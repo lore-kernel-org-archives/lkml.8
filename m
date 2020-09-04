@@ -2,263 +2,197 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA118C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE50D2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FC12084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgIDTvx (ORCPT
+        id S1727980AbgIDTwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:51:53 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:37708 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbgIDTvw (ORCPT
+        Fri, 4 Sep 2020 15:52:31 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:53307 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726265AbgIDTw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:51:52 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 721B1634C8C;
-        Fri,  4 Sep 2020 22:51:18 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1kEHjy-0001c3-Bp; Fri, 04 Sep 2020 22:51:18 +0300
-Date:   Fri, 4 Sep 2020 22:51:18 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
-Message-ID: <20200904195118.GH4392@valkosipuli.retiisi.org.uk>
-References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200904012000.GA9369@pendragon.ideasonboard.com>
- <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
- <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
- <20200904092049.6lokfmln4vulswrn@uno.localdomain>
- <20200904093626.GF4392@valkosipuli.retiisi.org.uk>
- <20200904103550.3cdxick4lje34kxv@uno.localdomain>
- <20200904110013.GG4392@valkosipuli.retiisi.org.uk>
- <20200904134832.GC7518@pendragon.ideasonboard.com>
+        Fri, 4 Sep 2020 15:52:29 -0400
+Received: (qmail 701042 invoked by uid 1000); 4 Sep 2020 15:52:28 -0400
+Date:   Fri, 4 Sep 2020 15:52:28 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
+        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH kcsan 9/9] tools/memory-model:  Document locking corner
+ cases
+Message-ID: <20200904195228.GB699781@rowland.harvard.edu>
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-9-paulmck@kernel.org>
+ <20200831201701.GB558270@rowland.harvard.edu>
+ <20200831214738.GE2855@paulmck-ThinkPad-P72>
+ <20200901014504.GB571008@rowland.harvard.edu>
+ <20200901170421.GF29330@paulmck-ThinkPad-P72>
+ <20200901201110.GB599114@rowland.harvard.edu>
+ <20200903234507.GA24261@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904134832.GC7518@pendragon.ideasonboard.com>
+In-Reply-To: <20200903234507.GA24261@paulmck-ThinkPad-P72>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:48:32PM +0300, Laurent Pinchart wrote:
-> On Fri, Sep 04, 2020 at 02:00:13PM +0300, Sakari Ailus wrote:
-> > On Fri, Sep 04, 2020 at 12:35:50PM +0200, Jacopo Mondi wrote:
-> > > On Fri, Sep 04, 2020 at 12:36:26PM +0300, Sakari Ailus wrote:
-> > > > On Fri, Sep 04, 2020 at 11:20:49AM +0200, Jacopo Mondi wrote:
-> > > > > On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
-> > > > > > On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
-> > > > > > > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
-> > > > > > > > Hi Prabhakar,
-> > > > > > > >
-> > > > > > > > Thank you for the patch.
-> > > > > > > >
-> > > > > > > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
-> > > > > > > > > Add support to read the bus-type and enable BT656 mode if needed.
-> > > > > > > > >
-> > > > > > > > > Also fail probe if unsupported bus_type is detected.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
-> > > > > > > > >  1 file changed, 32 insertions(+)
-> > > > > > > > >
-> > > > > > > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> > > > > > > > > index 2cc6a678069a..67764d647526 100644
-> > > > > > > > > --- a/drivers/media/i2c/ov772x.c
-> > > > > > > > > +++ b/drivers/media/i2c/ov772x.c
-> > > > > > > > > @@ -31,6 +31,7 @@
-> > > > > > > > >  #include <media/v4l2-ctrls.h>
-> > > > > > > > >  #include <media/v4l2-device.h>
-> > > > > > > > >  #include <media/v4l2-event.h>
-> > > > > > > > > +#include <media/v4l2-fwnode.h>
-> > > > > > > > >  #include <media/v4l2-image-sizes.h>
-> > > > > > > > >  #include <media/v4l2-subdev.h>
-> > > > > > > > >
-> > > > > > > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
-> > > > > > > > >  #ifdef CONFIG_MEDIA_CONTROLLER
-> > > > > > > > >  	struct media_pad pad;
-> > > > > > > > >  #endif
-> > > > > > > > > +	struct v4l2_fwnode_endpoint ep;
-> > > > > > > > >  };
-> > > > > > > > >
-> > > > > > > > >  /*
-> > > > > > > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-> > > > > > > > >  	if (priv->streaming == enable)
-> > > > > > > > >  		goto done;
-> > > > > > > > >
-> > > > > > > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
-> > > > > > > > > +		ret = regmaup_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
-> > > > > > > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
-> > > > > > > > > +		if (ret)
-> > > > > > > > > +			goto done;
-> > > > > > > > > +	}
-> > > > > > > > > +
-> > > > > > > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
-> > > > > > > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
-> > > > > > > > >  	if (ret)
-> > > > > > > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
-> > > > > > > > >
-> > > > > > > > >  static int ov772x_probe(struct i2c_client *client)
-> > > > > > > > >  {
-> > > > > > > > > +	struct fwnode_handle *endpoint;
-> > > > > > > > >  	struct ov772x_priv	*priv;
-> > > > > > > > >  	int			ret;
-> > > > > > > > >  	static const struct regmap_config ov772x_regmap_config = {
-> > > > > > > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
-> > > > > > > > >  		goto error_clk_put;
-> > > > > > > > >  	}
-> > > > > > > > >
-> > > > > > > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> > > > > > > > > +						  NULL);
-> > > > > > > > > +	if (!endpoint) {
-> > > > > > > > > +		dev_err(&client->dev, "endpoint node not found\n");
-> > > > > > > > > +		ret = -EINVAL;
-> > > > > > > > > +		goto error_clk_put;
-> > > > > > > > > +	}
-> > > > > > > > > +
-> > > > > > > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-> > > > > > > >
-> > > > > > > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
-> > > > > > > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
-> > > > > > > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
-> > > > > > > > path and in remove().
-> > > > > > >
-> > > > > > > Doesn't alloc_parse() differ from just _parse() as it reserve space
-> > > > > > > for the 'link-frequencies' array ? As this device does not support
-> > > > > > > CSI-2 and the 'link-frequencies' property is not allows in bindings,
-> > > > > > > isn't using endpoint_parse() better as it saves a call to _free() ?
-> > > > > >
-> > > > > > Yeah. I think the documentation needs to be updated.
-> > > > > >
-> > > > > > The thinking was there would be other variable size properties that drivers
-> > > > > > would need but that didn't happen. So feel free to continue use
-> > > > > > v4l2_fwnode_endpoint_parse() where it does the job.
-> > > > > >
-> > > > > > >
-> > > > > > > Or are we deprecating that function unconditionally ? The
-> > > > > > > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > > in new drivers" but here it doesn't seem required..
-> > > > > > >
-> > > > > > > >
-> > > > > > > > On the other hand, not setting .bus_type and letting the parse()
-> > > > > > > > function determine the but type automatically is also deprecated, and I
-> > > > > > > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > > > once for each bus type until one succeeds is a good API. As change will
-> > > > > > > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > > > for the time being if you want.
-> > > > > > >
-> > > > > > > But indeed relying on auto-guessing of the bus type is deprecated since
-> > > > > > > some time now (and the API could be improved, yes). Sorry I missed
-> > > > > > > that yesterday.
-> > > > > >
-> > > > > > There's one case where the bus type does not need to be set: when bindings
-> > > > > > require it *and* at the same time you have no default configuration that
-> > > > > > requires something to be set in the bus specific struct. Bindings where
-> > > > > > bus-type is required were added later so I think the documentation should
-> > > > > > be changed there, too.
-> > > > > >
-> > > > > > I can send the patches.
-> > > > > >
-> > > > > > >
-> > > > > > > As we support parallel and bt.656 only I must be honest I don't mind
-> > > > > > > it here as otherwise the code would be more complex for no real gain,
-> > > > > > > but I defer this to Sakari which has been fighting the battle against
-> > > > > > > auto-guessing since a long time now  :)
-> > > > > >
-> > > > > > I think you should require bus-type property in bindings in that case.
-> > > > > >
-> > > > > > But as it's an existing driver, bus-type will be optional. You'll need to
-> > > > > > default to what was supported earlier. This is actually an interesting case
-> > > > > > as bindings do not document it.
-> > > > >
-> > > > > For reference:
-> > > > > https://patchwork.linuxtv.org/project/linux-media/patch/20200903131029.18334-3-jacopo+renesas@jmondi.org/
-> > > > >
-> > > > > But yes, we might have DTBs in the wild without bus-type specified :(
-> > > >
-> > > > Shouldn't that be then that the bus-type is optional and defaults to
-> > > > parallel?
-> > > 
-> > > I think going forward we want to make it mandatory, don't we ? The
-> > > older dts will fail at dt validation time against the new yaml bindings, but
-> > > my understanding is that this is not a problem.
-> > 
-> > For new devices, yes. I still wouldn't make DT binding changes that render
-> > the old DT source invalid, at least unless it's absolutely mandatory. And
-> > that is not the case here.
-> > 
-> > I guess it may be a bit grey area. At least leave a comment in the driver
-> > on how the old bindings were so the code isn't accidentally "fixed".
-> > 
-> > > Binary compatibility, with the introduction of BT.656 support becomes
-> > > more complex instead :/
-> > > 
-> > > Before this series parallel was the only supported bus type and no
-> > > endpoint properties were required. The driver picked the default
-> > > settings for signal polarities and that was it.
-> > > 
-> > > With the introduction of BT.656 no signal polarity properties means
-> > > BT.656 when autoguess is in use. So going forward the bus-type shall
-> > > be explicitly set, but we might receive old DTBs with no bus-type and
-> > > no endpoint properties which assumes 'parallel' is in use.
-> > > 
-> > > One possible way forward could be:
-> > > - verify if bus-type is present in the fwnode
-> > > - if it is, we have a new DTB and we can rely on autoguess
-> 
-> It's not guessing if the bus type is specified :-)
-> 
-> > > - if it's not assume we have an old DTB that assumed 'parallel'. Parse
-> > >   the fwnode and if any relevant V4L2_MBUS_ flag is set use it,
-> > >   otherwise use the defaults.
-> > > 
-> > > If we make bus-type optional in new bindings, the old DTB with no
-> > > parallel endpoint properties would be identified as BT.656 breaking
-> > > capture operation, am I wrong ?
-> > 
-> > There's no technical reason why it has to be so.
-> > 
-> > You simply try endpoint parsing with parallel bus first, with the old
-> > defaults, and if that succeeds, then you don't attempt to parse it as
-> > Bt.656 anymore.
-> 
-> If bus-type is optional with new bindings,
-> v4l2_fwnode_endpoint_parse(V4L2_MBUS_PARALLEL) will always succeed if
-> the bus-type DT property isn't set.
+On Thu, Sep 03, 2020 at 04:45:07PM -0700, Paul E. McKenney wrote:
 
-Correct. And that's the idea, isn't it?
+> The hope was to have a good version of them completed some weeks ago,
+> but life intervened.
+> 
+> My current thought is to move these three patches out of my queue for
+> v5.10 to try again in v5.11:
+> 
+> 0b8c06b75ea1 ("tools/memory-model: Add a simple entry point document")
+> dc372dc0dc89 ("tools/memory-model: Move Documentation description to Documentation/README")
+> 0d9aaf8df7cb ("tools/memory-model: Document categories of ordering primitives")
+> 35dd5f6d17a0 ("tools/memory-model:  Document locking corner cases")
+> 
+> These would remain in my v5.10 queue:
+> 
+> 1e44e6e82e7b ("Replace HTTP links with HTTPS ones: LKMM")
+> cc9628b45c9f ("tools/memory-model: Update recipes.txt prime_numbers.c path")
+> 984f272be9d7 ("tools/memory-model: Improve litmus-test documentation")
+> 7c22cf3b731f ("tools/memory-model: Expand the cheatsheet.txt notion of relaxed")
+> 	(But with the updates from the other thread.)
+> 
+> Does that work?  If not, what would?
 
-> 
-> > > This might require a bit more work from Prabhakar I'm sorry. The old
-> > > bindings were clearly falling short once BT.656 becomes supported.
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
+That sounds reasonable.
 
--- 
-Sakari Ailus
+> > > > Just what you want to achieve here is not clear from the context.
+> > > 
+> > > People who have internalized the "roach motel" model of locking
+> > > (https://www.cs.umd.edu/~pugh/java/memoryModel/BidirectionalMemoryBarrier.html)
+> > > need their internalization adjusted.
+> > 
+> > Shucks, if you only want to show that letting arbitrary code (i.e., 
+> > branches) migrate into a critical section is unsafe, all you need is 
+> > this uniprocessor example:
+> > 
+> > 	P0(int *sl)
+> > 	{
+> > 		goto Skip;
+> > 		spin_lock(sl);
+> > 		spin_unlock(sl);
+> > 	Skip:
+> > 		spin_lock(sl);
+> > 		spin_unlock(sl);
+> > 	}
+> > 
+> > This does nothing but runs fine.  Letting the branch move into the first 
+> > critical section gives:
+> > 
+> > 	P0(int *sl)
+> > 	{
+> > 		spin_lock(sl);
+> > 		goto Skip;
+> > 		spin_unlock(sl);
+> > 	Skip:
+> > 		spin_lock(sl);
+> > 		spin_unlock(sl);
+> > 	}
+> > 
+> > which self-deadlocks 100% of the time.  You don't need to know anything 
+> > about memory models or concurrency to understand this.
+> 
+> Although your example does an excellent job of illustrating the general
+> point about branches, I am not convinced that it would be seen as
+> demonstrating the dangers of moving an entire loop into a critical
+> section.
+
+All right, how about this?
+
+	P0(int *sl)
+	{
+		while (spin_is_locked(sl))
+			cpu_relax();
+		spin_lock(sl);
+		spin_unlock(sl);
+	}
+
+Runs normally, even if other threads are doing unknown locking and 
+unlocking at the same time.  But:
+
+	P0(int *sl)
+	{
+		spin_lock(sl);
+		while (spin_is_locked(sl))
+			cpu_relax();
+		spin_unlock(sl);
+	}
+
+always goes into an infinite loop.
+
+> > On the other hand, if you want to show that letting memory accesses leak 
+> > into a critical section is unsafe then you need a different example: 
+> > spin loops won't do it.
+> 
+> I am not immediately coming up with an example that is broken by leaking
+> isolated memory accesses into a critical section.  I will give it some
+> more thought.
+
+It may turn out to be a hard challenge.  As far as I know, there are no 
+such examples, unless you want to count something like this:
+
+	spin_lock(sl);
+	spin_unlock(sl);
+	spin_lock(sl);
+	spin_unlock(sl);
+
+transformed to:
+
+	spin_lock(sl);
+	spin_lock(sl);
+	spin_unlock(sl);
+	spin_unlock(sl);
+
+You could view this transformation as moving the second spin_lock up 
+into the first critical section (obviously dangerous since spin_lock 
+involves a loop), or as moving the first spin_unlock down into the 
+second critical section (not so obvious since spin_unlock is just a 
+memory access).
+
+Okay, so let's restrict ourselves to memory accesses and loops that 
+don't touch the spinlock variable itself.  Then we would need something 
+more similar to the original example, like this:
+
+	P0(spin_lock *sl, int *x)
+	{
+		while (READ_ONCE(x) == 0)
+			cpu_relax();
+		spin_lock(sl);
+		spin_unlock(sl);
+	}
+
+	P1(spin_lock *sl, int *x)
+	{
+		spin_lock(sl);
+		WRITE_ONCE(x, 1);
+		spin_unlock(sl);
+	}
+
+This will always run to completion.  But if the loop in P0 is moved into 
+the critical section, the test may never end.  Again, you don't need 
+fancy memory models to understand this; you just need to know that 
+critical sections are mutually exclusive.
+
+But if this example didn't have a loop, allowing the memory access to 
+leak into the critical section would be fine.
+
+Alan
