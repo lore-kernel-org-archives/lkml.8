@@ -2,121 +2,75 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47FBC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8254E206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599215714;
-	bh=05Te+HixxeurS28FKnwyyjLfLGDIxAgo5O/92sKHlQk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cQ+WXvkFDMawfBFyYbR1Uz4pR7L4o6v6NQraOg5x9CiHgbdlVCBCVgApRS2WXivEP
-	 UwYSq8eXHhFisyk80zytudmZ9Wat4JCYLThWCS5CXepqLjXRoL5761tDrbpco+jjwv
-	 bnrBwoAsFOy2gkJblQPW66SUvPQxB+oTCz4HvgUY=
+	by mail.kernel.org (Postfix) with ESMTP id A33B520658
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:35:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbgIDKey (ORCPT
+        id S1730066AbgIDKfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53334 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 06:35:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48288 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730163AbgIDKeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:34:25 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E78EF206D4;
-        Fri,  4 Sep 2020 10:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599215664;
-        bh=05Te+HixxeurS28FKnwyyjLfLGDIxAgo5O/92sKHlQk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ad8NhWq0ABlpwNpH803HRuu6wC1seJUXOZbZ9cO1UFFG0Zd8wv5rrGShoKB3LSlAp
-         u+DoCbFdK/C6EUUr45wPjQ643ODJZQX5MJDaWBI1NssrGL2kWYi6Pxr7lw26h7SOXy
-         Y0KvP/q2GzGfmIVE0V2gcG3xZmuTW2VoKhSdoPjs=
-Date:   Fri, 4 Sep 2020 12:34:45 +0200
-From:   'Greg KH' <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?77+977+9w6Lvv73vv70=?= <changki.kim@samsung.com>
-Cc:     pmladek@suse.com, sergey.senozhatsky@gmail.com,
-        rostedt@goodmis.org, john.ogness@linutronix.de,
-        masahiroy@kernel.org, rd.dunlap@gmail.com, krzk@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: printk: Add process name information to printk() output.
-Message-ID: <20200904103445.GA2693206@kroah.com>
-References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
- <20200904082438.20707-1-changki.kim@samsung.com>
- <20200904090535.GA2440145@kroah.com>
- <000001d6829e$2226cc60$66746520$@samsung.com>
+        id S1730106AbgIDKbV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:31:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 01B79AF6D;
+        Fri,  4 Sep 2020 10:30:35 +0000 (UTC)
+Subject: Re: [PATCH 19/19] block: switch gendisk lookup to a simple xarray
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+References: <20200903080119.441674-1-hch@lst.de>
+ <20200903080119.441674-20-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <3dae7f00-58bc-c857-7c90-08ec336783c9@suse.de>
+Date:   Fri, 4 Sep 2020 12:30:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200903080119.441674-20-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <000001d6829e$2226cc60$66746520$@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 06:31:13PM +0900, ��â�� wrote:
-> > On Fri, Sep 04, 2020 at 05:24:38PM +0900, Changki Kim wrote:
-> > > Printk() meesages are the most basic and useful debug method.
-> > > However, additional information needs in multi-processor.
-> > > If we add messages with processor id and process name, we can find a
-> > > problem only with messages when the problem occurs with H/W IP or CPU.
-> > > This is very useful in narrowing down the scope of the problems.
-> > >
-> > > Therefore, instead of trying to help buffering, let's try to help
-> > > reconstructing messages by saving caller information as of calling
-> > > log_store() and adding it as "[$processor_id: $process_name:
-> > $thread_id]"
-> > > upon printing to consoles.
-> > >
-> > > Some examples for console output:
-> > >
-> > >   [    0.059580] [0:      swapper/0:    1] CPU: All CPU(s) started at
-> EL1i
-> > >   [    2.153157] [5:           init:    1] migov: complete to probe
-> migov
-> > >   [    7.441317] [4:           init:    1] NET: Registered protocol
-> family 39
-> > >   [   22.793389] [5:  kworker/u16:1:  184] SMP: stopping secondary CPUs
-> > >
-> > > Signed-off-by: Changki Kim <changki.kim@samsung.com>
-> > > ---
-> > >  kernel/printk/printk.c            | 20 ++++++++++++++++++--
-> > >  kernel/printk/printk_ringbuffer.h |  7 +++++++
-> > >  lib/Kconfig.debug                 | 16 ++++++++++++++++
-> > >  3 files changed, 41 insertions(+), 2 deletions(-)
-> > 
-> > Isn't the CPU number already present if you want it today?  Why add it
-> > again?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On 9/3/20 10:01 AM, Christoph Hellwig wrote:
+> Now that bdev_map is only used for finding gendisks, we can use
+> a simple xarray instead of the regions tracking structure for it.
 > 
-> CPU number isn't present now. If I enabled PRINTK_CALLER,
-> then it is present cpu id or thread id.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>   block/genhd.c         | 208 ++++++++----------------------------------
+>   include/linux/genhd.h |   7 --
+>   2 files changed, 37 insertions(+), 178 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Great, that should give you what you need here, right?
+Cheers,
 
-> The config isn't always present cpu id.
-
-What do you mean?
-
-> We need cpu id each each message.
-
-Why each message?  What does that provide you?
-
-And if PRINTK_CALLER does not work properly, please fix it.  I don't see
-how it would not work any different from your patch, you shouldn't
-duplicate things.
-
-thanks,
-
-greg k-h
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
