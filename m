@@ -2,159 +2,217 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DFBC4CC67
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00795C49ECA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0687425292
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pzpG0aWb"
+	by mail.kernel.org (Postfix) with ESMTP id 546962534A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgIDRYm (ORCPT
+        id S1727945AbgIDR1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgIDRYj (ORCPT
+        Fri, 4 Sep 2020 13:27:00 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52256 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727107AbgIDR0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:24:39 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B11FC061244;
-        Fri,  4 Sep 2020 10:24:39 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id x2so4910742ybf.12;
-        Fri, 04 Sep 2020 10:24:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HBnolezTElMG3DPNCT0X2miQ6xV0AeQAGXqt2ZRlAS4=;
-        b=pzpG0aWb2xH0/LYQzXWoFkg3lHCNMR4zgmUKPkAZLpvxi6VJbalfUoh36yrYjCcgSF
-         Fu3BR9H5biF1rgC1bUfrDs//yjDyZgHb/nZ8LXofgV0x3m81Scbf3tWA8m72rzdRh7we
-         qOM8JlsnZC7okrToVOVu77FCXWSnihR7LlaVW5wgsKXxtYwePg/qHxJXDdq324u7X7nE
-         XXotiWEDEedvO41JyUyQyf4sJKIKw2Q0gyIptS5sTLgBUAqbDtbnmXeGQndQI46M5nLt
-         uJLx5SOgNsSpFNH/0pDIBQS9HA7nE1fWBE97TEVKT/ITowkJSWR94ay4zngxCY3r47YX
-         azyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HBnolezTElMG3DPNCT0X2miQ6xV0AeQAGXqt2ZRlAS4=;
-        b=ufZueNzjTeuqzC0Hmeu3I9p6x3+GGLJbTWWLd82AFdK+Oc5rxmbxC9IFg7WgHsDMzu
-         nzEgh4+9OhEnuzB8enHW0W+d4RM29k7kMXU6wfMjoiJxfftYP2kc3ATLo5cuyWd2QR2B
-         uS/2DjsQcgk3eDiAvCc8dOr1S4+7jqdCLecpzf58uZi+wjpwDwzLACt3S5SFz/P3gNpD
-         hMAt/G+TbTgZ4QrzJzXdu7pZ7hxD6oIS/NOsD5xUfQobCBnnjb+dNDLpsOeQh9y3d27x
-         KNf/tDJYzheSRgiID8v/vBgc4iITs8i4FRmn+MVQQZRYBa3UB5xaF9BaQUvDvsjAjpD+
-         t6Sw==
-X-Gm-Message-State: AOAM532G2aIytFI2hw4JML+7/+DtkOmvHO8ZHPp0UqfnaRjWTzh4YDzn
-        hMDZdniTxBAKlmYxJ+CZ0hJNrpA5N3BhNW3WYiU=
-X-Google-Smtp-Source: ABdhPJxwKhTzY9vinoG67Ge0rXX5teef5N78CegffiHZm3jy/a5wyIUPzflHeDMrSP7T1EK9XMElRlnD+XErf6s44vg=
-X-Received: by 2002:a25:ab91:: with SMTP id v17mr10932172ybi.76.1599240277482;
- Fri, 04 Sep 2020 10:24:37 -0700 (PDT)
+        Fri, 4 Sep 2020 13:26:16 -0400
+Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
+ id 479dadb6a4c6bf8e; Fri, 4 Sep 2020 19:26:13 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>
+Subject: [PATCH 4/6] ACPICA: Add support for using logical addresses of GPE blocks
+Date:   Fri, 04 Sep 2020 19:24:14 +0200
+Message-ID: <9373262.piL2bvXoCD@kreacher>
+In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
+References: <1748021.N9i9sLPJ40@kreacher>
 MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825162718.5838-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXm9D8-bg3XdGqD7AKe2vMiZLNWENH3A0w-b7j=qZS=pA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXm9D8-bg3XdGqD7AKe2vMiZLNWENH3A0w-b7j=qZS=pA@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 4 Sep 2020 18:24:11 +0100
-Message-ID: <CA+V-a8to=PY2_4gHh6V33mRVXJC4QGJzEg2q2NVWzot9TmXAtA@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: r8a7742-iwg21d-q7: Add SPI NOR support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Thank you for the review.
+The logical address of every GPE block in system memory must be
+known before passing it to acpi_ev_initialize_gpe_block(), because
+memory cannot be mapped on the fly from an interrupt handler.
+Accordingly, the host OS must map every GPE block in system
+memory upfront and it can store the logical addresses of GPE
+blocks for future use.
 
-On Thu, Sep 3, 2020 at 12:59 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add support for the SPI NOR device which is connected to MSIOF0 interface
-> > on the iWave RainboW-G21d-q7 board.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
->
-> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > @@ -220,6 +220,32 @@
-> >         status = "okay";
-> >  };
-> >
-> > +&msiof0 {
-> > +       pinctrl-0 = <&msiof0_pins>;
-> > +       pinctrl-names = "default";
-> > +       cs-gpios = <&gpio5 13 GPIO_ACTIVE_LOW>;
-> > +
-> > +       status = "okay";
-> > +
-> > +       flash1: flash@0 {
-> > +               compatible = "sst,sst25vf016b", "jedec,spi-nor";
-> > +               reg = <0>;
-> > +               spi-max-frequency = <50000000>;
-> > +               m25p,fast-read;
-> > +
-> > +               partitions {
-> > +                       compatible = "fixed-partitions";
-> > +                       #address-cells = <1>;
-> > +                       #size-cells = <1>;
-> > +
-> > +                       partition@0 {
-> > +                               label = "user";
-> > +                               reg = <0x00000000 0x00200000>;
-> > +                       };
-> > +               };
-> > +       };
-> > +};
-> > +
-> >  &pci0 {
-> >         pinctrl-0 = <&usb0_pins>;
-> >         pinctrl-names = "default";
-> > @@ -266,6 +292,11 @@
-> >                 function = "i2c2";
-> >         };
-> >
-> > +       msiof0_pins: msiof0 {
-> > +               groups = "msiof0_clk", "msiof0_tx", "msiof0_rx";
->
-> I think you're missing "msiof0_sync", connected to SPI_CS0#?
->
-Agreed will fix that and post a v2.
+If these logical addresses were known to ACPICA, it could use them
+instead of the corresponding physical addresses of GPE block for
+GPE register accesses and the memory mapping lookups carried out
+by acpi_os_read_memory() and acpi_os_write_memory() on every
+attempt to access a GPE register would not be necessary any more.
 
-Cheers,
-Prabhakar
+To allow that to happen, introduce the ACPI_GPE_USE_LOGICAL_ADDRESSES
+symbol to indicate whether or not the host OS wants ACPICA to use the
+logical addresses of GPE registers in system memory directly (which
+is the case if this symbol is defined).  Moreover, conditional on
+whether ACPI_GPE_USE_LOGICAL_ADDRESSES is defined, introduce two new
+global variables for storing the logical addresses of the FADT GPE
+blocks 0 and 1, respectively, acpi_gbl_xgpe0_block_logical_address and
+acpi_gbl_xgpe1_block_logical_address, make acpi_ev_gpe_initialize()
+pass their values instead of the physical addresses of the GPE blocks
+in question to acpi_ev_create_gpe_block() and modify
+acpi_hw_gpe_read() and acpi_hw_gpe_write() to access memory directly
+via the addresses stored in the struct acpi_gpe_address objects,
+which are expected to be the logical addresses of GPE registers if
+ACPI_GPE_USE_LOGICAL_ADDRESSES is defined.
 
-> With that fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> > +               function = "msiof0";
-> > +       };
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+With the above changes in place, a host OS wanting ACPICA to
+access GPE registers directly through their logical addresses
+needs to define the ACPI_GPE_USE_LOGICAL_ADDRESSES symbol and
+make sure that the logical addresses of the FADT GPE blocks 0
+and 1 are stored in acpi_gbl_xgpe0_block_logical_address and
+acpi_gbl_xgpe1_block_logical_address, respectively, prior to
+calling acpi_ev_gpe_initialize().
+
+[If such a host OS also uses acpi_install_gpe_block() to add
+ non-FADT GPE register blocks located in system memory, it must
+ pass their logical addresses instead of their physical addresses
+ to this function.]
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/acpica/acglobal.h  |  6 ++++++
+ drivers/acpi/acpica/evgpeinit.c | 23 +++++++++++++++++------
+ drivers/acpi/acpica/hwgpe.c     | 10 ++++++++++
+ 3 files changed, 33 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/acpi/acpica/acglobal.h b/drivers/acpi/acpica/acglobal.h
+index 1030a0ce1599..5215ff1cbbbe 100644
+--- a/drivers/acpi/acpica/acglobal.h
++++ b/drivers/acpi/acpica/acglobal.h
+@@ -42,6 +42,12 @@ ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1a_enable);
+ ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1b_status);
+ ACPI_GLOBAL(struct acpi_generic_address, acpi_gbl_xpm1b_enable);
+ 
++#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
++ACPI_GLOBAL(void *, acpi_gbl_xgpe0_block_logical_address);
++ACPI_GLOBAL(void *, acpi_gbl_xgpe1_block_logical_address);
++
++#endif				/* ACPI_GPE_USE_LOGICAL_ADDRESSES */
++
+ /*
+  * Handle both ACPI 1.0 and ACPI 2.0+ Integer widths. The integer width is
+  * determined by the revision of the DSDT: If the DSDT revision is less than
+diff --git a/drivers/acpi/acpica/evgpeinit.c b/drivers/acpi/acpica/evgpeinit.c
+index 6effd8076dcc..6d82d30d8f7b 100644
+--- a/drivers/acpi/acpica/evgpeinit.c
++++ b/drivers/acpi/acpica/evgpeinit.c
+@@ -32,6 +32,16 @@ ACPI_MODULE_NAME("evgpeinit")
+  * kernel boot time as well.
+  */
+ 
++#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
++#define ACPI_FADT_GPE_BLOCK_ADDRESS(N)	\
++	acpi_gbl_FADT.xgpe##N##_block.space_id == \
++					ACPI_ADR_SPACE_SYSTEM_MEMORY ? \
++		(u64)acpi_gbl_xgpe##N##_block_logical_address : \
++		acpi_gbl_FADT.xgpe##N##_block.address
++#else
++#define ACPI_FADT_GPE_BLOCK_ADDRESS(N)	acpi_gbl_FADT.xgpe##N##_block.address
++#endif		/* ACPI_GPE_USE_LOGICAL_ADDRESSES */
++
+ /*******************************************************************************
+  *
+  * FUNCTION:    acpi_ev_gpe_initialize
+@@ -49,6 +59,7 @@ acpi_status acpi_ev_gpe_initialize(void)
+ 	u32 register_count1 = 0;
+ 	u32 gpe_number_max = 0;
+ 	acpi_status status;
++	u64 address;
+ 
+ 	ACPI_FUNCTION_TRACE(ev_gpe_initialize);
+ 
+@@ -85,8 +96,9 @@ acpi_status acpi_ev_gpe_initialize(void)
+ 	 * If EITHER the register length OR the block address are zero, then that
+ 	 * particular block is not supported.
+ 	 */
+-	if (acpi_gbl_FADT.gpe0_block_length &&
+-	    acpi_gbl_FADT.xgpe0_block.address) {
++	address = ACPI_FADT_GPE_BLOCK_ADDRESS(0);
++
++	if (acpi_gbl_FADT.gpe0_block_length && address) {
+ 
+ 		/* GPE block 0 exists (has both length and address > 0) */
+ 
+@@ -97,7 +109,6 @@ acpi_status acpi_ev_gpe_initialize(void)
+ 		/* Install GPE Block 0 */
+ 
+ 		status = acpi_ev_create_gpe_block(acpi_gbl_fadt_gpe_device,
+-						  acpi_gbl_FADT.xgpe0_block.
+ 						  address,
+ 						  acpi_gbl_FADT.xgpe0_block.
+ 						  space_id, register_count0, 0,
+@@ -110,8 +121,9 @@ acpi_status acpi_ev_gpe_initialize(void)
+ 		}
+ 	}
+ 
+-	if (acpi_gbl_FADT.gpe1_block_length &&
+-	    acpi_gbl_FADT.xgpe1_block.address) {
++	address = ACPI_FADT_GPE_BLOCK_ADDRESS(1);
++
++	if (acpi_gbl_FADT.gpe1_block_length && address) {
+ 
+ 		/* GPE block 1 exists (has both length and address > 0) */
+ 
+@@ -137,7 +149,6 @@ acpi_status acpi_ev_gpe_initialize(void)
+ 
+ 			status =
+ 			    acpi_ev_create_gpe_block(acpi_gbl_fadt_gpe_device,
+-						     acpi_gbl_FADT.xgpe1_block.
+ 						     address,
+ 						     acpi_gbl_FADT.xgpe1_block.
+ 						     space_id, register_count1,
+diff --git a/drivers/acpi/acpica/hwgpe.c b/drivers/acpi/acpica/hwgpe.c
+index a0e71f34c77a..37bb67ef3232 100644
+--- a/drivers/acpi/acpica/hwgpe.c
++++ b/drivers/acpi/acpica/hwgpe.c
+@@ -46,8 +46,13 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg)
+ 	u32 value32;
+ 
+ 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
++#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
++		*value = (u64)ACPI_GET8(reg->address);
++		return_ACPI_STATUS(AE_OK);
++#else
+ 		return acpi_os_read_memory((acpi_physical_address)reg->address,
+ 					    value, ACPI_GPE_REGISTER_WIDTH);
++#endif
+ 	}
+ 
+ 	status = acpi_os_read_port((acpi_io_address)reg->address,
+@@ -76,8 +81,13 @@ acpi_status acpi_hw_gpe_read(u64 *value, struct acpi_gpe_address *reg)
+ acpi_status acpi_hw_gpe_write(u64 value, struct acpi_gpe_address *reg)
+ {
+ 	if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
++#ifdef ACPI_GPE_USE_LOGICAL_ADDRESSES
++		ACPI_SET8(reg->address, value);
++		return_ACPI_STATUS(AE_OK);
++#else
+ 		return acpi_os_write_memory((acpi_physical_address)reg->address,
+ 					    value, ACPI_GPE_REGISTER_WIDTH);
++#endif
+ 	}
+ 
+ 	return acpi_os_write_port((acpi_io_address)reg->address, (u32)value,
+-- 
+2.26.2
+
+
+
+
