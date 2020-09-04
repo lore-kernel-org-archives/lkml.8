@@ -2,124 +2,82 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8844BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465DFC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A550206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="LkEW6cNW"
+	by mail.kernel.org (Postfix) with ESMTP id 17B922074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730513AbgIDOfL (ORCPT
+        id S1730493AbgIDOoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:35:11 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:32814 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbgIDOev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:34:51 -0400
-IronPort-SDR: MRED0OCmkjLNXo8Kz0rHdFOUZXQAYc9NHl180JrekTcYuQIAO0vPEsXeL+umr+g/QzVPwBhdNR
- AvWaWeCdqCPGTYSKlqEeT3TN0J6ti8UmioQeIMFtFZIYdHtKh1UsAJm/Rzq79pijLpGE6jvnhj
- u6i0bm57/HjEYqmL9kug62dq9dpP0V+pOwd7HCpaVs8QxzFFbP4awbH0PWoU6KUuLnqkSi8vfk
- 3gwt9F19U19ZWC35alSqQrEaPYSYrfZgWcEyo8Urfi03icVRs4KjoWtSEdcQvPyYWg9j3GzndC
- tRQ=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
-   d="scan'208";a="13737379"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 Sep 2020 16:34:43 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 04 Sep 2020 16:34:43 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 04 Sep 2020 16:34:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599230083; x=1630766083;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T7XiVlDr00IMxMBe764lGNk5PWpuISV6o8DZWMwHMFg=;
-  b=LkEW6cNWfD2yMDFHAcyzgn8dVUHnbsuMNQ93VYO2eFrGIavOcnEJ8XX7
-   ck4AGrnqy10Y8t+ZwqL2XbOvRHgYB+IlKSI5XPSe0Oz9w3LjV5uIYMzUH
-   prqIxqtcoQjLIo7noYIVp/yY02QHUaitpTfmW2ujDos3Px4Jsvxlo7gtS
-   /aHkXkMr1a0WrK2tPsGeY5WQaYLViDDAcyD3NkXqqyVnwpJ9TN2CTQHSA
-   ECeS/U4ep5JeepQdjp/p1ifeQf97EH7MxKeQNaS3UL3gTNTSMbitUMtaK
-   Qv5VKPVpR0yxvwozdZL+Pc9tTpmuA/v7lLX/CRoRb2wD4CQluO5r9PeAm
-   Q==;
-IronPort-SDR: XWepbQyV2JQ+1ituWt8O4o77v0i8ltrFzVdO3CzJgRlRnMO1bNPMKAW/gXDaGQtRwqfihgutVX
- UoAMCc/OKxXSJ6NmGgesXMCjAjFNbnDJqT2kzVktpcuddkgFs13C71LDKHh7YJsO3U2PJiRmCl
- xUdRn3BMWQMq7OKTd5NskyELgH0o4NyMWVl6PcidcmvLop19HQXhXsr68n9Q3WO6NENrNxmLaz
- ExALDZnJ2W6IqYfSY09zWjnIwzY1JFn4yd4RyWtEWUOgg8nXfhhQuq0qu4aAAucqIZnEdUoh8t
- SSM=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
-   d="scan'208";a="13737378"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 Sep 2020 16:34:43 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 38FF9280065;
-        Fri,  4 Sep 2020 16:34:43 +0200 (CEST)
-Message-ID: <f753882996235439b9ef53747d24382e896dc4e7.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH] spi-imx: remove num-cs support, set
- num_chipselect to 4
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 04 Sep 2020 16:34:43 +0200
-In-Reply-To: <CAOMZO5C7yyA11EOQvU0Fq-uDd5RK-B7WmbtvAy8OtPzfThYXRg@mail.gmail.com>
-References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
-         <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
-         <e1431dd2653dbffdfec39a2e7167db07836e30ac.camel@ew.tq-group.com>
-         <CAOMZO5C7yyA11EOQvU0Fq-uDd5RK-B7WmbtvAy8OtPzfThYXRg@mail.gmail.com>
+        Fri, 4 Sep 2020 10:44:15 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:46733 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730416AbgIDOoK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:44:10 -0400
+Received: by mail-il1-f208.google.com with SMTP id v6so4953257ili.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:44:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=GE20mkCJFx34V9csXbBi5MpSPEm23j5O5gEKMXhuGs4=;
+        b=kHMRo3Ufo081pWUR8vo0y4zoiD+BkRzAd6ec9rdD9TessPCVepUFDtrZKM6+gfA/Bi
+         pK2uWP5xqgjNBldlngjLxdhdJfBrQXB7iuU/06XB1a9X2MG2jHHCYhYiwTLvS8Nmihto
+         NDEp0SbV9dIVMee4PIdyYw5qfDcqIZzWmloDBb707OAUNUuRY23yZoQA1a6e9TyrQ8rf
+         P47z2/1NuzOTJGxCyWCCGkhHhoePuo/+IT/ToRfMW46BhU40eLEd6YyEIWyCksQYSFfh
+         npJoMmAnk6C8uyKMjOjO4iKVMa2XwAA+T+0Y9iGJ6q32ZOD0ruknWHmEXvbS/feKWZ4k
+         vpyw==
+X-Gm-Message-State: AOAM533k3ivmb4ih+P3uzkmv1xxRLUROlxTKOQb0aCcRzq+bWoyAozmG
+        6mQWrJny3seDUGk2Yt9PQuhQxy6mARsm6iw05RX3HhJ84+hc
+X-Google-Smtp-Source: ABdhPJxZCmzJJSBtD6oipaJudDBJ1GQFFB0c3Y+RmR7v/iFXEsAA2X6Ph+jfCB/546LXa6E6JWGbeRIObehShZ2GPeZnQjV295Tv
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:1303:: with SMTP id g3mr4832562ilr.218.1599230649567;
+ Fri, 04 Sep 2020 07:44:09 -0700 (PDT)
+Date:   Fri, 04 Sep 2020 07:44:09 -0700
+In-Reply-To: <00000000000055e1a9059f9e169f@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c8101605ae7de686@google.com>
+Subject: Re: KASAN: use-after-free Write in refcount_warn_saturate
+From:   syzbot <syzbot+7dd7f2f77a7a01d1dc14@syzkaller.appspotmail.com>
+To:     abhishekpandit@chromium.org, alainm@chromium.org,
+        davem@davemloft.net, johan.hedberg@gmail.com,
+        johan.hedberg@intel.com, josua.mayer@jm0.eu,
+        jukka.rissanen@linux.intel.com, keescook@chromium.org,
+        kuba@kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        mcchou@chromium.org, mike@foundries.io, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-09-04 at 10:57 -0300, Fabio Estevam wrote:
-> On Fri, Sep 4, 2020 at 10:02 AM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> 
-> > This would make num_chipselect default to 1 again (set by
-> > __spi_alloc_controller()), breaking every i.MX board that uses more
-> > than 1 native CS.
-> 
-> Which boards are that? Are you referring to non-DT i.MX boards?
-> 
-> If so, I have sent a patch removing all non-DT i.MX boards.
-> 
-> > I'm aware that using cs-gpios instead of native CS is probably a
-> > good
-> > idea in any case, as the native CS of this SPI controller is kinda
-> > flaky (and at a glance it looks like all in-tree DTs do this; not
-> > sure
-> > about board files that don't use DTs?), but I'm not convinced that
-> > breaking native CS support completely is desirable either.
-> 
-> Initial i.MX chips with this SPI IP had issues in using chip-select
-> in
-> native mode and GPIO chip-select has been used since them.
-> 
-> Do we have i.MX dts that make use of native chip select?
+syzbot suspects this issue was fixed by commit:
 
-As mentioned in my previous mail, all in-tree DTS use cs-gpios (unless
-I've overlooked something - I grepped for CSPIn_SSm pinmuxings), so
-removing support for native CS should not break anything we know of.
+commit b83764f9220a4a14525657466f299850bbc98de9
+Author: Miao-chen Chou <mcchou@chromium.org>
+Date:   Tue Jun 30 03:15:00 2020 +0000
 
-Nevertheless, I don't see why we should deliberately remove the native
-CS support - my understanding was that we try to avoid breaking changes
-to DT interpretation even for unknown/out-of-tree DTS.
+    Bluetooth: Fix kernel oops triggered by hci_adv_monitors_clear()
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f92e3e900000
+start commit:   c0842fbc random32: move the pseudo-random 32-bit definitio..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cf567e8c7428377e
+dashboard link: https://syzkaller.appspot.com/bug?extid=7dd7f2f77a7a01d1dc14
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b606dc900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=123e87cc900000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: Bluetooth: Fix kernel oops triggered by hci_adv_monitors_clear()
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
