@@ -2,180 +2,114 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0111C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 670CBC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6CA2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C772073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MKhx5Hg2";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="fYgadC23"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="f5nW2z5t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgIDLgR (ORCPT
+        id S1730137AbgIDLg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:36:17 -0400
-Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:57432
-        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729872AbgIDLXq (ORCPT
+        Fri, 4 Sep 2020 07:36:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729992AbgIDLKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:23:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599218470;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        bh=8pVmz0o3OoIQ5HbXtj/1WjtjF6Iyr+tVEffv2fUGSQw=;
-        b=MKhx5Hg2kBORH4kbkr3AautNFhaPdMKOu1ESqMHf8gGHHP3XVeBXFfpQ+qalUtGM
-        0nWrqMG/+hcXNGXd8h2cEt5XLDLWSRYYE8k44jzH3Ly65D2jhpJbMkEbTDerr+kYo2T
-        2lytctJh8XIyVhOjKRJGVLYWdWoXm/ru9FCwr4B8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599218470;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=8pVmz0o3OoIQ5HbXtj/1WjtjF6Iyr+tVEffv2fUGSQw=;
-        b=fYgadC23dQbOG6YB0sdDWU/kzIxlVOKiVX/nqyHopK3taf0OKOe8C0pg0w9X5GSu
-        +cflE86b2ZcUizmj/1OFIkqLS0fI6gjv2r0AhZzkdjTFytLf/HOpmvuWmcwRhSFpylw
-        g/g+rw/BU4GqdAEUcZkc/4Cu3eQF4IqPY8cqf4JI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D58BDC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=srivasam@codeaurora.org
-Subject: Re: [PATCH v3 3/5] ASoC: qcom: Add support for lpass hdmi driver
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     V Sujith Kumar Reddy <vsujithk@codeaurora.org>
-References: <1598855964-1042-1-git-send-email-srivasam@codeaurora.org>
- <1598855964-1042-4-git-send-email-srivasam@codeaurora.org>
- <ac1f0b9a-8e07-464c-b0df-6b8e5665a632@linaro.org>
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Organization: Qualcomm India Private Limited
-Message-ID: <0101017458d94ca3-9d12e985-1ae2-4a39-ae17-996abd0cf79f-000000@us-west-2.amazonses.com>
-Date:   Fri, 4 Sep 2020 11:21:10 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
-MIME-Version: 1.0
-In-Reply-To: <ac1f0b9a-8e07-464c-b0df-6b8e5665a632@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-SES-Outgoing: 2020.09.04-54.240.27.21
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Fri, 4 Sep 2020 07:10:21 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAF9C06125F
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:10:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o5so6281257wrn.13
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:10:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=CfYFcq4WmzTE0aAQvo/9AeYUJUnGPZBDIaHQZNs9Mgk=;
+        b=f5nW2z5tDqaAYg5sxLoTMzCHrvDVedINE/fP+LzcN8jRXcaN1dQntgDS2Mb+UFdFtf
+         25ntq9cGH9A5miW0aysMZXCh1p4xc7RlD0yI5A0p9pZKZz4XgpH6LEuuUTcGQef8a2YQ
+         3w5MRxp+JuYHvnSnOGGca4Ud47zxvsWQeBSbi/w0yw5oMmODa/Cl2PI/G3OKzbD5SH9U
+         jmSun0bXRSiSnZpVIuU3F0s8HPjmyLgUdbj1ZpROrw88MZ6w/hueWQ2pQnmF42TtxXKl
+         2JKyJTXBGgvkhiAufwRVlmkmfhBR3NGfphsteCqPHGb/vCsH94stnRg5Filz7Nllo8WX
+         CX3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=CfYFcq4WmzTE0aAQvo/9AeYUJUnGPZBDIaHQZNs9Mgk=;
+        b=aafo51/tt+2dqS6H3/vYsUkyCq2Zl58E4hBIBGTo70F3Zo0qHTFGCC04nnq/Me490J
+         x6gN21uQ5altTMdVm5yIWqSMxxBpxj+qTUN9wOEKnr90KTOlC335fJVQ4o8Q+notBt7S
+         wcQXWJaK+OJhTijGeykei3c4f4rH6+v+tMZwMe5wHBrmQCuVXjvZxojUsVBkVER3Qjav
+         8VkDe9cSck8HhLNKqlQlkRr8Gx/SS0YBgkMeM1DEHyXuL9e4ACxGFUT6Kcb8OD1bhMr+
+         ejgIg2fS2pxl5/VxIa0NAmWA6N5J7Oe55Xl1Ql8Cbwfgp0TViH76PZjbutyEt4T0p3kS
+         YDMA==
+X-Gm-Message-State: AOAM530qEXODareOPnpDChWXB+WQjfas82mguwjgmN60yuJpgXSX6Hdm
+        pmGexqjY8RrfTAxubyxeWSFweA==
+X-Google-Smtp-Source: ABdhPJysubVO+eu8sCb1TjAknOixCMMqmkkoiYOwyOKCvL/mczCYJybOKqKxBva7/YQxCV1tzfKonw==
+X-Received: by 2002:adf:f492:: with SMTP id l18mr7467352wro.280.1599217817574;
+        Fri, 04 Sep 2020 04:10:17 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id m3sm10622743wmb.26.2020.09.04.04.10.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:10:16 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v6 06/18] crypto: sun8i-ss: better debug printing
+Date:   Fri,  4 Sep 2020 11:09:51 +0000
+Message-Id: <1599217803-29755-7-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Srinivas For Review!!!
+This patch reworks the way debug info are printed.
+Instead of printing raw numbers, let's add a bit of context.
 
-On 9/4/2020 4:11 PM, Srinivas Kandagatla wrote:
->
->
-> On 31/08/2020 07:39, Srinivasa Rao Mandadapu wrote:
->> From: V Sujith Kumar Reddy <vsujithk@codeaurora.org>
->>
->> Upadate lpass cpu and platform driver to support audio over dp.
->> Also add lpass-hdmi.c and lpass-hdmi.h.
->>
->> Signed-off-by: Srinivasa Rao <srivasam@codeaurora.org>
->> Signed-off-by: V Sujith Kumar Reddy <vsujithk@codeaurora.org>
->> ---
->>   sound/soc/qcom/Kconfig           |   5 +
->>   sound/soc/qcom/Makefile          |   2 +
->>   sound/soc/qcom/lpass-apq8016.c   |   1 +
->>   sound/soc/qcom/lpass-cpu.c       |  64 ++--
->>   sound/soc/qcom/lpass-hdmi.c      | 684 
->> +++++++++++++++++++++++++++++++++++++++
->>   sound/soc/qcom/lpass-hdmi.h      | 129 ++++++++
->>   sound/soc/qcom/lpass-ipq806x.c   |   1 +
->>   sound/soc/qcom/lpass-lpaif-reg.h |  48 ++-
->>   sound/soc/qcom/lpass-platform.c  | 287 ++++++++++++----
->>   sound/soc/qcom/lpass.h           |  88 ++++-
->>   10 files changed, 1225 insertions(+), 84 deletions(-)
->>   create mode 100644 sound/soc/qcom/lpass-hdmi.c
->>   create mode 100644 sound/soc/qcom/lpass-hdmi.h
->>
->> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
->> index a607ace..509584c 100644
->> --- a/sound/soc/qcom/Kconfig
->> +++ b/sound/soc/qcom/Kconfig
->> @@ -12,6 +12,10 @@ config SND_SOC_LPASS_CPU
->>       tristate
->>       select REGMAP_MMIO
->>   +config SND_SOC_LPASS_HDMI
->> +    tristate
->> +    select REGMAP_MMIO
->> +
->>   config SND_SOC_LPASS_PLATFORM
->>       tristate
->>       select REGMAP_MMIO
->> @@ -30,6 +34,7 @@ config SND_SOC_LPASS_SC7180
->>       tristate
->>       select SND_SOC_LPASS_CPU
->>       select SND_SOC_LPASS_PLATFORM
->> +    select SND_SOC_LPASS_HDMI
->>     config SND_SOC_STORM
->>       tristate "ASoC I2S support for Storm boards"
->> diff --git a/sound/soc/qcom/Makefile b/sound/soc/qcom/Makefile
->> index 7972c94..0bd90d7 100644
->> --- a/sound/soc/qcom/Makefile
->> +++ b/sound/soc/qcom/Makefile
->> @@ -1,12 +1,14 @@
->>   # SPDX-License-Identifier: GPL-2.0
->>   # Platform
->>   snd-soc-lpass-cpu-objs := lpass-cpu.o
->> +snd-soc-lpass-hdmi-objs := lpass-hdmi.o
->>   snd-soc-lpass-platform-objs := lpass-platform.o
->>   snd-soc-lpass-ipq806x-objs := lpass-ipq806x.o
->>   snd-soc-lpass-apq8016-objs := lpass-apq8016.o
->>   snd-soc-lpass-sc7180-objs := lpass-sc7180.o
->>     obj-$(CONFIG_SND_SOC_LPASS_CPU) += snd-soc-lpass-cpu.o
->> +obj-$(CONFIG_SND_SOC_LPASS_HDMI) += snd-soc-lpass-hdmi.o
->>   obj-$(CONFIG_SND_SOC_LPASS_PLATFORM) += snd-soc-lpass-platform.o
->>   obj-$(CONFIG_SND_SOC_LPASS_IPQ806X) += snd-soc-lpass-ipq806x.o
->>   obj-$(CONFIG_SND_SOC_LPASS_APQ8016) += snd-soc-lpass-apq8016.o
->> diff --git a/sound/soc/qcom/lpass-apq8016.c 
->> b/sound/soc/qcom/lpass-apq8016.c
->> index 5c8ae22..a1bc7e2 100644
->> --- a/sound/soc/qcom/lpass-apq8016.c
->> +++ b/sound/soc/qcom/lpass-apq8016.c
->> @@ -289,6 +289,7 @@ static struct lpass_variant apq8016_data = {
->>       .exit            = apq8016_lpass_exit,
->>       .alloc_dma_channel    = apq8016_lpass_alloc_dma_channel,
->>       .free_dma_channel    = apq8016_lpass_free_dma_channel,
->> +    .id            = I2S_INTERFACE,
->
-> Before going into detail review, I see real issue in the overall 
-> approach here to add new interface to exiting lpass!!
->
-> Intention of struct lpass_variant is to address differences between 
-> SoCs or different lpass versions. But you should not duplicate this 
-> and use it for addressing differences between each lpass interfaces!
-> All the dai related register offsets should still go in to this 
-> structure and driver should be able to know which dai its talking to 
-> based on snd_soc_dai_driver id and select correct register offset.
->
-Do You suggest to use separate structure like struct 
-lpass_hdmi_interface in lpass_data?
-> Also on the other note, can you please split the patch if possible so 
-> that it will be easy for review. Specially I would like to see header 
-> file changes specific to adding new interface to be separate then 
-> followed by the actual interface implementation  and then the user.
-Okay, will split the patch.
->
-> I also see some unrelated changes like changing buffer sizes, which 
-> should go into different patch!
-Okay we will separate the patch.
->
-> --srini
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+index 5cf00d03be1f..739874596c72 100644
+--- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
++++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
+@@ -424,19 +424,19 @@ static int sun8i_ss_dbgfs_read(struct seq_file *seq, void *v)
+ 			continue;
+ 		switch (ss_algs[i].type) {
+ 		case CRYPTO_ALG_TYPE_SKCIPHER:
+-			seq_printf(seq, "%s %s %lu %lu\n",
++			seq_printf(seq, "%s %s reqs=%lu fallback=%lu\n",
+ 				   ss_algs[i].alg.skcipher.base.cra_driver_name,
+ 				   ss_algs[i].alg.skcipher.base.cra_name,
+ 				   ss_algs[i].stat_req, ss_algs[i].stat_fb);
+ 			break;
+ 		case CRYPTO_ALG_TYPE_RNG:
+-			seq_printf(seq, "%s %s %lu %lu\n",
++			seq_printf(seq, "%s %s reqs=%lu tsize=%lu\n",
+ 				   ss_algs[i].alg.rng.base.cra_driver_name,
+ 				   ss_algs[i].alg.rng.base.cra_name,
+ 				   ss_algs[i].stat_req, ss_algs[i].stat_bytes);
+ 			break;
+ 		case CRYPTO_ALG_TYPE_AHASH:
+-			seq_printf(seq, "%s %s %lu %lu\n",
++			seq_printf(seq, "%s %s reqs=%lu fallback=%lu\n",
+ 				   ss_algs[i].alg.hash.halg.base.cra_driver_name,
+ 				   ss_algs[i].alg.hash.halg.base.cra_name,
+ 				   ss_algs[i].stat_req, ss_algs[i].stat_fb);
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.26.2
 
