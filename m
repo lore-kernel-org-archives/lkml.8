@@ -2,78 +2,113 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0C6C54F45
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2437DC433E2
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9EB521D42
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AB0252CF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgIDRkw (ORCPT
+        id S1727807AbgIDR0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:40:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38416 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbgIDRkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:40:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id AA18CB6C2;
-        Fri,  4 Sep 2020 17:40:22 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 10:24:32 -0700
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Question on task_blocks_on_rt_mutex()
-Message-ID: <20200904172432.wgxn6x5tpnt4lcln@linux-p48b>
-References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
- <20200831232130.GA28456@paulmck-ThinkPad-P72>
- <20200901174938.GA8158@paulmck-ThinkPad-P72>
- <20200901235821.GA8516@paulmck-ThinkPad-P72>
- <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
- <20200902155410.GH29330@paulmck-ThinkPad-P72>
- <20200903200639.GA8956@paulmck-ThinkPad-P72>
+        Fri, 4 Sep 2020 13:26:20 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57984 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgIDR0N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 13:26:13 -0400
+Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
+ id ca0f1db468709f69; Fri, 4 Sep 2020 19:26:10 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>
+Subject: [PATCH 6/6] ACPI: OSL: Make ACPICA use logical addresses of GPE blocks
+Date:   Fri, 04 Sep 2020 19:25:29 +0200
+Message-ID: <8097951.ATsSJIO6Si@kreacher>
+In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
+References: <1748021.N9i9sLPJ40@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200903200639.GA8956@paulmck-ThinkPad-P72>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 03 Sep 2020, Paul E. McKenney wrote:
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
->commit d93a64389f4d544ded241d0ba30b2586497f5dc0
->Author: Paul E. McKenney <paulmck@kernel.org>
->Date:   Tue Sep 1 16:58:41 2020 -0700
->
->    torture: Periodically pause in stutter_wait()
->
->    Running locktorture scenario LOCK05 results in hangs:
->
->    tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
->
->    The lock_torture_writer() kthreads set themselves to MAX_NICE while
->    running SCHED_OTHER.  Other locktorture kthreads run at default niceness,
->    also SCHED_OTHER.  This results in these other locktorture kthreads
->    indefinitely preempting the lock_torture_writer() kthreads.  Note that
->    the cond_resched() in the stutter_wait() function's loop is ineffective
->    because this scenario is built with CONFIG_PREEMPT=y.
->
->    It is not clear that such indefinite preemption is supposed to happen, but
->    in the meantime this commit prevents kthreads running in stutter_wait()
->    from being completely CPU-bound, thus allowing the other threads to get
->    some CPU in a timely fashion.  This commit also uses hrtimers to provide
->    very short sleeps to avoid degrading the sudden-on testing that stutter
->    is supposed to provide.
->
->    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Define ACPI_GPE_USE_LOGICAL_ADDRESSES in aclinux.h and modify
+acpi_os_initialize() to store the logical addresses of the FADT GPE
+blocks 0 and 1 in acpi_gbl_xgpe0_block_logical_address and
+acpi_gbl_xgpe1_block_logical_address, respectively, so as to allow
+ACPICA to use them for accessing GPE registers in system memory,
+instead of using their physical addresses and looking up the
+corresponding logical addresses on every access attempt, which is
+inefficient.
 
-Reviwed-by: Davidlohr Bueso <dbueso@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/osl.c              | 12 ++++++++++--
+ include/acpi/platform/aclinux.h |  4 ++++
+ 2 files changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 3a50d8fa310b..0002973fbcde 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -1744,8 +1744,12 @@ acpi_status __init acpi_os_initialize(void)
+ {
+ 	acpi_os_map_generic_address(&acpi_gbl_FADT.xpm1a_event_block);
+ 	acpi_os_map_generic_address(&acpi_gbl_FADT.xpm1b_event_block);
+-	acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe0_block);
+-	acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe1_block);
++
++	acpi_gbl_xgpe0_block_logical_address =
++		acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe0_block);
++	acpi_gbl_xgpe1_block_logical_address =
++		acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe1_block);
++
+ 	if (acpi_gbl_FADT.flags & ACPI_FADT_RESET_REGISTER) {
+ 		/*
+ 		 * Use acpi_os_map_generic_address to pre-map the reset
+@@ -1783,8 +1787,12 @@ acpi_status acpi_os_terminate(void)
+ 
+ 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xgpe1_block);
+ 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xgpe0_block);
++	acpi_gbl_xgpe0_block_logical_address = NULL;
++	acpi_gbl_xgpe1_block_logical_address = NULL;
++
+ 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xpm1b_event_block);
+ 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xpm1a_event_block);
++
+ 	if (acpi_gbl_FADT.flags & ACPI_FADT_RESET_REGISTER)
+ 		acpi_os_unmap_generic_address(&acpi_gbl_FADT.reset_register);
+ 
+diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
+index 987e2af7c335..4151c76141fa 100644
+--- a/include/acpi/platform/aclinux.h
++++ b/include/acpi/platform/aclinux.h
+@@ -118,6 +118,10 @@
+ 
+ #define USE_NATIVE_ALLOCATE_ZEROED
+ 
++/* Use logical addresses for accessing GPE registers in system memory */
++
++#define ACPI_GPE_USE_LOGICAL_ADDRESSES
++
+ /*
+  * Overrides for in-kernel ACPICA
+  */
+-- 
+2.26.2
+
+
+
+
