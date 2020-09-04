@@ -8,61 +8,60 @@ X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB50C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41728C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C79820578
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011B120578
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mbjN+uEu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="unJgQppA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgIDDuh (ORCPT
+        id S1729811AbgIDDvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 23:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46598 "EHLO
+        Thu, 3 Sep 2020 23:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729550AbgIDDug (ORCPT
+        with ESMTP id S1729582AbgIDDu7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 23:50:36 -0400
+        Thu, 3 Sep 2020 23:50:59 -0400
 Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF6B0C061244;
-        Thu,  3 Sep 2020 20:50:33 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id o16so2560735pjr.2;
-        Thu, 03 Sep 2020 20:50:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 004C9C061244;
+        Thu,  3 Sep 2020 20:50:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id n3so4611142pjq.1;
+        Thu, 03 Sep 2020 20:50:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oGNQEfbxD8L5+SKSkkpDVif8jO0EN+U/H3irjTsQ9AQ=;
-        b=mbjN+uEu++65CWBVV2hmlNl+LzuAG+m+6L+gb9C+kFoMGM4Mw6Wy5bcNxEokxIvjwD
-         f/CQDACSSR3mXrh2guPvfjg0wDifTcQ7DJegok0SYGEQ//wjeBpJWWg/qqVLK2sW20ET
-         t8F9DgpViSDWBdpi6gc1c8dQ3w4VA+IQPkCT5n2B/EELZj+Tr4K2tgE7OCyUpGKA98LL
-         THH6UXD0G0uetveQRdASqZcU8dTFWGJK05B9F0Ki8mUAGBfNyy7ZoIbrSN/pAiOkkuEh
-         F7WCrX1pb1y4H6ZSns47dL0tUlHqlAgZu3gWxK0N4mi131qJjIbPVA9iiTyLRgfIOmHy
-         QNTw==
+        bh=4urzEhGn5hqssobDIK8yWQdnXlOAEOS8EvsZsVpYUxA=;
+        b=unJgQppA06zOr+i/5lbVh8/37wSbu9UyAGsYiVHtrOVMiaivuyDFggzcwBjwWE9486
+         C36prs5NCsLNwPTzYU+HswqW9oM9WRdEC1hBnOY6dJRMwEFNDdFJftTOSAQuj/qv0XFQ
+         liObP3Qo30j5gZTNS73wLPXTS47i7s1b3F8P6BxVvltDZHOYarHQaowYKZK5yBx7lvM/
+         9OMquEkKEQxvyjX6KwHr9nhQCBRaSVO7VzMPpmH0R6OIJq0bV42lA/M1WSgm8aJNL49h
+         0iriiCn9BVoffTa28iE/0BHDCmEbEGzS4HMkRyLy5mxf8kqzVqiLHCbwoIOu/SHSEGAY
+         uA3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=oGNQEfbxD8L5+SKSkkpDVif8jO0EN+U/H3irjTsQ9AQ=;
-        b=MwK86mSB9EBmSe/fFn92jnSW1p/7dTTIaCqajP2SKGvjG3rSpv818wSTzHxr8lilqT
-         BbOAen5k7eWiluVE0B4KbZx8TDtyS4D6OB8TCH1y/W5Tv7mTDJAFVzIVtn5sZAWHUaUp
-         fSi/OR8XuzP/s5NwfLd6+eY1bI1U0yOn2KL1FjAqW7uW3c5QxZWCPefv1MqzJGE2KgKF
-         4hTtao8PNlZENTrqu6cxvfly5z8VHJl3HPhaUW+4MYh1KP1lR2C4ESv+gNYyZKOhfpKz
-         96iPXI7p62tq6EsWjUMtKrCaSk17UIJJWUOEXa5raLHd2lbAdH4tluiNN32P6Xfngqqx
-         Vw7w==
-X-Gm-Message-State: AOAM530NbZnkZv8ab1Q/21rSZOM5uW1ZMBeHocBfC5ZZ5GAgfLvzzHS0
-        9BLpfhSsyuDS2bc/Tu9+vYs=
-X-Google-Smtp-Source: ABdhPJwRWIRQ4ZdJNLBEGGSskavPO2i9NUEJZrYx3XIkmS429bGh55xkL4u3gCEe5YKhQLGC0HGqzA==
-X-Received: by 2002:a17:90a:5304:: with SMTP id x4mr5949896pjh.16.1599191433468;
-        Thu, 03 Sep 2020 20:50:33 -0700 (PDT)
+        bh=4urzEhGn5hqssobDIK8yWQdnXlOAEOS8EvsZsVpYUxA=;
+        b=dqrPet14MOSDZZ6TX8xY8Ioza2hWr+pxsBWZv+zyjkULSddvY9F5Q+teOmJNU7jZsE
+         EsVWOARpAL9asNTT70Xbgxufcd9kjuofpfFlnaNTnYvj2+HyYsoRKzczdrQW1/PkiWKv
+         g/kNaqD9PiZATnq3dqzMwchaSG41JE3GR/Ai+BzuoDnNWn8bu90DC5KOw93nt9T/qobk
+         22WvKani67W5Gu4FSAo2BT//MroZuPWJd5X9wTcHdQ8gidAvCqtmq4DJwED7O8iYuqcr
+         1wztTqfPCQNLqX+khz75p0ueDj/i05RbnlQbxjM7CoL8KGpgIVwhWV3YwE0Xnx0xtqev
+         111w==
+X-Gm-Message-State: AOAM533JwPzZiAiQ4esd16Ib2MF9DBMqHutuQKgkA0Dc5OxerHLjv/u0
+        n7b/2bVKo6RfiJFU+fvRdgU=
+X-Google-Smtp-Source: ABdhPJzSRvqOf63gxU/n6n9ZHFnZOmVFxEHhne1/T97JN+EH0qLWP6l41omxY+8DCxWGjFIHXsJUHg==
+X-Received: by 2002:a17:90b:f01:: with SMTP id br1mr6465421pjb.2.1599191458528;
+        Thu, 03 Sep 2020 20:50:58 -0700 (PDT)
 Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id z1sm3771483pjn.34.2020.09.03.20.50.31
+        by smtp.gmail.com with ESMTPSA id u65sm4818759pfb.102.2020.09.03.20.50.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Sep 2020 20:50:32 -0700 (PDT)
-Subject: Re: [PATCH v2 06/11] usb: gadget: bdc: add identifier name for
- function declaraion
+        Thu, 03 Sep 2020 20:50:57 -0700 (PDT)
+Subject: Re: [PATCH v2 07/11] usb: gadget: bdc: avoid precedence issues
 To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
         Felipe Balbi <balbi@kernel.org>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -77,14 +76,14 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
 References: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
- <1597923046-12535-6-git-send-email-chunfeng.yun@mediatek.com>
+ <1597923046-12535-7-git-send-email-chunfeng.yun@mediatek.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <0c2122aa-9b77-559c-06e6-4caed58b2053@gmail.com>
-Date:   Thu, 3 Sep 2020 20:50:30 -0700
+Message-ID: <8bdd213d-e16f-2e91-439e-cc5d26fe3770@gmail.com>
+Date:   Thu, 3 Sep 2020 20:50:54 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-In-Reply-To: <1597923046-12535-6-git-send-email-chunfeng.yun@mediatek.com>
+In-Reply-To: <1597923046-12535-7-git-send-email-chunfeng.yun@mediatek.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -96,9 +95,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 8/20/2020 4:30 AM, Chunfeng Yun wrote:
-> This is used to avoid the warning of function arguments, e.g.
->    WARNING:FUNCTION_ARGUMENTS: function definition argument 'u32'
->    should also have an identifier name
+> Add () around macro argument to avoid precedence issues
 > 
 > Cc: Florian Fainelli <f.fainelli@gmail.com>
 > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
