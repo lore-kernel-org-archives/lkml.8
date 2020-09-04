@@ -2,226 +2,549 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89E3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0317BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7794C206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD206206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:34:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mSdxz4fg"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PhRe5cb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730182AbgIDLdp (ORCPT
+        id S1730125AbgIDLeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32866 "EHLO
+        Fri, 4 Sep 2020 07:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730105AbgIDLcQ (ORCPT
+        with ESMTP id S1730113AbgIDLX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:32:16 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57AE8C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:32:15 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id w3so7521772ljo.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:32:15 -0700 (PDT)
+        Fri, 4 Sep 2020 07:23:59 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 076A1C061235
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:10:28 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id t10so6374409wrv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:10:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3zA99aEMQ+GSN3rlEJk+n2U8t/Kxnc6IxQCFC33HIVA=;
-        b=mSdxz4fgtsgSS2l9njzIYvSmIlX80hvCnTvP/OgE02oJ4nDD6UKwizm4D7pYEV9/oB
-         tEbt7dHQNZO90wBDaS9dLTOH3TjgVJK62Qdxp3nj989prYsaxM5XJE20K/8QK3/7SqZW
-         Rs4zfFheOchEGYvixvNV8Dl6RNgZp5wwVcRUbWZDg+FvS8e7MMS5G3GTA1pvFe4Sn9IK
-         Iw+PG4lHpcmVmI5ZudeQeOLTrfqnwRivA7UeFYXQF7BLJ8gw/QPEIugIuJnobfN3dhDg
-         veR63F4DQdtkKOBLjGfzzJqrJW4/JaXH9pA+ARPCeGL0/34Rp9ZXyk+2jLpYybARdMQ9
-         q+Fw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Q+AxBfWsHjjw0akccvdmr8yLPgKwVXDq19oSvXn82uY=;
+        b=PhRe5cb0zFb1GtA1YgPYGNN1C5sB3djMbLN6qjKSt4MctjfytjHw6mVYy2FbyKrabv
+         +ShkZoRbE5sY2TvJvXjFCiFS9KTLQmwer7ixphYHa6y3QMblCWOljEZCW2dHdkSIfqm+
+         b/Ju2/L42SoFRJBHNI2FIU/8cm5A6xTRBAv7irkbiOxPZdTDwVc34ok7jP/v7TctbLmB
+         o64ANoiHRiOJSc/bi4gxSzOcCbLu2xKY+bx0lBHlZZY1x4OOsHHEbGAO3tXPSKVv1yXP
+         7m15hjN0Z1jKgMfurU8S0eIv45JQUVniHT/Bb9r4xVGkK1lJJI5IeBHAJjltVWkcqlt7
+         jGEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3zA99aEMQ+GSN3rlEJk+n2U8t/Kxnc6IxQCFC33HIVA=;
-        b=kc73QxtBxqnQCKkQUBjwv0A4DsdqwEy2im9kmn6I5lLbxidUJZBU2QbjwxbabL+G/Y
-         joXXwvWreh2E8Pwrxn/IUBXQAWZZo2h7MuGCDoK2GypTK5xIxCv4fC4Q44+yx40IKQGV
-         08utIL5X/UMv216biheM45ogzY1HNbmzu2wpJ+VLPuRufPFCds0tFxuM/bk00VcAkN0F
-         O9TVQS9tuhe21wbtUDTzJT5e8avjJukxC5DXhVPlLKM3ahab0e91UiChv6F8jVKAwCe8
-         N7LKKLaJ0WHucAeoZleu5mVVDoaLxiFYj1JKvfsU0yhvlgTpVfIa+0qPjFh2hViHQ7hf
-         SKBA==
-X-Gm-Message-State: AOAM5300Y8cV0hDhgtdo4rk3Rr2jyr4UJ7Ni6TYdtSOGFxLp0FdbD5kv
-        gjmsPabPr2oZ+nZT65UrRJHJJoIuVOZQ7n8RknsNlIxzKcKB6Q==
-X-Google-Smtp-Source: ABdhPJw6mw/bMokIo9Rs/jiLGSH2soJ9lHD4kwKbbHitnqslUJIg+RrmP0RYM6dir4mKgHThQjhIaXEzNK+sM2Hafq4=
-X-Received: by 2002:a2e:9ad9:: with SMTP id p25mr3319272ljj.256.1599219133711;
- Fri, 04 Sep 2020 04:32:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <1599134712-30923-1-git-send-email-sumit.garg@linaro.org>
- <1599134712-30923-2-git-send-email-sumit.garg@linaro.org> <05a195374cc81008e95e258221fe7d2b@kernel.org>
- <CAFA6WYNYGGsFwOdh35o2zHZb8k7o8YQ3CPDi_A=5c+VBLY9w_w@mail.gmail.com> <6125bdeb9ebd0cb51aa85fe36dee841c@kernel.org>
-In-Reply-To: <6125bdeb9ebd0cb51aa85fe36dee841c@kernel.org>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Fri, 4 Sep 2020 17:02:02 +0530
-Message-ID: <CAFA6WYNe_x7oCvN6uysXJ0sFBDzLk49-p5uxUydzdUv5zimwsQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] arm64: smp: Introduce a new IPI as IPI_CALL_NMI_FUNC
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        julien.thierry.kdev@gmail.com,
-        Douglas Anderson <dianders@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Q+AxBfWsHjjw0akccvdmr8yLPgKwVXDq19oSvXn82uY=;
+        b=oXnK4gN2jxB8o2v5btYFC8EVpsDB2FTWQGJg+l63F+l8Ac3Q4x8eIL7ZsUp5nkk4jy
+         aipoxoJnD/W7OK31eCje+sZrg3XHUvII0fzzB2lHyXEUDGZD5LAqaE7iYjDgk0N9o63F
+         DQE+F4iWEPopeDSspWHJ7pAFm/srFUE/D22nMhM4UQrwBUtHmVnvpj99O8H8vlKImDgR
+         4tpIma00+NQgoRbyqLIWOnXIwvF2BCZVRsl+5EzaP/Gf+ipfzpiZgdpdGOG7yFCJwVMV
+         xSlCG22vfVMRvub8cAxodgVKC9/ASxxpLt+r4Zo2qE2IMuahKFytFKyudjdXsth+Vg8L
+         QbRA==
+X-Gm-Message-State: AOAM532lFOQFR0gRN+h4hw8Ms26410J5KVwNHKjH2FA0jcoCxBaGahqE
+        4MNuxuYdqOisSGyfO42VYqhW5g==
+X-Google-Smtp-Source: ABdhPJyid5ZkgXONNfUyBDnsKseeXBdaArgJqQxi8y14zlz0S3dBSqOX9LdvyU1cipB0EQIJWXtcNA==
+X-Received: by 2002:adf:b19c:: with SMTP id q28mr7619227wra.392.1599217826586;
+        Fri, 04 Sep 2020 04:10:26 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id m3sm10622743wmb.26.2020.09.04.04.10.25
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:10:25 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v6 14/18] crypto: sun8i-ce: Add support for the PRNG
+Date:   Fri,  4 Sep 2020 11:09:59 +0000
+Message-Id: <1599217803-29755-15-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 at 13:30, Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-09-04 06:30, Sumit Garg wrote:
-> > On Thu, 3 Sep 2020 at 22:06, Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-09-03 13:05, Sumit Garg wrote:
-> >> > Introduce a new inter processor interrupt as IPI_CALL_NMI_FUNC that
-> >> > can be invoked to run special handlers in NMI context. One such handler
-> >> > example is kgdb_nmicallback() which is invoked in order to round up
-> >> > CPUs
-> >> > to enter kgdb context.
-> >> >
-> >> > As currently pseudo NMIs are supported on specific arm64 platforms
-> >> > which
-> >> > incorporates GICv3 or later version of interrupt controller. In case a
-> >> > particular platform doesn't support pseudo NMIs, IPI_CALL_NMI_FUNC will
-> >> > act as a normal IPI which can still be used to invoke special handlers.
-> >> >
-> >> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> >> > ---
-> >> >  arch/arm64/include/asm/smp.h |  1 +
-> >> >  arch/arm64/kernel/smp.c      | 11 +++++++++++
-> >> >  2 files changed, 12 insertions(+)
-> >> >
-> >> > diff --git a/arch/arm64/include/asm/smp.h
-> >> > b/arch/arm64/include/asm/smp.h
-> >> > index 2e7f529..e85f5d5 100644
-> >> > --- a/arch/arm64/include/asm/smp.h
-> >> > +++ b/arch/arm64/include/asm/smp.h
-> >> > @@ -89,6 +89,7 @@ extern void secondary_entry(void);
-> >> >
-> >> >  extern void arch_send_call_function_single_ipi(int cpu);
-> >> >  extern void arch_send_call_function_ipi_mask(const struct cpumask
-> >> > *mask);
-> >> > +extern void arch_send_call_nmi_func_ipi_mask(const struct cpumask
-> >> > *mask);
-> >> >
-> >> >  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
-> >> >  extern void arch_send_wakeup_ipi_mask(const struct cpumask *mask);
-> >> > diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> >> > index b6bde26..1b4c07c 100644
-> >> > --- a/arch/arm64/kernel/smp.c
-> >> > +++ b/arch/arm64/kernel/smp.c
-> >> > @@ -74,6 +74,7 @@ enum ipi_msg_type {
-> >> >       IPI_TIMER,
-> >> >       IPI_IRQ_WORK,
-> >> >       IPI_WAKEUP,
-> >> > +     IPI_CALL_NMI_FUNC,
-> >> >       NR_IPI
-> >> >  };
-> >> >
-> >> > @@ -793,6 +794,7 @@ static const char *ipi_types[NR_IPI]
-> >> > __tracepoint_string = {
-> >> >       S(IPI_TIMER, "Timer broadcast interrupts"),
-> >> >       S(IPI_IRQ_WORK, "IRQ work interrupts"),
-> >> >       S(IPI_WAKEUP, "CPU wake-up interrupts"),
-> >> > +     S(IPI_CALL_NMI_FUNC, "NMI function call interrupts"),
-> >> >  };
-> >> >
-> >> >  static void smp_cross_call(const struct cpumask *target, unsigned int
-> >> > ipinr);
-> >> > @@ -840,6 +842,11 @@ void arch_irq_work_raise(void)
-> >> >  }
-> >> >  #endif
-> >> >
-> >> > +void arch_send_call_nmi_func_ipi_mask(const struct cpumask *mask)
-> >> > +{
-> >> > +     smp_cross_call(mask, IPI_CALL_NMI_FUNC);
-> >> > +}
-> >> > +
-> >> >  static void local_cpu_stop(void)
-> >> >  {
-> >> >       set_cpu_online(smp_processor_id(), false);
-> >> > @@ -932,6 +939,10 @@ static void do_handle_IPI(int ipinr)
-> >> >               break;
-> >> >  #endif
-> >> >
-> >> > +     case IPI_CALL_NMI_FUNC:
-> >> > +             /* nop, IPI handlers for special features can be added here. */
-> >> > +             break;
-> >> > +
-> >> >       default:
-> >> >               pr_crit("CPU%u: Unknown IPI message 0x%x\n", cpu, ipinr);
-> >> >               break;
-> >>
-> >> I'm really not keen on adding more IPIs to the SMP code. One of the
-> >> main reasons for using these SGIs as normal IRQs was to make them
-> >> "requestable" from non-arch code as if they were standard percpu
-> >> interrupts.
-> >>
-> >> What prevents you from moving that all the way to the kgdb code?
-> >>
-> >
-> > Since we only have one SGI left (SGI7) which this patch reserves for
-> > NMI purposes, I am not sure what value add do you see to make it
-> > requestable from non-arch code.
->
-> We have one *guaranteed* SGI left. Potentially another 8 which we
-> could dynamically discover (reading the priority registers should
-> be enough to weed out the secure SGIs). And I'd like to keep that
-> last interrupt "just in case" we'd need it to workaround something.
->
-> > Also, allocating SGI7 entirely to kgdb would not allow us to leverage
-> > it for NMI backtrace support via magic sysrq. But with current
-> > implementation we should be able to achieve that.
->
-> I'd argue that there is no need for this interrupt to be a "well known
-> number". Maybe putting this code in the kgdb code is one step too far,
-> but keeping out of the arm64 SMP code is IMO the right thing to do.
+This patch had support for the PRNG present in the CE.
+The output was tested with rngtest without any failure.
 
-IIUC, you would prefer to only allocate SGI7 (only one left) if there
-is a corresponding user. And I agree that kgdb isn't commonly active
-for most users. But I think magic sysrq is enabled for most users and
-supporting NMI backtrace would be quite useful while debugging systems
-in the field as well.
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ drivers/crypto/allwinner/Kconfig              |   8 +
+ drivers/crypto/allwinner/sun8i-ce/Makefile    |   1 +
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c |  58 ++++++-
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-prng.c | 164 ++++++++++++++++++
+ drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h  |  31 ++++
+ 5 files changed, 261 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/crypto/allwinner/sun8i-ce/sun8i-ce-prng.c
 
-So if you like, I can create a separate file like
-"arch/arm64/kernel/ipi_nmi.c" for this implementation.
+diff --git a/drivers/crypto/allwinner/Kconfig b/drivers/crypto/allwinner/Kconfig
+index fa34df7fbf78..bf4d2a6328dc 100644
+--- a/drivers/crypto/allwinner/Kconfig
++++ b/drivers/crypto/allwinner/Kconfig
+@@ -88,6 +88,14 @@ config CRYPTO_DEV_SUN8I_CE_HASH
+ 	help
+ 	  Say y to enable support for hash algorithms.
+ 
++config CRYPTO_DEV_SUN8I_CE_PRNG
++	bool "Support for Allwinner Crypto Engine PRNG"
++	depends on CRYPTO_DEV_SUN8I_CE
++	select CRYPTO_RNG
++	help
++	  Select this option if you want to provide kernel-side support for
++	  the Pseudo-Random Number Generator found in the Crypto Engine.
++
+ config CRYPTO_DEV_SUN8I_SS
+ 	tristate "Support for Allwinner Security System cryptographic offloader"
+ 	select CRYPTO_SKCIPHER
+diff --git a/drivers/crypto/allwinner/sun8i-ce/Makefile b/drivers/crypto/allwinner/sun8i-ce/Makefile
+index d1b1f0e86c79..c0ea81da2c7d 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/Makefile
++++ b/drivers/crypto/allwinner/sun8i-ce/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_CRYPTO_DEV_SUN8I_CE) += sun8i-ce.o
+ sun8i-ce-y += sun8i-ce-core.o sun8i-ce-cipher.o
+ sun8i-ce-$(CONFIG_CRYPTO_DEV_SUN8I_CE_HASH) += sun8i-ce-hash.o
++sun8i-ce-$(CONFIG_CRYPTO_DEV_SUN8I_CE_PRNG) += sun8i-ce-prng.o
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+index 3ef5b1079be3..9b7f8fdc4992 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+@@ -22,6 +22,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/reset.h>
++#include <crypto/internal/rng.h>
+ #include <crypto/internal/skcipher.h>
+ 
+ #include "sun8i-ce.h"
+@@ -45,6 +46,7 @@ static const struct ce_variant ce_h3_variant = {
+ 		{ "mod", 50000000, 0 },
+ 		},
+ 	.esr = ESR_H3,
++	.prng = CE_ALG_PRNG,
+ };
+ 
+ static const struct ce_variant ce_h5_variant = {
+@@ -60,6 +62,7 @@ static const struct ce_variant ce_h5_variant = {
+ 		{ "mod", 300000000, 0 },
+ 		},
+ 	.esr = ESR_H5,
++	.prng = CE_ALG_PRNG,
+ };
+ 
+ static const struct ce_variant ce_h6_variant = {
+@@ -72,12 +75,14 @@ static const struct ce_variant ce_h6_variant = {
+ 	},
+ 	.cipher_t_dlen_in_bytes = true,
+ 	.hash_t_dlen_in_bits = true,
++	.prng_t_dlen_in_bytes = true,
+ 	.ce_clks = {
+ 		{ "bus", 0, 200000000 },
+ 		{ "mod", 300000000, 0 },
+ 		{ "ram", 0, 400000000 },
+ 		},
+ 	.esr = ESR_H6,
++	.prng = CE_ALG_PRNG_V2,
+ };
+ 
+ static const struct ce_variant ce_a64_variant = {
+@@ -93,6 +98,7 @@ static const struct ce_variant ce_a64_variant = {
+ 		{ "mod", 300000000, 0 },
+ 		},
+ 	.esr = ESR_A64,
++	.prng = CE_ALG_PRNG,
+ };
+ 
+ static const struct ce_variant ce_r40_variant = {
+@@ -108,15 +114,17 @@ static const struct ce_variant ce_r40_variant = {
+ 		{ "mod", 300000000, 0 },
+ 		},
+ 	.esr = ESR_R40,
++	.prng = CE_ALG_PRNG,
+ };
+ 
+ /*
+  * sun8i_ce_get_engine_number() get the next channel slot
+  * This is a simple round-robin way of getting the next channel
++ * The flow 3 is reserve for xRNG operations
+  */
+ int sun8i_ce_get_engine_number(struct sun8i_ce_dev *ce)
+ {
+-	return atomic_inc_return(&ce->flow) % MAXFLOW;
++	return atomic_inc_return(&ce->flow) % (MAXFLOW - 1);
+ }
+ 
+ int sun8i_ce_run_task(struct sun8i_ce_dev *ce, int flow, const char *name)
+@@ -527,6 +535,25 @@ static struct sun8i_ce_alg_template ce_algs[] = {
+ 	}
+ },
+ #endif
++#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_PRNG
++{
++	.type = CRYPTO_ALG_TYPE_RNG,
++	.alg.rng = {
++		.base = {
++			.cra_name		= "stdrng",
++			.cra_driver_name	= "sun8i-ce-prng",
++			.cra_priority		= 300,
++			.cra_ctxsize		= sizeof(struct sun8i_ce_rng_tfm_ctx),
++			.cra_module		= THIS_MODULE,
++			.cra_init		= sun8i_ce_prng_init,
++			.cra_exit		= sun8i_ce_prng_exit,
++		},
++		.generate               = sun8i_ce_prng_generate,
++		.seed                   = sun8i_ce_prng_seed,
++		.seedsize               = PRNG_SEED_SIZE,
++	}
++},
++#endif
+ };
+ 
+ #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+@@ -554,6 +581,12 @@ static int sun8i_ce_dbgfs_read(struct seq_file *seq, void *v)
+ 				   ce_algs[i].alg.hash.halg.base.cra_name,
+ 				   ce_algs[i].stat_req, ce_algs[i].stat_fb);
+ 			break;
++		case CRYPTO_ALG_TYPE_RNG:
++			seq_printf(seq, "%s %s %lu %lu\n",
++				   ce_algs[i].alg.rng.base.cra_driver_name,
++				   ce_algs[i].alg.rng.base.cra_name,
++				   ce_algs[i].stat_req, ce_algs[i].stat_bytes);
++			break;
+ 		}
+ 	}
+ 	return 0;
+@@ -788,6 +821,23 @@ static int sun8i_ce_register_algs(struct sun8i_ce_dev *ce)
+ 				return err;
+ 			}
+ 			break;
++		case CRYPTO_ALG_TYPE_RNG:
++			if (ce->variant->prng == CE_ID_NOTSUPP) {
++				dev_info(ce->dev,
++					 "DEBUG: Algo of %s not supported\n",
++					 ce_algs[i].alg.rng.base.cra_name);
++				ce_algs[i].ce = NULL;
++				break;
++			}
++			dev_info(ce->dev, "Register %s\n",
++				 ce_algs[i].alg.rng.base.cra_name);
++			err = crypto_register_rng(&ce_algs[i].alg.rng);
++			if (err) {
++				dev_err(ce->dev, "Fail to register %s\n",
++					ce_algs[i].alg.rng.base.cra_name);
++				ce_algs[i].ce = NULL;
++			}
++			break;
+ 		default:
+ 			ce_algs[i].ce = NULL;
+ 			dev_err(ce->dev, "ERROR: tried to register an unknown algo\n");
+@@ -814,6 +864,11 @@ static void sun8i_ce_unregister_algs(struct sun8i_ce_dev *ce)
+ 				 ce_algs[i].alg.hash.halg.base.cra_name);
+ 			crypto_unregister_ahash(&ce_algs[i].alg.hash);
+ 			break;
++		case CRYPTO_ALG_TYPE_RNG:
++			dev_info(ce->dev, "Unregister %d %s\n", i,
++				 ce_algs[i].alg.rng.base.cra_name);
++			crypto_unregister_rng(&ce_algs[i].alg.rng);
++			break;
+ 		}
+ 	}
+ }
+@@ -859,6 +914,7 @@ static int sun8i_ce_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	mutex_init(&ce->mlock);
++	mutex_init(&ce->rnglock);
+ 
+ 	err = sun8i_ce_allocate_chanlist(ce);
+ 	if (err)
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-prng.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-prng.c
+new file mode 100644
+index 000000000000..1b0b86a943de
+--- /dev/null
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-prng.c
+@@ -0,0 +1,164 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * sun8i-ce-prng.c - hardware cryptographic offloader for
++ * Allwinner H3/A64/H5/H2+/H6/R40 SoC
++ *
++ * Copyright (C) 2015-2020 Corentin Labbe <clabbe@baylibre.com>
++ *
++ * This file handle the PRNG
++ *
++ * You could find a link for the datasheet in Documentation/arm/sunxi/README
++ */
++#include "sun8i-ce.h"
++#include <linux/dma-mapping.h>
++#include <linux/pm_runtime.h>
++#include <crypto/internal/rng.h>
++
++int sun8i_ce_prng_init(struct crypto_tfm *tfm)
++{
++	struct sun8i_ce_rng_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
++
++	memset(ctx, 0, sizeof(struct sun8i_ce_rng_tfm_ctx));
++	return 0;
++}
++
++void sun8i_ce_prng_exit(struct crypto_tfm *tfm)
++{
++	struct sun8i_ce_rng_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
++
++	memzero_explicit(ctx->seed, ctx->slen);
++	kfree(ctx->seed);
++	ctx->seed = NULL;
++	ctx->slen = 0;
++}
++
++int sun8i_ce_prng_seed(struct crypto_rng *tfm, const u8 *seed,
++		       unsigned int slen)
++{
++	struct sun8i_ce_rng_tfm_ctx *ctx = crypto_rng_ctx(tfm);
++
++	if (ctx->seed && ctx->slen != slen) {
++		memzero_explicit(ctx->seed, ctx->slen);
++		kfree(ctx->seed);
++		ctx->slen = 0;
++		ctx->seed = NULL;
++	}
++	if (!ctx->seed)
++		ctx->seed = kmalloc(slen, GFP_KERNEL | GFP_DMA);
++	if (!ctx->seed)
++		return -ENOMEM;
++
++	memcpy(ctx->seed, seed, slen);
++	ctx->slen = slen;
++
++	return 0;
++}
++
++int sun8i_ce_prng_generate(struct crypto_rng *tfm, const u8 *src,
++			   unsigned int slen, u8 *dst, unsigned int dlen)
++{
++	struct sun8i_ce_rng_tfm_ctx *ctx = crypto_rng_ctx(tfm);
++	struct rng_alg *alg = crypto_rng_alg(tfm);
++	struct sun8i_ce_alg_template *algt;
++	struct sun8i_ce_dev *ce;
++	dma_addr_t dma_iv, dma_dst;
++	int err = 0;
++	int flow = 3;
++	unsigned int todo;
++	struct sun8i_ce_flow *chan;
++	struct ce_task *cet;
++	u32 common, sym;
++	void *d;
++
++	algt = container_of(alg, struct sun8i_ce_alg_template, alg.rng);
++	ce = algt->ce;
++
++	if (ctx->slen == 0) {
++		dev_err(ce->dev, "not seeded\n");
++		return -EINVAL;
++	}
++
++	/* we want dlen + seedsize rounded up to a multiple of PRNG_DATA_SIZE */
++	todo = dlen + ctx->slen + PRNG_DATA_SIZE * 2;
++	todo -= todo % PRNG_DATA_SIZE;
++
++	d = kzalloc(todo, GFP_KERNEL | GFP_DMA);
++	if (!d) {
++		err = -ENOMEM;
++		goto err_mem;
++	}
++
++	dev_dbg(ce->dev, "%s PRNG slen=%u dlen=%u todo=%u multi=%u\n", __func__,
++		slen, dlen, todo, todo / PRNG_DATA_SIZE);
++
++#ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
++	algt->stat_req++;
++	algt->stat_bytes += todo;
++#endif
++
++	dma_iv = dma_map_single(ce->dev, ctx->seed, ctx->slen, DMA_TO_DEVICE);
++	if (dma_mapping_error(ce->dev, dma_iv)) {
++		dev_err(ce->dev, "Cannot DMA MAP IV\n");
++		goto err_iv;
++	}
++
++	dma_dst = dma_map_single(ce->dev, d, todo, DMA_FROM_DEVICE);
++	if (dma_mapping_error(ce->dev, dma_dst)) {
++		dev_err(ce->dev, "Cannot DMA MAP DST\n");
++		err = -EFAULT;
++		goto err_dst;
++	}
++
++	err = pm_runtime_get_sync(ce->dev);
++	if (err < 0) {
++		pm_runtime_put_noidle(ce->dev);
++		goto err_pm;
++	}
++
++	mutex_lock(&ce->rnglock);
++	chan = &ce->chanlist[flow];
++
++	cet = &chan->tl[0];
++	memset(cet, 0, sizeof(struct ce_task));
++
++	cet->t_id = cpu_to_le32(flow);
++	common = ce->variant->prng | CE_COMM_INT;
++	cet->t_common_ctl = cpu_to_le32(common);
++
++	/* recent CE (H6) need length in bytes, in word otherwise */
++	if (ce->variant->prng_t_dlen_in_bytes)
++		cet->t_dlen = cpu_to_le32(todo);
++	else
++		cet->t_dlen = cpu_to_le32(todo / 4);
++
++	sym = PRNG_LD;
++	cet->t_sym_ctl = cpu_to_le32(sym);
++	cet->t_asym_ctl = 0;
++
++	cet->t_key = cpu_to_le32(dma_iv);
++	cet->t_iv = cpu_to_le32(dma_iv);
++
++	cet->t_dst[0].addr = cpu_to_le32(dma_dst);
++	cet->t_dst[0].len = cpu_to_le32(todo / 4);
++	ce->chanlist[flow].timeout = 2000;
++
++	err = sun8i_ce_run_task(ce, 3, "PRNG");
++	mutex_unlock(&ce->rnglock);
++
++	pm_runtime_put(ce->dev);
++
++err_pm:
++	dma_unmap_single(ce->dev, dma_dst, todo, DMA_FROM_DEVICE);
++err_dst:
++	dma_unmap_single(ce->dev, dma_iv, ctx->slen, DMA_TO_DEVICE);
++
++	if (!err) {
++		memcpy(dst, d, dlen);
++		memcpy(ctx->seed, d + dlen, ctx->slen);
++	}
++	memzero_explicit(d, todo);
++err_iv:
++	kfree(d);
++err_mem:
++	return err;
++}
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+index 910b510d7bb2..48d518539c29 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
+@@ -14,6 +14,7 @@
+ #include <linux/crypto.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/md5.h>
++#include <crypto/rng.h>
+ #include <crypto/sha.h>
+ 
+ /* CE Registers */
+@@ -54,6 +55,8 @@
+ #define CE_ALG_SHA256           19
+ #define CE_ALG_SHA384           20
+ #define CE_ALG_SHA512           21
++#define CE_ALG_PRNG		49
++#define CE_ALG_PRNG_V2		0x1d
+ 
+ /* Used in ce_variant */
+ #define CE_ID_NOTSUPP		0xFF
+@@ -88,6 +91,10 @@
+ #define ESR_H5	3
+ #define ESR_H6	4
+ 
++#define PRNG_DATA_SIZE (160 / 8)
++#define PRNG_SEED_SIZE DIV_ROUND_UP(175, 8)
++#define PRNG_LD BIT(17)
++
+ #define CE_DIE_ID_SHIFT	16
+ #define CE_DIE_ID_MASK	0x07
+ 
+@@ -120,8 +127,11 @@ struct ce_clock {
+  *				bytes or words
+  * @hash_t_dlen_in_bytes:	Does the request size for hash is in
+  *				bits or words
++ * @prng_t_dlen_in_bytes:	Does the request size for PRNG is in
++ *				bytes or words
+  * @ce_clks:	list of clocks needed by this variant
+  * @esr:	The type of error register
++ * @prng:	The CE_ALG_XXX value for the PRNG
+  */
+ struct ce_variant {
+ 	char alg_cipher[CE_ID_CIPHER_MAX];
+@@ -129,8 +139,10 @@ struct ce_variant {
+ 	u32 op_mode[CE_ID_OP_MAX];
+ 	bool cipher_t_dlen_in_bytes;
+ 	bool hash_t_dlen_in_bits;
++	bool prng_t_dlen_in_bytes;
+ 	struct ce_clock ce_clks[CE_MAX_CLOCKS];
+ 	int esr;
++	unsigned char prng;
+ };
+ 
+ struct sginfo {
+@@ -185,6 +197,7 @@ struct sun8i_ce_flow {
+  * @reset:	pointer to reset controller
+  * @dev:	the platform device
+  * @mlock:	Control access to device registers
++ * @rnglock:	Control access to the RNG (dedicated channel 3)
+  * @chanlist:	array of all flow
+  * @flow:	flow to use in next request
+  * @variant:	pointer to variant specific data
+@@ -197,6 +210,7 @@ struct sun8i_ce_dev {
+ 	struct reset_control *reset;
+ 	struct device *dev;
+ 	struct mutex mlock;
++	struct mutex rnglock;
+ 	struct sun8i_ce_flow *chanlist;
+ 	atomic_t flow;
+ 	const struct ce_variant *variant;
+@@ -266,6 +280,16 @@ struct sun8i_ce_hash_reqctx {
+ 	int flow;
+ };
+ 
++/*
++ * struct sun8i_ce_prng_ctx - context for PRNG TFM
++ * @seed:	The seed to use
++ * @slen:	The size of the seed
++ */
++struct sun8i_ce_rng_tfm_ctx {
++	void *seed;
++	unsigned int slen;
++};
++
+ /*
+  * struct sun8i_ce_alg_template - crypto_alg template
+  * @type:		the CRYPTO_ALG_TYPE for this template
+@@ -286,6 +310,7 @@ struct sun8i_ce_alg_template {
+ 	union {
+ 		struct skcipher_alg skcipher;
+ 		struct ahash_alg hash;
++		struct rng_alg rng;
+ 	} alg;
+ #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
+ 	unsigned long stat_req;
+@@ -320,3 +345,9 @@ int sun8i_ce_hash_update(struct ahash_request *areq);
+ int sun8i_ce_hash_finup(struct ahash_request *areq);
+ int sun8i_ce_hash_digest(struct ahash_request *areq);
+ int sun8i_ce_hash_run(struct crypto_engine *engine, void *breq);
++
++int sun8i_ce_prng_generate(struct crypto_rng *tfm, const u8 *src,
++			   unsigned int slen, u8 *dst, unsigned int dlen);
++int sun8i_ce_prng_seed(struct crypto_rng *tfm, const u8 *seed, unsigned int slen);
++void sun8i_ce_prng_exit(struct crypto_tfm *tfm);
++int sun8i_ce_prng_init(struct crypto_tfm *tfm);
+-- 
+2.26.2
 
-> And if NMI backtracing is a thing, then we should probably implement
-> that first.
-
-Have a look at IPI_CPU_BACKTRACE implementation for arm [1]. Similar
-implementation would be required for arm64 but now with IPI turned as
-a pseudo NMI. So I will try to add corresponding support.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/kernel/smp.c#n72
-
->
-> > Moreover, irq ids for normal interrupts are assigned via DT/ACPI, how
-> > do you envision this for SGIs?
->
-> Nothing could be further from the truth. How do you think MSIs work?
-> We'd just bolt an allocator for non-arch IPIs.
->
-
-Okay.
-
--Sumit
-
->          M.
-> --
-> Jazz is not dead. It just smells funny...
