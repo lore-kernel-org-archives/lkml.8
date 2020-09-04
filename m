@@ -2,141 +2,113 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3982CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D518C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A8B8206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34016206EF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:19:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="qH0x9AqW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="iGBdKFsC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LjfOI6ky"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbgIDDSt (ORCPT
+        id S1729683AbgIDDTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 23:18:49 -0400
-Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:54097 "EHLO
-        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729528AbgIDDSp (ORCPT
+        Thu, 3 Sep 2020 23:19:19 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:59147 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729528AbgIDDTR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 23:18:45 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 6FD431284;
-        Thu,  3 Sep 2020 23:18:43 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 03 Sep 2020 23:18:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        subject:to:cc:references:from:message-id:date:mime-version
-        :in-reply-to:content-type:content-transfer-encoding; s=fm3; bh=d
-        aya0oYspjG9Gt00RdJSVZlyB/j1e0iHqyBf8JDOAHI=; b=qH0x9AqWShHLGvJbB
-        7WcnSKZuR70hZW8ewBHikke14/RXA8iKU/mEzz0GIrLcaBzADVkQO5lzqnRi8mYm
-        Xy00p/D0HT0UmACc1lGMyuGbGt2yg1RYNX5Kkf6BV6hYerXKMbCD5ZrB3jup7Q7w
-        iE4VSpaSVXDpndzBYdxK4dR9M2hdc2JXXQX5eqOpuuOMxmyASfk4lPsQRNkQAzY7
-        9A9DckA8bFLWaDa8/SaelMBPxQSwl4FNutnLFMYq23qmVTvSz5OQB43KhwUCD007
-        n87tBPRbzG1E0SSfvTaH1wR2MmELcMJXHvjF1ldAafJePKDJZbCLIknt9vmYSLul
-        +jLFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=daya0oYspjG9Gt00RdJSVZlyB/j1e0iHqyBf8JDOA
-        HI=; b=iGBdKFsC7cY4mTqOmEfFlQKxEdwHyo1tR7qFwoMoacPY7KvfRFKQGb2fo
-        OfLo138V2tSHV9tMGKGYna31Q5n0MnZekdwrIS3DTaSJw/fvRlBUhHAa82FEOT+v
-        7Y44RuqcZU/22xfJFaDHBRfCTlwPvcl7gj7Z4f+F8DeHrwYZ/IzGBU6x5WrWRwpv
-        oVrcWmnQYUJa4OKDErzDyHmeO0plOzB4RgCbLR5mtlDYZ9eGVegyjOsB3AOsa/EZ
-        bZhsGVr3VmI/x0NUAj3sGpzqy52GlXTmL3Y7+KBhQy0vTSrDFw1ToMfX/uJYMneq
-        01erHy6INxtw4C9A++lTMSEzNunyA==
-X-ME-Sender: <xms:ErJRX56UYu_vQFidW29eL1TaTHtWJrt8O7yvn0EpgZ6tslVOizgTSw>
-    <xme:ErJRX25XHcw6Q65G_OWOfyyo84-0xsJ5-pW9tUxJVY7k9nJMS8nGSdIIHMwEey4jd
-    m5Dr09dsGrifu85cA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegvddgieelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepuffvfhfhkffffgggjggtgfesthekredttdefjeenucfhrhhomhepufgrmhhu
-    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecugg
-    ftrfgrthhtvghrnhepgfelkeduveejtdejhfeiledvhfeggeeiieeklefhfeefffffffeg
-    udetteelieejnecukfhppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghruf
-    hiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgr
-    nhgurdhorhhg
-X-ME-Proxy: <xmx:ErJRXwdm0znDTekQkNpFRQKbhtAKv3wpFUv2oOzFO8zqvcmj0TS_nw>
-    <xmx:ErJRXyInBPKHnNQ5vu1Ha2kaImMh0C6LIlQaLxxooKZZv_I3vojWcQ>
-    <xmx:ErJRX9L5iJJURgSbz473jBhbVTvc7YfkTP_ECs06ZMhEX0NV4Eoojw>
-    <xmx:E7JRX3CAaQ_5Az1QgjcryG6sjtQ9nSOqGLhE0CbjaIDwHdDRSHcbucvrBQU>
-Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 546CF328005A;
-        Thu,  3 Sep 2020 23:18:41 -0400 (EDT)
-Subject: Re: [PATCH v2 03/20] ASoC: sun4i-i2s: Adjust LRCLK width
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        Maxime Ripard <maxime@cerno.tech>
-References: <20200903203034.1057334-1-peron.clem@gmail.com>
- <20200903203034.1057334-4-peron.clem@gmail.com>
-From:   Samuel Holland <samuel@sholland.org>
-Message-ID: <e4c5eb23-e932-148c-5da6-90584c95cc81@sholland.org>
-Date:   Thu, 3 Sep 2020 22:18:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 3 Sep 2020 23:19:17 -0400
+X-UUID: 2165b6289a7540eab6a08a50e1a2c698-20200904
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=81j54tuoiKV3uK8sKV8TMOkBCYp/9eQY2ZBo8fSyYog=;
+        b=LjfOI6kypqLNZxiIZyol+4fjhvpGl8Y6+jlS1qBeFfioqww6ht3LMcW6FAoVjoTLy4UfGpeSXRGgXqJHpICjIpCTNKyyP8ZC/mOxC6/PNKQencmPY/RQgdyRTeX6exLWZV7RSMkV2EDPRO/ZbhEgJ0XS8zqSZCW4b7gpcTfOvI0=;
+X-UUID: 2165b6289a7540eab6a08a50e1a2c698-20200904
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1556347710; Fri, 04 Sep 2020 11:19:11 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 4 Sep
+ 2020 11:19:09 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 4 Sep 2020 11:19:08 +0800
+Message-ID: <1599189448.11403.33.camel@mhfsdcap03>
+Subject: Re: [PATCH v2 01/11] usb: gadget: bdc: fix improper SPDX comment
+ style for header file
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Sasi Kumar <sasi.kumar@broadcom.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 4 Sep 2020 11:17:28 +0800
+In-Reply-To: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <20200903203034.1057334-4-peron.clem@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-SNTS-SMTP: 6437F811FE63FA34E3E573D3346DC7F53866220D91CCF2E752ABCF714B765FAD2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clément,
-
-On 9/3/20 3:30 PM, Clément Péron wrote:
-> From: Marcus Cooper <codekipper@gmail.com>
-> 
-> Some codecs such as i2s based HDMI audio and the Pine64 DAC require
-> a different amount of bit clocks per frame than what is calculated
-> by the sample width. Use the values obtained by the tdm slot bindings
-> to adjust the LRCLK width accordingly.
-> 
-> Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> Acked-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  sound/soc/sunxi/sun4i-i2s.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> index acf24f512f2c..1b4482b0f4af 100644
-> --- a/sound/soc/sunxi/sun4i-i2s.c
-> +++ b/sound/soc/sunxi/sun4i-i2s.c
-> @@ -478,6 +478,9 @@ static int sun8i_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
->  		return -EINVAL;
->  	}
->  
-> +	if (i2s->slot_width)
-> +		lrck_period = i2s->slot_width;
-> +
-
-Same as patch 2, this duplicates logic in sun4i_i2s_hw_params, and would need to
-be multiplied by `slots` for PCM (DSP_A/B) mode.
-
-Regards,
-Samuel
-
->  	regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
->  			   SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
->  			   SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
-> 
+SGkgRmxvcmlhbiwgDQoNCk9uIFRodSwgMjAyMC0wOC0yMCBhdCAxOTozMCArMDgwMCwgQ2h1bmZl
+bmcgWXVuIHdyb3RlOg0KPiBGb3IgQyBoZWFkZXIgZmlsZXMgRG9jdW1lbnRhdGlvbi9wcm9jZXNz
+L2xpY2Vuc2UtcnVsZXMucnN0DQo+IG1hbmRhdGVzIEMtbGlrZSBjb21tZW50cyAob3Bwb3NlZCB0
+byBDIHNvdXJjZSBmaWxlcyB3aGVyZQ0KPiBDKysgc3R5bGUgc2hvdWxkIGJlIHVzZWQpLg0KPiAN
+Cj4gQ2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0KPiBTaWduZWQt
+b2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQo+IC0tLQ0K
+PiB2MjogYWRkIENjIEZsb3JpYW4NCj4gLS0tDQo+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2Jk
+Yy9iZGMuaCAgICAgfCAyICstDQo+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfY21k
+LmggfCAyICstDQo+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZGJnLmggfCAyICst
+DQo+ICBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZXAuaCAgfCAyICstDQo+ICA0IGZp
+bGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGMuaCBiL2RyaXZlcnMvdXNiL2dh
+ZGdldC91ZGMvYmRjL2JkYy5oDQo+IGluZGV4IGFjNzVlMjUuLmZjYmE3N2UgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oDQo+ICsrKyBiL2RyaXZlcnMvdXNi
+L2dhZGdldC91ZGMvYmRjL2JkYy5oDQo+IEBAIC0xLDQgKzEsNCBAQA0KPiAtLy8gU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjArDQo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMCsgKi8NCj4gIC8qDQo+ICAgKiBiZGMuaCAtIGhlYWRlciBmb3IgdGhlIEJSQ00gQkRD
+IFVTQjMuMCBkZXZpY2UgY29udHJvbGxlcg0KPiAgICoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+dXNiL2dhZGdldC91ZGMvYmRjL2JkY19jbWQuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRj
+L2JkY19jbWQuaA0KPiBpbmRleCAyOWNjOTg4Li4zNzNlNjc0IDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfY21kLmgNCj4gKysrIGIvZHJpdmVycy91c2IvZ2Fk
+Z2V0L3VkYy9iZGMvYmRjX2NtZC5oDQo+IEBAIC0xLDQgKzEsNCBAQA0KPiAtLy8gU1BEWC1MaWNl
+bnNlLUlkZW50aWZpZXI6IEdQTC0yLjArDQo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjog
+R1BMLTIuMCsgKi8NCj4gIC8qDQo+ICAgKiBiZGNfY21kLmggLSBoZWFkZXIgZm9yIHRoZSBCREMg
+ZGVidWcgZnVuY3Rpb25zDQo+ICAgKg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0
+L3VkYy9iZGMvYmRjX2RiZy5oIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2RiZy5o
+DQo+IGluZGV4IDM3M2Q1YWIuLjg1OWQ1ODggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvdXNiL2dh
+ZGdldC91ZGMvYmRjL2JkY19kYmcuaA0KPiArKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2Jk
+Yy9iZGNfZGJnLmgNCj4gQEAgLTEsNCArMSw0IEBADQo+IC0vLyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMCsNCj4gKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKyAq
+Lw0KPiAgLyoNCj4gICAqIGJkY19kYmcuaCAtIGhlYWRlciBmb3IgdGhlIEJEQyBkZWJ1ZyBmdW5j
+dGlvbnMNCj4gICAqDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9i
+ZGNfZXAuaCBiL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkY19lcC5oDQo+IGluZGV4IGEz
+N2ZmODAzLi41YmJkNzNmIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2Jk
+Yy9iZGNfZXAuaA0KPiArKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZXAuaA0K
+PiBAQCAtMSw0ICsxLDQgQEANCj4gLS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
+Kw0KPiArLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjArICovDQo+ICAvKg0KPiAg
+ICogYmRjX2VwLmggLSBoZWFkZXIgZm9yIHRoZSBCREMgZGVidWcgZnVuY3Rpb25zDQo+ICAgKg0K
+V291bGQgeW91IHBsZWFzZSB0YWtlIGEgbG9vayBhdCB0aGlzIHNlcmllcz8NCkknbGwgZHJvcCB0
+aGUgcGF0Y2hlcyB0aGF0IG5vdCBmaW5lIHdpdGggeW91Lg0KVGhhbmtzDQoNCg0K
 
