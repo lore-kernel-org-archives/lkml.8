@@ -2,176 +2,193 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB58C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDCAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90CB42067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599198648;
-	bh=Ajqcu18lUc5/3zhqgtBOnvQIuy7JVp5O+i+71TtQrrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i/B+jZqo1LzxPg5LLIbVg6vuKy+WerOS9+E0tGUjwn2+EK/f6ZLsloHZuR2NHnaKf
-	 LyxSVAli+DnkPl8XJUKnALMzOV+D9WgImXKU+RLiEBDa+zkBL1+bjbNKzJJBQcKJ6e
-	 IQ36LPZlyt9RyL9yrrN5Ftgrxn/W6eOjPjNMcRMk=
+	by mail.kernel.org (Postfix) with ESMTP id A49DB206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:51:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfchoPp5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbgIDFuq (ORCPT
+        id S1726811AbgIDFvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36684 "EHLO
+        Fri, 4 Sep 2020 01:51:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFuq (ORCPT
+        with ESMTP id S1725812AbgIDFvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:50:46 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84BD0C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:50:45 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id a15so6929457ejf.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:50:45 -0700 (PDT)
+        Fri, 4 Sep 2020 01:51:21 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D08DC061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:51:21 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so4888430wme.5
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:51:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=biVXHXRw4uWtZLcJO28Ygo157d0CnQIl9rGveo0PLXI=;
-        b=YV4ocw3j7HVUjpTqO4V9Fp9SItzHcTUFM8dzwT7wTGzWizKHPD5an/DqDzYX8/5H4t
-         R2GHMaeJnEd/9XIM5YTrHlJ5y+PCmLdrzos6WY8yW2nn58L428STT6ZOrDx7j9J1rJeo
-         O/xtOq810BVwAxpMFhP5kowKbyHf74rw6g+59+Bc1X7oAe3NGYg3Tn5qqBqYS2CVFlei
-         hsJDTwNr4lczcLazJjDNserSwxs0UcgvmBw7knOssNCE/ZH32+VgmSsi4jejqIZei+tR
-         9ZOkjGsuUxUZ0ZOiGvTPmxSMp0O7PwIOAx7FFw9axvrPfnddTq1a3m+R9RDUXvsbbPPx
-         AW9A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VBkALWNFmSZj7rK+SmejfUE4FzmI9+bkW+wvdb/tgIU=;
+        b=bfchoPp5zj2lItpqUucfpnTEhQD1FHHPAGOIkeuUZVWDDo5HxG8ybEi/qEjt2BAbRz
+         gPGLG3VT9Y4mAmhzVVhYijXN7UOUvEbSB58Fvx0Pm4TidSPoINzyIYjEdldmE2y8zMZv
+         QZsUB1GVUy4/D2xHNbaOKupKDg82JDojrtPLY1/bEzlVsQYFPQwf4Ok2+wbWzj+yyfah
+         h8m8EbNu+OK1CqM5QLswpmmBD9Nhue8UnY71/09ccFOYwvpsi8KYfb28cATjtBoaqdgn
+         tWV0Tsqjs1KiKpVPen4DB4C8hThzO+BYqj24APl2mMnfW7mEggKTMs3HpgEqFNkfIQzN
+         MsXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=biVXHXRw4uWtZLcJO28Ygo157d0CnQIl9rGveo0PLXI=;
-        b=oGI2lfFA65KRab+StbD6c7WqgB+tZhNoDrzrP6WsjgMh2/fIdl38V2wTXj0Kzg5Lnu
-         brVgv2LrQ7fQRtfKIoD2ES8xEEpnCkNuXX18NGwJ8c5BFN8e5xfCJMP7+vHLrdA4YOEl
-         YsXA8ts6U4jSWKeF/SZksq3slkpGCvf1QAdXb39iXWB6vvYNHh8Sd2uAXKsnPw4d4+nk
-         kZDLYEx2StzKzXGyIUmzu2TUzh5xtRXleIusan7X9dF5p1VoGIx+4KJUfNzrDUJRgfBJ
-         /uh9/NwvpXJoau1ChqWqVB65DWaOxZrLKnxk+c/DeJrWE7Lybv9h7TTDpjNQSPaoB8A3
-         l1Gw==
-X-Gm-Message-State: AOAM533ZcAevPE0VW9Ih5aNMYz3NWcHrieguGTWLXCVYW+YU1I+sz/kK
-        JAMxfZiceI7eJi0hIndmkj8=
-X-Google-Smtp-Source: ABdhPJwunjWLbCmYl5XW81XJa0Q7HoLOjMBE0bkoA/6XClwTleLcDzVHZWXZBDAbZ8m8AkFHzk252g==
-X-Received: by 2002:a17:906:c108:: with SMTP id do8mr6001529ejc.88.1599198643758;
-        Thu, 03 Sep 2020 22:50:43 -0700 (PDT)
-Received: from gmail.com (563BA415.dsl.pool.telekom.hu. [86.59.164.21])
-        by smtp.gmail.com with ESMTPSA id g5sm5100479ejk.52.2020.09.03.22.50.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 22:50:42 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 07:50:40 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     "Zhang, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "elver@google.com" <elver@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH v2] debugobjects:
- install cpu hotplug callback
-Message-ID: <20200904055040.GA2765622@gmail.com>
-References: <20200827050614.15100-1-qiang.zhang@windriver.com>
- <BYAPR11MB2632C578C5863019114EE572FF2D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VBkALWNFmSZj7rK+SmejfUE4FzmI9+bkW+wvdb/tgIU=;
+        b=lgtlZqPmhMnyEEww1bQXo7riAVjXhJC4HIh12sqF7dM0eE/XyldWLs9lMH1evYNbc5
+         P/NStdnJafLhFVDxl+OcE5Sjsv5cXDD2hCRciMeDOrE91iFpvj7YeQQSvaJxkRumrh9M
+         okpHEuk9nTy8sNjWbnwG7/A7nycMsDCwbxr5CVGluf8LNPzEw6l9ve48hjqTDXQxhELt
+         D0fhiOek6IInExcXWxbvxJikF9UWlFv5aNN5Vy2dsirwgd3/i31p5aKp1K3wfwEO2Ui0
+         68rVGrzE3zuVhWSdq9+CKGb0vd4+RSHIliTiC9SN8sCAXtHKGPNuUNHYaOs1+wkf3bXK
+         9Cxg==
+X-Gm-Message-State: AOAM5310rE1cpz7+q2yiKe10hBjEUuDTfw+WhDiIBIruUdI6ypOs6r7y
+        GmBy8da3rHuL/mCUg3oG8ix7imNGA8v7hOp44IO+RQ==
+X-Google-Smtp-Source: ABdhPJyjfg4RTVOS1EmVbuIhdOMU+V8UOMkY75qdg9ilr5NV+1cnP9l4YOD2cVaYmZAtsmnQPCN//Uc++UbX7cPSGkU=
+X-Received: by 2002:a05:600c:22d1:: with SMTP id 17mr1830382wmg.58.1599198679685;
+ Thu, 03 Sep 2020 22:51:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR11MB2632C578C5863019114EE572FF2D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200828205614.3391252-1-robh@kernel.org> <20200828205614.3391252-6-robh@kernel.org>
+ <CAP-5=fXTEd14wCZJgPyk1wUsSDAWP1zW+=e7sUx66L_1+YOO7A@mail.gmail.com> <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
+In-Reply-To: <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 3 Sep 2020 22:51:08 -0700
+Message-ID: <CAP-5=fUYsNZNM-s8auc5RVwQ-oqEnG10uBVhorns5aU29OAYXw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/9] libperf: Add support for user space counter access
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Raphael Gault <raphael.gault@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 2, 2020 at 12:48 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Sep 2, 2020 at 12:07 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Fri, Aug 28, 2020 at 1:56 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > x86 and arm64 can both support direct access of event counters in
+> > > userspace. The access sequence is less than trivial and currently exists
+> > > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
+> > > projects such as PAPI and libpfm4.
+> > >
+> > > In order to support usersapce access, an event must be mmapped. While
+> > > there's already mmap support for evlist, the usecase is a bit different
+> > > than the self monitoring with userspace access. So let's add a new
+> > > perf_evsel__mmap() function to mmap an evsel. This allows implementing
+> > > userspace access as a fastpath for perf_evsel__read().
+> > >
+> > > The mmapped address is returned by perf_evsel__mmap() primarily for
+> > > users/tests to check if userspace access is enabled.
+> > >
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+>
+> > > +int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count)
+> > > +{
+> > > +       struct perf_event_mmap_page *pc = map->base;
+> > > +       u32 seq, idx, time_mult = 0, time_shift = 0;
+> > > +       u64 cnt, cyc = 0, time_offset = 0, time_cycles = 0, time_mask = ~0ULL;
+> > > +
+> > > +       BUG_ON(!pc);
+> > > +
+> > > +       if (!pc->cap_user_rdpmc)
+> > > +               return -1;
+> > > +
+> > > +       do {
+> > > +               seq = READ_ONCE(pc->lock);
+> > > +               barrier();
+> > > +
+> > > +               count->ena = READ_ONCE(pc->time_enabled);
+> > > +               count->run = READ_ONCE(pc->time_running);
+> > > +
+> > > +               if (pc->cap_user_time && count->ena != count->run) {
+> > > +                       cyc = read_timestamp();
+> > > +                       time_mult = READ_ONCE(pc->time_mult);
+> > > +                       time_shift = READ_ONCE(pc->time_shift);
+> > > +                       time_offset = READ_ONCE(pc->time_offset);
+> > > +
+> > > +                       if (pc->cap_user_time_short) {
+> > > +                               time_cycles = READ_ONCE(pc->time_cycles);
+> > > +                               time_mask = READ_ONCE(pc->time_mask);
+> > > +                       }
+> > > +               }
+> > > +
+> > > +               idx = READ_ONCE(pc->index);
+> > > +               cnt = READ_ONCE(pc->offset);
+> > > +               if (pc->cap_user_rdpmc && idx) {
+> > > +                       u64 evcnt = read_perf_counter(idx - 1);
+> > > +                       u16 width = READ_ONCE(pc->pmc_width);
+> > > +
+> > > +                       evcnt <<= 64 - width;
+> > > +                       evcnt >>= 64 - width;
+> > > +                       cnt += evcnt;
+> > > +               } else
+> > > +                       return -1;
+> > > +
+> > > +               barrier();
+> > > +       } while (READ_ONCE(pc->lock) != seq);
+> > > +
+> > > +       if (count->ena != count->run) {
+> >
+> > There's an existing bug here that I tried to resolve in this patch:
+> > https://lore.kernel.org/lkml/CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com/
+> > Due to multiplexing, enabled may be > 0 but run == 0 and the divide
+> > below can end up with divide by zero.
+>
+> Yeah, I saw that, but didn't try to also fix that issue here.
+>
+> > I like the idea of this code being in a library, there's an intent
+> > that the perf_event.h and test code be copy-paste-able, but there is
+> > some pre-existing divergence. It would be nice if this code could be
+> > closer to the sample code in both the test and perf_event.h.
+>
+> The only way we get and keep all the versions of the code aligned is
+> removing the other copies. We should just remove the code comment from
+> perf_event.h IMO. If rdpmc.c is going to stick around given some
+> resistance to removing it, then perhaps it should be converted to use
+> libperf. At that point it could also be arch independent. Though I
+> don't like the idea of having the same test twice.
 
-* Zhang, Qiang <Qiang.Zhang@windriver.com> wrote:
+This makes sense to me, perhaps others could comment. Given the
+cleaned up API fixing or deleting tools/perf/arch/x86/tests/rdpmc.c is
+desirable (as your patch set does). I wondered if we could do Jiri's
+suggestion to run the lib/perf tests with perf test. One way would be
+to have shell script wrapper in tools/perf/tests/shell. It's not clear
+how to make a dependency from a shell script there and tests built
+elsewhere in the tree though.
 
-> tglx please review.
-> 
-> Thanks
-> Qiang
-> ________________________________________
-> 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 qiang.zhang@windriver.com <qiang.zhang@windriver.com>
-> 发送时间: 2020年8月27日 13:06
-> 收件人: tglx@linutronix.de; longman@redhat.com; elver@google.com
-> 抄送: linux-kernel@vger.kernel.org
-> 主题: [PATCH v2] debugobjects: install cpu hotplug callback
-> 
-> From: Zqiang <qiang.zhang@windriver.com>
-> 
-> Due to cpu hotplug, it may never be online after it's offline,
-> some objects in percpu pool is never free, in order to avoid
-> this happening, install cpu hotplug callback, call this callback
-> func to free objects in percpu pool when cpu going offline.
+> > As per the change above, I think running and enabled times need to be
+> > out arguments.
+>
+> They are now in this version.
 
-We capitalize 'CPU'. Also, please split this in at least two sentences.
-
-> 
-> Signed-off-by: Zqiang <qiang.zhang@windriver.com>
-> ---
->  v1->v2:
->  Modify submission information.
-> 
->  include/linux/cpuhotplug.h |  1 +
->  lib/debugobjects.c         | 23 +++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index a2710e654b64..2e77db655cfa 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -36,6 +36,7 @@ enum cpuhp_state {
->         CPUHP_X86_MCE_DEAD,
->         CPUHP_VIRT_NET_DEAD,
->         CPUHP_SLUB_DEAD,
-> +       CPUHP_DEBUG_OBJ_DEAD,
->         CPUHP_MM_WRITEBACK_DEAD,
->         CPUHP_MM_VMSTAT_DEAD,
->         CPUHP_SOFTIRQ_DEAD,
-> diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-> index fe4557955d97..50e21ed0519e 100644
-> --- a/lib/debugobjects.c
-> +++ b/lib/debugobjects.c
-> @@ -19,6 +19,7 @@
->  #include <linux/slab.h>
->  #include <linux/hash.h>
->  #include <linux/kmemleak.h>
-> +#include <linux/cpu.h>
-> 
->  #define ODEBUG_HASH_BITS       14
->  #define ODEBUG_HASH_SIZE       (1 << ODEBUG_HASH_BITS)
-> @@ -433,6 +434,23 @@ static void free_object(struct debug_obj *obj)
->         }
->  }
-> 
-> +#if defined(CONFIG_HOTPLUG_CPU)
-> +static int object_cpu_offline(unsigned int cpu)
-> +{
-> +       struct debug_percpu_free *percpu_pool;
-> +       struct hlist_node *tmp;
-> +       struct debug_obj *obj;
-> +
-> +       percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
-> +       hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
-> +               hlist_del(&obj->node);
-> +               kmem_cache_free(obj_cache, obj);
-> +       }
-> +
-> +       return 0;
-> +}
-> +#endif
-
-What happens to ->obj_free, if the CPU is brought back online? Won't it be 
-out of sync at that point?
-
-> +#if defined(CONFIG_HOTPLUG_CPU)
-
-There's a shorter preprocessor sequence for that pattern.
+Sorry, my mistake. I'd missed that.
 
 Thanks,
+Ian
 
-	Ingo
+> Rob
