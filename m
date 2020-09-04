@@ -2,163 +2,210 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C31EC28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10D5C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9432073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A841A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="cQGvEXlk"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="f2InfMC3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730393AbgIDNC6 (ORCPT
+        id S1730386AbgIDND0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:02:58 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:59041 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730018AbgIDNCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:02:51 -0400
-IronPort-SDR: LPv6p8VBFjjcYmntUG0UAnpzcSHEGq4/UIIvdKKqNHArY5TBgsO4ETEWjW6no+TchXzZwbbEk3
- YEFZx7XP0b5/C9lesgHYWh6X/Tl3phEGa4HQOoZoOu16AJWgvPNP5d8zpxC3odLZ/L47GzCV03
- dDL4bAA6vmGeDg8eeRkksQVguhJfu+gh+uNWyb9RQEreZG+uRLL0EpSWCWU04u4dRHIyr5R6o0
- l1QUrAykCeRnt0AfK4dJqqxzIXDo0Q+AlYiKXW7XO0ZWIJNV1D8XdeUFS22lzlZz7aJsqVKwMR
- X74=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
-   d="scan'208";a="13736372"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 Sep 2020 15:02:48 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 04 Sep 2020 15:02:48 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 04 Sep 2020 15:02:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599224568; x=1630760568;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=sxPcx61j+oNNPmi+1j+653tuMkYTgM/PcPrvPEAVVis=;
-  b=cQGvEXlk8ZJ37Cnhu5CrGx0xuwN4DZt5YVHAmyXnnb8Jzfk19MhqlpfR
-   Zoy+Fc4xDPGh5VMu31PkLUg0slb4qnrETnKNqJvLfQRT6e9SUobIe0OgR
-   q3TJVJ2419D9YVypiHKGvQROGUgnkPUfnpjwQgDCU2QQ/70U2cqItS1ic
-   GpjMYmZthmuzmgapE75efqPWQ/SiAymhuXigqIBkWa8rq7SQvs9QAkGX1
-   ydOGSgwiafx16rESkwfQfuS81QT2aujDsQMKjWsHCETS7BrhgPaCpzbim
-   OgEBAzVGE2LOx87X92DsQiCREiv5FwHs/6Z0Q4VdQs6CP6VoUC2y2SeDk
-   Q==;
-IronPort-SDR: ghZlZR/81gsikeGmjRjXFgzkK32ULfrL8wtbfdzoLHSPLn5nfALJyP31rtj+vz46dVhf9l4r8A
- XGXYe4TTNmWiOsXevFtrxOdOn+SGRnqFB5kMVNCvPWxslE8J2je7MkV9rqjjUebz5PSDmSdIld
- zj1O2OnbqqcEWZHb+MPFAAcBQLis7eG3h5UmIVW00vz+Tx2VEGm6hIyLzf2sIufRnr2C6pUsif
- jNz6rCgUq1vhtGKZt0KS4VAuXW3/vbKuCtt0VNbFdZNll9zGpbb2t/AqE3IHZbBolKf1437RBy
- 6NM=
-X-IronPort-AV: E=Sophos;i="5.76,389,1592863200"; 
-   d="scan'208";a="13736371"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 Sep 2020 15:02:48 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id A4509280065;
-        Fri,  4 Sep 2020 15:02:48 +0200 (CEST)
-Message-ID: <e1431dd2653dbffdfec39a2e7167db07836e30ac.camel@ew.tq-group.com>
-Subject: Re: (EXT) Re: [PATCH] spi-imx: remove num-cs support, set
- num_chipselect to 4
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Fri, 04 Sep 2020 15:02:46 +0200
-In-Reply-To: <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
-References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
-         <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Sep 2020 09:03:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730270AbgIDNDW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:03:22 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F26CC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:03:22 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id o64so6132368qkb.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=91R6k3kVp9Mx4ywBsUycmYMziP2Na7QYOzvont9ThTs=;
+        b=f2InfMC3zUv5o08wJbEWIhFbDOLTlZhxw7806mCoDQiE9GUHw+LDUxXVCIJAMMUCSY
+         eQVRB32C2QLctrkgHkrJEQNlJVSgykvTOK9urz+zgj4Yw9qc3zyaOqpdAxs/2m+thLTI
+         0gV5513hPf7Zhj0+P8kktYo0ly0tHRS2jadR9B7WewT6BtEgsntwRXt+Xb4ZdGe0w73n
+         lWElz3EhvBnkY3OSA+gbzdMkfBYpmUp/3u/nGpDrOkoXk3S5Zl0MYPJX2PivmAjpUhJr
+         MbJv419ws20mO2JVw6Gob2cCVrq+BM+4sLaZWvv9lBggPSg7pv9vTVWtZ0dpP3+FSKkh
+         HNYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=91R6k3kVp9Mx4ywBsUycmYMziP2Na7QYOzvont9ThTs=;
+        b=ByendMTgolk4owvYkB0BZr25R3+vq7c87vYeUYj/zwU1I+IhbTMiVyC4Lj498eoeKF
+         j/aSsOIG9I3/M3a2FCQ9Ed3zyia9PlHhANlA1iAC4QTXZ+DicV3GkNVSY6uR9Zf3kykk
+         +WP5zm+Xd6Te4IKs2793er5Zw0nD6kYSVXERZbXOuFZUgOz517McukhqtWWTUhDMGFxs
+         kFgjxheA6CCsseE/pqw+i+wq/dw84FtYae2AGe/co0LjPxyTvqUpaps6mSsDnQQIrhSC
+         eGHCqfJVzmG64obpKoUiozRAHYIBSu5QXbmJwtjYNgN3lvTAgXXVcbkGBeBUtOEMti+i
+         SMPw==
+X-Gm-Message-State: AOAM530OCqZ2UTl8pAxToUQublQ0tAEdYZNzUzaFqHnkBXldq58+zMY/
+        iDPiE6A7plfhCi8M72DaCB9Q4g==
+X-Google-Smtp-Source: ABdhPJxgSZH5zAHlN2iY/FzlPALmYu5zSQUPGU/S4gCioz7nDF6E7X/OgFbsHKaqndMAifmBMUmnEw==
+X-Received: by 2002:a05:620a:15a7:: with SMTP id f7mr1367974qkk.3.1599224601190;
+        Fri, 04 Sep 2020 06:03:21 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id q8sm4516772qkq.57.2020.09.04.06.03.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 06:03:20 -0700 (PDT)
+Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP
+ combo phy
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Chandan Uddaraju <chandanu@codeaurora.org>,
+        Vara Reddy <varar@codeaurora.org>,
+        Tanmay Shah <tanmay@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Clark <robdclark@chromium.org>
+References: <20200902230215.3452712-1-swboyd@chromium.org>
+ <20200902230215.3452712-8-swboyd@chromium.org>
+ <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
+ <9f99cc8b-2cfd-280f-e52a-23d098934a11@linaro.org>
+ <4c0f59f8-b7fa-432f-2255-8d253f434a59@marek.ca>
+ <c8ca7193-67ae-e1d5-d36a-19655ca67d78@linaro.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <6017ca10-e4c8-4104-df2d-03984da2a655@marek.ca>
+Date:   Fri, 4 Sep 2020 09:02:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <c8ca7193-67ae-e1d5-d36a-19655ca67d78@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-09-04 at 09:35 -0300, Fabio Estevam wrote:
-> Hi Matthias,
+On 9/4/20 8:57 AM, Dmitry Baryshkov wrote:
+> On 04/09/2020 15:44, Jonathan Marek wrote:
+>> On 9/4/20 8:29 AM, Dmitry Baryshkov wrote:
+>>> On 03/09/2020 23:43, Jonathan Marek wrote:
+>>>> On 9/2/20 7:02 PM, Stephen Boyd wrote:
+>>>>> Add support for the USB3 + DisplayPort (DP) "combo" phy to the qmp phy
+>>>>> driver. We already have support for the USB3 part of the combo phy, so
+>>>>> most additions are for the DP phy.
+>>>>>
+>>>>> Split up the qcom_qmp_phy{enable,disable}() functions into the phy 
+>>>>> init,
+>>>>> power on, power off, and exit functions that the common phy framework
+>>>>> expects so that the DP phy can add even more phy ops like
+>>>>> phy_calibrate() and phy_configure(). This allows us to initialize 
+>>>>> the DP
+>>>>> PHY and configure the AUX channel before powering on the PHY at the 
+>>>>> link
+>>>>> rate that was negotiated during link training.
+>>>>>
+>>>>> The general design is as follows:
+>>>>>
+>>>>>    1) DP controller calls phy_init() to initialize the PHY and 
+>>>>> configure
+>>>>>    the dp_com register region.
+>>>>>
+>>>>>    2) DP controller calls phy_configure() to tune the link rate and
+>>>>>    voltage swing and pre-emphasis settings.
+>>>>>
+>>>>>    3) DP controller calls phy_power_on() to enable the PLL and 
+>>>>> power on
+>>>>>    the phy.
+>>>>>
+>>>>>    4) DP controller calls phy_configure() again to tune the voltage 
+>>>>> swing
+>>>>>    and pre-emphasis settings determind during link training.
+>>>>>
+>>>>>    5) DP controller calls phy_calibrate() some number of times to 
+>>>>> change
+>>>>>    the aux settings if the aux channel times out during link training.
+>>>>>
+>>>>>    6) DP controller calls phy_power_off() if the link rate is to be
+>>>>>    changed and goes back to step 2 to try again at a different link 
+>>>>> rate.
+>>>>>
+>>>>>    5) DP controller calls phy_power_off() and then phy_exit() to power
+>>>>>    down the PHY when it is done.
+>>>>>
+>>>>> The DP PHY contains a PLL that is different from the one used for the
+>>>>> USB3 PHY. Instead of a pipe clk there is a link clk and a pixel clk
+>>>>> output from the DP PLL after going through various dividers. Introduce
+>>>>> clk ops for these two clks that just tell the child clks what the
+>>>>> frequency of the pixel and link are. When the phy link rate is
+>>>>> configured we call clk_set_rate() to update the child clks in the
+>>>>> display clk controller on what rate is in use. The clk frequencies
+>>>>> always differ based on the link rate (i.e. 1.6Gb/s 2.7Gb/s, 
+>>>>> 5.4Gb/s, or
+>>>>> 8.1Gb/s corresponding to various transmission modes like HBR1, HBR2 or
+>>>>> HBR3) so we simply store the link rate and use that to calculate 
+>>>>> the clk
+>>>>> frequencies.
+>>>>>
+>>>>> The PLL enable sequence is a little different from other QMP phy 
+>>>>> PLLs so
+>>>>> we power on the PLL in qcom_qmp_phy_configure_dp_phy() that gets 
+>>>>> called
+>>>>> from phy_power_on(). This should probably be split out better so that
+>>>>> each phy has a way to run the final PLL/PHY enable sequence.
+>>>>>
+>>>>> This code is based on a submission of this phy and PLL in the drm
+>>>>> subsystem.
+>>>>
+>>>> I updated my upstream-based sm8150/sm8250 displayport stack [1] to 
+>>>> use these patches.
+>>>
+>>> I have tried your branch on my RB5 with two different dongles. Both 
+>>> dongles provide the same behaviour:
+>>>   - on first plug I see VDM Tx errors,
+>>>   - after I unplug and replug the dongle, PD phy seems to be stuck on 
+>>> sending capabilities.
+>>>
+>>> See attached logs.
+>>>
+>>> Also I had to add typec_unregister_port(port->typec_port); to 
+>>> IS_ERR(alt) in your tcpm.c hack.
+>>>
+>>> I'm currently finishing the driver for the mux/redriver, will retry 
+>>> testing afterwards.
+>>>
+>>
+>> As I mentioned the TCPM driver has a lot of issues. The "hard reset" 
+>> isn't implemented correctly so going into that mode gets it stuck in a 
+>> bad state. Note I am using this dongle [1], and it only works 
+>> correctly in sink mode (with the dongle providing power), in source 
+>> mode it does negotiate the alt mode, but never gets the HPD event that 
+>> DP driver is waiting for.
+>>
+>> https://www.amazon.ca/Cable-Matters-Multiport-DisplayPort-Ethernet/dp/B06Y5N3YCD 
 > 
-> On Thu, Sep 3, 2020 at 11:40 AM Matthias Schiffer
-> <matthias.schiffer@ew.tq-group.com> wrote:
-> > 
-> > The num-cs property is not considered useful, and no in-tree Device
-> > Trees define it for spi-imx.
-> > 
-> > The default value to be used when no cs-gpios are defined is set to
-> > 4 to
-> > give access to all native CS pins of modern i.MX SoCs (i.MX6 and
-> > newer).
-> > 
-> > In older SoCs, the number of CS pins varies (for example the i.MX27
-> > has 3
-> > CS pins on CSPI1 and CSPI2, and only a single CS on CSPI3).
-> > Attempting
-> > to use the nonexisting CS pin would be an easy to notice DT
-> > misconfiguration; making the driver catch this doesn't seem
-> > worthwhile.
-> > 
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> >  drivers/spi/spi-imx.c | 13 +------------
-> >  1 file changed, 1 insertion(+), 12 deletions(-)
-> > 
-> > diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-> > index 197f60632072..aece8482739b 100644
-> > --- a/drivers/spi/spi-imx.c
-> > +++ b/drivers/spi/spi-imx.c
-> > @@ -1581,7 +1581,6 @@ static int spi_imx_probe(struct
-> > platform_device *pdev)
-> >         const struct spi_imx_devtype_data *devtype_data = of_id ?
-> > of_id->data :
-> >                 (struct spi_imx_devtype_data *)pdev->id_entry-
-> > >driver_data;
-> >         bool slave_mode;
-> > -       u32 val;
-> > 
-> >         slave_mode = devtype_data->has_slavemode &&
-> >                         of_property_read_bool(np, "spi-slave");
-> > @@ -1605,6 +1604,7 @@ static int spi_imx_probe(struct
-> > platform_device *pdev)
-> >         master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 32);
-> >         master->bus_num = np ? -1 : pdev->id;
-> >         master->use_gpio_descriptors = true;
-> > +       master->num_chipselect = 4;
 > 
-> On an imx6q-sabresd, which only has one SPI chip-select via GPIO,
-> this
-> makes the SPI core to understand that it has 4 chip selects.
+> I'll take a look for dongles that work in source mode (with RB5 being 
+> the sink). Reset being not fully implemented would answer on questions 
+> about replug. Any idea about VDM Tx errors?
 > 
-> From spi_get_gpio_descs() in drivers/spi/spi.c:
 > 
-> ctlr->num_chipselect = max_t(int, nb, ctlr->num_chipselect);
-> 
-> It is 4 now after your patch, it was 3 after 8cdcd8aeee28 ("spi:
-> imx/fsl-lpspi: Convert to GPIO descriptors") and 1 before such
-> commit.
-> 
-> Couldn't we just remove master->num_chipselect from the spi-imx.c
-> driver?
 
-This would make num_chipselect default to 1 again (set by
-__spi_alloc_controller()), breaking every i.MX board that uses more
-than 1 native CS.
+Unfortunately I don't have a good idea. If you want to compare, here is 
+my tcpm log [1] in source mode (HDK providing the power, it doesn't get 
+the HPD event)
 
-I'm aware that using cs-gpios instead of native CS is probably a good
-idea in any case, as the native CS of this SPI controller is kinda
-flaky (and at a glance it looks like all in-tree DTs do this; not sure
-about board files that don't use DTs?), but I'm not convinced that
-breaking native CS support completely is desirable either.
-
+[1] https://gist.github.com/flto/62f352dbff3601abe05013bfebe7c0ab
