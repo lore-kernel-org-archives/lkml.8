@@ -2,150 +2,170 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE1C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9CAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEBC1206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67D62206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pb+ilJUJ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Igs8SeG/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbgIDOIA (ORCPT
+        id S1730354AbgIDOHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:08:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56664 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730564AbgIDOG7 (ORCPT
+        Fri, 4 Sep 2020 10:07:41 -0400
+Received: from mx07-00178001.pphosted.com ([185.132.182.106]:60964 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730504AbgIDOFH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:06:59 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398FAC061245;
-        Fri,  4 Sep 2020 07:06:38 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id w16so6628745oia.2;
-        Fri, 04 Sep 2020 07:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wr4ik479hXJMABoUt+QySGUcxYVpD0giYre42tl6Lak=;
-        b=pb+ilJUJRPhJ/T5Cca3PbrSqzWYKDzd+9lVwpvCtKeG4tVFR5fQw4XDiIQxMEernf8
-         cN/W80EeOycrznLPrK9RkdvnacufPub2oUdkxxGTpGcA1GBMVIWkw8BcapZhRF7M9hCX
-         LrD+cFDk+B5RNXXHuTCwraVJ0QWLjLRxgn87VwM/dXlhI1esf59Ab11er8fAr6j7znQn
-         1V9KCjQAelo+dg9xaytKB3gQHCJarbecol+hxcLg9/Xw65DqUlhuFRQhvem9IilKf3KU
-         QrlZV18mXNtahcZ9xGvB827p/mMnHDDm/dVEvJf//2styAsjRlmRlP03lJjgKsdCw9HM
-         LR3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wr4ik479hXJMABoUt+QySGUcxYVpD0giYre42tl6Lak=;
-        b=YFHRXYJWMLh/4WzZyeLNHs3mmdzOgyik91fNNkBpqM3zEmRv3il4NDFA7mZ/STlxJV
-         IeV4gRztZGpD87BTxLBVwgLwVusI9T+EicOa8swRiG2OxnXgJPIH2eDe5U+0M1cWkSrF
-         IQ3DQzB4lts4gNRZ/Rw+JOxLvrqi/QabCX2ZxOVLwrNy8W3cWli6uTjlpaoL0uDRwg4v
-         Fkv/lu2mJJVL78g17xCS9LK+OG3Y5ch9iQ9wjtWxntnGtuGUtuIOmbrn+Y/11EIhkpL1
-         zcMfp6UtrLhC/XuaL3yES9g0Wg+J7xJTWOCBDVbfh3zOnUTUAZBcO6+64qBHQupDXGd2
-         5X5g==
-X-Gm-Message-State: AOAM530raUbSwRRHlwxX1FcBx7yj2JLPjwWF/dw0kOOw7jJVIsb4S0+U
-        lFOD24nFZqpfTacMsoHpv6100zi+/J1egJAlUuU=
-X-Google-Smtp-Source: ABdhPJziFDpId3xQV+kTiECfez29XequCwVUbV9zAOTxbsVuPohRo7dKhwXxjzjzByWc3HuEEQrlxZ5l47bnwwTL+yY=
-X-Received: by 2002:a54:4f9b:: with SMTP id g27mr5430650oiy.140.1599228397615;
- Fri, 04 Sep 2020 07:06:37 -0700 (PDT)
+        Fri, 4 Sep 2020 10:05:07 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084DM2qK005938;
+        Fri, 4 Sep 2020 15:23:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=9tDNNyjW1JFlsbbCLIY7DyEV8OK1r9OXdF3FnYfERXw=;
+ b=Igs8SeG/ZKp3N0XD8OfxBgvi/CRjxUi0S9+7BaZJ9q139ip+kCpiFe6mmtCBU71yMNnc
+ 4Z71DgRMm2U78YwyMo78Z4KWA6jt5CxjYxIGRsQ+kW9m5yaf7Sl1rTkJwCKPYIh/igvS
+ U5TyC+njDLQHWmR28nlZ9XNq+t9q5Z5OB10PWGTV5ywvgm0H4Zci3iiovApvJWqUN5pI
+ y+bDQc+Nz2GXdB6Ke+J2L4B9CFL6APrNREUMEWckiumicZ9V6SUqC1xfk15pm6DjtiTf
+ yaDGGtDZmrtyP/g9qt/rYG6ub1C4qumM9c07c6Wq1dT6xGoXt2ik+C5hEbmpdJP6aKZ2 rw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 337csw9xvg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 15:23:04 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4FA1B10002A;
+        Fri,  4 Sep 2020 15:23:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 447B82B0EBD;
+        Fri,  4 Sep 2020 15:23:04 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG6NODE2.st.com (10.75.127.17)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Sep 2020 15:23:03
+ +0200
+From:   Christophe Kerello <christophe.kerello@st.com>
+To:     <robh+dt@kernel.org>, <alexandre.torgue@st.com>,
+        <linux@armlinux.org.uk>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Christophe Kerello <christophe.kerello@st.com>
+Subject: [PATCH 2/2] ARM: dts: stm32: add FMC2 EBI support for stm32mp157c
+Date:   Fri, 4 Sep 2020 15:20:43 +0200
+Message-ID: <1599225643-5558-3-git-send-email-christophe.kerello@st.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1599225643-5558-1-git-send-email-christophe.kerello@st.com>
+References: <1599225643-5558-1-git-send-email-christophe.kerello@st.com>
 MIME-Version: 1.0
-References: <20200802215903.91936-1-mic@digikod.net> <20200802215903.91936-6-mic@digikod.net>
- <779c290b-45f5-b86c-c573-2edb4004105d@tycho.nsa.gov> <03f522c0-414c-434b-a0d1-57c3b17fa67f@digikod.net>
- <CAEjxPJ7POnxKy=5w-iQkKhjftxf2-=UuvA6D8EmhUPJyS1F6qg@mail.gmail.com>
-In-Reply-To: <CAEjxPJ7POnxKy=5w-iQkKhjftxf2-=UuvA6D8EmhUPJyS1F6qg@mail.gmail.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Fri, 4 Sep 2020 10:06:26 -0400
-Message-ID: <CAEjxPJ7ARJO57MBW66=xsBzMMRb=9uLgqocK5eskHCaiVMx7Vw@mail.gmail.com>
-Subject: Re: [PATCH v20 05/12] LSM: Infrastructure management of the superblock
-To:     =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Kees Cook <keescook@chromium.org>,
-        John Johansen <john.johansen@canonical.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Morris <jmorris@namei.org>, Jann Horn <jannh@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE2.st.com
+ (10.75.127.17)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-04_07:2020-09-04,2020-09-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 2:39 PM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> On Thu, Aug 13, 2020 at 10:17 AM Micka=C3=ABl Sala=C3=BCn <mic@digikod.ne=
-t> wrote:
-> >
-> >
-> > On 12/08/2020 21:16, Stephen Smalley wrote:
-> > > On 8/2/20 5:58 PM, Micka=C3=ABl Sala=C3=BCn wrote:
-> > >> From: Casey Schaufler <casey@schaufler-ca.com>
-> > >>
-> > >> Move management of the superblock->sb_security blob out
-> > >> of the individual security modules and into the security
-> > >> infrastructure. Instead of allocating the blobs from within
-> > >> the modules the modules tell the infrastructure how much
-> > >> space is required, and the space is allocated there.
-> > >>
-> > >> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> > >> Reviewed-by: Kees Cook <keescook@chromium.org>
-> > >> Reviewed-by: John Johansen <john.johansen@canonical.com>
-> > >> Reviewed-by: Stephen Smalley <sds@tycho.nsa.gov>
-> > >> Reviewed-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> > >> Link:
-> > >> https://lore.kernel.org/r/20190829232935.7099-2-casey@schaufler-ca.c=
-om
-> > >> ---
-> > >>
-> > >> Changes since v17:
-> > >> * Rebase the original LSM stacking patch from v5.3 to v5.7: I fixed =
-some
-> > >>    diff conflicts caused by code moves and function renames in
-> > >>    selinux/include/objsec.h and selinux/hooks.c .  I checked that it
-> > >>    builds but I didn't test the changes for SELinux nor SMACK.
-> > >
-> > > You shouldn't retain Signed-off-by and Reviewed-by lines from an earl=
-ier
-> > > patch if you made non-trivial changes to it (even more so if you didn=
-'t
-> > > test them).
-> >
-> > I think I made trivial changes according to the original patch. But
-> > without reply from other people with Signed-off-by or Reviewed-by
-> > (Casey, Kees, John), I'll remove them. I guess you don't want your
-> > Reviewed-by to be kept, so I'll remove it, except if you want to review
-> > this patch (or the modified part).
->
-> At the very least your Reviewed-by line is wrong - yours should be
-> Signed-off-by because the patch went through you and you modified it.
-> I'll try to take a look as time permits but FYI you should this
-> address (already updated in MAINTAINERS) going forward.
+This patch adds FMC2 External Bus Interface support on stm32mp157c.
 
-I finally got around to reviewing your updated patch.  You can drop
-the old line and add:
-Reviewed-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+---
+ arch/arm/boot/dts/stm32mp151.dtsi     | 43 +++++++++++++++++++++++------------
+ arch/arm/boot/dts/stm32mp157c-ev1.dts | 16 +++++++------
+ 2 files changed, 38 insertions(+), 21 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
+index bfe2902..4fd7572 100644
+--- a/arch/arm/boot/dts/stm32mp151.dtsi
++++ b/arch/arm/boot/dts/stm32mp151.dtsi
+@@ -1302,23 +1302,38 @@
+ 			dma-requests = <48>;
+ 		};
+ 
+-		fmc: nand-controller@58002000 {
+-			compatible = "st,stm32mp15-fmc2";
+-			reg = <0x58002000 0x1000>,
+-			      <0x80000000 0x1000>,
+-			      <0x88010000 0x1000>,
+-			      <0x88020000 0x1000>,
+-			      <0x81000000 0x1000>,
+-			      <0x89010000 0x1000>,
+-			      <0x89020000 0x1000>;
+-			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+-			dmas = <&mdma1 20 0x10 0x12000a02 0x0 0x0>,
+-			       <&mdma1 20 0x10 0x12000a08 0x0 0x0>,
+-			       <&mdma1 21 0x10 0x12000a0a 0x0 0x0>;
+-			dma-names = "tx", "rx", "ecc";
++		fmc: memory-controller@58002000 {
++			#address-cells = <2>;
++			#size-cells = <1>;
++			compatible = "st,stm32mp1-fmc2-ebi";
++			reg = <0x58002000 0x1000>;
+ 			clocks = <&rcc FMC_K>;
+ 			resets = <&rcc FMC_R>;
+ 			status = "disabled";
++
++			ranges = <0 0 0x60000000 0x04000000>, /* EBI CS 1 */
++				 <1 0 0x64000000 0x04000000>, /* EBI CS 2 */
++				 <2 0 0x68000000 0x04000000>, /* EBI CS 3 */
++				 <3 0 0x6c000000 0x04000000>, /* EBI CS 4 */
++				 <4 0 0x80000000 0x10000000>; /* NAND */
++
++			nand-controller@4,0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "st,stm32mp1-fmc2-nfc";
++				reg = <4 0x00000000 0x1000>,
++				      <4 0x08010000 0x1000>,
++				      <4 0x08020000 0x1000>,
++				      <4 0x01000000 0x1000>,
++				      <4 0x09010000 0x1000>,
++				      <4 0x09020000 0x1000>;
++				interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
++				dmas = <&mdma1 20 0x2 0x12000a02 0x0 0x0>,
++				       <&mdma1 20 0x2 0x12000a08 0x0 0x0>,
++				       <&mdma1 21 0x2 0x12000a0a 0x0 0x0>;
++				dma-names = "tx", "rx", "ecc";
++				status = "disabled";
++			};
+ 		};
+ 
+ 		qspi: spi@58003000 {
+diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+index 85628e1..a55e80c 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+@@ -158,14 +158,16 @@
+ 	pinctrl-0 = <&fmc_pins_a>;
+ 	pinctrl-1 = <&fmc_sleep_pins_a>;
+ 	status = "okay";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 
+-	nand@0 {
+-		reg = <0>;
+-		nand-on-flash-bbt;
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++	nand-controller@4,0 {
++		status = "okay";
++
++		nand@0 {
++			reg = <0>;
++			nand-on-flash-bbt;
++			#address-cells = <1>;
++			#size-cells = <1>;
++		};
+ 	};
+ };
+ 
+-- 
+1.9.1
+
