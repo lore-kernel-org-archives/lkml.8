@@ -2,71 +2,107 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A08C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA34C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B57C2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E072078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgIDNEi (ORCPT
+        id S1730385AbgIDNFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:04:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59646 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729297AbgIDNEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:04:36 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5661F5AA6CE11C5F8329;
-        Fri,  4 Sep 2020 21:04:34 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Fri, 4 Sep 2020
- 21:04:30 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <gustavo@embeddedor.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] NFC: digital: Remove two unused macroes
-Date:   Fri, 4 Sep 2020 21:01:57 +0800
-Message-ID: <20200904130157.17812-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Sep 2020 09:05:07 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35199 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729297AbgIDNFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:05:03 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-lPIx2QwrN4G0pg7GL2iAYA-1; Fri, 04 Sep 2020 09:04:58 -0400
+X-MC-Unique: lPIx2QwrN4G0pg7GL2iAYA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 193E3801AF2;
+        Fri,  4 Sep 2020 13:04:57 +0000 (UTC)
+Received: from shodan.usersys.redhat.com (unknown [10.43.17.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5B411002D66;
+        Fri,  4 Sep 2020 13:04:56 +0000 (UTC)
+Received: by shodan.usersys.redhat.com (Postfix, from userid 1000)
+        id 738A61C0C29; Fri,  4 Sep 2020 15:04:55 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 15:04:55 +0200
+From:   Artem Savkov <asavkov@redhat.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        threeearcat@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pty: do tty_flip_buffer_push without port->lock in
+ pty_write
+Message-ID: <20200904130455.GA52548@shodan.usersys.redhat.com>
+References: <20200901120157.3412245-1-asavkov@redhat.com>
+ <20200904074333.GA410@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200904074333.GA410@jagdpanzerIV.localdomain>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DIGITAL_NFC_DEP_REQ_RES_TAILROOM is never used after it was introduced.
-DIGITAL_NFC_DEP_REQ_RES_HEADROOM is no more used after below
-commit e8e7f4217564 ("NFC: digital: Remove useless call to skb_reserve()")
-Remove them.
+Hello Sergey,
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- net/nfc/digital_dep.c | 3 ---
- 1 file changed, 3 deletions(-)
+On Fri, Sep 04, 2020 at 04:43:33PM +0900, Sergey Senozhatsky wrote:
+> On (20/09/01 14:01), Artem Savkov wrote:
+> [..]
+> > It looks like the commit was aimed to protect tty_insert_flip_string and
+> > there is no need for tty_flip_buffer_push to be under this lock.
+> >
+> [..]
+> > @@ -120,10 +120,10 @@ static int pty_write(struct tty_struct *tty, const unsigned char *buf, int c)
+> >  		spin_lock_irqsave(&to->port->lock, flags);
+> >  		/* Stuff the data into the input queue of the other end */
+> >  		c = tty_insert_flip_string(to->port, buf, c);
+> > +		spin_unlock_irqrestore(&to->port->lock, flags);
+> >  		/* And shovel */
+> >  		if (c)
+> >  			tty_flip_buffer_push(to->port);
+> > -		spin_unlock_irqrestore(&to->port->lock, flags);
+> 
+> Performing unprotected
+> 
+> 	smp_store_release(&buf->tail->commit, buf->tail->used);
+> 
+> does not look safe to me.
+> 
+> 
+> This path can be called concurrently - "pty_write vs console's IRQ handler
+> (TX/RX)", for instance.
+> 
+> Doing this
+> 
+> 	queue_work(system_unbound_wq, &buf->work);
+> 
+> outside of port->lock scope also sounds like possible concurrent data
+> modification.
+> 
+> I'm not sure I see how this patch is safe.
 
-diff --git a/net/nfc/digital_dep.c b/net/nfc/digital_dep.c
-index 304b1a9bb18a..5971fb6f51cc 100644
---- a/net/nfc/digital_dep.c
-+++ b/net/nfc/digital_dep.c
-@@ -38,9 +38,6 @@
- 
- #define DIGITAL_GB_BIT	0x02
- 
--#define DIGITAL_NFC_DEP_REQ_RES_HEADROOM	2 /* SoD: [SB (NFC-A)] + LEN */
--#define DIGITAL_NFC_DEP_REQ_RES_TAILROOM	2 /* EoD: 2-byte CRC */
--
- #define DIGITAL_NFC_DEP_PFB_TYPE(pfb) ((pfb) & 0xE0)
- 
- #define DIGITAL_NFC_DEP_PFB_TIMEOUT_BIT 0x10
+Yes, indeed I see how this might be unsafe, but this argument doesn't
+hold well with console drivers other than 8250 - most of them seem to
+call tty_flip_buffer_push() outside of port->lock, many even unlock and
+then relock right around this call to avoid similar possible deadlocks.
+Even 8250 itself used to do this "recently". After all potentially
+corrupted console is better than a deadlock.
+
+I know this is no excuse to add unsafe code but unfortunately I don't
+see a better solution at the moment, although admittedly I am not very
+familiar with tty code.
+
 -- 
-2.17.1
+ Artem
 
