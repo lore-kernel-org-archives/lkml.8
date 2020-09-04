@@ -2,161 +2,210 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1468AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE08206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAB7F206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bZADD3NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbgIDOJV (ORCPT
+        id S1730649AbgIDOKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:09:21 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:53444 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730581AbgIDOHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:07:17 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 084E6Dui018627;
-        Fri, 4 Sep 2020 09:06:13 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 084E6BWY018626;
-        Fri, 4 Sep 2020 09:06:11 -0500
-Date:   Fri, 4 Sep 2020 09:06:11 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Krzysztof Struczynski <krzysztof.struczynski@huawei.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "containers@lists.linux-foundation.org" 
-        <containers@lists.linux-foundation.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "stefanb@linux.vnet.ibm.com" <stefanb@linux.vnet.ibm.com>,
-        "sunyuqiong1988@gmail.com" <sunyuqiong1988@gmail.com>,
-        "mkayaalp@cs.binghamton.edu" <mkayaalp@cs.binghamton.edu>,
-        "dmitry.kasatkin@gmail.com" <dmitry.kasatkin@gmail.com>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "christian@brauner.io" <christian@brauner.io>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>, nick.dusek@gmail.com
-Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
-Message-ID: <20200904140611.GA18124@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <20200818152037.11869-1-krzysztof.struczynski@huawei.com> <1597767571.3898.15.camel@HansenPartnership.com> <401a2f36149f450291d1742aeb6c2260@huawei.com> <5331e60b5a1afb55e2bc778db1b95998466b687d.camel@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5331e60b5a1afb55e2bc778db1b95998466b687d.camel@linux.ibm.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 04 Sep 2020 09:06:13 -0500 (CDT)
+        Fri, 4 Sep 2020 10:10:40 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44857 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730568AbgIDNp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:45:56 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133509euoutp01f23933fcc7656481236de3623fbf565d~xmAmeLJaS0721507215euoutp01t
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133509euoutp01f23933fcc7656481236de3623fbf565d~xmAmeLJaS0721507215euoutp01t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599226509;
+        bh=oVvlfd4BWRvKpcZfemLuoBrPFcZ7vE33qi6qHPEMJzU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bZADD3NM1w2tJ2pTaO2nxdL24Nio2jCAVdnMNdQkCm6Spbn9RhHVfdeZtgwrEn9nV
+         YQVs0NbCaOCupXqW+Vn7OBKd/uI7/5/NgwOBnwtvubCvayOZci0yfItTVSc3yYRiLQ
+         UP9pFUz9eoY9xaIQwYhYPUAznm2RbFdX5pPCMOl8=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133509eucas1p2cdcfff47365ce2abf05a67b3cfd98d59~xmAmJPvH90781307813eucas1p2D;
+        Fri,  4 Sep 2020 13:35:09 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 40.76.05997.D82425F5; Fri,  4
+        Sep 2020 14:35:09 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133509eucas1p23ae97afc5f53f7d84e7f0183803ec483~xmAlyscfu1446814468eucas1p2o;
+        Fri,  4 Sep 2020 13:35:09 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200904133509eusmtrp18a2e515d0fff9afa972ff974ba8cdad1~xmAlyB8xp0766507665eusmtrp1L;
+        Fri,  4 Sep 2020 13:35:09 +0000 (GMT)
+X-AuditID: cbfec7f4-65dff7000000176d-79-5f52428d1da2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FB.BE.06314.C82425F5; Fri,  4
+        Sep 2020 14:35:08 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133508eusmtip184c2d322fe339707e2360f80c5b8e05d~xmAlICjeq1926319263eusmtip1f;
+        Fri,  4 Sep 2020 13:35:08 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Gerd Hoffmann <kraxel@redhat.com>, linux-media@vger.kernel.org
+Subject: [PATCH v10 25/30] dmabuf: fix common struct sg_table related issues
+Date:   Fri,  4 Sep 2020 15:17:06 +0200
+Message-Id: <20200904131711.12950-26-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa2xLYRj29VzXKEcNn+ukwULmNhJHsLKIfD/8ED8QCXM2Z91i7Wi3uSRo
+        LFhqc5nLanHpZDLTYXapqcu0UV1VS7oRrc7GGjLZMtGq+6bHKf497/O8z/c8efPRmPwxMYHO
+        1RTwWg2XpyCluOXRN+/ssvS1GfMspjFsmdclYW8abxBsf9cdgh2ynMDYjs8DJFtrdkhYU+sS
+        9l3AhbGRjjcStqHnBcG2W8+RbGl9M8Fee9hJsbaPIYJ93Bmmlo9EB32/SFR3oQ6ge1ETjoIv
+        7pLoVrSbQF1HnBLUWL0fvRrswdDJlzUA3fHrSTRw/zmJjjZdBSjcMGWNbKN06VY+L7eI185N
+        2yLNGfI8obYfn7ir3tQq0QPrWANIoCGzEL597QcGIKXlzBUAqxwmQhwiAIbvdeHiEAbQ774i
+        +Wupth2LCzUAetqMlCD8sVQeTREwycyHhn4DKeBE5iCAbWXDBQPGODAYOFyFC8JoZjXsKw7G
+        XqVpnJkOP15KFmgZkwZ7HF9xMSwJmusfYAJOiPHNxtCfepB5S0G3qzfeaCU8HGzERDwafnA2
+        USKeBN0nS3HRUAzgG+81ShxKAWw/YATi1hIY9H4nhRYYMxPesM4V6RXwfF0/JtCQGQFf9o8S
+        aCwGyy0VcVoGSw7Jxe0ZsNJ5/V+s7ZkvXgdB88CP+LFOAFhe3AuOg6TK/2EmAK6CcXyhTq3i
+        dakafuccHafWFWpUc7Ly1Q0g9sPcg85IC7D+zLQDhgaK4bJhyrUZcoIr0u1W2wGkMUWiLN3j
+        3iyXbeV27+G1+RnawjxeZwcTaVwxTrbgUu8mOaPiCvhtPL+d1/5VJXTCBD1Y9KQ6975mWrJ+
+        VWjF+MbWVMLMjHXYle8fbXH1lVxWcfuGPPMyP6d9UoYCG7XLyhcP3lRuwKaeyvIZK6I2uKEv
+        snfx2WxE5ei/XexekPKwVhVdhtYl3U7KSl4/s2ZaoFb56TQ35pxt0alneP6OyVMOTVeXfFnq
+        zza2PD1T4GOJkALX5XDzZ2FaHfcbzYpBcV0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsVy+t/xu7o9TkHxBh/6rC16z51kstg4Yz2r
+        xdv7u1kt/m+byGxx5et7NouVq48yWSzYb23x7NZJZosvVx4yWWx6fI3V4vKuOWwWPRu2slqs
+        PXKX3eLghyesFqfufmZ34PdovfSXzWPNvDWMHnu/LWDxuHNtD5vH9m8PWD3udx9n8ti8pN7j
+        9r/HzB6Tbyxn9Nh9s4HN4/2+q2wefVtWMXp83iQXwBulZ1OUX1qSqpCRX1xiqxRtaGGkZ2hp
+        oWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl/H/7Bn2ggnSFRsW7GdqYNwl1sXIySEhYCKx
+        5GA/SxcjF4eQwFJGieb/99ghEjISJ6c1sELYwhJ/rnWxQRR9YpRY8/QMM0iCTcBQoustREJE
+        oJNRYlr3R3YQh1ngLLPEr+fLwUYJC/hIvGm+w9TFyMHBIqAq8WGROkiYV8BO4vHRHywQG+Ql
+        Vm84ADaUEyi+dcYTsM1CArYSH+YsZpnAyLeAkWEVo0hqaXFuem6xoV5xYm5xaV66XnJ+7iZG
+        YExtO/Zz8w7GSxuDDzEKcDAq8fAy2AfFC7EmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++
+        qDQntfgQoynQTROZpUST84HxnlcSb2hqaG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUI
+        po+Jg1OqgdE8xLLsYG0d/4qWr44mpQZlvBNunlH9X6Z+ecHBF6GyvDKq+xvOb4xjdnS5FmtW
+        U1pzyU0iyzPKY8HukxLCn/I/9e+wflXXk+/tuK+WxX/yNLlFe6qsRVVr94uq10z/v0zl9CX+
+        qaGlXMc2CJXu2uQUHxrLZBizU7EzxCWAaauolPkPIS0FJZbijERDLeai4kQAxfkiVb8CAAA=
+X-CMS-MailID: 20200904133509eucas1p23ae97afc5f53f7d84e7f0183803ec483
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200904133509eucas1p23ae97afc5f53f7d84e7f0183803ec483
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200904133509eucas1p23ae97afc5f53f7d84e7f0183803ec483
+References: <20200904131711.12950-1-m.szyprowski@samsung.com>
+        <CGME20200904133509eucas1p23ae97afc5f53f7d84e7f0183803ec483@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 02:53:17PM -0400, Mimi Zohar wrote:
+The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+returns the number of the created entries in the DMA address space.
+However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+dma_unmap_sg must be called with the original number of the entries
+passed to the dma_map_sg().
 
-Good morning, I hope the week is ending well for everyone.
+struct sg_table is a common structure used for describing a non-contiguous
+memory buffer, used commonly in the DRM and graphics subsystems. It
+consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+and DMA mapped pages (nents entry).
 
-> On Fri, 2020-08-21 at 15:13 +0000, Krzysztof Struczynski wrote:
-> > > From: James Bottomley [mailto:James.Bottomley@HansenPartnership.com]
-> > > On Tue, 2020-08-18 at 17:20 +0200, krzysztof.struczynski@huawei.com
-> > > wrote:
-> > > > The measurement list remains global, with the assumption that there
-> > > > is only one TPM in the system. Each IMA namespace has a unique ID,
-> > > > that allows to track measurements per IMA namespace. Processes in one
-> > > > namespace, have access only to the measurements from that namespace.
-> > > > The exception is made for the initial IMA namespace, whose processes
-> > > > have access to all entries.
-> > > 
-> > > So I think this can work in the use case where the system owner is
-> > > responsible for doing the logging and attestation and the tenants just
-> > > trust the owner without requiring an attestation.  However, in a multi-
-> > > tenant system you need a way for the attestation to be per-container
-> > > (because the combined list of who executed what would be a security
-> > > leak between tenants).  Since we can't virtualise the PCRs without
-> > > introducing a vtpm this is going to require a vtpm infrastructure like
-> > > that used for virtual machines and then we can do IMA logging per
-> > > container.
-> > 
-> > I agree and wonder if we should decouple the attestation trust model,
-> > which depends on the specific use case (e.g. multi/single tenant,
-> > public/private cloud), from the IMA logic of linking the measurements to
-> > the container. Indeed, attestation from within the container might require
-> > anchoring to a vTPM/vPCR and the current measurement tagging mechanism can
-> > support several ways of anchoring them to a (virtual) root of trust.
-> > 
-> > > I don't think the above has to be in your first patch set, we just have
-> > > to have an idea of how it could be done to show that nothing in this
-> > > patch set precludes a follow on from doing this.
-> > 
-> > Given that virtualizing trust anchors seems like a separate problem in
-> > which industry consensus is not easy to reach for all use cases, an
-> > anchoring mechanism should probably be a separate IMA feature.
+It turned out that it was a common mistake to misuse nents and orig_nents
+entries, calling DMA-mapping functions with a wrong number of entries or
+ignoring the number of mapped entries returned by the dma_map_sg()
+function.
 
-> Other trust anchors for "trusted keys" has been discussed, but I wasn't
-> aware of any discussion about other trust anchors for the IMA
-> measurement list.  The IMA measurement list is very much tied to a TPM.
-> 
-> Including container measurements in the host measurement list, will
-> unnecessarily cause the host measurement list to grow.  The decision of
-> what should and shouldn't be included in the host measurement list
-> shouldn't be defined by the container.
+To avoid such issues, lets use a common dma-mapping wrappers operating
+directly on the struct sg_table objects and use scatterlist page
+iterators where possible. This, almost always, hides references to the
+nents and orig_nents entries, making the code robust, easier to follow
+and copy/paste safe.
 
-We have been shipping, and more importantly maintaining in the wild,
-systems with a namespaced IMA implementation for 4+ years now. We
-presented the foundations for all of this at the 2015 Linux Security
-Summit in Seattle.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ drivers/dma-buf/heaps/heap-helpers.c | 13 ++++++-------
+ drivers/dma-buf/udmabuf.c            |  7 +++----
+ 2 files changed, 9 insertions(+), 11 deletions(-)
 
-For the purposes of further conversation, I should clarify and
-indicate that we have been shipping and maintaining what a namespaced
-IMA implementation turns into when all of the engineering challenges
-have been addressed with respect to workability issues, particularly
-in regards to keeping the resultant system from being too fragile to
-be effectively deployed and maintained.
+diff --git a/drivers/dma-buf/heaps/heap-helpers.c b/drivers/dma-buf/heaps/heap-helpers.c
+index 9f964ca3f59c..d0696cf937af 100644
+--- a/drivers/dma-buf/heaps/heap-helpers.c
++++ b/drivers/dma-buf/heaps/heap-helpers.c
+@@ -140,13 +140,12 @@ struct sg_table *dma_heap_map_dma_buf(struct dma_buf_attachment *attachment,
+ 				      enum dma_data_direction direction)
+ {
+ 	struct dma_heaps_attachment *a = attachment->priv;
+-	struct sg_table *table;
+-
+-	table = &a->table;
++	struct sg_table *table = &a->table;
++	int ret;
+ 
+-	if (!dma_map_sg(attachment->dev, table->sgl, table->nents,
+-			direction))
+-		table = ERR_PTR(-ENOMEM);
++	ret = dma_map_sgtable(attachment->dev, table, direction, 0);
++	if (ret)
++		table = ERR_PTR(ret);
+ 	return table;
+ }
+ 
+@@ -154,7 +153,7 @@ static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
+ 				   struct sg_table *table,
+ 				   enum dma_data_direction direction)
+ {
+-	dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
++	dma_unmap_sgtable(attachment->dev, table, direction, 0);
+ }
+ 
+ static vm_fault_t dma_heap_vm_fault(struct vm_fault *vmf)
+diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+index acb26c627d27..89e293bd9252 100644
+--- a/drivers/dma-buf/udmabuf.c
++++ b/drivers/dma-buf/udmabuf.c
+@@ -63,10 +63,9 @@ static struct sg_table *get_sg_table(struct device *dev, struct dma_buf *buf,
+ 					GFP_KERNEL);
+ 	if (ret < 0)
+ 		goto err;
+-	if (!dma_map_sg(dev, sg->sgl, sg->nents, direction)) {
+-		ret = -EINVAL;
++	ret = dma_map_sgtable(dev, sg, direction, 0);
++	if (ret < 0)
+ 		goto err;
+-	}
+ 	return sg;
+ 
+ err:
+@@ -78,7 +77,7 @@ static struct sg_table *get_sg_table(struct device *dev, struct dma_buf *buf,
+ static void put_sg_table(struct device *dev, struct sg_table *sg,
+ 			 enum dma_data_direction direction)
+ {
+-	dma_unmap_sg(dev, sg->sgl, sg->nents, direction);
++	dma_unmap_sgtable(dev, sg, direction, 0);
+ 	sg_free_table(sg);
+ 	kfree(sg);
+ }
+-- 
+2.17.1
 
-If practical experience is worth anything, I don't believe that
-namespacing the current IMA implementation is the optimum path
-forward.  With respect to developing operationally relevant trusted
-platforms, the objective needs to be modeling the behavior of
-namespaces spawned from a known root behavior.
-
-The current IMA implementation provides a great deal of relevant
-infrastructure, but as these conversations have suggested, namespacing
-the current implementation is problematic given how entangled it has
-become with existing kernel infrastructure.  What is needed is
-something far simpler that delegates, on the basis of a namespace,
-security policy to something other then the kernel, consistent with
-what we have learned about policy over the last 29+ years of Linux
-development.
-
-With respect to roots of trust, I don't think TPM's/fTPM's, virtual or
-otherwise, are going to be the relevant technology moving forward,
-although they will be part of the picture.
-
-Mimi has another post down thread that I will provide some more direct
-reflections on all of this for whatever value they may have.
-
-> Mimi
-
-Have a good day.
-
-Dr. Greg
-
-As always,
-Dr. Greg Wettstein, Ph.D, Worker      Autonomously self-defensive
-Enjellic Systems Development, LLC     IOT platforms and edge devices.
-4206 N. 19th Ave.
-Fargo, ND  58102
-PH: 701-281-1686                      EMAIL: dg@enjellic.com
-------------------------------------------------------------------------------
-"I had far rather walk, as I do, in daily terror of eternity, than feel
- that this was only a children's game in which all of the contestants
- would get equally worthless prizes in the end."
-                                -- T. S. Elliot
