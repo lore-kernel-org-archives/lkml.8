@@ -2,112 +2,233 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C284DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24D0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827EF206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79DB0206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:06:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SyxcfG5/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rvfn1Bnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgIDFD2 (ORCPT
+        id S1726267AbgIDFGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:03:28 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11924 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726329AbgIDFDW (ORCPT
+        Fri, 4 Sep 2020 01:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgIDFGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:03:22 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f51ca8c0000>; Thu, 03 Sep 2020 22:03:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 03 Sep 2020 22:03:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 03 Sep 2020 22:03:22 -0700
-Received: from [10.21.180.64] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 4 Sep
- 2020 05:03:13 +0000
-Subject: Re: [PATCH net-next RFC v3 02/14] devlink: Add reload actions
- counters
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     Jiri Pirko <jiri@resnulli.us>, Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-3-git-send-email-moshe@mellanox.com>
- <20200831104827.GB3794@nanopsycho.orion>
- <1fa33c3c-57b8-fe38-52d6-f50a586a8d3f@nvidia.com>
- <20200901170127.7bf0d045@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Moshe Shemesh <moshe@nvidia.com>
-Message-ID: <ea262edd-96e1-6b15-5a7a-80867b42c175@nvidia.com>
-Date:   Fri, 4 Sep 2020 08:03:09 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 4 Sep 2020 01:06:19 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CEDCC061245
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:06:18 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id s10so611279plp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:06:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=CBbMB4VPz7Fp/I3o67RU25C6dBsW7GnQgeenEJJuSTw=;
+        b=Rvfn1BnhAg+y/6coc//ePKxc7FZWsnd+hdeOXshn2MhZk5umuXuTThMjqB6FCKmbff
+         sgSmeAxPftQyIsN6rRK6yq6eE7RaKVePVWgHwoeNSSWVlwgKrcDJ9eZp4zkRGgypdDQQ
+         C8GSqzK7knDsU4dsHYYwNo5gJbV1fMaQaIi0A34jEORfJ0nVevNrVUM708Yy5cu4u5ox
+         pRFflSiQUPMq7Z3rLGXpxE7EJlqUxp4P0XK/B2In77Y5KUmqSe7eeQ8alxgankoZD0tV
+         lajoUaOcV/2iBqQknr7bnsXqKGXOMcKtv25aMGxMJ4MEh9AhAOHCGnEQZhTTh/bX4ZUn
+         PoGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=CBbMB4VPz7Fp/I3o67RU25C6dBsW7GnQgeenEJJuSTw=;
+        b=E52Go8G7r0hB+yvkY25Slp+4muBIffCd+5nzyR26wUIryakU8KWRhZWy2rDYXMp7vH
+         Je8Car4xSa4V5ZDYqj5Sw597Yn2q9nIzgB+nV4xhKd4rdM7tIMpmOK9YxwHS8UYial+4
+         VQ39ctJVjXXxkxF6o2suMfBdMWlapJpS9s8Cv4KJRVKGy/f8DAK12LlaDj+NiRo9G3fa
+         VIA4AfHOZI6HHExc37Hlb+5Ld7drWtTmuxS7COrww1Xb7JyynouDi3Wr7FRY274ZI9wf
+         AazqPDu42UmGg4w8DBYvRMRRS7xAUHj4NpHfFyF0P3t+U1ghdE3NqzkzFnurKSP1zIw3
+         gMvA==
+X-Gm-Message-State: AOAM533SAdz8B1SrcdDlP2DqYW0rFbH2l73SoMfTXZw2cXptiOlrHvb9
+        yfJv72yXt3COSiMS6aArxKisWA==
+X-Google-Smtp-Source: ABdhPJwyHx/64jYDWTs4ttIoXGIjsEOyTW7OJHFB9S6rqlWJHC8IE9cTP+9hhRz8wSvzYxnEaCUYlg==
+X-Received: by 2002:a17:902:9a90:: with SMTP id w16mr7481201plp.188.1599195977499;
+        Thu, 03 Sep 2020 22:06:17 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id c5sm4254341pgj.0.2020.09.03.22.06.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 03 Sep 2020 22:06:16 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 10:36:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, sudeep.holla@arm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq,cppc: fix issue when hotplugging out policy->cpu
+Message-ID: <20200904050604.yoar2c6fofcikipp@vireshk-i7>
+References: <20200903111955.31029-1-ionela.voinescu@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200901170127.7bf0d045@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599195788; bh=qKDcv2oHASmKOtICKUlIuZGw+N8YcHxYlJdxGiuRcHM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=SyxcfG5/uG671ylO5Ecbe38XP+PTE+7vS2hZ3Q5AktfpkNIv938L39U3ujI3fiW02
-         AZmQiwqvt7bzaa704dteqqs9+6ZqKtpc7B+ejbUtj93dMOJ3f4sH5KZorUJCK1wwcU
-         ppe8OOMVkw4mqv7OgqZOT70UwhJj2hVRuD5u+NMVy/u8ZRdUb4W9KPlJ3YkrIFm0aT
-         NcgT8wml0ny7yX9SKnFIypAgQ02W5+685KbLDqlHEvk6vF5bO5tSIk8epzZ/z1ItWG
-         MjqlBbWssZLTX8p74/e8lTmRrGjarB5ewxl6sz306QFYXlqgnjtZulhCQ3AlaZ8f90
-         P68fvQDYJ+9FA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903111955.31029-1-ionela.voinescu@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03-09-20, 12:19, Ionela Voinescu wrote:
+> An issue is observed in the cpufreq CPPC driver when having dependency
+> domains (PSD) and the policy->cpu is hotplugged out.
+> 
+> Considering a platform with 4 CPUs and 2 PSD domains (CPUs 0 and 1 in
+> PSD-1, CPUs 2 and 3 in PSD-2), cppc_cpufreq_cpu_init() will be called
+> for the two cpufreq policies that are created and it will set
+> all_cpu_data[policy->cpu]->cpu = policy->cpu.
+> 
+> Therefore all_cpu_data[0]->cpu=0, and all_cpu_data[2]->cpu=2. But for
+> CPUs 1 and 3, all_cpu_data[{1,3}]->cpu will remain 0 from the structure
+> allocation.
+> 
+> If CPU 2 is hotplugged out, CPU 3 will become policy->cpu. But its
+> all_cpu_data[3]->cpu will remain 0. Later, when the .target() function
+> is called for policy2, the cpu argument to cppc_set_perf() will be 0 and
+> therefore it will use the performance controls of CPU 0, which will
+> result in a performance level change for the wrong domain.
+> 
+> While the possibility of setting a correct CPU value in the per-cpu
+> cppc_cpudata structure is available, it can be noticed that this cpu value
+> is not used at all outside the .target() function, where it's not actually
+> necessary. Therefore, remove the cpu variable from the cppc_cpudata
+> structure and use policy->cpu in the .target() function as done for the
+> other CPPC cpufreq functions.
+> 
+> Fixes: 5477fb3bd1e8  ("ACPI / CPPC: Add a CPUFreq driver for use with CPPC")
+> Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> 
+> Testing was done on a Juno R2 platform (with the proper ACPI/CPPC setup):
+> CPUs 0, 1, 2, 3 are in PSD-0 (policy0), CPUs 4 and 5 are in PSD-4
+> (policy4).
+> 
+> Before the fix:
+> 
+> root@sqwt-ubuntu:~# dmesg | grep address
+> [    2.165177] ACPI CPPC: ACPI desired perf address 0: - ffff80001004d200
+> [    2.174226] ACPI CPPC: ACPI desired perf address 1: - ffff800010055200
+> [    2.183231] ACPI CPPC: ACPI desired perf address 2: - ffff80001005d200
+> [    2.192234] ACPI CPPC: ACPI desired perf address 3: - ffff800010065200
+> [    2.201245] ACPI CPPC: ACPI desired perf address 4: - ffff80001006d218
+> [    2.210256] ACPI CPPC: ACPI desired perf address 5: - ffff800011ff1218
+> [..]
+> [    2.801940] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 38300
+> [    2.835286] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
+> [..]
+> root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
+> [   72.098758] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
+> [   85.430645] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
+> [  102.606380] CPPC Cpufreq:CPPC: Calculate: (6285/261)*4266=102727.
+> [  102.612491] CPPC Cpufreq:CPPC: Core rate = 1203832, arch timer rate: 50000000
+> [  102.619659] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
+> [  102.626898] CPU4: shutdown
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
+> [  141.116882] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 51200
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
+> [  159.288273] ACPI CPPC: Writing to address for CPU 0:ffff80001004d200: 102400
+> 
+> 
+> After the fix:
+> 
+> root@sqwt-ubuntu:~# cd /sys/devices/system/cpu/cpufreq/
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
+> [  139.903322] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 51200
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
+> [  147.279040] ACPI CPPC: Writing to address for CPU 4:ffff80001006d218: 102400
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 0 > ../cpu4/online
+> [  153.598686] CPPC Cpufreq:CPPC: Calculate: (6171/253)*4266=104053.
+> [  153.604797] CPPC Cpufreq:CPPC: Core rate = 1219371, arch timer rate: 50000000
+> [  153.611960] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
+> [  153.619190] CPU4: shutdown
+> [  153.621911] psci: CPU4 killed (polled 0 ms)
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 600000 > policy4/scaling_setspeed
+> [  170.122495] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 51200
+> root@sqwt-ubuntu:/sys/devices/system/cpu/cpufreq# echo 1200000 > policy4/scaling_setspeed
+> [  177.206342] ACPI CPPC: Writing to address for CPU 5:ffff800011ff1218: 102400
+> 
+> Thanks,
+> Ionela.
+> 
+>  drivers/cpufreq/cppc_cpufreq.c | 8 ++++----
+>  include/acpi/cppc_acpi.h       | 1 -
+>  2 files changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index f29e8d0553a8..54457f5fe49e 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -149,8 +149,9 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
+>  		unsigned int target_freq,
+>  		unsigned int relation)
+>  {
+> -	struct cppc_cpudata *cpu;
+>  	struct cpufreq_freqs freqs;
+> +	int cpu_num = policy->cpu;
+> +	struct cppc_cpudata *cpu;
+>  	u32 desired_perf;
+>  	int ret = 0;
+>  
+> @@ -166,12 +167,12 @@ static int cppc_cpufreq_set_target(struct cpufreq_policy *policy,
+>  	freqs.new = target_freq;
+>  
+>  	cpufreq_freq_transition_begin(policy, &freqs);
+> -	ret = cppc_set_perf(cpu->cpu, &cpu->perf_ctrls);
+> +	ret = cppc_set_perf(cpu_num, &cpu->perf_ctrls);
+>  	cpufreq_freq_transition_end(policy, &freqs, ret != 0);
+>  
+>  	if (ret)
+>  		pr_debug("Failed to set target on CPU:%d. ret:%d\n",
+> -				cpu->cpu, ret);
+> +				cpu_num, ret);
+>  
+>  	return ret;
+>  }
+> @@ -247,7 +248,6 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+>  
+>  	cpu = all_cpu_data[policy->cpu];
+>  
+> -	cpu->cpu = cpu_num;
+>  	ret = cppc_get_perf_caps(policy->cpu, &cpu->perf_caps);
+>  
+>  	if (ret) {
+> diff --git a/include/acpi/cppc_acpi.h b/include/acpi/cppc_acpi.h
+> index a6a9373ab863..451132ec83c9 100644
+> --- a/include/acpi/cppc_acpi.h
+> +++ b/include/acpi/cppc_acpi.h
+> @@ -124,7 +124,6 @@ struct cppc_perf_fb_ctrs {
+>  
+>  /* Per CPU container for runtime CPPC management. */
+>  struct cppc_cpudata {
+> -	int cpu;
+>  	struct cppc_perf_caps perf_caps;
+>  	struct cppc_perf_ctrls perf_ctrls;
+>  	struct cppc_perf_fb_ctrs perf_fb_ctrs;
 
-On 9/2/2020 3:01 AM, Jakub Kicinski wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Tue, 1 Sep 2020 22:05:36 +0300 Moshe Shemesh wrote:
->>>> +void devlink_reload_actions_cnts_update(struct devlink *devlink, unsigned long actions_done)
->>>> +{
->>>> +  int action;
->>>> +
->>>> +  for (action = 0; action < DEVLINK_RELOAD_ACTION_MAX; action++) {
->>>> +          if (!test_bit(action, &actions_done))
->>>> +                  continue;
->>>> +          devlink->reload_actions_cnts[action]++;
->>>> +  }
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(devlink_reload_actions_cnts_update);
->>> I don't follow why this is an exported symbol if you only use it from
->>> this .c. Looks like a leftover...
->>>
->> Not leftover, in the commit message I notified and explained why I
->> exposed it.
-> We should generate devlink notifications on this event (down and up)
-> so the counters don't have to be exposed to drivers. We need a more
-> thorough API.
+With the way things are designed, I believe this is one of the bugs
+out of many.
 
+The structure cppc_cpudata must be shared across all CPUs of the same
+policy, so they all end up using the same set of values for different
+variables. i.e. it shouldn't be a per-cpu thing at all. Just allocate
+it from cpufreq_driver->init and store in policy->driver_data for use
+elsewhere.
 
-I will add devlink notifications for the counters, but what I meant here 
-is to have counters data updated also on hosts that are having reset but 
-didn't trigger the fw_activate action by themselves, so such host's 
-devlink is not aware of it. I mean fw_activate action was triggered on 
-another's host devlink sharing the same device/firmware.
+That would be a proper fix IMO, we just avoided one of the bugs here
+otherwise.
 
-Maybe I should have named this function 
-devlink_reload_implicit_actions_performed().
-
+-- 
+viresh
