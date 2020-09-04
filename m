@@ -2,189 +2,64 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E991DC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:34:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EBC2D0E1
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B80982074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:34:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599226462;
-	bh=x0jRDvCp22UPsUYFnsR/oV19tzgSwO5cbcHG4SpBbzo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRr4FdN341OvYpfHF5C4uqmpKEEVY1wEKI6rNYIXWHIN+SKgYDQgvJsyriQNkb+LV
-	 KclzmCJPlku52rv2MxJmmTX0PkcpS29doPaz0g24XgFV2aWl+LfK77uiG6Dr2SOyY8
-	 Dl2uaVGHzFV3hMyhGtkrkT1kJUoRRRqia/LXlLFE=
+	by mail.kernel.org (Postfix) with ESMTP id ACC732083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgIDNeT (ORCPT
+        id S1730404AbgIDNeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 09:34:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59172 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730301AbgIDNad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:30:33 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE5C2073B;
-        Fri,  4 Sep 2020 13:29:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226196;
-        bh=x0jRDvCp22UPsUYFnsR/oV19tzgSwO5cbcHG4SpBbzo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5UonjHpz7TVONDKQimvQujTFRwkGMiy6WZd5Jkvl45sjPIu6YvMjtRzDbkrgEquY
-         xiIDKmgcv1l5WWdeDSNTOIz3f6SOl7mYrv9gfgk8Z7IT3e6Vu0gMn5LvzAHZm2+Kiu
-         Ozy2xPoJeAOUENBimSeVBVDksbjwXkxzt/74+tyA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: [PATCH 5.4 02/16] HID: core: Sanitize event code and type when mapping input
-Date:   Fri,  4 Sep 2020 15:29:55 +0200
-Message-Id: <20200904120257.326980422@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730443AbgIDNaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:30:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id C7267AC19;
+        Fri,  4 Sep 2020 13:29:33 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 15:30:01 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc:     ltp@lists.linux.it,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, lkp@lists.01.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [LTP] [PATCH] syscall/ptrace08: Simplify the test.
+Message-ID: <20200904133001.GA9091@yuki.lan>
+References: <20200904115817.8024-1-chrubis@suse.cz>
+ <20200904132121.GE4768@mussarela>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904132121.GE4768@mussarela>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+Hi!
+> This is failing on our 4.4 and 4.15 kernels, though they passed with the
+> previous test and have commit f67b15037a7a applied.
+> 
+> So, this is dependent on some other behavior/commit that has changed. It passes
+> on 5.4, for example. I'll try to investigate further.
 
-commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
+We are looking at it now in SUSE, looks like the initial fix to the
+kernel postponed the check to the write to the dr7 that enabled the
+breakpoint, so when the dr0 wasn't enabled you could write anything
+there.
 
-When calling into hid_map_usage(), the passed event code is
-blindly stored as is, even if it doesn't fit in the associated bitmap.
+Also looks like somehow the EINVAL is not propagated into the POKEUSER
+call to the dr7 as it should have been.
 
-This event code can come from a variety of sources, including devices
-masquerading as input devices, only a bit more "programmable".
-
-Instead of taking the event code at face value, check that it actually
-fits the corresponding bitmap, and if it doesn't:
-- spit out a warning so that we know which device is acting up
-- NULLify the bitmap pointer so that we catch unexpected uses
-
-Code paths that can make use of untrusted inputs can now check
-that the mapping was indeed correct and bail out if not.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/hid/hid-input.c      |    4 ++++
- drivers/hid/hid-multitouch.c |    2 ++
- include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
- 3 files changed, 35 insertions(+), 13 deletions(-)
-
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(str
- 	}
- 
- mapped:
-+	/* Mapping failed, bail out */
-+	if (!bit)
-+		return;
-+
- 	if (device->driver->input_mapped &&
- 	    device->driver->input_mapped(device, hidinput, field, usage,
- 					 &bit, &max) < 0) {
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -864,6 +864,8 @@ static int mt_touch_input_mapping(struct
- 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
- 
- 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
-+		if (!*bit)
-+			return -1;
- 		input_set_capability(hi->input, EV_KEY, code);
- 		return 1;
- 
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -959,34 +959,49 @@ static inline void hid_device_io_stop(st
-  * @max: maximal valid usage->code to consider later (out parameter)
-  * @type: input event type (EV_KEY, EV_REL, ...)
-  * @c: code which corresponds to this usage and type
-+ *
-+ * The value pointed to by @bit will be set to NULL if either @type is
-+ * an unhandled event type, or if @c is out of range for @type. This
-+ * can be used as an error condition.
-  */
- static inline void hid_map_usage(struct hid_input *hidinput,
- 		struct hid_usage *usage, unsigned long **bit, int *max,
--		__u8 type, __u16 c)
-+		__u8 type, unsigned int c)
- {
- 	struct input_dev *input = hidinput->input;
--
--	usage->type = type;
--	usage->code = c;
-+	unsigned long *bmap = NULL;
-+	unsigned int limit = 0;
- 
- 	switch (type) {
- 	case EV_ABS:
--		*bit = input->absbit;
--		*max = ABS_MAX;
-+		bmap = input->absbit;
-+		limit = ABS_MAX;
- 		break;
- 	case EV_REL:
--		*bit = input->relbit;
--		*max = REL_MAX;
-+		bmap = input->relbit;
-+		limit = REL_MAX;
- 		break;
- 	case EV_KEY:
--		*bit = input->keybit;
--		*max = KEY_MAX;
-+		bmap = input->keybit;
-+		limit = KEY_MAX;
- 		break;
- 	case EV_LED:
--		*bit = input->ledbit;
--		*max = LED_MAX;
-+		bmap = input->ledbit;
-+		limit = LED_MAX;
- 		break;
- 	}
-+
-+	if (unlikely(c > limit || !bmap)) {
-+		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
-+				    input->name, c, type);
-+		*bit = NULL;
-+		return;
-+	}
-+
-+	usage->type = type;
-+	usage->code = c;
-+	*max = limit;
-+	*bit = bmap;
- }
- 
- /**
-@@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(s
- 		__u8 type, __u16 c)
- {
- 	hid_map_usage(hidinput, usage, bit, max, type, c);
--	clear_bit(c, *bit);
-+	if (*bit)
-+		clear_bit(usage->code, *bit);
- }
- 
- /**
-
-
+-- 
+Cyril Hrubis
+chrubis@suse.cz
