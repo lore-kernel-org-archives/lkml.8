@@ -2,248 +2,153 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C275BC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF8FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94D7B2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537BE2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5kOAMnC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FjGzQ3Bg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgIDPYV (ORCPT
+        id S1726384AbgIDP2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbgIDPYN (ORCPT
+        Fri, 4 Sep 2020 11:28:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:36452 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730388AbgIDP2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:24:13 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771E5C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:24:12 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id mm21so3355251pjb.4
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:24:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFWCEB6g5/V8I5o7+NdrYXVC2crJmMjghqm7UvM9SmE=;
-        b=T5kOAMnCALaVKK9A++6od7QZIMe5iZSGL7Av9nrb+C/13a1kxZO8naPXDR8CQho22R
-         4YjPBl9JOQRtiD4SvLqPAjALyy8VSTegVnpYn61ISDbd+4s1vIbb+ZFZjJj4+KNbyoWs
-         f8UblN18p+xIAR8YnaYb2hY98WB6Jd/dBkBwZfWIybeKATQ9OHzflhrSRsVg19eoXRBv
-         KZT9GH5Ta7C33jBYFJG+a3Ax3y/bBLrTNpFzJCUTMRA7SvCNCdDRuqjAAhrv34vZoF2y
-         C+qBhKdy1yLvTRCjXpot88j2QvoDi1KZQc4eXry2xZYp9ZsCY8KRtMTiyoacnJ+sfu9H
-         6Kqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mFWCEB6g5/V8I5o7+NdrYXVC2crJmMjghqm7UvM9SmE=;
-        b=Vq/Dk3XmJUkqp8olN/9RSYcmX08uFnacCCrLc81PkNHBgQhqMPuv/GHPIXOEOH3Bp8
-         zMZB2zJybKhsq6Al4Qp+asn6kea74YI0Gt32DlB4jdTMVscyQeBJ24eZbDrqmHnKU72R
-         JLSNlUi/G8FRh80LBtdnX+85Wf4fXAJK6buXQDGDWw4OlGJmUerq5lz3Re1x/9dAO0rq
-         TJta7Z5jDQPk7ZJfaxOPQj/TI0F1g0+e0Grg2ArK74QshEr0G646wXZr/js0MNGe5zpz
-         b3f8O/XFcFQ7hMbKWjV1Ka3YUn7ocJY9aOTBRiKxQxiE31zbn+uSSCy5r7U/kiZKecEp
-         uMBw==
-X-Gm-Message-State: AOAM532PpJ8FfECcWvJXLk8ahDmXWHGbjP6Zd9aG5gr8Tz/9xn2cTbC/
-        8prlJyrOkgPCavC6ekNOGbc=
-X-Google-Smtp-Source: ABdhPJyda1tCaODMWogJusRZ7J8bf8+InasubVVjHc9ghjHIwiVR/DEeOlWIyz5Md2sRDboknCZTSg==
-X-Received: by 2002:a17:90a:8c8f:: with SMTP id b15mr8602404pjo.84.1599233051999;
-        Fri, 04 Sep 2020 08:24:11 -0700 (PDT)
-Received: from vultr.guest ([141.164.41.4])
-        by smtp.gmail.com with ESMTPSA id 141sm7165421pfb.50.2020.09.04.08.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:24:11 -0700 (PDT)
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [RESEND PATCH] perf: ftrace: Add filter support for option -F/--funcs
-Date:   Fri,  4 Sep 2020 23:23:57 +0800
-Message-Id: <20200904152357.6053-1-changbin.du@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 4 Sep 2020 11:28:07 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FJi3i188512;
+        Fri, 4 Sep 2020 15:28:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=oisI33Zpu5BicchVLKMPafK1jiLJVKXmuASoEoz4pKQ=;
+ b=FjGzQ3Bgrhfw5U6SmoO0rXJaE2YqfhO1B3Fv07YuD8KaHwoZVPZlHZCJ76J7gEUpp8MR
+ 4F+kTT0ma5v59fAi/cJ5hS/u9fPyXBMDLqIpRpGr0rk4v0WiYIKVtH+pKw7TL/6hvoeK
+ MV3cL91q8emn5J+mWwXIzL04pLJYPWzpTtsSjs04XTlgVdx2GBR35vgzj47snfcdhTLU
+ odgFgNscdvHfVF1NQRz9/LAN1CFsUtf1SCAhblZ6V6SbVcncNTGGvpvKQPbZX/EWPk9Q
+ LXyzwfQA1TdhqA6X4FTabNaVy618QQLmKIduaPqBl125xSkm+hhMTtwdhlKAG9UL6haI jg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 339dmndgut-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 04 Sep 2020 15:28:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 084FLE6x117158;
+        Fri, 4 Sep 2020 15:26:03 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 33bhs4mxc5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Sep 2020 15:26:02 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 084FQ0xh003470;
+        Fri, 4 Sep 2020 15:26:00 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 04 Sep 2020 08:26:00 -0700
+Date:   Fri, 4 Sep 2020 08:25:59 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
+Message-ID: <20200904152559.GB6088@magnolia>
+References: <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
+ <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
+ <20200822143326.GC199705@mit.edu>
+ <aff250ad-4c31-15c2-fa1d-3f3945cb7aa5@kernel.dk>
+ <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
+ <049a97db-c362-bcfb-59e5-4b1d2df59383@kernel.dk>
+ <5140ba6c-779c-2a71-b7f2-3c3220cdf19c@kernel.dk>
+ <68510957-c887-8e26-4a1a-a7a93488586a@kernel.dk>
+ <20200904035528.GE558530@mit.edu>
+ <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=1 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009040134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9734 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=1
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009040134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as 'perf probe -F', this patch adds filter support for the ftrace
-subcommand option '-F, --funcs <[FILTER]>'.
+On Fri, Sep 04, 2020 at 08:51:24AM -0600, Jens Axboe wrote:
+> On 9/3/20 9:55 PM, Theodore Y. Ts'o wrote:
+> > Hi Jens,
+> > 
+> > Sorry, the past few months have been *crazy* insane.  Between Linux
+> > Plumbers Conference organizing, having to deal with some interns at
+> > $WORK, performance reviews, etc.., etc., it's been a perfect storm.
+> > As a result, I was late getting the primary ext4 pull request to
+> > Linus, and he's already yelled at me for a late pull request.
+> > 
+> > As a result, I'm being super paranoid about asking Linus for anything,
+> > even a one-time change, if it's not a bug fix.  And what you are
+> > asking for isn't a bug fix, but enabling a new feature.
+> 
+> That's fine, we blew past the 5.9 window long ago imho. As mentioned,
+> back in May we could have solved this by just adding your acked-by
+> or reviewed-by to the patch like we did for xfs/btrfs. That removes the
+> ext4 tree dependency. Obviously that's no longer a concern for 5.10, but
+> I need to know if we're going one of two routes:
+> 
+> a) I'm queueing this up, in which case I'll still need that ack/review
+> b) you're queueing it up, in which case you can just grab it
+> 
+> I just don't want to end up in the same situation for 5.10, and then
+> we're pushing this out 2 releases at that point...
+> 
+> > Worse, right now, -rc1 and -rc2 is causing random crashes in my
+> > gce-xfstests framework.  Sometimes it happens before we've run even a
+> > single xfstests; sometimes it happens after we have successfully
+> > completed all of the tests, and we're doing a shutdown of the VM under
+> > test.  Other times it happens in the middle of a test run.  Given that
+> > I'm seeing this at -rc1, which is before my late ext4 pull request to
+> > Linus, it's probably not an ext4 related bug.  But it also means that
+> > I'm partially blind in terms of my kernel testing at the moment.  So I
+> > can't even tell Linus that I've run lots of tests and I'm 100%
+> > confident your one-line change is 100% safe.
+> > 
+> > Next week after Labor Day, I should be completely done with the
+> > performance review writeups that are on my plate, and I will hopefully
+> > have a bit more time to try to debug these mysterious failures.  Or
+> > maybe someone else will be able to figure out what the heck is going
+> > wrong, and perhaps -rc3 will make all of these failures go away.
 
-Here is an example that only lists functions which start with 'vfs_':
-$ sudo perf ftrace -F vfs_*
-vfs_fadvise
-vfs_fallocate
-vfs_truncate
-vfs_open
-vfs_setpos
-vfs_llseek
-vfs_readf
-vfs_writef
-...
+FWIW I saw a strange crash in the xfs/iomap directio code that I could
+never reproduce again, but none of my newly onlined ext4 fstests vms
+have died, and I've been running a combination of 5.9-rc1 and 5.9-rc3 +
+other xfs goodies.  Good luck!
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
----
- tools/perf/Documentation/perf-ftrace.txt |  3 +-
- tools/perf/builtin-ftrace.c              | 84 ++++++++++++++++++++++--
- 2 files changed, 80 insertions(+), 7 deletions(-)
+--D
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 78358af9a1c4..1e91121bac0f 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -33,7 +33,8 @@ OPTIONS
- 
- -F::
- --funcs::
--        List all available functions to trace.
-+        List available functions to trace. It accepts a pattern to
-+        only list interested functions.
- 
- -p::
- --pid=::
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 1d44bc2f63d8..9366fad591dc 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -25,6 +25,7 @@
- #include "target.h"
- #include "cpumap.h"
- #include "thread_map.h"
-+#include "strfilter.h"
- #include "util/cap.h"
- #include "util/config.h"
- #include "util/units.h"
-@@ -36,7 +37,6 @@ struct perf_ftrace {
- 	struct evlist		*evlist;
- 	struct target		target;
- 	const char		*tracer;
--	bool			list_avail_functions;
- 	struct list_head	filters;
- 	struct list_head	notrace;
- 	struct list_head	graph_funcs;
-@@ -181,6 +181,40 @@ static int read_tracing_file_to_stdout(const char *name)
- 	return ret;
- }
- 
-+static int read_tracing_file_by_line(const char *name,
-+				     void (*cb)(char *str, void *arg),
-+				     void *cb_arg)
-+{
-+	char *line = NULL;
-+	size_t len = 0;
-+	char *file;
-+	FILE *fp;
-+
-+	file = get_tracing_file(name);
-+	if (!file) {
-+		pr_debug("cannot get tracing file: %s\n", name);
-+		return -1;
-+	}
-+
-+	fp = fopen(file, "r");
-+	if (fp == NULL) {
-+		pr_debug("cannot open tracing file: %s\n", name);
-+		put_tracing_file(file);
-+		return -1;
-+	}
-+
-+	while (getline(&line, &len, fp) != -1) {
-+		cb(line, cb_arg);
-+	}
-+
-+	if (line)
-+		free(line);
-+
-+	fclose(fp);
-+	put_tracing_file(file);
-+	return 0;
-+}
-+
- static int write_tracing_file_int(const char *name, int value)
- {
- 	char buf[16];
-@@ -557,9 +591,6 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
- 	signal(SIGCHLD, sig_handler);
- 	signal(SIGPIPE, sig_handler);
- 
--	if (ftrace->list_avail_functions)
--		return read_tracing_file_to_stdout("available_filter_functions");
--
- 	if (reset_tracing_files(ftrace) < 0) {
- 		pr_err("failed to reset ftrace\n");
- 		goto out;
-@@ -683,6 +714,46 @@ static int perf_ftrace_config(const char *var, const char *value, void *cb)
- 	return -1;
- }
- 
-+static void list_function_cb(char *str, void *arg)
-+{
-+	struct strfilter *filter = (struct strfilter *)arg;
-+
-+	if (strfilter__compare(filter, str))
-+		printf("%s", str);
-+}
-+
-+static int opt_list_avail_functions(const struct option *opt __maybe_unused,
-+				    const char *str, int unset)
-+{
-+	struct strfilter *filter;
-+	const char *err = NULL;
-+	int ret;
-+
-+	if (unset || !str)
-+		return -1;
-+
-+	filter = strfilter__new(str, &err);
-+	if (!filter)
-+		return err ? -EINVAL : -ENOMEM;
-+
-+	ret = strfilter__or(filter, str, &err);
-+	if (ret == -EINVAL) {
-+		pr_err("Filter parse error at %td.\n", err - str + 1);
-+		pr_err("Source: \"%s\"\n", str);
-+		pr_err("         %*c\n", (int)(err - str + 1), '^');
-+		strfilter__delete(filter);
-+		return ret;
-+	}
-+
-+	ret = read_tracing_file_by_line("available_filter_functions",
-+					list_function_cb, filter);
-+	strfilter__delete(filter);
-+	if (ret < 0)
-+		return ret;
-+
-+	exit(0);
-+}
-+
- static int parse_filter_func(const struct option *opt, const char *str,
- 			     int unset __maybe_unused)
- {
-@@ -817,8 +888,9 @@ int cmd_ftrace(int argc, const char **argv)
- 	const struct option ftrace_options[] = {
- 	OPT_STRING('t', "tracer", &ftrace.tracer, "tracer",
- 		   "Tracer to use: function_graph(default) or function"),
--	OPT_BOOLEAN('F', "funcs", &ftrace.list_avail_functions,
--		    "Show available functions to filter"),
-+	OPT_CALLBACK_DEFAULT('F', "funcs", NULL, "[FILTER]",
-+			     "Show available functions to filter",
-+			     opt_list_avail_functions, "*"),
- 	OPT_STRING('p', "pid", &ftrace.target.pid, "pid",
- 		   "Trace on existing process id"),
- 	/* TODO: Add short option -t after -t/--tracer can be removed. */
--- 
-2.25.1
-
+> > I'm sorry your frustrated; I'm frustrated too!  But until I can find
+> > the time to do a full bisect (v5.8 works just fine.  v5.9-rc1 is
+> > flakey as hell when booting my test config in a GCE VM), I'm not in a
+> > position to send anything to Linus.
+> 
+> That looks nasty, good luck! Hopefully the bisect will be helpful. FWIW,
+> in the testing I've done (with this patch) on ext4 and with XFS, I
+> haven't seen anything odd. That's using real hardware though, and qemu
+> on the laptop, no GCE.
+> 
+> -- 
+> Jens Axboe
+> 
