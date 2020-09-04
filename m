@@ -2,121 +2,81 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C2FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE520C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67BC5206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="BGzSa721"
+	by mail.kernel.org (Postfix) with ESMTP id 6E2FE206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgIDMmf (ORCPT
+        id S1730274AbgIDMmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:42:35 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:49272 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729297AbgIDMmR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:42:17 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id C8382187;
-        Fri,  4 Sep 2020 15:41:24 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599223284;
-        bh=4xVR0meJIvh1rEibqmfyPtAJgTOGQBkBefyqLtNjf1I=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=BGzSa721zbnxxY03ztTSlOE5OcXrCC8OiYOjYvqGqOMPC9JYVgbZU96tL5lslDc1u
-         AMOVX1VXIETE1IIaYkYwcbfRxyc4TkQJtUH+UVynYJLf5qvO01aO1fg5Df/5ZPLzMe
-         CV0p0vm3Vh2uSezYcJUoHJlvfdsiEq6AeTcKbtyE=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 4 Sep 2020 15:41:24 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Fri, 4 Sep 2020 15:41:24 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "dsterba@suse.cz" <dsterba@suse.cz>,
-        "aaptel@suse.com" <aaptel@suse.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "joe@perches.com" <joe@perches.com>,
-        "mark@harmstone.com" <mark@harmstone.com>
-Subject: RE: [PATCH v3 04/10] fs/ntfs3: Add file operations and implementation
-Thread-Topic: [PATCH v3 04/10] fs/ntfs3: Add file operations and
- implementation
-Thread-Index: AQHWfUkmGGliHMdep0qOFBeV9s6Y96lNd7cAgAr+VLA=
-Date:   Fri, 4 Sep 2020 12:41:24 +0000
-Message-ID: <d82dae3c12d94db7a2a212a8b8b79e8b@paragon-software.com>
-References: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
- <20200828143938.102889-5-almaz.alexandrovich@paragon-software.com>
- <20200828154544.GJ1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200828154544.GJ1236603@ZenIV.linux.org.uk>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 4 Sep 2020 08:42:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57356 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730151AbgIDMmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:42:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 87E75ACB5;
+        Fri,  4 Sep 2020 12:42:21 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 14:42:19 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        osalvador@suse.de, richard.weiyang@gmail.com, vbabka@suse.cz,
+        rientjes@google.com
+Subject: Re: [PATCH v2] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+Message-ID: <20200904124219.GB4610@dhcp22.suse.cz>
+References: <20200903140032.380431-1-pasha.tatashin@soleen.com>
+ <6ec66eb9-eeba-5076-af97-cef59ed5cbaa@redhat.com>
+ <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903123136.1fa50e773eb58c6200801e65@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@ftp.linux.org.uk>
-Sent: Friday, August 28, 2020 6:46 PM
-> On Fri, Aug 28, 2020 at 07:39:32AM -0700, Konstantin Komarov wrote:
->=20
-> > +static struct dentry *__ntfs_lookup(struct inode *dir, struct dentry *=
-dentry,
-> > +				    struct ntfs_fnd *fnd)
-> > +{
-> > +	struct dentry *d;
-> > +	struct inode *inode;
-> > +
-> > +	inode =3D dir_search(dir, &dentry->d_name, fnd);
-> > +
-> > +	if (!inode) {
-> > +		d_add(dentry, NULL);
-> > +		d =3D NULL;
-> > +		goto out;
-> > +	}
-> > +
-> > +	if (IS_ERR(inode)) {
-> > +		d =3D ERR_CAST(inode);
-> > +		goto out;
-> > +	}
-> > +
-> > +	d =3D d_splice_alias(inode, dentry);
-> > +	if (IS_ERR(d)) {
-> > +		iput(inode);
-> > +		goto out;
-> > +	}
-> > +
-> > +out:
-> > +	return d;
-> > +}
->=20
-> This is bollocks.  First and foremost, d_splice_alias() *does* iput() on
-> failure, so you've got double-put there.  What's more
-> 	* d_splice_alias(ERR_PTR(err), dentry) return err
-> 	* d_splice_alias(NULL, dentry) is equivalent to d_add(dentry, NULL) and =
-returns NULL
->=20
-> IOW, all that boilerplate could be replaced with one line:
->=20
-> 	return d_splice_alias(dir_search(dir, &dentry->d_name, fnd), dentry);
+On Thu 03-09-20 12:31:36, Andrew Morton wrote:
+> On Thu, 3 Sep 2020 19:36:26 +0200 David Hildenbrand <david@redhat.com> wrote:
+> 
+> > (still on vacation, back next week on Tuesday)
+> > 
+> > I didn't look into discussions in v1, but to me this looks like we are
+> > trying to hide an actual bug by implementing hacks in the caller
+> > (repeated calls to drain_all_pages()). What about alloc_contig_range()
+> > users - you get more allocation errors just because PCP code doesn't
+> > play along.
+> > 
+> > There *is* strong synchronization with the page allocator - however,
+> > there seems to be one corner case race where we allow to allocate pages
+> > from isolated pageblocks.
+> > 
+> > I want that fixed instead if possible, otherwise this is just an ugly
+> > hack to make the obvious symptoms (offlining looping forever) disappear.
+> > 
+> > If that is not possible easily, I'd much rather want to see all
+> > drain_all_pages() calls being moved to the caller and have the expected
+> > behavior documented instead of specifying "there is no strong
+> > synchronization with the page allocator" - which is wrong in all but PCP
+> > cases (and there only in one possible race?).
+> > 
+> 
+> It's a two-line hack which fixes a bug in -stable kernels, so I'm
+> inclined to proceed with it anyway.  We can undo it later on as part of
+> a better fix, OK?
 
-Hi Al! Agreed. Will be fixed in v4.
-Thanks.
+Agreed. http://lkml.kernel.org/r/20200904070235.GA15277@dhcp22.suse.cz
+for reference.
+-- 
+Michal Hocko
+SUSE Labs
