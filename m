@@ -2,107 +2,104 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA34C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3994C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E072078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89183206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:06:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DG8ozdPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgIDNFH (ORCPT
+        id S1730349AbgIDNGR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:05:07 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35199 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729297AbgIDNFD (ORCPT
+        Fri, 4 Sep 2020 09:06:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729297AbgIDNGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:05:03 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-262-lPIx2QwrN4G0pg7GL2iAYA-1; Fri, 04 Sep 2020 09:04:58 -0400
-X-MC-Unique: lPIx2QwrN4G0pg7GL2iAYA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 193E3801AF2;
-        Fri,  4 Sep 2020 13:04:57 +0000 (UTC)
-Received: from shodan.usersys.redhat.com (unknown [10.43.17.22])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5B411002D66;
-        Fri,  4 Sep 2020 13:04:56 +0000 (UTC)
-Received: by shodan.usersys.redhat.com (Postfix, from userid 1000)
-        id 738A61C0C29; Fri,  4 Sep 2020 15:04:55 +0200 (CEST)
-Date:   Fri, 4 Sep 2020 15:04:55 +0200
-From:   Artem Savkov <asavkov@redhat.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
-        threeearcat@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pty: do tty_flip_buffer_push without port->lock in
- pty_write
-Message-ID: <20200904130455.GA52548@shodan.usersys.redhat.com>
-References: <20200901120157.3412245-1-asavkov@redhat.com>
- <20200904074333.GA410@jagdpanzerIV.localdomain>
+        Fri, 4 Sep 2020 09:06:14 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997FEC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:06:13 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id t10so6731612wrv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=E9G/uEXRmNdCZf+xjqHOCF0OHoHgJrExnYXekXh18dQ=;
+        b=DG8ozdPssbxATQ9WJd35Z9K3V8uEpQMDgQuro20wVwXg8IdJ2bfSseQ5Cn+/hqgsMU
+         TEI6MIPtxAWk344mWNkvg0lRjxOZ7t278YfZ9VKTElYBgR6kckoL8B/RS8PBSiKsgZ4w
+         CrwYhVW4Zy/gpm8odZHtkf2EpGMzednQnohupkqw+a5xLNFjnBMyLxcF0IC+0wWRrnhs
+         6wS5PZe5UG4i7+B3foyVPfMOOaQZ5WOwkmE7dT7kA5eLmQEIcefge7MwM8P3pLO3601j
+         iWwv2VnDXawOFx4+tcAhhmgL/RsXmY3fJ7gYV0DpvyeeYAuclIKb8KqAyinlIOiswMSc
+         yjUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=E9G/uEXRmNdCZf+xjqHOCF0OHoHgJrExnYXekXh18dQ=;
+        b=lgcYAl+N74S6srCOSXGv32soRNJr6WTLpB8jByOkc3J19Fi4MzZAieO7kemQ4an9HQ
+         1Kff9EZ5EfiWE9XHGEogrESMOCLPOJASnD5suNgjHZUfiLqSprI4OaVNgf4sow+uX8yQ
+         tss1ekZnvcFUHUw5Exc5ymmk7ZlScQX4+39BDAXXxbz6Ft9QX/+QLCtuvBkNmWy3apiE
+         oxPTU6zTz4UrJstOx906zR59Stq+kGkBUzxtFrvZkYkaUv2sbJmDKvNY1tOwl/UWBCTy
+         xYXpXmLhLYOdM7zJX5TOg62JpOw0p2jJCsk/gLVcyUXunyJETDBD6jf/uHN13+OlmUO/
+         jsTQ==
+X-Gm-Message-State: AOAM531KijoQURYJxgFuoaUapFq7nW+/DHwZ1G4h3l/ZpEuLFWc84O0D
+        mkFEsq7Y9M6EBQDF7TXI0Dc=
+X-Google-Smtp-Source: ABdhPJxBo2YRoEMAGlF/dNKtG7Kr6QHVTHVLDM5g9dnKAeh1mu2DJSneo7DAt5CcOF3Nyna8A87yTg==
+X-Received: by 2002:adf:cc8c:: with SMTP id p12mr7890912wrj.92.1599224772308;
+        Fri, 04 Sep 2020 06:06:12 -0700 (PDT)
+Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
+        by smtp.gmail.com with ESMTPSA id e18sm13176384wra.36.2020.09.04.06.06.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 06:06:11 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 10:06:05 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
+Cc:     twoerner@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: add entry for VKMS
+Message-ID: <20200904130605.vs5tnfhgnemnz6pt@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904074333.GA410@jagdpanzerIV.localdomain>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Sergey,
+Add myself as maintainer of VKMS driver
 
-On Fri, Sep 04, 2020 at 04:43:33PM +0900, Sergey Senozhatsky wrote:
-> On (20/09/01 14:01), Artem Savkov wrote:
-> [..]
-> > It looks like the commit was aimed to protect tty_insert_flip_string and
-> > there is no need for tty_flip_buffer_push to be under this lock.
-> >
-> [..]
-> > @@ -120,10 +120,10 @@ static int pty_write(struct tty_struct *tty, const unsigned char *buf, int c)
-> >  		spin_lock_irqsave(&to->port->lock, flags);
-> >  		/* Stuff the data into the input queue of the other end */
-> >  		c = tty_insert_flip_string(to->port, buf, c);
-> > +		spin_unlock_irqrestore(&to->port->lock, flags);
-> >  		/* And shovel */
-> >  		if (c)
-> >  			tty_flip_buffer_push(to->port);
-> > -		spin_unlock_irqrestore(&to->port->lock, flags);
-> 
-> Performing unprotected
-> 
-> 	smp_store_release(&buf->tail->commit, buf->tail->used);
-> 
-> does not look safe to me.
-> 
-> 
-> This path can be called concurrently - "pty_write vs console's IRQ handler
-> (TX/RX)", for instance.
-> 
-> Doing this
-> 
-> 	queue_work(system_unbound_wq, &buf->work);
-> 
-> outside of port->lock scope also sounds like possible concurrent data
-> modification.
-> 
-> I'm not sure I see how this patch is safe.
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, indeed I see how this might be unsafe, but this argument doesn't
-hold well with console drivers other than 8250 - most of them seem to
-call tty_flip_buffer_push() outside of port->lock, many even unlock and
-then relock right around this call to avoid similar possible deadlocks.
-Even 8250 itself used to do this "recently". After all potentially
-corrupted console is better than a deadlock.
-
-I know this is no excuse to add unsafe code but unfortunately I don't
-see a better solution at the moment, although admittedly I am not very
-familiar with tty code.
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 01fb9ee6b951..d4277824a01c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5640,6 +5640,7 @@ F:	drivers/gpu/drm/udl/
+ 
+ DRM DRIVER FOR VIRTUAL KERNEL MODESETTING (VKMS)
+ M:	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
++M:	Melissa Wen <melissa.srw@gmail.com>
+ R:	Haneen Mohammed <hamohammed.sa@gmail.com>
+ R:	Daniel Vetter <daniel@ffwll.ch>
+ L:	dri-devel@lists.freedesktop.org
 -- 
- Artem
+2.28.0
 
