@@ -2,78 +2,112 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA05C52D74
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCB7C54E79
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827ED25341
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FA93253DF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbgIDR0q (ORCPT
+        id S1726229AbgIDSEy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:26:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:53176 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgIDR0U (ORCPT
+        Fri, 4 Sep 2020 14:04:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:42155 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgIDSEx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:26:20 -0400
-Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
- id fdcf7f96b97809a9; Fri, 4 Sep 2020 19:26:17 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>
-Subject: [PATCH 0/6] ACPICA / ACPI: OSL: Rework GPE registers access code
-Date:   Fri, 04 Sep 2020 19:19:26 +0200
-Message-ID: <1748021.N9i9sLPJ40@kreacher>
+        Fri, 4 Sep 2020 14:04:53 -0400
+Received: from mail-qt1-f181.google.com ([209.85.160.181]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MsJXG-1kXRrF2QQc-00tjbC; Fri, 04 Sep 2020 20:04:51 +0200
+Received: by mail-qt1-f181.google.com with SMTP id n10so5326328qtv.3;
+        Fri, 04 Sep 2020 11:04:51 -0700 (PDT)
+X-Gm-Message-State: AOAM532i2Zgortc+jdYp4gwDiE8QCVbgzkrPQCG+qnYdaF4WXF+wdVYf
+        xQOEARxvvNoP6rsLv04mk7GyO3xKaUl0PHpKmBI=
+X-Google-Smtp-Source: ABdhPJwKzhgqFAMC09LYvzrY70ahhbEpa/CeWyBR83Ccx3AuOB1/vZONwnfNbBWCJD4p/77P5oC/C+vZjOmK8LQVsYA=
+X-Received: by 2002:aed:2414:: with SMTP id r20mr9970750qtc.304.1599242690288;
+ Fri, 04 Sep 2020 11:04:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200904165216.1799796-1-hch@lst.de> <20200904165216.1799796-4-hch@lst.de>
+In-Reply-To: <20200904165216.1799796-4-hch@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 4 Sep 2020 20:04:34 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1=udSEq8kpsmLk-b7ye0p=6eKTvBV74jBoGYmufL2oEw@mail.gmail.com>
+Message-ID: <CAK8P3a1=udSEq8kpsmLk-b7ye0p=6eKTvBV74jBoGYmufL2oEw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in raw_copy_{from,to}_user
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:6MO0b0CUNaQ6Os9JHibIyRp08mfdhmxnxN+PwfFQq1OASMaeS/b
+ rUIIFKjwSIN+o44XTLUutoF2FPDWFHgbMolIT1QCaIx/l2gZKaZRNPHfGOrYhUxtI60i+15
+ BkCyH8sDLgLwap3vnyil+H/BBXMSs4oGsLD82ki9o/WViAZKzcD98aa2u3MwJmJgPkTl2IY
+ CPqx42KnbipwbyfgxCd9A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GsVbHphrEDY=:b6qsBZemjP56jcY0o4PEJo
+ 3IQX/aipeBiKMhSQp3O1VCI5FCWPNmULZu1a8HlGpRdLNwyL/DcDiTFc2i015xNib52Kr4QtA
+ YPEOpqZVQpE4rwQ6OiPseq1KWh/ZQOy7dZnEb2rlv67oOTVak+2YKwD4SuJ8UcNfAQ4DvNQ9a
+ QRi6DAJ7hBDYqe4PyVfkmM9ND79NwmsHMkxvt0i48gUequNoktUJuGGtnGLIEq3NVAWY3Teea
+ dNMi1nUnCQyUoRRkjWyBAWsvyr4qww2yE2syWEMnMaZNjOsZqpKtYSQUW3r74gyrsubzg3Zkt
+ UHbeirDDT779TFH2tsZmJ/DI7ZVEC2iKp9CTOidgtLMaByHc/kTpX0kXDwTU60XJPWwhtbgUf
+ lNjIliA9pwiJH2eOfQRCjBChv8mJIKsZ8yc/F6rOqpBQCe8UqPY0uIFuiCS3YdPyqYpROGLac
+ 8d7FLQPS594ocMvihMyHnodv6bx+nZ/TGFJypXiwvl5Buxds/yS5kvb0wN35pKanKIFrlZi2V
+ caQ6ZAuUhNsAm7lXzMNNRWe5ZlqcEPdaH35qibUE74IRh1To1/sar22U/zwTl8cafa6axoEVY
+ ARjIgt7DCCsWnnz9nnQftcvoC9dP4u+tl/I+9uG1x0dqKtIYiGekEbRWeoH0e7F+XRKH3iqZr
+ Scb4IUubHU3i87Wt79EvJohMxS/Nk/S0nw4juAI3Hm+8TakooFpc5YbsqEh073PV6K0vsWKtX
+ v/h/GZoOgTrV7LO7tssxjIM8MOcSj8mKuYjl4C51+aQtlrySBX7rmIDn8Iq9XnEOWz7c5FMtq
+ hnIJG+Toq7iC3/UQTEjlQ+KwrxDyp3H5hFkMbFvRAPjElV6AfD6VwHSsuzvLzw2dYRyznL3aA
+ M26lfUhK/D81SjqGtgSOS2h3zy+un8eelWKxtGoSdrVQHeJnlSRpiwvBJPN+k9k2PokqwYkvb
+ 3Kk91LnVT+DLeAh3Af0c9z/Hw0YeCmT6p1O0ptJMRNzWPM4jwId03
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Fri, Sep 4, 2020 at 6:52 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Use get_unaligned and put_unaligned for the small constant size cases
+> in the generic uaccess routines.  This ensures they can be used for
+> architectures that do not support unaligned loads and stores, while
+> being a no-op for those that do.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  include/asm-generic/uaccess.h | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
+> index cc3b2c8b68fab4..768502bbfb154e 100644
+> --- a/include/asm-generic/uaccess.h
+> +++ b/include/asm-generic/uaccess.h
+> @@ -36,19 +36,17 @@ raw_copy_from_user(void *to, const void __user * from, unsigned long n)
+>         if (__builtin_constant_p(n)) {
+>                 switch(n) {
+>                 case 1:
+> -                       *(u8 *)to = *(u8 __force *)from;
+> +                       *(u8 *)to = get_unaligned((u8 __force *)from);
+>                         return 0;
+>                 case 2:
+> -                       *(u16 *)to = *(u16 __force *)from;
+> +                       *(u16 *)to = get_unaligned((u16 __force *)from);
+>                         return 0;
 
-The underlying issue here is that in Linux calling
-acpi_os_read_memory() or acpi_os_write_memory() from an interrupt
-handler is generally invalid, because these functions may attempt
-to map memory on the fly.  It is only valid to call them from an
-interrupt handler if it is known that there is a memory mapping
-covering the physical address passed as the argument.
+The change look correct and necessary, but I wonder if this could be done
+in a way that is a little easier on the compiler than the nested switch/case.
 
-However, in that case using acpi_os_read_memory() or
-acpi_os_write_memory() for accessing memory is inefficient, because
-they need to look up the mapping in question every time in a global
-list, and it would be much more straightforward to use the (known
-already) logical address of the target memory region.
+If I see it right, __put_user() and __get_user() can probably
+be reduced to a plain put_unaligned() and get_unaligned() here,
+which would simplify these a lot.
 
-In ACPICA this problem affects GPE registers that are accessed
-with the help of acpi_hw_read() and acpi_hw_write() which is
-inefficient not just because they end up calling
-acpi_os_read_memory() or acpi_os_write_memory() if the GPE
-registers are located in system memory, but also because these
-functions check things that need not be checked for GPE registers
-in particular and they do that on every access.
+In turn it seems that the generic raw_copy_to_user() can just be the
+a plain memcpy(), IIRC the optimization for small sizes should also
+be done by modern compilers whenever they can.
 
-This series of patches reworks the GPE register accesses in ACPICA
-to be more efficient by omitting the unnecessary checks and making it
-possible to use logical addresses directly if these registers are
-located in system memory.
-
-The first four patches modify ACPICA and the last two add the
-requisite OS support to Linux on top of that.
-
-Please refer to the changelogs of the patches for details.
-
-Thanks,
-Rafael
-
-
-
+     Arnd
