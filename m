@@ -2,128 +2,95 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03992C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E4EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAD8820C56
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599222245;
-	bh=oi8x44wFUQteZiTcFdiPvZp8rHfw5Ycq1uBXFQAYp4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TzyW7semkl5lYpWhB8/f5jBG7UJpfAYPGen9PY0Eyn+tMqP0+QRKDXYUgG1zFRtuV
-	 KFkkjSgvhpZwVAlMJsmiCp2xQEfj1vhfpkIeMHXY48GyjyTo8eJdu7T9wRWSuYAw4+
-	 oqWxJ9gwbnHNHC99xYCZVS1sj8INk3VB18FWVPIQ=
+	by mail.kernel.org (Postfix) with ESMTP id F0FD72087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="eh7XGn5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgIDMYB (ORCPT
+        id S1730196AbgIDMZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:24:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38928 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730006AbgIDMXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:23:46 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0F422087C;
-        Fri,  4 Sep 2020 12:23:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599222225;
-        bh=oi8x44wFUQteZiTcFdiPvZp8rHfw5Ycq1uBXFQAYp4w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tuv8q937FHgf0hDBwT0818j05Q0KN2AkiT75Sq9gRXyQUSPlffOm1m6rK9ZsqRIZP
-         jK5tohbqdYzYDujf/OIMPUTORwo8Ik30NPtSL+pFRz3cw4qfQ6vyhoLPEqk0soGwj9
-         laQWBKqqpC1Lq7yqfJ7e5yjUPO0S+OZdnkxDbkoE=
-Date:   Fri, 4 Sep 2020 13:23:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 09/10] misc: hisi_hikey_usb: add support for Hikey 970
-Message-ID: <20200904122303.GC4625@sirena.org.uk>
-References: <cover.1599214329.git.mchehab+huawei@kernel.org>
- <f45f7663b694b16214604b55527f38eb9232f95b.1599214329.git.mchehab+huawei@kernel.org>
+        Fri, 4 Sep 2020 08:25:13 -0400
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:56976 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730113AbgIDMZL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:25:11 -0400
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084CJHlF025678;
+        Fri, 4 Sep 2020 07:25:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type;
+ s=PODMain02222019; bh=Qc7RhO3Z8DUmpqppgDnlz4Yb25OKBWKftAj0kFBkgoQ=;
+ b=eh7XGn5F+d0XXQP3soXHbEZEyue9PyyUV7CfVI2JDvu7w37EeGaL299bEoyUdpFn8tDk
+ Pw8oSeAvuzGPlaN9ueaGmn6l7wH/1i4MR1HT3RtSv7EjPH8p8VAwyXlEYsviIJs1bQJi
+ 7RumzZVhBMIzANx3Ts5tXj7FX/6MFEELz3fGjpqUxZjo1vLJt3n1yJbgCaRKMvOchImI
+ fF9k6Nge+U7ZtosZUQwJpB2Zb90M7Un9s3memwOg0XGFdIRVQpMeaaGursXTkk+yRa9w
+ piqEc/YmP+pRSp4xQHsWCPRzwGGpxK9axo015eVVyo+ir3/eXyIzdUEiBm05oVm/orDH cg== 
+Received: from ediex01.ad.cirrus.com ([87.246.76.36])
+        by mx0a-001ae601.pphosted.com with ESMTP id 337me3sc2w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 04 Sep 2020 07:25:08 -0500
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Fri, 4 Sep 2020
+ 13:25:06 +0100
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.1913.5 via Frontend
+ Transport; Fri, 4 Sep 2020 13:25:06 +0100
+Received: from algalon.ad.cirrus.com (algalon.ad.cirrus.com [198.90.251.122])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3684D45;
+        Fri,  4 Sep 2020 12:25:06 +0000 (UTC)
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     <broonie@kernel.org>
+CC:     <lgirdwood@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH] regulator: lochnagar: Add additional VDDCORE range
+Date:   Fri, 4 Sep 2020 13:25:06 +0100
+Message-ID: <20200904122506.28017-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QRj9sO5tAVLaXnSD"
-Content-Disposition: inline
-In-Reply-To: <f45f7663b694b16214604b55527f38eb9232f95b.1599214329.git.mchehab+huawei@kernel.org>
-X-Cookie: Heisenberg might have been here.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ mlxscore=0 mlxlogscore=999 phishscore=0 impostorscore=0 lowpriorityscore=0
+ suspectscore=1 adultscore=0 spamscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009040111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In the case of an unrecognised mini-card the Lochnagar will not
+initialise the VDDCORE voltage register leading to a value outside of the
+current range. Add an additional range to cover these values, initially
+this wasn't done since they are duplicates of the existing minimum
+value.
 
---QRj9sO5tAVLaXnSD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/regulator/lochnagar-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Fri, Sep 04, 2020 at 12:23:31PM +0200, Mauro Carvalho Chehab wrote:
+diff --git a/drivers/regulator/lochnagar-regulator.c b/drivers/regulator/lochnagar-regulator.c
+index 5ea3e41416849..cb71fa5f43c3e 100644
+--- a/drivers/regulator/lochnagar-regulator.c
++++ b/drivers/regulator/lochnagar-regulator.c
+@@ -98,6 +98,7 @@ static const struct regulator_ops lochnagar_vddcore_ops = {
+ };
+ 
+ static const struct linear_range lochnagar_vddcore_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0,    0x7, 0),
+ 	REGULATOR_LINEAR_RANGE(600000, 0x8, 0x41, 12500),
+ };
+ 
+-- 
+2.11.0
 
-> +	regulator = devm_regulator_get_optional(&pdev->dev, "hub-vdd");
-> +	if (IS_ERR(regulator)) {
-> +		if (PTR_ERR(regulator) == -EPROBE_DEFER) {
-> +			dev_info(&pdev->dev,
-> +				 "waiting for hub-vdd-supply to be probed\n");
-> +			return PTR_ERR(regulator);
-> +		}
-> +
-> +		/* let it fall back to regulator dummy */
-> +		regulator = devm_regulator_get(&pdev->dev, "hub-vdd");
-> +		if (IS_ERR(regulator)) {
-> +			dev_err(&pdev->dev,
-> +				"get hub-vdd-supply failed with error %ld\n",
-> +				PTR_ERR(regulator));
-> +			return PTR_ERR(regulator);
-> +		}
-> +	}
-
-This seems weird - if the supply is non-optional why is the code trying
-with devm_regulator_get_optional()?  Just use normal get directly.
-
-> +	ret = regulator_set_voltage(regulator, 3300000, 3300000);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "set hub-vdd-supply voltage failed\n");
-
-Unless the device is actively managing the voltage at runtime it should
-just let the voltage be set by machine constraints, most of the time
-this will do nothing.  This only sets the voltage in this one place.
-
-> +	hub_reset_en_gpio = of_get_named_gpio(pdev->dev.of_node,
-> +					      "hub_reset_en_gpio", 0);
-> +	if (!gpio_is_valid(hub_reset_en_gpio)) {
-> +		dev_err(&pdev->dev, "Failed to get a valid reset gpio\n");
-> +		return -ENODEV;
-> +	}
-
-Why not just use devm_gpio_request() which already asks for the GPIO by
-name?
-
---QRj9sO5tAVLaXnSD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9SMaYACgkQJNaLcl1U
-h9BAZAf9F0GBH2s2mwraiURwcRGD/oHmdss9DyNNa0RzZ30x9ueRv76JA9IGeMba
-Cam5eKlaWoxCO2P4BKoQcRO0OcsV+tLrIo3kO9a8EUmb8SLhTkTl+/xZJ6GT8t3h
-TcPBz3lurppndlQQVwWR5C5PR4/9uIK+U7IMVa6MtnDEWEm12JWhvcmy/JCx/Euw
-d20grMn+Qyq8D89y37Bj1nfwk5l9jN5j+V8X+OnJrNZkmeJVxYeYJqSeOAv8cdmm
-rCHf1KKBBODtwadGjj3iHhCioPW/ImzmaJVlxngU7b0gXm7k3XNLQoJx2ZhNsUoi
-zXYZfXZ7JvGjNJsn8QOu5WiEz+yV5w==
-=0E0v
------END PGP SIGNATURE-----
-
---QRj9sO5tAVLaXnSD--
