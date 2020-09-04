@@ -2,205 +2,71 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C4EE20748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8867A206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="GUUleuGH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i5I2Uji4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgIDGw2 (ORCPT
+        id S1728186AbgIDGw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:52:28 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:16713 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbgIDGw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:52:27 -0400
-IronPort-SDR: q0fwNExURpU7WgXSUb8mGzbfUsyAI8vrGF8Ty/hkzYOd1Akq0sVoCB29d1q+QHZqI0v8XJW/QJ
- oEUjI+kSjml88N/zGwKQCtCwI59/esp1Dy+8Y0yeB4PESQxQ5eSHBOw1kgDqrkYq0x5dxMYWxV
- AVflo8igSsFvD7PtJtUB3LDi7rBhUuo8UnqfjnpxoYh4weWxPrchByImfxBfhrD9jnaDud5jLB
- 8SQITKyhkdPopFZLBeAcX+13j/WzqRZOLVQY5M5+p3so8986Uw+RDyoPohV8NE4ixohu6BveM2
- fug=
-X-IronPort-AV: E=Sophos;i="5.76,388,1592863200"; 
-   d="scan'208";a="13728599"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 04 Sep 2020 08:52:24 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 04 Sep 2020 08:52:24 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 04 Sep 2020 08:52:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599202344; x=1630738344;
-  h=subject:from:to:cc:date:mime-version:
-   content-transfer-encoding:message-id;
-  bh=laQmDkZSgq5I0w0AUUyCJAr4yaR5ymslVR9BnsiF9xk=;
-  b=GUUleuGHTp3UjJYCDzA1Jbw3vSuT0aloP33Myv1LBtfiCVM8MMEtcvCq
-   ckWIR7RzxYd8ZbrxOh+S8yq8VhuAHzJXk39MWLlvbQT9wFUrdF1noOv3r
-   QauKras4tADBW5Ro9MhoARsII79HFlThwpxKPg8QuKm0MwXWhIHYKpEzX
-   AlR9HoQxuSWwW1SqValCUBwadkepQMDY5bqFOI99nslV5gwqtwrrumZ1G
-   rhRjgtAG2FRW1y9XC4KeC+fZB1xYPIp5Ir1bpwaOdVSVYmvOMVoNiOaoI
-   IPBxTpA2PpqUKbSVybrcI1cfvJEL3warlukEsiYxEmWW8sgNFXnndORIE
-   w==;
-IronPort-SDR: XN3U8wsgE5+K9uAqECPIOYrl7ed1hzChvN87pSn4qMaSIZcocTt7/qolaUVqQArarzs7eHhKDr
- HMx4ujmHwhP8JfZsi9ZotFVcSTSi0F/ZSs9+P+GWCHQA14jRCTJ8AoT0tBeeW+30zHCEiyOUY0
- /zIpBsWudYZ4x3gmyu1h97RwuNGDrsdWnEUbJ+12NoaNI9Feom2knW0KPQwn5xLQZJVWcR5Htg
- 0EShvPRjwvbgRXGTQ4Sfl1d6KswLafIQqGqhquCo/9FJCCMTfIsr/14N9Re2z2XAhQRMOeV89h
- rB4=
-X-IronPort-AV: E=Sophos;i="5.76,388,1592863200"; 
-   d="scan'208";a="13728598"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 04 Sep 2020 08:52:24 +0200
-Received: from vtuxmail01.tq-net.de (localhost [127.0.0.1])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTP id 6FC2C280065;
-        Fri,  4 Sep 2020 08:52:24 +0200 (CEST)
-Received: by vtuxmail01 (kopano-spooler) with MAPI; Fri, 4 Sep 2020 08:52:24
- +0200
-Subject: RE: (EXT) Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data
- message
-From:   "Gregor Herburger" <Gregor.Herburger@ew.tq-group.com>
-To:     "Borislav Petkov" <bp@alien8.de>
-Cc:     =?us-ascii?Q?york=2Esun=40nxp=2Ecom?= <york.sun@nxp.com>,
-        =?us-ascii?Q?mchehab=40kernel=2Eorg?= <mchehab@kernel.org>,
-        =?us-ascii?Q?tony=2Eluck=40intel=2Ecom?= <tony.luck@intel.com>,
-        =?us-ascii?Q?james=2Emorse=40arm=2Ecom?= <james.morse@arm.com>,
-        =?us-ascii?Q?rrichter=40marvell=2Ecom?= <rrichter@marvell.com>,
-        =?us-ascii?Q?linux-edac=40vger=2Ekernel=2Eorg?= 
-        <linux-edac@vger.kernel.org>,
-        =?us-ascii?Q?linux-kernel=40vger=2Ekernel=2Eorg?= 
-        <linux-kernel@vger.kernel.org>
-Date:   Fri, 4 Sep 2020 06:52:24 +0000
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Priority: 3 (Normal)
-X-Mailer: Kopano 8.7.82
-Message-Id: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
+        Fri, 4 Sep 2020 02:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgIDGw4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:52:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB960C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:52:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ud2h15Pl1kXqyet856rspbHUVDmYSIlb8Zch9HhHUBw=; b=i5I2Uji41lU6lUrpDezaYYIoNs
+        k0Jn/B3u/dfDrb6VGP4ELueZPSUyYN+WMjY6tSnIsI3OgzHpRjdcRJ1FiFvU30wXLZwiQiIBl7PvC
+        b+6+hsG9ahpLxsQqeCGLXnQlQpu84Y9og6Muw+sI/Wso0vLPYRrRoWF3kDUIxxBpxsQ2TSyl39cHN
+        qL27R+VeVbT2hJBp9BN5Z9/puz2YaTypH0wn8PAtBD5di+jsRvYQTWXngNsf9Ak4HGcwzVXqskHRE
+        xy4Os7KLZK7+MnQl9KynzedmCzoCbuflpCo9SW4Q2zUSHmAGdnzbVJ/sheys7aeY01+HUMzPGud66
+        0ZwIk8dQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kE5aZ-00043H-KO; Fri, 04 Sep 2020 06:52:47 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 55827300F7A;
+        Fri,  4 Sep 2020 08:52:45 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 12E292BBB68A3; Fri,  4 Sep 2020 08:52:45 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 08:52:45 +0200
+From:   peterz@infradead.org
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 0/5] seqlock: Introduce PREEMPT_RT support
+Message-ID: <20200904065245.GK2674@hirez.programming.kicks-ass.net>
+References: <20200828010710.5407-1-a.darwish@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828010710.5407-1-a.darwish@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >=C2=A0 drivers/edac/fsl_ddr_edac.c | 6 +++---
-> >=C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-> > index 6d8ea226010d..4b6989cf1947 100644
-> > --- a/drivers/edac/fsl_ddr_edac.c
-> > +++ b/drivers/edac/fsl_ddr_edac.c
-> > @@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
-> >=C2=A0
-> >=C2=A0 fsl_mc_printk(mci, KERN_ERR,
-> >=C2=A0 "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
-> > - cap_high ^ (1 << (bad_data_bit - 32)),
-> > - cap_low ^ (1 << bad_data_bit),
-> > - syndrome ^ (1 << bad_ecc_bit));
-> > + (bad_data_bit > 31) =3F cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
-> > + (bad_data_bit <=3D 31) =3F cap_low ^ (1 << (bad_data_bit)) : cap_low,
->
-> But if bad_data_bit is -1, this check above will hit and you'd still
-> shift by -1, IINM.
-You are right. It worked on my machine, but i guess that is again machine-dependent.
 
-> How about you fix it properly, clean it up and make it more readable in
-> the process (pasting the code directly instead of a diff because a diff
-> is less readable):
->
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((err_detect & DDR_EDE_SBE) && (bus_width =3D=3D 64)) {
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sbe_ecc_decode(cap_high, cap_low, syndrome,
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &bad_data_bit, &bad_ecc_bit);
->
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit !=3D -1) {
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit > 31)
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high ^=3D 1 << (bad_data_bit - 32);
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_low=C2=A0 ^=3D 1 << bad_data_bit;
->
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Faulty Data bit: %d\n",
-> bad_data_bit);
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Expected Data: %#8.8x_%08x\n",
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high, cap_low);
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_ecc_bit !=3D -1) {
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Faulty ECC bit: %d\n",
-> bad_ecc_bit);
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Expected ECC: %#2.2x\n",
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 syndrome ^ (1 << bad_ecc_bit));
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->
-> This way you print only when the respective faulty bits have been
-> properly found and not print anything otherwise.
 
-The cap_low, cap_high and syndrome are used in the printk following the if-Block.
-This will make expected data / captured data look the same.
-
->
-> Hmm=3F
-
-I would prefer printing exptected data and captured data in the same format, making it
-easier to compare them directly.
-
-diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
-index 6d8ea226010d..880cf3f4712b 100644
---- a/drivers/edac/fsl_ddr_edac.c
-+++ b/drivers/edac/fsl_ddr_edac.c
-@@ -288,6 +288,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 cap_low;
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int bad_data_bit;
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int bad_ecc_bit;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_high;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_low;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_syndrome;
-
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err_detect =3D ddr_in32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!err_detect)
-@@ -334,18 +337,32 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sbe_ecc_decode(cap_high, cap_low, syndrome,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &bad_data_bit, &bad_ecc_bit);
-
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high =3D cap_high;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_low =3D cap_low;
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_syndrome =3D syndrome;
-+
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit !=3D -1)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faulty Data bit: %d\n", bad_data_bit);
-+
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit < 32)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_low =3D cap_low ^ (1 << bad_data_bit);
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high =3D cap_high ^ (1 << (bad_data_bit - 32));
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-+
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_ecc_bit !=3D -1)
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faulty ECC bit: %d\n", bad_ecc_bit);
-
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_syndrome =3D syndrome ^ (1 << bad_ecc_bit);
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-+
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high ^ (1 << (bad_data_bit - 32)),
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_low ^ (1 << bad_data_bit),
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 syndrome ^ (1 << bad_ecc_bit));
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high, exp_low, exp_syndrome);
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Captured Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high, cap_low, syndrome);
-
-How about something like this=3F
-
+FWIW, can you please start a new thread with ever posting? I lost this
+one because it got stuck onto some ancient thread.
