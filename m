@@ -2,196 +2,86 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F00B0C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E52C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDF5B2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2BB20709
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:52:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="Hb6uPJFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbgIDMwY (ORCPT
+        id S1730335AbgIDMwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:52:24 -0400
-Received: from mga07.intel.com ([134.134.136.100]:65322 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730249AbgIDMva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:51:30 -0400
-IronPort-SDR: wEbqVZ8eufwrvzEBhRGC45PeflJRM0Ey/PPWJXoRBbH5z2BPMSYVjTepBEQDScniqGsz9UvqvJ
- hgz3T3ZnZo9Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="221944956"
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="221944956"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 05:51:29 -0700
-IronPort-SDR: itmLEUQGXFFs1O8DJSVvLTtjYjRie5A0pPdImpIQfVTtSStr5EsZJUrjIMd5QeYKWIIyWudv4R
- nbT70B5iCtwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
-   d="scan'208";a="405834945"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Sep 2020 05:51:28 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH 2/4] device connection: Remove device_connection_add()
-Date:   Fri,  4 Sep 2020 15:51:21 +0300
-Message-Id: <20200904125123.83725-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904125123.83725-1-heikki.krogerus@linux.intel.com>
-References: <20200904125123.83725-1-heikki.krogerus@linux.intel.com>
+        Fri, 4 Sep 2020 08:52:31 -0400
+Received: from relayfre-01.paragon-software.com ([176.12.100.13]:49538 "EHLO
+        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730114AbgIDMwT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:52:19 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 428291B7;
+        Fri,  4 Sep 2020 15:52:08 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1599223928;
+        bh=8moMATedVvC/Mwd/J3QHaBg8cFe/k1Zjj6s6XjcMcQ4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=Hb6uPJFDUfeK4xnnhZkp4v0giNfwbe1kHI3DQuVvxnaj8PIkEsi07HsgFIbE0wNng
+         3PacAjOS+w3LF6a8Fgsqt2avmTb5sV7nz3SQpVE1+87PdpOcBn2ou8DzdTywoBWNG2
+         azfXC7nAOLYn48GM4mcOX8nrs5iQcLwXX94FfHIQ=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 4 Sep 2020 15:52:07 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Fri, 4 Sep 2020 15:52:07 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     Mark Harmstone <mark@harmstone.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     =?utf-8?B?UGFsaSBSb2jDoXI=?= <pali@kernel.org>
+Subject: RE: [PATCH v2 05/10] fs/ntfs3: Add attrib operations
+Thread-Topic: [PATCH v2 05/10] fs/ntfs3: Add attrib operations
+Thread-Index: AdZ9WYtoNhpifd4wR/GdSqVgVwVwlwAkLbAAATPptnA=
+Date:   Fri, 4 Sep 2020 12:52:07 +0000
+Message-ID: <a9e1e31b909346faa9b398db9fa33ba1@paragon-software.com>
+References: <e2decd9632cd4d218fb83e96c0c37174@paragon-software.com>
+ <3c1e5918-347a-d1e6-44ce-338c7d0dc7e4@harmstone.com>
+In-Reply-To: <3c1e5918-347a-d1e6-44ce-338c7d0dc7e4@harmstone.com>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All the users of that API have now been converted to use
-software fwnodes instead.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- drivers/base/devcon.c  | 59 +-----------------------------------------
- include/linux/device.h | 29 ---------------------
- 2 files changed, 1 insertion(+), 87 deletions(-)
-
-diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-index 51ad546303ddb..94ab22a451ce3 100644
---- a/drivers/base/devcon.c
-+++ b/drivers/base/devcon.c
-@@ -9,9 +9,6 @@
- #include <linux/device.h>
- #include <linux/property.h>
- 
--static DEFINE_MUTEX(devcon_lock);
--static LIST_HEAD(devcon_list);
--
- static void *
- fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
- 			  void *data, devcon_match_fn_t match)
-@@ -99,60 +96,6 @@ EXPORT_SYMBOL_GPL(fwnode_connection_find_match);
- void *device_connection_find_match(struct device *dev, const char *con_id,
- 				   void *data, devcon_match_fn_t match)
- {
--	struct fwnode_handle *fwnode = dev_fwnode(dev);
--	const char *devname = dev_name(dev);
--	struct device_connection *con;
--	void *ret = NULL;
--	int ep;
--
--	if (!match)
--		return NULL;
--
--	ret = fwnode_connection_find_match(fwnode, con_id, data, match);
--	if (ret)
--		return ret;
--
--	mutex_lock(&devcon_lock);
--
--	list_for_each_entry(con, &devcon_list, list) {
--		ep = match_string(con->endpoint, 2, devname);
--		if (ep < 0)
--			continue;
--
--		if (con_id && strcmp(con->id, con_id))
--			continue;
--
--		ret = match(con, !ep, data);
--		if (ret)
--			break;
--	}
--
--	mutex_unlock(&devcon_lock);
--
--	return ret;
-+	return fwnode_connection_find_match(dev_fwnode(dev), con_id, data, match);
- }
- EXPORT_SYMBOL_GPL(device_connection_find_match);
--
--/**
-- * device_connection_add - Register a connection description
-- * @con: The connection description to be registered
-- */
--void device_connection_add(struct device_connection *con)
--{
--	mutex_lock(&devcon_lock);
--	list_add_tail(&con->list, &devcon_list);
--	mutex_unlock(&devcon_lock);
--}
--EXPORT_SYMBOL_GPL(device_connection_add);
--
--/**
-- * device_connections_remove - Unregister connection description
-- * @con: The connection description to be unregistered
-- */
--void device_connection_remove(struct device_connection *con)
--{
--	mutex_lock(&devcon_lock);
--	list_del(&con->list);
--	mutex_unlock(&devcon_lock);
--}
--EXPORT_SYMBOL_GPL(device_connection_remove);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 4a98cd2d442c7..43569297c6cc1 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -297,7 +297,6 @@ struct device_dma_parameters {
-  * @fwnode: The device node of the connected device
-  * @endpoint: The names of the two devices connected together
-  * @id: Unique identifier for the connection
-- * @list: List head, private, for internal use only
-  *
-  * NOTE: @fwnode is not used together with @endpoint. @fwnode is used when
-  * platform firmware defines the connection. When the connection is registered
-@@ -307,7 +306,6 @@ struct device_connection {
- 	struct fwnode_handle	*fwnode;
- 	const char		*endpoint[2];
- 	const char		*id;
--	struct list_head	list;
- };
- 
- typedef void *(*devcon_match_fn_t)(struct device_connection *con, int ep,
-@@ -319,33 +317,6 @@ void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
- void *device_connection_find_match(struct device *dev, const char *con_id,
- 				   void *data, devcon_match_fn_t match);
- 
--void device_connection_add(struct device_connection *con);
--void device_connection_remove(struct device_connection *con);
--
--/**
-- * device_connections_add - Add multiple device connections at once
-- * @cons: Zero terminated array of device connection descriptors
-- */
--static inline void device_connections_add(struct device_connection *cons)
--{
--	struct device_connection *c;
--
--	for (c = cons; c->endpoint[0]; c++)
--		device_connection_add(c);
--}
--
--/**
-- * device_connections_remove - Remove multiple device connections at once
-- * @cons: Zero terminated array of device connection descriptors
-- */
--static inline void device_connections_remove(struct device_connection *cons)
--{
--	struct device_connection *c;
--
--	for (c = cons; c->endpoint[0]; c++)
--		device_connection_remove(c);
--}
--
- /**
-  * enum device_link_state - Device link states.
-  * @DL_STATE_NONE: The presence of the drivers is not being tracked.
--- 
-2.28.0
-
+RnJvbTogTWFyayBIYXJtc3RvbmUgPG1hcmsuaGFybXN0b25lQGdtYWlsLmNvbT4gT24gQmVoYWxm
+IE9mIE1hcmsgSGFybXN0b25lDQpTZW50OiBTYXR1cmRheSwgQXVndXN0IDI5LCAyMDIwIDM6NTQg
+UE0NCj4gT24gMjgvOC8yMCA1OjUyIHBtLCBLb25zdGFudGluIEtvbWFyb3Ygd3JvdGU6DQo+ID4g
+SGkgTWFyayEgVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suIEl0J3MgcmVhc29uYWJsZSBjb25jZXJu
+LCBidXQgdGhlIG9wZW4NCj4gPiBxdWVzdGlvbiBpcyBob3cgdG8gYWNjZXNzIHRob3NlIE5URlMg
+YXR0cmlidXRlcyB3aGljaCBleHRlbmQgdGhlIERPUw0KPiA+IGF0dHJpYnV0ZXMuIHVzZXIuRE9T
+QVRUUklCIG1heSBiZSBnb29kIGZvciBGQVQzMiBhcyBET1MgYXR0cmlidXRlcyBhcmUgc3RvcmVk
+IGluIDhiaXQuDQo+ID4gSG93ZXZlciwgdGhpcyBkb2VzIG5vdCBhcHBseSB0byBOVEZTICgzMmJp
+dCBhdHRyaWJ1dGVzKS4NCj4gDQo+IEknbSBub3Qgc3VyZSB3aHkgdGhpcyB3b3VsZCBiZSBhbiBp
+c3N1ZSAtIHRoZSBvYnZpb3VzIHdheSBvZiByZWFkaW5nDQo+IHVzZXIuRE9TQVRUUklCIGlzIHRv
+IHVzZSBzc2NhbmYgaW50byBhbiBpbnQsIGFuZCB0aGVuIGNoZWNrIGZvciB0aGUgYml0cyB5b3Un
+cmUNCj4gaW50ZXJlc3RlZCBpbi4gVGhlIE5UIEZJTEVfQVRUUklCVVRFXyogdmFsdWVzIHJlcGxp
+Y2F0ZSBhbmQgZXh0ZW5kIHRoZSBGQVQNCj4gY29uc3RhbnRzIHVzZWQgYnkgRE9TLCBzbyBpdCBz
+aG91bGRuJ3QgY2F1c2UgYW55IGNvbmZ1c2lvbiBvbmx5IGV4cG9zaW5nIHRoZQ0KPiBmdWxsIDMy
+LWJpdCB2YWx1ZS4NCg0KSGkgTWFyayEgRmlyc3QsIGluIHY0IHdlJ3ZlIHJlbW92ZWQgc21iZC1l
+eGNsdXNpdmUgYWNjZXNzIHRvDQp1c2VyLkRPU0FUVFJJQi4gT3ZlcmFsbCwgd2UgYWdyZWUgdGhh
+dCB1bmlmaWVkIGFjY2VzcyBpcyBwcmVmZXJyZWQuDQpJZiBldmVyeW9uZSBpcyBmaW5lIHdpdGgg
+c3RpY2tpbmcgdG8gdXNlci5ET1NBVFRSSUIsIHdlJ2xsIHJlbW92ZQ0Kb3RoZXIgb3B0aW9ucyBp
+biBuZXh0IHBhdGNoZXMuDQo=
