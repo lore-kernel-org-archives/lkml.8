@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EC6C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD19C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADCFE206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BD520770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgIDKkf (ORCPT
+        id S1730056AbgIDKkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:40:35 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:3569 "EHLO
+        Fri, 4 Sep 2020 06:40:43 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:58099 "EHLO
         relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728118AbgIDKkK (ORCPT
+        by vger.kernel.org with ESMTP id S1728658AbgIDKkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 06:40:10 -0400
 X-IronPort-AV: E=Sophos;i="5.76,389,1592838000"; 
-   d="scan'208";a="56385867"
+   d="scan'208";a="56385879"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 04 Sep 2020 19:40:05 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 04 Sep 2020 19:40:09 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 31B62400D0FC;
-        Fri,  4 Sep 2020 19:40:02 +0900 (JST)
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DAB77400C751;
+        Fri,  4 Sep 2020 19:40:05 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Marek Vasut <marek.vasut+renesas@gmail.com>,
@@ -44,9 +44,9 @@ Cc:     linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 2/3] arm64: dts: renesas: r8a774e1: Add PCIe EP nodes
-Date:   Fri,  4 Sep 2020 11:38:50 +0100
-Message-Id: <20200904103851.3946-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/3] misc: pci_endpoint_test: Add Device ID for RZ/G2H PCIe controller
+Date:   Fri,  4 Sep 2020 11:38:51 +0100
+Message-Id: <20200904103851.3946-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -55,63 +55,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PCIe EP nodes for R8A774E1 Soc dtsi.
+Add Renesas R8A774E1 in pci_device_id table so that pci-epf-test
+can be used for testing PCIe EP on RZ/G2H.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- arch/arm64/boot/dts/renesas/r8a774e1.dtsi | 38 +++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ drivers/misc/pci_endpoint_test.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-index e5445ba99e84..272df6022442 100644
---- a/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774e1.dtsi
-@@ -2468,6 +2468,44 @@
- 			status = "disabled";
- 		};
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index ba654f42dc10..ed7425bb073d 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -77,6 +77,7 @@
+ #define PCI_DEVICE_ID_RENESAS_R8A774A1		0x0028
+ #define PCI_DEVICE_ID_RENESAS_R8A774B1		0x002b
+ #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
++#define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
  
-+		pciec0_ep: pcie-ep@fe000000 {
-+			compatible = "renesas,r8a774e1-pcie-ep",
-+				     "renesas,rcar-gen3-pcie-ep";
-+			reg = <0x0 0xfe000000 0 0x80000>,
-+			      <0x0 0xfe100000 0 0x100000>,
-+			      <0x0 0xfe200000 0 0x200000>,
-+			      <0x0 0x30000000 0 0x8000000>,
-+			      <0x0 0x38000000 0 0x8000000>;
-+			reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 319>;
-+			clock-names = "pcie";
-+			resets = <&cpg 319>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
-+		pciec1_ep: pcie-ep@ee800000 {
-+			compatible = "renesas,r8a774e1-pcie-ep",
-+				     "renesas,rcar-gen3-pcie-ep";
-+			reg = <0x0 0xee800000 0 0x80000>,
-+			      <0x0 0xee900000 0 0x100000>,
-+			      <0x0 0xeea00000 0 0x200000>,
-+			      <0x0 0xc0000000 0 0x8000000>,
-+			      <0x0 0xc8000000 0 0x8000000>;
-+			reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-+			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 318>;
-+			clock-names = "pcie";
-+			resets = <&cpg 318>;
-+			power-domains = <&sysc R8A774E1_PD_ALWAYS_ON>;
-+			status = "disabled";
-+		};
-+
- 		vspbc: vsp@fe920000 {
- 			compatible = "renesas,vsp2";
- 			reg = <0 0xfe920000 0 0x8000>;
+ static DEFINE_IDA(pci_endpoint_test_ida);
+ 
+@@ -955,6 +956,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774A1),},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774B1),},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774C0),},
++	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774E1),},
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+ 	  .driver_data = (kernel_ulong_t)&j721e_data,
+ 	},
 -- 
 2.17.1
 
