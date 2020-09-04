@@ -5,58 +5,59 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB92C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E58C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC937204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C630E204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jyV90Pj9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o++PUbGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbgIDNsy (ORCPT
+        id S1730558AbgIDNtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:48:54 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44845 "EHLO
+        Fri, 4 Sep 2020 09:49:31 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:44935 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730611AbgIDNp4 (ORCPT
+        with ESMTP id S1730616AbgIDNp4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:45:56 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133502euoutp0116b50079705f49b049055d4068692955~xmAfnx9Kl0722107221euoutp01h
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133502euoutp0116b50079705f49b049055d4068692955~xmAfnx9Kl0722107221euoutp01h
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133512euoutp01231695ebe1c5a37af0100aa7c6bdfe29~xmAo_kgYc0799107991euoutp01M
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:12 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133512euoutp01231695ebe1c5a37af0100aa7c6bdfe29~xmAo_kgYc0799107991euoutp01M
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599226502;
-        bh=miWTJ6cx6ut1i6kXEdULDZ4Mjgt6tos97ycfll4NlAE=;
+        s=mail20170921; t=1599226512;
+        bh=j4NMsIUYeDhNT1iU/BYbUagBybluyVnGEfDAwzBqQE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jyV90Pj9e09lki2dcAoXP+J3vcpoQNliAXnJc2uWx5UjkV4+x0PXzb+DpXCwRYnt9
-         uGt99zVQtOXrgrzTwBCnzBywDmz1e/k38Uh/yaeFvuFGAG5/6fzWPGhgLJ1SHFxbWf
-         uLkQSOLrApdzuepxg/rConkNq8JpMideYtxMDsrk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        b=o++PUbGo65XuYr4Q/r3BVGYNCcIOxMj8GySOSY+HO8EOzP9v1w/pAc5WcdmU9HdL2
+         aiY8x2pGDHL8A/9gVxR2NbMKnyCtx6U2SaKAc2hMBlqdQoNj9xWwJcNuSBPhgOWjOd
+         LKPsfCGbW8JLiqWg+YF+tB65pRNXalLN/cji0nsc=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200904133501eucas1p29681af24cdf905bfac363202f9ab3415~xmAfPEI6l1447814478eucas1p2o;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id B7.39.06318.582425F5; Fri,  4
-        Sep 2020 14:35:01 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        20200904133511eucas1p2d486263c794f51fdb8ea88600fe1e5fd~xmAoilL9n0781807818eucas1p2F;
+        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1D.11.06456.F82425F5; Fri,  4
+        Sep 2020 14:35:11 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
         eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133501eucas1p27e474ceb366abd6c5070565abfc6ae21~xmAe3abe30593605936eucas1p2p;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200904133501eusmtrp26074756feaa5a81ed6778c01db1a8f4d~xmAe2r1et0977009770eusmtrp2K;
-        Fri,  4 Sep 2020 13:35:01 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-a0-5f5242857798
+        20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68~xmAoO9OKM0143201432eucas1p2w;
+        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200904133511eusmtrp1fbe17ff149b4a75ba401f69bbb75685f~xmAoN7VnX0766507665eusmtrp1T;
+        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-67-5f52428f70ed
 Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A5.A0.06017.582425F5; Fri,  4
-        Sep 2020 14:35:01 +0100 (BST)
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id FE.BE.06314.F82425F5; Fri,  4
+        Sep 2020 14:35:11 +0100 (BST)
 Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
         eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133501eusmtip15974690ea6539d6916dc94521461cfc8~xmAeVfoow1888418884eusmtip1T;
-        Fri,  4 Sep 2020 13:35:00 +0000 (GMT)
+        20200904133511eusmtip1461f7ad71c971aeb5f97e8bdefea381d~xmAnrZiyY2113121131eusmtip1w;
+        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
 From:   Marek Szyprowski <m.szyprowski@samsung.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
@@ -67,98 +68,164 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         linux-arm-kernel@lists.infradead.org,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH v10 13/30] drm: omapdrm: use common helper for extracting
- pages array
-Date:   Fri,  4 Sep 2020 15:16:54 +0200
-Message-Id: <20200904131711.12950-14-m.szyprowski@samsung.com>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v10 29/30] media: pci: fix common ALSA DMA-mapping related
+ codes
+Date:   Fri,  4 Sep 2020 15:17:10 +0200
+Message-Id: <20200904131711.12950-30-m.szyprowski@samsung.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRj227nseFkcp+CXhYtZkkKamHDAy0z6cSqC8E8k5Fx5UMtN29TU
-        iIY2LW+pBa4lOsqweb+b5h11lTQlrVZeymaSiql5oUK0bSfr3/M+F56Hj49A+A2YKxErS2Tk
-        MkmcELdDW4d+jRxRhYaJjy4OBVB5hpccqkFdh1E7rYUINb6xjFO6qkEOpe0JoNbHZzhUo+kd
-        Ro11lOBUzcAUl+pbmcWourKPeIgDXV1aDeiuTS1Kt21+xuhPOXoO3VR+k57YNiH0PWMFoJ9/
-        UOJ0fnMloPXGNg691uh21j7cLjCKiYtNZuQ+wZF2MfPf7+MJffYpIz8fokqgs80GtgQkj8En
-        wwWIBfPJpwCOT4dnAzszXgew4WsvYI81ADdajfhu4tZqCcYKFQBqfugwNm6O9PTILRgnfWH2
-        UrY14EyqAHyR52AJIGQ/Bzar3qIWwYk8B6fUr6wmlDwEdzSzwIJ5ZDB8r5zD2DYBrKrvte6z
-        NfMt6llrMyS7udBQpkVY0wl4p30aZbETXNA3c1m8H+60l3HYQAaAM4YaLnvkAjiWrgasKwBO
-        Gn6bZxDmfZ6wrsOHpY9DXeeGlYbkHmhccrTQiBkWtRYjLM2DtzP5rNsDavS1/2r7Rt/8nUZD
-        9bKay75WIYDrg+lIARBo/pdpAagELkySQhrNKPxkzDVvhUSqSJJFe1+KlzYC80ca3tZvPAPd
-        Wxf7AUkAoQPPRhQm5mOSZEWqtB9AAhE680JfD0fweVGS1DRGHi+WJ8Uxin6wj0CFLjy/R/MX
-        +GS0JJG5wjAJjHxX5RC2rkrQKfMZ0C1ObOXrTVKvB/6B56Nri0LDL6eUm+L2rmbVPA65MXJ1
-        zTHyrkrQ0iUwVl2PiTjcPdXkmz63Ish1Fx3sNkYGaTz5xWeIU/rIQneHkx41hjTfA2hOZpQb
-        LvqysOd0lrN/WcaKt5i/s6hTi2pnSycjvs1n5ufECur9bYJGhagiRuLrhcgVkj8GjqjHRAMA
-        AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMIsWRmVeSWpSXmKPExsVy+t/xu7qtTkHxBgd+KFr0njvJZLFxxnpW
-        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs1h75C67xcEPT1gt1s+/xebA
-        47Fm3hpGj73fFrB4bP/2gNXjfvdxJo/NS+o9bv97zOwx+cZyRo/dNxvYPPq2rGL0OH5jO5PH
-        501yAdxRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJ
-        ehkv301hKzjIXXH+x2yWBsaVnF2MnBwSAiYSLR/nsHYxcnEICSxllOjoOssIkZCRODmtgRXC
-        Fpb4c62LDaLoE6PEiadzWUASbAKGEl1vIRIiAp2MEtO6P7KDOMwCJ5gk7u2dDzSKg0NYIFRi
-        e7cBSAOLgKrE/1lPwDbwCthJXG94BrVBXmL1hgPMIDYnUHzrjCdgcSEBW4kPcxazTGDkW8DI
-        sIpRJLW0ODc9t9hIrzgxt7g0L10vOT93EyMwQrYd+7llB2PXu+BDjAIcjEo8vAz2QfFCrIll
-        xZW5hxglOJiVRHidzp6OE+JNSaysSi3Kjy8qzUktPsRoCnTURGYp0eR8YPTmlcQbmhqaW1ga
-        mhubG5tZKInzdggcjBESSE8sSc1OTS1ILYLpY+LglGpgZDkhUZElzsfLc9tWuKKd8dT92ax2
-        Fm+/hBe6Xbb5/uRz6/EcMeN/f/6W1+QwN899kc7i1ZvEZe/2fnd139Uo07Ab21hqXm28+EQs
-        dzJz59Inspu3FD0WDvyblVe/2KQnuzyUq/fi6zMnpwk4ziji7O/M4q7I+Zdx+/WxNXycjIFy
-        KfNkJeWUWIozEg21mIuKEwF5FVkTpgIAAA==
-X-CMS-MailID: 20200904133501eucas1p27e474ceb366abd6c5070565abfc6ae21
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0gUURTGvfPYHVcnplXwpqmwoFGUuvRgSjETsYmEwighMF1zUMsXu65l
+        Qi4+y1eZVGKhUpqt63N9pmRq6mZLYmqmlemmWRlm+MIeWjuO1n+/853v3O/cyyVQcQNuTYRF
+        xrDySFm4RCDCGrp/9O665ukb4KJvpems3h6Ersmrwuk/DTkoPbg4K6DVmi6ELnriSi8MGhBa
+        OzGE0wPNdwV0ZnU9Tld0jgrpB9rfCN3+fRL3IJnygnLAPF4qwhht2VUB07g0jjNjGTqEqS1O
+        YN6uTqBM7nApYFpGVAImu64MMPNau+Nmp0VuwWx4WCwrd3YPFIV+TCvBo79KLg5NJyMqYLBN
+        B6YEpPbAT7e0GMdi6iGAGh3J8wKAPfp96UBk5HkAq/MMYGNgfKwP5RulAFa+HxbwhXFitlAl
+        5FwCSgrTZ9IFHFtSKQA+yzLnTCg1gcCiqqG1hgXlC8f6tGuMUQ4waTkD55ik3OEHdT3Cx9lD
+        TXUbyrGpUa/Pm8S5gyDVIYRVv5Ix3uQFNfeH1tkCTuvqhDxvhfrcTIwfSALQ0Fsh5ItMAAcS
+        89Zv5Arf9f40rkEY99sOq5qdefkQbDNwWxBG3gSHZzZzMmrEGw23UV4m4ZVUMe92hPm6yn+x
+        7X39KM8MnEtMAfwL5QCorx1GrwP7/P9hRQCUAStWqYgIYRXSSPaCk0IWoVBGhjidjYrQAuNv
+        0q/q5prAYn9QB6AIIDEnTQ76BohxWawiLqIDQAKVWJKeL/RnxGSwLO4SK48KkCvDWUUHsCEw
+        iRW5+94XfzEVIothz7NsNCvf6CKEqbUKeMeXPH20N/ROss9imnqWbBW6Kw+nnRJKo7xefpuC
+        fs6tbiMnVMjJpuX9r/2njtYjIrOszphtVE3j85WdxVM33wTK7AZ8tHEFn3sqR+Mxl65zJTZ+
+        6mMO/oza+7LHK+WBINsjji1xQr8FaFIHUgtV2SM+WxLKkkykYegK0R3rKMEUoTLpDlSukP0F
+        K0nh7UkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7r9TkHxBm3z1Sx6z51kstg4Yz2r
+        xf9tE5ktrnx9z2axcvVRJosF+60tvlx5yGSx6fE1VovLu+awWfRs2MpqsfbIXXaLZZv+MFkc
+        /PCE1YHXY828NYwee78tYPHYtKqTzWP7twesHve7jzN5bF5S73H732Nmj8k3ljN67L7ZwObR
+        t2UVo8fnTXIB3FF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZll
+        qUX6dgl6GU/bl7IWvFaquPaqhamB8aFsFyMnh4SAicSD+xeYuxi5OIQEljJKfLoxkREiISNx
+        cloDK4QtLPHnWhcbRNEnRolJ33vAEmwChhJdbyESIgKdjBLTuj+ygzjMAq+ZJFp3rWEDqRIW
+        CJDoP72CBcRmEVCVaP7RDdbNK2An8WjlViaIFfISqzccYAaxOYHiW2c8AasRErCV+DBnMcsE
+        Rr4FjAyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAqNl27Gfm3cwXtoYfIhRgINRiYeXwT4o
+        Xog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BjprILCWanA+M5LySeENT
+        Q3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxNJ32f+OflBO5yNA77EG2U
+        N63XytFiBtcn7sqs3e9idBgY3M9Lv7/j0FKUXu987phmvmcm0/1ZCdzzfnAnnpl4+JN6erKI
+        8Y33vjVZOb9zXR/6uUw/WVC2+aqjlYKMv+SyNdl2R3NEfn5O6T+3g1s9vfuh2YvpC7f+DNk4
+        r/gyz/5XYky/GpRYijMSDbWYi4oTAeT7s9WsAgAA
+X-CMS-MailID: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200904133501eucas1p27e474ceb366abd6c5070565abfc6ae21
+X-RootMTR: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200904133501eucas1p27e474ceb366abd6c5070565abfc6ae21
+X-CMS-RootMailID: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
 References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-        <CGME20200904133501eucas1p27e474ceb366abd6c5070565abfc6ae21@eucas1p2.samsung.com>
+        <CGME20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use common helper for converting a sg_table object into struct
-page pointer array.
+The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
+numer of the created entries in the DMA address space. However the
+subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
+called with the original number of entries passed to dma_map_sg. The
+sg_table->nents in turn holds the result of the dma_map_sg call as stated
+in include/linux/scatterlist.h. Adapt the code to obey those rules.
+
+While touching this code, update it to use the modern DMA_FROM_DEVICE
+definitions.
 
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/gpu/drm/omapdrm/omap_gem.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ drivers/media/pci/cx23885/cx23885-alsa.c | 4 ++--
+ drivers/media/pci/cx25821/cx25821-alsa.c | 4 ++--
+ drivers/media/pci/cx88/cx88-alsa.c       | 6 +++---
+ drivers/media/pci/saa7134/saa7134-alsa.c | 4 ++--
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_gem.c b/drivers/gpu/drm/omapdrm/omap_gem.c
-index d0d12d5dd76c..f67f223c6479 100644
---- a/drivers/gpu/drm/omapdrm/omap_gem.c
-+++ b/drivers/gpu/drm/omapdrm/omap_gem.c
-@@ -1297,10 +1297,9 @@ struct drm_gem_object *omap_gem_new_dmabuf(struct drm_device *dev, size_t size,
- 		omap_obj->dma_addr = sg_dma_address(sgt->sgl);
- 	} else {
- 		/* Create pages list from sgt */
--		struct sg_page_iter iter;
- 		struct page **pages;
- 		unsigned int npages;
--		unsigned int i = 0;
-+		unsigned int ret;
+diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
+index df44ed7393a0..c797bff6eebb 100644
+--- a/drivers/media/pci/cx23885/cx23885-alsa.c
++++ b/drivers/media/pci/cx23885/cx23885-alsa.c
+@@ -113,7 +113,7 @@ static int cx23885_alsa_dma_map(struct cx23885_audio_dev *dev)
+ 	struct cx23885_audio_buffer *buf = dev->buf;
  
- 		npages = DIV_ROUND_UP(size, PAGE_SIZE);
- 		pages = kcalloc(npages, sizeof(*pages), GFP_KERNEL);
-@@ -1311,14 +1310,9 @@ struct drm_gem_object *omap_gem_new_dmabuf(struct drm_device *dev, size_t size,
- 		}
+ 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+-			buf->nr_pages, PCI_DMA_FROMDEVICE);
++			buf->nr_pages, DMA_FROM_DEVICE);
  
- 		omap_obj->pages = pages;
--
--		for_each_sg_page(sgt->sgl, &iter, sgt->orig_nents, 0) {
--			pages[i++] = sg_page_iter_page(&iter);
--			if (i > npages)
--				break;
--		}
--
--		if (WARN_ON(i != npages)) {
-+		ret = drm_prime_sg_to_page_addr_arrays(sgt, pages, NULL,
-+						       npages);
-+		if (ret) {
- 			omap_gem_free_object(obj);
- 			obj = ERR_PTR(-ENOMEM);
- 			goto done;
+ 	if (0 == buf->sglen) {
+ 		pr_warn("%s: cx23885_alsa_map_sg failed\n", __func__);
+@@ -129,7 +129,7 @@ static int cx23885_alsa_dma_unmap(struct cx23885_audio_dev *dev)
+ 	if (!buf->sglen)
+ 		return 0;
+ 
+-	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
++	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
+ 	buf->sglen = 0;
+ 	return 0;
+ }
+diff --git a/drivers/media/pci/cx25821/cx25821-alsa.c b/drivers/media/pci/cx25821/cx25821-alsa.c
+index 301616426d8a..8da31c953b02 100644
+--- a/drivers/media/pci/cx25821/cx25821-alsa.c
++++ b/drivers/media/pci/cx25821/cx25821-alsa.c
+@@ -177,7 +177,7 @@ static int cx25821_alsa_dma_map(struct cx25821_audio_dev *dev)
+ 	struct cx25821_audio_buffer *buf = dev->buf;
+ 
+ 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+-			buf->nr_pages, PCI_DMA_FROMDEVICE);
++			buf->nr_pages, DMA_FROM_DEVICE);
+ 
+ 	if (0 == buf->sglen) {
+ 		pr_warn("%s: cx25821_alsa_map_sg failed\n", __func__);
+@@ -193,7 +193,7 @@ static int cx25821_alsa_dma_unmap(struct cx25821_audio_dev *dev)
+ 	if (!buf->sglen)
+ 		return 0;
+ 
+-	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
++	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
+ 	buf->sglen = 0;
+ 	return 0;
+ }
+diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
+index 7d7aceecc985..d38633bc1330 100644
+--- a/drivers/media/pci/cx88/cx88-alsa.c
++++ b/drivers/media/pci/cx88/cx88-alsa.c
+@@ -316,7 +316,7 @@ static int cx88_alsa_dma_map(struct cx88_audio_dev *dev)
+ 	struct cx88_audio_buffer *buf = dev->buf;
+ 
+ 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
+-			buf->nr_pages, PCI_DMA_FROMDEVICE);
++			buf->nr_pages, DMA_FROM_DEVICE);
+ 
+ 	if (buf->sglen == 0) {
+ 		pr_warn("%s: cx88_alsa_map_sg failed\n", __func__);
+@@ -332,8 +332,8 @@ static int cx88_alsa_dma_unmap(struct cx88_audio_dev *dev)
+ 	if (!buf->sglen)
+ 		return 0;
+ 
+-	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen,
+-		     PCI_DMA_FROMDEVICE);
++	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages,
++		     DMA_FROM_DEVICE);
+ 	buf->sglen = 0;
+ 	return 0;
+ }
+diff --git a/drivers/media/pci/saa7134/saa7134-alsa.c b/drivers/media/pci/saa7134/saa7134-alsa.c
+index 544ca57eee75..707ca77221dc 100644
+--- a/drivers/media/pci/saa7134/saa7134-alsa.c
++++ b/drivers/media/pci/saa7134/saa7134-alsa.c
+@@ -297,7 +297,7 @@ static int saa7134_alsa_dma_map(struct saa7134_dev *dev)
+ 	struct saa7134_dmasound *dma = &dev->dmasound;
+ 
+ 	dma->sglen = dma_map_sg(&dev->pci->dev, dma->sglist,
+-			dma->nr_pages, PCI_DMA_FROMDEVICE);
++			dma->nr_pages, DMA_FROM_DEVICE);
+ 
+ 	if (0 == dma->sglen) {
+ 		pr_warn("%s: saa7134_alsa_map_sg failed\n", __func__);
+@@ -313,7 +313,7 @@ static int saa7134_alsa_dma_unmap(struct saa7134_dev *dev)
+ 	if (!dma->sglen)
+ 		return 0;
+ 
+-	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->sglen, PCI_DMA_FROMDEVICE);
++	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->nr_pages, DMA_FROM_DEVICE);
+ 	dma->sglen = 0;
+ 	return 0;
+ }
 -- 
 2.17.1
 
