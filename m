@@ -2,118 +2,258 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A3BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D32BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:03:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0719920770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:02:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="jvNt3f7d"
+	by mail.kernel.org (Postfix) with ESMTP id E265D2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgIDLCK (ORCPT
+        id S1729584AbgIDLDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:02:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbgIDLAw (ORCPT
+        Fri, 4 Sep 2020 07:03:51 -0400
+Received: from retiisi.org.uk ([95.216.213.190]:59512 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729813AbgIDLAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:00:52 -0400
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63130C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:00:50 -0700 (PDT)
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout1.routing.net (Postfix) with ESMTP id E9D853FF6D;
-        Fri,  4 Sep 2020 11:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1599217232;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RdOFWohILbsEDDDJFVfgHhbn+dw2QRxvLWyTIr2kZpU=;
-        b=jvNt3f7d3FF2fSMFKk0MXXDc/yD9IpNkiQC8nzWhBGIU5u3Czw6ncUImhneqUjLr9W9UhQ
-        fDgtzqHkfh1NTc4vZBHK8IG7G3mhK0vJ3fOA+Kb9ARofzsVD9e+0Ovg1GsB6lGi7P1OJTd
-        uVzJuz+/IhjSweGEb17llg551RRqZck=
-Received: from localhost.localdomain (fttx-pool-217.61.147.193.bambit.de [217.61.147.193])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 393E0360469;
-        Fri,  4 Sep 2020 11:00:31 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alex Ryabchenko <d3adme4t@gmail.com>
-Subject: [PATCH v6 4/4] arm: dts: mt7623: add lima related regulator
-Date:   Fri,  4 Sep 2020 13:00:02 +0200
-Message-Id: <20200904110002.88966-5-linux@fw-web.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904110002.88966-1-linux@fw-web.de>
-References: <20200904110002.88966-1-linux@fw-web.de>
+        Fri, 4 Sep 2020 07:00:55 -0400
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 55543634C8C;
+        Fri,  4 Sep 2020 14:00:13 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kE9S1-0001a8-6D; Fri, 04 Sep 2020 14:00:13 +0300
+Date:   Fri, 4 Sep 2020 14:00:13 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200904110013.GG4392@valkosipuli.retiisi.org.uk>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200904012000.GA9369@pendragon.ideasonboard.com>
+ <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
+ <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
+ <20200904092049.6lokfmln4vulswrn@uno.localdomain>
+ <20200904093626.GF4392@valkosipuli.retiisi.org.uk>
+ <20200904103550.3cdxick4lje34kxv@uno.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904103550.3cdxick4lje34kxv@uno.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Ryabchenko <d3adme4t@gmail.com>
+Hi Jacopo,
 
-GPU needs additional regulator, add it to devicetree of bpi-r2
+On Fri, Sep 04, 2020 at 12:35:50PM +0200, Jacopo Mondi wrote:
+> Hi Sakari,
+> 
+> On Fri, Sep 04, 2020 at 12:36:26PM +0300, Sakari Ailus wrote:
+> > On Fri, Sep 04, 2020 at 11:20:49AM +0200, Jacopo Mondi wrote:
+> > > Hi Sakari,
+> > >
+> > > On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
+> > > > Hi Laurent, Jacopo,
+> > > >
+> > > > On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
+> > > > > Hi Laurent,
+> > > > >
+> > > > > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
+> > > > > > Hi Prabhakar,
+> > > > > >
+> > > > > > Thank you for the patch.
+> > > > > >
+> > > > > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> > > > > > > Add support to read the bus-type and enable BT656 mode if needed.
+> > > > > > >
+> > > > > > > Also fail probe if unsupported bus_type is detected.
+> > > > > > >
+> > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > > > > > ---
+> > > > > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+> > > > > > >  1 file changed, 32 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> > > > > > > index 2cc6a678069a..67764d647526 100644
+> > > > > > > --- a/drivers/media/i2c/ov772x.c
+> > > > > > > +++ b/drivers/media/i2c/ov772x.c
+> > > > > > > @@ -31,6 +31,7 @@
+> > > > > > >  #include <media/v4l2-ctrls.h>
+> > > > > > >  #include <media/v4l2-device.h>
+> > > > > > >  #include <media/v4l2-event.h>
+> > > > > > > +#include <media/v4l2-fwnode.h>
+> > > > > > >  #include <media/v4l2-image-sizes.h>
+> > > > > > >  #include <media/v4l2-subdev.h>
+> > > > > > >
+> > > > > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
+> > > > > > >  #ifdef CONFIG_MEDIA_CONTROLLER
+> > > > > > >  	struct media_pad pad;
+> > > > > > >  #endif
+> > > > > > > +	struct v4l2_fwnode_endpoint ep;
+> > > > > > >  };
+> > > > > > >
+> > > > > > >  /*
+> > > > > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+> > > > > > >  	if (priv->streaming == enable)
+> > > > > > >  		goto done;
+> > > > > > >
+> > > > > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> > > > > > > +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> > > > > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> > > > > > > +		if (ret)
+> > > > > > > +			goto done;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+> > > > > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
+> > > > > > >  	if (ret)
+> > > > > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+> > > > > > >
+> > > > > > >  static int ov772x_probe(struct i2c_client *client)
+> > > > > > >  {
+> > > > > > > +	struct fwnode_handle *endpoint;
+> > > > > > >  	struct ov772x_priv	*priv;
+> > > > > > >  	int			ret;
+> > > > > > >  	static const struct regmap_config ov772x_regmap_config = {
+> > > > > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+> > > > > > >  		goto error_clk_put;
+> > > > > > >  	}
+> > > > > > >
+> > > > > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> > > > > > > +						  NULL);
+> > > > > > > +	if (!endpoint) {
+> > > > > > > +		dev_err(&client->dev, "endpoint node not found\n");
+> > > > > > > +		ret = -EINVAL;
+> > > > > > > +		goto error_clk_put;
+> > > > > > > +	}
+> > > > > > > +
+> > > > > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
+> > > > > >
+> > > > > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
+> > > > > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
+> > > > > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
+> > > > > > path and in remove().
+> > > > >
+> > > > > Doesn't alloc_parse() differ from just _parse() as it reserve space
+> > > > > for the 'link-frequencies' array ? As this device does not support
+> > > > > CSI-2 and the 'link-frequencies' property is not allows in bindings,
+> > > > > isn't using endpoint_parse() better as it saves a call to _free() ?
+> > > >
+> > > > Yeah. I think the documentation needs to be updated.
+> > > >
+> > > > The thinking was there would be other variable size properties that drivers
+> > > > would need but that didn't happen. So feel free to continue use
+> > > > v4l2_fwnode_endpoint_parse() where it does the job.
+> > > >
+> > > > >
+> > > > > Or are we deprecating that function unconditionally ? The
+> > > > > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
+> > > > > in new drivers" but here it doesn't seem required..
+> > > > >
+> > > > > >
+> > > > > > On the other hand, not setting .bus_type and letting the parse()
+> > > > > > function determine the but type automatically is also deprecated, and I
+> > > > > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
+> > > > > > once for each bus type until one succeeds is a good API. As change will
+> > > > > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
+> > > > > > for the time being if you want.
+> > > > >
+> > > > > But indeed relying on auto-guessing of the bus type is deprecated since
+> > > > > some time now (and the API could be improved, yes). Sorry I missed
+> > > > > that yesterday.
+> > > >
+> > > > There's one case where the bus type does not need to be set: when bindings
+> > > > require it *and* at the same time you have no default configuration that
+> > > > requires something to be set in the bus specific struct. Bindings where
+> > > > bus-type is required were added later so I think the documentation should
+> > > > be changed there, too.
+> > > >
+> > > > I can send the patches.
+> > > >
+> > > > >
+> > > > > As we support parallel and bt.656 only I must be honest I don't mind
+> > > > > it here as otherwise the code would be more complex for no real gain,
+> > > > > but I defer this to Sakari which has been fighting the battle against
+> > > > > auto-guessing since a long time now  :)
+> > > >
+> > > > I think you should require bus-type property in bindings in that case.
+> > > >
+> > > > But as it's an existing driver, bus-type will be optional. You'll need to
+> > > > default to what was supported earlier. This is actually an interesting case
+> > > > as bindings do not document it.
+> > >
+> > > For reference:
+> > > https://patchwork.linuxtv.org/project/linux-media/patch/20200903131029.18334-3-jacopo+renesas@jmondi.org/
+> > >
+> > > But yes, we might have DTBs in the wild without bus-type specified :(
+> >
+> > Shouldn't that be then that the bus-type is optional and defaults to
+> > parallel?
+> 
+> I think going forward we want to make it mandatory, don't we ? The
+> older dts will fail at dt validation time against the new yaml bindings, but
+> my understanding is that this is not a problem.
 
-Signed-off-by: Alex Ryabchenko <d3adme4t@gmail.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+For new devices, yes. I still wouldn't make DT binding changes that render
+the old DT source invalid, at least unless it's absolutely mandatory. And
+that is not the case here.
 
-diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index f41f221e56ca..826912545ef1 100644
---- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-+++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -79,6 +79,13 @@ reg_5v: regulator-5v {
- 		regulator-always-on;
- 	};
- 
-+	reg_vgpu: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_fixed_vgpu";
-+		regulator-min-microvolt = <1150000>;
-+		regulator-max-microvolt = <1150000>;
-+	};
-+
- 	gpio-keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
-@@ -283,6 +290,11 @@ &i2c1 {
- 	status = "okay";
- };
- 
-+&mali {
-+	mali-supply = <&reg_vgpu>;
-+	status = "okay";
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default", "state_uhs";
- 	pinctrl-0 = <&mmc0_pins_default>;
-@@ -402,4 +414,3 @@ &u3phy1 {
- &u3phy2 {
- 	status = "okay";
- };
--
+I guess it may be a bit grey area. At least leave a comment in the driver
+on how the old bindings were so the code isn't accidentally "fixed".
+
+> 
+> Binary compatibility, with the introduction of BT.656 support becomes
+> more complex instead :/
+> 
+> Before this series parallel was the only supported bus type and no
+> endpoint properties were required. The driver picked the default
+> settings for signal polarities and that was it.
+> 
+> With the introduction of BT.656 no signal polarity properties means
+> BT.656 when autoguess is in use. So going forward the bus-type shall
+> be explicitly set, but we might receive old DTBs with no bus-type and
+> no endpoint properties which assumes 'parallel' is in use.
+> 
+> One possible way forward could be:
+> - verify if bus-type is present in the fwnode
+> - if it is, we have a new DTB and we can rely on autoguess
+> - if it's not assume we have an old DTB that assumed 'parallel'. Parse
+>   the fwnode and if any relevant V4L2_MBUS_ flag is set use it,
+>   otherwise use the defaults.
+> 
+> If we make bus-type optional in new bindings, the old DTB with no
+> parallel endpoint properties would be identified as BT.656 breaking
+> capture operation, am I wrong ?
+
+There's no technical reason why it has to be so.
+
+You simply try endpoint parsing with parallel bus first, with the old
+defaults, and if that succeeds, then you don't attempt to parse it as
+Bt.656 anymore.
+
+> 
+> This might require a bit more work from Prabhakar I'm sorry. The old
+> bindings were clearly falling short once BT.656 becomes supported.
+
 -- 
-2.25.1
+Kind regards,
 
+Sakari Ailus
