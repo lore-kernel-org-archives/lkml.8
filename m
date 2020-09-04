@@ -2,161 +2,166 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAD1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840F4C2BC84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFC60206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F51206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JpiHNMy9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UUtp1rvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbgIDGpQ (ORCPT
+        id S1728163AbgIDGrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:45:16 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:60166 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726127AbgIDGpH (ORCPT
+        Fri, 4 Sep 2020 02:47:12 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54980 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgIDGrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:45:07 -0400
-X-UUID: 9787be0d913f4ca197b842f57d98b71f-20200904
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=ZdGMDv5zUYGYyGcwMpbNr1XEOrUasDU8u/ZAe2/IJL4=;
-        b=JpiHNMy9Ehz7uELwxWxoHsD6aGHFNxZdLtqlbzEzMJ/znZ7t3TglXQqKA/1vsPYRDm31u3AFMUlJQhQ8Z5i0+w/qNfdGrd/Of0frpov858lhFSbWxYQ63+OPETXaBE9SGoYU9V2kyCVtWO0PdWO5YRjhAKu/e+hTmBPDhpcP8nY=;
-X-UUID: 9787be0d913f4ca197b842f57d98b71f-20200904
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <weiyi.lu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 672437035; Fri, 04 Sep 2020 14:44:57 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 4 Sep 2020 14:44:55 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 4 Sep 2020 14:44:55 +0800
-From:   Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Enric Balletbo Serra <eballetbo@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>
-Subject: [PATCH 3/3] arm64: dts: Add power controller device node of MT8192
-Date:   Fri, 4 Sep 2020 14:44:55 +0800
-Message-ID: <1599201895-11013-4-git-send-email-weiyi.lu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1599201895-11013-1-git-send-email-weiyi.lu@mediatek.com>
-References: <1599201895-11013-1-git-send-email-weiyi.lu@mediatek.com>
+        Fri, 4 Sep 2020 02:47:10 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904064707euoutp02b7854cb444c2387d79318b2c8ecee100~xgcV6gmNM1899618996euoutp02Z
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904064707euoutp02b7854cb444c2387d79318b2c8ecee100~xgcV6gmNM1899618996euoutp02Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599202027;
+        bh=67a+pt9I2jtHRBIG4Hc52tlennfGIpB6ZIhmKV+jdAc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=UUtp1rvAsv+k+nCyMMcUzpAmjdcKyAQAJp2x1hJLvIFIhsbBOhsynwiAho/6+clNy
+         WzogXpUFcZNO6B4+qbxgG+N3+ZflYT9+gms58N9MJMd6jJhwPvM00VkODYo7IZwKk2
+         7tLE0irq/RNK0Bj2HypDrvfkN5SLnD4j2C8oHO4w=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200904064707eucas1p1a492751e701126307c7afa8459d84bc1~xgcVnRxUy0374403744eucas1p1j;
+        Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 91.C2.06456.BE2E15F5; Fri,  4
+        Sep 2020 07:47:07 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200904064707eucas1p24ca97f26742aed3fd092b37012861fca~xgcVM5k_51330813308eucas1p2K;
+        Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904064706eusmtrp218e6fe4f52d1b160b2ea5e82d9a981a9~xgcVHNqm21768817688eusmtrp2M;
+        Fri,  4 Sep 2020 06:47:06 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-fa-5f51e2eb12a8
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 12.62.06314.AE2E15F5; Fri,  4
+        Sep 2020 07:47:06 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200904064706eusmtip276985d5c504de0a45479dcbe3d764a5f~xgcUpDwwd2982729827eusmtip2W;
+        Fri,  4 Sep 2020 06:47:06 +0000 (GMT)
+Subject: Re: [PATCH v2 1/3] ARM: dts: exynos: Add assigned clock parent to
+ CMU in Exynos3250
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Sylwester Nawrocki <snawrocki@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4bc2ea2e-65a2-6c0b-9557-5777e359241a@samsung.com>
+Date:   Fri, 4 Sep 2020 08:47:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200903181425.5015-1-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djP87qvHwXGG3y9KWkx/8g5Vov+x6+Z
+        Lc6f38BusenxNVaLy7vmsFnMOL+PyaJ17xF2i/anL5kdODw2repk89i8pN7j8ya5AOYoLpuU
+        1JzMstQifbsEroyll38zF+zirVj27j1zA2MzdxcjJ4eEgInEz1NrmLsYuTiEBFYwSuzc3sYG
+        4XxhlFi2+hErhPOZUeL58pdMMC0bbuyBqlrOKNH58BsLhPMeqOr3FUaQKmGBOImDjd/ZQRIi
+        IO2XJ19jBkkwC+hKTH/3BsxmEzCU6HrbxQZi8wrYSTS+ugvUzMHBIqAiceKuFEhYFGjOsVOP
+        WCBKBCVOznwCZnMCXXH/4TYmiJHyEtvfzoEaLy5x68l8JpC9EgLL2CUeT3nEDHG2i8T5mTvZ
+        IGxhiVfHt7BD2DIS/3fCNDQzSjw8t5YdwukBurppBiNElbXEnXO/2ECuYxbQlFi/Sx8i7Cix
+        eMFRdpCwhACfxI23ghBH8ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCoNAvJa7OQvDML
+        yTuzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpecn7uJEZh6Tv87/mkH49dLSYcYBTgY
+        lXh4b7wPiBdiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9j
+        hQTSE0tSs1NTC1KLYLJMHJxSDYydXvfufSzbY+p/TvcCS8fqTXt+LNfXuHR/t88G9mV/zZor
+        AxIKb+TyhGxT/DzznsO5pH9HM224k5i7I9yya7kneTNPbv3+z8R8gfyUzbxt0VICm5LfmS/L
+        39Exq1fU22NHcLB/pMuN44EHOjcuW54g7qtU8fqRjKHhjWmZt4L3mOz0uHypaq8SS3FGoqEW
+        c1FxIgCeWsMhOQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xe7qvHgXGG5x9bWkx/8g5Vov+x6+Z
+        Lc6f38BusenxNVaLy7vmsFnMOL+PyaJ17xF2i/anL5kdODw2repk89i8pN7j8ya5AOYoPZui
+        /NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyll38zF+zi
+        rVj27j1zA2MzdxcjJ4eEgInEhht72EBsIYGljBK7t2lBxGUkTk5rYIWwhSX+XOsCquECqnnL
+        KDH57z8WkISwQJzEmhMrWUASIgKfGSWeNW5iBkkwC+hKTH/3hhmiox2o4/ctRpAEm4ChRNfb
+        LrB1vAJ2Eo2v7gLFOThYBFQkTtyVAgmLAg090/MCqkRQ4uTMJ2DLOIEuvf9wGxPEfDOJeZsf
+        Qu2Sl9j+dg6ULS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+oVJ+YWl+al
+        6yXn525iBEbatmM/N+9gvLQx+BCjAAejEg/vjfcB8UKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1J
+        rKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgEsgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliS
+        mp2aWpBaBNPHxMEp1cAYsEAppqrH9LWo8Y3IukPblnB8yGXKOfub6+1SWaY53Re219Qm7jCe
+        fXm73epAl3VhCheMlRd0RJ05yMMqG/H7neOnue1KsnHT3GM3/pXUv8EY1Gq6cub/9yGGq06+
+        Vpz64trMNweeTo4Q4FWYxtJ+ffm/Ne9dO4192HdukHu7b1aEvnxbfsdFJZbijERDLeai4kQA
+        46qE7MoCAAA=
+X-CMS-MailID: 20200904064707eucas1p24ca97f26742aed3fd092b37012861fca
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200903181437eucas1p16b97d1c425672700bac7ece19084584c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200903181437eucas1p16b97d1c425672700bac7ece19084584c
+References: <CGME20200903181437eucas1p16b97d1c425672700bac7ece19084584c@eucas1p1.samsung.com>
+        <20200903181425.5015-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHBvd2VyIGNvbnRyb2xsZXIgbm9kZSBmb3IgTVQ4MTkyLg0KSW4gc2Nwc3lzIG5vZGUsIGl0
-IGNvbnRhaW5zIGNsb2NrcyBhbmQgcmVnbWFwcGluZyBvZg0KaW5mcmFjZmcgZm9yIGJ1cyBwcm90
-ZWN0aW9uLg0KQW5kIGxpc3QgYWxsIHRoZSBwb3dlciBkb21haW5zIG9mIE1UODE5MiB1bmRlciBz
-Y3BzeXMgbm9kZQ0KdG8gc2hvdyB0aGUgZGVwZW5kZW5jeSBiZXR3ZWVuIGVhY2ggb3RoZXIgdGhy
-b3VnaCBoaWVyYXJjaGljYWwNCnN0cnVjdHVyZS4NCg0KU2lnbmVkLW9mZi1ieTogV2VpeWkgTHUg
-PHdlaXlpLmx1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0
-ZWsvbXQ4MTkyLmR0c2kgfCAxNDggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KIDEg
-ZmlsZSBjaGFuZ2VkLCAxNDggaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02
-NC9ib290L2R0cy9tZWRpYXRlay9tdDgxOTIuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
-aWF0ZWsvbXQ4MTkyLmR0c2kNCmluZGV4IGIzZmFiNGYuLmJlOTAxMzcgMTAwNjQ0DQotLS0gYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpDQorKysgYi9hcmNoL2FybTY0
-L2Jvb3QvZHRzL21lZGlhdGVrL210ODE5Mi5kdHNpDQpAQCAtOSw2ICs5LDcgQEANCiAjaW5jbHVk
-ZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvYXJtLWdpYy5oPg0KICNpbmNsdWRl
-IDxkdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9pcnEuaD4NCiAjaW5jbHVkZSA8ZHQt
-YmluZGluZ3MvcGluY3RybC9tdDgxOTItcGluZnVuYy5oPg0KKyNpbmNsdWRlIDxkdC1iaW5kaW5n
-cy9wb3dlci9tdDgxOTItcG93ZXIuaD4NCiANCiAvIHsNCiAJY29tcGF0aWJsZSA9ICJtZWRpYXRl
-ayxtdDgxOTIiOw0KQEAgLTI1Nyw2ICsyNTgsMTUzIEBADQogCQkJI2ludGVycnVwdC1jZWxscyA9
-IDwyPjsNCiAJCX07DQogDQorCQlzY3BzeXM6IHBvd2VyLWNvbnRyb2xsZXJAMTAwMDYwMDAgew0K
-KwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTkyLXNjcHN5cyIsICJzeXNjb24iOw0KKwkJ
-CXJlZyA9IDwwIDB4MTAwMDYwMDAgMCAweDEwMDA+Ow0KKwkJCWNsb2NrcyA9IDwmdG9wY2tnZW4g
-Q0xLX1RPUF9BVURfSU5UQlVTX1NFTD4sDQorCQkJCSA8JmluZnJhY2ZnIENMS19JTkZSQV9BVURJ
-T18yNk1fQj4sDQorCQkJCSA8JmluZnJhY2ZnIENMS19JTkZSQV9BVURJTz4sDQorCQkJCSA8Jmlu
-ZnJhY2ZnIENMS19JTkZSQV9QTUlDX0NPTk4+LA0KKwkJCQkgPCZ0b3Bja2dlbiBDTEtfVE9QX01G
-R19QTExfU0VMPiwNCisJCQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9ESVNQX1NFTD4sDQorCQkJCSA8
-JmluZnJhY2ZnIENMS19JTkZSQV9ERVZJQ0VfQVBDX1NZTkM+LA0KKwkJCQkgPCZ0b3Bja2dlbiBD
-TEtfVE9QX0lQRV9TRUw+LA0KKwkJCQkgPCZ0b3Bja2dlbiBDTEtfVE9QX0lNRzFfU0VMPiwNCisJ
-CQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9JTUcyX1NFTD4sDQorCQkJCSA8JnRvcGNrZ2VuIENMS19U
-T1BfTURQX1NFTD4sDQorCQkJCSA8JnRvcGNrZ2VuIENMS19UT1BfVkVOQ19TRUw+LA0KKwkJCQkg
-PCZ0b3Bja2dlbiBDTEtfVE9QX1ZERUNfU0VMPiwNCisJCQkJIDwmdG9wY2tnZW4gQ0xLX1RPUF9D
-QU1fU0VMPjsNCisJCQljbG9jay1uYW1lcyA9ICJhdWRpbyIsICJhdWRpbzEiLCAiYXVkaW8yIiwg
-ImNvbm4iLCAibWZnIiwNCisJCQkJICAgICAgImRpc3AiLCAiZGlzcDEiLCAiaXBlIiwgImlzcCIs
-ICJpc3AxIiwNCisJCQkJICAgICAgIm1kcCIsICJ2ZW5jIiwgInZkZWMiLCAiY2FtIjsNCisJCQlp
-bmZyYWNmZyA9IDwmaW5mcmFjZmc+Ow0KKwkJCSNwb3dlci1kb21haW4tY2VsbHMgPSA8MT47DQor
-CQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQorCQkJI3NpemUtY2VsbHMgPSA8MD47DQorDQorCQkJ
-YXVkaW9ATVQ4MTkyX1BPV0VSX0RPTUFJTl9BVURJTyB7DQorCQkJCXJlZyA9IDxNVDgxOTJfUE9X
-RVJfRE9NQUlOX0FVRElPPjsNCisJCQl9Ow0KKw0KKwkJCWNvbm5ATVQ4MTkyX1BPV0VSX0RPTUFJ
-Tl9DT05OIHsNCisJCQkJcmVnID0gPE1UODE5Ml9QT1dFUl9ET01BSU5fQ09OTj47DQorCQkJfTsN
-CisNCisJCQltZmdATVQ4MTkyX1BPV0VSX0RPTUFJTl9NRkcwIHsNCisJCQkJcmVnID0gPE1UODE5
-Ml9QT1dFUl9ET01BSU5fTUZHMD47DQorCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKwkJCQkj
-c2l6ZS1jZWxscyA9IDwwPjsNCisNCisJCQkJbWZnMUBNVDgxOTJfUE9XRVJfRE9NQUlOX01GRzEg
-ew0KKwkJCQkJcmVnID0gPE1UODE5Ml9QT1dFUl9ET01BSU5fTUZHMT47DQorCQkJCQkjYWRkcmVz
-cy1jZWxscyA9IDwxPjsNCisJCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKwkJCQkJbWZnMkBN
-VDgxOTJfUE9XRVJfRE9NQUlOX01GRzIgew0KKwkJCQkJCXJlZyA9IDxNVDgxOTJfUE9XRVJfRE9N
-QUlOX01GRzI+Ow0KKwkJCQkJfTsNCisNCisJCQkJCW1mZzNATVQ4MTkyX1BPV0VSX0RPTUFJTl9N
-RkczIHsNCisJCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9NRkczPjsNCisJCQkJCX07
-DQorDQorCQkJCQltZmc0QE1UODE5Ml9QT1dFUl9ET01BSU5fTUZHNCB7DQorCQkJCQkJcmVnID0g
-PE1UODE5Ml9QT1dFUl9ET01BSU5fTUZHND47DQorCQkJCQl9Ow0KKw0KKwkJCQkJbWZnNUBNVDgx
-OTJfUE9XRVJfRE9NQUlOX01GRzUgew0KKwkJCQkJCXJlZyA9IDxNVDgxOTJfUE9XRVJfRE9NQUlO
-X01GRzU+Ow0KKwkJCQkJfTsNCisNCisJCQkJCW1mZzZATVQ4MTkyX1BPV0VSX0RPTUFJTl9NRkc2
-IHsNCisJCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9NRkc2PjsNCisJCQkJCX07DQor
-CQkJCX07DQorCQkJfTsNCisNCisJCQlkaXNwQE1UODE5Ml9QT1dFUl9ET01BSU5fRElTUCB7DQor
-CQkJCXJlZyA9IDxNVDgxOTJfUE9XRVJfRE9NQUlOX0RJU1A+Ow0KKwkJCQljbG9ja3MgPSA8Jm1t
-c3lzIENMS19NTV9TTUlfSU5GUkE+LA0KKwkJCQkJIDwmbW1zeXMgQ0xLX01NX1NNSV9DT01NT04+
-LA0KKwkJCQkJIDwmbW1zeXMgQ0xLX01NX1NNSV9HQUxTPiwNCisJCQkJCSA8Jm1tc3lzIENMS19N
-TV9TTUlfSU9NTVU+Ow0KKwkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCisJCQkJI3NpemUtY2Vs
-bHMgPSA8MD47DQorDQorCQkJCWlwZUBNVDgxOTJfUE9XRVJfRE9NQUlOX0lQRSB7DQorCQkJCQly
-ZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9JUEU+Ow0KKwkJCQkJY2xvY2tzID0gPCZpcGVzeXMg
-Q0xLX0lQRV9MQVJCMTk+LA0KKwkJCQkJCSA8JmlwZXN5cyBDTEtfSVBFX0xBUkIyMD4sDQorCQkJ
-CQkJIDwmaXBlc3lzIENMS19JUEVfU01JX1NVQkNPTT4sDQorCQkJCQkJIDwmaXBlc3lzIENMS19J
-UEVfR0FMUz47DQorCQkJCX07DQorDQorCQkJCWlzcEBNVDgxOTJfUE9XRVJfRE9NQUlOX0lTUCB7
-DQorCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9JU1A+Ow0KKwkJCQkJY2xvY2tzID0g
-PCZpbWdzeXMgQ0xLX0lNR19MQVJCOT4sDQorCQkJCQkJIDwmaW1nc3lzIENMS19JTUdfR0FMUz47
-DQorCQkJCX07DQorDQorCQkJCWlzcDJATVQ4MTkyX1BPV0VSX0RPTUFJTl9JU1AyIHsNCisJCQkJ
-CXJlZyA9IDxNVDgxOTJfUE9XRVJfRE9NQUlOX0lTUDI+Ow0KKwkJCQkJY2xvY2tzID0gPCZpbWdz
-eXMyIENMS19JTUcyX0xBUkIxMT4sDQorCQkJCQkJIDwmaW1nc3lzMiBDTEtfSU1HMl9HQUxTPjsN
-CisJCQkJfTsNCisNCisJCQkJbWRwQE1UODE5Ml9QT1dFUl9ET01BSU5fTURQIHsNCisJCQkJCXJl
-ZyA9IDxNVDgxOTJfUE9XRVJfRE9NQUlOX01EUD47DQorCQkJCQljbG9ja3MgPSA8Jm1kcHN5cyBD
-TEtfTURQX1NNSTA+Ow0KKwkJCQl9Ow0KKw0KKwkJCQl2ZW5jQE1UODE5Ml9QT1dFUl9ET01BSU5f
-VkVOQyB7DQorCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9WRU5DPjsNCisJCQkJCWNs
-b2NrcyA9IDwmdmVuY3N5cyBDTEtfVkVOQ19TRVQxX1ZFTkM+Ow0KKwkJCQl9Ow0KKw0KKwkJCQl2
-ZGVjQE1UODE5Ml9QT1dFUl9ET01BSU5fVkRFQyB7DQorCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VS
-X0RPTUFJTl9WREVDPjsNCisJCQkJCWNsb2NrcyA9IDwmdmRlY3N5c19zb2MgQ0xLX1ZERUNfU09D
-X1ZERUM+LA0KKwkJCQkJCSA8JnZkZWNzeXNfc29jIENMS19WREVDX1NPQ19MQVQ+LA0KKwkJCQkJ
-CSA8JnZkZWNzeXNfc29jIENMS19WREVDX1NPQ19MQVJCMT47DQorCQkJCQkjYWRkcmVzcy1jZWxs
-cyA9IDwxPjsNCisJCQkJCSNzaXplLWNlbGxzID0gPDA+Ow0KKw0KKwkJCQkJdmRlYzJATVQ4MTky
-X1BPV0VSX0RPTUFJTl9WREVDMiB7DQorCQkJCQkJcmVnID0gPE1UODE5Ml9QT1dFUl9ET01BSU5f
-VkRFQzI+Ow0KKwkJCQkJCWNsb2NrcyA9IDwmdmRlY3N5cyBDTEtfVkRFQ19WREVDPiwNCisJCQkJ
-CQkJIDwmdmRlY3N5cyBDTEtfVkRFQ19MQVQ+LA0KKwkJCQkJCQkgPCZ2ZGVjc3lzIENMS19WREVD
-X0xBUkIxPjsNCisJCQkJCX07DQorCQkJCX07DQorDQorCQkJCWNhbUBNVDgxOTJfUE9XRVJfRE9N
-QUlOX0NBTSB7DQorCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJTl9DQU0+Ow0KKwkJCQkJ
-Y2xvY2tzID0gPCZjYW1zeXMgQ0xLX0NBTV9MQVJCMTM+LA0KKwkJCQkJCSA8JmNhbXN5cyBDTEtf
-Q0FNX0xBUkIxND4sDQorCQkJCQkJIDwmY2Ftc3lzIENMS19DQU1fQ0NVX0dBTFM+LA0KKwkJCQkJ
-CSA8JmNhbXN5cyBDTEtfQ0FNX0NBTTJNTV9HQUxTPjsNCisJCQkJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KKwkJCQkJI3NpemUtY2VsbHMgPSA8MD47DQorDQorCQkJCQljYW1fcmF3YUBNVDgxOTJf
-UE9XRVJfRE9NQUlOX0NBTV9SQVdBIHsNCisJCQkJCQlyZWcgPSA8TVQ4MTkyX1BPV0VSX0RPTUFJ
-Tl9DQU1fUkFXQT47DQorCQkJCQkJY2xvY2tzID0gPCZjYW1zeXNfcmF3YSBDTEtfQ0FNX1JBV0Ff
-TEFSQlg+Ow0KKwkJCQkJfTsNCisNCisJCQkJCWNhbV9yYXdiQE1UODE5Ml9QT1dFUl9ET01BSU5f
-Q0FNX1JBV0Igew0KKwkJCQkJCXJlZyA9IDxNVDgxOTJfUE9XRVJfRE9NQUlOX0NBTV9SQVdCPjsN
-CisJCQkJCQljbG9ja3MgPSA8JmNhbXN5c19yYXdiIENMS19DQU1fUkFXQl9MQVJCWD47DQorCQkJ
-CQl9Ow0KKw0KKwkJCQkJY2FtX3Jhd2NATVQ4MTkyX1BPV0VSX0RPTUFJTl9DQU1fUkFXQyB7DQor
-CQkJCQkJcmVnID0gPE1UODE5Ml9QT1dFUl9ET01BSU5fQ0FNX1JBV0M+Ow0KKwkJCQkJCWNsb2Nr
-cyA9IDwmY2Ftc3lzX3Jhd2MgQ0xLX0NBTV9SQVdDX0xBUkJYPjsNCisJCQkJCX07DQorCQkJCX07
-DQorCQkJfTsNCisJCX07DQorDQogCQl3YXRjaGRvZzogd2F0Y2hkb2dAMTAwMDcwMDAgew0KIAkJ
-CWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTkyLXdkdCI7DQogCQkJcmVnID0gPDAgMHgxMDAw
-NzAwMCAwIDB4MTAwPjsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0K
+Hi Krzysztof,
+
+On 03.09.2020 20:14, Krzysztof Kozlowski wrote:
+> Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
+> for exynos3250") added assigned clocks under Clock Management Unit to
+> fix hangs when accessing ISP registers.
+>
+> However the dtschema expects "clocks" property if "assigned-clocks" are
+> used.  Add reference to input clock, the parent used in
+> "assigned-clock-parents" to silence the dtschema warnings:
+>
+>    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Add clocks property.
+>
+> This is a v2 for:
+> https://lore.kernel.org/linux-samsung-soc/20200901101534.GE23793@kozik-lap/T/#me85ac382b847dadbc3f6ebf30e94e70b5df1ebb6
+> ---
+>   arch/arm/boot/dts/exynos3250.dtsi | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index a1e93fb7f694..89b160280469 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -214,6 +214,7 @@
+>   			compatible = "samsung,exynos3250-cmu";
+>   			reg = <0x10030000 0x20000>;
+>   			#clock-cells = <1>;
+> +			clocks = <&cmu CLK_FIN_PLL>;
+
+This is not a correct input clock for this CMU. Please assign it to 
+xusbxti, xxti or xtcxo in the respective board dts, as this is a board 
+property.
+
+>   			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>,
+>   					  <&cmu CLK_MOUT_ACLK_266_SUB>;
+>   			assigned-clock-parents = <&cmu CLK_FIN_PLL>,
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
