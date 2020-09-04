@@ -2,207 +2,97 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EC4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F214BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FE5C2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:21:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=eero.com header.i=@eero.com header.b="s7F2RaTj"
+	by mail.kernel.org (Postfix) with ESMTP id A40C9208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:23:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbgIDVVE (ORCPT
+        id S1728113AbgIDVXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 17:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39032 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgIDVVD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 17:21:03 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00587C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 14:21:02 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id ay8so7382966edb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 14:21:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=eero.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/bbf2Btlz4O8O7mwAo6eW49nsY6yI+2OlbwP4d2f1k=;
-        b=s7F2RaTjJUzNuzYVM/OOWKjs/bBR734diSeL5TizFjBzV+Jjmt6y3Crw3MWPBkyBqd
-         XUwG5Xtln2yLXufHduRVqMS3WW4PcMcKI7u7qMKujF+yVipwbXAEUCIDKRRVnlwWaWjR
-         QmZXWJj2BL37kkqol1X/umWXOQuDKGtAOPUvo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/bbf2Btlz4O8O7mwAo6eW49nsY6yI+2OlbwP4d2f1k=;
-        b=gg9ofa7Q8qvA56mmkAKVUO+1gW/d3O8FvvbbdXuJ6l5iE6k0XcdbUyph+ZxjzflAN3
-         8rXnrApZaOXIrEaf2xdp+TdmsYwrHNHNpyQHMVsYLbFnAUsL2i8kQWze804I3CINRbGy
-         R8oCOxnunqXsnMFvgNiqvHlh8Re1WHZgHW8caGnuYsw8EYhME5CFSOlS58ZatLL5UJ4U
-         scQNd3eFhnY1afK/hRZUuFtHKd57tR0cpNAl056fkWWU845/rQivuurtt7RhpSKcMmYd
-         dDXpFVCdGIA+DUxYGONr7YYaK1uo11ynGEorGtVk2MMYdCRYlXl7Hwn/XSPVxjZaGwSo
-         kmNg==
-X-Gm-Message-State: AOAM531dCg86qqhoA2dAQmlqUeoIwnJTa76kUxYRszw1OA3SqYHLAgVz
-        AqXnXgj7KoD9lcH1eP2U//0xhCuFDSaEdXaf6Gc7bw==
-X-Google-Smtp-Source: ABdhPJz3MVW+ImiihsCu1nXqsWPXiyjxjt9c0fteSDxJXpiLt0CzU9YiT2w63Ulx0de/K6Ucmx8QjnnsQ9l69toGduE=
-X-Received: by 2002:a05:6402:12d1:: with SMTP id k17mr10489575edx.323.1599254461608;
- Fri, 04 Sep 2020 14:21:01 -0700 (PDT)
+        Fri, 4 Sep 2020 17:23:36 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:56938 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbgIDVXf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 17:23:35 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kEJB4-00015W-HH; Fri, 04 Sep 2020 23:23:22 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Tom Cubie <tom@radxa.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH 0/3] extcon: Add Type-C Virtual PD
+Date:   Fri, 04 Sep 2020 23:23:21 +0200
+Message-ID: <6955091.ERBjKZ0CLf@diego>
+In-Reply-To: <20200904191830.387296-1-jagan@amarulasolutions.com>
+References: <20200904191830.387296-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-References: <1598856077-58603-1-git-send-email-chao@eero.com>
- <20200904175007.GG29330@paulmck-ThinkPad-P72> <CAOr4Z-uwhX3LY=2x84da_uqAnX3dgpsgGSztQJLE6YEduCrR0w@mail.gmail.com>
- <20200904203718.GO29330@paulmck-ThinkPad-P72>
-In-Reply-To: <20200904203718.GO29330@paulmck-ThinkPad-P72>
-From:   Chao Zhou <chao@eero.com>
-Date:   Fri, 4 Sep 2020 14:20:50 -0700
-Message-ID: <CAOr4Z-u6yvcJZojrfMt_eeBxUfY8H7ede1rQRKi6PtPkKK9DxQ@mail.gmail.com>
-Subject: Re: [PATCH] rcu: allow multiple stalls before panic
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Paul, sounds good!
+Hi Jagan,
 
-Much appreciated your guidance.
+Am Freitag, 4. September 2020, 21:18:27 CEST schrieb Jagan Teki:
+> USB Type-C protocol supports various modes of operations
+> includes PD, USB3, and Altmode. If the platform design
+> supports a Type-C connector then configuring these modes
+> can be done via enumeration.
+> 
+> However, there are some platforms that design these modes
+> of operations as separate protocol connectors like design
+> Display Port from on-chip USB3 controller. So accessing
+> Type-C Altmode Display Port via onboard Display Port 
+> connector instead of a Type-C connector.
+>  
+> These kinds of platforms require an explicit extcon driver
+> in order to handle Power Delivery and Port Detection.
+> 
+> This series support this Type-C Virtual PD and enable the
+> same in ROCK Pi 4C SBC.
+> 
+> Any inputs?
 
-Chao
+I tend to disagree on the design via an extcon.
 
-eero inc.
+That the Rockchip rk3399 currently carries that extcon thingy is unfortunate
+and only works for ChromeOS devices based on the rk3399.
 
-660 3rd St, 4th Floor
+The kernel now has a real type-c framework so we should not extend this
+extcon hack any further, because that will make it even harder to roll back
+later. Also simply because other Rockchip boards currently can't really make
+use of type-c due to this, as they use the fsusb302 phys directly connected.
 
-San Francisco, CA 94107
+ChromeOS actually spend some time to make the cros-ec pd part of the type-c
+framework if I remember correctly, so a viable battle plan would be to:
+
+(1) move the Rockchip type-c phy driver to actually be part of the type-c
+    framework, with the extcon being a deprecated fallback for old DTs.
+(2) implement your gpio-altmode as part of the type-c framework
+    (which may even already exist)
+
+
+In short, please don't extend the rk3399 type-c extcon hack.
+
+Thanks
+Heiko
 
 
 
-On Fri, Sep 4, 2020 at 1:37 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Fri, Sep 04, 2020 at 12:40:29PM -0700, Chao Zhou wrote:
-> > Thanks Paul. Appreciated it.
-> >
-> > Initial intent was to give users a way to make their system more
-> > tolerable, but prudent enough to recover if suspicious behavior
-> > reaches a watermark. If a system experiences multiple stalls in one
-> > lifetime, no matter how healthy it looks or whether the stalls are
-> > from different sources, we still want it to dramatically recover.
-> > Please share your guidance?
->
-> I have no guidance in this case.  I was just wanting to verify that the
-> patch was in fact doing what you want it to.  And it sounds like it does,
-> so good!
->
-> I have queued this for testing and further review.  If all goes well,
-> I would submit it upstream for the v5.11 merge window, that is, not the
-> upcoming merge window, but the one after that.
->
->                                                         Thanx, Paul
->
-> > eero inc.
-> >
-> > 660 3rd St, 4th Floor
-> >
-> > San Francisco, CA 94107
-> >
-> >
-> >
-> > On Fri, Sep 4, 2020 at 11:05 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Sun, Aug 30, 2020 at 11:41:17PM -0700, chao wrote:
-> > > > Some stalls are transient and system can fully recover.
-> > > > Allow users to configure the number of stalls experienced
-> > > > to trigger kernel Panic.
-> > > >
-> > > > Signed-off-by: chao <chao@eero.com>
-> > >
-> > > Hearing no objections, I have queued this with wordsmithing as shown
-> > > below.  Please let me know if I messed something up.
-> > >
-> > > One question, though.  It looks like setting this to (say) 5 would panic
-> > > after the fifth RCU CPU stall warning message, regardless whether all
-> > > five were reporting the same RCU CPU stall event or whether they instead
-> > > were five widely separated transient RCU CPU stall events, where the
-> > > system fully recovered from each event.  Is this the intent?
-> > >
-> > >                                                         Thanx, Paul
-> > >
-> > > ------------------------------------------------------------------------
-> > >
-> > > commit e710c928fb52d8e56bc6173515805301da6aa22b
-> > > Author: chao <chao@eero.com>
-> > > Date:   Sun Aug 30 23:41:17 2020 -0700
-> > >
-> > >     rcu: Panic after fixed number of stalls
-> > >
-> > >     Some stalls are transient, so that system fully recovers.  This commit
-> > >     therefore allows users to configure the number of stalls that must happen
-> > >     in order to trigger kernel panic.
-> > >
-> > >     Signed-off-by: chao <chao@eero.com>
-> > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > >
-> > > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> > > index 500def6..fc2dd3f 100644
-> > > --- a/include/linux/kernel.h
-> > > +++ b/include/linux/kernel.h
-> > > @@ -536,6 +536,7 @@ extern int panic_on_warn;
-> > >  extern unsigned long panic_on_taint;
-> > >  extern bool panic_on_taint_nousertaint;
-> > >  extern int sysctl_panic_on_rcu_stall;
-> > > +extern int sysctl_max_rcu_stall_to_panic;
-> > >  extern int sysctl_panic_on_stackoverflow;
-> > >
-> > >  extern bool crash_kexec_post_notifiers;
-> > > diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-> > > index 0fde39b..228c55f 100644
-> > > --- a/kernel/rcu/tree_stall.h
-> > > +++ b/kernel/rcu/tree_stall.h
-> > > @@ -13,6 +13,7 @@
-> > >
-> > >  /* panic() on RCU Stall sysctl. */
-> > >  int sysctl_panic_on_rcu_stall __read_mostly;
-> > > +int sysctl_max_rcu_stall_to_panic __read_mostly;
-> > >
-> > >  #ifdef CONFIG_PROVE_RCU
-> > >  #define RCU_STALL_DELAY_DELTA          (5 * HZ)
-> > > @@ -106,6 +107,11 @@ early_initcall(check_cpu_stall_init);
-> > >  /* If so specified via sysctl, panic, yielding cleaner stall-warning output. */
-> > >  static void panic_on_rcu_stall(void)
-> > >  {
-> > > +       static int cpu_stall;
-> > > +
-> > > +       if (++cpu_stall < sysctl_max_rcu_stall_to_panic)
-> > > +               return;
-> > > +
-> > >         if (sysctl_panic_on_rcu_stall)
-> > >                 panic("RCU Stall\n");
-> > >  }
-> > > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> > > index 287862f..1bca490 100644
-> > > --- a/kernel/sysctl.c
-> > > +++ b/kernel/sysctl.c
-> > > @@ -2651,6 +2651,17 @@ static struct ctl_table kern_table[] = {
-> > >                 .extra2         = SYSCTL_ONE,
-> > >         },
-> > >  #endif
-> > > +#if defined(CONFIG_TREE_RCU)
-> > > +       {
-> > > +               .procname       = "max_rcu_stall_to_panic",
-> > > +               .data           = &sysctl_max_rcu_stall_to_panic,
-> > > +               .maxlen         = sizeof(sysctl_max_rcu_stall_to_panic),
-> > > +               .mode           = 0644,
-> > > +               .proc_handler   = proc_dointvec_minmax,
-> > > +               .extra1         = SYSCTL_ONE,
-> > > +               .extra2         = SYSCTL_INT_MAX,
-> > > +       },
-> > > +#endif
-> > >  #ifdef CONFIG_STACKLEAK_RUNTIME_DISABLE
-> > >         {
-> > >                 .procname       = "stack_erasing",
+
