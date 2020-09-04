@@ -2,130 +2,191 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C051C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F68C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3975B20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:52:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ggjJL5Z9"
+	by mail.kernel.org (Postfix) with ESMTP id 1FF4220770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:53:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgIDKwx (ORCPT
+        id S1729954AbgIDKxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:52:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726811AbgIDKwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:52:45 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25FBCC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 03:52:43 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id t10so6322150wrv.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 03:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=+iE8KKkck/xEAOwmmOF3xny94TS+1Do/CvzA4IxanHc=;
-        b=ggjJL5Z9HOKQFBj0T0XHZXCKcdvrBgKoB/723JkP+x5v+swsNt0f/7fTp/9KOXmPk7
-         agfSAD7Migk+IEmxFZji8v1DMCeOUTlt4AuwNatt6iMrYaeX9Ig6Z5CN6jvD7Ujgq00P
-         abApqDHg2ob9wcQvpRGvmGCV0CGY6RV6LgSENEUu7NEqP9pmBcSuQG0FlnNRYSQXs8dL
-         BmA2rog4/yXvySGnc4cgRt6d09YoI3MwupjUKjjIzHAW1K6d8FOnjlvCOE6MRGqSILn7
-         NVuq/3cciwlGQpL1gfmKsU8WEf+O5MDE1QfGbTSWDYdWXHDkQWLKEA5+qlpInIPEvIQv
-         snOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=+iE8KKkck/xEAOwmmOF3xny94TS+1Do/CvzA4IxanHc=;
-        b=OroafUuH04pO1ShDROlh3yz66K45BClZ4te2/U3vE7mvzDbgovgMS9o0jPSmjvxf55
-         tA6QVANPWSGZvRNGoJmB9xJNqVLUCV/e3VJTbOv+cewrDtfESSS/fRl+U2YG7W3p8LKu
-         BpXGSuE1dI/hxF5qnA3CN5g4vSXja9AsQ6ClKM7yWOo68ptSz/MiR8fH+GP3v0tXZXNg
-         Mna9qOeQuoUKq3SwVXBTlJlJtVbrV9KGHwXe43JDBMDdDwL1Pa7i8wnSbMkNNI2xjeXI
-         WVi9/H4E7QXZEsvFN3Wvd0vRBtIinmv0TxBAfry8qOSGfpHedxi3lsY9Nt2vlbgEkcOC
-         9HeA==
-X-Gm-Message-State: AOAM531AG0/X3cleA+fb9JKnS3mVkgoj7CaBJFKE07WATCQlwcCZBp0o
-        R2ej7TPx55h15VP1D9AZtgaEpkWRcu++qw==
-X-Google-Smtp-Source: ABdhPJx2iyDL6jMli8nl/e42y75F1m3oC21j7pDQ6qUbWp1FFL1zlCZEGoeRupL7zatohnitC12szg==
-X-Received: by 2002:adf:81c6:: with SMTP id 64mr6774218wra.176.1599216759238;
-        Fri, 04 Sep 2020 03:52:39 -0700 (PDT)
-Received: from ?IPv6:2a01:e34:ed2f:f020:35e2:113b:59f2:81a? ([2a01:e34:ed2f:f020:35e2:113b:59f2:81a])
-        by smtp.googlemail.com with ESMTPSA id f19sm10387140wmh.44.2020.09.04.03.52.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 03:52:38 -0700 (PDT)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [GIT PULL] timer drivers fixes for v5.9-rc4
-Message-ID: <921c157b-7f18-52bb-2d94-513f33cf9f41@linaro.org>
-Date:   Fri, 4 Sep 2020 12:52:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 4 Sep 2020 06:53:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:48300 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726171AbgIDKxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:53:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B1A31101E;
+        Fri,  4 Sep 2020 03:53:15 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 659D43F71F;
+        Fri,  4 Sep 2020 03:53:12 -0700 (PDT)
+Subject: Re: [RFC 00/10] Add USB support for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>, Yu Chen <chenyu56@huawei.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dragan Cvetic <dragan.cvetic@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+References: <cover.1599214329.git.mchehab+huawei@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <84b7dfcd-05e9-53b2-e0a0-b03105937eb3@arm.com>
+Date:   Fri, 4 Sep 2020 11:53:10 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <cover.1599214329.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-09-04 11:23, Mauro Carvalho Chehab wrote:
+> This RFC adds what seems to be needed for USB to work with Hikey 970.
+> While this driver works fine on Kernel 4.9 and 4.19, there's a hack there,
+> in the form of some special binding logic under dwg3 driver,  that seems to
+>   be just adding some delay,  and doing some different initializations at
+> PM (basically, disabling autosuspend).
+> 
+> With upstream Kernel, however, I'm getting a hard to track
+> Kernel panic:
+> 
+> [    1.837458] SError Interrupt on CPU0, code 0xbf000002 -- SError
+> [    1.837462] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #205
+> [    1.837463] Hardware name: HiKey970 (DT)
+> [    1.837465] Workqueue: events deferred_probe_work_func
+> [    1.837467] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
+> [    1.837468] pc : _raw_spin_unlock_irqrestore+0x18/0x50
+> [    1.837469] lr : regmap_unlock_spinlock+0x14/0x20
+> [    1.837470] sp : ffff8000124dba60
+> [    1.837471] x29: ffff8000124dba60 x28: 0000000000000000
+> [    1.837474] x27: ffff0001b7e854c8 x26: ffff80001204ea18
+> [    1.837476] x25: 0000000000000005 x24: ffff800011f918f8
+> [    1.837479] x23: ffff800011fbb588 x22: ffff0001b7e40e00
+> [    1.837481] x21: 0000000000000100 x20: 0000000000000000
+> [    1.837483] x19: ffff0001b767ec00 x18: 00000000ff10c000
+> [    1.837485] x17: 0000000000000002 x16: 0000b0740fdb9950
+> [    1.837488] x15: ffff8000116c1198 x14: ffffffffffffffff
+> [    1.837490] x13: 0000000000000030 x12: 0101010101010101
+> [    1.837493] x11: 0000000000000020 x10: ffff0001bf17d130
+> [    1.837495] x9 : 0000000000000000 x8 : ffff0001b6938080
+> [    1.837497] x7 : 0000000000000000 x6 : 000000000000003f
+> [    1.837500] x5 : 0000000000000000 x4 : 0000000000000000
+> [    1.837502] x3 : ffff80001096a880 x2 : 0000000000000000
+> [    1.837505] x1 : ffff0001b7e40e00 x0 : 0000000100000001
+> [    1.837507] Kernel panic - not syncing: Asynchronous SError Interrupt
+> [    1.837509] CPU: 0 PID: 74 Comm: kworker/0:1 Not tainted 5.8.0+ #205
+> [    1.837510] Hardware name: HiKey970 (DT)
+> [    1.837511] Workqueue: events deferred_probe_work_func
+> [    1.837513] Call trace:
+> [    1.837514]  dump_backtrace+0x0/0x1e0
+> [    1.837515]  show_stack+0x18/0x24
+> [    1.837516]  dump_stack+0xc0/0x11c
+> [    1.837517]  panic+0x15c/0x324
+> [    1.837518]  nmi_panic+0x8c/0x90
+> [    1.837519]  arm64_serror_panic+0x78/0x84
+> [    1.837520]  do_serror+0x158/0x15c
+> [    1.837521]  el1_error+0x84/0x100
+> [    1.837522]  _raw_spin_unlock_irqrestore+0x18/0x50
+> [    1.837523]  regmap_write+0x58/0x80
+> [    1.837524]  hi3660_reset_deassert+0x28/0x34
+> [    1.837526]  reset_control_deassert+0x50/0x260
+> [    1.837527]  reset_control_deassert+0xf4/0x260
+> [    1.837528]  dwc3_probe+0x5dc/0xe6c
+> [    1.837529]  platform_drv_probe+0x54/0xb0
+> [    1.837530]  really_probe+0xe0/0x490
+> [    1.837531]  driver_probe_device+0xf4/0x160
+> [    1.837532]  __device_attach_driver+0x8c/0x114
+> [    1.837533]  bus_for_each_drv+0x78/0xcc
+> [    1.837534]  __device_attach+0x108/0x1a0
+> [    1.837535]  device_initial_probe+0x14/0x20
+> [    1.837537]  bus_probe_device+0x98/0xa0
+> [    1.837538]  deferred_probe_work_func+0x88/0xe0
+> [    1.837539]  process_one_work+0x1cc/0x350
+> [    1.837540]  worker_thread+0x2c0/0x470
+> [    1.837541]  kthread+0x154/0x160
+> [    1.837542]  ret_from_fork+0x10/0x30
+> [    1.837569] SMP: stopping secondary CPUs
+> [    1.837570] Kernel Offset: 0x1d0000 from 0xffff800010000000
+> [    1.837571] PHYS_OFFSET: 0x0
+> [    1.837572] CPU features: 0x240002,20882004
+> [    1.837573] Memory Limit: none
+> 
+> I suspect that the driver works downstream because of the extra
+> delay of probing an additional driver, as porting such driver
+> to upstream sometimes makes this driver to work. So, it could
+> be due to some race condition.
+> 
+> The problem could also be due to something wrong at DT,
+> as, with the additional driver, the DT bindings are different.
+> 
+> As I'm not familiar about the Serror error mechanism on ARM,
+> I'm wondering if someone could give me some hint about how
+> can I identify what's happening here.  Due to the panic(), I
+> can't check what wrong happened there. Not sure if it would
+> be safe to just hack the error handling part of Serror, in order
+> to let the boot to finish.
 
-Hi Thomas,
+As one of my colleagues so wonderfully puts it, SError is effectively 
+"part of the SoC has fallen off" - it's an asynchronous notification of 
+some serious error condition external to the CPU. In this case, it seems 
+quite likely from trying to access a hardware block before it's powered 
+up or has finished its reset cycle, and so some CPU access is raising an 
+error in the interconnect instead of completing as expected.
 
-The following changes since commit b0294f30256bb6023b2044fd607855123863d98f:
+Robin.
 
-  time: Delete repeated words in comments (2020-08-10 22:14:07 +0200)
-
-are available in the Git repository at:
-
-  https://git.linaro.org/people/daniel.lezcano/linux.git
-tags/timers-v5.9-rc4
-
-for you to fetch changes up to bc6717d55d07110d8f3c6d31ec2af50c11b07091:
-
-  clocksource/drivers/timer-gx6605s: Fixup counter reload (2020-08-24
-13:01:39 +0200)
-
-----------------------------------------------------------------
-- Fix wrong signed return value when checking of_iomap in the probe
-  function for the h8300 timer (Tianjia Zhang)
-
-- Fix reset sequence when setting up the timer on the dm_timer (Tony
-  Lindgren)
-
-- Fix counter reload when the interrupt fires on gx6605s (Guo Ren)
-
-----------------------------------------------------------------
-Guo Ren (1):
-      clocksource/drivers/timer-gx6605s: Fixup counter reload
-
-Tianjia Zhang (1):
-      clocksource/drivers/h8300_timer8: Fix wrong return value in
-h8300_8timer_init()
-
-Tony Lindgren (1):
-      clocksource/drivers/timer-ti-dm: Do reset before enable
-
- drivers/clocksource/h8300_timer8.c         |  2 +-
- drivers/clocksource/timer-gx6605s.c        |  1 +
- drivers/clocksource/timer-ti-dm-systimer.c | 44
-+++++++++++++++++++++++---------------------
- 3 files changed, 25 insertions(+), 22 deletions(-)
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> PS.: the driver/misc hisi_hikey_usb driver on this series came
+> from the John Stultz Hikey 960 tree.
+> 
+> Thanks!
+> Mauro
+> 
+> Mauro Carvalho Chehab (7):
+>    phy: hisilicon: phy-hi3670-usb3: use a consistent namespace
+>    phy: hisilicon: phy-hi3670-usb3: fix coding style
+>    phy: hisilicon: phy-hi3670-usb3: change some DT properties
+>    dt-bindings: phy: convert phy-kirin970-usb3.txt to yaml
+>    MAINTAINERS: add myself as maintainer for Kirin 970 USB PHY
+>    misc: hisi_hikey_usb: add support for Hikey 970
+>    dts: hisilicon: add support for USB3 on Hikey 970
+> 
+> Yu Chen (3):
+>    phy: hisilicon: add USB physical layer for Kirin 3670
+>    phy: hisilicon: phy-hi3670-usb3: fix some issues at the init code
+>    misc: hisi_hikey_usb: Driver to support onboard USB gpio hub on
+>      Hikey960
+> 
+>   .../bindings/phy/hisilicon,hi3670-usb3.yaml   |  72 ++
+>   MAINTAINERS                                   |  16 +-
+>   .../boot/dts/hisilicon/hi3670-hikey970.dts    | 103 +++
+>   arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  49 ++
+>   drivers/misc/Kconfig                          |   9 +
+>   drivers/misc/Makefile                         |   1 +
+>   drivers/misc/hisi_hikey_usb.c                 | 272 +++++++
+>   drivers/phy/hisilicon/Kconfig                 |  10 +
+>   drivers/phy/hisilicon/Makefile                |   1 +
+>   drivers/phy/hisilicon/phy-hi3670-usb3.c       | 671 ++++++++++++++++++
+>   10 files changed, 1203 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/phy/hisilicon,hi3670-usb3.yaml
+>   create mode 100644 drivers/misc/hisi_hikey_usb.c
+>   create mode 100644 drivers/phy/hisilicon/phy-hi3670-usb3.c
+> 
