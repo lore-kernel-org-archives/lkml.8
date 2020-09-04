@@ -2,133 +2,103 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60918C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810CCC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F370E206CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:51:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QUVcsk1+"
+	by mail.kernel.org (Postfix) with ESMTP id 53BD1206CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:52:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgIDCvp (ORCPT
+        id S1729675AbgIDCwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 22:51:45 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:50267 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729600AbgIDCvn (ORCPT
+        Thu, 3 Sep 2020 22:52:19 -0400
+Received: from emcscan.emc.com.tw ([192.72.220.5]:30058 "EHLO
+        emcscan.emc.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729521AbgIDCwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 22:51:43 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200904025140epoutp017956d558079e25c758ead803479ab189~xdOxHv9Oe1044210442epoutp019
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 02:51:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200904025140epoutp017956d558079e25c758ead803479ab189~xdOxHv9Oe1044210442epoutp019
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599187900;
-        bh=3j9wXFPoXrGR29SzTgKQa2jvraHCbCGq1Geo06fCDFc=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=QUVcsk1+COo5cvzKxlDucqiFHSa8lHdwVaFZW/7tSif8LvfB2qL0xIyUioohcv4Xu
-         6Dc86UEOc6agz9L5MtshahaxnXxN/wCIeZO38ANr9xVrwgly3TgMVVxQB6uv8cqrlA
-         MZFwvoLgINFcUI0hPq5SUe70yG6J0RF8bn/ZYGxE=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200904025140epcas1p4e5bbc3942f86f7a7ce336a8fd5e06cfd~xdOwdHCAg2235622356epcas1p4s;
-        Fri,  4 Sep 2020 02:51:40 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.161]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4BjMdR1qRBzMqYlr; Fri,  4 Sep
-        2020 02:51:39 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        0D.F9.18978.BBBA15F5; Fri,  4 Sep 2020 11:51:39 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904025138epcas1p2aa6ede81a216c41405a57ef1ede0ff39~xdOuzWmYA1801918019epcas1p2Z;
-        Fri,  4 Sep 2020 02:51:38 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200904025138epsmtrp2b855f2394fa9e428c2b2707252745bc7~xdOuyjqrX1999719997epsmtrp2T;
-        Fri,  4 Sep 2020 02:51:38 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-f1-5f51abbb106e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        DB.7B.08303.ABBA15F5; Fri,  4 Sep 2020 11:51:38 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200904025138epsmtip2d0b4f7b4ccbd54e4049ebf81df3fa01d~xdOuhyiv72414624146epsmtip2W;
-        Fri,  4 Sep 2020 02:51:38 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Sungjong Seo'" <sj1557.seo@samsung.com>,
-        "'Tetsuhiro Kohada'" <kohada.t2@gmail.com>
-Cc:     <kohada.tetsuhiro@dc.mitsubishielectric.co.jp>,
-        <mori.takahiro@ab.mitsubishielectric.co.jp>,
-        <motai.hirotaka@aj.mitsubishielectric.co.jp>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <000001d681e3$2da33bc0$88e9b340$@samsung.com>
-Subject: RE: [PATCH] exfat: eliminate dead code in exfat_find()
-Date:   Fri, 4 Sep 2020 11:51:38 +0900
-Message-ID: <001a01d68266$4f416850$edc438f0$@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHi/AdGy7WFjhE0CTAe/r6eZnJXbwGnddttAjFSwr+pIA0swA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLJsWRmVeSWpSXmKPExsWy7bCmge7u1YHxBgf+8Vj8mHubxeLNyaks
-        Fnv2nmSxuLxrDpvF5f+fWCyWfZnMYrHl3xFWB3aPL3OOs3u0Tf7H7tF8bCWbx85Zd9k9+ras
-        YvT4vEkugC0qxyYjNTEltUghNS85PyUzL91WyTs43jne1MzAUNfQ0sJcSSEvMTfVVsnFJ0DX
-        LTMH6BYlhbLEnFKgUEBicbGSvp1NUX5pSapCRn5xia1SakFKToGhQYFecWJucWleul5yfq6V
-        oYGBkSlQZUJOxpN3V1gK1jBVrNrTxNjA+Juxi5GTQ0LAROLo7P2sXYxcHEICOxgltrb/h3I+
-        MUqcX7CLDcL5zCgx980lJpiW6Y3LmCASuxgl7i9ezgLhvGSU6Lu0khmkik1AV+Lfn/1sILaI
-        QLTEsR3nGUGKmAWuMEo8eDQLbBSngJXEjttzwGxhAXuJGc27wBpYBFQkLmztZwWxeQUsJe6f
-        usEOYQtKnJz5hAXEZhaQl9j+dg4zxEkKEj+fLmOFWOYksWzfd0aIGhGJ2Z1tUDUzOSQ2nmeB
-        sF0k3p7Yww5hC0u8Or4FypaS+PxuL9ANHEB2tcTH/VCtHYwSL77bQtjGEjfXb2AFKWEW0JRY
-        v0sfIqwosfP3XKitfBLvvvawQkzhlehoE4IoUQWGzmFoGEpLdLV/YJ/AqDQLyV+zkPw1C8n9
-        sxCWLWBkWcUollpQnJueWmxYYIgc2ZsYwelUy3QH48S3H/QOMTJxMB5ilOBgVhLhnXnDN16I
-        NyWxsiq1KD++qDQntfgQoykwpCcyS4km5wMTel5JvKGpkbGxsYWJmbmZqbGSOO/DWwrxQgLp
-        iSWp2ampBalFMH1MHJxSDUwTLBiNnsdJ6EtOPlx9o/pwSs+r16qq73od/h2bnPronrIFU5eb
-        gsCHS5OPq15a/bOS2Yfb2KWwSP/GwQjTeVobV20613FnTm5drxGvFtfem+V9myP4ZNTsrsZl
-        Lfn/M3xv08GYqZNMbvVqfFr5wnqbS+icDzNeOIVH5ZTUbnnw/8km+cWCu7bPa8lx0moTXulx
-        Q2Ht+TbzoBevGi4nXw83P8c92SBsFlPGnXtz77DLTLO7eZar9IvlYyExE6akT0ve7C3U7Vxh
-        eFR0RquV4hFTg5zIOlszk+1+B1+3LLgjsqmI4R4Pg8Hn5RNu3/BI5lieocBiNSHxcPK9I0HC
-        aSe4mGoKC8OW2saVTBL8FK/EUpyRaKjFXFScCABlTiogMAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42LZdlhJXnfX6sB4gzcfeS1+zL3NYvHm5FQW
-        iz17T7JYXN41h83i8v9PLBbLvkxmsdjy7wirA7vHlznH2T3aJv9j92g+tpLNY+esu+wefVtW
-        MXp83iQXwBbFZZOSmpNZllqkb5fAlfHk3RWWgjVMFav2NDE2MP5m7GLk5JAQMJGY3riMqYuR
-        i0NIYAejxJp525khEtISx06cAbI5gGxhicOHiyFqnjNKbGw5wARSwyagK/Hvz342EFtEIFri
-        6t+/LCA2s8A1Ronv07MhGrYzStxe/YEVJMEpYCWx4/YcsGZhAXuJGc27wJpZBFQkLmztB6vh
-        FbCUuH/qBjuELShxcuYTqKHaEk9vPoWy5SW2v50DdaiCxM+ny1ghjnCSWLbvOyNEjYjE7M42
-        5gmMwrOQjJqFZNQsJKNmIWlZwMiyilEytaA4Nz232LDAKC+1XK84Mbe4NC9dLzk/dxMjOLK0
-        tHYw7ln1Qe8QIxMH4yFGCQ5mJRHemTd844V4UxIrq1KL8uOLSnNSiw8xSnOwKInzfp21ME5I
-        ID2xJDU7NbUgtQgmy8TBKdXAFM87WY35Wka+IMMzAz8fUdcolWqv+d++LOVJ6Stz9uxT9wwX
-        qZ1lpti+un6auTyHqdFMr3WcHgbbNaU0XsVKPP73udB5T19desjsExYCF82suq8ZWZ/wD8qJ
-        TN5lmtfds0l6SopJ6JQl+tNzeCbIOZ2tfi04y7U6bcb02TFmv42mLjbOZg55uM1AT/oUt1ck
-        V6uHncqjEo4pk24KbHeMXX1R5HiBr/eaZba/29dcf2n2rfvIC46u6M6qkEWKd39+n+y3eV5I
-        qkrrhadLTVbO3Td780mbCatbKuXSTlpWthYlzTWS7Dh15Lt4yeG38yck/RKqP6J8++m0j32s
-        mvOOXhfcuO+p9qsPzPzTa24osRRnJBpqMRcVJwIAKlLWdxsDAAA=
-X-CMS-MailID: 20200904025138epcas1p2aa6ede81a216c41405a57ef1ede0ff39
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200902075318epcas1p3c35299366ec32bb4947362f73b50b56f
-References: <CGME20200902075318epcas1p3c35299366ec32bb4947362f73b50b56f@epcas1p3.samsung.com>
-        <20200902075306.8439-1-kohada.t2@gmail.com>
-        <000001d681e3$2da33bc0$88e9b340$@samsung.com>
+        Thu, 3 Sep 2020 22:52:18 -0400
+X-Greylist: delayed 583 seconds by postgrey-1.27 at vger.kernel.org; Thu, 03 Sep 2020 22:52:17 EDT
+X-IronPort-AV: E=Sophos;i="5.56,253,1539619200"; 
+   d="scan'208";a="37169782"
+Received: from unknown (HELO webmail.emc.com.tw) ([192.168.10.1])
+  by emcscan.emc.com.tw with ESMTP; 04 Sep 2020 10:42:30 +0800
+Received: from 192.168.10.23
+        by webmail.emc.com.tw with MailAudit ESMTP Server V5.0(142871:0:AUTH_RELAY)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 04 Sep 2020 10:42:30 +0800 (CST)
+Received: from 101.12.41.239
+        by webmail.emc.com.tw with Mail2000 ESMTPA Server V7.00(2486:2:AUTH_LOGIN)
+        (envelope-from <jingle.wu@emc.com.tw>); Fri, 04 Sep 2020 10:42:27 +0800 (CST)
+From:   "jingle.wu" <jingle.wu@emc.com.tw>
+To:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        dmitry.torokhov@gmail.com
+Cc:     phoenix@emc.com.tw,
+        "jingle.wu" <jingle.wu@elan.corp-partner.google.com>
+Subject: [PATCH] Input: trackpoint - Add Suspend mode for Elan TrackPoint
+Date:   Fri,  4 Sep 2020 10:42:31 +0800
+Message-Id: <20200904024231.26812-1-jingle.wu@emc.com.tw>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > The exfat_find_dir_entry() called by exfat_find() doesn't return -EEXIST.
-> > Therefore, the root-dir information setting is never executed.
-> >
-> > Signed-off-by: Tetsuhiro Kohada <kohada.t2@gmail.com>
-> 
-> Acked-by: Sungjong Seo <sj1557.seo@samsung.com>
-Applied. Thanks for your work!
+From: "jingle.wu" <jingle.wu@elan.corp-partner.google.com>
+
+Add suspend command for elan trackpoint
+---
+ drivers/input/mouse/trackpoint.c | 16 ++++++++++++++++
+ drivers/input/mouse/trackpoint.h |  1 +
+ 2 files changed, 17 insertions(+)
+
+diff --git a/drivers/input/mouse/trackpoint.c b/drivers/input/mouse/trackpoint.c
+index 3eefee2ee2a1..b3cba973a4eb 100644
+--- a/drivers/input/mouse/trackpoint.c
++++ b/drivers/input/mouse/trackpoint.c
+@@ -389,6 +389,20 @@ static int trackpoint_reconnect(struct psmouse *psmouse)
+ 	return 0;
+ }
+ 
++static void trackpoint_cleanup(struct psmouse *psmouse)
++{
++	struct trackpoint_data *tp = psmouse->private;
++	u8 param[3] = { TP_TOGGLE, TP_TOGGLE_BURST, TP_TOGGLE_ELAN_SLEEP };
++
++	if (tp->variant_id == TP_VARIANT_ELAN) {
++		if (ps2_command(&psmouse->ps2dev, param,
++				MAKE_PS2_CMD(3, 0, TP_COMMAND))) {
++			psmouse_err(psmouse,
++				    "failed to suspend trackpont.\n");
++		}
++	}
++}
++
+ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
+ {
+ 	struct ps2dev *ps2dev = &psmouse->ps2dev;
+@@ -421,6 +435,8 @@ int trackpoint_detect(struct psmouse *psmouse, bool set_properties)
+ 	psmouse->reconnect = trackpoint_reconnect;
+ 	psmouse->disconnect = trackpoint_disconnect;
+ 
++	psmouse->cleanup = trackpoint_cleanup;
++
+ 	if (variant_id != TP_VARIANT_IBM) {
+ 		/* Newer variants do not support extended button query. */
+ 		button_info = 0x33;
+diff --git a/drivers/input/mouse/trackpoint.h b/drivers/input/mouse/trackpoint.h
+index 5cb93ed26085..c7fa75452976 100644
+--- a/drivers/input/mouse/trackpoint.h
++++ b/drivers/input/mouse/trackpoint.h
+@@ -107,6 +107,7 @@
+ #define TP_TOGGLE_EXT_TAG	0x22	/* Bit 3 of the first packet coming from the
+ 					   external device will be forced to 1 */
+ #define TP_MASK_EXT_TAG			0x04
++#define TP_TOGGLE_ELAN_SLEEP	0x8
+ 
+ 
+ /* Power on Self Test Results */
+-- 
+2.17.1
 
