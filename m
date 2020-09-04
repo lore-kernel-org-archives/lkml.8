@@ -2,90 +2,88 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E38C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF58C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C523206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:26:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891F2206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgIDI0G (ORCPT
+        id S1729854AbgIDI07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:26:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:51424 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729761AbgIDI0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:26:04 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-_6JwrfygMgCh5W65Mchr2w-1; Fri, 04 Sep 2020 04:25:59 -0400
-X-MC-Unique: _6JwrfygMgCh5W65Mchr2w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AECCB80EF9C;
-        Fri,  4 Sep 2020 08:25:58 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8CEB25C22D;
-        Fri,  4 Sep 2020 08:25:54 +0000 (UTC)
-Subject: Re: [PATCH v4 00/10] vfio/fsl-mc: VFIO support for FSL-MC device
-To:     Diana Craciun OSS <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <ae46be70-82d3-6137-6169-beb4bf8ae707@redhat.com>
- <084feb8a-3f9b-efc1-e4f8-eb9a3e60b756@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <84a44bc8-bd7a-c81a-e7cc-35f0a8d3896a@redhat.com>
-Date:   Fri, 4 Sep 2020 10:25:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 4 Sep 2020 04:26:59 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10768 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729582AbgIDI0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:26:55 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 5359180C9C0A7CA6DE60;
+        Fri,  4 Sep 2020 16:26:53 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 4 Sep 2020 16:26:43 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bp@alien8.de>, <mchehab@kernel.org>, <tony.luck@intel.com>
+CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <wangxiongfeng2@huawei.com>
+Subject: [PATCH] EDAC/mc_sysfs: add missing newlines when printing 'max(dimm)_location'
+Date:   Fri, 4 Sep 2020 16:19:23 +0800
+Message-ID: <1599207563-41819-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <084feb8a-3f9b-efc1-e4f8-eb9a3e60b756@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
+When I cat 'max_location' and 'dimm_location' by sysfs, it displays as
+follows. It's better to add a newline for easy reading.
 
-On 9/4/20 10:03 AM, Diana Craciun OSS wrote:
-> Hi Eric,
-> 
-> On 9/3/2020 4:40 PM, Auger Eric wrote:
->>> The patches are dependent on some changes in the mc-bus (bus/fsl-mc)
->>> driver. The changes were needed in order to re-use code and to export
->>> some more functions that are needed by the VFIO driver. Currenlty the
->>> mc-bus patches are under review:
->>> https://www.spinics.net/lists/kernel/msg3639226.html 
->> Could you share a branch with both series? This would help the review.
->> Thanks Eric 
-> 
-> I have pushed both the series here:
-> https://source.codeaurora.org/external/qoriq/qoriq-components/linux-extras/log/?h=dpaa2_direct_assignment
-> 
-> 
-> Regards,
-> 
-> Diana
-> 
-> PS: I apologize if you received the message twice, I have sent it by
-> mistake as html first.
-> 
-No Problem. Thank you for the branch. I have completed a first review
-pass. Hope this helps.
+[root@localhost /]# cat /sys/devices/system/edac/mc/mc0/max_location
+memory 3 [root@localhost /]# cat /sys/devices/system/edac/mc/mc0/dimm0/dimm_location
+memory 0 [root@localhost /]#
 
-Thanks
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-Eric
+---
+I am not sure if there are some userspace tools using this file.
+---
+ drivers/edac/edac_mc_sysfs.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/edac/edac_mc_sysfs.c b/drivers/edac/edac_mc_sysfs.c
+index 4e6aca5..5d7b079 100644
+--- a/drivers/edac/edac_mc_sysfs.c
++++ b/drivers/edac/edac_mc_sysfs.c
+@@ -474,8 +474,12 @@ static ssize_t dimmdev_location_show(struct device *dev,
+ 				     struct device_attribute *mattr, char *data)
+ {
+ 	struct dimm_info *dimm = to_dimm(dev);
++	ssize_t count;
+ 
+-	return edac_dimm_info_location(dimm, data, PAGE_SIZE);
++	count = edac_dimm_info_location(dimm, data, PAGE_SIZE);
++	count += snprintf(data + count, PAGE_SIZE - count, "\n");
++
++	return count;
+ }
+ 
+ static ssize_t dimmdev_label_show(struct device *dev,
+@@ -821,6 +825,7 @@ static ssize_t mci_max_location_show(struct device *dev,
+ 			     edac_layer_name[mci->layers[i].type],
+ 			     mci->layers[i].size - 1);
+ 	}
++	p += sprintf(p, "\n");
+ 
+ 	return p - data;
+ }
+-- 
+1.7.12.4
 
