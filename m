@@ -2,194 +2,238 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E622C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D5AC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 267482084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0D902084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yBv6nkBc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jlZDiNAO"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TcRrEcUw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728361AbgIDX1S (ORCPT
+        id S1728308AbgIDX3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbgIDX1R (ORCPT
+        Fri, 4 Sep 2020 19:29:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34542 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728258AbgIDX3w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:27:17 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9E29C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 16:27:16 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599262033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EJwojlnE2s15WtGyxEEC0ksdWuHJjbLM8eHBhqQhp8Q=;
-        b=yBv6nkBce73q+hz4KYoBD90PqwfisE7nPKDNd/b+1H5ORngRitHMYM9SGn6HNym/UjY71G
-        pTfIxXr3dwsbB1wo5wMq/kmCK48Y15qDgWB+0rbxAoNHzylPNAZDIisXLr+D791yMtE1K4
-        ePunaVcuMODXBrmTdD+ezysaGaoq8qApYB3j4bJ9SBVi0t4KXGy9PckibIBEmgNEHfdocR
-        VrcAZTvFgVJDeEJm+t/qKTWOVMjsViZ/OXbB3D5pH1+Q7KxntFBdKBU2yUCzc6yhcGPqqV
-        78mapU9YwkVrs7ROxgDbKzLdr6D3wQfpPUsB6ur80l93puWjIPdiz4JGAJoguw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599262033;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EJwojlnE2s15WtGyxEEC0ksdWuHJjbLM8eHBhqQhp8Q=;
-        b=jlZDiNAOOM+0b10Th/R+icvRew6HUukQV70WEJOFtrk9Dw040wbVG1tUXNxbYnvnUp5CTE
-        0TwCYIXmBz6AL8CQ==
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Changki Kim <changki.kim@samsung.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
-        gregkh@linuxfoundation.org, krzk@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: printk: Add process name information to printk() output.
-In-Reply-To: <20200904151336.GC20558@alley>
-References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com> <20200904082438.20707-1-changki.kim@samsung.com> <874kod6fgh.fsf@jogness.linutronix.de> <20200904124530.GB20558@alley> <87y2lp4r6o.fsf@jogness.linutronix.de> <20200904151336.GC20558@alley>
-Date:   Sat, 05 Sep 2020 01:33:12 +0206
-Message-ID: <87ft7xazsf.fsf@jogness.linutronix.de>
+        Fri, 4 Sep 2020 19:29:52 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084N3AEQ091888;
+        Fri, 4 Sep 2020 19:29:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=aeCxjDPzA4p1lGvHwMUq7VxTcyA3YFwfsfPU7jiiRM4=;
+ b=TcRrEcUwGEG186JgdXvC8deKUuiTW7q9B5DB4/JoYvj9c8s8ZCNSBQJGf3HvZE53cQes
+ /9C2GdsgguirpsmaN/9sTkJeWwJWLrvzTV/KSjiNVuoVjEs5LovriW/71Jc7l9OvLEkg
+ TXBgM7fMh4zo0jXFvwL9xXCIK/3+8LzNzrQY8XDTmFfeFyoIhIj/auop8e7YbL7KHNxt
+ nmnHiEQku1QG8efsE+iZnxmin7t+owW0H9nJ6FhQOEIEHkaQ6cv2fOEYrTTJCzT/Ul13
+ 7Pr+1an6ghKyYnwlvy5bc/DxG91otBYLlr4YiT/zmcWzlZjnAme5x5iNBnitkPtlkuNu 5g== 
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33bvxkjrnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 19:29:40 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 084NROal009043;
+        Fri, 4 Sep 2020 23:29:39 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma04wdc.us.ibm.com with ESMTP id 337ena2xwh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 04 Sep 2020 23:29:39 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 084NTdEB55443762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 4 Sep 2020 23:29:39 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B1A928058;
+        Fri,  4 Sep 2020 23:29:39 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CCBCB28059;
+        Fri,  4 Sep 2020 23:29:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.40.195.188])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  4 Sep 2020 23:29:38 +0000 (GMT)
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+To:     james.bottomley@hansenpartnership.com
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        brking@linux.ibm.com, Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: [PATCH v3 2/2] scsi: ibmvfc: interface updates for future FPIN and MQ support
+Date:   Fri,  4 Sep 2020 18:29:36 -0500
+Message-Id: <20200904232936.840193-2-tyreld@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200904232936.840193-1-tyreld@linux.ibm.com>
+References: <20200904232936.840193-1-tyreld@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-04_15:2020-09-04,2020-09-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 spamscore=0 impostorscore=0 priorityscore=1501
+ clxscore=1015 bulkscore=0 phishscore=0 adultscore=0 malwarescore=0
+ suspectscore=1 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009040195
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-04, Petr Mladek <pmladek@suse.com> wrote:
->>> I am currently playing with support for all three timestamps based
->>> on https://lore.kernel.org/lkml/20200814101933.574326079@linutronix.de/
->>>
->>> And I got the following idea:
->>>
->>> 1. Storing side:
->>>
->>>    Create one more ring/array for storing the optional metadata.
->>>    It might eventually replace dict ring, see below.
->>>
->>>    struct struct printk_ext_info {
->>> 	u64 ts_boot;			/* timestamp from boot clock */
->>> 	u64 ts_real;			/* timestamp from real clock */
->>> 	char process[TASK_COMM_LEN];	/* process name */
->>>    };
->>>
->>>    It must be in a separate array so that struct prb_desc stay stable
->>>    and crashdump tools do not need to be updated so often.
->>>
->>>    But the number of these structures must be the same as descriptors.
->>>    So it might be:
->>>
->>>    struct prb_desc_ring {
->>> 	unsigned int		count_bits;
->>> 	struct prb_desc		*descs;
->>> 	struct printk_ext_info  *ext_info
->>> 	atomic_long_t		head_id;
->>> 	atomic_long_t		tail_id;
->>>    };
->>>
->>>    One huge advantage is that these extra information would not block
->>>    pushing lockless printk buffer upstream.
->>>
->>>    It might be even possible to get rid of dict ring and just
->>>    add two more elements into struct printk_ext_info:
->>>
->>> 	  char subsystem[16];	/* for SUBSYSTEM= dict value */
->>> 	  char device[48];	/* for DEVICE= dict value */
->
-> From my POV, if we support 3 timestamps then they must be stored
-> reliably. And dict ring is out of the game.
+VIOS partitions with SLI-4 enabled Emulex adapters will be capable of
+driving IO in parallel through mulitple work queues or channels, and
+with new hyperviosr firmware that supports multiple interrupt sources
+an ibmvfc NPIV single initiator can be modified to exploit end to end
+channelization in a PowerVM environment.
 
-Agreed. I am just trying to think of how to better manage the strings,
-which currently are rare and optional. That is where the dict_ring
-becomes interesting.
+VIOS hosts will also be able to expose fabric perfromance impact
+notifications (FPIN) via a new asynchronous event to ibmvfc clients that
+advertise support via IBMVFC_CAN_HANDLE_FPIN in their capabilities flag
+during NPIV_LOGIN.
 
-Perhaps we should use both the fixed structs with the variable
-dict_ring. printk_ext_info could look like this:
+This patch introduces three new Management Datagrams (MADs) for
+channelization support negotiation as well as the FPIN asynchronous
+event and FPIN status flags. Follow up work is required to plumb the
+ibmvfc client driver to use these new interfaces.
 
-struct struct printk_ext_info {
-    u64 ts_boot;
-    u64 ts_real;
-    char *process;
-    char *subsystem;
-    char *device;
-};
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+---
+v2 -> v3:
+	Fixup checkpatch warnings about using __attribute__()
+v1 -> v2:
+        Fixup complier errors from neglected commit --amend
 
-And @process, @subsystem, @device could all point to null-terminated
-trings within the dict_ring. So printk.c code looks something like this:
+---
+ drivers/scsi/ibmvscsi/ibmvfc.h | 66 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
 
-size_t process_sz = strlen(process) + 1;
-size_t subsystem_sz = strlen(subsystem) + 1;
-size_t device_sz = strlen(device) + 1;
-struct prb_reserved_entry e;
-struct printk_record r;
-char *p;
+diff --git a/drivers/scsi/ibmvscsi/ibmvfc.h b/drivers/scsi/ibmvscsi/ibmvfc.h
+index 6da23666f5be..e6e1c255a79c 100644
+--- a/drivers/scsi/ibmvscsi/ibmvfc.h
++++ b/drivers/scsi/ibmvscsi/ibmvfc.h
+@@ -124,6 +124,9 @@ enum ibmvfc_mad_types {
+ 	IBMVFC_PASSTHRU		= 0x0200,
+ 	IBMVFC_TMF_MAD		= 0x0100,
+ 	IBMVFC_NPIV_LOGOUT	= 0x0800,
++	IBMVFC_CHANNEL_ENQUIRY	= 0x1000,
++	IBMVFC_CHANNEL_SETUP	= 0x2000,
++	IBMVFC_CONNECTION_INFO	= 0x4000,
+ };
+ 
+ struct ibmvfc_mad_common {
+@@ -162,6 +165,8 @@ struct ibmvfc_npiv_login {
+ 	__be32 max_cmds;
+ 	__be64 capabilities;
+ #define IBMVFC_CAN_MIGRATE		0x01
++#define IBMVFC_CAN_USE_CHANNELS		0x02
++#define IBMVFC_CAN_HANDLE_FPIN		0x04
+ 	__be64 node_name;
+ 	struct srp_direct_buf async;
+ 	u8 partition_name[IBMVFC_MAX_NAME];
+@@ -204,6 +209,7 @@ struct ibmvfc_npiv_login_resp {
+ 	__be64 capabilities;
+ #define IBMVFC_CAN_FLUSH_ON_HALT	0x08
+ #define IBMVFC_CAN_SUPPRESS_ABTS	0x10
++#define IBMVFC_CAN_SUPPORT_CHANNELS	0x20
+ 	__be32 max_cmds;
+ 	__be32 scsi_id_sz;
+ 	__be64 max_dma_len;
+@@ -482,6 +488,52 @@ struct ibmvfc_passthru_mad {
+ 	struct ibmvfc_passthru_fc_iu fc_iu;
+ } __packed __aligned(8);
+ 
++struct ibmvfc_channel_enquiry {
++	struct ibmvfc_mad_common common;
++	__be32 flags;
++#define IBMVFC_NO_CHANNELS_TO_CRQ_SUPPORT	0x01
++#define IBMVFC_SUPPORT_VARIABLE_SUBQ_MSG	0x02
++#define IBMVFC_NO_N_TO_M_CHANNELS_SUPPORT	0x04
++	__be32 num_scsi_subq_channels;
++	__be32 num_nvmeof_subq_channels;
++	__be32 num_scsi_vas_channels;
++	__be32 num_nvmeof_vas_channels;
++} __packed __aligned(8);
++
++struct ibmvfc_channel_setup_mad {
++	struct ibmvfc_mad_common common;
++	struct srp_direct_buf buffer;
++} __packed __aligned(8);
++
++#define IBMVFC_MAX_CHANNELS	502
++
++struct ibmvfc_channel_setup {
++	__be32 flags;
++#define IBMVFC_CANCEL_CHANNELS		0x01
++#define IBMVFC_USE_BUFFER		0x02
++#define IBMVFC_CHANNELS_CANCELED	0x04
++	__be32 reserved;
++	__be32 num_scsi_subq_channels;
++	__be32 num_nvmeof_subq_channels;
++	__be32 num_scsi_vas_channels;
++	__be32 num_nvmeof_vas_channels;
++	struct srp_direct_buf buffer;
++	__be64 reserved2[5];
++	__be64 channel_handles[IBMVFC_MAX_CHANNELS];
++} __packed __aligned(8);
++
++struct ibmvfc_connection_info {
++	struct ibmvfc_mad_common common;
++	__be64 information_bits;
++#define IBMVFC_NO_FC_IO_CHANNEL		0x01
++#define IBMVFC_NO_PHYP_VAS		0x02
++#define IBMVFC_NO_PHYP_SUBQ		0x04
++#define IBMVFC_PHYP_DEPRECATED_SUBQ	0x08
++#define IBMVFC_PHYP_PRESERVED_SUBQ	0x10
++#define IBMVFC_PHYP_FULL_SUBQ		0x20
++	__be64 reserved[16];
++} __packed __aligned(8);
++
+ struct ibmvfc_trace_start_entry {
+ 	u32 xfer_len;
+ } __packed;
+@@ -532,6 +584,7 @@ enum ibmvfc_async_event {
+ 	IBMVFC_AE_HALT			= 0x0400,
+ 	IBMVFC_AE_RESUME			= 0x0800,
+ 	IBMVFC_AE_ADAPTER_FAILED	= 0x1000,
++	IBMVFC_AE_FPIN			= 0x2000,
+ };
+ 
+ struct ibmvfc_async_desc {
+@@ -560,10 +613,18 @@ enum ibmvfc_ae_link_state {
+ 	IBMVFC_AE_LS_LINK_DEAD		= 0x08,
+ };
+ 
++enum ibmvfc_ae_fpin_status {
++	IBMVFC_AE_FPIN_LINK_CONGESTED	= 0x1,
++	IBMVFC_AE_FPIN_PORT_CONGESTED	= 0x2,
++	IBMVFC_AE_FPIN_PORT_CLEARED	= 0x3,
++	IBMVFC_AE_FPIN_PORT_DEGRADED	= 0x4,
++};
++
+ struct ibmvfc_async_crq {
+ 	volatile u8 valid;
+ 	u8 link_state;
+-	u8 pad[2];
++	u8 fpin_status;
++	u8 pad;
+ 	__be32 pad2;
+ 	volatile __be64 event;
+ 	volatile __be64 scsi_id;
+@@ -590,6 +651,9 @@ union ibmvfc_iu {
+ 	struct ibmvfc_tmf tmf;
+ 	struct ibmvfc_cmd cmd;
+ 	struct ibmvfc_passthru_mad passthru;
++	struct ibmvfc_channel_enquiry channel_enquiry;
++	struct ibmvfc_channel_setup_mad channel_setup;
++	struct ibmvfc_connection_info connection_info;
+ } __packed __aligned(8);
+ 
+ enum ibmvfc_target_action {
+-- 
+2.27.0
 
-prb_rec_init_wr(&r, text_len, process_sz + subsystem_sz + device_sz);
-prb_reserve(&e, prb, &r);
-
-memcpy(r.text_buf, text, text_len);
-r.info->text_len = text_len;
-
-/* guaranteed ext data */
-r.ext_info->ts_boot = time_boot();
-r.ext_info->ts_real = time_real();
-
-/* optional ext data */
-if (r.dict_buf) {
-    p = r.dict_buf;
-
-    memcpy(p, process, process_sz);
-    r.ext_info->process = p;
-    p += process_sz;
-    
-    memcpy(p, subsystem, subsystem_sz);
-    r.ext_info->subsystem = p;    
-    p += subsystem_sz;
-    
-    memcpy(p, device, device_sz);
-    r.ext_info->device = p;
-
-    r.info->dict_len = process_sz + subsystem_sz + device_sz;
-}
-
-> And I am not comfortable even with the current dictionary handling.
-> I already wrote this somewhere. The following command is supposed
-> to show all kernel messages printed by "pci" subsystem:
->
-> 	$> journalctl _KERNEL_SUBSYSTEM=pci
->
-> It will be incomplete when the dictionary metadata were not saved.
-
-In that case, perhaps @subsystem should be a static array in
-printk_ext_info instead.
-
-> Regarding the waste of space. The dict ring currently has the same
-> size as the text ring. It is likely a waste of space as well. Any
-> tuning is complicated because it depends on the use case.
-
-The whole point of the dict_ring is that it allows for variable length
-_optional_ data to be stored. If we decide there is no optional data,
-then dict_ring is not needed.
-
-> The advantage of the fixed @ext_info[] array is that everything is
-> clear, simple, and predictable (taken space and name length limits).
-> We could easily tell users what they will get for a given cost.
-
-Agreed. For non-optional data (such as your timestamps), I am in full
-agreement that a fixed array is the way to go. And it would only require
-a couple lines of code added to the ringbuffer.
-
-My concern is if we need to guarantee space for all possible dictionary
-data of all records. I think the dict_ring can be very helpful here.
-
-John Ogness
