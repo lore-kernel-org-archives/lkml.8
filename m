@@ -2,96 +2,126 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B653EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF4FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852E92074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599231288;
-	bh=acFLAnqkE86HeCOtNctPMq/uQTqTdSMzshdLBUt2XLQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FlQsj1OLhHM6xohYY0fCVtaB61oVX0A52qfpd9IHZ5d1a8dM2A33yh/9VFB4nYOFd
-	 p7qcgLuuuxRBcuoKy56yWND4N47Hy/vRlhcdlDUo59HfUszCGVr5xsyo9zl7zvqZ4E
-	 IlKdEVkzOyVqyDTGVLhuNXT6sSg+aLrb+k2hrAS8=
+	by mail.kernel.org (Postfix) with ESMTP id 71AEC2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:56:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B6yn0s+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgIDOyq (ORCPT
+        id S1730470AbgIDO4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:54:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730849AbgIDOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:54:37 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB4320770;
-        Fri,  4 Sep 2020 14:54:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599231276;
-        bh=acFLAnqkE86HeCOtNctPMq/uQTqTdSMzshdLBUt2XLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8loe0i7Vb5Ga3aEbMBJ0L38GtsqZUHqeV/NiHs6RiB6w9Hx4HMS9f+VI74X7XOEw
-         RQh6OYFXQ6IiRZ9yejJ5WbnVxrwuotKVHI7ECofFJvGn5Ri25GQHNmOEfoIeR99JwW
-         6W5mVGsqul0iQYKLD/vW+yTRai9PW7tKE7dl0PYI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Li Yang <leoyang.li@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 13/13] arm64: dts: imx8mq-librem5: Add interrupt-names to ti,tps6598x
-Date:   Fri,  4 Sep 2020 16:53:12 +0200
-Message-Id: <20200904145312.10960-14-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904145312.10960-1-krzk@kernel.org>
-References: <20200904145312.10960-1-krzk@kernel.org>
+        Fri, 4 Sep 2020 10:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730257AbgIDO4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:56:11 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D01C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:56:11 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id y5so6109916otg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vpKrUehbWkjhPrh2kJL3X4EVOaqPrDgkRZZZ122pDdg=;
+        b=B6yn0s+mws5yiJzwUUdi885QZASFwaiPFQ4rw178/C+vYsxKsD6OlCOQ8UusjKl5nC
+         O71NudexpsbPHvDy4sOCqwfRv85Lmq7SoKLP7nbqBY7hWMbPYYCBgOd5tnipoxJ8k8xR
+         +2ifRFPJpDL8t0Qamvrya8MEmtSeQq6xsha0fJn2qq1S47aR9uWZ25hYEvC5NMg33Ici
+         MyBBSqMBy0egea5fj14vVnPMan1YkXWnLMqyUjHcx8OgRxx4rkAfkRnSdiPQoRPXKAh9
+         F0i4miDyQu+Ub91wJctr7EeT/cikmNeHYmZQ7pet1w9Ej8ZzDuWYdwG0KwYhzSil6lfB
+         J+tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vpKrUehbWkjhPrh2kJL3X4EVOaqPrDgkRZZZ122pDdg=;
+        b=TkRtMgfAXhwQzQrfRUAGuxsjXaN8NJvN/bOXaoAAZxvxyPiWQDJ5xWL6JsnEUfJ07m
+         I5vpUtFUTtobig/AbO9vOgm2OzflaCfWlBYdwfORzI1gb9tTd4DUaEcWt8ROF02wxtd8
+         7g7z52G8p3FigWA1Mfuie3mgT9XpZ1Ej95KoRx82dBaGa1XF9U5UTL/Z7XR4n8Zgq045
+         nHp2F6kDe8CnSozg5Msh7xY9z3F1CVVwW2J1KW597H91gapqY9Hp9Lla9qDtE2zcoen+
+         eWbst3OfwaJVh9//MyR2k88XDClS4PJviuf1Vm4zunZuVOGzH1+eWzF7QV9V0GPUv+1T
+         nubQ==
+X-Gm-Message-State: AOAM532hCLkA52FrgET3vED7NbLA2VJJlSgluA2GGbYwZklAse9RXNMg
+        bS18lhruycHUcWUE4e43J8+vgQ==
+X-Google-Smtp-Source: ABdhPJypgpCZE8ik17Yt/cCswx06ecF47ejD0yq+nJtCASFxNBLNc1X2qdkI+lwn+VrKOkbHiWi1JQ==
+X-Received: by 2002:a9d:7a96:: with SMTP id l22mr5682951otn.220.1599231370498;
+        Fri, 04 Sep 2020 07:56:10 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id o7sm1262068otl.63.2020.09.04.07.56.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 07:56:09 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 09:56:03 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 3/3] iommu: qcom: Drop of_match_ptr to fix
+ -Wunused-const-variable
+Message-ID: <20200904145603.GE3715@yoga>
+References: <20200728170859.28143-1-krzk@kernel.org>
+ <20200728170859.28143-3-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728170859.28143-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ti,tps6598x binding requires interrupt-names property.  The driver
-does not really use it but the hardware could have more interrupt lines
-connected.  This fixes dtbs_check warning:
+On Tue 28 Jul 12:08 CDT 2020, Krzysztof Kozlowski wrote:
 
-  arch/arm64/boot/dts/freescale/imx8mq-librem5-r2.dt.yaml: usb-pd@3f: 'interrupt-names' is a required property
+> The of_device_id is included unconditionally by of.h header and used
+> in the driver as well.  Remove of_match_ptr to fix W=1 compile test
+> warning with !CONFIG_OF:
+> 
+>     drivers/iommu/qcom_iommu.c:910:34: warning: 'qcom_iommu_of_match' defined but not used [-Wunused-const-variable=]
+>       910 | static const struct of_device_id qcom_iommu_of_match[] = {
+> 
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-index a78584086fa9..56295dd2fa8f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-librem5.dtsi
-@@ -605,6 +605,7 @@
- 		pinctrl-0 = <&pinctrl_typec>, <&pinctrl_tcpc>;
- 		interrupt-parent = <&gpio1>;
- 		interrupts = <10 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "irq";
- 
- 		connector {
- 			ports {
--- 
-2.17.1
-
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/iommu/qcom_iommu.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+> index af6bec3ace00..9535a6af7553 100644
+> --- a/drivers/iommu/qcom_iommu.c
+> +++ b/drivers/iommu/qcom_iommu.c
+> @@ -752,7 +752,7 @@ static const struct of_device_id ctx_of_match[] = {
+>  static struct platform_driver qcom_iommu_ctx_driver = {
+>  	.driver	= {
+>  		.name		= "qcom-iommu-ctx",
+> -		.of_match_table	= of_match_ptr(ctx_of_match),
+> +		.of_match_table	= ctx_of_match,
+>  	},
+>  	.probe	= qcom_iommu_ctx_probe,
+>  	.remove = qcom_iommu_ctx_remove,
+> @@ -915,7 +915,7 @@ static const struct of_device_id qcom_iommu_of_match[] = {
+>  static struct platform_driver qcom_iommu_driver = {
+>  	.driver	= {
+>  		.name		= "qcom-iommu",
+> -		.of_match_table	= of_match_ptr(qcom_iommu_of_match),
+> +		.of_match_table	= qcom_iommu_of_match,
+>  		.pm		= &qcom_iommu_pm_ops,
+>  	},
+>  	.probe	= qcom_iommu_device_probe,
+> -- 
+> 2.17.1
+> 
