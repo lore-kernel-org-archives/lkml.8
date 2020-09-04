@@ -2,63 +2,65 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C211C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A242FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 045E620770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F59F2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbgIDPaj (ORCPT
+        id S1726288AbgIDPbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:30:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27083 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725984AbgIDPah (ORCPT
+        Fri, 4 Sep 2020 11:31:10 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49858 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725984AbgIDPbI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:30:37 -0400
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-571-xFRSHDPkOGK54w5bnhDK-w-1; Fri, 04 Sep 2020 11:30:35 -0400
-X-MC-Unique: xFRSHDPkOGK54w5bnhDK-w-1
-Received: by mail-ej1-f69.google.com with SMTP id md9so2353537ejb.8
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:30:33 -0700 (PDT)
+        Fri, 4 Sep 2020 11:31:08 -0400
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-500-BXwHKNZsMHCrcunBTyN79g-1; Fri, 04 Sep 2020 11:31:06 -0400
+X-MC-Unique: BXwHKNZsMHCrcunBTyN79g-1
+Received: by mail-ej1-f72.google.com with SMTP id y10so2709974ejd.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:31:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=umTLLbWNIKdgBaY8oamQNBodLX2YoAzBBUrL/6iK/FA=;
-        b=fu7wtDL/LYPNAbBT1OOx2EffqXiD5WdfTI0cdxjKy8lSs4j1DoovJd6V/D2nQc+wJj
-         MmsuMZAjCN8pzZs7D0TOEhNuLL3+8xq9cWGtH5A8VKaGC5rbIXoFjUutuwkIJB3nbdHA
-         MKIWc5vuHGvMQz6au9gVvQ/dtB6ERQYUkuZWciPTLc9mVIvpCBTR5Dh3hrwd0VPQNz8J
-         nbD7qXlnlQHWsQAIOJsveEorp51xsPQEGr7q7+k/IKrep3FItJVR0t7gAQ/N0g5UPE/N
-         N39eA4xA2JC8K14NAL7vquSkz1Zc+FwnJRTxsxZwcB+Mxzyl/cu7BJLBIhbpfHA50hvN
-         8FwA==
-X-Gm-Message-State: AOAM533OtzRzawCrPsAGiYBhiKIyVSEOX1s29CgKS34z/ZHEnaRDrNoW
-        Nhhs+NqGWh6qQaAGEzC4eIpuz04qPFqWRPiqePMAJwuDhfxEiG+ZOHMDZpvGge+bRcUTtLF10hz
-        Wqfbmijf8pRid/xKspN5tj2io
-X-Received: by 2002:a17:906:656:: with SMTP id t22mr7736899ejb.392.1599233432632;
-        Fri, 04 Sep 2020 08:30:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfb8/EpCr2No5rcDl00aKu5M2/j8pBN+qyMnCAe7nsW6QCVkCWNbEv0StyI96i/Q7pAw8RlA==
-X-Received: by 2002:a17:906:656:: with SMTP id t22mr7736874ejb.392.1599233432418;
-        Fri, 04 Sep 2020 08:30:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bHdVf3niRzHqO3Je3Anrnq6r1Um2aQYUFrOux9Di8JU=;
+        b=EzlPBl+C1MtaIFV1TXWxiWjosiBmOhCY2Ukh/SRSf6oaWyGBkq9hAJ30/oSYwl2ww3
+         e3EYn4X5KntJ+GIL/Y9903cqXGaIirHjEqIU1a40cePiC/6mpFwKvL10KHZSr1gDCkt7
+         fHpKeqk5fYQxD6rhEEkMHfxyx5GMjankQ45Pa8NUviri1yvIEXjyI8tL2eXpinfb5hcd
+         wX+ShrEBJt6up/T0nh8+3Q6oPalXkdAr0vIBwJwpVNlWBW3O26mxFGQXnaxToxvegw7s
+         VEDtcFCWf0SrRoofAv8hoUXodbOHgLvNlYy4ddZvTF4QPTTxjPGtCJZ+o6fr3e837k0o
+         Jo4g==
+X-Gm-Message-State: AOAM530eSV1R4Y+39wBUAQ6QuhHE/JKnHHXO45zIe/FahSXf82dBTtRL
+        Kctt4/hD1WCV6yKP1qkTO0o6tvy/TvilLvqJkZ4BvMz3vsG0IEDYO4VydJ9lx4lxzuw7HOeP3PR
+        R0YaQCjLrDo9jUAJ22RalTZiu
+X-Received: by 2002:a17:906:2552:: with SMTP id j18mr7781966ejb.476.1599233464549;
+        Fri, 04 Sep 2020 08:31:04 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwS+AbUWXvKYDf2oRJHYf2cHj51JgvJ1WI1zVP4o5h8HUG+FebL0VdQ1Ocp6MNWRpSlHc0MKQ==
+X-Received: by 2002:a17:906:2552:: with SMTP id j18mr7781938ejb.476.1599233464333;
+        Fri, 04 Sep 2020 08:31:04 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id z10sm6273802eje.122.2020.09.04.08.30.31
+        by smtp.gmail.com with ESMTPSA id j92sm6446284edc.82.2020.09.04.08.31.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:30:31 -0700 (PDT)
+        Fri, 04 Sep 2020 08:31:03 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
         raphael.gault@arm.com, benh@kernel.crashing.org,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH v3 00/10] Make check implementation arch agnostic
-Date:   Fri,  4 Sep 2020 16:30:18 +0100
-Message-Id: <20200904153028.32676-1-jthierry@redhat.com>
+Subject: [PATCH v3 01/10] objtool: Group headers to check in a single list
+Date:   Fri,  4 Sep 2020 16:30:19 +0100
+Message-Id: <20200904153028.32676-2-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
+References: <20200904153028.32676-1-jthierry@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,99 +68,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In order to support multiple architectures and potentially different
+sets of header to compare against their kernel equivalent, it is simpler
+to have all headers to check in a single list.
 
-The current implementation of the check subcommand has various x86 bits
-here and there. In order to prepare objtool to provide check for other
-architectures, add some abstraction over the x86 specific bits, relying
-on objtool arch specific code to provide some necessary operations.
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
+---
+ tools/objtool/sync-check.sh | 21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-This is part of the effort to implement check for arm64, initiated [1]
-by Raphael. The series is based on top of the separation of check & orc
-subcommands series[2].
-
-I've push both series base on top of tip/objtool/core at [3].
-
-- The first two patches make it simpler for new arches to provide their
-list of kernel headers, without worrying about modifications in the x86
-headers.
-- Patch 3 Moves arch specific macros to more suitable location
-- Patches 4 and 5 add abstraction to handle alternatives
-- Patch 6 adds abstraction to handle jump table
-- Patches 7-10 makes unwind hint definitions shared across architectures
-
-Changes since v2 [4]:
-- Rebased on v5.9-rc1
-- Under tools/objtool/arch/x86/, rename arch_special.c to special.c
-- Rename include/linux/frame.h to inclide/linux/objtool.h
-- Share unwind hint types across architectures
-
-[1] https://lkml.org/lkml/2019/8/16/400
-[2] https://lkml.org/lkml/2020/6/4/675
-[3] https://github.com/julien-thierry/linux/tree/arch-independent-check
-[4] https://lkml.org/lkml/2020/7/30/424
-
-Cheers,
-
-Julien
-
--->
-
-Julien Thierry (9):
-  objtool: Group headers to check in a single list
-  objtool: Make sync-check consider the target architecture
-  objtool: Move macros describing structures to arch-dependent code
-  objtool: Abstract alternative special case handling
-  objtool: Make relocation in alternative handling arch dependent
-  headers: Rename frame.h
-  objtool: Only include valid definitions depending on source file type
-  objtool: Make unwind hints definitions available to other
-    architectures
-  objtool: Decode unwind hint register depending on architecture
-
-Raphael Gault (1):
-  objtool: Refactor switch-tables code to support other architectures
-
- arch/x86/include/asm/nospec-branch.h          |   2 +-
- arch/x86/include/asm/orc_types.h              |  34 ----
- arch/x86/include/asm/unwind_hints.h           |  50 +-----
- arch/x86/kernel/kprobes/core.c                |   2 +-
- arch/x86/kernel/kprobes/opt.c                 |   2 +-
- arch/x86/kernel/reboot.c                      |   2 +-
- arch/x86/kernel/unwind_orc.c                  |  11 +-
- arch/x86/kvm/svm/svm.c                        |   2 +-
- arch/x86/kvm/vmx/nested.c                     |   2 +-
- arch/x86/kvm/vmx/vmx.c                        |   2 +-
- arch/x86/xen/enlighten_pv.c                   |   2 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c           |   3 +-
- include/linux/frame.h                         |  35 -----
- include/linux/objtool.h                       | 134 ++++++++++++++++
- kernel/bpf/core.c                             |   2 +-
- kernel/kexec_core.c                           |   2 +-
- tools/arch/x86/include/asm/orc_types.h        |  34 ----
- tools/include/linux/objtool.h                 | 134 ++++++++++++++++
- tools/objtool/Makefile                        |   2 +-
- tools/objtool/arch.h                          |   2 +
- tools/objtool/arch/x86/Build                  |   1 +
- tools/objtool/arch/x86/decode.c               |  37 +++++
- tools/objtool/arch/x86/include/arch_special.h |  20 +++
- tools/objtool/arch/x86/special.c              | 145 ++++++++++++++++++
- tools/objtool/check.c                         | 137 ++---------------
- tools/objtool/check.h                         |   7 +-
- tools/objtool/objtool.h                       |   2 +
- tools/objtool/orc_dump.c                      |   7 +-
- tools/objtool/orc_gen.c                       |   5 +-
- tools/objtool/special.c                       |  48 +-----
- tools/objtool/special.h                       |  10 ++
- tools/objtool/sync-check.sh                   |  27 ++--
- tools/objtool/weak.c                          |   2 -
- 33 files changed, 561 insertions(+), 346 deletions(-)
- delete mode 100644 include/linux/frame.h
- create mode 100644 include/linux/objtool.h
- create mode 100644 tools/include/linux/objtool.h
- create mode 100644 tools/objtool/arch/x86/include/arch_special.h
- create mode 100644 tools/objtool/arch/x86/special.c
-
---
+diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+index 2a1261bfbb62..c9674877419c 100755
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -1,13 +1,17 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-FILES='
++FILES="
+ arch/x86/include/asm/inat_types.h
+ arch/x86/include/asm/orc_types.h
+ arch/x86/include/asm/emulate_prefix.h
+ arch/x86/lib/x86-opcode-map.txt
+ arch/x86/tools/gen-insn-attr-x86.awk
+-'
++arch/x86/include/asm/inat.h     -I '^#include [\"<]\(asm/\)*inat_types.h[\">]'
++arch/x86/include/asm/insn.h     -I '^#include [\"<]\(asm/\)*inat.h[\">]'
++arch/x86/lib/inat.c             -I '^#include [\"<]\(../include/\)*asm/insn.h[\">]'
++arch/x86/lib/insn.c             -I '^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]' -I '^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]'
++"
+ 
+ check_2 () {
+   file1=$1
+@@ -40,11 +44,10 @@ fi
+ 
+ cd ../..
+ 
+-for i in $FILES; do
+-  check $i
+-done
++while read -r file_entry; do
++    if [ -z "$file_entry" ]; then
++	continue
++    fi
+ 
+-check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
+-check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+-check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+-check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
++    check $file_entry
++done <<< "$FILES"
+-- 
 2.21.3
 
