@@ -2,106 +2,117 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E235C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E60C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683D420684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 779E620684
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bnr9W94c"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rmly/Hi2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgIDL02 (ORCPT
+        id S1730219AbgIDL11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:26:28 -0400
+        Fri, 4 Sep 2020 07:27:27 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730041AbgIDLXp (ORCPT
+        with ESMTP id S1730185AbgIDL1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:23:45 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A5A4C061233
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:10:26 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id a65so5682528wme.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:10:26 -0700 (PDT)
+        Fri, 4 Sep 2020 07:27:08 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A19C7C06123F;
+        Fri,  4 Sep 2020 04:25:42 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id kk9so540923pjb.2;
+        Fri, 04 Sep 2020 04:25:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=B84TBgeETkt4nO+wKVIpW+Ds3pJrpx/FZNcZ1KM26KI=;
-        b=bnr9W94cIFYUYGbYZM/SjXBTXSmzTwYBy8DJNJXcmc8WG9lGAKRql5O2qS0xoi9z8k
-         lEmn8M0IGhkeEqaCiExydHxJOGaqAxW/sskGh76OdYzjAdCqZQjde9d8mhLVm/VZOtdK
-         R1Y1SntzmRorFlcJtkDUVIMB9h+TZKRSwiysjV3CZz0R5kw20lCPWnziudAOOlM8xfGu
-         i/vnsJGr3U4cJrlpg3CPbstp5DecYYm7pNqZDK3PtkeZnOML6qFMlYihSzeo6/dREzDp
-         etVmWRwa33R2N0Ujch1NRLKJpKP6KSp3pIQxDrgInzxPSD/QeP5uVVdYpQOq3wW100zv
-         bq3Q==
+        d=gmail.com; s=20161025;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=4iF/KxJRf6RUN8ireZqNsFjdJniXRQCA0m2V2VdM7aY=;
+        b=rmly/Hi26HxZ+lf1DtFGWTwggsOa+IuyWuUP6RCnfw6k7QWod4onfRB1eQGLonapfA
+         mp48rqLbdh4MERxOKwp7yA5dvcmxZHdG0sLRkO9GHO2eH09WBeQJCj+oXN680YkMT/Vy
+         5BriiWyC1iIlLFf38pw5AlucY1drz+Zn207Z7ywoQrJqIEG4OMwUIVx7VPTWJxxHWUwT
+         TXFldnzkaBvcItl2YAsxsTBs02qrayxmEAil7cGau2+XbuOcPsoNNDUrRBUABJbxoq3j
+         jvzm0OEXspY6rVCxSOvHkOIehW8NR0Jjd9g+bLyPbwTylxLj2rxXnfJ7eM08Oxih6Zi2
+         2X2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=B84TBgeETkt4nO+wKVIpW+Ds3pJrpx/FZNcZ1KM26KI=;
-        b=IC39HiiQnd0oIZJ5uAu13VY6uC1GsMZqiINS/UPZWhrwzVmmp7eXMJ8wIKqKkfzGHx
-         HjWEQe0Myr8sEoHzSkVoTXw63CiayvaFfPeECRdEgBBWBnQmSCLLWYdb8DS2Zy4YWf+K
-         MD2BWtwZqM5M0VXBydulqnBDQNaD9DXDb/Uq59nxujoor1nqohqAJDofEkfXlIPnmFqP
-         AzsW1sVDu67YmKOVf36kNsawUCZRSqQ3XeDQzr1qgFFF5erQfNhKE2A6nIu70cUWbiAO
-         FW/S8M3gcrHOahwhZ0uve/R1F3kiwtWRn9nph9TesNwF8A5b7xS4tsjrdNxPDZeslTQ5
-         l3EA==
-X-Gm-Message-State: AOAM531km5NZZfSygScLMxcPE2ssGl0jHtnkx5aQ62KPWoiSMa0+Fd/L
-        gsH4S3RsFrKWJT/g9EbHtGHNtg==
-X-Google-Smtp-Source: ABdhPJwCcPr6IlHHWvbOcoNbdd4+uY/LZzQJ3ZXMxi3Gu7j9EL5gFmOLVKhDopwr3CZ8hLAlqlCWzA==
-X-Received: by 2002:a1c:b60b:: with SMTP id g11mr7190349wmf.48.1599217825183;
-        Fri, 04 Sep 2020 04:10:25 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id m3sm10622743wmb.26.2020.09.04.04.10.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Sep 2020 04:10:24 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v6 13/18] crypto: sun8i-ce: Add stat_bytes debugfs
-Date:   Fri,  4 Sep 2020 11:09:58 +0000
-Message-Id: <1599217803-29755-14-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
-References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=4iF/KxJRf6RUN8ireZqNsFjdJniXRQCA0m2V2VdM7aY=;
+        b=TDqo1WvdwwYIH8hK/QbDwfpb5225Mv/mKxO2+KlHieFBZpvO5nx5stcYc/YYfwGSH1
+         K3kVoMVF/ZHDNIlT6Lh1fykBRyrzDcyPMDW0AwbgjlYrb2vgwztS4SAIy0wPIZVfq+7G
+         qVyhplPtk8yZheWz9Xm6ZcCQ0NRaV2lUGPs0BHjpqzMtNgg70he/ZREFig+uFnqHuXoG
+         ZWlMh7gXbo8jsICMK6/B6l6rWPyxyr4j5k3UYXodslSa0+WRnramsNnCw+eSSCfb+BYs
+         yStGYBUFwmTuiWSxvqVuoqL7v84nFtqi8c5RXwydiOGhFfwzCAFnsTjZrGwq7mNXgc4p
+         glOA==
+X-Gm-Message-State: AOAM533iaKG1WmrqCU0KlmE8S44PhSWHIWDA8/JteKXdbv8dwhwBkVKC
+        BsLNEVgH8HKdbFFBPZ8xWw==
+X-Google-Smtp-Source: ABdhPJwA6BUd2QTxpgWoADDjuuNYMmhS0f6lh9N/5x3Gvo3/JYPUwvc7iWOFYYyvAimk0pavjAATMw==
+X-Received: by 2002:a17:90a:9382:: with SMTP id q2mr7622795pjo.118.1599218742271;
+        Fri, 04 Sep 2020 04:25:42 -0700 (PDT)
+Received: from [127.0.0.1] ([103.7.29.7])
+        by smtp.gmail.com with ESMTPSA id 72sm6298793pfx.79.2020.09.04.04.25.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:25:41 -0700 (PDT)
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>, joro@8bytes.org,
+        "jmattson@google.com" <jmattson@google.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        vkuznets@redhat.com, sean.j.christopherson@intel.com,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH] KVM: SVM: Add tracepoint for cr_interception
+Message-ID: <f3031602-db3b-c4fe-b719-d402663b0a2b@gmail.com>
+Date:   Fri, 4 Sep 2020 19:25:29 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a new stat_bytes counter in the sun8i-ce debugfs.
+From: Haiwei Li <lihaiwei@tencent.com>
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Add trace_kvm_cr_write and trace_kvm_cr_read for svm.
+
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
 ---
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h | 2 ++
- 1 file changed, 2 insertions(+)
+  arch/x86/kvm/svm/svm.c | 2 ++
+  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-index 6bbafdf9d40c..910b510d7bb2 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-@@ -276,6 +276,7 @@ struct sun8i_ce_hash_reqctx {
-  * @alg:		one of sub struct must be used
-  * @stat_req:		number of request done on this template
-  * @stat_fb:		number of request which has fallbacked
-+ * @stat_bytes:		total data size done by this template
-  */
- struct sun8i_ce_alg_template {
- 	u32 type;
-@@ -289,6 +290,7 @@ struct sun8i_ce_alg_template {
- #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_DEBUG
- 	unsigned long stat_req;
- 	unsigned long stat_fb;
-+	unsigned long stat_bytes;
- #endif
- };
- 
--- 
-2.26.2
-
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 03dd7bac8034..2c6dea48ba62 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -2261,6 +2261,7 @@ static int cr_interception(struct vcpu_svm *svm)
+  	if (cr >= 16) { /* mov to cr */
+  		cr -= 16;
+  		val = kvm_register_read(&svm->vcpu, reg);
++		trace_kvm_cr_write(cr, val);
+  		switch (cr) {
+  		case 0:
+  			if (!check_selective_cr0_intercepted(svm, val))
+@@ -2306,6 +2307,7 @@ static int cr_interception(struct vcpu_svm *svm)
+  			return 1;
+  		}
+  		kvm_register_write(&svm->vcpu, reg, val);
++		trace_kvm_cr_read(cr, val);
+  	}
+  	return kvm_complete_insn_gp(&svm->vcpu, err);
+  }
+--
+2.18.4
