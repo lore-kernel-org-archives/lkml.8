@@ -2,266 +2,198 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6724BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F55206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8F8206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:10:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByTisoq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbgIDOKQ (ORCPT
+        id S1730581AbgIDOKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:10:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53174 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730593AbgIDOJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:09:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B3513ABC1;
-        Fri,  4 Sep 2020 14:09:04 +0000 (UTC)
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     ltp@lists.linux.it
-Cc:     linux-kernel@vger.kernel.org, lkp@lists.01.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>
-Subject: [PATCH v2] syscall/ptrace08: Simplify the test.
-Date:   Fri,  4 Sep 2020 16:09:31 +0200
-Message-Id: <20200904140931.10153-1-chrubis@suse.cz>
-X-Mailer: git-send-email 2.26.2
+        Fri, 4 Sep 2020 10:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730570AbgIDOJz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:09:55 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C86C061245;
+        Fri,  4 Sep 2020 07:08:46 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id k15so4646582pfc.12;
+        Fri, 04 Sep 2020 07:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kmxGZ73C5CsQLZZP/FDq6xz0n5ZrAH97GbPiW2F7114=;
+        b=ByTisoq/16kDYd5Yn2o3w70Y2wvMGWpk4c/TIysLLJS9aUTI4bLLRXZvu4Hk6irbpK
+         zYYt4V42kZP9Ki4YVK44FoAxux7Q9DgjgSFqox9/wylDUSm5oMholul7yQLY6uTEaf6v
+         tdbNDDMepC58EdqrfTzHqiH3TC100tAXW0LHAgpyIW5gUcKrHe9lLY8nbXnAvO8vFX/8
+         3LoCo3dHCGJB1ORRHnw9blZS/AKn9J/4JvwHQ99L1aFL8rPWc+Dr6RkI974IKryKkbmv
+         axdPY/ttJYRvsJ19C5GJznC89PBUsMjE5ZeZPFjpQUZXBgMaqUsqlyzqboIhWJqE1Tn7
+         OpiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=kmxGZ73C5CsQLZZP/FDq6xz0n5ZrAH97GbPiW2F7114=;
+        b=STWupK12MIE2jmV8C/ZNB7W0A3UBdGOYgUv2Kc/brfE2cPF6KGEh/lOMGRwJaLTvt+
+         1INmXaoAD8UWkQ4yF/O1YnB3Lng5JNiQF148pRVAtyFDYoqp9ulhdRA0ur2ep+W9/f2v
+         IH/tqjvAcNUeHkHbLPRwrzwi5QTE2PtbT2ekd9yrWkvzRqsJQKSvBPDjYSJ3Zq/NUuKH
+         ekwTKGlDo6+GiIOsT63gmpwDvM5ucMlZnSuOdYgCuwMVLkd7926gf1p9Tto0e3TZbn3i
+         2QDJaD49n9KsAK4XMrDFIqDTHD8+sW0b4b6ndg/VAonxqyTr1uB68UQ3Rn6UGpQqDgOz
+         8+vA==
+X-Gm-Message-State: AOAM532YLErKXeufwlXm24UPjnPS12stqlHVglAtFvyJaWdyKpdWJO7V
+        ZRfXGstWvNwoxdprFmu/w7U=
+X-Google-Smtp-Source: ABdhPJxEhTornXLho7zTO/7GFT9MQHTSBLQwd9514+Ob3FA8E4YTqFfuHZ9cnqnlHyz9T8KzCkc5Kg==
+X-Received: by 2002:a63:1262:: with SMTP id 34mr7425425pgs.37.1599228526267;
+        Fri, 04 Sep 2020 07:08:46 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 19sm4398857pgz.42.2020.09.04.07.08.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 07:08:45 -0700 (PDT)
+Subject: Re: [PATCH] hwmon: sparx5: Fix initial reading of temperature
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>
+References: <20200903134704.8949-1-lars.povlsen@microchip.com>
+ <8ca270c9-5561-3176-61cf-7a9fbee10d1f@roeck-us.net>
+ <87v9guvt4o.fsf@soft-dev15.microsemi.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <57a29906-7831-dbfa-8344-f464308fcbc8@roeck-us.net>
+Date:   Fri, 4 Sep 2020 07:08:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <87v9guvt4o.fsf@soft-dev15.microsemi.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The original test was attempting to crash the kernel by setting a
-breakpoint on do_debug kernel function which, when triggered, caused an
-infinite loop in the kernel. The problem with this approach is that
-kernel internal function names are not stable at all and the name was
-changed recently, which made the test fail for no good reason.
+On 9/4/20 1:33 AM, Lars Povlsen wrote:
+> 
+> Guenter Roeck writes:
+> 
+>> On 9/3/20 6:47 AM, Lars Povlsen wrote:
+>>> If the temperature is read before the internal calibration is
+>>> completed, the driver returns -EIO. Instead it should return -EAGAIN
+>>> to encourage repeating the operation.
+>>>
+>>> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+>>> ---
+>>>  drivers/hwmon/sparx5-temp.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
+>>> index 1a2b1026b026..98be48e3a22a 100644
+>>> --- a/drivers/hwmon/sparx5-temp.c
+>>> +++ b/drivers/hwmon/sparx5-temp.c
+>>> @@ -56,7 +56,7 @@ static int s5_read(struct device *dev, enum hwmon_sensor_types type,
+>>>       case hwmon_temp_input:
+>>>               stat = readl_relaxed(hwmon->base + TEMP_STAT);
+>>>               if (!(stat & TEMP_STAT_VALID))
+>>> -                     return -EIO;
+>>> +                     return -EAGAIN;
+>>
+>> The problem is that this may result in a hard loop and effectively hang the system,
+>> or at least the calling process. It may be better to return -ENODATA in this situation.
+>>
+> 
+> Guenther,
+> 
+> Thank you for your response.
+> 
+> The motivation for the patch was as I tried to use thermal support to
+> control a fan, and I noticed an initial quip from
+> thermal_core.c:update_temperature() - it will throw a dev_warn() for
+> anything else than an "EAGAIN". The EAGAIN also seems to be used by
+> several other hwmon drivers in similar situations.
+> 
+> The bottom line is that I would like to get rid of the warning
+> message. Changing the error code to ENODATA does not fix what I am
+> trying to accomplish.
+> 
 
-The original kernel fix made it however poissible to set a kernel
-address as a breakpoint and instead disabled the breakpoint on userspace
-modification. The error checks were deffered to write to the dr7 that
-enabled the breakpoint again.
+Sigh. I know that -EAGAIN is used, but it has its own problems - userspace
+is inclined to retry directly, causing hard loops.
 
-So on newer kernels we do not allow to set the breakpoint to the kernel
-addres at all, which means that the POKEUSR to dr0 has to fail with an
-address in a kernel range and also we read back the breakpoint address
-and check that it wasn't set just to be sure.
+Ok, lets go with -EAGAIN then. Can't be helped. I'll apply your patch.
 
-On older kernels we check that the POKEUSER to dr7 that enables the
-breakpoint fails properly after the dr0 has been set to an address in
-the kernel range.
+Guenter
 
-Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
-CC: Andy Lutomirski <luto@kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Alexandre Chartre <alexandre.chartre@oracle.com>
----
- testcases/kernel/syscalls/ptrace/ptrace08.c | 136 +++++++++++---------
- 1 file changed, 76 insertions(+), 60 deletions(-)
-
-diff --git a/testcases/kernel/syscalls/ptrace/ptrace08.c b/testcases/kernel/syscalls/ptrace/ptrace08.c
-index 591aa0dd2..1b84ce376 100644
---- a/testcases/kernel/syscalls/ptrace/ptrace08.c
-+++ b/testcases/kernel/syscalls/ptrace/ptrace08.c
-@@ -5,8 +5,17 @@
-  *
-  * CVE-2018-1000199
-  *
-- * Test error handling when ptrace(POKEUSER) modifies debug registers.
-- * Even if the call returns error, it may create breakpoint in kernel code.
-+ * Test error handling when ptrace(POKEUSER) modified x86 debug registers even
-+ * when the call returned error.
-+ *
-+ * When the bug was present we could create breakpoint in the kernel code,
-+ * which shoudn't be possible at all. The original CVE caused a kernel crash by
-+ * setting a breakpoint on do_debug kernel function which, when triggered,
-+ * caused an infinite loop. However we do not have to crash the kernel in order
-+ * to assert if kernel has been fixed or not. All we have to do is to try to
-+ * set a breakpoint, on any kernel address, then read it back and check if the
-+ * value has been set or not.
-+ *
-  * Kernel crash partially fixed in:
-  *
-  *  commit f67b15037a7a50c57f72e69a6d59941ad90a0f0f
-@@ -26,69 +35,54 @@
- #include "tst_safe_stdio.h"
- 
- #if defined(__i386__) || defined(__x86_64__)
--#define SYMNAME_SIZE 256
--#define KERNEL_SYM "do_debug"
- 
--static unsigned long break_addr;
- static pid_t child_pid;
- 
--static void setup(void)
--{
--	int fcount;
--	char endl, symname[256];
--	FILE *fr = SAFE_FOPEN("/proc/kallsyms", "r");
--
--	/* Find address of do_debug() in /proc/kallsyms */
--	do {
--		fcount = fscanf(fr, "%lx %*c %255s%c", &break_addr, symname,
--			&endl);
--
--		if (fcount <= 0 && feof(fr))
--			break;
--
--		if (fcount < 2) {
--			fclose(fr);
--			tst_brk(TBROK, "Unexpected data in /proc/kallsyms %d",
--				fcount);
--		}
--
--		if (fcount >= 3 && endl != '\n')
--			while (!feof(fr) && fgetc(fr) != '\n');
--	} while (!feof(fr) && strcmp(symname, KERNEL_SYM));
--
--	SAFE_FCLOSE(fr);
--
--	if (strcmp(symname, KERNEL_SYM))
--		tst_brk(TBROK, "Cannot find address of kernel symbol \"%s\"",
--			KERNEL_SYM);
--
--	if (!break_addr)
--		tst_brk(TCONF, "Addresses in /proc/kallsyms are hidden");
-+#if defined(__x86_64__)
-+# define KERN_ADDR_MIN 0xffff800000000000
-+# define KERN_ADDR_MAX 0xffffffffffffffff
-+# define KERN_ADDR_BITS 64
-+#elif defined(__i386__)
-+# define KERN_ADDR_MIN 0xc0000000
-+# define KERN_ADDR_MAX 0xffffffff
-+# define KERN_ADDR_BITS 32
-+#endif
- 
--	tst_res(TINFO, "Kernel symbol \"%s\" found at 0x%lx", KERNEL_SYM,
--		break_addr);
--}
-+static int deffered_check;
- 
--static void debug_trap(void)
-+static void setup(void)
- {
--	/* x86 instruction INT1 */
--	asm volatile (".byte 0xf1");
-+	/*
-+	 * When running in compat mode we can't pass 64 address to ptrace so we
-+	 * have to skip the test.
-+	 */
-+	if (tst_kernel_bits() != KERN_ADDR_BITS)
-+		tst_brk(TCONF, "Cannot pass 64bit kernel address in compat mode");
-+
-+
-+	/*
-+	 * The original fix for the kernel haven't rejected the kernel address
-+	 * right away when breakpoint was modified from userspace it was
-+	 * disabled and the EINVAL was returned when dr7 was written to enable
-+	 * it again.
-+	 */
-+	if (tst_kvercmp(4, 17, 0) < 0)
-+		deffered_check = 1;
- }
- 
- static void child_main(void)
- {
- 	raise(SIGSTOP);
--	/* wait for SIGCONT from parent */
--	debug_trap();
- 	exit(0);
- }
- 
--static void run(void)
-+static void ptrace_try_kern_addr(unsigned long kern_addr)
- {
- 	int status;
--	pid_t child;
- 
--	child = child_pid = SAFE_FORK();
-+	tst_res(TINFO, "Trying address 0x%lx", kern_addr);
-+
-+	child_pid = SAFE_FORK();
- 
- 	if (!child_pid)
- 		child_main();
-@@ -102,23 +96,46 @@ static void run(void)
- 	SAFE_PTRACE(PTRACE_POKEUSER, child_pid,
- 		(void *)offsetof(struct user, u_debugreg[7]), (void *)1);
- 
--	/* Return value intentionally ignored here */
--	ptrace(PTRACE_POKEUSER, child_pid,
-+	TEST(ptrace(PTRACE_POKEUSER, child_pid,
- 		(void *)offsetof(struct user, u_debugreg[0]),
--		(void *)break_addr);
-+		(void *)kern_addr));
-+
-+	if (deffered_check) {
-+		TEST(ptrace(PTRACE_POKEUSER, child_pid,
-+			(void *)offsetof(struct user, u_debugreg[7]), (void *)1));
-+	}
-+
-+	if (TST_RET != -1) {
-+		tst_res(TFAIL, "ptrace() breakpoint with kernel addr succeeded");
-+	} else {
-+		if (TST_ERR == EINVAL) {
-+			tst_res(TPASS | TTERRNO,
-+				"ptrace() breakpoint with kernel addr failed");
-+		} else {
-+			tst_res(TFAIL | TTERRNO,
-+				"ptrace() breakpoint on kernel addr should return EINVAL, got");
-+		}
-+	}
-+
-+	unsigned long addr;
-+
-+	addr = ptrace(PTRACE_PEEKUSER, child_pid,
-+	              (void*)offsetof(struct user, u_debugreg[0]), NULL);
-+
-+	if (!deffered_check && addr == kern_addr)
-+		tst_res(TFAIL, "Was able to set breakpoint on kernel addr");
- 
- 	SAFE_PTRACE(PTRACE_DETACH, child_pid, NULL, NULL);
- 	SAFE_KILL(child_pid, SIGCONT);
- 	child_pid = 0;
-+	tst_reap_children();
-+}
- 
--	if (SAFE_WAITPID(child, &status, 0) != child)
--		tst_brk(TBROK, "Received event from unexpected PID");
--
--	if (!WIFSIGNALED(status))
--		tst_brk(TBROK, "Received unexpected event from child");
--
--	tst_res(TPASS, "Child killed by %s", tst_strsig(WTERMSIG(status)));
--	tst_res(TPASS, "We're still here. Nothing bad happened, probably.");
-+static void run(void)
-+{
-+	ptrace_try_kern_addr(KERN_ADDR_MIN);
-+	ptrace_try_kern_addr(KERN_ADDR_MAX);
-+	ptrace_try_kern_addr(KERN_ADDR_MIN + (KERN_ADDR_MAX - KERN_ADDR_MIN)/2);
- }
- 
- static void cleanup(void)
-@@ -133,7 +150,6 @@ static struct tst_test test = {
- 	.setup = setup,
- 	.cleanup = cleanup,
- 	.forks_child = 1,
--	.taint_check = TST_TAINT_W | TST_TAINT_D,
- 	.tags = (const struct tst_tag[]) {
- 		{"linux-git", "f67b15037a7a"},
- 		{"CVE", "2018-1000199"},
--- 
-2.26.2
+> Do you have any suggestions on how to achieve the objective?
+> 
+> Sincerely,
+> 
+> ---Lars
+> 
+>> Guenter
+>>
+>>>               value = stat & TEMP_STAT_TEMP;
+>>>               /*
+>>>                * From register documentation:
+>>> --
+>>> 2.27.0
+>>>
+> 
 
