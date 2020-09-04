@@ -2,231 +2,126 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B76CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2923C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE3002078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:37:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="A2CCPBx1"
+	by mail.kernel.org (Postfix) with ESMTP id 784D920797
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:39:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599223145;
+	bh=BlQtmONuFYOzt9Ln8O9jP1eZ/pFYc0fHMxaV26z4A+8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=SdepsAcjzPvafCNrJ0YF/QwH7buryUL/dIN4IjjOnP5DdPyYzDPbSIWTfgM3p54lU
+	 2YrZoejht15gIPQtPVXbSNA0dmz8kYiygyl3WAA5Qvf1fgpCk87p8+F7+8rkfwxK3e
+	 KThv8hOj1UIQYWJJ477dTcMFs1fkrJbxe5baKjcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgIDMhZ (ORCPT
+        id S1730254AbgIDMjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:37:25 -0400
-Received: from crapouillou.net ([89.234.176.41]:51936 "EHLO crapouillou.net"
+        Fri, 4 Sep 2020 08:39:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730241AbgIDMg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:36:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599223013; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=111WU6mEpB+nmKTKJ1qIKJgWH37XkpXyxWaxP7CI7B0=;
-        b=A2CCPBx1phDcnjYJ1uOAgQjVSYOt+HV4UIi54JsqtXaC29i16oSAU7WEC0cJE66wrO3SbO
-        wcZ2r5B87bwnP2tmXPu+YSsNLtty4WyTCzfJniwqzwDjLeooVlGU+Vktm++lTs0EUgtZFO
-        byk1NNBY4uH8/bplnfcEBmrGN5l74jY=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     od@zcrc.me, devicetree@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] MIPS: dts/ingenic: Cleanup qi_lb60.dts
-Date:   Fri,  4 Sep 2020 14:36:47 +0200
-Message-Id: <20200904123647.11678-1-paul@crapouillou.net>
+        id S1729932AbgIDMiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:38:54 -0400
+Received: from coco.lan (ip5f5ad59b.dynamic.kabel-deutschland.de [95.90.213.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B8122078E;
+        Fri,  4 Sep 2020 12:38:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599223133;
+        bh=BlQtmONuFYOzt9Ln8O9jP1eZ/pFYc0fHMxaV26z4A+8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cGqvZZqkWXzKNm09BMh+Ps/6slJj9f+XfpVXAMMi5t5mX84YZS+nn5j4rhm+LYTAj
+         2pZ5oBzphUi40yqsH+jBlKnFOe1k3q8LP85oGGsGsKjWWQFCq1VTyX8WMwNykhb1o0
+         XrQCgtrKi5lHp079DztlJ99xUbzljoWpADO2aRUY=
+Date:   Fri, 4 Sep 2020 14:38:48 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 09/10] misc: hisi_hikey_usb: add support for Hikey 970
+Message-ID: <20200904143848.535d4c13@coco.lan>
+In-Reply-To: <20200904122303.GC4625@sirena.org.uk>
+References: <cover.1599214329.git.mchehab+huawei@kernel.org>
+        <f45f7663b694b16214604b55527f38eb9232f95b.1599214329.git.mchehab+huawei@kernel.org>
+        <20200904122303.GC4625@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup a bit the Device Tree file:
+Em Fri, 4 Sep 2020 13:23:03 +0100
+Mark Brown <broonie@kernel.org> escreveu:
 
-1. Respect the number of cells in GPIO descriptors and keyboard matrix;
-2. Use 'ecc-engine' instead of deprecated 'ingenic,bch-controller'
-   property;
-3. The NAND's rb-gpios is actually active high;
-3. The FRE/FWE pins must be configured in the proper mode for the NAND
-   to work if it was not already done by the bootloader.
+> On Fri, Sep 04, 2020 at 12:23:31PM +0200, Mauro Carvalho Chehab wrote:
+> 
+> > +	regulator = devm_regulator_get_optional(&pdev->dev, "hub-vdd");
+> > +	if (IS_ERR(regulator)) {
+> > +		if (PTR_ERR(regulator) == -EPROBE_DEFER) {
+> > +			dev_info(&pdev->dev,
+> > +				 "waiting for hub-vdd-supply to be probed\n");
+> > +			return PTR_ERR(regulator);
+> > +		}
+> > +
+> > +		/* let it fall back to regulator dummy */
+> > +		regulator = devm_regulator_get(&pdev->dev, "hub-vdd");
+> > +		if (IS_ERR(regulator)) {
+> > +			dev_err(&pdev->dev,
+> > +				"get hub-vdd-supply failed with error %ld\n",
+> > +				PTR_ERR(regulator));
+> > +			return PTR_ERR(regulator);
+> > +		}
+> > +	}  
+> 
+> This seems weird - if the supply is non-optional why is the code trying
+> with devm_regulator_get_optional()?  Just use normal get directly.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- arch/mips/boot/dts/ingenic/qi_lb60.dts | 137 ++++++++++++-------------
- 1 file changed, 68 insertions(+), 69 deletions(-)
+That's meant to avoid problems with EPROBE_DEFER.
 
-diff --git a/arch/mips/boot/dts/ingenic/qi_lb60.dts b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-index bf298268f1a1..ba0218971572 100644
---- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
-+++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-@@ -109,74 +109,73 @@ keyboard {
- 		debounce-delay-ms = <10>;
- 		wakeup-source;
- 
--		row-gpios = <&gpd 18 0 &gpd 19 0 &gpd 20 0 &gpd 21 0
--			     &gpd 22 0 &gpd 23 0 &gpd 24 0 &gpd 26 0>;
--		col-gpios = <&gpc 10 0 &gpc 11 0 &gpc 12 0 &gpc 13 0
--			     &gpc 14 0 &gpc 15 0 &gpc 16 0 &gpc 17 0>;
-+		row-gpios = <&gpd 18 0>, <&gpd 19 0>, <&gpd 20 0>, <&gpd 21 0>,
-+			    <&gpd 22 0>, <&gpd 23 0>, <&gpd 24 0>, <&gpd 26 0>;
-+		col-gpios = <&gpc 10 0>, <&gpc 11 0>, <&gpc 12 0>, <&gpc 13 0>,
-+			    <&gpc 14 0>, <&gpc 15 0>, <&gpc 16 0>, <&gpc 17 0>;
- 		gpio-activelow;
- 
--		linux,keymap = <
--			MATRIX_KEY(0, 0, KEY_F1)	/* S2 */
--			MATRIX_KEY(0, 1, KEY_F2)	/* S3 */
--			MATRIX_KEY(0, 2, KEY_F3)	/* S4 */
--			MATRIX_KEY(0, 3, KEY_F4)	/* S5 */
--			MATRIX_KEY(0, 4, KEY_F5)	/* S6 */
--			MATRIX_KEY(0, 5, KEY_F6)	/* S7 */
--			MATRIX_KEY(0, 6, KEY_F7)	/* S8 */
--
--			MATRIX_KEY(1, 0, KEY_Q)	/* S10 */
--			MATRIX_KEY(1, 1, KEY_W)	/* S11 */
--			MATRIX_KEY(1, 2, KEY_E)	/* S12 */
--			MATRIX_KEY(1, 3, KEY_R)	/* S13 */
--			MATRIX_KEY(1, 4, KEY_T)	/* S14 */
--			MATRIX_KEY(1, 5, KEY_Y)	/* S15 */
--			MATRIX_KEY(1, 6, KEY_U)	/* S16 */
--			MATRIX_KEY(1, 7, KEY_I)	/* S17 */
--			MATRIX_KEY(2, 0, KEY_A)	/* S18 */
--			MATRIX_KEY(2, 1, KEY_S)	/* S19 */
--			MATRIX_KEY(2, 2, KEY_D)	/* S20 */
--			MATRIX_KEY(2, 3, KEY_F)	/* S21 */
--			MATRIX_KEY(2, 4, KEY_G)	/* S22 */
--			MATRIX_KEY(2, 5, KEY_H)	/* S23 */
--			MATRIX_KEY(2, 6, KEY_J)	/* S24 */
--			MATRIX_KEY(2, 7, KEY_K)	/* S25 */
--			MATRIX_KEY(3, 0, KEY_ESC)	/* S26 */
--			MATRIX_KEY(3, 1, KEY_Z)	/* S27 */
--			MATRIX_KEY(3, 2, KEY_X)	/* S28 */
--			MATRIX_KEY(3, 3, KEY_C)	/* S29 */
--			MATRIX_KEY(3, 4, KEY_V)	/* S30 */
--			MATRIX_KEY(3, 5, KEY_B)	/* S31 */
--			MATRIX_KEY(3, 6, KEY_N)	/* S32 */
--			MATRIX_KEY(3, 7, KEY_M)	/* S33 */
--			MATRIX_KEY(4, 0, KEY_TAB)	/* S34 */
--			MATRIX_KEY(4, 1, KEY_CAPSLOCK)	/* S35 */
--			MATRIX_KEY(4, 2, KEY_BACKSLASH)	/* S36 */
--			MATRIX_KEY(4, 3, KEY_APOSTROPHE)	/* S37 */
--			MATRIX_KEY(4, 4, KEY_COMMA)	/* S38 */
--			MATRIX_KEY(4, 5, KEY_DOT)	/* S39 */
--			MATRIX_KEY(4, 6, KEY_SLASH)	/* S40 */
--			MATRIX_KEY(4, 7, KEY_UP)	/* S41 */
--			MATRIX_KEY(5, 0, KEY_O)	/* S42 */
--			MATRIX_KEY(5, 1, KEY_L)	/* S43 */
--			MATRIX_KEY(5, 2, KEY_EQUAL)	/* S44 */
--			MATRIX_KEY(5, 3, KEY_QI_UPRED)	/* S45 */
--			MATRIX_KEY(5, 4, KEY_SPACE)	/* S46 */
--			MATRIX_KEY(5, 5, KEY_QI_QI)	/* S47 */
--			MATRIX_KEY(5, 6, KEY_RIGHTCTRL)	/* S48 */
--			MATRIX_KEY(5, 7, KEY_LEFT)	/* S49 */
--			MATRIX_KEY(6, 0, KEY_F8)	/* S50 */
--			MATRIX_KEY(6, 1, KEY_P)	/* S51 */
--			MATRIX_KEY(6, 2, KEY_BACKSPACE)/* S52 */
--			MATRIX_KEY(6, 3, KEY_ENTER)	/* S53 */
--			MATRIX_KEY(6, 4, KEY_QI_VOLUP)	/* S54 */
--			MATRIX_KEY(6, 5, KEY_QI_VOLDOWN)	/* S55 */
--			MATRIX_KEY(6, 6, KEY_DOWN)	/* S56 */
--			MATRIX_KEY(6, 7, KEY_RIGHT)	/* S57 */
--
--			MATRIX_KEY(7, 0, KEY_LEFTSHIFT)	/* S58 */
--			MATRIX_KEY(7, 1, KEY_LEFTALT) /* S59 */
--			MATRIX_KEY(7, 2, KEY_QI_FN)	/* S60 */
--			>;
-+		linux,keymap =
-+			<MATRIX_KEY(0, 0, KEY_F1)>,	/* S2 */
-+			<MATRIX_KEY(0, 1, KEY_F2)>,	/* S3 */
-+			<MATRIX_KEY(0, 2, KEY_F3)>,	/* S4 */
-+			<MATRIX_KEY(0, 3, KEY_F4)>,	/* S5 */
-+			<MATRIX_KEY(0, 4, KEY_F5)>,	/* S6 */
-+			<MATRIX_KEY(0, 5, KEY_F6)>,	/* S7 */
-+			<MATRIX_KEY(0, 6, KEY_F7)>,	/* S8 */
-+
-+			<MATRIX_KEY(1, 0, KEY_Q)>,	/* S10 */
-+			<MATRIX_KEY(1, 1, KEY_W)>,	/* S11 */
-+			<MATRIX_KEY(1, 2, KEY_E)>,	/* S12 */
-+			<MATRIX_KEY(1, 3, KEY_R)>,	/* S13 */
-+			<MATRIX_KEY(1, 4, KEY_T)>,	/* S14 */
-+			<MATRIX_KEY(1, 5, KEY_Y)>,	/* S15 */
-+			<MATRIX_KEY(1, 6, KEY_U)>,	/* S16 */
-+			<MATRIX_KEY(1, 7, KEY_I)>,	/* S17 */
-+			<MATRIX_KEY(2, 0, KEY_A)>,	/* S18 */
-+			<MATRIX_KEY(2, 1, KEY_S)>,	/* S19 */
-+			<MATRIX_KEY(2, 2, KEY_D)>,	/* S20 */
-+			<MATRIX_KEY(2, 3, KEY_F)>,	/* S21 */
-+			<MATRIX_KEY(2, 4, KEY_G)>,	/* S22 */
-+			<MATRIX_KEY(2, 5, KEY_H)>,	/* S23 */
-+			<MATRIX_KEY(2, 6, KEY_J)>,	/* S24 */
-+			<MATRIX_KEY(2, 7, KEY_K)>,	/* S25 */
-+			<MATRIX_KEY(3, 0, KEY_ESC)>,	/* S26 */
-+			<MATRIX_KEY(3, 1, KEY_Z)>,	/* S27 */
-+			<MATRIX_KEY(3, 2, KEY_X)>,	/* S28 */
-+			<MATRIX_KEY(3, 3, KEY_C)>,	/* S29 */
-+			<MATRIX_KEY(3, 4, KEY_V)>,	/* S30 */
-+			<MATRIX_KEY(3, 5, KEY_B)>,	/* S31 */
-+			<MATRIX_KEY(3, 6, KEY_N)>,	/* S32 */
-+			<MATRIX_KEY(3, 7, KEY_M)>,	/* S33 */
-+			<MATRIX_KEY(4, 0, KEY_TAB)>,	/* S34 */
-+			<MATRIX_KEY(4, 1, KEY_CAPSLOCK)>,	/* S35 */
-+			<MATRIX_KEY(4, 2, KEY_BACKSLASH)>,	/* S36 */
-+			<MATRIX_KEY(4, 3, KEY_APOSTROPHE)>,	/* S37 */
-+			<MATRIX_KEY(4, 4, KEY_COMMA)>,	/* S38 */
-+			<MATRIX_KEY(4, 5, KEY_DOT)>,	/* S39 */
-+			<MATRIX_KEY(4, 6, KEY_SLASH)>,	/* S40 */
-+			<MATRIX_KEY(4, 7, KEY_UP)>,	/* S41 */
-+			<MATRIX_KEY(5, 0, KEY_O)>,	/* S42 */
-+			<MATRIX_KEY(5, 1, KEY_L)>,	/* S43 */
-+			<MATRIX_KEY(5, 2, KEY_EQUAL)>,	/* S44 */
-+			<MATRIX_KEY(5, 3, KEY_QI_UPRED)>,	/* S45 */
-+			<MATRIX_KEY(5, 4, KEY_SPACE)>,	/* S46 */
-+			<MATRIX_KEY(5, 5, KEY_QI_QI)>,	/* S47 */
-+			<MATRIX_KEY(5, 6, KEY_RIGHTCTRL)>,	/* S48 */
-+			<MATRIX_KEY(5, 7, KEY_LEFT)>,	/* S49 */
-+			<MATRIX_KEY(6, 0, KEY_F8)>,	/* S50 */
-+			<MATRIX_KEY(6, 1, KEY_P)>,	/* S51 */
-+			<MATRIX_KEY(6, 2, KEY_BACKSPACE)>,/* S52 */
-+			<MATRIX_KEY(6, 3, KEY_ENTER)>,	/* S53 */
-+			<MATRIX_KEY(6, 4, KEY_QI_VOLUP)>,	/* S54 */
-+			<MATRIX_KEY(6, 5, KEY_QI_VOLDOWN)>,	/* S55 */
-+			<MATRIX_KEY(6, 6, KEY_DOWN)>,	/* S56 */
-+			<MATRIX_KEY(6, 7, KEY_RIGHT)>,	/* S57 */
-+
-+			<MATRIX_KEY(7, 0, KEY_LEFTSHIFT)>,	/* S58 */
-+			<MATRIX_KEY(7, 1, KEY_LEFTALT)>, /* S59 */
-+			<MATRIX_KEY(7, 2, KEY_QI_FN)>;	/* S60 */
- 	};
- 
- 	spi {
-@@ -261,12 +260,12 @@ nandc: nand-controller@1 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		ingenic,bch-controller = <&ecc>;
-+		ecc-engine = <&ecc>;
- 
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pins_nemc>;
- 
--		rb-gpios = <&gpc 30 GPIO_ACTIVE_LOW>;
-+		rb-gpios = <&gpc 30 GPIO_ACTIVE_HIGH>;
- 
- 		nand@1 {
- 			reg = <1>;
-@@ -324,7 +323,7 @@ pins_lcd: lcd {
- 
- 	pins_nemc: nemc {
- 		function = "nand";
--		groups = "nand-cs1";
-+		groups = "nand-fre-fwe", "nand-cs1";
- 	};
- 
- 	pins_uart0: uart0 {
--- 
-2.28.0
+See, Hikey 970 need to initialize 4 drivers for the regulators:
+SPMI core, SPMI bus controller, MFD and regulator. This can take
+some time. So, a first call to *regulator_get() may return
+EPROBE_DEFER, specially if both regulator drivers and USB HUB
+are builtin.
 
+I ended doing the same as some other DRM drivers do (like adv7535).
+
+
+> > +	ret = regulator_set_voltage(regulator, 3300000, 3300000);
+> > +	if (ret)
+> > +		dev_err(&pdev->dev, "set hub-vdd-supply voltage failed\n");  
+> 
+> Unless the device is actively managing the voltage at runtime it should
+> just let the voltage be set by machine constraints, most of the time
+> this will do nothing.  This only sets the voltage in this one place.
+
+Ok, I'll drop this.
+
+> > +	hub_reset_en_gpio = of_get_named_gpio(pdev->dev.of_node,
+> > +					      "hub_reset_en_gpio", 0);
+> > +	if (!gpio_is_valid(hub_reset_en_gpio)) {
+> > +		dev_err(&pdev->dev, "Failed to get a valid reset gpio\n");
+> > +		return -ENODEV;
+> > +	}  
+> 
+> Why not just use devm_gpio_request() which already asks for the GPIO by
+> name?
+
+Makes sense.
+
+Thanks,
+Mauro
