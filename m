@@ -3,180 +3,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611C2C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2812C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF632084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765852083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599249370;
-	bh=D4kFDskR2ElmqDONFLDmYkjYcsGM3HgMJlmgJ2Hk2os=;
+	s=default; t=1599249391;
+	bh=kyHoXHEB1z/l8Lhheci0db779WAaZP7g3X/GY0wTX/0=;
 	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
 	 From;
-	b=AHnO50kdy5pE13JS8GrtPdd0qk+ApB7kjPLCdxvBsC3EWdpQ+k5/SS5G1rTj77tZw
-	 oCOufD/YklEvk6oe21iqiqs3FG0AGAz00FMaEs84kQG44HH1oxO5vFYx4rYQ03EXEE
-	 wH4OV1zlEw9LAx/J0GkNxnWnA3a1q56VgqhsZ3wo=
+	b=mLACwoy4ih/pyl+Aa8bYzllBy3mXDR3cTrJgiHSWcrq3ar0irNbPcQ7+uhw+Vz7Ig
+	 0wZRhDUbq9PKAEwfJTXTQN6cGDF3LVjQbNr858kNvC4YSslDv/gi1g2Y93ftCfQyNW
+	 jVzaK7ojqrMhruswAUfUj4EHW4TQYdb6yf4kVvic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgIDT4I (ORCPT
+        id S1727995AbgIDT4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:56:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 15:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbgIDT4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:56:06 -0400
+        id S1726221AbgIDT43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:56:29 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F03B2083B;
-        Fri,  4 Sep 2020 19:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C614F2083B;
+        Fri,  4 Sep 2020 19:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599249365;
-        bh=D4kFDskR2ElmqDONFLDmYkjYcsGM3HgMJlmgJ2Hk2os=;
+        s=default; t=1599249388;
+        bh=kyHoXHEB1z/l8Lhheci0db779WAaZP7g3X/GY0wTX/0=;
         h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=GVNbppvPylM/JYV+oLaU2WMwU9hQOA3jr5egtZDtmQ1P2XNzfQMo4wm1aNRTAx4zM
-         aber8bq/koscWhNvasHbHTF4c9HebD/7bmDXuLvQLgkdJjVZ6e63aNQdtS75PxHS/B
-         UrP6QRxOe8I0TWG9APmujlTctI3w7THGyoTajc9Q=
+        b=fgpqOGhQGo60q54JVzmValSlg7QFPXxeDRZdxmpBBH7tU+CIllfB6wZk6AFjNzcXs
+         ItTNSOX0Xog2hhqh/W//kqasiYD6UR/n2ZAbS3xMKuACgHkSKgfiJmSpmE92DbCAYV
+         92v3JwoEyNfxAKwxZEP996hhGAqpiu3VR1jvwiFw=
 Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E4083352162B; Fri,  4 Sep 2020 12:56:04 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 12:56:04 -0700
+        id 9976C352162B; Fri,  4 Sep 2020 12:56:28 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 12:56:28 -0700
 From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        stern@rowland.harvard.edu, parri.andrea@gmail.com, will@kernel.org,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 6/9] tools/memory-model: Expand the cheatsheet.txt
- notion of relaxed
-Message-ID: <20200904195604.GK29330@paulmck-ThinkPad-P72>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Question on task_blocks_on_rt_mutex()
+Message-ID: <20200904195628.GL29330@paulmck-ThinkPad-P72>
 Reply-To: paulmck@kernel.org
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-6-paulmck@kernel.org>
- <20200902035448.GC49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200902101412.GC1362448@hirez.programming.kicks-ass.net>
- <20200902123715.GD49492@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200903233037.GW29330@paulmck-ThinkPad-P72>
- <20200904005921.GA7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200904023955.GX29330@paulmck-ThinkPad-P72>
- <20200904024717.GC7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
+ <20200831232130.GA28456@paulmck-ThinkPad-P72>
+ <20200901174938.GA8158@paulmck-ThinkPad-P72>
+ <20200901235821.GA8516@paulmck-ThinkPad-P72>
+ <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
+ <20200902155410.GH29330@paulmck-ThinkPad-P72>
+ <20200903200639.GA8956@paulmck-ThinkPad-P72>
+ <20200904172432.wgxn6x5tpnt4lcln@linux-p48b>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904024717.GC7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <20200904172432.wgxn6x5tpnt4lcln@linux-p48b>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 10:47:17AM +0800, Boqun Feng wrote:
-> On Thu, Sep 03, 2020 at 07:39:55PM -0700, Paul E. McKenney wrote:
-> > On Fri, Sep 04, 2020 at 08:59:21AM +0800, Boqun Feng wrote:
-> > > On Thu, Sep 03, 2020 at 04:30:37PM -0700, Paul E. McKenney wrote:
-> > 
-> > [ . . . ]
-> > 
-> > > > How about like this, adding "Relaxed" to the WRITE_ONCE() and READ_ONCE()
-> > > > rows and "RMW" to the "Relaxed operation" row?
-> > > > 
-> > > 
-> > > Much better now, thanks! However ...
-> > > 
-> > > > The file contents are followed by a diff against the previous version.
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > ------------------------------------------------------------------------
-> > 
-> > [ . . . ]
-> > 
-> > > > Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> > > > 		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> > > > 		  WRITE_ONCE(), or one of the atomic_read() and
-> > > > 		  atomic_set() family of operations.
-> > > 
-> > > And:
-> > > 		  a RMW operation that doesn't return any value (e.g
-> > > 		  atomic_inc()), IOW it's a void Relaxed operation.
-> > 
-> > Good point!  Please see below.
-> > 
+On Fri, Sep 04, 2020 at 10:24:32AM -0700, Davidlohr Bueso wrote:
+> On Thu, 03 Sep 2020, Paul E. McKenney wrote:
 > 
-> Looks good to me ;-)
+> > commit d93a64389f4d544ded241d0ba30b2586497f5dc0
+> > Author: Paul E. McKenney <paulmck@kernel.org>
+> > Date:   Tue Sep 1 16:58:41 2020 -0700
+> > 
+> >    torture: Periodically pause in stutter_wait()
+> > 
+> >    Running locktorture scenario LOCK05 results in hangs:
+> > 
+> >    tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
+> > 
+> >    The lock_torture_writer() kthreads set themselves to MAX_NICE while
+> >    running SCHED_OTHER.  Other locktorture kthreads run at default niceness,
+> >    also SCHED_OTHER.  This results in these other locktorture kthreads
+> >    indefinitely preempting the lock_torture_writer() kthreads.  Note that
+> >    the cond_resched() in the stutter_wait() function's loop is ineffective
+> >    because this scenario is built with CONFIG_PREEMPT=y.
+> > 
+> >    It is not clear that such indefinite preemption is supposed to happen, but
+> >    in the meantime this commit prevents kthreads running in stutter_wait()
+> >    from being completely CPU-bound, thus allowing the other threads to get
+> >    some CPU in a timely fashion.  This commit also uses hrtimers to provide
+> >    very short sleeps to avoid degrading the sudden-on testing that stutter
+> >    is supposed to provide.
+> > 
+> >    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 > 
-> 
-> Acked-by: Boqun Feng <boqun.feng@gmail.com>
+> Reviwed-by: Davidlohr Bueso <dbueso@suse.de>
 
 Applied, thank you!
 
 							Thanx, Paul
-
-> Regards,
-> Boqun
-> 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> >                                   Prior Operation     Subsequent Operation
-> >                                   ---------------  ---------------------------
-> >                                C  Self  R  W  RMW  Self  R  W  DR  DW  RMW  SV
-> >                               --  ----  -  -  ---  ----  -  -  --  --  ---  --
-> > 
-> > Relaxed store                        Y                                       Y
-> > Relaxed load                         Y                          Y   Y        Y
-> > Relaxed RMW operation                Y                          Y   Y        Y
-> > rcu_dereference()                    Y                          Y   Y        Y
-> > Successful *_acquire()               R                   Y  Y   Y   Y    Y   Y
-> > Successful *_release()         C        Y  Y    Y     W                      Y
-> > smp_rmb()                               Y       R        Y      Y        R
-> > smp_wmb()                                  Y    W           Y       Y    W
-> > smp_mb() & synchronize_rcu()  CP        Y  Y    Y        Y  Y   Y   Y    Y
-> > Successful full non-void RMW  CP     Y  Y  Y    Y     Y  Y  Y   Y   Y    Y   Y
-> > smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> > smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> > 
-> > 
-> > Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
-> > 		  a *_relaxed() RMW operation, an unsuccessful RMW
-> > 		  operation, a non-value-returning RMW operation such
-> > 		  as atomic_inc(), or one of the atomic*_read() and
-> > 		  atomic*_set() family of operations.
-> > 	C:	  Ordering is cumulative
-> > 	P:	  Ordering propagates
-> > 	R:	  Read, for example, READ_ONCE(), or read portion of RMW
-> > 	W:	  Write, for example, WRITE_ONCE(), or write portion of RMW
-> > 	Y:	  Provides ordering
-> > 	a:	  Provides ordering given intervening RMW atomic operation
-> > 	DR:	  Dependent read (address dependency)
-> > 	DW:	  Dependent write (address, data, or control dependency)
-> > 	RMW:	  Atomic read-modify-write operation
-> > 	SELF:	  Orders self, as opposed to accesses before and/or after
-> > 	SV:	  Orders later accesses to the same variable
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/tools/memory-model/Documentation/cheatsheet.txt b/tools/memory-model/Documentation/cheatsheet.txt
-> > index 4146b8d..99d0087 100644
-> > --- a/tools/memory-model/Documentation/cheatsheet.txt
-> > +++ b/tools/memory-model/Documentation/cheatsheet.txt
-> > @@ -17,10 +17,11 @@ smp_mb__before_atomic()       CP        Y  Y    Y        a  a   a   a    Y
-> >  smp_mb__after_atomic()        CP        a  a    Y        Y  Y   Y   Y    Y
-> >  
-> >  
-> > -Key:	Relaxed:  A relaxed operation is either a *_relaxed() RMW
-> > -		  operation, an unsuccessful RMW operation, READ_ONCE(),
-> > -		  WRITE_ONCE(), or one of the atomic_read() and
-> > -		  atomic_set() family of operations.
-> > +Key:	Relaxed:  A relaxed operation is either READ_ONCE(), WRITE_ONCE(),
-> > +		  a *_relaxed() RMW operation, an unsuccessful RMW
-> > +		  operation, a non-value-returning RMW operation such
-> > +		  as atomic_inc(), or one of the atomic*_read() and
-> > +		  atomic*_set() family of operations.
-> >  	C:	  Ordering is cumulative
-> >  	P:	  Ordering propagates
-> >  	R:	  Read, for example, READ_ONCE(), or read portion of RMW
