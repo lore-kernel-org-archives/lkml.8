@@ -2,122 +2,129 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E847C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7263DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68747206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KF7I1vpZ"
+	by mail.kernel.org (Postfix) with ESMTP id 341CC206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:58:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599199117;
+	bh=kG4cDXBMwOEWtg2SbyCMwgRDg2zW4amVr/qTLCyJ7vQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j5zw1jYAStwn4cEfi8YHiaJ20ulldgHMeRbzGgUCkAJD7U9Flrf2WSqSWEuWKmnrf
+	 3OGHL3I0YlCXciHTXbUrE+Qo2WIYWfJ3x8eR9S669eBrIRe38xdldJD+8lzS3AWz87
+	 cOWh7xNvaOaSDCo5v8aqwuxXYgaxU9qL1i6+BziM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbgIDFyE (ORCPT
+        id S1726425AbgIDF6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:54:04 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60806 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFyC (ORCPT
+        Fri, 4 Sep 2020 01:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgIDF6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:54:02 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0845rjLP115317;
-        Fri, 4 Sep 2020 00:53:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599198825;
-        bh=MdmoxK2AeCCqej9xs0bxxv1OBv8ANR9M3r35yVubq2s=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=KF7I1vpZblhqUvzvqPDfcc5ojQRfe0fri66/dNK0eCxj7EcMxE8xoV0fzh1i0j96z
-         1NYjejsCdRJjtexH5w+A+LZoeuu5c1y4eKByCTTmdoIMplTwsHmjgj5/CTzm5Bed3t
-         +55tDZ+y+Qxy6jRZlBUWgnoJZAtEBM8w7cZY6D3Y=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0845rjpx089883
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 4 Sep 2020 00:53:45 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
- 2020 00:53:44 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Fri, 4 Sep 2020 00:53:44 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0845reXd081865;
-        Fri, 4 Sep 2020 00:53:41 -0500
-Subject: Re: [PATCH v9 2/3] drm: bridge: Add support for Cadence MHDP8546
- DPI/DP bridge
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Swapnil Jakhade <sjakhade@cadence.com>,
-        <dri-devel@lists.freedesktop.org>, <airlied@linux.ie>,
-        <daniel@ffwll.ch>, <robh+dt@kernel.org>, <a.hajda@samsung.com>,
-        <narmstrong@baylibre.com>, <jonas@kwiboo.se>,
-        <jernej.skrabec@siol.net>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <mparab@cadence.com>,
-        <yamonkar@cadence.com>, <jsarha@ti.com>, <nsekhar@ti.com>,
-        <praneeth@ti.com>, <nikhil.nd@ti.com>
-References: <1598862215-10222-1-git-send-email-sjakhade@cadence.com>
- <1598862215-10222-3-git-send-email-sjakhade@cadence.com>
- <71452de7-80e7-0144-4802-e3370c00854b@ti.com>
- <20200904022948.GE9369@pendragon.ideasonboard.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <ae3b4dfb-72a7-2734-e104-7fa5b24d81f5@ti.com>
-Date:   Fri, 4 Sep 2020 08:53:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 4 Sep 2020 01:58:30 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE36AC061244;
+        Thu,  3 Sep 2020 22:58:29 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id l17so4894303edq.12;
+        Thu, 03 Sep 2020 22:58:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=86/hDza+7M+cBpbx4SYN2mNKlPBD4Khd4N7abYdp5es=;
+        b=INFYiCzmKU5iRQe53yQOFtmJQLAE0oYHTB6GP7SpNat6APmdvxU7CFfVGsOjm0Zto8
+         +Y0XjZoAfwtJDOhvF5OsWU5oQQyUQmfpjTt6n+Fqok+l/YzBvTHtkz3WvNmO9f9WZ6Tl
+         Vi+vUgPP+WzubQlb3Pf5wQQ/2vK1sk4vD8dWEznnxJx9IkBNSKmQriauqGWDzRLo0gG7
+         VI8z/rIRvNRpB6Q/YL8rsM5fb6sHUBf/mf3N0+adBR3VyjGcnVJgZxmKyMSBx6ICd4VF
+         S35cHKZhRM5s64mDTpYHaob7cWV4fflraLlbLhMcl51PorbbNws+VWiGnRpQ3VeZCAqn
+         NFhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=86/hDza+7M+cBpbx4SYN2mNKlPBD4Khd4N7abYdp5es=;
+        b=fLuNSmmNZADVY1sNl92nu1EJ4dYiKpiVbAY86gPZ3nw5eYT6UV6Y3FgcJlc1KZ/lD3
+         2fIH9YirPDpDvRvGOxNfXw6HoSfBCoCG3YSu3gMRlX/UPOaTKuDKkbAIhb7BhDkxPQq1
+         seYe27Q974iG661ulR1j3hu7T+qpM4UKlGQzt1n3xn3DiDNugzKExIyqgMi2E4petdA0
+         9HiA97kwuFFIQoLwdWUeTsAcU3bEb9X3c5qQTZJE3pjv/sKSiOP22WLCNpZiIN6E+9SD
+         OIVcJaS5ZOGYDp9rCsquxWro384wDgMGR+Pq+2KRE8DCUN4VTyMsTU/av4pvH/PzVYQ1
+         wRUA==
+X-Gm-Message-State: AOAM532+pH35DUz6M+0zcy5j87NBeI6WqLWpumtB8Gis2fObnpGSHikH
+        OVBcYKEneqVZhyyZnzKB0Hw=
+X-Google-Smtp-Source: ABdhPJwWt7ZQxHXwfHlIAvDC4aqzZ2345pSsFoI7PTTwHE6eLo8+11eQMMVi7nzT7RaJhdxO9p5+OA==
+X-Received: by 2002:a50:fd19:: with SMTP id i25mr6926242eds.142.1599199108527;
+        Thu, 03 Sep 2020 22:58:28 -0700 (PDT)
+Received: from gmail.com (563BA415.dsl.pool.telekom.hu. [86.59.164.21])
+        by smtp.gmail.com with ESMTPSA id c8sm5158129ejp.30.2020.09.03.22.58.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 22:58:27 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 07:58:25 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 0/5] Warn on orphan section placement
+Message-ID: <20200904055825.GA2779622@gmail.com>
+References: <20200902025347.2504702-1-keescook@chromium.org>
+ <CAKwvOd=r8X1UeBRgYMcjUoQX_nbOEbXCQYGX6n7kMnJhGXis=Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904022948.GE9369@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=r8X1UeBRgYMcjUoQX_nbOEbXCQYGX6n7kMnJhGXis=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 04/09/2020 05:29, Laurent Pinchart wrote:
+* Nick Desaulniers <ndesaulniers@google.com> wrote:
 
->> Laurent mentioned that atomic_check should not change state. Note that
->> cdns_mhdp_validate_mode_params also changes state, as it calculates tu_size, vs and line_thresh.
+> On Tue, Sep 1, 2020 at 7:53 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Hi Ingo,
+> >
+> > The ever-shortening series. ;) Here is "v7", which is just the remaining
+> > Makefile changes to enable orphan section warnings, now updated to
+> > include ld-option calls.
+> >
+> > Thanks for getting this all into -tip!
 > 
-> .atomic_check() isn't allowed to change any global state, which means
-> both hardware state and data in cdns_mhdp_device. The drm_bridge_state
-> (and thus the cdns_mhdp_bridge_state) can be modified as it stores the
-> state for the atomic commit being checked.
+> For the series,
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 > 
->> There seems to be issues with mode changes, but I think the first step would be to clarify the
->> related code a bit. cdns_mhdp_validate_mode_params() is misnamed, I think it should be renamed to
->> calculate_tu or something like that.
->>
->> cdns_mhdp_bandwidth_ok() should take display_fmt or bpp as a parameter, as currently it digs that up
->> from the current state.
->>
->> Probably cdns_mhdp_validate_mode_params() would be better if it doesn't write the result to the
->> state, but returns the values. That way it could also be used to verify if suitable settings can be
->> found, without changing the state.
-> 
-> This use case is actually a very good example of proper usage of the
-> atomic state :-) .atomic_check() has to perform computations to verify
-> the atomic commit, and storing the results in the commit's state
-> prevents duplicating the same calculation at .atomic_commit() time.
+> As the recent ppc vdso boogaloo exposed, what about the vdsos?
+> * arch/x86/entry/vdso/Makefile
+> * arch/arm/vdso/Makefile
+> * arch/arm64/kernel/vdso/Makefile
+> * arch/arm64/kernel/vdso32/Makefile
 
-Yes, you're right.
+Kees, will these patches DTRT for the vDSO builds? I will be unable to test 
+these patches on that old system until tomorrow the earliest.
 
-But it's still not good, as cdns_mhdp_validate_mode_params uses link details to do the calculations,
-but we do link training only later and thus the calculations are invalid.
+I'm keeping these latest changes in WIP.core/build for now.
 
-cdns_mhdp_validate_mode_params is also called from the HPD interrupt, and there it changes the
-current bridge state. link_mutex is being held in every place where cdns_mhdp_validate_mode_params
-is called, so I guess it's fine.
+Thanks,
 
- Tomi
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+	Ingo
