@@ -2,113 +2,155 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2437DC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656CCC54F49
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48AB0252CF
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E564F25239
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a8tlbEtt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgIDR0U (ORCPT
+        id S1727094AbgIDRST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:26:20 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57984 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgIDR0N (ORCPT
+        Fri, 4 Sep 2020 13:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgIDRSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:26:13 -0400
-Received: from 89-64-89-131.dynamic.chello.pl (89.64.89.131) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.468)
- id ca0f1db468709f69; Fri, 4 Sep 2020 19:26:10 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>
-Subject: [PATCH 6/6] ACPI: OSL: Make ACPICA use logical addresses of GPE blocks
-Date:   Fri, 04 Sep 2020 19:25:29 +0200
-Message-ID: <8097951.ATsSJIO6Si@kreacher>
-In-Reply-To: <1748021.N9i9sLPJ40@kreacher>
-References: <1748021.N9i9sLPJ40@kreacher>
+        Fri, 4 Sep 2020 13:18:16 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253BEC061244;
+        Fri,  4 Sep 2020 10:18:16 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id p6so4918667ybk.10;
+        Fri, 04 Sep 2020 10:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Zfc6VGSzm8zmMkjKMO2rWCvc30ekK+qXgo2rUCsAxuM=;
+        b=a8tlbEttDX50qzj8qHjpXbYGBhjRJ9uvUqpEV2R8yLMtp1Gzg+iWlz06G8VZsSTszo
+         MPD3j6hD8uyMYD+V5I6OM+ZcoXTGNDkBUn18h54CrVdRU7rrf0HiWFg+WMMwiaTD9uYT
+         t4Ypr3EwyEux9hSP1xOowV4DiiPcVKuVX+eUC4ZSSe7E5lIbVGXpKL5zclIXutKJ5hF7
+         2GAk3/L667DNbOlPt/Uper0E1rL/9MoxK5ptomEb31jkAbgwm9GFZDgQCqmrmV6VcmYz
+         wA61GZTNyBu9fH2sAq2DjlsmQR15fzrJhzI/cYhZg60VktFXiwjYaOJE+2M0W2IPlH6l
+         Rmeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Zfc6VGSzm8zmMkjKMO2rWCvc30ekK+qXgo2rUCsAxuM=;
+        b=G56hpS+Q4tjgj4Tlb7iher8os7GSfl+r/hqmJNNRh7rH+0WtDbXnCLcBrzAzZFPCQW
+         it6U/BMgBj+cNYnCBKCW2FxeX/WAjgL1DsUStAVeSTg36dQRAeYHL2jf8Q2s0JTTvtfu
+         N7x6n5V5XT8XzNWpzjTWhfHSXzJCTXO1ayfZsfHX+0V7osoVOKvSzIMBvZDgkNfZOEa/
+         UQAIGeIe7k4dhBXI4fWN1ifGyAyU19DjbYAztamNBS3rPCXCXjDH3B9EqDyu0bnmVmFJ
+         MZqC1Z9BngHautegIulNgs72DxlQ1YBwBimDDJhje1BENS3sJcMnLv4zVT2RBnN2cmej
+         CkXw==
+X-Gm-Message-State: AOAM533hnISkeMEQwftVZI66+J95Ih/+PP3/zthVBW4Kbx6hrHIA9mNG
+        cViTRlJxXA6g7DdygNeKd8Lfuf77LnQMOPgJaRY=
+X-Google-Smtp-Source: ABdhPJzhf2gcGQW8Bfk3nZHbFBeNDENxJ0X5gjaUzunqO3RJTsGgO+ufYZWXr5gUYyTjAC2onvKsLAp3P54FO1+I9hk=
+X-Received: by 2002:a25:bbcf:: with SMTP id c15mr11170341ybk.127.1599239895457;
+ Fri, 04 Sep 2020 10:18:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825162718.5838-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUbxtb+Yg=3dgRXWXn2k2tGYcmVzbS-n6rLM0QAJrfo-A@mail.gmail.com>
+In-Reply-To: <CAMuHMdUbxtb+Yg=3dgRXWXn2k2tGYcmVzbS-n6rLM0QAJrfo-A@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 4 Sep 2020 18:17:49 +0100
+Message-ID: <CA+V-a8vyrQjK-c6NYwn_zJcC2iRCL7sDm_-q2rcM7uicfEV7yQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: r8a7742-iwg21d-q7: Add can0 support to
+ carrier board
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Hi Geert,
 
-Define ACPI_GPE_USE_LOGICAL_ADDRESSES in aclinux.h and modify
-acpi_os_initialize() to store the logical addresses of the FADT GPE
-blocks 0 and 1 in acpi_gbl_xgpe0_block_logical_address and
-acpi_gbl_xgpe1_block_logical_address, respectively, so as to allow
-ACPICA to use them for accessing GPE registers in system memory,
-instead of using their physical addresses and looking up the
-corresponding logical addresses on every access attempt, which is
-inefficient.
+Thank you for the review.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/osl.c              | 12 ++++++++++--
- include/acpi/platform/aclinux.h |  4 ++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+On Thu, Sep 3, 2020 at 1:14 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > This patch enables CAN0 interface exposed through connector J20 on the
+> > carrier board.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>
+> According to my schematics, the CAN port on J20 has its signals named
+> CAN0_[RT]XD on the carrier board, but connected to CAN1[RT]X (GP4_[67])
+> on the SoM.
+>
+> Or am I looking at the wrong file?
+>
+You are correct, I misplaced the node from the carrier board, will post a v2.
 
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 3a50d8fa310b..0002973fbcde 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -1744,8 +1744,12 @@ acpi_status __init acpi_os_initialize(void)
- {
- 	acpi_os_map_generic_address(&acpi_gbl_FADT.xpm1a_event_block);
- 	acpi_os_map_generic_address(&acpi_gbl_FADT.xpm1b_event_block);
--	acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe0_block);
--	acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe1_block);
-+
-+	acpi_gbl_xgpe0_block_logical_address =
-+		acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe0_block);
-+	acpi_gbl_xgpe1_block_logical_address =
-+		acpi_os_map_generic_address(&acpi_gbl_FADT.xgpe1_block);
-+
- 	if (acpi_gbl_FADT.flags & ACPI_FADT_RESET_REGISTER) {
- 		/*
- 		 * Use acpi_os_map_generic_address to pre-map the reset
-@@ -1783,8 +1787,12 @@ acpi_status acpi_os_terminate(void)
- 
- 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xgpe1_block);
- 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xgpe0_block);
-+	acpi_gbl_xgpe0_block_logical_address = NULL;
-+	acpi_gbl_xgpe1_block_logical_address = NULL;
-+
- 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xpm1b_event_block);
- 	acpi_os_unmap_generic_address(&acpi_gbl_FADT.xpm1a_event_block);
-+
- 	if (acpi_gbl_FADT.flags & ACPI_FADT_RESET_REGISTER)
- 		acpi_os_unmap_generic_address(&acpi_gbl_FADT.reset_register);
- 
-diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platform/aclinux.h
-index 987e2af7c335..4151c76141fa 100644
---- a/include/acpi/platform/aclinux.h
-+++ b/include/acpi/platform/aclinux.h
-@@ -118,6 +118,10 @@
- 
- #define USE_NATIVE_ALLOCATE_ZEROED
- 
-+/* Use logical addresses for accessing GPE registers in system memory */
-+
-+#define ACPI_GPE_USE_LOGICAL_ADDRESSES
-+
- /*
-  * Overrides for in-kernel ACPICA
-  */
--- 
-2.26.2
+Cheers,
+Prabhakar
 
-
-
-
+> > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > @@ -198,6 +198,13 @@
+> >         };
+> >  };
+> >
+> > +&can0 {
+>
+> can1
+>
+> > +       pinctrl-0 = <&can0_pins>;
+>
+> can1_pins
+>
+> > +       pinctrl-names = "default";
+> > +
+> > +       status = "okay";
+> > +};
+> > +
+> >  &cmt0 {
+> >         status = "okay";
+> >  };
+>
+> > @@ -287,6 +303,11 @@
+> >                 function = "tpu0";
+> >         };
+> >
+> > +       can0_pins: can0 {
+> > +               groups = "can0_data_d";
+>
+> can1_data_b
+>
+> > +               function = "can0";
+> > +       };
+> > +
+> >         i2c2_pins: i2c2 {
+> >                 groups = "i2c2_b";
+> >                 function = "i2c2";
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
