@@ -2,228 +2,163 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF38C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EDFD20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB0D2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:46:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="oFrwyne8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YPEHwTgW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgIDPp6 (ORCPT
+        id S1726882AbgIDPqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43818 "EHLO
+        Fri, 4 Sep 2020 11:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbgIDPpy (ORCPT
+        with ESMTP id S1726154AbgIDPq3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:45:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D84C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:45:52 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w2so6504415wmi.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:45:52 -0700 (PDT)
+        Fri, 4 Sep 2020 11:46:29 -0400
+Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4C2C061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:29 -0700 (PDT)
+Received: by mail-ua1-x943.google.com with SMTP id s29so2143383uae.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BWAhN7a+4874hzvxevYBZLVV3qk181dMhkmwcopVXuI=;
-        b=oFrwyne8UjE4GXeuhjjOpVE9dYZzB2GlQAZCkFaOP1wA0cXqKCn7uoJJwGDObMHxPc
-         dFLnAam23p6BBsCONYgBCS8Y3VSJ7EySoY4Fq5UoZy/F8Fn2lbfkkqBi1OjU/s5JCuEQ
-         +UHKUniKfnrVglb99KDPOYVPapsE5nuHsbwWDUXY5kMUq5FTRJ89pfRug0hq4ZLwqTag
-         kxJjyxhTh7qRPvOCRVNb+dWojAmEJ2ch1rJknyxyZUNQd2ZIZPR2hKHtF5EnNzeGSe5W
-         3LkwSplCw1X7pDUYAp/rmsDgjRmrze7FYppzpfhj7RhzMpSAeo+cHJAmHAAMamm/Yicg
-         alXg==
+        bh=gBjj6Z6R/+X4N410jUAaQIpfhsJ1Uab1XRHbJdH8dAw=;
+        b=YPEHwTgWCTHCsBvkvb5iNWOgPL18jzf9kn1lZwE7bMbG/qsoaRUJRlLUiUvn7UsbRU
+         xWLq78s6Zjx5M+gG58MQqK96A/z90GODiLUBY2tVybORIeD8qd024KcU4cb1NR6XsgSn
+         k983Ey58HmvF9RsaKL58l0jJP0KrwZnsNQM8PoZHbbnvUCuJHhjEw1GXNIBVxpF62edn
+         KMo2pe2VNgqUeJmIdtchr7g/1nTuwFfqudj/hGk0bfmJ7rFSBscLHMQulfYZ5FocwPKN
+         /nX3LomJ6Z444F3tjBV8ady3IH3z3bUSgaLw/RDtnRvhpMA957RyTett0X5LUpPhocoX
+         KTSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BWAhN7a+4874hzvxevYBZLVV3qk181dMhkmwcopVXuI=;
-        b=qX9iUVH/lBEpfNnilecqEZPbaztKnGSpv/H0jWS8u6zSSi7CeTYrR40yo/9RG+Rwag
-         GfUCaBbN2+d2OWdu702dKwJzH8yuIdh+vstQsfe8ii38Zo/ewThY4bKYZwnwM1oCAcNr
-         JXtLEPvGqB4cqJs+yCdkXzLhVLW2El01KvWqTSWCmWGZkcB9IH5kk7kEKtM16rGwsiwi
-         KhKD/EvjtjgaJ0MpR1aPGklY0QTse+9a9HU9uiCoBY2d4VjwuAryIL1Ekn/5hSA7k56E
-         TzIc11EIXQM1AOSLyPalkz13kJxsmEt0AP7jnxYHdcp+XkOPQPXSwsxwZJqTj2UJItv0
-         Bypg==
-X-Gm-Message-State: AOAM5316KGVkN69+mkaZGa7d+wl56GXdWoUO8ymaqQJyWmM1Cbla8Kv7
-        VfTOXxja8Z0DqdmCqqxTKnLe44AtlvY97sUFXmZxvQ==
-X-Google-Smtp-Source: ABdhPJzfjtKP7vZTuEflczNVPJm8Afz2ShaotHKRilLa7ZLCMiX8evx3ILz6Mx8pA1RbRMbqOuiZ+w5nytdpOD6GqG0=
-X-Received: by 2002:a1c:4303:: with SMTP id q3mr8102774wma.158.1599234351549;
- Fri, 04 Sep 2020 08:45:51 -0700 (PDT)
+        bh=gBjj6Z6R/+X4N410jUAaQIpfhsJ1Uab1XRHbJdH8dAw=;
+        b=PUse2soax780ISWMuW1wnTRIpRwm7h1Yj9AzbJ6QdcAq4o/e/sbz2C7vXstva2I+U8
+         b/x9m8ZCHy4llJvACkNuKvKGGQCuB1g2PH4uqMv/+4XCLP5OfaK0N/Rix3s6o+OCW+wP
+         sv/l5Wdiu2CH9hQgWPJLmbNnEEkZdWv9Aa4KbPG5OtTIKMvgA6SEgvfszQoZDRaBK7Wo
+         dGAjWe8tXJFqvuu268HerskCpYIj/p/Vv4HXgX27hQ/OO9b7HBU6ddn+VIDP3tLDkFTT
+         KKC8h7uuYJMGdAL6/W1JqpafiCL5YNITQIqXnoz0AP5IbiB9K2NXPKHCoetaljIg04G/
+         gQgA==
+X-Gm-Message-State: AOAM531HjX3shjC6UMMj+FIgZdN243mvoGcntoMTU+vib3RHVix7UiMj
+        tguUgRy5R4PnZEE91BGj8dTw1tPiUfCyvw==
+X-Google-Smtp-Source: ABdhPJz05m5hSpYCmSQbWpOKBVEzlH3DjKyMFQ4KSZdcNDBW0yQL1a5a4yLx7QGcU9peb+xn/37kNw==
+X-Received: by 2002:ab0:6596:: with SMTP id v22mr5250526uam.63.1599234387727;
+        Fri, 04 Sep 2020 08:46:27 -0700 (PDT)
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
+        by smtp.gmail.com with ESMTPSA id s4sm914671vsc.2.2020.09.04.08.46.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 08:46:26 -0700 (PDT)
+Received: by mail-vs1-f52.google.com with SMTP id x203so3858138vsc.11
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:26 -0700 (PDT)
+X-Received: by 2002:a67:8783:: with SMTP id j125mr5978201vsd.174.1599234385835;
+ Fri, 04 Sep 2020 08:46:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
- <5c19bbf10153cb42ca0fb67e08606c8295c17236.1599120059.git-series.maxime@cerno.tech>
-In-Reply-To: <5c19bbf10153cb42ca0fb67e08606c8295c17236.1599120059.git-series.maxime@cerno.tech>
-From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date:   Fri, 4 Sep 2020 16:45:36 +0100
-Message-ID: <CAPY8ntAPzQ2BWRivzmfSbX03WZiQ0UDRCDBFgWA2-ZtrqO10nA@mail.gmail.com>
-Subject: Re: [PATCH v5 55/80] drm/vc4: hdmi: Add a CSC setup callback
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
+References: <20200901195415.4840-1-m-karicheri2@ti.com> <20200901195415.4840-2-m-karicheri2@ti.com>
+In-Reply-To: <20200901195415.4840-2-m-karicheri2@ti.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Fri, 4 Sep 2020 17:45:48 +0200
+X-Gmail-Original-Message-ID: <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
+Message-ID: <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/1] net: hsr/prp: add vlan support
+To:     Murali Karicheri <m-karicheri2@ti.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, nsekhar@ti.com,
+        Grygorii Strashko <grygorii.strashko@ti.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime
-
-On Thu, 3 Sep 2020 at 09:03, Maxime Ripard <maxime@cerno.tech> wrote:
+On Tue, Sep 1, 2020 at 9:54 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
 >
-> Similarly to the previous patches, the CSC setup is slightly different in
-> the BCM2711 than in the previous generations. Let's add a callback for it.
+> This patch add support for creating vlan interfaces
+> over hsr/prp interface.
 >
-> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 > ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 70 +++++++++++++++++++++--------------
->  drivers/gpu/drm/vc4/vc4_hdmi.h |  3 ++-
->  2 files changed, 45 insertions(+), 28 deletions(-)
+>  net/hsr/hsr_device.c  |  4 ----
+>  net/hsr/hsr_forward.c | 16 +++++++++++++---
+>  2 files changed, 13 insertions(+), 7 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index c29376c3fd8a..532618e02399 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -334,6 +334,41 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
->                 DRM_ERROR("Failed to release power domain: %d\n", ret);
->  }
+> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+> index ab953a1a0d6c..e1951579a3ad 100644
+> --- a/net/hsr/hsr_device.c
+> +++ b/net/hsr/hsr_device.c
+> @@ -477,10 +477,6 @@ void hsr_dev_setup(struct net_device *dev)
 >
-> +static void vc4_hdmi_csc_setup(struct vc4_hdmi *vc4_hdmi, bool enable)
-> +{
-> +       u32 csc_ctl;
-> +
-> +       csc_ctl = VC4_SET_FIELD(VC4_HD_CSC_CTL_ORDER_BGR,
-> +                               VC4_HD_CSC_CTL_ORDER);
-> +
-> +       if (enable) {
-> +               /* CEA VICs other than #1 requre limited range RGB
-> +                * output unless overridden by an AVI infoframe.
-> +                * Apply a colorspace conversion to squash 0-255 down
-> +                * to 16-235.  The matrix here is:
-> +                *
-> +                * [ 0      0      0.8594 16]
-> +                * [ 0      0.8594 0      16]
-> +                * [ 0.8594 0      0      16]
-> +                * [ 0      0      0       1]
-> +                */
-> +               csc_ctl |= VC4_HD_CSC_CTL_ENABLE;
-> +               csc_ctl |= VC4_HD_CSC_CTL_RGB2YCC;
-> +               csc_ctl |= VC4_SET_FIELD(VC4_HD_CSC_CTL_MODE_CUSTOM,
-> +                                        VC4_HD_CSC_CTL_MODE);
-> +
-> +               HDMI_WRITE(HDMI_CSC_12_11, (0x000 << 16) | 0x000);
-> +               HDMI_WRITE(HDMI_CSC_14_13, (0x100 << 16) | 0x6e0);
-> +               HDMI_WRITE(HDMI_CSC_22_21, (0x6e0 << 16) | 0x000);
-> +               HDMI_WRITE(HDMI_CSC_24_23, (0x100 << 16) | 0x000);
-> +               HDMI_WRITE(HDMI_CSC_32_31, (0x000 << 16) | 0x6e0);
-> +               HDMI_WRITE(HDMI_CSC_34_33, (0x100 << 16) | 0x000);
-> +       }
-> +
-> +       /* The RGB order applies even when CSC is disabled. */
-> +       HDMI_WRITE(HDMI_CSC_CTL, csc_ctl);
-> +}
-> +
->  static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
+>         /* Prevent recursive tx locking */
+>         dev->features |= NETIF_F_LLTX;
+> -       /* VLAN on top of HSR needs testing and probably some work on
+> -        * hsr_header_create() etc.
+> -        */
+> -       dev->features |= NETIF_F_VLAN_CHALLENGED;
+>         /* Not sure about this. Taken from bridge code. netdev_features.h says
+>          * it means "Does not change network namespaces".
+>          */
+> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+> index cadfccd7876e..de21df30b0d9 100644
+> --- a/net/hsr/hsr_forward.c
+> +++ b/net/hsr/hsr_forward.c
+> @@ -208,6 +208,7 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
+>                                     struct hsr_port *port, u8 proto_version)
 >  {
->         struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
-> @@ -357,7 +392,6 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->                                         mode->crtc_vsync_end -
->                                         interlaced,
->                                         VC4_HDMI_VERTB_VBP));
-> -       u32 csc_ctl;
->         int ret;
+>         struct hsr_ethhdr *hsr_ethhdr;
+> +       unsigned char *pc;
+>         int lsdu_size;
 >
->         ret = pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
-> @@ -428,41 +462,20 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->                    (vsync_pos ? 0 : VC4_HD_VID_CTL_VSYNC_LOW) |
->                    (hsync_pos ? 0 : VC4_HD_VID_CTL_HSYNC_LOW));
+>         /* pad to minimum packet size which is 60 + 6 (HSR tag) */
+> @@ -218,7 +219,18 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
+>         if (frame->is_vlan)
+>                 lsdu_size -= 4;
 >
-> -       csc_ctl = VC4_SET_FIELD(VC4_HD_CSC_CTL_ORDER_BGR,
-> -                               VC4_HD_CSC_CTL_ORDER);
->
->         if (vc4_encoder->hdmi_monitor &&
-> -           drm_default_rgb_quant_range(mode) ==
-> -           HDMI_QUANTIZATION_RANGE_LIMITED) {
-> -               /* CEA VICs other than #1 requre limited range RGB
-> -                * output unless overridden by an AVI infoframe.
-> -                * Apply a colorspace conversion to squash 0-255 down
-> -                * to 16-235.  The matrix here is:
-> -                *
-> -                * [ 0      0      0.8594 16]
-> -                * [ 0      0.8594 0      16]
-> -                * [ 0.8594 0      0      16]
-> -                * [ 0      0      0       1]
-> -                */
-> -               csc_ctl |= VC4_HD_CSC_CTL_ENABLE;
-> -               csc_ctl |= VC4_HD_CSC_CTL_RGB2YCC;
-> -               csc_ctl |= VC4_SET_FIELD(VC4_HD_CSC_CTL_MODE_CUSTOM,
-> -                                        VC4_HD_CSC_CTL_MODE);
-> +           drm_default_rgb_quant_range(mode) == HDMI_QUANTIZATION_RANGE_LIMITED) {
-> +               if (vc4_hdmi->variant->csc_setup)
-> +                       vc4_hdmi->variant->csc_setup(vc4_hdmi, true);
->
-> -               HDMI_WRITE(HDMI_CSC_12_11, (0x000 << 16) | 0x000);
-> -               HDMI_WRITE(HDMI_CSC_14_13, (0x100 << 16) | 0x6e0);
-> -               HDMI_WRITE(HDMI_CSC_22_21, (0x6e0 << 16) | 0x000);
-> -               HDMI_WRITE(HDMI_CSC_24_23, (0x100 << 16) | 0x000);
-> -               HDMI_WRITE(HDMI_CSC_32_31, (0x000 << 16) | 0x6e0);
-> -               HDMI_WRITE(HDMI_CSC_34_33, (0x100 << 16) | 0x000);
->                 vc4_encoder->limited_rgb_range = true;
->         } else {
-> +               if (vc4_hdmi->variant->csc_setup)
-> +                       vc4_hdmi->variant->csc_setup(vc4_hdmi, false);
-> +
->                 vc4_encoder->limited_rgb_range = false;
+> -       hsr_ethhdr = (struct hsr_ethhdr *)skb_mac_header(skb);
+> +       pc = skb_mac_header(skb);
+> +       if (frame->is_vlan)
+> +               /* This 4-byte shift (size of a vlan tag) does not
+> +                * mean that the ethhdr starts there. But rather it
+> +                * provides the proper environment for accessing
+> +                * the fields, such as hsr_tag etc., just like
+> +                * when the vlan tag is not there. This is because
+> +                * the hsr tag is after the vlan tag.
+> +                */
+> +               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
+> +       else
+> +               hsr_ethhdr = (struct hsr_ethhdr *)pc;
+
+Instead, I would pass the header from the caller, which knows the
+offset because it moves the previous headers to make space.
+
+Also, supporting VLAN probably also requires supporting 802.1ad QinQ,
+which means code should parse the headers instead of hardcoding
+VLAN_HLEN.
+
+>         hsr_set_path_id(hsr_ethhdr, port);
+>         set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
+> @@ -511,8 +523,6 @@ static int fill_frame_info(struct hsr_frame_info *frame,
+>         if (frame->is_vlan) {
+>                 vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
+>                 proto = vlan_hdr->vlanhdr.h_vlan_encapsulated_proto;
+> -               /* FIXME: */
+> -               netdev_warn_once(skb->dev, "VLAN not yet supported");
 >         }
 >
-> -       /* The RGB order applies even when CSC is disabled. */
-> -       HDMI_WRITE(HDMI_CSC_CTL, csc_ctl);
-> -
->         HDMI_WRITE(HDMI_FIFO_CTL, VC4_HDMI_FIFO_CTL_MASTER_SLAVE_N);
->
->         if (debug_dump_regs) {
-> @@ -1430,6 +1443,7 @@ static const struct vc4_hdmi_variant bcm2835_variant = {
->         .num_registers          = ARRAY_SIZE(vc4_hdmi_fields),
->
->         .init_resources         = vc4_hdmi_init_resources,
-> +       .csc_setup              = vc4_hdmi_csc_setup,
->         .reset                  = vc4_hdmi_reset,
->         .phy_init               = vc4_hdmi_phy_init,
->         .phy_disable            = vc4_hdmi_phy_disable,
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 950accbc44e4..c8fd58548ea2 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -41,6 +41,9 @@ struct vc4_hdmi_variant {
->         /* Callback to reset the HDMI block */
->         void (*reset)(struct vc4_hdmi *vc4_hdmi);
->
-> +       /* Callback to enable / disable the CSC */
-> +       void (*csc_setup)(struct vc4_hdmi *vc4_hdmi, bool enable);
-> +
->         /* Callback to initialize the PHY according to the mode */
->         void (*phy_init)(struct vc4_hdmi *vc4_hdmi,
->                          struct drm_display_mode *mode);
+>         frame->is_from_san = false;
 > --
-> git-series 0.9.1
+> 2.17.1
+>
