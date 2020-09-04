@@ -2,108 +2,148 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF51C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7035C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6A4206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599236966;
-	bh=ijQZmDJ1VKEp4/GIBst2/UEw+3wG90aKOhvkbc/1BG0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AO4Z38NJ4Z16aWC5cFT7iKAQ1DHXYG7extsh6a53HkG/JOQyEyMFoWHk5sADSfqcD
-	 Ki9sXzYl4VaPEcvNJMzL6BLSwSLQEcK4dWIAJBvHWRSAhMkBhiwJ2hRUVnjFSNN03J
-	 54d10M/UX7X5q6/sCsUg1zhAzDAGFZjS9R6j6s8Q=
+	by mail.kernel.org (Postfix) with ESMTP id 89EC62083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:35:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbgIDQ3Y (ORCPT
+        id S1726286AbgIDQfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:29:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33286 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 12:35:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:22282 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgIDQ3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:29:23 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13596206A5;
-        Fri,  4 Sep 2020 16:29:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599236962;
-        bh=ijQZmDJ1VKEp4/GIBst2/UEw+3wG90aKOhvkbc/1BG0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B2VicmmT9O0OSF/wh6e+YOLQ8CXV7yG8OLbt4+2DJ7y/8FescpdRn7f+ZoShlpOq6
-         CWdF7O0i8peUfFMm8Y33AVbJd+Fiq4edwuVLMHSBJ/l8eKvd1sO5Wb9x+BKzPHxgpw
-         VpymAmboad0RpYYk37M42X2ZWf2bFlGrbMc6yMJQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2202240D3D; Fri,  4 Sep 2020 13:29:20 -0300 (-03)
-Date:   Fri, 4 Sep 2020 13:29:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     kajoljain <kjain@linux.ibm.com>, Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2] perf expr: Force encapsulation on expr_id_data
-Message-ID: <20200904162920.GV3495158@kernel.org>
-References: <20200826153055.2067780-1-irogers@google.com>
- <20200826155733.GB783610@krava>
- <4b6bc995-d468-3137-f00f-3867233740a3@linux.ibm.com>
- <CAP-5=fUdK2Zuv9BMpkRw669n_SvQ3kDa0s0RA=Hj1GUtqqw0YQ@mail.gmail.com>
+        id S1726047AbgIDQfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:35:25 -0400
+IronPort-SDR: N7G1NMA1vwgQZOyxy79IzchW1pPfH7PkEXNqYvcXOf+4iQvVX/gX2IOO38Od/e6Sd2bhLHM/BU
+ afh1yvK+7vCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137300774"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="137300774"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:35:22 -0700
+IronPort-SDR: /dqQJqsIa/VFbqalbeB6jnnHq/h+KBnDMOXQYnSozk9jvYwAZbYayzsGNojeOYVl2FHGANE9zP
+ QJyMI8K2AIJQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="332215807"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:35:19 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kEEgH-00EKJ1-4s; Fri, 04 Sep 2020 19:35:17 +0300
+Date:   Fri, 4 Sep 2020 19:35:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 03/23] lib: uaccess: provide getline_from_user()
+Message-ID: <20200904163517.GW1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-4-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fUdK2Zuv9BMpkRw669n_SvQ3kDa0s0RA=Hj1GUtqqw0YQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200904154547.3836-4-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Sep 03, 2020 at 10:53:16PM -0700, Ian Rogers escreveu:
-> On Thu, Aug 27, 2020 at 12:00 AM kajoljain <kjain@linux.ibm.com> wrote:
-> >
-> >
-> >
-> > On 8/26/20 9:27 PM, Jiri Olsa wrote:
-> > > On Wed, Aug 26, 2020 at 08:30:55AM -0700, Ian Rogers wrote:
-> > >> This patch resolves some undefined behavior where variables in
-> > >> expr_id_data were accessed (for debugging) without being defined. To
-> > >> better enforce the tagged union behavior, the struct is moved into
-> > >> expr.c and accessors provided. Tag values (kinds) are explicitly
-> > >> identified.
-> >
-> > Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
-> >
-> > Thanks,
-> > Kajol Jain
-> > >>
-> > >> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >
-> > > great, thanks for doing this
-> > >
-> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> > >
-> > > jirka
-> > >
+On Fri, Sep 04, 2020 at 05:45:27PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Thanks for the reviews! Arnaldo could this get merged? Thanks!
+> Provide a uaccess helper that allows callers to copy a single line from
+> user memory. This is useful for debugfs write callbacks.
 
-I'll get this and the other outstanding patches into perf/core soon as I
-got urgent stuff already merged by Linus,
+Doesn't mm/util.c provides us something like this?
+strndup_user()?
 
-Thanks!
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  include/linux/uaccess.h |  3 +++
+>  lib/usercopy.c          | 37 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> index 94b285411659..5aedd8ac5c31 100644
+> --- a/include/linux/uaccess.h
+> +++ b/include/linux/uaccess.h
+> @@ -333,6 +333,9 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
+>  		long count);
+>  long strnlen_user_nofault(const void __user *unsafe_addr, long count);
+>  
+> +ssize_t getline_from_user(char *dst, size_t dst_size,
+> +			  const char __user *src, size_t src_size);
+> +
+>  /**
+>   * get_kernel_nofault(): safely attempt to read from a location
+>   * @val: read into this variable
+> diff --git a/lib/usercopy.c b/lib/usercopy.c
+> index b26509f112f9..55aaaf93d847 100644
+> --- a/lib/usercopy.c
+> +++ b/lib/usercopy.c
+> @@ -87,3 +87,40 @@ int check_zeroed_user(const void __user *from, size_t size)
+>  	return -EFAULT;
+>  }
+>  EXPORT_SYMBOL(check_zeroed_user);
+> +
+> +/**
+> + * getline_from_user - Copy a single line from user
+> + * @dst: Where to copy the line to
+> + * @dst_size: Size of the destination buffer
+> + * @src: Where to copy the line from
+> + * @src_size: Size of the source user buffer
+> + *
+> + * Copies a number of characters from given user buffer into the dst buffer.
+> + * The number of bytes is limited to the lesser of the sizes of both buffers.
+> + * If the copied string contains a newline, its first occurrence is replaced
+> + * by a NULL byte in the destination buffer. Otherwise the function ensures
+> + * the copied string is NULL-terminated.
+> + *
+> + * Returns the number of copied bytes or a negative error number on failure.
+> + */
+> +
+> +ssize_t getline_from_user(char *dst, size_t dst_size,
+> +			  const char __user *src, size_t src_size)
+> +{
+> +	size_t size = min_t(size_t, dst_size, src_size);
+> +	char *c;
+> +	int ret;
+> +
+> +	ret = copy_from_user(dst, src, size);
+> +	if (ret)
+> +		return -EFAULT;
+> +
+> +	dst[size - 1] = '\0';
+> +
+> +	c = strchrnul(dst, '\n');
+> +	if (*c)
+> +		*c = '\0';
+> +
+> +	return c - dst;
+> +}
+> +EXPORT_SYMBOL(getline_from_user);
+> -- 
+> 2.26.1
+> 
 
-- Arnaldo
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
