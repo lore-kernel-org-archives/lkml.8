@@ -2,137 +2,101 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87620C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FA9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCA5206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310B220722
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vJfeW6Vj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LMEG6W+C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pA3kZzLQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbgIDNVQ (ORCPT
+        id S1730369AbgIDN1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:21:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33004 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730255AbgIDNQK (ORCPT
+        Fri, 4 Sep 2020 09:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730206AbgIDN0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:16:10 -0400
-Date:   Fri, 04 Sep 2020 13:16:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599225367;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BVAh8I/2bxTPz9UIi08lc10tsx0Q9qTXm+c63FuVeog=;
-        b=vJfeW6Vjgn17H3MJT1jz3Tfin2vd6YT7/++r9vylVVzVzbePu00Cu0wWeyI/hlMzY17n2B
-        OSw0EVgRkDIKWCVuHoZvsjISU/3drdrcZ5OjgPbvs2QM1QlNQEsfWTosF3V5ylKXgaLUZI
-        9l19ck9oYz74euuR61fKhN3zSKxruXFNeRR/GlvD+yPtiUXeKvRZw3GWK/EcbbPOhDXukP
-        Jq/GKhyaK+ljasct4IZ7cRQ6vkafPuQvJKUMy/dYV6gUmjOUguBlfyZ3kc7MRPrfko7T3h
-        69aURSi9Pf55vMSbcv85Vgj1fdEOYT8Wpl2pxWpKQReeGrwyNJU1FvClGSSKeg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599225367;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BVAh8I/2bxTPz9UIi08lc10tsx0Q9qTXm+c63FuVeog=;
-        b=LMEG6W+CZcmf0wg4GWzI6L4qrnXoe35edK7coGjInVs0fnFrsx+Od9LyoGC5EIN/C8rM+7
-        7F0fYhf3LEEyaKDw==
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/debug: Simplify hw_breakpoint_handler()
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200902133201.292906672@infradead.org>
-References: <20200902133201.292906672@infradead.org>
+        Fri, 4 Sep 2020 09:26:33 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60ADCC061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:26:27 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id m5so2950485lfp.7
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=to8yGy7pHihTBT/93HN//DxGYS+102uxdQTAldLv0Xg=;
+        b=pA3kZzLQLp9KkrmZE2CIfgA7yXMv+24CpAbAlKDA+YkSgL4ec26BOM23e79D0mUPFg
+         o2VZZ0QNRQPciwDU0YR10+ujbKO/oTMU0GIom66c3XLVBPDRjLPn+WsjyUvyaOOF5oO5
+         yEt6UPzHZxK4UZgzv4wVpzw/m6zUTZoHgbNjpwgba5/pBy4CBTaH7xF2v+LUQiT3uSOg
+         XUeyqoVXPeRmOU3NDP7K2cn+CYnfv2FnPhfzQ8Z85xzwOMKp7bweyKBgqwtVy89SHEls
+         SHLPivQUIShZq1q5d6YZRB+9s3j4W4/xVJEziFqSx5UEAALiDZBlCALDMOtRJBsTweq0
+         RlDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=to8yGy7pHihTBT/93HN//DxGYS+102uxdQTAldLv0Xg=;
+        b=Ec1JDrz8+fiL0RR716BRanwhXaG9tExkEsoYWtsafplqR2g4wbToxvNlk4IRlW9RCc
+         ISLxfGADOEsBRtOapm+f2x9W26urFMLvXFqwcenQdPmbiqvzZ9KRlAguNnfDbU6v99wL
+         JfqwOCe27EnGQZVcuCPaNhE4/HHuXs4LZLUHlpleE2zSCw6dbfXR9MZabNE6HunWSHSD
+         pLzlfHGnrqYPrC2a9ex2X6xZKq7fPNeoOlnOa2Scc8LN5O/uHPaqqyoYO4KrAOvI0xN2
+         o/Sqd3ww/bbXoOZWbzRGJrtog4pfGD4olmYaqidkeb/02RfvXgfbr4Xq1EhUExNDt6M3
+         J2cA==
+X-Gm-Message-State: AOAM531uk/N6aBCSBKh8uhUVLwwUVpVzKeToAO4lmR6+/FwQrR1zTk3X
+        hFyLVLkaXY8c/9LW2JUihSU=
+X-Google-Smtp-Source: ABdhPJwp282W1wItjcXF7u18XZ7DcCmHWiEUTloxD227WOQg1SzZqHcn+m3WeqcA1L5DxWExlqGtQg==
+X-Received: by 2002:ac2:48b2:: with SMTP id u18mr3814999lfg.185.1599225985745;
+        Fri, 04 Sep 2020 06:26:25 -0700 (PDT)
+Received: from localhost.localdomain (188.147.111.252.nat.umts.dynamic.t-mobile.pl. [188.147.111.252])
+        by smtp.gmail.com with ESMTPSA id l15sm1281116lje.16.2020.09.04.06.26.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 06:26:25 -0700 (PDT)
+From:   mateusznosek0@gmail.com
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, akpm@linux-foundation.org
+Subject: [PATCH] mm/page_alloc.c: Clean code by removing unnecessary initialization
+Date:   Fri,  4 Sep 2020 15:24:22 +0200
+Message-Id: <20200904132422.17387-1-mateusznosek0@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Message-ID: <159922536721.20229.16306947437710774866.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+From: Mateusz Nosek <mateusznosek0@gmail.com>
 
-Commit-ID:     21d44be7b6ff4c254dc971e2c99d4082dd470afd
-Gitweb:        https://git.kernel.org/tip/21d44be7b6ff4c254dc971e2c99d4082dd470afd
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Wed, 02 Sep 2020 15:26:00 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 04 Sep 2020 15:12:56 +02:00
+Previously variable 'tmp' was initialized, but was not read later
+before reassigning. So the initialization can be removed.
 
-x86/debug: Simplify hw_breakpoint_handler()
-
-This is called with interrupts disabled, there's no point in using
-get_cpu() and per_cpu().
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
-Link: https://lore.kernel.org/r/20200902133201.292906672@infradead.org
-
+Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
 ---
- arch/x86/kernel/hw_breakpoint.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index ca9de59..7b7d9f2 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -487,7 +487,7 @@ EXPORT_SYMBOL_GPL(hw_breakpoint_restore);
-  */
- static int hw_breakpoint_handler(struct die_args *args)
- {
--	int i, cpu, rc = NOTIFY_STOP;
-+	int i, rc = NOTIFY_STOP;
- 	struct perf_event *bp;
- 	unsigned long dr6;
- 	unsigned long *dr6_p;
-@@ -505,12 +505,10 @@ static int hw_breakpoint_handler(struct die_args *args)
- 		return NOTIFY_DONE;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3ae4f3651aec..77c3d2084004 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5637,7 +5637,7 @@ static int find_next_best_node(int node, nodemask_t *used_node_mask)
+ 	int n, val;
+ 	int min_val = INT_MAX;
+ 	int best_node = NUMA_NO_NODE;
+-	const struct cpumask *tmp = cpumask_of_node(0);
++	const struct cpumask *tmp;
  
- 	/*
--	 * Assert that local interrupts are disabled
- 	 * Reset the DRn bits in the virtualized register value.
- 	 * The ptrace trigger routine will add in whatever is needed.
- 	 */
- 	current->thread.debugreg6 &= ~DR_TRAP_BITS;
--	cpu = get_cpu();
- 
- 	/* Handle all the breakpoints that were triggered */
- 	for (i = 0; i < HBP_NUM; ++i) {
-@@ -525,7 +523,7 @@ static int hw_breakpoint_handler(struct die_args *args)
- 		 */
- 		rcu_read_lock();
- 
--		bp = per_cpu(bp_per_reg[i], cpu);
-+		bp = this_cpu_read(bp_per_reg[i]);
- 		/*
- 		 * Reset the 'i'th TRAP bit in dr6 to denote completion of
- 		 * exception handling
-@@ -560,8 +558,6 @@ static int hw_breakpoint_handler(struct die_args *args)
- 	    (dr6 & (~DR_TRAP_BITS)))
- 		rc = NOTIFY_DONE;
- 
--	put_cpu();
--
- 	return rc;
- }
- 
+ 	/* Use the local node if we haven't already */
+ 	if (!node_isset(node, *used_node_mask)) {
+-- 
+2.20.1
+
