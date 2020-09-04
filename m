@@ -2,63 +2,77 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20135C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0880C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5E7520772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B85E72074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:33:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kHVNSAsv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v8Ek/F4l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOnJXWOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgIDPc7 (ORCPT
+        id S1726787AbgIDPdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:32:59 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:33754 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbgIDPca (ORCPT
+        Fri, 4 Sep 2020 11:33:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30226 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726213AbgIDPdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:32:30 -0400
-From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599233547;
+        Fri, 4 Sep 2020 11:33:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599233595;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=t3aTXUWOFUY6rMm9X7d1EuCalQEcR/WTioCR4C7q4F8=;
-        b=kHVNSAsvvteInNP5oNANH57rTRn36oQ/5zodjwhLfpDeIqhmzg2kRUK87iBeOKqn16zvcC
-        I/aWwvBv048I09iPKWK0tOonrB60UfJQyjQyOoj6dBXNZuxTZDZhRv/B/XRqnwj4CAsJJu
-        uLELOxWRiVAmGmVu1XFGjYvjHZ8uT73KuHnQDOBqYTIg2A+LrW7d2yn41tVhVUKHW1o2dx
-        8vXDd6cb/BrOorv2/GbLDnr4wZ3eEeCZXXO1rJjB6xye7bnzzLxIVJc+/thp3BOaAfqkPV
-        0IrIbe0FNMxwTkSAx/LlMVxkGPvOTEYKijnW3SYAnT3X2/kr8aftiiw8J+hGgg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599233548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=t3aTXUWOFUY6rMm9X7d1EuCalQEcR/WTioCR4C7q4F8=;
-        b=v8Ek/F4lB/eyVfaLzdCxREoKbWISzJ7xACajorteCh1heIv2M0H3+o0UveCs+DR3qJOfz+
-        9te4GHzFirp0k/AA==
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Ahmed S. Darwish" <a.darwish@linutronix.de>
-Subject: [PATCH v2 5/5] seqlock: PREEMPT_RT: Do not starve seqlock_t writers
-Date:   Fri,  4 Sep 2020 17:32:31 +0200
-Message-Id: <20200904153231.11994-6-a.darwish@linutronix.de>
-In-Reply-To: <20200904153231.11994-1-a.darwish@linutronix.de>
-References: <20200904153231.11994-1-a.darwish@linutronix.de>
+        bh=hrVz+KLbKI6BdLhyF2fMlzFox3txKG0LPn3niHgImoA=;
+        b=SOnJXWOP8N0dwJ/vSXD9lUPYhuDwaegBdZM9+9sC/L1PTYAhBH4S8D/KCq2mILxsyKSgKb
+        064VHJueFnRu6IeQKwUXmRkvsew22tGnVQE4FdKh+MSyprBWLcIezynDDjiyzAYhpEzSAq
+        5xW7+cyzv93xL12m94fObCHSxx+rak4=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-eGmBl3RBPDqy_6U0FYXZ_g-1; Fri, 04 Sep 2020 11:33:13 -0400
+X-MC-Unique: eGmBl3RBPDqy_6U0FYXZ_g-1
+Received: by mail-ed1-f71.google.com with SMTP id y15so2858725ede.14
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:33:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hrVz+KLbKI6BdLhyF2fMlzFox3txKG0LPn3niHgImoA=;
+        b=fmQdSDCDaiSv9wAkOa0bHfo8ZhETCDnKdk1sWjrLHAqlrKevvKRB3YhHHbbLSCcSDB
+         aiuXnUsWi21dxEU+XF7eFUrUVR+kDPsYWVe27e+j/rk7Y/3GaxLohXbvMdUkGTkYfybg
+         iYDP8cXiuqxcM7YnpJHBorkCI7EKwPgB9zzRKfc+bYLGqBad0uvi/Jt79+mDPYZWPalM
+         qFd6aEHPinFWkAJdSWhsbm+amXciTILcUN31SLe+FXBSTF39pMYcUCz01DUaKcLWnOhf
+         SQ3yRxSVyqQW2vMRv5ceSPYRvQg5dPTzLeG4asBXR36Wv/SpT0o0qjlDrbmFJVfyviT+
+         hYCQ==
+X-Gm-Message-State: AOAM5326U6E6uJNAb4yNoJUMEwyCkk06ix2QSDq+/37EToDf6XsWO9pD
+        JlarhM1HjxdeUG4HFXqAH+aRr3rjCZi9dh7HoFCxFaVZ5AXlcU9iSIAjQ5XpIOFv8iF1AmRMpGv
+        5jh2xH2eTofOUHsEYJANilzue
+X-Received: by 2002:a05:6402:17b5:: with SMTP id j21mr8895146edy.276.1599233592376;
+        Fri, 04 Sep 2020 08:33:12 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzquBwBTR4pU/rFyhz41uof7tyQJTyw3BfjNsyZuXuGbXnpe30LPlOlIHzdN8J7b7it3e3Htg==
+X-Received: by 2002:a05:6402:17b5:: with SMTP id j21mr8895118edy.276.1599233592050;
+        Fri, 04 Sep 2020 08:33:12 -0700 (PDT)
+Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
+        by smtp.gmail.com with ESMTPSA id o6sm6374294edh.40.2020.09.04.08.33.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:33:11 -0700 (PDT)
+From:   Julien Thierry <jthierry@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org,
+        Julien Thierry <jthierry@redhat.com>
+Subject: [PATCH v3 05/10] objtool: Make relocation in alternative handling arch dependent
+Date:   Fri,  4 Sep 2020 16:30:23 +0100
+Message-Id: <20200904153028.32676-6-jthierry@redhat.com>
+X-Mailer: git-send-email 2.21.3
+In-Reply-To: <20200904153028.32676-1-jthierry@redhat.com>
+References: <20200904153028.32676-1-jthierry@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,143 +80,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On PREEMPT_RT, seqlock_t is transformed to a sleeping lock that do not
-disable preemption. A seqlock_t reader can thus preempt its write side
-section and spin for the enter scheduler tick. If that reader belongs to
-a real-time scheduling class, it can spin forever and the kernel will
-livelock.
+As pointed out by the comment in handle_group_alt(), support of
+relocation for instructions in an alternative group depends on whether
+arch specific kernel code handles it.
 
-To break this livelock possibility on PREEMPT_RT, implement seqlock_t in
-terms of "seqcount_spinlock_t" instead of plain "seqcount_t".
+So, let objtool arch specific code decide whether a relocation for
+the alternative section should be accepted.
 
-Beside its pure annotational value, this will leverage the existing
-seqcount_LOCKNAME_T PREEMPT_RT anti-livelock mechanisms, without adding
-any extra code.
-
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- include/linux/seqlock.h | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ tools/objtool/arch/x86/special.c | 13 +++++++++++++
+ tools/objtool/check.c            | 19 ++++++-------------
+ tools/objtool/check.h            |  6 ++++++
+ tools/objtool/special.h          |  4 ++++
+ 4 files changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
-index 6ac5a63fc536..06a339355c3a 100644
---- a/include/linux/seqlock.h
-+++ b/include/linux/seqlock.h
-@@ -757,13 +757,17 @@ static inline void raw_write_seqcount_t_latch(seqcount_t *s)
-  *    - Documentation/locking/seqlock.rst
-  */
- typedef struct {
--	struct seqcount seqcount;
-+	/*
-+	 * Make sure that readers don't starve writers on PREEMPT_RT: use
-+	 * seqcount_spinlock_t instead of seqcount_t. Check __SEQ_LOCK().
-+	 */
-+	seqcount_spinlock_t seqcount;
- 	spinlock_t lock;
- } seqlock_t;
- 
- #define __SEQLOCK_UNLOCKED(lockname)					\
- 	{								\
--		.seqcount = SEQCNT_ZERO(lockname),			\
-+		.seqcount = SEQCNT_SPINLOCK_ZERO(lockname, &(lockname).lock), \
- 		.lock =	__SPIN_LOCK_UNLOCKED(lockname)			\
+diff --git a/tools/objtool/arch/x86/special.c b/tools/objtool/arch/x86/special.c
+index 823561e4015c..34e0e162e6fd 100644
+--- a/tools/objtool/arch/x86/special.c
++++ b/tools/objtool/arch/x86/special.c
+@@ -35,3 +35,16 @@ void arch_handle_alternative(unsigned short feature, struct special_alt *alt)
+ 		break;
  	}
- 
-@@ -773,8 +777,8 @@ typedef struct {
-  */
- #define seqlock_init(sl)						\
- 	do {								\
--		seqcount_init(&(sl)->seqcount);				\
- 		spin_lock_init(&(sl)->lock);				\
-+		seqcount_spinlock_init(&(sl)->seqcount, &(sl)->lock);	\
- 	} while (0)
- 
- /**
-@@ -821,6 +825,12 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
- 	return read_seqcount_retry(&sl->seqcount, start);
  }
- 
-+/*
-+ * For all seqlock_t write side functions, use write_seqcount_*t*_begin()
-+ * instead of the generic write_seqcount_begin(). This way, no redundant
-+ * lockdep_assert_held() checks are added.
-+ */
 +
- /**
-  * write_seqlock() - start a seqlock_t write side critical section
-  * @sl: Pointer to seqlock_t
-@@ -837,7 +847,7 @@ static inline unsigned read_seqretry(const seqlock_t *sl, unsigned start)
- static inline void write_seqlock(seqlock_t *sl)
++bool arch_support_alt_relocation(struct special_alt *special_alt,
++				 struct instruction *insn,
++				 struct reloc *reloc)
++{
++	/*
++	 * The x86 alternatives code adjusts the offsets only when it
++	 * encounters a branch instruction at the very beginning of the
++	 * replacement group.
++	 */
++	return insn->offset == special_alt->new_off &&
++	       (insn->type == INSN_CALL || is_static_jump(insn));
++}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 6156bd9a687c..8217a9a9a838 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -109,12 +109,6 @@ static struct instruction *prev_insn_same_sym(struct objtool_file *file,
+ 	for (insn = next_insn_same_sec(file, insn); insn;		\
+ 	     insn = next_insn_same_sec(file, insn))
+ 
+-static bool is_static_jump(struct instruction *insn)
+-{
+-	return insn->type == INSN_JUMP_CONDITIONAL ||
+-	       insn->type == INSN_JUMP_UNCONDITIONAL;
+-}
+-
+ static bool is_sibling_call(struct instruction *insn)
  {
- 	spin_lock(&sl->lock);
--	write_seqcount_t_begin(&sl->seqcount);
-+	write_seqcount_t_begin(&sl->seqcount.seqcount);
- }
+ 	/* An indirect jump is either a sibling call or a jump to a table. */
+@@ -866,6 +860,8 @@ static int handle_group_alt(struct objtool_file *file,
+ 	alt_group = alt_group_next_index++;
+ 	insn = *new_insn;
+ 	sec_for_each_insn_from(file, insn) {
++		struct reloc *alt_reloc;
++
+ 		if (insn->offset >= special_alt->new_off + special_alt->new_len)
+ 			break;
  
- /**
-@@ -849,7 +859,7 @@ static inline void write_seqlock(seqlock_t *sl)
-  */
- static inline void write_sequnlock(seqlock_t *sl)
- {
--	write_seqcount_t_end(&sl->seqcount);
-+	write_seqcount_t_end(&sl->seqcount.seqcount);
- 	spin_unlock(&sl->lock);
- }
+@@ -882,14 +878,11 @@ static int handle_group_alt(struct objtool_file *file,
+ 		 * .altinstr_replacement section, unless the arch's
+ 		 * alternatives code can adjust the relative offsets
+ 		 * accordingly.
+-		 *
+-		 * The x86 alternatives code adjusts the offsets only when it
+-		 * encounters a branch instruction at the very beginning of the
+-		 * replacement group.
+ 		 */
+-		if ((insn->offset != special_alt->new_off ||
+-		    (insn->type != INSN_CALL && !is_static_jump(insn))) &&
+-		    find_reloc_by_dest_range(file->elf, insn->sec, insn->offset, insn->len)) {
++		alt_reloc = find_reloc_by_dest_range(file->elf, insn->sec,
++						   insn->offset, insn->len);
++		if (alt_reloc &&
++		    !arch_support_alt_relocation(special_alt, insn, alt_reloc)) {
  
-@@ -863,7 +873,7 @@ static inline void write_sequnlock(seqlock_t *sl)
- static inline void write_seqlock_bh(seqlock_t *sl)
- {
- 	spin_lock_bh(&sl->lock);
--	write_seqcount_t_begin(&sl->seqcount);
-+	write_seqcount_t_begin(&sl->seqcount.seqcount);
- }
+ 			WARN_FUNC("unsupported relocation in alternatives section",
+ 				  insn->sec, insn->offset);
+diff --git a/tools/objtool/check.h b/tools/objtool/check.h
+index 0abdf8efdbc0..58374255934b 100644
+--- a/tools/objtool/check.h
++++ b/tools/objtool/check.h
+@@ -47,6 +47,12 @@ struct instruction {
+ #endif
+ };
  
- /**
-@@ -876,7 +886,7 @@ static inline void write_seqlock_bh(seqlock_t *sl)
-  */
- static inline void write_sequnlock_bh(seqlock_t *sl)
- {
--	write_seqcount_t_end(&sl->seqcount);
-+	write_seqcount_t_end(&sl->seqcount.seqcount);
- 	spin_unlock_bh(&sl->lock);
- }
++static inline bool is_static_jump(struct instruction *insn)
++{
++	return insn->type == INSN_JUMP_CONDITIONAL ||
++	       insn->type == INSN_JUMP_UNCONDITIONAL;
++}
++
+ struct instruction *find_insn(struct objtool_file *file,
+ 			      struct section *sec, unsigned long offset);
  
-@@ -890,7 +900,7 @@ static inline void write_sequnlock_bh(seqlock_t *sl)
- static inline void write_seqlock_irq(seqlock_t *sl)
- {
- 	spin_lock_irq(&sl->lock);
--	write_seqcount_t_begin(&sl->seqcount);
-+	write_seqcount_t_begin(&sl->seqcount.seqcount);
- }
+diff --git a/tools/objtool/special.h b/tools/objtool/special.h
+index 44da89afeda2..1dc1bb3e74c6 100644
+--- a/tools/objtool/special.h
++++ b/tools/objtool/special.h
+@@ -7,6 +7,7 @@
+ #define _SPECIAL_H
  
- /**
-@@ -902,7 +912,7 @@ static inline void write_seqlock_irq(seqlock_t *sl)
-  */
- static inline void write_sequnlock_irq(seqlock_t *sl)
- {
--	write_seqcount_t_end(&sl->seqcount);
-+	write_seqcount_t_end(&sl->seqcount.seqcount);
- 	spin_unlock_irq(&sl->lock);
- }
+ #include <stdbool.h>
++#include "check.h"
+ #include "elf.h"
  
-@@ -911,7 +921,7 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
- 	unsigned long flags;
+ struct special_alt {
+@@ -30,4 +31,7 @@ int special_get_alts(struct elf *elf, struct list_head *alts);
  
- 	spin_lock_irqsave(&sl->lock, flags);
--	write_seqcount_t_begin(&sl->seqcount);
-+	write_seqcount_t_begin(&sl->seqcount.seqcount);
- 	return flags;
- }
+ void arch_handle_alternative(unsigned short feature, struct special_alt *alt);
  
-@@ -940,7 +950,7 @@ static inline unsigned long __write_seqlock_irqsave(seqlock_t *sl)
- static inline void
- write_sequnlock_irqrestore(seqlock_t *sl, unsigned long flags)
- {
--	write_seqcount_t_end(&sl->seqcount);
-+	write_seqcount_t_end(&sl->seqcount.seqcount);
- 	spin_unlock_irqrestore(&sl->lock, flags);
- }
- 
++bool arch_support_alt_relocation(struct special_alt *special_alt,
++				 struct instruction *insn,
++				 struct reloc *reloc);
+ #endif /* _SPECIAL_H */
 -- 
-2.28.0
+2.21.3
 
