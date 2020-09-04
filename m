@@ -2,78 +2,58 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7DFC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC42CC2BC84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 753B120722
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:55:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O1Wk6g+4"
+	by mail.kernel.org (Postfix) with ESMTP id 8B32720791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbgIDIzy (ORCPT
+        id S1729917AbgIDI5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729917AbgIDIzw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:55:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45671C061244;
-        Fri,  4 Sep 2020 01:55:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6Ph7JbkbFaoWfq28ICsly/8XMu67nEPXs5Q9waIv3f0=; b=O1Wk6g+4dtnT/2kNHdruUhmJV+
-        6tEB67TeIbdL+Al5Jn9XY44q6y9lQhurDBfwdtD2w6dxjzl4spbONnX1/Kj3RoZoEDodS0yfasFX3
-        S372OJaKBTzpshK5Q6gZ9YlJP2cFOminq4D2m+ZPqghHqvMXLsI91kT1ZAkbUfWdAN1cu2Xo6TgZo
-        eoX51+rzTdO5E3cpEnC8uolXotY9q3+nOJCI6AFCcAomERKJIfcW+E1EPFb91rQnk5qLy7cBbUWLq
-        O2t8c7qjE6mzHu4WL0RtNjIoZu8mDkM3XCINb38ZwjrOvS+cuffk7p1QSoG9LtYeG+sRoXJxwGWXG
-        qZeWJzEA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kE7VD-0003wl-6w; Fri, 04 Sep 2020 08:55:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 95E99300F7A;
-        Fri,  4 Sep 2020 10:55:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7A4B12BBB68A3; Fri,  4 Sep 2020 10:55:20 +0200 (CEST)
-Date:   Fri, 4 Sep 2020 10:55:20 +0200
-From:   peterz@infradead.org
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 00/28] Add support for Clang LTO
-Message-ID: <20200904085520.GN2674@hirez.programming.kicks-ass.net>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
+        Fri, 4 Sep 2020 04:57:50 -0400
+Received: from 8bytes.org ([81.169.241.247]:40800 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728205AbgIDI5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 04:57:50 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id DE35B3D5; Fri,  4 Sep 2020 10:57:48 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 10:57:47 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 1/3] iommu: amd: Fix kerneldoc
+Message-ID: <20200904085747.GC6714@8bytes.org>
+References: <20200728170859.28143-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903203053.3411268-1-samitolvanen@google.com>
+In-Reply-To: <20200728170859.28143-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jul 28, 2020 at 07:08:57PM +0200, Krzysztof Kozlowski wrote:
+> Fix W=1 compile warnings (invalid kerneldoc):
+> 
+>     drivers/iommu/amd/init.c:1586: warning: Function parameter or member 'ivrs' not described in 'get_highest_supported_ivhd_type'
+>     drivers/iommu/amd/init.c:1938: warning: Function parameter or member 'iommu' not described in 'iommu_update_intcapxt'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/iommu/amd/init.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Please don't nest series!
-
-Start a new thread for every posting.
+Applied all 3, thanks.
