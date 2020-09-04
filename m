@@ -2,69 +2,72 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01645C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F15992074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C81292078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:13:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="BV9Yn1CG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbgIDNNp (ORCPT
+        id S1730453AbgIDNNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:13:45 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10816 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728588AbgIDNNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:13:15 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B0FFDF05AD95A8EF610F;
-        Fri,  4 Sep 2020 21:13:03 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Fri, 4 Sep 2020
- 21:12:58 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] can: kvaser_pciefd: Remove unused macro KVASER_PCIEFD_KCAN_CTRL_EFRAME
-Date:   Fri, 4 Sep 2020 21:10:26 +0800
-Message-ID: <20200904131026.21817-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 4 Sep 2020 09:13:48 -0400
+Received: from crapouillou.net ([89.234.176.41]:53560 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730400AbgIDNNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:13:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599225120; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8KYnW8DrpG29wj31nUxneF23HgfS2+oqloS8LgQTb+g=;
+        b=BV9Yn1CGiq4UYLRr1WuK84G8qchM5lUV7x39NLguRpEwaLR2RFhEjRu/lHtOLr2eQaVEEC
+        uKJHfTHYdeJC+ppQf4hTZSq5eFrHiC2rWmmguLtbv3QP7k+8EEnhNlkPy7XfHIPv5Bh3iK
+        A4KgdT/bRWpd97Y16jFl5EnlBQDaa+M=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     od@zcrc.me, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 3/3] i2c: jz4780: Remove of_match_ptr()
+Date:   Fri,  4 Sep 2020 15:11:52 +0200
+Message-Id: <20200904131152.17390-3-paul@crapouillou.net>
+In-Reply-To: <20200904131152.17390-1-paul@crapouillou.net>
+References: <20200904131152.17390-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KVASER_PCIEFD_KCAN_CTRL_EFRAME is never used after it was introduced.
-So better to remove it.
+CONFIG_OF is selected by CONFIG_MACH_INGENIC, therefore we don't need to
+handle the case where Device Tree is not supported.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/net/can/kvaser_pciefd.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/i2c/busses/i2c-jz4780.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/can/kvaser_pciefd.c b/drivers/net/can/kvaser_pciefd.c
-index 6f766918211a..c0b18ff107c7 100644
---- a/drivers/net/can/kvaser_pciefd.c
-+++ b/drivers/net/can/kvaser_pciefd.c
-@@ -131,7 +131,6 @@ MODULE_DESCRIPTION("CAN driver for Kvaser CAN/PCIe devices");
+diff --git a/drivers/i2c/busses/i2c-jz4780.c b/drivers/i2c/busses/i2c-jz4780.c
+index ed2ec86f6f1a..cb4a25ebb890 100644
+--- a/drivers/i2c/busses/i2c-jz4780.c
++++ b/drivers/i2c/busses/i2c-jz4780.c
+@@ -857,7 +857,7 @@ static struct platform_driver jz4780_i2c_driver = {
+ 	.remove		= jz4780_i2c_remove,
+ 	.driver		= {
+ 		.name	= "jz4780-i2c",
+-		.of_match_table = of_match_ptr(jz4780_i2c_of_matches),
++		.of_match_table = jz4780_i2c_of_matches,
+ 	},
+ };
  
- /* Kvaser KCAN definitions */
- #define KVASER_PCIEFD_KCAN_CTRL_EFLUSH (4 << 29)
--#define KVASER_PCIEFD_KCAN_CTRL_EFRAME (5 << 29)
- 
- #define KVASER_PCIEFD_KCAN_CMD_SEQ_SHIFT 16
- /* Request status packet */
 -- 
-2.17.1
+2.28.0
 
