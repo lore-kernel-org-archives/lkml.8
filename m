@@ -2,186 +2,134 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5D1C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF460C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1380020684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865B220709
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599223593;
+	bh=AKON/w8h1U/t9dbEFQGyokWU312ml4V6QAjW/UdmFBQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H6c3PVFJlfL8yWsOjcrR2wD6oc5C9J+NiYN83lOQLMM5U8i8cBulZye5UTaTeTPAx
+	 /6IKs/N3e+O472JOoEhCkAg5zRVLHRl1iHPrkqwiGWu2IUw+6U1gmCKg47IzrXQuRe
+	 N5Aefeij3dK2EDguBADfYHo2EJYhhFBJfgroLPUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730278AbgIDMpl (ORCPT
+        id S1730151AbgIDMqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:45:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59402 "EHLO mx2.suse.de"
+        Fri, 4 Sep 2020 08:46:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbgIDMpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:45:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7590CAF06;
-        Fri,  4 Sep 2020 12:45:32 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 14:45:30 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Changki Kim <changki.kim@samsung.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
-        gregkh@linuxfoundation.org, krzk@kernel.org,
+        id S1729297AbgIDMqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:46:05 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3C6720684;
+        Fri,  4 Sep 2020 12:46:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599223565;
+        bh=AKON/w8h1U/t9dbEFQGyokWU312ml4V6QAjW/UdmFBQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KWnUxlINSAXzOkAr1Iey+WUBRc/J5MZ+jZ0pL0NOhaIi+tnskOe36lyg0larnctO8
+         stHizLuUKfmSTKp2Kbde4JnbMRlk8fuurcJq52FLKTLpgSu7PW4CpsL6XFlaD8AUUA
+         ESuGOP971QMsp2nRyEonCbNITB77jqDmP3nhKNOs=
+Date:   Fri, 4 Sep 2020 13:45:23 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: printk: Add process name information to printk() output.
-Message-ID: <20200904124530.GB20558@alley>
-References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
- <20200904082438.20707-1-changki.kim@samsung.com>
- <874kod6fgh.fsf@jogness.linutronix.de>
+Subject: Re: [RFC 09/10] misc: hisi_hikey_usb: add support for Hikey 970
+Message-ID: <20200904124523.GE4625@sirena.org.uk>
+References: <cover.1599214329.git.mchehab+huawei@kernel.org>
+ <f45f7663b694b16214604b55527f38eb9232f95b.1599214329.git.mchehab+huawei@kernel.org>
+ <20200904122303.GC4625@sirena.org.uk>
+ <20200904143848.535d4c13@coco.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ffoCPvUAPMgSXi6H"
 Content-Disposition: inline
-In-Reply-To: <874kod6fgh.fsf@jogness.linutronix.de>
+In-Reply-To: <20200904143848.535d4c13@coco.lan>
+X-Cookie: Heisenberg might have been here.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-09-04 11:53:42, John Ogness wrote:
-> On 2020-09-04, Changki Kim <changki.kim@samsung.com> wrote:
-> > Printk() meesages are the most basic and useful debug method.
-> > However, additional information needs in multi-processor.
-> > If we add messages with processor id and process name, we can find
-> > a problem only with messages when the problem occurs with H/W IP or CPU.
-> > This is very useful in narrowing down the scope of the problems.
-> 
-> [...]
-> 
-> > diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-> > index e6302da041f9..fcefe9516606 100644
-> > --- a/kernel/printk/printk_ringbuffer.h
-> > +++ b/kernel/printk/printk_ringbuffer.h
-> > @@ -21,6 +22,12 @@ struct printk_info {
-> >  	u8	flags:5;	/* internal record flags */
-> >  	u8	level:3;	/* syslog level */
-> >  	u32	caller_id;	/* thread id or processor id */
-> > +#ifdef CONFIG_PRINTK_PROCESS
-> > +	int	pid;			/* process id */
-> > +	u8	cpu_id;			/* processor id */
-> > +	u8	in_interrupt;		/* interrupt conext */
-> > +	char process[TASK_COMM_LEN];	/* process name */
-> > +#endif
-> >  };
-> 
-> I can understand the desire to have more information with messages. But
-> IMHO adding it to the ringbuffer descriptor is the wrong place for
-> it. The descriptor should really be limited to data that the printk
-> subsystem needs for _itself_.
 
-I fully agree.
+--ffoCPvUAPMgSXi6H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> With respect to LOG_CONT, I think we can agree that @caller_id is
-> not enough. But there has been discussions [0]
-> of having @caller_id provide a better context representation.
+On Fri, Sep 04, 2020 at 02:38:48PM +0200, Mauro Carvalho Chehab wrote:
+> Em Fri, 4 Sep 2020 13:23:03 +0100
+> Mark Brown <broonie@kernel.org> escreveu:
+>=20
+> > On Fri, Sep 04, 2020 at 12:23:31PM +0200, Mauro Carvalho Chehab wrote:
+> >=20
+> > > +	regulator =3D devm_regulator_get_optional(&pdev->dev, "hub-vdd");
+> > > +	if (IS_ERR(regulator)) {
+> > > +		if (PTR_ERR(regulator) =3D=3D -EPROBE_DEFER) {
+> > > +			dev_info(&pdev->dev,
+> > > +				 "waiting for hub-vdd-supply to be probed\n");
+> > > +			return PTR_ERR(regulator);
+> > > +		}
+> > > +
+> > > +		/* let it fall back to regulator dummy */
+> > > +		regulator =3D devm_regulator_get(&pdev->dev, "hub-vdd");
+> > > +		if (IS_ERR(regulator)) {
+> > > +			dev_err(&pdev->dev,
+> > > +				"get hub-vdd-supply failed with error %ld\n",
+> > > +				PTR_ERR(regulator));
+> > > +			return PTR_ERR(regulator);
+> > > +		}
+> > > +	} =20
 
-I am not sure if I read the above correctly. Anyway, @caller_id is
-needed by printk() to handle continuous lines. It would be great
-to store more precise information about the irq context. But
-more details, like process name, have to be stored somewhere else.
+> > This seems weird - if the supply is non-optional why is the code trying
+> > with devm_regulator_get_optional()?  Just use normal get directly.
 
+> That's meant to avoid problems with EPROBE_DEFER.
 
-> If we want to support adding more meta information to messages, I would
-> prefer that the information is either prepended directly to the message
-> text string or appended to the dictionary text string.
+Which problems and in what way does it avoid them?
 
-I have two problems with dict ring:
+> See, Hikey 970 need to initialize 4 drivers for the regulators:
+> SPMI core, SPMI bus controller, MFD and regulator. This can take
+> some time. So, a first call to *regulator_get() may return
+> EPROBE_DEFER, specially if both regulator drivers and USB HUB
+> are builtin.
 
-   + does not guarantee enough space to always store the metadata
-   + waste of space by repeating the same prefixes again and again
+This is totally normal and works fine with normal regulator_get().
 
+> I ended doing the same as some other DRM drivers do (like adv7535).
 
-I am currently playing with support for all three timestamps based
-on https://lore.kernel.org/lkml/20200814101933.574326079@linutronix.de/
+I can't find any references to regulator_get_optional()
+drivers/gpu/drm/bridge/adv7511/adv7511_drv.c?
 
-And I got the following idea:
+--ffoCPvUAPMgSXi6H
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-1. Storing side:
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9SNuIACgkQJNaLcl1U
+h9CF6Qf/V2z9AZt2aQSgx9uPlNndCHEN9oj91pn/v4UIkdaKZ1YRJteTdnaCKRKA
+7UzDn2HebaopkhnSTRrqCGCwYlbZBL0y2FrGuImom9O7lTaHE8YwllQhhZD4Xf0N
+NOlKMBC/gOmscuDAy9kxdeGckGYalPlnSPr2f//e9/ugO519K6iTPZEktc4xybcU
+FBUqwfZOUql0cH86wzDRCc13ZrhEHEbiDl10ufndu3Y9Gjl3vM7vZLek06/D6okn
++ocTbMI9c5rNfUgWry9rhFjajvXO43NJ7x5j1qWIfp8glgQ5o6Pdp1fZL9+iDJer
+0qDxXsanKOMVF3LxKp3T1A/VgEZUKQ==
+=tTGG
+-----END PGP SIGNATURE-----
 
-   Create one more ring/array for storing the optional metadata.
-   It might eventually replace dict ring, see below.
-
-   struct struct printk_ext_info {
-	u64 ts_boot;			/* timestamp from boot clock */
-	u64 ts_real;			/* timestamp from real clock */
-	char process[TASK_COMM_LEN];	/* process name */
-   };
-
-   It must be in a separate array so that struct prb_desc stay stable
-   and crashdump tools do not need to be updated so often.
-
-   But the number of these structures must be the same as descriptors.
-   So it might be:
-
-   struct prb_desc_ring {
-	unsigned int		count_bits;
-	struct prb_desc		*descs;
-	struct printk_ext_info  *ext_info
-	atomic_long_t		head_id;
-	atomic_long_t		tail_id;
-   };
-
-   One huge advantage is that these extra information would not block
-   pushing lockless printk buffer upstream.
-
-   It might be even possible to get rid of dict ring and just
-   add two more elements into struct printk_ext_info:
-
-	  char subsystem[16];	/* for SUBSYSTEM= dict value */
-	  char device[48];	/* for DEVICE= dict value */
-
-   Pros:
-
-	+ the information will always get stored
-
-   Cons:
-
-	+ the names might get shrinked
-
-   Space usage:
-
-	+ No need to store "SUBSYSTEM=" and "DEVICE=" repeatedly.
-	+ Space used only for dev_printk()
-
-
-   Well, I think that it might work in practice.
-
-
-
-2. Reading side:
-
-   + /dev/kmsg is easy. It makes perfect sense to pass all extra
-     information in the dictionary format:
-
-       + less effective but /dev/kmsg is fast
-       + does not break userspace
-       + might be shown even by the current journalctl
-
-
-    + syslog syscall and /proc/syslog are hard to extend.
-      I would ignore them. Users need to use /dev/kmsg to
-      get the dictionary metadata already now.
-
-
-    + console is a sensitive beast
-
-      The output format would need to be configurable using
-      build/boot/runtime options. It is already the case
-      for the timestamp, see printk_time parameter.
-
-      And people would probably want to have this configurable
-      per-console to disable this on the slow ones, sigh.
-
-
-Best Regards,
-Petr
+--ffoCPvUAPMgSXi6H--
