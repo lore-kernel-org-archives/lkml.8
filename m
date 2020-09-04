@@ -2,119 +2,449 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9C94C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8925DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7856620797
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D822073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:32:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6QTs08V"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="rHqRPCH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbgIDN3G (ORCPT
+        id S1730479AbgIDNcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730301AbgIDN1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:27:13 -0400
-Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B3A5C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:26:58 -0700 (PDT)
-Received: by mail-vk1-xa42.google.com with SMTP id n12so1630769vkk.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EcvtgMkqtV+QMekKVdpR7+VGa/x86DjVYJCvIcGjyK8=;
-        b=n6QTs08VggzC4TRruzKbItvKGOXVLpbSHGflONYffbYUuhXodFEZk5rF2ce4lJVCXf
-         G/jZYiUQij/ybyYI7bQq22YLon4jSFDP5yI0O/J6OCCXtXh8xugcnhAJL5AXEPEY7i9d
-         wa6m2CbLmR2x1kqwCOezY7lUGIPtejJ2i6AzkpMb5wGrYJuwWbSqnOFbiT2iOIKdVPab
-         IdXRhxQBEzVvvJfGJNRGlw5fTGQmiw4rel47Vz7ph4VKhOfM0m8KzYBmJ5gEOHiiW+5g
-         q1s6x3oOQduGCeCPapiRP+y3UfC1IuNOsIM2t0SzVzcD/MlpLtKoSFyFsLC5HaX52JuJ
-         creg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EcvtgMkqtV+QMekKVdpR7+VGa/x86DjVYJCvIcGjyK8=;
-        b=UJ66zduO3QVRVlBI5WnptFEbkRnWqTbHGrcu8FOobGY5u/glr+HCfiKmZUKLV3Nld4
-         XaUrjYEC9mOcSSGLqF4VHCiFZ1kiq20KPV9MRuqcsgpU2DSlT67o8MNBhEEwcRNvz+dz
-         RZMENvhIcTmsL/41XwBYbsWD9zeFc82C0dGRJDiGh2XWQGsYBP+aSwvTwzq6dY+meF49
-         YIY06AczxUGueTN5eswtBfRV/6183IJlL7jLjdaop0v2rW2cT3mKPtbTGDgZt0atjVWL
-         325D8MyI/wqVoXpj7yd+e1SSDE1d0ohQ2qqzQ+nSg+L6cXvUAbgl5N6VlNPByJ6tBxyC
-         a0JA==
-X-Gm-Message-State: AOAM531rtX1vzjK6gGw6AqXiDy692sCyKNPUx8GeynBEdivKUnXAB8U4
-        RDQOjKeP3hg9L/pGvmRMN1NL8UCH8ldTEw==
-X-Google-Smtp-Source: ABdhPJwlbrvWuGQ5zozJvJoMDK+c8M+iXnvt+HvpIEyrA+5KOmXBLc/CHtUHKBxAZDgtrPIkRjigJA==
-X-Received: by 2002:a1f:a0c3:: with SMTP id j186mr5352851vke.76.1599226016801;
-        Fri, 04 Sep 2020 06:26:56 -0700 (PDT)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id c16sm557937vsh.5.2020.09.04.06.26.54
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 06:26:55 -0700 (PDT)
-Received: by mail-ua1-f52.google.com with SMTP id s29so1999390uae.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:26:54 -0700 (PDT)
-X-Received: by 2002:ab0:2404:: with SMTP id f4mr4707114uan.108.1599226014262;
- Fri, 04 Sep 2020 06:26:54 -0700 (PDT)
+        Fri, 4 Sep 2020 09:32:19 -0400
+Received: from crapouillou.net ([89.234.176.41]:54374 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730395AbgIDN1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1599226069; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BeyOxd0Z1Sl90VNPLBeBKSGBp6sDPp1jUNoeYAamw2w=;
+        b=rHqRPCH+e3RIZgT/ZmBUIcGgflAwzW/zRzxhQm134TCinJ8+jJflEVGv2aIfS93Jl9B0Q2
+        k/wr1ozEbeiEYrAkOYk8Mgr07xpj84fyU+CdxJUsoocj01SVLA+U8mL3k/JrtMB90FnEJk
+        9BTLeEkA0wV0NxR2JxUlfLU8NI3Mr10=
+Date:   Fri, 04 Sep 2020 15:27:37 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 1/3] pinctrl: Ingenic: Add SSI pins support for JZ4770
+ and JZ4780.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, aric.pzqi@ingenic.com,
+        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
+        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com
+Message-Id: <1QY4GQ.ER1P2TWMJCKH@crapouillou.net>
+In-Reply-To: <20200831154324.64951-2-zhouyanjie@wanyeetech.com>
+References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
+        <20200831154324.64951-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20200904130608.19869-1-wanghai38@huawei.com>
-In-Reply-To: <20200904130608.19869-1-wanghai38@huawei.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Fri, 4 Sep 2020 15:26:18 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfMO4YPGp88HYRPWwRUCg79SVyYicOowCH9oJkKPtmdLA@mail.gmail.com>
-Message-ID: <CA+FuTSfMO4YPGp88HYRPWwRUCg79SVyYicOowCH9oJkKPtmdLA@mail.gmail.com>
-Subject: Re: [PATCH net-next] net/packet: Remove unused macro BLOCK_PRIV
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Mao Wenan <maowenan@huawei.com>, jrosen@cisco.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Colin King <colin.king@canonical.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 3:09 PM Wang Hai <wanghai38@huawei.com> wrote:
->
-> BPDU_TYPE_TCN is never used after it was introduced.
-> So better to remove it.
+Hi Zhou,
 
-This comment does not cover the patch contents. Otherwise the patch
-looks good to me.
-
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Le lun. 31 ao=C3=BBt 2020 =C3=A0 23:43, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Y=
+anjie)=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add SSI pins support for the JZ4770 SoC and the
+> JZ4780 SoC from Ingenic.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
 > ---
->  net/packet/af_packet.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-> index da8254e680f9..c430672c6a67 100644
-> --- a/net/packet/af_packet.c
-> +++ b/net/packet/af_packet.c
-> @@ -177,7 +177,6 @@ static int packet_set_ring(struct sock *sk, union tpacket_req_u *req_u,
->  #define BLOCK_LEN(x)           ((x)->hdr.bh1.blk_len)
->  #define BLOCK_SNUM(x)          ((x)->hdr.bh1.seq_num)
->  #define BLOCK_O2PRIV(x)        ((x)->offset_to_priv)
-> -#define BLOCK_PRIV(x)          ((void *)((char *)(x) + BLOCK_O2PRIV(x)))
->
->  struct packet_sock;
->  static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
+>=20
+> Notes:
+>     v1->v2:
+>     Rebase on top of kernel 5.9-rc3.
+>=20
+>  drivers/pinctrl/pinctrl-ingenic.c | 267=20
+> ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 267 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index a8d1b53ec4c1..00f29fd684fa 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -633,6 +633,46 @@ static int jz4770_uart2_data_pins[] =3D { 0x5c,=20
+> 0x5e, };
+>  static int jz4770_uart2_hwflow_pins[] =3D { 0x5d, 0x5f, };
+>  static int jz4770_uart3_data_pins[] =3D { 0x6c, 0x85, };
+>  static int jz4770_uart3_hwflow_pins[] =3D { 0x88, 0x89, };
+> +static int jz4770_ssi0_dt_a_pins[] =3D { 0x15, };
+> +static int jz4770_ssi0_dt_b_pins[] =3D { 0x35, };
+> +static int jz4770_ssi0_dt_d_pins[] =3D { 0x55, };
+> +static int jz4770_ssi0_dt_e_pins[] =3D { 0x71, };
+> +static int jz4770_ssi0_dr_a_pins[] =3D { 0x14, };
+> +static int jz4770_ssi0_dr_b_pins[] =3D { 0x34, };
+> +static int jz4770_ssi0_dr_d_pins[] =3D { 0x54, };
+> +static int jz4770_ssi0_dr_e_pins[] =3D { 0x6e, };
+> +static int jz4770_ssi0_clk_a_pins[] =3D { 0x12, };
+> +static int jz4770_ssi0_clk_b_pins[] =3D { 0x3c, };
+> +static int jz4770_ssi0_clk_d_pins[] =3D { 0x58, };
+> +static int jz4770_ssi0_clk_e_pins[] =3D { 0x6f, };
+> +static int jz4770_ssi0_gpc_b_pins[] =3D { 0x3e, };
+> +static int jz4770_ssi0_gpc_d_pins[] =3D { 0x56, };
+> +static int jz4770_ssi0_gpc_e_pins[] =3D { 0x73, };
+> +static int jz4770_ssi0_ce0_a_pins[] =3D { 0x13, };
+> +static int jz4770_ssi0_ce0_b_pins[] =3D { 0x3d, };
+> +static int jz4770_ssi0_ce0_d_pins[] =3D { 0x59, };
+> +static int jz4770_ssi0_ce0_e_pins[] =3D { 0x70, };
+> +static int jz4770_ssi0_ce1_b_pins[] =3D { 0x3f, };
+> +static int jz4770_ssi0_ce1_d_pins[] =3D { 0x57, };
+> +static int jz4770_ssi0_ce1_e_pins[] =3D { 0x72, };
+> +static int jz4770_ssi1_dt_b_pins[] =3D { 0x35, };
+> +static int jz4770_ssi1_dt_d_pins[] =3D { 0x55, };
+> +static int jz4770_ssi1_dt_e_pins[] =3D { 0x71, };
+> +static int jz4770_ssi1_dr_b_pins[] =3D { 0x34, };
+> +static int jz4770_ssi1_dr_d_pins[] =3D { 0x54, };
+> +static int jz4770_ssi1_dr_e_pins[] =3D { 0x6e, };
+> +static int jz4770_ssi1_clk_b_pins[] =3D { 0x3c, };
+> +static int jz4770_ssi1_clk_d_pins[] =3D { 0x58, };
+> +static int jz4770_ssi1_clk_e_pins[] =3D { 0x6f, };
+> +static int jz4770_ssi1_gpc_b_pins[] =3D { 0x3e, };
+> +static int jz4770_ssi1_gpc_d_pins[] =3D { 0x56, };
+> +static int jz4770_ssi1_gpc_e_pins[] =3D { 0x73, };
+> +static int jz4770_ssi1_ce0_b_pins[] =3D { 0x3d, };
+> +static int jz4770_ssi1_ce0_d_pins[] =3D { 0x59, };
+> +static int jz4770_ssi1_ce0_e_pins[] =3D { 0x70, };
+> +static int jz4770_ssi1_ce1_b_pins[] =3D { 0x3f, };
+> +static int jz4770_ssi1_ce1_d_pins[] =3D { 0x57, };
+> +static int jz4770_ssi1_ce1_e_pins[] =3D { 0x72, };
+>  static int jz4770_mmc0_1bit_a_pins[] =3D { 0x12, 0x13, 0x14, };
+>  static int jz4770_mmc0_4bit_a_pins[] =3D { 0x15, 0x16, 0x17, };
+>  static int jz4770_mmc0_1bit_e_pins[] =3D { 0x9c, 0x9d, 0x94, };
+> @@ -703,6 +743,46 @@ static int jz4770_uart2_data_funcs[] =3D { 0, 0, };
+>  static int jz4770_uart2_hwflow_funcs[] =3D { 0, 0, };
+>  static int jz4770_uart3_data_funcs[] =3D { 0, 1, };
+>  static int jz4770_uart3_hwflow_funcs[] =3D { 0, 0, };
+> +static int jz4770_ssi0_dt_a_funcs[] =3D { 2, };
+> +static int jz4770_ssi0_dt_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_dt_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_dt_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi0_dr_a_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_dr_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_dr_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_dr_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi0_clk_a_funcs[] =3D { 2, };
+> +static int jz4770_ssi0_clk_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_clk_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_clk_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi0_gpc_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_gpc_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_gpc_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi0_ce0_a_funcs[] =3D { 2, };
+> +static int jz4770_ssi0_ce0_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_ce0_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_ce0_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi0_ce1_b_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_ce1_d_funcs[] =3D { 1, };
+> +static int jz4770_ssi0_ce1_e_funcs[] =3D { 0, };
+> +static int jz4770_ssi1_dt_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_dt_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_dt_e_funcs[] =3D { 1, };
+> +static int jz4770_ssi1_dr_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_dr_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_dr_e_funcs[] =3D { 1, };
+> +static int jz4770_ssi1_clk_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_clk_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_clk_e_funcs[] =3D { 1, };
+> +static int jz4770_ssi1_gpc_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_gpc_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_gpc_e_funcs[] =3D { 1, };
+> +static int jz4770_ssi1_ce0_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_ce0_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_ce0_e_funcs[] =3D { 1, };
+> +static int jz4770_ssi1_ce1_b_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_ce1_d_funcs[] =3D { 2, };
+> +static int jz4770_ssi1_ce1_e_funcs[] =3D { 1, };
+>  static int jz4770_mmc0_1bit_a_funcs[] =3D { 1, 1, 0, };
+>  static int jz4770_mmc0_4bit_a_funcs[] =3D { 1, 1, 1, };
+>  static int jz4770_mmc0_1bit_e_funcs[] =3D { 0, 0, 0, };
+> @@ -763,6 +843,46 @@ static const struct group_desc jz4770_groups[] =3D=20
+> {
+>  	INGENIC_PIN_GROUP("uart2-hwflow", jz4770_uart2_hwflow),
+>  	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
+>  	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
+> +	INGENIC_PIN_GROUP("ssi0-dt-a", jz4770_ssi0_dt_a),
+> +	INGENIC_PIN_GROUP("ssi0-dt-b", jz4770_ssi0_dt_b),
+> +	INGENIC_PIN_GROUP("ssi0-dt-d", jz4770_ssi0_dt_d),
+> +	INGENIC_PIN_GROUP("ssi0-dt-e", jz4770_ssi0_dt_e),
+> +	INGENIC_PIN_GROUP("ssi0-dr-a", jz4770_ssi0_dr_a),
+> +	INGENIC_PIN_GROUP("ssi0-dr-b", jz4770_ssi0_dr_b),
+> +	INGENIC_PIN_GROUP("ssi0-dr-d", jz4770_ssi0_dr_d),
+> +	INGENIC_PIN_GROUP("ssi0-dr-e", jz4770_ssi0_dr_e),
+
+The common acronyms associated with SPI are MISO / MOSI, I think it=20
+would make sense to use them instead of DR / DT. What do you think?
+
+The rest looks OK.
+
+Cheers,
+-Paul
+
+> +	INGENIC_PIN_GROUP("ssi0-clk-a", jz4770_ssi0_clk_a),
+> +	INGENIC_PIN_GROUP("ssi0-clk-b", jz4770_ssi0_clk_b),
+> +	INGENIC_PIN_GROUP("ssi0-clk-d", jz4770_ssi0_clk_d),
+> +	INGENIC_PIN_GROUP("ssi0-clk-e", jz4770_ssi0_clk_e),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-b", jz4770_ssi0_gpc_b),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-d", jz4770_ssi0_gpc_d),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-e", jz4770_ssi0_gpc_e),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-a", jz4770_ssi0_ce0_a),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-b", jz4770_ssi0_ce0_b),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-d", jz4770_ssi0_ce0_d),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-e", jz4770_ssi0_ce0_e),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-b", jz4770_ssi0_ce1_b),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-d", jz4770_ssi0_ce1_d),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-e", jz4770_ssi0_ce1_e),
+> +	INGENIC_PIN_GROUP("ssi1-dt-b", jz4770_ssi1_dt_b),
+> +	INGENIC_PIN_GROUP("ssi1-dt-d", jz4770_ssi1_dt_d),
+> +	INGENIC_PIN_GROUP("ssi1-dt-e", jz4770_ssi1_dt_e),
+> +	INGENIC_PIN_GROUP("ssi1-dr-b", jz4770_ssi1_dr_b),
+> +	INGENIC_PIN_GROUP("ssi1-dr-d", jz4770_ssi1_dr_d),
+> +	INGENIC_PIN_GROUP("ssi1-dr-e", jz4770_ssi1_dr_e),
+> +	INGENIC_PIN_GROUP("ssi1-clk-b", jz4770_ssi1_clk_b),
+> +	INGENIC_PIN_GROUP("ssi1-clk-d", jz4770_ssi1_clk_d),
+> +	INGENIC_PIN_GROUP("ssi1-clk-e", jz4770_ssi1_clk_e),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-b", jz4770_ssi1_gpc_b),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-d", jz4770_ssi1_gpc_d),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-e", jz4770_ssi1_gpc_e),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-b", jz4770_ssi1_ce0_b),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-d", jz4770_ssi1_ce0_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-e", jz4770_ssi1_ce0_e),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-b", jz4770_ssi1_ce1_b),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-d", jz4770_ssi1_ce1_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-e", jz4770_ssi1_ce1_e),
+>  	INGENIC_PIN_GROUP("mmc0-1bit-a", jz4770_mmc0_1bit_a),
+>  	INGENIC_PIN_GROUP("mmc0-4bit-a", jz4770_mmc0_4bit_a),
+>  	INGENIC_PIN_GROUP("mmc0-1bit-e", jz4770_mmc0_1bit_e),
+> @@ -815,6 +935,22 @@ static const char *jz4770_uart0_groups[] =3D {=20
+> "uart0-data", "uart0-hwflow", };
+>  static const char *jz4770_uart1_groups[] =3D { "uart1-data",=20
+> "uart1-hwflow", };
+>  static const char *jz4770_uart2_groups[] =3D { "uart2-data",=20
+> "uart2-hwflow", };
+>  static const char *jz4770_uart3_groups[] =3D { "uart3-data",=20
+> "uart3-hwflow", };
+> +static const char *jz4770_ssi0_groups[] =3D {
+> +	"ssi0-dt-a", "ssi0-dt-b", "ssi0-dt-d", "ssi0-dt-e",
+> +	"ssi0-dr-a", "ssi0-dr-b", "ssi0-dr-d", "ssi0-dr-e",
+> +	"ssi0-clk-a", "ssi0-clk-b", "ssi0-clk-d", "ssi0-clk-e",
+> +	"ssi0-gpc-b", "ssi0-gpc-d", "ssi0-gpc-e",
+> +	"ssi0-ce0-a", "ssi0-ce0-b", "ssi0-ce0-d", "ssi0-ce0-e",
+> +	"ssi0-ce1-b", "ssi0-ce1-d", "ssi0-ce1-e",
+> +};
+> +static const char *jz4770_ssi1_groups[] =3D {
+> +	"ssi1-dt-b", "ssi1-dt-d", "ssi1-dt-e",
+> +	"ssi1-dr-b", "ssi1-dr-d", "ssi1-dr-e",
+> +	"ssi1-clk-b", "ssi1-clk-d", "ssi1-clk-e",
+> +	"ssi1-gpc-b", "ssi1-gpc-d", "ssi1-gpc-e",
+> +	"ssi1-ce0-b", "ssi1-ce0-d", "ssi1-ce0-e",
+> +	"ssi1-ce1-b", "ssi1-ce1-d", "ssi1-ce1-e",
+> +};
+>  static const char *jz4770_mmc0_groups[] =3D {
+>  	"mmc0-1bit-a", "mmc0-4bit-a",
+>  	"mmc0-1bit-e", "mmc0-4bit-e", "mmc0-8bit-e",
+> @@ -858,6 +994,8 @@ static const struct function_desc=20
+> jz4770_functions[] =3D {
+>  	{ "uart1", jz4770_uart1_groups, ARRAY_SIZE(jz4770_uart1_groups), },
+>  	{ "uart2", jz4770_uart2_groups, ARRAY_SIZE(jz4770_uart2_groups), },
+>  	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
+> +	{ "ssi0", jz4770_ssi0_groups, ARRAY_SIZE(jz4770_ssi0_groups), },
+> +	{ "ssi1", jz4770_ssi1_groups, ARRAY_SIZE(jz4770_ssi1_groups), },
+>  	{ "mmc0", jz4770_mmc0_groups, ARRAY_SIZE(jz4770_mmc0_groups), },
+>  	{ "mmc1", jz4770_mmc1_groups, ARRAY_SIZE(jz4770_mmc1_groups), },
+>  	{ "mmc2", jz4770_mmc2_groups, ARRAY_SIZE(jz4770_mmc2_groups), },
+> @@ -900,6 +1038,39 @@ static const struct ingenic_chip_info=20
+> jz4770_chip_info =3D {
+>  static int jz4780_uart2_data_pins[] =3D { 0x66, 0x67, };
+>  static int jz4780_uart2_hwflow_pins[] =3D { 0x65, 0x64, };
+>  static int jz4780_uart4_data_pins[] =3D { 0x54, 0x4a, };
+> +static int jz4780_ssi0_dt_a_19_pins[] =3D { 0x13, };
+> +static int jz4780_ssi0_dt_a_21_pins[] =3D { 0x15, };
+> +static int jz4780_ssi0_dt_a_28_pins[] =3D { 0x1c, };
+> +static int jz4780_ssi0_dt_b_pins[] =3D { 0x3d, };
+> +static int jz4780_ssi0_dt_d_pins[] =3D { 0x59, };
+> +static int jz4780_ssi0_dr_a_20_pins[] =3D { 0x14, };
+> +static int jz4780_ssi0_dr_a_27_pins[] =3D { 0x1b, };
+> +static int jz4780_ssi0_dr_b_pins[] =3D { 0x34, };
+> +static int jz4780_ssi0_dr_d_pins[] =3D { 0x54, };
+> +static int jz4780_ssi0_clk_a_pins[] =3D { 0x12, };
+> +static int jz4780_ssi0_clk_b_5_pins[] =3D { 0x25, };
+> +static int jz4780_ssi0_clk_b_28_pins[] =3D { 0x3c, };
+> +static int jz4780_ssi0_clk_d_pins[] =3D { 0x58, };
+> +static int jz4780_ssi0_gpc_b_pins[] =3D { 0x3e, };
+> +static int jz4780_ssi0_gpc_d_pins[] =3D { 0x56, };
+> +static int jz4780_ssi0_ce0_a_23_pins[] =3D { 0x17, };
+> +static int jz4780_ssi0_ce0_a_25_pins[] =3D { 0x19, };
+> +static int jz4780_ssi0_ce0_b_pins[] =3D { 0x3f, };
+> +static int jz4780_ssi0_ce0_d_pins[] =3D { 0x57, };
+> +static int jz4780_ssi0_ce1_b_pins[] =3D { 0x35, };
+> +static int jz4780_ssi0_ce1_d_pins[] =3D { 0x55, };
+> +static int jz4780_ssi1_dt_b_pins[] =3D { 0x3d, };
+> +static int jz4780_ssi1_dt_d_pins[] =3D { 0x59, };
+> +static int jz4780_ssi1_dr_b_pins[] =3D { 0x34, };
+> +static int jz4780_ssi1_dr_d_pins[] =3D { 0x54, };
+> +static int jz4780_ssi1_clk_b_pins[] =3D { 0x3c, };
+> +static int jz4780_ssi1_clk_d_pins[] =3D { 0x58, };
+> +static int jz4780_ssi1_gpc_b_pins[] =3D { 0x3e, };
+> +static int jz4780_ssi1_gpc_d_pins[] =3D { 0x56, };
+> +static int jz4780_ssi1_ce0_b_pins[] =3D { 0x3f, };
+> +static int jz4780_ssi1_ce0_d_pins[] =3D { 0x57, };
+> +static int jz4780_ssi1_ce1_b_pins[] =3D { 0x35, };
+> +static int jz4780_ssi1_ce1_d_pins[] =3D { 0x55, };
+>  static int jz4780_mmc0_8bit_a_pins[] =3D { 0x04, 0x05, 0x06, 0x07,=20
+> 0x18, };
+>  static int jz4780_i2c3_pins[] =3D { 0x6a, 0x6b, };
+>  static int jz4780_i2c4_e_pins[] =3D { 0x8c, 0x8d, };
+> @@ -909,6 +1080,39 @@ static int jz4780_hdmi_ddc_pins[] =3D { 0xb9,=20
+> 0xb8, };
+>  static int jz4780_uart2_data_funcs[] =3D { 1, 1, };
+>  static int jz4780_uart2_hwflow_funcs[] =3D { 1, 1, };
+>  static int jz4780_uart4_data_funcs[] =3D { 2, 2, };
+> +static int jz4780_ssi0_dt_a_19_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_dt_a_21_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_dt_a_28_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_dt_b_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_dt_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_dr_a_20_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_dr_a_27_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_dr_b_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_dr_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_clk_a_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_clk_b_5_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_clk_b_28_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_clk_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_gpc_b_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_gpc_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_ce0_a_23_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_ce0_a_25_funcs[] =3D { 2, };
+> +static int jz4780_ssi0_ce0_b_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_ce0_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_ce1_b_funcs[] =3D { 1, };
+> +static int jz4780_ssi0_ce1_d_funcs[] =3D { 1, };
+> +static int jz4780_ssi1_dt_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_dt_d_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_dr_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_dr_d_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_clk_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_clk_d_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_gpc_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_gpc_d_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_ce0_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_ce0_d_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_ce1_b_funcs[] =3D { 2, };
+> +static int jz4780_ssi1_ce1_d_funcs[] =3D { 2, };
+>  static int jz4780_mmc0_8bit_a_funcs[] =3D { 1, 1, 1, 1, 1, };
+>  static int jz4780_i2c3_funcs[] =3D { 1, 1, };
+>  static int jz4780_i2c4_e_funcs[] =3D { 1, 1, };
+> @@ -925,6 +1129,51 @@ static const struct group_desc jz4780_groups[]=20
+> =3D {
+>  	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
+>  	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
+>  	INGENIC_PIN_GROUP("uart4-data", jz4780_uart4_data),
+> +	INGENIC_PIN_GROUP("ssi0-dt-a-19", jz4780_ssi0_dt_a_19),
+> +	INGENIC_PIN_GROUP("ssi0-dt-a-21", jz4780_ssi0_dt_a_21),
+> +	INGENIC_PIN_GROUP("ssi0-dt-a-28", jz4780_ssi0_dt_a_28),
+> +	INGENIC_PIN_GROUP("ssi0-dt-b", jz4780_ssi0_dt_b),
+> +	INGENIC_PIN_GROUP("ssi0-dt-d", jz4780_ssi0_dt_d),
+> +	INGENIC_PIN_GROUP("ssi0-dt-e", jz4770_ssi0_dt_e),
+> +	INGENIC_PIN_GROUP("ssi0-dr-a-20", jz4780_ssi0_dr_a_20),
+> +	INGENIC_PIN_GROUP("ssi0-dr-a-27", jz4780_ssi0_dr_a_27),
+> +	INGENIC_PIN_GROUP("ssi0-dr-b", jz4780_ssi0_dr_b),
+> +	INGENIC_PIN_GROUP("ssi0-dr-d", jz4780_ssi0_dr_d),
+> +	INGENIC_PIN_GROUP("ssi0-dr-e", jz4770_ssi0_dr_e),
+> +	INGENIC_PIN_GROUP("ssi0-clk-a", jz4780_ssi0_clk_a),
+> +	INGENIC_PIN_GROUP("ssi0-clk-b-5", jz4780_ssi0_clk_b_5),
+> +	INGENIC_PIN_GROUP("ssi0-clk-b-28", jz4780_ssi0_clk_b_28),
+> +	INGENIC_PIN_GROUP("ssi0-clk-d", jz4780_ssi0_clk_d),
+> +	INGENIC_PIN_GROUP("ssi0-clk-e", jz4770_ssi0_clk_e),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-b", jz4780_ssi0_gpc_b),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-d", jz4780_ssi0_gpc_d),
+> +	INGENIC_PIN_GROUP("ssi0-gpc-e", jz4770_ssi0_gpc_e),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-a-23", jz4780_ssi0_ce0_a_23),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-a-25", jz4780_ssi0_ce0_a_25),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-b", jz4780_ssi0_ce0_b),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-d", jz4780_ssi0_ce0_d),
+> +	INGENIC_PIN_GROUP("ssi0-ce0-e", jz4770_ssi0_ce0_e),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-b", jz4780_ssi0_ce1_b),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-d", jz4780_ssi0_ce1_d),
+> +	INGENIC_PIN_GROUP("ssi0-ce1-e", jz4770_ssi0_ce1_e),
+> +	INGENIC_PIN_GROUP("ssi1-dt-b", jz4780_ssi1_dt_b),
+> +	INGENIC_PIN_GROUP("ssi1-dt-d", jz4780_ssi1_dt_d),
+> +	INGENIC_PIN_GROUP("ssi1-dt-e", jz4770_ssi1_dt_e),
+> +	INGENIC_PIN_GROUP("ssi1-dr-b", jz4780_ssi1_dr_b),
+> +	INGENIC_PIN_GROUP("ssi1-dr-d", jz4780_ssi1_dr_d),
+> +	INGENIC_PIN_GROUP("ssi1-dr-e", jz4770_ssi1_dr_e),
+> +	INGENIC_PIN_GROUP("ssi1-clk-b", jz4780_ssi1_clk_b),
+> +	INGENIC_PIN_GROUP("ssi1-clk-d", jz4780_ssi1_clk_d),
+> +	INGENIC_PIN_GROUP("ssi1-clk-e", jz4770_ssi1_clk_e),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-b", jz4780_ssi1_gpc_b),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-d", jz4780_ssi1_gpc_d),
+> +	INGENIC_PIN_GROUP("ssi1-gpc-e", jz4770_ssi1_gpc_e),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-b", jz4780_ssi1_ce0_b),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-d", jz4780_ssi1_ce0_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce0-e", jz4770_ssi1_ce0_e),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-b", jz4780_ssi1_ce1_b),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-d", jz4780_ssi1_ce1_d),
+> +	INGENIC_PIN_GROUP("ssi1-ce1-e", jz4770_ssi1_ce1_e),
+>  	INGENIC_PIN_GROUP("mmc0-1bit-a", jz4770_mmc0_1bit_a),
+>  	INGENIC_PIN_GROUP("mmc0-4bit-a", jz4770_mmc0_4bit_a),
+>  	INGENIC_PIN_GROUP("mmc0-8bit-a", jz4780_mmc0_8bit_a),
+> @@ -972,6 +1221,22 @@ static const struct group_desc jz4780_groups[]=20
+> =3D {
+>=20
+>  static const char *jz4780_uart2_groups[] =3D { "uart2-data",=20
+> "uart2-hwflow", };
+>  static const char *jz4780_uart4_groups[] =3D { "uart4-data", };
+> +static const char *jz4780_ssi0_groups[] =3D {
+> +	"ssi0-dt-a-19", "ssi0-dt-a-21", "ssi0-dt-a-28", "ssi0-dt-b",=20
+> "ssi0-dt-d", "ssi0-dt-e",
+> +	"ssi0-dr-a-20", "ssi0-dr-a-27", "ssi0-dr-b", "ssi0-dr-d",=20
+> "ssi0-dr-e",
+> +	"ssi0-clk-a", "ssi0-clk-b-5", "ssi0-clk-b-28", "ssi0-clk-d",=20
+> "ssi0-clk-e",
+> +	"ssi0-gpc-b", "ssi0-gpc-d", "ssi0-gpc-e",
+> +	"ssi0-ce0-a-23", "ssi0-ce0-a-25", "ssi0-ce0-b", "ssi0-ce0-d",=20
+> "ssi0-ce0-e",
+> +	"ssi0-ce1-b", "ssi0-ce1-d", "ssi0-ce1-e",
+> +};
+> +static const char *jz4780_ssi1_groups[] =3D {
+> +	"ssi1-dt-b", "ssi1-dt-d", "ssi1-dt-e",
+> +	"ssi1-dr-b", "ssi1-dr-d", "ssi1-dr-e",
+> +	"ssi1-clk-b", "ssi1-clk-d", "ssi1-clk-e",
+> +	"ssi1-gpc-b", "ssi1-gpc-d", "ssi1-gpc-e",
+> +	"ssi1-ce0-b", "ssi1-ce0-d", "ssi1-ce0-e",
+> +	"ssi1-ce1-b", "ssi1-ce1-d", "ssi1-ce1-e",
+> +};
+>  static const char *jz4780_mmc0_groups[] =3D {
+>  	"mmc0-1bit-a", "mmc0-4bit-a", "mmc0-8bit-a",
+>  	"mmc0-1bit-e", "mmc0-4bit-e",
+> @@ -997,6 +1262,8 @@ static const struct function_desc=20
+> jz4780_functions[] =3D {
+>  	{ "uart2", jz4780_uart2_groups, ARRAY_SIZE(jz4780_uart2_groups), },
+>  	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
+>  	{ "uart4", jz4780_uart4_groups, ARRAY_SIZE(jz4780_uart4_groups), },
+> +	{ "ssi0", jz4780_ssi0_groups, ARRAY_SIZE(jz4780_ssi0_groups), },
+> +	{ "ssi1", jz4780_ssi1_groups, ARRAY_SIZE(jz4780_ssi1_groups), },
+>  	{ "mmc0", jz4780_mmc0_groups, ARRAY_SIZE(jz4780_mmc0_groups), },
+>  	{ "mmc1", jz4780_mmc1_groups, ARRAY_SIZE(jz4780_mmc1_groups), },
+>  	{ "mmc2", jz4780_mmc2_groups, ARRAY_SIZE(jz4780_mmc2_groups), },
 > --
-> 2.17.1
->
+> 2.11.0
+>=20
+
+
