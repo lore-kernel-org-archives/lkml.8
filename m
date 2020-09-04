@@ -2,96 +2,168 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE97C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66DCC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99DA20772
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599236533;
-	bh=aT2FJHW1WlNv25o153zFstwJjPQmAqnZElzR5tHePyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e3pDRNqUfbAmfZh8rKO/iQE1b3dPH2Jdo+oG6PW5zxBzmX6Tu3i/wYCbATCuHaESA
-	 Uto434qCsgsDVgKkWAfwDBgZMIIvpTVQxbYyK42xc7HnrlsoO2R16weSpGb5DdiCRK
-	 jD6YQd/abk05wUWexjxCP4OL+hd9SW9/6BFO5Z2s=
+	by mail.kernel.org (Postfix) with ESMTP id 733C02067C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pM4zSYED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgIDQWL (ORCPT
+        id S1727866AbgIDQW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbgIDQWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:22:11 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D97912067C;
-        Fri,  4 Sep 2020 16:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599236531;
-        bh=aT2FJHW1WlNv25o153zFstwJjPQmAqnZElzR5tHePyY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=euspleWFeid+yEEBVznB9qMfOXeiAXiRvZgG1K83RI+zpcWZEAdFDLaUI7jQ9lj7i
-         YTzePv2YfCbisYJZSULETQfBojrb5Ey9v2nOdWaPYzJN3yIoPgEcuMbLVKJffJ+Xed
-         FfhNU6eJytU6xIbD5Sv0ZQqoLjdg1OhFdwarJqpY=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E35D040D3D; Fri,  4 Sep 2020 13:22:08 -0300 (-03)
-Date:   Fri, 4 Sep 2020 13:22:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yuehaibing <yuehaibing@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, irogers@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] perf bench: fix return value check in
- do_run_multi_threaded()
-Message-ID: <20200904162208.GS3495158@kernel.org>
-References: <20200902140526.26916-1-yuehaibing@huawei.com>
- <20200903185301.GE3495158@kernel.org>
- <20200903185451.GF3495158@kernel.org>
- <20200903185549.GG3495158@kernel.org>
- <6815e565-c3a2-c7a2-f164-8d3c56f9c516@huawei.com>
+        Fri, 4 Sep 2020 12:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726184AbgIDQWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:22:24 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9619C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:22:23 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id w5so7318662wrp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:22:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iUBmsm1x2IjnP/vvaMS9kAvkCHrQJaf0jWdnYFgluME=;
+        b=pM4zSYEDH8rIALEQFgas6IpcrK9Kwnfi0QTIA+JO1xCa+et9UJk/Y5Uja1ezkn37Hu
+         E56ZnTwuPhX33oHp0FNw9Ku43IDcnxNe6YfpoGyk+5c2+FZKe4x9gUkn2ZEFCpv6fEwy
+         6r1bmx7G3efw7aVCikhg9ESQgCiEe6+PgKBCy5s2hVeBlVLUvpg2IMQ+eUpLpk2Q3da9
+         XcMZOTIC2SaQJP8HTUuJXiyu6gol5/gm+ZXZdS8Hz+E0Nh99XY6bY4BsvYwIii+S16OK
+         0IjjpP3RCLCn3VdHVSTNju8NoBPA3JNpUkfwz9po5oXprvtgF4qjPsScxIzhJxNiNTzK
+         hv7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iUBmsm1x2IjnP/vvaMS9kAvkCHrQJaf0jWdnYFgluME=;
+        b=SJq1Iv0+gHJoCiyg/Ciu4pBydVPj3pG3KuwroqTBF/Ah3iPDZKrdq4GHm+EnKgzGxN
+         yMJSLrkKK/ElRU7a80CyguCJIGs4E9QSKM2P5yUtXdce7M0zBlKPE+Ahdc/BwjnR3e16
+         n71yhkXpXVUiZpFbosToGt1hviN5nHB6gPN9htsjPWxmDjtNkGNZGBS+LkXxBLn137KH
+         SdkxejJWCVSz0eDEMZeydqa4W0pE7ULITp0eOo3T2NIBQulygU84iClev//kIJVAIv8e
+         RBSJSIWgqfJTVycuQ1PY3IvCfXs6j/qORiqf93AamfB2otgZhMHWuEWt6Z8PYB309g+F
+         UTdg==
+X-Gm-Message-State: AOAM530mgZWMff7ML6vEvCVUSVf9aeJ01wdDS2A/GbLTBP95c8ofcTVp
+        J+sJeRHHTh/ljZw06EIc3S/6MiiMDYP8pu+1lt5PnQ==
+X-Google-Smtp-Source: ABdhPJySfIz8aAcQ9J1AamPC0cWNdBGNAI75Wc0N8M5+kih7VPDyB0ZJhly7HEz5L6PjHFBOXOFNgYbe/rcGjkqCQKg=
+X-Received: by 2002:adf:f88b:: with SMTP id u11mr8134820wrp.376.1599236542160;
+ Fri, 04 Sep 2020 09:22:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6815e565-c3a2-c7a2-f164-8d3c56f9c516@huawei.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-3-irogers@google.com>
+ <20200728155940.GC1319041@krava> <20200728160954.GD1319041@krava>
+ <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
+ <CAP-5=fWNniZuYfYhz_Cz7URQ+2E4T4Kg3DJqGPtDg70i38Er_A@mail.gmail.com> <20200904160303.GD939481@krava>
+In-Reply-To: <20200904160303.GD939481@krava>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 4 Sep 2020 09:22:10 -0700
+Message-ID: <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
+ attr->sample_period for libpfm4 events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 04, 2020 at 09:25:02PM +0800, Yuehaibing escreveu:
-> On 2020/9/4 2:55, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Sep 03, 2020 at 03:54:51PM -0300, Arnaldo Carvalho de Melo escreveu:
-> >>>> Fixes: 13edc237200c ("perf bench: Add a multi-threaded synthesize benchmark")
-> >>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+On Fri, Sep 4, 2020 at 9:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Thu, Sep 03, 2020 at 10:41:14PM -0700, Ian Rogers wrote:
+> > On Wed, Jul 29, 2020 at 4:24 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > >
+> > > > On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
+> > > > > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
+> > > > > > From: Stephane Eranian <eranian@google.com>
+> > > > > >
+> > > > > > Before:
+> > > > > > $ perf record -c 10000 --pfm-events=cycles:period=77777
+> > > > > >
+> > > > > > Would yield a cycles event with period=10000, instead of 77777.
+> > > > > >
+> > > > > > This was due to an ordering issue between libpfm4 parsing
+> > > > > > the event string and perf record initializing the event.
+> > > > > >
+> > > > > > This patch fixes the problem by preventing override for
+> > > > > > events with attr->sample_period != 0 by the time
+> > > > > > perf_evsel__config() is invoked. This seems to have been the
+> > > > > > intent of the author.
+> > > > > >
+> > > > > > Signed-off-by: Stephane Eranian <eranian@google.com>
+> > > > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > > > > ---
+> > > > > >  tools/perf/util/evsel.c | 3 +--
+> > > > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > > > > index 811f538f7d77..8afc24e2ec52 100644
+> > > > > > --- a/tools/perf/util/evsel.c
+> > > > > > +++ b/tools/perf/util/evsel.c
+> > > > > > @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+> > > > > >      * We default some events to have a default interval. But keep
+> > > > > >      * it a weak assumption overridable by the user.
+> > > > > >      */
+> > > > > > -   if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+> > > > > > -                                opts->user_interval != ULLONG_MAX)) {
+> > > > > > +   if (!attr->sample_period) {
+> > > > >
+> > > > > I was wondering why this wouldn't break record/top
+> > > > > but we take care of the via record_opts__config
+> > > > >
+> > > > > as long as 'perf test attr' works it looks ok to me
+> > > >
+> > > > hum ;-)
+> > > >
+> > > > [jolsa@krava perf]$ sudo ./perf test 17 -v
+> > > > 17: Setup struct perf_event_attr                          :
+> > > > ...
+> > > > running './tests/attr/test-record-C0'
+> > > > expected sample_period=4000, got 3000
+> > > > FAILED './tests/attr/test-record-C0' - match failure
+> > >
+> > > I'm not able to reproduce this. Do you have a build configuration or
+> > > something else to look at? The test doesn't seem obviously connected
+> > > with this patch.
+> > >
+> > > Thanks,
+> > > Ian
+> >
+> > Jiri, any update? Thanks,
+>
+> sorry, I rebased and ran it again and it passes for me now,
+> so it got fixed along the way
 
-> >>> Thanks, applied, kudos for adding the Fixes: tag, appreciated!
+No worries, thanks for the update! It'd be nice to land this and the
+other libpfm fixes.
 
-> >> But...
- 
-> OOps, sorry for this, I'll pay attention next time.
+Ian
 
-Thanks!
-
-- Arnaldo
- 
-> >>>> +++ b/tools/perf/bench/synthesize.c
-> >>>> @@ -162,8 +162,8 @@ static int do_run_multi_threaded(struct target *target,
-> >>>>  	init_stats(&event_stats);
-> >>>>  	for (i = 0; i < multi_iterations; i++) {
-> >>>>  		session = perf_session__new(NULL, false, NULL);
-> >>>> -		if (!session)
-> >>>> -			return -ENOMEM;
-> >>>> +		if (IS_ERR(session)) {
-> >>>> +			return PTR_ERR(session);
-
-> >> This doesn't compile, so I take back that kudo ;-\
-
-> >> I'm fixing this by removing that needless '{'.
+> jirka
+>
