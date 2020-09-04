@@ -2,74 +2,73 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72525C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF59C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A64B2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9812074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:22:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="R5Dqco5V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyiAzQ07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgIDPWp (ORCPT
+        id S1730937AbgIDPWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:22:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39990 "EHLO
+        Fri, 4 Sep 2020 11:22:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730460AbgIDPVY (ORCPT
+        with ESMTP id S1730905AbgIDPWj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:21:24 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D864AC061247
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:21:23 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id t10so7172966wrv.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:21:23 -0700 (PDT)
+        Fri, 4 Sep 2020 11:22:39 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12DCDC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:22:39 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id u13so4511075pgh.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:22:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=stUHoXBLhmGzCwZtEJAUKXLxs5aOWuJj0Ee8wOeFjkw=;
-        b=R5Dqco5Vp40iB/h46/HNZAv1XlB31sJ1uLGZz0PIHiNSuFyPEIvqOG0s3JiYF+lh3u
-         DurSlxoDn/IFY+Fbf5xSfktwwY5BC84nKcYoiG8OR5b1/efxzcT2XWjZAPsadyfJskzF
-         oHaVA+C2KEV7MKjlE0XUBbHp3MXCuih647KUKkedt85whqODx3C2FEopKhUim+AOuB0U
-         E5GPclZWVElCYYr+ofk7B9yjyHzhgWjKrwfgx63n+Eq18kgjNg95pQarqWmU6Xl2gCSX
-         +HnJE8kCQ4VctMsImFS8lFPAD00bcCs2JXlkAM3c5Zeqld1EIAshT8hcndkPjtrZz3TM
-         lzMg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nhGWIlrqRL4A3CYEW/fZul+9qsq53dkEaLWmo2XlaaQ=;
+        b=RyiAzQ07v2ZooHsYtRWflXJTUKc5GglOSMnseNFDk7HyM4Y4xHP+CEcdHh2CwFF+De
+         VxrgwHqhuxFS/oz9XfcOgU5I32yoTrGO/Biei4UPKBs0cVtFcpJH8+iAyeXXHLzXFQFU
+         91r5ugOd3/eiInmw5MrLJRhqBAyejuRxspCCps4szq6QS97m6tn939CFn9PVy9IBQanv
+         OH3EPTtZ+Qna3AYVObx1X8oOe1Jr9F5lHhSiFMQNSQc92TAFBSK3I2jYsvu/YW3vDXmk
+         VmNjxUrZipHBzXeudIhIleEOHEBvTkGfw6BUvtIUOBfmN/y58TGg44I7F06EGFvyAjOJ
+         vSZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=stUHoXBLhmGzCwZtEJAUKXLxs5aOWuJj0Ee8wOeFjkw=;
-        b=uaq9FrixQNF2VMPx6qwfXM+RY3zWlg60GnL3qyzYNESwqs8EaoX3i8iv/hTGPFtUZA
-         FEoHG+r3HG+oAUPJQTBu3zDzNzNXV0QDvy5jPlDrKExarC3JlTdzsH0691Zt8h8L2HZN
-         a8Kb573dr2Y47wtqwdzOKGm1iQ3LUOrz+riILvjip5ZJjLPoqJZUO7o3NjpoNixpIK0K
-         tULqDS9aPWTRV352psaCozvSys5BvAaCbnTGu2lWMzs0jY0J+LU/RzRYfbdi52Yu15Ua
-         mAdc97OCWRlNkPXfk1++HrwHAbRNgzazXM3efWdcAv+2IvJWivUM9fBgzftEEoBPbdz6
-         X2eA==
-X-Gm-Message-State: AOAM533RE+Iaq/L+OmfyBrrKd1Jo4zE1WWAWueRhXAtN7rRTJ/AQWcQ4
-        kQ+2gvHiWLjQ3zEtysTbcNONWA==
-X-Google-Smtp-Source: ABdhPJwl7Nn/2R7VILQzKg8oX0n4CU6PnnWJQYviy0/NYR2eE/0FgjwSs2ONiVU4fkwPEDEObs/jPA==
-X-Received: by 2002:adf:94c1:: with SMTP id 59mr8817819wrr.29.1599232882017;
-        Fri, 04 Sep 2020 08:21:22 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id a11sm7789534wmm.18.2020.09.04.08.21.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nhGWIlrqRL4A3CYEW/fZul+9qsq53dkEaLWmo2XlaaQ=;
+        b=fVp9UEOMdZdj18wbkFBdIEfeXuNNjh3t2vdrcYrY84NJ41h9sjHcgQHoQzYbima2NX
+         +cVIzBwdPmf9kaV5dNzpyjbo3TKfJM2v+ygs7P/aTuO47G9Q3CNUPXx5UCRZZnDTzK1i
+         kP622YweLAni8SUTyRHwgbbt9UhekhN3hV6oqCTby3Hu09iuTFauH9xwc7NVVoDhry1J
+         suQGUxg3UFu43vhk54ArPj6NToKFtoul1xeLm3eu9uAjBtI1iswdhU3P6upxu/YYcwl6
+         ldRBW0ZUQDT1RpNly+uGiyjaupUQ08AeucViWjr9KBEPzrgi54iGhjAYjHYBLKiE1Gvw
+         ufsQ==
+X-Gm-Message-State: AOAM532PhbWGW0iz00wf43/1XhOOqK3l6/E/SeVzm7h6Oykt5I9Oh/ZT
+        B4I4Q6Cu0t2US1uHIx4LEeA7UGyBc7M=
+X-Google-Smtp-Source: ABdhPJwCiPrd6Fdtq27v3WGV3yLwtty7P1Mq7wXxq2vnhBUJR06DFaQidzG+5jw3NYbjeNvNPnXRcQ==
+X-Received: by 2002:a63:b202:: with SMTP id x2mr7408241pge.432.1599232958557;
+        Fri, 04 Sep 2020 08:22:38 -0700 (PDT)
+Received: from vultr.guest ([141.164.41.4])
+        by smtp.gmail.com with ESMTPSA id q190sm7141779pfc.176.2020.09.04.08.22.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:21:21 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 1/8] rtc: rx8010: remove unnecessary parentheses
-Date:   Fri,  4 Sep 2020 17:21:09 +0200
-Message-Id: <20200904152116.2157-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904152116.2157-1-brgl@bgdev.pl>
-References: <20200904152116.2157-1-brgl@bgdev.pl>
+        Fri, 04 Sep 2020 08:22:37 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Randy Dunlap <rd.dunlap@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] kcsan: kconfig: Move to menu 'Generic Kernel Debugging Instruments'
+Date:   Fri,  4 Sep 2020 23:22:24 +0800
+Message-Id: <20200904152224.5570-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,50 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+This moves the KCSAN kconfig items under menu 'Generic Kernel Debugging
+Instruments' where UBSAN resides.
 
-Remove parentheses whenever they guard a single line.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
 ---
- drivers/rtc/rtc-rx8010.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ lib/Kconfig.debug | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
-index fe010151ec8f..2faf5357a3a5 100644
---- a/drivers/rtc/rtc-rx8010.c
-+++ b/drivers/rtc/rtc-rx8010.c
-@@ -181,9 +181,8 @@ static int rx8010_set_time(struct device *dev, struct rtc_time *dt)
- 		return ret;
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index e068c3c7189a..0c781f912f9f 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -520,8 +520,8 @@ config DEBUG_FS_ALLOW_NONE
+ endchoice
  
- 	flagreg = i2c_smbus_read_byte_data(rx8010->client, RX8010_FLAG);
--	if (flagreg < 0) {
-+	if (flagreg < 0)
- 		return flagreg;
--	}
+ source "lib/Kconfig.kgdb"
+-
+ source "lib/Kconfig.ubsan"
++source "lib/Kconfig.kcsan"
  
- 	if (flagreg & RX8010_FLAG_VLF)
- 		ret = i2c_smbus_write_byte_data(rx8010->client, RX8010_FLAG,
-@@ -284,17 +283,15 @@ static int rx8010_set_alarm(struct device *dev, struct rtc_wkalrm *t)
- 	int err;
+ endmenu
  
- 	flagreg = i2c_smbus_read_byte_data(client, RX8010_FLAG);
--	if (flagreg < 0) {
-+	if (flagreg < 0)
- 		return flagreg;
--	}
+@@ -1620,8 +1620,6 @@ config PROVIDE_OHCI1394_DMA_INIT
  
- 	if (rx8010->ctrlreg & (RX8010_CTRL_AIE | RX8010_CTRL_UIE)) {
- 		rx8010->ctrlreg &= ~(RX8010_CTRL_AIE | RX8010_CTRL_UIE);
- 		err = i2c_smbus_write_byte_data(rx8010->client, RX8010_CTRL,
- 						rx8010->ctrlreg);
--		if (err < 0) {
-+		if (err < 0)
- 			return err;
--		}
- 	}
+ source "samples/Kconfig"
  
- 	flagreg &= ~RX8010_FLAG_AF;
+-source "lib/Kconfig.kcsan"
+-
+ config ARCH_HAS_DEVMEM_IS_ALLOWED
+ 	bool
+ 
 -- 
-2.26.1
+2.25.1
 
