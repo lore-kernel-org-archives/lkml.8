@@ -2,181 +2,113 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7044C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A31C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB78206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF70920748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pg0KpA/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbgIDHxB (ORCPT
+        id S1729801AbgIDHxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:53:01 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:45107 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729909AbgIDHwV (ORCPT
+        Fri, 4 Sep 2020 03:53:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53186 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729911AbgIDHwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:52:21 -0400
-X-Originating-IP: 93.34.118.233
-Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 8D1DDE0003;
-        Fri,  4 Sep 2020 07:52:06 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 09:55:53 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
-Message-ID: <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
-References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200904012000.GA9369@pendragon.ideasonboard.com>
+        Fri, 4 Sep 2020 03:52:20 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0847q8QU018084;
+        Fri, 4 Sep 2020 02:52:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599205928;
+        bh=mBDRi2H+5RmDLfb3VgWO2CxtWeit10rVqDT4xYAQnwU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=pg0KpA/aU2JX7C57viAWaX2A45zDfffLOFSGiCVPmjA5DiaQzRM7P8kdxwmU+2Aky
+         mKHiSCX2KWgvOqC9m3tfUR+eyab3eKLVbAcRnUL28UdubJyEMf1OUIq60YSDfbFrqO
+         X++fhI+FTHtc/MW1ZN9lS8wZTHFVwuXgVKfyIwqo=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0847q8kk092058
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 4 Sep 2020 02:52:08 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Fri, 4 Sep
+ 2020 02:52:07 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Fri, 4 Sep 2020 02:52:07 -0500
+Received: from a0393678-ssd.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0847osNE058796;
+        Fri, 4 Sep 2020 02:52:02 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, <linux-pci@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-ntb@googlegroups.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 13/17] PCI: Add TI J721E device to pci ids
+Date:   Fri, 4 Sep 2020 13:20:48 +0530
+Message-ID: <20200904075052.8911-14-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904075052.8911-1-kishon@ti.com>
+References: <20200904075052.8911-1-kishon@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200904012000.GA9369@pendragon.ideasonboard.com>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
+Add TI J721E device to the pci id database. Since this device has
+a configurable PCIe endpoint, it could be used with different
+drivers.
 
-On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
-> > Add support to read the bus-type and enable BT656 mode if needed.
-> >
-> > Also fail probe if unsupported bus_type is detected.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >
-> > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> > index 2cc6a678069a..67764d647526 100644
-> > --- a/drivers/media/i2c/ov772x.c
-> > +++ b/drivers/media/i2c/ov772x.c
-> > @@ -31,6 +31,7 @@
-> >  #include <media/v4l2-ctrls.h>
-> >  #include <media/v4l2-device.h>
-> >  #include <media/v4l2-event.h>
-> > +#include <media/v4l2-fwnode.h>
-> >  #include <media/v4l2-image-sizes.h>
-> >  #include <media/v4l2-subdev.h>
-> >
-> > @@ -434,6 +435,7 @@ struct ov772x_priv {
-> >  #ifdef CONFIG_MEDIA_CONTROLLER
-> >  	struct media_pad pad;
-> >  #endif
-> > +	struct v4l2_fwnode_endpoint ep;
-> >  };
-> >
-> >  /*
-> > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-> >  	if (priv->streaming == enable)
-> >  		goto done;
-> >
-> > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
-> > +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
-> > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
-> > +		if (ret)
-> > +			goto done;
-> > +	}
-> > +
-> >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
-> >  				 enable ? 0 : SOFT_SLEEP_MODE);
-> >  	if (ret)
-> > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
-> >
-> >  static int ov772x_probe(struct i2c_client *client)
-> >  {
-> > +	struct fwnode_handle *endpoint;
-> >  	struct ov772x_priv	*priv;
-> >  	int			ret;
-> >  	static const struct regmap_config ov772x_regmap_config = {
-> > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
-> >  		goto error_clk_put;
-> >  	}
-> >
-> > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> > +						  NULL);
-> > +	if (!endpoint) {
-> > +		dev_err(&client->dev, "endpoint node not found\n");
-> > +		ret = -EINVAL;
-> > +		goto error_clk_put;
-> > +	}
-> > +
-> > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
->
-> v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
-> v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
-> that v4l2_fwnode_endpoint_free() then needs to be called in the error
-> path and in remove().
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/misc/pci_endpoint_test.c | 1 -
+ include/linux/pci_ids.h          | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-Doesn't alloc_parse() differ from just _parse() as it reserve space
-for the 'link-frequencies' array ? As this device does not support
-CSI-2 and the 'link-frequencies' property is not allows in bindings,
-isn't using endpoint_parse() better as it saves a call to _free() ?
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index e060796f9caa..03fade34aeac 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -68,7 +68,6 @@
+ #define PCI_ENDPOINT_TEST_FLAGS			0x2c
+ #define FLAG_USE_DMA				BIT(0)
+ 
+-#define PCI_DEVICE_ID_TI_J721E			0xb00d
+ #define PCI_DEVICE_ID_TI_AM654			0xb00c
+ 
+ #define is_am654_pci_dev(pdev)		\
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1ab1e24bcbce..6ddeb64049b5 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -880,6 +880,7 @@
+ #define PCI_DEVICE_ID_TI_X620		0xac8d
+ #define PCI_DEVICE_ID_TI_X420		0xac8e
+ #define PCI_DEVICE_ID_TI_XX20_FM	0xac8f
++#define PCI_DEVICE_ID_TI_J721E		0xb00d
+ #define PCI_DEVICE_ID_TI_DRA74x		0xb500
+ #define PCI_DEVICE_ID_TI_DRA72x		0xb501
+ 
+-- 
+2.17.1
 
-Or are we deprecating that function unconditionally ? The
-documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
-in new drivers" but here it doesn't seem required..
-
->
-> On the other hand, not setting .bus_type and letting the parse()
-> function determine the but type automatically is also deprecated, and I
-> don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
-> once for each bus type until one succeeds is a good API. As change will
-> be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
-> for the time being if you want.
-
-But indeed relying on auto-guessing of the bus type is deprecated since
-some time now (and the API could be improved, yes). Sorry I missed
-that yesterday.
-
-As we support parallel and bt.656 only I must be honest I don't mind
-it here as otherwise the code would be more complex for no real gain,
-but I defer this to Sakari which has been fighting the battle against
-auto-guessing since a long time now  :)
-
-
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-> > +	fwnode_handle_put(endpoint);
-> > +	if (ret) {
-> > +		dev_err(&client->dev, "Could not parse endpoint\n");
-> > +		goto error_clk_put;
-> > +	}
-> > +
-> > +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
-> > +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
-> > +		dev_err(&client->dev, "Unsupported bus type %d\n",
-> > +			priv->ep.bus_type);
-> > +		goto error_clk_put;
-> > +	}
-> > +
-> >  	ret = ov772x_video_probe(priv);
-> >  	if (ret < 0)
-> >  		goto error_gpio_put;
->
-> --
-> Regards,
->
-> Laurent Pinchart
