@@ -2,108 +2,125 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EC8C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC30C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2A320770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:20:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZN8SVwAz"
+	by mail.kernel.org (Postfix) with ESMTP id 9C2202067C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599211240;
+	bh=tfvwXFZiU3UT3uCBI0eVIiaDepEZKUtj+JOTXPnmFsw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CSIspDAOe2uc20zAJbtiB8ImRmb8Uy0dSNG1KmW0o2mDIbgvOMuOD+SiUq3uQSAjy
+	 5PxA3V/c0bbkKid6H9kGrjoD6gN3xQlSmgX8lTdXfaCjt6Zj+VAIcxZ7675mCLCnca
+	 kmk69T6UyDERbNztGfIayClZfa6BcX0gABq4M0DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgIDJUF (ORCPT
+        id S1730051AbgIDJUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:20:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729628AbgIDJUA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:20:00 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A55A2C061244;
-        Fri,  4 Sep 2020 02:19:58 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w3so7104020ljo.5;
-        Fri, 04 Sep 2020 02:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uratX28Mxl9/lGwuq+H8AvPcnvgdYTTOzgJnH3Evmiw=;
-        b=ZN8SVwAzwCv5aAkw942KG/DUK4ZVxzqxD87UFYHEc5IrQY1Ubn27Pxai6GFj70e2e4
-         kV3FSfVF1dohd9a2vKW10yzxOgPjPRnGQ0C21K14Otx1VoqyybKqDvqxjLsVbJXV2R8q
-         Z2XW7nChKYavnxy8h/vUJ5SDA42YFhyA57mvHGRT92veSyUrRVO/HCOpqkM1RWoamuen
-         TO/19TfRngmIx1S0vQ8Cs1Ii2Ox03FUmO5uWGJUo1qu0g9eoDbwd/2CP1Vii8qMew5/l
-         u8AazwA9Gm1h5U3ZxtnaWBdM64vPNoYJ+aOvgYxf/6o37Tv2bLpEMQWlC2fhr4ZQA1m2
-         /rJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uratX28Mxl9/lGwuq+H8AvPcnvgdYTTOzgJnH3Evmiw=;
-        b=mM0Oxpbo2B4q6u2OvLw2/Hj6UaTI9Tiqn1gyONquITQxknizCDcTXn/hf5gdeomtyI
-         UoOVSPQYtbfesLDfbjVWObkvQ08VREH0MemykjMRbcthfyLGojYFot+RNwEKHx9YWxhM
-         CV+azL1Oq3au0adF9iqe2uuGhX8Ml6PkCW1mvhTQ47ekczFw5EwVAGr1ayUlH9j3xoNc
-         zpY2XmRW/vYIhQUskFCxgX+6KTZrTLB4kUYPr2QLbGmGOcnMcY5DTF0HweGTM1bIRcNw
-         8vWOQkvU+QGAsRBSL8E4KXJl9HVFDgOgISAYzTAkFdq7kY5UvzhxHSXVtPC6d9cBIAjY
-         N+KQ==
-X-Gm-Message-State: AOAM532v3zFxVWxBOsA+pM6jng5fk2fzr7B+u/SkC8hXDUFoMscL/2nI
-        4VTn2PVbndtadGLQtHnscOxGI5qaJsY=
-X-Google-Smtp-Source: ABdhPJxcqOpdnKHFFAnaqeTyqOU+SdC4HwFZQfHee7jyhxo2CLcFF9WkZLkuU7g3cZ/cdIRs+aVvZg==
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr3023302ljk.421.1599211196950;
-        Fri, 04 Sep 2020 02:19:56 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id 201sm1158663ljf.75.2020.09.04.02.19.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 02:19:56 -0700 (PDT)
-Subject: Re: [PATCH RESEND v3] iommu/tegra-smmu: Add missing locks around
- mapping operations
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200814162252.31965-1-digetx@gmail.com>
- <20200904090519.GF6714@8bytes.org>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <9f7b042e-db46-dd5b-acb8-9b1e8213fa62@gmail.com>
-Date:   Fri, 4 Sep 2020 12:19:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 4 Sep 2020 05:20:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729628AbgIDJUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 05:20:36 -0400
+Received: from localhost (p5486cda5.dip0.t-ipconnect.de [84.134.205.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6D5E2067C;
+        Fri,  4 Sep 2020 09:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599211235;
+        bh=tfvwXFZiU3UT3uCBI0eVIiaDepEZKUtj+JOTXPnmFsw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JVTj/hYdti7ZOguNrnw2iuzyeMxhWiP8cgeuhOAht8F02N5gmhfh2HxDDvcQj107h
+         4ifFx6nxVFzUesF8iXxBLPLKWUAw3BEtopz+mFS72Nmhnet+ySsDq2UKZsnxzsh6UB
+         ZLbw9GgVbEuLg/2GWAziBor2k7pJGg1pgBqGVI3U=
+Date:   Fri, 4 Sep 2020 11:20:32 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Codrin.Ciubotariu@microchip.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, Ludovic.Desroches@microchip.com,
+        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+        linux@armlinux.org.uk, kamel.bouhara@bootlin.com
+Subject: Re: Re: Re: [RFC PATCH 4/4] i2c: at91: Move to generic GPIO bus
+ recovery
+Message-ID: <20200904092032.GA32080@ninjato>
+References: <20200619141904.910889-1-codrin.ciubotariu@microchip.com>
+ <20200619141904.910889-5-codrin.ciubotariu@microchip.com>
+ <20200802170820.GC10193@kunai>
+ <65890aab-1d19-7e7e-abff-3c6ee05c8ade@microchip.com>
+ <20200826061444.GB1081@ninjato>
+ <15466c95-f1ea-63a4-1429-24d9b7567c1c@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904090519.GF6714@8bytes.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="WIyZ46R2i8wDzkSu"
+Content-Disposition: inline
+In-Reply-To: <15466c95-f1ea-63a4-1429-24d9b7567c1c@microchip.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.09.2020 12:05, Joerg Roedel пишет:
-> On Fri, Aug 14, 2020 at 07:22:52PM +0300, Dmitry Osipenko wrote:
->> The mapping operations of the Tegra SMMU driver are subjected to a race
->> condition issues because SMMU Address Space isn't allocated and freed
->> atomically, while it should be. This patch makes the mapping operations
->> atomic, it fixes an accidentally released Host1x Address Space problem
->> which happens while running multiple graphics tests in parallel on
->> Tegra30, i.e. by having multiple threads racing with each other in the
->> Host1x's submission and completion code paths, performing IOVA mappings
->> and unmappings in parallel.
->>
->> Cc: <stable@vger.kernel.org>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> 
-> Thierry, does this change look good to you?
-> 
 
-Hello Joerg and Thierry,
+--WIyZ46R2i8wDzkSu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please take into account that there is a v5 now that I sent out a day
-ago, it's more optimized version and supports both atomic and non-atomic
-GFP flags for the mapping operation.
+Hi Codrin,
+
+> The pinmux driver needs to have strict set to false, otherwise the=20
+> switching is not available, not at this time at least. Perhaps there is=
+=20
+> room for improvement here, because the I2C bus is not using the pins=20
+> while we are doing GPIO recovery.
+
+Our driver doesn't use 'strict'. The thing is that I can't describe a
+pinctrl state for GPIO. GPIO is the default state until another function
+is requested. Back to GPIO currently means freeing the pin again, so it
+defaults back to GPIO. We are currently discussing it. Geert (CCed)
+isn't very happy of describing the same pins with 'function =3D "gpio"'
+because the Kernel already knows the mapping, just needs to revert it.
+Geert, please correct me if I am wrong.
+
+> I am not sure I'll have time the next week to work on what you asked me=
+=20
+> regarding sh_mobile and PXA, but I will look into it the week after that.
+> Sorry about my delayed reply, I was on vacation.
+
+Well, no need for sh_mobile, this is my todo item :) About PXA, well, I
+am still happy that you volunteered to do it, so I hope you had a
+relaxing vacation!
+
+Happy hacking,
+
+   Wolfram
+
+
+--WIyZ46R2i8wDzkSu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9SBtwACgkQFA3kzBSg
+KbZeWw//e8idK/UaDDNoa1ayZzCtU5zt8qZiIxCEia10pmFsfb1uZkJ4nyybcIT2
+FcpsGjUsrDCWvVEu+3hAyILntIJF8949WUK7K7JhqMeH9o3T7ZJeUEgK7cB0o9s5
+wrjs2WMvBjP1TaPW2LhcAAlP3q4/Qy+4xQ6SpjLzQsTeNtv643vWo15V5lOUHjuK
+0s/VCmZtnrqvRXsbjrzAIk+XZ+m7IhWgNDY6MUfO7gxDCWq8q+KRcncBaHNopCIi
+wYGq2KReTYQ/nA+ACytH/SsiQvmXoYdfEiN6K1WnXviu0XwtkG1yTQPtpBetvpS7
+obzG2hDmOcN680XFZ9tOYiQdChEI4cqFlWAPpthZ0TtSjmZ+0Jv5spTVbP7M/DFJ
+61RCUdzZiPrTJiTwuQt5PGO39BnGbxbG64+x1a0qFrcd96FftmRi1CXwEoEF5dXc
+LBS3yE/GmHALiBDKwqK4RN5iF6P4ErdP6WDL0506uW/xFOp198BHOd+auHXt4+eY
+a2L4hOuAhl6w7BvjtIXogzX/0pGGqnzk2egyYNXOW1REtCrF/JInnxal+gBQpl9E
+v+ErBOZ+1+BRi01Dk0ytbC4mkCNvaMsRFz+O4Msm9PlF03V+utBfeRUzOOC32aMw
+2QuyngO580zJt/F8WPTvoH2CHIvtkKh92azHOo95+IPwjPjUYWs=
+=qgU2
+-----END PGP SIGNATURE-----
+
+--WIyZ46R2i8wDzkSu--
