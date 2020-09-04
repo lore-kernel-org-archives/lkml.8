@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C42DC4CC60
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 626A9C4CC6C
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55E84253BD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383DA21D47
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VSYVCsIK"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AbT4QyAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgIDRjK (ORCPT
+        id S1728315AbgIDRlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:39:10 -0400
-Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:24326 "EHLO
-        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgIDRin (ORCPT
+        Fri, 4 Sep 2020 13:41:03 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:50639 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728279AbgIDRkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:38:43 -0400
+        Fri, 4 Sep 2020 13:40:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599241123; x=1630777123;
+  t=1599241237; x=1630777237;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IDJPC6h8zTuYLDlXHaoNCskbQsP9fULf+RfT7UZQ5Dc=;
-  b=VSYVCsIKvIBR/3zNkt1uORo9iKTF1e2vTupBHr0zW64zVTtRWsNumgmd
-   SR/M/f2wLEj6s6fA7ZxlKfjifAglC8099m42DeHVJHDouKen5PzEFG3/J
-   26/W1dIBp338d/8jLjYxgpdRWbH/dGniGxbI1xYv6nQlPaQMC4PKjCfF5
-   k=;
+  bh=JHWbSdfDvt8NNhmcMfRK8xBmbggJxJMKuHA88kVk7Fo=;
+  b=AbT4QyAPdG78XKKuzv8qpnmimOdEk6D6kyq6Bwt2XM7taZIkYJd4BkbW
+   kUw6EgGxS77xFsEYhuMi1Lnm5GhLJBHKmm+0G4l2IKHDLuaFpKh9ChqeV
+   p/BauCVuYtoIeBxR6oEno/VtN0LAkLq94CZkzL9MaEIKCYT4iLWm+1en+
+   Y=;
 X-IronPort-AV: E=Sophos;i="5.76,390,1592870400"; 
-   d="scan'208";a="52099875"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP; 04 Sep 2020 17:38:42 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id B87E8A248E;
-        Fri,  4 Sep 2020 17:38:38 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+   d="scan'208";a="52179432"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 04 Sep 2020 17:40:36 +0000
+Received: from EX13D16EUB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id 37CB3A25A2;
+        Fri,  4 Sep 2020 17:40:33 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.145) by
  EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Fri, 4 Sep 2020 17:38:27 +0000
+ id 15.0.1497.2; Fri, 4 Sep 2020 17:40:22 +0000
 From:   Andra Paraschiv <andraprs@amazon.com>
 To:     linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Anthony Liguori <aliguori@amazon.com>,
@@ -67,15 +67,15 @@ CC:     Anthony Liguori <aliguori@amazon.com>,
         kvm <kvm@vger.kernel.org>,
         ne-devel-upstream <ne-devel-upstream@amazon.com>,
         Andra Paraschiv <andraprs@amazon.com>
-Subject: [PATCH v8 06/18] nitro_enclaves: Handle out-of-band PCI device events
-Date:   Fri, 4 Sep 2020 20:37:06 +0300
-Message-ID: <20200904173718.64857-7-andraprs@amazon.com>
+Subject: [PATCH v8 16/18] nitro_enclaves: Add sample for ioctl interface usage
+Date:   Fri, 4 Sep 2020 20:37:16 +0300
+Message-ID: <20200904173718.64857-17-andraprs@amazon.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200904173718.64857-1-andraprs@amazon.com>
 References: <20200904173718.64857-1-andraprs@amazon.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D02UWC003.ant.amazon.com (10.43.162.199) To
+X-Originating-IP: [10.43.161.145]
+X-ClientProxiedBy: EX13D06UWC001.ant.amazon.com (10.43.162.91) To
  EX13D16EUB001.ant.amazon.com (10.43.166.28)
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -84,21 +84,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to the replies sent by the Nitro Enclaves PCI device in
-response to command requests, out-of-band enclave events can happen e.g.
-an enclave crashes. In this case, the Nitro Enclaves driver needs to be
-aware of the event and notify the corresponding user space process that
-abstracts the enclave.
-
-Register an MSI-X interrupt vector to be used for this kind of
-out-of-band events. The interrupt notifies that the state of an enclave
-changed and the driver logic scans the state of each running enclave to
-identify for which this notification is intended.
-
-Create an workqueue to handle the out-of-band events. Notify user space
-enclave process that is using a polling mechanism on the enclave fd.
-
-Signed-off-by: Alexandru-Catalin Vasile <lexnv@amazon.com>
+Signed-off-by: Alexandru Vasile <lexnv@amazon.com>
 Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
 Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
@@ -106,184 +92,974 @@ Changelog
 
 v7 -> v8
 
-* No changes.
+* Track NE custom error codes for invalid page size, invalid flags and
+  enclave CID.
+* Update the heartbeat logic to have a listener fd first, then start the
+  enclave and then accept connection to get the heartbeat.
+* Update the reference link to the hugetlb documentation.
 
 v6 -> v7
 
-* No changes.
+* Track POLLNVAL as poll event in addition to POLLHUP.
 
 v5 -> v6
 
+* Remove "rc" mentioning when printing errno string.
+* Remove the ioctl to query API version.
+* Include usage info for NUMA-aware hugetlb configuration.
 * Update documentation to kernel-doc format.
+* Add logic for enclave image loading.
 
 v4 -> v5
 
-* Remove sanity checks for situations that shouldn't happen, only if
-  buggy system or broken logic at all.
+* Print enclave vCPU ids when they are created.
+* Update logic to map the modified vCPU ioctl call.
+* Add check for the path to the enclave image to be less than PATH_MAX.
+* Update the ioctl calls error checking logic to match the NE specific
+  error codes.
 
 v3 -> v4
 
-* Use dev_err instead of custom NE log pattern.
-* Return IRQ_NONE when interrupts are not handled.
+* Update usage details to match the updates in v4.
+* Update NE ioctl interface usage.
 
 v2 -> v3
 
-* Remove the WARN_ON calls.
-* Update static calls sanity checks.
-* Remove "ratelimited" from the logs that are not in the ioctl call
-  paths.
+* Remove the include directory to use the uapi from the kernel.
+* Remove the GPL additional wording as SPDX-License-Identifier is
+  already in place.
 
 v1 -> v2
 
-* Add log pattern for NE.
-* Update goto labels to match their purpose.
+* New in v2.
 ---
- drivers/virt/nitro_enclaves/ne_pci_dev.c | 116 +++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
+ samples/nitro_enclaves/.gitignore        |   2 +
+ samples/nitro_enclaves/Makefile          |  16 +
+ samples/nitro_enclaves/ne_ioctl_sample.c | 883 +++++++++++++++++++++++
+ 3 files changed, 901 insertions(+)
+ create mode 100644 samples/nitro_enclaves/.gitignore
+ create mode 100644 samples/nitro_enclaves/Makefile
+ create mode 100644 samples/nitro_enclaves/ne_ioctl_sample.c
 
-diff --git a/drivers/virt/nitro_enclaves/ne_pci_dev.c b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-index e9e3ff882cc7..dcf529ba509d 100644
---- a/drivers/virt/nitro_enclaves/ne_pci_dev.c
-+++ b/drivers/virt/nitro_enclaves/ne_pci_dev.c
-@@ -199,6 +199,88 @@ static irqreturn_t ne_reply_handler(int irq, void *args)
- 	return IRQ_HANDLED;
- }
- 
-+/**
-+ * ne_event_work_handler() - Work queue handler for notifying enclaves on a
-+ *			     state change received by the event interrupt
-+ *			     handler.
-+ * @work:	Item containing the NE PCI device for which an out-of-band event
-+ *		was issued.
-+ *
-+ * An out-of-band event is being issued by the Nitro Hypervisor when at least
-+ * one enclave is changing state without client interaction.
-+ *
-+ * Context: Work queue context.
+diff --git a/samples/nitro_enclaves/.gitignore b/samples/nitro_enclaves/.gitignore
+new file mode 100644
+index 000000000000..827934129c90
+--- /dev/null
++++ b/samples/nitro_enclaves/.gitignore
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++ne_ioctl_sample
+diff --git a/samples/nitro_enclaves/Makefile b/samples/nitro_enclaves/Makefile
+new file mode 100644
+index 000000000000..a3ec78fefb52
+--- /dev/null
++++ b/samples/nitro_enclaves/Makefile
+@@ -0,0 +1,16 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
++
++# Enclave lifetime management support for Nitro Enclaves (NE) - ioctl sample
++# usage.
++
++.PHONY: all clean
++
++CFLAGS += -Wall
++
++all:
++	$(CC) $(CFLAGS) -o ne_ioctl_sample ne_ioctl_sample.c -lpthread
++
++clean:
++	rm -f ne_ioctl_sample
+diff --git a/samples/nitro_enclaves/ne_ioctl_sample.c b/samples/nitro_enclaves/ne_ioctl_sample.c
+new file mode 100644
+index 000000000000..480b763142b3
+--- /dev/null
++++ b/samples/nitro_enclaves/ne_ioctl_sample.c
+@@ -0,0 +1,883 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 + */
-+static void ne_event_work_handler(struct work_struct *work)
++
++/**
++ * DOC: Sample flow of using the ioctl interface provided by the Nitro Enclaves (NE)
++ * kernel driver.
++ *
++ * Usage
++ * -----
++ *
++ * Load the nitro_enclaves module, setting also the enclave CPU pool. The
++ * enclave CPUs need to be full cores from the same NUMA node. CPU 0 and its
++ * siblings have to remain available for the primary / parent VM, so they
++ * cannot be included in the enclave CPU pool.
++ *
++ * See the cpu list section from the kernel documentation.
++ * https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html#cpu-lists
++ *
++ *	insmod drivers/virt/nitro_enclaves/nitro_enclaves.ko
++ *	lsmod
++ *
++ *	The CPU pool can be set at runtime, after the kernel module is loaded.
++ *
++ *	echo <cpu-list> > /sys/module/nitro_enclaves/parameters/ne_cpus
++ *
++ *	NUMA and CPU siblings information can be found using:
++ *
++ *	lscpu
++ *	/proc/cpuinfo
++ *
++ * Check the online / offline CPU list. The CPUs from the pool should be
++ * offlined.
++ *
++ *	lscpu
++ *
++ * Check dmesg for any warnings / errors through the NE driver lifetime / usage.
++ * The NE logs contain the "nitro_enclaves" or "pci 0000:00:02.0" pattern.
++ *
++ *	dmesg
++ *
++ * Setup hugetlbfs huge pages. The memory needs to be from the same NUMA node as
++ * the enclave CPUs.
++ *
++ * https://www.kernel.org/doc/html/latest/admin-guide/mm/hugetlbpage.html
++ *
++ * By default, the allocation of hugetlb pages are distributed on all possible
++ * NUMA nodes. Use the following configuration files to set the number of huge
++ * pages from a NUMA node:
++ *
++ *	/sys/devices/system/node/node<X>/hugepages/hugepages-2048kB/nr_hugepages
++ *	/sys/devices/system/node/node<X>/hugepages/hugepages-1048576kB/nr_hugepages
++ *
++ *	or, if not on a system with multiple NUMA nodes, can also set the number
++ *	of 2 MiB / 1 GiB huge pages using
++ *
++ *	/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
++ *	/sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
++ *
++ *	In this example 256 hugepages of 2 MiB are used.
++ *
++ * Build and run the NE sample.
++ *
++ *	make -C samples/nitro_enclaves clean
++ *	make -C samples/nitro_enclaves
++ *	./samples/nitro_enclaves/ne_ioctl_sample <path_to_enclave_image>
++ *
++ * Unload the nitro_enclaves module.
++ *
++ *	rmmod nitro_enclaves
++ *	lsmod
++ */
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <limits.h>
++#include <poll.h>
++#include <pthread.h>
++#include <string.h>
++#include <sys/eventfd.h>
++#include <sys/ioctl.h>
++#include <sys/mman.h>
++#include <sys/socket.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <unistd.h>
++
++#include <linux/mman.h>
++#include <linux/nitro_enclaves.h>
++#include <linux/vm_sockets.h>
++
++/**
++ * NE_DEV_NAME - Nitro Enclaves (NE) misc device that provides the ioctl interface.
++ */
++#define NE_DEV_NAME			"/dev/nitro_enclaves"
++
++/**
++ * NE_POLL_WAIT_TIME - Timeout in seconds for each poll event.
++ */
++#define NE_POLL_WAIT_TIME		(60)
++/**
++ * NE_POLL_WAIT_TIME_MS - Timeout in milliseconds for each poll event.
++ */
++#define NE_POLL_WAIT_TIME_MS		(NE_POLL_WAIT_TIME * 1000)
++
++/**
++ * NE_SLEEP_TIME - Amount of time in seconds for the process to keep the enclave alive.
++ */
++#define NE_SLEEP_TIME			(300)
++
++/**
++ * NE_DEFAULT_NR_VCPUS - Default number of vCPUs set for an enclave.
++ */
++#define NE_DEFAULT_NR_VCPUS		(2)
++
++/**
++ * NE_MIN_MEM_REGION_SIZE - Minimum size of a memory region - 2 MiB.
++ */
++#define NE_MIN_MEM_REGION_SIZE		(2 * 1024 * 1024)
++
++/**
++ * NE_DEFAULT_NR_MEM_REGIONS - Default number of memory regions of 2 MiB set for
++ *			       an enclave.
++ */
++#define NE_DEFAULT_NR_MEM_REGIONS	(256)
++
++/**
++ * NE_IMAGE_LOAD_HEARTBEAT_CID - Vsock CID for enclave image loading heartbeat logic.
++ */
++#define NE_IMAGE_LOAD_HEARTBEAT_CID	(3)
++/**
++ * NE_IMAGE_LOAD_HEARTBEAT_PORT - Vsock port for enclave image loading heartbeat logic.
++ */
++#define NE_IMAGE_LOAD_HEARTBEAT_PORT	(9000)
++/**
++ * NE_IMAGE_LOAD_HEARTBEAT_VALUE - Heartbeat value for enclave image loading.
++ */
++#define NE_IMAGE_LOAD_HEARTBEAT_VALUE	(0xb7)
++
++/**
++ * struct ne_user_mem_region - User space memory region set for an enclave.
++ * @userspace_addr:	Address of the user space memory region.
++ * @memory_size:	Size of the user space memory region.
++ */
++struct ne_user_mem_region {
++	void	*userspace_addr;
++	size_t	memory_size;
++};
++
++/**
++ * ne_create_vm() - Create a slot for the enclave VM.
++ * @ne_dev_fd:		The file descriptor of the NE misc device.
++ * @slot_uid:		The generated slot uid for the enclave.
++ * @enclave_fd :	The generated file descriptor for the enclave.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_create_vm(int ne_dev_fd, unsigned long *slot_uid, int *enclave_fd)
 +{
-+	struct ne_pci_dev_cmd_reply cmd_reply = {};
-+	struct ne_enclave *ne_enclave = NULL;
-+	struct ne_pci_dev *ne_pci_dev =
-+		container_of(work, struct ne_pci_dev, notify_work);
 +	int rc = -EINVAL;
-+	struct slot_info_req slot_info_req = {};
++	*enclave_fd = ioctl(ne_dev_fd, NE_CREATE_VM, slot_uid);
 +
-+	mutex_lock(&ne_pci_dev->enclaves_list_mutex);
++	if (*enclave_fd < 0) {
++		rc = *enclave_fd;
++		switch (errno) {
++		case NE_ERR_NO_CPUS_AVAIL_IN_POOL: {
++			printf("Error in create VM, no CPUs available in the NE CPU pool\n");
 +
-+	/*
-+	 * Iterate over all enclaves registered for the Nitro Enclaves
-+	 * PCI device and determine for which enclave(s) the out-of-band event
-+	 * is corresponding to.
-+	 */
-+	list_for_each_entry(ne_enclave, &ne_pci_dev->enclaves_list, enclave_list_entry) {
-+		mutex_lock(&ne_enclave->enclave_info_mutex);
-+
-+		/*
-+		 * Enclaves that were never started cannot receive out-of-band
-+		 * events.
-+		 */
-+		if (ne_enclave->state != NE_STATE_RUNNING)
-+			goto unlock;
-+
-+		slot_info_req.slot_uid = ne_enclave->slot_uid;
-+
-+		rc = ne_do_request(ne_enclave->pdev, SLOT_INFO, &slot_info_req,
-+				   sizeof(slot_info_req), &cmd_reply, sizeof(cmd_reply));
-+		if (rc < 0)
-+			dev_err(&ne_enclave->pdev->dev, "Error in slot info [rc=%d]\n", rc);
-+
-+		/* Notify enclave process that the enclave state changed. */
-+		if (ne_enclave->state != cmd_reply.state) {
-+			ne_enclave->state = cmd_reply.state;
-+
-+			ne_enclave->has_event = true;
-+
-+			wake_up_interruptible(&ne_enclave->eventq);
++			break;
 +		}
 +
-+unlock:
-+		 mutex_unlock(&ne_enclave->enclave_info_mutex);
++		default:
++			printf("Error in create VM [%m]\n");
++		}
++
++		return rc;
 +	}
 +
-+	mutex_unlock(&ne_pci_dev->enclaves_list_mutex);
++	return 0;
++}
++
++
++/**
++ * ne_poll_enclave_fd() - Thread function for polling the enclave fd.
++ * @data:	Argument provided for the polling function.
++ *
++ * Context: Process context.
++ * Return:
++ * * NULL on success / failure.
++ */
++void *ne_poll_enclave_fd(void *data)
++{
++	int enclave_fd = *(int *)data;
++	struct pollfd fds[1] = {};
++	int i = 0;
++	int rc = -EINVAL;
++
++	printf("Running from poll thread, enclave fd %d\n", enclave_fd);
++
++	fds[0].fd = enclave_fd;
++	fds[0].events = POLLIN | POLLERR | POLLHUP;
++
++	/* Keep on polling until the current process is terminated. */
++	while (1) {
++		printf("[iter %d] Polling ...\n", i);
++
++		rc = poll(fds, 1, NE_POLL_WAIT_TIME_MS);
++		if (rc < 0) {
++			printf("Error in poll [%m]\n");
++
++			return NULL;
++		}
++
++		i++;
++
++		if (!rc) {
++			printf("Poll: %d seconds elapsed\n",
++			       i * NE_POLL_WAIT_TIME);
++
++			continue;
++		}
++
++		printf("Poll received value 0x%x\n", fds[0].revents);
++
++		if (fds[0].revents & POLLHUP) {
++			printf("Received POLLHUP\n");
++
++			return NULL;
++		}
++
++		if (fds[0].revents & POLLNVAL) {
++			printf("Received POLLNVAL\n");
++
++			return NULL;
++		}
++	}
++
++	return NULL;
 +}
 +
 +/**
-+ * ne_event_handler() - Interrupt handler for PCI device out-of-band events.
-+ *			This interrupt does not supply any data in the MMIO
-+ *			region. It notifies a change in the state of any of
-+ *			the launched enclaves.
-+ * @irq:	Received interrupt for an out-of-band event.
-+ * @args:	PCI device private data structure.
++ * ne_alloc_user_mem_region() - Allocate a user space memory region for an enclave.
++ * @ne_user_mem_region:	User space memory region allocated using hugetlbfs.
 + *
-+ * Context: Interrupt context.
++ * Context: Process context.
 + * Return:
-+ * * IRQ_HANDLED on handled interrupt.
++ * * 0 on success.
++ * * Negative return value on failure.
 + */
-+static irqreturn_t ne_event_handler(int irq, void *args)
++static int ne_alloc_user_mem_region(struct ne_user_mem_region *ne_user_mem_region)
 +{
-+	struct ne_pci_dev *ne_pci_dev = (struct ne_pci_dev *)args;
++	/**
++	 * Check available hugetlb encodings for different huge page sizes in
++	 * include/uapi/linux/mman.h.
++	 */
++	ne_user_mem_region->userspace_addr = mmap(NULL, ne_user_mem_region->memory_size,
++						  PROT_READ | PROT_WRITE,
++						  MAP_PRIVATE | MAP_ANONYMOUS |
++						  MAP_HUGETLB | MAP_HUGE_2MB, -1, 0);
++	if (ne_user_mem_region->userspace_addr == MAP_FAILED) {
++		printf("Error in mmap memory [%m]\n");
 +
-+	queue_work(ne_pci_dev->event_wq, &ne_pci_dev->notify_work);
++		return -1;
++	}
 +
-+	return IRQ_HANDLED;
++	return 0;
 +}
 +
- /**
-  * ne_setup_msix() - Setup MSI-X vectors for the PCI device.
-  * @pdev:	PCI device to setup the MSI-X for.
-@@ -243,8 +325,36 @@ static int ne_setup_msix(struct pci_dev *pdev)
- 		goto free_irq_vectors;
- 	}
- 
-+	ne_pci_dev->event_wq = create_singlethread_workqueue("ne_pci_dev_wq");
-+	if (!ne_pci_dev->event_wq) {
-+		rc = -ENOMEM;
++/**
++ * ne_load_enclave_image() - Place the enclave image in the enclave memory.
++ * @enclave_fd :		The file descriptor associated with the enclave.
++ * @ne_user_mem_regions:	User space memory regions allocated for the enclave.
++ * @enclave_image_path :	The file path of the enclave image.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_load_enclave_image(int enclave_fd, struct ne_user_mem_region ne_user_mem_regions[],
++				 char *enclave_image_path)
++{
++	unsigned char *enclave_image = NULL;
++	int enclave_image_fd = -1;
++	size_t enclave_image_size = 0;
++	size_t enclave_memory_size = 0;
++	unsigned long i = 0;
++	size_t image_written_bytes = 0;
++	struct ne_image_load_info image_load_info = {
++		.flags = NE_EIF_IMAGE,
++	};
++	struct stat image_stat_buf = {};
++	int rc = -EINVAL;
++	size_t temp_image_offset = 0;
 +
-+		dev_err(&pdev->dev, "Cannot get wq for dev events [rc=%d]\n", rc);
++	for (i = 0; i < NE_DEFAULT_NR_MEM_REGIONS; i++)
++		enclave_memory_size += ne_user_mem_regions[i].memory_size;
 +
-+		goto free_reply_irq_vec;
++	rc = stat(enclave_image_path, &image_stat_buf);
++	if (rc < 0) {
++		printf("Error in get image stat info [%m]\n");
++
++		return rc;
 +	}
 +
-+	INIT_WORK(&ne_pci_dev->notify_work, ne_event_work_handler);
++	enclave_image_size = image_stat_buf.st_size;
++
++	if (enclave_memory_size < enclave_image_size) {
++		printf("The enclave memory is smaller than the enclave image size\n");
++
++		return -ENOMEM;
++	}
++
++	rc = ioctl(enclave_fd, NE_GET_IMAGE_LOAD_INFO, &image_load_info);
++	if (rc < 0) {
++		switch (errno) {
++		case NE_ERR_NOT_IN_INIT_STATE: {
++			printf("Error in get image load info, enclave not in init state\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_FLAG_VALUE: {
++			printf("Error in get image load info, provided invalid flag\n");
++
++			break;
++		}
++
++		default:
++			printf("Error in get image load info [%m]\n");
++		}
++
++		return rc;
++	}
++
++	printf("Enclave image offset in enclave memory is %lld\n",
++	       image_load_info.memory_offset);
++
++	enclave_image_fd = open(enclave_image_path, O_RDONLY);
++	if (enclave_image_fd < 0) {
++		printf("Error in open enclave image file [%m]\n");
++
++		return enclave_image_fd;
++	}
++
++	enclave_image = mmap(NULL, enclave_image_size, PROT_READ,
++			     MAP_PRIVATE, enclave_image_fd, 0);
++	if (enclave_image == MAP_FAILED) {
++		printf("Error in mmap enclave image [%m]\n");
++
++		return -1;
++	}
++
++	temp_image_offset = image_load_info.memory_offset;
++
++	for (i = 0; i < NE_DEFAULT_NR_MEM_REGIONS; i++) {
++		size_t bytes_to_write = 0;
++		size_t memory_offset = 0;
++		size_t memory_size = ne_user_mem_regions[i].memory_size;
++		size_t remaining_bytes = 0;
++		void *userspace_addr = ne_user_mem_regions[i].userspace_addr;
++
++		if (temp_image_offset >= memory_size) {
++			temp_image_offset -= memory_size;
++
++			continue;
++		} else if (temp_image_offset != 0) {
++			memory_offset = temp_image_offset;
++			memory_size -= temp_image_offset;
++			temp_image_offset = 0;
++		}
++
++		remaining_bytes = enclave_image_size - image_written_bytes;
++		bytes_to_write = memory_size < remaining_bytes ?
++				 memory_size : remaining_bytes;
++
++		memcpy(userspace_addr + memory_offset,
++		       enclave_image + image_written_bytes, bytes_to_write);
++
++		image_written_bytes += bytes_to_write;
++
++		if (image_written_bytes == enclave_image_size)
++			break;
++	}
++
++	munmap(enclave_image, enclave_image_size);
++
++	close(enclave_image_fd);
++
++	return 0;
++}
++
++/**
++ * ne_set_user_mem_region() - Set a user space memory region for the given enclave.
++ * @enclave_fd :		The file descriptor associated with the enclave.
++ * @ne_user_mem_region :	User space memory region to be set for the enclave.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_set_user_mem_region(int enclave_fd, struct ne_user_mem_region ne_user_mem_region)
++{
++	struct ne_user_memory_region mem_region = {
++		.flags = NE_DEFAULT_MEMORY_REGION,
++		.memory_size = ne_user_mem_region.memory_size,
++		.userspace_addr = (__u64)ne_user_mem_region.userspace_addr,
++	};
++	int rc = -EINVAL;
++
++	rc = ioctl(enclave_fd, NE_SET_USER_MEMORY_REGION, &mem_region);
++	if (rc < 0) {
++		switch (errno) {
++		case NE_ERR_NOT_IN_INIT_STATE: {
++			printf("Error in set user memory region, enclave not in init state\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_MEM_REGION_SIZE: {
++			printf("Error in set user memory region, mem size not multiple of 2 MiB\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_MEM_REGION_ADDR: {
++			printf("Error in set user memory region, invalid user space address\n");
++
++			break;
++		}
++
++		case NE_ERR_UNALIGNED_MEM_REGION_ADDR: {
++			printf("Error in set user memory region, unaligned user space address\n");
++
++			break;
++		}
++
++		case NE_ERR_MEM_REGION_ALREADY_USED: {
++			printf("Error in set user memory region, memory region already used\n");
++
++			break;
++		}
++
++		case NE_ERR_MEM_NOT_HUGE_PAGE: {
++			printf("Error in set user memory region, not backed by huge pages\n");
++
++			break;
++		}
++
++		case NE_ERR_MEM_DIFFERENT_NUMA_NODE: {
++			printf("Error in set user memory region, different NUMA node than CPUs\n");
++
++			break;
++		}
++
++		case NE_ERR_MEM_MAX_REGIONS: {
++			printf("Error in set user memory region, max memory regions reached\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_PAGE_SIZE: {
++			printf("Error in set user memory region, has page not multiple of 2 MiB\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_FLAG_VALUE: {
++			printf("Error in set user memory region, provided invalid flag\n");
++
++			break;
++		}
++
++		default:
++			printf("Error in set user memory region [%m]\n");
++		}
++
++		return rc;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_free_mem_regions() - Unmap all the user space memory regions that were set
++ *			   aside for the enclave.
++ * @ne_user_mem_regions:	The user space memory regions associated with an enclave.
++ *
++ * Context: Process context.
++ */
++static void ne_free_mem_regions(struct ne_user_mem_region ne_user_mem_regions[])
++{
++	unsigned int i = 0;
++
++	for (i = 0; i < NE_DEFAULT_NR_MEM_REGIONS; i++)
++		munmap(ne_user_mem_regions[i].userspace_addr,
++		       ne_user_mem_regions[i].memory_size);
++}
++
++/**
++ * ne_add_vcpu() - Add a vCPU to the given enclave.
++ * @enclave_fd :	The file descriptor associated with the enclave.
++ * @vcpu_id:		vCPU id to be set for the enclave, either provided or
++ *			auto-generated (if provided vCPU id is 0).
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_add_vcpu(int enclave_fd, unsigned int *vcpu_id)
++{
++	int rc = -EINVAL;
++
++	rc = ioctl(enclave_fd, NE_ADD_VCPU, vcpu_id);
++	if (rc < 0) {
++		switch (errno) {
++		case NE_ERR_NO_CPUS_AVAIL_IN_POOL: {
++			printf("Error in add vcpu, no CPUs available in the NE CPU pool\n");
++
++			break;
++		}
++
++		case NE_ERR_VCPU_ALREADY_USED: {
++			printf("Error in add vcpu, the provided vCPU is already used\n");
++
++			break;
++		}
++
++		case NE_ERR_VCPU_NOT_IN_CPU_POOL: {
++			printf("Error in add vcpu, the provided vCPU is not in the NE CPU pool\n");
++
++			break;
++		}
++
++		case NE_ERR_VCPU_INVALID_CPU_CORE: {
++			printf("Error in add vcpu, the core id of the provided vCPU is invalid\n");
++
++			break;
++		}
++
++		case NE_ERR_NOT_IN_INIT_STATE: {
++			printf("Error in add vcpu, enclave not in init state\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_VCPU: {
++			printf("Error in add vcpu, the provided vCPU is out of avail CPUs range\n");
++
++			break;
++		}
++
++		default:
++			printf("Error in add vcpu [%m]\n");
++
++		}
++		return rc;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_start_enclave() - Start the given enclave.
++ * @enclave_fd :		The file descriptor associated with the enclave.
++ * @enclave_start_info :	Enclave metadata used for starting e.g. vsock CID.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_start_enclave(int enclave_fd,  struct ne_enclave_start_info *enclave_start_info)
++{
++	int rc = -EINVAL;
++
++	rc = ioctl(enclave_fd, NE_START_ENCLAVE, enclave_start_info);
++	if (rc < 0) {
++		switch (errno) {
++		case NE_ERR_NOT_IN_INIT_STATE: {
++			printf("Error in start enclave, enclave not in init state\n");
++
++			break;
++		}
++
++		case NE_ERR_NO_MEM_REGIONS_ADDED: {
++			printf("Error in start enclave, no memory regions have been added\n");
++
++			break;
++		}
++
++		case NE_ERR_NO_VCPUS_ADDED: {
++			printf("Error in start enclave, no vCPUs have been added\n");
++
++			break;
++		}
++
++		case NE_ERR_FULL_CORES_NOT_USED: {
++			printf("Error in start enclave, enclave has no full cores set\n");
++
++			break;
++		}
++
++		case NE_ERR_ENCLAVE_MEM_MIN_SIZE: {
++			printf("Error in start enclave, enclave memory is less than min size\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_FLAG_VALUE: {
++			printf("Error in start enclave, provided invalid flag\n");
++
++			break;
++		}
++
++		case NE_ERR_INVALID_ENCLAVE_CID: {
++			printf("Error in start enclave, provided invalid enclave CID\n");
++
++			break;
++		}
++
++		default:
++			printf("Error in start enclave [%m]\n");
++		}
++
++		return rc;
++	}
++
++	return 0;
++}
++
++/**
++ * ne_start_enclave_check_booted() - Start the enclave and wait for a hearbeat
++ *				     from it, on a newly created vsock channel,
++ *				     to check it has booted.
++ * @enclave_fd :	The file descriptor associated with the enclave.
++ *
++ * Context: Process context.
++ * Return:
++ * * 0 on success.
++ * * Negative return value on failure.
++ */
++static int ne_start_enclave_check_booted(int enclave_fd)
++{
++	struct sockaddr_vm client_vsock_addr = {};
++	int client_vsock_fd = -1;
++	socklen_t client_vsock_len = sizeof(client_vsock_addr);
++	struct ne_enclave_start_info enclave_start_info = {};
++	struct pollfd fds[1] = {};
++	int rc = -EINVAL;
++	unsigned char recv_buf = 0;
++	struct sockaddr_vm server_vsock_addr = {
++		.svm_family = AF_VSOCK,
++		.svm_cid = NE_IMAGE_LOAD_HEARTBEAT_CID,
++		.svm_port = NE_IMAGE_LOAD_HEARTBEAT_PORT,
++	};
++	int server_vsock_fd = -1;
++
++	server_vsock_fd = socket(AF_VSOCK, SOCK_STREAM, 0);
++	if (server_vsock_fd < 0) {
++		rc = server_vsock_fd;
++
++		printf("Error in socket [%m]\n");
++
++		return rc;
++	}
++
++	rc = bind(server_vsock_fd, (struct sockaddr *)&server_vsock_addr,
++		  sizeof(server_vsock_addr));
++	if (rc < 0) {
++		printf("Error in bind [%m]\n");
++
++		goto out;
++	}
++
++	rc = listen(server_vsock_fd, 1);
++	if (rc < 0) {
++		printf("Error in listen [%m]\n");
++
++		goto out;
++	}
++
++	rc = ne_start_enclave(enclave_fd, &enclave_start_info);
++	if (rc < 0)
++		goto out;
++
++	printf("Enclave started, CID %llu\n", enclave_start_info.enclave_cid);
++
++	fds[0].fd = server_vsock_fd;
++	fds[0].events = POLLIN;
++
++	rc = poll(fds, 1, NE_POLL_WAIT_TIME_MS);
++	if (rc < 0) {
++		printf("Error in poll [%m]\n");
++
++		goto out;
++	}
++
++	if (!rc) {
++		printf("Poll timeout, %d seconds elapsed\n", NE_POLL_WAIT_TIME);
++
++		rc = -ETIMEDOUT;
++
++		goto out;
++	}
++
++	if ((fds[0].revents & POLLIN) == 0) {
++		printf("Poll received value %d\n", fds[0].revents);
++
++		rc = -EINVAL;
++
++		goto out;
++	}
++
++	rc = accept(server_vsock_fd, (struct sockaddr *)&client_vsock_addr,
++		    &client_vsock_len);
++	if (rc < 0) {
++		printf("Error in accept [%m]\n");
++
++		goto out;
++	}
++
++	client_vsock_fd = rc;
 +
 +	/*
-+	 * This IRQ gets triggered every time any enclave's state changes. Its
-+	 * handler then scans for the changes and propagates them to the user
-+	 * space.
++	 * Read the heartbeat value that the init process in the enclave sends
++	 * after vsock connect.
 +	 */
-+	rc = request_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_event_handler,
-+			 0, "enclave_evt", ne_pci_dev);
++	rc = read(client_vsock_fd, &recv_buf, sizeof(recv_buf));
 +	if (rc < 0) {
-+		dev_err(&pdev->dev, "Error in request irq event [rc=%d]\n", rc);
++		printf("Error in read [%m]\n");
 +
-+		goto destroy_wq;
++		goto out;
 +	}
 +
- 	return 0;
- 
-+destroy_wq:
-+	destroy_workqueue(ne_pci_dev->event_wq);
-+free_reply_irq_vec:
-+	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
- free_irq_vectors:
- 	pci_free_irq_vectors(pdev);
- 
-@@ -261,6 +371,12 @@ static void ne_teardown_msix(struct pci_dev *pdev)
- {
- 	struct ne_pci_dev *ne_pci_dev = pci_get_drvdata(pdev);
- 
-+	free_irq(pci_irq_vector(pdev, NE_VEC_EVENT), ne_pci_dev);
++	if (rc != sizeof(recv_buf) || recv_buf != NE_IMAGE_LOAD_HEARTBEAT_VALUE) {
++		printf("Read %d instead of %d\n", recv_buf,
++		       NE_IMAGE_LOAD_HEARTBEAT_VALUE);
 +
-+	flush_work(&ne_pci_dev->notify_work);
-+	flush_workqueue(ne_pci_dev->event_wq);
-+	destroy_workqueue(ne_pci_dev->event_wq);
++		goto out;
++	}
 +
- 	free_irq(pci_irq_vector(pdev, NE_VEC_REPLY), ne_pci_dev);
- 
- 	pci_free_irq_vectors(pdev);
++	/* Write the heartbeat value back. */
++	rc = write(client_vsock_fd, &recv_buf, sizeof(recv_buf));
++	if (rc < 0) {
++		printf("Error in write [%m]\n");
++
++		goto out;
++	}
++
++	rc = 0;
++
++out:
++	close(server_vsock_fd);
++
++	return rc;
++}
++
++int main(int argc, char *argv[])
++{
++	int enclave_fd = -1;
++	unsigned int i = 0;
++	int ne_dev_fd = -1;
++	struct ne_user_mem_region ne_user_mem_regions[NE_DEFAULT_NR_MEM_REGIONS] = {};
++	unsigned int ne_vcpus[NE_DEFAULT_NR_VCPUS] = {};
++	int rc = -EINVAL;
++	pthread_t thread_id = 0;
++	unsigned long slot_uid = 0;
++
++	if (argc != 2) {
++		printf("Usage: %s <path_to_enclave_image>\n", argv[0]);
++
++		exit(EXIT_FAILURE);
++	}
++
++	if (strlen(argv[1]) >= PATH_MAX) {
++		printf("The size of the path to enclave image is higher than max path\n");
++
++		exit(EXIT_FAILURE);
++	}
++
++	ne_dev_fd = open(NE_DEV_NAME, O_RDWR | O_CLOEXEC);
++	if (ne_dev_fd < 0) {
++		printf("Error in open NE device [%m]\n");
++
++		exit(EXIT_FAILURE);
++	}
++
++	printf("Creating enclave slot ...\n");
++
++	rc = ne_create_vm(ne_dev_fd, &slot_uid, &enclave_fd);
++
++	close(ne_dev_fd);
++
++	if (rc < 0)
++		exit(EXIT_FAILURE);
++
++	printf("Enclave fd %d\n", enclave_fd);
++
++	rc = pthread_create(&thread_id, NULL, ne_poll_enclave_fd, (void *)&enclave_fd);
++	if (rc < 0) {
++		printf("Error in thread create [%m]\n");
++
++		close(enclave_fd);
++
++		exit(EXIT_FAILURE);
++	}
++
++	for (i = 0; i < NE_DEFAULT_NR_MEM_REGIONS; i++) {
++		ne_user_mem_regions[i].memory_size = NE_MIN_MEM_REGION_SIZE;
++
++		rc = ne_alloc_user_mem_region(&ne_user_mem_regions[i]);
++		if (rc < 0) {
++			printf("Error in alloc userspace memory region, iter %d\n", i);
++
++			goto release_enclave_fd;
++		}
++	}
++
++	rc = ne_load_enclave_image(enclave_fd, ne_user_mem_regions, argv[1]);
++	if (rc < 0)
++		goto release_enclave_fd;
++
++	for (i = 0; i < NE_DEFAULT_NR_MEM_REGIONS; i++) {
++		rc = ne_set_user_mem_region(enclave_fd, ne_user_mem_regions[i]);
++		if (rc < 0) {
++			printf("Error in set memory region, iter %d\n", i);
++
++			goto release_enclave_fd;
++		}
++	}
++
++	printf("Enclave memory regions were added\n");
++
++	for (i = 0; i < NE_DEFAULT_NR_VCPUS; i++) {
++		/*
++		 * The vCPU is chosen from the enclave vCPU pool, if the value
++		 * of the vcpu_id is 0.
++		 */
++		ne_vcpus[i] = 0;
++		rc = ne_add_vcpu(enclave_fd, &ne_vcpus[i]);
++		if (rc < 0) {
++			printf("Error in add vcpu, iter %d\n", i);
++
++			goto release_enclave_fd;
++		}
++
++		printf("Added vCPU %d to the enclave\n", ne_vcpus[i]);
++	}
++
++	printf("Enclave vCPUs were added\n");
++
++	rc = ne_start_enclave_check_booted(enclave_fd);
++	if (rc < 0) {
++		printf("Error in the enclave start / image loading heartbeat logic [rc=%d]\n", rc);
++
++		goto release_enclave_fd;
++	}
++
++	printf("Entering sleep for %d seconds ...\n", NE_SLEEP_TIME);
++
++	sleep(NE_SLEEP_TIME);
++
++	close(enclave_fd);
++
++	ne_free_mem_regions(ne_user_mem_regions);
++
++	exit(EXIT_SUCCESS);
++
++release_enclave_fd:
++	close(enclave_fd);
++	ne_free_mem_regions(ne_user_mem_regions);
++
++	exit(EXIT_FAILURE);
++}
 -- 
 2.20.1 (Apple Git-117)
 
