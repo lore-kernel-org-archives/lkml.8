@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E53C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 222AAC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 452AB206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7951206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:27:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229613;
-	bh=Tr4z+NR1SRMOzY+LWC5T7njKmV51Ey9kJebg7MBtyho=;
+	s=default; t=1599229628;
+	bh=OyJPEEMtX0OZO8ZGe/PWQVztakgqVmr0EUsWqA/IVP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rOWgltFx31s07PPqSvaUZA1xhOjGZaeHNAW4Agkdfx+hwEII7Xw5dOtwNsk7lPL1r
-	 AaMztAgJCfqfvertBLuxS5QBt4zrDuX1uHdEw7KUpBGqlDSZ1W1dXSRKS8OS3XO6jj
-	 D5ddMDtWlIKCw1crhwy7yzSeOpfgQpiEhOjV/GL4=
+	b=biudiamThNSs6DHkoAptyfaZ6A7uUXK3rdoAUOrTilzE2dagjGapO3CKaxB83A8/8
+	 MRKoDr8UZ8xUJ5Mp5pNIWLqa+MgCqSrJwiG9PNfD4fGJNxkXehucsdyoaKHOmzO5PE
+	 BCtg+lzIioCsHDiiFNl2ArS5Szf2Dp+cR6ORUDRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730814AbgIDO0t (ORCPT
+        id S1730568AbgIDO1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:26:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36826 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:27:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730388AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730460AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:34:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8916C216C4;
-        Fri,  4 Sep 2020 13:31:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FBAE20E65;
+        Fri,  4 Sep 2020 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226272;
-        bh=Tr4z+NR1SRMOzY+LWC5T7njKmV51Ey9kJebg7MBtyho=;
+        s=default; t=1599226248;
+        bh=OyJPEEMtX0OZO8ZGe/PWQVztakgqVmr0EUsWqA/IVP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/cqYwoylcvvLKW9dpAGMqEr+nJVeM4xw6upTWqBvLJh9NW7nNVRltEPNpn+bnFHO
-         MUxM/qS/kgiO/VH4CUvY2P/Jx7ENGC1uc5HtwZzdcMFYVqppDm+fOspcVnkmlszXif
-         fwXPuSOCmo3gJyUqNVCayPeYkfI/e8PaYq5+vnjw=
+        b=U0mX0EnUxL4GumD+/nMnqWtduGR4TTth3msZQoO5LsQ800Y84TZOvDfWJNJwk3KGe
+         jT+4I8S2pU0rAsrxt6myVXi6Elz+A4Woym2U5HS1IZYAl9MobRA14Qxl2L3r7E9BFK
+         OqZPmTGa3GeJWaaqXpc6XUVbQpDTkoAR/7WwB5Kk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
         Sowjanya Komatineni <skomatineni@nvidia.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 14/17] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-Date:   Fri,  4 Sep 2020 15:30:13 +0200
-Message-Id: <20200904120258.690017339@linuxfoundation.org>
+Subject: [PATCH 5.8 11/17] arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+Date:   Fri,  4 Sep 2020 15:30:10 +0200
+Message-Id: <20200904120258.543409905@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
 References: <20200904120257.983551609@linuxfoundation.org>
@@ -63,41 +62,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit e33588adcaa925c18ee2ea253161fb0317fa2329 upstream.
+commit c956c0cd4f6f4aac4f095621b1c4e1c5ee1df877 upstream.
 
-commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+commit 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra210 from the
-beginning of Tegra210 support in the driver.
+Tegra194 uses separate SDMMC_LEGACY_TM clock for data timeout and
+this clock is not enabled currently which is not recommended.
 
-Tegra210 SDMMC hardware by default uses timeout clock (TMCLK)
-instead of SDCLK and this quirk should not be set.
+Tegra194 SDMMC advertises 12Mhz as timeout clock frequency in host
+capability register.
 
-So, this patch remove this quirk for Tegra210.
+So, this clock should be kept enabled by SDMMC driver.
 
-Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Fixes: 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
 Cc: stable <stable@vger.kernel.org> # 5.4
 Tested-by: Jon Hunter <jonathanh@nvidia.com>
 Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1598548861-32373-2-git-send-email-skomatineni@nvidia.com
+Link: https://lore.kernel.org/r/1598548861-32373-7-git-send-email-skomatineni@nvidia.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-tegra.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1409,7 +1409,6 @@ static const struct sdhci_ops tegra210_s
- 
- static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -453,8 +453,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03400000 0x10000>;
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC1>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
+ 			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
+@@ -475,8 +476,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03440000 0x10000>;
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC3>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
+ 			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
+@@ -498,8 +500,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03460000 0x10000>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			assigned-clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
+ 					  <&bpmp TEGRA194_CLK_PLLC4>;
+ 			assigned-clock-parents =
 
 
