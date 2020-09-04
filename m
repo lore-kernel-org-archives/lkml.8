@@ -2,160 +2,192 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C30FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF79C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC1DC206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="DVTGoZ9/"
+	by mail.kernel.org (Postfix) with ESMTP id 8CE70206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599234538;
+	bh=vCpPDFBI/YTj3r0gZ1Lk+JMh06anXpHdDelgk/Yroqs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uLqOAk2sdvPFa2NM6lMImIJEYJY8Ajpp1UKJuz5SJdWZ4g5nl/dqm3bp5fbCe5uWx
+	 rX6NRZJsOmL87WoYt2cSpAVaXxdHR199HMyljnvQjC3a0Tev06+oMJZ+b8kN0hAnvQ
+	 dKj8dcE4SYF0Jg9VD2TGOslG1Uuzn9Edx9PIY+Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgIDPso (ORCPT
+        id S1727901AbgIDPsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 4 Sep 2020 11:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727877AbgIDPso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 11:48:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgIDPrM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:47:12 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F141C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:52 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q9so6498720wmj.2
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fqNzmK12nk8xdy0PepsxrcJPk3kdW/zWD0as5Np++IA=;
-        b=DVTGoZ9/IcG51yNk5wt6AIfbpjjgClmzQ/sB+JyYMzA1scB60f3klAUXpqyjXur7cU
-         ceecqoA7dym9XyBOoc0KJdnwhnHizDo3L+PRneh2SVhNd3RWGVlxNWp4fb0qHEB16MUY
-         UZZ981+PbDw/shKPxNe44u2DhQhUUonkKpnwrrBH3up1tBSsARpNhbqB1KQ0qdn4YGQv
-         XVsC4P/nVvaAO/z3RO/B93144s06ZfVD1aZ6utVH8mAT1UxThVC9fl3XLywTHrk2F3Pb
-         WRQ2oVF2yJ8i9/JXYBH6uosFBiLxHCTqBSgossd5IqX6hMJ4D3zpFtL5ugLmJe9Q8xrE
-         2QvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fqNzmK12nk8xdy0PepsxrcJPk3kdW/zWD0as5Np++IA=;
-        b=bJzm69l8AibUscv7+fPDGc6s0i+ccEhoONB/Jf+2QZ+bt1Nv7tg33gf4RIAZwMPT4w
-         0bapzwm0xqCXPUhN5UOk1xUQca56qz+Yi/M1Vmdh/q0DwdXXf/FKW25+PyjIiqqzruJ6
-         n7eJVc3oKFjasGcQoCPFE4I+wZFTzCTkqTmyzFvUvYNM6ts6f9S64U4YqNUrrCdgDtbk
-         cW4NfeckUKT0dQjgqzT1barnUTZ4uPglA4YYNrzJGYoUEYqczckxAOppCdmq7PjUOFpn
-         fgUcbhPoUGx/4DiTrT9nhBMJEXzIFP90FRt7Ct2j2MBhGlc0AvRcGzpf13lDBSH2jtWO
-         2D4g==
-X-Gm-Message-State: AOAM533wIDXfA8W1k1uQeRIU3Z3u+IXBFxEXXU494IBzAeEtsmyoc0NW
-        Qui6zq0VtmrywMmxzSBJA3wSMw==
-X-Google-Smtp-Source: ABdhPJxttLkSDVoDRXzlpcTjTpigx62xH5t4We6CkvNvgq/knQn3QcMipzht5x/6b+Rm8h9SpKU0dQ==
-X-Received: by 2002:a1c:f402:: with SMTP id z2mr7915668wma.87.1599234411169;
-        Fri, 04 Sep 2020 08:46:51 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:46:50 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 17/23] gpio: mockup: rename and move around debugfs callbacks
-Date:   Fri,  4 Sep 2020 17:45:41 +0200
-Message-Id: <20200904154547.3836-18-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 615A3206E7;
+        Fri,  4 Sep 2020 15:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599234523;
+        bh=vCpPDFBI/YTj3r0gZ1Lk+JMh06anXpHdDelgk/Yroqs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hblZpg2RnolUwCmaVnfkcv5nnfC5YRQi4H9Ze3Ui/uhjJPtpTJh2aNSU+BOVck5sc
+         U/fNvP/qOcuRApyEZEUD357dQuODreuxbxdIHcZDEuKG3RHfAQjH+ZadT0PzhyPUfo
+         5gL3OzvsTXG3GrIDp79qT6DXJrIEETiTjgnBqwrs=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kEDxB-009DDO-MC; Fri, 04 Sep 2020 16:48:41 +0100
+Date:   Fri, 04 Sep 2020 16:48:35 +0100
+Message-ID: <87ft7xr19o.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: tegra: Convert to MSI domains
+In-Reply-To: <20200904105613.444945-1-thierry.reding@gmail.com>
+References: <20200904105613.444945-1-thierry.reding@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: thierry.reding@gmail.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jonathanh@nvidia.com, jgg@nvidia.com, tglx@linutronix.de, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Thierry,
 
-We will soon introduce new debugfs attributes for dynamically created
-chips. We'll reuse the gpio_mockup_debugfs_open() helper for them but
-the relevant write callbacks will of course be different.
+On Fri, 04 Sep 2020 11:56:13 +0100,
+Thierry Reding <thierry.reding@gmail.com> wrote:
+> 
+> From: Marc Zyngier <maz@kernel.org>
+> 
+> In anticipation of the removal of the msi_controller structure, convert
+> the Tegra host controller driver to MSI domains.
+> 
+> We end-up with the usual two domain structure, the top one being a
+> generic PCI/MSI domain, the bottom one being Tegra-specific and handling
+> the actual HW interrupt allocation.
+> 
+> While at it, convert the normal interrupt handler to a chained handler,
+> handle the controller's MSI IRQ edge triggered, support multiple MSIs
+> per device and use the AFI_MSI_EN_VEC* registers to provide MSI masking.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> [treding@nvidia.com: fix, clean up and address TODOs from Marc's draft]
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> This is basically Marc's patch from here:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=irq/tegra-msi&id=8ba6858f07a7554d4e56a6d5103cd914dcf23af0
+> 
+> That didn't work as-is, but it was pretty easy to get it to build and
+> run properly. Once I had that I went through Marc's list of TODOs and
+> addressed them, which was also not very difficult.
+> 
+> I haven't done any extensive testing, but I can boot fine over NFS with
+> a PCI Ethernet card. Given how fundamental this is, I would expect that
+> to be a good enough test.
+> 
+> Marc, I've kept your authorship on this. There are substantial changes
+> from your version, but you had laid out the plan for all these changes,
+> so it seemed fair. However, let me know if you're not comfortable with
+> taking responsibility for any potential bugs I've introduced.
 
-Let's rename gpio_mockup_debugfs_write() to
-gpio_mockup_debugfs_pull_write() to avoid confusion with new write
-callbacks and move gpio_mockup_debugfs_open() higher up in the code to
-separate it from the pull/value attribute which will no longer be the
-only user.
+Thanks a lot for picking this up at short notice. Definitely happy
+with you preserving the authorship, though I wouldn't object if you
+did it the other way around.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpio-mockup.c | 26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+> I had originally considered sending this out as a series with more
+> intermediate steps, but it turns out most of the TODO's that Marc had
+> listed are related, so this could've been at maximum two or three
+> patches. That didn't seem worth splitting up for. I think most of this
+> work is still all related to the MSI domain conversion, so it makes
+> sense to keep it in one patch.
+> 
+>  drivers/pci/controller/pci-tegra.c | 316 +++++++++++++++--------------
+>  1 file changed, 165 insertions(+), 151 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index c1d34353c29b..f7f92718ce40 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
 
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index eb94ddac5fee..29fbf007ab26 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -262,9 +262,14 @@ static void gpio_mockup_free(struct gpio_chip *gc, unsigned int offset)
- 	__gpio_mockup_set(chip, offset, chip->lines[offset].pull);
- }
- 
--static ssize_t gpio_mockup_debugfs_read(struct file *file,
--					char __user *usr_buf,
--					size_t size, loff_t *ppos)
-+static int gpio_mockup_debugfs_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, NULL, inode->i_private);
-+}
-+
-+static ssize_t gpio_mockup_debugfs_value_read(struct file *file,
-+					      char __user *usr_buf,
-+					      size_t size, loff_t *ppos)
- {
- 	struct gpio_mockup_dbgfs_private *priv;
- 	struct gpio_mockup_chip *chip;
-@@ -287,9 +292,9 @@ static ssize_t gpio_mockup_debugfs_read(struct file *file,
- 	return simple_read_from_buffer(usr_buf, size, ppos, buf, cnt);
- }
- 
--static ssize_t gpio_mockup_debugfs_write(struct file *file,
--					 const char __user *usr_buf,
--					 size_t size, loff_t *ppos)
-+static ssize_t gpio_mockup_debugfs_pull_write(struct file *file,
-+					      const char __user *usr_buf,
-+					      size_t size, loff_t *ppos)
- {
- 	struct gpio_mockup_dbgfs_private *priv;
- 	int rv, val;
-@@ -313,11 +318,6 @@ static ssize_t gpio_mockup_debugfs_write(struct file *file,
- 	return size;
- }
- 
--static int gpio_mockup_debugfs_open(struct inode *inode, struct file *file)
--{
--	return single_open(file, NULL, inode->i_private);
--}
--
- /*
-  * Each mockup chip is represented by a directory named after the chip's device
-  * name under /sys/kernel/debug/gpio-mockup/. Each line is represented by
-@@ -342,8 +342,8 @@ static int gpio_mockup_debugfs_open(struct inode *inode, struct file *file)
- static const struct file_operations gpio_mockup_debugfs_ops = {
- 	.owner = THIS_MODULE,
- 	.open = gpio_mockup_debugfs_open,
--	.read = gpio_mockup_debugfs_read,
--	.write = gpio_mockup_debugfs_write,
-+	.read = gpio_mockup_debugfs_value_read,
-+	.write = gpio_mockup_debugfs_pull_write,
- 	.llseek = no_llseek,
- 	.release = single_release,
- };
+[...]
+
+> +static void tegra_msi_irq_mask(struct irq_data *d)
+> +{
+> +	struct tegra_msi *msi = irq_data_get_irq_chip_data(d);
+> +	struct tegra_pcie *pcie = msi_to_pcie(msi);
+> +	unsigned int index = d->hwirq / 32;
+> +	u32 value;
+> +
+> +	value = afi_readl(pcie, AFI_MSI_EN_VEC(index));
+> +	value &= ~BIT(d->hwirq % 32);
+> +	afi_writel(pcie, value, AFI_MSI_EN_VEC(index));
+
+You need some extra locking here, as this register looks shared with
+another 31 MSIs. Same for the unmask.
+
+[...]
+
+> +static int tegra_allocate_domains(struct tegra_msi *msi)
+>  {
+> -	irq_set_chip_and_handler(irq, &tegra_msi_irq_chip, handle_simple_irq);
+> -	irq_set_chip_data(irq, domain->host_data);
+> +	struct tegra_pcie *pcie = container_of(msi, struct tegra_pcie, msi);
+> +	struct fwnode_handle *fwnode = of_node_to_fwnode(pcie->dev->of_node);
+> +	struct irq_domain *parent;
+>  
+> -	tegra_cpuidle_pcie_irqs_in_use();
+> +	msi->top.name = "Tegra PCIe MSI";
+> +	msi->top.irq_ack = tegra_msi_top_irq_ack;
+> +	msi->top.irq_mask = tegra_msi_top_irq_mask;
+> +	msi->top.irq_unmask = tegra_msi_top_irq_unmask;
+> +
+> +	msi->info.flags = MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS | MSI_FLAG_PCI_MSIX;
+> +	msi->info.chip = &msi->top;
+> +
+> +	msi->bottom.name = "Tegra MSI";
+> +	msi->bottom.irq_ack = tegra_msi_irq_ack;
+> +	msi->bottom.irq_mask = tegra_msi_irq_mask;
+> +	msi->bottom.irq_unmask = tegra_msi_irq_unmask;
+> +	msi->bottom.irq_set_affinity = tegra_msi_set_affinity;
+> +	msi->bottom.irq_compose_msi_msg = tegra_compose_msi_msg;
+
+It's not obvious to me why these irq_chip and msi_domain_info are
+dynamically allocated, given that they only contain static data, which
+should be common across PCIe controllers.
+
+Am I missing something here?
+
+The reason I'm being picky about it is that I'm trying to get to a
+point where we can make most struct irq_chip to be const and thus
+marked read-only (PM is getting in the way at the moment).
+
+The rest looks good to me, and only the above locking issue is a real
+showstopper.
+
+Thanks,
+
+	M.
+
 -- 
-2.26.1
-
+Without deviation from the norm, progress is not possible.
