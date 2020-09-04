@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87ECBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EE8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53755206CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8D1215A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbgIDXxe (ORCPT
+        id S1728295AbgIDXxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:53:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64693 "EHLO mga06.intel.com"
+        Fri, 4 Sep 2020 19:53:37 -0400
+Received: from mga06.intel.com ([134.134.136.31]:64696 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbgIDXxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:53:22 -0400
-IronPort-SDR: McjwtTfm3hGIpYUljXiE/7wasTv9CuXDhHF1BZ6fE4dp45ufrin09zkyli0lmzSRDeb8jCqbsh
- SHwLAlVJKz1Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="219386208"
+        id S1728210AbgIDXxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 19:53:24 -0400
+IronPort-SDR: QpNcjZNP9wvgadeR55Efh2M3kw9Ym1n3IJokRGpORpBp2R7s8h+EtsVxmyTwFeAjzxxw225Xqb
+ P3cjMSoQJ2/w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="219386219"
 X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
-   d="scan'208";a="219386208"
+   d="scan'208";a="219386219"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 16:53:18 -0700
-IronPort-SDR: E4E5py9oYGWaclhQ5c1YshgaVenKA6bg91R109QKJhWzraxuW0Wxzy6Kw8DB49x+xNC2v3sMhC
- f4jwXSoXv1QQ==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 16:53:20 -0700
+IronPort-SDR: EMeUMxuTkHFBA2CB9KPJpLPRA22Udhc1zLg8PlndRF++SF0ck+vTnBM1M0otE0A5MPwIUa+fGO
+ taflrfMea+ug==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,391,1592895600"; 
-   d="scan'208";a="284656400"
+   d="scan'208";a="284656595"
 Received: from rhweight-mobl2.amr.corp.intel.com (HELO rhweight-mobl2.ra.intel.com) ([10.251.151.80])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Sep 2020 16:53:18 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 04 Sep 2020 16:53:20 -0700
 From:   Russ Weight <russell.h.weight@intel.com>
 To:     mdf@kernel.org, lee.jones@linaro.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     trix@redhat.com, lgoncalv@redhat.com, yilun.xu@intel.com,
         hao.wu@intel.com, matthew.gerlach@intel.com,
         Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH v1 08/12] fpga: expose sec-mgr update errors
-Date:   Fri,  4 Sep 2020 16:53:01 -0700
-Message-Id: <20200904235305.6254-9-russell.h.weight@intel.com>
+Subject: [PATCH v1 12/12] fpga: add max10 get_hw_errinfo callback func
+Date:   Fri,  4 Sep 2020 16:53:05 -0700
+Message-Id: <20200904235305.6254-13-russell.h.weight@intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904235305.6254-1-russell.h.weight@intel.com>
 References: <20200904235305.6254-1-russell.h.weight@intel.com>
@@ -53,165 +53,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Extend Intel Security Manager class driver to include
-an update/error sysfs node that can be read for error
-information when a secure update fails.
+Extend the MAX10 BMC Security Engine driver to include
+a function that returns 64 bits of additional HW specific
+data for errors that require additional information.
+This callback function enables the hw_errinfo sysfs
+node in the Intel Security Manager class driver.
 
 Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 Reviewed-by: Wu Hao <hao.wu@intel.com>
 ---
- .../ABI/testing/sysfs-class-ifpga-sec-mgr     | 17 ++++++
- drivers/fpga/ifpga-sec-mgr.c                  | 60 +++++++++++++++++--
- include/linux/fpga/ifpga-sec-mgr.h            |  1 +
- 3 files changed, 73 insertions(+), 5 deletions(-)
+ drivers/fpga/intel-m10-bmc-secure.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-index 849ccb2802f8..e7b1b02bf7ee 100644
---- a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-+++ b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-@@ -97,3 +97,20 @@ Description:	Read-only. Returns a string describing the current
- 		programming. Userspace code can poll on this file,
- 		as it will be signaled by sysfs_notify() on each
- 		state change.
-+
-+What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/update/error
-+Date:		Sep 2020
-+KernelVersion:  5.10
-+Contact:	Russ Weight <russell.h.weight@intel.com>
-+Description:	Read-only. Returns a string describing the failure
-+		of a secure update. This string will be in the form
-+		of <STATUS>:<ERROR>, where <STATUS> will be one of
-+		the status strings described for the status sysfs
-+		file and <ERROR> will be one of the following:
-+		hw-error, timeout, user-abort, device-busy,
-+		invalid-file-size, read-write-error, flash-wearout,
-+		file-read-error.  The error sysfs file is only
-+		meaningful when the secure update engine is in the
-+		idle state. If this file is read while a secure
-+		update is in progress, then the read will fail with
-+		EBUSY.
-diff --git a/drivers/fpga/ifpga-sec-mgr.c b/drivers/fpga/ifpga-sec-mgr.c
-index 5fe3d85e2963..a7718bd8ee61 100644
---- a/drivers/fpga/ifpga-sec-mgr.c
-+++ b/drivers/fpga/ifpga-sec-mgr.c
-@@ -146,10 +146,16 @@ static void update_progress(struct ifpga_sec_mgr *imgr,
- 	sysfs_notify(&imgr->dev.kobj, "update", "status");
+diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
+index 4a66c2d448eb..7fb1c805f654 100644
+--- a/drivers/fpga/intel-m10-bmc-secure.c
++++ b/drivers/fpga/intel-m10-bmc-secure.c
+@@ -450,6 +450,30 @@ static enum ifpga_sec_err m10bmc_sec_cancel(struct ifpga_sec_mgr *imgr)
+ 	return ret ? IFPGA_SEC_ERR_RW_ERROR : IFPGA_SEC_ERR_NONE;
  }
  
-+static void set_error(struct ifpga_sec_mgr *imgr, enum ifpga_sec_err err_code)
++static u64 m10bmc_sec_hw_errinfo(struct ifpga_sec_mgr *imgr)
 +{
-+	imgr->err_state = imgr->progress;
-+	imgr->err_code = err_code;
-+}
++	struct m10bmc_sec *sec = imgr->priv;
++	u32 doorbell = 0, auth_result = 0;
++	u64 hw_errinfo = 0;
 +
- static void ifpga_sec_dev_error(struct ifpga_sec_mgr *imgr,
- 				enum ifpga_sec_err err_code)
- {
--	imgr->err_code = err_code;
-+	set_error(imgr, err_code);
- 	imgr->iops->cancel(imgr);
- }
- 
-@@ -172,7 +178,7 @@ static void ifpga_sec_mgr_update(struct work_struct *work)
- 
- 	get_device(&imgr->dev);
- 	if (request_firmware(&fw, imgr->filename, &imgr->dev)) {
--		imgr->err_code = IFPGA_SEC_ERR_FILE_READ;
-+		set_error(imgr, IFPGA_SEC_ERR_FILE_READ);
- 		goto idle_exit;
- 	}
- 
-@@ -180,7 +186,7 @@ static void ifpga_sec_mgr_update(struct work_struct *work)
- 	imgr->remaining_size = fw->size;
- 
- 	if (!try_module_get(imgr->dev.parent->driver->owner)) {
--		imgr->err_code = IFPGA_SEC_ERR_BUSY;
-+		set_error(imgr, IFPGA_SEC_ERR_BUSY);
- 		goto release_fw_exit;
- 	}
- 
-@@ -266,16 +272,59 @@ static const char * const sec_mgr_prog_str[] = {
- 	"programming"		/* IFPGA_SEC_PROG_PROGRAMMING */
- };
- 
-+static const char * const sec_mgr_err_str[] = {
-+	"none",			/* IFPGA_SEC_ERR_NONE */
-+	"hw-error",		/* IFPGA_SEC_ERR_HW_ERROR */
-+	"timeout",		/* IFPGA_SEC_ERR_TIMEOUT */
-+	"user-abort",		/* IFPGA_SEC_ERR_CANCELED */
-+	"device-busy",		/* IFPGA_SEC_ERR_BUSY */
-+	"invalid-file-size",	/* IFPGA_SEC_ERR_INVALID_SIZE */
-+	"read-write-error",	/* IFPGA_SEC_ERR_RW_ERROR */
-+	"flash-wearout",	/* IFPGA_SEC_ERR_WEAROUT */
-+	"file-read-error"	/* IFPGA_SEC_ERR_FILE_READ */
-+};
++	switch (imgr->err_code) {
++	case IFPGA_SEC_ERR_HW_ERROR:
++	case IFPGA_SEC_ERR_TIMEOUT:
++	case IFPGA_SEC_ERR_BUSY:
++	case IFPGA_SEC_ERR_WEAROUT:
++		if (!m10bmc_sys_read(sec->m10bmc, M10BMC_DOORBELL, &doorbell))
++			hw_errinfo = (u64)doorbell << 32;
 +
-+static const char *sec_progress(enum ifpga_sec_prog prog)
-+{
-+	return (prog < IFPGA_SEC_PROG_MAX) ?
-+		sec_mgr_prog_str[prog] : "unknown-status";
-+}
++		if (!m10bmc_sys_read(sec->m10bmc, M10BMC_AUTH_RESULT,
++				     &auth_result))
++			hw_errinfo |= (u64)auth_result;
 +
- static ssize_t
- status_show(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
- 
--	return sprintf(buf, "%s\n", (imgr->progress < IFPGA_SEC_PROG_MAX) ?
--		       sec_mgr_prog_str[imgr->progress] : "unknown-status");
-+	return sprintf(buf, "%s\n", sec_progress(imgr->progress));
- }
- static DEVICE_ATTR_RO(status);
- 
-+static ssize_t
-+error_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
-+	enum ifpga_sec_err err_code;
-+	const char *prog_str;
-+	int ret;
-+
-+	mutex_lock(&imgr->lock);
-+	if (imgr->progress != IFPGA_SEC_PROG_IDLE) {
-+		ret = -EBUSY;
-+	} else if (!imgr->err_code) {
-+		ret = 0;
-+	} else {
-+		err_code = imgr->err_code;
-+		prog_str = sec_progress(imgr->err_state);
-+		ret = sprintf(buf, "%s:%s\n", prog_str,
-+			      (err_code < IFPGA_SEC_ERR_MAX) ?
-+			      sec_mgr_err_str[err_code] : "unknown-error");
++		return hw_errinfo;
++	default:
++		return 0;
 +	}
-+	mutex_unlock(&imgr->lock);
-+
-+	return ret;
 +}
-+static DEVICE_ATTR_RO(error);
 +
- static ssize_t filename_store(struct device *dev, struct device_attribute *attr,
- 			      const char *buf, size_t count)
- {
-@@ -314,6 +363,7 @@ static DEVICE_ATTR_WO(filename);
- static struct attribute *sec_mgr_update_attrs[] = {
- 	&dev_attr_filename.attr,
- 	&dev_attr_status.attr,
-+	&dev_attr_error.attr,
- 	NULL,
+ static const struct ifpga_sec_mgr_ops m10bmc_iops = {
+ 	.user_flash_count = get_qspi_flash_count,
+ 	.bmc_root_entry_hash = get_bmc_root_entry_hash,
+@@ -467,7 +491,8 @@ static const struct ifpga_sec_mgr_ops m10bmc_iops = {
+ 	.prepare = m10bmc_sec_prepare,
+ 	.write_blk = m10bmc_sec_write_blk,
+ 	.poll_complete = m10bmc_sec_poll_complete,
+-	.cancel = m10bmc_sec_cancel
++	.cancel = m10bmc_sec_cancel,
++	.get_hw_errinfo = m10bmc_sec_hw_errinfo
  };
  
-diff --git a/include/linux/fpga/ifpga-sec-mgr.h b/include/linux/fpga/ifpga-sec-mgr.h
-index 4da2864e251c..f04bf9e30c67 100644
---- a/include/linux/fpga/ifpga-sec-mgr.h
-+++ b/include/linux/fpga/ifpga-sec-mgr.h
-@@ -181,6 +181,7 @@ struct ifpga_sec_mgr {
- 	const u8 *data;			/* pointer to update data */
- 	u32 remaining_size;		/* size remaining to transfer */
- 	enum ifpga_sec_prog progress;
-+	enum ifpga_sec_prog err_state;	/* progress state at time of failure */
- 	enum ifpga_sec_err err_code;	/* security manager error code */
- 	bool driver_unload;
- 	void *priv;
+ static void ifpga_sec_mgr_uinit(struct m10bmc_sec *sec)
 -- 
 2.17.1
 
