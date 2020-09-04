@@ -2,122 +2,75 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7FAC2BB84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07639C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4061E2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C150D2064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgIDQle (ORCPT
+        id S1726937AbgIDQlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:41:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:57038 "EHLO mga03.intel.com"
+        Fri, 4 Sep 2020 12:41:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbgIDQle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:41:34 -0400
-IronPort-SDR: 0Uv+5BFSaBLVs9QSJi/RDfiPJopuWWiKPJXHfDz1Nl9lbNoW6U0RbRsOKueWgHJMjXYRbA2Jy1
- DU+glLjXTjeQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157789071"
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="157789071"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:41:33 -0700
-IronPort-SDR: J+a8HPv+zl+rkbGgEhumMoGYktnR2HCWMbhCrcqoP0mPKDecJ6pjxwkhoTZgVIyy7Fj5EuX16w
- C/ZzPbOvsFEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="332217042"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:41:31 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kEEmG-00EKMC-JN; Fri, 04 Sep 2020 19:41:28 +0300
-Date:   Fri, 4 Sep 2020 19:41:28 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 06/23] gpiolib: switch to simpler IDA interface
-Message-ID: <20200904164128.GZ1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-7-brgl@bgdev.pl>
+        id S1726726AbgIDQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:41:35 -0400
+Received: from localhost.localdomain (unknown [46.69.195.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0453F2064E;
+        Fri,  4 Sep 2020 16:41:33 +0000 (UTC)
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] arm64 fixes for 5.9-rc4
+Date:   Fri,  4 Sep 2020 17:41:32 +0100
+Message-Id: <20200904164132.18160-1-catalin.marinas@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904154547.3836-7-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:45:30PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> We don't need to specify any ranges when allocating IDs so we can switch
-> to ida_alloc() and ida_free() instead of the ida_simple_ counterparts.
-> 
-> ida_simple_get(ida, 0, 0, gfp) is equivalent to
-> ida_alloc_range(ida, 0, UINT_MAX, gfp) which is equivalent to
-> ida_alloc(ida, gfp). Note: IDR will never actually allocate an ID
-> larger than INT_MAX.
+Hi Linus,
 
-Have you considered switching to XArray API?
+Please pull the arm64 fixes below. Thanks.
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/gpio/gpiolib.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 15c99cf560ee..591777bc2285 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -471,7 +471,7 @@ static void gpiodevice_release(struct device *dev)
->  	struct gpio_device *gdev = dev_get_drvdata(dev);
->  
->  	list_del(&gdev->list);
-> -	ida_simple_remove(&gpio_ida, gdev->id);
-> +	ida_free(&gpio_ida, gdev->id);
->  	kfree_const(gdev->label);
->  	kfree(gdev->descs);
->  	kfree(gdev);
-> @@ -582,7 +582,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  		gc->of_node = gdev->dev.of_node;
->  #endif
->  
-> -	gdev->id = ida_simple_get(&gpio_ida, 0, 0, GFP_KERNEL);
-> +	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
->  	if (gdev->id < 0) {
->  		ret = gdev->id;
->  		goto err_free_gdev;
-> @@ -753,7 +753,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  err_free_descs:
->  	kfree(gdev->descs);
->  err_free_ida:
-> -	ida_simple_remove(&gpio_ida, gdev->id);
-> +	ida_free(&gpio_ida, gdev->id);
->  err_free_gdev:
->  	/* failures here can mean systems won't boot... */
->  	pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
-> -- 
-> 2.26.1
-> 
+The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
 
--- 
-With Best Regards,
-Andy Shevchenko
+  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
+
+for you to fetch changes up to e0328feda79d9681b3e3245e6e180295550c8ee9:
+
+  arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE (2020-09-02 08:35:33 +0100)
+
+----------------------------------------------------------------
+- Fix the loading of modules built with binutils-2.35. This version
+  produces writable and executable .text.ftrace_trampoline section which
+  is rejected by the kernel.
+
+- Remove the exporting of cpu_logical_map() as the Tegra driver has now
+  been fixed and no longer uses this function.
+
+----------------------------------------------------------------
+Jessica Yu (1):
+      arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE
+
+Sudeep Holla (1):
+      arm64: Remove exporting cpu_logical_map symbol
+
+ arch/arm64/kernel/module-plts.c | 3 +--
+ arch/arm64/kernel/setup.c       | 1 -
+ 2 files changed, 1 insertion(+), 3 deletions(-)
