@@ -2,81 +2,269 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:37:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B59B1C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97C02083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9252084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D5hsv+de"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbgIDThZ (ORCPT
+        id S1727902AbgIDTie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:37:25 -0400
-Received: from smtprelay0195.hostedemail.com ([216.40.44.195]:34122 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726221AbgIDThX (ORCPT
+        Fri, 4 Sep 2020 15:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgIDTid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:37:23 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id D6807181D3028;
-        Fri,  4 Sep 2020 19:37:22 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: meat92_0910680270b4
-X-Filterd-Recvd-Size: 2254
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Fri,  4 Sep 2020 19:37:21 +0000 (UTC)
-Message-ID: <906c2ffb0ef6b2d87d6aecdf60b61833ea79e4fb.camel@perches.com>
-Subject: Re: [PATCH v6 18/18] crypto: sun8i-ce: fix some style issue
-From:   Joe Perches <joe@perches.com>
-To:     Corentin Labbe <clabbe@baylibre.com>, davem@davemloft.net,
-        herbert@gondor.apana.org.au, mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Date:   Fri, 04 Sep 2020 12:37:19 -0700
-In-Reply-To: <1599217803-29755-19-git-send-email-clabbe@baylibre.com>
-References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
-         <1599217803-29755-19-git-send-email-clabbe@baylibre.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Fri, 4 Sep 2020 15:38:33 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BE5C061244;
+        Fri,  4 Sep 2020 12:38:33 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mm21so3674034pjb.4;
+        Fri, 04 Sep 2020 12:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=srMe0q/dUf+fYtOAIii05KtFKJa3HxZ/IRTBqWOl530=;
+        b=D5hsv+de3TVfbtbwqqcjV4Lb2xlQWcVNneufRvf1NhguLk3BsJvx+fzhhQ6UNi9oxA
+         uwP8pfla6yynZOI/O+B0aecnXMy160b0DiPTOu8flcFdOMWUvnPV2P+pL6C4yDFI2mNt
+         Gh88XnBxTV2rEyHm4egtqBXJEclBNrQ+cQTOoq5+FpmXoaEqVZ/xMfJtvzCLPL83La0N
+         q52/eLk9OFhbxWrJJdjgG3633AX1EsLxVz0LHZ+yJsRM+3BLzp1afwd0Zgn3pK27PtZD
+         TW0H5uA/Gbe3cC8R8WG1J5+bqy7Xb/dm5GCcGYKnj76vrGWZZ2307NwQspOfU2/G714f
+         FDWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=srMe0q/dUf+fYtOAIii05KtFKJa3HxZ/IRTBqWOl530=;
+        b=O8EC/bi8PRzLZIb5E3d101NHzCK2fuxZfT5dGCMZo1lFrTa9xk6FOLN4nl0i0ClThQ
+         DkImjM+Kji87e8V8bVoIY4adgHLAZXsbfyJ+2IgF5HTyq0TUINWw9TfsaLSPSH5c1Hvt
+         Ne20FfvBaEcxeeLm2z3Kxa0kAs3bm1T0hzBV25AMtShHCqFyCoXNW8bG/8uB1gOHWOk0
+         U/Ud/qMjKUPPHjnq7aFVODei2q2QW2W4gWgPXFU/4G0Y6hU+GR0ziqUsFjhGs1YXTqp3
+         Ck74gJHZdmExICI7zRaQ8fWcOwEc4BlfcnQE8l76BMWRGAITj1XFjiGahCuyqbp+OEOe
+         xcxw==
+X-Gm-Message-State: AOAM530fEB0GOkbbl4XA4riUaic+vDNIdU6lnH0DeIUkCgeGxOZMJ9IS
+        fylFcrU4jf7BhIqZ2M+H1X0p3nq8doVlt5SUvy4=
+X-Google-Smtp-Source: ABdhPJxd15WUtvEkm9IpcVUeCRtsuTT5I55S9qVkF+h4gfa25UwheuY1WRrjQ0Hik5cEaFOlI1fxa0RAtfWWrOZcGLI=
+X-Received: by 2002:a17:902:ea86:: with SMTP id x6mr10086698plb.131.1599248312463;
+ Fri, 04 Sep 2020 12:38:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu> <20200904165222.18444-5-vadym.kochan@plvision.eu>
+In-Reply-To: <20200904165222.18444-5-vadym.kochan@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 4 Sep 2020 22:38:15 +0300
+Message-ID: <CAHp75VdowNYwS76QEq6YqyvD84y61jTLACLLWoBDF3K27g45tA@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 4/6] net: marvell: prestera: Add ethtool
+ interface support
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-09-04 at 11:10 +0000, Corentin Labbe wrote:
-> This patch fix a double empty line issue reported by checkpatch.
-> While at it, since now the maximum line length is now 100, reorder some
-> wrapped line.
-[]
-> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-[]
-> @@ -164,12 +164,10 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
->  				goto theend_key;
->  			}
->  			offset = areq->cryptlen - ivsize;
-> -			scatterwalk_map_and_copy(rctx->backup_iv, areq->src,
-> -						 offset, ivsize, 0);
-> +			scatterwalk_map_and_copy(rctx->backup_iv, areq->src, offset, ivsize, 0);
->  		}
->  		memcpy(rctx->bounce_iv, areq->iv, ivsize);
-> -		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen,
-> -					 DMA_TO_DEVICE);
-> +		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen, DMA_TO_DEVICE);
+On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+>
+> The ethtool API provides support for the configuration of the following
+> features: speed and duplex, auto-negotiation, MDI-x, forward error
+> correction, port media type. The API also provides information about the
+> port status, hardware and software statistic. The following limitation
+> exists:
+>
+>     - port media type should be configured before speed setting
+>     - ethtool -m option is not supported
+>     - ethtool -p option is not supported
+>     - ethtool -r option is supported for RJ45 port only
+>     - the following combination of parameters is not supported:
+>
+>           ethtool -s sw1pX port XX autoneg on
+>
+>     - forward error correction feature is supported only on SFP ports, 10G
+>       speed
+>
+>     - auto-negotiation and MDI-x features are not supported on
+>       Copper-to-Fiber SFP module
 
-coding-style.rst:
+...
 
-   Statements longer than 80 columns should be broken into sensible chunks,
-   unless exceeding 80 columns significantly increases readability and does
-   not hide information.
+> +#include <linux/kernel.h>
+> +#include <linux/netdevice.h>
+> +#include <linux/ethtool.h>
 
-Do these longer lines make the code significantly more readable?
-I don't think they do.
+Sorted?
 
+...
 
+> +       if (new_mode < PRESTERA_LINK_MODE_MAX)
+> +               err = prestera_hw_port_link_mode_set(port, new_mode);
+> +       else
+> +               err = -EINVAL;
+> +
+
+> +       if (!err) {
+> +               port->caps.type = type;
+> +               port->autoneg = false;
+> +       }
+> +
+> +       return err;
+
+Traditional pattern?
+
+if (err)
+ return err;
+...
+return 0;
+
+...
+
+> +       ecmd->base.speed = !err ? speed : SPEED_UNKNOWN;
+
+Why not err : SPEED_... : speed; ?
+
+...
+
+> +static int
+> +prestera_ethtool_get_link_ksettings(struct net_device *dev,
+
+One line?
+
+> +                                   struct ethtool_link_ksettings *ecmd)
+
+...
+
+> +       err = prestera_hw_port_link_mode_get(port, &curr_mode);
+> +       if (err || curr_mode >= PRESTERA_LINK_MODE_MAX)
+> +               return -EINVAL;
+
+Why shadowing error code?
+
+...
+
+> +/*
+> + * Copyright (c) 2019-2020 Marvell International Ltd. All rights reserved.
+> + *
+> + */
+
+One line.
+
+...
+
+> +#include <linux/netdevice.h>
+
+Is this being used?
+
+> +#include <linux/ethtool.h>
+> +
+> +extern const struct ethtool_ops prestera_ethtool_ops;
+
+...
+
+> +enum {
+> +       PRESTERA_FC_NONE,
+> +       PRESTERA_FC_SYMMETRIC,
+> +       PRESTERA_FC_ASYMMETRIC,
+> +       PRESTERA_FC_SYMM_ASYMM
+
+Comma?
+
+> +};
+
+...
+
+> +       struct prestera_msg_port_attr_req req = {
+> +               .attr = PRESTERA_CMD_PORT_ATTR_REMOTE_CAPABILITY,
+> +               .port = port->hw_id,
+> +               .dev = port->dev_id
+
+Comma?
+
+> +       };
+
+...
+
+> +       err = prestera_cmd_ret(port->sw, PRESTERA_CMD_TYPE_PORT_ATTR_GET,
+> +                              &req.cmd, sizeof(req), &resp.ret, sizeof(resp));
+> +       if (err)
+> +               return err;
+> +
+> +       *link_mode_bitmap = resp.param.cap.link_mode;
+> +
+> +       return err;
+
+return 0;
+
+I think I have talked that any of the given comments applies to *all*
+similar code pieces!
+
+This file is full of repetitions of the above.
+
+...
+
+> +static u8 prestera_hw_mdix_to_eth(u8 mode)
+> +{
+> +       switch (mode) {
+> +       case PRESTERA_PORT_TP_MDI:
+> +               return ETH_TP_MDI;
+> +       case PRESTERA_PORT_TP_MDIX:
+> +               return ETH_TP_MDI_X;
+> +       case PRESTERA_PORT_TP_AUTO:
+> +               return ETH_TP_MDI_AUTO;
+> +       }
+> +
+> +       return ETH_TP_MDI_INVALID;
+
+default.
+Also I have a deja vu about such.
+
+> +}
+> +
+> +static u8 prestera_hw_mdix_from_eth(u8 mode)
+> +{
+> +       switch (mode) {
+> +       case ETH_TP_MDI:
+> +               return PRESTERA_PORT_TP_MDI;
+> +       case ETH_TP_MDI_X:
+> +               return PRESTERA_PORT_TP_MDIX;
+> +       case ETH_TP_MDI_AUTO:
+> +               return PRESTERA_PORT_TP_AUTO;
+> +       }
+> +
+> +       return PRESTERA_PORT_TP_NA;
+> +}
+
+Ditto.
+
+...
+
+> +enum {
+> +       PRESTERA_PORT_DUPLEX_HALF,
+> +       PRESTERA_PORT_DUPLEX_FULL
+
+Comma ?
+
+> +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
