@@ -2,83 +2,148 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3CDC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDEEC2064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NV+Jt2s/"
+	by mail.kernel.org (Postfix) with ESMTP id 034972064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:48:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbgIDQsR (ORCPT
+        id S1726947AbgIDQs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726063AbgIDQsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:48:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB53CC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:48:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=qSjMS9ZCPt26N5Rnx9e6arn/zW5Cw1f8ReNOL+Oht4k=; b=NV+Jt2s/+31HkxNEHukRME3CeF
-        F0izkTrz0uAc0mFQoYbMh+n4C//idEo5XRYSb5SQR4bMGXehfx6qwi1xrOiy35NxORZuMxMTu+6uq
-        UGKZL1Ewr4xs1ryg/uKciyJjSAzEYlEb+KYHNJrp6BxouxvG6oJPl5NkGxl7yvfCiaBLElPAF6fny
-        sumXD3H/lUij6bi03BfKRjxwVf+aaDapG61iCA8Hz8tjWC85z3FedkBW04g84SqBqWwRB2vBpqvXJ
-        BBTxbUXtsP/Shj/Sk+OFonb32xSbHUvUPN5gYFfDrg7yXG72MM+xL91SXeFZ884GojzxsZYnrVzbz
-        Tr9gbrrQ==;
-Received: from [2001:4bb8:184:af1:704:22b1:700d:1395] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEEsg-0000nF-CO; Fri, 04 Sep 2020 16:48:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     viro@zeniv.linux.org.uk
-Cc:     mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sysctl: wire up ->splice_read and ->splice_write
-Date:   Fri,  4 Sep 2020 18:48:05 +0200
-Message-Id: <20200904164805.1799256-1-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
+        Fri, 4 Sep 2020 12:48:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:35664 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726063AbgIDQs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:48:26 -0400
+IronPort-SDR: k6yseJJAqCH9wlmQClYNd0HNIXUnubvlVM2Jq6DFLLGrA7Vm3wYnESz/kIyBZT46HRS8SthWkB
+ 7vsNPd0FsHXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="158763009"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="158763009"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:48:25 -0700
+IronPort-SDR: KJSw+4xnH4Ykzd6zyCRjHWRbqk0LScUMmuTF9EpxuQu+XZ/EAe4ldX7jDAI9X4wx+pu7A9Ob0S
+ OY3uDBuSrc3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="332218383"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:48:22 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kEEsu-00EKR9-0z; Fri, 04 Sep 2020 19:48:20 +0300
+Date:   Fri, 4 Sep 2020 19:48:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 13/23] gpio: mockup: pass the chip label as device
+ property
+Message-ID: <20200904164820.GB1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-14-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904154547.3836-14-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure the kernel_write that the init code uses to apply sysctl
-values from the kernel command line keeps working without set_fs().
+On Fri, Sep 04, 2020 at 05:45:37PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> While we do check the "chip-name" property in probe(), we never actually
+> use it. Let's pass the chip label to the driver using device properties
+> as we'll want to allow users to define their own once dynamically
+> created chips are supported.
+> 
+> The property is renamed to "chip-label" to not cause any confusion with
+> the actual chip name which is of the form: "gpiochipX".
+> 
+> If the "chip-label" property is missing, let's do what most devices in
+> drivers/gpio/ do and use dev_name().
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
+Just wondering if we have a documentation in kernel how this mockup mechanism
+works and what kind of properties it uses.
 
-This could be folded into "sysctl: Convert to iter interfaces".
+Side note: moving to software nodes would make some advantages in future such
+as visibility properties and their values (not yet implemented, but there is an
+idea to move forward).
 
- fs/proc/proc_sysctl.c | 2 ++
- 1 file changed, 2 insertions(+)
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpio-mockup.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index e8a19a28ed13..ce83f1df1933 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -433,21 +433,14 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+>  	if (rv)
+>  		return rv;
+>  
+> -	rv = device_property_read_string(dev, "chip-name", &name);
+> +	rv = device_property_read_string(dev, "chip-label", &name);
+>  	if (rv)
+> -		name = NULL;
+> +		name = dev_name(dev);
+>  
+>  	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
+>  	if (!chip)
+>  		return -ENOMEM;
+>  
+> -	if (!name) {
+> -		name = devm_kasprintf(dev, GFP_KERNEL,
+> -				      "%s-%c", pdev->name, pdev->id + 'A');
+> -		if (!name)
+> -			return -ENOMEM;
+> -	}
+> -
+>  	mutex_init(&chip->lock);
+>  
+>  	gc = &chip->gc;
+> @@ -534,6 +527,7 @@ static void gpio_mockup_unregister_devices(void)
+>  static int __init gpio_mockup_init(void)
+>  {
+>  	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
+> +	char chip_label[GPIO_MOCKUP_LABEL_SIZE];
+>  	struct gpio_mockup_device *mockup_dev;
+>  	int i, prop, num_chips, err = 0, base;
+>  	struct platform_device_info pdevinfo;
+> @@ -570,6 +564,11 @@ static int __init gpio_mockup_init(void)
+>  		memset(&pdevinfo, 0, sizeof(pdevinfo));
+>  		prop = 0;
+>  
+> +		snprintf(chip_label, sizeof(chip_label),
+> +			 "gpio-mockup-%c", i + 'A');
+> +		properties[prop++] = PROPERTY_ENTRY_STRING("chip-label",
+> +							   chip_label);
+> +
+>  		base = gpio_mockup_range_base(i);
+>  		if (base >= 0)
+>  			properties[prop++] = PROPERTY_ENTRY_U32("gpio-base",
+> -- 
+> 2.26.1
+> 
 
-diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-index a4a3122f8a584a..317899222d7fdf 100644
---- a/fs/proc/proc_sysctl.c
-+++ b/fs/proc/proc_sysctl.c
-@@ -853,6 +853,8 @@ static const struct file_operations proc_sys_file_operations = {
- 	.poll		= proc_sys_poll,
- 	.read_iter	= proc_sys_read,
- 	.write_iter	= proc_sys_write,
-+	.splice_read	= generic_file_splice_read,
-+	.splice_write	= iter_file_splice_write,
- 	.llseek		= default_llseek,
- };
- 
 -- 
-2.28.0
+With Best Regards,
+Andy Shevchenko
+
 
