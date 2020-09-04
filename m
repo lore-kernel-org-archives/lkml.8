@@ -2,96 +2,158 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8E3C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D610C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1135E2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E78732074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:03:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OkpOrPJZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C1YTXxEf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgIDQCN (ORCPT
+        id S1726708AbgIDQDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:02:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46418 "EHLO
+        Fri, 4 Sep 2020 12:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgIDQCK (ORCPT
+        with ESMTP id S1726005AbgIDQDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:02:10 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E68CC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:02:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id v4so6537872wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 09:02:10 -0700 (PDT)
+        Fri, 4 Sep 2020 12:03:17 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E501C061244;
+        Fri,  4 Sep 2020 09:03:16 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mm21so3410861pjb.4;
+        Fri, 04 Sep 2020 09:03:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WPWs6+bNAsvF0rvAc3yDkiD79Fr0V6X4UpT2H9wqL9w=;
-        b=OkpOrPJZjs2Y0PihfJ7PKAOhPKi+QXL4WLgx95wnrgwebxFXuZPO471OqXLrfRoYPw
-         W88jgdiC3dytG8y7rSPSpp+QNgisq043YZXmCVQ9dBEcxIN9ABSt5YaSUwE/K0puhnZ4
-         CjEXXPkmqV9ZhBsRr/uZvM9BAmbPYn54nsjTtrqnRA0v9oBqkuCyGS8+D3cz5nub6xIo
-         gURl08C/czURvIgKQ9TOxjZbmJ/xgAyJ/75NW3bXcO9xX6el1jKLTxNRAaH8F4XFcPlS
-         l+Z8a+Hy7DpKDllQBV4TVm4MXt4XfwcwCSmg7/jR7/k+LHRQ/52KMId1KfaVH9M5MHWl
-         qkEA==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=KHkXwx+jqaoaCS6UX8HzJ0+ftR5FngFSLzBY4NLpaHQ=;
+        b=C1YTXxEfZmQ5IEeNYNmT8Umezg2XJu/IuxxhEW1fRiDqWU0qluZSyBTg0sW6JRq7EU
+         mV4yZMMZ0/Xm7wQg0HJyE45MTNODIZ1Q0J27b1H+OzLjogdFPygr9ToDRr8j1RLgc3Ol
+         rng/oMlR/BFdQAStpKtb2WKYlFDuuUPvd7pMrlYE34/ctCEONpH3NFw3PAULvPvZ2DKD
+         bt/57I8IW7vH4kwNQOKtsa5ab2eppkXP+bctBv89kjXhvLSypehyorj72RZNARZZg4FU
+         pDjRwoZ8yxJVdhVGawyPJmB3fYQK7/iIXSKMlpkP8iMooCBJ+Atti9jZLDeyoifr8e3m
+         mP4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WPWs6+bNAsvF0rvAc3yDkiD79Fr0V6X4UpT2H9wqL9w=;
-        b=PQzm2Yfj0gzB8AduCwTKP73N4Wl5EIhNmmRDjxgkgKPdcvWSeTEQBNkAJ2wZJiCQm/
-         yH9TyMmaoU5zJfH8hSb27LnqQ9+/BwZScBFhZOoQfaESVIqTA4rXcV9GJ/52lzhtcDhp
-         gIJLdEWnqaogtl8iyVw54evWOA+NdLF3Tm7hIuspaxTjebGICT/+kcCaLvezEoey0AyP
-         XSYbR5kBaYzF1muv/GAJfLPkRlxJb+rkotjH0AO5kOcPOIrba+fuHo5/ItuIqzxtJUGg
-         tFj4IdNjCnM4qBdA9+y5vas3O9uCxwcAucBcS3oJE7JFCLkznOyrG76zl81/jKbbBW+R
-         JYPw==
-X-Gm-Message-State: AOAM531S9Fjle2hkLNuj9wEfq4wpI5seC3x56KI4RptLc+haYs6ykFtc
-        jACQs6QEpAV8TWwo8jaN9onixQ==
-X-Google-Smtp-Source: ABdhPJxqrPj4FqwNvFmd29r1spI/ZIQGafj/o4jzYrlvzXdLjkT+3k5breq2rCLBzbh5/WkV2rdDrQ==
-X-Received: by 2002:a1c:ab55:: with SMTP id u82mr8388426wme.139.1599235328834;
-        Fri, 04 Sep 2020 09:02:08 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id i3sm11938627wrs.4.2020.09.04.09.02.07
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=KHkXwx+jqaoaCS6UX8HzJ0+ftR5FngFSLzBY4NLpaHQ=;
+        b=J1QRVXRvKaH1JNjjUgg0kaKEVkZyxPSkU22VPQNGNH/zuSG6s6k3w3CK0EV4MtN7La
+         7oH/qvnUpRAo6LuzESAeQ0uZvnyjVLxIBFHRQxYa1jHbvSR1ocyQlQzLg9CH2HzEZhlt
+         Uo6E7rSo5yuuNXwCiKfFEQd5Hqz0IZM+6aOXv03hfIV2V/S+6kAPCh9sjJ/WUFDJoMe7
+         +W523sNAyvuoiwcgcF7XeeLljvZaLZKgvH/orJpe5dzgGMmUPLc7D0EzS1HNL5pUjl2O
+         ewUMYh4UCaqGXdOAUJxrTZTnddrnwuVCP/16A86uNqU6Ca0ACNVn0oiczWH3XTiSTGZ5
+         VT+A==
+X-Gm-Message-State: AOAM5316B3nAAtkOq1usH9plPZ9kEXnrOmt//GwItSq0rWAQsbxCg/G6
+        z04pFO0JOQ5tUMfa/bI2pDU=
+X-Google-Smtp-Source: ABdhPJw68D3zn12AwaSMv3IePjrL7SraUw8pPVUg5HAYxMdMInAXg/JKDg3oxRTe/VxqPoJtiRdqJg==
+X-Received: by 2002:a17:90a:ab11:: with SMTP id m17mr8509478pjq.236.1599235395895;
+        Fri, 04 Sep 2020 09:03:15 -0700 (PDT)
+Received: from localhost ([2001:e42:102:1532:160:16:113:140])
+        by smtp.gmail.com with ESMTPSA id u3sm5510880pjn.29.2020.09.04.09.03.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 09:02:08 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] soc: amlogic: add support for the Meson AXG Power Controller
-Date:   Fri,  4 Sep 2020 18:02:04 +0200
-Message-Id: <20200904160206.22570-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Fri, 04 Sep 2020 09:03:15 -0700 (PDT)
+From:   Coiby Xu <coiby.xu@gmail.com>
+X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
+Date:   Sat, 5 Sep 2020 00:03:08 +0800
+To:     Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] staging: qlge: fix build breakage with dumping enabled
+Message-ID: <20200904160308.vpflvqfob7h7hz4v@Rk>
+References: <20200902140031.203374-1-coiby.xu@gmail.com>
+ <20200903034918.GA227281@f3>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200903034918.GA227281@f3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the bindings and support for the Power Controller found in the
-Amlogic AXG SoCs.
+On Thu, Sep 03, 2020 at 12:49:18PM +0900, Benjamin Poirier wrote:
+>On 2020-09-02 22:00 +0800, Coiby Xu wrote:
+>> This fixes commit 0107635e15ac
+>> ("staging: qlge: replace pr_err with netdev_err") which introduced an
+>> build breakage of missing `struct ql_adapter *qdev` for some functions
+>> and a warning of type mismatch with dumping enabled, i.e.,
+>>
+>> $ make CFLAGS_MODULE="QL_ALL_DUMP=1 QL_OB_DUMP=1 QL_CB_DUMP=1 \
+>>   QL_IB_DUMP=1 QL_REG_DUMP=1 QL_DEV_DUMP=1" M=drivers/staging/qlge
+>>
+>> qlge_dbg.c: In function ‘ql_dump_ob_mac_rsp’:
+>> qlge_dbg.c:2051:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
+>>  2051 |  netdev_err(qdev->ndev, "%s\n", __func__);
+>>       |             ^~~~
+>> qlge_dbg.c: In function ‘ql_dump_routing_entries’:
+>> qlge_dbg.c:1435:10: warning: format ‘%s’ expects argument of type ‘char *’, but argument 3 has type ‘int’ [-Wformat=]
+>>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>>       |         ~^
+>>       |          |
+>>       |          char *
+>>       |         %d
+>>  1436 |        i, value);
+>>       |        ~
+>>       |        |
+>>       |        int
+>> qlge_dbg.c:1435:37: warning: format ‘%x’ expects a matching ‘unsigned int’ argument [-Wformat=]
+>>  1435 |        "%s: Routing Mask %d = 0x%.08x\n",
+>>       |                                 ~~~~^
+>>       |                                     |
+>>       |                                     unsigned int
+>>
+>> Fixes: 0107635e15ac ("staging: qlge: replace pr_err with netdev_err")
+>> Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+>> Suggested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+>> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+>> ---
+>
+>Thanks for following up on this issue.
+>
+>[...]
+>> @@ -1632,8 +1635,8 @@ void ql_dump_wqicb(struct wqicb *wqicb)
+>>
+>>  void ql_dump_tx_ring(struct tx_ring *tx_ring)
+>>  {
+>> -	if (!tx_ring)
+>> -		return;
+>> +	struct ql_adapter *qdev = tx_ring->qdev;
+>> +
+>>  	netdev_err(qdev->ndev, "===================== Dumping tx_ring %d ===============\n",
+>>  		   tx_ring->wq_id);
+>>  	netdev_err(qdev->ndev, "tx_ring->base = %p\n", tx_ring->wq_base);
+>
+>Did you actually check to confirm that the test can be removed?
 
-The Power Controller in the Amlogic AXG SoCs is similar to the GXL one
-but with less VPU memory domains to enable and a supplementary Audio
-memory power domain.
+Thank you for the reminding! For the current code, when ql_dump_tx_ring
+is called, tx_ring would never be null.
 
-Neil Armstrong (2):
-  dt-bindings: power: amlogic,meson-ee-pwrc: add Amlogic AXG power
-    controller bindings
-  soc: amlogic: meson-ee-pwrc: add support for the Meson AXG SoCs
+>
+>This is something that you should mention in the changelog at the very
+>least since that change is not directly about fixing the build breakage
+>and if it's wrong, it can lead to null pointer deref.
 
- .../bindings/power/amlogic,meson-ee-pwrc.yaml | 23 ++++++++++++++--
- drivers/soc/amlogic/meson-ee-pwrc.c           | 26 +++++++++++++++++++
- include/dt-bindings/power/meson-axg-power.h   | 14 ++++++++++
- 3 files changed, 61 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/power/meson-axg-power.h
+I thought it is common practice in C that the caller makes sure
+the passed parameter isn't a null pointer because a QEMU developer
+also gave me the same advice after reviewing one of my patches for
+QEMU a few weeks ago. I'll mention this in the commit message. Thank
+you for the suggestion!
 
--- 
-2.22.0
 
+--
+Best regards,
+Coiby
