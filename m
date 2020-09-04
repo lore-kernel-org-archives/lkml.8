@@ -2,128 +2,83 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A651C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E771DC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 300C82087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0ACD208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 21:51:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4lf6q4c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=skogtun.org header.i=@skogtun.org header.b="an3bOoyp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgIDVhz (ORCPT
+        id S1728153AbgIDVvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 17:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        Fri, 4 Sep 2020 17:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgIDVhg (ORCPT
+        with ESMTP id S1727020AbgIDVvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 17:37:36 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF3C7C061244;
-        Fri,  4 Sep 2020 14:37:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id e33so4988037pgm.0;
-        Fri, 04 Sep 2020 14:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wkAVJoVoRBCJEyWInzS/e4imL5cccpTcbk0DieW+gr4=;
-        b=t4lf6q4ciCDroGEJn4jGg0VxZuwB//H3Rn2QwoBvhYFJDDpFlNU1b8W1OVWs7Eqf8L
-         3M+PvEKT0pLbCOHE94GXjVn601RXNKS4q1wxOq7ITiSXd6UKZJgN926jeR4XrapZu6V0
-         +WiSbDEk/MxWq90c5xgEzT1ZFy/tclxX6C0JmqiVpoxvqklrQonCCPSFq55z3v5Y2kax
-         mYibgyXCkqggE8ZTpLsZv9ROmeZzRRuBqBc39qHey4+d8NkzCogTn+aGMrKWzOOLCNMg
-         D3KYH9UewRGLYmf558AdqCV8aBEVZO2t3gUy46i4NNoFjigBd1JAJa01wauLaaqTsbj2
-         cUKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wkAVJoVoRBCJEyWInzS/e4imL5cccpTcbk0DieW+gr4=;
-        b=AInNe3DSTwCxmOWPlb145c6oT+x0VqFNGeO8yFNCIc94lorZurH0Kw2RMpC4bhD3pn
-         LLVQU6XjtLo065nm4tsNJJWA1rfKREkv4mROyo4Yi71xi2QL/9QV1qW+r4Cus4e8VhUw
-         nUklXOmszBNLYxyY8HztIrjMGWtltk9uGY74V+pBtzZZGOWO2rAQH6HBNS6HsNo8zjSe
-         tisRO/WQmjDhFS1QRAG5d0LgWXxuKY26oouI6/Mhg7/nUB0t3fSHLVjm0qWq0bSlHpok
-         p+dhGhoGm2GWCiu7A82ZkTF0zpMLsCx/lc3IVhwtb/TYpyDn3SmwuNkr3STnl4nUgo9v
-         glmg==
-X-Gm-Message-State: AOAM530qhcDDmuY1l54xcfxlWcHIYUvLvv+SW4pTPp24UnvZm4UUayT8
-        8SKmeyvkf21ZNGdfuQcgcXU/pmE0Th0=
-X-Google-Smtp-Source: ABdhPJxKQh51JIWSeHtUcULy+XoA4scpq790dbR9PxNvODbVORgxPJ0cfSgA2k/2XGe7kKro62tj1Q==
-X-Received: by 2002:a62:4e8a:0:b029:13c:1611:653b with SMTP id c132-20020a624e8a0000b029013c1611653bmr8271577pfb.13.1599255455104;
-        Fri, 04 Sep 2020 14:37:35 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d17sm1255093pgn.56.2020.09.04.14.37.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 14:37:34 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org (open list),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE)
-Subject: [PATCH net-next v2 1/2] of: Export of_remove_property() to modules
-Date:   Fri,  4 Sep 2020 14:37:29 -0700
-Message-Id: <20200904213730.3467899-2-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904213730.3467899-1-f.fainelli@gmail.com>
-References: <20200904213730.3467899-1-f.fainelli@gmail.com>
+        Fri, 4 Sep 2020 17:51:47 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C55C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 14:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=skogtun.org
+        ; s=ds201912; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=CSV8fgUCyOoK9Ra6R0elSO8AVBPoGfoCDvuZQf1//AU=; b=an3bOoyp13xtDFVZ2xDRuDlVDJ
+        Fcz807ZjfcVZRxc+plgUN+sfa4P/haJfMJYhRsxbpf/ubk6Goojdr/YDs5K+j1aRa+1Ko9Cg6Kzgw
+        8pbVNOyAdYTNHoiMkbBbRS1uRnrFpRVR+dzvlJy9WpdUDNG/eL6IlAYjMQ/hPr2AzkICa5zwoWVYT
+        Rhc9/mRI2kwMkgA6XidX5bYmqAK/ktPfijuEoBpW2SAr68NLKYJnOFFpkrvhTHkUbXacjOlaiOvLJ
+        J24jtQfrcG6CHMu8lJ8MWbWZoevNcD2woMHK1aEYXBGke36xps7uy0LKr8b8VnEBAcoJn2CZwHk3s
+        CvhrQ8Pg==;
+Received: from [2a01:79c:cebf:7fb0:de97:df61:fecc:46bb] (port=53844)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <harald@skogtun.org>)
+        id 1kEJcN-0003Ab-LQ; Fri, 04 Sep 2020 23:51:35 +0200
+Subject: Re: [git pull] drm fixes for 5.9-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@gmail.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAPM=9tz0whDeamM+k_8Wu8TVzz0TDr+qMNMXo8rKeeNRKxBuiQ@mail.gmail.com>
+ <CAHk-=wh2EH9DKRpJQ7+X+NWjjduLPy_Ncv1GzxnXBg-3mTn0Fw@mail.gmail.com>
+From:   Harald Arnesen <harald@skogtun.org>
+Message-ID: <cfcea1be-e02f-b391-ab1f-780888da138d@skogtun.org>
+Date:   Fri, 4 Sep 2020 23:51:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wh2EH9DKRpJQ7+X+NWjjduLPy_Ncv1GzxnXBg-3mTn0Fw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will need to remove some OF properties in drivers/net/dsa/bcm_sf2.c
-with a subsequent commit. Export of_remove_property() to modules so we
-can keep bcm_sf2 modular and provide an empty stub for when CONFIG_OF is
-disabled to maintain the ability to compile test.
+Linus Torvalds [04.09.2020 21:02]:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/of/base.c  | 1 +
- include/linux/of.h | 5 +++++
- 2 files changed, 6 insertions(+)
+> On Thu, Sep 3, 2020 at 8:53 PM Dave Airlie <airlied@gmail.com> wrote:
+>>
+>> Not much going on this week, nouveau has a display hw bug workaround,
+>> amdgpu has some PM fixes and CIK regression fixes, one single radeon
+>> PLL fix, and a couple of i915 display fixes.
+> 
+> Any movement on the i915 relocation issue? I've only seen the one
+> report for the 64-bit case, but clearly there was more going on than
+> just the missing page table flush on 32-bit..
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index ea44fea99813..161a23631472 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1869,6 +1869,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(of_remove_property);
- 
- int __of_update_property(struct device_node *np, struct property *newprop,
- 		struct property **oldpropp)
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 5cf7ae0465d1..481ec0467285 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -929,6 +929,11 @@ static inline int of_machine_is_compatible(const char *compat)
- 	return 0;
- }
- 
-+static inline int of_remove_property(struct device_node *np, struct property *prop)
-+{
-+	return 0;
-+}
-+
- static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
- {
- 	return false;
+Still doesn't work without the three reverts
+(763fedd6a216, 9e0f9464e2ab, 7ac2d2536dfa)...
 -- 
-2.25.1
-
+Hilsen Harald
