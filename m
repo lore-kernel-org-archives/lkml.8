@@ -2,332 +2,297 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB919C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664CBC2BB84
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E94120684
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599246228;
-	bh=muFcJp8E1gbBcdaar0E+RCiRJK6ts1EbXJNqVBc7KNs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hUR1GQ9pChoSjlI1kDhgCapEAW3Eqw535d+LgFy1KRQA6u7bTmMBVOgTAImFICeGO
-	 g37vV79ZAYpAnhtlV+G6l8vTjGCcIhCAOvnzmuJp9C9yMgWAUawRZTtdkzuikdncMz
-	 u3kGped+yZQMc4OCFncILyFitHYCU1IcUYsQeT64=
+	by mail.kernel.org (Postfix) with ESMTP id 20A39206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:05:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F7ZyLaAZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726966AbgIDTDo (ORCPT
+        id S1727776AbgIDTFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:03:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49620 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgIDTDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:03:42 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE03B20684;
-        Fri,  4 Sep 2020 19:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599246220;
-        bh=muFcJp8E1gbBcdaar0E+RCiRJK6ts1EbXJNqVBc7KNs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vtYI58PHGSOWLnQP5RQUP+Z49Xk32TwYMXp+K/O8wacfb0hOGRLdt++//aRjLzW9C
-         QBwIWqsm4c5M1ZkphsebI9iJ2wThpa9DJDex7jYA/ZnpJqytmUZmlRAb649FdRx3Bg
-         HcjBVsbNvYNLa8b06X+KqH/hdL5RqtorPsBPjJEU=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6261240D3D; Fri,  4 Sep 2020 16:03:37 -0300 (-03)
-Date:   Fri, 4 Sep 2020 16:03:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Remi Bernon <rbernon@codeweavers.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jacek Caban <jacek@codeweavers.com>
-Subject: Re: [PATCH v3 1/3] perf dso: Use libbfd to read build_id and
- .gnu_debuglink section
-Message-ID: <20200904190337.GB3753976@kernel.org>
-References: <20200821165238.1340315-1-rbernon@codeweavers.com>
- <20200903002519.GA3487700@kernel.org>
- <20200903165132.GA3495158@kernel.org>
- <76cc6da5-bf1e-4de3-7b79-b9759dc6e5b9@codeweavers.com>
+        Fri, 4 Sep 2020 15:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46494 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgIDTFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:05:36 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3140C061244;
+        Fri,  4 Sep 2020 12:05:30 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id s92so5141780ybi.2;
+        Fri, 04 Sep 2020 12:05:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BMiPCZuP6GEHaaEZM7q9rB4THO4vE8QHXy0T6I+My7o=;
+        b=F7ZyLaAZQJJlcTUmdXe7IDxofHvzPb3lN7cv5yCTznfeR/n/ZDsOaWUu7M0+/MNbvy
+         KRnUGg7Lz9XqBYH9fOn5XChqjN++KGjwxL75GRZKSrd9be8ARQla2L7nwFujaW971B7p
+         mo4IkgFTtPtNghEM4DRBWEl9J3g/RqBL3Aask37wknQ15avvoi28IanbVs3xaNkrWXBe
+         Ycvs9W8WVhmgPzh06AEK3lYi/OGNq19LsEDkCDr2CHvo0ICcShkFs2RBZTOqoQpD4GTh
+         0y7DS/JDm5trsepTQPIPUvV1J9119eeNpzdcFkHgbx9qWoH9u2xBM5ZIe344ePfYtpc2
+         xfuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BMiPCZuP6GEHaaEZM7q9rB4THO4vE8QHXy0T6I+My7o=;
+        b=t+KE18mMDCB8usd/xTI/neC/tTowUF16DlVEVmOE4Z4RbBkmyB9OdpkaprNcRLSOTd
+         LzjWlyKYyj3gpJciEFL5qyqiAcP3QvlcCtCrRNTIVsgdzFcrnCLM1tXhDDIdgpeGRufj
+         Zn0QBkZsNuWqTlRxOUcHkQ8GbQY9bxTzl7+XUO8VHZsf7LWUUPEmQL8raYmB7t9aKa9X
+         py3VpaIUsG9JzHoZ9NZS3izVqO/bhac8Q6/2RGdgJbKguP8VRbU/Vy7u6xCirPqEC8Ex
+         +Cq1kWXFl0vy/6JIGg2aetEGWbXovOVte3OI9Js0X+YcNwwIpmS3s/xBFzRSK1z5bx11
+         uzHg==
+X-Gm-Message-State: AOAM530CEFFGdHqnTLfgPF07vJ2KWku5z36khl3JCkidDMXi+GVb9QpZ
+        jGyacq/DZL1y6fMocWiuCtB1359c/hrwqU0p4Po=
+X-Google-Smtp-Source: ABdhPJzCRTy5EXwAaEHZq7hDMa8YJ88II1pb5Fv8DdjuniM8MsDZQIvWiSTeQsBa6xBA4MAWc4KVKTUPUWn0J0dZBFE=
+X-Received: by 2002:a25:ad5a:: with SMTP id l26mr11411579ybe.510.1599246329545;
+ Fri, 04 Sep 2020 12:05:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76cc6da5-bf1e-4de3-7b79-b9759dc6e5b9@codeweavers.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200903223332.881541-1-haoluo@google.com> <20200903223332.881541-2-haoluo@google.com>
+In-Reply-To: <20200903223332.881541-2-haoluo@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 4 Sep 2020 12:05:18 -0700
+Message-ID: <CAEf4BzZSPb0qWc5_FxsrzykUJa245VgkX-U6xstDM7Durh50gw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/6] bpf: Introduce pseudo_btf_id
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 04, 2020 at 09:57:33AM +0200, Remi Bernon escreveu:
-> On 2020-09-03 18:51, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Sep 02, 2020 at 09:25:19PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Fri, Aug 21, 2020 at 06:52:36PM +0200, Remi Bernon escreveu:
-> > > > Wine generates PE binaries for most of its modules and perf is unable
-> > > > to parse these files to get build_id or .gnu_debuglink section.
-> > > > 
-> > > > Using libbfd when available, instead of libelf, makes it possible to
-> > > > resolve debug file location regardless of the dso binary format.
-> > > > 
-> > > > Signed-off-by: Remi Bernon <rbernon@codeweavers.com>
-> > > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > Cc: Jiri Olsa <jolsa@redhat.com>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > Cc: Jacek Caban <jacek@codeweavers.com>
-> > > > ---
-> > > > 
-> > > > v3: Rebase and small changes to PATCH 2/3 and and PATCH 3/3.
-> > > > 
-> > > >   tools/perf/util/symbol-elf.c | 80 ++++++++++++++++++++++++++++++++++--
-> > > >   1 file changed, 77 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> > > > index 8cc4b0059fb0..f7432c4a4154 100644
-> > > > --- a/tools/perf/util/symbol-elf.c
-> > > > +++ b/tools/perf/util/symbol-elf.c
-> > > > @@ -50,6 +50,10 @@ typedef Elf64_Nhdr GElf_Nhdr;
-> > > >   #define DMGL_ANSI        (1 << 1)       /* Include const, volatile, etc */
-> > > >   #endif
-> > > > +#ifdef HAVE_LIBBFD_SUPPORT
-> > > 
-> > > So, the feature test should also test for the buildid struct field, see
-> > > below:
-> > > 
-> > > > +#define PACKAGE 'perf'
-> > > > +#include <bfd.h>
-> > > > +#else
-> > > >   #ifdef HAVE_CPLUS_DEMANGLE_SUPPORT
-> > > >   extern char *cplus_demangle(const char *, int);
-> > > > @@ -65,9 +69,7 @@ static inline char *bfd_demangle(void __maybe_unused *v,
-> > > >   {
-> > > >   	return NULL;
-> > > >   }
-> > > > -#else
-> > > > -#define PACKAGE 'perf'
-> > > > -#include <bfd.h>
-> > > > +#endif
-> > > >   #endif
-> > > >   #endif
-> > > > @@ -530,6 +532,36 @@ static int elf_read_build_id(Elf *elf, void *bf, size_t size)
-> > > >   	return err;
-> > > >   }
-> > > > +#ifdef HAVE_LIBBFD_SUPPORT
-> > > > +
-> > > > +int filename__read_build_id(const char *filename, void *bf, size_t size)
-> > > > +{
-> > > > +	int err = -1;
-> > > > +	bfd *abfd;
-> > > > +
-> > > > +	abfd = bfd_openr(filename, NULL);
-> > > > +	if (!abfd)
-> > > > +		return -1;
-> > > > +
-> > > > +	if (!bfd_check_format(abfd, bfd_object)) {
-> > > > +		pr_debug2("%s: cannot read %s bfd file.\n", __func__, filename);
-> > > > +		goto out_close;
-> > > > +	}
-> > > > +
-> > > > +	if (!abfd->build_id || abfd->build_id->size > size)
-> > > > +		goto out_close;
-> > > 
-> > > amazonlinux:1, centos:6, debian:8, mageia:5, oraclelinux:6, ubuntu:14.04
-> > > fail, its all old stuff, but adding a reference to abfd->build_id to the
-> > > feature test that ends up defining HAVE_LIBBFD_SUPPORT will solve that,
-> > > I'll do it tomorrow morning if you don't beat me to it.
-> > > 
-> > > util/symbol-elf.c: In function 'filename__read_build_id':
-> > > util/symbol-elf.c:551:11: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    if (!abfd->build_id || abfd->build_id->size > size)
-> > >             ^~
-> > > util/symbol-elf.c:551:29: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    if (!abfd->build_id || abfd->build_id->size > size)
-> > >                               ^~
-> > > util/symbol-elf.c:554:17: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    memcpy(bf, abfd->build_id->data, abfd->build_id->size);
-> > >                   ^~
-> > > util/symbol-elf.c:554:39: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    memcpy(bf, abfd->build_id->data, abfd->build_id->size);
-> > >                                         ^~
-> > > util/symbol-elf.c:555:18: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    memset(bf + abfd->build_id->size, 0, size - abfd->build_id->size);
-> > >                    ^~
-> > > util/symbol-elf.c:555:50: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    memset(bf + abfd->build_id->size, 0, size - abfd->build_id->size);
-> > >                                                    ^~
-> > > util/symbol-elf.c:556:12: error: 'bfd {aka struct bfd}' has no member named 'build_id'
-> > >    err = abfd->build_id->size;
-> > >              ^~
-> > >    CC       /tmp/build/perf/util/cap.o
-> > > make[4]: *** [/tmp/build/perf/util/symbol-elf.o] Error 1
-> > > make[4]: *** Waiting for unfinished jobs....
-> > >    LD       /tmp/build/perf/util/scripting-engines/perf-in.o
-> > >    LD       /tmp/build/perf/util/intel-pt-decoder/perf-in.o
-> > > make[3]: *** [util] Error 2
-> > > make[2]: *** [/tmp/build/perf/perf-in.o] Error 2
-> > > make[2]: *** Waiting for unfinished jobs....
-> > > make[1]: *** [sub-make] Error 2
-> > > make: *** [all] Error 2
-> > > make: Leaving directory `/git/linux/tools/perf'
-> > > + exit 1
-> > > [perfbuilder@five ~]$
-> > 
-> > So, I have the cset at the end of this message in front of your series +
-> > the following patch applied to your patch, the debuglink part seems ok
-> > and can continue depending on just libbfd, having or not abfd->buildid.
-> > 
-> 
-> Thanks! I may have missed the first changeset you mention -- IIUC the one
-> adding the feature check -- but it sounds good to me nonetheless.
-> 
-> Should I do anything?
+On Thu, Sep 3, 2020 at 3:34 PM Hao Luo <haoluo@google.com> wrote:
+>
+> Pseudo_btf_id is a type of ld_imm insn that associates a btf_id to a
+> ksym so that further dereferences on the ksym can use the BTF info
+> to validate accesses. Internally, when seeing a pseudo_btf_id ld insn,
+> the verifier reads the btf_id stored in the insn[0]'s imm field and
+> marks the dst_reg as PTR_TO_BTF_ID. The btf_id points to a VAR_KIND,
+> which is encoded in btf_vminux by pahole. If the VAR is not of a struct
+> type, the dst reg will be marked as PTR_TO_MEM instead of PTR_TO_BTF_ID
+> and the mem_size is resolved to the size of the VAR's type.
+>
+> From the VAR btf_id, the verifier can also read the address of the
+> ksym's corresponding kernel var from kallsyms and use that to fill
+> dst_reg.
+>
+> Therefore, the proper functionality of pseudo_btf_id depends on (1)
+> kallsyms and (2) the encoding of kernel global VARs in pahole, which
+> should be available since pahole v1.18.
+>
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
 
-No need at this time, here is the new feature test that ends up being
-used to check if that abfd->build_id is present:
+Logic looks correct, but I have a few suggestions for naming things
+and verifier logs. Please see below.
 
-[acme@five perf]$ git log torvalds/master.. --oneline
-d39497a94c1672c2 (HEAD -> perf/core) perf: ftrace: Add filter support for option -F/--funcs
-6330d59303482407 perf tools: Consolidate close_control_option()'s into one function
-bd0c035c66c933ee perf intel-pt: Document snapshot control command
-7f5b197269a34f9a perf annotate: Add 'ret' (intel disasm style) as an alias for 'retq'
-2481b0089bddb6b6 perf annotate: Allow configuring the 'disassembler_style' knob via 'perf config'
-d20aff1512f013fa (quaco/perf/core) perf record: Add 'snapshot' control command
-a8fcbd269b4340c3 perf tools: Add FIFO file names as alternative options to --control
-1f4390d825cc04e9 perf tools: Use AsciiDoc formatting for --control option documentation
-40db8ff59e75af10 perf tools: Handle read errors from ctl_fd
-9864a66defeb8df0 perf tools: Consolidate --control option parsing into one function
-ed21d6d7c48e6e96 perf tests: Add test for PE binary format support
-eac9a4342e5447ca perf symbols: Try reading the symbol table with libbfd
-ba0509dcb7f80640 perf dso: Use libbfd to read build_id and .gnu_debuglink section
-e71e19a9ea70952a tools features: Add feature test to check if libbfd has buildid support
-[acme@five perf]$
+>  include/linux/bpf_verifier.h   |   4 ++
+>  include/linux/btf.h            |  15 +++++
+>  include/uapi/linux/bpf.h       |  38 ++++++++---
+>  kernel/bpf/btf.c               |  15 -----
+>  kernel/bpf/verifier.c          | 112 ++++++++++++++++++++++++++++++---
+>  tools/include/uapi/linux/bpf.h |  38 ++++++++---
+>  6 files changed, 182 insertions(+), 40 deletions(-)
+>
+> diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
+> index 53c7bd568c5d..a14063f64d96 100644
+> --- a/include/linux/bpf_verifier.h
+> +++ b/include/linux/bpf_verifier.h
+> @@ -308,6 +308,10 @@ struct bpf_insn_aux_data {
+>                         u32 map_index;          /* index into used_maps[] */
+>                         u32 map_off;            /* offset from value base address */
+>                 };
+> +               struct {
+> +                       u32 pseudo_btf_id_type; /* type of pseudo_btf_id */
+> +                       u32 pseudo_btf_id_meta; /* memsize or btf_id */
 
+a bit misleading names, not clear at all in the code what's in there.
+This section is for ldimm64 insns that are loading BTF variables,
+right? so how about this:
 
-$ git show e71e19a9ea70952a
-commit e71e19a9ea70952a53d58a99971820ce6c1794a8
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date:   Thu Sep 3 13:44:39 2020 -0300
+struct {
+    u32 reg_type;
+    union {
+        u32 btf_id;
+        u32 memsize;
+    };
+} btf_var;
 
-    tools features: Add feature test to check if libbfd has buildid support
-    
-    Which is needed by the PE executable support, for instance.
-    
-    Cc: Adrian Hunter <adrian.hunter@intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Ian Rogers <irogers@google.com>
-    Cc: Jacek Caban <jacek@codeweavers.com>
-    Cc: Jiri Olsa <jolsa@redhat.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: Remi Bernon <rbernon@codeweavers.com>
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+In case someone hates non-anonymous structs, I'd still go with
+btf_var_reg_type, btf_var_btf_id and btf_var_memsize.
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index c1daf4d57518c579..8b381d8ec9ded098 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -41,6 +41,7 @@ FEATURE_TESTS_BASIC :=                  \
-         gtk2                            \
-         gtk2-infobar                    \
-         libbfd                          \
-+        libbfd-buildid			\
-         libcap                          \
-         libelf                          \
-         libelf-getphdrnum               \
-@@ -113,6 +114,7 @@ FEATURE_DISPLAY ?=              \
-          glibc                  \
-          gtk2                   \
-          libbfd                 \
-+         libbfd-buildid		\
-          libcap                 \
-          libelf                 \
-          libnuma                \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index d220fe952747053a..9e5f8db4a1689832 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -15,6 +15,7 @@ FILES=                                          \
-          test-hello.bin                         \
-          test-libaudit.bin                      \
-          test-libbfd.bin                        \
-+         test-libbfd-buildid.bin		\
-          test-disassembler-four-args.bin        \
-          test-reallocarray.bin			\
-          test-libbfd-liberty.bin                \
-@@ -229,6 +230,9 @@ $(OUTPUT)test-libpython-version.bin:
- $(OUTPUT)test-libbfd.bin:
- 	$(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
- 
-+$(OUTPUT)test-libbfd-buildid.bin:
-+	$(BUILD) -DPACKAGE='"perf"' -lbfd -ldl
-+
- $(OUTPUT)test-disassembler-four-args.bin:
- 	$(BUILD) -DPACKAGE='"perf"' -lbfd -lopcodes
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 5479e543b1947ee9..80c5795f324ba04f 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -90,6 +90,10 @@
- # include "test-libbfd.c"
- #undef main
- 
-+#define main main_test_libbfd_buildid
-+# include "test-libbfd-buildid.c"
-+#undef main
-+
- #define main main_test_backtrace
- # include "test-backtrace.c"
- #undef main
-@@ -208,6 +212,7 @@ int main(int argc, char *argv[])
- 	main_test_gtk2(argc, argv);
- 	main_test_gtk2_infobar(argc, argv);
- 	main_test_libbfd();
-+	main_test_libbfd_buildid();
- 	main_test_backtrace();
- 	main_test_libnuma();
- 	main_test_numa_num_possible_cpus();
-diff --git a/tools/build/feature/test-libbfd-buildid.c b/tools/build/feature/test-libbfd-buildid.c
-new file mode 100644
-index 0000000000000000..157644b04c052a51
---- /dev/null
-+++ b/tools/build/feature/test-libbfd-buildid.c
-@@ -0,0 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <bfd.h>
-+
-+int main(void)
-+{
-+	bfd *abfd = bfd_openr("Pedro", 0);
-+	return abfd && (!abfd->build_id || abfd->build_id->size > 0x506564726f);
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 190be4fa5c2187f3..f73a85ea3e7fb20a 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -825,6 +825,12 @@ else
-   $(call feature_check,disassembler-four-args)
- endif
- 
-+ifeq ($(feature-libbfd-buildid), 1)
-+  CFLAGS += -DHAVE_LIBBFD_BUILDID_SUPPORT
-+else
-+  msg := $(warning Old version of libbfd/binutils things like PE executable profiling will not be available);
-+endif
-+
- ifdef NO_DEMANGLE
-   CFLAGS += -DNO_DEMANGLE
- else
+> +               };
+>         };
+>         u64 map_key_state; /* constant (32 bit) key tracking for maps */
+>         int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
+> diff --git a/include/linux/btf.h b/include/linux/btf.h
+> index a9af5e7a7ece..592373d359b9 100644
+> --- a/include/linux/btf.h
+> +++ b/include/linux/btf.h
+> @@ -106,6 +106,21 @@ static inline bool btf_type_is_func_proto(const struct btf_type *t)
+>         return BTF_INFO_KIND(t->info) == BTF_KIND_FUNC_PROTO;
+>  }
+>
+
+[...]
+
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index b4e9c56b8b32..3b382c080cfd 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -7398,6 +7398,24 @@ static int check_ld_imm(struct bpf_verifier_env *env, struct bpf_insn *insn)
+>                 return 0;
+>         }
+>
+> +       if (insn->src_reg == BPF_PSEUDO_BTF_ID) {
+> +               u32 type = aux->pseudo_btf_id_type;
+> +               u32 meta = aux->pseudo_btf_id_meta;
+> +
+> +               mark_reg_known_zero(env, regs, insn->dst_reg);
+> +
+> +               regs[insn->dst_reg].type = type;
+> +               if (type == PTR_TO_MEM) {
+> +                       regs[insn->dst_reg].mem_size = meta;
+> +               } else if (type == PTR_TO_BTF_ID) {
+> +                       regs[insn->dst_reg].btf_id = meta;
+
+nit: probably worthwhile to introduce a local variable (dst_reg) to
+capture pointer to regs[insn->dst_reg] in this entire function. Then
+no reall need for type and meta local vars above, everything is going
+to be short and sweet.
+
+> +               } else {
+> +                       verbose(env, "bpf verifier is misconfigured\n");
+> +                       return -EFAULT;
+> +               }
+> +               return 0;
+> +       }
+> +
+>         map = env->used_maps[aux->map_index];
+>         mark_reg_known_zero(env, regs, insn->dst_reg);
+>         regs[insn->dst_reg].map_ptr = map;
+> @@ -9284,6 +9302,74 @@ static int do_check(struct bpf_verifier_env *env)
+>         return 0;
+>  }
+>
+> +/* replace pseudo btf_id with kernel symbol address */
+> +static int check_pseudo_btf_id(struct bpf_verifier_env *env,
+> +                              struct bpf_insn *insn,
+> +                              struct bpf_insn_aux_data *aux)
+> +{
+> +       u32 type, id = insn->imm;
+> +       const struct btf_type *t;
+> +       const char *sym_name;
+> +       u64 addr;
+> +
+> +       if (!btf_vmlinux) {
+> +               verbose(env, "%s: btf not available. verifier misconfigured.\n",
+> +                       __func__);
+
+verifier logs so far hasn't used __func__ and it's not all that
+meaningful to users and might change due to later refactorings.
+
+Also, in this particular case, it's not a verifier misconfiguration,
+but rather that the kernel doesn't have a built-in BTF, so suggest
+enabling CONFIG_DEBUG_INFO_BTF=y.
+
+"kernel is missing BTF, make sure CONFIG_DEBUG_INFO_BTF=y is specified
+in Kconfig"
+
+> +               return -EINVAL;
+> +       }
+> +
+> +       t = btf_type_by_id(btf_vmlinux, id);
+> +       if (!t) {
+> +               verbose(env, "%s: invalid btf_id %d\n", __func__, id);
+
+"ldimm64 insn specifies invalid btf_id %d"? add similar context below
+
+> +               return -ENOENT;
+> +       }
+> +
+> +       if (insn[1].imm != 0) {
+> +               verbose(env, "%s: BPF_PSEUDO_BTF_ID uses reserved fields\n",
+> +                       __func__);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (!btf_type_is_var(t)) {
+> +               verbose(env, "%s: btf_id %d isn't KIND_VAR\n", __func__, id);
+> +               return -EINVAL;
+> +       }
+> +
+> +       sym_name = btf_name_by_offset(btf_vmlinux, t->name_off);
+> +       addr = kallsyms_lookup_name(sym_name);
+> +       if (!addr) {
+> +               verbose(env, "%s: failed to find the address of symbol '%s'.\n",
+> +                       __func__, sym_name);
+> +               return -ENOENT;
+> +       }
+> +
+
+[...]
+
+> @@ -9394,10 +9480,14 @@ static bool bpf_map_is_cgroup_storage(struct bpf_map *map)
+>                 map->map_type == BPF_MAP_TYPE_PERCPU_CGROUP_STORAGE);
+>  }
+>
+> -/* look for pseudo eBPF instructions that access map FDs and
+> - * replace them with actual map pointers
+> +/* find and rewrite pseudo imm in ld_imm64 instructions:
+> + *
+> + * 1. if it accesses map FD, replace it with actual map pointer.
+> + * 2. if it accesses btf_id of a VAR, replace it with pointer to the var.
+> + *
+> + * NOTE: btf_vmlinux is required for converting pseudo btf_id.
+>   */
+> -static int replace_map_fd_with_map_ptr(struct bpf_verifier_env *env)
+> +static int replace_pseudo_imm_with_ptr(struct bpf_verifier_env *env)
+
+nit: I'd call this something like "resolve_pseudo_ldimm64" instead.
+ptr here is an implementation detail of map pointers ldimm64 and
+doesn't even match what we are doing for pseudo_btf_id
+
+>  {
+>         struct bpf_insn *insn = env->prog->insnsi;
+>         int insn_cnt = env->prog->len;
+> @@ -9438,6 +9528,14 @@ static int replace_map_fd_with_map_ptr(struct bpf_verifier_env *env)
+>                                 /* valid generic load 64-bit imm */
+>                                 goto next_insn;
+>
+> +                       if (insn[0].src_reg == BPF_PSEUDO_BTF_ID) {
+> +                               aux = &env->insn_aux_data[i];
+> +                               err = check_pseudo_btf_id(env, insn, aux);
+> +                               if (err)
+> +                                       return err;
+> +                               goto next_insn;
+> +                       }
+> +
+>                         /* In final convert_pseudo_ld_imm64() step, this is
+>                          * converted into regular 64-bit imm load insn.
+>                          */
+
+[...]
