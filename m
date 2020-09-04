@@ -2,138 +2,210 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5089CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B52A5C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21FA9206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:04:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tmglZImb"
+	by mail.kernel.org (Postfix) with ESMTP id 8837B206E7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbgIDGEj (ORCPT
+        id S1726415AbgIDGJD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDGEi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:04:38 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D09C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:04:38 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id n133so5354714qkn.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :organization:user-agent:mime-version:content-transfer-encoding;
-        bh=Y4+nyUm6P1sliqzR8n00yXfDoX7E3MCV3APAcgzk2PM=;
-        b=tmglZImbSzoU+BhJ6jX9g28qc3bA3Dg4gsr18kTGq4SIswhoONwdW7lTJ37ErdYH0f
-         VKyDWeCmNhGNRuUWPMOfVZvdpsarevt9GZbHmqKNG6BX8v9uCTcz18gw2QfND7xyROPn
-         I5onuGEu9zZ8T7eG1A9YU+Qeda0oJGkZQqSPMAracI4OGeh4zjnr3aDbyk18h7+sgx42
-         lMlfdjNK7LOhmKh3PC7sGNuJPRJLK1RCRQg7wXFJQcqqokjcOMERWdmR93IHzj/Cc7BO
-         YnFOCZH/UTY9v5tuKcTJYdM5R+c1654bmqEBluKZ5d+j+dy7CHCso8Hbs2vdo/ILThNg
-         RmEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:organization:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=Y4+nyUm6P1sliqzR8n00yXfDoX7E3MCV3APAcgzk2PM=;
-        b=OuQktHOQYl2uNxoADS4MtnwIkX0dJoVqUwAuKl5fzOaFy7S9YSMBArMCuZ0sFn1sfq
-         6f6Z0/uyoOHYaaJ1kAv94E3/hm2+HzlZsh7aqxMTv2aoun4taENXdX+M+FjuFs/Clsop
-         B147/nPhpa+FEYwVuRl3v9kdGBzxpi1FzGMM4rELV4t8ZogT/yWkSWbzhEH4IXVgRn4p
-         ryVjlwfchXAlXuI49AW1T6+w//CvaKd1JP6ZmLsK1hLnzOrEve7fQ0goPsJLRDnjkI1o
-         nXG48WJvzkMrNLNfHNi2lsCaWLLJcEznNv+hsPcuNpB+mxJpcrPj8idPeQyU2sDIql+m
-         FMsQ==
-X-Gm-Message-State: AOAM53385nYiefWkzUidFnux4u0efO2w/SlGv3vRxZnaclUhJnPAK0vm
-        sigI4nRqh7iQ2ZftUU7ymcM=
-X-Google-Smtp-Source: ABdhPJyMROFWR3SpJFpKskeTIMVkr4OkfgySEus//Cvb5l6RUUinHU1UFOrJ5iRJ1avXPXHMpAtDwA==
-X-Received: by 2002:a37:a3cf:: with SMTP id m198mr6676667qke.410.1599199475491;
-        Thu, 03 Sep 2020 23:04:35 -0700 (PDT)
-Received: from LeoBras (179-125-130-62.dynamic.desktop.com.br. [179.125.130.62])
-        by smtp.gmail.com with ESMTPSA id 103sm3808531qta.31.2020.09.03.23.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Sep 2020 23:04:34 -0700 (PDT)
-Message-ID: <ef7e80b0a7399bad607324301a604bfb46c2de05.camel@gmail.com>
-Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
- IOMMU_PAGE_SIZE on iommu_*_coherent()
-From:   Leonardo Bras <leobras.c@gmail.com>
-To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Fri, 04 Sep 2020 03:04:28 -0300
-In-Reply-To: <8f569f68-5145-676e-50a1-b13f3fbd69cc@ozlabs.ru>
-References: <20200817234033.442511-1-leobras.c@gmail.com>
-         <20200817234033.442511-3-leobras.c@gmail.com>
-         <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
-         <c67c66e466ad27d15aa2b970c48d2336d95b2971.camel@gmail.com>
-         <da473389-f921-075a-ec8e-ea516de4f177@ozlabs.ru>
-         <2aacd45f047489642da1731c92d3555ad101e3c7.camel@gmail.com>
-         <81f106bd-8962-22f2-f14a-378d3486f57e@ozlabs.ru>
-         <39ad3a9c103faf9c5fc2fd5700d8606eb4a2b67e.camel@gmail.com>
-         <8f569f68-5145-676e-50a1-b13f3fbd69cc@ozlabs.ru>
-Organization: IBM
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Fri, 4 Sep 2020 02:09:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:2079 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725812AbgIDGJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:09:02 -0400
+IronPort-SDR: /RnHB+lKBiO4sDk8W8tuLPmbY9++99wtVAXKuLYiGwMz4jrAihbgPd1puI4YORABzwoMBoKNA9
+ E2OXG/PBKVuQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="155095685"
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="155095685"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 23:09:01 -0700
+IronPort-SDR: WnIAQssWbM5cgI7sn0A2JEgKJnpLS33upoRBQzZKYQiiqXDGsSvnzo7Qerwh0SK61m69h8sMIn
+ WqboLBUn+9tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="502788500"
+Received: from unknown (HELO [10.239.154.46]) ([10.239.154.46])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Sep 2020 23:08:53 -0700
+Subject: Re: [PATCH] i2c: virtio: add a virtio i2c frontend driver
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-i2c@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, mst@redhat.com, jasowang@redhat.com,
+        wsa+renesas@sang-engineering.com, wsa@kernel.org,
+        jarkko.nikula@linux.intel.com, jdelvare@suse.de,
+        Sergey.Semin@baikalelectronics.ru, krzk@kernel.org,
+        rppt@kernel.org, loic.poulain@linaro.org, tali.perry1@gmail.com,
+        bjorn.andersson@linaro.org, shuo.a.liu@intel.com,
+        conghui.chen@intel.com, yu1.wang@intel.com
+References: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
+ <20200903102008.GY1891694@smile.fi.intel.com>
+From:   Jie Deng <jie.deng@intel.com>
+Message-ID: <71587fa1-ded8-2f96-378f-fc1ecc18a1a1@intel.com>
+Date:   Fri, 4 Sep 2020 14:08:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.0.1
 MIME-Version: 1.0
+In-Reply-To: <20200903102008.GY1891694@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-09-03 at 14:41 +1000, Alexey Kardashevskiy wrote:
-> I am new to this, so I am trying to understand how a memory page mapped
-> > as DMA, and used for something else could be a problem.
-> 
->  From the device prospective, there is PCI space and everything from 0 
-> till 1<<64 is accessible and what is that mapped to - the device does 
-> not know. PHB's IOMMU is the thing to notice invalid access and raise 
-> EEH but PHB only knows about PCI->physical memory mapping (with IOMMU 
-> pages) but nothing about the host kernel pages. Does this help? Thanks,
 
-According to our conversation on Slack:
-1- There is a problem if a hypervisor gives to it's VMs contiguous
-memory blocks that are not aligned to IOMMU pages, because then an 
-iommu_map_page() could map some memory in this VM and some memory in
-other VM / process.
-2- To guarantee this, we should have system pagesize >= iommu_pagesize 
+On 2020/9/3 18:20, Andy Shevchenko wrote:
+> On Thu, Sep 03, 2020 at 01:34:45PM +0800, Jie Deng wrote:
+>> Add an I2C bus driver for virtio para-virtualization.
+>>
+>> The controller can be emulated by the backend driver in
+>> any device model software by following the virtio protocol.
+>>
+>> This driver communicates with the backend driver through a
+>> virtio I2C message structure which includes following parts:
+>>
+>> - Header: i2c_msg addr, flags, len.
+>> - Data buffer: the pointer to the i2c msg data.
+>> - Status: the processing result from the backend.
+>>
+>> People may implement different backend drivers to emulate
+>> different controllers according to their needs. A backend
+>> example can be found in the device model of the open source
+>> project ACRN. For more information, please refer to
+>> https://projectacrn.org.
+>>
+>> The virtio device ID 34 is used for this I2C adpter since IDs
+>> before 34 have been reserved by other virtio devices.
+> Seems it's slightly different version to what I have reviewed internally.
+> My comments below. (I admit that some of them maybe new)
+>
+> ...
 
-One way to get (2) is by doing this in enable_ddw():
-	if ((query.page_size & 4) && PAGE_SHIFT >= 24) {
-		page_shift = 24; /* 16MB */
-	} else if ((query.page_size & 2) &&  PAGE_SHIFT >= 16 ) {
-		page_shift = 16; /* 64kB */
-	} else if (query.page_size & 1 &&  PAGE_SHIFT >= 12) {
-		page_shift = 12; /* 4kB */
-	[...]
+Yeah... Some new devices have been added into the virtio spec during 
+these days.
 
-Another way of solving this, would be adding in LoPAR documentation
-that the blocksize of contiguous memory the hypervisor gives a VM
-should always be aligned to IOMMU pagesize offered.
 
-I think the best approach would be first sending the above patch, which
-is faster, and then get working into adding that to documentation, so
-hypervisors guarantee this.
+>> +/**
+>> + * struct virtio_i2c_hdr - the virtio I2C message header structure
+>> + * @addr: i2c_msg addr, the slave address
+>> + * @flags: i2c_msg flags
+>> + * @len: i2c_msg len
+>> + */
+>> +struct virtio_i2c_hdr {
+>> +	__virtio16 addr;
+>> +	__virtio16 flags;
+>> +	__virtio16 len;
+>> +} __packed;
+> As Misha noticed and somewhere I saw 0-day reports these should be carefully
+> taken care of.
+>
+> ...
 
-If this gets into the docs, we can revert the patch.
+Sure. Will fix these.
 
-What do you think?
 
-Best regards!
+>> +static int virtio_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>> +{
+>> +	struct virtio_i2c *vi = i2c_get_adapdata(adap);
+>> +	struct virtio_i2c_msg *vmsg_o, *vmsg_i;
+>> +	struct virtqueue *vq = vi->vq;
+>> +	unsigned long time_left;
+>> +	int len, i, ret = 0;
+>> +
+>> +	vmsg_o = kzalloc(sizeof(*vmsg_o), GFP_KERNEL);
+>> +	if (!vmsg_o)
+>> +		return -ENOMEM;
+>> +
+>> +	mutex_lock(&vi->i2c_lock);
+>> +	vmsg_o->buf = NULL;
+>> +	for (i = 0; i < num; i++) {
+>> +		ret = virtio_i2c_add_msg(vq, vmsg_o, &msgs[i]);
+>> +		if (ret) {
+>> +			dev_err(&adap->dev, "failed to add msg[%d] to virtqueue.\n", i);
+>> +			goto err_unlock_free;
+> break;
 
+OK.
+
+
+>> +		}
+>> +
+>> +		virtqueue_kick(vq);
+>> +
+>> +		time_left = wait_for_completion_timeout(&vi->completion, adap->timeout);
+>> +		if (!time_left) {
+>> +			dev_err(&adap->dev, "msg[%d]: addr=0x%x timeout.\n", i, msgs[i].addr);
+>> +			ret = i;
+>> +			goto err_unlock_free;
+> break;
+>
+> And so on.
+OK.
+>> +		}
+>> +
+>> +		vmsg_i = (struct virtio_i2c_msg *)virtqueue_get_buf(vq, &len);
+>> +		if (vmsg_i) {
+>> +			/* vmsg_i should point to the same address with vmsg_o */
+>> +			if (vmsg_i != vmsg_o) {
+>> +				dev_err(&adap->dev, "msg[%d]: addr=0x%x virtqueue error.\n",
+>> +					i, vmsg_i->hdr.addr);
+>> +				ret = i;
+>> +				goto err_unlock_free;
+>> +			}
+>> +			if (vmsg_i->status != VIRTIO_I2C_MSG_OK) {
+>> +				dev_err(&adap->dev, "msg[%d]: addr=0x%x error=%d.\n",
+>> +					i, vmsg_i->hdr.addr, vmsg_i->status);
+>> +				ret = i;
+>> +				goto err_unlock_free;
+>> +			}
+>> +			if ((vmsg_i->hdr.flags & I2C_M_RD) && vmsg_i->hdr.len)
+>> +				memcpy(msgs[i].buf, vmsg_i->buf, vmsg_i->hdr.len);
+>> +
+>> +			kfree(vmsg_i->buf);
+>> +			vmsg_i->buf = NULL;
+>> +		}
+>> +		reinit_completion(&vi->completion);
+>> +	}
+>> +	if (i == num)
+>> +		ret = num;
+> And this conditional seems a dup of the for-loop successfully iterating over
+> entire queue.
+You are right.
+We may save several lines of code by using "Return (ret<0) ? ret : i" at 
+the end.
+
+
+>> +err_unlock_free:
+> Redundant.
+OK.
+>> +	mutex_unlock(&vi->i2c_lock);
+>> +	kfree(vmsg_o->buf);
+>> +	kfree(vmsg_o);
+>> +	return ret;
+>> +}
+> ...
+>
+>> +	vi->adap.timeout = HZ / 10;
+> + Blank line.
+OK.
+>> +	ret = i2c_add_adapter(&vi->adap);
+>> +	if (ret) {
+>> +		dev_err(&vdev->dev, "failed to add virtio-i2c adapter.\n");
+>> +		virtio_i2c_del_vqs(vdev);
+> Usually we do clean up followed by message.
+I will change the order. Thank you.
+>> +	}
+>> +
+>> +	return ret;
+>
