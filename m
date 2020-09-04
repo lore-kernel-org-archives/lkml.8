@@ -2,145 +2,256 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58FC4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DDEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C12B2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599247995;
-	bh=EwWqQCCeyt59RTTQb8UOoKzovguyPsH4Mq6GX6zmhgE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PKxwxRjX10Ka9S8hZXvXYBWv690DMrVVvx39rSbsoRtoDpRdNL6a/ly7DT1gpWLvb
-	 VjniJapvfLxDbWHGbsFwzGHnCijd3xiGYy/njHGhwq4dLRjJPcNKABZ3WqnPRXOFo9
-	 4lB8bAOrm4EEC5Y5ukleEokl1xs4DpZq064d3Aqo=
+	by mail.kernel.org (Postfix) with ESMTP id 29EE42083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:34:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3CRJycg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgIDTdN (ORCPT
+        id S1727919AbgIDTey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:33:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726317AbgIDTdM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:33:12 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCA342083B;
-        Fri,  4 Sep 2020 19:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599247992;
-        bh=EwWqQCCeyt59RTTQb8UOoKzovguyPsH4Mq6GX6zmhgE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oAFKDW9FXgJ9pwPBOyWGU4pwAGUBLMfyCrWC9AT7td4hEN/jGrNoU6Nlc99D52Bek
-         ZzCYBYCNliEs2PerjM4pemO3H16rQxtb8tkiqQHxi6s3LzktxNreOh7ST0J7Pr9NXJ
-         aY1PSZIfg5GJlFPFYD+mt4deFJ66LcD2qoie0odE=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id ECB2C40D3D; Fri,  4 Sep 2020 16:33:09 -0300 (-03)
-Date:   Fri, 4 Sep 2020 16:33:09 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vijay Thakkar <vijaythakkar@me.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>,
-        Martin Jambor <mjambor@suse.cz>,
-        Michael Petlan <mpetlan@redhat.com>,
-        William Cohen <wcohen@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/4] perf vendor events amd: Enable Family 19h users by
- matching Zen2 events
-Message-ID: <20200904193309.GH3753976@kernel.org>
-References: <20200901220944.277505-1-kim.phillips@amd.com>
- <20200901220944.277505-4-kim.phillips@amd.com>
- <CAP-5=fXs6WJoJ5HTkkgXVx=TR6=G1VaP6kcZHhf4Zq9Nhxb4Xw@mail.gmail.com>
+        Fri, 4 Sep 2020 15:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50964 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbgIDTev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:34:51 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE40C061244;
+        Fri,  4 Sep 2020 12:34:50 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id s92so5190867ybi.2;
+        Fri, 04 Sep 2020 12:34:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l7AbF6ObHul/HpyDP1CM3i794LArutPSVoTj+5ZND9c=;
+        b=E3CRJycglGFtdTRqsIeYV4f037iqOXMeZ7ZmrCDWl/ZiD89Ml1+6DshFCBA9E7KefO
+         8oXQLV3ZPRW3rzjWxyq/wnEThsg4T8B7O5I62mVo756ejOey2aI6SmssfmiWtUlPRENr
+         MOcNFz9cvbTqHXpIYAkMCXFglgB0RPk+vPdhcGwO+xmLKR/BqgL2w6YAuDAoh31FJ+yV
+         PvMTE2b+sjn28LEOwSSW5KPDlBZWDvF9rpG8PgX67XF6aOUPw6mivy6J8eBSHM4CbnhC
+         NCZR4nXQaReVhCCpWHG8FBcoozYTE+AFsb6GEuD6gphZH9kLQccO/LnNQ9CdqRI4ODHT
+         iiag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l7AbF6ObHul/HpyDP1CM3i794LArutPSVoTj+5ZND9c=;
+        b=ZWcCWe5Scf4KdL+/X7jZbVsbz6w7Wc/1y5+uG46Yy3JU4br5lS9Q+kd7UbD/A/Z1ZX
+         cTYdOIRtWVwVGclQ289sXaHKdRLnrMrC3yfdHIpw7QyLgi43juYHXHYYbnXypcyQJMdh
+         1dCwYWrVCz70nrq/3GAvXpRERjPfmgu1I58dXtXWnjRzDWKIXG8gVVVR2p2B7CkSecL9
+         6rvqv+rL+IspUSm+Z+T/HvFVPDeuw4Q6Wd6JfTa60RMCemNltcYw6kWZLUpxQwJ1iu5N
+         JhtfVlBlSU5NkNBVL6Dvs5ro2+MsjjS2C9PQ6rtyQcRFsV7IO0SXnqzoG/4MnB4zUS6z
+         yWXA==
+X-Gm-Message-State: AOAM530Y3dCt9cdZHdQSP4EoiFE2FSEOMFutprTcDPdQ8AToJo1cfmlE
+        zpz7I+udUwvsxteBQEbYpDQ4Sm413m9q8kr8xXw=
+X-Google-Smtp-Source: ABdhPJxb2XupjUC1M++Pp29hJVxUIXjCX59D857gC4+43yhdgI8g8gmqmSjrDVOEgBQuC/neJe5Bf8iU+2USIjL8NjY=
+X-Received: by 2002:a5b:44d:: with SMTP id s13mr12361472ybp.403.1599248089911;
+ Fri, 04 Sep 2020 12:34:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXs6WJoJ5HTkkgXVx=TR6=G1VaP6kcZHhf4Zq9Nhxb4Xw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200903223332.881541-1-haoluo@google.com> <20200903223332.881541-3-haoluo@google.com>
+In-Reply-To: <20200903223332.881541-3-haoluo@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 4 Sep 2020 12:34:39 -0700
+Message-ID: <CAEf4Bzbu=Rdztx2xC6vkyeT=KGhQdy=+Dto8r1maWMLa5cGHbA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 2/6] bpf/libbpf: BTF support for typed ksyms
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Sep 02, 2020 at 11:20:20PM -0700, Ian Rogers escreveu:
-> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
-> >
-> > This enables zen3 users by reusing mostly-compatible zen2 events
-> > until the official public list of zen3 events is published in a
-> > future PPR.
-> >
-> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-> 
-> Acked-by: Ian Rogers <irogers@google.com>
+On Thu, Sep 3, 2020 at 3:34 PM Hao Luo <haoluo@google.com> wrote:
+>
+> If a ksym is defined with a type, libbpf will try to find the ksym's btf
+> information from kernel btf. If a valid btf entry for the ksym is found,
+> libbpf can pass in the found btf id to the verifier, which validates the
+> ksym's type and value.
+>
+> Typeless ksyms (i.e. those defined as 'void') will not have such btf_id,
+> but it has the symbol's address (read from kallsyms) and its value is
+> treated as a raw pointer.
+>
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
 
-Thanks, applied,
+Logic looks correct, but I have complaints about libbpf logging
+consistency, please see suggestions below.
 
-- Arnaldo
- 
-> Thanks!
-> Ian
-> 
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > Cc: Jiri Olsa <jolsa@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Vijay Thakkar <vijaythakkar@me.com>
-> > Cc: Andi Kleen <ak@linux.intel.com>
-> > Cc: John Garry <john.garry@huawei.com>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Yunfeng Ye <yeyunfeng@huawei.com>
-> > Cc: Jin Yao <yao.jin@linux.intel.com>
-> > Cc: "Martin Liška" <mliska@suse.cz>
-> > Cc: Borislav Petkov <bp@suse.de>
-> > Cc: Jon Grimm <jon.grimm@amd.com>
-> > Cc: Martin Jambor <mjambor@suse.cz>
-> > Cc: Michael Petlan <mpetlan@redhat.com>
-> > Cc: William Cohen <wcohen@redhat.com>
-> > Cc: Stephane Eranian <eranian@google.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: linux-perf-users@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  tools/perf/pmu-events/arch/x86/mapfile.csv | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > index 25b06cf98747..2f2a209e87e1 100644
-> > --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> > @@ -38,3 +38,4 @@ GenuineIntel-6-7E,v1,icelake,core
-> >  GenuineIntel-6-86,v1,tremontx,core
-> >  AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
-> >  AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
-> > +AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen2,core
-> > --
-> > 2.27.0
-> >
+>  tools/lib/bpf/libbpf.c | 116 ++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 102 insertions(+), 14 deletions(-)
+>
 
--- 
+[...]
 
-- Arnaldo
+> @@ -3119,6 +3130,8 @@ static int bpf_object__collect_externs(struct bpf_object *obj)
+>                         vt->type = int_btf_id;
+>                         vs->offset = off;
+>                         vs->size = sizeof(int);
+> +                       pr_debug("ksym var_secinfo: var '%s', type #%d, size %d, offset %d\n",
+> +                                ext->name, vt->type, vs->size, vs->offset);
+
+debug leftover?
+
+>                 }
+>                 sec->size = off;
+>         }
+> @@ -5724,8 +5737,13 @@ bpf_program__relocate(struct bpf_program *prog, struct bpf_object *obj)
+>                                 insn[0].imm = obj->maps[obj->kconfig_map_idx].fd;
+>                                 insn[1].imm = ext->kcfg.data_off;
+>                         } else /* EXT_KSYM */ {
+> -                               insn[0].imm = (__u32)ext->ksym.addr;
+> -                               insn[1].imm = ext->ksym.addr >> 32;
+> +                               if (ext->ksym.type_id) { /* typed ksyms */
+> +                                       insn[0].src_reg = BPF_PSEUDO_BTF_ID;
+> +                                       insn[0].imm = ext->ksym.vmlinux_btf_id;
+> +                               } else { /* typeless ksyms */
+> +                                       insn[0].imm = (__u32)ext->ksym.addr;
+> +                                       insn[1].imm = ext->ksym.addr >> 32;
+> +                               }
+>                         }
+>                         break;
+>                 case RELO_CALL:
+> @@ -6462,10 +6480,72 @@ static int bpf_object__read_kallsyms_file(struct bpf_object *obj)
+>         return err;
+>  }
+>
+> +static int bpf_object__resolve_ksyms_btf_id(struct bpf_object *obj)
+> +{
+> +       struct extern_desc *ext;
+> +       int i, id;
+> +
+> +       if (!obj->btf_vmlinux) {
+> +               pr_warn("support of typed ksyms needs kernel btf.\n");
+> +               return -ENOENT;
+> +       }
+
+This check shouldn't be needed, you'd either successfully load
+btf_vmlinux by now or will fail earlier, because BTF is required but
+not found.
+
+> +
+> +       for (i = 0; i < obj->nr_extern; i++) {
+> +               const struct btf_type *targ_var, *targ_type;
+> +               __u32 targ_type_id, local_type_id;
+> +               int ret;
+> +
+> +               ext = &obj->externs[i];
+> +               if (ext->type != EXT_KSYM || !ext->ksym.type_id)
+> +                       continue;
+> +
+> +               id = btf__find_by_name_kind(obj->btf_vmlinux, ext->name,
+> +                                           BTF_KIND_VAR);
+> +               if (id <= 0) {
+> +                       pr_warn("no btf entry for ksym '%s' in vmlinux.\n",
+> +                               ext->name);
+
+please try to stick to consistent style of comments:
+
+"extern (ksym) '%s': failed to find BTF ID in vmlinux BTF" or
+something like that
+
+
+> +                       return -ESRCH;
+> +               }
+> +
+> +               /* find target type_id */
+> +               targ_var = btf__type_by_id(obj->btf_vmlinux, id);
+> +               targ_type = skip_mods_and_typedefs(obj->btf_vmlinux,
+> +                                                  targ_var->type,
+> +                                                  &targ_type_id);
+> +
+> +               /* find local type_id */
+> +               local_type_id = ext->ksym.type_id;
+> +
+> +               ret = bpf_core_types_are_compat(obj->btf_vmlinux, targ_type_id,
+> +                                               obj->btf, local_type_id);
+
+you reversed the order, it's always local btf/id, then target btf/id.
+
+> +               if (ret <= 0) {
+> +                       const struct btf_type *local_type;
+> +                       const char *targ_name, *local_name;
+> +
+> +                       local_type = btf__type_by_id(obj->btf, local_type_id);
+> +                       targ_name = btf__name_by_offset(obj->btf_vmlinux,
+> +                                                       targ_type->name_off);
+> +                       local_name = btf__name_by_offset(obj->btf,
+> +                                                        local_type->name_off);
+
+it's a bit unfortunate that we get the name of an already resolved
+type, because if you have a typedef to anon struct, this will give you
+an empty string. I don't know how much of a problem that would be, so
+I think it's fine to leave it as is, and fix it if it's a problem in
+practice.
+
+> +
+> +                       pr_warn("ksym '%s' expects type '%s' (vmlinux_btf_id: #%d), "
+> +                               "but got '%s' (btf_id: #%d)\n", ext->name,
+> +                               targ_name, targ_type_id, local_name, local_type_id);
+
+same thing, please stay consistent in logging format. Check
+bpf_core_dump_spec() for how BTF type info is usually emitted
+throughout libbpf:
+
+"extern (ksym): incompatible types, expected [%d] %s %s, but kernel
+has [%d] %s %s\n"
+
+there is a btf_kind_str() helper to resolve kind to a string representation.
+
+
+> +                       return -EINVAL;
+> +               }
+> +
+> +               ext->is_set = true;
+> +               ext->ksym.vmlinux_btf_id = id;
+> +               pr_debug("extern (ksym) %s=vmlinux_btf_id(#%d)\n", ext->name, id);
+
+"extern (ksym) '%s': resolved to [%d] %s %s\n", similar to above
+suggestion. This "[%d]" format is very consistently used for BTF IDs
+throughout, so it will be familiar and recognizable for people that
+had to deal with this in libbpf logs.
+
+> +       }
+> +       return 0;
+> +}
+> +
+>  static int bpf_object__resolve_externs(struct bpf_object *obj,
+>                                        const char *extra_kconfig)
+>  {
+> -       bool need_config = false, need_kallsyms = false;
+> +       bool need_kallsyms = false, need_vmlinux_btf = false;
+> +       bool need_config = false;
+
+nit: doesn't make sense to change the existing source code line at
+all. Just add `bool need_vmlinux_btf = false;` on a new line? Or we
+can split all these bools into 3 separate lines, if you prefer.
+
+>         struct extern_desc *ext;
+>         void *kcfg_data = NULL;
+>         int err, i;
+
+[...]
