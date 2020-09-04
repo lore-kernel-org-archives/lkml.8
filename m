@@ -2,137 +2,60 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3032EC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48205C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E580520791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:14:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVN64zaL"
+	by mail.kernel.org (Postfix) with ESMTP id 27D1A206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbgIDHOQ (ORCPT
+        id S1728205AbgIDHRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:14:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgIDHOP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:14:15 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99CCC061244;
-        Fri,  4 Sep 2020 00:14:14 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id n18so3981166qtw.0;
-        Fri, 04 Sep 2020 00:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=GSiu7q5INNKgwni6kCKdhOc96uZE70+2Wp8nmvDrTrM=;
-        b=pVN64zaLQdVkm9y++BHIgl9U2HYy1ga2ItqCVhDAXoHtDKlW3qke2dVxHARuY9RHA4
-         JUXg1v+XjSIPkvHaPAES954FDBnkDthsJ07QWrZWlLC1Yxvts+zg+VSZ71Jr7bMf4H18
-         u+0x8AbJlY06zTXVdXCVAaZkz0P58VhuZ3vIqnnqn+1RHth8aDaaHihuQTu2cTuGP5+3
-         QKjsFfOhUxNBDB2GrG5Sk14VIWkDiRKKFbRsv4Q0YKTpBWjSdZYERZUvbfkCq0u2TeU0
-         bLUvSo40kyTW0CnRezsekbOBqmkwZv+n8+E0AQy8h84U4iMnz0lUwHSZcy5P0MrB+ESd
-         R2RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GSiu7q5INNKgwni6kCKdhOc96uZE70+2Wp8nmvDrTrM=;
-        b=H6s4otDlUqDFuSAFZ1DlCB+xJr1rKokQQVV80ln5sUS3rpkWx9HYP89kk5S5fA/p+x
-         tj0okB46dpzvPLgoVa08bSvGw/50nte8XdvPPV1zNmyrOhU2HWN0G1MBjsXgsB983egC
-         Rc4dLUhYUBK+0vH4v+4pXUxnve2OFu0SSofTBmPD0uGtQQA6JGi7CDIKmhDGQUMwKU49
-         35efQNvx4QGYsyenBXoJU4FBN2SoLIL8/iCRq6IUdjpnRD1r267TVotXI76lEkS9AMCB
-         4QedM+dK0+467FnuH4AwB2AIA6qEvHD3kkYwS3TiQri4zwCbSmgF+BNXqb6eaK9nFOa8
-         0rUw==
-X-Gm-Message-State: AOAM533pCVik9VoJ+sTlRFvCrE6QSyRmtw2YqhYNk2cZzSXURNBL4P8y
-        +NlHABm2+vkJu6CqoXEslq0=
-X-Google-Smtp-Source: ABdhPJyxhXjoiuUHJ8yHqedEnX8rmWvhjD+7ADa6DmR56ksBmgeSMROQzmrkQSZxIIn6pfwVxB0aYA==
-X-Received: by 2002:aed:2c63:: with SMTP id f90mr7360733qtd.262.1599203653880;
-        Fri, 04 Sep 2020 00:14:13 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id 202sm2202325qkg.56.2020.09.04.00.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 00:14:12 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 00:14:11 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 01/28] x86/boot/compressed: Disable relocation
- relaxation
-Message-ID: <20200904071411.GA1712031@ubuntu-n2-xlarge-x86>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-2-samitolvanen@google.com>
- <202009031444.F2ECA89E@keescook>
- <20200903234215.GA106172@rani.riverdale.lan>
+        Fri, 4 Sep 2020 03:17:18 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:42572 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgIDHRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 03:17:17 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1kE5y9-0008OZ-LB; Fri, 04 Sep 2020 17:17:10 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 04 Sep 2020 17:17:09 +1000
+Date:   Fri, 4 Sep 2020 17:17:09 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Peter Enderborg <peter.enderborg@sony.com>
+Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        davem@davemloft.net, peter.enderborg@sony.com
+Subject: Re: [PATCH] crypto: Mark tfm buffer as non leak.
+Message-ID: <20200904071709.GA24539@gondor.apana.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903234215.GA106172@rani.riverdale.lan>
+In-Reply-To: <20200903134007.2769-1-peter.enderborg@sony.com>
+X-Newsgroups: apana.lists.os.linux.cryptoapi,apana.lists.os.linux.kernel
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 07:42:15PM -0400, Arvind Sankar wrote:
-> On Thu, Sep 03, 2020 at 02:44:41PM -0700, Kees Cook wrote:
-> > On Thu, Sep 03, 2020 at 01:30:26PM -0700, Sami Tolvanen wrote:
-> > > From: Arvind Sankar <nivedita@alum.mit.edu>
-> > > 
-> > > Patch series [4] is a solution to allow the compressed kernel to be
-> > > linked with -pie unconditionally, but even if merged is unlikely to be
-> > > backported. As a simple solution that can be applied to stable as well,
-> > > prevent the assembler from generating the relaxed relocation types using
-> > > the -mrelax-relocations=no option. For ease of backporting, do this
-> > > unconditionally.
-> > > 
-> > > [0] https://gitlab.com/x86-psABIs/x86-64-ABI/-/blob/master/x86-64-ABI/linker-optimization.tex#L65
-> > > [1] https://lore.kernel.org/lkml/20200807194100.3570838-1-ndesaulniers@google.com/
-> > > [2] https://github.com/ClangBuiltLinux/linux/issues/1121
-> > > [3] https://reviews.llvm.org/rGc41a18cf61790fc898dcda1055c3efbf442c14c0
-> > > [4] https://lore.kernel.org/lkml/20200731202738.2577854-1-nivedita@alum.mit.edu/
-> > > 
-> > > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > 
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > 
-> > -- 
-> > Kees Cook
-> 
-> Note that since [4] is now in tip, assuming it doesn't get dropped for
-> some reason, this patch isn't necessary unless you need to backport this
-> LTO series to 5.9 or below.
-> 
-> Thanks.
+Peter Enderborg <peter.enderborg@sony.com> wrote:
+>
+> This is caused by tfm = (struct crypto_tfm *)(mem + tfmsize);
+> that is keept instead of the allocated buffer in mem.
+> Reference counting is done on alg.
 
-It is still necessary for tip of tree LLVM to work properly
-(specifically clang and ld.lld) regardless of whether or not LTO is
-used.
+I don't understand why this is necessary.  We end up returning
+mem in crypto_create_tfm_node and that is the primary means of
+getting to the object.
 
-[4] also fixes it but I don't think it can be backported to stable so it
-would still be nice to get it picked up so that it can be sent back
-there. We have been carrying it in our CI for a decent amount of time...
+The tfm pointer is just an internal thing.  So why do we have
+to mark mem as not a leak?
 
 Cheers,
-Nathan
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
