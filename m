@@ -2,339 +2,138 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD953C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B624C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95005206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42233206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:03:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CdtkJPlL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgIDIDD (ORCPT
+        id S1726251AbgIDID2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:03:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29032 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726151AbgIDIC6 (ORCPT
+        Fri, 4 Sep 2020 04:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729683AbgIDIDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:02:58 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-328-6gr_ztSQNMmT-4IQ5EY8PA-1; Fri, 04 Sep 2020 04:02:55 -0400
-X-MC-Unique: 6gr_ztSQNMmT-4IQ5EY8PA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44E5F18B9ED1;
-        Fri,  4 Sep 2020 08:02:54 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B00F51001B2B;
-        Fri,  4 Sep 2020 08:02:49 +0000 (UTC)
-Subject: Re: [PATCH v4 08/10] vfio/fsl-mc: trigger an interrupt via eventfd
-To:     Diana Craciun <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-9-diana.craciun@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <f313b0ed-2cb7-cbb0-18f6-943098ecef9a@redhat.com>
-Date:   Fri, 4 Sep 2020 10:02:48 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 4 Sep 2020 04:03:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6F8C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 01:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KoEt7dwJzHzc0zmg3gPZoBe1ae26mzuh+FezXIxiqQ4=; b=CdtkJPlLhr2CA3JmAOmUGekyb3
+        DIIv5ks3CQQDGi4J+JV/C0PqE0iFZYr3tF/ucWUhCFwq4Vp15IunEDl0mcDEO2Eed1cQpLwNQCpPj
+        jKzZH7sKBErtd3axqGdsvBJg3hz+t0pezWAHXhzmOi35uqsEhV8leOLYkWaapLAFetGCeAZeWmucK
+        i63UgVjO/VXapEiN8vdPz+PyTTCSAj8CVWc44bBSMe3FWmFUOZ4YapKEEayRHv/MjBNRLTdAhNtQQ
+        DRtAqzlTdqpWI6+y7+ZgJuvBrCnF+nGleYyJZdL/DlrpgGVVuOLcpUonnPaSODsIEDnsX1yiWCZdI
+        G+kSouGg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kE6gm-0000Uk-8l; Fri, 04 Sep 2020 08:03:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C1C52301179;
+        Fri,  4 Sep 2020 10:03:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B14A32B9A6885; Fri,  4 Sep 2020 10:03:12 +0200 (CEST)
+Date:   Fri, 4 Sep 2020 10:03:12 +0200
+From:   peterz@infradead.org
+To:     "Ahmed S. Darwish" <a.darwish@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Sebastian A. Siewior" <bigeasy@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v1 6/8] x86/tsc: Use seqcount_latch_t
+Message-ID: <20200904080312.GZ35926@hirez.programming.kicks-ass.net>
+References: <20200827114044.11173-1-a.darwish@linutronix.de>
+ <20200827114044.11173-7-a.darwish@linutronix.de>
+ <20200904074142.GL2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20200826093315.5279-9-diana.craciun@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904074142.GL2674@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
+On Fri, Sep 04, 2020 at 09:41:42AM +0200, peterz@infradead.org wrote:
+> On Thu, Aug 27, 2020 at 01:40:42PM +0200, Ahmed S. Darwish wrote:
+> 
+> >  __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+> >  {
+> > +	seqcount_latch_t *seqcount;
+> >  	int seq, idx;
+> >  
+> >  	preempt_disable_notrace();
+> >  
+> > +	seqcount = &this_cpu_ptr(&cyc2ns)->seq;
+> >  	do {
+> > -		seq = this_cpu_read(cyc2ns.seq.sequence);
+> > +		seq = raw_read_seqcount_latch(seqcount);
+> >  		idx = seq & 1;
+> >  
+> >  		data->cyc2ns_offset = this_cpu_read(cyc2ns.data[idx].cyc2ns_offset);
+> >  		data->cyc2ns_mul    = this_cpu_read(cyc2ns.data[idx].cyc2ns_mul);
+> >  		data->cyc2ns_shift  = this_cpu_read(cyc2ns.data[idx].cyc2ns_shift);
+> >  
+> > -	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.sequence)));
+> > +	} while (read_seqcount_latch_retry(seqcount, seq));
+> >  }
+> 
+> So I worried about this change, it obviously generates worse code. But I
+> was not expecting this:
+> 
+> Before:
+> 
+> 196: 0000000000000110   189 FUNC    GLOBAL DEFAULT    1 native_sched_clock
+> 
+> After:
+> 
+> 195: 0000000000000110   399 FUNC    GLOBAL DEFAULT    1 native_sched_clock
+> 
+> That's _210_ bytes extra!!
+> 
+> If you look at the disassembly of the thing after it's a complete
+> trainwreck.
 
-On 8/26/20 11:33 AM, Diana Craciun wrote:
-> This patch allows to set an eventfd for fsl-mc device interrupts
-> and also to trigger the interrupt eventfd from userspace for testing.
-> 
-> All fsl-mc device interrupts are MSIs. The MSIs are allocated from
-> the MSI domain only once per DPRC and used by all the DPAA2 objects.
-> The interrupts are managed by the DPRC in a pool of interrupts. Each
-> device requests interrupts from this pool. The pool is allocated
-> when the first virtual device is setting the interrupts.
-> The pool of interrupts is protected by a lock.
-> 
-> The DPRC has an interrupt of its own which indicates if the DPRC
-> contents have changed. However, currently, the contents of a DPRC
-> assigned to the guest cannot be changed at runtime, so this interrupt
-> is not configured.
-> 
-> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> ---
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c         |  18 ++-
->  drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 160 +++++++++++++++++++++-
->  drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  10 ++
->  3 files changed, 186 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> index 42014297b484..73834f488a94 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> @@ -147,12 +147,28 @@ static int vfio_fsl_mc_open(void *device_data)
->  static void vfio_fsl_mc_release(void *device_data)
->  {
->  	struct vfio_fsl_mc_device *vdev = device_data;
-> +	int ret;
->  
->  	mutex_lock(&vdev->reflck->lock);
->  
-> -	if (!(--vdev->refcnt))
-> +	if (!(--vdev->refcnt)) {
-> +		struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +		struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
-> +		struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
-> +
->  		vfio_fsl_mc_regions_cleanup(vdev);
->  
-> +		/* reset the device before cleaning up the interrupts */
-> +		ret = dprc_reset_container(mc_cont->mc_io, 0,
-> +		      mc_cont->mc_handle,
-> +			  mc_cont->obj_desc.id,
-> +			  DPRC_RESET_OPTION_NON_RECURSIVE);
-shouldn't you test ret?
-> +
-> +		vfio_fsl_mc_irqs_cleanup(vdev);
-> +
-> +		fsl_mc_cleanup_irq_pool(mc_cont);
-> +	}
-> +
->  	mutex_unlock(&vdev->reflck->lock);
->  
->  	module_put(THIS_MODULE);
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-> index 058aa97aa54a..409f3507fcf3 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
-> @@ -29,12 +29,149 @@ static int vfio_fsl_mc_irq_unmask(struct vfio_fsl_mc_device *vdev,
->  	return -EINVAL;
->  }
->  
-> +int vfio_fsl_mc_irqs_allocate(struct vfio_fsl_mc_device *vdev)
-> +{
-> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +	struct vfio_fsl_mc_irq *mc_irq;
-> +	int irq_count;
-> +	int ret, i;
-> +
-> +    /* Device does not support any interrupt */
-indent needs to be fixed
-> +	if (mc_dev->obj_desc.irq_count == 0)
-> +		return 0;
-> +
-> +	/* interrupts were already allocated for this device */
-> +	if (vdev->mc_irqs)
-> +		return 0;
-> +
-> +	irq_count = mc_dev->obj_desc.irq_count;
-> +
-> +	mc_irq = kcalloc(irq_count, sizeof(*mc_irq), GFP_KERNEL);
-> +	if (!mc_irq)
-> +		return -ENOMEM;
-> +
-> +	/* Allocate IRQs */
-> +	ret = fsl_mc_allocate_irqs(mc_dev);
-> +	if (ret) {
-> +		kfree(mc_irq);
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < irq_count; i++) {
-> +		mc_irq[i].count = 1;
-> +		mc_irq[i].flags = VFIO_IRQ_INFO_EVENTFD;
-> +	}
-> +
-> +	vdev->mc_irqs = mc_irq;
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t vfio_fsl_mc_irq_handler(int irq_num, void *arg)
-> +{
-> +	struct vfio_fsl_mc_irq *mc_irq = (struct vfio_fsl_mc_irq *)arg;
-> +
-> +	eventfd_signal(mc_irq->trigger, 1);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int vfio_set_trigger(struct vfio_fsl_mc_device *vdev,
-> +						   int index, int fd)
-> +{
-> +	struct vfio_fsl_mc_irq *irq = &vdev->mc_irqs[index];
-> +	struct eventfd_ctx *trigger;
-> +	int hwirq;
-> +	int ret;
-> +
-> +	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
-> +	if (irq->trigger) {
-> +		free_irq(hwirq, irq);
-> +		kfree(irq->name);
-> +		eventfd_ctx_put(irq->trigger);
-> +		irq->trigger = NULL;
-> +	}
-> +
-> +	if (fd < 0) /* Disable only */
-> +		return 0;
-> +
-> +	irq->name = kasprintf(GFP_KERNEL, "vfio-irq[%d](%s)",
-> +			    hwirq, dev_name(&vdev->mc_dev->dev));
-> +	if (!irq->name)
-> +		return -ENOMEM;
-> +
-> +	trigger = eventfd_ctx_fdget(fd);
-> +	if (IS_ERR(trigger)) {
-> +		kfree(irq->name);
-> +		return PTR_ERR(trigger);
-> +	}
-> +
-> +	irq->trigger = trigger;
-> +
-> +	ret = request_irq(hwirq, vfio_fsl_mc_irq_handler, 0,
-> +		  irq->name, irq);
-> +	if (ret) {
-> +		kfree(irq->name);
-> +		eventfd_ctx_put(trigger);
-> +		irq->trigger = NULL;
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
->  				       unsigned int index, unsigned int start,
->  				       unsigned int count, u32 flags,
->  				       void *data)
->  {
-> -	return -EINVAL;
-> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +	int ret, hwirq;
-> +	struct vfio_fsl_mc_irq *irq;
-> +	struct device *cont_dev = fsl_mc_cont_dev(&mc_dev->dev);
-> +	struct fsl_mc_device *mc_cont = to_fsl_mc_device(cont_dev);
-> +
-> +	if (start != 0 || count != 1)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&vdev->reflck->lock);
-> +	ret = fsl_mc_populate_irq_pool(mc_cont,
-> +			FSL_MC_IRQ_POOL_MAX_TOTAL_IRQS);
-> +	if (ret)
-> +		goto unlock;
-> +
-> +	ret = vfio_fsl_mc_irqs_allocate(vdev);
-any reason the init is done in the set_irq() and not in the open() if
-!vdev->refcnt?
-> +	if (ret)
-> +		goto unlock;
-> +	mutex_unlock(&vdev->reflck->lock);
-> +
-> +	if (!count && (flags & VFIO_IRQ_SET_DATA_NONE))
-> +		return vfio_set_trigger(vdev, index, -1);
-> +
-> +	if (flags & VFIO_IRQ_SET_DATA_EVENTFD) {
-> +		s32 fd = *(s32 *)data;
-> +
-> +		return vfio_set_trigger(vdev, index, fd);
-> +	}
-> +
-> +	hwirq = vdev->mc_dev->irqs[index]->msi_desc->irq;
-> +
-> +	irq = &vdev->mc_irqs[index];
-> +
-> +	if (flags & VFIO_IRQ_SET_DATA_NONE) {
-> +		vfio_fsl_mc_irq_handler(hwirq, irq);
-> +
-> +	} else if (flags & VFIO_IRQ_SET_DATA_BOOL) {
-> +		u8 trigger = *(u8 *)data;
-> +
-> +		if (trigger)
-> +			vfio_fsl_mc_irq_handler(hwirq, irq);
-> +	}
-> +
-> +	return 0;
-> +
-> +unlock:
-> +	mutex_unlock(&vdev->reflck->lock);
-> +	return ret;
->  }
->  
->  int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
-> @@ -61,3 +198,24 @@ int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
->  
->  	return ret;
->  }
-> +
-> +/* Free All IRQs for the given MC object */
-> +void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev)
-> +{
-> +	struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +	int irq_count = mc_dev->obj_desc.irq_count;
-> +	int i;
-> +
-> +	/* Device does not support any interrupt or the interrupts
-> +	 * were not configured
-> +	 */
-> +	if (mc_dev->obj_desc.irq_count == 0 || !vdev->mc_irqs)
-> +		return;
-> +
-> +	for (i = 0; i < irq_count; i++)
-> +		vfio_set_trigger(vdev, i, -1);
-> +
-> +	fsl_mc_free_irqs(mc_dev);
-> +	kfree(vdev->mc_irqs);
-> +	vdev->mc_irqs = NULL;
-> +}
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> index d5b6fe891a48..bbfca8b55f8a 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
-> @@ -15,6 +15,13 @@
->  #define VFIO_FSL_MC_INDEX_TO_OFFSET(index)	\
->  	((u64)(index) << VFIO_FSL_MC_OFFSET_SHIFT)
->  
-> +struct vfio_fsl_mc_irq {
-> +	u32         flags;
-> +	u32         count;
-> +	struct eventfd_ctx  *trigger;
-> +	char            *name;
-> +};
-> +
->  struct vfio_fsl_mc_reflck {
->  	struct kref		kref;
->  	struct mutex		lock;
-> @@ -35,6 +42,7 @@ struct vfio_fsl_mc_device {
->  	struct vfio_fsl_mc_region	*regions;
->  	struct vfio_fsl_mc_reflck   *reflck;
->  	struct mutex         igate;
-> +	struct vfio_fsl_mc_irq      *mc_irqs;
->  };
->  
->  extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
-> @@ -42,4 +50,6 @@ extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
->  			       unsigned int start, unsigned int count,
->  			       void *data);
->  
-> +void vfio_fsl_mc_irqs_cleanup(struct vfio_fsl_mc_device *vdev);
-> +
->  #endif /* VFIO_FSL_MC_PRIVATE_H */
-> 
-Thanks
+The below delta fixes it again.
 
-Eric
-
+---
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -68,21 +68,19 @@ early_param("tsc_early_khz", tsc_early_k
+ 
+ __always_inline void cyc2ns_read_begin(struct cyc2ns_data *data)
+ {
+-	seqcount_latch_t *seqcount;
+ 	int seq, idx;
+ 
+ 	preempt_disable_notrace();
+ 
+-	seqcount = &this_cpu_ptr(&cyc2ns)->seq;
+ 	do {
+-		seq = raw_read_seqcount_latch(seqcount);
++		seq = this_cpu_read(cyc2ns.seq.seqcount.sequence);
+ 		idx = seq & 1;
+ 
+ 		data->cyc2ns_offset = this_cpu_read(cyc2ns.data[idx].cyc2ns_offset);
+ 		data->cyc2ns_mul    = this_cpu_read(cyc2ns.data[idx].cyc2ns_mul);
+ 		data->cyc2ns_shift  = this_cpu_read(cyc2ns.data[idx].cyc2ns_shift);
+ 
+-	} while (read_seqcount_latch_retry(seqcount, seq));
++	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.seqcount.sequence)));
+ }
+ 
+ __always_inline void cyc2ns_read_end(void)
