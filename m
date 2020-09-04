@@ -2,244 +2,110 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E7FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E00FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F5832067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2317620716
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kpMRMg0N"
+	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="OdPlhwg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbgIDCEG (ORCPT
+        id S1729647AbgIDCEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 22:04:06 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40418 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgIDCEE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 22:04:04 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1599185043; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=LstDX6xiLYnZhD0hGqb5VJ5fAqydLKT4PHp42tcf7eg=; b=kpMRMg0NIqtY/aKZv+Xi8bTC78ysCGV8sWsXOOqbhfrgWs2bcJooKk5V/h6CTcH42TtgeKQh
- wLgscpEtXtenShMmwMU8bxha4sXe2g1r8PoHqhPyweFKi3gNv+C24giJ3q4VIUruAPRkfWX3
- 30l53A/0KhNY5iXf6HVLKZMD7zc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f51a0789f3347551fcf5975 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 04 Sep 2020 02:03:36
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8CA3BC4344C; Fri,  4 Sep 2020 02:03:35 +0000 (UTC)
-Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A077EC43387;
-        Fri,  4 Sep 2020 02:03:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A077EC43387
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Eric Anholt <eric@anholt.net>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] drm/msm: Disable the RPTR shadow
-Date:   Thu,  3 Sep 2020 20:03:13 -0600
-Message-Id: <20200904020313.1810988-5-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904020313.1810988-1-jcrouse@codeaurora.org>
-References: <20200904020313.1810988-1-jcrouse@codeaurora.org>
+        Thu, 3 Sep 2020 22:04:20 -0400
+Received: from mail-eopbgr1410059.outbound.protection.outlook.com ([40.107.141.59]:46656
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728582AbgIDCET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 22:04:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LZL4aIfVRAN3hJDN/ZhfVh9J+qR/M++CtfGEMW570koGHKikoRxt15eJ5DcxsiLrPWCAsg59aLbR+iZ49/0I4/aI+cCyXndNto3bHoXqZztNemmNe+TXwOmnpB/wOQGXsOjUFcwmqlACRCcfGf10bJsfDtm74yizYT/IrCv0dbff1mdCq4si9jhYZnsyIUW6pSyyb6aIOMLo21eCl3T2EINkmbao690I6fLK69U8hVEnajvBI85csvI+5ULI5YuPOPEjyCnLteH6Yr8lpDSXWZxET/RObQbU6P5EO1axAlTuqLwsP2d3XhtuuR4FaqioIP28COh5B0eNmU8NFzH/Mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WV0W+4bZeOrG3uOF7P/RZM4iUF1OFXMg1ZGyF0OfiPs=;
+ b=ce0dkDLfO8ZOfpSZz/qheJrtnRHoC7z2DqO2GTQrmbsTLTcTEVPhOReP7Olk54j5TSmyYMcI+KErwZerkZ+QH2fwApPZaxdD2BkDrqxPYHYzk3LVSbk0SPqxG4otZspKIjhHns+TdR1Crqqrbc4PkQq3yO+fe1dpGvGqJtVyVhskmXrvzR8HmmlNV/62V6osICUyLKOPPpMSRpsL8ZQuW1Tnu6CbdYF86X9maPiDN+53YuloVHIpp9VrqJTyvdjUgfnj+Os23L2FNImqtcXv0AMHoNurQHunNn72tbGaa+26/0M5YTtvmyqFBXAWHqzCdCpymsOIaJ/jFWbI8rqV7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WV0W+4bZeOrG3uOF7P/RZM4iUF1OFXMg1ZGyF0OfiPs=;
+ b=OdPlhwg7ePbRnVbQLxBfdWGmQOLMbxDkc394+ygk+ebXGn0Ge7B8bsX3XUlaoOGWCpQjVyM9BdA7maJ1EDODfU0e+OrflDu/ytZIidHVtYepGKjdQE1psZgD2/TtaA/h2z8nAVAXZO+DT8MHOigWbrv73VyWgk0aZFr3ga8pW1I=
+Received: from TYAPR01MB3213.jpnprd01.prod.outlook.com (2603:1096:404:8b::18)
+ by TYBPR01MB5421.jpnprd01.prod.outlook.com (2603:1096:404:802e::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Fri, 4 Sep
+ 2020 02:04:16 +0000
+Received: from TYAPR01MB3213.jpnprd01.prod.outlook.com
+ ([fe80::c1fb:d14a:1d72:a39]) by TYAPR01MB3213.jpnprd01.prod.outlook.com
+ ([fe80::c1fb:d14a:1d72:a39%6]) with mapi id 15.20.3348.015; Fri, 4 Sep 2020
+ 02:04:16 +0000
+From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
+        <naoya.horiguchi@nec.com>
+To:     Oscar Salvador <osalvador@suse.de>
+CC:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "cai@lca.pw" <cai@lca.pw>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Oscar Salvador <osalvador@suse.com>
+Subject: Re: [PATCH 2/4] mm,hwpoison: Refactor madvise_inject_error
+Thread-Topic: [PATCH 2/4] mm,hwpoison: Refactor madvise_inject_error
+Thread-Index: AQHWgQ3JdaD53Ibs/0mHj2iAn+ybCqlXvUYA
+Date:   Fri, 4 Sep 2020 02:04:16 +0000
+Message-ID: <20200904020416.GB32236@hori.linux.bs1.fc.nec.co.jp>
+References: <20200902094510.10727-1-osalvador@suse.de>
+ <20200902094510.10727-3-osalvador@suse.de>
+In-Reply-To: <20200902094510.10727-3-osalvador@suse.de>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: suse.de; dkim=none (message not signed)
+ header.d=none;suse.de; dmarc=none action=none header.from=nec.com;
+x-originating-ip: [165.225.110.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24caf980-f91c-4094-ae77-08d85076d3fd
+x-ms-traffictypediagnostic: TYBPR01MB5421:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYBPR01MB54216F2220C6FBA1C03C3446E72D0@TYBPR01MB5421.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:773;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uqr4ab9EVsA2prXP7KBUSAFHdypWmigcbyc1dIFm6rpqwV5+xABy4G4TyI62kux6PR+NaK8kSffAXPcoQLP0Y7EZuoTcxKxXgezHMHjpn8FkakToEmrCnIMbi0A3MSeEuU1tlk2EhmmWuwaw9uOQactCozQyHUV3MiCkOeEUyDPHILW16198/S+xtVG81FYQiud8IlMC+/CEFCG64LOSnVIZmhsV1FAxyqBpHcmUB9jpqPA0jFjQqVYo/avxyI4ENncnBg2FqTm/0H5G1JvbcjSMfEODJxBqRWmbXFwbC36wrj2Xdjh5jh8zzqB9eugeh2YZ+4UWi9cLJEDXQ1IG2V/VxeqzDPnP4+YPzMF4P1IQByAOKbeUWBbbIMyzoHlP
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYAPR01MB3213.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(396003)(366004)(346002)(39860400002)(9686003)(478600001)(6916009)(6512007)(186003)(8676002)(26005)(558084003)(66946007)(5660300002)(54906003)(66446008)(1076003)(6506007)(33656002)(66476007)(2906002)(76116006)(66556008)(64756008)(4326008)(71200400001)(55236004)(8936002)(316002)(86362001)(6486002)(85182001)(142933001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: v1WcorW/L5E2wCZgyGyra4aR1i8NzFJxQaH30o+rNC9ubIEhn6AE/baQ0OFg3Km6NggfvKn1utBAH+QTFKI2OCnllV0mL1Bk9chFw4ZiQ9O00x8jyqfB7wBDlJ7ZVUi5OScLNmNolwCeLybafjg1NETbo+yVB/W6z1POrutcCkViqQJPaJOtDkt5tZR6vmgri78ppb89XPgXSSHJ8X/rIJ2K9wF24L3vUe5GA4suzHIuAcwbcdJAZFCT8GSjoBUe81j/4aiONzP/uLF+bmBLWkPdZVu4EBMEbduskFZ4bhZmOvKoHkxBI1Ka5kC73BGBBh7hAfgTbzzhdLR0nOyL9nQasWfc/YdXGAPoZJBo6AYgoRAm+HAMcw/6Bob7Krj9we7ks2lMYmoAGRaZzd8/S5daq5ZyhW1lqjsM7JPBMioUEIoz/feCJ+9Kvn2fHZHwu+aDtK9MoZu8BTFNg4y5+bCSFChf1nyj6f83TKCQd3GLqdN6c7XP99ABYZ7e7RMUdu+G31v9zCZk5OO6yNa8GD0xIXK5YA1FKJY2nKjXhauET/KEGkzmrMNvPoN7wwpWLkR5Kevwurjy9bmDf4q6ar0GXaQjjEV6q34/qmi3gPP0uB5V11kRImbzVSo3lkGagVdes/VS95sCpXn7xvf/JQ==
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <EBEAB20D5A88BD4C96749F77596068FE@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYAPR01MB3213.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24caf980-f91c-4094-ae77-08d85076d3fd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Sep 2020 02:04:16.5356
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Tzd5x8OCNdJK6YNy0Hrp9BsvEyV8PE7s0ZuH4DvqANll3yxWv2eNBUIH0C/aTX80IWGkC9oYFGeMWU3mUY6U8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYBPR01MB5421
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disable the RPTR shadow across all targets. It will be selectively
-re-enabled later for targets that need it.
+On Wed, Sep 02, 2020 at 11:45:08AM +0200, Oscar Salvador wrote:
+> Make a proper if-else condition for {hard,soft}-offline.
+>=20
+> Signed-off-by: Oscar Salvador <osalvador@suse.com>
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
-
- drivers/gpu/drm/msm/adreno/a2xx_gpu.c   |  5 +++++
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c   | 10 +++++++++
- drivers/gpu/drm/msm/adreno/a4xx_gpu.c   | 10 +++++++++
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 11 ++++++++--
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  7 +++++++
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 27 ++-----------------------
- 6 files changed, 43 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-index 6021f8d9efd1..48fa49f69d6d 100644
---- a/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a2xx_gpu.c
-@@ -164,6 +164,11 @@ static int a2xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		return ret;
- 
-+	gpu_write(gpu, REG_AXXX_CP_RB_CNTL,
-+		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
-+
-+	gpu_write(gpu, REG_AXXX_CP_RB_BASE, lower_32_bits(gpu->rb[0]->iova));
-+
- 	/* NOTE: PM4/micro-engine firmware registers look to be the same
- 	 * for a2xx and a3xx.. we could possibly push that part down to
- 	 * adreno_gpu base class.  Or push both PM4 and PFP but
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index 0a5ea9f56cb8..f6471145a7a6 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -211,6 +211,16 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Use the default ringbuffer size and block size but disable the RPTR
-+	 * shadow
-+	 */
-+	gpu_write(gpu, REG_AXXX_CP_RB_CNTL,
-+		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
-+
-+	/* Set the ringbuffer address */
-+	gpu_write(gpu, REG_AXXX_CP_RB_BASE, lower_32_bits(gpu->rb[0]->iova));
-+
- 	/* setup access protection: */
- 	gpu_write(gpu, REG_A3XX_CP_PROTECT_CTRL, 0x00000007);
- 
-diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-index b9b26b2bf9c5..954753600625 100644
---- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-@@ -267,6 +267,16 @@ static int a4xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Use the default ringbuffer size and block size but disable the RPTR
-+	 * shadow
-+	 */
-+	gpu_write(gpu, REG_A4XX_CP_RB_CNTL,
-+		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
-+
-+	/* Set the ringbuffer address */
-+	gpu_write(gpu, REG_A4XX_CP_RB_BASE, lower_32_bits(gpu->rb[0]->iova));
-+
- 	/* Load PM4: */
- 	ptr = (uint32_t *)(adreno_gpu->fw[ADRENO_FW_PM4]->data);
- 	len = adreno_gpu->fw[ADRENO_FW_PM4]->size / 4;
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index e718f964d590..ce3c0b5c167b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -703,8 +703,6 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		return ret;
- 
--	a5xx_preempt_hw_init(gpu);
--
- 	if (!adreno_is_a510(adreno_gpu))
- 		a5xx_gpmu_ucode_init(gpu);
- 
-@@ -712,6 +710,15 @@ static int a5xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		return ret;
- 
-+	/* Set the ringbuffer address */
-+	gpu_write64(gpu, REG_A5XX_CP_RB_BASE, REG_A5XX_CP_RB_BASE_HI,
-+		gpu->rb[0]->iova);
-+
-+	gpu_write(gpu, REG_A5XX_CP_RB_CNTL,
-+		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
-+
-+	a5xx_preempt_hw_init(gpu);
-+
- 	/* Disable the interrupts through the initial bringup stage */
- 	gpu_write(gpu, REG_A5XX_RBBM_INT_0_MASK, A5XX_INT_MASK);
- 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 406efaac95a7..74bc27eb4203 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -695,6 +695,13 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		goto out;
- 
-+	/* Set the ringbuffer address */
-+	gpu_write64(gpu, REG_A6XX_CP_RB_BASE, REG_A6XX_CP_RB_BASE_HI,
-+		gpu->rb[0]->iova);
-+
-+	gpu_write(gpu, REG_A6XX_CP_RB_CNTL,
-+		MSM_GPU_RB_CNTL_DEFAULT | AXXX_CP_RB_CNTL_NO_UPDATE);
-+
- 	/* Always come up on rb 0 */
- 	a6xx_gpu->cur_ring = gpu->rb[0];
- 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index d2dbb6968cba..459f10a3710b 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -400,26 +400,6 @@ int adreno_hw_init(struct msm_gpu *gpu)
- 		ring->memptrs->rptr = 0;
- 	}
- 
--	/*
--	 * Setup REG_CP_RB_CNTL.  The same value is used across targets (with
--	 * the excpetion of A430 that disables the RPTR shadow) - the cacluation
--	 * for the ringbuffer size and block size is moved to msm_gpu.h for the
--	 * pre-processor to deal with and the A430 variant is ORed in here
--	 */
--	adreno_gpu_write(adreno_gpu, REG_ADRENO_CP_RB_CNTL,
--		MSM_GPU_RB_CNTL_DEFAULT |
--		(adreno_is_a430(adreno_gpu) ? AXXX_CP_RB_CNTL_NO_UPDATE : 0));
--
--	/* Setup ringbuffer address - use ringbuffer[0] for GPU init */
--	adreno_gpu_write64(adreno_gpu, REG_ADRENO_CP_RB_BASE,
--		REG_ADRENO_CP_RB_BASE_HI, gpu->rb[0]->iova);
--
--	if (!adreno_is_a430(adreno_gpu)) {
--		adreno_gpu_write64(adreno_gpu, REG_ADRENO_CP_RB_RPTR_ADDR,
--			REG_ADRENO_CP_RB_RPTR_ADDR_HI,
--			rbmemptr(gpu->rb[0], rptr));
--	}
--
- 	return 0;
- }
- 
-@@ -427,11 +407,8 @@ int adreno_hw_init(struct msm_gpu *gpu)
- static uint32_t get_rptr(struct adreno_gpu *adreno_gpu,
- 		struct msm_ringbuffer *ring)
- {
--	if (adreno_is_a430(adreno_gpu))
--		return ring->memptrs->rptr = adreno_gpu_read(
--			adreno_gpu, REG_ADRENO_CP_RB_RPTR);
--	else
--		return ring->memptrs->rptr;
-+	return ring->memptrs->rptr = adreno_gpu_read(
-+		adreno_gpu, REG_ADRENO_CP_RB_RPTR);
- }
- 
- struct msm_ringbuffer *adreno_active_ring(struct msm_gpu *gpu)
--- 
-2.25.1
-
+Acked-by: Naoya Horiguchi <naoya.horiguchi@nec.com>=
