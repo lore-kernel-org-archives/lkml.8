@@ -2,172 +2,99 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EAEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED6BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B939D20829
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fbndYahX"
+	by mail.kernel.org (Postfix) with ESMTP id 011B620770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599231233;
+	bh=bvXZcz7ttVocHXEVxEt5vYwPMCOoOFG4MAo12LWzn3w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ctzT+6CV982hrD3qP5Au2bgYOLN+E2ZihAnDd+K/jnwvoeTzoowuc2UwMDbcJzWbn
+	 y2iudlM9JVjcbIOxzQ8w6wHLI3/WN+EprC+ITdGC4xt7DvdMvi90tm+gu6Y9tsZjba
+	 7dRi0W4CkLuA3dqmFhthW7tf6HYvwizIc+N8FjVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgIDOxe (ORCPT
+        id S1730565AbgIDOxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35620 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730258AbgIDOxZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:53:25 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAD6C061244;
-        Fri,  4 Sep 2020 07:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=C93Bva8rREpRWfgd7uzk8ZfeKaPFHiRbyRDvw46iFOY=; b=fbndYahXL3+H/DTtCdOhDFUJhi
-        KVxjkuQrILC5BBiHjjAYVAAS8AMgMvEEBMZq/ENhS2eoD4JSr111zHQPRJRunYUrd6OchzZ/VXJP6
-        aPejgJmTN/JqI6V4R5Sdp7z1MIgB6+lJlVhXVszqO+WhNMhr7viYzohbRHP0vV3H5IFgETtLo0rL1
-        Wz9I8M6ZV3olAgafOMud40YICuq32e87J+Nb3lzq9aCYjRt/xBMWQKlL5Qh2XSDmCFjLDMmNb/kq7
-        M8BDJaoYnhXsOSEJvf/7eIWg+SGuMBtS1S7bkVuWWev8qLB7v1redbLB4B8o4bGd+YyZPMVR8iemj
-        Wr8FxhQg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kED5e-0001OI-VL; Fri, 04 Sep 2020 14:53:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 924D9301179;
-        Fri,  4 Sep 2020 16:53:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 58B0029E3DDBE; Fri,  4 Sep 2020 16:53:22 +0200 (CEST)
-Date:   Fri, 4 Sep 2020 16:53:22 +0200
-From:   peterz@infradead.org
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Subject: Re: [PATCH -v2] scipts/tags.sh: Add custom sort order
-Message-ID: <20200904145322.GA35926@hirez.programming.kicks-ass.net>
-References: <20200805102550.GO2674@hirez.programming.kicks-ass.net>
- <20200806120438.GG35926@hirez.programming.kicks-ass.net>
- <CAK7LNAQE2jPUQJUa1yi7+=w--Jj-wwnGVR2hyPQZxR7Yp9odBA@mail.gmail.com>
- <20200902162649.GL1362448@hirez.programming.kicks-ass.net>
- <CAK7LNAS+0QtvgX1b77Y51cuMQ-eK4cKb8rebTQ=Ug3F2rkjP2g@mail.gmail.com>
- <20200903072604.GT1362448@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903072604.GT1362448@hirez.programming.kicks-ass.net>
+        Fri, 4 Sep 2020 10:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730297AbgIDOx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:53:29 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 192A620722;
+        Fri,  4 Sep 2020 14:53:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599231208;
+        bh=bvXZcz7ttVocHXEVxEt5vYwPMCOoOFG4MAo12LWzn3w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kxY9sZT4eR3/CDZbyP/ApLs6rtNEXa0MdbPLKO4rgS7onWVP3+/Nl9GLwVCJ/OFbg
+         ylTvLxlAir9ilUwaFgZAhbYQF1K9J9WiNr4WD9NxuJTQlbaoW0PMF/CBCjqOUBmdmb
+         IVgVlnXvuo9ZYq/UNiK2xCf8H+ectwAqN63xY/Sk=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Li Yang <leoyang.li@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 01/13] dt-bindings: power: fsl,imx-gpcv2: Document interrupt controller properties
+Date:   Fri,  4 Sep 2020 16:53:00 +0200
+Message-Id: <20200904145312.10960-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904145312.10960-1-krzk@kernel.org>
+References: <20200904145312.10960-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 09:26:04AM +0200, peterz@infradead.org wrote:
-> On Thu, Sep 03, 2020 at 11:07:28AM +0900, Masahiro Yamada wrote:
+The i.MX General Power Controller v2 is also an interrupt controller so
+document additional properties to fix dtbs_check warnings like:
 
-> > Will re-implementing your sorting logic
-> > in bash look cleaner?
-> 
-> Possibly, I can try, we'll see.
+  arch/arm64/boot/dts/freescale/imx8mq-evk.dt.yaml: gpc@303a0000:
+    '#interrupt-cells', 'interrupt-controller' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-It is somewhat cleaner, but it is _abysmally_ slow. Bash sucks :-(
-
-It is still broken in all the same ways as before, I figured I'd get it
-'working' first.
-
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
-diff --git a/scripts/tags.sh b/scripts/tags.sh
-index 32d3f53af10b..ec2688b3441a 100755
---- a/scripts/tags.sh
-+++ b/scripts/tags.sh
-@@ -239,10 +239,65 @@ setup_regex()
- 	done
- }
+ Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml
+index bde09a0b2da3..a96e6dbf1858 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.yaml
+@@ -33,6 +33,10 @@ properties:
+   interrupts:
+     maxItems: 1
  
-+sort_tags()
-+{
-+	export LC_ALL=C
++  interrupt-controller: true
++  '#interrupt-cells':
++    const: 3
 +
-+	# start concurrent sort
-+	coproc sort
-+	# HACK, clone sort output into 3 to ensure we can still read it
-+	# after sort terminates
-+	exec 3<&${COPROC[0]}
-+
-+	while read tag file rest;
-+	do
-+		local tmp=${rest#*;\"}
-+
-+		case "${tmp:1:1}" in # Precedence for 'C' kinds
-+
-+		c) order="A";; # classes
-+		s) order="B";; # structure names
-+		t) order="C";; # typedefs
-+		g) order="D";; # enumeration names
-+		u) order="E";; # union names
-+		n) order="F";; # namespaces
-+
-+		f) order="G";; # function definitions
-+		p) order="H";; # function prototypes
-+		d) order="I";; # macro definitions
-+
-+		e) order="J";; # enumerators (values inside an enumeration)
-+		m) order="K";; # class, struct and union members
-+		v) order="L";; # variable definitions
-+
-+		l) order="M";; # local variables [off]
-+		x) order="N";; # external and forward variable declarations
-+
-+		*) order="Z";;
-+
-+		esac
-+
-+		# write to sort with a new sort-key prepended
-+		echo "${tag}${order}	${tag}	${file}	${rest}" >&${COPROC[1]}
-+	done
-+
-+	# close sort input
-+	exec {COPROC[1]}>&-
-+
-+	# consume sort output
-+	while read -u 3 key line;
-+	do
-+		# strip the sort-key
-+		echo "${line}"
-+	done
-+}
-+
- exuberant()
- {
-+	(
-+
- 	setup_regex exuberant asm c
--	all_target_sources | xargs $1 -a                        \
-+	all_target_sources | xargs $1                           \
- 	-I __initdata,__exitdata,__initconst,__ro_after_init	\
- 	-I __initdata_memblock					\
- 	-I __refdata,__attribute,__maybe_unused,__always_unused \
-@@ -256,12 +311,16 @@ exuberant()
- 	-I DEFINE_TRACE,EXPORT_TRACEPOINT_SYMBOL,EXPORT_TRACEPOINT_SYMBOL_GPL \
- 	-I static,const						\
- 	--extra=+fq --c-kinds=+px --fields=+iaS --langmap=c:+.h \
-+	--sort=no -o -						\
- 	"${regex[@]}"
- 
- 	setup_regex exuberant kconfig
--	all_kconfigs | xargs $1 -a                              \
-+	all_kconfigs | xargs $1                                 \
-+	--sort=no -o -						\
- 	--langdef=kconfig --language-force=kconfig "${regex[@]}"
- 
-+	) | sort_tags > tags
-+
- }
- 
- emacs()
+   pgc:
+     type: object
+     description: list of power domains provided by this controller.
+-- 
+2.17.1
+
