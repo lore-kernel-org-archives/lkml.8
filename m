@@ -2,144 +2,140 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97197C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CC0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B4D2074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6C020770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599232468;
+	bh=B8VIGNVugApvS63IRKs5y0LcQBmAErxWczKo8XZhL3E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=2R3i3jSzIHzmMvhndBmQJnLm0Ot3GcutKjEEtrLvpBSVdD5VsOEOE2eIQ+rMLG9SZ
+	 Qy8HmHU/dYchL2Vk5n2F2JXApH7EFj245aAW4fBWbkjH6XcfiaskXDK6mlH2veBNVN
+	 8kPJKGQ3R+FNsKWTH20VXQB1kEedv0dKyNOPivmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgIDPNk (ORCPT
+        id S1730801AbgIDPOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:13:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50540 "EHLO mx2.suse.de"
+        Fri, 4 Sep 2020 11:14:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730204AbgIDPNj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:13:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id D3F0DAD2C;
-        Fri,  4 Sep 2020 15:13:38 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 17:13:36 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Changki Kim <changki.kim@samsung.com>,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
-        gregkh@linuxfoundation.org, krzk@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: printk: Add process name information to printk() output.
-Message-ID: <20200904151336.GC20558@alley>
-References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
- <20200904082438.20707-1-changki.kim@samsung.com>
- <874kod6fgh.fsf@jogness.linutronix.de>
- <20200904124530.GB20558@alley>
- <87y2lp4r6o.fsf@jogness.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2lp4r6o.fsf@jogness.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1730204AbgIDPOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:14:19 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF1DE2074D;
+        Fri,  4 Sep 2020 15:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599232458;
+        bh=B8VIGNVugApvS63IRKs5y0LcQBmAErxWczKo8XZhL3E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=efxZLcTDb6RMP3WaE8v3lLXhlKq8jt9P1CXm0IaKely0oz6qj5SBOBAYHe+VH3XrW
+         vY+p0Uo4NaTk+lFAuinT0pCEEDV5of23YNjJNu34lm4AcUq6FbMJToXdE7Dhzgz5YH
+         Tej/UJJCsDloL9dtc9Btpbla0q/U4825nrFY8WWw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Wolfram Sang <wolfram@the-dreams.de>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 1/4] dt-bindings: i2c: imx-lpi2c: Add properties and use unevaluatedProperties
+Date:   Fri,  4 Sep 2020 17:14:08 +0200
+Message-Id: <20200904151411.18973-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-09-04 15:23:19, John Ogness wrote:
-> On 2020-09-04, Petr Mladek <pmladek@suse.com> wrote:
-> > I am currently playing with support for all three timestamps based
-> > on https://lore.kernel.org/lkml/20200814101933.574326079@linutronix.de/
-> >
-> > And I got the following idea:
-> >
-> > 1. Storing side:
-> >
-> >    Create one more ring/array for storing the optional metadata.
-> >    It might eventually replace dict ring, see below.
-> >
-> >    struct struct printk_ext_info {
-> > 	u64 ts_boot;			/* timestamp from boot clock */
-> > 	u64 ts_real;			/* timestamp from real clock */
-> > 	char process[TASK_COMM_LEN];	/* process name */
-> >    };
-> >
-> >    It must be in a separate array so that struct prb_desc stay stable
-> >    and crashdump tools do not need to be updated so often.
-> >
-> >    But the number of these structures must be the same as descriptors.
-> >    So it might be:
-> >
-> >    struct prb_desc_ring {
-> > 	unsigned int		count_bits;
-> > 	struct prb_desc		*descs;
-> > 	struct printk_ext_info  *ext_info
-> > 	atomic_long_t		head_id;
-> > 	atomic_long_t		tail_id;
-> >    };
-> >
-> >    One huge advantage is that these extra information would not block
-> >    pushing lockless printk buffer upstream.
-> >
-> >    It might be even possible to get rid of dict ring and just
-> >    add two more elements into struct printk_ext_info:
-> >
-> > 	  char subsystem[16];	/* for SUBSYSTEM= dict value */
-> > 	  char device[48];	/* for DEVICE= dict value */
-> 
-> You say "get rid of dict ring", but there is nothing requiring the
-> dict_ring to be strings. It can be binary data. The @data of the
-> prb_data_block struct could be a printk_ext_info struct. This would be
-> trivial to implement in printk.c and would not require any ringbuffer
-> changes. (My ringbuffer test software [0] uses binary structs for the
-> data.)
->
-> Using VMCOREINFO we can provide the printk_ext_info size and field
-> offsets for crash tools.
-> 
-> >    Pros:
-> >
-> > 	+ the information will always get stored
-> 
-> If the dict_ring is "_DESCS_COUNT() * sizeof(struct printk_ext_info)"
-> then it would also always get stored. Although this does seem like a bit
-> of a waste of space in order to cover the worst case scenario of all
-> records using all fields.
+Additional properties actually might appear (e.g. power-domains) so
+describe all typical and use unevaluatedProperties to fix dtbs_check
+warnings like:
 
-The opposite is that the extended metadata might be missing for some
-lines. This might cause quite some confusion.
+  arch/arm64/boot/dts/freescale/imx8qxp-ai_ml.dt.yaml: i2c@5a800000:
+    'assigned-clock-rates', 'assigned-clocks', 'clock-names', 'power-domains' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-For example, I can't find any reasonable way how to produce missing
-timestamps.
+  arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: i2c@5a800000:
+    'touchscreen@2c' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-From my POV, if we support 3 timestamps then they must be stored
-reliably. And dict ring is out of the game.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+---
 
-And I am not comfortable even with the current dictionary handling.
-I already wrote this somewhere. The following command is supposed
-to show all kernel messages printed by "pci" subsystem:
+Changes since v1:
+1. Add more properties and include /schemas/i2c/i2c-controller.yaml#
+---
+ .../bindings/i2c/i2c-imx-lpi2c.yaml           | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-	$> journalctl _KERNEL_SUBSYSTEM=pci
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+index ac0bc5dd64d6..e5cfd08faa07 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.yaml
+@@ -9,6 +9,9 @@ title: Freescale Low Power Inter IC (LPI2C) for i.MX
+ maintainers:
+   - Anson Huang <Anson.Huang@nxp.com>
+ 
++allOf:
++  - $ref: /schemas/i2c/i2c-controller.yaml#
++
+ properties:
+   compatible:
+     enum:
+@@ -16,29 +19,41 @@ properties:
+       - fsl,imx8qxp-lpi2c
+       - fsl,imx8qm-lpi2c
+ 
++  '#address-cells': true
++  '#size-cells': true
++
+   reg:
+     maxItems: 1
+ 
+   interrupts:
+     maxItems: 1
+ 
++  assigned-clock-rates: true
++  assigned-clocks: true
++  clock-frequency: true
++
++  clock-names:
++    maxItems: 1
++
+   clocks:
+     maxItems: 1
+ 
++  power-domains: true
++
+ required:
+   - compatible
+   - reg
+   - interrupts
+   - clocks
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ examples:
+   - |
+     #include <dt-bindings/clock/imx7ulp-clock.h>
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-    lpi2c7@40a50000 {
++    i2c@40a50000 {
+         compatible = "fsl,imx7ulp-lpi2c";
+         reg = <0x40A50000 0x10000>;
+         interrupt-parent = <&intc>;
+-- 
+2.17.1
 
-It will be incomplete when the dictionary metadata were not saved.
-
-You might argue that the problem already exists when the entire
-message gets lost. But this situation can be detected by missing
-sequence numbers and journalctl even add messages about it.
-But the user currently is not informed about missing
-dictionary.
-
-
-Regarding the waste of space. The dict ring currently has the same
-size as the text ring. It is likely a waste of space as well. Any tuning
-is complicated because it depends on the use case.
-
-The advantage of the fixed @ext_info[] array is that everything is
-clear, simple, and predictable (taken space and name length limits).
-We could easily tell users what they will get for a given cost.
-
-Best Regards,
-Petr
