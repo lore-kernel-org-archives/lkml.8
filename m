@@ -2,75 +2,121 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07639C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EFC7C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C150D2064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FA52064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgIDQlj (ORCPT
+        id S1726855AbgIDQli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 12:41:38 -0400
+Received: from mga03.intel.com ([134.134.136.65]:57038 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgIDQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725966AbgIDQlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 12:41:35 -0400
-Received: from localhost.localdomain (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0453F2064E;
-        Fri,  4 Sep 2020 16:41:33 +0000 (UTC)
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] arm64 fixes for 5.9-rc4
-Date:   Fri,  4 Sep 2020 17:41:32 +0100
-Message-Id: <20200904164132.18160-1-catalin.marinas@arm.com>
-X-Mailer: git-send-email 2.20.1
+IronPort-SDR: dkVhQnmRYwxcctqI9frPbjqxGXJKQ+FOv0xYFA2lzRr471a7DOj7aKVpSqaZmdgrO2NBb5U0jD
+ 5TdX6uPNG0Ng==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157789072"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="157789072"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:41:34 -0700
+IronPort-SDR: jOnaDEq7/s6HtzL0/sF8gBkc6FFxhv5V0ORsq9GD1cg0wncpNhhz5vjbuVYXX1hvBDQXBEGHjV
+ KGpPnI57Y17A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="332217046"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:41:32 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kEEbj-00EKGC-Cn; Fri, 04 Sep 2020 19:30:35 +0300
+Date:   Fri, 4 Sep 2020 19:30:35 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 09/23] gpio: mockup: use KBUILD_MODNAME
+Message-ID: <20200904163035.GU1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-10-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904154547.3836-10-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Sep 04, 2020 at 05:45:33PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Drop the definition for the driver name. Let's use KBUILD_MODNAME for
+> the log format and use the "gpio-mockup" value directly in the only
+> place where it's relevant: in the name of the device.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpio-mockup.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index 73cd51459c2a..78c97f7b6893 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -22,9 +22,8 @@
+>  #include "gpiolib.h"
 
-Please pull the arm64 fixes below. Thanks.
+>  #undef pr_fmt
+> -#define pr_fmt(fmt)		GPIO_MOCKUP_NAME ": " fmt
+> +#define pr_fmt(fmt)		KBUILD_MODNAME ": " fmt
 
-The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
+This should be part of previous patch with something like "this is equivalent
+right now".
 
-  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
+> -#define GPIO_MOCKUP_NAME	"gpio-mockup"
+>  #define GPIO_MOCKUP_MAX_GC	10
+>  /*
+>   * We're storing two values per chip: the GPIO base and the number
+> @@ -501,7 +500,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
+>  
+>  static struct platform_driver gpio_mockup_driver = {
+>  	.driver = {
+> -		.name = GPIO_MOCKUP_NAME,
+> +		.name = "gpio-mockup",
+>  	},
+>  	.probe = gpio_mockup_probe,
+>  };
+> @@ -572,7 +571,7 @@ static int __init gpio_mockup_init(void)
+>  			properties[prop++] = PROPERTY_ENTRY_BOOL(
+>  						"named-gpio-lines");
+>  
+> -		pdevinfo.name = GPIO_MOCKUP_NAME;
+> +		pdevinfo.name = "gpio-mockup";
+>  		pdevinfo.id = i;
+>  		pdevinfo.properties = properties;
+>  
+> -- 
+> 2.26.1
+> 
 
-are available in the Git repository at:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux tags/arm64-fixes
 
-for you to fetch changes up to e0328feda79d9681b3e3245e6e180295550c8ee9:
-
-  arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE (2020-09-02 08:35:33 +0100)
-
-----------------------------------------------------------------
-- Fix the loading of modules built with binutils-2.35. This version
-  produces writable and executable .text.ftrace_trampoline section which
-  is rejected by the kernel.
-
-- Remove the exporting of cpu_logical_map() as the Tegra driver has now
-  been fixed and no longer uses this function.
-
-----------------------------------------------------------------
-Jessica Yu (1):
-      arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE
-
-Sudeep Holla (1):
-      arm64: Remove exporting cpu_logical_map symbol
-
- arch/arm64/kernel/module-plts.c | 3 +--
- arch/arm64/kernel/setup.c       | 1 -
- 2 files changed, 1 insertion(+), 3 deletions(-)
