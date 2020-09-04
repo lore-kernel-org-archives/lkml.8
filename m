@@ -7,188 +7,108 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDCAC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6356EC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A49DB206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23700206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:53:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bfchoPp5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DcqLT4v+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbgIDFvW (ORCPT
+        id S1726597AbgIDFxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
+        Fri, 4 Sep 2020 01:53:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFvV (ORCPT
+        with ESMTP id S1725812AbgIDFxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:51:21 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D08DC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:51:21 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a65so4888430wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:51:21 -0700 (PDT)
+        Fri, 4 Sep 2020 01:53:30 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE248C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:53:29 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u18so4905034wmc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:53:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VBkALWNFmSZj7rK+SmejfUE4FzmI9+bkW+wvdb/tgIU=;
-        b=bfchoPp5zj2lItpqUucfpnTEhQD1FHHPAGOIkeuUZVWDDo5HxG8ybEi/qEjt2BAbRz
-         gPGLG3VT9Y4mAmhzVVhYijXN7UOUvEbSB58Fvx0Pm4TidSPoINzyIYjEdldmE2y8zMZv
-         QZsUB1GVUy4/D2xHNbaOKupKDg82JDojrtPLY1/bEzlVsQYFPQwf4Ok2+wbWzj+yyfah
-         h8m8EbNu+OK1CqM5QLswpmmBD9Nhue8UnY71/09ccFOYwvpsi8KYfb28cATjtBoaqdgn
-         tWV0Tsqjs1KiKpVPen4DB4C8hThzO+BYqj24APl2mMnfW7mEggKTMs3HpgEqFNkfIQzN
-         MsXA==
+        bh=yJDVwwbw1qOq4XNkIij/xlhDxBT/xq3FKFF20CPGobU=;
+        b=DcqLT4v+5fdpGzNr4ozRUu4e6yGlxBRWxfuh7dN9DSDGBSMg6P54QlLkTXu4PjmH1c
+         HLGk1kbfAGFMR++4HSA94tTlbgmkM/rlWTO4luox6JuzYY/wzKJDczpTJBzyZo4iM0DC
+         ZvanobtsstemKYUTu4EWiHhA3K9YqOKXNL6B6J6MKMoB/xvm2wUqwgFQy61yrfIwofGo
+         1Gk4CH2TzBr0vpv4uTgDUrk4dnMOhUbcJItLSRvjN6YHflB4QaOtR9qjQFa2FDNJQqpB
+         Fe/lzSSeB8dEdQr5qZTN4WJvlIz7z8V7H2twdI4C9KRqZC8u7e/i3ngLHrgc+LTACHs5
+         MuWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VBkALWNFmSZj7rK+SmejfUE4FzmI9+bkW+wvdb/tgIU=;
-        b=lgtlZqPmhMnyEEww1bQXo7riAVjXhJC4HIh12sqF7dM0eE/XyldWLs9lMH1evYNbc5
-         P/NStdnJafLhFVDxl+OcE5Sjsv5cXDD2hCRciMeDOrE91iFpvj7YeQQSvaJxkRumrh9M
-         okpHEuk9nTy8sNjWbnwG7/A7nycMsDCwbxr5CVGluf8LNPzEw6l9ve48hjqTDXQxhELt
-         D0fhiOek6IInExcXWxbvxJikF9UWlFv5aNN5Vy2dsirwgd3/i31p5aKp1K3wfwEO2Ui0
-         68rVGrzE3zuVhWSdq9+CKGb0vd4+RSHIliTiC9SN8sCAXtHKGPNuUNHYaOs1+wkf3bXK
-         9Cxg==
-X-Gm-Message-State: AOAM5310rE1cpz7+q2yiKe10hBjEUuDTfw+WhDiIBIruUdI6ypOs6r7y
-        GmBy8da3rHuL/mCUg3oG8ix7imNGA8v7hOp44IO+RQ==
-X-Google-Smtp-Source: ABdhPJyjfg4RTVOS1EmVbuIhdOMU+V8UOMkY75qdg9ilr5NV+1cnP9l4YOD2cVaYmZAtsmnQPCN//Uc++UbX7cPSGkU=
-X-Received: by 2002:a05:600c:22d1:: with SMTP id 17mr1830382wmg.58.1599198679685;
- Thu, 03 Sep 2020 22:51:19 -0700 (PDT)
+        bh=yJDVwwbw1qOq4XNkIij/xlhDxBT/xq3FKFF20CPGobU=;
+        b=D/aI/eYILfd/3a1KwtsC/r/fPIJ5QDuzPZjx723zmNZtu7wi93sjChBxxM5cgzb9aj
+         ZmGDCmcEgLPn+760OqvwZCjRW+bwUGzpTisqRKwxiAl0m8cGKvsuBQUg7Pad3Xhu0fCb
+         1oTzQz2UUIc37aKgAoTt4VMEumkVfVpUetsk5cImW6UNdsdLKLlrpcZUPq4lb316Oylo
+         yjNlM5jug5yVNCNcEiOfu2Gq0o560PIfx0UfyW3bGtD/CVG1abzLQK1t/bz0X0WwUcXx
+         AvNtWzYIV/Q2qGs6tkAO20RJtcpcvkiuSc2fET/0nIk1UuBXn1+dOw1+uPDz/czQhN+x
+         QzBg==
+X-Gm-Message-State: AOAM531GmIj/0432dXa5kiB1wwXpSVGDoTmhfPgPrBgOBGaerVXn36OP
+        3GAYfc2RCdhb0X5n7gw/KynakB1C+EQqvtjT/lA+rg==
+X-Google-Smtp-Source: ABdhPJy9kzOmUmDIZbOHv/Hf/mNZCQV0G5MQPOvA7gtStOXSjLymmuZzu8sFRjYziY1ZdDjfNhcMWBrZNBfCQHC1pGQ=
+X-Received: by 2002:a1c:f402:: with SMTP id z2mr5597873wma.87.1599198808198;
+ Thu, 03 Sep 2020 22:53:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200828205614.3391252-1-robh@kernel.org> <20200828205614.3391252-6-robh@kernel.org>
- <CAP-5=fXTEd14wCZJgPyk1wUsSDAWP1zW+=e7sUx66L_1+YOO7A@mail.gmail.com> <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
+References: <20200826153055.2067780-1-irogers@google.com> <20200826155733.GB783610@krava>
+ <4b6bc995-d468-3137-f00f-3867233740a3@linux.ibm.com>
+In-Reply-To: <4b6bc995-d468-3137-f00f-3867233740a3@linux.ibm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Sep 2020 22:51:08 -0700
-Message-ID: <CAP-5=fUYsNZNM-s8auc5RVwQ-oqEnG10uBVhorns5aU29OAYXw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/9] libperf: Add support for user space counter access
-To:     Rob Herring <robh@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+Date:   Thu, 3 Sep 2020 22:53:16 -0700
+Message-ID: <CAP-5=fUdK2Zuv9BMpkRw669n_SvQ3kDa0s0RA=Hj1GUtqqw0YQ@mail.gmail.com>
+Subject: Re: [PATCH v2] perf expr: Force encapsulation on expr_id_data
+To:     kajoljain <kjain@linux.ibm.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Raphael Gault <raphael.gault@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 12:48 PM Rob Herring <robh@kernel.org> wrote:
+On Thu, Aug 27, 2020 at 12:00 AM kajoljain <kjain@linux.ibm.com> wrote:
 >
-> On Wed, Sep 2, 2020 at 12:07 PM Ian Rogers <irogers@google.com> wrote:
+>
+>
+> On 8/26/20 9:27 PM, Jiri Olsa wrote:
+> > On Wed, Aug 26, 2020 at 08:30:55AM -0700, Ian Rogers wrote:
+> >> This patch resolves some undefined behavior where variables in
+> >> expr_id_data were accessed (for debugging) without being defined. To
+> >> better enforce the tagged union behavior, the struct is moved into
+> >> expr.c and accessors provided. Tag values (kinds) are explicitly
+> >> identified.
+>
+> Reviewed-By: Kajol Jain<kjain@linux.ibm.com>
+>
+> Thanks,
+> Kajol Jain
+> >>
+> >> Signed-off-by: Ian Rogers <irogers@google.com>
 > >
-> > On Fri, Aug 28, 2020 at 1:56 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > x86 and arm64 can both support direct access of event counters in
-> > > userspace. The access sequence is less than trivial and currently exists
-> > > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
-> > > projects such as PAPI and libpfm4.
-> > >
-> > > In order to support usersapce access, an event must be mmapped. While
-> > > there's already mmap support for evlist, the usecase is a bit different
-> > > than the self monitoring with userspace access. So let's add a new
-> > > perf_evsel__mmap() function to mmap an evsel. This allows implementing
-> > > userspace access as a fastpath for perf_evsel__read().
-> > >
-> > > The mmapped address is returned by perf_evsel__mmap() primarily for
-> > > users/tests to check if userspace access is enabled.
-> > >
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
->
-> > > +int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count)
-> > > +{
-> > > +       struct perf_event_mmap_page *pc = map->base;
-> > > +       u32 seq, idx, time_mult = 0, time_shift = 0;
-> > > +       u64 cnt, cyc = 0, time_offset = 0, time_cycles = 0, time_mask = ~0ULL;
-> > > +
-> > > +       BUG_ON(!pc);
-> > > +
-> > > +       if (!pc->cap_user_rdpmc)
-> > > +               return -1;
-> > > +
-> > > +       do {
-> > > +               seq = READ_ONCE(pc->lock);
-> > > +               barrier();
-> > > +
-> > > +               count->ena = READ_ONCE(pc->time_enabled);
-> > > +               count->run = READ_ONCE(pc->time_running);
-> > > +
-> > > +               if (pc->cap_user_time && count->ena != count->run) {
-> > > +                       cyc = read_timestamp();
-> > > +                       time_mult = READ_ONCE(pc->time_mult);
-> > > +                       time_shift = READ_ONCE(pc->time_shift);
-> > > +                       time_offset = READ_ONCE(pc->time_offset);
-> > > +
-> > > +                       if (pc->cap_user_time_short) {
-> > > +                               time_cycles = READ_ONCE(pc->time_cycles);
-> > > +                               time_mask = READ_ONCE(pc->time_mask);
-> > > +                       }
-> > > +               }
-> > > +
-> > > +               idx = READ_ONCE(pc->index);
-> > > +               cnt = READ_ONCE(pc->offset);
-> > > +               if (pc->cap_user_rdpmc && idx) {
-> > > +                       u64 evcnt = read_perf_counter(idx - 1);
-> > > +                       u16 width = READ_ONCE(pc->pmc_width);
-> > > +
-> > > +                       evcnt <<= 64 - width;
-> > > +                       evcnt >>= 64 - width;
-> > > +                       cnt += evcnt;
-> > > +               } else
-> > > +                       return -1;
-> > > +
-> > > +               barrier();
-> > > +       } while (READ_ONCE(pc->lock) != seq);
-> > > +
-> > > +       if (count->ena != count->run) {
+> > great, thanks for doing this
 > >
-> > There's an existing bug here that I tried to resolve in this patch:
-> > https://lore.kernel.org/lkml/CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com/
-> > Due to multiplexing, enabled may be > 0 but run == 0 and the divide
-> > below can end up with divide by zero.
->
-> Yeah, I saw that, but didn't try to also fix that issue here.
->
-> > I like the idea of this code being in a library, there's an intent
-> > that the perf_event.h and test code be copy-paste-able, but there is
-> > some pre-existing divergence. It would be nice if this code could be
-> > closer to the sample code in both the test and perf_event.h.
->
-> The only way we get and keep all the versions of the code aligned is
-> removing the other copies. We should just remove the code comment from
-> perf_event.h IMO. If rdpmc.c is going to stick around given some
-> resistance to removing it, then perhaps it should be converted to use
-> libperf. At that point it could also be arch independent. Though I
-> don't like the idea of having the same test twice.
+> > Acked-by: Jiri Olsa <jolsa@redhat.com>
+> >
+> > jirka
+> >
 
-This makes sense to me, perhaps others could comment. Given the
-cleaned up API fixing or deleting tools/perf/arch/x86/tests/rdpmc.c is
-desirable (as your patch set does). I wondered if we could do Jiri's
-suggestion to run the lib/perf tests with perf test. One way would be
-to have shell script wrapper in tools/perf/tests/shell. It's not clear
-how to make a dependency from a shell script there and tests built
-elsewhere in the tree though.
-
-> > As per the change above, I think running and enabled times need to be
-> > out arguments.
->
-> They are now in this version.
-
-Sorry, my mistake. I'd missed that.
-
-Thanks,
+Thanks for the reviews! Arnaldo could this get merged? Thanks!
 Ian
-
-> Rob
