@@ -2,85 +2,245 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4304CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A131AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19E04205CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:40:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NAWz69Ng"
+	by mail.kernel.org (Postfix) with ESMTP id 61161205CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:41:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgIDJj7 (ORCPT
+        id S1729915AbgIDJlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43762 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDJj6 (ORCPT
+        Fri, 4 Sep 2020 05:41:11 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:44435 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgIDJlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:39:58 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965FEC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 02:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QqT90p3rhFaTDHgMOPcigZE+5LY1U6eqKJ6hY6XGnC4=; b=NAWz69Ng8WWM4gSDVNHqU03nmk
-        YD6X8hQ4P7prxhBldmOeg5Sp8VzYxFkSzAPJJ9Lzb28fX9wxBYIFQKMrGlCDacg/mGtajvXOu7Zzn
-        yV1CyS4eVLLag6GvwDd5vzR/cReYVXP3S1ZjD/jUBgF8WdyoAisntUnPX+lyEVW0m3WYcQIREyh2L
-        8qFoqIIKkK94JIBGUzzmKOgS/v4npb7yf+pFbgjDj2DriTDherxbDogpOOxW+k8nkfZ85Na3AISFX
-        E4rjRq0XGIj3inZYynT/k8NYHtw0Jbp78p/bsu+9p+kRwzWyQnhiGU/CpZMYb7BOPexDmJ7S2pvXh
-        3woyGGsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kE8C8-0003eC-SI; Fri, 04 Sep 2020 09:39:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 628193012DF;
-        Fri,  4 Sep 2020 11:39:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2DE0428B80007; Fri,  4 Sep 2020 11:39:43 +0200 (CEST)
-Date:   Fri, 4 Sep 2020 11:39:43 +0200
-From:   peterz@infradead.org
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     Juri Lelli <juri.lelli@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: Add myself as SCHED_DEADLINE reviewer
-Message-ID: <20200904093943.GI1362448@hirez.programming.kicks-ass.net>
-References: <4476a6da70949913a59dab9aacfbd12162c1fbd7.1599146667.git.bristot@redhat.com>
+        Fri, 4 Sep 2020 05:41:11 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0849enUC3015902, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb05.realtek.com.tw[172.21.6.98])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0849enUC3015902
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 4 Sep 2020 17:40:49 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 4 Sep 2020 17:40:49 +0800
+Received: from localhost (172.22.88.222) by RTEXMB01.realtek.com.tw
+ (172.21.6.94) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Fri, 4 Sep 2020
+ 17:40:49 +0800
+From:   <ricky_wu@realtek.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <ricky_wu@realtek.com>, <bhelgaas@google.com>,
+        <ulf.hansson@linaro.org>, <rui_feng@realsil.com>,
+        <linux-kernel@vger.kernel.org>, <puranjay12@gmail.com>,
+        <linux-pci@vger.kernel.org>, <vailbhavgupta40@gmail.com>
+Subject: [PATCH v4 1/2] misc: rtsx: Fix power down flow
+Date:   Fri, 4 Sep 2020 17:40:42 +0800
+Message-ID: <20200904094043.27461-1-ricky_wu@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4476a6da70949913a59dab9aacfbd12162c1fbd7.1599146667.git.bristot@redhat.com>
+Content-Type: text/plain
+X-Originating-IP: [172.22.88.222]
+X-ClientProxiedBy: RTEXMB04.realtek.com.tw (172.21.6.97) To
+ RTEXMB01.realtek.com.tw (172.21.6.94)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 11:26:23AM +0200, Daniel Bristot de Oliveira wrote:
+From: Ricky Wu <ricky_wu@realtek.com>
 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 592467ba3f4d..56d185210a43 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15363,6 +15363,7 @@ R:	Dietmar Eggemann <dietmar.eggemann@arm.com> (SCHED_NORMAL)
->  R:	Steven Rostedt <rostedt@goodmis.org> (SCHED_FIFO/SCHED_RR)
->  R:	Ben Segall <bsegall@google.com> (CONFIG_CFS_BANDWIDTH)
->  R:	Mel Gorman <mgorman@suse.de> (CONFIG_NUMA_BALANCING)
-> +R:	Daniel Bristot de Oliveira <bristot@redhat.com> (SCHED_DEADLINE)
->  L:	linux-kernel@vger.kernel.org
->  S:	Maintained
->  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+Fix and sort out rtsx driver power down flow
 
-Absolutely, great to have you looking over that!
+Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+---
+ drivers/misc/cardreader/rts5227.c  | 15 ---------------
+ drivers/misc/cardreader/rts5228.c  |  5 ++---
+ drivers/misc/cardreader/rts5249.c  | 17 -----------------
+ drivers/misc/cardreader/rts5260.c  | 16 ----------------
+ drivers/misc/cardreader/rtsx_pcr.c | 16 ++++++++++++++++
+ 5 files changed, 18 insertions(+), 51 deletions(-)
+
+diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+index f5f392ddf3d6..747391e3fb5d 100644
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -77,19 +77,6 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rts5227_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x10);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+-}
+-
+ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	u16 cap;
+@@ -239,7 +226,6 @@ static const struct pcr_ops rts5227_pcr_ops = {
+ 	.switch_output_voltage = rts5227_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
+-	.force_power_down = rts5227_force_power_down,
+ };
+ 
+ /* SD Pull Control Enable:
+@@ -389,7 +375,6 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ 	.switch_output_voltage = rts522a_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
+-	.force_power_down = rts5227_force_power_down,
+ };
+ 
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
+index 28feab1449ab..781a86def59a 100644
+--- a/drivers/misc/cardreader/rts5228.c
++++ b/drivers/misc/cardreader/rts5228.c
+@@ -99,9 +99,8 @@ static void rts5228_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+ 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+ 				RELINK_TIME_MASK, 0);
+ 
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
++			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+ 
+ 	rtsx_pci_write_register(pcr, FPDCTL,
+ 		SSC_POWER_DOWN, SSC_POWER_DOWN);
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index 941b3d77f1e9..719aa2d61919 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -78,20 +78,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+-}
+-
+ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+ {
+ 	struct pci_dev *pdev = pcr->pci;
+@@ -360,7 +346,6 @@ static const struct pcr_ops rts5249_pcr_ops = {
+ 	.card_power_on = rtsx_base_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rtsx_base_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ };
+ 
+ /* SD Pull Control Enable:
+@@ -585,7 +570,6 @@ static const struct pcr_ops rts524a_pcr_ops = {
+ 	.card_power_on = rtsx_base_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rtsx_base_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+ };
+ 
+@@ -700,7 +684,6 @@ static const struct pcr_ops rts525a_pcr_ops = {
+ 	.card_power_on = rts525a_card_power_on,
+ 	.card_power_off = rtsx_base_card_power_off,
+ 	.switch_output_voltage = rts525a_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+ };
+ 
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index b9f66b1384a6..897cfee350e7 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -87,21 +87,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
+-static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+-{
+-	/* Set relink_time to 0 */
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
+-	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+-				RELINK_TIME_MASK, 0);
+-
+-	if (pm_state == HOST_ENTER_S3)
+-		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+-					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+-
+-	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
+-}
+-
+ static int rtsx_base_enable_auto_blink(struct rtsx_pcr *pcr)
+ {
+ 	return rtsx_pci_write_register(pcr, OLT_LED_CTL,
+@@ -620,7 +605,6 @@ static const struct pcr_ops rts5260_pcr_ops = {
+ 	.card_power_on = rts5260_card_power_on,
+ 	.card_power_off = rts5260_card_power_off,
+ 	.switch_output_voltage = rts5260_switch_output_voltage,
+-	.force_power_down = rtsx_base_force_power_down,
+ 	.stop_cmd = rts5260_stop_cmd,
+ 	.set_l1off_cfg_sub_d0 = rts5260_set_l1off_cfg_sub_d0,
+ 	.enable_ocp = rts5260_enable_ocp,
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index 37ccc67f4914..3f84b898bd9c 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -1096,6 +1096,20 @@ static void rtsx_pci_idle_work(struct work_struct *work)
+ 	mutex_unlock(&pcr->pcr_mutex);
+ }
+ 
++static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
++{
++	/* Set relink_time to 0 */
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
++	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
++			RELINK_TIME_MASK, 0);
++
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
++			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
++
++	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
++}
++
+ static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+ {
+ 	if (pcr->ops->turn_off_led)
+@@ -1109,6 +1123,8 @@ static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+ 
+ 	if (pcr->ops->force_power_down)
+ 		pcr->ops->force_power_down(pcr, pm_state);
++	else
++		rtsx_base_force_power_down(pcr, pm_state);
+ }
+ 
+ void rtsx_pci_enable_ocp(struct rtsx_pcr *pcr)
+-- 
+2.17.1
 
