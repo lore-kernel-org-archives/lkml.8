@@ -2,95 +2,140 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9547EC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74572C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66EFA206CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:39:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DQf1WCSb"
+	by mail.kernel.org (Postfix) with ESMTP id 504E5206CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726245AbgIDEjB (ORCPT
+        id S1726328AbgIDEkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 00:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725892AbgIDEi5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 00:38:57 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D368CC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 21:38:56 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id c3so306214plz.5
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 21:38:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=AKTidWnwKMw/87YvP/dGXFFvii+sZrfhQX2pdgUJdtI=;
-        b=DQf1WCSbvh8LYmj1RwJAM4L0XhBwekQFu+N0ulyWtHXptKWrBc+L2xqTlrjd5HhEhA
-         KVjTkQBP8cwtzBx7YKImywEPPFQkmci4NSjwUr/Qt8YcnDxekDfTyKn81efv1iEgmXgX
-         pYnkSJEvK+ssG5qzqL32QBuqIlP4Iw3X0OlXlZbB0ExyCtylrZDFcnB8PzrYz3MhwLyt
-         WXPdPr/oJqEqnSk3Px6R2I61Paysm6hrM4AjMXSdc4XYxaMI8IVarnbnxoiIta2dq2Jb
-         emFreT0HlGa1M4SB8fm8E3F/xs86KWYwY2Gmcdra0JeBz4LW/VCg8qOYPJNS5SFaqN6r
-         BBLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=AKTidWnwKMw/87YvP/dGXFFvii+sZrfhQX2pdgUJdtI=;
-        b=Wvny1/WbEnkp0uigrERYQfrpjNjxjsCL7U3nSHo+BpNlPJB/JxRtgrscEhneq457FN
-         XLWNvfg0U8Dv2PK7OvI20wf6NGCn+Xr7QLra+QloYg0C6gM3gPU3QtlZ935H2VWYCHd+
-         Dyx7czATeOsXp7q7wlW1WekTH6GaxMaKVRQaMdGncW/Vp+4sNNxbEAGv+yn18+sCE/CV
-         ZrtTnhN9HHHFuT/QOWGIjrqdzN78L+hJ4r6/KHtE9Eg5mQuF9vm4pSf6i9nLEeIC+N/E
-         JeZavto+kzaB/++4DN6Evcjn/AW2CRR+UmdInvu/QVhdJ9RDQz9kiHfBrefjykOo1gzb
-         Hirw==
-X-Gm-Message-State: AOAM533ZfQltN7boqeQasVDH2W/QDhHL0ZDwxUX8SOYl0TYUuPvClk0D
-        THW3xwkpRdb5qFT33MGCQa3xEg==
-X-Google-Smtp-Source: ABdhPJxTg37soXGgDTI6jsVCoUh0jZdyWwZdRnirV7gCcasqpJbOVIuYIA43vleVX2nA+Ln5g5brXg==
-X-Received: by 2002:a17:902:7606:: with SMTP id k6mr7287372pll.171.1599194335296;
-        Thu, 03 Sep 2020 21:38:55 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id f10sm990844pfk.195.2020.09.03.21.38.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 21:38:54 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 10:08:47 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 0/5] cpufreq: improve frequency invariance support
-Message-ID: <20200904043847.g4ss3o4uofwujnyk@vireshk-i7>
-References: <20200901205549.30096-1-ionela.voinescu@arm.com>
- <20200903133203.GA29370@arm.com>
+        Fri, 4 Sep 2020 00:40:01 -0400
+Received: from mga03.intel.com ([134.134.136.65]:64597 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgIDEkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 00:40:00 -0400
+IronPort-SDR: GicBLU7aOz9GmRy63zWLbhi9IZXX2SoIY99M1uo6m3znExbi0bG1tczjJhvOmFgF11Y/h20dYA
+ 00S1GVcfIwNw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="157700170"
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="157700170"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 21:39:59 -0700
+IronPort-SDR: vPCwzAlOwsfHd5loa5iIKb8ynDAIMtKRdz0Porl/lDM0a9YPIrkweuuIC+OjFN8yFFsotnhahG
+ OSAV+arkrjMg==
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="478316190"
+Received: from sliu49-mobl1.ccr.corp.intel.com (HELO [10.249.174.205]) ([10.249.174.205])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 21:39:56 -0700
+Subject: Re: [PATCH v2 07/17] virt: acrn: Introduce an ioctl to set vCPU
+ registers state
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200903124201.17275-1-shuo.a.liu@intel.com>
+ <20200903124201.17275-8-shuo.a.liu@intel.com>
+ <20200903130325.GC2778029@kroah.com>
+From:   "Liu, Shuo A" <shuo.a.liu@intel.com>
+Message-ID: <89b140af-e128-46d8-191e-8b7d8e0620c0@intel.com>
+Date:   Fri, 4 Sep 2020 12:39:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903133203.GA29370@arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200903130325.GC2778029@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-09-20, 14:32, Ionela Voinescu wrote:
-> Hi Rafael, Viresh,
-> 
-> Would it be okay for you to apply this series, as the majority of
-> changes are in cpufreq? For arch_topology and arm64 changes, they have
-> been reviewed and acked-by Catalin and Sudeep.
-> 
-> Also, please let me know if I should send v6 with Sudeep's Reviewed-by/s
-> applied.
+Hi Greg,
 
-No need to resend. Rafael will apply these with the tags.
+On 9/3/2020 21:03, Greg Kroah-Hartman wrote:
+> On Thu, Sep 03, 2020 at 08:41:51PM +0800, shuo.a.liu@intel.com wrote:
+>> From: Shuo Liu <shuo.a.liu@intel.com>
+>>
+>> A virtual CPU of User VM has different context due to the different
+>> registers state. ACRN userspace needs to set the virtual CPU
+>> registers state (e.g. giving a initial registers state to a virtual
+>> BSP of a User VM).
+>>
+>> HSM provides an ioctl ACRN_IOCTL_SET_VCPU_REGS to do the virtual CPU
+>> registers state setting. The ioctl passes the registers state from ACRN
+>> userspace to the hypervisor directly.
+>>
+>> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+>> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+>> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+>> Cc: Zhi Wang <zhi.a.wang@intel.com>
+>> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+>> Cc: Yu Wang <yu1.wang@intel.com>
+>> Cc: Reinette Chatre <reinette.chatre@intel.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> ---
+>>  drivers/virt/acrn/hsm.c       | 14 +++++++
+>>  drivers/virt/acrn/hypercall.h | 13 +++++++
+>>  include/uapi/linux/acrn.h     | 71 +++++++++++++++++++++++++++++++++++
+>>  3 files changed, 98 insertions(+)
+>>
+>> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+>> index 6ec6aa9053d3..13df76d0206e 100644
+>> --- a/drivers/virt/acrn/hsm.c
+>> +++ b/drivers/virt/acrn/hsm.c
+>> @@ -12,6 +12,7 @@
+>>  #define pr_fmt(fmt) "acrn: " fmt
+>>  #define dev_fmt(fmt) "acrn: " fmt
+>>  
+>> +#include <linux/io.h>
+>>  #include <linux/miscdevice.h>
+>>  #include <linux/mm.h>
+>>  #include <linux/module.h>
+>> @@ -49,6 +50,7 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+>>  {
+>>  	struct acrn_vm *vm = filp->private_data;
+>>  	struct acrn_vm_creation *vm_param;
+>> +	struct acrn_vcpu_regs *cpu_regs;
+>>  	int ret = 0;
+>>  
+>>  	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
+>> @@ -96,6 +98,18 @@ static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+>>  	case ACRN_IOCTL_DESTROY_VM:
+>>  		ret = acrn_vm_destroy(vm);
+>>  		break;
+>> +	case ACRN_IOCTL_SET_VCPU_REGS:
+>> +		cpu_regs = memdup_user((void __user *)ioctl_param,
+>> +				       sizeof(struct acrn_vcpu_regs));
+>> +		if (IS_ERR(cpu_regs))
+>> +			return PTR_ERR(cpu_regs);
+>> +
+>> +		ret = hcall_set_vcpu_regs(vm->vmid, virt_to_phys(cpu_regs));
+> 
+> No sanity checking of any arguments?
 
--- 
-viresh
+The HSM driver has limited VM status maintenance so it doesn't have full
+ability to do the sanity checking.
+
+> 
+> Wow, fuzzers are going to have a fun time with your hypervisor, good
+> luck!  :)
+
+The hypervisor has some sanity checking. :)
+
+Thanks
+shuo
