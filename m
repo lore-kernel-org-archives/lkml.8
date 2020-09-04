@@ -2,75 +2,142 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A96DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F086C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3F821741
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E836E208CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:43:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599227024;
+	bh=m9pIERxvWHUgsDqBqgVJI3JMc/1+doudOyGmLox0dOo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e+MBxoZFzIf+Jj09Eyy3I9gxKVWoBOF7Uoi4K0VOf7jKOiBhUz3V1UBCHL+mUb7bL
+	 srAsmMP3+lXvdMp4Hc0L0axO9mP30E33STtavu6LNGdJnBmeNKgDwLnP/MnZPi+J+j
+	 zP+K6pW78ec6olPfytqsoe7LZ9OJYDk3NRqm/Yyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgIDNmf (ORCPT
+        id S1730543AbgIDNnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:42:35 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:42872 "EHLO vps0.lunn.ch"
+        Fri, 4 Sep 2020 09:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgIDNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730463AbgIDNeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:34:22 -0400
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
-        (envelope-from <andrew@lunn.ch>)
-        id 1kEBpB-00DCNS-G7; Fri, 04 Sep 2020 15:32:17 +0200
-Date:   Fri, 4 Sep 2020 15:32:17 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Subject: Re: [PATCH net v6 1/6] net: marvell: prestera: Add driver for
- Prestera family ASIC devices
-Message-ID: <20200904133217.GJ3112546@lunn.ch>
-References: <20200902150442.2779-1-vadym.kochan@plvision.eu>
- <20200902150442.2779-2-vadym.kochan@plvision.eu>
- <CA+FuTSfMRhEZ5c2CWaN_F3ASDgvV7eQ4q6zVuY-FvgLqsqYecw@mail.gmail.com>
- <20200904093252.GA10654@plvision.eu>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1E1E2083B;
+        Fri,  4 Sep 2020 13:30:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599226244;
+        bh=m9pIERxvWHUgsDqBqgVJI3JMc/1+doudOyGmLox0dOo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dKWQjXs9be77p3NDUujSJyKRekCSS/uFtn8EswFxfMo9g0GzidLNi4ymgOE/AirrO
+         6CGGTqjgaU0mAfsACQc1hGLev2JhB2MlBAgU7NH4QR+BpWyM2zptYbzc60ROUbUqeF
+         sCtpDtUF0HGAJQikubhKeIgBgrXVjKgaeX0UiCXU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.8 10/17] dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+Date:   Fri,  4 Sep 2020 15:30:09 +0200
+Message-Id: <20200904120258.497389751@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
+References: <20200904120257.983551609@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904093252.GA10654@plvision.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > +static int prestera_is_valid_mac_addr(struct prestera_port *port, u8 *addr)
-> > > +{
-> > > +       if (!is_valid_ether_addr(addr))
-> > > +               return -EADDRNOTAVAIL;
-> > > +
-> > > +       if (memcmp(port->sw->base_mac, addr, ETH_ALEN - 1))
-> > 
-> > Why ETH_ALEN - 1?
-> > 
-> This is the restriction of the port mac address, it must have base mac
-> address part at first 5 bytes.
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-You probably want to put a comment here about that.
+commit f7f86e8ac0ad7cd6792a80137f5a550924966916 upstream.
 
-And this is particularly user unfriendly. Is this a hardware issue? Or
-firmware? Is this likely to change in the future?
+commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
 
-	  Andrew
+Tegra210 and later uses separate SDMMC_LEGACY_TM clock for data
+timeout.
+
+So, this patch adds "tmclk" to Tegra sdhci clock property in the
+device tree binding.
+
+Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1598548861-32373-4-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt |   32 +++++++++-
+ 1 file changed, 29 insertions(+), 3 deletions(-)
+
+--- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
++++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+@@ -15,8 +15,15 @@ Required properties:
+   - "nvidia,tegra210-sdhci": for Tegra210
+   - "nvidia,tegra186-sdhci": for Tegra186
+   - "nvidia,tegra194-sdhci": for Tegra194
+-- clocks : Must contain one entry, for the module clock.
+-  See ../clocks/clock-bindings.txt for details.
++- clocks: For Tegra210, Tegra186 and Tegra194 must contain two entries.
++	  One for the module clock and one for the timeout clock.
++	  For all other Tegra devices, must contain a single entry for
++	  the module clock. See ../clocks/clock-bindings.txt for details.
++- clock-names: For Tegra210, Tegra186 and Tegra194 must contain the
++	       strings 'sdhci' and 'tmclk' to represent the module and
++	       the timeout clocks, respectively.
++	       For all other Tegra devices must contain the string 'sdhci'
++	       to represent the module clock.
+ - resets : Must contain an entry for each entry in reset-names.
+   See ../reset/reset.txt for details.
+ - reset-names : Must include the following entries:
+@@ -99,7 +106,7 @@ Optional properties for Tegra210, Tegra1
+ 
+ Example:
+ sdhci@700b0000 {
+-	compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
++	compatible = "nvidia,tegra124-sdhci";
+ 	reg = <0x0 0x700b0000 0x0 0x200>;
+ 	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+ 	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
+@@ -107,6 +114,25 @@ sdhci@700b0000 {
+ 	resets = <&tegra_car 14>;
+ 	reset-names = "sdhci";
+ 	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++	pinctrl-0 = <&sdmmc1_3v3>;
++	pinctrl-1 = <&sdmmc1_1v8>;
++	nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
++	nvidia,pad-autocal-pull-down-offset-3v3 = <0x7d>;
++	nvidia,pad-autocal-pull-up-offset-1v8 = <0x7b>;
++	nvidia,pad-autocal-pull-down-offset-1v8 = <0x7b>;
++	status = "disabled";
++};
++
++sdhci@700b0000 {
++	compatible = "nvidia,tegra210-sdhci";
++	reg = <0x0 0x700b0000 0x0 0x200>;
++	interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
++		 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
++	clock-names = "sdhci", "tmclk";
++	resets = <&tegra_car 14>;
++	reset-names = "sdhci";
++	pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
+ 	pinctrl-0 = <&sdmmc1_3v3>;
+ 	pinctrl-1 = <&sdmmc1_1v8>;
+ 	nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
+
+
