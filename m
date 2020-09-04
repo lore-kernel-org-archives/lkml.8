@@ -2,230 +2,232 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E58C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C630E204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60763204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:50:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="o++PUbGo"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="pSDdDSvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbgIDNtb (ORCPT
+        id S1730447AbgIDNuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:49:31 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44935 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730616AbgIDNp4 (ORCPT
+        Fri, 4 Sep 2020 09:50:15 -0400
+Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:49457 "EHLO
+        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730627AbgIDNqT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:45:56 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133512euoutp01231695ebe1c5a37af0100aa7c6bdfe29~xmAo_kgYc0799107991euoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133512euoutp01231695ebe1c5a37af0100aa7c6bdfe29~xmAo_kgYc0799107991euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599226512;
-        bh=j4NMsIUYeDhNT1iU/BYbUagBybluyVnGEfDAwzBqQE4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o++PUbGo65XuYr4Q/r3BVGYNCcIOxMj8GySOSY+HO8EOzP9v1w/pAc5WcdmU9HdL2
-         aiY8x2pGDHL8A/9gVxR2NbMKnyCtx6U2SaKAc2hMBlqdQoNj9xWwJcNuSBPhgOWjOd
-         LKPsfCGbW8JLiqWg+YF+tB65pRNXalLN/cji0nsc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200904133511eucas1p2d486263c794f51fdb8ea88600fe1e5fd~xmAoilL9n0781807818eucas1p2F;
-        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1D.11.06456.F82425F5; Fri,  4
-        Sep 2020 14:35:11 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68~xmAoO9OKM0143201432eucas1p2w;
-        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200904133511eusmtrp1fbe17ff149b4a75ba401f69bbb75685f~xmAoN7VnX0766507665eusmtrp1T;
-        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-67-5f52428f70ed
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id FE.BE.06314.F82425F5; Fri,  4
-        Sep 2020 14:35:11 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133511eusmtip1461f7ad71c971aeb5f97e8bdefea381d~xmAnrZiyY2113121131eusmtip1w;
-        Fri,  4 Sep 2020 13:35:11 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v10 29/30] media: pci: fix common ALSA DMA-mapping related
- codes
-Date:   Fri,  4 Sep 2020 15:17:10 +0200
-Message-Id: <20200904131711.12950-30-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0gUURTGvfPYHVcnplXwpqmwoFGUuvRgSjETsYmEwighMF1zUMsXu65l
-        Qi4+y1eZVGKhUpqt63N9pmRq6mZLYmqmlemmWRlm+MIeWjuO1n+/853v3O/cyyVQcQNuTYRF
-        xrDySFm4RCDCGrp/9O665ukb4KJvpems3h6Ersmrwuk/DTkoPbg4K6DVmi6ELnriSi8MGhBa
-        OzGE0wPNdwV0ZnU9Tld0jgrpB9rfCN3+fRL3IJnygnLAPF4qwhht2VUB07g0jjNjGTqEqS1O
-        YN6uTqBM7nApYFpGVAImu64MMPNau+Nmp0VuwWx4WCwrd3YPFIV+TCvBo79KLg5NJyMqYLBN
-        B6YEpPbAT7e0GMdi6iGAGh3J8wKAPfp96UBk5HkAq/MMYGNgfKwP5RulAFa+HxbwhXFitlAl
-        5FwCSgrTZ9IFHFtSKQA+yzLnTCg1gcCiqqG1hgXlC8f6tGuMUQ4waTkD55ik3OEHdT3Cx9lD
-        TXUbyrGpUa/Pm8S5gyDVIYRVv5Ix3uQFNfeH1tkCTuvqhDxvhfrcTIwfSALQ0Fsh5ItMAAcS
-        89Zv5Arf9f40rkEY99sOq5qdefkQbDNwWxBG3gSHZzZzMmrEGw23UV4m4ZVUMe92hPm6yn+x
-        7X39KM8MnEtMAfwL5QCorx1GrwP7/P9hRQCUAStWqYgIYRXSSPaCk0IWoVBGhjidjYrQAuNv
-        0q/q5prAYn9QB6AIIDEnTQ76BohxWawiLqIDQAKVWJKeL/RnxGSwLO4SK48KkCvDWUUHsCEw
-        iRW5+94XfzEVIothz7NsNCvf6CKEqbUKeMeXPH20N/ROss9imnqWbBW6Kw+nnRJKo7xefpuC
-        fs6tbiMnVMjJpuX9r/2njtYjIrOszphtVE3j85WdxVM33wTK7AZ8tHEFn3sqR+Mxl65zJTZ+
-        6mMO/oza+7LHK+WBINsjji1xQr8FaFIHUgtV2SM+WxLKkkykYegK0R3rKMEUoTLpDlSukP0F
-        K0nh7UkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsVy+t/xu7r9TkHxBm3z1Sx6z51kstg4Yz2r
-        xf9tE5ktrnx9z2axcvVRJosF+60tvlx5yGSx6fE1VovLu+awWfRs2MpqsfbIXXaLZZv+MFkc
-        /PCE1YHXY828NYwee78tYPHYtKqTzWP7twesHve7jzN5bF5S73H732Nmj8k3ljN67L7ZwObR
-        t2UVo8fnTXIB3FF6NkX5pSWpChn5xSW2StGGFkZ6hpYWekYmlnqGxuaxVkamSvp2NimpOZll
-        qUX6dgl6GU/bl7IWvFaquPaqhamB8aFsFyMnh4SAicSD+xeYuxi5OIQEljJKfLoxkREiISNx
-        cloDK4QtLPHnWhcbRNEnRolJ33vAEmwChhJdbyESIgKdjBLTuj+ygzjMAq+ZJFp3rWEDqRIW
-        CJDoP72CBcRmEVCVaP7RDdbNK2An8WjlViaIFfISqzccYAaxOYHiW2c8AasRErCV+DBnMcsE
-        Rr4FjAyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAqNl27Gfm3cwXtoYfIhRgINRiYeXwT4o
-        Xog1say4MvcQowQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BjprILCWanA+M5LySeENT
-        Q3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYxNJ32f+OflBO5yNA77EG2U
-        N63XytFiBtcn7sqs3e9idBgY3M9Lv7/j0FKUXu987phmvmcm0/1ZCdzzfnAnnpl4+JN6erKI
-        8Y33vjVZOb9zXR/6uUw/WVC2+aqjlYKMv+SyNdl2R3NEfn5O6T+3g1s9vfuh2YvpC7f+DNk4
-        r/gyz/5XYky/GpRYijMSDbWYi4oTAeT7s9WsAgAA
-X-CMS-MailID: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68
-References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-        <CGME20200904133511eucas1p2359dd080181340eb4f24b325e75a4c68@eucas1p2.samsung.com>
+        Fri, 4 Sep 2020 09:46:19 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id 7FE9982183;
+        Fri,  4 Sep 2020 16:34:39 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1599226479;
+        bh=ixGyvfOtF1m0Qt8mSIDj693P0IvczSm5D6Px5h32/OM=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=pSDdDSvtciqlNktcfputpB9pBNfeSwbPgEz4uCF38DHvOMroxPp7mJvXlQAy7k4wo
+         P6eyaPR7zFMK8+C5CB8WO0ZvlJxKmaTeh9zU3r5o3T7cMXNvekjwzsGiLflOlZ49Mn
+         su0UWol5UuHiTwfNBOGjuxmTafQIgyzFt4HWqOrQ=
+Received: from fsd-lkpg.ufsd.paragon-software.com (172.30.114.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 4 Sep 2020 16:34:39 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     <linux-fsdevel@vger.kernel.org>
+CC:     <viro@zeniv.linux.org.uk>, <linux-kernel@vger.kernel.org>,
+        <pali@kernel.org>, <dsterba@suse.cz>, <aaptel@suse.com>,
+        <willy@infradead.org>, <rdunlap@infradead.org>, <joe@perches.com>,
+        <mark@harmstone.com>, <nborisov@suse.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Subject: [PATCH v4 08/10] fs/ntfs3: Add Kconfig, Makefile and doc
+Date:   Fri, 4 Sep 2020 16:32:29 +0300
+Message-ID: <20200904133231.1769292-9-almaz.alexandrovich@paragon-software.com>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
+References: <20200904133231.1769292-1-almaz.alexandrovich@paragon-software.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.30.114.105]
+X-ClientProxiedBy: vdlg-exch-02.paragon-software.com (172.30.1.105) To
+ vdlg-exch-02.paragon-software.com (172.30.1.105)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that dma_map_sg returns the
-numer of the created entries in the DMA address space. However the
-subsequent calls to dma_sync_sg_for_{device,cpu} and dma_unmap_sg must be
-called with the original number of entries passed to dma_map_sg. The
-sg_table->nents in turn holds the result of the dma_map_sg call as stated
-in include/linux/scatterlist.h. Adapt the code to obey those rules.
+This adds Kconfig, Makefile and doc
 
-While touching this code, update it to use the modern DMA_FROM_DEVICE
-definitions.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
 ---
- drivers/media/pci/cx23885/cx23885-alsa.c | 4 ++--
- drivers/media/pci/cx25821/cx25821-alsa.c | 4 ++--
- drivers/media/pci/cx88/cx88-alsa.c       | 6 +++---
- drivers/media/pci/saa7134/saa7134-alsa.c | 4 ++--
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ Documentation/filesystems/ntfs3.rst | 103 ++++++++++++++++++++++++++++
+ fs/ntfs3/Kconfig                    |  23 +++++++
+ fs/ntfs3/Makefile                   |  11 +++
+ 3 files changed, 137 insertions(+)
+ create mode 100644 Documentation/filesystems/ntfs3.rst
+ create mode 100644 fs/ntfs3/Kconfig
+ create mode 100644 fs/ntfs3/Makefile
 
-diff --git a/drivers/media/pci/cx23885/cx23885-alsa.c b/drivers/media/pci/cx23885/cx23885-alsa.c
-index df44ed7393a0..c797bff6eebb 100644
---- a/drivers/media/pci/cx23885/cx23885-alsa.c
-+++ b/drivers/media/pci/cx23885/cx23885-alsa.c
-@@ -113,7 +113,7 @@ static int cx23885_alsa_dma_map(struct cx23885_audio_dev *dev)
- 	struct cx23885_audio_buffer *buf = dev->buf;
- 
- 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
--			buf->nr_pages, PCI_DMA_FROMDEVICE);
-+			buf->nr_pages, DMA_FROM_DEVICE);
- 
- 	if (0 == buf->sglen) {
- 		pr_warn("%s: cx23885_alsa_map_sg failed\n", __func__);
-@@ -129,7 +129,7 @@ static int cx23885_alsa_dma_unmap(struct cx23885_audio_dev *dev)
- 	if (!buf->sglen)
- 		return 0;
- 
--	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
-+	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
- 	buf->sglen = 0;
- 	return 0;
- }
-diff --git a/drivers/media/pci/cx25821/cx25821-alsa.c b/drivers/media/pci/cx25821/cx25821-alsa.c
-index 301616426d8a..8da31c953b02 100644
---- a/drivers/media/pci/cx25821/cx25821-alsa.c
-+++ b/drivers/media/pci/cx25821/cx25821-alsa.c
-@@ -177,7 +177,7 @@ static int cx25821_alsa_dma_map(struct cx25821_audio_dev *dev)
- 	struct cx25821_audio_buffer *buf = dev->buf;
- 
- 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
--			buf->nr_pages, PCI_DMA_FROMDEVICE);
-+			buf->nr_pages, DMA_FROM_DEVICE);
- 
- 	if (0 == buf->sglen) {
- 		pr_warn("%s: cx25821_alsa_map_sg failed\n", __func__);
-@@ -193,7 +193,7 @@ static int cx25821_alsa_dma_unmap(struct cx25821_audio_dev *dev)
- 	if (!buf->sglen)
- 		return 0;
- 
--	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen, PCI_DMA_FROMDEVICE);
-+	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages, DMA_FROM_DEVICE);
- 	buf->sglen = 0;
- 	return 0;
- }
-diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
-index 7d7aceecc985..d38633bc1330 100644
---- a/drivers/media/pci/cx88/cx88-alsa.c
-+++ b/drivers/media/pci/cx88/cx88-alsa.c
-@@ -316,7 +316,7 @@ static int cx88_alsa_dma_map(struct cx88_audio_dev *dev)
- 	struct cx88_audio_buffer *buf = dev->buf;
- 
- 	buf->sglen = dma_map_sg(&dev->pci->dev, buf->sglist,
--			buf->nr_pages, PCI_DMA_FROMDEVICE);
-+			buf->nr_pages, DMA_FROM_DEVICE);
- 
- 	if (buf->sglen == 0) {
- 		pr_warn("%s: cx88_alsa_map_sg failed\n", __func__);
-@@ -332,8 +332,8 @@ static int cx88_alsa_dma_unmap(struct cx88_audio_dev *dev)
- 	if (!buf->sglen)
- 		return 0;
- 
--	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->sglen,
--		     PCI_DMA_FROMDEVICE);
-+	dma_unmap_sg(&dev->pci->dev, buf->sglist, buf->nr_pages,
-+		     DMA_FROM_DEVICE);
- 	buf->sglen = 0;
- 	return 0;
- }
-diff --git a/drivers/media/pci/saa7134/saa7134-alsa.c b/drivers/media/pci/saa7134/saa7134-alsa.c
-index 544ca57eee75..707ca77221dc 100644
---- a/drivers/media/pci/saa7134/saa7134-alsa.c
-+++ b/drivers/media/pci/saa7134/saa7134-alsa.c
-@@ -297,7 +297,7 @@ static int saa7134_alsa_dma_map(struct saa7134_dev *dev)
- 	struct saa7134_dmasound *dma = &dev->dmasound;
- 
- 	dma->sglen = dma_map_sg(&dev->pci->dev, dma->sglist,
--			dma->nr_pages, PCI_DMA_FROMDEVICE);
-+			dma->nr_pages, DMA_FROM_DEVICE);
- 
- 	if (0 == dma->sglen) {
- 		pr_warn("%s: saa7134_alsa_map_sg failed\n", __func__);
-@@ -313,7 +313,7 @@ static int saa7134_alsa_dma_unmap(struct saa7134_dev *dev)
- 	if (!dma->sglen)
- 		return 0;
- 
--	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->sglen, PCI_DMA_FROMDEVICE);
-+	dma_unmap_sg(&dev->pci->dev, dma->sglist, dma->nr_pages, DMA_FROM_DEVICE);
- 	dma->sglen = 0;
- 	return 0;
- }
+diff --git a/Documentation/filesystems/ntfs3.rst b/Documentation/filesystems/ntfs3.rst
+new file mode 100644
+index 000000000000..02f59ff97d28
+--- /dev/null
++++ b/Documentation/filesystems/ntfs3.rst
+@@ -0,0 +1,103 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=====
++NTFS3
++=====
++
++
++Summary and Features
++====================
++
++NTFS3 is fully functional NTFS Read-Write driver. The driver works with
++NTFS versions up to 3.1, normal/compressed/sparse files
++and journal replaying. File system type to use on mount is 'ntfs3'.
++
++- This driver implements NTFS read/write support for normal, sparse and
++  compressed files.
++  NOTE: Operations with compressed files require increased memory consumption;
++- Supports native journal replaying;
++- Supports extended attributes;
++- Supports NFS export of mounted NTFS volumes.
++
++Mount Options
++=============
++
++The list below describes mount options supported by NTFS3 driver in addition to
++generic ones.
++
++===============================================================================
++
++nls=name		These options inform the driver how to interpret path
++			strings and translate them to Unicode and back. In case
++			none of these options are set, or if specified codepage
++			doesn't exist on the system, the default codepage will be
++			used (CONFIG_NLS_DEFAULT).
++			Examples:
++				'nls=utf8'
++
++uid=
++gid=
++umask=			Controls the default permissions for files/directories created
++			after the NTFS volume is mounted.
++
++fmask=
++dmask=			Instead of specifying umask which applies both to
++			files and directories, fmask applies only to files and
++			dmask only to directories.
++
++nohidden		Files with the Windows-specific HIDDEN (FILE_ATTRIBUTE_HIDDEN)
++			attribute will not be shown under Linux.
++
++sys_immutable		Files with the Windows-specific SYSTEM
++			(FILE_ATTRIBUTE_SYSTEM) attribute will be marked as system
++			immutable files.
++
++discard			Enable support of the TRIM command for improved performance
++			on delete operations, which is recommended for use with the
++			solid-state drives (SSD).
++
++force			Forces the driver to mount partitions even if 'dirty' flag
++			(volume dirty) is set. Not recommended for use.
++
++sparse			Create new files as "sparse".
++
++showmeta		Use this parameter to show all meta-files (System Files) on
++			a mounted NTFS partition.
++			By default, all meta-files are hidden.
++
++prealloc		Preallocate space for files excessively when file size is
++			increasing on writes. Decreases fragmentation in case of
++			parallel write operations to different files.
++
++no_acs_rules		"No access rules" mount option sets access rights for
++			files/folders to 777 and owner/group to root. This mount
++			option absorbs all other permissions:
++			- permissions change for files/folders will be reported
++				as successful, but they will remain 777;
++			- owner/group change will be reported as successful, but
++				they will stay as root
++
++acl			Support POSIX ACLs (Access Control Lists). Effective if
++			supported by Kernel. Not to be confused with NTFS ACLs.
++			The option specified as acl enables support for POSIX ACLs.
++
++noatime			All files and directories will not update their last access
++			time attribute if a partition is mounted with this parameter.
++			This option can speed up file system operation.
++
++===============================================================================
++
++ToDo list
++=========
++
++- Full journaling support (currently journal replaying is supported) over JBD.
++
++
++References
++==========
++https://www.paragon-software.com/home/ntfs-linux-professional/
++	- Commercial version of the NTFS driver for Linux.
++
++almaz.alexandrovich@paragon-software.com
++	- Direct e-mail address for feedback and requests on the NTFS3 implementation.
++
+diff --git a/fs/ntfs3/Kconfig b/fs/ntfs3/Kconfig
+new file mode 100644
+index 000000000000..92a9c68008c8
+--- /dev/null
++++ b/fs/ntfs3/Kconfig
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: GPL-2.0-only
++config NTFS3_FS
++	tristate "NTFS Read-Write file system support"
++	select NLS
++	help
++	  Windows OS native file system (NTFS) support up to NTFS version 3.1.
++
++	  Y or M enables the NTFS3 driver with full features enabled (read,
++	  write, journal replaying, sparse/compressed files support).
++	  File system type to use on mount is "ntfs3". Module name (M option)
++	  is also "ntfs3".
++
++	  Documentation: <file:Documentation/filesystems/ntfs3.rst>
++
++config NTFS3_64BIT_CLUSTER
++	bool "64 bits per NTFS clusters"
++	depends on NTFS3_FS && 64BIT
++	help
++	  Windows implementation of ntfs.sys uses 32 bits per clusters.
++	  If activated 64 bits per clusters you will be able to use 4k cluster
++	  for 16T+ volumes. Windows will not be able to mount such volumes.
++
++	  It is recommended to say N here.
+diff --git a/fs/ntfs3/Makefile b/fs/ntfs3/Makefile
+new file mode 100644
+index 000000000000..4d4fe198b8b8
+--- /dev/null
++++ b/fs/ntfs3/Makefile
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Makefile for the ntfs3 filesystem support.
++#
++
++obj-$(CONFIG_NTFS3_FS) += ntfs3.o
++
++ntfs3-objs := bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
++	    index.o attrlist.o record.o attrib.o run.o xattr.o\
++	    upcase.o super.o file.o dir.o namei.o lznt.o\
++	    fslog.o
 -- 
-2.17.1
+2.25.4
 
