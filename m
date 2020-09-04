@@ -2,107 +2,112 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D01C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B7C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0361120748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B911620791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:37:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p4391RoV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p5JO+kvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgIDGf2 (ORCPT
+        id S1728248AbgIDGgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:35:28 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56980 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgIDGf1 (ORCPT
+        Fri, 4 Sep 2020 02:36:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726445AbgIDGgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:35:27 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0846YLib093171;
-        Fri, 4 Sep 2020 06:35:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=/nEvMcYcQDU1SKp7DuIR7lsg8jaYz/VuKkA3WV3EDT8=;
- b=p4391RoVK+UFuMMBCRTMMxJEX+uWNb1T2I8FsdceBrSbeL/PuwbIruCdw6+XxofjYboS
- NWOW8KR4EDDSsq3wMNFqZqb4zxY3CvSGDLu7SRuK8PIbR+Ss4zGKVDwaqbKCq852YSE8
- 23P/jweDHvIyxKC6JUktcjLGxQpJQhRAZNAv5pq1U2kc4H3fXZtMAsx304Hs51TBetUT
- plmoIlem1MdZ4gIDh6lov39y/XoM6Vtca8t31E5aHDNQJvYTzWbGoAnJhshAc9k7B8bf
- 6KQ0vsvr3HuABh+/j0TtnbppYhVxeL2S342asqSk6GefliY0Cf4VqorhXPKdUIz+UA73 nQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 337eymmqn7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 04 Sep 2020 06:35:21 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0846ZJgt053408;
-        Fri, 4 Sep 2020 06:35:21 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 3380kt0ay5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 04 Sep 2020 06:35:21 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0846ZEJr007484;
-        Fri, 4 Sep 2020 06:35:16 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 03 Sep 2020 23:35:14 -0700
-Date:   Fri, 4 Sep 2020 09:35:07 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Dewar <alex.dewar90@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alan Cox <alan@linux.intel.com>, linux-media@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: media: atomisp: Fix error path in
- lm3554_probe()
-Message-ID: <20200904063506.GJ8321@kadam>
-References: <20200903173843.GF8299@kadam>
- <20200903182502.709300-1-alex.dewar90@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200903182502.709300-1-alex.dewar90@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009040059
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9733 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=999 mlxscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 bulkscore=0 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009040059
+        Fri, 4 Sep 2020 02:36:50 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF6CC061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:36:50 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id h2so707964plr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:36:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=4yiHUblFAYV93CvP9TCqNN/f4GGkDG7hfCsIMIHesuc=;
+        b=p5JO+kvkSTjVbTMWKBPkg9HykrjsaWRYc58QNIUTjCx8kpmaiectCCjel03OqpNcwt
+         HNL2p3ToDviWW+w0BL0qhvQr9+CIeVHxe4Cn8XEtZknHz7/pJ2fwQTI20Z8hC4Z8dJCL
+         pwvWbQr76LblbhEaT9bbP4q4ifi8Z7otr7FKq0yKbPK39YWfSVaVxNRDAhkFi2Mo+6zn
+         1Jhiu+tl4wlC+o39bKRqRDy638iLpoZVBHeoBWhPBevQJEVwEJWm9OmbuqiwrZjL0hBr
+         WScJRhfoBvI59J4R7u1b3HRmd4gyLN/s1tDDiDYS2hlGKm2yufFOAUn/5hB4CLmF+NtJ
+         vOig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=4yiHUblFAYV93CvP9TCqNN/f4GGkDG7hfCsIMIHesuc=;
+        b=fTreTH+0Z7FdED/JSX2Bcxu3jmm1Q2o0/pSbOTfnEgiwjnBzjEihAvvAOsDz8Tu8cV
+         esuPlN5H5HHLWaNhcAtLKYDWbhpNLrdwQHxJzItEjEY/Y/KtV6616oBdzDho9ryBioqY
+         Ekaif6WzEVCe3aKXMTlZEOcdth3PKSa6jxXmCn/qOiy1zL8PCQMqGDW3zPOBFa2irCnN
+         2cj3Q2F1YPSqoQQL0x3+EkyASUApqGNUHQ/pbGOn+ROHd9MSRbCH7is8gucGVOnmiGhT
+         hm6f6MwPh7rheJosrbtTnO4H5Ccl/XEFzKgkTlbz2ZGOwoHxtRxWH3+T47oi8oRrWQMA
+         pxCg==
+X-Gm-Message-State: AOAM530cfW6hgmf7sK2j3/RKim9GXYx/rE1U9xV1S02K5AhZTD4eliEu
+        zRVAtuFKUtFNZuwROhmm+CTu
+X-Google-Smtp-Source: ABdhPJxwOUbjrSmhdjljqAK9JS6spFNyLSSqyellwHKkG/3SNMmXjPz4BrrffWwBh/blwdxEQXUaMw==
+X-Received: by 2002:a17:90b:164a:: with SMTP id il10mr6929868pjb.2.1599201409322;
+        Thu, 03 Sep 2020 23:36:49 -0700 (PDT)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id 143sm5315040pfc.66.2020.09.03.23.36.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 23:36:48 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/6] Add initial support for Qualcomm RB5 platform
+Date:   Fri,  4 Sep 2020 12:06:31 +0530
+Message-Id: <20200904063637.28632-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 07:24:51PM +0100, Alex Dewar wrote:
-> +
-> +	ret = atomisp_register_i2c_module(&flash->sd, NULL, LED_FLASH);
-> +	if (!ret)
-> +		return 0;
+Hello,
 
-Ugh!!!  This is a a special case of the "success handling instead of
-failure handling" anti-pattern where the last condition in the function
-is different.  I just fixed a bug caused by this on Wed.
+This series adds initial support for Qualcomm Robotics RB5 Platform
+based on QRB5165 SoC which is a derivative of SM8250 SoC customized
+for robotics applications.
 
-https://www.spinics.net/lists/netdev/msg680226.html
+This board is one of the Consumer Edition boards of the 96Boards family
+manufactured by Thundercomm. This initial support includes regulators,
+UFS, debug UART, I2C, SPI, GPIO and LED peripherals.
 
-But it doesn't cause any problems here so whatever...
+More information about this board can be found in Qualcomm website:
+https://www.qualcomm.com/products/qualcomm-robotics-rb5-platform
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+This series functionally depends on following patches for proper working:
 
-regards,
-dan carpenter
+irqchip: Fix probing deferal when using IRQCHIP_PLATFORM_DRIVER helpers
+arm64: dts: qcom: sm8250: add apps_smmu node
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (6):
+  dt-bindings: arm: qcom: Document SM8250 SoC and boards
+  arm64: dts: qcom: sm8250: Rename UART2 node to UART12
+  arm64: dts: qcom: Add basic devicetree support for QRB5165 RB5
+  arm64: dts: qcom: qrb5165-rb5: Add onboard LED support
+  arm64: dts: qcom: qrb5165-rb5: Add gpio-line-names for TLMM block
+  arm64: dts: qcom: qrb5165-rb5: Add gpio-line-names for PM8150(B&L)
+
+ .../devicetree/bindings/arm/qcom.yaml         |   7 +
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ arch/arm64/boot/dts/qcom/qrb5165-rb5.dts      | 686 ++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8250-mtp.dts       |   4 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |  11 +-
+ 5 files changed, 706 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/qrb5165-rb5.dts
+
+-- 
+2.17.1
 
