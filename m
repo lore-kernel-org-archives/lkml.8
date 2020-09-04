@@ -2,119 +2,197 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F916C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F26C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA4A20829
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Rn5qthIa"
+	by mail.kernel.org (Postfix) with ESMTP id 429A0206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599229582;
+	bh=HFapN7zvtezMJU2LiF4VaXhhRaky00ItAw3UbeyTDWI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q0gkYAu95eoTNUrIrSf9GsvnqWkCP8LnREP9H5bLTfYWxXfmducNXnrlvxWljR0qd
+	 nd3xmJFzX6LSkyrQohTtHEn8bJ+S4AOnYF5slzuAj3i/huG6NcVclHRDApZQ99/G1d
+	 sEUsCXTngeopkPsAOluo5noG/rlR6fpcq0HvGpO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgIDO0K (ORCPT
+        id S1730609AbgIDO0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730457AbgIDOZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:25:45 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BACC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:25:40 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id q21so6321803edv.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:25:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jyk7CHt5bTCTjZ7EhyIfL9NYG87K4gl68GKaA7iV2V8=;
-        b=Rn5qthIaDvzwFjhhXEEk9a0ckRXKPetzFqHyFCMSmJ8zIntPq6DN7Qn7EtPUyngR88
-         P37FqKENw04smcg+k9HBl5GLKyWbcT/iAUwsfDhYSu7W7AtDe1TZun8rfsn8cG+bt5sv
-         1i7gjuvUAy1R2X4bP9OfI81neqhAnC0xzBFiwUWDP24/RsAmAv1JbpEaRiGfgotjcXSj
-         xR4WwaDN/ER7jmjn/h7goGDrIZPJyaY/dpwrNAz+mBp4B5YtxP3NgUn2ryJydxuq23Lz
-         NgKdCMrPRcpkychU0PnC3S9UTrm6aDG7cE287ILgfjMDaZBy1AGTqyZhsUhxKyWnGapx
-         BsCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jyk7CHt5bTCTjZ7EhyIfL9NYG87K4gl68GKaA7iV2V8=;
-        b=A67hee8WgQz9IOiRZetzw5EMAIAfrGwZNpG7JbVCthY2KyrPWTDjoidpGNjH4qWC/t
-         LNktWYRCngdug/dC24d6b/GCjnNXx/npQGtWMeJ3ift4k520MknD9AhbMKHRQu4AyRW+
-         VImXzWBXxcP/KQxpUQtzTuySW4AG9jmll7hBc4x8kHM9T1LgmIjPCV69CmjOeMuGsd1v
-         pKlm+7d1W8ZtIxG5pFUI462+d0Y+CLNw/UqeyOiBBdoriFINce/8zfS0otbxhy6sBn0v
-         x7ZEBAriF6UTLvhdGlWWWtIYVWw80F5pPp+f//nB/J6rRPEDxln+mftKna0s4eaw9+QZ
-         AChg==
-X-Gm-Message-State: AOAM531JNhPTNphAhQ35yDh0NMSepolctYkTXxBveUF/o5Db5dlez0Is
-        IPuUFaf4FQ3OQSXJhkbTX8k9ohpTGSCQUBRftRcVdw==
-X-Google-Smtp-Source: ABdhPJysfnaP8HEjzDvtjD+Y2aV+Obj8YyKPtfutRyAPfLvQQAnyIsL4ylug10Xad5ayI7NRXdv4tos0CdWBQRLsepY=
-X-Received: by 2002:a05:6402:1544:: with SMTP id p4mr8572340edx.346.1599229538615;
- Fri, 04 Sep 2020 07:25:38 -0700 (PDT)
+        Fri, 4 Sep 2020 10:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730458AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:34:23 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC94321556;
+        Fri,  4 Sep 2020 13:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599226255;
+        bh=HFapN7zvtezMJU2LiF4VaXhhRaky00ItAw3UbeyTDWI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xzpXfwoXQ+U6j4/hneahUFy7kPQUE0mqzWKwkeM9n0HE559fUWOU3VEgSVsUjBuAx
+         ciLtzUwScbKdrZLfCImWBlVCLr7ppAqo5zwFrqzmihyBghj5xNs1ThYoP7KoNGWXLC
+         yNKu9hCbBON6othyl/bZQTa9ykpDg18E8/qTbNe8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andreas Fischer <netfilter@d9c.eu>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.8 03/17] netfilter: nft_set_rbtree: Handle outcomes of tree rotations in overlap detection
+Date:   Fri,  4 Sep 2020 15:30:02 +0200
+Message-Id: <20200904120258.147134635@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
+References: <20200904120257.983551609@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
- <20200902140851.GJ4617@dhcp22.suse.cz> <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
- <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz> <20200902151306.GL4617@dhcp22.suse.cz>
- <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz> <20200903063806.GM4617@dhcp22.suse.cz>
- <c6b11905-2456-52a0-3b15-d4ceae6e7f54@redhat.com> <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
- <d89510b1-a6a2-a874-7ffc-ba7a37d4212d@redhat.com> <20200904070235.GA15277@dhcp22.suse.cz>
-In-Reply-To: <20200904070235.GA15277@dhcp22.suse.cz>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 4 Sep 2020 10:25:02 -0400
-Message-ID: <CA+CK2bDON8A5AmKqPFWOytP-B29U-YAc9maQAvV-oGffaek6Yg@mail.gmail.com>
-Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
- memory offline
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Another alternative would be to enable/disable static branch only from
-> users who really care but this is quite tricky because how do you tell
-> you need or not? It seems that alloc_contig_range would be just fine
-> with a weaker semantic because it would "only" to a spurious failure.
-> Memory hotplug on the other hand really needs to have a point where
-> nobody interferes with the offlined memory so it could ask for a
-> stronger semantic.
->
-> Yet another option would be to make draining stronger and actually
-> guarantee there are no in-flight pages to be freed to the pcp list.
-> One way would be to tweak pcp->high and implement a strong barrier
-> (IPI?) to sync with all CPUs. Quite expensive, especially when there are
-> many draining requests (read cma users because hotplug doesn't really
-> matter much as it happens seldom).
->
-> So no nice&cheap solution I can think of...
+From: Stefano Brivio <sbrivio@redhat.com>
 
-I think start_isolate_page_range() should not be doing page draining
-at all. It should isolate ranges, meaning set appropriate flags, but
-draining should be performed by the users when appropriate: next to
-lru_add_drain_all() calls both in CMA and hotplug.
-Currently, the way start_isolate_page_range() drains pages is very
-inefficient. It calls drain_all_pages() for every valid page block,
-which is a slow call as it starts a thread per cpu, and waits for
-those threads to finish before returning.
+commit 226a88de473e475cb9f993682a1c7d0c2b451ad8 upstream.
 
-We could optimize by moving the drain_all_pages() calls from
-set_migratetype_isolate() to start_isolate_page_range() and call it
-once for every different zone, but both current users of this
-interface guarantee that all pfns [start_pfn, end_pfn] are within the
-same zone, and I think we should keep it this way, so again the extra
-traversal is going to be overhead overhead.
+Checks for partial overlaps on insertion assume that end elements
+are always descendant nodes of their corresponding start, because
+they are inserted later. However, this is not the case if a
+previous delete operation caused a tree rotation as part of
+rebalancing.
 
-This way we will have on average only a single drain per hot-remove
-(instead of one per block), and also it is going to be symmetric only
-in one place. Faster hot-remove and cma alloc, and no race, imo
-win-win.
+Taking the issue reported by Andreas Fischer as an example, if we
+omit delete operations, the existing procedure works because,
+equivalently, we are inserting a start item with value 40 in the
+this region of the red-black tree with single-sized intervals:
 
-Pasha
+                                  overlap flag
+                   10 (start)
+                  /  \            false
+                      20 (start)
+                     /  \         false
+                         30 (start)
+                        /  \      false
+                            60 (start)
+                           /  \   false
+                         50 (end)
+                        /  \      false
+                      20 (end)
+                     /  \         false
+                         40 (start)
+
+if we now delete interval 30 - 30, the tree can be rearranged in
+a way similar to this (note the rotation involving 50 - 50):
+
+                                  overlap flag
+                   10 (start)
+                  /  \            false
+                      20 (start)
+                     /  \         false
+                         25 (start)
+                        /  \      false
+                            70 (start)
+                           /  \   false
+                         50 (end)
+                        /  \      true (from rule a1.)
+                      50 (start)
+                     /  \         true
+                   40 (start)
+
+and we traverse interval 50 - 50 from the opposite direction
+compared to what was expected.
+
+To deal with those cases, add a start-before-start rule, b4.,
+that covers traversal of existing intervals from the right.
+
+We now need to restrict start-after-end rule b3. to cases
+where there are no occurring nodes between existing start and
+end elements, because addition of rule b4. isn't sufficient to
+ensure that the pre-existing end element we encounter while
+descending the tree corresponds to a start element of an
+interval that we already traversed entirely.
+
+Different types of overlap detection on trees with rotations
+resulting from re-balancing will be covered by nft test case
+sets/0044interval_overlap_1.
+
+Reported-by: Andreas Fischer <netfilter@d9c.eu>
+Bugzilla: https://bugzilla.netfilter.org/show_bug.cgi?id=1449
+Cc: <stable@vger.kernel.org> # 5.6.x
+Fixes: 7c84d41416d8 ("netfilter: nft_set_rbtree: Detect partial overlaps on insertion")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/netfilter/nft_set_rbtree.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -238,21 +238,27 @@ static int __nft_rbtree_insert(const str
+ 	 *
+ 	 * b1. _ _ __>|  !_ _ __|  (insert end before existing start)
+ 	 * b2. _ _ ___|  !_ _ _>|  (insert end after existing start)
+-	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end)
++	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end, as a leaf)
++	 *            '--' no nodes falling in this range
++	 * b4.          >|_ _   !  (insert start before existing start)
+ 	 *
+ 	 * Case a3. resolves to b3.:
+ 	 * - if the inserted start element is the leftmost, because the '0'
+ 	 *   element in the tree serves as end element
+-	 * - otherwise, if an existing end is found. Note that end elements are
+-	 *   always inserted after corresponding start elements.
++	 * - otherwise, if an existing end is found immediately to the left. If
++	 *   there are existing nodes in between, we need to further descend the
++	 *   tree before we can conclude the new start isn't causing an overlap
++	 *
++	 * or to b4., which, preceded by a3., means we already traversed one or
++	 * more existing intervals entirely, from the right.
+ 	 *
+ 	 * For a new, rightmost pair of elements, we'll hit cases b3. and b2.,
+ 	 * in that order.
+ 	 *
+ 	 * The flag is also cleared in two special cases:
+ 	 *
+-	 * b4. |__ _ _!|<_ _ _   (insert start right before existing end)
+-	 * b5. |__ _ >|!__ _ _   (insert end right after existing start)
++	 * b5. |__ _ _!|<_ _ _   (insert start right before existing end)
++	 * b6. |__ _ >|!__ _ _   (insert end right after existing start)
+ 	 *
+ 	 * which always happen as last step and imply that no further
+ 	 * overlapping is possible.
+@@ -272,7 +278,7 @@ static int __nft_rbtree_insert(const str
+ 			if (nft_rbtree_interval_start(new)) {
+ 				if (nft_rbtree_interval_end(rbe) &&
+ 				    nft_set_elem_active(&rbe->ext, genmask) &&
+-				    !nft_set_elem_expired(&rbe->ext))
++				    !nft_set_elem_expired(&rbe->ext) && !*p)
+ 					overlap = false;
+ 			} else {
+ 				overlap = nft_rbtree_interval_end(rbe) &&
+@@ -288,10 +294,9 @@ static int __nft_rbtree_insert(const str
+ 					  nft_set_elem_active(&rbe->ext,
+ 							      genmask) &&
+ 					  !nft_set_elem_expired(&rbe->ext);
+-			} else if (nft_rbtree_interval_end(rbe) &&
+-				   nft_set_elem_active(&rbe->ext, genmask) &&
++			} else if (nft_set_elem_active(&rbe->ext, genmask) &&
+ 				   !nft_set_elem_expired(&rbe->ext)) {
+-				overlap = true;
++				overlap = nft_rbtree_interval_end(rbe);
+ 			}
+ 		} else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+
+
