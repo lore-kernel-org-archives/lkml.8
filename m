@@ -2,151 +2,150 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D50CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA601C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D919F2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA7BE208B3
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:05:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZd50ylc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgIDLE4 (ORCPT
+        id S1730125AbgIDLFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:04:56 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:63950 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728263AbgIDLBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:01:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BjZVf4YvpzB09bQ;
-        Fri,  4 Sep 2020 13:01:30 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id p6qrsTlmFVgo; Fri,  4 Sep 2020 13:01:30 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BjZVf2pPlzB09bP;
-        Fri,  4 Sep 2020 13:01:30 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A12548B81C;
-        Fri,  4 Sep 2020 13:01:31 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id oo9Efquu5ZWU; Fri,  4 Sep 2020 13:01:31 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (unknown [10.25.210.31])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 731BC8B81B;
-        Fri,  4 Sep 2020 13:01:31 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E4778653FF; Fri,  4 Sep 2020 11:01:30 +0000 (UTC)
-Message-Id: <94ba5a5138f99522e1562dbcdb38d31aa790dc89.1599216721.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH 1/3] powerpc/uaccess: Switch __put_user_size_allowed() to
- __put_user_asm_goto()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri,  4 Sep 2020 11:01:30 +0000 (UTC)
+        Fri, 4 Sep 2020 07:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730079AbgIDLCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 07:02:45 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFB97C061246
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:02:43 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id u18so5672903wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=NfwkNFk09ZusBLOpLBTzQZi+H+vFvkYJED/TT3XgJYw=;
+        b=JZd50ylcdwr2PHwgwiiaZbZPtEwrGD9obMYXTwpZhmQPv/Lx0wB5KCsEfKIKGKv7ni
+         S0TL0ck/MMQKYiuWElIRT0D4FGT8AJ6zDeu2mMpdm1mzf3FKDmAceMkHYdmQSn8OZkVU
+         WYCL/bNmxjKSpU0YjiDiqFJzwHDIW/8oA5YwGb35qTuWFWL3pnnL8DMK/lfPXFqmR8VS
+         Ge1jpfi/BDhBGpau/jZqgYHFBjpUo9RWBh3BL2x+X46DPjOzmrYEWUWRK0GxHH6Ms5W7
+         XFO5XIpa4Y+4vtV2ytbTIiJKpkEbXF5SWJIeHjMpt7rIXEPmKV+g5tU55WRpK3AT+OZV
+         cDPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NfwkNFk09ZusBLOpLBTzQZi+H+vFvkYJED/TT3XgJYw=;
+        b=cQciu1Pry6FwnRNGd9qF7/SstbZpISgHe82aPMOgksPZ+APGXYRa8tdv1E1rhN6pTj
+         GptSV4YF6BOvvldy9rNUVQD5qtSP84ptR4AAyLChM51HzSWzkAat1T2Vc+b5RvruhZCN
+         S1rQwE0VXZ4mhd4lIyqTAAjgkyhzcwIPb8W5wH4CSmDcBWIPEIm/tv2FGv47pD4dhTmQ
+         FPPSZHk7Bs3JQyb3ScxnJVUL5jRkaWFGBiV2qD4UYQC+WdYhjNSjNybmfGBM12Yb6byy
+         QCdsZJxGx2Dgp6gRFouv/vuUtvArSWGMSnpXEacH6qWsSQGk85xcRSgNS1tIQ74KWaHG
+         T9Hg==
+X-Gm-Message-State: AOAM533PDGldxdVIg4o4lzqllZBibQFrQ+F5B8AbeprLB830vMIVXbRe
+        wzP36ipwI7nlHC1is5ux9FFligiFlCBYLA==
+X-Google-Smtp-Source: ABdhPJyDXc07W9KvlQK9EHpFRFv+t6KZPHfDW0yXqRKut/IryH4+skf+lxaDkSbM+QVtkaGdqqxNog==
+X-Received: by 2002:a1c:b4c1:: with SMTP id d184mr7475012wmf.26.1599217362207;
+        Fri, 04 Sep 2020 04:02:42 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id a127sm10514447wmh.34.2020.09.04.04.02.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:02:41 -0700 (PDT)
+Subject: Re: [PATCH v3 1/3] nvmem: core: allow to register cells during nvmem
+ registration
+To:     Vadym Kochan <vadym.kochan@plvision.eu>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Maxime Ripard <maxime.ripard@free-electrons.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200831015539.26811-1-vadym.kochan@plvision.eu>
+ <20200831015539.26811-2-vadym.kochan@plvision.eu>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <6ab47f55-af66-f035-d8d9-82d0c831b5b8@linaro.org>
+Date:   Fri, 4 Sep 2020 12:02:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20200831015539.26811-2-vadym.kochan@plvision.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__put_user_asm_goto() provides more flexibility to GCC and avoids using
-a local variable to tell if the write succeeded or not.
-GCC can then avoid implementing a cmp in the fast path.
+Hi Vadym,
 
-See the difference for a small function like the PPC64 version of
-save_general_regs() in arch/powerpc/kernel/signal_32.c:
+Thanks for the patch,
+On 31/08/2020 02:55, Vadym Kochan wrote:
+> Add NVMEM_PRE_ADD notification step which is called before any cells
+> binding - from lookup table or config, this allows to register cells
+> in some specific layout (tlv) which should be parsed first and then
+> registered. So there might be a cell parser driver which can register
+> lookup table during this notification step.
+> 
+This is going in right direction but totally not correct way to do it.
 
-Before the patch (unreachable nop removed):
+1> this is not scalable as any consumer that will register for this even 
+will have no idea of which what kind of parsing that provider needs.
+It can work in your case but not really useful.
 
-0000000000000c10 <.save_general_regs>:
-     c10:	39 20 00 2c 	li      r9,44
-     c14:	39 40 00 00 	li      r10,0
-     c18:	7d 29 03 a6 	mtctr   r9
-     c1c:	38 c0 00 00 	li      r6,0
-     c20:	48 00 00 14 	b       c34 <.save_general_regs+0x24>
-     c30:	42 40 00 40 	bdz     c70 <.save_general_regs+0x60>
-     c34:	28 2a 00 27 	cmpldi  r10,39
-     c38:	7c c8 33 78 	mr      r8,r6
-     c3c:	79 47 1f 24 	rldicr  r7,r10,3,60
-     c40:	39 20 00 01 	li      r9,1
-     c44:	41 82 00 0c 	beq     c50 <.save_general_regs+0x40>
-     c48:	7d 23 38 2a 	ldx     r9,r3,r7
-     c4c:	79 29 00 20 	clrldi  r9,r9,32
-     c50:	91 24 00 00 	stw     r9,0(r4)
-     c54:	2c 28 00 00 	cmpdi   r8,0
-     c58:	39 4a 00 01 	addi    r10,r10,1
-     c5c:	38 84 00 04 	addi    r4,r4,4
-     c60:	41 82 ff d0 	beq     c30 <.save_general_regs+0x20>
-     c64:	38 60 ff f2 	li      r3,-14
-     c68:	4e 80 00 20 	blr
-     c70:	38 60 00 00 	li      r3,0
-     c74:	4e 80 00 20 	blr
+2> this is a consumer API, not the provider api.
 
-0000000000000000 <.fixup>:
-  cc:	39 00 ff f2 	li      r8,-14
-  d0:	48 00 00 00 	b       d0 <.fixup+0xd0>
-			d0: R_PPC64_REL24	.text+0xc54
+How about adding a "parse_cells" callback in struct nvmem_config along 
+with encoding type.
 
-After the patch:
 
-0000000000001490 <.save_general_regs>:
-    1490:	39 20 00 2c 	li      r9,44
-    1494:	39 40 00 00 	li      r10,0
-    1498:	7d 29 03 a6 	mtctr   r9
-    149c:	60 00 00 00 	nop
-    14a0:	28 2a 00 27 	cmpldi  r10,39
-    14a4:	79 48 1f 24 	rldicr  r8,r10,3,60
-    14a8:	39 20 00 01 	li      r9,1
-    14ac:	41 82 00 0c 	beq     14b8 <.save_general_regs+0x28>
-    14b0:	7d 23 40 2a 	ldx     r9,r3,r8
-    14b4:	79 29 00 20 	clrldi  r9,r9,32
-    14b8:	91 24 00 00 	stw     r9,0(r4)
-    14bc:	39 4a 00 01 	addi    r10,r10,1
-    14c0:	38 84 00 04 	addi    r4,r4,4
-    14c4:	42 00 ff dc 	bdnz    14a0 <.save_general_regs+0x10>
-    14c8:	38 60 00 00 	li      r3,0
-    14cc:	4e 80 00 20 	blr
-    14d0:	38 60 ff f2 	li      r3,-14
-    14d4:	4e 80 00 20 	blr
+thanks,
+srini
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/include/asm/uaccess.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-index a5cfe867fbdc..96d1c144f92b 100644
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -189,14 +189,14 @@ extern long __put_user_bad(void);
- 
- #define __put_user_size_allowed(x, ptr, size, retval)		\
- do {								\
-+	__label__ __pu_failed;					\
-+								\
- 	retval = 0;						\
--	switch (size) {						\
--	  case 1: __put_user_asm(x, ptr, retval, "stb"); break;	\
--	  case 2: __put_user_asm(x, ptr, retval, "sth"); break;	\
--	  case 4: __put_user_asm(x, ptr, retval, "stw"); break;	\
--	  case 8: __put_user_asm2(x, ptr, retval); break;	\
--	  default: __put_user_bad();				\
--	}							\
-+	__put_user_size_goto(x, ptr, size, __pu_failed);	\
-+	break;							\
-+								\
-+__pu_failed:							\
-+	retval = -EFAULT;					\
- } while (0)
- 
- #define __put_user_size(x, ptr, size, retval)			\
--- 
-2.25.0
-
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> ---
+> v3:
+>      1) Update core.c changes by extending notification mechanism
+>         by adding new NVMEM_PRE_ADD event id which is called before lookup
+>         table cells binding, this allows for notification handler to
+>         register cells which require nvmem parsing.
+> 
+>   drivers/nvmem/core.c           | 2 ++
+>   include/linux/nvmem-consumer.h | 1 +
+>   2 files changed, 3 insertions(+)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 6cd3edb2eaf6..c48a69e0ebbe 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -668,6 +668,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   			goto err_device_del;
+>   	}
+>   
+> +	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_PRE_ADD, nvmem);
+> +
+>   	if (config->cells) {
+>   		rval = nvmem_add_cells(nvmem, config->cells, config->ncells);
+>   		if (rval)
+> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+> index 052293f4cbdb..0f7107276756 100644
+> --- a/include/linux/nvmem-consumer.h
+> +++ b/include/linux/nvmem-consumer.h
+> @@ -50,6 +50,7 @@ enum {
+>   	NVMEM_REMOVE,
+>   	NVMEM_CELL_ADD,
+>   	NVMEM_CELL_REMOVE,
+> +	NVMEM_PRE_ADD,
+>   };
+>   
+>   #if IS_ENABLED(CONFIG_NVMEM)
+> 
