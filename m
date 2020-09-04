@@ -2,78 +2,133 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB5DC28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFB8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A36720791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2635C20791
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgIDK3I (ORCPT
+        id S1730174AbgIDK3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:29:08 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:42762 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726171AbgIDK3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:29:00 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MTFFlJfq8AQAA--.90S2;
-        Fri, 04 Sep 2020 18:28:23 +0800 (CST)
-From:   Jinyang He <hejinyang@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH] MIPS: Make NUMA select SMP
-Date:   Fri,  4 Sep 2020 18:28:21 +0800
-Message-Id: <1599215301-2480-1-git-send-email-hejinyang@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dx+MTFFlJfq8AQAA--.90S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw45Wr18GryrGF4kXr18Xwb_yoWxKrg_tw
-        sFva48WF1Syr97Wryagws5Z340ya4rWF15AFsIqF1UZ343Xr15Jay7Jayktr17G3WDWFWr
-        ZrWruFnrZr42yjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2xYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26F4j6r4UJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4DMxAIw28I
-        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-        IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUqLZcUUUUU
-X-CM-SenderInfo: pkhmx0p1dqwqxorr0wxvrqhubq/
+        Fri, 4 Sep 2020 06:29:23 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:35547 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgIDK3O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:29:14 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kE8xv-0001oE-SE; Fri, 04 Sep 2020 10:29:07 +0000
+Date:   Fri, 4 Sep 2020 12:29:07 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Josh Triplett <josh@joshtriplett.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-kselftest@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-api@vger.kernel.org, Jann Horn <jannh@google.com>
+Subject: Re: [PATCH v2 2/4] exit: support non-blocking pidfds
+Message-ID: <20200904102907.2t6w6k7ud5i6ak2o@wittgenstein>
+References: <20200902102130.147672-1-christian.brauner@ubuntu.com>
+ <20200902102130.147672-3-christian.brauner@ubuntu.com>
+ <20200903235659.GC210207@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200903235659.GC210207@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While it does make sense to allow CONFIG_NUMA and !CONFIG_SMP
-in theory, it doesn't make much sense in practice. Follow other
-architectures and make CONFIG_NUMA select CONFIG_SMP.
+On Thu, Sep 03, 2020 at 04:56:59PM -0700, Josh Triplett wrote:
+> On Wed, Sep 02, 2020 at 12:21:28PM +0200, Christian Brauner wrote:
+> > Passing a non-blocking pidfd to waitid() currently has no effect, i.e.  is not
+> > supported. There are users which would like to use waitid() on pidfds that are
+> > O_NONBLOCK and mix it with pidfds that are blocking and both pass them to
+> > waitid().
+> > The expected behavior is to have waitid() return -EAGAIN for non-blocking
+> > pidfds and to block for blocking pidfds without needing to perform any
+> > additional checks for flags set on the pidfd before passing it to waitid().
+> > Non-blocking pidfds will return EAGAIN from waitid() when no child process is
+> > ready yet. Returning -EAGAIN for non-blocking pidfds makes it easier for event
+> > loops that handle EAGAIN specially.
+> > 
+> > It also makes the API more consistent and uniform. In essence, waitid() is
+> > treated like a read on a non-blocking pidfd or a recvmsg() on a non-blocking
+> > socket.
+> > With the addition of support for non-blocking pidfds we support the same
+> > functionality that sockets do. For sockets() recvmsg() supports MSG_DONTWAIT
+> > for pidfds waitid() supports WNOHANG. Both flags are per-call options. In
+> > contrast non-blocking pidfds and non-blocking sockets are a setting on an open
+> > file description affecting all threads in the calling process as well as other
+> > processes that hold file descriptors referring to the same open file
+> > description. Both behaviors, per call and per open file description, have
+> > genuine use-cases.
+> > 
+> > The implementation should be straightforward, we simply raise the WNOHANG flag
+> > when a non-blocking pidfd is passed and when do_wait() returns without finding
+> > an eligible task and the pidfd is non-blocking we set EAGAIN.  If no child
+> > process exists non-blocking pidfd users will continue to see ECHILD but if
+> > child processes exist but have not yet exited users will see EAGAIN.
+> > 
+> > A concrete use-case that was brought on-list was Josh's async pidfd library.
+> > Ever since the introduction of pidfds and more advanced async io various
+> > programming languages such as Rust have grown support for async event
+> > libraries. These libraries are created to help build epoll-based event loops
+> > around file descriptors. A common pattern is to automatically make all file
+> > descriptors they manage to O_NONBLOCK.
+> > 
+> > For such libraries the EAGAIN error code is treated specially. When a function
+> > is called that returns EAGAIN the function isn't called again until the event
+> > loop indicates the the file descriptor is ready.  Supporting EAGAIN when
+> > waiting on pidfds makes such libraries just work with little effort.
+> > 
+> > Link: https://lore.kernel.org/lkml/20200811181236.GA18763@localhost/
+> > Link: https://github.com/joshtriplett/async-pidfd
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Sargun Dhillon <sargun@sargun.me>
+> > Cc: Jann Horn <jannh@google.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Oleg Nesterov <oleg@redhat.com>
+> > Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+> > Suggested-by: Josh Triplett <josh@joshtriplett.org>
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> 
+> With or without the discussed change to WNOHANG behavior for
+> compatibility:
+> Reviewed-by: Josh Triplett <josh@joshtriplett.org>
 
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
----
- arch/mips/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I think that WNOHANG compatibility change might be a good idea. So I've
+changed this to:
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 99220e7..b8e3331 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2657,6 +2657,7 @@ config ARCH_SPARSEMEM_ENABLE
- config NUMA
- 	bool "NUMA Support"
- 	depends on SYS_SUPPORTS_NUMA
-+	select SMP
- 	help
- 	  Say Y to compile the kernel to support NUMA (Non-Uniform Memory
- 	  Access).  This option improves performance on systems with more
--- 
-2.1.0
+	ret = do_wait(&wo);
+	if (!ret && !(options & WNOHANG) && (f_flags & O_NONBLOCK))
+		ret = -EAGAIN;
 
+> 
+> Also, I think you should flip the order of patches 1 and 2, so that
+> there isn't a one-patch window in kernel history where you can create an
+> O_NONBLOCK pidfd with pidfd_open but it has no effect. I'd expect
+> userspace to use pidfd_open accepting or EINVAL-ing the flag as an
+> indication of whether it'll work.
+
+Good point! I've changed the order now.
+
+Thanks!
+Christian
