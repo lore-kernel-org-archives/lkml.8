@@ -2,122 +2,107 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C40D5C52D69
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752FBC52D5B
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8842C25359
+	by mail.kernel.org (Postfix) with ESMTP id 33C302535B
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599242648;
-	bh=lKICge3jhun+RF61dqzonN1rfSXdIUyK+d/Ihwq7Gs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q2h3ZXYntWde19dOWLLfn85VK/QYbfKVFWXrwGDaPJWZo1oKYHGcT7mC/IY0ghLZJ
-	 XeQpflocnrVDk2lZWvZycjEijAMfwDXoJLbXB3Wj7rHGHPPxaoUKH9Wu+Pf5bM1vxO
-	 FdVhmy8IkpuAfdSYuXbDfBrWbPyKbDGqxs29hRW0=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ViyTBUKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgIDRaX (ORCPT
+        id S1727869AbgIDRaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:30:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:40713 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727077AbgIDRaK (ORCPT
+        Fri, 4 Sep 2020 13:30:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726948AbgIDRaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:30:10 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j2so7499875wrx.7;
-        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
+        Fri, 4 Sep 2020 13:30:07 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A341FC061247
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:30:06 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id g72so7000077qke.8
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qMG1ps8fgPCdKYmX4D9C0vTU0mM7NukKZP7s8FwwQlE=;
+        b=ViyTBUKFruXN0VnmAsL8NgjxNce0CorHAmM5BdC1GhOcVAdeJNLMUmWeG2CnKftulb
+         FXUGbhhHvbRj0kchEEER/Eb9W2ilBzfHXqxWlpHzRHrvZE/4W9syeqz4vRreMGIBOXL6
+         msJsqURCahbJJZF6/2RDY/mhTzUH37BFK1kiYBealqQj/75yX0xAWMBOMD/Qd1yIT0Ci
+         mrvaCfUqs6QnP6V+lx6q9Ff1yg9E2hJfBCrFYHViAlbVVe4EB6B5UnpEd0E8NlRnITpQ
+         xWLdRmubcwWeXUGu28zFiqNI606wGvyaWuOO/K8A1fjjVKqssVvNOfnwF5DaW03GWGcA
+         C5EA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wNy2hGieTjSAjcYv7kwR0BOvIQ7J3JLWd6JVvNnGJ0g=;
-        b=sZ03nkQtO3bsUjoKBy3QLm+3u9SW6Lpvfeq1irGk3xaB8UVZSgwiFfIOjAs+/gYeQ1
-         8aNDgOqAkWfXlIWn9fUfe70C5H3COjdeQ84Emxxr45a15Sl5RJOpoNgB+0bq4Wh4yscx
-         GXz14XgfuJ8nOfgUP4YuW2e5LCoqQJcueFlRFYa5BWMwNcy/UauUarfmlUO5jxvMC0XZ
-         ElGn1peCJabazZjZdDPZ/kLCmkwK+bzO01R+AQRRS3YAPT4QRU6I56z8JiXhWdAiOj3e
-         OCcuQgr1zTsWHpUV0Rj3iPB5JqGiafm3X5Ha3PCiao01tujuWrfQSALkEjcBK5JsF/3w
-         Xzlg==
-X-Gm-Message-State: AOAM533obBxxceAl1ccD5rMuXaXoqhCPMYiYwiGk2vLdqAkoT3gmEzeb
-        Wz/9RgycX3ySBYBWvOeP0vI=
-X-Google-Smtp-Source: ABdhPJy4lxSlIVmCZUYUt5G7cHc/b9vzzBbVyS5+h60xbFD5BvIaoh1SmuoljfZVF5ACmqFJVbs98w==
-X-Received: by 2002:a05:6000:100c:: with SMTP id a12mr9155928wrx.115.1599240608246;
-        Fri, 04 Sep 2020 10:30:08 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id h5sm13026654wrt.31.2020.09.04.10.30.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qMG1ps8fgPCdKYmX4D9C0vTU0mM7NukKZP7s8FwwQlE=;
+        b=t+1phTYpOXYvee7ApGgCVt6uYVvKf5QSOnIjecxB3i00HEOejA3SN54/O+B1cvuyLU
+         t4wjtyGdafF5zRCEgTanjJrEJavfcDZJCzetArww9AxcjKFwQhfBlD7J/X4s49O4Ucou
+         1cwpUTmESWL/FHUoXT8DD65mVAR7N3nbU8uVHo2YqcqxbAtrGRKvYPwxu0BT+CtE7y3l
+         bUsMDMuDZ5V5covHJl523+yuFh4I37YRGKV4nasENYdBu1efFfocTosQ52fmNIajxuYg
+         qTaU2ae41Yrf4utBWTgMLXJV5CwGVSOx2hXBzu09B+v8rr39Sxb+9kliqgm7uCZ1XcUH
+         2FpA==
+X-Gm-Message-State: AOAM5312LMlH61850fN4kNtiBWQABKJCICGXjCSWBBVSYWEV1mAZ3C/j
+        fnyO74Clra/vN135NHZ3lJF7MA==
+X-Google-Smtp-Source: ABdhPJx58g/vQxNQERfeujwhlruc479tT6x7SVFypiBtCQJtMohP5A6VeGR8kjgBFY56JBEQXbOpDA==
+X-Received: by 2002:a37:2cc1:: with SMTP id s184mr9064820qkh.357.1599240605934;
+        Fri, 04 Sep 2020 10:30:05 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id i66sm5103330qkc.63.2020.09.04.10.30.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 10:30:07 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 17:30:06 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v1 5/5] hv_balloon: try to merge system ram resources
-Message-ID: <20200904173006.e65qow53ietxzpne@liuwe-devbox-debian-v2>
-References: <20200821103431.13481-1-david@redhat.com>
- <20200821103431.13481-6-david@redhat.com>
+        Fri, 04 Sep 2020 10:30:05 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     freedreno@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Konrad Dybcio <konradybcio@gmail.com>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/3] drm/msm/dsi: remove unused clk_pre/clk_post in msm_dsi_dphy_timing
+Date:   Fri,  4 Sep 2020 13:28:36 -0400
+Message-Id: <20200904172859.25633-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200904172859.25633-1-jonathan@marek.ca>
+References: <20200904172859.25633-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821103431.13481-6-david@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:34:31PM +0200, David Hildenbrand wrote:
-> Let's use the new mechanism to merge system ram resources below the
-> root. We are the only one hotplugging system ram, e.g., DIMMs don't apply,
-> so this is safe to be used.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Wei Liu <wei.liu@kernel.org>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  drivers/hv/hv_balloon.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/hv/hv_balloon.c b/drivers/hv/hv_balloon.c
-> index 32e3bc0aa665a..49a6305f0fb73 100644
-> --- a/drivers/hv/hv_balloon.c
-> +++ b/drivers/hv/hv_balloon.c
-> @@ -745,6 +745,9 @@ static void hv_mem_hot_add(unsigned long start, unsigned long size,
->  			has->covered_end_pfn -=  processed_pfn;
->  			spin_unlock_irqrestore(&dm_device.ha_lock, flags);
->  			break;
-> +		} else {
-> +			/* Try to reduce the number of system ram resources. */
-> +			merge_system_ram_resources(&iomem_resource);
->  		}
+The clk_pre/clk_post values in shared_timings are used instead, and these
+are unused.
 
-You don't need to put the call under the "else" branch. It will have
-broken out of the loop if ret is not zero.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-Wei.
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+index ef8672d7b123..886a9e3b44b5 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
+@@ -50,8 +50,6 @@ extern const struct msm_dsi_phy_cfg dsi_phy_10nm_cfgs;
+ extern const struct msm_dsi_phy_cfg dsi_phy_10nm_8998_cfgs;
+ 
+ struct msm_dsi_dphy_timing {
+-	u32 clk_pre;
+-	u32 clk_post;
+ 	u32 clk_zero;
+ 	u32 clk_trail;
+ 	u32 clk_prepare;
+-- 
+2.26.1
 
->  
->  		/*
-> -- 
-> 2.26.2
-> 
