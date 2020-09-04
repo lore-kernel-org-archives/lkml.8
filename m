@@ -2,265 +2,117 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3363AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245DF2087C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GLKStaCR"
+	by mail.kernel.org (Postfix) with ESMTP id ECB862087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599222159;
+	bh=U6LIUnwp1k9RKeaeKFONil3LIrucaL6iHCXEkAvAXDE=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=Tfq790E4RMXhcHp5fiEe7zL4/J6o5BMoN+9/XX4r7t7m+rLHW8p3c+mpbaQMzTqcX
+	 q06N9aLtA40eQO/fHi/JqFianHekc9ZFk1G9dlbgsiSGSdHRjpwSL9fDJCJCNxGKA+
+	 95TQwROZ663jeSlafZwdge4r65XoMCG9knwTByHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgIDMWL (ORCPT
+        id S1730197AbgIDMWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:22:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbgIDMV7 (ORCPT
+        Fri, 4 Sep 2020 08:22:37 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:17166 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730178AbgIDMWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:21:59 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E532C061244;
-        Fri,  4 Sep 2020 05:21:59 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id c3so813700plz.5;
-        Fri, 04 Sep 2020 05:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/D0mUWcrQeh1VGNvRjy5IHBKR+r68K0heXZUGkRNS8g=;
-        b=GLKStaCRMO+1eIHpLmuzBSzRtLI9N5RUndnwQn7qxYvSBXLmNZsr115dxnurU2iHxF
-         sPsXrDe75CV4gXGzD2vhTAG31wNPoI93uqIOt63SIvuMMDA1N6/wqH71ANw/VvyjO2UI
-         +oxUXyc0nGf5BiA0Pk+C8dLAwkm9o+JJ+5s+kV6wWNwBMU62pClIeqViZfJbvQKjS3Lf
-         T6sbOjlGWU1kMoW1VPiH181sPkT07A8GOz+//RWy6GR8Kql7Fkpge2gRPn5wd4byzmoS
-         GVlDWpwfIMGrLpVmJXVxtqJkXMpKkfC66EGnLA0XCkAB5nMvzgwiFYXCQ1FnaoibJX7D
-         PVGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/D0mUWcrQeh1VGNvRjy5IHBKR+r68K0heXZUGkRNS8g=;
-        b=XxxgdcC7WXwjhPfIGNwcY/HCnYdaN7VjCo/HvfdJ2jpjGx6iQa6HwT3j+4e/SlTSYh
-         f2fC1U42kByKfz8gpSR3T8KcF1TqntG7ZLVMd4bNN3GVANVzOMM5P7GOF1iOAlsSlJck
-         BHdioWvI0qJL1gfjGpl0tD/qhijRm+Mcs0556i26FvSFnjKFU+xmNJ59gjdretoMDB+m
-         Ueh4MkvsAUvhfCbFeRL76m1Kzn4OWpy/4sVyRgl765hEyWg8LDe3CzlAYJCPxebpBz3y
-         espxumbQt62Zp3nJuXHbzuqR9+bn8p9TGpcWKUESqEcPaUt5byr54cmb0XHmOPfuQMRG
-         /47Q==
-X-Gm-Message-State: AOAM5306l14PM5mTkIqCj1B8JlH1+9i5mWelFqcplw1cZe+RHKp+eCOA
-        3ux5r7FgZh3VOhZq4nwg2w==
-X-Google-Smtp-Source: ABdhPJyT9cGvYCXYSye7La6eftbiTPUOu9x0D1fXBNV5cqyRsJBXSYSQzldwWNMWotI/AeD3jXLnPA==
-X-Received: by 2002:a17:90a:7acb:: with SMTP id b11mr8058656pjl.171.1599222118755;
-        Fri, 04 Sep 2020 05:21:58 -0700 (PDT)
-Received: from [127.0.0.1] ([103.7.29.7])
-        by smtp.gmail.com with ESMTPSA id i9sm5867467pgb.37.2020.09.04.05.21.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 05:21:58 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: Check the allocation of pv cpu mask
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>, tglx@linutronix.de,
-        mingo@redhat.com, "bp@alien8.de" <bp@alien8.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-References: <654d8c60-49f0-e398-be25-24aed352360d@gmail.com>
- <87y2lrnnyf.fsf@vitty.brq.redhat.com>
- <61e2fd6f-effd-64d7-148a-1b1f9fda1449@gmail.com>
- <87o8mlooki.fsf@vitty.brq.redhat.com>
-From:   Haiwei Li <lihaiwei.kernel@gmail.com>
-Message-ID: <b56d5af9-9489-738f-aff2-d8ce64171fc0@gmail.com>
-Date:   Fri, 4 Sep 2020 20:21:46 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Fri, 4 Sep 2020 08:22:12 -0400
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 084CLpaQ011231;
+        Fri, 4 Sep 2020 21:21:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 084CLpaQ011231
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599222112;
+        bh=x/yifUkRlLB9UfaYl2xOtzBdludps5JWV6bLncouj9I=;
+        h=From:Date:Subject:To:Cc:From;
+        b=nf2TRHly49akD82vhEhEEbsHMDBf8X1SxMqTHU1lG0tjL37MivfjASDgFum6TOh7+
+         14bx9o5drUHJ4rVXGh3y6L6hyfC/rtjLBv1/6Dr8bXBIIW6UaffwetiLnSbEDAj3Qt
+         lHg+Tw8G1781tRG/nMXuy8+dD7Fs4GGfEI5yDpy9+/x/ty2BW5kbqNfUlWQswXHije
+         +Ge40lWZnx3StIboU/vGdCsWssYhkxB2ZCMjMaxUlFa7Vr3HGINK6r5xrmZ59A4K7+
+         GjXxqM6xLpy3D0qVKyDTykS4TxnDD67pdFbvY1b3/0wMddWJfClC00TxK+iIIi7H3A
+         9CKhFW/G5HVdg==
+X-Nifty-SrcIP: [209.85.210.172]
+Received: by mail-pf1-f172.google.com with SMTP id z19so2350395pfn.8;
+        Fri, 04 Sep 2020 05:21:52 -0700 (PDT)
+X-Gm-Message-State: AOAM5302s+HakfyqFe/0Htsc+gnNa5WXJhBCbK1FLEQVG1IewrUhZ3wP
+        o1B2OSP+BHVVzitdOcb4uqUsXamyH0vDurK+dCM=
+X-Google-Smtp-Source: ABdhPJxR8TuiL2dzc+6fOXXOG8sgGhT2/b32RqcFUy7Sd3rZ5Il4s/mb77ioLvbfsHdsSNTG7d1NGP9NdbO9bYrtBQw=
+X-Received: by 2002:a62:8007:0:b029:13c:1611:6533 with SMTP id
+ j7-20020a6280070000b029013c16116533mr6500008pfd.5.1599222111283; Fri, 04 Sep
+ 2020 05:21:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87o8mlooki.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 4 Sep 2020 21:21:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARx_s1pyrU=PKSWLr6nX7=+=U78OjXVNdX7B2-bXzpX6Q@mail.gmail.com>
+Message-ID: <CAK7LNARx_s1pyrU=PKSWLr6nX7=+=U78OjXVNdX7B2-bXzpX6Q@mail.gmail.com>
+Subject: [GIT PULL] Kbuild fixes for v5.9-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
+
+Please pull Kbuild fixes.
+Thanks.
 
 
-On 20/9/4 17:53, Vitaly Kuznetsov wrote:
-> Haiwei Li <lihaiwei.kernel@gmail.com> writes:
-> 
->> On 20/9/3 18:39, Vitaly Kuznetsov wrote:
->>> Haiwei Li <lihaiwei.kernel@gmail.com> writes:
->>>
->>>> From: Haiwei Li <lihaiwei@tencent.com>
->>>>
->>>> check the allocation of per-cpu __pv_cpu_mask. Initialize ops only when
->>>> successful.
->>>>
->>>> Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
->>>> ---
->>>>     arch/x86/kernel/kvm.c | 24 ++++++++++++++++++++----
->>>>     1 file changed, 20 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->>>> index 08320b0b2b27..d3c062e551d7 100644
->>>> --- a/arch/x86/kernel/kvm.c
->>>> +++ b/arch/x86/kernel/kvm.c
->>>> @@ -555,7 +555,6 @@ static void kvm_send_ipi_mask_allbutself(const
->>>> struct cpumask *mask, int vector)
->>>>     static void kvm_setup_pv_ipi(void)
->>>>     {
->>>>     	apic->send_IPI_mask = kvm_send_ipi_mask;
->>>> -	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
->>>>     	pr_info("setup PV IPIs\n");
->>>>     }
->>>>
->>>> @@ -654,7 +653,6 @@ static void __init kvm_guest_init(void)
->>>>     	}
->>>>
->>>>     	if (pv_tlb_flush_supported()) {
->>>> -		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
->>>>     		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
->>>>     		pr_info("KVM setup pv remote TLB flush\n");
->>>>     	}
->>>> @@ -767,6 +765,14 @@ static __init int activate_jump_labels(void)
->>>>     }
->>>>     arch_initcall(activate_jump_labels);
->>>>
->>>> +static void kvm_free_pv_cpu_mask(void)
->>>> +{
->>>> +	unsigned int cpu;
->>>> +
->>>> +	for_each_possible_cpu(cpu)
->>>> +		free_cpumask_var(per_cpu(__pv_cpu_mask, cpu));
->>>> +}
->>>> +
->>>>     static __init int kvm_alloc_cpumask(void)
->>>>     {
->>>>     	int cpu;
->>>> @@ -785,11 +791,21 @@ static __init int kvm_alloc_cpumask(void)
->>>>
->>>>     	if (alloc)
->>>>     		for_each_possible_cpu(cpu) {
->>>> -			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
->>>> -				GFP_KERNEL, cpu_to_node(cpu));
->>>> +			if (!zalloc_cpumask_var_node(
->>>> +				per_cpu_ptr(&__pv_cpu_mask, cpu),
->>>> +				GFP_KERNEL, cpu_to_node(cpu)))
->>>> +				goto zalloc_cpumask_fail;
->>>>     		}
->>>>
->>>> +#if defined(CONFIG_SMP)
->>>> +	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
->>>> +#endif
->>>> +	pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
->>>
->>> This is too late I'm afraid. If I'm not mistaken PV patching happens
->>> earlier, so .init.guest_late_init (kvm_guest_init()) is good and
->>> arch_initcall() is bad.
->>
->> .init.guest_late_init (kvm_guest_init()) is called before
->> arch_initcall() and kvm_flush_tlb_others && kvm_send_ipi_mask_allbutself
->> rely on __pv_cpu_mask.  So, i can not put this assign in kvm_guest_init().
->>
->>>
->>> Have you checked that with this patch kvm_flush_tlb_others() is still
->>> being called?
->>
->> yes. I add a printk and i get the log.
->>
-> 
-> This is weird. I do the following on top of your patch:
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index d3c062e551d7..f441209ff0a4 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -620,6 +620,8 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
->          struct kvm_steal_time *src;
->          struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->   
-> +       trace_printk("PV TLB flush %d CPUs\n", cpumask_weight(cpumask));
-> +
->          cpumask_copy(flushmask, cpumask);
->          /*
->           * We have to call flush only on online vCPUs. And
-> 
-> With your patch I don't see any calls:
-> 
-> # grep -c -v '^#' /sys/kernel/debug/tracing/trace
-> 0
-> 
-> with your patch reverted I see them:
-> 
-> # grep -c -v '^#' /sys/kernel/debug/tracing/trace
-> 4571
 
-I just retested. You are right. I'm sorry.
+The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
 
-> 
-> 
->>>
->>> Actually, there is no need to assign kvm_flush_tlb_others() so late. We
->>> can always check if __pv_cpu_mask was allocated and revert back to the
->>> architectural path if not.
->> I am sorry i don't really understand. Can you explain in more detail? Thx.
->>
-> 
-> I mean we can always call e.g. kvm_flush_tlb_others(), even if (very
-> unlikely) the mask wasn't allocated. We just need to check for
-> that. Something like (completely untested):
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index d3c062e551d7..e3676cdee6a2 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -620,6 +620,11 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
->          struct kvm_steal_time *src;
->          struct cpumask *flushmask = this_cpu_cpumask_var_ptr(__pv_cpu_mask);
->   
-> +       if (unlikely(!flushmask)) {
-> +               flushmask = cpumask;
-> +               goto do_native;
-> +       }
-> +
+  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
 
-I see. I appreciate your patience and kindness.
+are available in the Git repository at:
 
-I will send a new version.
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-fixes-v5.9-2
 
->          cpumask_copy(flushmask, cpumask);
->          /*
->           * We have to call flush only on online vCPUs. And
-> @@ -635,6 +640,7 @@ static void kvm_flush_tlb_others(const struct cpumask *cpumask,
->                  }
->          }
->   
-> +do_native:
->          native_flush_tlb_others(flushmask, info);
->   }
->   
-> 
->>>
->>>>     	return 0;
->>>> +
->>>> +zalloc_cpumask_fail:
->>>> +	kvm_free_pv_cpu_mask();
->>>> +	return -ENOMEM;
->>>>     }
->>>>     arch_initcall(kvm_alloc_cpumask);
->>>>
->>>> --
->>>> 2.18.4
->>>>
->>>
->>
-> 
+for you to fetch changes up to 163e0c27fead96fd6804fa59a55fc4f841d38db8:
+
+  kconfig: remove redundant assignment prompt = prompt (2020-09-03
+12:21:22 +0900)
+
+----------------------------------------------------------------
+Kbuild fixes for v5.9 (2nd)
+
+ - fix documents
+
+ - fix warning in 'make localmodconfig'
+
+----------------------------------------------------------------
+Denis Efremov (1):
+      kconfig: remove redundant assignment prompt = prompt
+
+Nathan Chancellor (1):
+      Documentation/llvm: Improve formatting of commands, variables,
+and arguments
+
+Randy Dunlap (2):
+      kconfig: streamline_config.pl: check defined(ENV variable) before using it
+      kbuild: Documentation: clean up makefiles.rst
+
+ Documentation/kbuild/llvm.rst        | 26 +++++++++++++-------------
+ Documentation/kbuild/makefiles.rst   | 18 +++++++++---------
+ scripts/kconfig/nconf.c              |  1 -
+ scripts/kconfig/streamline_config.pl |  5 ++++-
+ 4 files changed, 26 insertions(+), 24 deletions(-)
+
+
+-- 
+Best Regards
+Masahiro Yamada
