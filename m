@@ -2,257 +2,96 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71C0C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A78CF20797
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:53:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ht7FM1vA"
+	by mail.kernel.org (Postfix) with ESMTP id 8B08F204FD
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599227607;
+	bh=936VthRBiEB4km52buOWNR2V7woJnLVTpg2eVa8/G2U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zyYcU70zkxQc1vw/JHRqYtvtom5K8mp33bDtCw9qqr6HykfEsKGFGqGogb4yq6Pz3
+	 +8YGcVQc33VFoG2IIZnQ7PkRm1/dvJDyzlTV3EzRH1T9jcmFC9bqFKJkPDiTV7Zt11
+	 exPS3AK1BphhWrLLSPfuXLcSteg3kEF6tFKHPmTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730616AbgIDNxI (ORCPT
+        id S1730628AbgIDNxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:53:08 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:52164 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730687AbgIDNtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:49:33 -0400
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 17F64540;
-        Fri,  4 Sep 2020 15:48:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1599227336;
-        bh=JchvXbon4mHBQSTlVX6Y5V7cre9VlOak2CkfONDlO1U=;
+        Fri, 4 Sep 2020 09:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48194 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730634AbgIDNu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:50:28 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14905204FD;
+        Fri,  4 Sep 2020 13:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599227428;
+        bh=936VthRBiEB4km52buOWNR2V7woJnLVTpg2eVa8/G2U=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ht7FM1vAaYxdABUm6AxtFWO19YDiuPzh6EDiWK5xIBay19/gB+RkWOjcRGsGSdgc3
-         7o6Bc7PxgZFyFDtCbzRSSqvDGRuAUGkb7OyCZo45S+qk+8B6AAU7l6SBg5Ayu9VGbx
-         7ZkFqNXTTDeayVSCm8wZfE8xTcA23MQd34JkhPuY=
-Date:   Fri, 4 Sep 2020 16:48:32 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
-Message-ID: <20200904134832.GC7518@pendragon.ideasonboard.com>
-References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200904012000.GA9369@pendragon.ideasonboard.com>
- <20200904075553.qjdyskcpext7fxcy@uno.localdomain>
- <20200904082104.GE4392@valkosipuli.retiisi.org.uk>
- <20200904092049.6lokfmln4vulswrn@uno.localdomain>
- <20200904093626.GF4392@valkosipuli.retiisi.org.uk>
- <20200904103550.3cdxick4lje34kxv@uno.localdomain>
- <20200904110013.GG4392@valkosipuli.retiisi.org.uk>
+        b=X5ymyTrwKNf9E/c7D0/1k80/zY25RgIG1FMihrBWz6Nr6ZfiaF77ACOyBDMK21DHQ
+         GzK1Lqe3FO/B5hbxQnMqGD5OtFm03U7dT22Wy/8yekJsB0Z7A0gx5fxVDrhrpIPlSG
+         B8NVSTDMkW60Hk1Ot+lRKBP4d2+IPYbWcubdJBKs=
+Date:   Fri, 4 Sep 2020 15:50:49 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Penghao <penghao@uniontech.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        johan@kernel.org, hdegoede@redhat.com, dlaz@chromium.org,
+        stern@rowland.harvard.edu, kerneldev@karsmulder.nl,
+        jonathan@jdcox.net, tomasz@meresinski.eu
+Subject: Re: [PATCH v3] HID: quirks: Add USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk
+ for BYD zhaoxin notebook
+Message-ID: <20200904135049.GA3181902@kroah.com>
+References: <20200904091322.30426-1-penghao@uniontech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904110013.GG4392@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20200904091322.30426-1-penghao@uniontech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 02:00:13PM +0300, Sakari Ailus wrote:
-> On Fri, Sep 04, 2020 at 12:35:50PM +0200, Jacopo Mondi wrote:
-> > On Fri, Sep 04, 2020 at 12:36:26PM +0300, Sakari Ailus wrote:
-> > > On Fri, Sep 04, 2020 at 11:20:49AM +0200, Jacopo Mondi wrote:
-> > > > On Fri, Sep 04, 2020 at 11:21:04AM +0300, Sakari Ailus wrote:
-> > > > > On Fri, Sep 04, 2020 at 09:55:53AM +0200, Jacopo Mondi wrote:
-> > > > > > On Fri, Sep 04, 2020 at 04:20:00AM +0300, Laurent Pinchart wrote:
-> > > > > > > Hi Prabhakar,
-> > > > > > >
-> > > > > > > Thank you for the patch.
-> > > > > > >
-> > > > > > > On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
-> > > > > > > > Add support to read the bus-type and enable BT656 mode if needed.
-> > > > > > > >
-> > > > > > > > Also fail probe if unsupported bus_type is detected.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > > > > ---
-> > > > > > > >  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
-> > > > > > > >  1 file changed, 32 insertions(+)
-> > > > > > > >
-> > > > > > > > diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
-> > > > > > > > index 2cc6a678069a..67764d647526 100644
-> > > > > > > > --- a/drivers/media/i2c/ov772x.c
-> > > > > > > > +++ b/drivers/media/i2c/ov772x.c
-> > > > > > > > @@ -31,6 +31,7 @@
-> > > > > > > >  #include <media/v4l2-ctrls.h>
-> > > > > > > >  #include <media/v4l2-device.h>
-> > > > > > > >  #include <media/v4l2-event.h>
-> > > > > > > > +#include <media/v4l2-fwnode.h>
-> > > > > > > >  #include <media/v4l2-image-sizes.h>
-> > > > > > > >  #include <media/v4l2-subdev.h>
-> > > > > > > >
-> > > > > > > > @@ -434,6 +435,7 @@ struct ov772x_priv {
-> > > > > > > >  #ifdef CONFIG_MEDIA_CONTROLLER
-> > > > > > > >  	struct media_pad pad;
-> > > > > > > >  #endif
-> > > > > > > > +	struct v4l2_fwnode_endpoint ep;
-> > > > > > > >  };
-> > > > > > > >
-> > > > > > > >  /*
-> > > > > > > > @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
-> > > > > > > >  	if (priv->streaming == enable)
-> > > > > > > >  		goto done;
-> > > > > > > >
-> > > > > > > > +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
-> > > > > > > > +		ret = regmaup_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
-> > > > > > > > +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
-> > > > > > > > +		if (ret)
-> > > > > > > > +			goto done;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > >  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
-> > > > > > > >  				 enable ? 0 : SOFT_SLEEP_MODE);
-> > > > > > > >  	if (ret)
-> > > > > > > > @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
-> > > > > > > >
-> > > > > > > >  static int ov772x_probe(struct i2c_client *client)
-> > > > > > > >  {
-> > > > > > > > +	struct fwnode_handle *endpoint;
-> > > > > > > >  	struct ov772x_priv	*priv;
-> > > > > > > >  	int			ret;
-> > > > > > > >  	static const struct regmap_config ov772x_regmap_config = {
-> > > > > > > > @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
-> > > > > > > >  		goto error_clk_put;
-> > > > > > > >  	}
-> > > > > > > >
-> > > > > > > > +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
-> > > > > > > > +						  NULL);
-> > > > > > > > +	if (!endpoint) {
-> > > > > > > > +		dev_err(&client->dev, "endpoint node not found\n");
-> > > > > > > > +		ret = -EINVAL;
-> > > > > > > > +		goto error_clk_put;
-> > > > > > > > +	}
-> > > > > > > > +
-> > > > > > > > +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
-> > > > > > >
-> > > > > > > v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
-> > > > > > > v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
-> > > > > > > that v4l2_fwnode_endpoint_free() then needs to be called in the error
-> > > > > > > path and in remove().
-> > > > > >
-> > > > > > Doesn't alloc_parse() differ from just _parse() as it reserve space
-> > > > > > for the 'link-frequencies' array ? As this device does not support
-> > > > > > CSI-2 and the 'link-frequencies' property is not allows in bindings,
-> > > > > > isn't using endpoint_parse() better as it saves a call to _free() ?
-> > > > >
-> > > > > Yeah. I think the documentation needs to be updated.
-> > > > >
-> > > > > The thinking was there would be other variable size properties that drivers
-> > > > > would need but that didn't happen. So feel free to continue use
-> > > > > v4l2_fwnode_endpoint_parse() where it does the job.
-> > > > >
-> > > > > >
-> > > > > > Or are we deprecating that function unconditionally ? The
-> > > > > > documentation suggests "please use v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > in new drivers" but here it doesn't seem required..
-> > > > > >
-> > > > > > >
-> > > > > > > On the other hand, not setting .bus_type and letting the parse()
-> > > > > > > function determine the but type automatically is also deprecated, and I
-> > > > > > > don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > > once for each bus type until one succeeds is a good API. As change will
-> > > > > > > be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
-> > > > > > > for the time being if you want.
-> > > > > >
-> > > > > > But indeed relying on auto-guessing of the bus type is deprecated since
-> > > > > > some time now (and the API could be improved, yes). Sorry I missed
-> > > > > > that yesterday.
-> > > > >
-> > > > > There's one case where the bus type does not need to be set: when bindings
-> > > > > require it *and* at the same time you have no default configuration that
-> > > > > requires something to be set in the bus specific struct. Bindings where
-> > > > > bus-type is required were added later so I think the documentation should
-> > > > > be changed there, too.
-> > > > >
-> > > > > I can send the patches.
-> > > > >
-> > > > > >
-> > > > > > As we support parallel and bt.656 only I must be honest I don't mind
-> > > > > > it here as otherwise the code would be more complex for no real gain,
-> > > > > > but I defer this to Sakari which has been fighting the battle against
-> > > > > > auto-guessing since a long time now  :)
-> > > > >
-> > > > > I think you should require bus-type property in bindings in that case.
-> > > > >
-> > > > > But as it's an existing driver, bus-type will be optional. You'll need to
-> > > > > default to what was supported earlier. This is actually an interesting case
-> > > > > as bindings do not document it.
-> > > >
-> > > > For reference:
-> > > > https://patchwork.linuxtv.org/project/linux-media/patch/20200903131029.18334-3-jacopo+renesas@jmondi.org/
-> > > >
-> > > > But yes, we might have DTBs in the wild without bus-type specified :(
-> > >
-> > > Shouldn't that be then that the bus-type is optional and defaults to
-> > > parallel?
-> > 
-> > I think going forward we want to make it mandatory, don't we ? The
-> > older dts will fail at dt validation time against the new yaml bindings, but
-> > my understanding is that this is not a problem.
+On Fri, Sep 04, 2020 at 05:13:22PM +0800, Penghao wrote:
+> Add a USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk for the BYD zhaoxin notebook.
+> This notebook come with usb touchpad. And we would like to disable touchpad
+> wakeup on this notebook by default.
 > 
-> For new devices, yes. I still wouldn't make DT binding changes that render
-> the old DT source invalid, at least unless it's absolutely mandatory. And
-> that is not the case here.
+> Signed-off-by: Penghao <penghao@uniontech.com>
+> ---
 > 
-> I guess it may be a bit grey area. At least leave a comment in the driver
-> on how the old bindings were so the code isn't accidentally "fixed".
+> Changes since v2:
+>  - Add changes
 > 
-> > Binary compatibility, with the introduction of BT.656 support becomes
-> > more complex instead :/
-> > 
-> > Before this series parallel was the only supported bus type and no
-> > endpoint properties were required. The driver picked the default
-> > settings for signal polarities and that was it.
-> > 
-> > With the introduction of BT.656 no signal polarity properties means
-> > BT.656 when autoguess is in use. So going forward the bus-type shall
-> > be explicitly set, but we might receive old DTBs with no bus-type and
-> > no endpoint properties which assumes 'parallel' is in use.
-> > 
-> > One possible way forward could be:
-> > - verify if bus-type is present in the fwnode
-> > - if it is, we have a new DTB and we can rely on autoguess
-
-It's not guessing if the bus type is specified :-)
-
-> > - if it's not assume we have an old DTB that assumed 'parallel'. Parse
-> >   the fwnode and if any relevant V4L2_MBUS_ flag is set use it,
-> >   otherwise use the defaults.
-> > 
-> > If we make bus-type optional in new bindings, the old DTB with no
-> > parallel endpoint properties would be identified as BT.656 breaking
-> > capture operation, am I wrong ?
+> Changes since v1:
+>  - Add the entries sorted by vendor ID and product ID.
 > 
-> There's no technical reason why it has to be so.
+>  drivers/usb/core/quirks.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> You simply try endpoint parsing with parallel bus first, with the old
-> defaults, and if that succeeds, then you don't attempt to parse it as
-> Bt.656 anymore.
+> diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+> index 7c1198f80c23..fffe1f7f1098 100644
+> --- a/drivers/usb/core/quirks.c
+> +++ b/drivers/usb/core/quirks.c
+> @@ -393,6 +393,10 @@ static const struct usb_device_id usb_quirk_list[] = {
+>  	/* Generic RTL8153 based ethernet adapters */
+>  	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
+>  
+> +	/* SONiX USB DEVICE Touchpad */
+> +	{ USB_DEVICE(0x0c45, 0x7056), .driver_info =
+> +			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
+> +
 
-If bus-type is optional with new bindings,
-v4l2_fwnode_endpoint_parse(V4L2_MBUS_PARALLEL) will always succeed if
-the bus-type DT property isn't set.
+Why is the subject line "HID:"?  This is a USB core quirk, not a
+hid-specific one.
 
-> > This might require a bit more work from Prabhakar I'm sorry. The old
-> > bindings were clearly falling short once BT.656 becomes supported.
+thanks,
 
--- 
-Regards,
-
-Laurent Pinchart
+greg k-h
