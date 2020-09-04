@@ -2,119 +2,135 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED00FC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146B9C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C12A52073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC3012073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:36:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GhdtQvuV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FwqQTXfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730132AbgIDLfg (ORCPT
+        id S1730013AbgIDLgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:35:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59702 "EHLO
+        Fri, 4 Sep 2020 07:36:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730032AbgIDLX5 (ORCPT
+        with ESMTP id S1730073AbgIDLX5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 07:23:57 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EA3DC06123B
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:10:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id u18so5693259wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:10:31 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 250DFC0611E2
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:11:44 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id e17so5720111wme.0
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:11:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RREMgoQ10AgEzpG5x2JxpJp9Y6xrNHTkcUblYPCMXMg=;
-        b=GhdtQvuVPlMNi/4HuZ1Le/lrCrgZO5SzT0y0hUW5n2rpoWmV5qQ5lePPG9kMfnaHIE
-         l95/VlEinbmuLJ8+JXTh2qoyemzjonhQ15so0IncFRJINpHUemb5SUZUnfYfdFl43Gjd
-         JibwurqGMqVKb1JPUTFGo/1PXonh8XLYU/w5wgGFcbC/x98cudybdby8TOOsXyTwBVyE
-         v0ZA8hv5iVX3N1HVu4UvyRVs15xyL4AlW9SlXFQ6EcER0Dmc8T8L0D6Ltk1Oqlkr/Fne
-         MLno4tKSXVSj/hJECJ60lSBPGB/27OQnV70V8oCkTs4LxTklkJ52RHrLstg5fROSIAn2
-         jbTA==
+        d=linaro.org; s=google;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=LjQtNgStW1hALd3XhSoX7pAgphzsITUHS7smGh0YpFE=;
+        b=FwqQTXfmpEk27k1Cnptou5LcLzVWIuD5BRbwqgxCEKk7zQDKMJzVOS9c6XW2avSVj3
+         JobmwDln7gtg+zV2cU2JWkCTXW2fOc0+YfAjiTiKBpcj1gH6e83pVLLcAL6JJZ07Wxkr
+         KL5sqM2H0TcqYKWLCAmOJ4OWE5Mrb2V7bj4TtV3e+6VanvzflsZoN/w7JfswCyu0vOlR
+         PJ0F5qYYLpRng19WdutxOv7mA1M40H03mG0MtiWBPC2PqXMgCyo3EvspfAEf8R5tiqDS
+         pQNtFxfkyNWGjghuoxaRLeX1F2MRo8uix+8psNsS/qg5SLfUXRvGQXm1mYy2LKsiodw7
+         53AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RREMgoQ10AgEzpG5x2JxpJp9Y6xrNHTkcUblYPCMXMg=;
-        b=re/CB83TkR6KqG2PSAHf5gZpIvvGUTVXvtrpXMa0BrQtMux3OZ3cGwSRjgAmZfz4co
-         DBoyZnqLLmGhH4Aq9B6Gad7B0kuJD/cRAailrLRtV0J9VAymUyn6z8VS5cmGUg4wuNZm
-         qpGxuKjY4/9LXIRrhgXPm4SuOsB0D8nYz52WuxiXBcE91J94h6guJPYFOZvYU9HeiVV6
-         NlGy+Bv58jtB367iQhVKSm/o3fr0pyDknIKcwUlNpm4tsH8jkvmFuckgWZumIecqc9Oh
-         B14GVuU+xPCbHuxohsFgtdq0/9I93s8TK6Gn+ezftCpOn8wgaWPi3UZ74bFzSyRiN9Xd
-         YxZA==
-X-Gm-Message-State: AOAM531OySe3iocJ5wefM79ioiDIxcFAgQEjByFqdQ0P7SfYqXMOJgSo
-        I46FZdaT4dYF7bryDJkyDgeuqufa7nqXiA==
-X-Google-Smtp-Source: ABdhPJzAXlVz9b1PNm6h5crfm4OA+i6aZW/VhhCZtvESCxw4H8J+XYMKpa0jH7ftMnVGyUCjsuTOGg==
-X-Received: by 2002:a1c:2c06:: with SMTP id s6mr7241821wms.110.1599217829903;
-        Fri, 04 Sep 2020 04:10:29 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id m3sm10622743wmb.26.2020.09.04.04.10.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 04 Sep 2020 04:10:28 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v6 17/18] crypto: sun8i-ss: fix comparison of integer expressions of different signedness
-Date:   Fri,  4 Sep 2020 11:10:02 +0000
-Message-Id: <1599217803-29755-18-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
-References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=LjQtNgStW1hALd3XhSoX7pAgphzsITUHS7smGh0YpFE=;
+        b=esxPA/TkYB4HcYfuF9PHHwjYcIl0sfiT04EGCs7bM+PVTo2z1GKv7PtCf6FlaCW36F
+         ADjmJiegPePDD+ARKdTbUBpFdOSLAEvbCGflWBXxe/jTcjk4RAiyGC4veLzrG+AHqLt1
+         Ux764Eu8RP5Bx7GbxgYc1eiROUx664JkNnyxERzpKTUNuG0w/SPqH5aXvgQYR0i0eVPn
+         nBuew6wLZAx2nYZOy2+6aOR3V2W9KE0fHRw20gX2nOkjpy0Gp1biVheoTGK7fjC+lh5e
+         jbQlKjyF5N1T1QDZp1fhBe0KzMKgOKt4Iz/sGHKJ3Y11RV5mUtwdW9tyGUXPYRje48l9
+         3mSw==
+X-Gm-Message-State: AOAM530d0VqoCP/Zz0lU9sOaaAbJGkJaH3Jld+V/WHbVmoBkBfPXUonL
+        +vraRy3DvwDetwaeaWPsiYZms/dVgE97dg==
+X-Google-Smtp-Source: ABdhPJw/uDWOWC7lIwiu1IibpgDgLlCsBUZt3k6+E6Be+gUioTKNidQkMX5TgZ3IVlV4h5HiFChblQ==
+X-Received: by 2002:a1c:6385:: with SMTP id x127mr7420970wmb.95.1599217902811;
+        Fri, 04 Sep 2020 04:11:42 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:35e2:113b:59f2:81a? ([2a01:e34:ed2f:f020:35e2:113b:59f2:81a])
+        by smtp.googlemail.com with ESMTPSA id s124sm10742438wme.29.2020.09.04.04.11.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:11:42 -0700 (PDT)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [GIT PULL RESEND] thermal fixes for v5.9-rc4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Veera Vegivada <vvegivad@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <6b8dbaef-b288-4d44-1916-a10892e665bc@linaro.org>
+Date:   Fri, 4 Sep 2020 13:11:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the warning:
-warning: comparison of integer expressions of different signedness: 'int' and 'long unsigned int' [-Wsign-compare]
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+[ with lkml@ cc'ed ]
 
-diff --git a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-index 739874596c72..c9cfe20b383d 100644
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-@@ -414,7 +414,7 @@ static struct sun8i_ss_alg_template ss_algs[] = {
- static int sun8i_ss_dbgfs_read(struct seq_file *seq, void *v)
- {
- 	struct sun8i_ss_dev *ss = seq->private;
--	int i;
-+	unsigned int i;
- 
- 	for (i = 0; i < MAXFLOW; i++)
- 		seq_printf(seq, "Channel %d: nreq %lu\n", i, ss->flows[i].stat_req);
-@@ -571,7 +571,8 @@ static void sun8i_ss_pm_exit(struct sun8i_ss_dev *ss)
- 
- static int sun8i_ss_register_algs(struct sun8i_ss_dev *ss)
- {
--	int ss_method, err, id, i;
-+	int ss_method, err, id;
-+	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ss_algs); i++) {
- 		ss_algs[i].ss = ss;
-@@ -642,7 +643,7 @@ static int sun8i_ss_register_algs(struct sun8i_ss_dev *ss)
- 
- static void sun8i_ss_unregister_algs(struct sun8i_ss_dev *ss)
- {
--	int i;
-+	unsigned int i;
- 
- 	for (i = 0; i < ARRAY_SIZE(ss_algs); i++) {
- 		if (!ss_algs[i].ss)
+Hi Linus,
+
+The following changes since commit d012a7190fc1fd72ed48911e77ca97ba4521bccd:
+
+  Linux 5.9-rc2 (2020-08-23 14:08:43 -0700)
+
+are available in the Git repository at:
+
+
+ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+tags/thermal-v5.9-rc4
+
+for you to fetch changes up to a5f785ce608cafc444cdf047d1791d5ad97943ba:
+
+  thermal: core: Fix use-after-free in thermal_zone_device_unregister()
+(2020-09-04 11:52:54 +0200)
+
+----------------------------------------------------------------
+- Fix bogus thermal shutdowns for omap4430 where bogus values
+  resulting from an incorrect ADC conversion are too high and fire an
+  emergency shutdown (Tony Lindgren)
+
+- Don't suppress negative temp for qcom spmi as they are valid and
+  userspace needs them (Veera Vegivada)
+
+- Fix use-after-free in thermal_zone_device_unregister reported by
+  Kasan (Dmitry Osipenko)
+
+----------------------------------------------------------------
+Dmitry Osipenko (1):
+      thermal: core: Fix use-after-free in thermal_zone_device_unregister()
+
+Tony Lindgren (1):
+      thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
+
+Veera Vegivada (1):
+      thermal: qcom-spmi-temp-alarm: Don't suppress negative temp
+
+ drivers/thermal/qcom/qcom-spmi-temp-alarm.c        |  4 ++--
+ drivers/thermal/thermal_core.c                     |  5 +++--
+ .../thermal/ti-soc-thermal/omap4-thermal-data.c    | 23
++++++++++++-----------
+ drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h  | 10 +++++++---
+ 4 files changed, 24 insertions(+), 18 deletions(-)
+
+
 -- 
-2.26.2
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
