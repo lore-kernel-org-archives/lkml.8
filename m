@@ -2,209 +2,115 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432F5C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7517CC2D0A8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE7CD2083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:25:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pR7D9m7f"
+	by mail.kernel.org (Postfix) with ESMTP id 392952083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:29:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599258569;
+	bh=+8dgVfOXgmURomqOzPuR2s0d+0XktF+kVIZ4JamC1Yk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W7oJhp2j53cNu5ogYJ0VBaN4mQsygla91lfTWoxciWDepj/0zYI1wDy2ir0Fx3fxe
+	 /otUVkx07UF2GhDqLYOlBwl09snfFkPm/nZWwxyUa3stRQ4PzLGLsvpEe193bsxBJ9
+	 RLFTb9yul1ZVEZ8/cT8NO/dL/Iohzwm80OkVZT08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgIDWZq (ORCPT
+        id S1728171AbgIDW32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 18:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbgIDWZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 18:25:45 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 750B0C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 15:25:44 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id c19so8356370wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 15:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zrLMKNTk6DlVsGytrkOjXJuP9EZ+uCfXucuurHA8Ico=;
-        b=pR7D9m7fwwnrGzLwdJ8SEXX1U3knoHlUsyXXJk/Vpbch67upO4xGNjK495qiSuCx1K
-         tDtYwPT8Ci6WkuMzo0SUV8yGa3Rsj40iwhKK+QjQepkmHYYSWNHl8pkXJghNnblQh7du
-         5VtqU6rMRbhrP+18V9FOTuYSomjr/fszmrHU7VGfy4Wtxm4ypWckvQnx282/unvwA4zn
-         cKfUpj3NVloXsx6XOxsjSF1tz9wkj7k706t0gmTa5xN41881qcTPp7Dzybykm8VBjFom
-         rg+nZ6TC+4eUO2xpr9A2LVZuiADcTyCEqx1O091JUm5eHdKvW36FZDFECvQcSOvMY+5N
-         xVQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zrLMKNTk6DlVsGytrkOjXJuP9EZ+uCfXucuurHA8Ico=;
-        b=n104GwtTGNg5pN78GJNLvaiLdFzlr6EJ08vo8FqK/5VT/clYtsSsUq/HNvsK0E/egt
-         5BKerNa0P1/4yQ1PVBmoVzKqXHCAHlobb12pv0JncYwIECQPG/pWh3LcXez/IldSmOA6
-         s2YWKdL69Fz6TfY0MkqRpdhD0BWelSIxgjVWBLNwHNZOamFWOsU0x2H7GVu9RtIHSu+p
-         T+lwMwHWmJG5E6fixOWlFkDpQY87cyeYtwIwP/P6NP4bE9YxkFT7kWFtMqv4Wiqsw+oN
-         k3xPw6vdnmNl1HQcuCm88f2fwYRaa2pkaW6RPKJJJcaeydJYko+Dfa97tuhBD7ynR66r
-         /eGw==
-X-Gm-Message-State: AOAM5323qh33FA9iJZ2e+/cWmQkL3DPgnBI3iCX0YIEssc6BaN2jdjPT
-        8EgD5V4J7adrcW7XemkRDyk=
-X-Google-Smtp-Source: ABdhPJzqTEJ2dOzXpptUIAPmtvjGH9As3Cd1GrZ5RQU/T1NYe3VjZyD5W9jKJiN2faepRfGh/02mEA==
-X-Received: by 2002:a1c:5641:: with SMTP id k62mr10132668wmb.13.1599258343096;
-        Fri, 04 Sep 2020 15:25:43 -0700 (PDT)
-Received: from smtp.gmail.com (a95-92-181-29.cpe.netcabo.pt. [95.92.181.29])
-        by smtp.gmail.com with ESMTPSA id a15sm15481367wrn.3.2020.09.04.15.25.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 15:25:42 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 19:25:35 -0300
-From:   Melissa Wen <melissa.srw@gmail.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Brian Starkey <brian.starkey@arm.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Simon Ser <contact@emersion.fr>,
-        Leandro Ribeiro <leandro.ribeiro@collabora.com>,
-        daniels@collabora.com, Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v6 1/3] drm/vkms: Decouple crc operations from composer
-Message-ID: <20200904222535.j6ggfxyrlosrva6u@smtp.gmail.com>
-References: <20200830142000.146706-1-rodrigosiqueiramelo@gmail.com>
- <20200830142000.146706-2-rodrigosiqueiramelo@gmail.com>
+        Fri, 4 Sep 2020 18:29:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728012AbgIDW31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 18:29:27 -0400
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AA67208C7;
+        Fri,  4 Sep 2020 22:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599258566;
+        bh=+8dgVfOXgmURomqOzPuR2s0d+0XktF+kVIZ4JamC1Yk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FPfVtLk3VgVy9YY2bppjWvDV2nvJ00oTy/jZPGsp1pSsT+kcmQKDELrZFVKOe/MW4
+         zJ45aqs0sB4ogJLfi9CwwVOS1v0zgXZFL4fluzz0xaGojKmgqLJSTmIwDbIBjLZCDs
+         e36mpUibGpzlRequFLGXPuBTspvr9u7SNO8bieYo=
+Received: by mail-ot1-f53.google.com with SMTP id g96so7253810otb.12;
+        Fri, 04 Sep 2020 15:29:26 -0700 (PDT)
+X-Gm-Message-State: AOAM530HI8S9w97j5PgXqi3vtRBxS4qaUMIMg4IDLgsN+4mUyfAvzmGg
+        1lBYOqogNOdrbP+dn0+qOhkmDJ2fNHZwlCDxBg==
+X-Google-Smtp-Source: ABdhPJyg8Cu0lq2UsQBYhJV227Jo2feqOcJKLxrdCLPxr9lVLm9MUPpbfMcEDGy7OIP/8N+4iwU7/9VeNN4vhk5EUSE=
+X-Received: by 2002:a9d:7f84:: with SMTP id t4mr7261177otp.192.1599258565768;
+ Fri, 04 Sep 2020 15:29:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200830142000.146706-2-rodrigosiqueiramelo@gmail.com>
+References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-14-krzk@kernel.org>
+In-Reply-To: <20200904152404.20636-14-krzk@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 4 Sep 2020 16:29:14 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
+Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
+Subject: Re: [PATCH v3 13/14] dt-bindings: mtd: nand-controller: Fix matching
+ with size-cells==1
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 08/30, Rodrigo Siqueira wrote:
-> In the vkms_composer.c, some of the functions related to CRC and compose
-> have interdependence between each other. This patch reworks some
-> functions inside vkms_composer to make crc and composer computation
-> decoupled.
-> 
-> This patch is preparation work for making vkms able to support new
-> features.
-> 
-> Tested-by: Melissa Wen <melissa.srw@gmail.com>
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_composer.c | 49 ++++++++++++++++------------
->  1 file changed, 29 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-> index eaecc5a6c5db..f67d1baf1942 100644
-> --- a/drivers/gpu/drm/vkms/vkms_composer.c
-> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
-> @@ -131,35 +131,31 @@ static void compose_cursor(struct vkms_composer *cursor_composer,
->  	      primary_composer, cursor_composer);
->  }
->  
-> -static uint32_t _vkms_get_crc(struct vkms_composer *primary_composer,
-> -			      struct vkms_composer *cursor_composer)
-> +static int compose_planes(void **vaddr_out,
-> +			  struct vkms_composer *primary_composer,
-> +			  struct vkms_composer *cursor_composer)
->  {
->  	struct drm_framebuffer *fb = &primary_composer->fb;
->  	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
->  	struct vkms_gem_object *vkms_obj = drm_gem_to_vkms_gem(gem_obj);
-> -	void *vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-> -	u32 crc = 0;
->  
-> -	if (!vaddr_out) {
-> -		DRM_ERROR("Failed to allocate memory for output frame.");
-> -		return 0;
-> +	if (!*vaddr_out) {
-> +		*vaddr_out = kzalloc(vkms_obj->gem.size, GFP_KERNEL);
-> +		if (!*vaddr_out) {
-> +			DRM_ERROR("Cannot allocate memory for output frame.");
-> +			return -ENOMEM;
-> +		}
->  	}
->  
-> -	if (WARN_ON(!vkms_obj->vaddr)) {
-> -		kfree(vaddr_out);
-> -		return crc;
-> -	}
-> +	if (WARN_ON(!vkms_obj->vaddr))
-> +		return -EINVAL;
->  
-> -	memcpy(vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
-> +	memcpy(*vaddr_out, vkms_obj->vaddr, vkms_obj->gem.size);
->  
->  	if (cursor_composer)
-> -		compose_cursor(cursor_composer, primary_composer, vaddr_out);
-> +		compose_cursor(cursor_composer, primary_composer, *vaddr_out);
->  
-> -	crc = compute_crc(vaddr_out, primary_composer);
-> -
-> -	kfree(vaddr_out);
-> -
-> -	return crc;
-> +	return 0;
->  }
->  
->  /**
-> @@ -180,9 +176,11 @@ void vkms_composer_worker(struct work_struct *work)
->  	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
->  	struct vkms_composer *primary_composer = NULL;
->  	struct vkms_composer *cursor_composer = NULL;
-> +	void *vaddr_out = NULL;
->  	u32 crc32 = 0;
->  	u64 frame_start, frame_end;
->  	bool crc_pending;
-> +	int ret;
->  
->  	spin_lock_irq(&out->composer_lock);
->  	frame_start = crtc_state->frame_start;
-> @@ -206,14 +204,25 @@ void vkms_composer_worker(struct work_struct *work)
->  	if (crtc_state->num_active_planes == 2)
->  		cursor_composer = crtc_state->active_planes[1]->composer;
->  
-> -	if (primary_composer)
-> -		crc32 = _vkms_get_crc(primary_composer, cursor_composer);
-> +	if (!primary_composer)
-> +		return;
-> +
-> +	ret = compose_planes(&vaddr_out, primary_composer, cursor_composer);
-> +	if (ret) {
-> +		if (ret == -EINVAL)
-> +			kfree(vaddr_out);
-> +		return;
-> +	}
-> +
-> +	crc32 = compute_crc(vaddr_out, primary_composer);
->  
->  	/*
->  	 * The worker can fall behind the vblank hrtimer, make sure we catch up.
->  	 */
->  	while (frame_start <= frame_end)
->  		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
-> +
-> +	kfree(vaddr_out);
->  }
->  
->  static const char * const pipe_crc_sources[] = {"auto"};
-> -- 
-> 2.28.0
+On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
+> Most of Freescale/NXP GPMI device trees use size-cells==1 (even when
+> actually not needed except few boards).  This fixes dtbs_check warnings
+> like:
+>
+>     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: #size-cells:0:0: 0 was expected
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index 40fc5b0b2b8c..0879e1108837 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -34,7 +34,10 @@ properties:
+>      const: 1
+>
+>    "#size-cells":
+> -    const: 0
+> +    description:
+> +      Depends on your controller. Put zero unless you need a mapping between CS
+> +      lines and dedicated memory regions.
+> +    enum: [0, 1]
 
-I noticed two improvements: for a pre-existing op (alloc), but that
-could affect the logic of the next patch; and another one (kfree -
-release vaddr_out earlier, when it’s no longer needed) that you also
-adjusted in the next one and is harmless here.
+Humm, seems that was to describe partitions, but the expectation of
+the nand binding is describing nand chips. It seems the nand chips are
+never described and on 1 board even has partitions. I think you should
+fix the dts to move 'partition@N' nodes under 'partitions' which is
+preferred and needed if you ever describe nand chips. And then fix
+'#size-cells' to be 0.
 
-So, looking as a preparation for the writeback patch, I tested and
-consider that this rework keeps operations stable here.
-
-Reviewed-by: Melissa Wen <melissa.srw@gmail.com>
+Rob
