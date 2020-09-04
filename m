@@ -2,189 +2,154 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEBCEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9D8C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C87520709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:14:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E2+GPMWX"
+	by mail.kernel.org (Postfix) with ESMTP id 4EC98206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599228905;
+	bh=5IwSshPpgozIPZMjbeg/fb3EXkle70zb11w810FYpW0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1PmvOSUYBQNU4KgIHLp1R3oT6ryBkKt6vYn03ffOHAZpv213q7uv9c5abILl+ltMQ
+	 VURApjgetoDrZL9HKPbo+A2gDSQQWCEbWfEb0gqEcioKaSLYibXHOI3txSz1kNTqj0
+	 sz3AQpxX6Vh0+QFcS/P6jbfSdP/kC2T9cvIpxxpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbgIDOOO (ORCPT
+        id S1730459AbgIDNpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:14:14 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44696 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730590AbgIDNpX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:45:23 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133507euoutp01db8fc4734be992775f3eac299a26e93e~xmAkitEzs0721507215euoutp01p
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904133507euoutp01db8fc4734be992775f3eac299a26e93e~xmAkitEzs0721507215euoutp01p
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599226507;
-        bh=J4cTiD2Ov/1hJwWc6LhEYhhzrX1Y8PyWVK9BxFfcGP0=;
+        Fri, 4 Sep 2020 09:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730488AbgIDNeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:34:24 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAB5E21734;
+        Fri,  4 Sep 2020 13:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599226279;
+        bh=5IwSshPpgozIPZMjbeg/fb3EXkle70zb11w810FYpW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2+GPMWXYdPg6wO7u88NdFpmh7Qmxmg02AYlLLkPfUdEIAjgA9yStuveqdl11ayZ5
-         v6+QLb7vDoHoY7TvWk87cYbWJ/5657D0o+qIV5+BB2AkRTQn/WwAJo6OKFna1XU6vL
-         nR0ubK8cWA1KWW8DmPls1/CJlRN2w+4XEp0Ddg9M=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200904133507eucas1p15315e55ae9efc273d6a927ec4f7acb80~xmAkSXygD1681116811eucas1p1t;
-        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 7E.39.06318.B82425F5; Fri,  4
-        Sep 2020 14:35:07 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133507eucas1p197261c4a609b4034f9269f9b413ed5e7~xmAj-y_tE0113901139eucas1p13;
-        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200904133507eusmtrp1434b8b650f1f6df000db1de47e990e94~xmAj-K42t0766507665eusmtrp1H;
-        Fri,  4 Sep 2020 13:35:07 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-b4-5f52428b44f2
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 98.BE.06314.A82425F5; Fri,  4
-        Sep 2020 14:35:07 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200904133506eusmtip1dc04bed1f79290debe4a072459180c58~xmAjXC1QP1683116831eusmtip1Z;
-        Fri,  4 Sep 2020 13:35:06 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org
-Subject: [PATCH v10 22/30] xen: gntdev: fix common struct sg_table related
- issues
-Date:   Fri,  4 Sep 2020 15:17:03 +0200
-Message-Id: <20200904131711.12950-23-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904131711.12950-1-m.szyprowski@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMKsWRmVeSWpSXmKPExsWy7djP87rdTkHxBi9niFr0njvJZLFxxnpW
-        i4vTW1ks/m+byGxx5et7NouVq48yWSzYb20x56aRxZcrD5ksNj2+xmpxedccNou1R+6yWxz8
-        8ITV4vuWyUwOfB5r5q1h9Nj7bQGLx/ZvD1g97ncfZ/LYvKTe4/a/x8wek28sZ/Q4/OEKi8fu
-        mw1sHh+f3mLx6NuyitFj/ZarLB6fN8kF8EZx2aSk5mSWpRbp2yVwZbx5t5mt4KRYRdPjRvYG
-        xi1CXYycHBICJhJ7rk5g7GLk4hASWMEosbRtFQuE84VRov9WJ5TzmVFiwd12JpiWuRfusEMk
-        ljNKrLxyH6Hl4+sFYFVsAoYSXW+72EBsEYFWRokTvTwgRcwC3cwSU9euYgVJCAsES7y+OJ0Z
-        xGYRUJW4dfMYkM3BwStgJ/HiDtQ2eYnVGw6AlXAChbfOeMIKMkdC4Ba7RNOyfqgiF4kz0xvZ
-        IGxhiVfHt7BD2DISpyf3sEA0NDNKPDy3lh3C6WGUuNw0gxGiylrizrlfbCCbmQU0Jdbv0gcx
-        JQQcJb5OFoEw+SRuvBUEKWYGMidtm84MEeaV6GiDhqOaxKzj6+C2HrxwCarEQ+La73JI8Exk
-        lOhoesY2gVF+FsKqBYyMqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQKT1ul/x7/uYNz3
-        J+kQowAHoxIPL4N9ULwQa2JZcWXuIUYJDmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzFKc7Ao
-        ifMaL3oZKySQnliSmp2aWpBaBJNl4uCUamCcerHJ2NbletDuteHOt9PUY4+t9u3ZHBS6cPf1
-        c7oR7brv/sfLNipypMrtyha636fuzXVbQyrG5qP3w3yzDWJ/GxqnXL9XF+a8MejC3pUv2gWf
-        Ln34+JXP3p0Ov4yWP7PO+bdje820d6fanzPNSV4stvRejehW5vBMtalpp2fUtx26ue6C0fYy
-        JZbijERDLeai4kQA21QidVYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsVy+t/xu7rdTkHxBhOnMlr0njvJZLFxxnpW
-        i4vTW1ks/m+byGxx5et7NouVq48yWSzYb20x56aRxZcrD5ksNj2+xmpxedccNou1R+6yWxz8
-        8ITV4vuWyUwOfB5r5q1h9Nj7bQGLx/ZvD1g97ncfZ/LYvKTe4/a/x8wek28sZ/Q4/OEKi8fu
-        mw1sHh+f3mLx6NuyitFj/ZarLB6fN8kF8Ebp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZ
-        GpvHWhmZKunb2aSk5mSWpRbp2yXoZbx5t5mt4KRYRdPjRvYGxi1CXYycHBICJhJzL9xh72Lk
-        4hASWMoo0XXxAxNEQkbi5LQGVghbWOLPtS42iKJPjBL7bt5jB0mwCRhKdL2FSIgIdDJKTOv+
-        CDaKWWAys8Sz1dfBRgkLBEpM+NTOCGKzCKhK3Lp5jLmLkYODV8BO4sUdqG3yEqs3HGAGsTmB
-        wltnPAHbLCRgK/FhzmKWCYx8CxgZVjGKpJYW56bnFhvqFSfmFpfmpesl5+duYgTG0bZjPzfv
-        YLy0MfgQowAHoxIPL4N9ULwQa2JZcWXuIUYJDmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzGa
-        At00kVlKNDkfGON5JfGGpobmFpaG5sbmxmYWSuK8HQIHY4QE0hNLUrNTUwtSi2D6mDg4pRoY
-        /QI5dRNsuSde0f8Z9P3HoYtuv7K0vN4YpnLKr+pJuLWJde3Zem6WXKf9yadKZF4Ebpy3feOh
-        sy7/Ki7yLuY9qrsg7N0ZhuMzbD9Ir/LdEv3jdUzrQ4EzfWFfzJ65VnwRbV2UFVw5r9n0xIzT
-        Szy0mCWMou4HMPFkb8j7nmG0tfexv1C88cMyJZbijERDLeai4kQACNKhf7kCAAA=
-X-CMS-MailID: 20200904133507eucas1p197261c4a609b4034f9269f9b413ed5e7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200904133507eucas1p197261c4a609b4034f9269f9b413ed5e7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200904133507eucas1p197261c4a609b4034f9269f9b413ed5e7
-References: <20200904131711.12950-1-m.szyprowski@samsung.com>
-        <CGME20200904133507eucas1p197261c4a609b4034f9269f9b413ed5e7@eucas1p1.samsung.com>
+        b=DmuO6/Gm/vXZr09yyWeEN91h92YYLGW1ID6+xR9Mli84Vz9IvyUIC1qYIlrtqn8l/
+         t7zmuoa+Tx4jtMyhLxRK4fGkrWV6xIO40mydLCGPXZHoz7UT4U0rWTfLfxEdaTHh+H
+         0Md22jElYz9Ui7+PL1OAYAtIDThCmN6fGM1ZeFRE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
+        Daniel Meyerholt <dxm523@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.8 17/17] scsi: target: tcmu: Optimize use of flush_dcache_page
+Date:   Fri,  4 Sep 2020 15:30:16 +0200
+Message-Id: <20200904120258.840415117@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
+References: <20200904120257.983551609@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-returns the number of the created entries in the DMA address space.
-However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-dma_unmap_sg must be called with the original number of the entries
-passed to the dma_map_sg().
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-struct sg_table is a common structure used for describing a non-contiguous
-memory buffer, used commonly in the DRM and graphics subsystems. It
-consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-and DMA mapped pages (nents entry).
+commit 3c58f737231e2c8cbf543a09d84d8c8e80e05e43 upstream.
 
-It turned out that it was a common mistake to misuse nents and orig_nents
-entries, calling DMA-mapping functions with a wrong number of entries or
-ignoring the number of mapped entries returned by the dma_map_sg()
-function.
+(scatter|gather)_data_area() need to flush dcache after writing data to or
+before reading data from a page in uio data area.  The two routines are
+able to handle data transfer to/from such a page in fragments and flush the
+cache after each fragment was copied by calling the wrapper
+tcmu_flush_dcache_range().
 
-To avoid such issues, lets use a common dma-mapping wrappers operating
-directly on the struct sg_table objects and use scatterlist page
-iterators where possible. This, almost always, hides references to the
-nents and orig_nents entries, making the code robust, easier to follow
-and copy/paste safe.
+That means:
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Acked-by: Juergen Gross <jgross@suse.com>
+1) flush_dcache_page() can be called multiple times for the same page.
+
+2) Calling flush_dcache_page() indirectly using the wrapper does not make
+   sense, because each call of the wrapper is for one single page only and
+   the calling routine already has the correct page pointer.
+
+Change (scatter|gather)_data_area() such that, instead of calling
+tcmu_flush_dcache_range() before/after each memcpy, it now calls
+flush_dcache_page() before unmapping a page (when writing is complete for
+that page) or after mapping a page (when starting to read the page).
+
+After this change only calls to tcmu_flush_dcache_range() for addresses in
+vmalloc'ed command ring are left over.
+
+The patch was tested on ARM with kernel 4.19.118 and 5.7.2
+
+Link: https://lore.kernel.org/r/20200618131632.32748-2-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Tested-by: Daniel Meyerholt <dxm523@gmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/xen/gntdev-dmabuf.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/target/target_core_user.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
-index b1b6eebafd5d..4c13cbc99896 100644
---- a/drivers/xen/gntdev-dmabuf.c
-+++ b/drivers/xen/gntdev-dmabuf.c
-@@ -247,10 +247,9 @@ static void dmabuf_exp_ops_detach(struct dma_buf *dma_buf,
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -676,8 +676,10 @@ static void scatter_data_area(struct tcm
+ 		from = kmap_atomic(sg_page(sg)) + sg->offset;
+ 		while (sg_remaining > 0) {
+ 			if (block_remaining == 0) {
+-				if (to)
++				if (to) {
++					flush_dcache_page(page);
+ 					kunmap_atomic(to);
++				}
  
- 		if (sgt) {
- 			if (gntdev_dmabuf_attach->dir != DMA_NONE)
--				dma_unmap_sg_attrs(attach->dev, sgt->sgl,
--						   sgt->nents,
--						   gntdev_dmabuf_attach->dir,
--						   DMA_ATTR_SKIP_CPU_SYNC);
-+				dma_unmap_sgtable(attach->dev, sgt,
-+						  gntdev_dmabuf_attach->dir,
-+						  DMA_ATTR_SKIP_CPU_SYNC);
- 			sg_free_table(sgt);
- 		}
+ 				block_remaining = DATA_BLOCK_SIZE;
+ 				dbi = tcmu_cmd_get_dbi(tcmu_cmd);
+@@ -722,7 +724,6 @@ static void scatter_data_area(struct tcm
+ 				memcpy(to + offset,
+ 				       from + sg->length - sg_remaining,
+ 				       copy_bytes);
+-				tcmu_flush_dcache_range(to, copy_bytes);
+ 			}
  
-@@ -288,8 +287,8 @@ dmabuf_exp_ops_map_dma_buf(struct dma_buf_attachment *attach,
- 	sgt = dmabuf_pages_to_sgt(gntdev_dmabuf->pages,
- 				  gntdev_dmabuf->nr_pages);
- 	if (!IS_ERR(sgt)) {
--		if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
--				      DMA_ATTR_SKIP_CPU_SYNC)) {
-+		if (dma_map_sgtable(attach->dev, sgt, dir,
-+				    DMA_ATTR_SKIP_CPU_SYNC)) {
- 			sg_free_table(sgt);
- 			kfree(sgt);
- 			sgt = ERR_PTR(-ENOMEM);
-@@ -633,7 +632,7 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_priv *priv, struct device *dev,
+ 			sg_remaining -= copy_bytes;
+@@ -731,8 +732,10 @@ static void scatter_data_area(struct tcm
+ 		kunmap_atomic(from - sg->offset);
+ 	}
  
- 	/* Now convert sgt to array of pages and check for page validity. */
- 	i = 0;
--	for_each_sg_page(sgt->sgl, &sg_iter, sgt->nents, 0) {
-+	for_each_sgtable_page(sgt, &sg_iter, 0) {
- 		struct page *page = sg_page_iter_page(&sg_iter);
- 		/*
- 		 * Check if page is valid: this can happen if we are given
--- 
-2.17.1
+-	if (to)
++	if (to) {
++		flush_dcache_page(page);
+ 		kunmap_atomic(to);
++	}
+ }
+ 
+ static void gather_data_area(struct tcmu_dev *udev, struct tcmu_cmd *cmd,
+@@ -778,13 +781,13 @@ static void gather_data_area(struct tcmu
+ 				dbi = tcmu_cmd_get_dbi(cmd);
+ 				page = tcmu_get_block_page(udev, dbi);
+ 				from = kmap_atomic(page);
++				flush_dcache_page(page);
+ 			}
+ 			copy_bytes = min_t(size_t, sg_remaining,
+ 					block_remaining);
+ 			if (read_len < copy_bytes)
+ 				copy_bytes = read_len;
+ 			offset = DATA_BLOCK_SIZE - block_remaining;
+-			tcmu_flush_dcache_range(from, copy_bytes);
+ 			memcpy(to + sg->length - sg_remaining, from + offset,
+ 					copy_bytes);
+ 
+
 
