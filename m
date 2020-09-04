@@ -5,191 +5,184 @@ X-Spam-Level:
 X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B435FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09963C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BEA92074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16062074A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:39:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sKbygJay"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="f15p0Ep3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgIDFbZ (ORCPT
+        id S1726360AbgIDFjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:31:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33704 "EHLO
+        Fri, 4 Sep 2020 01:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgIDFbX (ORCPT
+        with ESMTP id S1726032AbgIDFjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:31:23 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C648FC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:31:22 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id x14so5378754wrl.12
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:31:22 -0700 (PDT)
+        Fri, 4 Sep 2020 01:39:18 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5009BC061246
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:39:15 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id b79so4870147wmb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uMlM9XPLd0j8P0/aRabMWwa2svO4gw32t1kN1da6wwk=;
-        b=sKbygJay1AwoLskDd1MWUiOlgyyJBzndTYFiOl0z6OlIOSNeUn4kYy8BAvFg5ggyG3
-         BWcsGBWh0K+uqvDy8PsyClyYODivgvSC5bNxHo+zB5yGnGADMqMyqPDNnFDWcK2EcK1z
-         tk+aa1IO+xyLnjJnXSwGkb1bOJoIPmxJjv/aydzY2Y738f58o4vgL8xXqOXNrNkW2/jh
-         q33IwUv6x2xEB2/kvsEStS0WbiN+9ZkdJWrxF8oaTy7aavVE0eF9nj8PtDRr3C8UCxR9
-         GDq5KM5aLnre7FkPRPICmKBw2wHW2pGlkcmR5NInZSPDh0Kb/GDHfSek/55trAdZMCni
-         5w3w==
+        bh=Olcgjo2cp3SzbVgj9VEdIW4pjN91mBbsvBxdvxCRLJo=;
+        b=f15p0Ep32YArP4LXBLiAkExie0hAem2FPAH0okI/cr+oL76ljWPQYqXHjM5IpBpPUl
+         zbtS1hPYSEFeBReM1bLva9wCyscIzoTN8U6jRZ/CT3zvnfy0njGa5v9OwP+Nrg2Ltc1h
+         b5FZa89xEwj/zhdrZ9gf6CSsfF1DkYInPJi4pFlD+bTRmiHybV/jooIHz1DWQ4rEdqiF
+         cu/RYQXhUHTm2lcqze04jfkA6rt3eeZMqlPVnESfnl8wypve67LNYwy2WajnUZHrOoiB
+         R5HFIzEzjPmkz2eNVIPLvOu+WCShfm/DgumDzFTockUEVofDevhr6CgHkt8j0d3euYkC
+         PCaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uMlM9XPLd0j8P0/aRabMWwa2svO4gw32t1kN1da6wwk=;
-        b=PvR8SOyVq7s51Iz1m7ZDV5dnzi50byDfU3g+kwPAyNqTxdfFlAxqkcnrzt+DFGJW/x
-         jnqSZFG8T4maCD+NA5XZNXRlbxZYA6kHKlJTtPXQ/sM8U88FGDhiJfL0pT0XZZuJh5sr
-         9m+uie3IxlIZbdpdWS0VGZj+8JkY+Fr0B1QjhF6mUKm9kT4tTG9NvUjIt7cGYpcdTz3d
-         bxE4i2/4IakUlA7I8Nb0jK5i3hGrHaR0ms/7sasQA1vMBMHXRcYE1Lz8GhwKupsuyfTJ
-         Jaa4XjtXzrywCy09JbvdcpYi/3mxwpV5AKP7pldsRpS662gJXZfoabQz3NBHYveyLF9M
-         7XGw==
-X-Gm-Message-State: AOAM530Xa+dfcTIWmxnp6Ab4XHvb0u6TY+XgCBFFPArxTXc7cA5894fM
-        PSPINHTn5tE2YWlChSkVRUjEun/f583i3TVVMDHZ9w==
-X-Google-Smtp-Source: ABdhPJzC90134mJIKA/5mLEC4Flpm6LhaeVSioRuPKVsLD2wMugvVAPRM1RcpGtQe8iDsBxc2tT+dxBOj3xsMZmocls=
-X-Received: by 2002:adf:82b1:: with SMTP id 46mr6279732wrc.271.1599197481136;
- Thu, 03 Sep 2020 22:31:21 -0700 (PDT)
+        bh=Olcgjo2cp3SzbVgj9VEdIW4pjN91mBbsvBxdvxCRLJo=;
+        b=PtcoLRtnFQWNqOqN1mTvpQ3xB2o7AWwwpIrUz2+JugpLfvVL2fSdy8WSXm8jJ2HSt3
+         LPNQjONFpGClrm+pbBUuGOk4nHKtZyqpTay8kVk46UTzURYF0wAZwV7twxHD8soS9SEv
+         jEK+HEpOu20aptBAl4cMddEJ/iNvBrcR5Kv7C/6mZ18OGNpCClgSdsnnCvwG9MAPts1u
+         h/B5pWNh+uTQMRWd1mfNGIu11To3B9SVjW2geQgUdiSTBJLnqRF1WSodkIJNdaT/JFat
+         gI4OSbxhlWdvmgDRENv35N9H94XeDeYH3GlBpoKt8/9ftT1O721aWM+QanFukhPFqVgf
+         GPgg==
+X-Gm-Message-State: AOAM5333csPx/CUG708JEOYxDlUFvyBlbSNgcfihuRrMoMrL+AZSscaD
+        bMsNpygphkDab/v2Ucg2i1fCFOeZplx/TEUt+B7rqQ==
+X-Google-Smtp-Source: ABdhPJziswYikgl/jGPR1gjMEEpxF6fEBNmx3b/HSs5t0TXQ0QsMijI6ieW+i4mlSTk97QvH5RD9z7lrELtjMYBaBHo=
+X-Received: by 2002:a05:600c:22d1:: with SMTP id 17mr1793416wmg.58.1599197952693;
+ Thu, 03 Sep 2020 22:39:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200903184359.GC3495158@kernel.org>
-In-Reply-To: <20200903184359.GC3495158@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-2-irogers@google.com>
+ <20200729185212.GB433799@kernel.org> <CAP-5=fUJW+UkL-jZkzkCKqTLh7DC0XnFx06kdfYiu2CK85Wq1w@mail.gmail.com>
+In-Reply-To: <CAP-5=fUJW+UkL-jZkzkCKqTLh7DC0XnFx06kdfYiu2CK85Wq1w@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Sep 2020 22:31:09 -0700
-Message-ID: <CAP-5=fWvLaeuvQ6p0ep_uA0MNpk3o0hxim5tPQf+RXCafj8E=A@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: Use uintptr_t when casting numbers to pointers
+Date:   Thu, 3 Sep 2020 22:39:01 -0700
+Message-ID: <CAP-5=fXbLtiX5Syji7X=-tV8r=PbbTw7X63h4PfggT-XvUemtQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] perf record: Set PERF_RECORD_PERIOD if attr->freq
+ is set.
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 11:44 AM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Jul 29, 2020 at 2:43 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Hi Ian,
+> On Wed, Jul 29, 2020 at 11:52 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Tue, Jul 28, 2020 at 01:57:30AM -0700, Ian Rogers escreveu:
+> > > From: David Sharp <dhsharp@google.com>
+> > >
+> > > evsel__config() would only set PERF_RECORD_PERIOD if it set attr->freq
+> >
+> > There is no such thing as 'PERF_RECORD_PERIOD', its PERF_SAMPLE_PERIOD,
+> > also...
+> >
+> > > from perf record options. When it is set by libpfm events, it would not
+> > > get set. This changes evsel__config to see if attr->freq is set outside of
+> > > whether or not it changes attr->freq itself.
+> > >
+> > > Signed-off-by: David Sharp <dhsharp@google.com>
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/evsel.c | 7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > > index ef802f6d40c1..811f538f7d77 100644
+> > > --- a/tools/perf/util/evsel.c
+> > > +++ b/tools/perf/util/evsel.c
+> > > @@ -979,13 +979,18 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+> > >       if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
+> > >                                    opts->user_interval != ULLONG_MAX)) {
+> > >               if (opts->freq) {
+> > > -                     evsel__set_sample_bit(evsel, PERIOD);
+> > >                       attr->freq              = 1;
+> > >                       attr->sample_freq       = opts->freq;
+> > >               } else {
+> > >                       attr->sample_period = opts->default_interval;
+> > >               }
+> > >       }
+> > > +     /*
+> > > +      * If attr->freq was set (here or earlier), ask for period
+> > > +      * to be sampled.
+> > > +      */
+> > > +     if (attr->freq)
+> > > +             evsel__set_sample_bit(evsel, PERIOD);
+> >
+> > Why can't the libpfm code set opts?
+> >
+> > With this patch we will end up calling evsel__set_sample_bit(evsel,
+> > PERIOD) twice, which isn't a problem but looks strange.
 >
->         Please check that this is ok with you,
+> Thanks Arnaldo! The case I was looking at was something like:
+> perf record --pfm-events cycles:freq=1000
+>
+> For regular events this would be:
+> perf record -e cycles/freq=1000/
+>
+> With libpfm4 events the perf_event_attr is set up (a public API in
+> linux/perf_event.h) and then parse_events__add_event is used (an
+> internal API) to make the evsel and this added to the evlist
+> (parse_libpfm_events_option). This is similar to the parse_events
+> function except rather than set up a perf_event_attr the regular
+> parsing sets up config terms that are then applied to evsel and attr
+> later in evsel__config, via evsel__apply_config_terms.
+>
+> I think we can  update this change so that in pfm.c after
+> parse_events__add_event we do:
+> if (attr.freq)
+>   evsel__set_sample_bit(evsel, PERIOD);
+>
+> This code could also be part of parse_events__add_event. I think the
+> intent in placing this code here was that it is close to the similar
+> evsel__apply_config_terms and setting of sample bits in the evsel. The
+> logic here is already dependent on reading the attr->sample_period.
+>
+> I'm not sure I follow the double setting case - I think that is only
+> possible with a config term or with period_set (-P).
 >
 > Thanks,
->
-> - Arnaldo
+> Ian
 
-Thanks Arnaldo, this looks good to me! There is a separate issue, the
-casts are necessary as we have PE_VALUEs that are supposed to be
-numbers but here are list*. It seems error prone to have something
-that is a pointer or a number, and so I wonder if we can introduce new
-tokens in parse-events.y to handle this. It'd also mean that
-yydestructors and the like could clean up error states. I'll try to
-take a look.
-
-Thanks,
+Polite ping. Thanks,
 Ian
 
-> commit 0823f768b800cca2592fad3b5649766ae6bc4eba
-> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date:   Thu Sep 3 15:34:20 2020 -0300
 >
->     perf parse-events: Use uintptr_t when casting numbers to pointers
->
->     To address these errors found when cross building from x86_64 to MIPS
->     little endian 32-bit:
->
->         CC       /tmp/build/perf/util/parse-events-bison.o
->       util/parse-events.y: In function 'parse_events_parse':
->       util/parse-events.y:514:6: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->         514 |      (void *) $2, $6, $4);
->             |      ^
->       util/parse-events.y:531:7: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->         531 |       (void *) $2, NULL, $4)) {
->             |       ^
->       util/parse-events.y:547:6: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->         547 |      (void *) $2, $4, 0);
->             |      ^
->       util/parse-events.y:564:7: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->         564 |       (void *) $2, NULL, 0)) {
->             |       ^
->
->     Fixes: cabbf26821aa210f ("perf parse: Before yyabort-ing free components")
->     Cc: Adrian Hunter <adrian.hunter@intel.com>
->     Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->     Cc: Alexei Starovoitov <ast@kernel.org>
->     Cc: Andi Kleen <ak@linux.intel.com>
->     Cc: Daniel Borkmann <daniel@iogearbox.net>
->     Cc: Ian Rogers <irogers@google.com>
->     Cc: Jin Yao <yao.jin@linux.intel.com>
->     Cc: Jiri Olsa <jolsa@kernel.org>
->     Cc: John Garry <john.garry@huawei.com>
->     Cc: Kan Liang <kan.liang@linux.intel.com>
->     Cc: Mark Rutland <mark.rutland@arm.com>
->     Cc: Martin KaFai Lau <kafai@fb.com>
->     Cc: Namhyung Kim <namhyung@kernel.org>
->     Cc: Peter Zijlstra <peterz@infradead.org>
->     Cc: Song Liu <songliubraving@fb.com>
->     Cc: Stephane Eranian <eranian@google.com>
->     Cc: Yonghong Song <yhs@fb.com>
->     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index b9fb91fdc5de9177..645bf4f1859fd76b 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -511,7 +511,7 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
->         list = alloc_list();
->         ABORT_ON(!list);
->         err = parse_events_add_breakpoint(list, &parse_state->idx,
-> -                                       (void *) $2, $6, $4);
-> +                                       (void *)(uintptr_t) $2, $6, $4);
->         free($6);
->         if (err) {
->                 free(list);
-> @@ -528,7 +528,7 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE sep_dc
->         list = alloc_list();
->         ABORT_ON(!list);
->         if (parse_events_add_breakpoint(list, &parse_state->idx,
-> -                                               (void *) $2, NULL, $4)) {
-> +                                               (void *)(uintptr_t) $2, NULL, $4)) {
->                 free(list);
->                 YYABORT;
->         }
-> @@ -544,7 +544,7 @@ PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
->         list = alloc_list();
->         ABORT_ON(!list);
->         err = parse_events_add_breakpoint(list, &parse_state->idx,
-> -                                       (void *) $2, $4, 0);
-> +                                       (void *)(uintptr_t) $2, $4, 0);
->         free($4);
->         if (err) {
->                 free(list);
-> @@ -561,7 +561,7 @@ PE_PREFIX_MEM PE_VALUE sep_dc
->         list = alloc_list();
->         ABORT_ON(!list);
->         if (parse_events_add_breakpoint(list, &parse_state->idx,
-> -                                               (void *) $2, NULL, 0)) {
-> +                                               (void *)(uintptr_t) $2, NULL, 0)) {
->                 free(list);
->                 YYABORT;
->         }
+> > - Arnaldo
+> >
+> > >
+> > >       if (opts->no_samples)
+> > >               attr->sample_freq = 0;
+> > > --
+> > > 2.28.0.163.g6104cc2f0b6-goog
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
