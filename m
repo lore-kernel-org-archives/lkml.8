@@ -2,139 +2,130 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02654C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF010C43461
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD07620770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B132074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbiZjmqF"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="fU31qie4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgIDPnJ (ORCPT
+        id S1726493AbgIDPnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
+        Fri, 4 Sep 2020 11:43:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgIDPmv (ORCPT
+        with ESMTP id S1726722AbgIDPmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 11:42:51 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4284C061244;
-        Fri,  4 Sep 2020 08:42:50 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id b19so8453326lji.11;
-        Fri, 04 Sep 2020 08:42:50 -0700 (PDT)
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2A8C061245
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:42:51 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z9so6512012wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:42:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=raspberrypi.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Yiryn+cueMpZ9rgxKt1g+WZ6OWiHzbsq73ksEtl7T5Q=;
-        b=RbiZjmqF79ncHO10ryXSsRXUA1u3CEqE4416UFJL3OmBUtaZSBqjMNZTuhN1LenC3u
-         yypX9dKwxO+CVE5FDt08lEUCWf1/fOl+8PzxCMHpwg+Qbdbl+a3m5+yC792XM5T6xfoC
-         Xe+noOAbZ51OoRLtBFa379OLu4kmFZz17xrQ7KuuHpGL0RuiNlsvw1Do3Tdl0X1NnF4Z
-         K5fMDzFaOyK4FmEWmcnCKKBINnIBMxuGPp2wbcTZT3j60zcBWd3jjxxCmFSRkOZc2rgM
-         +7RMuYQbun9ywUNkALSqpTsZjgbGm5BCF5e3JBzXgt987y1U06hJC97sq3ediisSTlUr
-         B/XA==
+        bh=UFt5VYp91zERLEDHeaE+RW9pXHUGaLWnGfwWTh4Sc2U=;
+        b=fU31qie4kt2TV9lPfFAfIIE0WAv8mDvUqhU1LLlYfB8UsatCipj8RgKEIFsNAc6ocA
+         xG5uup6s1fR/dqAgzERNBs1S+XEZ6SNWmkahGKmG0CN08m2kz4XzOMvv6F0SDvBIT2qC
+         wwZZDieY4lzyH3DTqG+DOaZgYgqgdTegIxpjpRBWVbTACjeTaAxRe1XDf4prKT4CyiPR
+         S4C6gpk6BSh+GiEs63wlu6eyxtO0I2XXbLJNQXeR0jNlfDzTSir6ah3Adnxf3Z9sMrKC
+         RZxxyTWdhtr1be/4hfo8j9Q1RBviQ3jtYMRbW5VWDj+IVf1QVbLFY+ZDb6MlmseawrnF
+         r3gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Yiryn+cueMpZ9rgxKt1g+WZ6OWiHzbsq73ksEtl7T5Q=;
-        b=NHk+bWoUaNZm70p4V5q3MHxLVWlN47KbaNSYEd9ZVLGBZVxx9c4J+5pC9yvXnwKmff
-         bZwR8XcqKdlEWYhIKgN+dh+owGcJFNIlJNAu+7AwdSr58o8am9S9ZR0K96uEGg898Bev
-         PG29XTQ0uJTjdN0dp6q1L/FVQrryp3gPFDTVutV3hyB7It6n+uPvoqMfcR5HHrf1Idsg
-         PD+W6GlRC807jH/RD/ZcOrEV2p4GsKuqGy5kOu+SoYgWlNt2AoVOCzExfCvThr7Q0lDg
-         Np3LzrcH1Zdvv62iN76nKJp3uJGJxAEMhcVyHvz/DcGvaYPVmjxArEt1foUivBF6AyBr
-         hMOw==
-X-Gm-Message-State: AOAM533G5mA5SkL/nejgmPkMoSOvzX/CyBNVHIhzJOJO4QDq+bUnuNUU
-        cO8jdlH2gnIZkO+pi0VLj1lx3zFQGk7I1X7eREqgwkth30I=
-X-Google-Smtp-Source: ABdhPJyWeGqQVaIc+VLOaxxe98ywP1hMqh2t9ALDWj8r1ymvnSb+cCVjXnoTCEzHbIBktmr7RMlGGBtXHW+9X3LyZvo=
-X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr4326904ljb.452.1599234169093;
+        bh=UFt5VYp91zERLEDHeaE+RW9pXHUGaLWnGfwWTh4Sc2U=;
+        b=dpNkOYIqKRETs4hxRlyAIL90RwIz8KgDFJR/CBGk6ETP4OL9dgieA/guJ8zGdQS8Ra
+         yuKPV7Hk3Pm9rWwTNauUMcQOejS9gME4E6WKiZ6jfX8iv8Dg9SbKC5VwxCvBeFtN3Gvj
+         iVSem5PrDcn10Ms15BlLuoVr2erdLemmBKlXbMROW0x0T88TNxhdG73mWnNuUBVXCJxh
+         q4wa5MR0/RhgiQn6VpOTZwVDpC8Z402BQugvF0sqzDXsoqn8igLEDo99DfHgMDx3vB79
+         7tQmZ87mOpZ1LMZcGBK9ywfFHbaoiWybGQF7CVshX4conJS+Q/ZVsf0/Qbd1g7E+OK5e
+         0QGQ==
+X-Gm-Message-State: AOAM533sAiYOfvS8McoAC6dVjN+Le0bd9TkThIkBhXB4onlDoaU/sKgl
+        f++eBArW9Oumy2unfMYlJxcEHvcd2jIvwr+7FVTv6g==
+X-Google-Smtp-Source: ABdhPJxLkBJqCTGf+urDE22psZ9kQBs7jd5tDjfYTwq0eIZiLv8gjpbdFkfhT1WGAohsQRYRqyhPHhMeA9xiVx5bOPw=
+X-Received: by 2002:a1c:1d52:: with SMTP id d79mr8761629wmd.82.1599234169816;
  Fri, 04 Sep 2020 08:42:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
- <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
- <e1431dd2653dbffdfec39a2e7167db07836e30ac.camel@ew.tq-group.com>
- <CAOMZO5C7yyA11EOQvU0Fq-uDd5RK-B7WmbtvAy8OtPzfThYXRg@mail.gmail.com>
- <f753882996235439b9ef53747d24382e896dc4e7.camel@ew.tq-group.com> <20200904150450.GG4625@sirena.org.uk>
-In-Reply-To: <20200904150450.GG4625@sirena.org.uk>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Fri, 4 Sep 2020 12:42:37 -0300
-Message-ID: <CAOMZO5DNE9dEqXMN3SkB2Xr_BZ2iFM=LJit0hp1sBCb8Htvr1g@mail.gmail.com>
-Subject: Re: (EXT) Re: (EXT) Re: [PATCH] spi-imx: remove num-cs support, set
- num_chipselect to 4
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+ <a712d2b70aaee20379cfc52c2141aa2f6e2a9d5b.1599120059.git-series.maxime@cerno.tech>
+In-Reply-To: <a712d2b70aaee20379cfc52c2141aa2f6e2a9d5b.1599120059.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Fri, 4 Sep 2020 16:42:35 +0100
+Message-ID: <CAPY8ntBuPWFU-xEoLwR=C1ccbA5CoxcQ1Gx_zvWf+VQzRg=E1g@mail.gmail.com>
+Subject: Re: [PATCH v5 13/80] drm/vc4: kms: Convert to for_each_new_crtc_state
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Hi Maxime
 
-On Fri, Sep 4, 2020 at 12:05 PM Mark Brown <broonie@kernel.org> wrote:
+On Thu, 3 Sep 2020 at 09:02, Maxime Ripard <maxime@cerno.tech> wrote:
 >
-> On Fri, Sep 04, 2020 at 04:34:43PM +0200, Matthias Schiffer wrote:
+> The vc4 atomic commit loop has an handrolled loop that is basically
+> identical to for_each_new_crtc_state, let's convert it to that helper.
 >
-> > Nevertheless, I don't see why we should deliberately remove the native
-> > CS support - my understanding was that we try to avoid breaking changes
-> > to DT interpretation even for unknown/out-of-tree DTS.
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+
+Based on your comment to the previous revision, I'm happy.
+
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> ---
+>  drivers/gpu/drm/vc4/vc4_kms.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 >
-> Yes, we should try to maintain compatibility for anyone that was using
-> it.
-
-We are not breaking compatibility.
-
-Prior to 8cdcd8aeee281 ("spi: imx/fsl-lpspi: Convert to GPIO
-descriptors")  num_chipselect was 1 for all device tree users.
-i.MX board files will be removed, so we don't need to worry about them.
-
-What will cause breakage is to say that the driver supports the native
-chip-select.
-
-I have just done a quick test on an imx6q-sabresd.
-
-With the original dts that uses cs-gpios the SPI NOR is correctly probed:
-
-[    5.402627] spi-nor spi0.0: m25p32 (4096 Kbytes)
-
-However, using native chip select with this dts change:
-
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -189,7 +189,6 @@
- };
-
- &ecspi1 {
--       cs-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-        pinctrl-names = "default";
-        pinctrl-0 = <&pinctrl_ecspi1>;
-        status = "okay";
-@@ -506,7 +505,7 @@
-                                MX6QDL_PAD_KEY_COL1__ECSPI1_MISO        0x100b1
-                                MX6QDL_PAD_KEY_ROW0__ECSPI1_MOSI        0x100b1
-                                MX6QDL_PAD_KEY_COL0__ECSPI1_SCLK        0x100b1
--                               MX6QDL_PAD_KEY_ROW1__GPIO4_IO09         0x1b0b0
-+                               MX6QDL_PAD_KEY_ROW1__ECSPI1_SS0         0x1b0b0
-                        >;
-                };
-
-Causes SPI NOR probe to fail:
-
-[    5.388704] spi-nor spi0.0: unrecognized JEDEC id bytes: 00 00 00 00 00 00
-
-That's why I prefer we do not advertise that we can use the native
-chip-select with this driver.
+> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
+> index 210cc2408087..a41d105d4e3c 100644
+> --- a/drivers/gpu/drm/vc4/vc4_kms.c
+> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
+> @@ -152,14 +152,16 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
+>         struct drm_device *dev = state->dev;
+>         struct vc4_dev *vc4 = to_vc4_dev(dev);
+>         struct vc4_hvs *hvs = vc4->hvs;
+> -       struct vc4_crtc *vc4_crtc;
+> +       struct drm_crtc_state *new_crtc_state;
+> +       struct drm_crtc *crtc;
+>         int i;
+>
+> -       for (i = 0; i < dev->mode_config.num_crtc; i++) {
+> -               if (!state->crtcs[i].ptr || !state->crtcs[i].commit)
+> +       for_each_new_crtc_in_state(state, crtc, new_crtc_state, i) {
+> +               struct vc4_crtc *vc4_crtc = to_vc4_crtc(crtc);
+> +
+> +               if (!new_crtc_state->commit)
+>                         continue;
+>
+> -               vc4_crtc = to_vc4_crtc(state->crtcs[i].ptr);
+>                 vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
+>         }
+>
+> --
+> git-series 0.9.1
