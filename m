@@ -2,334 +2,118 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F0FC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1959A2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACC482078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 23:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="C8ViL/s7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K+rNvidz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lAqUJ/9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgIDX3y (ORCPT
+        id S1728252AbgIDXdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 19:29:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32766 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728247AbgIDX3w (ORCPT
+        Fri, 4 Sep 2020 19:33:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbgIDXdK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 19:29:52 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 084N21Hj163406;
-        Fri, 4 Sep 2020 19:29:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=54a2dzktp+EaHtCMf6qtkuWphngdICkTER0HUdbympk=;
- b=C8ViL/s7FNY8h8WhwaEB098tY71QdtO6ajR4dK8hOk9u5znLJdD2s/bzySznfSFLEVCh
- VM29V81lqCr7ZDQBFMkI3ZDigjQ8ieI7AVC+9ddDkjklpWamCnwwKwVjv9t0uNPZFH0l
- uhhlznvHKakKr8AgbmQNqm+rLqmnn/+pAkgAannk2FzPE10CWUbqvNq/T003WNJ5dZB2
- oqRgY0l/RrRiSE4NO/jE6fMFbXNok8P9Zagclp2O+vLkINaePckAyds0MsoRUrU/WBrO
- E9zVlpQZt0DyjCCoi55g9erVGMdFGB2yLhWPFt2VJVeQQBYM2ddrep+EQ5Ay2Vqmv9Lm nQ== 
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33bwga9x0r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 19:29:40 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 084NRaOt017407;
-        Fri, 4 Sep 2020 23:29:39 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma01dal.us.ibm.com with ESMTP id 337enafmse-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 04 Sep 2020 23:29:39 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 084NTcea57213326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 4 Sep 2020 23:29:38 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B5C542805A;
-        Fri,  4 Sep 2020 23:29:38 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 426CE28059;
-        Fri,  4 Sep 2020 23:29:38 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.40.195.188])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  4 Sep 2020 23:29:38 +0000 (GMT)
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-To:     james.bottomley@hansenpartnership.com
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        brking@linux.ibm.com, Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: [PATCH v3 1/2] scsi: ibmvfc: use compiler attribute defines instead of __attribute__()
-Date:   Fri,  4 Sep 2020 18:29:35 -0500
-Message-Id: <20200904232936.840193-1-tyreld@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
+        Fri, 4 Sep 2020 19:33:10 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 126CAC061244;
+        Fri,  4 Sep 2020 16:33:10 -0700 (PDT)
+Date:   Fri, 04 Sep 2020 23:33:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599262388;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T+APnNSye1kJjw9olDELRnc3+FWK++0UzgXwBMBFY2k=;
+        b=K+rNvidzdBzbmmZtm4supmHy2Ysh/Fe+yZLe0kqY6cE5YBbXTuXiOkAmVLT1n5OE5yDaA4
+        HI9z8I6RQ4fOlraleUZEg+04sneaDJ2o0IdbGviBCKY/v3ENfUCAMjZ76N3UPT8Uwb/u4L
+        Eiqw6pINqNtRcFw4ajG1vSnlEdWhFxVBMWUqtnEluasBlGEvOKv0Pqq4YMuTaXXcBQr8+q
+        Eaf8aOisXMtx1DauCxXgUVUOB3ok9dIKwBXReBLHmXG8Xkp/mrPTLiSKlMF3QoWYrENUNZ
+        0Xp8uYT0df34qVU1m4L4hphaM2SRm9Y7MsZ1tdAzlaxqATHy7DoKkclktn5BEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599262388;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T+APnNSye1kJjw9olDELRnc3+FWK++0UzgXwBMBFY2k=;
+        b=lAqUJ/9aeS9DKSzPUQ90warCqDzVfV3mf5Kj/MpuLAz7U9lsueHZ8lHRfTYCbTTl+Q+uoE
+        KwA+CBcQt6ZgfUCw==
+From:   "tip-bot2 for Colin Ian King" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/resctrl: Fix spelling in user-visible warning
+ messages
+Cc:     Colin Ian King <colin.king@canonical.com>,
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200810075508.46490-1-colin.king@canonical.com>
+References: <20200810075508.46490-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-04_15:2020-09-04,2020-09-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 impostorscore=0 adultscore=0 spamscore=0 priorityscore=1501
- malwarescore=0 clxscore=1015 phishscore=0 mlxlogscore=999 suspectscore=1
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009040191
+Message-ID: <159926238705.20229.16169849403685136300.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update ibmvfc.h structs to use the preferred  __packed and __aligned()
-attribute macros defined in include/linux/compiler_attributes.h in place
-of __attribute__().
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Commit-ID:     93921baa3f6ff77e57d7e772165aa7bd709b5387
+Gitweb:        https://git.kernel.org/tip/93921baa3f6ff77e57d7e772165aa7bd709b5387
+Author:        Colin Ian King <colin.king@canonical.com>
+AuthorDate:    Mon, 10 Aug 2020 08:55:08 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Sat, 05 Sep 2020 01:24:17 +02:00
+
+x86/resctrl: Fix spelling in user-visible warning messages
+
+Fix spelling mistake "Could't" -> "Couldn't" in user-visible warning
+messages.
+
+ [ bp: Massage commit message; s/cpu/CPU/g ]
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200810075508.46490-1-colin.king@canonical.com
 ---
- drivers/scsi/ibmvscsi/ibmvfc.h | 56 +++++++++++++++++-----------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+ arch/x86/kernel/cpu/resctrl/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.h b/drivers/scsi/ibmvscsi/ibmvfc.h
-index 907889f1fa9d..6da23666f5be 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.h
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.h
-@@ -133,16 +133,16 @@ struct ibmvfc_mad_common {
- 	__be16 status;
- 	__be16 length;
- 	__be64 tag;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 6a9df71..9cceee6 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -562,7 +562,7 @@ static void domain_add_cpu(int cpu, struct rdt_resource *r)
  
- struct ibmvfc_npiv_login_mad {
- 	struct ibmvfc_mad_common common;
- 	struct srp_direct_buf buffer;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
+ 	d = rdt_find_domain(r, id, &add_pos);
+ 	if (IS_ERR(d)) {
+-		pr_warn("Could't find cache id for cpu %d\n", cpu);
++		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
+ 		return;
+ 	}
  
- struct ibmvfc_npiv_logout_mad {
- 	struct ibmvfc_mad_common common;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
+@@ -607,7 +607,7 @@ static void domain_remove_cpu(int cpu, struct rdt_resource *r)
  
- #define IBMVFC_MAX_NAME 256
+ 	d = rdt_find_domain(r, id, NULL);
+ 	if (IS_ERR_OR_NULL(d)) {
+-		pr_warn("Could't find cache id for cpu %d\n", cpu);
++		pr_warn("Couldn't find cache id for CPU %d\n", cpu);
+ 		return;
+ 	}
  
-@@ -168,7 +168,7 @@ struct ibmvfc_npiv_login {
- 	u8 device_name[IBMVFC_MAX_NAME];
- 	u8 drc_name[IBMVFC_MAX_NAME];
- 	__be64 reserved2[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_common_svc_parms {
- 	__be16 fcph_version;
-@@ -177,7 +177,7 @@ struct ibmvfc_common_svc_parms {
- 	__be16 bb_rcv_sz; /* upper nibble is BB_SC_N */
- 	__be32 ratov;
- 	__be32 edtov;
--}__attribute__((packed, aligned (4)));
-+} __packed __aligned(4);
- 
- struct ibmvfc_service_parms {
- 	struct ibmvfc_common_svc_parms common;
-@@ -192,7 +192,7 @@ struct ibmvfc_service_parms {
- 	__be32 ext_len;
- 	__be32 reserved[30];
- 	__be32 clk_sync_qos[2];
--}__attribute__((packed, aligned (4)));
-+} __packed __aligned(4);
- 
- struct ibmvfc_npiv_login_resp {
- 	__be32 version;
-@@ -217,12 +217,12 @@ struct ibmvfc_npiv_login_resp {
- 	u8 drc_name[IBMVFC_MAX_NAME];
- 	struct ibmvfc_service_parms service_parms;
- 	__be64 reserved2;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- union ibmvfc_npiv_login_data {
- 	struct ibmvfc_npiv_login login;
- 	struct ibmvfc_npiv_login_resp resp;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_discover_targets_buf {
- 	__be32 scsi_id[1];
-@@ -239,7 +239,7 @@ struct ibmvfc_discover_targets {
- 	__be32 num_avail;
- 	__be32 num_written;
- 	__be64 reserved[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- enum ibmvfc_fc_reason {
- 	IBMVFC_INVALID_ELS_CMD_CODE	= 0x01,
-@@ -283,7 +283,7 @@ struct ibmvfc_port_login {
- 	struct ibmvfc_service_parms service_parms;
- 	struct ibmvfc_service_parms service_parms_change;
- 	__be64 reserved3[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_prli_svc_parms {
- 	u8 type;
-@@ -303,7 +303,7 @@ struct ibmvfc_prli_svc_parms {
- #define IBMVFC_PRLI_TARGET_FUNC			0x00000010
- #define IBMVFC_PRLI_READ_FCP_XFER_RDY_DISABLED	0x00000002
- #define IBMVFC_PRLI_WR_FCP_XFER_RDY_DISABLED	0x00000001
--}__attribute__((packed, aligned (4)));
-+} __packed __aligned(4);
- 
- struct ibmvfc_process_login {
- 	struct ibmvfc_mad_common common;
-@@ -314,7 +314,7 @@ struct ibmvfc_process_login {
- 	__be16 error;			/* also fc_reason */
- 	__be32 reserved2;
- 	__be64 reserved3[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_query_tgt {
- 	struct ibmvfc_mad_common common;
-@@ -325,13 +325,13 @@ struct ibmvfc_query_tgt {
- 	__be16 fc_explain;
- 	__be16 fc_type;
- 	__be64 reserved[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_implicit_logout {
- 	struct ibmvfc_mad_common common;
- 	__be64 old_scsi_id;
- 	__be64 reserved[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_tmf {
- 	struct ibmvfc_mad_common common;
-@@ -348,7 +348,7 @@ struct ibmvfc_tmf {
- 	__be32 my_cancel_key;
- 	__be32 pad;
- 	__be64 reserved[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- enum ibmvfc_fcp_rsp_info_codes {
- 	RSP_NO_FAILURE		= 0x00,
-@@ -361,7 +361,7 @@ struct ibmvfc_fcp_rsp_info {
- 	u8 reserved[3];
- 	u8 rsp_code;
- 	u8 reserved2[4];
--}__attribute__((packed, aligned (2)));
-+} __packed __aligned(2);
- 
- enum ibmvfc_fcp_rsp_flags {
- 	FCP_BIDI_RSP			= 0x80,
-@@ -377,7 +377,7 @@ enum ibmvfc_fcp_rsp_flags {
- union ibmvfc_fcp_rsp_data {
- 	struct ibmvfc_fcp_rsp_info info;
- 	u8 sense[SCSI_SENSE_BUFFERSIZE + sizeof(struct ibmvfc_fcp_rsp_info)];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_fcp_rsp {
- 	__be64 reserved;
-@@ -388,7 +388,7 @@ struct ibmvfc_fcp_rsp {
- 	__be32 fcp_sense_len;
- 	__be32 fcp_rsp_len;
- 	union ibmvfc_fcp_rsp_data data;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- enum ibmvfc_cmd_flags {
- 	IBMVFC_SCATTERLIST	= 0x0001,
-@@ -422,7 +422,7 @@ struct ibmvfc_fcp_cmd_iu {
- #define IBMVFC_WRDATA		0x01
- 	u8 cdb[IBMVFC_MAX_CDB_LEN];
- 	__be32 xfer_len;
--}__attribute__((packed, aligned (4)));
-+} __packed __aligned(4);
- 
- struct ibmvfc_cmd {
- 	__be64 task_tag;
-@@ -446,7 +446,7 @@ struct ibmvfc_cmd {
- 	__be64 reserved3[2];
- 	struct ibmvfc_fcp_cmd_iu iu;
- 	struct ibmvfc_fcp_rsp rsp;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_passthru_fc_iu {
- 	__be32 payload[7];
-@@ -473,18 +473,18 @@ struct ibmvfc_passthru_iu {
- 	__be64 scsi_id;
- 	__be64 tag;
- 	__be64 reserved2[2];
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_passthru_mad {
- 	struct ibmvfc_mad_common common;
- 	struct srp_direct_buf cmd_ioba;
- 	struct ibmvfc_passthru_iu iu;
- 	struct ibmvfc_passthru_fc_iu fc_iu;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_trace_start_entry {
- 	u32 xfer_len;
--}__attribute__((packed));
-+} __packed;
- 
- struct ibmvfc_trace_end_entry {
- 	u16 status;
-@@ -493,7 +493,7 @@ struct ibmvfc_trace_end_entry {
- 	u8 rsp_code;
- 	u8 scsi_status;
- 	u8 reserved;
--}__attribute__((packed));
-+} __packed;
- 
- struct ibmvfc_trace_entry {
- 	struct ibmvfc_event *evt;
-@@ -510,7 +510,7 @@ struct ibmvfc_trace_entry {
- 		struct ibmvfc_trace_start_entry start;
- 		struct ibmvfc_trace_end_entry end;
- 	} u;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- enum ibmvfc_crq_formats {
- 	IBMVFC_CMD_FORMAT		= 0x01,
-@@ -545,7 +545,7 @@ struct ibmvfc_crq {
- 	volatile u8 format;
- 	u8 reserved[6];
- 	volatile __be64 ioba;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_crq_queue {
- 	struct ibmvfc_crq *msgs;
-@@ -570,7 +570,7 @@ struct ibmvfc_async_crq {
- 	volatile __be64 wwpn;
- 	volatile __be64 node_name;
- 	__be64 reserved;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- struct ibmvfc_async_crq_queue {
- 	struct ibmvfc_async_crq *msgs;
-@@ -590,7 +590,7 @@ union ibmvfc_iu {
- 	struct ibmvfc_tmf tmf;
- 	struct ibmvfc_cmd cmd;
- 	struct ibmvfc_passthru_mad passthru;
--}__attribute__((packed, aligned (8)));
-+} __packed __aligned(8);
- 
- enum ibmvfc_target_action {
- 	IBMVFC_TGT_ACTION_NONE = 0,
--- 
-2.27.0
-
