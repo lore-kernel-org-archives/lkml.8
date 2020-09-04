@@ -2,114 +2,104 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	TVD_SUBJ_WIPE_DEBT,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB4CC4CC71
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D8AC49EBF
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305F9248E5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599242633;
-	bh=gZm0FbvxyjoTKxH8aaKUuJUaShJJQPTYaECSWWMDM9c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HoQxJsgPSJ/5KcoGDqx0Rmw3ud9s1t/EYFvNpb3ryTa6vetKoPel/Ws6aOdMx325Y
-	 0rajkHI6M3wO8HhRKrCjNUiulYdS9EknF4i4+9oEHoTCYKBvxXIF+WvQ59bTUjpV4m
-	 a8byE4FbirFiYXOMYewsw3B7zIUDWA/jpWMbEz6o=
+	by mail.kernel.org (Postfix) with ESMTP id 500CB2223F
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgQCIgRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgIDRL3 (ORCPT
+        id S1727874AbgIDR6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 13:11:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
+        Fri, 4 Sep 2020 13:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgIDRL2 (ORCPT
+        with ESMTP id S1726047AbgIDR62 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 13:11:28 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADAC8C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 10:11:27 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id e11so8843614ljn.6
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:11:27 -0700 (PDT)
+        Fri, 4 Sep 2020 13:58:28 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B48FC061244;
+        Fri,  4 Sep 2020 10:58:27 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id n22so6978444edt.4;
+        Fri, 04 Sep 2020 10:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LwSOZ3VxHk2DxOprDUCFltuLBh+Nnc13XxZ9vhv/VSM=;
-        b=Ai5VYeCU8N0HEbW+IM5blqtlPgBAdGE7a3XFUEbRHQk5rk29NE1Y6tMiu2T/EMq17a
-         oE42EL494zdqelcOJfkWDvC8gduDspSWRXtrBLodjT6PNtuIMZdw4lEZsKoERdT4+qfQ
-         DzOZXMaeU+RmNmSqU9sHI/NrjQBcHXnvyzI6I=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xWrD3MuyolikZBdkT5ghr88RwiH+oj1SGO1EEE8/fK8=;
+        b=fgQCIgRWO9koqQpJSZq0UUVMNjWdYYuTIm3HfndnOr8ei7WofSr0zy+yG8x0XPPYry
+         syRVhzehT0ZIjLtJNng03oQjHxaMO3BEcdNUzsIkeTxfqetWTO2vTELR3ZpcuRrRZ5/L
+         N1ZVac6a1zcGtBy3wgfNZYi9YASM4WHZtCE19VizJ1ypdJt7bMP1VGdbHtj/8jZHkrE/
+         aMvFV3CsEjbwtu9wLUvO6dR+NlU9QQRfxsV5TjzRLcrBr4zIp6ijB35Q9TVuFQsjDP9E
+         C9RKR7D19nIk6CCoFvQeImizIc1LJbdyP/98edlFpfyTem8uTC/SzpqJKf/5pt2FEhOI
+         qBAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LwSOZ3VxHk2DxOprDUCFltuLBh+Nnc13XxZ9vhv/VSM=;
-        b=Qb4v7A+8KoO7g0+GkGfw67IhLOzkWbZgXvrJRlf4V6Zg8lIZCi/ZGbS9NE/NoTrqso
-         gKSjz66vklt0llCGP6YQ3wLUgjnl39Dr99O2vmQXgglHu2ZvEcEgsAg2TvUfQzLA05LQ
-         AdCjGbrF+GdbHlASjnqCMO1cQ6BNiCFR0CoaruHgKD1xVSFfNm0ePL/9qIJfk0dzRiam
-         8fK9KfHX4R2YkMA0PxwZa1ucDQgZUDLOnh8dXts43YQwfew+XCzwKybvmI4z2ZWf538B
-         JVQR3dF701rkjJ94SkIGgI7RU3PztycbYZyoVTSmKTN94zFOoW/ITuQCVTVtuUB5M6ZT
-         npdw==
-X-Gm-Message-State: AOAM531NEBuDTxwwGwfkiXHitBbjBaSxSz9zRwn++A+3sh/i5hRLTFiI
-        DfyplHEsY5MqHNdo3DaYVr+/3fwNiybv2g==
-X-Google-Smtp-Source: ABdhPJy+LfFDnhB2nLi6blePpdS7U79a2JkZgd/mzOmUv4ottMvXO/eSPY47M2bkHirmdF8057DRpg==
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr4691383ljp.312.1599239485901;
-        Fri, 04 Sep 2020 10:11:25 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id s4sm1360943lja.124.2020.09.04.10.11.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 10:11:22 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id y11so4249396lfl.5
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 10:11:22 -0700 (PDT)
-X-Received: by 2002:a05:6512:50c:: with SMTP id o12mr4298936lfb.192.1599239481877;
- Fri, 04 Sep 2020 10:11:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xWrD3MuyolikZBdkT5ghr88RwiH+oj1SGO1EEE8/fK8=;
+        b=J1PqSVAnaw9+4j7Fdyqz1/9nK0lCuA4fH24FkfzRCIroHRGjPquAst3C3XRRpeUhEA
+         FToZwygNu7yBuqBMZSmfzksgEq5G2R7Al/rOeNcKtX4wkCEpm/JrzK6PKa79KDqxD9Oq
+         bRRjTAId1z/2gHv1nzQq7b5FP2n2hGJAkwvQXrwh5biLHgnZZnQV/LRRfCoB0bPqSIYJ
+         Lw43P/K+KnA2iKjFvRpqnykM3m6pfm/OfepdU7MnWRGpJfC+AAkjXbHCQitRGFDicDXM
+         SJNIGSzbM5GDpp28DQydefuYEKED989UQHohsaC60edMQFVBqTFbHGGbAei3hL+xCSg9
+         dCEg==
+X-Gm-Message-State: AOAM531oYq72g/rGr3GEyIo7Q907FPMBCUb/zztj4tg/F3I2bQukul2Y
+        Soqaorr2jhEpIKC37WycWA==
+X-Google-Smtp-Source: ABdhPJwmF6eKN6yrdWqMeDA6ZaWPrS1RLQwm+PEUIDVhPMvcR0xkr1YXtb5BAvLBd7cgo66vO8NUpA==
+X-Received: by 2002:aa7:d043:: with SMTP id n3mr9504016edo.243.1599242306081;
+        Fri, 04 Sep 2020 10:58:26 -0700 (PDT)
+Received: from localhost.localdomain ([46.53.251.136])
+        by smtp.gmail.com with ESMTPSA id lo25sm6546522ejb.53.2020.09.04.10.58.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 10:58:25 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 20:58:23 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: remove the last set_fs() in common code, and remove it for x86
+ and powerpc v3
+Message-ID: <20200904175823.GA500051@localhost.localdomain>
+References: <20200903142242.925828-1-hch@lst.de>
+ <20200904060024.GA2779810@gmail.com>
 MIME-Version: 1.0
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
- <CAHk-=whpJp9W_eyhqJU3Y2JsnX45xMfQHFNQSsb9dNirdMFnaA@mail.gmail.com> <alpine.LRH.2.02.2009040402560.14993@file01.intranet.prod.int.rdu2.redhat.com>
-In-Reply-To: <alpine.LRH.2.02.2009040402560.14993@file01.intranet.prod.int.rdu2.redhat.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 4 Sep 2020 10:11:06 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgmhDNm7+w0atqAj3X=izWxNut_4kQGTG8n=+HhtxEbRw@mail.gmail.com>
-Message-ID: <CAHk-=wgmhDNm7+w0atqAj3X=izWxNut_4kQGTG8n=+HhtxEbRw@mail.gmail.com>
-Subject: Re: a crash when running strace from persistent memory
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Jann Horn <jannh@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kirill Shutemov <kirill@shutemov.name>,
-        Jan Kara <jack@suse.cz>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200904060024.GA2779810@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 1:08 AM Mikulas Patocka <mpatocka@redhat.com> wrote:
->
-> I applied these four patches and strace works well. There is no longer any
-> warning or crash.
+On Fri, Sep 04, 2020 at 08:00:24AM +0200, Ingo Molnar wrote:
+> * Christoph Hellwig <hch@lst.de> wrote:
+> > this series removes the last set_fs() used to force a kernel address
+> > space for the uaccess code in the kernel read/write/splice code, and then
+> > stops implementing the address space overrides entirely for x86 and
+> > powerpc.
+> 
+> Cool! For the x86 bits:
+> 
+>   Acked-by: Ingo Molnar <mingo@kernel.org>
 
-Ok. I obviously approve of that series whole-heartedly, but I still
-didn't want to apply it this way (and with this kind of "mid-rc"
-timing).
+set_fs() is older than some kernel hackers!
 
-I was hoping to just leave it for the next merge window, but there are
-now two independent problems that that forced COW patch of mine
-caused, and a plain revert isn't acceptable either, so I've just
-applied that series to my tree despite the garbage timing.
-
-Maybe I'm just making excuses and rationalizing because I wanted that
-series anyway, and patches that remove lines in core code make me
-happy, but I don't see other great alternatives.
-
-              Linus
+	$ cd linux-0.11/
+	$ find . -type f -name '*.h' | xargs grep -e set_fs -w -n -A3
+	./include/asm/segment.h:61:extern inline void set_fs(unsigned long val)
+	./include/asm/segment.h-62-{
+	./include/asm/segment.h-63-     __asm__("mov %0,%%fs"::"a" ((unsigned short) val));
+	./include/asm/segment.h-64-}
