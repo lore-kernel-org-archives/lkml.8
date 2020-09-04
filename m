@@ -2,325 +2,515 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBFE20748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eeLpY+Dz"
+	by mail.kernel.org (Postfix) with ESMTP id 3836620748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726399AbgIDEWh (ORCPT
+        id S1726185AbgIDE3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 00:22:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDEWc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 00:22:32 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51EA6C061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 21:22:31 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id s13so4774048wmh.4
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 21:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HJNootjbgI1yqKE1hshu70n//JA6RH+qTwDjuT7fs/U=;
-        b=eeLpY+Dz8LGHQenp7nC3ZXa9uMS32u98WxUmvvSvnTrQLcZEK2ouBySGqHmHsCrqhW
-         mTFBJzgGOEHCG0YLsQvG97TxB1Qy3yGhn1KEskth+ReojuNTPpEVYfQYa4Fspy+qvN48
-         CSpcW1sIKKGfMlQTxhGTFEG/ErD8p4MZi7qkCPzFUCosJyIEEz06tTzFvec7H107LFf6
-         7d6GVeraFU6FmM7l7Tu2sb1yJpEzSaQ+msbNafkRfgjbJv84UJkIKHPzL8GDWW4Diuim
-         0tbFzlFfdoS8gaJUfjabqb/5jIFbL7Ba8SaTNZhBphv16SDSMa546M1x19U0VSmjGemb
-         Obcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HJNootjbgI1yqKE1hshu70n//JA6RH+qTwDjuT7fs/U=;
-        b=OYdB7w4a+28WtJrrnLny2F1zkk9JqQZDgvE+8fIQm527HHzlYj7a6SaK3ZAWsQ9Jgl
-         WpW1c56cnF2ks9BOGquRhg8kSOWYh+On442pfHmgrJxmk6KHsETnBo2x0ZT5vyqII77H
-         QSxswIrFi04cLS0kL0Ap0nhUgxaJecyHV64qx75OJzyylQwi+BC1+ryENen5C2w4iGQn
-         Knjhg1Uo8eF0LcGC4Y+NfqsWukK+7JeT1jDHMpsXti4C3do8erGF2cSKEkVcKud7wrM5
-         u58sH3AkOCEwXKcoCbAnT07bsT73bh+xYzQ0/oH5VzcW1k+YEy001GP2KTJQP4KKB0V6
-         U7wQ==
-X-Gm-Message-State: AOAM532RsK6wca52rpVsToUa4xK3/AgzVhJB66z/RLFcsxXOwHCEZihq
-        2oRQkitQQfTd3v44JU9HKzgxTp0mmv6sitiaCuaEbg==
-X-Google-Smtp-Source: ABdhPJyR3dCQXTEZer3IkFNsPERlVAdJMzlp1+MdP/tnbbgOf1106eDG7rfHH/99KUFFxBZHF7Oh/wIdrtnT/tQmqoE=
-X-Received: by 2002:a7b:c384:: with SMTP id s4mr5362800wmj.138.1599193349790;
- Thu, 03 Sep 2020 21:22:29 -0700 (PDT)
+        Fri, 4 Sep 2020 00:29:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:4722 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgIDE3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 00:29:18 -0400
+IronPort-SDR: MTIYFWNk/HCu4NbQrMa/JoYu6RXkVBiTiMWdCZBxg4rs1MzrqccGy0hXZ7uZfJmdkPAHOTd4+1
+ BxUuwPrWiSOg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="242512030"
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="242512030"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 21:29:13 -0700
+IronPort-SDR: vP/tGVpVmxWP+0Zx4QvsGNmU/Rrkw+R1kwrXn6/aAv2Kx/yOGuVoYL2lAMkLRbwbBo7sa2U2Jn
+ XQ21ZWzvVo2Q==
+X-IronPort-AV: E=Sophos;i="5.76,388,1592895600"; 
+   d="scan'208";a="478313934"
+Received: from sliu49-mobl1.ccr.corp.intel.com (HELO [10.249.174.205]) ([10.249.174.205])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 21:29:10 -0700
+Subject: Re: [PATCH v2 06/17] virt: acrn: Introduce VM management interfaces
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yu Wang <yu1.wang@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+References: <20200903124201.17275-1-shuo.a.liu@intel.com>
+ <20200903124201.17275-7-shuo.a.liu@intel.com>
+ <20200903130239.GB2778029@kroah.com>
+From:   "Liu, Shuo A" <shuo.a.liu@intel.com>
+Message-ID: <1946bf48-fda7-20e0-246d-93414a1a67f5@intel.com>
+Date:   Fri, 4 Sep 2020 12:29:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200702071416.1780522-1-davidgow@google.com> <20200827131438.GA3597431@elver.google.com>
- <CABVgOSmoiFh5i8Ue14MtCLwq-LbGgQ1hf4MyRYLFWFQrkushjQ@mail.gmail.com>
- <202008311641.D10607D43@keescook> <CABVgOSmF93YVD=scGL5p0tjnm0XUwC2n8LPT9xFqGje9zXQ96Q@mail.gmail.com>
- <CANpmjNP9OD0ZULQbZKv2HtVyO4Nho46uu4h9gNO8i-XhOMzHVw@mail.gmail.com>
-In-Reply-To: <CANpmjNP9OD0ZULQbZKv2HtVyO4Nho46uu4h9gNO8i-XhOMzHVw@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Fri, 4 Sep 2020 12:22:17 +0800
-Message-ID: <CABVgOSmvcToydrGzPGdTkRkKq62Gh4vtc+ZazGMfnsXw0FdRWQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: Add naming guidelines
-To:     Marco Elver <elver@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Randy Dunlap <rd.dunlab@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Tim Bird <Tim.Bird@sony.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200903130239.GB2778029@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 8:23 PM Marco Elver <elver@google.com> wrote:
->
-> On Tue, 1 Sep 2020 at 07:31, David Gow <davidgow@google.com> wrote:
-> > On Tue, Sep 1, 2020 at 7:47 AM Kees Cook <keescook@chromium.org> wrote:
-> > > On Fri, Aug 28, 2020 at 12:17:05AM +0800, David Gow wrote:
-> > > > On Thu, Aug 27, 2020 at 9:14 PM Marco Elver <elver@google.com> wrote:
-> [...]
-> >
-> > I guess there are two audiences to cater for:
-> > 1. Test authors, who may wish to have both unit-style and
-> > integration-style tests, and want to distinguish them. They probably
-> > have the best idea of where the line should be drawn for their
-> > subsystems, and may have some existing style/nomenclature.
-> > 2. People running "all tests", who want to broadly understand how the
-> > whole suite of tests will behave (e.g., how long they'll take to run,
-> > are they possibly nondeterministic, are there weird hardware/software
-> > dependencies). This is where some more standardisation probably makes
-> > sense.
-> >
-> > I'm not 100% the file/module name is the best place to make these
-> > distinctions (given that it's the Kconfig entries that are at least
-> > our current way of finding and running tests).
->
-> I agree -- as you note, it's very hard to make this distinction. Since
-> we're still discussing the best convention to use, one point I want to
-> make is that encoding a dependency ("kunit") or type of test (unit,
-> integration, etc.) in the name hurts scalability of our workflows.
-> Because as soon as the dependency changes, or the type, any
-> rename/move is very destructive to our workflow, because it
-> immediately causes conflict with any in-flight patches. Whereas
-> encoding this either in a comment, or via Kconfig would be less
-> destructive.
->
+Hi Greg,
 
-This is a good point -- renaming files is definitely a pain. It's
-obviously my hope that KUnit sticks around long enough that it's not
-being added/removed as a dependency too often, particularly for the
-unit tests, so "_kunit" as a name doesn't worry me that much
-otherwise.
+On 9/3/2020 21:02, Greg Kroah-Hartman wrote:
+> On Thu, Sep 03, 2020 at 08:41:50PM +0800, shuo.a.liu@intel.com wrote:
+>> From: Shuo Liu <shuo.a.liu@intel.com>
+>>
+>> The VM management interfaces expose several VM operations to ACRN
+>> userspace via ioctls. For example, creating VM, starting VM, destroying
+>> VM and so on.
+>>
+>> The ACRN Hypervisor needs to exchange data with the ACRN userspace
+>> during the VM operations. HSM provides VM operation ioctls to the ACRN
+>> userspace and communicates with the ACRN Hypervisor for VM operations
+>> via hypercalls.
+>>
+>> HSM maintains a list of User VM. Each User VM will be bound to an
+>> existing file descriptor of /dev/acrn_hsm. The User VM will be
+>> destroyed when the file descriptor is closed.
+>>
+>> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
+>> Reviewed-by: Zhi Wang <zhi.a.wang@intel.com>
+>> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+>> Cc: Zhi Wang <zhi.a.wang@intel.com>
+>> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
+>> Cc: Yu Wang <yu1.wang@intel.com>
+>> Cc: Reinette Chatre <reinette.chatre@intel.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> ---
+>>  drivers/virt/acrn/Makefile    |  2 +-
+>>  drivers/virt/acrn/acrn_drv.h  | 21 +++++++++-
+>>  drivers/virt/acrn/hsm.c       | 62 +++++++++++++++++++++++++++-
+>>  drivers/virt/acrn/hypercall.h | 78 +++++++++++++++++++++++++++++++++++
+>>  drivers/virt/acrn/vm.c        | 67 ++++++++++++++++++++++++++++++
+>>  include/uapi/linux/acrn.h     | 39 ++++++++++++++++++
+>>  6 files changed, 266 insertions(+), 3 deletions(-)
+>>  create mode 100644 drivers/virt/acrn/hypercall.h
+>>  create mode 100644 drivers/virt/acrn/vm.c
+>>
+>> diff --git a/drivers/virt/acrn/Makefile b/drivers/virt/acrn/Makefile
+>> index 6920ed798aaf..cf8b4ed5e74e 100644
+>> --- a/drivers/virt/acrn/Makefile
+>> +++ b/drivers/virt/acrn/Makefile
+>> @@ -1,3 +1,3 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  obj-$(CONFIG_ACRN_HSM)	:= acrn.o
+>> -acrn-y := hsm.o
+>> +acrn-y := hsm.o vm.o
+>> diff --git a/drivers/virt/acrn/acrn_drv.h b/drivers/virt/acrn/acrn_drv.h
+>> index 0b8e4fdc168a..043ae6840995 100644
+>> --- a/drivers/virt/acrn/acrn_drv.h
+>> +++ b/drivers/virt/acrn/acrn_drv.h
+>> @@ -4,16 +4,35 @@
+>>  #define __ACRN_HSM_DRV_H
+>>  
+>>  #include <linux/acrn.h>
+>> +#include <linux/dev_printk.h>
+>>  #include <linux/types.h>
+>>  
+>> +#include "hypercall.h"
+>> +
+>>  #define ACRN_INVALID_VMID (0xffffU)
+>>  
+>> +#define ACRN_VM_FLAG_DESTROYED		0U
+>> +extern struct list_head acrn_vm_list;
+>> +extern rwlock_t acrn_vm_list_lock;
+>>  /**
+>>   * struct acrn_vm - Properties of ACRN User VM.
+>> + * @dev:	The struct device this VM belongs to
+>> + * @list:	Entry within global list of all VMs
+>>   * @vmid:	User VM ID
+>> + * @vcpu_num:	Number of virtual CPUs in the VM
+>> + * @flags:	Flags (ACRN_VM_FLAG_*) of the VM. This is VM flag management
+>> + *		in HSM which is different from the &acrn_vm_creation.vm_flag.
+>>   */
+>>  struct acrn_vm {
+>> -	u16	vmid;
+>> +	struct device		*dev;
+>> +	struct list_head	list;
+>> +	u16			vmid;
+>> +	int			vcpu_num;
+>> +	unsigned long		flags;
+>>  };
+>>  
+>> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+>> +			       struct acrn_vm_creation *vm_param);
+>> +int acrn_vm_destroy(struct acrn_vm *vm);
+>> +
+>>  #endif /* __ACRN_HSM_DRV_H */
+>> diff --git a/drivers/virt/acrn/hsm.c b/drivers/virt/acrn/hsm.c
+>> index 549c7f8d6b5f..6ec6aa9053d3 100644
+>> --- a/drivers/virt/acrn/hsm.c
+>> +++ b/drivers/virt/acrn/hsm.c
+>> @@ -10,6 +10,7 @@
+>>   */
+>>  
+>>  #define pr_fmt(fmt) "acrn: " fmt
+>> +#define dev_fmt(fmt) "acrn: " fmt
+> 
+> This should not be needed anywhere, what is wrong with the default
+> prefix given to you by the dev_*() calls?
 
-> > An off-the-wall idea
-> > would be to have a flags field in the test suite structure to note
-> > things like "large/long-running test" or "nondeterministic", and have
-> > either a KUnit option to bypass them, note them in the output, or even
-> > something terrifying like parsing it out of a compiled module.
->
-> As a side-node, in the other very large codebase I have worked on, we
-> have such markers ("size = ..."):
-> https://docs.bazel.build/versions/master/be/common-definitions.html#common-attributes-tests
-> However, there is also incentive to get this distinction right,
-> because the test will be killed by the CI system if it exceeds the
-> specified size (ran too long, OOM). Not sure we have this incentive
-> yet.
->
+OK, the default prefix is enough. I will remove this define.
 
-KUnit does have test timeouts, but they're generous (30 seconds), and
-not configurable per-test or per-suite. Fixing that's probably a
-separate feature request which, as you point out, probably isn't worth
-doing until we're actually seeing a problem. Maybe it's something
-that'll become more apparent as KUnit is integrated into KernelCI and
-the like, so we see more (and more varied) test runs/configs.
+> 
+>>  
+>>  #include <linux/miscdevice.h>
+>>  #include <linux/mm.h>
+>> @@ -21,6 +22,8 @@
+>>  
+>>  #include "acrn_drv.h"
+>>  
+>> +static struct device *dev;
+> 
+> Um, why?  This feels really odd...
 
-> [...]
-> > > > I guess the interesting thing to note is that we've to date not really
-> > > > made a distinction between KUnit the framework and the suite of all
-> > > > KUnit tests. Maybe having a separate file/module naming scheme could
-> > > > be a way of making that distinction, though it'd really only appear
-> > > > when loading tests as modules -- there'd be no indication in e.g.,
-> > > > suite names or test results. The more obvious solution to me (at
-> > > > least, based on the current proposal) would be to have "integration"
-> > > > or similar be part of the suite name (and hence the filename, so
-> > > > _integration_kunit.c or similar), though even I admit that that's much
-> > > > uglier. Maybe the idea of having the subsystem/suite distinction be
-> > > > represented in the code could pave the way to having different suites
-> > > > support different suffixes like that.
-> > >
-> > > Heh, yeah, let's not call them "_integration_kunit.c" ;) _behavior.c?
-> > > _integration.c?
->
-> If possible, I'd still prefer generic filenames, because it's easy to
-> get wrong as we noted. Changes will cause conflicts.
->
-> > I think we'd really like something that says more strongly that this
-> > is a test (which is I suspect one of the reasons why _kunit.c has its
-> > detractors: it doesn't have the word "test" in it).
->
-> ^ Agreed.
->
+Sorry, my foolish. :)
+Will use 'static struct miscdevice acrn_dev' directly.
 
-I'm not personally convinced that "kunit" isn't something people could
-associate with tests, particularly as it becomes more popular, but if
-people really dislike it, we could have"_unittest.c" or similar.
-There's a balancing act between being generic (and not distinguishing
-between unit/integration/etc tests) and being consistent or avoiding
-renames. Take the case where there's a set of unit tests in a
-"-test.c" file, and an integration test is written as well: it
-probably should go in a speparate file, so now you'd either have a
-"-test.c" and a separate "-integration-test.c" (or the other way
-around if the integration test was written first), or the "-test.c"
-file would be renamed.
+>> +
+>>  /*
+>>   * When /dev/acrn_hsm is opened, a 'struct acrn_vm' object is created to
+>>   * represent a VM instance and continues to be associated with the opened file
+>> @@ -36,6 +39,7 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
+>>  		return -ENOMEM;
+>>  
+>>  	vm->vmid = ACRN_INVALID_VMID;
+>> +	vm->dev = dev;
+>>  	filp->private_data = vm;
+>>  	return 0;
+>>  }
+>> @@ -43,13 +47,68 @@ static int acrn_dev_open(struct inode *inode, struct file *filp)
+>>  static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
+>>  			   unsigned long ioctl_param)
+>>  {
+>> -	return 0;
+>> +	struct acrn_vm *vm = filp->private_data;
+>> +	struct acrn_vm_creation *vm_param;
+>> +	int ret = 0;
+>> +
+>> +	if (vm->vmid == ACRN_INVALID_VMID && cmd != ACRN_IOCTL_CREATE_VM) {
+>> +		dev_err(dev, "ioctl 0x%x: Invalid VM state!\n", cmd);
+>> +		return -EFAULT;
+>> +	}
+>> +
+>> +	switch (cmd) {
+>> +	case ACRN_IOCTL_CREATE_VM:
+>> +		vm_param = memdup_user((void __user *)ioctl_param,
+>> +				       sizeof(struct acrn_vm_creation));
+>> +		if (IS_ERR(vm_param))
+>> +			return PTR_ERR(vm_param);
+>> +
+>> +		vm = acrn_vm_create(vm, vm_param);
+>> +		if (!vm) {
+>> +			ret = -EFAULT;
+>> +			kfree(vm_param);
+>> +			break;
+>> +		}
+>> +
+>> +		if (copy_to_user((void __user *)ioctl_param, vm_param,
+>> +				 sizeof(struct acrn_vm_creation))) {
+>> +			acrn_vm_destroy(vm);
+>> +			ret = -EFAULT;
+>> +		}
+>> +
+>> +		kfree(vm_param);
+>> +		break;
+>> +	case ACRN_IOCTL_START_VM:
+>> +		ret = hcall_start_vm(vm->vmid);
+>> +		if (ret < 0)
+>> +			dev_err(dev, "Failed to start VM %u!\n", vm->vmid);
+>> +		break;
+>> +	case ACRN_IOCTL_PAUSE_VM:
+>> +		ret = hcall_pause_vm(vm->vmid);
+>> +		if (ret < 0)
+>> +			dev_err(dev, "Failed to pause VM %u!\n", vm->vmid);
+>> +		break;
+>> +	case ACRN_IOCTL_RESET_VM:
+>> +		ret = hcall_reset_vm(vm->vmid);
+>> +		if (ret < 0)
+>> +			dev_err(dev, "Failed to restart VM %u!\n", vm->vmid);
+>> +		break;
+>> +	case ACRN_IOCTL_DESTROY_VM:
+>> +		ret = acrn_vm_destroy(vm);
+>> +		break;
+>> +	default:
+>> +		dev_warn(dev, "Unknown IOCTL 0x%x!\n", cmd);
+>> +		ret = -ENOTTY;
+>> +	}
+>> +
+>> +	return ret;
+>>  }
+>>  
+>>  static int acrn_dev_release(struct inode *inode, struct file *filp)
+>>  {
+>>  	struct acrn_vm *vm = filp->private_data;
+>>  
+>> +	acrn_vm_destroy(vm);
+>>  	kfree(vm);
+>>  	return 0;
+>>  }
+>> @@ -83,6 +142,7 @@ static int __init hsm_init(void)
+>>  		return ret;
+>>  	}
+>>  
+>> +	dev = acrn_dev.this_device;
+> 
+> Oh wow.  No, please no.  You just broke reference counting rules.
+> 
+> Put this in your file-handle-specific structure, not in a global
+> structure, that's going to break into loads of tiny pieces if you ever
+> glance wrong at it...
+> 
+> And as always, when you save a pointer to something, you HAVE TO
+> REFERENCE COUNT IT!  Otherwise it will go away from you without you
+> noticing and bad thigns will happen.
+> 
+> There's a reason we have the functions get_device(), don't ignore it
+> please...
 
-> > The other thing to
-> > consider is that if there are multiple tests for the same thing (e.g.,
-> > a unit test suite and an integration test suite), they'd still need
-> > separate, non-conflicting suite names if we wanted them to be able to
-> > be present in the same kernel.
-> >
-> > Maybe the right thing to do is to say that, for now, the _kunit.c
-> > naming guideline only applies to "unit-style" tests.
-> [...]
-> >
-> > So, putting together the various bits of feedback, how about something
-> > like this:
-> > Test filenames/modules should end in _kunit.c, unless they are either
-> > a) not unit-style tests -- i.e, test something other than correctness
-> > (e.g., performance), are non-deterministic, take a long time to run (>
-> > ~1--2 seconds), or are testing across multiple subsystems -- OR
-> > b) are ports of existing tests, which may keep their existing filename
-> > (at least for now), so as not to break existing workflows.
-> >
-> > This is a bit weaker than the existing guidelines, and will probably
-> > need tightening up once we have a better idea of what non-unit tests
-> > should be and/or the existing, inconsistently named tests are
-> > sufficiently outnumbered by the _kunit ones that people are used to it
-> > and the perceived ugliness fades away. What (if any) tooling we need
-> > around enumerating tests may end up influencing/being influenced by
-> > this a bit, too.
-> >
-> > Thoughts?
->
-> That could work, but it all still feels a little unsatisfying. Here's
-> what I think the requirements for all this are:
->
-> 1. Clear, intuitive, descriptive filenames ("[...] something that says
-> more strongly that this is a test [...]").
->
-> 2. Avoid renames if any of the following changes: test framework, test
-> type or scope. I worry the most about this point, because it affects
-> our workflows. We need to avoid unnecessary patch conflicts, keep
-> cherry-picks simple, etc.
->
-> 3. Strive for consistently named tests, regardless of type (because
-> it's hard to get right).
->
-> 4. Want to distinguish KUnit tests from non-KUnit tests. (Also
-> consider that tooling can assist with this.)
->
+Thanks for reminding. Will use the helpers.
 
-I think that these are somewhat in conflict with each other, which is
-what makes this complicated. Particularly, it's going to be difficult
-to both avoid renames if the test framework changes and to distinguish
-between KUnit and non-KUnit tests by filename.
+> 
+>> +#define HC_ID_VM_BASE			0x10UL
+> 
+> Why 10?
 
-I personally think that of these requirements, 2 is probably the one
-that would cause people the most real-world pain. I'm not sure how
-often test type or scope changes enough to be worth the rename, and I
-hope KUnit survives long enough and is useful enough that test
-framework changes are kept to a minimum, but this has already
-irritated enough people porting tests to KUnit to be a noticeable
-issue. One possibility is to focus on module names, which are probably
-more important and can be renamed without changing the filename,
-though that's pretty ugly.
+the hypercalls are grouped with each group has a 0x10 items.
+There was also a 0, which was removed with api verison hypercall.
+The last patch will introduce another hypercall using group 0.
 
-I actually think "_kunit.c" probably is descriptive/intuitive enough
-to meet (1) -- or at least will be once KUnit is more widely used --
-but it does conflict a bit with 2.
 
-It'd be nice to have consistently named tests, but we're not there at
-the moment, so fixing it will require a lot of renaming things. It's
-looking increasingly unlikely that we'll be able to do that for
-everything, so making this a recommendation for new test suites is
-probably the best we're likely to get.
+>> +#define HC_CREATE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x00)
+>> +#define HC_DESTROY_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x01)
+>> +#define HC_START_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x02)
+>> +#define HC_PAUSE_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x03)
+>> +#define HC_RESET_VM			_HC_ID(HC_ID, HC_ID_VM_BASE + 0x05)
+>> +
+>> +/**
+>> + * hcall_create_vm() - Create a User VM
+>> + * @vminfo:	Service VM GPA of info of User VM creation
+>> + *
+>> + * Return: 0 on success, <0 on failure
+>> + */
+>> +static inline long hcall_create_vm(u64 vminfo)
+>> +{
+>> +	return acrn_hypercall1(HC_CREATE_VM, vminfo);
+>> +}
+>> +
+>> +/**
+>> + * hcall_start_vm() - Start a User VM
+>> + * @vmid:	User VM ID
+>> + *
+>> + * Return: 0 on success, <0 on failure
+>> + */
+>> +static inline long hcall_start_vm(u64 vmid)
+>> +{
+>> +	return acrn_hypercall1(HC_START_VM, vmid);
+>> +}
+>> +
+>> +/**
+>> + * hcall_pause_vm() - Pause a User VM
+>> + * @vmid:	User VM ID
+>> + *
+>> + * Return: 0 on success, <0 on failure
+>> + */
+>> +static inline long hcall_pause_vm(u64 vmid)
+>> +{
+>> +	return acrn_hypercall1(HC_PAUSE_VM, vmid);
+>> +}
+>> +
+>> +/**
+>> + * hcall_destroy_vm() - Destroy a User VM
+>> + * @vmid:	User VM ID
+>> + *
+>> + * Return: 0 on success, <0 on failure
+>> + */
+>> +static inline long hcall_destroy_vm(u64 vmid)
+>> +{
+>> +	return acrn_hypercall1(HC_DESTROY_VM, vmid);
+>> +}
+>> +
+>> +/**
+>> + * hcall_reset_vm() - Reset a User VM
+>> + * @vmid:	User VM ID
+>> + *
+>> + * Return: 0 on success, <0 on failure
+>> + */
+>> +static inline long hcall_reset_vm(u64 vmid)
+>> +{
+>> +	return acrn_hypercall1(HC_RESET_VM, vmid);
+>> +}
+> 
+> Why are you putting these as inline functions? 
 
-> These are the 2 options under closer consideration:
->
-> A. Original choice of "*-test.c": Satisfies 1,2,3. It seems to fail 4,
-> per Kees's original concern.
->
+There are short and in header file. Isn't it preferred?
 
-Kees also brings up that using hyphens instead of underscores causes
-some inconsistency with module names, which is a bit of a pain.
+ ANd not using the acrn_*
+> prefix for them?
 
-> B. "*_kunit.c": Satisfies 4, maybe 3.
->   - Fails 1, because !strstr("_kunit.c", "test") and the resulting
-> indirection. It hints at "unit test", but this may be a problem for
-> (2).
->   - Fails 2, because if the test for some reason decides to stop using
-> KUnit (or a unit test morphs into an integration test), the file needs
-> to be renamed.
->
-> And based on all this, why not:
->
-> C. "*-ktest.c" (or "*_ktest.c"):
->   - Satisfies 1, because it's descriptive and clearly says it's a
-> test; the 'k' can suggest it's an "[in-]kernel test" vs. some other
-> hybrid test that requires a userspace component.
->   - Satisfies 2, because neither test framework or test type need to
-> be encoded in the filename.
->   - Satisfies 3, because every test (that wants to use KUnit) can just
-> use this without thinking too much about it.
->   - Satisfies 4, because "git grep -- '[-_]ktest\.[co]'" returns nothing.
->
+The original reason is that the header file in the driver's own
+directory with 'static inline'. So i thought there are  no symbol name
+pollution.
 
-My concern with this is that we're introducing new jargon either way:
-does having "test" in the name outweigh the potential confusion from
-having "ktest" be in the filename only for "KUnit tests". So my
-feeling is that this would've been really useful if we'd named KUnit
-KTest (which, ironically, I think Brendan had considered) instead, but
-as-is is probably more confusing.
+I can add the prefix if you think it is better to have.
 
-> Thanks,
-> -- Marco
+> 
+>> +#endif /* __ACRN_HSM_HYPERCALL_H */
+>> diff --git a/drivers/virt/acrn/vm.c b/drivers/virt/acrn/vm.c
+>> new file mode 100644
+>> index 000000000000..770322904fcc
+>> --- /dev/null
+>> +++ b/drivers/virt/acrn/vm.c
+>> @@ -0,0 +1,67 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * ACRN_HSM: Virtual Machine management
+>> + *
+>> + * Copyright (C) 2020 Intel Corporation. All rights reserved.
+>> + *
+>> + * Authors:
+>> + *	Jason Chen CJ <jason.cj.chen@intel.com>
+>> + *	Yakui Zhao <yakui.zhao@intel.com>
+>> + */
+>> +#define pr_fmt(fmt) "acrn: " fmt
+>> +#define dev_fmt(fmt) "acrn: " fmt
+> 
+> Both of these should not be needed, right?
 
-At the risk of just chickening out at calling this "too hard", I'm
-leaning towards a variant of (A) here, and going for _test, but making
-it a weaker recommendation:
-- Specifying that the module name should end in _test, rather than the
-source filename. Module names are easier to change without causing
-merge conflicts (though they're a pain to change for the user).
-- Only applies to new test suites, and another suffix may be used if
-it conflicts with an existing non-kunit test (if it conflicts with a
-kunit test, they should be disambiguated in the suite name).
-- Test types (unit, integration, some subsystem-specific thing, etc)
-may be disambiguated in the suite name, at the discretion of the test
-author. (e.g., "driver_integration" as a suite name, with
-"driver_integration_test" as the module name, and either
-"driver_integration_test.c" or "integration_test.c" as recommended
-test filenames, depending on if "driver" is in its own directory.)
+OK. I will remove them.
 
-This should satisfy 1 & 2, and go some way towards satisfying 3. We
-can try to come up with some other technical solution to 4 if we need
-to.
+> 
+>> +
+>> +#include <linux/io.h>
+>> +#include <linux/mm.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#include "acrn_drv.h"
+>> +
+>> +LIST_HEAD(acrn_vm_list);
+> 
+> static?
+> 
+>> +DEFINE_RWLOCK(acrn_vm_list_lock);
+> 
+> static?
 
-Unless the objections are particularly earth-shattering, I'll do a new
-version of the patch that matches this next week. The other option is
-to drop the filename stuff from the document altogether, and sort it
-out in another patch, so we at least get some of the consistency in
-suite and Kconfig names.
+They will be used in another file by a later patch.
 
-Cheers,
--- David
+> 
+> What is this locking?  Documentation please...
+
+To protect acrn_vm_list. I will comments for it.
+
+> 
+>> +
+>> +struct acrn_vm *acrn_vm_create(struct acrn_vm *vm,
+>> +			       struct acrn_vm_creation *vm_param)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = hcall_create_vm(virt_to_phys(vm_param));
+>> +	if (ret < 0 || vm_param->vmid == ACRN_INVALID_VMID) {
+>> +		dev_err(vm->dev, "Failed to create VM! Error: %d\n", ret);
+>> +		return NULL;
+>> +	}
+>> +
+>> +	vm->vmid = vm_param->vmid;
+>> +	vm->vcpu_num = vm_param->vcpu_num;
+>> +
+>> +	write_lock_bh(&acrn_vm_list_lock);
+>> +	list_add(&vm->list, &acrn_vm_list);
+>> +	write_unlock_bh(&acrn_vm_list_lock);
+>> +
+>> +	dev_dbg(vm->dev, "VM %u created.\n", vm->vmid);
+>> +	return vm;
+>> +}
+>> +
+>> +int acrn_vm_destroy(struct acrn_vm *vm)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (vm->vmid == ACRN_INVALID_VMID ||
+>> +	    test_and_set_bit(ACRN_VM_FLAG_DESTROYED, &vm->flags))
+>> +		return 0;
+>> +
+>> +	/* Remove from global VM list */
+>> +	write_lock_bh(&acrn_vm_list_lock);
+>> +	list_del_init(&vm->list);
+>> +	write_unlock_bh(&acrn_vm_list_lock);
+>> +
+>> +	ret = hcall_destroy_vm(vm->vmid);
+>> +	if (ret < 0) {
+>> +		dev_err(vm->dev, "Failed to destroy VM %u\n", vm->vmid);
+>> +		clear_bit(ACRN_VM_FLAG_DESTROYED, &vm->flags);
+>> +		return ret;
+>> +	}
+>> +	dev_dbg(vm->dev, "VM %u destroyed.\n", vm->vmid);
+>> +	vm->vmid = ACRN_INVALID_VMID;
+>> +	return 0;
+>> +}
+>> diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
+>> index 4ae34f86e2be..364b1a783074 100644
+>> --- a/include/uapi/linux/acrn.h
+>> +++ b/include/uapi/linux/acrn.h
+>> @@ -11,7 +11,46 @@
+>>  
+>>  #include <linux/types.h>
+>>  
+>> +/**
+>> + * struct acrn_vm_creation - Info to create a User VM
+>> + * @vmid:		User VM ID returned from the hypervisor
+>> + * @reserved0:		Reserved
+>> + * @vcpu_num:		Number of vCPU in the VM. Return from hypervisor.
+>> + * @reserved1:		Reserved
+>> + * @uuid:		UUID of the VM. Pass to hypervisor directly.
+>> + * @vm_flag:		Flag of the VM creating. Pass to hypervisor directly.
+>> + * @ioreq_buf:		Service VM GPA of I/O request buffer. Pass to
+>> + *			hypervisor directly.
+>> + * @cpu_affinity:	CPU affinity of the VM. Pass to hypervisor directly.
+>> + * @reserved2:		Reserved
+>> + */
+>> +struct acrn_vm_creation {
+>> +	__u16	vmid;
+>> +	__u16	reserved0;
+>> +	__u16	vcpu_num;
+>> +	__u16	reserved1;
+>> +	__u8	uuid[16];
+> 
+> Don't we have a uuid type?
+
+Yes. include/uapi/linux/uuid.h
+
+But in this case, we just pass the uuid data from user space to
+hypervisor. So, we can remove a header dependeny with using raw data format.
+
+> 
+>> +	__u64	vm_flag;
+>> +	__u64	ioreq_buf;
+>> +	__u64	cpu_affinity;
+>> +	__u8	reserved2[8];
+>> +} __attribute__((aligned(8)));
+> 
+> For "reserved" fields, are you ensuring that they are set to 0 now?  If
+> not, please do so, otherwise things will break in the future...
+
+These structures are filled by user space, then be passed to hypervisor
+via hypercalls. Need kernel fill reserved fields in the transmitting ?
+
+Thanks
+shuo
