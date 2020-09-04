@@ -2,124 +2,117 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E57C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F020C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2715720770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EE82074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qPYjFdX5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbgIDP2M (ORCPT
+        id S1726161AbgIDPaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:28:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44670 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730224AbgIDP2F (ORCPT
+        Fri, 4 Sep 2020 11:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725984AbgIDPaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:28:05 -0400
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-190-UNr5EU4HOti7zKsrqzy5gA-1; Fri, 04 Sep 2020 11:28:03 -0400
-X-MC-Unique: UNr5EU4HOti7zKsrqzy5gA-1
-Received: by mail-ed1-f70.google.com with SMTP id m88so2875354ede.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:28:02 -0700 (PDT)
+        Fri, 4 Sep 2020 11:30:02 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331D2C061244;
+        Fri,  4 Sep 2020 08:30:02 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gf14so3195992pjb.5;
+        Fri, 04 Sep 2020 08:30:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=iebi0z2mlsaS/MsI2PAICvEB1QQjSGqa/F+RwGkGDOI=;
+        b=qPYjFdX5evc0l2TJ203QDpjrFD6lufBE+yb+11A/VO/XZ6rv25HLw62qs9LAJL1XYO
+         ii8//MHd1dduxpUkQRGcf2d9untvUQrKXQyEWBVTiPzC6PiE9XRsMNhuoBAp1ZJ8jykl
+         hdfsFk7xGuDq9swEYSEw5HOpv6s1zyk1YLyeN5sAskT1ifGgeuvmaZVGRKEOw4Q9Z42Y
+         f6TDMFdIsTdXLvzKDS0slyfLls+i4gmwUz/BhcigDEMZPdRXtgaKigCGSkTNZLL+wYjE
+         eCQdts4zkpStdcUOr2mywi+Oei4RUi8QEpYNM5GYksnyC+K5INGITXR+d/FAp1LDw2YB
+         4SAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=bHdVf3niRzHqO3Je3Anrnq6r1Um2aQYUFrOux9Di8JU=;
-        b=CpFv9ylqxosMfpwVCjWJLa0gb0LHmWvscRobaHhykCMoHAzjNG/0pViR3cf3zkxIBj
-         5FA8+2cfKWtZH5/sTujKLVJMXkaH4ryJ/qWwVoTxxOSgbtCMtMCAeTE7R0d/ERVTWpwW
-         GKhMz9z322CFFgw4vn+W3Xk6f+/m5VhsO6DbsFL9OkKogKXf+ep5SPDoUi06WyGsfWed
-         fb/0E11KUWI17FV51nFKear3VBQLCdwT9wCc3rnPlAuzuR74HgcUtcD5xn57/OSyVy/4
-         9cK5LdSz4tlswF8MfsXcNdJjTH257ZKDNVZDryMnkeqGmP8RNpPvZqGFmkYMk5U2l5Hk
-         RcEQ==
-X-Gm-Message-State: AOAM531TdBofGZ7DyuJFV5iA4w+19cdoRfoglgvMfy91+o6QLWJoWO5k
-        0RwBSMcuWtt6QOREWsfghG7bpqGJcmJOOl9KgykT8kG42k+fTLetEpybWCf44DDamWincfGopsc
-        eTKn+q62WDXFhLSwLTm1VdCpO
-X-Received: by 2002:a17:906:c8d2:: with SMTP id gc18mr8487567ejb.467.1599233281648;
-        Fri, 04 Sep 2020 08:28:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxo37yp/J5b0e5yObdqYjDtmGRsP25mQDjjBOfCMOKT4HIvNK9e2E3cNKN1u/Jqk+ZfpQ5V3g==
-X-Received: by 2002:a17:906:c8d2:: with SMTP id gc18mr8487553ejb.467.1599233281485;
-        Fri, 04 Sep 2020 08:28:01 -0700 (PDT)
-Received: from redfedo.redhat.com ([2a01:cb14:499:3d00:cd47:f651:9d80:157a])
-        by smtp.gmail.com with ESMTPSA id a18sm6357110ejy.71.2020.09.04.08.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 08:28:01 -0700 (PDT)
-From:   Julien Thierry <jthierry@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     jpoimboe@redhat.com, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org,
-        Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH v3 01/10] objtool: Group headers to check in a single list
-Date:   Fri,  4 Sep 2020 16:27:46 +0100
-Message-Id: <20200904152755.32372-2-jthierry@redhat.com>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200904152755.32372-1-jthierry@redhat.com>
-References: <20200904152755.32372-1-jthierry@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iebi0z2mlsaS/MsI2PAICvEB1QQjSGqa/F+RwGkGDOI=;
+        b=T2TKXqzI/8J42zGMea/Wj1dGvILt7cZeiCAu4Y7rCj4ANkrztZ5fSCMYcxXzsgwM8s
+         QdHUOlWfQUReAxs9C1hwVZ653bMvF0nS4kVXQaLtmDI2ZYiSXPpgbh9QJ3infL+fOSv/
+         5vG2mtfswDzKfQ1hRV6izgYQuS+jBn9lR9ZxRNRyxlvhVtiqBYyzErR/WwkB+wsVVCba
+         JLOy6jOlElLcwaBLRL/sOEuJZwjEwijrcIKHdAXpQzWfcSYaPXYjjdGfW0+X3suIl5Mb
+         qkUsnSwPgGEissSrSkT+AbgzK5irFi8FzUmEpbwVfosZ/K8I+l0Xm1qRTBSNs8/LEExC
+         u7Vg==
+X-Gm-Message-State: AOAM5314gQReqFBDO24jgVjytsKFE7v+jyGZqQGXJZHKgM7Hg/R9F+nn
+        1JrPKZO0XKA9gpV1rnWJapU=
+X-Google-Smtp-Source: ABdhPJz2hYfNBzOEEK9l+8DUohjFIb9XcVD4neyJl/SxS3d+OlhUR9w3ukXGK2jcYC7brorIMOkPsg==
+X-Received: by 2002:a17:90b:4a4f:: with SMTP id lb15mr7224272pjb.146.1599233401669;
+        Fri, 04 Sep 2020 08:30:01 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id w10sm5603097pjq.46.2020.09.04.08.29.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Sep 2020 08:30:01 -0700 (PDT)
+Subject: Re: [PATCH 00/10] dt-bindings: Convert SP805 to Json-schema (and fix
+ users)
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chanho Min <chanho.min@lge.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Wei Xu <xuwei5@hisilicon.com>
+References: <20200828130602.42203-1-andre.przywara@arm.com>
+ <19c6a67e-48f0-c0b6-3653-32a5a1f09e07@gmail.com>
+ <CACRpkdbMbNd87145iwdL7=x501cvgU7wiZXNLF456sn6WvoodQ@mail.gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <302c54fd-5183-c8d0-7038-f6e60c7bb056@gmail.com>
+Date:   Fri, 4 Sep 2020 08:29:57 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.2.1
 MIME-Version: 1.0
+In-Reply-To: <CACRpkdbMbNd87145iwdL7=x501cvgU7wiZXNLF456sn6WvoodQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to support multiple architectures and potentially different
-sets of header to compare against their kernel equivalent, it is simpler
-to have all headers to check in a single list.
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: Julien Thierry <jthierry@redhat.com>
----
- tools/objtool/sync-check.sh | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
 
-diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
-index 2a1261bfbb62..c9674877419c 100755
---- a/tools/objtool/sync-check.sh
-+++ b/tools/objtool/sync-check.sh
-@@ -1,13 +1,17 @@
- #!/bin/sh
- # SPDX-License-Identifier: GPL-2.0
- 
--FILES='
-+FILES="
- arch/x86/include/asm/inat_types.h
- arch/x86/include/asm/orc_types.h
- arch/x86/include/asm/emulate_prefix.h
- arch/x86/lib/x86-opcode-map.txt
- arch/x86/tools/gen-insn-attr-x86.awk
--'
-+arch/x86/include/asm/inat.h     -I '^#include [\"<]\(asm/\)*inat_types.h[\">]'
-+arch/x86/include/asm/insn.h     -I '^#include [\"<]\(asm/\)*inat.h[\">]'
-+arch/x86/lib/inat.c             -I '^#include [\"<]\(../include/\)*asm/insn.h[\">]'
-+arch/x86/lib/insn.c             -I '^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]' -I '^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]'
-+"
- 
- check_2 () {
-   file1=$1
-@@ -40,11 +44,10 @@ fi
- 
- cd ../..
- 
--for i in $FILES; do
--  check $i
--done
-+while read -r file_entry; do
-+    if [ -z "$file_entry" ]; then
-+	continue
-+    fi
- 
--check arch/x86/include/asm/inat.h     '-I "^#include [\"<]\(asm/\)*inat_types.h[\">]"'
--check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
--check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
--check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
-+    check $file_entry
-+done <<< "$FILES"
+On 9/4/2020 1:58 AM, Linus Walleij wrote:
+> On Fri, Aug 28, 2020 at 9:34 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>> On 8/28/20 6:05 AM, Andre Przywara wrote:
+> 
+>> What is the plan for merging this series? Should Rob pick up all changes
+>> or since those are non critical changes, should we just leave it to the
+>> SoC maintainers to pick up the changes in their tree?
+> 
+> What about André just send a pull request to the ARM SoC maintainers
+> for the whole thing?
+
+I already applied some of the patches, if we got that route please CC me 
+so I can drop them from my local queue. Thanks
 -- 
-2.21.3
-
+Florian
