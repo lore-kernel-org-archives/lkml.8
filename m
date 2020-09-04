@@ -2,112 +2,118 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C364C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5901C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E464B20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:47:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AwA+N+1l"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF54206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599245288;
+	bh=PDE0If3Xa0BCychsFfVBP73AEAJpWKm1Y9RfRQZSBGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Av9KUIFYhklsjlbOImrIr699+pVsHkP7U2Swj9wJAwDXYQ7278wwwlQQvHeXdZ17s
+	 tlflanpyxc7AcI22tnKj3wfA1O4YKVOH7Nx9zknF5DufOszp+LkGUJIh+w9JbbfUHQ
+	 zCDXUScfGHivQhYOp8dL4A9/ktiyz/uMHK00G5NI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgIDSrC (ORCPT
+        id S1727929AbgIDSsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgIDSqg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:46:36 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD741C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 11:46:35 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id u18so7082284wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 11:46:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/IsrdXrUOtOTBrB3eBrlMDBlKpxWA0R40two4e+nGOc=;
-        b=AwA+N+1lENnbpLz/wWhQ8pA4H1pRMZGJ7Ojc10luRGWxPaB62cOcZPCeJlx0uWAvLY
-         1gw7bfxy8jwAxBT2g7QRGLLgvvOqAtHRWSxEsEXC0ZDgI4UfI7peuVFYQJM78Y/L9wuG
-         ForTiB3vmMI7mtfA8WdGvdcep6tg0cgJLCJybq0YzhKq5RFvHie7dxO6BdI5zsJl86+W
-         Ze79gjInHbmCdkBQCEqj0KtLHtR8R0wX/t/kdRuuSgD0Iqj1OPSZck5LrcLaSkRxpXWF
-         VwAaqtHACZTe/ZiNL8vDtyjIPuVsXRddzRuBdmCN0MRnhnqS1CqAyaC4wfDut9woCtyA
-         pWWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/IsrdXrUOtOTBrB3eBrlMDBlKpxWA0R40two4e+nGOc=;
-        b=OG2dxVIoHPv8vGnsLoelQ9by5cy5kZhquI+x1soBofwMoLLK8f10C6gNFnugLb55tc
-         U0J3UZ38vMbA+rG6w86z1ifYsckBJdS6N5F0VntxeNvXfxVmIGmk1zOvHw+U+VmBdlbv
-         DlXewdbaye5770lv2QEKhRWooWj1JCU683eUf3CCxiLrjBijsFzq3Uzm9ZJ0F8ql8WnI
-         qCSBf/bKftKO3ctod13VWbVrkWT2gMt19C+mFveGFwO8tlyW0f6dxweI87J26ykX8rQy
-         Is66DhEMXc9nYF96dTVejZb+oGZK+KBuDNUCHhrVIkF78TivddYcX2/8NEuSJykYerwg
-         0x7g==
-X-Gm-Message-State: AOAM532Y39giFoiREd1IE1KcpW8pEdnObN/kgvMcvJ+OByKIE+/CRkZX
-        aCyF7OCsAW/L2utAt9qqm9mgN0NcskA=
-X-Google-Smtp-Source: ABdhPJxFS6bqY4pw+HEz8iQgV0XYhP1R0DjvZ+TRaQGPKK81WRnoaAV7ouDNjLxOC+QizozsxQFwvw==
-X-Received: by 2002:a1c:7918:: with SMTP id l24mr9251444wme.46.1599245193526;
-        Fri, 04 Sep 2020 11:46:33 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id q186sm14111670wma.45.2020.09.04.11.46.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 11:46:32 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Cc:     Ofir Bitton <obitton@habana.ai>
-Subject: [PATCH 4/6] habanalabs: Fix alignment issue in cpucp_info structure
-Date:   Fri,  4 Sep 2020 21:46:21 +0300
-Message-Id: <20200904184623.13478-4-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904184623.13478-1-oded.gabbay@gmail.com>
-References: <20200904184623.13478-1-oded.gabbay@gmail.com>
+        Fri, 4 Sep 2020 14:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgIDSsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:48:06 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62BBC20665;
+        Fri,  4 Sep 2020 18:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599245285;
+        bh=PDE0If3Xa0BCychsFfVBP73AEAJpWKm1Y9RfRQZSBGs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ypnm1k438oFJq+i9TwHQtBFnd/r8W+r5fRXsR3gjcjbh7+AYmIVtCdsVnJ5SO4grv
+         ZaS1tpVK3cSZgoY+JRhzAVJMh6OSmRL9o+gLg0FTWjNIfqw0eLW03A7Bovj5qQUX8p
+         7Uoh2ObZp+g8Z768N5NlcPOEHm3eShMOwBXFT+MQ=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4039B40D3D; Fri,  4 Sep 2020 15:48:03 -0300 (-03)
+Date:   Fri, 4 Sep 2020 15:48:03 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
+ attr->sample_period for libpfm4 events
+Message-ID: <20200904184803.GA3749996@kernel.org>
+References: <20200728085734.609930-1-irogers@google.com>
+ <20200728085734.609930-3-irogers@google.com>
+ <20200728155940.GC1319041@krava>
+ <20200728160954.GD1319041@krava>
+ <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
+ <CAP-5=fWNniZuYfYhz_Cz7URQ+2E4T4Kg3DJqGPtDg70i38Er_A@mail.gmail.com>
+ <20200904160303.GD939481@krava>
+ <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Bitton <obitton@habana.ai>
+Em Fri, Sep 04, 2020 at 09:22:10AM -0700, Ian Rogers escreveu:
+> On Fri, Sep 4, 2020 at 9:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > On Thu, Sep 03, 2020 at 10:41:14PM -0700, Ian Rogers wrote:
+> > > On Wed, Jul 29, 2020 at 4:24 PM Ian Rogers <irogers@google.com> wrote:
+> > > > On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
+> > > > > On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
+> > > > > > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
+> > > > > [jolsa@krava perf]$ sudo ./perf test 17 -v
+> > > > > 17: Setup struct perf_event_attr                          :
 
-Because the device CPU compiler aligns structures to 8 bytes,
-struct cpucp_info has an alignment issue as some parts
-in the structure are not aligned to 8 bytes.
-It is preferred that we explicitly insert placeholders inside
-the structure to avoid confusion
+> > > > > running './tests/attr/test-record-C0'
+> > > > > expected sample_period=4000, got 3000
+> > > > > FAILED './tests/attr/test-record-C0' - match failure
 
-in order to validate this scenario, we printed both pointers:
+> > > > I'm not able to reproduce this. Do you have a build configuration or
+> > > > something else to look at? The test doesn't seem obviously connected
+> > > > with this patch.
 
-__u8 cpucp_version[VERSION_MAX_LEN]; (0xffff899c67ed4cbc)
-__le64 dram_size;                    (0xffff899c67ed4d40)
+> > > Jiri, any update? Thanks,
 
-we see difference of 132 bytes although the first array
-is only 128 bytes long, Meaning compiler added a 4 byte padding.
+> > sorry, I rebased and ran it again and it passes for me now,
+> > so it got fixed along the way
 
-Signed-off-by: Ofir Bitton <obitton@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/include/common/cpucp_if.h | 1 +
- 1 file changed, 1 insertion(+)
+> No worries, thanks for the update! It'd be nice to land this and the
+> other libpfm fixes.
 
-diff --git a/drivers/misc/habanalabs/include/common/cpucp_if.h b/drivers/misc/habanalabs/include/common/cpucp_if.h
-index 1e8480e978e2..dcde440427b4 100644
---- a/drivers/misc/habanalabs/include/common/cpucp_if.h
-+++ b/drivers/misc/habanalabs/include/common/cpucp_if.h
-@@ -410,6 +410,7 @@ struct cpucp_info {
- 	__u8 fuse_version[VERSION_MAX_LEN];
- 	__u8 thermal_version[VERSION_MAX_LEN];
- 	__u8 cpucp_version[VERSION_MAX_LEN];
-+	__le32 reserved2;
- 	__le64 dram_size;
- 	char card_name[CARD_NAME_MAX_LEN];
- };
--- 
-2.17.1
+I applied it and it generated this regression:
 
+FAILED '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period' - match failure
+
+I'll look at the other patches that are pending in this regard to see
+what needs to be squashed so that we don't break bisect.
+
+- Arnaldo
