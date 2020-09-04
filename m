@@ -2,119 +2,176 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DE0C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA7C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C82820748
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB720748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="mmkmS07o";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="B6AlSxfm"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FDGsK4pj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbgIDJGz (ORCPT
+        id S1729997AbgIDJHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:06:55 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:60731 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729584AbgIDJGy (ORCPT
+        Fri, 4 Sep 2020 05:07:10 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:55158 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729795AbgIDJHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:06:54 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id F0E415C00D0;
-        Fri,  4 Sep 2020 05:06:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 04 Sep 2020 05:06:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=1o72WctqDY+zCsC7OnIzx9kRKHo
-        rm2lEhRdF3SbI988=; b=mmkmS07oJ9t+hn7BZy/wUf/OZ8JyrTcZCuDqU5Hs1lW
-        Z6IKxmrtcA3beKHfsh9kU0QkYCqZZ7RD+v7pywU47rN6gZI0NwUaciEMiS/Zg+hF
-        xnj8iXpfFqeyedhqG7LQxcIs8cEezMWGY/Q7pDeuZtLUeElMNleAX2o+FuW0HxW3
-        67uvviIgIAUrLVsAcqHNTZdR2QQdStLcoUOtAOV0ZtKRrMt4me9dsVkwvTyYUldn
-        VrTPnmT1TtjSZmk/Hb4xR5ZV3ezMEFU7bdw9dbY509FpyMQcCkEzjzVNkf2tQ+kz
-        IwUZ/k9zVXWtFmGVsNgGNFIKndlAo+bZ6psBvct9EGg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=1o72Wc
-        tqDY+zCsC7OnIzx9kRKHorm2lEhRdF3SbI988=; b=B6AlSxfmtTl9Cz8YOPlVdL
-        YEu1NeaNWiQjWbuvnoee3l0nCLw+warrKXz3YuW4RrQt7AdbxEoPVOfp4Uaq1/Jp
-        pE+yXnVgA77m86zNBMt++G4Baq9qpt2xXmlal2HfiTCZFgONAUpvYGOUwFkqhdE9
-        5e+w4iekdpLkUVNSU3LkY4lOa+Ydlej7SUZ1RQLtMkcR7+0UcKbfQYQNPQd8JqWn
-        6sjf1bbtA7Ks/nEn/82H0YUuaZpV3yGmbw0yXbZrX1MAoR93givFoSPndjIAT4vz
-        WH9bcfntKeK2Rli+oA8S63YgnE9Ci7AKNSurV3teq+HG9bbzAXi/We9I8Suv2vPw
-        ==
-X-ME-Sender: <xms:qgNSXxVyDTwliPx1VeoondJ50dM2zGrkqiazTTUAUinzcWwlVuaCTw>
-    <xme:qgNSXxmNik9BPqLeM-dtT5asS-rFi8kC6uBf0Iv3dfLC8fgo5JcEMe1bEB8PSiuEP
-    ea1ohgX2_fI02Ssa9g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegfedguddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:qgNSX9bhLhH-xW3rILo-qCiSS8PirrzWZDGL3aCPCUpaQVqzEguo6Q>
-    <xmx:qgNSX0XYB3rmDmXIcDp_dWYIfDZ-MyLvp7Uxi3NHexf3-ZftxHpWsQ>
-    <xmx:qgNSX7nXhHMCP9D3dUm1AiZVxs0LvJ3OUJB2zaYRPsIw1155kpd76A>
-    <xmx:rANSX2vm5xsG4RxFK0Wm6C-R0kpmAF9bLi3WrbqQAf5eJ6T7fteSiA>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9A74C328005A;
-        Fri,  4 Sep 2020 05:06:50 -0400 (EDT)
-Date:   Fri, 4 Sep 2020 11:06:48 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, irlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Roman Stratiienko <r.stratiienko@gmail.com>
-Subject: Re: [PATCH] drm/sun4i: Fix DE2 YVU handling
-Message-ID: <20200904090648.wj74dlkgp5qo3mfb@gilmour.lan>
-References: <20200901220305.6809-1-jernej.skrabec@siol.net>
+        Fri, 4 Sep 2020 05:07:09 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200904090707euoutp0111f0eee27421b7ce3ffab3798d3dd1c5~xiWkU8svS0707607076euoutp01n
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 09:07:07 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200904090707euoutp0111f0eee27421b7ce3ffab3798d3dd1c5~xiWkU8svS0707607076euoutp01n
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599210427;
+        bh=IqE/ZCuueqw+2/m8cMT/uCjm2LtVAnNylq3DpnDKyPg=;
+        h=Subject:To:From:Date:In-Reply-To:References:From;
+        b=FDGsK4pjEDZn9FRgBXtypWSRITRkzYY32TA3Axcx1QkpPcEY6EaRb6Il7VZ+tbfFg
+         v0EqEvx8ud+DZQ1w/G3eXUcyWlw47vQm/vAvKI1ho+o29Tv39/9Rx17mzmnxuthgUp
+         47gCqK48q6MLcMiVyWGv4fHv/9RVwCWi1S0N3eCk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200904090706eucas1p15b9050bdbcd7ed018ff84cd21bef5a30~xiWkFWp8L3161631616eucas1p1f;
+        Fri,  4 Sep 2020 09:07:06 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 23.02.06318.AB3025F5; Fri,  4
+        Sep 2020 10:07:06 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904090706eucas1p10c262692b3d884aabf0a8f92fb82adf3~xiWjumMab1986019860eucas1p1g;
+        Fri,  4 Sep 2020 09:07:06 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904090706eusmtrp28b73170824226c71212a2027a01c1d06~xiWjtl6340660706607eusmtrp2c;
+        Fri,  4 Sep 2020 09:07:06 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-7a-5f5203ba81c5
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 08.D9.06017.AB3025F5; Fri,  4
+        Sep 2020 10:07:06 +0100 (BST)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904090705eusmtip1a09c33a3c811e85e75200f8ff4f9b080~xiWjNmJ6j1726517265eusmtip1C;
+        Fri,  4 Sep 2020 09:07:05 +0000 (GMT)
+Subject: Re: [PATCH 2/3] crypto: s5p-sss - Add and fix kerneldoc
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Kamil Konieczny <k.konieczny@samsung.com>
+Message-ID: <ad460c31-aa10-21a8-2fd9-698d5a7ca823@samsung.com>
+Date:   Fri, 4 Sep 2020 11:07:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lhvls7hmqle5lecj"
-Content-Disposition: inline
-In-Reply-To: <20200901220305.6809-1-jernej.skrabec@siol.net>
+In-Reply-To: <20200903180400.2865-2-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRj2O+dsO44mx6n5olK28kdFmlh0sBCTfizMEIsyQ9fKk442lc17
+        f6bmNcG75hQsIWziPVtqKbpmoksXBGUlKWgsB1JeijRtbTtK/nve58L3PPCRuPAZx4uUJaUy
+        yiSpXMTlE7rX66ZjA3iU5Pjj2kC60XSPoJsMUxz6vsWHNpm6ePTsl3WMfjfQyKUfmIYwOn/Q
+        wKOtG3l4qLO4V/sRE+uG/cQ9rcVc8d9H1YR4tWdfJCeGfyaekcvSGWVAyA1+Ym5tISelySNz
+        vuotoUY1riXImQTqBKgn+vASxCeF1BMExpbfiD3WEBR1m7eVVQTa+RW0EynqmiJYoQVBQUUn
+        lz2WEGy9/IHbXW5UKJjbLBy74E4ZMGg3F3DsApcKgJHJccKOBVQIVHxWO3iCOgTWkQZH2IO6
+        Bv1fF3msxxXG6xccfmfb0y0zRQ4/TnnCp4UmjMX74flSo6MrUDoedGj6eWzXc6D7MESw2A0s
+        Y73bvA9Y++1heyDPNltdw2OPUgSDa71c1nUaVpeHbZi0PXEYOgcCWPosaJ9uOWigXGB6yZUt
+        4QKVujqcpQVQVCBk3X5gnijFWOwNJdYODovFUJ6Ti8rRAc2umZpd0zS7pmn+d3iIiFbkyaSp
+        FAmMKiiJyfBXSRWqtKQE/1vJih5k+0zGv2M/+9DQ5k09okgk2iOY/h4pEXKk6aoshR4BiYvc
+        BWGTxjihIF6alc0okyXKNDmj0iNvkhB5CoKaF2OFVII0lbnDMCmMckfFSGcvNWrX3i3T+je3
+        QbBU0j0saonJj9iyzBlLhJ5UDhaXvzlyKTq2OEgxe0Hu++d2Zeb7U6OzJ33H+bPh8kHJ/Fy2
+        l2xz5kXHcmFZad2v8Kiwg9edjlLRvhFWLNjJZbHKdWPvWMN0/dUU5uKby27VshVdxtzg6HJH
+        A2Bz59u/XdEbXokIVaI08AiuVEn/ATRzVthIAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xu7q7mIPiDfZdFLOYc76FxWL+kXOs
+        Ft2vZCzOn9/AbnH/3k8mi8u75rBZzDi/j8mide8Rdov/v5qZHTg9tqy8yeSx7YCqx6ZVnWwe
+        /xZOYfH4vEkugDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSez
+        LLVI3y5BL6NpWjtrwXzRiseTL7A0ME4V7GLk5JAQMJHo2HCOpYuRi0NIYCmjxKRpv9khEtIS
+        jadXM0HYwhJ/rnWxQRS9ZpRYe2IHC0hCWMBB4vmaV6wgCRGBI0wS62c+Z4Ko2sgosXD+GbAq
+        NgF9iYNnT4LZvAJ2EhNvN7CC2CwCKhL/D85m7mLk4BAViJTYucMSokRQ4uTMJ2DlnEDnLb/T
+        AVbOLKAu8WfeJWYIW1zi1pP5TBC2vMT2t3OYJzAKzkLSPgtJyywkLbOQtCxgZFnFKJJaWpyb
+        nltspFecmFtcmpeul5yfu4kRGG/bjv3csoOx613wIUYBDkYlHt4b7wPihVgTy4orcw8xSnAw
+        K4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTot4nMUqLJ+cBUkFcSb2hqaG5haWhubG5sZqEk
+        ztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgVGITcWA5yd/zOQnl/6kOXNb7BJQ3b9w3y3RIn+W
+        DtXUM/daNFdJZZd5LHLnvZG66e+mj6Wvvubev922a4/VGilJp+sPjsX8Ts67Wywhply0on7J
+        57/cH7/8L67vKFY7+ZbTxfevXfSiswmfLALzO9eJXl6bWue47tdVwT0r+TlZLtnx2gkXfFBi
+        Kc5INNRiLipOBAB6QgkFzQIAAA==
+X-CMS-MailID: 20200904090706eucas1p10c262692b3d884aabf0a8f92fb82adf3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200903180416eucas1p224f764a13664b5444cb3c00fca84c369
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200903180416eucas1p224f764a13664b5444cb3c00fca84c369
+References: <20200903180400.2865-1-krzk@kernel.org>
+        <CGME20200903180416eucas1p224f764a13664b5444cb3c00fca84c369@eucas1p2.samsung.com>
+        <20200903180400.2865-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---lhvls7hmqle5lecj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 02, 2020 at 12:03:05AM +0200, Jernej Skrabec wrote:
-> Function sun8i_vi_layer_get_csc_mode() is supposed to return CSC mode
-> but due to inproper return type (bool instead of u32) it returns just 0
-> or 1. Colors are wrong for YVU formats because of that.
->=20
-> Fixes: daab3d0e8e2b ("drm/sun4i: de2: csc_mode in de2 format struct is mo=
-stly redundant")
-> Reported-by: Roman Stratiienko <r.stratiienko@gmail.com>
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+On 9/3/20 8:03 PM, Krzysztof Kozlowski wrote:
+> Add missing and fix existing kerneldoc to silence W=1 warnings:
+> 
+>   drivers/crypto/s5p-sss.c:333: warning: Function parameter or member 'pclk' not described in 's5p_aes_dev'
+>   drivers/crypto/s5p-sss.c:373: warning: Function parameter or member 'sgl' not described in 's5p_hash_reqctx'
+>   drivers/crypto/s5p-sss.c:373: warning: Function parameter or member 'buffer' not described in 's5p_hash_reqctx'
+>   drivers/crypto/s5p-sss.c:1143: warning: Function parameter or member 'new_len' not described in 's5p_hash_prepare_sgs'
+>   drivers/crypto/s5p-sss.c:1143: warning: Excess function parameter 'nbytes' description in 's5p_hash_prepare_sgs'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/crypto/s5p-sss.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
+> index 341433fbcc4a..f67f1e22ecd1 100644
+> --- a/drivers/crypto/s5p-sss.c
+> +++ b/drivers/crypto/s5p-sss.c
+> @@ -260,6 +260,7 @@ struct s5p_aes_ctx {
+>   * struct s5p_aes_dev - Crypto device state container
+>   * @dev:	Associated device
+>   * @clk:	Clock for accessing hardware
+> + * @pclk:	APB bus clock necessary to access the hardware
+>   * @ioaddr:	Mapped IO memory region
+>   * @aes_ioaddr:	Per-varian offset for AES block IO memory
+>   * @irq_fc:	Feed control interrupt line
+> @@ -342,13 +343,13 @@ struct s5p_aes_dev {
+>   * @engine:	Bits for selecting type of HASH in SSS block
+>   * @sg:		sg for DMA transfer
+>   * @sg_len:	Length of sg for DMA transfer
+> - * @sgl[]:	sg for joining buffer and req->src scatterlist
+> + * @sgl:	sg for joining buffer and req->src scatterlist
+>   * @skip:	Skip offset in req->src for current op
+>   * @total:	Total number of bytes for current request
+>   * @finup:	Keep state for finup or final.
+>   * @error:	Keep track of error.
+>   * @bufcnt:	Number of bytes holded in buffer[]
+> - * @buffer[]:	For byte(s) from end of req->src in UPDATE op
+> + * @buffer:	For byte(s) from end of req->src in UPDATE op
+>   */
+>  struct s5p_hash_reqctx {
+>  	struct s5p_aes_dev	*dd;
+> @@ -1125,7 +1126,7 @@ static int s5p_hash_copy_sg_lists(struct s5p_hash_reqctx *ctx,
+>   * s5p_hash_prepare_sgs() - prepare sg for processing
+>   * @ctx:	request context
+>   * @sg:		source scatterlist request
+> - * @nbytes:	number of bytes to process from sg
+> + * @new_len:	number of bytes to process from sg
+>   * @final:	final flag
+>   *
+>   * Check two conditions: (1) if buffers in sg have len aligned data, and (2)
+> 
 
-Applied, thanks!
-Maxime
+Reviewed-by: Kamil Konieczny <k.konieczny@samsung.com>
+Acked-by: Kamil Konieczny <k.konieczny@samsung.com>
 
---lhvls7hmqle5lecj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1IDqAAKCRDj7w1vZxhR
-xeuJAP90RxwlsHMsS3BsBTa5ovNs3ktqUgJLNp2+jXLIhC6XHwD+KvQYtc0bFTNH
-ISN+iTcZw/oBVJVpnbDLCORYtX1qNgs=
-=Alq+
------END PGP SIGNATURE-----
-
---lhvls7hmqle5lecj--
