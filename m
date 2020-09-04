@@ -2,176 +2,99 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F30C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1FEC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49ED42074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A3E20795
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:06:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgIDQGV (ORCPT
+        id S1728029AbgIDQGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:06:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:40312 "EHLO mga17.intel.com"
+        Fri, 4 Sep 2020 12:06:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:34938 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbgIDQGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:06:14 -0400
-IronPort-SDR: mNA65Rc6zvMCnXfR8SNC109C0oDOj6xWs4y9tevo7spgLqZA7wkR+n0JzMQegJWit2UkVt5qnX
- oSn0GROXDLvA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137823625"
+        id S1727998AbgIDQGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:06:17 -0400
+IronPort-SDR: yjr+BW74s7btEI0SpCxXonE6s+atR+eZft/3Pgc4to2nhOaO8tBhhPtE9BzZczpXXO9wLOb0PQ
+ 3Np+cjUOBvOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157036546"
 X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="137823625"
+   d="scan'208";a="157036546"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:06:14 -0700
-IronPort-SDR: Fgk+EDJnX2zD5D02DfcnKFc1J2YJBR/3LyrWm797boITeW63Kr6ncWBXYw8LKhg9ftOgHM8o9x
- bIKapkuUfN3A==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:06:14 -0700
+IronPort-SDR: 3+uboW1eJZdPEC8GQz+ib5rViBy7IyYNUzc36nW2gBgKz2vs8ICx9HH6/cqH+iw9yA+XcV/QQT
+ 4dHWONkUUyIA==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
-   d="scan'208";a="284479234"
-Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:06:11 -0700
-Date:   Fri, 4 Sep 2020 09:06:10 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] KVM: LAPIC: Reset timer_advance_ns if timer mode switch
-Message-ID: <20200904160609.GD2206@sjchrist-ice>
-References: <1598578508-14134-1-git-send-email-wanpengli@tencent.com>
- <20200902212328.GI11695@sjchrist-ice>
- <CANRm+CzQ00nFoYsxLQ7xhDaAnbi01U4BGkmuS9WLY80Nyt254w@mail.gmail.com>
+   d="scan'208";a="326722628"
+Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Sep 2020 09:06:14 -0700
+Date:   Fri, 4 Sep 2020 16:06:13 +0000
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Jacob Jun Pan <jacob.jun.pan@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Sohil Mehta <sohil.mehta@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
+Subject: Re: [PATCH v7 1/9] iommu: Change type of pasid to u32
+Message-ID: <20200904160613.GA412013@otcwcpicx6.sc.intel.com>
+References: <1598540794-132666-1-git-send-email-fenghua.yu@intel.com>
+ <1598540794-132666-2-git-send-email-fenghua.yu@intel.com>
+ <20200904104614.GE21499@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANRm+CzQ00nFoYsxLQ7xhDaAnbi01U4BGkmuS9WLY80Nyt254w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200904104614.GE21499@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 06:57:00PM +0800, Wanpeng Li wrote:
-> On Thu, 3 Sep 2020 at 05:23, Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Fri, Aug 28, 2020 at 09:35:08AM +0800, Wanpeng Li wrote:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > >
-> > > per-vCPU timer_advance_ns should be set to 0 if timer mode is not tscdeadline
-> > > otherwise we waste cpu cycles in the function lapic_timer_int_injected(),
-> > > especially on AMD platform which doesn't support tscdeadline mode. We can
-> > > reset timer_advance_ns to the initial value if switch back to tscdealine
-> > > timer mode.
-> > >
-> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > ---
-> > >  arch/x86/kvm/lapic.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > index 654649b..abc296d 100644
-> > > --- a/arch/x86/kvm/lapic.c
-> > > +++ b/arch/x86/kvm/lapic.c
-> > > @@ -1499,10 +1499,16 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
-> > >                       kvm_lapic_set_reg(apic, APIC_TMICT, 0);
-> > >                       apic->lapic_timer.period = 0;
-> > >                       apic->lapic_timer.tscdeadline = 0;
-> > > +                     if (timer_mode == APIC_LVT_TIMER_TSCDEADLINE &&
-> > > +                             lapic_timer_advance_dynamic)
-> >
-> > Bad indentation.
-> >
-> > > +                             apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
-> >
-> > Redoing the tuning seems odd.  Doubt it will matter, but it feels weird to
-> > have to retune the advancement just because the guest toggled between modes.
-> >
-> > Rather than clear timer_advance_ns, can we simply move the check against
-> > apic->lapic_timer.expired_tscdeadline much earlier?  I think that would
-> > solve this performance hiccup, and IMO would be a logical change in any
-> > case.  E.g. with some refactoring to avoid more duplication between VMX and
-> > SVM
-> 
-> How about something like below:
+Hi, Boris,
 
-That works too.  The only reason I used the inline shenanigans was to avoid
-the CALL+RET in VM-Enter when the timer hasn't expired.
+On Fri, Sep 04, 2020 at 12:46:14PM +0200, Borislav Petkov wrote:
+> Just a nitpick in case you have to send a new version or the committer
+> of this one can fixup the prefix here:
+> 
+> > Subject: Re: [PATCH v7 1/9] iommu: Change type of pasid to u32
+> 
+> 		drm, iommu: Change type ...
+> 
+> 
+> On Thu, Aug 27, 2020 at 08:06:26AM -0700, Fenghua Yu wrote:
+> > PASID is defined as a few different types in iommu including "int",
+> > "u32", and "unsigned int". To be consistent and to match with uapi
+> > definitions, define PASID and its variations (e.g. max PASID) as "u32".
+> > "u32" is also shorter and a little more explicit than "unsigned int".
+> > 
+> > No PASID type change in uapi although it defines PASID as __u64 in
+> > some places.
 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 3b32d3b..51ed4f0 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1582,9 +1582,6 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->      struct kvm_lapic *apic = vcpu->arch.apic;
->      u64 guest_tsc, tsc_deadline;
-> 
-> -    if (apic->lapic_timer.expired_tscdeadline == 0)
-> -        return;
-> -
->      tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->      apic->lapic_timer.expired_tscdeadline = 0;
->      guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> @@ -1599,7 +1596,10 @@ static void __kvm_wait_lapic_expire(struct
-> kvm_vcpu *vcpu)
-> 
->  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->  {
-> -    if (lapic_timer_int_injected(vcpu))
-> +    if (lapic_in_kernel(vcpu) &&
-> +        vcpu->arch.apic->lapic_timer.expired_tscdeadline &&
-> +        vcpu->arch.apic->lapic_timer.timer_advance_ns &&
-> +        lapic_timer_int_injected(vcpu))
->          __kvm_wait_lapic_expire(vcpu);
->  }
->  EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
-> @@ -1635,8 +1635,7 @@ static void apic_timer_expired(struct kvm_lapic
-> *apic, bool from_timer_fn)
->      }
-> 
->      if (kvm_use_posted_timer_interrupt(apic->vcpu)) {
-> -        if (apic->lapic_timer.timer_advance_ns)
-> -            __kvm_wait_lapic_expire(vcpu);
-> +        kvm_wait_lapic_expire(vcpu);
->          kvm_apic_inject_pending_timer_irqs(apic);
->          return;
->      }
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 0194336..19e622a 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3456,9 +3456,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct
-> kvm_vcpu *vcpu)
->      clgi();
->      kvm_load_guest_xsave_state(vcpu);
-> 
-> -    if (lapic_in_kernel(vcpu) &&
-> -        vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> -        kvm_wait_lapic_expire(vcpu);
-> +    kvm_wait_lapic_expire(vcpu);
-> 
->      /*
->       * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index a544351..d6e1656 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6800,9 +6800,7 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
->      if (enable_preemption_timer)
->          vmx_update_hv_timer(vcpu);
-> 
-> -    if (lapic_in_kernel(vcpu) &&
-> -        vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> -        kvm_wait_lapic_expire(vcpu);
-> +    kvm_wait_lapic_expire(vcpu);
-> 
->      /*
->       * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+Thank you very much for your review!
+
+Could you please consider to commit the series? I can send out v8 with
+the subject "drm," change if you want me to do so.
+
+Thanks.
+
+-Fenghua
