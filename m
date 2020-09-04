@@ -2,134 +2,206 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750F3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC1DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5506020829
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9196D20795
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:01:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="q9BXhdl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgIDQBR (ORCPT
+        id S1727895AbgIDQBV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:01:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:53260 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726789AbgIDQA1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:00:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2935E11B3;
-        Fri,  4 Sep 2020 09:00:27 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD76B3F66F;
-        Fri,  4 Sep 2020 09:00:24 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
-Cc:     Steven Price <steven.price@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
-        Juan Quintela <quintela@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Peter Maydell <Peter.Maydell@arm.com>,
-        Haibo Xu <Haibo.Xu@arm.com>
-Subject: [PATCH v2 0/2] MTE support for KVM guest
-Date:   Fri,  4 Sep 2020 17:00:16 +0100
-Message-Id: <20200904160018.29481-1-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
+        Fri, 4 Sep 2020 12:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgIDQBB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:01:01 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D4AC061244;
+        Fri,  4 Sep 2020 09:01:00 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id j11so9381322ejk.0;
+        Fri, 04 Sep 2020 09:01:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIz3Dqv9/KGHKChd3/IFzzxn7xbyzIDCFdjTQoSAu6w=;
+        b=q9BXhdl5PVF9mLC9vkchxmULiG9xehyXT0Dy35pIMdBIVb2r4uf3zo0DYi5Uy4TT9g
+         8HtDMU8X3UsMUtmhW3jmB+GsLG784ov5aFIt3DdqsI6s7+pRgLhN3Hvl5mSOeUe8Ncfs
+         RJx7BFIoShGkf/rkq2/jJ/tU5AZxegj5QRXv6XnnqIZZDSy1L0fVaJ8tabsEGyzNHoMd
+         2F/JQXKHQGqHSsl0Dx/uK6/36BJ6/onw/wG8iB9evJXvU+ZSreM5vc6/jHG72Y/lYhSh
+         BfHjVKV7pCkdnSOdXA39mIocO3m/zYbismyZ/bLDTbpFwTYpEIcpLtHDtcX+hoi5JWnn
+         u90g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BIz3Dqv9/KGHKChd3/IFzzxn7xbyzIDCFdjTQoSAu6w=;
+        b=LB4/YPPnngc7Y9X1m+iOqP7GhNYqTaLg5nhoI2undJ97rOYv+Eh3DpShc0YeztsMwK
+         dCwutA/sNR8iifu2FMRTO7MTLFa8KTKC0FwECDLobqem/NsHJolM8dwnoy4h9XKV7hdJ
+         WDeSe6oPOnsW2cLTGtQywGZszAnT1Dt5S6evcaLNdrudycjULxW3i+qdz0VDRfBF/6Kr
+         o6kSGKbvhJXRZyj1tNaPEW3VoPkRheoizNCDZgvGbM6iI72sRQ7A50TY98NJnAfF7121
+         024CyqJePbevmUWvp7iKa6e8r0sRYSnWqNk7/2+d1kNZ5HjIHxknJOl0WbVkckGWBgTm
+         BU1w==
+X-Gm-Message-State: AOAM5329+RV75/spu9Ect5uVJK/ctlGjW6DP4Mr0S6c39frOZ6oOxjFQ
+        kdECx9u47A7bfv9++Mot8hiLKuQSMZ0CXSxH
+X-Google-Smtp-Source: ABdhPJz3Q8w4Tv7USQ8eui4LVCy5y4lAuTULMivw04dlU/rjS5/aBfLukg0LJ56MBQC+0SmUli78/Q==
+X-Received: by 2002:a17:906:5a83:: with SMTP id l3mr8552049ejq.14.1599235259141;
+        Fri, 04 Sep 2020 09:00:59 -0700 (PDT)
+Received: from debianHome.localdomain (x5f700e02.dyn.telefonica.de. [95.112.14.2])
+        by smtp.gmail.com with ESMTPSA id h10sm6276025eds.0.2020.09.04.09.00.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 09:00:58 -0700 (PDT)
+From:   =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: [RFC PATCH] sched: only issue an audit on privileged operation
+Date:   Fri,  4 Sep 2020 18:00:31 +0200
+Message-Id: <20200904160031.6444-1-cgzones@googlemail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm's Memory Tagging Extension (MTE) adds 4 bits of tag data to every 16
-bytes of memory in the system. This along with stashing a tag within the
-high bit of virtual addresses allows runtime checking of memory
-accesses.
+sched_setattr(2) does via kernel/sched/core.c:__sched_setscheduler()
+issue a CAP_SYS_NICE audit event unconditionally, even when the requested
+operation does not require that capability / is un-privileged.
 
-These patches add support to KVM to enable MTE within a guest. They are
-based on Catalin's v9 MTE user-space support series[1].
+Perform privilged/unprivileged catigorization first and perform a
+capable test only if needed.
 
-I'd welcome feedback on the proposed user-kernel ABI. Specifically this
-series currently:
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ kernel/sched/core.c | 65 ++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 18 deletions(-)
 
- 1. Requires the VMM to enable MTE per-VCPU.
- 2. Automatically promotes (normal host) memory given to the guest to be
-    tag enabled (sets PG_mte_tagged), if any VCPU has MTE enabled. The
-    tags are cleared if the memory wasn't previously MTE enabled.
- 3. Doesn't provide any new methods for the VMM to access the tags on
-    memory.
-
-(2) and (3) are particularly interesting from the aspect of VM migration.
-The guest is able to store/retrieve data in the tags (presumably for the
-purpose of tag checking, but architecturally it could be used as just
-storage). This means that when migrating a guest the data needs to be
-transferred (or saved/restored).
-
-MTE tags are controlled by the same permission model as normal pages
-(i.e. a read-only page has read-only tags), so the normal methods of
-detecting guest changes to pages can be used. But this would also
-require the tags within a page to be migrated at the same time as the
-data (since the access control for tags is the same as the normal data
-within a page).
-
-(3) may be problematic and I'd welcome input from those familiar with
-VMMs. User space cannot access tags unless the memory is mapped with the
-PROT_MTE flag. However enabling PROT_MTE will also enable tag checking
-for the user space process (assuming the VMM enables tag checking for
-the process) and since the tags in memory are controlled by the guest
-it's unlikely the VMM would have an appropriately tagged pointer for its
-access. This means the VMM would either need to maintain two mappings of
-memory (one to access tags, the other to access data) or disable tag
-checking during the accesses to data.
-
-If it's not practical to either disable tag checking in the VMM or
-maintain multiple mappings then the alternatives I'm aware of are:
-
- * Provide a KVM-specific method to extract the tags from guest memory.
-   This might also have benefits in terms of providing an easy way to
-   read bulk tag data from guest memory (since the LDGM instruction
-   isn't available at EL0).
- * Provide support for user space setting the TCMA0 or TCMA1 bits in
-   TCR_EL1. These would allow the VMM to generate pointers which are not
-   tag checked.
-
-Feedback is welcome, and feel free to ask questions if anything in the
-above doesn't make sense.
-
-Changes since the previous v1 posting[2]:
-
- * Rebasing clean-ups
- * sysreg visibility is now controlled based on whether the VCPU has MTE
-   enabled or not
-
-[1] https://lore.kernel.org/r/20200904103029.32083-1-catalin.marinas@arm.com
-[2] https://lore.kernel.org/r/20200713100102.53664-1-steven.price%40arm.com
-
-Steven Price (2):
-  arm64: kvm: Save/restore MTE registers
-  arm64: kvm: Introduce MTE VCPU feature
-
- arch/arm64/include/asm/kvm_emulate.h       |  3 +++
- arch/arm64/include/asm/kvm_host.h          |  9 ++++++++-
- arch/arm64/include/asm/sysreg.h            |  3 ++-
- arch/arm64/include/uapi/asm/kvm.h          |  1 +
- arch/arm64/kvm/hyp/include/hyp/sysreg-sr.h | 14 ++++++++++++++
- arch/arm64/kvm/mmu.c                       | 15 +++++++++++++++
- arch/arm64/kvm/reset.c                     |  8 ++++++++
- arch/arm64/kvm/sys_regs.c                  | 20 +++++++++++++++-----
- 8 files changed, 66 insertions(+), 7 deletions(-)
-
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8471a0f7eb32..954f968d2466 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5249,13 +5249,19 @@ static int __sched_setscheduler(struct task_struct *p,
+ 		return -EINVAL;
+ 
+ 	/*
+-	 * Allow unprivileged RT tasks to decrease priority:
++	 * Allow unprivileged RT tasks to decrease priority.
++	 * Only issue a capable test if needed to avoid audit
++	 * event on non-privileged operations:
+ 	 */
+-	if (user && !capable(CAP_SYS_NICE)) {
++	if (user) {
+ 		if (fair_policy(policy)) {
+ 			if (attr->sched_nice < task_nice(p) &&
+-			    !can_nice(p, attr->sched_nice))
+-				return -EPERM;
++			    !can_nice(p, attr->sched_nice)) {
++				if (capable(CAP_SYS_NICE))
++					goto sys_nice_capable;
++				else
++					return -EPERM;
++			}
+ 		}
+ 
+ 		if (rt_policy(policy)) {
+@@ -5263,13 +5269,21 @@ static int __sched_setscheduler(struct task_struct *p,
+ 					task_rlimit(p, RLIMIT_RTPRIO);
+ 
+ 			/* Can't set/change the rt policy: */
+-			if (policy != p->policy && !rlim_rtprio)
+-				return -EPERM;
++			if (policy != p->policy && !rlim_rtprio) {
++				if (capable(CAP_SYS_NICE))
++					goto sys_nice_capable;
++				else
++					return -EPERM;
++			}
+ 
+ 			/* Can't increase priority: */
+ 			if (attr->sched_priority > p->rt_priority &&
+-			    attr->sched_priority > rlim_rtprio)
+-				return -EPERM;
++			    attr->sched_priority > rlim_rtprio) {
++				if (capable(CAP_SYS_NICE))
++					goto sys_nice_capable;
++				else
++					return -EPERM;
++			}
+ 		}
+ 
+ 		 /*
+@@ -5278,28 +5292,43 @@ static int __sched_setscheduler(struct task_struct *p,
+ 		  * unprivileged DL tasks to increase their relative deadline
+ 		  * or reduce their runtime (both ways reducing utilization)
+ 		  */
+-		if (dl_policy(policy))
+-			return -EPERM;
++		if (dl_policy(policy)) {
++			if (capable(CAP_SYS_NICE))
++				goto sys_nice_capable;
++			else
++				return -EPERM;
++		}
+ 
+ 		/*
+ 		 * Treat SCHED_IDLE as nice 20. Only allow a switch to
+ 		 * SCHED_NORMAL if the RLIMIT_NICE would normally permit it.
+ 		 */
+ 		if (task_has_idle_policy(p) && !idle_policy(policy)) {
+-			if (!can_nice(p, task_nice(p)))
+-				return -EPERM;
++			if (!can_nice(p, task_nice(p))) {
++				if (capable(CAP_SYS_NICE))
++					goto sys_nice_capable;
++				else
++					return -EPERM;
++			}
+ 		}
+ 
+ 		/* Can't change other user's priorities: */
+-		if (!check_same_owner(p))
+-			return -EPERM;
++		if (!check_same_owner(p)) {
++			if (capable(CAP_SYS_NICE))
++				goto sys_nice_capable;
++			else
++				return -EPERM;
++		}
+ 
+ 		/* Normal users shall not reset the sched_reset_on_fork flag: */
+-		if (p->sched_reset_on_fork && !reset_on_fork)
+-			return -EPERM;
+-	}
++		if (p->sched_reset_on_fork && !reset_on_fork) {
++			if (capable(CAP_SYS_NICE))
++				goto sys_nice_capable;
++			else
++				return -EPERM;
++		}
+ 
+-	if (user) {
++sys_nice_capable:
+ 		if (attr->sched_flags & SCHED_FLAG_SUGOV)
+ 			return -EINVAL;
+ 
 -- 
-2.20.1
+2.28.0
 
