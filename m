@@ -2,109 +2,111 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A6AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D604AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F8320709
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4EC8206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SCJRqVFM"
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="ZKczgM7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgIDMxo (ORCPT
+        id S1730346AbgIDMzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:53:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730018AbgIDMxi (ORCPT
+        Fri, 4 Sep 2020 08:55:41 -0400
+Received: from relayfre-01.paragon-software.com ([176.12.100.13]:49574 "EHLO
+        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729297AbgIDMzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:53:38 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0DCC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 05:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=XyADDbWub8q+RugxMKXaWIKp8gy8G3WLyWqZgRFJ6N0=; b=SCJRqVFMV6xq5oK62ZSBS2K16B
-        0M4rx9nXvo2QjrEbxl5oklw53k5HytS8tujXVTOQqxAPGekh7WXwX3/3zDt1v2dXteaZBIkEjL94g
-        WbVyyBFWhTjPz7jbkUyDFPylmtlpRwGD8MuNMjmRFHoAz4CxWtEQjQJ286vtdG75iW7M5Va5APGAP
-        N46NgXJDtG/zeu7ILQsh3dv8wz4/QSssUqm425xcSNvbkv8XVPMnfy+xLw2ofzcFuBzdL0wF0Up3H
-        uiC8myUw9C4NQN7rdLgap15e0x0DMH5YLj7//qxCuR53suaXjNF12lFcFpPyGae2BVCFYFcRTgsqe
-        wjwVcKRw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEBDf-0001id-EH; Fri, 04 Sep 2020 12:53:31 +0000
-Subject: Re: [RFC 08/10] misc: hisi_hikey_usb: Driver to support onboard USB
- gpio hub on Hikey960
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Yu Chen <chenyu56@huawei.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Derek Kiernan <derek.kiernan@xilinx.com>,
-        Dragan Cvetic <dragan.cvetic@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org
-References: <cover.1599214329.git.mchehab+huawei@kernel.org>
- <ef9f06eb56e1580d146fc639dc2a037205cc843f.1599214329.git.mchehab+huawei@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b8e7b15f-757c-29b9-6984-ac0a49efd6c9@infradead.org>
-Date:   Fri, 4 Sep 2020 05:53:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <ef9f06eb56e1580d146fc639dc2a037205cc843f.1599214329.git.mchehab+huawei@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Fri, 4 Sep 2020 08:55:37 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 49A341B7;
+        Fri,  4 Sep 2020 15:55:34 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1599224134;
+        bh=H8xMnD7JCVbbHVS0+itUPohVVc2Te/ty31v7I7Ungxw=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=ZKczgM7oGTMVABveYNTHb+dVYtKzBpCdsTC71HZflxFdx9R5oMdXp1gHXxxzsw/+b
+         HljdXqtogRhUiwq7lu8PEVZYHpKZwzr5KTKZGWktrXX1WGuQ8H6qXmzsBQ/aiGIH6z
+         EwPqKFGrpkSexTa4Hz52KwW7PHs9GPYwR604wEjE=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 4 Sep 2020 15:55:33 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Fri, 4 Sep 2020 15:55:33 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     Nikolay Borisov <nborisov@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pali@kernel.org" <pali@kernel.org>,
+        "dsterba@suse.cz" <dsterba@suse.cz>,
+        "aaptel@suse.com" <aaptel@suse.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "joe@perches.com" <joe@perches.com>,
+        "mark@harmstone.com" <mark@harmstone.com>
+Subject: RE: [PATCH v3 00/10] NTFS read-write driver GPL implementation by
+ Paragon Software
+Thread-Topic: [PATCH v3 00/10] NTFS read-write driver GPL implementation by
+ Paragon Software
+Thread-Index: AQHWfUkhnfa+JjUWaECKShg2PWgYh6lOwxGAgAm3bNA=
+Date:   Fri, 4 Sep 2020 12:55:33 +0000
+Message-ID: <0576878cc589449ebce9785322370c15@paragon-software.com>
+References: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
+ <dcea3bfc-a082-8dfe-cbd0-c99333fe1b22@suse.com>
+In-Reply-To: <dcea3bfc-a082-8dfe-cbd0-c99333fe1b22@suse.com>
+Accept-Language: ru-RU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/20 3:23 AM, Mauro Carvalho Chehab wrote:
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index e1b1ba5e2b92..8ceba6153ecc 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -456,6 +456,15 @@ config PVPANIC
->  	  a paravirtualized device provided by QEMU; it lets a virtual machine
->  	  (guest) communicate panic events to the host.
->  
-> +config HISI_HIKEY_USB
-> +	tristate "USB GPIO Hub on HiSilicon Hikey960 Platform"
-> +	depends on OF && GPIOLIB
-
-	depends on (OF && GPIOLIB) || COMPILE_TEST
-?
-Both of those have stubs if they are not enabled IIRC.
-
-> +	help
-> +	  If you say yes here this adds support for the on-board USB gpio hub
-
-	                                                             GPIO
-
-> +	  found on the HiKey960, which is necssary to support switching between
-
-	                                  necessary
-
-> +	  the dual-role USB-C port and the USB-A host ports using only one USB
-> +	  controller.
-> +
->  source "drivers/misc/c2port/Kconfig"
->  source "drivers/misc/eeprom/Kconfig"
->  source "drivers/misc/cb710/Kconfig"
-
-
-thanks.
--- 
-~Randy
-
+RnJvbTogTmlrb2xheSBCb3Jpc292IDxuYm9yaXNvdkBzdXNlLmNvbT4NClNlbnQ6IFNhdHVyZGF5
+LCBBdWd1c3QgMjksIDIwMjAgMjozMiBQTQ0KPiBPbiAyOC4wOC4yMCDQsy4gMTc6Mzkg0YcuLCBL
+b25zdGFudGluIEtvbWFyb3Ygd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIE5URlMgUmVhZC1X
+cml0ZSBkcml2ZXIgdG8gZnMvbnRmczMuDQo+ID4NCj4gPiBIYXZpbmcgZGVjYWRlcyBvZiBleHBl
+cnRpc2UgaW4gY29tbWVyY2lhbCBmaWxlIHN5c3RlbXMgZGV2ZWxvcG1lbnQgYW5kIGh1Z2UNCj4g
+PiB0ZXN0IGNvdmVyYWdlLCB3ZSBhdCBQYXJhZ29uIFNvZnR3YXJlIEdtYkggd2FudCB0byBtYWtl
+IG91ciBjb250cmlidXRpb24gdG8NCj4gPiB0aGUgT3BlbiBTb3VyY2UgQ29tbXVuaXR5IGJ5IHBy
+b3ZpZGluZyBpbXBsZW1lbnRhdGlvbiBvZiBOVEZTIFJlYWQtV3JpdGUNCj4gPiBkcml2ZXIgZm9y
+IHRoZSBMaW51eCBLZXJuZWwuDQo+ID4NCj4gPiBUaGlzIGlzIGZ1bGx5IGZ1bmN0aW9uYWwgTlRG
+UyBSZWFkLVdyaXRlIGRyaXZlci4gQ3VycmVudCB2ZXJzaW9uIHdvcmtzIHdpdGgNCj4gPiBOVEZT
+KGluY2x1ZGluZyB2My4xKSBhbmQgbm9ybWFsL2NvbXByZXNzZWQvc3BhcnNlIGZpbGVzIGFuZCBz
+dXBwb3J0cyBqb3VybmFsIHJlcGxheWluZy4NCj4gPg0KPiA+IFdlIHBsYW4gdG8gc3VwcG9ydCB0
+aGlzIHZlcnNpb24gYWZ0ZXIgdGhlIGNvZGViYXNlIG9uY2UgbWVyZ2VkLCBhbmQgYWRkIG5ldw0K
+PiA+IGZlYXR1cmVzIGFuZCBmaXggYnVncy4gRm9yIGV4YW1wbGUsIGZ1bGwgam91cm5hbGluZyBz
+dXBwb3J0IG92ZXIgSkJEIHdpbGwgYmUNCj4gPiBhZGRlZCBpbiBsYXRlciB1cGRhdGVzLg0KPiA+
+DQo+ID4gdjI6DQo+ID4gIC0gcGF0Y2ggc3BsaXR0ZWQgdG8gY2h1bmtzIChmaWxlLXdpc2UpDQo+
+ID4gIC0gYnVpbGQgaXNzdWVzIGZpeGVkDQo+ID4gIC0gc3BhcnNlIGFuZCBjaGVja3BhdGNoLnBs
+IGVycm9ycyBmaXhlZA0KPiA+ICAtIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBvbiBta2ZzLm50
+ZnMtZm9ybWF0dGVkIHZvbHVtZSBtb3VudCBmaXhlZA0KPiA+ICAtIGNvc21ldGljcyArIGNvZGUg
+Y2xlYW51cA0KPiA+DQo+ID4gdjM6DQo+ID4gIC0gYWRkZWQgYWNsLCBub2F0aW1lLCBub19hY3Nf
+cnVsZXMsIHByZWFsbG9jIG1vdW50IG9wdGlvbnMNCj4gPiAgLSBhZGRlZCBmaWVtYXAgc3VwcG9y
+dA0KPiA+ICAtIGZpeGVkIGVuY29kaW5ncyBzdXBwb3J0DQo+ID4gIC0gcmVtb3ZlZCB0eXBlZGVm
+cw0KPiA+ICAtIGFkYXB0ZWQgS2VybmVsLXdheSBsb2dnaW5nIG1lY2hhbmlzbXMNCj4gPiAgLSBm
+aXhlZCB0eXBvcyBhbmQgY29ybmVyLWNhc2UgaXNzdWVzDQo+ID4NCj4gPiBLb25zdGFudGluIEtv
+bWFyb3YgKDEwKToNCj4gPiAgIGZzL250ZnMzOiBBZGQgaGVhZGVycyBhbmQgbWlzYyBmaWxlcw0K
+PiA+ICAgZnMvbnRmczM6IEFkZCBpbml0aWFsaXphdGlvbiBvZiBzdXBlciBibG9jaw0KPiANCj4g
+VGhpcyBwYXRjaCBpcyBtaXNzaW5nDQo+IA0KPiA+ICAgZnMvbnRmczM6IEFkZCBiaXRtYXANCj4g
+PiAgIGZzL250ZnMzOiBBZGQgZmlsZSBvcGVyYXRpb25zIGFuZCBpbXBsZW1lbnRhdGlvblRoaXMg
+cGF0Y2ggaXMgbWlzc2luZw0KPiANCj4gPiAgIGZzL250ZnMzOiBBZGQgYXR0cmliIG9wZXJhdGlv
+bnMNCj4gPiAgIGZzL250ZnMzOiBBZGQgY29tcHJlc3Npb24NCj4gPiAgIGZzL250ZnMzOiBBZGQg
+TlRGUyBqb3VybmFsDQo+IFRoaXMgcGF0Y2ggaXMgbWlzc2luZw0KPiANCj4gPiAgIGZzL250ZnMz
+OiBBZGQgS2NvbmZpZywgTWFrZWZpbGUgYW5kIGRvYw0KW10NCj4gPg0KSGkgTmlrb2xheSEgQXMg
+ZmFyIGFzIEkgY2FuIHNlZSwgYWxsIHRoZSBtZXNzYWdlcyBhcmUgaW4NCnRoZSBsaW51eC1mc2Rl
+dmVsIGxpc3QgYW5kIGhhdmUgY29ycmVjdCAiaW4tcmVwbHktdG8iIElEcy4NCkFyZSB0aG9zZSBw
+YXRjaGVzIHN0aWxsIG1pc3Npbmcgb24geW91ciBzaWRlPw0K
