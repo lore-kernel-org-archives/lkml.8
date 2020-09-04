@@ -2,114 +2,147 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0A8C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB47C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1579206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIT8ojs3"
+	by mail.kernel.org (Postfix) with ESMTP id D5DEB206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgIDH7q (ORCPT
+        id S1729772AbgIDH7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729683AbgIDH7m (ORCPT
+        Fri, 4 Sep 2020 03:59:50 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34508 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729698AbgIDH7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:59:42 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66134C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 00:59:42 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id k15so2820714pji.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 00:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4sO3K9KUt0lx1jX3LT5Qymn7SNSmjZ7mgkYLWSMNBaA=;
-        b=IIT8ojs3Nphf5jUQlNRD+WdyJ7QgPdCDWGeS+Cf9dHwvTtzymqZ5CJfN6cYwvNnzfL
-         RZt4TKNYjzspKAP86CMfbqvRCqZyvIsCXJX59+jz8vKOnvZuyYZK2sYmgORS55b/zH6w
-         jCut7AyX94mREgkX9hgMWHU3ZArX7DJhi2Br/oDphVk49Dx3j+bwrAikNhvv5XLJ6ZfZ
-         pIa5063N+161yywi96AGx/Z8XvbHjbDp40eiLIBm0H7avjGvFjkaLi3EsSMVBVa83XHC
-         SOhhVrMZUG0A1cD23H4oS+HIKCrJgv7D0BT2KYJV74W8cB+FA7Xw7dAQqIzBM8TG0IU7
-         8/Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4sO3K9KUt0lx1jX3LT5Qymn7SNSmjZ7mgkYLWSMNBaA=;
-        b=b3wmT0yhEwp6pnyJ8zdq2sPFrG/nSBcil3TSGjvMjyVmIN89f7Oj1jEdFjITfuVuJk
-         gPSFZZgL6iHfBT/7NrqLideArocbFFyu8i84bsGkRvEhp+WRk+T1DzEyqSanfxdPtnhA
-         poN+DeAzUenSd+E3DMnQjtAwi7FbJgqAoWT6FskRFuPCTvTUMmBYb8I39Mlm9tYSuuxD
-         Vynp7g2aYHdFBHg/uauRsYstBP0GaRMYsdT3kqqHwjQs/mq6hjnWlSLvRtkoqo4fdA+P
-         1ocjrkv+pze+PZ7fUTKaxx6Is4MKYb2XmMaDNmG86MjmAiU6gL4ctUyph439YnzbmGl0
-         mAbg==
-X-Gm-Message-State: AOAM533c34nmsHCOzU3RkheDoVfHhEzEY7acSSSLnNNzPD/tIvjiW4Tr
-        qrzulia8bT/219h0SLHUvuve65gIzl2PUDPtoOIPnw==
-X-Google-Smtp-Source: ABdhPJwcr9ntIJAx1uVoOxLFhbawv85XiwvUMkctNVJ4VlDH49I6YFh6OAIpfBe+5b5h6pqAcSyv6KOQPu/P1CqMTME=
-X-Received: by 2002:a17:90a:fe07:: with SMTP id ck7mr7022389pjb.20.1599206381503;
- Fri, 04 Sep 2020 00:59:41 -0700 (PDT)
+        Fri, 4 Sep 2020 03:59:47 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2D56729AFE0
+Subject: Re: [PATCH] media: mtk-mdp: Fix Null pointer dereference when calling
+ list_add
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-media@vger.kernel.org
+Cc:     matthias.bgg@gmail.com, mchehab@kernel.org, hverkuil@xs4all.nl,
+        kernel@collabora.com, dafna3@gmail.com
+References: <20200828135541.8282-1-dafna.hirschfeld@collabora.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d61eb22b-f3b7-50bb-f44f-629928d5e8c8@collabora.com>
+Date:   Fri, 4 Sep 2020 09:59:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200902180950.4bc7c4de@canb.auug.org.au> <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
- <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
-In-Reply-To: <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Fri, 4 Sep 2020 00:59:30 -0700
-Message-ID: <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
-Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200828135541.8282-1-dafna.hirschfeld@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 9/2/20 8:44 AM, Randy Dunlap wrote:
-> > On 9/2/20 1:09 AM, Stephen Rothwell wrote:
-> >> Hi all,
-> >>
-> >> Changes since 20200828:
-> >>
-> >
-> >
-> > on i386:
-> >
-> > ../lib/ubsan.c: In function =E2=80=98ubsan_prologue=E2=80=99:
-> > ../lib/ubsan.c:141:2: error: implicit declaration of function =E2=80=98=
-kunit_fail_current_test=E2=80=99; did you mean =E2=80=98kunit_init_test=E2=
-=80=99? [-Werror=3Dimplicit-function-declaration]
-> >   kunit_fail_current_test();
-> >
-> >
-> > Full randconfig file is attached.
-> >
->
-> Hi Brendan,
->
-> Do you know anything about this build error?
->
-> I can't find kunit_fail_current_test() anywhere.
+Hi Dafna,
 
-Yeah, this got applied for some reason without the prerequisite
-patches. It is from a two patch series, the other being here:
+Thank you to work on this fix.
 
-https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguaja=
-rdojr@gmail.com/
+On 28/8/20 15:55, Dafna Hirschfeld wrote:
+> In list_add, the first variable is the new node and the second
+> is the list head. The function is called with a wrong order causing
+> NULL dereference:
+> 
+> [   15.527030] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
+> [   15.542317] Mem abort info:
+> [   15.545152]   ESR = 0x96000044
+> [   15.548248]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   15.553624]   SET = 0, FnV = 0
+> [   15.556715]   EA = 0, S1PTW = 0
+> [   15.559892] Data abort info:
+> [   15.562799]   ISV = 0, ISS = 0x00000044
+> [   15.566678]   CM = 0, WnR = 1
+> [   15.569683] user pgtable: 4k pages, 48-bit VAs, pgdp=00000001373f0000
+> [   15.576196] [0000000000000008] pgd=0000000000000000, p4d=0000000000000000
+> [   15.583101] Internal error: Oops: 96000044 [#1] PREEMPT SMP
+> [   15.588747] Modules linked in: mtk_mdp(+) cfg80211 v4l2_mem2mem videobuf2_vmalloc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 videobuf2_common vide
+> odev mt8173_rt5650 smsc95xx usbnet ecdh_generic ecc snd_soc_rt5645 mc mt8173_afe_pcm rfkill cros_ec_sensors snd_soc_mtk_common elan_i2c crct10dif_ce cros_ec_se
+> nsors_core snd_soc_rl6231 elants_i2c industrialio_triggered_buffer kfifo_buf mtk_vpu cros_ec_chardev cros_usbpd_charger cros_usbpd_logger sbs_battery display_c
+> onnector pwm_bl ip_tables x_tables ipv6
+> [   15.634295] CPU: 0 PID: 188 Comm: systemd-udevd Not tainted 5.9.0-rc2+ #69
+> [   15.641242] Hardware name: Google Elm (DT)
+> [   15.645381] pstate: 20000005 (nzCv daif -PAN -UAO BTYPE=--)
+> [   15.651022] pc : mtk_mdp_probe+0x134/0x3a8 [mtk_mdp]
+> [   15.656041] lr : mtk_mdp_probe+0x128/0x3a8 [mtk_mdp]
+> [   15.661055] sp : ffff80001255b910
+> [   15.669548] x29: ffff80001255b910 x28: 0000000000000000
+> [   15.679973] x27: ffff800009089bf8 x26: ffff0000fafde800
+> [   15.690347] x25: ffff0000ff7d2768 x24: ffff800009089010
+> [   15.700670] x23: ffff0000f01a7cd8 x22: ffff0000fafde810
+> [   15.710940] x21: ffff0000f01a7c80 x20: ffff0000f0c3c180
+> [   15.721148] x19: ffff0000ff7f1618 x18: 0000000000000010
+> [   15.731289] x17: 0000000000000000 x16: 0000000000000000
+> [   15.741375] x15: 0000000000aaaaaa x14: 0000000000000020
+> [   15.751399] x13: 00000000ffffffff x12: 0000000000000020
+> [   15.761363] x11: 0000000000000028 x10: 0101010101010101
+> [   15.771279] x9 : 0000000000000004 x8 : 7f7f7f7f7f7f7f7f
+> [   15.781148] x7 : 646bff6171606b2b x6 : 0000000000806d65
+> [   15.790981] x5 : ffff0000ff7f8360 x4 : 0000000000000000
+> [   15.800767] x3 : 0000000000000004 x2 : 0000000000000001
+> [   15.810501] x1 : 0000000000000005 x0 : 0000000000000000
+> [   15.820171] Call trace:
+> [   15.826944]  mtk_mdp_probe+0x134/0x3a8 [mtk_mdp]
+> [   15.835908]  platform_drv_probe+0x54/0xa8
+> [   15.844247]  really_probe+0xe4/0x3b0
+> [   15.852104]  driver_probe_device+0x58/0xb8
+> [   15.860457]  device_driver_attach+0x74/0x80
+> [   15.868854]  __driver_attach+0x58/0xe0
+> [   15.876770]  bus_for_each_dev+0x70/0xc0
+> [   15.884726]  driver_attach+0x24/0x30
+> [   15.892374]  bus_add_driver+0x14c/0x1f0
+> [   15.900295]  driver_register+0x64/0x120
+> [   15.908168]  __platform_driver_register+0x48/0x58
+> [   15.916864]  mtk_mdp_driver_init+0x20/0x1000 [mtk_mdp]
+> [   15.925943]  do_one_initcall+0x54/0x1b4
+> [   15.933662]  do_init_module+0x54/0x200
+> [   15.941246]  load_module+0x1cf8/0x22d0
+> [   15.948798]  __do_sys_finit_module+0xd8/0xf0
+> [   15.956829]  __arm64_sys_finit_module+0x20/0x30
+> [   15.965082]  el0_svc_common.constprop.0+0x6c/0x168
+> [   15.973527]  do_el0_svc+0x24/0x90
+> [   15.980403]  el0_sync_handler+0x90/0x198
+> [   15.987867]  el0_sync+0x158/0x180
+> [   15.994653] Code: 9400014b 2a0003fc 35000920 f9400280 (f9000417)
+> [   16.004299] ---[ end trace 76fee0203f9898e5 ]---
+> 
+> Fixes: 86698b9505bbc ("media: mtk-mdp: convert mtk_mdp_dev.comp array to list")
+> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> ---
+>  drivers/media/platform/mtk-mdp/mtk_mdp_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> index f96c8b3bf861..976aa1f4829b 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_core.c
+> @@ -94,7 +94,7 @@ static void mtk_mdp_reset_handler(void *priv)
+>  void mtk_mdp_register_component(struct mtk_mdp_dev *mdp,
+>  				struct mtk_mdp_comp *comp)
+>  {
+> -	list_add(&mdp->comp_list, &comp->node);
+> +	list_add(&comp->node, &mdp->comp_list);
+>  }
+>  
+>  void mtk_mdp_unregister_component(struct mtk_mdp_dev *mdp,
+> 
 
-which in turn depends on another patchset which didn't make it into 5.9.
+FWIW this also fixes my problems with suspend/resume on my Acer Chromebook R13, so:
 
-Again, I don't know why this was applied without it's prereqs. Sorry about =
-that.
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+
+
+
