@@ -2,238 +2,117 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD97C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C82EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB2C20829
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:26:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sRbOUOb7"
+	by mail.kernel.org (Postfix) with ESMTP id 93FF6207EA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgIDT0D (ORCPT
+        id S1727821AbgIDT13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbgIDT0B (ORCPT
+        Fri, 4 Sep 2020 15:27:29 -0400
+Received: from smtprelay0082.hostedemail.com ([216.40.44.82]:34226 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726221AbgIDT12 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:26:01 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F615C061244;
-        Fri,  4 Sep 2020 12:26:01 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id bh1so1592003plb.12;
-        Fri, 04 Sep 2020 12:26:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qFzHYAnJjeew+/VoFDw5WYkblYa09ONtC+TDOJdOTh4=;
-        b=sRbOUOb7rppBXwuOmSwJptyYN5iBNXrPCq6JLgMewS7Owl7fM4PfCOQANGIlNzcbpk
-         H7z5tBddzPa4x0inJuV1jUSbVLXWL3zHsQ8NV2JP9uiP/JiGgL3efJfggarjLAwd+cvY
-         uJ0JAQ5bD3Fv7fQjbF70tzr1yvNdgbFaGQ7gHWwNuxpRVWatgg8dPgto1ycW8Vvzn8+0
-         B1cnazFpmBo1m2RG+g7RGKCz+CKwPl773U6o4x/MQ7DVjhjEYJbrYeCi6gY/blNEnaiy
-         trKLqTRs4L6X5pf1KWlWmR+BQYaqg1ecUEvI3gb8D+8X9hWA+wwjjETPZFTQBdXe+FQw
-         7Qiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qFzHYAnJjeew+/VoFDw5WYkblYa09ONtC+TDOJdOTh4=;
-        b=gkOv6JnP7/LN+XsSPoYvWvrX9U+cWR7cgxy0uBZZycDINTqDZuh5iQ/klGOxQ5XFo8
-         tYN31e4EcYTr/WIanGpBjDahRIRhIOmmuRZf22/XqeaIqQ+w7DPa/gUnicdk4ON/bSDb
-         t9ojhUluAXDmlUUmPnYhrSk8/gRn0PU0EDkvyxmpS5ZeI7rcnj9+5RQzF/AuHeDN3bO+
-         +q+n4ZMf+88iJT12etzS1qVlduK40EiMv3bvkrOxIFii+baeCkAGwmzyFSJT6WY1uZqJ
-         LcqW710/i+iLMpFp19MHf3wvpLTd1y+vW/q5cq6MyniP+4zRbjlM9YObeHeGJnP1tkJv
-         3zhQ==
-X-Gm-Message-State: AOAM532B2tlZ7goCrQLKB3cwUvrGX1XBUD5S9wybv866HdkIloHTyFoT
-        /g8tEprWqXFA0wMzqs60FFjRiiZl8LZ6Zu4YYAw=
-X-Google-Smtp-Source: ABdhPJycXs81cFywcafg76vAWpKAlUxjd+vGb3FswAonbvhiioLYqMQhEWrdgSxHoiIv5GOc+8HXsJkSdf/+RwGR1Yo=
-X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr9818922pjr.228.1599247560759;
- Fri, 04 Sep 2020 12:26:00 -0700 (PDT)
+        Fri, 4 Sep 2020 15:27:28 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id C44731800EC27;
+        Fri,  4 Sep 2020 19:27:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: land29_56048e2270b4
+X-Filterd-Recvd-Size: 3930
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf07.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  4 Sep 2020 19:27:24 +0000 (UTC)
+Message-ID: <897438bf3fbbd38ee92e964ce5b9d1dc2bccd2ec.camel@perches.com>
+Subject: Re: printk: Add process name information to printk() output.
+From:   Joe Perches <joe@perches.com>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        John Ogness <john.ogness@linutronix.de>
+Cc:     Changki Kim <changki.kim@samsung.com>, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
+        krzk@kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 04 Sep 2020 12:27:23 -0700
+In-Reply-To: <20200904103541.GB2693206@kroah.com>
+References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
+         <20200904082438.20707-1-changki.kim@samsung.com>
+         <874kod6fgh.fsf@jogness.linutronix.de> <20200904103541.GB2693206@kroah.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200904165222.18444-1-vadym.kochan@plvision.eu> <20200904165222.18444-3-vadym.kochan@plvision.eu>
-In-Reply-To: <20200904165222.18444-3-vadym.kochan@plvision.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 4 Sep 2020 22:25:43 +0300
-Message-ID: <CAHp75VcEC=sHardyv1jkpQ1o=MUhxPzMzehNtq0uN0hoEYoDwg@mail.gmail.com>
-Subject: Re: [PATCH net-next v7 2/6] net: marvell: prestera: Add PCI interface support
-To:     Vadym Kochan <vadym.kochan@plvision.eu>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
-        Serhiy Boiko <serhiy.boiko@plvision.eu>,
-        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
-        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
-        Taras Chornyi <taras.chornyi@plvision.eu>,
-        Andrii Savka <andrii.savka@plvision.eu>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mickey Rachamim <mickeyr@marvell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
->
-> Add PCI interface driver for Prestera Switch ASICs family devices, which
-> provides:
->
->     - Firmware loading mechanism
->     - Requests & events handling to/from the firmware
->     - Access to the firmware on the bus level
->
-> The firmware has to be loaded each time the device is reset. The driver
-> is loading it from:
->
->     /lib/firmware/mrvl/prestera/mvsw_prestera_fw-v{MAJOR}.{MINOR}.img
->
-> The full firmware image version is located within the internal header
-> and consists of 3 numbers - MAJOR.MINOR.PATCH. Additionally, driver has
-> hard-coded minimum supported firmware version which it can work with:
->
->     MAJOR - reflects the support on ABI level between driver and loaded
->             firmware, this number should be the same for driver and loaded
->             firmware.
->
->     MINOR - this is the minimum supported version between driver and the
->             firmware.
->
->     PATCH - indicates only fixes, firmware ABI is not changed.
->
-> Firmware image file name contains only MAJOR and MINOR numbers to make
-> driver be compatible with any PATCH version.
+On Fri, 2020-09-04 at 12:35 +0200, Greg KH wrote:
+> On Fri, Sep 04, 2020 at 11:53:42AM +0206, John Ogness wrote:
+> > On 2020-09-04, Changki Kim <changki.kim@samsung.com> wrote:
+> > > Printk() meesages are the most basic and useful debug method.
+> > > However, additional information needs in multi-processor.
+> > > If we add messages with processor id and process name, we can find
+> > > a problem only with messages when the problem occurs with H/W IP or CPU.
+> > > This is very useful in narrowing down the scope of the problems.
+> > 
+> > [...]
+> > 
+> > > diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+> > > index e6302da041f9..fcefe9516606 100644
+> > > --- a/kernel/printk/printk_ringbuffer.h
+> > > +++ b/kernel/printk/printk_ringbuffer.h
+> > > @@ -21,6 +22,12 @@ struct printk_info {
+> > >  	u8	flags:5;	/* internal record flags */
+> > >  	u8	level:3;	/* syslog level */
+> > >  	u32	caller_id;	/* thread id or processor id */
+> > > +#ifdef CONFIG_PRINTK_PROCESS
+> > > +	int	pid;			/* process id */
+> > > +	u8	cpu_id;			/* processor id */
+> > > +	u8	in_interrupt;		/* interrupt conext */
+> > > +	char process[TASK_COMM_LEN];	/* process name */
+> > > +#endif
+> > >  };
+> > 
+> > I can understand the desire to have more information with messages. But
+> > IMHO adding it to the ringbuffer descriptor is the wrong place for
+> > it. The descriptor should really be limited to data that the printk
+> > subsystem needs for _itself_. With respect to LOG_CONT, I think we can
+> > agree that @caller_id is not enough. But there has been discussions [0]
+> > of having @caller_id provide a better context representation.
+> > 
+> > If we want to support adding more meta information to messages, I would
+> > prefer that the information is either prepended directly to the message
+> > text string or appended to the dictionary text string. We could even go
+> > so far as providing a boot argument where a list of information could be
+> > specified, what should be automatically added to the text/dict strings
+> > of each message. That would not require any ringbuffer changes and would
+> > allow new types of information to be added later.
+> > 
+> > Something like:
+> > 
+> >     printk.format=ts,cpu,comm,pid,in_atomic
+> > 
+> > John Ogness
+> > 
+> > [0] https://lkml.kernel.org/r/20200719143527.GA566@jagdpanzerIV.localdomain
+> 
+> Ah, finally a good use of the "dictionary" that we all can agree makes
+> sense :)
+> 
+> This does seem like a better solution overall, thanks.
 
-...
+__func__ too please so that it could optionally be enabled per
+subsystem using %pS, __builtin_return_address(<appropriate_level>)
 
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/device.h>
-> +#include <linux/pci.h>
-> +#include <linux/circ_buf.h>
-> +#include <linux/firmware.h>
-> +#include <linux/iopoll.h>
+That way a lot of %s:..., __func__ could be removed from
+specific printk instances.
 
-Perhaps sorted?
 
-...
 
-> +enum prestera_pci_bar_t {
-> +       PRESTERA_PCI_BAR_FW = 2,
-> +       PRESTERA_PCI_BAR_PP = 4
-
-Comma?
-
-> +};
-
-...
-
-> +       return readl_poll_timeout(addr, rd_idx,
-> +                                CIRC_SPACE(wr_idx, rd_idx, buf_len) >= len,
-> +                                1 * USEC_PER_MSEC, 100 * USEC_PER_MSEC);
-
-> +       return 0;
-
-dead code.
-
-...
-
-> +       if (err) {
-> +               dev_err(fw->dev.dev, "Timeout to load FW img [state=%d]",
-> +                       prestera_ldr_read(fw, PRESTERA_LDR_STATUS_REG));
-
-> +               return err;
-> +       }
-> +
-> +       return 0;
-
-return err;
-
-> +}
-
-...
-
-> +       status = prestera_ldr_read(fw, PRESTERA_LDR_STATUS_REG);
-
-> +       if (status != PRESTERA_LDR_STATUS_START_FW) {
-
-Point of this check?
-
-> +               switch (status) {
-> +               case PRESTERA_LDR_STATUS_INVALID_IMG:
-> +                       dev_err(fw->dev.dev, "FW img has bad CRC\n");
-> +                       return -EINVAL;
-> +               case PRESTERA_LDR_STATUS_NOMEM:
-> +                       dev_err(fw->dev.dev, "Loader has no enough mem\n");
-> +                       return -ENOMEM;
-> +               default:
-> +                       break;
-> +               }
-> +       }
-> +
-> +       return 0;
-
-...
-
-> +       err = prestera_ldr_wait_reg32(fw, PRESTERA_LDR_READY_REG,
-> +                                     PRESTERA_LDR_READY_MAGIC, 5 * 1000);
-
-1000? MSEC_PER_SEC?
-
-> +       if (err) {
-> +               dev_err(fw->dev.dev, "waiting for FW loader is timed out");
-> +               return err;
-> +       }
-
-...
-
-> +       if (!IS_ALIGNED(f->size, 4)) {
-> +               dev_err(fw->dev.dev, "FW image file is not aligned");
-
-> +               release_firmware(f);
-> +               return -EINVAL;
-
- err = -EINVAL;
- goto out_release;
-?
-
-> +       }
-
-Is it really fatal?
-
-> +
-> +       err = prestera_fw_hdr_parse(fw, f);
-> +       if (err) {
-> +               dev_err(fw->dev.dev, "FW image header is invalid\n");
-
-> +               release_firmware(f);
-> +               return err;
-
-goto out_release; ?
-
-> +       }
-> +
-> +       prestera_ldr_write(fw, PRESTERA_LDR_IMG_SIZE_REG, f->size - hlen);
-> +       prestera_ldr_write(fw, PRESTERA_LDR_CTL_REG, PRESTERA_LDR_CTL_DL_START);
-> +
-> +       dev_info(fw->dev.dev, "Loading %s ...", fw_path);
-> +
-> +       err = prestera_ldr_fw_send(fw, f->data + hlen, f->size - hlen);
-
-out_release: ?
-
-> +       release_firmware(f);
-> +       return err;
-
--- 
-With Best Regards,
-Andy Shevchenko
