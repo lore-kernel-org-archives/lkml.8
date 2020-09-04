@@ -2,111 +2,143 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D604AC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79393C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4EC8206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FB9206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:55:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="ZKczgM7o"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="d0c4e8pn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730346AbgIDMzl (ORCPT
+        id S1730323AbgIDMzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:55:41 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:49574 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729297AbgIDMzh (ORCPT
+        Fri, 4 Sep 2020 08:55:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730010AbgIDMzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 08:55:37 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 49A341B7;
-        Fri,  4 Sep 2020 15:55:34 +0300 (MSK)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E98C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 05:55:36 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id k15so6622211wrn.10
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 05:55:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1599224134;
-        bh=H8xMnD7JCVbbHVS0+itUPohVVc2Te/ty31v7I7Ungxw=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=ZKczgM7oGTMVABveYNTHb+dVYtKzBpCdsTC71HZflxFdx9R5oMdXp1gHXxxzsw/+b
-         HljdXqtogRhUiwq7lu8PEVZYHpKZwzr5KTKZGWktrXX1WGuQ8H6qXmzsBQ/aiGIH6z
-         EwPqKFGrpkSexTa4Hz52KwW7PHs9GPYwR604wEjE=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 4 Sep 2020 15:55:33 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Fri, 4 Sep 2020 15:55:33 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     Nikolay Borisov <nborisov@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "pali@kernel.org" <pali@kernel.org>,
-        "dsterba@suse.cz" <dsterba@suse.cz>,
-        "aaptel@suse.com" <aaptel@suse.com>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "joe@perches.com" <joe@perches.com>,
-        "mark@harmstone.com" <mark@harmstone.com>
-Subject: RE: [PATCH v3 00/10] NTFS read-write driver GPL implementation by
- Paragon Software
-Thread-Topic: [PATCH v3 00/10] NTFS read-write driver GPL implementation by
- Paragon Software
-Thread-Index: AQHWfUkhnfa+JjUWaECKShg2PWgYh6lOwxGAgAm3bNA=
-Date:   Fri, 4 Sep 2020 12:55:33 +0000
-Message-ID: <0576878cc589449ebce9785322370c15@paragon-software.com>
-References: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
- <dcea3bfc-a082-8dfe-cbd0-c99333fe1b22@suse.com>
-In-Reply-To: <dcea3bfc-a082-8dfe-cbd0-c99333fe1b22@suse.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yv8vkjDQK6hcRmOjhA1B4LKV5dcNKUU+lKopTGFxDEk=;
+        b=d0c4e8pnx/zw8L1LUX1IDKWgDaOOcFOwkGN7pDeTnRSV3HcfbvwR2pF65F33Qq2OrP
+         x0L8nWU/KikfnXLm0ad7qfVo32XRlkxz7Z0eDlEsVHr+cfAv784G2m9LTVfLv+L0f7y/
+         /N0KuRUbHfIOdbBvB07yBYVOSJDW1Zi5LWqy6KbFBa/6nwLkxkd9MKkd95bfh20BkAeN
+         RRubpy7nee7IrN1eT3+dighUN7LxYPJNkUVJ30yLVmCThHcyJhG2YMk/uW+8O+9hXuxX
+         T76cIDTMe6zOR1Ub9D9DCmA+3lE1EuogygFRlm3pCq0Ql2rw04CMAx81n9gC7E/XmE6j
+         jONQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yv8vkjDQK6hcRmOjhA1B4LKV5dcNKUU+lKopTGFxDEk=;
+        b=WmWwXNX16edlcxNOZ+uaUJTdcbeDqnK6CJ9nCUeWAhLv9IJ5Ae5Flo6Yc8HExnDk1l
+         S2PbrBvQWkNIVUKM5WPGHbnl/N7QnfzQ1Po/w0aUiVkrdnr76MOHHbucQvapyuaUApYv
+         HtLQtwI9AqsTL3pQmf8nycIxhvpTBRgvSSTR9rgFwCqtMi1kve71e8Uu3BNgZaPGemDC
+         KAzJZlMVp1+nrT0fKMv+fMxaYLxEtH9pX6s4L5kCJ81KGuHA30FMmR2pH742ViDzkH2m
+         x2+wDV7NbGbKILDcQbd0KZQxrJi1X2SU6f9WRT7P2+42Bj0RGVwdqLcpf0Z+RxtQMYKm
+         AZEA==
+X-Gm-Message-State: AOAM533ijAYa5XycBgswM11RtFLMeCn4OgJip3XleUbVVMjACO8TGmWV
+        4KSXOsiRW+F4BJ2J+J2xUE/DZA==
+X-Google-Smtp-Source: ABdhPJxv90v+tFBoZCB4HpM62W+SkjjqW7sPC+ACOuh5qlqbSlXgZD7YYB18yLvhWxSjJbc4yvEFNw==
+X-Received: by 2002:a5d:5486:: with SMTP id h6mr7572543wrv.415.1599224134577;
+        Fri, 04 Sep 2020 05:55:34 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id z15sm11026236wrv.94.2020.09.04.05.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 05:55:33 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net
+Cc:     yannick.fertre@st.com, heiko.stuebner@theobroma-systems.com,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH] drm/bridge: dw-mipi-dsi: permit configuring the escape clock rate
+Date:   Fri,  4 Sep 2020 14:55:31 +0200
+Message-Id: <20200904125531.15248-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTmlrb2xheSBCb3Jpc292IDxuYm9yaXNvdkBzdXNlLmNvbT4NClNlbnQ6IFNhdHVyZGF5
-LCBBdWd1c3QgMjksIDIwMjAgMjozMiBQTQ0KPiBPbiAyOC4wOC4yMCDQsy4gMTc6Mzkg0YcuLCBL
-b25zdGFudGluIEtvbWFyb3Ygd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIE5URlMgUmVhZC1X
-cml0ZSBkcml2ZXIgdG8gZnMvbnRmczMuDQo+ID4NCj4gPiBIYXZpbmcgZGVjYWRlcyBvZiBleHBl
-cnRpc2UgaW4gY29tbWVyY2lhbCBmaWxlIHN5c3RlbXMgZGV2ZWxvcG1lbnQgYW5kIGh1Z2UNCj4g
-PiB0ZXN0IGNvdmVyYWdlLCB3ZSBhdCBQYXJhZ29uIFNvZnR3YXJlIEdtYkggd2FudCB0byBtYWtl
-IG91ciBjb250cmlidXRpb24gdG8NCj4gPiB0aGUgT3BlbiBTb3VyY2UgQ29tbXVuaXR5IGJ5IHBy
-b3ZpZGluZyBpbXBsZW1lbnRhdGlvbiBvZiBOVEZTIFJlYWQtV3JpdGUNCj4gPiBkcml2ZXIgZm9y
-IHRoZSBMaW51eCBLZXJuZWwuDQo+ID4NCj4gPiBUaGlzIGlzIGZ1bGx5IGZ1bmN0aW9uYWwgTlRG
-UyBSZWFkLVdyaXRlIGRyaXZlci4gQ3VycmVudCB2ZXJzaW9uIHdvcmtzIHdpdGgNCj4gPiBOVEZT
-KGluY2x1ZGluZyB2My4xKSBhbmQgbm9ybWFsL2NvbXByZXNzZWQvc3BhcnNlIGZpbGVzIGFuZCBz
-dXBwb3J0cyBqb3VybmFsIHJlcGxheWluZy4NCj4gPg0KPiA+IFdlIHBsYW4gdG8gc3VwcG9ydCB0
-aGlzIHZlcnNpb24gYWZ0ZXIgdGhlIGNvZGViYXNlIG9uY2UgbWVyZ2VkLCBhbmQgYWRkIG5ldw0K
-PiA+IGZlYXR1cmVzIGFuZCBmaXggYnVncy4gRm9yIGV4YW1wbGUsIGZ1bGwgam91cm5hbGluZyBz
-dXBwb3J0IG92ZXIgSkJEIHdpbGwgYmUNCj4gPiBhZGRlZCBpbiBsYXRlciB1cGRhdGVzLg0KPiA+
-DQo+ID4gdjI6DQo+ID4gIC0gcGF0Y2ggc3BsaXR0ZWQgdG8gY2h1bmtzIChmaWxlLXdpc2UpDQo+
-ID4gIC0gYnVpbGQgaXNzdWVzIGZpeGVkDQo+ID4gIC0gc3BhcnNlIGFuZCBjaGVja3BhdGNoLnBs
-IGVycm9ycyBmaXhlZA0KPiA+ICAtIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBvbiBta2ZzLm50
-ZnMtZm9ybWF0dGVkIHZvbHVtZSBtb3VudCBmaXhlZA0KPiA+ICAtIGNvc21ldGljcyArIGNvZGUg
-Y2xlYW51cA0KPiA+DQo+ID4gdjM6DQo+ID4gIC0gYWRkZWQgYWNsLCBub2F0aW1lLCBub19hY3Nf
-cnVsZXMsIHByZWFsbG9jIG1vdW50IG9wdGlvbnMNCj4gPiAgLSBhZGRlZCBmaWVtYXAgc3VwcG9y
-dA0KPiA+ICAtIGZpeGVkIGVuY29kaW5ncyBzdXBwb3J0DQo+ID4gIC0gcmVtb3ZlZCB0eXBlZGVm
-cw0KPiA+ICAtIGFkYXB0ZWQgS2VybmVsLXdheSBsb2dnaW5nIG1lY2hhbmlzbXMNCj4gPiAgLSBm
-aXhlZCB0eXBvcyBhbmQgY29ybmVyLWNhc2UgaXNzdWVzDQo+ID4NCj4gPiBLb25zdGFudGluIEtv
-bWFyb3YgKDEwKToNCj4gPiAgIGZzL250ZnMzOiBBZGQgaGVhZGVycyBhbmQgbWlzYyBmaWxlcw0K
-PiA+ICAgZnMvbnRmczM6IEFkZCBpbml0aWFsaXphdGlvbiBvZiBzdXBlciBibG9jaw0KPiANCj4g
-VGhpcyBwYXRjaCBpcyBtaXNzaW5nDQo+IA0KPiA+ICAgZnMvbnRmczM6IEFkZCBiaXRtYXANCj4g
-PiAgIGZzL250ZnMzOiBBZGQgZmlsZSBvcGVyYXRpb25zIGFuZCBpbXBsZW1lbnRhdGlvblRoaXMg
-cGF0Y2ggaXMgbWlzc2luZw0KPiANCj4gPiAgIGZzL250ZnMzOiBBZGQgYXR0cmliIG9wZXJhdGlv
-bnMNCj4gPiAgIGZzL250ZnMzOiBBZGQgY29tcHJlc3Npb24NCj4gPiAgIGZzL250ZnMzOiBBZGQg
-TlRGUyBqb3VybmFsDQo+IFRoaXMgcGF0Y2ggaXMgbWlzc2luZw0KPiANCj4gPiAgIGZzL250ZnMz
-OiBBZGQgS2NvbmZpZywgTWFrZWZpbGUgYW5kIGRvYw0KW10NCj4gPg0KSGkgTmlrb2xheSEgQXMg
-ZmFyIGFzIEkgY2FuIHNlZSwgYWxsIHRoZSBtZXNzYWdlcyBhcmUgaW4NCnRoZSBsaW51eC1mc2Rl
-dmVsIGxpc3QgYW5kIGhhdmUgY29ycmVjdCAiaW4tcmVwbHktdG8iIElEcy4NCkFyZSB0aG9zZSBw
-YXRjaGVzIHN0aWxsIG1pc3Npbmcgb24geW91ciBzaWRlPw0K
+The Amlogic D-PHY in the Amlogic AXG SoC Family does support a frequency
+higher than 10MHz for the TX Escape Clock, thus make the target rate
+configurable.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 25 +++++++++++++++----
+ include/drm/bridge/dw_mipi_dsi.h              |  1 +
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+index d580b2aa4ce9..31fc965c66fd 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+@@ -562,15 +562,30 @@ static void dw_mipi_dsi_disable(struct dw_mipi_dsi *dsi)
+ 
+ static void dw_mipi_dsi_init(struct dw_mipi_dsi *dsi)
+ {
++	const struct dw_mipi_dsi_phy_ops *phy_ops = dsi->plat_data->phy_ops;
++	unsigned int esc_rate; /* in MHz */
++	u32 esc_clk_division;
++	int ret;
++
+ 	/*
+ 	 * The maximum permitted escape clock is 20MHz and it is derived from
+-	 * lanebyteclk, which is running at "lane_mbps / 8".  Thus we want:
+-	 *
+-	 *     (lane_mbps >> 3) / esc_clk_division < 20
++	 * lanebyteclk, which is running at "lane_mbps / 8".
++	 */
++	if (phy_ops->get_esc_clk_rate) {
++		ret = phy_ops->get_esc_clk_rate(dsi->plat_data->priv_data,
++						&esc_rate);
++		if (ret)
++			DRM_DEBUG_DRIVER("Phy get_esc_clk_rate() failed\n");
++	} else
++		esc_rate = 20; /* Default to 20MHz */
++
++	/*
++	 * We want :
++	 *     (lane_mbps >> 3) / esc_clk_division < X
+ 	 * which is:
+-	 *     (lane_mbps >> 3) / 20 > esc_clk_division
++	 *     (lane_mbps >> 3) / X > esc_clk_division
+ 	 */
+-	u32 esc_clk_division = (dsi->lane_mbps >> 3) / 20 + 1;
++	esc_clk_division = (dsi->lane_mbps >> 3) / esc_rate + 1;
+ 
+ 	dsi_write(dsi, DSI_PWR_UP, RESET);
+ 
+diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
+index b0e390b3288e..bda8aa7c2280 100644
+--- a/include/drm/bridge/dw_mipi_dsi.h
++++ b/include/drm/bridge/dw_mipi_dsi.h
+@@ -36,6 +36,7 @@ struct dw_mipi_dsi_phy_ops {
+ 			     unsigned int *lane_mbps);
+ 	int (*get_timing)(void *priv_data, unsigned int lane_mbps,
+ 			  struct dw_mipi_dsi_dphy_timing *timing);
++	int (*get_esc_clk_rate)(void *priv_data, unsigned int *esc_clk_rate);
+ };
+ 
+ struct dw_mipi_dsi_host_ops {
+-- 
+2.22.0
+
