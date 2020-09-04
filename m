@@ -2,166 +2,205 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_QP_LONG_LINE,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840F4C2BC84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DB3C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59F51206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C4EE20748
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UUtp1rvA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="GUUleuGH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbgIDGrM (ORCPT
+        id S1726575AbgIDGw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:47:12 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54980 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbgIDGrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:47:10 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904064707euoutp02b7854cb444c2387d79318b2c8ecee100~xgcV6gmNM1899618996euoutp02Z
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904064707euoutp02b7854cb444c2387d79318b2c8ecee100~xgcV6gmNM1899618996euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599202027;
-        bh=67a+pt9I2jtHRBIG4Hc52tlennfGIpB6ZIhmKV+jdAc=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=UUtp1rvAsv+k+nCyMMcUzpAmjdcKyAQAJp2x1hJLvIFIhsbBOhsynwiAho/6+clNy
-         WzogXpUFcZNO6B4+qbxgG+N3+ZflYT9+gms58N9MJMd6jJhwPvM00VkODYo7IZwKk2
-         7tLE0irq/RNK0Bj2HypDrvfkN5SLnD4j2C8oHO4w=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200904064707eucas1p1a492751e701126307c7afa8459d84bc1~xgcVnRxUy0374403744eucas1p1j;
-        Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 91.C2.06456.BE2E15F5; Fri,  4
-        Sep 2020 07:47:07 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904064707eucas1p24ca97f26742aed3fd092b37012861fca~xgcVM5k_51330813308eucas1p2K;
-        Fri,  4 Sep 2020 06:47:07 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200904064706eusmtrp218e6fe4f52d1b160b2ea5e82d9a981a9~xgcVHNqm21768817688eusmtrp2M;
-        Fri,  4 Sep 2020 06:47:06 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-fa-5f51e2eb12a8
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 12.62.06314.AE2E15F5; Fri,  4
-        Sep 2020 07:47:06 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200904064706eusmtip276985d5c504de0a45479dcbe3d764a5f~xgcUpDwwd2982729827eusmtip2W;
-        Fri,  4 Sep 2020 06:47:06 +0000 (GMT)
-Subject: Re: [PATCH v2 1/3] ARM: dts: exynos: Add assigned clock parent to
- CMU in Exynos3250
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <4bc2ea2e-65a2-6c0b-9557-5777e359241a@samsung.com>
-Date:   Fri, 4 Sep 2020 08:47:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200903181425.5015-1-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGKsWRmVeSWpSXmKPExsWy7djP87qvHwXGG3y9KWkx/8g5Vov+x6+Z
-        Lc6f38BusenxNVaLy7vmsFnMOL+PyaJ17xF2i/anL5kdODw2repk89i8pN7j8ya5AOYoLpuU
-        1JzMstQifbsEroyll38zF+zirVj27j1zA2MzdxcjJ4eEgInEz1NrmLsYuTiEBFYwSuzc3sYG
-        4XxhlFi2+hErhPOZUeL58pdMMC0bbuyBqlrOKNH58BsLhPMeqOr3FUaQKmGBOImDjd/ZQRIi
-        IO2XJ19jBkkwC+hKTH/3BsxmEzCU6HrbxQZi8wrYSTS+ugvUzMHBIqAiceKuFEhYFGjOsVOP
-        WCBKBCVOznwCZnMCXXH/4TYmiJHyEtvfzoEaLy5x68l8JpC9EgLL2CUeT3nEDHG2i8T5mTvZ
-        IGxhiVfHt7BD2DIS/3fCNDQzSjw8t5YdwukBurppBiNElbXEnXO/2ECuYxbQlFi/Sx8i7Cix
-        eMFRdpCwhACfxI23ghBH8ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCoNAvJa7OQvDML
-        yTuzEPYuYGRZxSieWlqcm55abJiXWq5XnJhbXJqXrpecn7uJEZh6Tv87/mkH49dLSYcYBTgY
-        lXh4b7wPiBdiTSwrrsw9xCjBwawkwut09nScEG9KYmVValF+fFFpTmrxIUZpDhYlcV7jRS9j
-        hQTSE0tSs1NTC1KLYLJMHJxSDYydXvfufSzbY+p/TvcCS8fqTXt+LNfXuHR/t88G9mV/zZor
-        AxIKb+TyhGxT/DzznsO5pH9HM224k5i7I9yya7kneTNPbv3+z8R8gfyUzbxt0VICm5LfmS/L
-        39Exq1fU22NHcLB/pMuN44EHOjcuW54g7qtU8fqRjKHhjWmZt4L3mOz0uHypaq8SS3FGoqEW
-        c1FxIgCeWsMhOQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOIsWRmVeSWpSXmKPExsVy+t/xe7qvHgXGG5x9bWkx/8g5Vov+x6+Z
-        Lc6f38BusenxNVaLy7vmsFnMOL+PyaJ17xF2i/anL5kdODw2repk89i8pN7j8ya5AOYoPZui
-        /NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYyll38zF+zi
-        rVj27j1zA2MzdxcjJ4eEgInEhht72EBsIYGljBK7t2lBxGUkTk5rYIWwhSX+XOsCquECqnnL
-        KDH57z8WkISwQJzEmhMrWUASIgKfGSWeNW5iBkkwC+hKTH/3hhmiox2o4/ctRpAEm4ChRNfb
-        LrB1vAJ2Eo2v7gLFOThYBFQkTtyVAgmLAg090/MCqkRQ4uTMJ2DLOIEuvf9wGxPEfDOJeZsf
-        Qu2Sl9j+dg6ULS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+oVJ+YWl+al
-        6yXn525iBEbatmM/N+9gvLQx+BCjAAejEg/vjfcB8UKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1J
-        rKxKLcqPLyrNSS0+xGgK9NtEZinR5HxgEsgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliS
-        mp2aWpBaBNPHxMEp1cAYsEAppqrH9LWo8Y3IukPblnB8yGXKOfub6+1SWaY53Re219Qm7jCe
-        fXm73epAl3VhCheMlRd0RJ05yMMqG/H7neOnue1KsnHT3GM3/pXUv8EY1Gq6cub/9yGGq06+
-        Vpz64trMNweeTo4Q4FWYxtJ+ffm/Ne9dO4192HdukHu7b1aEvnxbfsdFJZbijERDLeai4kQA
-        46qE7MoCAAA=
-X-CMS-MailID: 20200904064707eucas1p24ca97f26742aed3fd092b37012861fca
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200903181437eucas1p16b97d1c425672700bac7ece19084584c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200903181437eucas1p16b97d1c425672700bac7ece19084584c
-References: <CGME20200903181437eucas1p16b97d1c425672700bac7ece19084584c@eucas1p1.samsung.com>
-        <20200903181425.5015-1-krzk@kernel.org>
+        Fri, 4 Sep 2020 02:52:28 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:16713 "EHLO mx1.tq-group.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726089AbgIDGw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:52:27 -0400
+IronPort-SDR: q0fwNExURpU7WgXSUb8mGzbfUsyAI8vrGF8Ty/hkzYOd1Akq0sVoCB29d1q+QHZqI0v8XJW/QJ
+ oEUjI+kSjml88N/zGwKQCtCwI59/esp1Dy+8Y0yeB4PESQxQ5eSHBOw1kgDqrkYq0x5dxMYWxV
+ AVflo8igSsFvD7PtJtUB3LDi7rBhUuo8UnqfjnpxoYh4weWxPrchByImfxBfhrD9jnaDud5jLB
+ 8SQITKyhkdPopFZLBeAcX+13j/WzqRZOLVQY5M5+p3so8986Uw+RDyoPohV8NE4ixohu6BveM2
+ fug=
+X-IronPort-AV: E=Sophos;i="5.76,388,1592863200"; 
+   d="scan'208";a="13728599"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 04 Sep 2020 08:52:24 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Fri, 04 Sep 2020 08:52:24 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Fri, 04 Sep 2020 08:52:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1599202344; x=1630738344;
+  h=subject:from:to:cc:date:mime-version:
+   content-transfer-encoding:message-id;
+  bh=laQmDkZSgq5I0w0AUUyCJAr4yaR5ymslVR9BnsiF9xk=;
+  b=GUUleuGHTp3UjJYCDzA1Jbw3vSuT0aloP33Myv1LBtfiCVM8MMEtcvCq
+   ckWIR7RzxYd8ZbrxOh+S8yq8VhuAHzJXk39MWLlvbQT9wFUrdF1noOv3r
+   QauKras4tADBW5Ro9MhoARsII79HFlThwpxKPg8QuKm0MwXWhIHYKpEzX
+   AlR9HoQxuSWwW1SqValCUBwadkepQMDY5bqFOI99nslV5gwqtwrrumZ1G
+   rhRjgtAG2FRW1y9XC4KeC+fZB1xYPIp5Ir1bpwaOdVSVYmvOMVoNiOaoI
+   IPBxTpA2PpqUKbSVybrcI1cfvJEL3warlukEsiYxEmWW8sgNFXnndORIE
+   w==;
+IronPort-SDR: XN3U8wsgE5+K9uAqECPIOYrl7ed1hzChvN87pSn4qMaSIZcocTt7/qolaUVqQArarzs7eHhKDr
+ HMx4ujmHwhP8JfZsi9ZotFVcSTSi0F/ZSs9+P+GWCHQA14jRCTJ8AoT0tBeeW+30zHCEiyOUY0
+ /zIpBsWudYZ4x3gmyu1h97RwuNGDrsdWnEUbJ+12NoaNI9Feom2knW0KPQwn5xLQZJVWcR5Htg
+ 0EShvPRjwvbgRXGTQ4Sfl1d6KswLafIQqGqhquCo/9FJCCMTfIsr/14N9Re2z2XAhQRMOeV89h
+ rB4=
+X-IronPort-AV: E=Sophos;i="5.76,388,1592863200"; 
+   d="scan'208";a="13728598"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 04 Sep 2020 08:52:24 +0200
+Received: from vtuxmail01.tq-net.de (localhost [127.0.0.1])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTP id 6FC2C280065;
+        Fri,  4 Sep 2020 08:52:24 +0200 (CEST)
+Received: by vtuxmail01 (kopano-spooler) with MAPI; Fri, 4 Sep 2020 08:52:24
+ +0200
+Subject: RE: (EXT) Re: [PATCH v2 1/1] edac: fsl_ddr_edac: fix expected data
+ message
+From:   "Gregor Herburger" <Gregor.Herburger@ew.tq-group.com>
+To:     "Borislav Petkov" <bp@alien8.de>
+Cc:     =?us-ascii?Q?york=2Esun=40nxp=2Ecom?= <york.sun@nxp.com>,
+        =?us-ascii?Q?mchehab=40kernel=2Eorg?= <mchehab@kernel.org>,
+        =?us-ascii?Q?tony=2Eluck=40intel=2Ecom?= <tony.luck@intel.com>,
+        =?us-ascii?Q?james=2Emorse=40arm=2Ecom?= <james.morse@arm.com>,
+        =?us-ascii?Q?rrichter=40marvell=2Ecom?= <rrichter@marvell.com>,
+        =?us-ascii?Q?linux-edac=40vger=2Ekernel=2Eorg?= 
+        <linux-edac@vger.kernel.org>,
+        =?us-ascii?Q?linux-kernel=40vger=2Ekernel=2Eorg?= 
+        <linux-kernel@vger.kernel.org>
+Date:   Fri, 4 Sep 2020 06:52:24 +0000
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Priority: 3 (Normal)
+X-Mailer: Kopano 8.7.82
+Message-Id: <kcEE.e0qfoTd8SOOr3lTVWaXz/A.AASg8YeC1gE@vtuxmail01.tq-net.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+> >=C2=A0 drivers/edac/fsl_ddr_edac.c | 6 +++---
+> >=C2=A0 1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
+> > index 6d8ea226010d..4b6989cf1947 100644
+> > --- a/drivers/edac/fsl_ddr_edac.c
+> > +++ b/drivers/edac/fsl_ddr_edac.c
+> > @@ -343,9 +343,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+> >=C2=A0
+> >=C2=A0 fsl_mc_printk(mci, KERN_ERR,
+> >=C2=A0 "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+> > - cap_high ^ (1 << (bad_data_bit - 32)),
+> > - cap_low ^ (1 << bad_data_bit),
+> > - syndrome ^ (1 << bad_ecc_bit));
+> > + (bad_data_bit > 31) =3F cap_high ^ (1 << (bad_data_bit - 32)) : cap_high,
+> > + (bad_data_bit <=3D 31) =3F cap_low ^ (1 << (bad_data_bit)) : cap_low,
+>
+> But if bad_data_bit is -1, this check above will hit and you'd still
+> shift by -1, IINM.
+You are right. It worked on my machine, but i guess that is again machine-dependent.
 
-On 03.09.2020 20:14, Krzysztof Kozlowski wrote:
-> Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
-> for exynos3250") added assigned clocks under Clock Management Unit to
-> fix hangs when accessing ISP registers.
+> How about you fix it properly, clean it up and make it more readable in
+> the process (pasting the code directly instead of a diff because a diff
+> is less readable):
 >
-> However the dtschema expects "clocks" property if "assigned-clocks" are
-> used.  Add reference to input clock, the parent used in
-> "assigned-clock-parents" to silence the dtschema warnings:
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if ((err_detect & DDR_EDE_SBE) && (bus_width =3D=3D 64)) {
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sbe_ecc_decode(cap_high, cap_low, syndrome,
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &bad_data_bit, &bad_ecc_bit);
 >
->    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit !=3D -1) {
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit > 31)
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high ^=3D 1 << (bad_data_bit - 32);
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_low=C2=A0 ^=3D 1 << bad_data_bit;
 >
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Faulty Data bit: %d\n",
+> bad_data_bit);
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Expected Data: %#8.8x_%08x\n",
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high, cap_low);
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
 >
-> ---
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_ecc_bit !=3D -1) {
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Faulty ECC bit: %d\n",
+> bad_ecc_bit);
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR, "Expected ECC: %#2.2x\n",
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 syndrome ^ (1 << bad_ecc_bit));
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
 >
-> Changes since v1:
-> 1. Add clocks property.
->
-> This is a v2 for:
-> https://lore.kernel.org/linux-samsung-soc/20200901101534.GE23793@kozik-lap/T/#me85ac382b847dadbc3f6ebf30e94e70b5df1ebb6
-> ---
->   arch/arm/boot/dts/exynos3250.dtsi | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index a1e93fb7f694..89b160280469 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -214,6 +214,7 @@
->   			compatible = "samsung,exynos3250-cmu";
->   			reg = <0x10030000 0x20000>;
->   			#clock-cells = <1>;
-> +			clocks = <&cmu CLK_FIN_PLL>;
+> This way you print only when the respective faulty bits have been
+> properly found and not print anything otherwise.
 
-This is not a correct input clock for this CMU. Please assign it to 
-xusbxti, xxti or xtcxo in the respective board dts, as this is a board 
-property.
+The cap_low, cap_high and syndrome are used in the printk following the if-Block.
+This will make expected data / captured data look the same.
 
->   			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>,
->   					  <&cmu CLK_MOUT_ACLK_266_SUB>;
->   			assigned-clock-parents = <&cmu CLK_FIN_PLL>,
+>
+> Hmm=3F
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+I would prefer printing exptected data and captured data in the same format, making it
+easier to compare them directly.
+
+diff --git a/drivers/edac/fsl_ddr_edac.c b/drivers/edac/fsl_ddr_edac.c
+index 6d8ea226010d..880cf3f4712b 100644
+--- a/drivers/edac/fsl_ddr_edac.c
++++ b/drivers/edac/fsl_ddr_edac.c
+@@ -288,6 +288,9 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 cap_low;
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int bad_data_bit;
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int bad_ecc_bit;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_high;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_low;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 exp_syndrome;
+
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err_detect =3D ddr_in32(pdata->mc_vbase + FSL_MC_ERR_DETECT);
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!err_detect)
+@@ -334,18 +337,32 @@ static void fsl_mc_check(struct mem_ctl_info *mci)
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 sbe_ecc_decode(cap_high, cap_low, syndrome,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 &bad_data_bit, &bad_ecc_bit);
+
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high =3D cap_high;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_low =3D cap_low;
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_syndrome =3D syndrome;
++
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit !=3D -1)
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faulty Data bit: %d\n", bad_data_bit);
++
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_data_bit < 32)
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_low =3D cap_low ^ (1 << bad_data_bit);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high =3D cap_high ^ (1 << (bad_data_bit - 32));
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
++
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (bad_ecc_bit !=3D -1)
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 {
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Faulty ECC bit: %d\n", bad_ecc_bit);
+
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_syndrome =3D syndrome ^ (1 << bad_ecc_bit);
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
++
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Expected Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high ^ (1 << (bad_data_bit - 32)),
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_low ^ (1 << bad_data_bit),
+-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 syndrome ^ (1 << bad_ecc_bit));
++=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 exp_high, exp_low, exp_syndrome);
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 fsl_mc_printk(mci, KERN_ERR,
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Captured Data / ECC:\t%#8.8x_%08x / %#2.2x\n",
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cap_high, cap_low, syndrome);
+
+How about something like this=3F
 
