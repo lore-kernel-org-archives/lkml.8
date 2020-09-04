@@ -2,120 +2,201 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D776CC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2547C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA2A2073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61B2C20829
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599247160;
-	bh=3/XHR9KmR5+E+hPmAKgHDEXT1FicpzNwBSYSgTYPZNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q11DFdxUqFGbtX4Q8Vmg0dwvgsd61xOdA+Me72PSjZfzg6vaIVfDBcAr+TpGZjW67
-	 92V6NJiM5kLyrrQaqX42blDlliD4DTH2fYnyMI/tXJTiZpfmn3o2UZxZboiR60E+rl
-	 drkYX9hhzyneurv7IfTDhq3JoFSMOKjgEDzcN09o=
+	s=default; t=1599247299;
+	bh=a8m6M7tcTmNRXgFR0//YuNWwbw8T+Sgyc6Rycfdtw74=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XkjbPv0TIt/s9aNiHA+bUPoPjGXOJYTbASH8GqwcjoPEwPGNm1/dVfDOGsU/NjdWX
+	 cTuQAc0viWfkvnfuImb/Fk+GFvXVIsEbS2niOtXPBDJzFlIiLlsJNuugCMpxzbDnyl
+	 Nk3xkXwGiLEP1BgcrLzaTKMCpdttgR+6ae33Y2i0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbgIDTTT (ORCPT
+        id S1726928AbgIDTVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:19:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 15:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbgIDTTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:19:14 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1726221AbgIDTVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:21:36 -0400
+Received: from X1 (nat-ab2241.sltdut.senawave.net [162.218.216.4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06BCA20684;
-        Fri,  4 Sep 2020 19:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90DD220797;
+        Fri,  4 Sep 2020 19:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599247154;
-        bh=3/XHR9KmR5+E+hPmAKgHDEXT1FicpzNwBSYSgTYPZNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YLiouQIN7OnbOd1Lo/0aSn+Ks/3xl5tv1+NflqUwsH5rv0vmI/tLjs6TYOhSvN6On
-         zSHkAn7x9mRVwwXIY6aOvgqULRJ6UX1po9hD9lqWcCTFgO7jq7OG56vlxuXSWzTR78
-         cSRcBMxtKrqIeYJtoptYfRAlpPjLwIKSQ0hkN1io=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1E2F740D3D; Fri,  4 Sep 2020 16:19:12 -0300 (-03)
-Date:   Fri, 4 Sep 2020 16:19:12 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Kim Phillips <kim.phillips@amd.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vijay Thakkar <vijaythakkar@me.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yunfeng Ye <yeyunfeng@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>,
-        Martin Jambor <mjambor@suse.cz>,
-        Michael Petlan <mpetlan@redhat.com>,
-        William Cohen <wcohen@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/4] perf vendor events amd: Add ITLB Instruction Fetch
- Hits event for zen1
-Message-ID: <20200904191912.GF3753976@kernel.org>
-References: <20200901220944.277505-1-kim.phillips@amd.com>
- <20200901220944.277505-2-kim.phillips@amd.com>
- <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+        s=default; t=1599247295;
+        bh=a8m6M7tcTmNRXgFR0//YuNWwbw8T+Sgyc6Rycfdtw74=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=kr6bNPcbOiTVn9WlWnXCYJLMn8graWb/9Hgu/LoEuf4tuSzE7F71WtGDkuVUPSCcQ
+         KdWZyeOVNax3NjnqYTfLOQ+KsU7r0QIe7wrN91wTO89JSnHrB4/Uvw7dpuxsJ/QdPq
+         kde3ceMwazS08ORhWxbn41BKrQyp35SSE0z4dw78=
+Date:   Fri, 4 Sep 2020 12:21:34 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v2 03/10] mm/memory_hotplug: simplify page offlining
+Message-Id: <20200904122134.1000bb0bf6bc6baf7f5302a7@linux-foundation.org>
+In-Reply-To: <C2E636DD-EA64-4EC8-A33B-57DB26DB478C@redhat.com>
+References: <20200903145844.2ead558f5bc3ef3d5230d30f@linux-foundation.org>
+        <C2E636DD-EA64-4EC8-A33B-57DB26DB478C@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Sep 02, 2020 at 11:03:38PM -0700, Ian Rogers escreveu:
-> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
-> >
-> > The ITLB Instruction Fetch Hits event isn't documented even in
-> > later zen1 PPRs, but it seems to count correctly on zen1 hardware.
-> >
-> > Add it to zen1 group so zen1 users can use the upcoming IC Fetch Miss
-> > Ratio Metric.
-> >
-> > The IF1G, 1IF2M, IF4K (Instruction fetches to a 1 GB, 2 MB, and 4K page)
-> > unit masks are not added because unlike zen2 hardware, zen1 hardware
-> > counts all its unit masks with a 0 unit mask according to the old
-> > convention:
-> >
-> > zen1$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
-> >
-> >  Performance counter stats for 'sleep 1':
-> >
-> >            211,318      cpu/event=0x94/u
-> >            211,318      cpu/event=0x94,umask=0xff/u
-> >
-> > Rome/zen2:
-> >
-> > zen2$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
-> >
-> >  Performance counter stats for 'sleep 1':
-> >
-> >                  0      cpu/event=0x94/u
-> >            190,744      cpu/event=0x94,umask=0xff/u
-> >
-> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+On Fri, 4 Sep 2020 07:47:45 +0200 David Hildenbrand <david@redhat.com> wrote:
+
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> 
+> > +         * PageBuddy on freed pages on other zones.
+> > +         */
+> > +        if (ret)
+> > +            drain_all_pages(zone);
+> > +    } while (test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE));
+> 
+> I think we have to do
+> 
+> ret = test_pages_isolated()
+> if (ret)
+> ...
+> } while (ret);
+> 
+> So keeping the old code flow. I cannot resend before next Tuesday.
 
-Thanks, applied.
+Here's what I now (effectively) have:
 
-- Arnaldo
+
+From: David Hildenbrand <david@redhat.com>
+Subject: mm/memory_hotplug: simplify page offlining
+
+We make sure that we cannot have any memory holes right at the beginning
+of offline_pages().  We no longer need walk_system_ram_range() and can
+call test_pages_isolated() and __offline_isolated_pages() directly.
+
+offlined_pages always corresponds to nr_pages, so we can simplify that.
+
+Link: https://lkml.kernel.org/r/20200819175957.28465-4-david@redhat.com
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Charan Teja Reddy <charante@codeaurora.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michel Lespinasse <walken@google.com>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+
+--- a/mm/memory_hotplug.c~mm-memory_hotplug-simplify-page-offlining
++++ a/mm/memory_hotplug.c
+@@ -1383,28 +1383,6 @@ do_migrate_range(unsigned long start_pfn
+ 	return ret;
+ }
+ 
+-/* Mark all sections offline and remove all free pages from the buddy. */
+-static int
+-offline_isolated_pages_cb(unsigned long start, unsigned long nr_pages,
+-			void *data)
+-{
+-	unsigned long *offlined_pages = (unsigned long *)data;
+-
+-	*offlined_pages += __offline_isolated_pages(start, start + nr_pages);
+-	return 0;
+-}
+-
+-/*
+- * Check all pages in range, recorded as memory resource, are isolated.
+- */
+-static int
+-check_pages_isolated_cb(unsigned long start_pfn, unsigned long nr_pages,
+-			void *data)
+-{
+-	return test_pages_isolated(start_pfn, start_pfn + nr_pages,
+-				   MEMORY_OFFLINE);
+-}
+-
+ static int __init cmdline_parse_movable_node(char *p)
+ {
+ 	movable_node_enabled = true;
+@@ -1491,7 +1469,7 @@ static int count_system_ram_pages_cb(uns
+ int __ref offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ {
+ 	const unsigned long end_pfn = start_pfn + nr_pages;
+-	unsigned long pfn, system_ram_pages = 0, offlined_pages = 0;
++	unsigned long pfn, system_ram_pages = 0;
+ 	int ret, node, nr_isolate_pageblock;
+ 	unsigned long flags;
+ 	struct zone *zone;
+@@ -1589,9 +1567,7 @@ int __ref offline_pages(unsigned long st
+ 			reason = "failure to dissolve huge pages";
+ 			goto failed_removal_isolated;
+ 		}
+-		/* check again */
+-		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+-					    NULL, check_pages_isolated_cb);
++
+ 		/*
+ 		 * per-cpu pages are drained in start_isolate_page_range, but if
+ 		 * there are still pages that are not free, make sure that we
+@@ -1604,15 +1580,15 @@ int __ref offline_pages(unsigned long st
+ 		 * because has_unmovable_pages explicitly checks for
+ 		 * PageBuddy on freed pages on other zones.
+ 		 */
++		ret = test_pages_isolated(start_pfn, end_pfn, MEMORY_OFFLINE);
+ 		if (ret)
+ 			drain_all_pages(zone);
+ 	} while (ret);
+ 
+-	/* Ok, all of our target is isolated.
+-	   We cannot do rollback at this point. */
+-	walk_system_ram_range(start_pfn, end_pfn - start_pfn,
+-			      &offlined_pages, offline_isolated_pages_cb);
+-	pr_info("Offlined Pages %ld\n", offlined_pages);
++	/* Mark all sections offline and remove free pages from the buddy. */
++	__offline_isolated_pages(start_pfn, end_pfn);
++	pr_info("Offlined Pages %ld\n", nr_pages);
++
+ 	/*
+ 	 * Onlining will reset pagetype flags and makes migrate type
+ 	 * MOVABLE, so just need to decrease the number of isolated
+@@ -1623,11 +1599,11 @@ int __ref offline_pages(unsigned long st
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+ 
+ 	/* removal success */
+-	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+-	zone->present_pages -= offlined_pages;
++	adjust_managed_page_count(pfn_to_page(start_pfn), -nr_pages);
++	zone->present_pages -= nr_pages;
+ 
+ 	pgdat_resize_lock(zone->zone_pgdat, &flags);
+-	zone->zone_pgdat->node_present_pages -= offlined_pages;
++	zone->zone_pgdat->node_present_pages -= nr_pages;
+ 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
+ 
+ 	init_per_zone_wmark_min();
+_
+
