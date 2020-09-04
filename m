@@ -2,106 +2,104 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99843C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF0492078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 578D22074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:51:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="BoOoqmq8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ZLU7hI+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgIDPuq (ORCPT
+        id S1727981AbgIDPu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:50:46 -0400
-Received: from mout.gmx.net ([212.227.15.15]:46143 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgIDPul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:50:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599234634;
-        bh=jUo1rcy8Vk2NuZDY7J5rwMK5KzvoLjBx6pfXZJ2n7Ts=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=BoOoqmq8X8mImNpc2Qxhh4W3343M4PBod5v0WS+79D/YHOu+NJ4lLK/39D8GnUj/2
-         r1e+otD0HUauwi/LH0zgZPM0rKX7tlS8VlRqdEASUnnmE5GkorbhYzCCXC4UKirpKP
-         ffX7LEJb7SSy8JAmUnKD0CNAzHF/TAL6gfXQE0k8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from workstation4.fritz.box ([178.202.41.107]) by mail.gmx.com
- (mrgmx005 [212.227.17.184]) with ESMTPSA (Nemesis) id
- 1MWRRZ-1k2s6s3RPP-00Xqnv; Fri, 04 Sep 2020 17:50:33 +0200
-From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxim Uvarov <maxim.uvarov@linaro.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH 1/1] efi/libstub: DRAM base calculation
-Date:   Fri,  4 Sep 2020 17:50:25 +0200
-Message-Id: <20200904155025.55718-1-xypron.glpk@gmx.de>
-X-Mailer: git-send-email 2.28.0
+        Fri, 4 Sep 2020 11:50:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbgIDPqe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:46:34 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8FAC061247
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:46:32 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id a65so6472327wme.5
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wTtZyQw48avsFdpHOI98/RhzmvMtVCVcNE1bMjyUXUY=;
+        b=ZLU7hI+Wc7S/0ExzQYekPR5nYEvn3dMLSQ8I8NS3mnZfZUiBd2hetNf19N4pAZv1rI
+         DeIhjhpv+zGnVF6vXYiT19iDuA70MNhfyPFxDNolyuYpQ+WQPep3iMglPTEWxBqZ8+oT
+         vn7MeRdaCfJsMgVjjhpN3lDMPfwPzYCL0KCjFoh5eY59T/BCH1Bxn2ZR0G+C07XuE7fp
+         PRgjTuH/qNg773hmdRgtGTinUP9YvmZ93r3YGgQuXB0ok8/p1MuKgYPGwYMySRAwo/Gc
+         bEsLyowk16QRwX7LiDALkhMvoMzY75po+CjvBg0ASsdV5yorNWtDBjqCllhBUMyDBWxM
+         XjoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wTtZyQw48avsFdpHOI98/RhzmvMtVCVcNE1bMjyUXUY=;
+        b=mVcb4XZlFCuT5/AMbi8p6i3ED9YkX2vxBorjDaO2Q0hHu91AdEzEc4C8SeC+1kUtRw
+         hWLM1sxILFyjEV2slXiB9A0CONz/z2Q4ezdaoS8ppFWPLVcg3I88XlhmPxhL3DAOgeT7
+         3d8sZlKVD4Ca9KBxK8VgJJuA/knnMam4VS/eNJ0Gqy3yDMiarH5xLnsAYTELuIl1FhNi
+         YwZE+kXghi+93/88BOWf8mgX/uLr2NA/TXh8+DYyIuUUV7beVnLic0kqbM4GfSokqneR
+         QDSjgXxAd3S+xTKEo010HgGXDqDkBuarhapCWSq9CRxlrIjhKk3GlzrDAA7Rf0wR5qfS
+         q0xg==
+X-Gm-Message-State: AOAM531Redj5KN+15qNh8vsWexHcQV9CJrMgxjqBfmpuapwxI8Z5xvxF
+        Th9m0ilGxnHnJRvHjIozP7NOJw==
+X-Google-Smtp-Source: ABdhPJzK1kWNGIgBMdYGgwQSUscLv8S6S2shXWsDOTyjh9QvJLrxo7r/bW7tLuw/15SUb2KbDSDOUQ==
+X-Received: by 2002:a05:600c:258:: with SMTP id 24mr8513082wmj.66.1599234391665;
+        Fri, 04 Sep 2020 08:46:31 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id q4sm11983375wru.65.2020.09.04.08.46.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 08:46:31 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 01/23] lib: cmdline: export next_arg()
+Date:   Fri,  4 Sep 2020 17:45:25 +0200
+Message-Id: <20200904154547.3836-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200904154547.3836-1-brgl@bgdev.pl>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:doqmB75RmQWNmTYciFl4XKtt9DbYeZi24qbKJZtWpVckGRC+xkp
- C2aj+6lhw2Csq6CtdQGvwNc+69X52a4l1JQwun8QOcPFy0GNT5S5QwYuzneTFVYLS/vEF0H
- Eo0a6wOvY/caOT+e4sEvnG7/k3gQGvVYiFjewgJa5WD2ABQ45NipTekj2F1fsSfOyIOC0AF
- TzrRlmSMs4kbfTUyshv5A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SWwrOPPkoRk=:q29LpSorYGyKX0iflRUA06
- JME5mWcahjucKCi3cUm2cmJX1qdWbg6CSmFLtWLhbGAfru5lGpLIqtW3txlBltKZh2qAab0OB
- ODstMPG+W2T5lwXalzZEghXAl646l4pinyacgC/8tnWkw4zE3u7Xm0+RkRB/pmfBpQe8VkGh3
- GfnHmVgVmElH3zQm9VwejUOlYwT2NeU7ST/Rt8xQOxI9G2wYoOuOgJF2FU2Fw7cYsp5LuMXyr
- 5sssYuAxtVPgsBDDldR+i51xKXdwDRzc3E3Zqt/DaQbAU8Dbv84E/YpYUlC3jU5n0bHsDmSrq
- YNavxuSHbi0W3UxQ+Xa4XQ+g9tc9buSw5VdsJb2EFoRO64BjJnFzWLV5MNAWoc2Jpmr/Lv3Jl
- 4/H8e+kmKeotR0q/aTEz5kYtJhueJvIg7Wtwi+hl0nbUDb4o+LknLh1zDBw5NPX4PNk7NyH6I
- /EWa+9wbnWOzMiKRx5xwJ+F3wlL/eYheHGznQR3R5vcG+Koj2AJ8DZovjOqtxA1+6cA5bXXpI
- FpPSHjpZ2pMSRteb0EkTk0hL7JkHavs76b9lRzbOLl6vgNyYOmy2JLxz5/xS6Y8d8RfGHYMZD
- hBgQi/ocaOAD1PfpHkeiH+4HnXM8w2oNjBY3b9qskQN846PAQkLKiwA3wsXbaO7wcdUWML4MY
- PCY2nnqI3HD0zj3Mnbxx6eO2qSJBHNxqKgNW8A+h2Oh+kGOXWVNgXMARgyxAik+3ApwZWkahx
- krT5DhXadToVv6yOsvqHI7QpU2IPM5s0fi2gx1OrV7nxZOsvv5lwuWzjCRcpmcyCz3EvSbrMM
- cOLJwR7OcopuFb/ttL4ZFCZAQlfk3B/qyN6py2mO5yWL84+921Od/LD0kgqxG3Hi3aP/Pm816
- ZHYj9cUIge7TzimWYnk8nsxic3JKVFbzNao2wi6AFViFL/UW6ADWNCX8UhniRHTxK4w+i9EvV
- 8+l09LXNhyOC3OZQOfCKtfaQ4iKoXEvKtLOsyzfc5ORw3cTcsVhrBxtwmu/37/fqgYmdDfJ+X
- kMESqzhJRjbIFin1Q5Avma6/yfC138l0K7e5PGGvD4WSmtj90rOy0pflV2PZ+gPyRp5jx0Wuh
- TuJmqPTxZzIADNgWCxEaCsZsizsJJtgtUGB8ihfCapRqLzmNZlg+W/a3rKcA56ak3TvF6zLtW
- yCEgLJBe2GRLXL29zN7Snl+z8HjRA5K00Ba845grDmWfzpMa0VEVb1m08hA1+apmjpZYzewc7
- TUIA6liQdeiDRsNVDyIYQJIVcAFy8YLXQzCi3ig==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the memory map the regions with the lowest addresses may be of type
-EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
-rest of the memory. So for calculating the maximum loading address for the
-device tree and the initial ramdisk image these reserved areas should not
-be taken into account.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-=2D--
- drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+We want to use this helper in a module (gpio-mockup) for parsing user
+input when creating dummy devices. Let's export it.
 
-diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/ef=
-i/libstub/efi-stub.c
-index c2484bf75c5d..13058ac75765 100644
-=2D-- a/drivers/firmware/efi/libstub/efi-stub.c
-+++ b/drivers/firmware/efi/libstub/efi-stub.c
-@@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
- 	map.map_end =3D map.map + map_size;
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ lib/cmdline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- 	for_each_efi_memory_desc_in_map(&map, md) {
--		if (md->attribute & EFI_MEMORY_WB) {
-+		if (md->attribute & EFI_MEMORY_WB &&
-+		    md->type !=3D EFI_RESERVED_TYPE) {
- 			if (membase > md->phys_addr)
- 				membase =3D md->phys_addr;
- 		}
-=2D-
-2.28.0
+diff --git a/lib/cmdline.c b/lib/cmdline.c
+index fbb9981a04a4..e194f76d546e 100644
+--- a/lib/cmdline.c
++++ b/lib/cmdline.c
+@@ -247,3 +247,4 @@ char *next_arg(char *args, char **param, char **val)
+ 	/* Chew up trailing spaces. */
+ 	return skip_spaces(next);
+ }
++EXPORT_SYMBOL(next_arg);
+-- 
+2.26.1
 
