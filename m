@@ -2,115 +2,169 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7517CC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73589C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 392952083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599258569;
-	bh=+8dgVfOXgmURomqOzPuR2s0d+0XktF+kVIZ4JamC1Yk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=W7oJhp2j53cNu5ogYJ0VBaN4mQsygla91lfTWoxciWDepj/0zYI1wDy2ir0Fx3fxe
-	 /otUVkx07UF2GhDqLYOlBwl09snfFkPm/nZWwxyUa3stRQ4PzLGLsvpEe193bsxBJ9
-	 RLFTb9yul1ZVEZ8/cT8NO/dL/Iohzwm80OkVZT08=
+	by mail.kernel.org (Postfix) with ESMTP id 3EA582083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 22:35:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbgIDW32 (ORCPT
+        id S1728164AbgIDWfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 18:29:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728012AbgIDW31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 18:29:27 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AA67208C7;
-        Fri,  4 Sep 2020 22:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599258566;
-        bh=+8dgVfOXgmURomqOzPuR2s0d+0XktF+kVIZ4JamC1Yk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FPfVtLk3VgVy9YY2bppjWvDV2nvJ00oTy/jZPGsp1pSsT+kcmQKDELrZFVKOe/MW4
-         zJ45aqs0sB4ogJLfi9CwwVOS1v0zgXZFL4fluzz0xaGojKmgqLJSTmIwDbIBjLZCDs
-         e36mpUibGpzlRequFLGXPuBTspvr9u7SNO8bieYo=
-Received: by mail-ot1-f53.google.com with SMTP id g96so7253810otb.12;
-        Fri, 04 Sep 2020 15:29:26 -0700 (PDT)
-X-Gm-Message-State: AOAM530HI8S9w97j5PgXqi3vtRBxS4qaUMIMg4IDLgsN+4mUyfAvzmGg
-        1lBYOqogNOdrbP+dn0+qOhkmDJ2fNHZwlCDxBg==
-X-Google-Smtp-Source: ABdhPJyg8Cu0lq2UsQBYhJV227Jo2feqOcJKLxrdCLPxr9lVLm9MUPpbfMcEDGy7OIP/8N+4iwU7/9VeNN4vhk5EUSE=
-X-Received: by 2002:a9d:7f84:: with SMTP id t4mr7261177otp.192.1599258565768;
- Fri, 04 Sep 2020 15:29:25 -0700 (PDT)
+        Fri, 4 Sep 2020 18:35:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50422 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728076AbgIDWfY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 18:35:24 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B797C061244;
+        Fri,  4 Sep 2020 15:35:24 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEKIg-00AaHv-Ll; Fri, 04 Sep 2020 22:35:18 +0000
+Date:   Fri, 4 Sep 2020 23:35:18 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in
+ raw_copy_{from,to}_user
+Message-ID: <20200904223518.GR1236603@ZenIV.linux.org.uk>
+References: <20200904165216.1799796-1-hch@lst.de>
+ <20200904165216.1799796-4-hch@lst.de>
+ <20200904180617.GQ1236603@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-14-krzk@kernel.org>
-In-Reply-To: <20200904152404.20636-14-krzk@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 4 Sep 2020 16:29:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
-Message-ID: <CAL_JsqKOkerY14qc-7e5721Xsp0k6jm9oh1U1Lr-3SZA0HFgjw@mail.gmail.com>
-Subject: Re: [PATCH v3 13/14] dt-bindings: mtd: nand-controller: Fix matching
- with size-cells==1
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904180617.GQ1236603@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Most of Freescale/NXP GPMI device trees use size-cells==1 (even when
-> actually not needed except few boards).  This fixes dtbs_check warnings
-> like:
->
->     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: #size-cells:0:0: 0 was expected
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  Documentation/devicetree/bindings/mtd/nand-controller.yaml | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> index 40fc5b0b2b8c..0879e1108837 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
-> @@ -34,7 +34,10 @@ properties:
->      const: 1
->
->    "#size-cells":
-> -    const: 0
-> +    description:
-> +      Depends on your controller. Put zero unless you need a mapping between CS
-> +      lines and dedicated memory regions.
-> +    enum: [0, 1]
+On Fri, Sep 04, 2020 at 07:06:17PM +0100, Al Viro wrote:
+> On Fri, Sep 04, 2020 at 06:52:11PM +0200, Christoph Hellwig wrote:
+> > Use get_unaligned and put_unaligned for the small constant size cases
+> > in the generic uaccess routines.  This ensures they can be used for
+> > architectures that do not support unaligned loads and stores, while
+> > being a no-op for those that do.
+> 
+> Frankly, I would rather get rid of those constant-sized cases entirely;
+> sure, we'd need to adjust asm-generic/uaccess.h defaults for __get_user(),
+> but there that kind of stuff would make sense; in raw_copy_from_user()
+> it really doesn't.
 
-Humm, seems that was to describe partitions, but the expectation of
-the nand binding is describing nand chips. It seems the nand chips are
-never described and on 1 board even has partitions. I think you should
-fix the dts to move 'partition@N' nodes under 'partitions' which is
-preferred and needed if you ever describe nand chips. And then fix
-'#size-cells' to be 0.
+FWIW, we have asm-generic/uaccess.h used by
+	arc
+	c6x
+	hexagon
+	riscv/!MMU
+	um
+by direct includes from asm/uaccess.h
+	h8300
+picked as default from asm-generic, in place of absent native uaccess.h
 
-Rob
+In asm-generic/uaccess.h we have
+	raw_copy_from_user(): CONFIG_UACCESS_MEMCPY
+		[h8300, riscv with your series]
+	raw_copy_to_user(): CONFIG_UACCESS_MEMCP
+		[h8300, riscv with your series]
+	set_fs group: MAKE_MM_SEG KERNEL_DS USER_DS set_fs() get_fs() uaccess_kernel()
+		all, really
+	access_ok()/__access_ok() (unless overridden)
+		[c6x/!CONFIG_ACCESS_CHECK h8300 riscv]
+	__put_user()/put_user()
+		all, implemented via __put_user_fn()
+	__put_user_fn(): raw_copy_to_user(), unless overridden [all except arc]
+	__get_user()/get_user()
+		all, implemented via __get_user_fn()
+	__get_user_fn(): raw_copy_from_user(), unless overridden [all except arc]
+	__strncpy_from_user() (unless overridden) [c6x h8300 riscv]
+	strncpy_from_user()
+	__strnlen_user() (unless overridden) [c6x h8300 riscv]
+	strnlen_user()
+	__clear_user() (unless overridden) [c6x h8300 riscv]
+	clear_user()
+
+__strncpy_from_user()/__strnlen_user()/__clear_user() are never used outside
+of arch/*, and there almost all callers are non-__ variants of the same.
+Exceptions:
+arch/hexagon/include/asm/uaccess.h:76:  long res = __strnlen_user(src, n);
+	racy implementation of __strncpy_from_user()
+arch/c6x/kernel/signal.c:157:   err |= __clear_user(&frame->uc, offsetof(struct ucontext, uc_mcontext));
+arch/x86/include/asm/fpu/internal.h:367:        err = __clear_user(&buf->header, sizeof(buf->header));
+arch/x86/kernel/fpu/signal.c:138:       if (unlikely(err) && __clear_user(buf, fpu_user_xstate_size))
+
+and that's it.
+
+	Now, if you look at raw_copy_from_user() you'll see an interesting
+picture: some architectures special-case the handling of small constant sizes.
+Namely,
+	arc (any size; inlining in there is obscene, constant size or not),
+	c6x (1,4,8),
+	m68k/MMU (1,2,3,4,5,6,7,8,9,10,12)
+	ppc (1,2,4,8),
+	h8300 (1,2,4),
+	riscv (with your series)(1,2,4, 8 if 64bit).
+
+	If you look at the callers of e.g. raw_copy_from_user(), you'll
+see this:
+	* default __get_user_fn() [relevant on c6x, h8300 and riscv - in
+all cases it should be doing get_unaligned() instead]
+	* __copy_from_user_inatomic()
+	* __copy_from_user()
+	* copy_from_user() in case of INLINE_COPY_FROM_USER [relevant on
+arc, c6x and m68k]
+	* lib/* callers, all with non-constant sizes.
+
+Callers of __copy_from_user_inatomic() on relevant architectures, excluding the
+ones with non-constant (or huge - several get PAGE_SIZE) sizes:
+	* [ppc] p9_hmi_special_emu() - 16 bytes read; not recognized as special
+	* [riscv] user_backtrace() - 2 words read; not recognized as special
+	* __copy_from_user_inatomic_nocache()
+	* arch_perf_out_copy_user()
+
+All callers of __copy_from_user_inatomic_nocache() pass it non-constant sizes.
+arch_perf_out_copy_user() is called (via layers of preprocessor abuse) via
+__output_copy_user(), which gets non-constant size.
+
+Callers of __copy_from_user() potentially hitting those:
+arch/arc/kernel/signal.c:108:   err = __copy_from_user(&set, &sf->uc.uc_sigmask, sizeof(set));
+arch/c6x/kernel/signal.c:82:    if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+arch/h8300/kernel/signal.c:114: if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+arch/m68k/kernel/signal.c:340:          if (__copy_from_user(current->thread.fpcntl,
+arch/m68k/kernel/signal.c:794:       __copy_from_user(&set.sig[1], &frame->extramask,
+arch/m68k/kernel/signal.c:817:  if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+arch/powerpc/kernel/signal_64.c:688:    if (__copy_from_user(&set, &new_ctx->uc_sigmask, sizeof(set)))
+arch/powerpc/kernel/signal_64.c:719:    if (__copy_from_user(&set, &uc->uc_sigmask, sizeof(set)))
+arch/powerpc/kvm/book3s_64_mmu_hv.c:1864:               if (__copy_from_user(&hdr, buf, sizeof(hdr)))
+arch/riscv/kernel/signal.c:113: if (__copy_from_user(&set, &frame->uc.uc_sigmask, sizeof(set)))
+drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c:2244:            if (__copy_from_user(&fence, user++, sizeof(fence))) {
+include/linux/regset.h:256:             } else if (__copy_from_user(data, *ubuf, copy))
+
+The last one is user_regset_copyin() and it's going to die.
+A bunch of signal-related ones are in in sigreturn variants, reading
+sigset_t.  Considering that shitloads of data get copied nearby for
+each such call, I would be surprised if those would be worth bothering
+with.   Remaining ppc case is kvm_htab_write(), which just might be
+hot enough to care; we are copying a 64bit structure, and it might
+be worth reading it as a single 64bit.  And i915 is reading 64bit
+objects in a loop.  Hell knows, might or might not be hot.
+
+copy_from_user() callers on arc, c6x and m68k boil down to one case:
+arch/arc/kernel/disasm.c:37:            bytes_not_copied = copy_from_user(ins_buf,
+8-byte read.  And that's it.
+
+IOW, there's a scattering of potentially valid uses that might be better
+off with get_user().  And there's generic non-MMU variant that gets
+used in get_user()/__get_user() on h8300 and riscv.  This one *is*
+valid, but I don't think that raw_copy_from_user() is the right layer
+for that.
+
+For raw_copy_to_user() the picture is similar.  And I'd like to get
+rid of that magical crap.  Let's not make it harder...
