@@ -2,134 +2,284 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C84C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDFEC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9A320758
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A01220758
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:06:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgIDBFA (ORCPT
+        id S1729538AbgIDBGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 21:05:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:42970 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgIDBE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 21:04:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA83F101E;
-        Thu,  3 Sep 2020 18:04:57 -0700 (PDT)
-Received: from [192.168.2.22] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7728F3F68F;
-        Thu,  3 Sep 2020 18:04:56 -0700 (PDT)
-Subject: Re: [PATCH v2 3/6] ARM: dts: NSP: Fix SP804 compatible node
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-References: <20200828142018.43298-1-andre.przywara@arm.com>
- <20200828142018.43298-4-andre.przywara@arm.com>
- <73b35bcd-0e8c-0f62-ed2b-e0c64261f930@gmail.com>
- <c97c1472-c308-27e2-ce68-30bc82b96aae@gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Autocrypt: addr=andre.przywara@arm.com; prefer-encrypt=mutual; keydata=
- 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
- i4aIXCH3Wv6K
-Organization: ARM Ltd.
-Message-ID: <98cdc873-e36a-c47d-6eaf-cc4e023f977c@arm.com>
-Date:   Fri, 4 Sep 2020 02:04:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 3 Sep 2020 21:06:46 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10809 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729172AbgIDBGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 21:06:43 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 745F3F9750CADEBF3E25;
+        Fri,  4 Sep 2020 09:06:40 +0800 (CST)
+Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.487.0; Fri, 4 Sep 2020
+ 09:06:38 +0800
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: change i_compr_blocks of inode to
+ atomic value
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Daeho Jeong <daeho43@gmail.com>
+CC:     Daeho Jeong <daehojeong@google.com>, <kernel-team@android.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200903030320.330507-1-daeho43@gmail.com>
+ <20200903174804.GB3619770@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <6bc6a14b-9cce-47ae-141e-88dec98829be@huawei.com>
+Date:   Fri, 4 Sep 2020 09:06:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <c97c1472-c308-27e2-ce68-30bc82b96aae@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <20200903174804.GB3619770@google.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.136.114.67]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/2020 00:04, Florian Fainelli wrote:
-
-Hi Florian,
-
-sorry, the mail got swamped in my inbox...
-
-> On 8/28/2020 10:12 AM, Florian Fainelli wrote:
->> On 8/28/20 7:20 AM, Andre Przywara wrote:
->>> The DT binding for SP804 requires to have an "arm,primecell" compatible
->>> string.
->>> Add this string so that the Linux primecell bus driver picks the device
->>> up and activates the clock.
->>>
->>> Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
->>> Tested-by: Florian Fainelli <f.fainelli@gmail.com>
->>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On 2020/9/4 1:48, Jaegeuk Kim wrote:
+> On 09/03, Daeho Jeong wrote:
+>> From: Daeho Jeong <daehojeong@google.com>
 >>
->> This looks fine, however there is a ccbtimer1 instance that you missed,
->> can you resubmit with it included?
+>> writepages() can be concurrently invoked for the same file by different
+>> threads such as a thread fsyncing the file and a kworker kernel thread.
+>> So, changing i_compr_blocks without protection is racy and we need to
+>> protect it by changing it with atomic type value. Plus, we don't need
+>> a 64bit value for i_compr_blocks, so just we will use a atomic value,
+>> not atomic64.
 >>
->> With that:
+>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
+>> ---
+>> Changes in v2:
+>>   - Change atomic64 to atomic and remove unnecessary part
+>> ---
+>>   fs/f2fs/f2fs.h  | 18 ++++++++----------
+>>   fs/f2fs/file.c  | 22 ++++++++++++----------
+>>   fs/f2fs/inode.c | 11 +++++++----
+>>   fs/f2fs/super.c |  1 +
+>>   4 files changed, 28 insertions(+), 24 deletions(-)
 >>
->> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index f60414805e05..f6b8ac10a55c 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -801,7 +801,7 @@ struct f2fs_inode_info {
+>>   	struct timespec64 i_disk_time[4];/* inode disk times */
+>>   
+>>   	/* for file compress */
+>> -	u64 i_compr_blocks;			/* # of compressed blocks */
+>> +	atomic_t i_compr_blocks;		/* # of compressed blocks */
+>>   	unsigned char i_compress_algorithm;	/* algorithm type */
+>>   	unsigned char i_log_cluster_size;	/* log of cluster size */
+>>   	unsigned int i_cluster_size;		/* cluster size */
+>> @@ -3936,12 +3936,9 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
+>>   
+>>   	if (!f2fs_compressed_file(inode))
+>>   		return 0;
+>> -	if (S_ISREG(inode->i_mode)) {
+>> -		if (get_dirty_pages(inode))
+>> -			return 1;
+>> -		if (fi->i_compr_blocks)
+>> -			return fi->i_compr_blocks;
+>> -	}
+>> +	if (S_ISREG(inode->i_mode) &&
+>> +		(get_dirty_pages(inode) || atomic_read(&fi->i_compr_blocks)))
+>> +		return 1;
 > 
-> Andre are you going to resubmit a patch with the second instance
-> (ccbtimer1) fixed as well, or should I take care of that while applying
-> the patch? Either way is fine, just let me know.
+> Please keep the original flow in this patch which says swithing to atomic.
+> Instead, it'd be better to have another patch which cleans up
+> f2fs_disable_compressed_file() having "bool" as a return value.
 
-So I was waiting for more comments, but there was nothing so far that
-justifies a new version. So would you mind fixing this while applying? I
-must have indeed missed this instance while diffing before and after.
+Agreed, maybe I mislead Daeho, let's keep the rule do one thing in one patch. :)
 
-Many thanks!
-Andre.
+Thanks,
+
+> 
+>>   
+>>   	fi->i_flags &= ~F2FS_COMPR_FL;
+>>   	stat_dec_compr_inode(inode);
+>> @@ -4057,16 +4054,17 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+>>   						u64 blocks, bool add)
+>>   {
+>>   	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+>> +	struct f2fs_inode_info *fi = F2FS_I(inode);
+>>   
+>>   	/* don't update i_compr_blocks if saved blocks were released */
+>> -	if (!add && !F2FS_I(inode)->i_compr_blocks)
+>> +	if (!add && !atomic_read(&fi->i_compr_blocks))
+>>   		return;
+>>   
+>>   	if (add) {
+>> -		F2FS_I(inode)->i_compr_blocks += diff;
+>> +		atomic_add(diff, &fi->i_compr_blocks);
+>>   		stat_add_compr_blocks(inode, diff);
+>>   	} else {
+>> -		F2FS_I(inode)->i_compr_blocks -= diff;
+>> +		atomic_sub(diff, &fi->i_compr_blocks);
+>>   		stat_sub_compr_blocks(inode, diff);
+>>   	}
+>>   	f2fs_mark_inode_dirty_sync(inode, true);
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index cc7f5670390f..adc4acad488a 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -564,7 +564,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+>>   	bool compressed_cluster = false;
+>>   	int cluster_index = 0, valid_blocks = 0;
+>>   	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>> -	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+>> +	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
+>>   
+>>   	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+>>   		base = get_extra_isize(dn->inode);
+>> @@ -3436,7 +3436,7 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+>>   	if (!f2fs_compressed_file(inode))
+>>   		return -EINVAL;
+>>   
+>> -	blocks = F2FS_I(inode)->i_compr_blocks;
+>> +	blocks = atomic_read(&F2FS_I(inode)->i_compr_blocks);
+>>   	return put_user(blocks, (u64 __user *)arg);
+>>   }
+>>   
+>> @@ -3535,7 +3535,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>>   	if (ret)
+>>   		goto out;
+>>   
+>> -	if (!F2FS_I(inode)->i_compr_blocks)
+>> +	if (!atomic_read(&F2FS_I(inode)->i_compr_blocks))
+>>   		goto out;
+>>   
+>>   	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+>> @@ -3588,14 +3588,15 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+>>   
+>>   	if (ret >= 0) {
+>>   		ret = put_user(released_blocks, (u64 __user *)arg);
+>> -	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
+>> +	} else if (released_blocks &&
+>> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+>>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+>> -			"iblocks=%llu, released=%u, compr_blocks=%llu, "
+>> +			"iblocks=%llu, released=%u, compr_blocks=%u, "
+>>   			"run fsck to fix.",
+>>   			__func__, inode->i_ino, inode->i_blocks,
+>>   			released_blocks,
+>> -			F2FS_I(inode)->i_compr_blocks);
+>> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+>>   	}
+>>   
+>>   	return ret;
+>> @@ -3683,7 +3684,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>>   	if (ret)
+>>   		return ret;
+>>   
+>> -	if (F2FS_I(inode)->i_compr_blocks)
+>> +	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
+>>   		goto out;
+>>   
+>>   	f2fs_balance_fs(F2FS_I_SB(inode), true);
+>> @@ -3747,14 +3748,15 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+>>   
+>>   	if (ret >= 0) {
+>>   		ret = put_user(reserved_blocks, (u64 __user *)arg);
+>> -	} else if (reserved_blocks && F2FS_I(inode)->i_compr_blocks) {
+>> +	} else if (reserved_blocks &&
+>> +			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+>>   		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>>   		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+>> -			"iblocks=%llu, reserved=%u, compr_blocks=%llu, "
+>> +			"iblocks=%llu, reserved=%u, compr_blocks=%u, "
+>>   			"run fsck to fix.",
+>>   			__func__, inode->i_ino, inode->i_blocks,
+>>   			reserved_blocks,
+>> -			F2FS_I(inode)->i_compr_blocks);
+>> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+>>   	}
+>>   
+>>   	return ret;
+>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>> index 66969ae852b9..2ed935c13aed 100644
+>> --- a/fs/f2fs/inode.c
+>> +++ b/fs/f2fs/inode.c
+>> @@ -442,7 +442,8 @@ static int do_read_inode(struct inode *inode)
+>>   					(fi->i_flags & F2FS_COMPR_FL)) {
+>>   		if (F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
+>>   					i_log_cluster_size)) {
+>> -			fi->i_compr_blocks = le64_to_cpu(ri->i_compr_blocks);
+>> +			atomic_set(&fi->i_compr_blocks,
+>> +					le64_to_cpu(ri->i_compr_blocks));
+>>   			fi->i_compress_algorithm = ri->i_compress_algorithm;
+>>   			fi->i_log_cluster_size = ri->i_log_cluster_size;
+>>   			fi->i_cluster_size = 1 << fi->i_log_cluster_size;
+>> @@ -460,7 +461,7 @@ static int do_read_inode(struct inode *inode)
+>>   	stat_inc_inline_inode(inode);
+>>   	stat_inc_inline_dir(inode);
+>>   	stat_inc_compr_inode(inode);
+>> -	stat_add_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
+>> +	stat_add_compr_blocks(inode, atomic_read(&fi->i_compr_blocks));
+>>   
+>>   	return 0;
+>>   }
+>> @@ -619,7 +620,8 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
+>>   			F2FS_FITS_IN_INODE(ri, F2FS_I(inode)->i_extra_isize,
+>>   							i_log_cluster_size)) {
+>>   			ri->i_compr_blocks =
+>> -				cpu_to_le64(F2FS_I(inode)->i_compr_blocks);
+>> +				cpu_to_le64(atomic_read(
+>> +					&F2FS_I(inode)->i_compr_blocks));
+>>   			ri->i_compress_algorithm =
+>>   				F2FS_I(inode)->i_compress_algorithm;
+>>   			ri->i_log_cluster_size =
+>> @@ -768,7 +770,8 @@ void f2fs_evict_inode(struct inode *inode)
+>>   	stat_dec_inline_dir(inode);
+>>   	stat_dec_inline_inode(inode);
+>>   	stat_dec_compr_inode(inode);
+>> -	stat_sub_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
+>> +	stat_sub_compr_blocks(inode,
+>> +			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+>>   
+>>   	if (likely(!f2fs_cp_error(sbi) &&
+>>   				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index 83bf9a02f83f..813aa207824c 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -1011,6 +1011,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+>>   
+>>   	/* Initialize f2fs-specific inode info */
+>>   	atomic_set(&fi->dirty_pages, 0);
+>> +	atomic_set(&fi->i_compr_blocks, 0);
+>>   	init_rwsem(&fi->i_sem);
+>>   	spin_lock_init(&fi->i_size_lock);
+>>   	INIT_LIST_HEAD(&fi->dirty_list);
+>> -- 
+>> 2.28.0.526.ge36021eeef-goog
+>>
+>>
+>>
+>> _______________________________________________
+>> Linux-f2fs-devel mailing list
+>> Linux-f2fs-devel@lists.sourceforge.net
+>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> 
+> 
+> _______________________________________________
+> Linux-f2fs-devel mailing list
+> Linux-f2fs-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+> .
+> 
