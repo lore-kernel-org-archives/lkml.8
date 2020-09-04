@@ -2,101 +2,192 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20823C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7361C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0311206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C17206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727027AbgIDQAk (ORCPT
+        id S1727030AbgIDQAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:00:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:53240 "EHLO foss.arm.com"
+        Fri, 4 Sep 2020 12:00:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:53308 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgIDQAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:00:18 -0400
+        id S1726922AbgIDQAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:00:33 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EB5B113E;
-        Fri,  4 Sep 2020 09:00:18 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.8.186])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F0A23F66F;
-        Fri,  4 Sep 2020 09:00:14 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 17:00:06 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200904160006.GA21956@C02TD0UTHF1T.local>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
- <20200901140208.GA95447@C02TD0UTHF1T.local>
- <20200901144641.GA28580@lst.de>
- <20200901145442.GC95447@C02TD0UTHF1T.local>
- <20200901150553.GA30034@lst.de>
- <20200901154629.GA882@lst.de>
- <20200902114348.GA1002@C02TD0UTHF1T.local>
- <20200902133231.GA32133@lst.de>
- <20200902172330.GB1002@C02TD0UTHF1T.local>
- <20200903065613.GA18731@lst.de>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D3C313D5;
+        Fri,  4 Sep 2020 09:00:32 -0700 (PDT)
+Received: from e112269-lin.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0724E3F66F;
+        Fri,  4 Sep 2020 09:00:29 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>, qemu-devel@nongnu.org,
+        Juan Quintela <quintela@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Peter Maydell <Peter.Maydell@arm.com>,
+        Haibo Xu <Haibo.Xu@arm.com>
+Subject: [PATCH v2 2/2] arm64: kvm: Introduce MTE VCPU feature
+Date:   Fri,  4 Sep 2020 17:00:18 +0100
+Message-Id: <20200904160018.29481-3-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200904160018.29481-1-steven.price@arm.com>
+References: <20200904160018.29481-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200903065613.GA18731@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 08:56:13AM +0200, Christoph Hellwig wrote:
-> On Wed, Sep 02, 2020 at 06:23:30PM +0100, Mark Rutland wrote:
-> > I've pushed an initial/incomplete/WIP stab (just the kernel accessors)
-> > to:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git/log/?h=arm64/set_fs-removal
-> 
-> Thanks!
-> 
-> > ... and doing that made it clear that the necessary arm64 rework is a
-> > bit more fractal than I thought (e.g. SDEI bits), so it might be a short
-> > while before I post a series.
-> 
-> SDEI is just forcing back a KERNEL_DS to a normal USER_DS, isn't it?
+Add a new VCPU features 'KVM_ARM_VCPU_MTE' which enables memory tagging
+on a VCPU. When enabled on any VCPU in the virtual machine this causes
+all pages that are faulted into the VM to have the PG_mte_tagged flag
+set (and the tag storage cleared if this is the first use).
+
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ arch/arm64/include/asm/kvm_emulate.h |  3 +++
+ arch/arm64/include/asm/kvm_host.h    |  5 ++++-
+ arch/arm64/include/uapi/asm/kvm.h    |  1 +
+ arch/arm64/kvm/mmu.c                 | 15 +++++++++++++++
+ arch/arm64/kvm/reset.c               |  8 ++++++++
+ arch/arm64/kvm/sys_regs.c            |  6 +++++-
+ 6 files changed, 36 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
+index 49a55be2b9a2..0042323a4b7f 100644
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -79,6 +79,9 @@ static inline void vcpu_reset_hcr(struct kvm_vcpu *vcpu)
+ 	if (cpus_have_const_cap(ARM64_MISMATCHED_CACHE_TYPE) ||
+ 	    vcpu_el1_is_32bit(vcpu))
+ 		vcpu->arch.hcr_el2 |= HCR_TID2;
++
++	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
++		vcpu->arch.hcr_el2 |= HCR_ATA;
+ }
  
-It's a bit more involved -- we also need to fiddle with some HW state
-(PSTATE.PAN, PSTATE.UAO, and TTBR0 for SW_PAN) because SDEI isn't a real
-exception, so we have to simulate what HW (or the usual exception code)
-does for exception entry/return.
+ static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index 4f4360dd149e..b1190366242b 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -37,7 +37,7 @@
+ 
+ #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+ 
+-#define KVM_VCPU_MAX_FEATURES 7
++#define KVM_VCPU_MAX_FEATURES 8
+ 
+ #define KVM_REQ_SLEEP \
+ 	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+@@ -110,6 +110,9 @@ struct kvm_arch {
+ 	 * supported.
+ 	 */
+ 	bool return_nisv_io_abort_to_user;
++
++	/* If any VCPU has MTE enabled then all memory must be MTE enabled */
++	bool vcpu_has_mte;
+ };
+ 
+ struct kvm_vcpu_fault_info {
+diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+index ba85bb23f060..2677e1ab8c16 100644
+--- a/arch/arm64/include/uapi/asm/kvm.h
++++ b/arch/arm64/include/uapi/asm/kvm.h
+@@ -106,6 +106,7 @@ struct kvm_regs {
+ #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
+ #define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
+ #define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
++#define KVM_ARM_VCPU_MTE		7 /* VCPU supports Memory Tagging */
+ 
+ struct kvm_vcpu_init {
+ 	__u32 target;
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index ba00bcc0c884..e8891bacd76f 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -1949,6 +1949,21 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	if (vma_pagesize == PAGE_SIZE && !force_pte)
+ 		vma_pagesize = transparent_hugepage_adjust(memslot, hva,
+ 							   &pfn, &fault_ipa);
++	if (system_supports_mte() && kvm->arch.vcpu_has_mte && pfn_valid(pfn)) {
++		/*
++		 * VM will be able to see the page's tags, so we must ensure
++		 * they have been initialised.
++		 */
++		struct page *page = pfn_to_page(pfn);
++		long i, nr_pages = compound_nr(page);
++
++		/* if PG_mte_tagged is set, tags have already been initialised */
++		for (i = 0; i < nr_pages; i++, page++) {
++			if (!test_and_set_bit(PG_mte_tagged, &page->flags))
++				mte_clear_page_tags(page_address(page));
++		}
++	}
++
+ 	if (writable)
+ 		kvm_set_pfn_dirty(pfn);
+ 
+diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+index ee33875c5c2a..82f3883d717f 100644
+--- a/arch/arm64/kvm/reset.c
++++ b/arch/arm64/kvm/reset.c
+@@ -274,6 +274,14 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
++	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features)) {
++		if (!system_supports_mte()) {
++			ret = -EINVAL;
++			goto out;
++		}
++		vcpu->kvm->arch.vcpu_has_mte = true;
++	}
++
+ 	switch (vcpu->arch.target) {
+ 	default:
+ 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index a655f172b5ad..6a971b201e81 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1132,7 +1132,8 @@ static u64 read_id_reg(const struct kvm_vcpu *vcpu,
+ 			val &= ~(0xfUL << ID_AA64PFR0_SVE_SHIFT);
+ 		val &= ~(0xfUL << ID_AA64PFR0_AMU_SHIFT);
+ 	} else if (id == SYS_ID_AA64PFR1_EL1) {
+-		val &= ~(0xfUL << ID_AA64PFR1_MTE_SHIFT);
++		if (!test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
++			val &= ~(0xfUL << ID_AA64PFR1_MTE_SHIFT);
+ 	} else if (id == SYS_ID_AA64ISAR1_EL1 && !vcpu_has_ptrauth(vcpu)) {
+ 		val &= ~((0xfUL << ID_AA64ISAR1_APA_SHIFT) |
+ 			 (0xfUL << ID_AA64ISAR1_API_SHIFT) |
+@@ -1394,6 +1395,9 @@ static bool access_mte_regs(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+ static unsigned int mte_visibility(const struct kvm_vcpu *vcpu,
+ 				   const struct sys_reg_desc *rd)
+ {
++	if (test_bit(KVM_ARM_VCPU_MTE, vcpu->arch.features))
++		return 0;
++
+ 	return REG_HIDDEN_USER | REG_HIDDEN_GUEST;
+ }
+ 
+-- 
+2.20.1
 
-It's simple enough to handle, but requires some refactoring as we now
-rely on force_uaccess_{begin,end}() having those HW side-effects. I'll
-probably factor that out into new arm64-specific helpers for simulating
-exception entry/return (which we used to open-code) since it's the only
-special case and that'll be clearer than repurposing generic helpers to
-do so.
-
-> > It might be handy to have a stable branch with the common bits so that
-> > the arm64 rework could go via the arm64 tree in case there's any
-> > fallout.
-> 
-> The series will need at least one more repost, but hopefully I'll have
-> s stable branch soon.
-
-I'll keep an eye out!
-
-Mark.
