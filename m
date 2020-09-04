@@ -2,82 +2,98 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D729C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885FFC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10C30206F2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D1CC206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599225096;
+	bh=o3vMmFMOelqR+HH3uQoaVBSBJla+WpWFuQVl0HAoJzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I7Wrupjxew/KzjJCyiNt8xqd/40hGZLuQzT0a/Crn7rXPe3j2DsZInKHAQrYOuiE7
+	 6D7vE6PgpYwWLuZQhfyAOSh16dne76NcO1gGkLS5w9IOGbwW3NVDfEn99+AcUUorkK
+	 2Oh3w5RqHPYlM7PukM3BlXCkwzp00Sq0LjMytv4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgIDNJx (ORCPT
+        id S1730376AbgIDNLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:09:53 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:33526 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730331AbgIDNJU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:09:20 -0400
-Received: by mail-io1-f72.google.com with SMTP id l22so4327076iol.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 06:09:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=nQsXJ+2Sn0MGE1vR1zI3z182rgZanXd2F2eDcOAOPAE=;
-        b=AnXBcwC2ArBW5yk0x0CFOtCgrrjB3Q2Cs8GkGvtq5kS9hHgzbF3KsjOdklsMQRmYSQ
-         V+liCTQj+U0Ec9s0otaNaXLEFhlOQVDP9TPC9gisiC7RmEG4i1PyaupjXQM6r+vaabDp
-         OfPy5ionb7xcXtkEcbJ2bErY2oxXRNixAff3J42ONF2vjgarL2/4yLKq7c+vGDeOgoSy
-         ID8Gzc0BoRlQIlFnzaS+ymTOLno86OXcOjoOFD69GEgkVcBzHPr77Ma9e4WAwUeWBh7u
-         X+oOqp9rjm/7kuuWNoakh0QcI2Ubp8Yb/wQLg9sIr6kSD68HeURtIt+DVb+5+3iMzAHf
-         3W8Q==
-X-Gm-Message-State: AOAM531QkhJ/ne0LEjmTlaW8hSbJj0aXPNQXVtEY8Dy+0o5sE8OZt3Fb
-        tG0lor+161akC2zUBFiluSHtJynGLViIlDgCpQZG9CKb4ImW
-X-Google-Smtp-Source: ABdhPJxf8t7VNvzid2ouf5qVOPnpSDKMCVM8d0r7TIrVaIlBa9eEFM0Usf4AS/KJPZyjoztDdjY8EqP8DYsJeHYvCCAEl7iEHley
+        Fri, 4 Sep 2020 09:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730410AbgIDNLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:11:08 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE5EB206F2;
+        Fri,  4 Sep 2020 13:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599225056;
+        bh=o3vMmFMOelqR+HH3uQoaVBSBJla+WpWFuQVl0HAoJzU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fcrm5zp3fjfm3ezecfHz0/BxJh+6KrON8w4iogR/LIm5cX+b59hQp4kMYPUbF3r9m
+         5kz16y5JsSfugIS/FunM7+d8/EWPWDseL2nKvNvoPCa0/z9fySiACSE9urN3kLstfo
+         pDXwPJdkQqNHhggHqXT5koIk8oaYWupKAeXMjdmo=
+Date:   Fri, 4 Sep 2020 14:10:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] spi-imx: remove num-cs support, set num_chipselect to 4
+Message-ID: <20200904131014.GF4625@sirena.org.uk>
+References: <20200903144028.20416-1-matthias.schiffer@ew.tq-group.com>
+ <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:76b:: with SMTP id y11mr8087182jad.29.1599224959482;
- Fri, 04 Sep 2020 06:09:19 -0700 (PDT)
-Date:   Fri, 04 Sep 2020 06:09:19 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a03f8d05ae7c9371@google.com>
-Subject: WARNING: can't access registers at asm_sysvec_reschedule_ipi
-From:   syzbot <syzbot+853f7009c5c271473926@syzkaller.appspotmail.com>
-To:     alexandre.chartre@oracle.com, bp@alien8.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i3lJ51RuaGWuFYNw"
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5DGHoG_8X+fbrGCHR4g=sGdEaF7bYrHbC_2T=aUnfTs8g@mail.gmail.com>
+X-Cookie: Heisenberg might have been here.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following issue on:
+--i3lJ51RuaGWuFYNw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-HEAD commit:    e28f0104 Merge tag 'fixes-2020-09-03' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10c43af9900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=853f7009c5c271473926
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+On Fri, Sep 04, 2020 at 09:35:38AM -0300, Fabio Estevam wrote:
+> On Thu, Sep 3, 2020 at 11:40 AM Matthias Schiffer
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> > +       master->num_chipselect = 4;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+853f7009c5c271473926@syzkaller.appspotmail.com
+> On an imx6q-sabresd, which only has one SPI chip-select via GPIO, this
+> makes the SPI core to understand that it has 4 chip selects.
 
-WARNING: can't access registers at asm_sysvec_reschedule_ipi+0x12/0x20 arch/x86/include/asm/idtentry.h:586
+We shouldn't do anything with the extra chip selects though?
 
+--i3lJ51RuaGWuFYNw
+Content-Type: application/pgp-signature; name="signature.asc"
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-----BEGIN PGP SIGNATURE-----
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9SPLYACgkQJNaLcl1U
+h9CPVwf/Ql3lZK0EZhriIHFw8zQwmBJXZnBrY0W0xOBNDnpj+9GPY6G9G4uh3bVu
+v65omDnMgdTgvIZRJmgbMvZPWsU8BXVzHVyZhIVKrgcWTp3x3p4OKJ6Gz5iTipxZ
+jlHq/whlCBURzx0kKx62hxwB2c6YIk3WKET9KtMNsEr84RadH9E4y5UNW5n0gVvp
+uDu+f6WLsLfJAiylY1pKKrVQS7JDU0cz8PwEUpZQkSKe91NJ9vxbpq0BfdS7hXBP
+84XGcQ8k2m8sLQpRtLBdGZ48VKgXhB4sF+RYNCwPhKsIFPv6N2aRkRbtwMjw1e4F
+c5SBuVDahtEqM3OHe22bScmJ9La20g==
+=Oyxe
+-----END PGP SIGNATURE-----
+
+--i3lJ51RuaGWuFYNw--
