@@ -4,25 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEA9C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40D4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822D1208CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143F120665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 20:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgIDUCD (ORCPT
+        id S1728096AbgIDUCU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 16:02:03 -0400
-Received: from gw.c-home.cz ([89.24.150.100]:41758 "EHLO dmz.c-home.cz"
+        Fri, 4 Sep 2020 16:02:20 -0400
+Received: from gw.c-home.cz ([89.24.150.100]:41765 "EHLO dmz.c-home.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726135AbgIDUB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 16:01:58 -0400
+        id S1727990AbgIDUCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 16:02:03 -0400
 Received: from ubuntu1804.c-home.cz (unifi.c-home.cz [192.168.1.239])
-        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 084K1EdB002405;
-        Fri, 4 Sep 2020 22:01:27 +0200 (CEST)
+        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 084K1Ed9002405;
+        Fri, 4 Sep 2020 22:01:26 +0200 (CEST)
 From:   Martin Cerveny <m.cerveny@computer.org>
 To:     devicetree@vger.kernel.org
 Cc:     Martin Cerveny <m.cerveny@computer.org>,
@@ -34,9 +34,9 @@ Cc:     Martin Cerveny <m.cerveny@computer.org>,
         Maxime Ripard <mripard@kernel.org>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 3/6] ARM: dts: sun8i: v3s: Add node for system control
-Date:   Fri,  4 Sep 2020 22:01:09 +0200
-Message-Id: <20200904200112.5563-4-m.cerveny@computer.org>
+Subject: [PATCH 1/6] media: cedrus: Register all codecs as capability
+Date:   Fri,  4 Sep 2020 22:01:07 +0200
+Message-Id: <20200904200112.5563-2-m.cerveny@computer.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904200112.5563-1-m.cerveny@computer.org>
 References: <20200904200112.5563-1-m.cerveny@computer.org>
@@ -45,47 +45,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allwinner V3s has system control and SRAM C1 region similar to H3.
+All codecs should have capabilities.
+For example "Allwinner V3s" does not support "MPEG2".
 
 Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
 ---
- arch/arm/boot/dts/sun8i-v3s.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/staging/media/sunxi/cedrus/cedrus.c    | 18 +++++++++++++++++-
+ drivers/staging/media/sunxi/cedrus/cedrus.h    |  2 ++
+ .../staging/media/sunxi/cedrus/cedrus_video.c  |  2 ++
+ 3 files changed, 21 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
-index e5312869c..3f18866fb 100644
---- a/arch/arm/boot/dts/sun8i-v3s.dtsi
-+++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
-@@ -138,6 +138,29 @@
- 			};
- 		};
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
+index bc27f9430..3fd9fd810 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
+@@ -474,42 +474,58 @@ static int cedrus_remove(struct platform_device *pdev)
+ }
  
-+		syscon: system-control@1c00000 {
-+			compatible = "allwinner,sun8i-v3s-system-control",
-+				     "allwinner,sun8i-h3-system-control";
-+			reg = <0x01c00000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			sram_c: sram@1d00000 {
-+				compatible = "mmio-sram";
-+				reg = <0x01d00000 0x80000>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges = <0 0x01d00000 0x80000>;
-+
-+				ve_sram: sram-section@0 {
-+					compatible = "allwinner,sun8i-v3s-sram-c1",
-+						     "allwinner,sun4i-a10-sram-c1";
-+					reg = <0x000000 0x80000>;
-+				};
-+			};
-+		};
-+
- 		tcon0: lcd-controller@1c0c000 {
- 			compatible = "allwinner,sun8i-v3s-tcon";
- 			reg = <0x01c0c000 0x1000>;
+ static const struct cedrus_variant sun4i_a10_cedrus_variant = {
++	.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC,
+ 	.mod_rate	= 320000000,
+ };
+ 
+ static const struct cedrus_variant sun5i_a13_cedrus_variant = {
++	.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC,
+ 	.mod_rate	= 320000000,
+ };
+ 
+ static const struct cedrus_variant sun7i_a20_cedrus_variant = {
++	.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC,
+ 	.mod_rate	= 320000000,
+ };
+ 
+ static const struct cedrus_variant sun8i_a33_cedrus_variant = {
+-	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
++	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC,
+ 	.mod_rate	= 320000000,
+ };
+ 
+ static const struct cedrus_variant sun8i_h3_cedrus_variant = {
+ 	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC |
+ 			  CEDRUS_CAPABILITY_H265_DEC,
+ 	.mod_rate	= 402000000,
+ };
+ 
+ static const struct cedrus_variant sun50i_a64_cedrus_variant = {
+ 	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC |
+ 			  CEDRUS_CAPABILITY_H265_DEC,
+ 	.mod_rate	= 402000000,
+ };
+ 
+ static const struct cedrus_variant sun50i_h5_cedrus_variant = {
+ 	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC |
+ 			  CEDRUS_CAPABILITY_H265_DEC,
+ 	.mod_rate	= 402000000,
+ };
+ 
+ static const struct cedrus_variant sun50i_h6_cedrus_variant = {
+ 	.capabilities	= CEDRUS_CAPABILITY_UNTILED |
++			  CEDRUS_CAPABILITY_MPEG2_DEC |
++			  CEDRUS_CAPABILITY_H264_DEC |
+ 			  CEDRUS_CAPABILITY_H265_DEC,
+ 	.quirks		= CEDRUS_QUIRK_NO_DMA_OFFSET,
+ 	.mod_rate	= 600000000,
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.h b/drivers/staging/media/sunxi/cedrus/cedrus.h
+index 96765555a..b6032f40c 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus.h
++++ b/drivers/staging/media/sunxi/cedrus/cedrus.h
+@@ -28,6 +28,8 @@
+ 
+ #define CEDRUS_CAPABILITY_UNTILED	BIT(0)
+ #define CEDRUS_CAPABILITY_H265_DEC	BIT(1)
++#define CEDRUS_CAPABILITY_H264_DEC	BIT(2)
++#define CEDRUS_CAPABILITY_MPEG2_DEC	BIT(3)
+ 
+ #define CEDRUS_QUIRK_NO_DMA_OFFSET	BIT(0)
+ 
+diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_video.c b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+index 16d82309e..cb4aca5be 100644
+--- a/drivers/staging/media/sunxi/cedrus/cedrus_video.c
++++ b/drivers/staging/media/sunxi/cedrus/cedrus_video.c
+@@ -38,10 +38,12 @@ static struct cedrus_format cedrus_formats[] = {
+ 	{
+ 		.pixelformat	= V4L2_PIX_FMT_MPEG2_SLICE,
+ 		.directions	= CEDRUS_DECODE_SRC,
++		.capabilities	= CEDRUS_CAPABILITY_MPEG2_DEC,
+ 	},
+ 	{
+ 		.pixelformat	= V4L2_PIX_FMT_H264_SLICE,
+ 		.directions	= CEDRUS_DECODE_SRC,
++		.capabilities	= CEDRUS_CAPABILITY_H264_DEC,
+ 	},
+ 	{
+ 		.pixelformat	= V4L2_PIX_FMT_HEVC_SLICE,
 -- 
 2.17.1
 
