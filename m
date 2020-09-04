@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFCEC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C244AC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909DF2065E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC872065E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599227778;
-	bh=TFnCzz/oxl1Z9g3HmDAlM7mLxYJEGSfxJEqQhLnHhfE=;
+	s=default; t=1599227797;
+	bh=vrGj66RR5jkgNEtI7rY2hFH1JXzu/8HYiRlDy7c4y0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rps10+72dAMZeVsQ21MV1oNl7UR8dLqWuynw0h4sXtr7rFQacq7yS7P6/Bkfj72qa
-	 PHIovAxIzgbwkB7X8sw2Y4yErefAWq0CpbEt1Ssq3Ue9iB5t/c1AeQIaAZh7xVJnjw
-	 xAfxvCK8tKvr01KZdO0HrynpQmcd7EjywMvPyNkw=
+	b=yqAp8oHrBwk9ET7Ei/zgFs7GQm3RJo1etlcMj5QubZIc+1S9VI4gp5CeXnyeApm9R
+	 KGGH+KBwOmt8qOqLNZOiLTciP1hjkWsuaftRL0WdgXkC+ult/FOdggtSWacg3Oe7yf
+	 A2BIUS2rNaFyt2/ZKLf3US3RHZYHLB/b966lOnug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbgIDN4L (ORCPT
+        id S1730733AbgIDN4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50884 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 09:56:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgIDNz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730659AbgIDNz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:55:28 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1192208C7;
-        Fri,  4 Sep 2020 13:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 591D720BED;
+        Fri,  4 Sep 2020 13:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226210;
-        bh=TFnCzz/oxl1Z9g3HmDAlM7mLxYJEGSfxJEqQhLnHhfE=;
+        s=default; t=1599226224;
+        bh=vrGj66RR5jkgNEtI7rY2hFH1JXzu/8HYiRlDy7c4y0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/ZcULZo5H4VT4/zgjRSHf5X4Y+z/Sy+CVto82I7Bnq6rTtkJsL8k34i0gcTjaTDW
-         tIdtzqAVf0EfcesZomWvN72k3hKdY6W6ol0eLNWeJn3yvSsVAE2fe4kZOVQf+Wir1G
-         t3MwkAygRZhKmDbuwbnXM7IjoIn+62f5ScJXEIV8=
+        b=XwVNfGeobSFKGqSzCBDy9D0oaZ/3xgE0UPPkRwpC9THPcSpF8VUzlrMiTvyFEOqse
+         fNKaTWVvbUTuKwTrs58cSPHk1a47Z6r4u+3THaJs+qWFkBW/8XE5wA6zsHZv92RyMt
+         gxcaIf5aJEzwmtsSJQ6Tm1uDMipHMET0N0C0Tquc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 5.4 08/16] KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-Date:   Fri,  4 Sep 2020 15:30:01 +0200
-Message-Id: <20200904120257.605755537@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 14/16] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+Date:   Fri,  4 Sep 2020 15:30:07 +0200
+Message-Id: <20200904120257.894661509@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
 References: <20200904120257.203708503@linuxfoundation.org>
@@ -61,57 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit 71a7f8cb1ca4ca7214a700b1243626759b6c11d4 upstream.
+commit 391d89dba8c290859a3e29430d0b9e32c358bb0d upstream.
 
-AT instructions do a translation table walk and return the result, or
-the fault in PAR_EL1. KVM uses these to find the IPA when the value is
-not provided by the CPU in HPFAR_EL1.
+commit 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
 
-If a translation table walk causes an external abort it is taken as an
-exception, even if it was due to an AT instruction. (DDI0487F.a's D5.2.11
-"Synchronous faults generated by address translation instructions")
+SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK is set for Tegra186 from the
+beginning of its support in driver.
 
-While we previously made KVM resilient to exceptions taken due to AT
-instructions, the device access causes mismatched attributes, and may
-occur speculatively. Prevent this, by forbidding a walk through memory
-described as device at stage2. Now such AT instructions will report a
-stage2 fault.
+Tegra186 SDMMC hardware by default uses timeout clock (TMCLK) instead
+of SDCLK and this quirk should not be set.
 
-Such a fault will cause KVM to restart the guest. If the AT instructions
-always walk the page tables, but guest execution uses the translation cached
-in the TLB, the guest can't make forward progress until the TLB entry is
-evicted. This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64:
-Defer guest entry when an asynchronous exception is pending"), KVM will
-return to the host to process IRQs allowing the rest of the system to keep
-running.
+So, this patch remove this quirk for Tegra186.
 
-Cc: stable@vger.kernel.org # <v5.3: 5dcd0fdbb492 ("KVM: arm64: Defer guest entry when an asynchronous exception is pending")
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Fixes: 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
+Cc: stable <stable@vger.kernel.org> # 5.4
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Link: https://lore.kernel.org/r/1598548861-32373-3-git-send-email-skomatineni@nvidia.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_arm.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -72,11 +72,12 @@
-  * IMO:		Override CPSR.I and enable signaling with VI
-  * FMO:		Override CPSR.F and enable signaling with VF
-  * SWIO:	Turn set/way invalidates into set/way clean+invalidate
-+ * PTW:		Take a stage2 fault if a stage1 walk steps in device memory
-  */
- #define HCR_GUEST_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
- 			 HCR_TVM | HCR_BSU_IS | HCR_FB | HCR_TAC | \
- 			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
--			 HCR_FMO | HCR_IMO)
-+			 HCR_FMO | HCR_IMO | HCR_PTW )
- #define HCR_VIRT_EXCP_MASK (HCR_VSE | HCR_VI | HCR_VF)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK)
- #define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H)
+---
+ drivers/mmc/host/sdhci-tegra.c |    1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -1406,7 +1406,6 @@ static const struct sdhci_ops tegra186_s
+ 
+ static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
+ 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
+-		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
+ 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
+ 		  SDHCI_QUIRK_NO_HISPD_BIT |
+ 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
 
 
