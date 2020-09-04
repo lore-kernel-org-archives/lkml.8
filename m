@@ -2,172 +2,234 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A95C28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CC8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F628206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C20E206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="pUd8m9mU"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bn473Ddz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbgIDLbE (ORCPT
+        id S1730006AbgIDLcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:31:04 -0400
-Received: from mail-eopbgr00102.outbound.protection.outlook.com ([40.107.0.102]:13283
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730069AbgIDLYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:24:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XW4E13skJ0etb8G+3RJzHY0Jc0MQ8OOBg8Hntg/uvbzsKMjWw1mbC0jixYO2z0lcFeykmKdtQrp0zRA8tXezKgWyFg7NquJdTly0puMF0B1wG0zteCH8pRNvrFCj9Wfg+GuCjvF4TF1FCbDRIfV5nXZVoqzqdIDFD/iOEBaP9AdOAPYsI7UivM+mHGc6gCX0TCnxoldcfZuNz07Onxd1DKAdXlhtm/I7lueC24vsATLYL5KtNNEYaDZfr88A9KKpyTnowa66PCyfAGM52kEKqb9xPNSek74wd8sueJFZ2TJcMDc2FaENVZ+BBw9PspuhE6i1Q8RvHIDaXV+Gc8pN0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKZ7p81PcyPdAihQDAkR2rjbSCflKL4sE3bsr2fcqwg=;
- b=lsBO30R1aKzefszACpdobkPeA0tlNtQU/wkMrcphAMXvoSd6kRTp/T+XFwR6aARoJ0ux/k5ReB5+gZkR+YWs9Pa9buU3kW15UezoJpspJJUGUITQGvqSl8HSKcAhaTFHZcEOD7XAfgr5LzOCNt7NhaHFSOb0izCWcKcLCaL9kGMGjpyy7pyfi7bzIcFNoaEU6sm6PrKdAikqTwqOvLz3n+7cvpJVJHke/9jlmQzrk/LDYsoUju76Jtpwo+JOQ/qE6ZmOyJ1jps0m6rrDnRwwRG0cR64TrIrUUJ157bqoAvPG1+LqAVeD5Fw6BbIrVbbujkAVTOn8mlHw9hE6OHfCVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dKZ7p81PcyPdAihQDAkR2rjbSCflKL4sE3bsr2fcqwg=;
- b=pUd8m9mUmG33xGjWN9ZkouhKZ3IIGI1HNvUztRJ9WfMxpFYaX3h4taJSkcw6EDBA3Cg40JUMqCjNaezQL49NmrBTjc8lVe872ZBh/msgB8jdC80ryCSzajxIS9jvNpoMvOTDmEWRi6EYX5OJ7zWCSocvCwotlbbqQZuDh4Ckcu0=
-Authentication-Results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=plvision.eu;
-Received: from DB6P190MB0535.EURP190.PROD.OUTLOOK.COM (2603:10a6:6:3e::26) by
- DB6P190MB0008.EURP190.PROD.OUTLOOK.COM (2603:10a6:4:88::15) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.16; Fri, 4 Sep 2020 11:23:13 +0000
-Received: from DB6P190MB0535.EURP190.PROD.OUTLOOK.COM
- ([fe80::9cbe:fafc:3c8a:3765]) by DB6P190MB0535.EURP190.PROD.OUTLOOK.COM
- ([fe80::9cbe:fafc:3c8a:3765%4]) with mapi id 15.20.3348.016; Fri, 4 Sep 2020
- 11:23:13 +0000
-Date:   Fri, 4 Sep 2020 14:23:10 +0300
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Maxime Ripard <maxime.ripard@free-electrons.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] nvmem: core: allow to register cells during nvmem
- registration
-Message-ID: <20200904112310.GD10654@plvision.eu>
-References: <20200831015539.26811-1-vadym.kochan@plvision.eu>
- <20200831015539.26811-2-vadym.kochan@plvision.eu>
- <6ab47f55-af66-f035-d8d9-82d0c831b5b8@linaro.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6ab47f55-af66-f035-d8d9-82d0c831b5b8@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: AM5PR1001CA0009.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:206:2::22) To DB6P190MB0535.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:6:3e::26)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from plvision.eu (217.20.186.93) by AM5PR1001CA0009.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:206:2::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Fri, 4 Sep 2020 11:23:12 +0000
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1c366b2f-0605-44a1-c86c-08d850c4e949
-X-MS-TrafficTypeDiagnostic: DB6P190MB0008:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DB6P190MB00088AD3AF780BDA22FDED4B952D0@DB6P190MB0008.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ojFFkTOMeqQj+3TwgIjs0n/vM83hepoKwYbBvhq915GDTBTWVBBkC4CDq3uRPt1ukNuJ966FjNbzwrwyp5eYaD1KkcXuRYLgMBniKMUF0JiYQH+Rf/egvYv+kRXtEPo4BfmzhhkfqrdtBy+kKmkizucv97suRZl97U93EcxatoxfXLzfkrCxPQn62WIsQSxVUAXNxJ6vDj+bEO+5kWDvno3/ktNF7DdqgAffzMQ9minlZVtEzbM+PguPeYsMxjWCjZ5w4OgCSk2cS+v9ZWHfWc7u4Y3FwMFaE7/qSb6rWHg48rnPWRM9kjqJXJBXWzUbUeC8RhNtAVSe3OoyNkgXLA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6P190MB0535.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(136003)(376002)(346002)(396003)(366004)(39830400003)(6916009)(16526019)(66476007)(2906002)(2616005)(8676002)(956004)(1076003)(478600001)(66556008)(186003)(44832011)(86362001)(55016002)(8936002)(66946007)(8886007)(33656002)(26005)(36756003)(4326008)(83380400001)(5660300002)(52116002)(54906003)(53546011)(316002)(7696005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: DWOfA/QMH5mxtRn+bCU+NDdpyJq9m5hcz97c+wCzZrtJnkpETrczVUCTQkarwpkrZ4JC9N8ZwL29lPfJiVMMfT8GXjOghvMaYnXMrrubn/CViK81W6MaDBwh5DD/Qb8jrvEukpUMq27/d/ckwyUueKl09oMMe/ry3KqXRb1UPW1hNUeG40owSMnhlPjixXK4Vc0IDg8+qWEXex3TW5buuGo67VmfiII2Hlcu1VE27e07c99hnUsvPb6+fl9Jj/gyO6aj4yCzy+QM/iUl19x4a5Ts17Hj+lmlXkV1nkGO5DpphCeFGkibe1EV1Ct/J3lZM4X9aK6BwL6A6VM8ZWfSRbO4dNnKBuocC2550QT+Y2ZyMQYu1ylVQtY/SYiJ0IMV6NursfPQY8T1iV9BxreLsCjF8tXOdf0BTmJRW2WJ1BIRKlW06rzc9ThkBZPeeD11NGBBh2au2bp42/5vNwmi7QCvJgFvYv+6s3w+smIRtWpKiyCuk3hwh9VqNJBeYMOtA0Gew+/udlkzdcWvfyBiLRnX9ph5ZhQsnYSclJCa8q6S6Fby8WpTaG7SykX1eH5eYLC88appR2vwR+gg/zAZgTe9hLuIFymJoNa8GbbOdTL1Q1KnVJox3qUXRNnp6OtVyH6c8VNhGr2Z3ol+lgXAJQ==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c366b2f-0605-44a1-c86c-08d850c4e949
-X-MS-Exchange-CrossTenant-AuthSource: DB6P190MB0535.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Sep 2020 11:23:13.4002
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: z2aOpAqW3dWILirDsermHohEFWVMFUk85B/11sWq6ywr6BNMaQt4B+CYRLNwMQ8xEGgy1itq0wq8Y714siVlYxey07SUiPPPKEU9P3vrTzA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6P190MB0008
+        Fri, 4 Sep 2020 07:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59622 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730142AbgIDLYE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 07:24:04 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C48C06123E
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 04:10:32 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id z9so5714688wmk.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 04:10:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=enpDAR+q6vLHcCWoXqxt/APfxOpAFUDPCVJnonleY4M=;
+        b=bn473DdzdhX55zJ4EmlFLqT+gWYU/H95ECDnGSriOw33ruu4gIaHlqTFUnqIboT2Yn
+         yfTxrAFQH+xp8OFzjM/YNwVpX0qsY8vAVlXKcJBowp01KKJYG+ZbSEeIuVAZwJMWXJqz
+         7VRUw5OCJXHKbbv5kgou8LqiQRiiohYacVhQTswXdHrQ5B+le3C5MeZtdcYUN+yQCrTm
+         gAMRFoVFCFslCT3EWPK7K+UaEqknJXsDEss4uU07F2oS2wMT/SpBqEg40jo3PMWumtrN
+         o3Hy8VTT+tj/u+XbVi/utSPzxbaL/FhRBsskFTBenlTvYtwC7hHcU9Y3Ny/cyNc5vtsf
+         dvcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=enpDAR+q6vLHcCWoXqxt/APfxOpAFUDPCVJnonleY4M=;
+        b=YFpD/9sn1tIHFAYlYLH2kk7qy08vCjSaAfDA1XjMnQo3pyvPsLDVgnL1nIqKmtzryi
+         oxxTZ84aivM3VJG0gXFd1rYBinekxhSqbocJQxMKx1UwKHgmWpFIIv3vdHaynXRjRigr
+         tqp+IObpt9w9vl0drz2Xz4NDrCeVX+ew1qAHBGoV460nYOZFAjdxQPViKacklFd0ldrm
+         3SxsZ9RK0IOUXUKQQ1Kh/xcYltOU2Zp/+eBRFEItbZyy0hfa2ZGfJrBYnnZaQqdxE+3E
+         6gyiMdRymt1nEdiZauEvoDEqmWOKZKbl1JbyN6A/3aMddz3bPQ79C91kj9vvKwIu3onz
+         EHCw==
+X-Gm-Message-State: AOAM531/AFrbnqJntKLzIGcpx6lzKlvvqY3caqnvXaWXS0mhtq6p2BNh
+        Yx3KMO1kNFRTONqijBHLuRY/CA==
+X-Google-Smtp-Source: ABdhPJw5O1NSJAUt07KeskJXKNX4H9evhQsJ0gerNlA0T6Ex6xyEklbqG95N4CJqYsr2kt8xoiktgw==
+X-Received: by 2002:a1c:a707:: with SMTP id q7mr7593068wme.152.1599217831116;
+        Fri, 04 Sep 2020 04:10:31 -0700 (PDT)
+Received: from localhost.localdomain ([51.15.160.169])
+        by smtp.googlemail.com with ESMTPSA id m3sm10622743wmb.26.2020.09.04.04.10.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 04 Sep 2020 04:10:30 -0700 (PDT)
+From:   Corentin Labbe <clabbe@baylibre.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe@baylibre.com>
+Subject: [PATCH v6 18/18] crypto: sun8i-ce: fix some style issue
+Date:   Fri,  4 Sep 2020 11:10:03 +0000
+Message-Id: <1599217803-29755-19-git-send-email-clabbe@baylibre.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+This patch fix a double empty line issue reported by checkpatch.
+While at it, since now the maximum line length is now 100, reorder some
+wrapped line.
 
-On Fri, Sep 04, 2020 at 12:02:40PM +0100, Srinivas Kandagatla wrote:
-> Hi Vadym,
-> 
-> Thanks for the patch,
-> On 31/08/2020 02:55, Vadym Kochan wrote:
-> > Add NVMEM_PRE_ADD notification step which is called before any cells
-> > binding - from lookup table or config, this allows to register cells
-> > in some specific layout (tlv) which should be parsed first and then
-> > registered. So there might be a cell parser driver which can register
-> > lookup table during this notification step.
-> > 
-> This is going in right direction but totally not correct way to do it.
-> 
-> 1> this is not scalable as any consumer that will register for this even
-> will have no idea of which what kind of parsing that provider needs.
-> It can work in your case but not really useful.
-> 
-> 2> this is a consumer API, not the provider api.
-> 
-> How about adding a "parse_cells" callback in struct nvmem_config along with
-> encoding type.
-> 
-> 
-> thanks,
-> srini
-> 
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+---
+ .../allwinner/sun8i-ce/sun8i-ce-cipher.c      | 34 ++++++-------------
+ .../crypto/allwinner/sun8i-ce/sun8i-ce-core.c |  9 ++---
+ 2 files changed, 14 insertions(+), 29 deletions(-)
 
-Looks like I missed main point here that this cells parser should be
-registered as nvmem provider. I will think on it.
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+index 2dcf508b0f18..9dae2be26e48 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+@@ -164,12 +164,10 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ 				goto theend_key;
+ 			}
+ 			offset = areq->cryptlen - ivsize;
+-			scatterwalk_map_and_copy(rctx->backup_iv, areq->src,
+-						 offset, ivsize, 0);
++			scatterwalk_map_and_copy(rctx->backup_iv, areq->src, offset, ivsize, 0);
+ 		}
+ 		memcpy(rctx->bounce_iv, areq->iv, ivsize);
+-		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen,
+-					 DMA_TO_DEVICE);
++		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen, DMA_TO_DEVICE);
+ 		cet->t_iv = cpu_to_le32(addr_iv);
+ 		if (dma_mapping_error(ce->dev, addr_iv)) {
+ 			dev_err(ce->dev, "Cannot DMA MAP IV\n");
+@@ -179,8 +177,7 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ 	}
+ 
+ 	if (areq->src == areq->dst) {
+-		nr_sgs = dma_map_sg(ce->dev, areq->src, sg_nents(areq->src),
+-				    DMA_BIDIRECTIONAL);
++		nr_sgs = dma_map_sg(ce->dev, areq->src, sg_nents(areq->src), DMA_BIDIRECTIONAL);
+ 		if (nr_sgs <= 0 || nr_sgs > MAX_SG) {
+ 			dev_err(ce->dev, "Invalid sg number %d\n", nr_sgs);
+ 			err = -EINVAL;
+@@ -188,15 +185,13 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ 		}
+ 		nr_sgd = nr_sgs;
+ 	} else {
+-		nr_sgs = dma_map_sg(ce->dev, areq->src, sg_nents(areq->src),
+-				    DMA_TO_DEVICE);
++		nr_sgs = dma_map_sg(ce->dev, areq->src, sg_nents(areq->src), DMA_TO_DEVICE);
+ 		if (nr_sgs <= 0 || nr_sgs > MAX_SG) {
+ 			dev_err(ce->dev, "Invalid sg number %d\n", nr_sgs);
+ 			err = -EINVAL;
+ 			goto theend_iv;
+ 		}
+-		nr_sgd = dma_map_sg(ce->dev, areq->dst, sg_nents(areq->dst),
+-				    DMA_FROM_DEVICE);
++		nr_sgd = dma_map_sg(ce->dev, areq->dst, sg_nents(areq->dst), DMA_FROM_DEVICE);
+ 		if (nr_sgd <= 0 || nr_sgd > MAX_SG) {
+ 			dev_err(ce->dev, "Invalid sg number %d\n", nr_sgd);
+ 			err = -EINVAL;
+@@ -251,15 +246,13 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+ theend_iv:
+ 	if (areq->iv && ivsize > 0) {
+ 		if (addr_iv)
+-			dma_unmap_single(ce->dev, addr_iv, rctx->ivlen,
+-					 DMA_TO_DEVICE);
++			dma_unmap_single(ce->dev, addr_iv, rctx->ivlen, DMA_TO_DEVICE);
+ 		offset = areq->cryptlen - ivsize;
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+ 			memcpy(areq->iv, rctx->backup_iv, ivsize);
+ 			kfree_sensitive(rctx->backup_iv);
+ 		} else {
+-			scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+-						 ivsize, 0);
++			scatterwalk_map_and_copy(areq->iv, areq->dst, offset, ivsize, 0);
+ 		}
+ 		kfree(rctx->bounce_iv);
+ 	}
+@@ -315,15 +308,13 @@ static int sun8i_ce_cipher_unprepare(struct crypto_engine *engine, void *async_r
+ 
+ 	if (areq->iv && ivsize > 0) {
+ 		if (cet->t_iv)
+-			dma_unmap_single(ce->dev, cet->t_iv, rctx->ivlen,
+-					 DMA_TO_DEVICE);
++			dma_unmap_single(ce->dev, cet->t_iv, rctx->ivlen, DMA_TO_DEVICE);
+ 		offset = areq->cryptlen - ivsize;
+ 		if (rctx->op_dir & CE_DECRYPTION) {
+ 			memcpy(areq->iv, rctx->backup_iv, ivsize);
+ 			kfree_sensitive(rctx->backup_iv);
+ 		} else {
+-			scatterwalk_map_and_copy(areq->iv, areq->dst, offset,
+-						 ivsize, 0);
++			scatterwalk_map_and_copy(areq->iv, areq->dst, offset, ivsize, 0);
+ 		}
+ 		kfree(rctx->bounce_iv);
+ 	}
+@@ -395,7 +386,6 @@ int sun8i_ce_cipher_init(struct crypto_tfm *tfm)
+ 	sktfm->reqsize = sizeof(struct sun8i_cipher_req_ctx) +
+ 			 crypto_skcipher_reqsize(op->fallback_tfm);
+ 
+-
+ 	dev_info(op->ce->dev, "Fallback for %s is %s\n",
+ 		 crypto_tfm_alg_driver_name(&sktfm->base),
+ 		 crypto_tfm_alg_driver_name(crypto_skcipher_tfm(op->fallback_tfm)));
+@@ -427,8 +417,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
+ 	pm_runtime_put_sync_suspend(op->ce->dev);
+ }
+ 
+-int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+-			unsigned int keylen)
++int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key, unsigned int keylen)
+ {
+ 	struct sun8i_cipher_tfm_ctx *op = crypto_skcipher_ctx(tfm);
+ 	struct sun8i_ce_dev *ce = op->ce;
+@@ -459,8 +448,7 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
+ 	return crypto_skcipher_setkey(op->fallback_tfm, key, keylen);
+ }
+ 
+-int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
+-			 unsigned int keylen)
++int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key, unsigned int keylen)
+ {
+ 	struct sun8i_cipher_tfm_ctx *op = crypto_skcipher_ctx(tfm);
+ 	int err;
+diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+index cf320898a4b1..1dbbd40ad576 100644
+--- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
++++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
+@@ -596,8 +596,7 @@ static int sun8i_ce_dbgfs_read(struct seq_file *seq, void *v)
+ 		}
+ 	}
+ #ifdef CONFIG_CRYPTO_DEV_SUN8I_CE_TRNG
+-	seq_printf(seq, "HWRNG %lu %lu\n",
+-		   ce->hwrng_stat_req, ce->hwrng_stat_bytes);
++	seq_printf(seq, "HWRNG %lu %lu\n", ce->hwrng_stat_req, ce->hwrng_stat_bytes);
+ #endif
+ 	return 0;
+ }
+@@ -635,8 +634,7 @@ static int sun8i_ce_allocate_chanlist(struct sun8i_ce_dev *ce)
+ {
+ 	int i, err;
+ 
+-	ce->chanlist = devm_kcalloc(ce->dev, MAXFLOW,
+-				    sizeof(struct sun8i_ce_flow), GFP_KERNEL);
++	ce->chanlist = devm_kcalloc(ce->dev, MAXFLOW, sizeof(struct sun8i_ce_flow), GFP_KERNEL);
+ 	if (!ce->chanlist)
+ 		return -ENOMEM;
+ 
+@@ -935,8 +933,7 @@ static int sun8i_ce_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto error_pm;
+ 
+-	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0,
+-			       "sun8i-ce-ns", ce);
++	err = devm_request_irq(&pdev->dev, irq, ce_irq_handler, 0, "sun8i-ce-ns", ce);
+ 	if (err) {
+ 		dev_err(ce->dev, "Cannot request CryptoEngine Non-secure IRQ (err=%d)\n", err);
+ 		goto error_irq;
+-- 
+2.26.2
 
-Thanks,
-
-> > Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
-> > ---
-> > v3:
-> >      1) Update core.c changes by extending notification mechanism
-> >         by adding new NVMEM_PRE_ADD event id which is called before lookup
-> >         table cells binding, this allows for notification handler to
-> >         register cells which require nvmem parsing.
-> > 
-> >   drivers/nvmem/core.c           | 2 ++
-> >   include/linux/nvmem-consumer.h | 1 +
-> >   2 files changed, 3 insertions(+)
-> > 
-> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> > index 6cd3edb2eaf6..c48a69e0ebbe 100644
-> > --- a/drivers/nvmem/core.c
-> > +++ b/drivers/nvmem/core.c
-> > @@ -668,6 +668,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> >   			goto err_device_del;
-> >   	}
-> > +	blocking_notifier_call_chain(&nvmem_notifier, NVMEM_PRE_ADD, nvmem);
-> > +
-> >   	if (config->cells) {
-> >   		rval = nvmem_add_cells(nvmem, config->cells, config->ncells);
-> >   		if (rval)
-> > diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-> > index 052293f4cbdb..0f7107276756 100644
-> > --- a/include/linux/nvmem-consumer.h
-> > +++ b/include/linux/nvmem-consumer.h
-> > @@ -50,6 +50,7 @@ enum {
-> >   	NVMEM_REMOVE,
-> >   	NVMEM_CELL_ADD,
-> >   	NVMEM_CELL_REMOVE,
-> > +	NVMEM_PRE_ADD,
-> >   };
-> >   #if IS_ENABLED(CONFIG_NVMEM)
-> > 
