@@ -2,60 +2,60 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3D3C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E731CC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC694206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7A47206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Js+dMC2y"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="eEwr7rjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgIDTTB (ORCPT
+        id S1727969AbgIDTTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:19:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48554 "EHLO
+        Fri, 4 Sep 2020 15:19:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727821AbgIDTS5 (ORCPT
+        with ESMTP id S1727951AbgIDTTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:18:57 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80590C061246
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 12:18:57 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p37so4822119pgl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 12:18:57 -0700 (PDT)
+        Fri, 4 Sep 2020 15:19:02 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12D7C061246
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 12:19:01 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id j11so1593596plk.9
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 12:19:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+0r4W9mwB3hElBdfBrvtjd4X0q5DQJLDeKjMbcplMDU=;
-        b=Js+dMC2y6bJOPfgi+dpPWCdzalyDqvjHxyFNDwMUi825KGhHDJI1Ytib81Zz86k6fH
-         QK6do1e81kvyEHJvPtSMRRA6NEoB51cFZHAzoUMfgMZwIi9++wQiqIPG4ONZluvE3hPf
-         zIV0UTmQ9bHzSJk31E9ibifexitYDo7hzHx98=
+        bh=qRMPP9LxKZUNiuhnbNUkYFs55rCgA//jb+vd/Rx6Ht0=;
+        b=eEwr7rjOHjYc90SI75Z6Ut+MR+UIR8SjsReg4Nh+bkkNtf3q6mhsZe/DOfXcHbnOjz
+         drKjfYKMQUPR1vGqcPN3Bl+y6ed/X+LsPKZVQsSpKrtVddmpMBN0zhjmooYpjO8cxUyh
+         k3zKOVzfP8YdEHI1VaORIAtYLL2AQ6r2WUqAs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+0r4W9mwB3hElBdfBrvtjd4X0q5DQJLDeKjMbcplMDU=;
-        b=DrL/dGy3Q0ylz1ldqDB7ZtUnfIzONRI+F0J8568B6TWADTVDdrlNokAkMwdwOMoGAA
-         D6Kp9WLRgfprFTKjn18cmvERZstKdBm1C3q/KNWrdD6B1ZwODPhPfz9eULVKcuYmIbJX
-         Hydb2WmvON0bBfB+qOmLOpfGCm8XA48cZrRHfj6eeiWWUzJh9iFJ3ZT3TXAJrvhMesmf
-         auQGeopSCux2GJOuNt622c7uVfMaNRmOk2j74+nHr3izJudk+4iUDIQNvrSSNz7kzOQw
-         pbPuEcUfvx3OFgvgDyrpS8PIGKxLZhH+JtllaBo5UinAUqwWQFcpasoTBdd97WVzN+9A
-         QmJQ==
-X-Gm-Message-State: AOAM532C9ILHuQMife04aXNaTuIzvs2Z5RxRm1h9tge3EbMTaxXDpsRG
-        iiuJ2mNhQOULzqWToK8zt8phXQ==
-X-Google-Smtp-Source: ABdhPJwPFAeSEqozQ2oq/5q8jmzdSVhlRwP56anlVHCYZpX7bRboVFg0gwDr5Qiwv41Zg6sEsTBtew==
-X-Received: by 2002:a63:6fc6:: with SMTP id k189mr8132738pgc.165.1599247136913;
-        Fri, 04 Sep 2020 12:18:56 -0700 (PDT)
+        bh=qRMPP9LxKZUNiuhnbNUkYFs55rCgA//jb+vd/Rx6Ht0=;
+        b=Gd5lYlwzPcPcqmpJOXBZ57A6kUuOJWtvdrn3I7iIGTS3I/xArCTKxS/ga3qOQUujn6
+         VoQXHeqasl0wRY6D62nZMQUjE3CE17Yj6I8BgKrvx5SiN6Czo/58wtdn73ZacuouaQ82
+         nLeAhkLkC7nMWeyO6KmGNogrrcufj7/67rYG4rgR2rc1D8gqNLcRD1kmGYI0KsushNbT
+         e7Ke6afBPCfOVZXo70fsDm3iUpqGy6atZym73ubfodQl1bXaPpRgo5tA2nChf6rOLjuR
+         F1g1KlBfaeTB2AuRP0Rlzwt/0rakcuxhGrQPtA6xsUy87nWhNrHg1RUlhbs4IEaRCFDI
+         8Y9A==
+X-Gm-Message-State: AOAM532mGQWfcL3CvwvJ/0EfTQzlBc/HxOwTqYjGQhC6zxDt/Rq1tVYe
+        5TEggswb/AQGLHPJsfpmRbbMwA==
+X-Google-Smtp-Source: ABdhPJzUuILtE+Lwd5POY+0Lfp6RXonJmBryQBkbG0RS+y2jdm+w1JLUsyQMiNXyvqjHmoi1pWFsZg==
+X-Received: by 2002:a17:902:be08:b029:d0:5c75:38da with SMTP id r8-20020a170902be08b02900d05c7538damr9927728pls.1.1599247140913;
+        Fri, 04 Sep 2020 12:19:00 -0700 (PDT)
 Received: from localhost.localdomain ([2405:201:c809:c7d5:b9ea:24bf:6b2b:1eee])
-        by smtp.gmail.com with ESMTPSA id t4sm5986001pje.56.2020.09.04.12.18.53
+        by smtp.gmail.com with ESMTPSA id t4sm5986001pje.56.2020.09.04.12.18.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 12:18:56 -0700 (PDT)
+        Fri, 04 Sep 2020 12:19:00 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
@@ -66,9 +66,9 @@ Cc:     Tom Cubie <tom@radxa.com>, devicetree@vger.kernel.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 2/3] extcon: Add Type-C Virtual PD driver
-Date:   Sat,  5 Sep 2020 00:48:29 +0530
-Message-Id: <20200904191830.387296-3-jagan@amarulasolutions.com>
+Subject: [PATCH 3/3] arm64: dts: rk3399-rock-pi-4c: Enable Display Port
+Date:   Sat,  5 Sep 2020 00:48:30 +0530
+Message-Id: <20200904191830.387296-4-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200904191830.387296-1-jagan@amarulasolutions.com>
 References: <20200904191830.387296-1-jagan@amarulasolutions.com>
@@ -79,367 +79,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB Type-C protocol supports various modes of operations
-includes PD, USB3, and Altmode. If the platform design
-supports a Type-C connector then configuring these modes
-can be done via enumeration.
+Enable Display Port on ROCK Pi 4C board.
 
-However, there are some platforms that design these modes
-of operations as separate protocol connectors like design
-Display Port from on-chip USB3 controller. So accessing
-Type-C Altmode Display Port via onboard Display Port
-connector instead of a Type-C connector.
+Unlike, other RK3399 platforms with accessing DP Altmode
+via Type-C connector, the display Port on ROCK Pi 4C is
+accessible via physical display port connector by means
+of Type-C Virtual PD extcon configuration.
 
-These kinds of platforms require an explicit extcon driver
-in order to handle Power Delivery and Port Detection.
-
-Add extcon driver for it.
+Enable support for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- MAINTAINERS                             |   6 +
- drivers/extcon/Kconfig                  |  10 +
- drivers/extcon/Makefile                 |   1 +
- drivers/extcon/extcon-usbc-virtual-pd.c | 285 ++++++++++++++++++++++++
- 4 files changed, 302 insertions(+)
- create mode 100644 drivers/extcon/extcon-usbc-virtual-pd.c
+ .../boot/dts/rockchip/rk3399-rock-pi-4c.dts      | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 68f21d46614c..aeb161b19dae 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6466,6 +6466,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
- F:	Documentation/filesystems/ext4/
- F:	fs/ext4/
- 
-+EXTCON DRIVER FOR TYPE-C VIRTUAL PD
-+M:	Jagan Teki <jagan@amarulasolutions.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml
-+F:	drivers/extcon/extcon-usbc-virtual-pd.c
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
+index 4c7ebb1c5d2d..19a648add355 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4c.dts
+@@ -11,6 +11,22 @@
+ / {
+ 	model = "Radxa ROCK Pi 4C";
+ 	compatible = "radxa,rockpi4c", "radxa,rockpi4", "rockchip,rk3399";
 +
- Extended Verification Module (EVM)
- M:	Mimi Zohar <zohar@linux.ibm.com>
- L:	linux-integrity@vger.kernel.org
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index aac507bff135..edd6c3c52699 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -186,4 +186,14 @@ config EXTCON_USBC_CROS_EC
- 	  Say Y here to enable USB Type C cable detection extcon support when
- 	  using Chrome OS EC based USB Type-C ports.
- 
-+config EXTCON_USBC_VIRTUAL_PD
-+	tristate "Virtual Type-C PD EXTCON support"
-+	depends on GPIOLIB || COMPILE_TEST
-+	help
-+	  Say Y here to enable Virtual Type-C PD extcon driver support, if
-+	  hardware platform designed Type-C modes separately.
-+
-+	  Example, of designing Display Port separately from Type-C Altmode
-+	  instead of accessing Altmode Display Port in Type-C connector.
-+
- endif
-diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-index 52096fd8a216..c35191eef0e1 100644
---- a/drivers/extcon/Makefile
-+++ b/drivers/extcon/Makefile
-@@ -25,3 +25,4 @@ obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
- obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
- obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
- obj-$(CONFIG_EXTCON_USBC_CROS_EC) += extcon-usbc-cros-ec.o
-+obj-$(CONFIG_EXTCON_USBC_VIRTUAL_PD) += extcon-usbc-virtual-pd.o
-diff --git a/drivers/extcon/extcon-usbc-virtual-pd.c b/drivers/extcon/extcon-usbc-virtual-pd.c
-new file mode 100644
-index 000000000000..e0713670e33d
---- /dev/null
-+++ b/drivers/extcon/extcon-usbc-virtual-pd.c
-@@ -0,0 +1,285 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Type-C Virtual PD Extcon driver
-+ *
-+ * Copyright (c) 2019 Fuzhou Rockchip Electronics Co., Ltd
-+ * Copyright (c) 2019 Radxa Limited
-+ * Copyright (c) 2019 Amarula Solutions(India)
-+ */
-+
-+#include <linux/extcon-provider.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+static const unsigned int vpd_cable[] = {
-+	EXTCON_USB,
-+	EXTCON_USB_HOST,
-+	EXTCON_DISP_DP,
-+	EXTCON_NONE,
-+};
-+
-+enum vpd_data_role {
-+	DR_NONE,
-+	DR_HOST,
-+	DR_DEVICE,
-+	DR_DISPLAY_PORT,
-+};
-+
-+enum vpd_polarity {
-+	POLARITY_NORMAL,
-+	POLARITY_FLIP,
-+};
-+
-+enum vpd_usb_ss {
-+	USB_SS_USB2,
-+	USB_SS_USB3,
-+};
-+
-+struct vpd_extcon {
-+	struct device *dev;
-+	struct extcon_dev *extcon;
-+	struct gpio_desc *det_gpio;
-+
-+	u8 polarity;
-+	u8 usb_ss;
-+	enum vpd_data_role data_role;
-+
-+	int irq;
-+	bool enable_irq;
-+	struct work_struct work;
-+	struct delayed_work irq_work;
-+};
-+
-+static void vpd_extcon_irq_work(struct work_struct *work)
-+{
-+	struct vpd_extcon *vpd = container_of(work, struct vpd_extcon, irq_work.work);
-+	bool host_connected = false, device_connected = false, dp_connected = false;
-+	union extcon_property_value property;
-+	int det;
-+
-+	det = vpd->det_gpio ? gpiod_get_raw_value(vpd->det_gpio) : 0;
-+	if (det) {
-+		device_connected = (vpd->data_role == DR_DEVICE) ? true : false;
-+		host_connected = (vpd->data_role == DR_HOST) ? true : false;
-+		dp_connected = (vpd->data_role == DR_DISPLAY_PORT) ? true : false;
-+	}
-+
-+	extcon_set_state(vpd->extcon, EXTCON_USB, host_connected);
-+	extcon_set_state(vpd->extcon, EXTCON_USB_HOST, device_connected);
-+	extcon_set_state(vpd->extcon, EXTCON_DISP_DP, dp_connected);
-+
-+	property.intval = vpd->polarity;
-+	extcon_set_property(vpd->extcon, EXTCON_USB,
-+			    EXTCON_PROP_USB_TYPEC_POLARITY, property);
-+	extcon_set_property(vpd->extcon, EXTCON_USB_HOST,
-+			    EXTCON_PROP_USB_TYPEC_POLARITY, property);
-+	extcon_set_property(vpd->extcon, EXTCON_DISP_DP,
-+			    EXTCON_PROP_USB_TYPEC_POLARITY, property);
-+
-+	property.intval = vpd->usb_ss;
-+	extcon_set_property(vpd->extcon, EXTCON_USB,
-+			    EXTCON_PROP_USB_SS, property);
-+	extcon_set_property(vpd->extcon, EXTCON_USB_HOST,
-+			    EXTCON_PROP_USB_SS, property);
-+	extcon_set_property(vpd->extcon, EXTCON_DISP_DP,
-+			    EXTCON_PROP_USB_SS, property);
-+
-+	extcon_sync(vpd->extcon, EXTCON_USB);
-+	extcon_sync(vpd->extcon, EXTCON_USB_HOST);
-+	extcon_sync(vpd->extcon, EXTCON_DISP_DP);
-+}
-+
-+static irqreturn_t vpd_extcon_irq_handler(int irq, void *dev_id)
-+{
-+	struct vpd_extcon *vpd = dev_id;
-+
-+	schedule_delayed_work(&vpd->irq_work, msecs_to_jiffies(10));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static enum vpd_data_role vpd_extcon_data_role(struct vpd_extcon *vpd)
-+{
-+	const char *const data_roles[] = {
-+		[DR_NONE]		= "NONE",
-+		[DR_HOST]		= "host",
-+		[DR_DEVICE]		= "device",
-+		[DR_DISPLAY_PORT]	= "display-port",
++	virtual_pd: virtual-pd {
++		compatible = "linux,extcon-usbc-virtual-pd";
++		det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;	/* DP_HPD */
++		vpd-data-role = "display-port";
++		vpd-super-speed;
 +	};
-+	struct device *dev = vpd->dev;
-+	int ret;
-+	const char *dr;
-+
-+	ret = device_property_read_string(dev, "vpd-data-role", &dr);
-+	if (ret < 0)
-+		return DR_NONE;
-+
-+	ret = match_string(data_roles, ARRAY_SIZE(data_roles), dr);
-+
-+	return (ret < 0) ? DR_NONE : ret;
-+}
-+
-+static int vpd_extcon_parse_dts(struct vpd_extcon *vpd)
-+{
-+	struct device *dev = vpd->dev;
-+	bool val = false;
-+	int ret;
-+
-+	val = device_property_read_bool(dev, "vpd-polarity");
-+	if (val)
-+		vpd->polarity = POLARITY_FLIP;
-+	else
-+		vpd->polarity = POLARITY_NORMAL;
-+
-+	val = device_property_read_bool(dev, "vpd-super-speed");
-+	if (val)
-+		vpd->usb_ss = USB_SS_USB3;
-+	else
-+		vpd->usb_ss = USB_SS_USB2;
-+
-+	vpd->data_role = vpd_extcon_data_role(vpd);
-+
-+	vpd->det_gpio = devm_gpiod_get_optional(dev, "det", GPIOD_OUT_LOW);
-+	if (IS_ERR(vpd->det_gpio)) {
-+		ret = PTR_ERR(vpd->det_gpio);
-+		dev_warn(dev, "failed to get det gpio: %d\n", ret);
-+		return ret;
-+	}
-+
-+	vpd->irq = gpiod_to_irq(vpd->det_gpio);
-+	if (vpd->irq < 0) {
-+		dev_err(dev, "failed to get irq for gpio: %d\n", vpd->irq);
-+		return vpd->irq;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, vpd->irq, NULL,
-+					vpd_extcon_irq_handler,
-+					IRQF_TRIGGER_FALLING |
-+					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					NULL, vpd);
-+	if (ret)
-+		dev_err(dev, "failed to request gpio irq\n");
-+
-+	return ret;
-+}
-+
-+static int vpd_extcon_probe(struct platform_device *pdev)
-+{
-+	struct vpd_extcon *vpd;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	vpd = devm_kzalloc(dev, sizeof(*vpd), GFP_KERNEL);
-+	if (!vpd)
-+		return -ENOMEM;
-+
-+	vpd->dev = dev;
-+	ret = vpd_extcon_parse_dts(vpd);
-+	if (ret)
-+		return ret;
-+
-+	INIT_DELAYED_WORK(&vpd->irq_work, vpd_extcon_irq_work);
-+
-+	vpd->extcon = devm_extcon_dev_allocate(dev, vpd_cable);
-+	if (IS_ERR(vpd->extcon)) {
-+		dev_err(dev, "allocat extcon failed\n");
-+		return PTR_ERR(vpd->extcon);
-+	}
-+
-+	ret = devm_extcon_dev_register(dev, vpd->extcon);
-+	if (ret) {
-+		dev_err(dev, "register extcon failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB,
-+				       EXTCON_PROP_USB_VBUS);
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB_HOST,
-+				       EXTCON_PROP_USB_VBUS);
-+
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB,
-+				       EXTCON_PROP_USB_TYPEC_POLARITY);
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB_HOST,
-+				       EXTCON_PROP_USB_TYPEC_POLARITY);
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB,
-+				       EXTCON_PROP_USB_SS);
-+	extcon_set_property_capability(vpd->extcon, EXTCON_USB_HOST,
-+				       EXTCON_PROP_USB_SS);
-+
-+	extcon_set_property_capability(vpd->extcon, EXTCON_DISP_DP,
-+				       EXTCON_PROP_USB_SS);
-+	extcon_set_property_capability(vpd->extcon, EXTCON_DISP_DP,
-+				       EXTCON_PROP_USB_TYPEC_POLARITY);
-+
-+	platform_set_drvdata(pdev, vpd);
-+
-+	vpd_extcon_irq_work(&vpd->irq_work.work);
-+
-+	return 0;
-+}
-+
-+static int vpd_extcon_remove(struct platform_device *pdev)
-+{
-+	struct vpd_extcon *vpd = platform_get_drvdata(pdev);
-+
-+	cancel_delayed_work_sync(&vpd->irq_work);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int vpd_extcon_suspend(struct device *dev)
-+{
-+	struct vpd_extcon *vpd = dev_get_drvdata(dev);
-+
-+	if (!vpd->enable_irq) {
-+		disable_irq_nosync(vpd->irq);
-+		vpd->enable_irq = true;
-+	}
-+
-+	return 0;
-+}
-+
-+static int vpd_extcon_resume(struct device *dev)
-+{
-+	struct vpd_extcon *vpd = dev_get_drvdata(dev);
-+
-+	if (vpd->enable_irq) {
-+		enable_irq(vpd->irq);
-+		vpd->enable_irq = false;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(vpd_extcon_pm_ops,
-+			 vpd_extcon_suspend, vpd_extcon_resume);
-+
-+static const struct of_device_id vpd_extcon_dt_match[] = {
-+	{ .compatible = "linux,extcon-usbc-virtual-pd", },
-+	{ /* sentinel */ }
 +};
 +
-+static struct platform_driver vpd_extcon_driver = {
-+	.probe		= vpd_extcon_probe,
-+	.remove		= vpd_extcon_remove,
-+	.driver		= {
-+		.name	= "extcon-usbc-virtual-pd",
-+		.pm	= &vpd_extcon_pm_ops,
-+		.of_match_table = vpd_extcon_dt_match,
-+	},
++&cdn_dp {
++	extcon = <&virtual_pd>;
++	status = "okay";
 +};
 +
-+module_platform_driver(vpd_extcon_driver);
-+
-+MODULE_AUTHOR("Jagan Teki <jagan@amarulasolutions.com>");
-+MODULE_DESCRIPTION("Type-C Virtual PD extcon driver");
-+MODULE_LICENSE("GPL v2");
++&tcphy0 {
++	extcon = <&virtual_pd>;
+ };
+ 
+ &sdio0 {
 -- 
 2.25.1
 
