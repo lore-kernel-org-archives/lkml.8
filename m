@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6566C2BB84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916DFC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFBA20665
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53383206B8
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:46:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7W0D/Fi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtTM9kdk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbgIDSqh (ORCPT
+        id S1727035AbgIDSqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:46:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43570 "EHLO
+        Fri, 4 Sep 2020 14:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgIDSqd (ORCPT
+        with ESMTP id S1726047AbgIDSqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:46:33 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9886C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 11:46:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e11so8076798wme.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 11:46:32 -0700 (PDT)
+        Fri, 4 Sep 2020 14:46:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4FFC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 11:46:37 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id t10so7873413wrv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 11:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=wYjCbBQQF/RZa7DFxW9EFnrYsiHEPgl/aDtOvgFKLs4=;
-        b=i7W0D/FiJMtqsEBaVqvZK9BCEkz5MVt7cQWJXek+uf2HY1K0r9qK61RIsVWtpahSnh
-         OVcr+8Ukwjgh4XdH8GG+zh4SWMeCjYC53xkBMwolEBq9gw9UvL/ZKO7g+rKkpksyhVRs
-         GAIHRGlmmGR0O3g6Wv+XgkkXQoLyiw77dFbXNlKVdYnMLLkG0lg3BUgVKU4uPIkhaU62
-         Ojj2wQLUwxK223oNDOp5KIHJ6CpmRPDujAr2knjwG1pQvcJt6QYJHbtTjbT/yZT8rQzg
-         QypJVDrkxOHh6Z2sC0jJYOTFnLgXUX+QzitPVzu6UaZPUeIpadWM8werXF6KGcA6HBAu
-         jT7A==
+        bh=dQx7qlr5sgzl+EKsELL8mDhBMabAg3tAw/hUjBERGxw=;
+        b=WtTM9kdkg/wt6spsrEZ+o1doy3qhPydnTTUFE7DM3+dJvLK2Jkcf1Lrodr9ouegtVv
+         Up45nyWxX+kWV4TovqKnjULFESfMDAv1/H78UlBWNO2c5IuiUBPFChWiteHjyx0mClWV
+         qiXwVMs7QE/9BlYxbpdlMqH10UYaJTzfSXZZc0OyRas2rGlsuyG7MDsl8ea9LJ8qCIrv
+         Y/en3YfbTmJt0ZoHxOEQCgOIlMYZOhLNUfvlvbah9A8BUEoXKZLSACmJ5sgCONHoNS/g
+         AvRNLW/dMpmTI0CP5oM9wW3R76NZ+UikqDdq3M0bg/JK4MYI6i9NVE3mM3EOcb54pWBy
+         axcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=wYjCbBQQF/RZa7DFxW9EFnrYsiHEPgl/aDtOvgFKLs4=;
-        b=BWZ3IhCRIMgF/4MlUcIQZvuw83zvAfIbF2omp/WGyMQq49AUpyl5DU8hTNsL6TUOep
-         eVTRFqUOIT0H/vP3JNYOjWXzw1yp9ld4neRofj0I3ERNDxNPWtaBRCqex3fKOVv0t8og
-         heV6IkNQHpRVM5r3CmvE8QDhsBRKAfFHILvK1fvmPJEot7+AXQttNwQNApLjUjMO6TUn
-         ++1ZXQdeQOxKhQDDGP2lM7jg8hQIv49bgIghNHclWUsikGSfY+Q+4J83Krb9vJS9j3Pf
-         2/nFwQZxsvRbj2SXQfci5PSRpODMcRxFDG0kuTdoUccV2UTrQPGrOHV7dfmsJKTarXqJ
-         vsDw==
-X-Gm-Message-State: AOAM530AAzmYpFwX+inppUtpYUKCHShhukE8rsRkbDtRzTikjdBkh0Fa
-        9CSdyGAPq3QfcstFr1oHY/zTi214hWQ=
-X-Google-Smtp-Source: ABdhPJyie2SGWSW4oLp1uAesrHv4WOO6PpRjKaeacvC+oT+UifUmDjpteq9iev04y5TEB89jH7KXbg==
-X-Received: by 2002:a05:600c:2053:: with SMTP id p19mr8852239wmg.50.1599245190732;
-        Fri, 04 Sep 2020 11:46:30 -0700 (PDT)
+        bh=dQx7qlr5sgzl+EKsELL8mDhBMabAg3tAw/hUjBERGxw=;
+        b=XjBn0Re5SWOb5GO/UGY3CixlmMmShGunQp+JtNQM4o9Q3OfILHFnIqqhS5AKcrhmNm
+         jNsqNctE0b8OMuHsnTbBXE+K0UOkHLxqSZpjW/cRzEqhSAjIJW/f/JvX0EogWcdTPBTS
+         J5SYa4yJGvr5hIC95uxnayxYvhu0LlLOLVIv4ia6el6mSbcJkjdLJDQh+wszBn85p5+I
+         Wub1VXXiTrusrCl9fRNUprxPhIRN7a/njqNJEe7qKOnPDuhaZF/bPZc+FxbXle7tbHL2
+         XsaUMIt8MIPBv5XCwKmRlAbQhBttQv88qCPc5iYrTjllnaH3BsdqR5nvotdnFEbk0MGv
+         d9xQ==
+X-Gm-Message-State: AOAM530Nin9ickWkFZ/UHonk/WPC+vzZH3YW1Fy7k6PQABoj/oQ8dgRv
+        5H30UGl46SriqaAiArEKFtq9nPrRvrY=
+X-Google-Smtp-Source: ABdhPJyRZnf+SlBQ7UbrvpsnTaq4v4xa242elj+FV/LlVyt9CQ5ComoNbu8H0KuPGTxqae/RK5yZTw==
+X-Received: by 2002:a5d:6051:: with SMTP id j17mr9690739wrt.81.1599245195826;
+        Fri, 04 Sep 2020 11:46:35 -0700 (PDT)
 Received: from ogabbay-VM.habana-labs.com ([213.57.90.10])
-        by smtp.gmail.com with ESMTPSA id q186sm14111670wma.45.2020.09.04.11.46.28
+        by smtp.gmail.com with ESMTPSA id q186sm14111670wma.45.2020.09.04.11.46.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 11:46:29 -0700 (PDT)
+        Fri, 04 Sep 2020 11:46:34 -0700 (PDT)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, SW_Drivers@habana.ai
-Subject: [PATCH 3/6] habanalabs: remove unused define
-Date:   Fri,  4 Sep 2020 21:46:20 +0300
-Message-Id: <20200904184623.13478-3-oded.gabbay@gmail.com>
+Subject: [PATCH 5/6] habanalabs: increase PQ COMP_OFFSET by one nibble
+Date:   Fri,  4 Sep 2020 21:46:22 +0300
+Message-Id: <20200904184623.13478-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904184623.13478-1-oded.gabbay@gmail.com>
 References: <20200904184623.13478-1-oded.gabbay@gmail.com>
@@ -72,26 +72,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleanup the code.
+For future ASICs, we increase this field by one nibble. This field was not
+used by the current ASICs so this change doesn't break anything.
 
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/gaudi/gaudiP.h | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/misc/habanalabs/include/common/qman_if.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/habanalabs/gaudi/gaudiP.h b/drivers/misc/habanalabs/gaudi/gaudiP.h
-index b86eb98b145c..dd222bc128f9 100644
---- a/drivers/misc/habanalabs/gaudi/gaudiP.h
-+++ b/drivers/misc/habanalabs/gaudi/gaudiP.h
-@@ -35,8 +35,6 @@
- #error "Number of MSI interrupts must be smaller or equal to GAUDI_MSI_ENTRIES"
- #endif
+diff --git a/drivers/misc/habanalabs/include/common/qman_if.h b/drivers/misc/habanalabs/include/common/qman_if.h
+index 0fdb49188ed7..7ed7739575ee 100644
+--- a/drivers/misc/habanalabs/include/common/qman_if.h
++++ b/drivers/misc/habanalabs/include/common/qman_if.h
+@@ -40,7 +40,7 @@ struct hl_bd {
+  */
  
--#define QMAN_FENCE_TIMEOUT_USEC		10000		/* 10 ms */
--
- #define CORESIGHT_TIMEOUT_USEC		100000		/* 100 ms */
+ #define BD_CTL_COMP_OFFSET_SHIFT	16
+-#define BD_CTL_COMP_OFFSET_MASK		0x00FF0000
++#define BD_CTL_COMP_OFFSET_MASK		0x0FFF0000
  
- #define GAUDI_MAX_CLK_FREQ		2200000000ull	/* 2200 MHz */
+ #define BD_CTL_COMP_DATA_SHIFT		0
+ #define BD_CTL_COMP_DATA_MASK		0x0000FFFF
 -- 
 2.17.1
 
