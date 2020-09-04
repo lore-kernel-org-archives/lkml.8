@@ -2,201 +2,224 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1916C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E138C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD5F42074A
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:57:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PvzH0SIA"
+	by mail.kernel.org (Postfix) with ESMTP id 262A02074A
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:00:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgIDM5b (ORCPT
+        id S1730283AbgIDNAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:57:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729297AbgIDM50 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:57:26 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48958C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 05:57:24 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id m5so2899489lfp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 05:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8GlQkjXHe55LHZB2lHiYIu853ibpNGCiL6ph4EkjLC0=;
-        b=PvzH0SIAklhtrU2bxnDv4DBvhoX5lQIH06mHJozoCeS/DbVrVoTQujCfZuoT7VKUVD
-         eMe37vXZ9n3+fHtnbgpfft9T9TdrlVWU+yid1Hsy5e2VzlH+P6UXOOuEcilS+SQG47KI
-         6a3OjvzyZkQLtV9lFHglPtEOkeAS11L2qJx1uCX8EAfnR6SLE7RO1mGfeXuHEHWJltgt
-         eV/BTAG4EyM/Vn7aSpHYr0Mmt/dmo3mi0wKMFoeHATDrdJL725zjXxwgZYx2UBi5oFw2
-         0foAZX13ZN3ujvmsznV7ZPKnoCgTTA/n5Z7Z1gu5jUP669/ZL1Ao2bRYrRBwgyAM0Rvg
-         GJdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8GlQkjXHe55LHZB2lHiYIu853ibpNGCiL6ph4EkjLC0=;
-        b=iYSd/m6dvk7/gr9frj5I7oIAD2Wzrv6EAwOTCIfiysY/E4tR6Z5dRyvVqAT0KoOaey
-         osfxfMVms1uIfw6iEJAZcslb93LbUx2xEA9XIYPTKU29Ef+oElhfeN2T6CNcxqiZY0H9
-         eEgRdr3lwZHz7b8YX/b0PQhbZNsBFPHWa6KQkEtpcrsxiX94CoAKSnypX77+tOvWeVjZ
-         Hesy18PpgPBTUTamefLd5/kSL3ciDAbe2PAcPMdwBTxY3iwhbZ1UFr40wu7nDmhThZLH
-         hwvB23NZQ0Phevm/B1gbFQmywth+nqcfFmwk6dKDshyWtIq8GaDrkTKFtQflFX3+vBf0
-         A8Tw==
-X-Gm-Message-State: AOAM532JlpMtDbvsQdfjpsIq75Rk2h2LLImeGohejy7acWgJ94GDfP5r
-        LJKG2kd5hQTmNE/WzChKbbr/0w==
-X-Google-Smtp-Source: ABdhPJy6PvardLC1xge4MYT8+GmbaFkYE9Ni9x/dQ5tN07+HlVQ5IBLFCJlABr7P9PTxCwGg8zVy5A==
-X-Received: by 2002:a05:6512:10d1:: with SMTP id k17mr3836894lfg.179.1599224242629;
-        Fri, 04 Sep 2020 05:57:22 -0700 (PDT)
-Received: from [192.168.1.211] ([188.162.64.166])
-        by smtp.gmail.com with ESMTPSA id j28sm1288148lfk.97.2020.09.04.05.57.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 05:57:21 -0700 (PDT)
-Subject: Re: [PATCH v2 07/10] phy: qcom-qmp: Add support for DP in USB3+DP
- combo phy
-To:     Jonathan Marek <jonathan@marek.ca>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Clark <robdclark@chromium.org>
-References: <20200902230215.3452712-1-swboyd@chromium.org>
- <20200902230215.3452712-8-swboyd@chromium.org>
- <b6f80242-482d-b778-690b-8aefa4e8f23e@marek.ca>
- <9f99cc8b-2cfd-280f-e52a-23d098934a11@linaro.org>
- <4c0f59f8-b7fa-432f-2255-8d253f434a59@marek.ca>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <c8ca7193-67ae-e1d5-d36a-19655ca67d78@linaro.org>
-Date:   Fri, 4 Sep 2020 15:57:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Fri, 4 Sep 2020 09:00:01 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13377 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730266AbgIDM7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:59:36 -0400
+IronPort-SDR: YI+UElyj4xD++xa18Mp1VvetH+cD0Qv+DSjUHBZbL3jwhXdWx87SyWSZ7VNDK7/CFpdGFG7g9H
+ T6DGeHGrr0kA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="158712125"
+X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
+   d="scan'208";a="158712125"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 05:59:35 -0700
+IronPort-SDR: SPQQ1AIZ5ET7Ke3RxYzReU+X9bje9vpilsVhnzoH8C+bhmkW1li2Ng7qpfxqrxz6DWmuahzFn6
+ Ye/QXBMu8oQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,389,1592895600"; 
+   d="scan'208";a="339698846"
+Received: from pipper-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.56.104])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Sep 2020 05:59:32 -0700
+Date:   Fri, 4 Sep 2020 15:59:31 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     dhowells@redhat.com, dwmw2@infradead.org, jmorris@namei.org,
+        serge@hallyn.com, zohar@linux.ibm.com, erichte@linux.ibm.com,
+        nayna@linux.ibm.com, mpe@ellerman.id.au, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Subject: Re: [RFC PATCH] certs: Add EFI_CERT_X509_GUID support for dbx
+ entries]
+Message-ID: <20200904125931.GE39023@linux.intel.com>
+References: <20200901165143.10295-1-eric.snowberg@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <4c0f59f8-b7fa-432f-2255-8d253f434a59@marek.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901165143.10295-1-eric.snowberg@oracle.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2020 15:44, Jonathan Marek wrote:
-> On 9/4/20 8:29 AM, Dmitry Baryshkov wrote:
->> On 03/09/2020 23:43, Jonathan Marek wrote:
->>> On 9/2/20 7:02 PM, Stephen Boyd wrote:
->>>> Add support for the USB3 + DisplayPort (DP) "combo" phy to the qmp phy
->>>> driver. We already have support for the USB3 part of the combo phy, so
->>>> most additions are for the DP phy.
->>>>
->>>> Split up the qcom_qmp_phy{enable,disable}() functions into the phy 
->>>> init,
->>>> power on, power off, and exit functions that the common phy framework
->>>> expects so that the DP phy can add even more phy ops like
->>>> phy_calibrate() and phy_configure(). This allows us to initialize 
->>>> the DP
->>>> PHY and configure the AUX channel before powering on the PHY at the 
->>>> link
->>>> rate that was negotiated during link training.
->>>>
->>>> The general design is as follows:
->>>>
->>>>    1) DP controller calls phy_init() to initialize the PHY and 
->>>> configure
->>>>    the dp_com register region.
->>>>
->>>>    2) DP controller calls phy_configure() to tune the link rate and
->>>>    voltage swing and pre-emphasis settings.
->>>>
->>>>    3) DP controller calls phy_power_on() to enable the PLL and power on
->>>>    the phy.
->>>>
->>>>    4) DP controller calls phy_configure() again to tune the voltage 
->>>> swing
->>>>    and pre-emphasis settings determind during link training.
->>>>
->>>>    5) DP controller calls phy_calibrate() some number of times to 
->>>> change
->>>>    the aux settings if the aux channel times out during link training.
->>>>
->>>>    6) DP controller calls phy_power_off() if the link rate is to be
->>>>    changed and goes back to step 2 to try again at a different link 
->>>> rate.
->>>>
->>>>    5) DP controller calls phy_power_off() and then phy_exit() to power
->>>>    down the PHY when it is done.
->>>>
->>>> The DP PHY contains a PLL that is different from the one used for the
->>>> USB3 PHY. Instead of a pipe clk there is a link clk and a pixel clk
->>>> output from the DP PLL after going through various dividers. Introduce
->>>> clk ops for these two clks that just tell the child clks what the
->>>> frequency of the pixel and link are. When the phy link rate is
->>>> configured we call clk_set_rate() to update the child clks in the
->>>> display clk controller on what rate is in use. The clk frequencies
->>>> always differ based on the link rate (i.e. 1.6Gb/s 2.7Gb/s, 5.4Gb/s, or
->>>> 8.1Gb/s corresponding to various transmission modes like HBR1, HBR2 or
->>>> HBR3) so we simply store the link rate and use that to calculate the 
->>>> clk
->>>> frequencies.
->>>>
->>>> The PLL enable sequence is a little different from other QMP phy 
->>>> PLLs so
->>>> we power on the PLL in qcom_qmp_phy_configure_dp_phy() that gets called
->>>> from phy_power_on(). This should probably be split out better so that
->>>> each phy has a way to run the final PLL/PHY enable sequence.
->>>>
->>>> This code is based on a submission of this phy and PLL in the drm
->>>> subsystem.
->>>
->>> I updated my upstream-based sm8150/sm8250 displayport stack [1] to 
->>> use these patches.
->>
->> I have tried your branch on my RB5 with two different dongles. Both 
->> dongles provide the same behaviour:
->>   - on first plug I see VDM Tx errors,
->>   - after I unplug and replug the dongle, PD phy seems to be stuck on 
->> sending capabilities.
->>
->> See attached logs.
->>
->> Also I had to add typec_unregister_port(port->typec_port); to 
->> IS_ERR(alt) in your tcpm.c hack.
->>
->> I'm currently finishing the driver for the mux/redriver, will retry 
->> testing afterwards.
->>
+On Tue, Sep 01, 2020 at 12:51:43PM -0400, Eric Snowberg wrote:
+> The Secure Boot Forbidden Signature Database, dbx, contains a list of now
+> revoked signatures and keys previously approved to boot with UEFI Secure
+> Boot enabled.  The dbx is capable of containing any number of
+> EFI_CERT_X509_SHA256_GUID, EFI_CERT_SHA256_GUID, and EFI_CERT_X509_GUID
+> entries.
 > 
-> As I mentioned the TCPM driver has a lot of issues. The "hard reset" 
-> isn't implemented correctly so going into that mode gets it stuck in a 
-> bad state. Note I am using this dongle [1], and it only works correctly 
-> in sink mode (with the dongle providing power), in source mode it does 
-> negotiate the alt mode, but never gets the HPD event that DP driver is 
-> waiting for.
+> Currently when EFI_CERT_X509_GUID are contained in the dbx, the entries are
+> skipped.
 > 
-> https://www.amazon.ca/Cable-Matters-Multiport-DisplayPort-Ethernet/dp/B06Y5N3YCD 
+> This change adds support for EFI_CERT_X509_GUID dbx entries. When a
+> EFI_CERT_X509_GUID is found, it is added as an asymmetrical key to the
+> .blacklist keyring.  Anytime the .platform keyring is used, the keys in
+> the .blacklist keyring are referenced, if a matching key is found, the
+> key will be rejected.
+> 
+> Signed-off-by: Eric Snowberg <eric.snowberg@oracle.com>
 
-I'll take a look for dongles that work in source mode (with RB5 being 
-the sink). Reset being not fully implemented would answer on questions 
-about replug. Any idea about VDM Tx errors?
+In the last paragraph, please use imperative form: "Add support for ...".
 
+> ---
+>  certs/blacklist.c                             | 36 +++++++++++++++++++
+>  certs/system_keyring.c                        |  6 ++++
+>  include/keys/system_keyring.h                 | 11 ++++++
+>  .../platform_certs/keyring_handler.c          | 11 ++++++
+>  4 files changed, 64 insertions(+)
+> 
+> diff --git a/certs/blacklist.c b/certs/blacklist.c
+> index 6514f9ebc943..17ebf50cf0ae 100644
+> --- a/certs/blacklist.c
+> +++ b/certs/blacklist.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/err.h>
+>  #include <linux/seq_file.h>
+>  #include <keys/system_keyring.h>
+> +#include <crypto/pkcs7.h>
+>  #include "blacklist.h"
+>  
+>  static struct key *blacklist_keyring;
+> @@ -100,6 +101,41 @@ int mark_hash_blacklisted(const char *hash)
+>  	return 0;
+>  }
+>  
+> +int mark_key_revocationlisted(const char *data, size_t size)
+> +{
+> +	key_ref_t key;
+> +
+> +	key = key_create_or_update(make_key_ref(blacklist_keyring, true),
+> +				   "asymmetric",
+> +				   NULL,
+> +				   data,
+> +				   size,
+> +				   ((KEY_POS_ALL & ~KEY_POS_SETATTR) |
+> +				    KEY_USR_VIEW),
+> +				   KEY_ALLOC_NOT_IN_QUOTA |
+> +				   KEY_ALLOC_BUILT_IN);
+> +
+> +	if (IS_ERR(key)) {
+> +		pr_err("Problem with revocation key (%ld)\n", PTR_ERR(key));
+> +		return PTR_ERR(key);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int is_key_revocationlisted(struct pkcs7_message *pkcs7)
+> +{
+> +	int ret;
+> +
+> +	ret = pkcs7_validate_trust(pkcs7, blacklist_keyring);
+> +
+> +	if (ret == 0)
+> +		return -EKEYREJECTED;
+> +
+> +	return -ENOKEY;
+> +}
+> +EXPORT_SYMBOL_GPL(is_key_revocationlisted);
+> +
+>  /**
+>   * is_hash_blacklisted - Determine if a hash is blacklisted
+>   * @hash: The hash to be checked as a binary blob
+> diff --git a/certs/system_keyring.c b/certs/system_keyring.c
+> index 798291177186..f8ea96219155 100644
+> --- a/certs/system_keyring.c
+> +++ b/certs/system_keyring.c
+> @@ -241,6 +241,12 @@ int verify_pkcs7_message_sig(const void *data, size_t len,
+>  			pr_devel("PKCS#7 platform keyring is not available\n");
+>  			goto error;
+>  		}
+> +
+> +		ret = is_key_revocationlisted(pkcs7);
+> +		if (ret != -ENOKEY) {
+> +			pr_devel("PKCS#7 platform key revocationlisted\n");
+> +			goto error;
+> +		}
+>  	}
+>  	ret = pkcs7_validate_trust(pkcs7, trusted_keys);
+>  	if (ret < 0) {
+> diff --git a/include/keys/system_keyring.h b/include/keys/system_keyring.h
+> index fb8b07daa9d1..b6991cfe1b6d 100644
+> --- a/include/keys/system_keyring.h
+> +++ b/include/keys/system_keyring.h
+> @@ -31,11 +31,14 @@ extern int restrict_link_by_builtin_and_secondary_trusted(
+>  #define restrict_link_by_builtin_and_secondary_trusted restrict_link_by_builtin_trusted
+>  #endif
+>  
+> +extern struct pkcs7_message *pkcs7;
+>  #ifdef CONFIG_SYSTEM_BLACKLIST_KEYRING
+>  extern int mark_hash_blacklisted(const char *hash);
+> +extern int mark_key_revocationlisted(const char *data, size_t size);
+>  extern int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+>  			       const char *type);
+>  extern int is_binary_blacklisted(const u8 *hash, size_t hash_len);
+> +extern int is_key_revocationlisted(struct pkcs7_message *pkcs7);
+>  #else
+>  static inline int is_hash_blacklisted(const u8 *hash, size_t hash_len,
+>  				      const char *type)
+> @@ -47,6 +50,14 @@ static inline int is_binary_blacklisted(const u8 *hash, size_t hash_len)
+>  {
+>  	return 0;
+>  }
+> +static inline int mark_key_revocationlisted(const char *data, size_t size)
+> +{
+> +	return 0;
+> +}
+> +static inline int is_key_revocationlisted(struct pkcs7_message *pkcs7)
+> +{
+> +	return -ENOKEY;
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_IMA_BLACKLIST_KEYRING
+> diff --git a/security/integrity/platform_certs/keyring_handler.c b/security/integrity/platform_certs/keyring_handler.c
+> index c5ba695c10e3..cc5a43804bc4 100644
+> --- a/security/integrity/platform_certs/keyring_handler.c
+> +++ b/security/integrity/platform_certs/keyring_handler.c
+> @@ -55,6 +55,15 @@ static __init void uefi_blacklist_binary(const char *source,
+>  	uefi_blacklist_hash(source, data, len, "bin:", 4);
+>  }
+>  
+> +/*
+> + * Revocationlist the X509 cert
+> + */
+> +static __init void uefi_revocationlist_x509(const char *source,
+> +					    const void *data, size_t len)
+> +{
+> +	mark_key_revocationlisted(data, len);
+> +}
+> +
+>  /*
+>   * Return the appropriate handler for particular signature list types found in
+>   * the UEFI db and MokListRT tables.
+> @@ -76,5 +85,7 @@ __init efi_element_handler_t get_handler_for_dbx(const efi_guid_t *sig_type)
+>  		return uefi_blacklist_x509_tbs;
+>  	if (efi_guidcmp(*sig_type, efi_cert_sha256_guid) == 0)
+>  		return uefi_blacklist_binary;
+> +	if (efi_guidcmp(*sig_type, efi_cert_x509_guid) == 0)
+> +		return uefi_revocationlist_x509;
+>  	return 0;
+>  }
+> -- 
+> 2.18.1
+> 
 
--- 
-With best wishes
-Dmitry
+I did not find anything wrong with the code change.
+
+/Jarkko
