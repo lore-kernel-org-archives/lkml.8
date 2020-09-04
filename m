@@ -2,175 +2,188 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D764C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC697C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB1CD205CB
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86BA420897
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 09:46:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r7KmP8re"
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="GkEwuFZ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbgIDJqV (ORCPT
+        id S1729898AbgIDJqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 05:46:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44742 "EHLO
+        Fri, 4 Sep 2020 05:46:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgIDJqU (ORCPT
+        with ESMTP id S1725812AbgIDJqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 05:46:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E710C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 02:46:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=sVSQdkJku0lzaY9hfTNOZl+VhauhkXuus8gnwioVvZ0=; b=r7KmP8reYtZ5ZsCivGMaq8+DKv
-        6iA6HwrXC4ayxgumG9XSui/6uDIGPzfE4xKXM03lvv6O9v0QgXwB2n/L9FL815+cd0kodz4Qyeydz
-        /AH1q0wAS1cjXnqO6Bt/iwwXw3Rjn4vvwdx5YH1rrxZMwTaVbnk/gnCd3PEkX4+UhjsXM3/8HLdTX
-        ll6fvR/LiibeP2r5c29+0+/GsJ0GbyChj+09VFVmz+EV6wSpVy/r7nAYzKkAO0SBImhLeHEE2PhS6
-        u6jSOj4Y7ls/eGVS197cLGAmO+7mfb3i+23/6DqFgV8iqCIt4QofJQLU1ZnyFDIpuKIbTvRUNnfbv
-        Tf6vpY1w==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kE8IT-0007Mo-1x; Fri, 04 Sep 2020 09:46:17 +0000
-Date:   Fri, 4 Sep 2020 10:46:17 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] RISC-V Fixes for 5.9-rc2
-Message-ID: <20200904094617.GA27846@infradead.org>
-References: <mhng-32c8d053-acbd-4c72-b41d-8d6042ac639d@palmerdabbelt-glaptop1>
- <CAHk-=wi_tf4qsiBj5UD0GG3wz8Hi5NrHzqdrx+CwtfAY+_UiGg@mail.gmail.com>
- <20200904083109.GA9182@infradead.org>
- <CAAhSdy3S8FfMAWih_VoBHw0xd-7c=urzuJ+PPdug9iX_pWyTsQ@mail.gmail.com>
+        Fri, 4 Sep 2020 05:46:43 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7918CC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 02:46:42 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w5so6077988wrp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 02:46:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iVx7hC5Z+ZE9a7SrgsdYEtoRluDNQl4XcnFv96CEECo=;
+        b=GkEwuFZ2XgoFCAbgB9JFRh7/4rIuBnkk7B3WowF0Ouo7ZwRGjDRK2ZDlmZJ2RLg/On
+         nrfPdZUS/h6zd7gpkrNCNoCHNFDi305JAdVAde3a7doEtdHs0smrUnlcdJG+pKDd/cO7
+         z7gpywm58gbc6ZQtGbyM4abXSOAwVd/o12b8eqbMIFpwHGPaugZDkoyz3B5fyVcPllbH
+         rhj30xsmlH1C15HVBRhssiDsZvK16TDN6lMszim4cQjNM01buVbRtafq3/3c+yhlPLjS
+         mzWOjOvn/OLzZPG+rs7d835O+afcHy1Qx9kDXY5pA1V4bgiKpFHrAZ3z4gH8TtH47vbm
+         sVRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iVx7hC5Z+ZE9a7SrgsdYEtoRluDNQl4XcnFv96CEECo=;
+        b=ClzKVsXRoDVFmTPEfrXoLBOoruPpdtbBuCOce+zkxB6OPnHzVoS7D+a1QQwOABhbR6
+         bIBXqopRzSpP+Y7DPsMyvBR55yXZMvKVUGKPMXb9xHiZe79HbsFlxo6Z+vyTFue5u6nM
+         pfChEveO8RW3HAGfEfTrROrdExGmZ4kWuqEhr/UwrqbGxUpQpp8GOpF1dBNmyGQYMTXy
+         IJToicHDMhpnxI5qIBiSSwMN16Ival4uoR3xw7Yf9A3ioVswxSrNE1srap68pV4pj/1k
+         h2Fr9uwHAzisoewDG/MDeg6rQND+xa2Mz4l3yUax2Cj23I+clzXkMzljo/MqH9uaZ010
+         64FA==
+X-Gm-Message-State: AOAM531Frv3LYke2D0/zjP2IDY/J0MpKohqENBmbuNWaLi0WCOLGfr9i
+        jeqARkzgp/WLgVbE/2Umc1k5r9SEGMOLjLT1bfXbAQ==
+X-Google-Smtp-Source: ABdhPJwptTnuYBF7f+Osku8uKwpWjtboRQN9W4oEJ9YqWxV4nkxW6SWMHqNqVamQSLiM39jayeQ7YaNuePi+ebV3FW8=
+X-Received: by 2002:a5d:4949:: with SMTP id r9mr7050780wrs.27.1599212800728;
+ Fri, 04 Sep 2020 02:46:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhSdy3S8FfMAWih_VoBHw0xd-7c=urzuJ+PPdug9iX_pWyTsQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+ <d757ddd6549da140f178563e5fd2bf1d129913fd.1599120059.git-series.maxime@cerno.tech>
+In-Reply-To: <d757ddd6549da140f178563e5fd2bf1d129913fd.1599120059.git-series.maxime@cerno.tech>
+From:   Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date:   Fri, 4 Sep 2020 10:46:26 +0100
+Message-ID: <CAPY8ntC_Tobv+4TtgtYhvAst00_zsfxZdZd=torcb57SQ0CMQA@mail.gmail.com>
+Subject: Re: [PATCH v5 75/80] drm/vc4: hdmi: Add pixel BVB clock control
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:12:18PM +0530, Anup Patel wrote:
-> I tried Linux-5.9-rc3 using nommu_virt_defconfig at my end. I am not
-> able to reproduce
-> this issue. Is there additional Kconfig option required to reproduce
-> this issue ??
+Hi Maxime
 
-export CROSS_COMPILE=/usr/bin/riscv64-linux-gnu-
-make ARCH=riscv nommu_virt_defconfig
-make ARCH=riscv -j4 loader
+On Thu, 3 Sep 2020 at 09:03, Maxime Ripard <maxime@cerno.tech> wrote:
+>
+> From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+>
+> The BCM2711 has another clock that needs to be ramped up depending on the
+> pixel rate: the pixel BVB clock. Add the code to adjust that clock when
+> changing the mode.
+>
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> [Maxime: Changed the commit log, used clk_set_min_rate]
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> Link: https://lore.kernel.org/r/20200901040759.29992-3-hoegeun.kwon@samsung.com
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 23 +++++++++++++++++++++++
+>  drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index ab7abb409de2..39508107dafd 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -54,6 +54,7 @@
+>  #include "vc4_regs.h"
+>
+>  #define CEC_CLOCK_FREQ 40000
+> +#define VC4_HSM_MID_CLOCK 149985000
 
-/opt/qemu-riscv/bin/qemu-system-riscv64 \
-        -smp 2 \
-        -m 256 \
-        -machine virt \
-        -nographic \
-        -kernel arch/riscv/boot/loader \
-        -drive file=rootfs.ext2,format=raw,id=hd0 \
-        -device virtio-blk-device,drive=hd0
+I didn't flag it earlier, but this is a bit of a weird name for the
+define. I know it wants to be concise, but it made me do a double take
+as to what it is for.
+I'm currently applying all these patches to our Raspberry Pi tree and
+actually CEC needs a fixed HSM on Pi0-3 to avoid recomputing all the
+timings. So I have a VC4_HSM_CLOCK define which is the fixed clock
+rate for Pi 0-3.
+This one is more a threshold for HSM to control BVB, and my brain
+starts to hurt over what it should be called.
 
-> 
-> anup@anup-ubuntu64-vm:~/Work/riscv-test/nommu$ qemu-system-riscv64 -M
-> virt -m 8M -display none -nographic -kernel
-> ./build-riscv64/arch/riscv/boot/loader -append "root=/dev/ram rw
-> console=ttyS0" -smp 4
-> qemu-system-riscv64: warning: No -bios option specified. Not loading a firmware.
-> qemu-system-riscv64: warning: This default will change in a future
-> QEMU release. Please use the -bios option to avoid breakages when this
-> happens.
-> qemu-system-riscv64: warning: See QEMU's deprecation documentation for details.
-> [    0.000000] Linux version 5.9.0-rc3 (anup@anup-ubuntu64-vm)
-> (riscv64-unknown-linux-gnu-gcc (GCC) 9.2.0, GNU ld (GNU Binutils)
-> 2.34) #1 SMP Fri Sep 4 15:02:31 IST 2020
-> [    0.000000] earlycon: uart8250 at MMIO 0x0000000010000000 (options
-> '115200n8')
-> [    0.000000] printk: bootconsole [uart8250] enabled
-> [    0.000000] Zone ranges:
-> [    0.000000]   DMA32    [mem 0x0000000080000000-0x00000000807fffff]
-> [    0.000000]   Normal   empty
-> [    0.000000] Movable zone start for each node
-> [    0.000000] Early memory node ranges
-> [    0.000000]   node   0: [mem 0x0000000080000000-0x00000000807fffff]
-> [    0.000000] Initmem setup node 0 [mem 0x0000000080000000-0x00000000807fffff]
-> [    0.000000] riscv: ISA extensions acdfimsu
-> [    0.000000] riscv: ELF capabilities acdfim
-> [    0.000000] percpu: max_distance=0x30000 too large for vmalloc space 0x0
-> [    0.000000] percpu: Embedded 12 pages/cpu s18592 r0 d30560 u49152
-> [    0.000000] Built 1 zonelists, mobility grouping off.  Total pages: 2020
-> [    0.000000] Kernel command line: root=/dev/vda rw
-> earlycon=uart8250,mmio,0x10000000,115200n8 console=ttyS0
-> [    0.000000] Dentry cache hash table entries: 1024 (order: 1, 8192
-> bytes, linear)
-> [    0.000000] Inode-cache hash table entries: 512 (order: 0, 4096
-> bytes, linear)
-> [    0.000000] Sorting __ex_table...
-> [    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-> [    0.000000] Memory: 6016K/8192K available (1283K kernel code, 138K
-> rwdata, 200K rodata, 106K init, 133K bss, 2176K reserved, 0K
-> cma-reserved)
-> [    0.000000] rcu: Hierarchical RCU implementation.
-> [    0.000000] rcu:     RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=4.
-> [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay
-> is 25 jiffies.
-> [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4
-> [    0.000000] NR_IRQS: 64, nr_irqs: 64, preallocated irqs: 0
-> [    0.000000] riscv-intc: 64 local interrupts mapped
-> [    0.000000] plic: plic@c000000: mapped 53 interrupts with 4
-> handlers for 8 contexts.
-> [    0.000000] random: get_random_bytes called from 0x00000000800019b4
-> with crng_init=0
-> [    0.000000] clint: clint@2000000: timer running at 10000000 Hz
-> [    0.000000] clocksource: clint_clocksource: mask:
-> 0xffffffffffffffff max_cycles: 0x24e6a1710, max_idle_ns: 440795202120
-> ns
-> [    0.000212] sched_clock: 64 bits at 10MHz, resolution 100ns, wraps
-> every 4398046511100ns
-> [    0.016835] Console: colour dummy device 80x25
-> [    0.034899] Calibrating delay loop (skipped), value calculated
-> using timer frequency.. 20.00 BogoMIPS (lpj=40000)
-> [    0.050107] pid_max: default: 4096 minimum: 301
-> [    0.051951] Mount-cache hash table entries: 512 (order: 0, 4096
-> bytes, linear)
-> [    0.052711] Mountpoint-cache hash table entries: 512 (order: 0,
-> 4096 bytes, linear)
-> [    0.151318] rcu: Hierarchical SRCU implementation.
-> [    0.158697] smp: Bringing up secondary CPUs ...
-> [    0.213140] smp: Brought up 1 node, 4 CPUs
-> [    0.245903] devtmpfs: initialized
-> [    0.262757] clocksource: jiffies: mask: 0xffffffff max_cycles:
-> 0xffffffff, max_idle_ns: 7645041785100000 ns
-> [    0.264822] futex hash table entries: 16 (order: -2, 1024 bytes, linear)
-> [    0.413555] clocksource: Switched to clocksource clint_clocksource
-> [    0.580364] workingset: timestamp_bits=62 max_order=11 bucket_order=0
-> [    0.589640] Serial: 8250/16550 driver, 1 ports, IRQ sharing disabled
-> [    0.604478] printk: console [ttyS0] disabled
-> [    0.611025] 10000000.uart: ttyS0 at MMIO 0x10000000 (irq = 2,
-> base_baud = 230400) is a 16550A
-> [    0.621897] printk: console [ttyS0] enabled
-> [    0.621897] printk: console [ttyS0] enabled
-> [    0.622997] printk: bootconsole [uart8250] disabled
-> [    0.622997] printk: bootconsole [uart8250] disabled
-> [    0.646964] syscon-poweroff soc:poweroff: pm_power_off already
-> claimed (____ptrval____)
-> [    0.648264] syscon-poweroff: probe of soc:poweroff failed with error -16
-> [    0.677403] VFS: Cannot open root device "vda" or
-> unknown-block(0,0): error -6
-> [    0.679474] Please append a correct "root=" boot option; here are
-> the available partitions:
-> [    0.682862] Kernel panic - not syncing: VFS: Unable to mount root
-> fs on unknown-block(0,0)
-> 
-> Regards,
-> Anup
----end quoted text---
+Unless there are other comments around this patchset (and I hope to
+read through the remaining ones today), then I don't consider it a
+blocker, but we can probably do better as and when we add the next
+threshold for 4k60.
+My current understanding is that the clock has to be an integer divide
+of 600MHz, and at least the pixel rate / 2, so the only link to HSM is
+due to HSM being 101% of pixel rate, but I will try to find
+confirmation of that.
+
+>
+>  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+>  {
+> @@ -344,6 +345,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
+>         HDMI_WRITE(HDMI_VID_CTL,
+>                    HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+>
+> +       clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
+>         clk_disable_unprepare(vc4_hdmi->hsm_clock);
+>         clk_disable_unprepare(vc4_hdmi->pixel_clock);
+>
+> @@ -516,6 +518,27 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
+>                 return;
+>         }
+>
+> +       /*
+> +        * FIXME: When the pixel freq is 594MHz (4k60), this needs to be setup
+> +        * at 150MHz.
+> +        */
+
+Typo here. For 4k60 we need 300MHz (pixel clock / 2)
+
+Otherwise
+Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+> +       ret = clk_set_min_rate(vc4_hdmi->pixel_bvb_clock,
+> +                              (hsm_rate > VC4_HSM_MID_CLOCK ? 150000000 : 75000000));
+> +       if (ret) {
+> +               DRM_ERROR("Failed to set pixel bvb clock rate: %d\n", ret);
+> +               clk_disable_unprepare(vc4_hdmi->hsm_clock);
+> +               clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> +               return;
+> +       }
+> +
+> +       ret = clk_prepare_enable(vc4_hdmi->pixel_bvb_clock);
+> +       if (ret) {
+> +               DRM_ERROR("Failed to turn on pixel bvb clock: %d\n", ret);
+> +               clk_disable_unprepare(vc4_hdmi->hsm_clock);
+> +               clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> +               return;
+> +       }
+> +
+>         if (vc4_hdmi->variant->reset)
+>                 vc4_hdmi->variant->reset(vc4_hdmi);
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> index 34138e0dd4a6..59639b405b7f 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
+> @@ -119,6 +119,7 @@ struct vc4_hdmi {
+>         struct clk *pixel_clock;
+>         struct clk *hsm_clock;
+>         struct clk *audio_clock;
+> +       struct clk *pixel_bvb_clock;
+>
+>         struct debugfs_regset32 hdmi_regset;
+>         struct debugfs_regset32 hd_regset;
+> --
+> git-series 0.9.1
