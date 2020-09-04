@@ -2,189 +2,119 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AB4C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F916C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31C6D206B8
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:25:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229552;
-	bh=Z43hsJRsfSylTDdOsmfHse5zoUozD+qAvb/fuNHvOm8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N6MfE02o7oyoRsuECtRLjGdB+YAbGDf9ddKU6VBfxV5KlpHLU4QLjfnooB+UVfa0c
-	 EoqNxpAKW7eLUAe6A/A/f09ZWXREXv7/Dxu68b0izTweCjUhAhW0HVc/XdxQyzuaNO
-	 iykgFWFGcfETrBHCSyrF93YkucGkku/I/4MT1A6M=
+	by mail.kernel.org (Postfix) with ESMTP id 6EA4A20829
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Rn5qthIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgIDOZv (ORCPT
+        id S1730716AbgIDO0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:25:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730465AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:34:23 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AD2B2100A;
-        Fri,  4 Sep 2020 13:30:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226252;
-        bh=Z43hsJRsfSylTDdOsmfHse5zoUozD+qAvb/fuNHvOm8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zrXGU7JARtDotpczgh8kMNxCGYRTzDxN4nxc00ntZqTKikmXE44MaalT2Su91j7N4
-         TYealU5OZUHRdsbhrB256xiDwn3RPvftLYaGorIy9Ognv3kg97AaGeLThg6ilSjwwE
-         YMQhDNVitR3NKOQcAHqTJ5dZNMbFGY+LJQ+L54lk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Subject: [PATCH 5.8 02/17] HID: core: Sanitize event code and type when mapping input
-Date:   Fri,  4 Sep 2020 15:30:01 +0200
-Message-Id: <20200904120258.098166396@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
-References: <20200904120257.983551609@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 4 Sep 2020 10:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730457AbgIDOZp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:25:45 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BACC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:25:40 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id q21so6321803edv.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:25:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jyk7CHt5bTCTjZ7EhyIfL9NYG87K4gl68GKaA7iV2V8=;
+        b=Rn5qthIaDvzwFjhhXEEk9a0ckRXKPetzFqHyFCMSmJ8zIntPq6DN7Qn7EtPUyngR88
+         P37FqKENw04smcg+k9HBl5GLKyWbcT/iAUwsfDhYSu7W7AtDe1TZun8rfsn8cG+bt5sv
+         1i7gjuvUAy1R2X4bP9OfI81neqhAnC0xzBFiwUWDP24/RsAmAv1JbpEaRiGfgotjcXSj
+         xR4WwaDN/ER7jmjn/h7goGDrIZPJyaY/dpwrNAz+mBp4B5YtxP3NgUn2ryJydxuq23Lz
+         NgKdCMrPRcpkychU0PnC3S9UTrm6aDG7cE287ILgfjMDaZBy1AGTqyZhsUhxKyWnGapx
+         BsCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jyk7CHt5bTCTjZ7EhyIfL9NYG87K4gl68GKaA7iV2V8=;
+        b=A67hee8WgQz9IOiRZetzw5EMAIAfrGwZNpG7JbVCthY2KyrPWTDjoidpGNjH4qWC/t
+         LNktWYRCngdug/dC24d6b/GCjnNXx/npQGtWMeJ3ift4k520MknD9AhbMKHRQu4AyRW+
+         VImXzWBXxcP/KQxpUQtzTuySW4AG9jmll7hBc4x8kHM9T1LgmIjPCV69CmjOeMuGsd1v
+         pKlm+7d1W8ZtIxG5pFUI462+d0Y+CLNw/UqeyOiBBdoriFINce/8zfS0otbxhy6sBn0v
+         x7ZEBAriF6UTLvhdGlWWWtIYVWw80F5pPp+f//nB/J6rRPEDxln+mftKna0s4eaw9+QZ
+         AChg==
+X-Gm-Message-State: AOAM531JNhPTNphAhQ35yDh0NMSepolctYkTXxBveUF/o5Db5dlez0Is
+        IPuUFaf4FQ3OQSXJhkbTX8k9ohpTGSCQUBRftRcVdw==
+X-Google-Smtp-Source: ABdhPJysfnaP8HEjzDvtjD+Y2aV+Obj8YyKPtfutRyAPfLvQQAnyIsL4ylug10Xad5ayI7NRXdv4tos0CdWBQRLsepY=
+X-Received: by 2002:a05:6402:1544:: with SMTP id p4mr8572340edx.346.1599229538615;
+ Fri, 04 Sep 2020 07:25:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
+ <20200902140851.GJ4617@dhcp22.suse.cz> <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
+ <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz> <20200902151306.GL4617@dhcp22.suse.cz>
+ <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz> <20200903063806.GM4617@dhcp22.suse.cz>
+ <c6b11905-2456-52a0-3b15-d4ceae6e7f54@redhat.com> <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
+ <d89510b1-a6a2-a874-7ffc-ba7a37d4212d@redhat.com> <20200904070235.GA15277@dhcp22.suse.cz>
+In-Reply-To: <20200904070235.GA15277@dhcp22.suse.cz>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 4 Sep 2020 10:25:02 -0400
+Message-ID: <CA+CK2bDON8A5AmKqPFWOytP-B29U-YAc9maQAvV-oGffaek6Yg@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+> Another alternative would be to enable/disable static branch only from
+> users who really care but this is quite tricky because how do you tell
+> you need or not? It seems that alloc_contig_range would be just fine
+> with a weaker semantic because it would "only" to a spurious failure.
+> Memory hotplug on the other hand really needs to have a point where
+> nobody interferes with the offlined memory so it could ask for a
+> stronger semantic.
+>
+> Yet another option would be to make draining stronger and actually
+> guarantee there are no in-flight pages to be freed to the pcp list.
+> One way would be to tweak pcp->high and implement a strong barrier
+> (IPI?) to sync with all CPUs. Quite expensive, especially when there are
+> many draining requests (read cma users because hotplug doesn't really
+> matter much as it happens seldom).
+>
+> So no nice&cheap solution I can think of...
 
-commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
+I think start_isolate_page_range() should not be doing page draining
+at all. It should isolate ranges, meaning set appropriate flags, but
+draining should be performed by the users when appropriate: next to
+lru_add_drain_all() calls both in CMA and hotplug.
+Currently, the way start_isolate_page_range() drains pages is very
+inefficient. It calls drain_all_pages() for every valid page block,
+which is a slow call as it starts a thread per cpu, and waits for
+those threads to finish before returning.
 
-When calling into hid_map_usage(), the passed event code is
-blindly stored as is, even if it doesn't fit in the associated bitmap.
+We could optimize by moving the drain_all_pages() calls from
+set_migratetype_isolate() to start_isolate_page_range() and call it
+once for every different zone, but both current users of this
+interface guarantee that all pfns [start_pfn, end_pfn] are within the
+same zone, and I think we should keep it this way, so again the extra
+traversal is going to be overhead overhead.
 
-This event code can come from a variety of sources, including devices
-masquerading as input devices, only a bit more "programmable".
+This way we will have on average only a single drain per hot-remove
+(instead of one per block), and also it is going to be symmetric only
+in one place. Faster hot-remove and cma alloc, and no race, imo
+win-win.
 
-Instead of taking the event code at face value, check that it actually
-fits the corresponding bitmap, and if it doesn't:
-- spit out a warning so that we know which device is acting up
-- NULLify the bitmap pointer so that we catch unexpected uses
-
-Code paths that can make use of untrusted inputs can now check
-that the mapping was indeed correct and bail out if not.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/hid/hid-input.c      |    4 ++++
- drivers/hid/hid-multitouch.c |    2 ++
- include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
- 3 files changed, 35 insertions(+), 13 deletions(-)
-
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(str
- 	}
- 
- mapped:
-+	/* Mapping failed, bail out */
-+	if (!bit)
-+		return;
-+
- 	if (device->driver->input_mapped &&
- 	    device->driver->input_mapped(device, hidinput, field, usage,
- 					 &bit, &max) < 0) {
---- a/drivers/hid/hid-multitouch.c
-+++ b/drivers/hid/hid-multitouch.c
-@@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct
- 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
- 
- 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
-+		if (!*bit)
-+			return -1;
- 		input_set_capability(hi->input, EV_KEY, code);
- 		return 1;
- 
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -959,34 +959,49 @@ static inline void hid_device_io_stop(st
-  * @max: maximal valid usage->code to consider later (out parameter)
-  * @type: input event type (EV_KEY, EV_REL, ...)
-  * @c: code which corresponds to this usage and type
-+ *
-+ * The value pointed to by @bit will be set to NULL if either @type is
-+ * an unhandled event type, or if @c is out of range for @type. This
-+ * can be used as an error condition.
-  */
- static inline void hid_map_usage(struct hid_input *hidinput,
- 		struct hid_usage *usage, unsigned long **bit, int *max,
--		__u8 type, __u16 c)
-+		__u8 type, unsigned int c)
- {
- 	struct input_dev *input = hidinput->input;
--
--	usage->type = type;
--	usage->code = c;
-+	unsigned long *bmap = NULL;
-+	unsigned int limit = 0;
- 
- 	switch (type) {
- 	case EV_ABS:
--		*bit = input->absbit;
--		*max = ABS_MAX;
-+		bmap = input->absbit;
-+		limit = ABS_MAX;
- 		break;
- 	case EV_REL:
--		*bit = input->relbit;
--		*max = REL_MAX;
-+		bmap = input->relbit;
-+		limit = REL_MAX;
- 		break;
- 	case EV_KEY:
--		*bit = input->keybit;
--		*max = KEY_MAX;
-+		bmap = input->keybit;
-+		limit = KEY_MAX;
- 		break;
- 	case EV_LED:
--		*bit = input->ledbit;
--		*max = LED_MAX;
-+		bmap = input->ledbit;
-+		limit = LED_MAX;
- 		break;
- 	}
-+
-+	if (unlikely(c > limit || !bmap)) {
-+		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
-+				    input->name, c, type);
-+		*bit = NULL;
-+		return;
-+	}
-+
-+	usage->type = type;
-+	usage->code = c;
-+	*max = limit;
-+	*bit = bmap;
- }
- 
- /**
-@@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(s
- 		__u8 type, __u16 c)
- {
- 	hid_map_usage(hidinput, usage, bit, max, type, c);
--	clear_bit(c, *bit);
-+	if (*bit)
-+		clear_bit(usage->code, *bit);
- }
- 
- /**
-
-
+Pasha
