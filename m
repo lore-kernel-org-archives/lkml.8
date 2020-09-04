@@ -2,64 +2,132 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127EBC2D0E1
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42F7C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACC732083B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A698D2083B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599226629;
+	bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UN2S3wFzob9ixLhpZwyyn6SOfwt7Auv5PGpqXdH9vtTjhXZAJpwnPZtWuMHHSY0z+
+	 Rp006hRcdHb9I2QFcL0ydmmB3GLjRn6C/EXDbHMxe9k+ReMYyWzziGG1tmpOjXCO51
+	 +jdzlzHqwiDPZDfSYiphF3uffsYGKbhwclP/utBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbgIDNeq (ORCPT
+        id S1730524AbgIDNhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:34:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59172 "EHLO mx2.suse.de"
+        Fri, 4 Sep 2020 09:37:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730443AbgIDNaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:30:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C7267AC19;
-        Fri,  4 Sep 2020 13:29:33 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 15:30:01 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Cc:     ltp@lists.linux.it,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        id S1730432AbgIDNaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:30:21 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24BB82078E;
+        Fri,  4 Sep 2020 13:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599226198;
+        bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eyxmaTQRaRvmE1DflhLk+UWc4eGgd/SgLFju+/Tw2yhO+37p/U5K4OSPkFgR1xD3O
+         V68ZA4PepjRflEJO+bRnuieFACMxbJTClN7MfM0lnAw7DR5D/8u+UPbwIyjLJ7KKdL
+         iB/eDPeJIy3fN191T3to8RMJUYJaRqzajxkXyHEw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Clarke <pc@us.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, lkp@lists.01.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [LTP] [PATCH] syscall/ptrace08: Simplify the test.
-Message-ID: <20200904133001.GA9091@yuki.lan>
-References: <20200904115817.8024-1-chrubis@suse.cz>
- <20200904132121.GE4768@mussarela>
+        Stephane Eranian <eranian@google.com>,
+        Tony Jones <tonyj@suse.de>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 03/16] perf record/stat: Explicitly call out event modifiers in the documentation
+Date:   Fri,  4 Sep 2020 15:29:56 +0200
+Message-Id: <20200904120257.376680744@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
+References: <20200904120257.203708503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904132121.GE4768@mussarela>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
-> This is failing on our 4.4 and 4.15 kernels, though they passed with the
-> previous test and have commit f67b15037a7a applied.
-> 
-> So, this is dependent on some other behavior/commit that has changed. It passes
-> on 5.4, for example. I'll try to investigate further.
+From: Kim Phillips <kim.phillips@amd.com>
 
-We are looking at it now in SUSE, looks like the initial fix to the
-kernel postponed the check to the write to the dr7 that enabled the
-breakpoint, so when the dr0 wasn't enabled you could write anything
-there.
+commit e48a73a312ebf19cc3d72aa74985db25c30757c1 upstream.
 
-Also looks like somehow the EINVAL is not propagated into the POKEUSER
-call to the dr7 as it should have been.
+Event modifiers are not mentioned in the perf record or perf stat
+manpages.  Add them to orient new users more effectively by pointing
+them to the perf list manpage for details.
 
--- 
-Cyril Hrubis
-chrubis@suse.cz
+Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paul Clarke <pc@us.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tony Jones <tonyj@suse.de>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200901215853.276234-1-kim.phillips@amd.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ tools/perf/Documentation/perf-record.txt |    4 ++++
+ tools/perf/Documentation/perf-stat.txt   |    4 ++++
+ 2 files changed, 8 insertions(+)
+
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -33,6 +33,10 @@ OPTIONS
+         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+ 	  hexadecimal event descriptor.
+ 
++        - a symbolic or raw PMU event followed by an optional colon
++	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
++	  linkperf:perf-list[1] man page for details on event modifiers.
++
+ 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
+ 	  'param1', 'param2', etc are defined as formats for the PMU in
+ 	  /sys/bus/event_source/devices/<pmu>/format/*.
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -39,6 +39,10 @@ report::
+ 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
+ 	  hexadecimal event descriptor.
+ 
++        - a symbolic or raw PMU event followed by an optional colon
++	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
++	  linkperf:perf-list[1] man page for details on event modifiers.
++
+ 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
+ 	  param1 and param2 are defined as formats for the PMU in
+ 	  /sys/bus/event_source/devices/<pmu>/format/*
+
+
