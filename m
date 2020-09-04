@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A55FC2D0E3
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D42C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 515562074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33ED2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599233162;
-	bh=rOlkyLq/MJZ1DAenvWhfuxACksm2nB3ySP8n+l1ST3Y=;
+	s=default; t=1599233166;
+	bh=Pq6AMCutClAdC1MVlFH4CnQL+gGmRAYhCy6R3i2GV1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i7VG65z/inr0t+28ZTjCmDgh6FQbI9eNDOS6BOH6EMA6AQmVCux+HBteBuYyZhh1l
-	 kNOEE1WUPfqfsSIHGjmDtK5LHWJXPWSRUxXIOpyOuCvn+G9S/ptXg7VUE3IMmCPP8Q
-	 4bngX/gVV+xgFeFBe8dN80A6UYcWHMyiNKOsPpt4=
+	b=KsQh6DsGsc9IwCD/pgHj5Dnq+H/V9UYQa14+JKdkXeL+odfQOnFVXw5JqCqQ1MiVY
+	 5jBMvdgueDIdIG+sdzngJNqScGS2NPf/eYAHDa5itbs2ubgXk3vF/rhGukHn6jsog4
+	 lmVSsnC8JlyQvkkqoVb5EeRSBWATJuDNNgEihe8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbgIDP0B (ORCPT
+        id S1731109AbgIDP0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:26:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33924 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 11:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731025AbgIDPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:25:10 -0400
+        id S1730476AbgIDPZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:25:01 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F855207EA;
-        Fri,  4 Sep 2020 15:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942D02074D;
+        Fri,  4 Sep 2020 15:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599233109;
-        bh=rOlkyLq/MJZ1DAenvWhfuxACksm2nB3ySP8n+l1ST3Y=;
+        s=default; t=1599233100;
+        bh=Pq6AMCutClAdC1MVlFH4CnQL+gGmRAYhCy6R3i2GV1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PaqVKv+51CMd2e9jRYvN5mgOE1tx7YFjPJhMSEGmg2XQ3ymKdZ66xjmWr5W96AsNt
-         Sbp14LlTgVHVTrIkUavHwuloFSKQ9BRKfxRR3HfhdVUcWfFWEdsI2H+I0PoII5XAdD
-         SVG53WgpDzJUZak63DFMEuU0uXbaXBR35ZNkTiXQ=
+        b=pjis33CzlE4L8H5Hnvz2sDPU+++Cix7kCoiPDA0FaQM0iuGrWZ141pW18vBqPfqaT
+         Umi3jXeYOqFfHssMDCjdXC2mY1bme+uWigxNZiQQXnN/iI1NQK5KMKoaigEUqADwJK
+         6PFcpRACCzgdaObvVFzjEiaKq6yu/d9JATDLwVWQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -54,9 +54,9 @@ Cc:     Michael Turquette <mturquette@baylibre.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Guenter Roeck <linux@roeck-us.net>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v3 11/14] dt-bindings: mtd: gpmi-nand: Add i.MX 8M compatibles
-Date:   Fri,  4 Sep 2020 17:24:01 +0200
-Message-Id: <20200904152404.20636-12-krzk@kernel.org>
+Subject: [PATCH v3 09/14] dt-bindings: mfd: rohm,bd71847-pmic: Correct clock properties requirements
+Date:   Fri,  4 Sep 2020 17:23:59 +0200
+Message-Id: <20200904152404.20636-10-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200904152404.20636-1-krzk@kernel.org>
 References: <20200904152404.20636-1-krzk@kernel.org>
@@ -65,54 +65,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
-to fix dtbs_check warnings like:
+The input clock and number of clock provider cells are not required for
+the PMIC to operate.  They are needed only for the optional bd718x7
+clock driver.
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible:0: 'fsl,imx8mm-gpmi-nand' is not one of ['fsl,imx23-gpmi-nand', 'fsl,imx28-gpmi-nand', 'fsl,imx6q-gpmi-nand', 'fsl,imx6sx-gpmi-nand', 'fsl,imx7d-gpmi-nand']
-    From schema: Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
+Add also clock-output-names as driver takes use of it.
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible: ['fsl,imx8mm-gpmi-nand', 'fsl,imx7d-gpmi-nand'] is too long
+This fixes dtbs_check warnings like:
 
-  arch/arm64/boot/dts/freescale/imx8mm-evk.dt.yaml: nand-controller@33002000:
-    compatible: Additional items are not allowed ('fsl,imx7d-gpmi-nand' was unexpected)
+    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: 'clocks' is a required property
+    arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dt.yaml: pmic@4b: '#clock-cells' is a required property
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- .../devicetree/bindings/mtd/gpmi-nand.yaml     | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/mfd/rohm,bd71847-pmic.yaml       | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-index 3201372b7f85..28ff8c581837 100644
---- a/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-+++ b/Documentation/devicetree/bindings/mtd/gpmi-nand.yaml
-@@ -20,12 +20,18 @@ description: |
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+index 77bcca2d414f..5d531051a153 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd71847-pmic.yaml
+@@ -38,6 +38,9 @@ properties:
+   "#clock-cells":
+     const: 0
  
- properties:
-   compatible:
--    enum:
--      - fsl,imx23-gpmi-nand
--      - fsl,imx28-gpmi-nand
--      - fsl,imx6q-gpmi-nand
--      - fsl,imx6sx-gpmi-nand
--      - fsl,imx7d-gpmi-nand
-+    oneOf:
-+      - enum:
-+          - fsl,imx23-gpmi-nand
-+          - fsl,imx28-gpmi-nand
-+          - fsl,imx6q-gpmi-nand
-+          - fsl,imx6sx-gpmi-nand
-+          - fsl,imx7d-gpmi-nand
-+      - items:
-+          - enum:
-+              - fsl,imx8mm-gpmi-nand
-+              - fsl,imx8mn-gpmi-nand
-+          - const: fsl,imx7d-gpmi-nand
++  clock-output-names:
++    maxItems: 1
++
+ # The BD71847 abd BD71850 support two different HW states as reset target
+ # states. States are called as SNVS and READY. At READY state all the PMIC
+ # power outputs go down and OTP is reload. At the SNVS state all other logic
+@@ -116,12 +119,14 @@ required:
+   - compatible
+   - reg
+   - interrupts
+-  - clocks
+-  - "#clock-cells"
+   - regulators
  
-   reg:
-     items:
+ additionalProperties: false
+ 
++dependencies:
++  '#clock-cells': [clocks]
++  clocks: ['#clock-cells']
++
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/irq.h>
 -- 
 2.17.1
 
