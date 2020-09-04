@@ -2,90 +2,81 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4AFC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C2C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B55D2084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 728362084D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 11:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbgIDL6f (ORCPT
+        id S1730155AbgIDL6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 07:58:35 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:38531 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726171AbgIDL62 (ORCPT
+        Fri, 4 Sep 2020 07:58:42 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27037 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730110AbgIDL6d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 07:58:28 -0400
-Received: by mail-oo1-f68.google.com with SMTP id r10so117670oor.5;
-        Fri, 04 Sep 2020 04:58:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C9tCEIkRGQnaztUyMojleGF3hkNEd1n8iupS20opO6o=;
-        b=h5oN929J5JNGRTmPlSOxYO2B454CW6n4f700rAoCQVTdg+LLTeCqWO00QnTKg7SzUl
-         GoS9HjRgZSOjABC7ccfRPJ6N8WjCy6mz+BGKampDbVIwpi9SL72qQAiJJnb4WutrVf7r
-         YUBAX0FSS/qmK5fimEHLJoJYxFx+DVx8/Sdehs9UGv8dRXvWCLW/fqHqLz71BKXasksA
-         NcrKD8XlA8vw4RjuqsOvUFZEFys9KI4yEiQc9KD3R3hDLst3MBEl4y7Zarskz7phidqt
-         7il3I1YtrG4A1T8+9uRL6oXPV4jRvKJssqSY3WFznLNlhipJ7VEhqoWUCBeac9Xbf6nf
-         BsIQ==
-X-Gm-Message-State: AOAM532sArEUnlkrWFm0DB5sH98CWQVW/yzzdOCz28naBdhHrNww0uwo
-        PKg3xHQ7fdykQBwrEVlrkciyYDMr4eRPYx1e40E=
-X-Google-Smtp-Source: ABdhPJyIzaQmNZ7IdOnSLRQ7vsc5EVSjIxYs25WB+EnmqwRm8oqhovoYW7RqbPoq1qtt2EAxQHHzr+4JEP/OmKaFHZ0=
-X-Received: by 2002:a4a:4201:: with SMTP id h1mr5484812ooj.1.1599220707324;
- Fri, 04 Sep 2020 04:58:27 -0700 (PDT)
+        Fri, 4 Sep 2020 07:58:33 -0400
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-0fypSvtTPzuBU8yy6NCR7w-1; Fri, 04 Sep 2020 07:58:28 -0400
+X-MC-Unique: 0fypSvtTPzuBU8yy6NCR7w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E773873085;
+        Fri,  4 Sep 2020 11:58:27 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87BF95D9CC;
+        Fri,  4 Sep 2020 11:58:27 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 7B26D79DA2;
+        Fri,  4 Sep 2020 11:58:27 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 07:58:27 -0400 (EDT)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <1368247890.15496631.1599220707457.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200904115048.GA2964117@kroah.com>
+References: <20200811150129.53343-1-vdronov@redhat.com> <20200904114207.375220-1-vdronov@redhat.com> <20200904115048.GA2964117@kroah.com>
+Subject: Re: [PATCH] debugfs: Fix module state check condition
 MIME-Version: 1.0
-References: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200904103851.3946-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200904103851.3946-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 4 Sep 2020 13:58:16 +0200
-Message-ID: <CAMuHMdWuQzPAPi46FEF2yzQww=6rbX469fQFm3X0XaGnBSzfMQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3] misc: pci_endpoint_test: Add Device ID for RZ/G2H
- PCIe controller
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.208.51, 10.4.195.2]
+Thread-Topic: debugfs: Fix module state check condition
+Thread-Index: e5aKqC+SWN99YQvQqyZUd2FQT/pMlQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 12:40 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add Renesas R8A774E1 in pci_device_id table so that pci-epf-test
-> can be used for testing PCIe EP on RZ/G2H.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+Hello, Greg, all,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+----- Original Message -----
+> From: "Greg KH" <gregkh@linuxfoundation.org>
+> Subject: Re: [PATCH] debugfs: Fix module state check condition
+> 
+...skip...
+> 
+> It's in my queue, but bugs you can only trigger while root are a bit
+> lower on the priority list :)
 
-Gr{oetje,eeting}s,
+Oh, apologies. I really thought this has been somehow lost/slipped.
+Thank you for the reply and a confirmation.
 
-                        Geert
+/me stops bothering people.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> thanks,
+> 
+> greg k-h
+> 
+> 
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Vladis
+
