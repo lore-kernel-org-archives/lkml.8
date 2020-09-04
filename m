@@ -2,101 +2,120 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9625DC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:39:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148F8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F8420770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:39:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6E3C206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599234032;
+	bh=UAR/0+WFmx8OVQKEUwR8M1ofPElVR/g3UzxICkFCKa4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Ws968hq3MdtkRmcowQ080LFBKUT7ZywFJ/aWiuyOuK9TtqoMoSzJQpvG2lI/1wqb4
+	 JJCziFSD7r/gOt8X76VwEq6+YR7FlBAJ6nhQbxKS7LD+oBnGhHZ2q3Fj9u6wu3NI+d
+	 nG42QEIuHMhAlBBUajxtfTSdEPuOiMW9FVMYGDWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgIDPjR (ORCPT
+        id S1726437AbgIDPk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:39:17 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56707 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725984AbgIDPjQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:39:16 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 5FF9F60012;
-        Fri,  4 Sep 2020 15:39:13 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 17:39:13 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 5/8] rtc: rx8010: don't use magic values for time buffer
- length
-Message-ID: <20200904153913.GK230586@piout.net>
-References: <20200904152116.2157-1-brgl@bgdev.pl>
- <20200904152116.2157-6-brgl@bgdev.pl>
+        Fri, 4 Sep 2020 11:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725984AbgIDPkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:40:21 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35A32083B;
+        Fri,  4 Sep 2020 15:40:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599234021;
+        bh=UAR/0+WFmx8OVQKEUwR8M1ofPElVR/g3UzxICkFCKa4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XXSyBms+Ca+wqhd/Owwo8OB3AEqdJWufDnkclusdhZfyjyemCCzGb13/xxFFrb9TD
+         Fe96Rax76Q56c9WfwykrKBT9XDVkIp+LJNE1A3HJW3e5Ve5rg1S7AFxQF0nnVf9tq6
+         xFmAvBOpL4zY2mpE9zoyOI4e+QYjjAPUaNrXVOZ8=
+Received: by mail-ot1-f49.google.com with SMTP id i4so6269733ota.2;
+        Fri, 04 Sep 2020 08:40:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533cl7hIIW55Xh1k5dF2U3zMZ1cy/IJ7R5K1wT6K8ISZ/4HiIwbd
+        TzCCfHALMjZ3x2qKG+d4sWQQOO9rqaoYadqqEw==
+X-Google-Smtp-Source: ABdhPJw1oaweJSOxp/Hs5WNuevPNIBfXtJv/Gk75Q/8Ya70E8+SBi0EbnW3JC3c/w3BVO1X3ug9F5KaKGeMyOUtsdss=
+X-Received: by 2002:a9d:6b0d:: with SMTP id g13mr5930304otp.129.1599234019987;
+ Fri, 04 Sep 2020 08:40:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904152116.2157-6-brgl@bgdev.pl>
+References: <20200830185356.5365-1-digetx@gmail.com> <20200830185356.5365-2-digetx@gmail.com>
+ <20200903161022.GA2707794@bogus> <790dbb23-7422-887a-3f11-5ae55bb916fa@gmail.com>
+In-Reply-To: <790dbb23-7422-887a-3f11-5ae55bb916fa@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 4 Sep 2020 09:40:07 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Ue72jJ9gurcG0f_R+gGVC77dErhgbKpB_p40buUewLg@mail.gmail.com>
+Message-ID: <CAL_Jsq+Ue72jJ9gurcG0f_R+gGVC77dErhgbKpB_p40buUewLg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: mfd: Add ENE KB930 Embedded
+ Controller binding
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/09/2020 17:21:13+0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The time buffer len is used directly in this driver. For readability
-> it's better to define a constant.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/rtc/rtc-rx8010.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-rx8010.c b/drivers/rtc/rtc-rx8010.c
-> index 67ff06a76629..f3bed7be2533 100644
-> --- a/drivers/rtc/rtc-rx8010.c
-> +++ b/drivers/rtc/rtc-rx8010.c
-> @@ -48,6 +48,8 @@
->  
->  #define RX8010_ALARM_AE		BIT(7)
->  
-> +#define RX8010_TIME_BUF_LEN	7
-> +
->  static const struct i2c_device_id rx8010_id[] = {
->  	{ "rx8010", 0 },
->  	{ }
-> @@ -108,7 +110,7 @@ static irqreturn_t rx8010_irq_1_handler(int irq, void *dev_id)
->  static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
->  {
->  	struct rx8010_data *rx8010 = dev_get_drvdata(dev);
-> -	u8 date[7];
+On Fri, Sep 4, 2020 at 6:07 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> 03.09.2020 19:10, Rob Herring =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Sun, 30 Aug 2020 21:53:51 +0300, Dmitry Osipenko wrote:
+> >> Add binding document for the ENE KB930 Embedded Controller.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 ++++++++++++++++++=
++
+> >>  1 file changed, 66 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.ya=
+ml
+> >>
+> >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/mf=
+d/ene-kb930.example.dt.yaml: battery-cell: 'operating-range-celsius' does n=
+ot match any of the regexes: '^ocv-capacity-table-[0-9]+$', 'pinctrl-[0-9]+=
+'
+> >       From schema: /builds/robherring/linux-dt-review/Documentation/dev=
+icetree/bindings/power/supply/battery.yaml
+> >
+> >
+> > See https://patchwork.ozlabs.org/patch/1354004
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure dt-schema is up to date:
+> >
+> > pip3 install git+https://github.com/devicetree-org/dt-schema.git@master=
+ --upgrade
+> >
+> > Please check and re-submit.
+> >
+>
+> Apparently bot uses outdated kernel.
 
-I'm usually fine with a magic value here...
+It's on v5.9-rc2. The scripts don't know your base/dependencies and
+neither did I because you didn't mention anything here. I do review
+the errors before spamming people.
 
-> +	u8 date[RX8010_TIME_BUF_LEN];
->  	int flagreg, err;
->  
->  	flagreg = i2c_smbus_read_byte_data(rx8010->client, RX8010_FLAG);
-> @@ -121,8 +123,8 @@ static int rx8010_get_time(struct device *dev, struct rtc_time *dt)
->  	}
->  
->  	err = i2c_smbus_read_i2c_block_data(rx8010->client, RX8010_SEC,
-> -					    7, date);
-> -	if (err != 7)
-> +					    RX8010_TIME_BUF_LEN, date);
-
-..as long as sizeof(date) is used here.
-
-Even better, you could have date[RX8010_YEAR - RX8010_SEC + 1] and then
-use sizeof. Or also have #define RX8010_TIME_BUF_LEN (RX8010_YEAR -
-RX8010_SEC + 1) which would be safer than 7.
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Rob
