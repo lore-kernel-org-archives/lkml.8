@@ -2,212 +2,220 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:31:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C879BC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC54206D4
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:31:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 982E8206D4
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 03:34:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ONq6z4Rt"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dZ2s5aka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgIDDb3 (ORCPT
+        id S1729688AbgIDDe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 23:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbgIDDbZ (ORCPT
+        Thu, 3 Sep 2020 23:34:57 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32760 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729580AbgIDDey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 23:31:25 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F13BC061244;
-        Thu,  3 Sep 2020 20:31:25 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id p65so3719521qtd.2;
-        Thu, 03 Sep 2020 20:31:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3XehbrPYRfRYUCZ13XbEG2FB/0APg52ndRCkIBeff8I=;
-        b=ONq6z4Rtfr0mqoWNUDNn+uiJu/F+nB1j+lmTZFPOdzJ7EpSBlW4+65Y7KPrNzNTay+
-         L5+LAWRClVwkgBUxOYeGSO8zkwt96J4HUJjwkncvE/n6ol5H3F7HDFyU4+aV0AR8VA82
-         yvqbmTQX+v1nwTupWaHZa/6j3zExUKUoe4RY4oMz8spi5rVwpi6ADoyWRaEeUgaaqu+/
-         RsbDlEZYmjYDx+1DREDmMMJrTn7WYguJIpnjaCecemakWAjyMDrZG8XvYhDOg+5GFKTb
-         lTaFe88KhamycwheHl/TEYf7tXmhEJjGkx2NEeXkHJ3WJ4wZl9DUMCKhMR3ADtyF8an2
-         GdRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3XehbrPYRfRYUCZ13XbEG2FB/0APg52ndRCkIBeff8I=;
-        b=lQOlvFFTzlEi+5xaRPtrbWDNkPZoSx2fg4pSyce0xgmnsnV89Kxs9+eZ0yiccY3w5j
-         dz/nngjWHxAhiQWw2AoYTsnPBV9nIAGr+NHXABIsqbLAZku7ymRWC4kbts9MZ/wdHl10
-         BjpWK7XL8ZwwiWH8qy5B8HA+29PUraQzzJK6UeFnO1rNudV743oyKtVWxmpZAIMntjYM
-         M/lI4Xbg/81APRW2muuT77qSeoczZMGA72fkn5mLhJffxGTP3sNRtrL+xbfdf0A2dfrg
-         KlkuCDyeLsODssvrnF/fWsnb/sNfnfcYMCSrjFAFoPXWPx1N0/xTrzndZPgUlpAmFj53
-         BDwA==
-X-Gm-Message-State: AOAM532wlGHnA7EOWzC20vG13Q8qbOnb2SUDgnghH6f09I7vynaQJ53F
-        C5PvWqof5T74ySkdcr/hkJc=
-X-Google-Smtp-Source: ABdhPJzaTKiqJKuVCZPCElrgIOpiv5d6Uz/0jrPpMGW3V7yulFncqtybbESUJb4BHI/nEboIRfw1rg==
-X-Received: by 2002:ac8:7b95:: with SMTP id p21mr6754715qtu.139.1599190284599;
-        Thu, 03 Sep 2020 20:31:24 -0700 (PDT)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id y18sm3528037qkf.93.2020.09.03.20.31.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 03 Sep 2020 20:31:24 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 2D45127C0054;
-        Thu,  3 Sep 2020 23:31:23 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Thu, 03 Sep 2020 23:31:23 -0400
-X-ME-Sender: <xms:CbVRXxFW47fUDIn7uNUFa569dFf0XzxHxULgUB4eF-hMXfugso_wOQ>
-    <xme:CbVRX2UHwejbW8o2dbZ4gbN9i3MSNANj8HlHR_l1NBoR7I9Y1ugj1PwYdRIGzMPcD
-    -6qLJ7-8R0FZwBwNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegvddgjedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehg
-    mhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpedvleeigedugfegveejhfejveeuve
-    eiteejieekvdfgjeefudehfefhgfegvdegjeenucfkphephedvrdduheehrdduuddurdej
-    udenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
-    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
-    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
-    gvrdhnrghmvg
-X-ME-Proxy: <xmx:CbVRXzI8UeVS6iNNLMtFBk-mxMFCzdMSO1yaLGgIe04hiNBePBe48Q>
-    <xmx:CbVRX3H5pr4nJg2rg_mAGDr3qhP4_b2b_FuUy8zp3Rh5Y7j2aZReDg>
-    <xmx:CbVRX3V_o1_ui1FCeADVCxhPDGLlJU_pNaKFXxlnkcjNQjPZVDM-bQ>
-    <xmx:C7VRX5bOkrWilOUuTQERFKKAP8s2OPuWI3YvZVkOg7nHIky6YCPOxgb6gw0>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EBA14306005C;
-        Thu,  3 Sep 2020 23:31:20 -0400 (EDT)
-Date:   Fri, 4 Sep 2020 11:31:19 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     paulmck@kernel.org
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH tip/core/rcu 3/4] kernel/smp: Provide CSD lock timeout
- diagnostics
-Message-ID: <20200904033119.GC7922@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200831181356.GA1224@paulmck-ThinkPad-P72>
- <20200831181417.1378-3-paulmck@kernel.org>
+        Thu, 3 Sep 2020 23:34:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599190492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0Sivd+X8sSjHVFUEdDJB8sFaPEg6xaM+EZovO2ogqnQ=;
+        b=dZ2s5akagYVMMSuu4Zgn4mOhSnkUm2D3IEnV8kfVQkHcxE0YUlbqUlbDLpaYFTB3Hv6Uby
+        UjzOAgeuMKdG8KoXXqSTqGnAVbSkFQktbPQzQ57eolmwjcWDJId9TW3UjpFiwg/AYriTST
+        3TIkAu+kIHNZrivvps3KYEJ2Q2V9GSc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-243-h8uTNWP-NaKEZHA0lwJCVQ-1; Thu, 03 Sep 2020 23:34:48 -0400
+X-MC-Unique: h8uTNWP-NaKEZHA0lwJCVQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 193DF107465A;
+        Fri,  4 Sep 2020 03:34:45 +0000 (UTC)
+Received: from mail (ovpn-113-36.rdu2.redhat.com [10.10.113.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 02E12100239F;
+        Fri,  4 Sep 2020 03:34:39 +0000 (UTC)
+Date:   Thu, 3 Sep 2020 23:34:38 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Lokesh Gidra <lokeshgidra@google.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@google.com>,
+        Sandeep Patil <sspatil@google.com>, kernel@android.com,
+        Daniel Colascione <dancol@dancol.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: [PATCH 2/2] Add a new sysctl knob:
+ unprivileged_userfaultfd_user_mode_only
+Message-ID: <20200904033438.GI9411@redhat.com>
+References: <20200520195134.GK26186@redhat.com>
+ <CA+EESO4wEQz3CMxNLh8mQmTpUHdO+zZbV10zUfYGKEwfRPK2nQ@mail.gmail.com>
+ <20200520211634.GL26186@redhat.com>
+ <CABXk95A-E4NYqA5qVrPgDF18YW-z4_udzLwa0cdo2OfqVsy=SQ@mail.gmail.com>
+ <CA+EESO4kLaje0yTOyMSxHfSLC0n86zAF+M1DWB_XrwFDLOCawQ@mail.gmail.com>
+ <CAFJ0LnGfrzvVgtyZQ+UqRM6F3M7iXOhTkUBTc+9sV+=RrFntyQ@mail.gmail.com>
+ <20200724093852-mutt-send-email-mst@kernel.org>
+ <CAFJ0LnEZghYj=d3w8Fmko4GZAWw6Qc5rgAMmXj-8qgXtyU3bZQ@mail.gmail.com>
+ <20200806004351-mutt-send-email-mst@kernel.org>
+ <CA+EESO6bxhKf5123feNX1LZyyN2QL4Ti5ApPAu=xb3pHXd7cwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200831181417.1378-3-paulmck@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+EESO6bxhKf5123feNX1LZyyN2QL4Ti5ApPAu=xb3pHXd7cwQ@mail.gmail.com>
+User-Agent: Mutt/1.14.5 (2020-06-23)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:14:16AM -0700, paulmck@kernel.org wrote:
-[...]
-> +static __always_inline bool csd_lock_wait_toolong(call_single_data_t *csd, u64 ts0, u64 *ts1, int *bug_id)
-> +{
-> +	int cpu = -1;
-> +	int cpux;
-> +	bool firsttime;
-> +	u64 ts2, ts_delta;
-> +	call_single_data_t *cpu_cur_csd;
-> +	unsigned int flags = READ_ONCE(csd->flags);
-> +
-> +	if (!(flags & CSD_FLAG_LOCK)) {
-> +		if (!unlikely(*bug_id))
-> +			return true;
-> +		cpu = csd_lock_wait_getcpu(csd);
-> +		pr_alert("csd: CSD lock (#%d) got unstuck on CPU#%02d, CPU#%02d released the lock.\n",
-> +			 *bug_id, raw_smp_processor_id(), cpu);
-> +		return true;
-> +	}
-> +
-> +	ts2 = sched_clock();
-> +	ts_delta = ts2 - *ts1;
-> +	if (likely(ts_delta <= CSD_LOCK_TIMEOUT))
-> +		return false;
-> +
-> +	firsttime = !*bug_id;
-> +	if (firsttime)
-> +		*bug_id = atomic_inc_return(&csd_bug_count);
-> +	cpu = csd_lock_wait_getcpu(csd);
-> +	if (WARN_ONCE(cpu < 0 || cpu >= nr_cpu_ids, "%s: cpu = %d\n", __func__, cpu))
-> +		cpux = 0;
-> +	else
-> +		cpux = cpu;
-> +	cpu_cur_csd = smp_load_acquire(&per_cpu(cur_csd, cpux)); /* Before func and info. */
-> +	pr_alert("csd: %s non-responsive CSD lock (#%d) on CPU#%d, waiting %llu ns for CPU#%02d %pS(%ps).\n",
-> +		 firsttime ? "Detected" : "Continued", *bug_id, raw_smp_processor_id(), ts2 - ts0,
-> +		 cpu, csd->func, csd->info);
-> +	if (cpu_cur_csd && csd != cpu_cur_csd) {
-> +		pr_alert("\tcsd: CSD lock (#%d) handling prior %pS(%ps) request.\n",
-> +			 *bug_id, READ_ONCE(per_cpu(cur_csd_func, cpux)),
-> +			 READ_ONCE(per_cpu(cur_csd_info, cpux)));
-> +	} else {
-> +		pr_alert("\tcsd: CSD lock (#%d) %s.\n",
-> +			 *bug_id, !cpu_cur_csd ? "unresponsive" : "handling this request");
-> +	}
-> +	if (cpu >= 0) {
-> +		if (!trigger_single_cpu_backtrace(cpu))
-> +			dump_cpu_task(cpu);
-> +		if (!cpu_cur_csd) {
-> +			pr_alert("csd: Re-sending CSD lock (#%d) IPI from CPU#%02d to CPU#%02d\n", *bug_id, raw_smp_processor_id(), cpu);
-> +			arch_send_call_function_single_ipi(cpu);
-> +		}
-> +	}
-> +	dump_stack();
-> +	*ts1 = ts2;
-> +
-> +	return false;
-> +}
-> +
->  /*
->   * csd_lock/csd_unlock used to serialize access to per-cpu csd resources
->   *
-> @@ -105,8 +205,28 @@ void __init call_function_init(void)
->   */
->  static __always_inline void csd_lock_wait(call_single_data_t *csd)
->  {
-> +	int bug_id = 0;
-> +	u64 ts0, ts1;
-> +
-> +	ts1 = ts0 = sched_clock();
-> +	for (;;) {
-> +		if (csd_lock_wait_toolong(csd, ts0, &ts1, &bug_id))
-> +			break;
-> +		cpu_relax();
-> +	}
-> +	smp_acquire__after_ctrl_dep();
+Hello,
 
-It's a little difficult here to figure out what operation we want to add
-ACQUIRE semantics. So maybe a few lines of comments?
+On Mon, Aug 17, 2020 at 03:11:16PM -0700, Lokesh Gidra wrote:
+> There has been an emphasis that Android is probably the only user for
+> the restriction of userfaults from kernel-space and that it wouldn’t
+> be useful anywhere else. I humbly disagree! There are various areas
+> where the PROT_NONE+SIGSEGV trick is (and can be) used in a purely
+> user-space setting. Basically, any lazy, on-demand,
 
-	/* 
-  	 * Add the ACQUIRE semantics for the read of csd->flags in
-	 * csd_lock_wait_toolong().
-	 */
+For the record what I said is quoted below
+https://lkml.kernel.org/r/20200520194804.GJ26186@redhat.com :
 
-Regards,
-Boqun
+"""It all boils down of how peculiar it is to be able to leverage only
+the acceleration [..] Right now there's a single user that can cope
+with that limitation [..] If there will be more users [..]  it'd be
+fine to add a value "2" later."""
 
-> +}
-> +
-> +#else
-> +static void csd_lock_record(call_single_data_t *csd)
-> +{
-> +}
-> +
-> +static __always_inline void csd_lock_wait(call_single_data_t *csd)
-> +{
->  	smp_cond_load_acquire(&csd->flags, !(VAL & CSD_FLAG_LOCK));
->  }
-> +#endif
->  
-[...]
+Specifically I never said "that it wouldn’t be useful anywhere else.".
+
+Also I'm only arguing about the sysctl visible kABI change in patch
+2/2: the flag passed as parameter to the syscall in patch 1/2 is all
+great, because seccomp needs it in the scalar parameter of the syscall
+to implement a filter equivalent to your sysctl "2" policy with only
+patch 1/2 applied.
+
+I've two more questions now:
+
+1) why don't you enforce the block of kernel initiated faults with
+   seccomp-bpf instead of adding a sysctl value 2? Is the sysctl just
+   an optimization to remove a few instructions per syscall in the bpf
+   execution of Android unprivileged apps? You should block a lot of
+   other syscalls by default to all unprivileged processes, including
+   vmsplice.
+
+   In other words if it's just for Android, why can't Android solve it
+   with only patch 1/2 by tweaking the seccomp filter?
+
+2) given that Android is secure enough with the sysctl at value 2, why
+   should we even retain the current sysctl 0 semantics? Why can't
+   more secure systems just use seccomp and block userfaultfd, as it
+   is already happens by default in the podman default seccomp
+   whitelist (for those containers that don't define a new json
+   whitelist in the OCI schema)? Shouldn't we focus our energy in
+   making containers more secure by preventing the OCI schema of a
+   random container to re-enable userfaultfd in the container seccomp
+   filter instead of trying to solve this with a global sysctl?
+
+   What's missing in my view is a kubernetes hard allowlist/denylist
+   that cannot be overridden with the OCI schema in case people has
+   the bad idea of running containers downloaded from a not fully
+   trusted source, without adding virt isolation and that's an
+   userland problem to be solved in the container runtime, not a
+   kernel issue. Then you'd just add userfaultfd to the json of the
+   k8s hard seccomp denylist instead of going around tweaking sysctl.
+
+What's your take in changing your 2/2 patch to just replace value "0"
+and avoid introducing a new value "2"?
+
+The value "0" was motivated by the concern that uffd can enlarge the
+race window for use after free by providing one more additional way to
+block kernel faults, but value "2" is already enough to solve that
+concern completely and it'll be the default on all Android.
+
+In other words by adding "2" you're effectively doing a more
+finegrined and more optimal implementation of "0" that remains useful
+and available to unprivileged apps and it already resolves all
+"robustness against side effects other kernel bugs" concerns. Clearly
+"0" is even more secure statistically but that would apply to every
+other syscall including vmsplice, and there's no
+/proc/sys/vm/unprivileged_vmsplice sysctl out there.
+
+The next issue we have now is with the pipe mutex (which is not a
+major concern but we need to solve it somehow for correctness). So I
+wonder if should make the default value to be "0" (or "2" if think we
+should not replace "0") and to allow only user initiated faults by
+default.
+
+Changing the sysctl default to be 0, will make live migration fail to
+switch to postcopy which will be (unnoticeable to the guest), instead
+of risking the VM to be killed because of network latency
+outlier. Then we wouldn't need to change the pipe code at all.
+
+Alternatively we could still fix the pipe code so it runs better (but
+it'll be more complex) or to disable uffd faults only in the pipe
+code.
+
+One thing to keep in mind is that if we change the default, then
+hypervisor hosts running QEMU would need to set:
+
+vm.userfaultfd = 1
+
+in /etc/sysctl.conf if postcopy live migration is required, that's not
+particularly concerning constraint for qemu (there are likely other
+tweaks required and it looks less risky than an arbitrary timeout
+which could kill the VM: if the above is forgotten the postcopy live
+migration won't even start and it'll be unnoticeable to the guest).
+
+The main concern really are future apps that may want to use uffd for
+kernel initiated faults won't be allowed to do so by default anymore,
+those apps will be heavily incentivated to use bounce buffers before
+passing data to syscalls, similarly to the current use case of patch 2/2.
+
+Comments welcome,
+Andrea
+
+PS. Another usage of uffd that remains possible without privilege with
+the 2/2 patch sysctl "2" behavior (besides the strict SIGSEGV
+acceleration) is the UFFD_FEATURE_SIGBUS. That's good so a malloc lib
+will remain possible without requiring extra privileges, by adding a
+UFFDIO_POPULATE to use in combination with UFFD_FEATURE_SIGBUS
+(UFFDIO_POPULATE just needs to zero out a page and map it, it'll be
+indistinguishable to UFFDIO_ZEROPAGE but it will solve the last
+performance bottleneck by avoiding a wrprotect fault after the
+allocation and it will be THP capable too). Memory will be freed with
+MADV_DONTNEED, without ever having to call mmap/mumap. It could move
+memory around with UFFDIO_COPY+MADV_DONTNEED or by adding UFFDIO_REMAP
+which already exists.
+
