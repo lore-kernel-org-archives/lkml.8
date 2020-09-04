@@ -3,117 +3,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5901C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFBDC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF54206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:48:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599245288;
-	bh=PDE0If3Xa0BCychsFfVBP73AEAJpWKm1Y9RfRQZSBGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Av9KUIFYhklsjlbOImrIr699+pVsHkP7U2Swj9wJAwDXYQ7278wwwlQQvHeXdZ17s
-	 tlflanpyxc7AcI22tnKj3wfA1O4YKVOH7Nx9zknF5DufOszp+LkGUJIh+w9JbbfUHQ
-	 zCDXUScfGHivQhYOp8dL4A9/ktiyz/uMHK00G5NI=
+	by mail.kernel.org (Postfix) with ESMTP id 65A7220665
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:49:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I5NQL21U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgIDSsH (ORCPT
+        id S1726877AbgIDStM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:48:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbgIDSsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:48:06 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 4 Sep 2020 14:49:12 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:36204 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726135AbgIDStL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 14:49:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599245350;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=CiYSRBaMluJSVw3MWVD8YBv3e0YIzVGvkRBc3uY9Q5M=;
+        b=I5NQL21U3Eir0+LziducBhG3YErqD7Hq0hcN0GPLy76qRY1ia/NLO1S3ZVS5wLMfY6fYbV
+        0xn46sKEB8+84UxAfuM83VrsgXqa8GgxY33HSyfCQfQDRuHfusTw1i1snIVMH+u1I9vN74
+        olTKARhQsQXIKusTnEG8JVLZ0q+w8LM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-206-46EtkNuMOWKeIdo1q_bFVQ-1; Fri, 04 Sep 2020 14:49:07 -0400
+X-MC-Unique: 46EtkNuMOWKeIdo1q_bFVQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62BBC20665;
-        Fri,  4 Sep 2020 18:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599245285;
-        bh=PDE0If3Xa0BCychsFfVBP73AEAJpWKm1Y9RfRQZSBGs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ypnm1k438oFJq+i9TwHQtBFnd/r8W+r5fRXsR3gjcjbh7+AYmIVtCdsVnJ5SO4grv
-         ZaS1tpVK3cSZgoY+JRhzAVJMh6OSmRL9o+gLg0FTWjNIfqw0eLW03A7Bovj5qQUX8p
-         7Uoh2ObZp+g8Z768N5NlcPOEHm3eShMOwBXFT+MQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4039B40D3D; Fri,  4 Sep 2020 15:48:03 -0300 (-03)
-Date:   Fri, 4 Sep 2020 15:48:03 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
- attr->sample_period for libpfm4 events
-Message-ID: <20200904184803.GA3749996@kernel.org>
-References: <20200728085734.609930-1-irogers@google.com>
- <20200728085734.609930-3-irogers@google.com>
- <20200728155940.GC1319041@krava>
- <20200728160954.GD1319041@krava>
- <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
- <CAP-5=fWNniZuYfYhz_Cz7URQ+2E4T4Kg3DJqGPtDg70i38Er_A@mail.gmail.com>
- <20200904160303.GD939481@krava>
- <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E5C218B9EDB;
+        Fri,  4 Sep 2020 18:49:06 +0000 (UTC)
+Received: from treble (ovpn-117-138.rdu2.redhat.com [10.10.117.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C996E87B2D;
+        Fri,  4 Sep 2020 18:49:05 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 13:49:04 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org
+Subject: Re: [PATCH v3 09/10] objtool: Make unwind hints definitions
+ available to other architectures
+Message-ID: <20200904184904.px725vsob6zwd3ir@treble>
+References: <20200904153028.32676-1-jthierry@redhat.com>
+ <20200904153028.32676-10-jthierry@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fWOSi4B3g1DARkh6Di-gU4FgmjnhbPYRBdvSdLSy_KC5Q@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200904153028.32676-10-jthierry@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Sep 04, 2020 at 09:22:10AM -0700, Ian Rogers escreveu:
-> On Fri, Sep 4, 2020 at 9:03 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > On Thu, Sep 03, 2020 at 10:41:14PM -0700, Ian Rogers wrote:
-> > > On Wed, Jul 29, 2020 at 4:24 PM Ian Rogers <irogers@google.com> wrote:
-> > > > On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> > > > > On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
-> > > > > > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
-> > > > > [jolsa@krava perf]$ sudo ./perf test 17 -v
-> > > > > 17: Setup struct perf_event_attr                          :
+On Fri, Sep 04, 2020 at 04:30:27PM +0100, Julien Thierry wrote:
+> +/*
+> + * UNWIND_HINT_TYPE_CALL: Indicates that sp_reg+sp_offset resolves to PREV_SP
+> + * (the caller's SP right before it made the call).  Used for all callable
+> + * functions, i.e. all C code and all callable asm functions.
+> + *
+> + * UNWIND_HINT_TYPE_REGS: Used in entry code to indicate that sp_reg+sp_offset
+> + * points to a fully populated pt_regs from a syscall, interrupt, or exception.
+> + *
+> + * UNWIND_HINT_TYPE_REGS_IRET: Used in entry code to indicate that sp_reg+sp_offset
+> + * points to the iret return frame.
 
-> > > > > running './tests/attr/test-record-C0'
-> > > > > expected sample_period=4000, got 3000
-> > > > > FAILED './tests/attr/test-record-C0' - match failure
+Now that this is generic, I think REGS_PARTIAL would be better.
 
-> > > > I'm not able to reproduce this. Do you have a build configuration or
-> > > > something else to look at? The test doesn't seem obviously connected
-> > > > with this patch.
+> + *
+> + * The UNWIND_HINT macros are used only for the unwind_hint struct.  They
+> + * aren't used in struct orc_entry due to size and complexity constraints.
+> + * Objtool converts them to real types when it converts the hints to orc
+> + * entries.
 
-> > > Jiri, any update? Thanks,
+Now that ORC_TYPE_* have been replaced by UNWIND_HINT_TYPE_*, I think
+this last paragraph should be removed.
 
-> > sorry, I rebased and ran it again and it passes for me now,
-> > so it got fixed along the way
+-- 
+Josh
 
-> No worries, thanks for the update! It'd be nice to land this and the
-> other libpfm fixes.
-
-I applied it and it generated this regression:
-
-FAILED '/home/acme/libexec/perf-core/tests/attr/test-record-pfm-period' - match failure
-
-I'll look at the other patches that are pending in this regard to see
-what needs to be squashed so that we don't break bisect.
-
-- Arnaldo
