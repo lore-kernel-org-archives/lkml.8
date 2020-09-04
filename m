@@ -2,88 +2,81 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71A20C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECB0920791
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LWuI98ju";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uzvNLAjC"
+	by mail.kernel.org (Postfix) with ESMTP id 4797B208C7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbgIDK0Z (ORCPT
+        id S1730031AbgIDK0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:26:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:60380 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729950AbgIDK0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:26:10 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599215168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IIb9DxOVf2o7mz0utSYXLof9MskW68PFyAZoe+fk2Dc=;
-        b=LWuI98juUnFZ+JFLdt+0iKBUigefi/KYCS+j6l2a5xLL9E0FL24XqIKriMo5D/ukklNXSd
-        tpTACXWre12qyiDSXiJ6BuAKRHGfYtU4PLVNKspVcDx82G58/8rDDWjBinLPqi+TYVuQM0
-        6MNOetV609tkmMRdomNBJW1fWyIsB+TfBoPnJoxfpQMjHzzJEXdWvR8YM3PzoQWWeiceT7
-        y1oxW3Xg4xgCPZEg4ovz+zM5hRU4tclboo/Y3XVls5wepQxR3O4cI83bFrSMnc/sHA5uFb
-        HeDd2quLlPlf7N9JWFR8Iw785/8gaQwqQL60S67ovWup6Ww9/LnNqqCuHzYQHQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599215168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IIb9DxOVf2o7mz0utSYXLof9MskW68PFyAZoe+fk2Dc=;
-        b=uzvNLAjCd5bnR28TEdEGvfM9tM7O+dwNUAz98ohBpBG1BITpbM40TZDR20cs9fY8XvXMMD
-        zS+HQ2911yr3hRCg==
-To:     Ingo Molnar <mingo@kernel.org>,
-        "Zhang\, Qiang" <Qiang.Zhang@windriver.com>
-Cc:     "longman\@redhat.com" <longman@redhat.com>,
-        "elver\@google.com" <elver@google.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSNOg==?= [PATCH v2] debugobjects: install cpu
- hotplug callback
-In-Reply-To: <20200904055040.GA2765622@gmail.com>
-References: <20200827050614.15100-1-qiang.zhang@windriver.com> <BYAPR11MB2632C578C5863019114EE572FF2D0@BYAPR11MB2632.namprd11.prod.outlook.com> <20200904055040.GA2765622@gmail.com>
-Date:   Fri, 04 Sep 2020 12:26:07 +0200
-Message-ID: <87k0x94z40.fsf@nanos.tec.linutronix.de>
+        Fri, 4 Sep 2020 06:26:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43398 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730043AbgIDK0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:26:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id CF89FAF6D;
+        Fri,  4 Sep 2020 10:26:15 +0000 (UTC)
+Subject: Re: [PATCH 13/19] ide: switch to __register_blkdev for command set
+ probing
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-m68k@lists.linux-m68k.org
+References: <20200903080119.441674-1-hch@lst.de>
+ <20200903080119.441674-14-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Message-ID: <4199305c-5d59-030b-2a5f-b13ede10bf17@suse.de>
+Date:   Fri, 4 Sep 2020 12:26:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200903080119.441674-14-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04 2020 at 07:50, Ingo Molnar wrote:
->> +#if defined(CONFIG_HOTPLUG_CPU)
->> +static int object_cpu_offline(unsigned int cpu)
->> +{
->> +       struct debug_percpu_free *percpu_pool;
->> +       struct hlist_node *tmp;
->> +       struct debug_obj *obj;
->> +
->> +       percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
->> +       hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
->> +               hlist_del(&obj->node);
->> +               kmem_cache_free(obj_cache, obj);
->> +       }
->> +
->> +       return 0;
->> +}
->> +#endif
->
-> What happens to ->obj_free, if the CPU is brought back online? Won't it be 
-> out of sync at that point?
+On 9/3/20 10:01 AM, Christoph Hellwig wrote:
+> ide is the last user of the blk_register_region framework except for the
+> tracking of allocated gendisk.  Switch to __register_blkdev, even if that
+> doesn't allow us to trivially find out which command set to probe for.
+> That means we now always request all modules when a user tries to access
+> an unclaimed ide device node, but except for a few potentially loaded
+> modules for a fringe use case of a deprecated and soon to be removed
+> driver that doesn't make a difference.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/ide/ide-probe.c | 34 ++++++----------------------------
+>   1 file changed, 6 insertions(+), 28 deletions(-)
+> 
+Ceterum censeo ...
 
-Yes and it's going to do the completely wrong thing.
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Thanks,
+Cheers,
 
-        tglx
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), Geschäftsführer: Felix Imendörffer
