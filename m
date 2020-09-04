@@ -5,50 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 074EEC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3F1C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF03820797
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141CC206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229330;
-	bh=6KTkxpgzQHDR1wFViFDOTk7r1crsAnUhrlDc4NUnbmE=;
+	s=default; t=1599229355;
+	bh=wvxtajZLIXfuNmxZJFRiIF+SaRJ8cKhztaeZ5ho8vSM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X5hiwFOPlyuYrYNiTblimDVoX/hniwSid4gHVPvFCM/MDeL/RP6j5qn46o1NlfLKJ
-	 4jC3YgKxgpfnABmHkpu0a5oAu0daA7KAK8enii+jHN31KILr1oHCnV3eZHWl5EgF3g
-	 a4tyeEgctVniLzirEUPgxxSh+OWOOro9Lu+v+q0w=
+	b=NtrcltNcUQ6Xtw9tRdxjO8eSuPRNLwMN2JGu9xv8VzlDwIbz77KZHv0WJqmLxDHlQ
+	 8xdR01TzF65YED3/0O9KL41Oerpyq+zoBMH8CkXmM/xvBQCfupmYjcu6o0dnXfS85d
+	 HQkv1afPuS0gW6CuETbYJTorZBqXI4lonTHIRx1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbgIDOWH (ORCPT
+        id S1730805AbgIDOWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:22:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 10:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730476AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730455AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 4 Sep 2020 09:34:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3432B2166E;
-        Fri,  4 Sep 2020 13:31:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2F2821582;
+        Fri,  4 Sep 2020 13:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226269;
-        bh=6KTkxpgzQHDR1wFViFDOTk7r1crsAnUhrlDc4NUnbmE=;
+        s=default; t=1599226257;
+        bh=wvxtajZLIXfuNmxZJFRiIF+SaRJ8cKhztaeZ5ho8vSM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zPn+u4B9ePNx0o2SSf9VKW00FGM4iak4fYTwhWyQlISiP00VOZwKADM5bGqOFNlnv
-         QjD25xugUtaQMoycDoSqkz8TZ1Axjytkmfgrt+ZK/SVpqPGmZqHjaAlGgrFu7Nk6WP
-         Xyofay/lkks4ouVV9Wvc1ftKf2w3Db13SmodVKtU=
+        b=wZHRpDb2i3nlvTU6bfSEM/HUQ/rL7EUZH2+1BJJPU80LdC+5021ICTi/88lJYqoOQ
+         BjAQDV/k6z3yXxvdtkkTZfyRANS7Vq/Q6PSSXC3BWXo8dZcIXgUgLzPo0HcKjL01wQ
+         nC5L5bhhu86OHxoKSOJsjkkO6gbK2MIgENdzrJxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 5.8 09/17] KVM: arm64: Survive synchronous exceptions caused by AT instructions
-Date:   Fri,  4 Sep 2020 15:30:08 +0200
-Message-Id: <20200904120258.449102679@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 04/17] mm: fix pin vs. gup mismatch with gate pages
+Date:   Fri,  4 Sep 2020 15:30:03 +0200
+Message-Id: <20200904120258.196815367@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
 References: <20200904120257.983551609@linuxfoundation.org>
@@ -61,129 +65,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Dave Hansen <dave.hansen@linux.intel.com>
 
-commit 88a84ccccb3966bcc3f309cdb76092a9892c0260 upstream.
+commit 9fa2dd946743ae6f30dc4830da19147bf100a7f2 upstream.
 
-KVM doesn't expect any synchronous exceptions when executing, any such
-exception leads to a panic(). AT instructions access the guest page
-tables, and can cause a synchronous external abort to be taken.
+Gate pages were missed when converting from get to pin_user_pages().
+This can lead to refcount imbalances.  This is reliably and quickly
+reproducible running the x86 selftests when vsyscall=emulate is enabled
+(the default).  Fix by using try_grab_page() with appropriate flags
+passed.
 
-The arm-arm is unclear on what should happen if the guest has configured
-the hardware update of the access-flag, and a memory type in TCR_EL1 that
-does not support atomic operations. B2.2.6 "Possible implementation
-restrictions on using atomic instructions" from DDI0487F.a lists
-synchronous external abort as a possible behaviour of atomic instructions
-that target memory that isn't writeback cacheable, but the page table
-walker may behave differently.
+The long story:
 
-Make KVM robust to synchronous exceptions caused by AT instructions.
-Add a get_user() style helper for AT instructions that returns -EFAULT
-if an exception was generated.
+Today, pin_user_pages() and get_user_pages() are similar interfaces for
+manipulating page reference counts.  However, "pins" use a "bias" value
+and manipulate the actual reference count by 1024 instead of 1 used by
+plain "gets".
 
-While KVM's version of the exception table mixes synchronous and
-asynchronous exceptions, only one of these can occur at each location.
+That means that pin_user_pages() must be matched with unpin_user_pages()
+and can't be mixed with a plain put_user_pages() or put_page().
 
-Re-enter the guest when the AT instructions take an exception on the
-assumption the guest will take the same exception. This isn't guaranteed
-to make forward progress, as the AT instructions may always walk the page
-tables, but guest execution may use the translation cached in the TLB.
+Enter gate pages, like the vsyscall page.  They are pages usually in the
+kernel image, but which are mapped to userspace.  Userspace is allowed
+access to them, including interfaces using get/pin_user_pages().  The
+refcount of these kernel pages is manipulated just like a normal user
+page on the get/pin side so that the put/unpin side can work the same
+for normal user pages or gate pages.
 
-This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64: Defer guest
-entry when an asynchronous exception is pending"), KVM will return to the
-host to process IRQs allowing the rest of the system to keep running.
+get_gate_page() uses try_get_page() which only bumps the refcount by
+1, not 1024, even if called in the pin_user_pages() path.  If someone
+pins a gate page, this happens:
 
-Cc: stable@vger.kernel.org # <v5.3: 5dcd0fdbb492 ("KVM: arm64: Defer guest entry when an asynchronous exception is pending")
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+	pin_user_pages()
+		get_gate_page()
+			try_get_page() // bump refcount +1
+	... some time later
+	unpin_user_pages()
+		page_ref_sub_and_test(page, 1024))
+
+... and boom, we get a refcount off by 1023.  This is reliably and
+quickly reproducible running the x86 selftests when booted with
+vsyscall=emulate (the default).  The selftests use ptrace(), but I
+suspect anything using pin_user_pages() on gate pages could hit this.
+
+To fix it, simply use try_grab_page() instead of try_get_page(), and
+pass 'gup_flags' in so that FOLL_PIN can be respected.
+
+This bug traces back to the very beginning of the FOLL_PIN support in
+commit 3faa52c03f44 ("mm/gup: track FOLL_PIN pages"), which showed up in
+the 5.7 release.
+
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Fixes: 3faa52c03f44 ("mm/gup: track FOLL_PIN pages")
+Reported-by: Peter Zijlstra <peterz@infradead.org>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: x86@kernel.org
+Cc: Jann Horn <jannh@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_asm.h |   28 ++++++++++++++++++++++++++++
- arch/arm64/kvm/hyp/hyp-entry.S   |   14 ++++++++++----
- arch/arm64/kvm/hyp/switch.c      |    8 ++++----
- 3 files changed, 42 insertions(+), 8 deletions(-)
 
---- a/arch/arm64/include/asm/kvm_asm.h
-+++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -121,6 +121,34 @@ extern char __smccc_workaround_1_smc[__S
- 		*__hyp_this_cpu_ptr(sym);				\
- 	 })
- 
-+#define __KVM_EXTABLE(from, to)						\
-+	"	.pushsection	__kvm_ex_table, \"a\"\n"		\
-+	"	.align		3\n"					\
-+	"	.long		(" #from " - .), (" #to " - .)\n"	\
-+	"	.popsection\n"
-+
-+
-+#define __kvm_at(at_op, addr)						\
-+( { 									\
-+	int __kvm_at_err = 0;						\
-+	u64 spsr, elr;							\
-+	asm volatile(							\
-+	"	mrs	%1, spsr_el2\n"					\
-+	"	mrs	%2, elr_el2\n"					\
-+	"1:	at	"at_op", %3\n"					\
-+	"	isb\n"							\
-+	"	b	9f\n"						\
-+	"2:	msr	spsr_el2, %1\n"					\
-+	"	msr	elr_el2, %2\n"					\
-+	"	mov	%w0, %4\n"					\
-+	"9:\n"								\
-+	__KVM_EXTABLE(1b, 2b)						\
-+	: "+r" (__kvm_at_err), "=&r" (spsr), "=&r" (elr)		\
-+	: "r" (addr), "i" (-EFAULT));					\
-+	__kvm_at_err;							\
-+} )
-+
-+
- #else /* __ASSEMBLY__ */
- 
- .macro hyp_adr_this_cpu reg, sym, tmp
---- a/arch/arm64/kvm/hyp/hyp-entry.S
-+++ b/arch/arm64/kvm/hyp/hyp-entry.S
-@@ -166,13 +166,19 @@ el1_error:
- 	b	__guest_exit
- 
- el2_sync:
--	/* Check for illegal exception return, otherwise panic */
-+	/* Check for illegal exception return */
- 	mrs	x0, spsr_el2
-+	tbnz	x0, #20, 1f
- 
--	/* if this was something else, then panic! */
--	tst	x0, #PSR_IL_BIT
--	b.eq	__hyp_panic
-+	save_caller_saved_regs_vect
-+	stp     x29, x30, [sp, #-16]!
-+	bl	kvm_unexpected_el2_exception
-+	ldp     x29, x30, [sp], #16
-+	restore_caller_saved_regs_vect
- 
-+	eret
-+
-+1:
- 	/* Let's attempt a recovery from the illegal exception return */
- 	get_vcpu_ptr	x1, x0
- 	mov	x0, #ARM_EXCEPTION_IL
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -303,10 +303,10 @@ static bool __hyp_text __translate_far_t
- 	 * saved the guest context yet, and we may return early...
- 	 */
- 	par = read_sysreg(par_el1);
--	asm volatile("at s1e1r, %0" : : "r" (far));
--	isb();
--
--	tmp = read_sysreg(par_el1);
-+	if (!__kvm_at("s1e1r", far))
-+		tmp = read_sysreg(par_el1);
-+	else
-+		tmp = SYS_PAR_EL1_F; /* back to the guest */
- 	write_sysreg(par, par_el1);
- 
- 	if (unlikely(tmp & SYS_PAR_EL1_F))
+---
+ mm/gup.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -843,7 +843,7 @@ static int get_gate_page(struct mm_struc
+ 			goto unmap;
+ 		*page = pte_page(*pte);
+ 	}
+-	if (unlikely(!try_get_page(*page))) {
++	if (unlikely(!try_grab_page(*page, gup_flags))) {
+ 		ret = -ENOMEM;
+ 		goto unmap;
+ 	}
 
 
