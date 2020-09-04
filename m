@@ -2,98 +2,115 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4762CC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:42:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158B2206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A8C206A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:43:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNMhJyTs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIDHmO (ORCPT
+        id S1726811AbgIDHni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 03:42:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41222 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgIDHmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:42:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BBDB1ABC1;
-        Fri,  4 Sep 2020 07:42:09 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 09:42:07 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
+        Fri, 4 Sep 2020 03:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726089AbgIDHnh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 03:43:37 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B5EC061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 00:43:37 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g29so3919310pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 00:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=tQaAklUi4mOHolVXLrurT6V8jWl51s1fx1oUnBoO5Jw=;
+        b=bNMhJyTsoVn1gKktUBUxgiXMXLoUoVG4WJERz+LrnRQFWwPg3JjS0tDQIlZJR+RSjF
+         Roo8emi2j4ZW2gCmGswCZGlg7atyt9XdJD/n68RuwLxnIeMBUkPhFvsd32ye7MXFdeUD
+         STKGEIxy6HzCwU1xvNkntsaqMoSP9ZToLTi/zPMI6sRgNp7xJnMMUiG2iZvlJFSifiV3
+         KVUR7DufJU48KbT+p+tnQxPK37ia9MdBudy5LoWlj6dheB4xbwVNvzSJS4GvI8UjrcwA
+         T8dFV3nBdz1l4TYPvDn9u4qWdFIcKIV8gqgx7RgnD8xEl06D9orcNbA5X62k5lnZjU5N
+         pNHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tQaAklUi4mOHolVXLrurT6V8jWl51s1fx1oUnBoO5Jw=;
+        b=AG1zh+w7wdRUdgiwmzp589Hwvjsq2qBV4lr2kME2UeyqPne6Iiyr3/5hP1Y4g9vmKg
+         v7plrOxAo1gG9RYRq+4TV7MnUWqduNltkulJWdEVdomu5vtLiHT3aM+lWmbcl/p18G8O
+         7WjpUC70K3qS4FCZfHAo/6H+rckjX18ZLj/OJ0LxTNIvDTEOUjqkMUnVxTE6/Lc2J8S7
+         IqUagpRHb/bndJmN9hIX1/skvBcdNsaZv5J0DT/NV3B1AqWx3t952T2+wuXeaTEvTWMg
+         D5CtsULm2cH4T7fFA9wDAJ3dPcgY/5vhBA5pmMLKx/UHTgBG48oa7ectq0ecLcUA9bdI
+         Lwow==
+X-Gm-Message-State: AOAM533u6htOFdR5muHJI39iDHFUoFBSIml6cqJQnIyUi8G8BpwR10pX
+        FAFapMpz0WhB9RrHgwmsuKM=
+X-Google-Smtp-Source: ABdhPJy0dpwBb+ewWrTMHGfbTGgK2HDi3d1BTNRXUiZ+npxFGNhc8qLtFmhm+EKDyVc956Eq+vUnTg==
+X-Received: by 2002:a63:ca0c:: with SMTP id n12mr3215793pgi.209.1599205416920;
+        Fri, 04 Sep 2020 00:43:36 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id b20sm5966248pfb.198.2020.09.04.00.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 00:43:35 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 16:43:33 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+To:     Artem Savkov <asavkov@redhat.com>
+Cc:     gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        threeearcat@gmail.com, sergey.senozhatsky@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-Message-ID: <20200904074207.GC15277@dhcp22.suse.cz>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903073254.GP4617@dhcp22.suse.cz>
- <20200903162527.GF60440@carbon.dhcp.thefacebook.com>
+Subject: Re: [PATCH] pty: do tty_flip_buffer_push without port->lock in
+ pty_write
+Message-ID: <20200904074333.GA410@jagdpanzerIV.localdomain>
+References: <20200901120157.3412245-1-asavkov@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903162527.GF60440@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200901120157.3412245-1-asavkov@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 03-09-20 09:25:27, Roman Gushchin wrote:
-> On Thu, Sep 03, 2020 at 09:32:54AM +0200, Michal Hocko wrote:
-> > On Wed 02-09-20 14:06:12, Zi Yan wrote:
-> > > From: Zi Yan <ziy@nvidia.com>
-> > > 
-> > > Hi all,
-> > > 
-> > > This patchset adds support for 1GB THP on x86_64. It is on top of
-> > > v5.9-rc2-mmots-2020-08-25-21-13.
-> > > 
-> > > 1GB THP is more flexible for reducing translation overhead and increasing the
-> > > performance of applications with large memory footprint without application
-> > > changes compared to hugetlb.
-> > 
-> > Please be more specific about usecases. This better have some strong
-> > ones because THP code is complex enough already to add on top solely
-> > based on a generic TLB pressure easing.
-> 
-> Hello, Michal!
-> 
-> We at Facebook are using 1 GB hugetlbfs pages and are getting noticeable
-> performance wins on some workloads.
+On (20/09/01 14:01), Artem Savkov wrote:
+[..]
+> It looks like the commit was aimed to protect tty_insert_flip_string and
+> there is no need for tty_flip_buffer_push to be under this lock.
+>
+[..]
+> @@ -120,10 +120,10 @@ static int pty_write(struct tty_struct *tty, const unsigned char *buf, int c)
+>  		spin_lock_irqsave(&to->port->lock, flags);
+>  		/* Stuff the data into the input queue of the other end */
+>  		c = tty_insert_flip_string(to->port, buf, c);
+> +		spin_unlock_irqrestore(&to->port->lock, flags);
+>  		/* And shovel */
+>  		if (c)
+>  			tty_flip_buffer_push(to->port);
+> -		spin_unlock_irqrestore(&to->port->lock, flags);
 
-Let me clarify. I am not questioning 1GB (or large) pages in general. I
-believe it is quite clear that there are usecases which hugely benefit
-from them.  I am mostly asking for the transparent part of it which
-traditionally means that userspace mostly doesn't have to care and get
-them. 2MB THPs have established certain expectations mostly a really    
-aggressive pro-active instanciation. This has bitten us many times and
-create a "you need to disable THP to fix your problem whatever that is"
-cargo cult. I hope we do not want to repeat that mistake here again.
+Performing unprotected
 
-> Historically we allocated gigantic pages at the boot time, but recently moved
-> to cma-based dynamic approach. Still, hugetlbfs interface requires more management
-> than we would like to do. 1 GB THP seems to be a better alternative. So I definitely
-> see it as a very useful feature.
-> 
-> Given the cost of an allocation, I'm slightly skeptical about an automatic
-> heuristics-based approach, but if an application can explicitly mark target areas
-> with madvise(), I don't see why it wouldn't work.
+	smp_store_release(&buf->tail->commit, buf->tail->used);
 
-An explicit opt-in sounds much more appropriate to me as well. If we go
-with a specific API then I would not make it 1GB pages specific. Why
-cannot we have an explicit interface to "defragment" address space
-range into large pages and the kernel would use large pages where
-appropriate? Or is the additional copying prohibitively expensive?
--- 
-Michal Hocko
-SUSE Labs
+does not look safe to me.
+
+
+This path can be called concurrently - "pty_write vs console's IRQ handler
+(TX/RX)", for instance.
+
+Doing this
+
+	queue_work(system_unbound_wq, &buf->work);
+
+outside of port->lock scope also sounds like possible concurrent data
+modification.
+
+I'm not sure I see how this patch is safe.
+
+	-ss
