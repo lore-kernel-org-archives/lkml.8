@@ -2,104 +2,140 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EDBC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFA652074D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7691B2074D
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 08:22:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kn76Vy0w";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="h8KbfenD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgIDIVn (ORCPT
+        id S1729849AbgIDIW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 04:21:43 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55645 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729808AbgIDIVl (ORCPT
+        Fri, 4 Sep 2020 04:22:56 -0400
+Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:59906
+        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726575AbgIDIWx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 04:21:41 -0400
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-307-vBvCEjuyPtSr0Qvj5kAg_g-1; Fri, 04 Sep 2020 04:21:36 -0400
-X-MC-Unique: vBvCEjuyPtSr0Qvj5kAg_g-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E19E81F030;
-        Fri,  4 Sep 2020 08:21:35 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE8AE811B1;
-        Fri,  4 Sep 2020 08:21:30 +0000 (UTC)
-Subject: Re: [PATCH v4 10/10] vfio/fsl-mc: Add support for device reset
-To:     Diana Craciun <diana.craciun@oss.nxp.com>,
-        alex.williamson@redhat.com, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-11-diana.craciun@oss.nxp.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <629498a6-8329-1045-c1a4-ab334f3c8107@redhat.com>
-Date:   Fri, 4 Sep 2020 10:21:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Fri, 4 Sep 2020 04:22:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599207772;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding;
+        bh=cGxakaCL3jNr682m7wuEzqoRV1+pDVo5TxIlEQKNg5Q=;
+        b=kn76Vy0wMMJl0dDuntDxrZCS99IE8JwFohSOkW8vXua5/BL0pQVrWrBu/mKu84IB
+        Kog17myFhlYgEwyLAw/gHktDk1I/hkXjQd4aGNxwdkNcT3hMuJpL35emcQarceUw4qi
+        oVxi3esY878No7Ft/ukZLrmqt4Cgww5nfFDXQsy4=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599207772;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Transfer-Encoding:Feedback-ID;
+        bh=cGxakaCL3jNr682m7wuEzqoRV1+pDVo5TxIlEQKNg5Q=;
+        b=h8KbfenD1v8ukETWbYAPXV2ShUNc3dpgSRxiNYvo8ksn3ytugjik0nCBufdIWNNe
+        TTjU4onvu91F6Q6LSgeZhNtkkMqTbFmMcK+YdnWvJ7FmfrcsPZRzUhbxhl1Bwk9GNTQ
+        y70uL0MvQeM/8O3HdIYucPTmlc4iyrHuDTQO+kxw=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7B1BAC4339C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=wcheng@codeaurora.org
+From:   Wesley Cheng <wcheng@codeaurora.org>
+To:     sboyd@kernel.org, heikki.krogerus@linux.intel.com,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, sergei.shtylyov@gmail.com,
+        Wesley Cheng <wcheng@codeaurora.org>
+Subject: [PATCH v9 0/4] Introduce PMIC based USB type C detection
+Date:   Fri, 4 Sep 2020 08:22:52 +0000
+Message-ID: <0101017458361191-9af95c83-8a0d-4f10-b9ee-c26458c9cc1c-000000@us-west-2.amazonses.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200826093315.5279-11-diana.craciun@oss.nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-SES-Outgoing: 2020.09.04-54.240.27.186
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Diana,
+Changes in v9:
+ - Fixed dt-binding to reference usb-connector from the 'connector' node,
+   removed properties that didn't have further constraints (than specified in
+   usb-connector.yaml), and make 'reg' a required property.
+ - Moved vbus_reg get call into probe(), and will fail if the regulator is not
+   available.
+ - Removed some references from qcom_pmic_typec, as they were not needed after
+   probe().
+ - Moved interrupt registration until after all used variables were initialized.
 
-On 8/26/20 11:33 AM, Diana Craciun wrote:
-> Currently only resetting the DPRC container is supported which
-> will reset all the objects inside it. Resetting individual
-> objects is possible from the userspace by issueing commands
-> towards MC firmware.
-> 
-> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
-> ---
->  drivers/vfio/fsl-mc/vfio_fsl_mc.c | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> index 27713aa86878..d17c5b3148ad 100644
-> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
-> @@ -310,7 +310,20 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
->  	}
->  	case VFIO_DEVICE_RESET:
->  	{
-> -		return -ENOTTY;
-> +		int ret = 0;
-initialization not needed
-> +
-spare empty line
-> +		struct fsl_mc_device *mc_dev = vdev->mc_dev;
-> +
-> +		/* reset is supported only for the DPRC */
-> +		if (!is_fsl_mc_bus_dprc(mc_dev))
-> +			return -ENOTTY;
-it is an error case or do we just don't care?
-> +
-> +		ret = dprc_reset_container(mc_dev->mc_io, 0,
-> +					   mc_dev->mc_handle,
-> +					   mc_dev->obj_desc.id,
-> +					   DPRC_RESET_OPTION_NON_RECURSIVE);
-> +		return ret;
-> +
->  	}
->  	default:
->  		return -ENOTTY;
-> 
-Thanks
+Changes in v8:
+ - Simplified some property definitions, and corrected the
+   connector reference in the dt binding.
 
-Eric
+Changes in v7:
+ - Fixups in qcom-pmic-typec.c to remove uncesscary includes, printk formatting,
+   and revising some logic operations. 
+
+Changes in v6:
+ - Removed qcom_usb_vbus-regulator.c and qcom,usb-vbus-regulator.yaml from the
+   series as they have been merged on regulator.git
+ - Added separate references to the usb-connector.yaml in qcom,pmic-typec.yaml
+   instead of referencing the entire schema.
+
+Changes in v5:
+ - Fix dt_binding_check warning/error in qcom,pmic-typec.yaml
+
+Changes in v4:
+ - Modified qcom,pmic-typec binding to include the SS mux and the DRD remote
+   endpoint nodes underneath port@1, which is assigned to the SSUSB path
+   according to usb-connector
+ - Added usb-connector reference to the typec dt-binding
+ - Added tags to the usb type c and vbus nodes
+ - Removed "qcom" tags from type c and vbus nodes
+ - Modified Kconfig module name, and removed module alias from the typec driver
+ 
+Changes in v3:
+ - Fix driver reference to match driver name in Kconfig for
+   qcom_usb_vbus-regulator.c
+ - Utilize regulator bitmap helpers for enable, disable and is enabled calls in
+   qcom_usb_vbus-regulator.c
+ - Use of_get_regulator_init_data() to initialize regulator init data, and to
+   set constraints in qcom_usb_vbus-regulator.c
+ - Remove the need for a local device structure in the vbus regulator driver
+ 
+Changes in v2:
+ - Use devm_kzalloc() in qcom_pmic_typec_probe()
+ - Add checks to make sure return value of typec_find_port_power_role() is
+   valid
+ - Added a VBUS output regulator driver, which will be used by the PMIC USB
+   type c driver to enable/disable the source
+ - Added logic to control vbus source from the PMIC type c driver when
+   UFP/DFP is detected
+ - Added dt-binding for this new regulator driver
+ - Fixed Kconfig typec notation to match others
+ - Leave type C block disabled until enabled by a platform DTS
+
+Wesley Cheng (4):
+  usb: typec: Add QCOM PMIC typec detection driver
+  dt-bindings: usb: Add Qualcomm PMIC type C controller dt-binding
+  arm64: boot: dts: qcom: pm8150b: Add node for USB type C block
+  arm64: boot: dts: qcom: pm8150b: Add DTS node for PMIC VBUS booster
+
+ .../bindings/usb/qcom,pmic-typec.yaml         | 108 ++++++++
+ arch/arm64/boot/dts/qcom/pm8150b.dtsi         |  13 +
+ arch/arm64/boot/dts/qcom/sm8150-mtp.dts       |   4 +
+ drivers/usb/typec/Kconfig                     |  12 +
+ drivers/usb/typec/Makefile                    |   1 +
+ drivers/usb/typec/qcom-pmic-typec.c           | 262 ++++++++++++++++++
+ 6 files changed, 400 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/qcom,pmic-typec.yaml
+ create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
