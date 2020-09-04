@@ -2,86 +2,121 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E29BC28E83
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C2FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02BCF2078E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BC5206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 12:42:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="BGzSa721"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgIDMmX (ORCPT
+        id S1730268AbgIDMmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 08:42:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56646 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbgIDMlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 08:41:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 85C67ACB5;
-        Fri,  4 Sep 2020 12:40:59 +0000 (UTC)
-Subject: Re: [PATCH v5 0/3] xen/balloon: fixes for memory hotplug
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20200901083326.21264-1-roger.pau@citrix.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <0b3daa72-692f-e747-4842-48a7a1b66dd4@suse.com>
-Date:   Fri, 4 Sep 2020 14:40:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200901083326.21264-1-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 4 Sep 2020 08:42:35 -0400
+Received: from relayfre-01.paragon-software.com ([176.12.100.13]:49272 "EHLO
+        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729297AbgIDMmR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 08:42:17 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id C8382187;
+        Fri,  4 Sep 2020 15:41:24 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1599223284;
+        bh=4xVR0meJIvh1rEibqmfyPtAJgTOGQBkBefyqLtNjf1I=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=BGzSa721zbnxxY03ztTSlOE5OcXrCC8OiYOjYvqGqOMPC9JYVgbZU96tL5lslDc1u
+         AMOVX1VXIETE1IIaYkYwcbfRxyc4TkQJtUH+UVynYJLf5qvO01aO1fg5Df/5ZPLzMe
+         CV0p0vm3Vh2uSezYcJUoHJlvfdsiEq6AeTcKbtyE=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Fri, 4 Sep 2020 15:41:24 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Fri, 4 Sep 2020 15:41:24 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+CC:     "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "pali@kernel.org" <pali@kernel.org>,
+        "dsterba@suse.cz" <dsterba@suse.cz>,
+        "aaptel@suse.com" <aaptel@suse.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "joe@perches.com" <joe@perches.com>,
+        "mark@harmstone.com" <mark@harmstone.com>
+Subject: RE: [PATCH v3 04/10] fs/ntfs3: Add file operations and implementation
+Thread-Topic: [PATCH v3 04/10] fs/ntfs3: Add file operations and
+ implementation
+Thread-Index: AQHWfUkmGGliHMdep0qOFBeV9s6Y96lNd7cAgAr+VLA=
+Date:   Fri, 4 Sep 2020 12:41:24 +0000
+Message-ID: <d82dae3c12d94db7a2a212a8b8b79e8b@paragon-software.com>
+References: <20200828143938.102889-1-almaz.alexandrovich@paragon-software.com>
+ <20200828143938.102889-5-almaz.alexandrovich@paragon-software.com>
+ <20200828154544.GJ1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200828154544.GJ1236603@ZenIV.linux.org.uk>
+Accept-Language: ru-RU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.09.20 10:33, Roger Pau Monne wrote:
-> Hello,
-> 
-> The following series contain some fixes in order to split Xen
-> unpopulated memory handling from the ballooning driver using the
-> ZONE_DEVICE functionality, so that physical memory regions used to map
-> foreign pages are not tied to memory hotplug.
-> 
-> Note this is currently only available for x86 due to Arm using an
-> identity map for dom0 p2m and thus needing special handling.
-> 
-> Thanks, Roger.
-> 
-> Roger Pau Monne (3):
->    xen/balloon: add header guard
->    memremap: rename MEMORY_DEVICE_DEVDAX to MEMORY_DEVICE_GENERIC
->    xen: add helpers to allocate unpopulated memory
-> 
->   drivers/dax/device.c                    |   2 +-
->   drivers/gpu/drm/xen/xen_drm_front_gem.c |   9 +-
->   drivers/xen/Kconfig                     |  11 ++
->   drivers/xen/Makefile                    |   1 +
->   drivers/xen/balloon.c                   |   4 +-
->   drivers/xen/grant-table.c               |   4 +-
->   drivers/xen/privcmd.c                   |   4 +-
->   drivers/xen/unpopulated-alloc.c         | 185 ++++++++++++++++++++++++
->   drivers/xen/xenbus/xenbus_client.c      |   6 +-
->   drivers/xen/xlate_mmu.c                 |   4 +-
->   include/linux/memremap.h                |   9 +-
->   include/xen/balloon.h                   |   4 +
->   include/xen/xen.h                       |   9 ++
->   mm/memremap.c                           |   2 +-
->   14 files changed, 232 insertions(+), 22 deletions(-)
->   create mode 100644 drivers/xen/unpopulated-alloc.c
-> 
+From: Al Viro <viro@ftp.linux.org.uk>
+Sent: Friday, August 28, 2020 6:46 PM
+> On Fri, Aug 28, 2020 at 07:39:32AM -0700, Konstantin Komarov wrote:
+>=20
+> > +static struct dentry *__ntfs_lookup(struct inode *dir, struct dentry *=
+dentry,
+> > +				    struct ntfs_fnd *fnd)
+> > +{
+> > +	struct dentry *d;
+> > +	struct inode *inode;
+> > +
+> > +	inode =3D dir_search(dir, &dentry->d_name, fnd);
+> > +
+> > +	if (!inode) {
+> > +		d_add(dentry, NULL);
+> > +		d =3D NULL;
+> > +		goto out;
+> > +	}
+> > +
+> > +	if (IS_ERR(inode)) {
+> > +		d =3D ERR_CAST(inode);
+> > +		goto out;
+> > +	}
+> > +
+> > +	d =3D d_splice_alias(inode, dentry);
+> > +	if (IS_ERR(d)) {
+> > +		iput(inode);
+> > +		goto out;
+> > +	}
+> > +
+> > +out:
+> > +	return d;
+> > +}
+>=20
+> This is bollocks.  First and foremost, d_splice_alias() *does* iput() on
+> failure, so you've got double-put there.  What's more
+> 	* d_splice_alias(ERR_PTR(err), dentry) return err
+> 	* d_splice_alias(NULL, dentry) is equivalent to d_add(dentry, NULL) and =
+returns NULL
+>=20
+> IOW, all that boilerplate could be replaced with one line:
+>=20
+> 	return d_splice_alias(dir_search(dir, &dentry->d_name, fnd), dentry);
 
-Applied the series to xen/tip.git for-linus-5.9
-
-
-Juergen
+Hi Al! Agreed. Will be fixed in v4.
+Thanks.
