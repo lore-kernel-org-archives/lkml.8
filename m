@@ -2,82 +2,159 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A26C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 544E5C28E83
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC7A12084D
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599216274;
-	bh=3++H5FLh2C1YKek3cWv88BHDHieTeA4Y8dH+wVehUno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GU48+jMxyWMCJPVifJ15poEhPTyJvJPdavc4kRxaWSs0w1DrRbCAvkg0PHv3nNAPd
-	 YxhvghO7BsPxjxWtzNPGR6v7iVOBJpVKywj/gQgrIVC2VnbeoL/2xQEeKFF68nWC4q
-	 BcckuQPwAFwRb+wxljWGWZya8cQXLoOdYpAlbvzU=
+	by mail.kernel.org (Postfix) with ESMTP id 333B82087C
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 10:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgIDKo3 (ORCPT
+        id S1729915AbgIDKpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 06:44:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57878 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726171AbgIDKo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 06:44:26 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D5F520770;
-        Fri,  4 Sep 2020 10:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599216265;
-        bh=3++H5FLh2C1YKek3cWv88BHDHieTeA4Y8dH+wVehUno=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RmdexBTFilHLSNIkaHvBO/F2/GuyHKDcS+HqsCNopLYZoCfCz5wYTnApFBMmRoxEZ
-         Dj/U4cNhG8+LwERuak5e6kX2BkeZO8HF1Ppqdm21oI5H1zqqFPlojhDeGFnAnW/JZE
-         6VrMndJL1PMyZuGO33R0viJowxGpn111DpfVFa90=
-Date:   Fri, 4 Sep 2020 12:44:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     PengHao <penghao@uniontech.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johan@kernel.org, dlaz@chromium.org,
-        stern@rowland.harvard.edu, kerneldev@karsmulder.nl,
-        jonathan@jdcox.net, tomasz@meresinski.eu
-Subject: Re: [PATCH v3] HID: quirks: Add USB_QUIRK_IGNORE_REMOTE_WAKEUP quirk
- for BYD zhaoxin notebook
-Message-ID: <20200904104447.GA2727177@kroah.com>
-References: <20200904091322.30426-1-penghao@uniontech.com>
- <f519d8a0-9082-13c5-0222-40dd9a1fac36@redhat.com>
- <bd5674f2-67dc-b386-f639-97ddce13b8af@uniontech.com>
+        Fri, 4 Sep 2020 06:45:15 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:56589 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726171AbgIDKpE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 06:45:04 -0400
+X-Originating-IP: 93.34.118.233
+Received: from uno.localdomain (93-34-118-233.ip49.fastwebnet.it [93.34.118.233])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 636DA1C000C;
+        Fri,  4 Sep 2020 10:44:55 +0000 (UTC)
+Date:   Fri, 4 Sep 2020 12:48:42 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Paul <paul.kocialkowski@bootlin.com>,
+        Hugues Fruchet <hugues.fruchet@st.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 2/3] media: i2c: ov5640: Add support for BT656 mode
+Message-ID: <20200904104842.hz6n6egjyqgarvlb@uno.localdomain>
+References: <20200813171337.5540-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200813171337.5540-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <bd5674f2-67dc-b386-f639-97ddce13b8af@uniontech.com>
+In-Reply-To: <20200813171337.5540-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 06:38:21PM +0800, PengHao wrote:
-> Hi, Hans
-> 
-> Thanks for the review. And sorry for I'm not really familiar with
-> mailing list, so didn't reply early.
-> 
-> Actually the reason why I submit this patch, is the vendor ask we do
-> this, they do not want enable touchpad wakeup.
+Hi Prabhakar
 
-That says _what_ they want to do, but we need to know _why_ this is the
-case.
+On Thu, Aug 13, 2020 at 06:13:36PM +0100, Lad Prabhakar wrote:
+> Enable support for BT656 mode.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-What is wrong with the existing touchpad wakeup functionality that is
-broken on this device?  Why does this quirk have to be added, what goes
-wrong if it is not added?
+Looks good to me
+Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
 
-Please put that information in the changelog text.
+Thanks
+  j
 
-thanks,
-
-greg k-h
+> ---
+>  drivers/media/i2c/ov5640.c | 46 ++++++++++++++++++++++++++++----------
+>  1 file changed, 34 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+> index e36bc08bc17f..160d2857352a 100644
+> --- a/drivers/media/i2c/ov5640.c
+> +++ b/drivers/media/i2c/ov5640.c
+> @@ -84,6 +84,7 @@
+>  #define OV5640_REG_VFIFO_HSIZE		0x4602
+>  #define OV5640_REG_VFIFO_VSIZE		0x4604
+>  #define OV5640_REG_JPG_MODE_SELECT	0x4713
+> +#define OV5640_REG_CCIR656_CTRL00	0x4730
+>  #define OV5640_REG_POLARITY_CTRL00	0x4740
+>  #define OV5640_REG_MIPI_CTRL00		0x4800
+>  #define OV5640_REG_DEBUG_MODE		0x4814
+> @@ -1215,6 +1216,20 @@ static int ov5640_set_autogain(struct ov5640_dev *sensor, bool on)
+>  			      BIT(1), on ? 0 : BIT(1));
+>  }
+>
+> +static int ov5640_set_stream_bt656(struct ov5640_dev *sensor, bool on)
+> +{
+> +	int ret;
+> +
+> +	ret = ov5640_write_reg(sensor, OV5640_REG_CCIR656_CTRL00,
+> +			       on ? 0x1 : 0x00);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ?
+> +				OV5640_REG_SYS_CTRL0_SW_PWUP :
+> +				OV5640_REG_SYS_CTRL0_SW_PWDN);
+> +}
+> +
+>  static int ov5640_set_stream_dvp(struct ov5640_dev *sensor, bool on)
+>  {
+>  	return ov5640_write_reg(sensor, OV5640_REG_SYS_CTRL0, on ?
+> @@ -2022,18 +2037,21 @@ static int ov5640_set_power_dvp(struct ov5640_dev *sensor, bool on)
+>  	 *		datasheet and hardware, 0 is active high
+>  	 *		and 1 is active low...)
+>  	 */
+> -	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> -		pclk_pol = 1;
+> -	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> -		hsync_pol = 1;
+> -	if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> -		vsync_pol = 1;
+> +	if (sensor->ep.bus_type == V4L2_MBUS_PARALLEL) {
+> +		if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +			pclk_pol = 1;
+> +		if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +			hsync_pol = 1;
+> +		if (flags & V4L2_MBUS_VSYNC_ACTIVE_LOW)
+> +			vsync_pol = 1;
+> +
+> +		ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
+> +				       (pclk_pol << 5) | (hsync_pol << 1) |
+> +				       vsync_pol);
+>
+> -	ret = ov5640_write_reg(sensor, OV5640_REG_POLARITY_CTRL00,
+> -			       (pclk_pol << 5) | (hsync_pol << 1) | vsync_pol);
+> -
+> -	if (ret)
+> -		return ret;
+> +		if (ret)
+> +			return ret;
+> +	}
+>
+>  	/*
+>  	 * powerdown MIPI TX/RX PHY & disable MIPI
+> @@ -2057,7 +2075,9 @@ static int ov5640_set_power_dvp(struct ov5640_dev *sensor, bool on)
+>  	 * - 4:		PCLK output enable
+>  	 * - [3:0]:	D[9:6] output enable
+>  	 */
+> -	ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01, 0x7f);
+> +	ret = ov5640_write_reg(sensor, OV5640_REG_PAD_OUTPUT_ENABLE01,
+> +			       sensor->ep.bus_type == V4L2_MBUS_PARALLEL ?
+> +			       0x7f : 0x1f);
+>  	if (ret)
+>  		return ret;
+>
+> @@ -2911,6 +2931,8 @@ static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+>
+>  		if (sensor->ep.bus_type == V4L2_MBUS_CSI2_DPHY)
+>  			ret = ov5640_set_stream_mipi(sensor, enable);
+> +		else if (sensor->ep.bus_type == V4L2_MBUS_BT656)
+> +			ret = ov5640_set_stream_bt656(sensor, enable);
+>  		else
+>  			ret = ov5640_set_stream_dvp(sensor, enable);
+>
+> --
+> 2.17.1
+>
