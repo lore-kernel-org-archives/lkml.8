@@ -2,146 +2,109 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306ABC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 008E8C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00BA720722
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="rkg1fR0C"
+	by mail.kernel.org (Postfix) with ESMTP id BA7DD20797
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599231208;
+	bh=bjAz7YHJmR0xoTdAVB4K1GtWMTGGPiLOn6zcDC3zJ0I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HZxN5qpeMOjE3lmE/BN9b6B4p4embwq+MbOxZ9ATmhxU6AJnaVY1diLze1NVeFv/K
+	 I0zXAUvA1tykvxLxuoQywdoH83LWKCb7aof3VfMM3jeWryRpEPiYgO28vrLqmaNkqV
+	 6IUhStf+suiKHC4hjRPxQH3sAsoVVBTLJ8KdT9K8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbgIDOvh (ORCPT
+        id S1730395AbgIDOx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:51:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730395AbgIDOv2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:51:28 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A35C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:51:28 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id u13so4463352pgh.1
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 07:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YCwuwpY2wU3kaylQ/MILMMrzNaUrce3uBcy3VjkPLcA=;
-        b=rkg1fR0CBytwyrhRc4EikmMXthCT3N5jfBxjoYC1f2Aijxq260yyTxXzm4b5D4xdJM
-         ZKVT4z4WQErwkMaE8ZMEF5kV387p5w953ELxaWyRrcMcFaNIMd/pIHu2vTc6ka8IbldA
-         hN1HxRbl5w7Z+gn4dkdZqlZAWTXUcG4djEmjya3a1sZ9Cq7ik4SB9lfsBjPa4Du9VzzR
-         GSHooiSDCvBgzteocraC5W3zyoGKt6Eb9G1iJGLMUy/Rjv/q321puyjCYvdy4Biaet7b
-         58DB32pESS8ttLBfPtoF7SL2V2YnOQqyNBaMln7yqA4Y7deRnKGQywEeZRxmxcBN5/0T
-         YIlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YCwuwpY2wU3kaylQ/MILMMrzNaUrce3uBcy3VjkPLcA=;
-        b=GJB6jbGvFeGHfcUY3CXdY4WQ93GyU62SrfQ/fdBLqFi/PEdx/PRX4x4XFmu9g154SL
-         tO4s58RTK/dX7ZdXdEOfBLlSf+Fzkcjmw8ebOWk6Y9rSB3RVBEz6Ia8OdRbVNQjMHxAF
-         DxBT9XyVApNd6h/YXwxzE/WcTch9gcU/tUnD96oFKGE/m8YGNScbvLOK3t/6flx30zvh
-         yhsuLRZJj22kA0DOJxQ98n2m1kNP4/vY5Mwzy/G/xmOcliE5TtUMzOhtyw5l1uyFY8IK
-         NrQf1bzaixi+9iV7C9sTFc4+nH7JpqxdGs2L/lRhknmn19V1LqXuRYuTX1/LSBGCMJst
-         k5Ig==
-X-Gm-Message-State: AOAM5334NLADaCcdL7N72QZoRMzdw96BIIFj6/1+5l9CR+qpWDPKwai6
-        DvAWywdkGxaqFu0ay5Ku4ssJk9poSM3c5I9c
-X-Google-Smtp-Source: ABdhPJxbjl6x1jMUJXR8dYxxNsseOtmG1Vat/jx5qrNmxoLcT6SMRBzHwskY4FsPWRMLYnN5B3Nviw==
-X-Received: by 2002:a63:e249:: with SMTP id y9mr7554359pgj.117.1599231087194;
-        Fri, 04 Sep 2020 07:51:27 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21cf::1188? ([2620:10d:c090:400::5:1a09])
-        by smtp.gmail.com with ESMTPSA id 82sm6041681pgd.6.2020.09.04.07.51.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 07:51:26 -0700 (PDT)
-Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-ext4@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
- <20200818181117.GA34125@mit.edu>
- <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
- <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
- <20200822143326.GC199705@mit.edu>
- <aff250ad-4c31-15c2-fa1d-3f3945cb7aa5@kernel.dk>
- <7f0e2d99-5da2-237e-a894-0afddc0ace1e@kernel.dk>
- <049a97db-c362-bcfb-59e5-4b1d2df59383@kernel.dk>
- <5140ba6c-779c-2a71-b7f2-3c3220cdf19c@kernel.dk>
- <68510957-c887-8e26-4a1a-a7a93488586a@kernel.dk>
- <20200904035528.GE558530@mit.edu>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <73f14124-e660-de0d-95ad-7fb21f18cdef@kernel.dk>
-Date:   Fri, 4 Sep 2020 08:51:24 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200904035528.GE558530@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Sep 2020 10:53:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730160AbgIDOxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:53:24 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E45132074D;
+        Fri,  4 Sep 2020 14:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599231203;
+        bh=bjAz7YHJmR0xoTdAVB4K1GtWMTGGPiLOn6zcDC3zJ0I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OAv7X5gvBUumvNAkExgshZaX36psIdv419CgbhfhwJ7fQbY5FiVYF21NTEErDw0Tg
+         G+/tMjMmogShWIVJAFpeFef+9Ol6liSBRC6RheddUo7D9zP+mn59CwAz2LY2lSPNds
+         NnRND0xnpZLpR7g2qfrUAP0hpnUGxoOU5IP8XxxU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>, Li Yang <leoyang.li@nxp.com>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 00/13] iMX 8 - Another round of cleanups
+Date:   Fri,  4 Sep 2020 16:52:59 +0200
+Message-Id: <20200904145312.10960-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/3/20 9:55 PM, Theodore Y. Ts'o wrote:
-> Hi Jens,
-> 
-> Sorry, the past few months have been *crazy* insane.  Between Linux
-> Plumbers Conference organizing, having to deal with some interns at
-> $WORK, performance reviews, etc.., etc., it's been a perfect storm.
-> As a result, I was late getting the primary ext4 pull request to
-> Linus, and he's already yelled at me for a late pull request.
-> 
-> As a result, I'm being super paranoid about asking Linus for anything,
-> even a one-time change, if it's not a bug fix.  And what you are
-> asking for isn't a bug fix, but enabling a new feature.
+Hi,
 
-That's fine, we blew past the 5.9 window long ago imho. As mentioned,
-back in May we could have solved this by just adding your acked-by
-or reviewed-by to the patch like we did for xfs/btrfs. That removes the
-ext4 tree dependency. Obviously that's no longer a concern for 5.10, but
-I need to know if we're going one of two routes:
+This is an another round of cleanups of i.MX 8 DTS and binings.  No
+dependencies.
 
-a) I'm queueing this up, in which case I'll still need that ack/review
-b) you're queueing it up, in which case you can just grab it
+Best regards,
+Krzysztof
 
-I just don't want to end up in the same situation for 5.10, and then
-we're pushing this out 2 releases at that point...
+Krzysztof Kozlowski (13):
+  dt-bindings: power: fsl,imx-gpcv2: Document interrupt controller
+    properties
+  dt-bindings: display: bridge: nwl-dsi: Add common properties
+  dt-bindings: arm: fsl: Fix matching Purism Librem5 phones
+  dt-bindings: gpu: vivante,gc: Add common properties
+  dt-bindings: gpu: vivante,gc: Remove trailing whitespace
+  dt-bindings: mfd: rohm,bd71837-pmic: Add common properties
+  dt-bindings: mfd: rohm,bd71847-pmic: Add common clock-names
+  arm64: dts: imx8mm-var-som-symphony: Use newer interrupts property
+  arm64: dts: imx8mp-evk: Align pin configuration group names with
+    schema
+  arm64: dts: imx8mq: Add missing interrupts to GPC
+  arm64: dts: imx8mq-librem5: Align regulator names with schema
+  arm64: dts: imx8mq-librem5: Drop interrupt-names in PMIC
+  arm64: dts: imx8mq-librem5: Add interrupt-names to ti,tps6598x
 
-> Worse, right now, -rc1 and -rc2 is causing random crashes in my
-> gce-xfstests framework.  Sometimes it happens before we've run even a
-> single xfstests; sometimes it happens after we have successfully
-> completed all of the tests, and we're doing a shutdown of the VM under
-> test.  Other times it happens in the middle of a test run.  Given that
-> I'm seeing this at -rc1, which is before my late ext4 pull request to
-> Linus, it's probably not an ext4 related bug.  But it also means that
-> I'm partially blind in terms of my kernel testing at the moment.  So I
-> can't even tell Linus that I've run lots of tests and I'm 100%
-> confident your one-line change is 100% safe.
-> 
-> Next week after Labor Day, I should be completely done with the
-> performance review writeups that are on my plate, and I will hopefully
-> have a bit more time to try to debug these mysterious failures.  Or
-> maybe someone else will be able to figure out what the heck is going
-> wrong, and perhaps -rc3 will make all of these failures go away.
-> 
-> I'm sorry your frustrated; I'm frustrated too!  But until I can find
-> the time to do a full bisect (v5.8 works just fine.  v5.9-rc1 is
-> flakey as hell when booting my test config in a GCE VM), I'm not in a
-> position to send anything to Linus.
-
-That looks nasty, good luck! Hopefully the bisect will be helpful. FWIW,
-in the testing I've done (with this patch) on ext4 and with XFS, I
-haven't seen anything odd. That's using real hardware though, and qemu
-on the laptop, no GCE.
+ .../devicetree/bindings/arm/fsl.yaml          | 10 ++++--
+ .../bindings/display/bridge/nwl-dsi.yaml      |  4 +++
+ .../devicetree/bindings/gpu/vivante,gc.yaml   |  9 +++++-
+ .../bindings/mfd/rohm,bd71837-pmic.yaml       |  6 ++++
+ .../bindings/mfd/rohm,bd71847-pmic.yaml       |  3 ++
+ .../bindings/power/fsl,imx-gpcv2.yaml         |  4 +++
+ .../dts/freescale/imx8mm-var-som-symphony.dts |  2 +-
+ arch/arm64/boot/dts/freescale/imx8mp-evk.dts  | 12 +++----
+ .../dts/freescale/imx8mq-librem5-devkit.dts   |  1 -
+ .../boot/dts/freescale/imx8mq-librem5.dtsi    | 32 +++++++++----------
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi     |  1 +
+ 11 files changed, 57 insertions(+), 27 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
