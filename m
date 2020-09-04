@@ -2,110 +2,156 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A182C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E678DC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE157206CA
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB004206CA
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 04:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="cnfSSiYI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbgIDElt (ORCPT
+        id S1726275AbgIDEpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 00:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDElt (ORCPT
+        Fri, 4 Sep 2020 00:45:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:37812 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgIDEpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 00:41:49 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8D1EC061244;
-        Thu,  3 Sep 2020 21:41:48 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kE3Xe-00AAXp-Va; Fri, 04 Sep 2020 04:41:39 +0000
-Date:   Fri, 4 Sep 2020 05:41:38 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 12/14] x86: remove address space overrides using set_fs()
-Message-ID: <20200904044138.GP1236603@ZenIV.linux.org.uk>
-References: <20200903142242.925828-1-hch@lst.de>
- <20200903142242.925828-13-hch@lst.de>
- <20200904025510.GO1236603@ZenIV.linux.org.uk>
+        Fri, 4 Sep 2020 00:45:10 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5F05720B7178;
+        Thu,  3 Sep 2020 21:45:08 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5F05720B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1599194709;
+        bh=RpWQ073VIH14t43XVqWmodh+nr8CLXf0OhaMaz/PNpc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cnfSSiYIMeDx3WseF4w/2m+nlcpw4+brLUAvvqJlkCYcflBi5aoUZkVgJfMfEie/r
+         qJwuc8VtLvNBaY3w3rLneU8aYeouhqFMS0+sfDCvts1Vg2chTDxPkh2Fgn7B6m9hJP
+         tQ3xjemvbysiY6NFgWs38yVgrku/wbWvPZ/omWbw=
+Subject: Re: [PATCH v5 3/3] arm64: Add IMA kexec buffer to DTB
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     zohar@linux.ibm.com, robh@kernel.org, gregkh@linuxfoundation.org,
+        james.morse@arm.com, catalin.marinas@arm.com, sashal@kernel.org,
+        will@kernel.org, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        prsriva@linux.microsoft.com, balajib@linux.microsoft.com
+References: <20200901195029.30039-1-nramas@linux.microsoft.com>
+ <20200901195029.30039-4-nramas@linux.microsoft.com>
+ <87sgbyy0gr.fsf@morokweng.localdomain>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <35e3e3b0-541c-8a93-8c2f-b7659090d41f@linux.microsoft.com>
+Date:   Thu, 3 Sep 2020 21:45:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904025510.GO1236603@ZenIV.linux.org.uk>
+In-Reply-To: <87sgbyy0gr.fsf@morokweng.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:55:10AM +0100, Al Viro wrote:
-> On Thu, Sep 03, 2020 at 04:22:40PM +0200, Christoph Hellwig wrote:
+On 9/3/20 3:11 PM, Thiago Jung Bauermann wrote:
 > 
-> > diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-> > index c8a85b512796e1..94f7be4971ed04 100644
-> > --- a/arch/x86/lib/getuser.S
-> > +++ b/arch/x86/lib/getuser.S
-> > @@ -35,10 +35,19 @@
-> >  #include <asm/smap.h>
-> >  #include <asm/export.h>
-> >  
-> > +#ifdef CONFIG_X86_5LEVEL
-> > +#define LOAD_TASK_SIZE_MINUS_N(n) \
-> > +	ALTERNATIVE "mov $((1 << 47) - 4096 - (n)),%rdx", \
-> > +		    "mov $((1 << 56) - 4096 - (n)),%rdx", X86_FEATURE_LA57
-> > +#else
-> > +#define LOAD_TASK_SIZE_MINUS_N(n) \
-> > +	mov $(TASK_SIZE_MAX - (n)),%_ASM_DX
-> > +#endif
+> Lakshmi Ramasubramanian <nramas@linux.microsoft.com> writes:
 > 
-> Wait a sec... how is that supposed to build with X86_5LEVEL?  Do you mean
+>> The address and size of the current kernel's IMA measurement log
+>> need to be added to the device tree's IMA kexec buffer node for
+>> the log to be carried over to the next kernel on the kexec call.
+>>
+>> Add the IMA measurement log buffer properties to the device tree for
+>> ARM64 and reserve the memory for storing the IMA log.
+>> Update CONFIG_KEXEC_FILE to select CONFIG_HAVE_IMA_KEXEC to
+>> indicate that the IMA measurement log information is present in
+>> the device tree.
+>>
+>> Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+>> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+>> ---
+>>   arch/arm64/Kconfig                     |  1 +
+>>   arch/arm64/kernel/machine_kexec_file.c | 15 +++++++++++++++
+>>   2 files changed, 16 insertions(+)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 6d232837cbee..9f03c8245e5b 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -1077,6 +1077,7 @@ config KEXEC
+>>   config KEXEC_FILE
+>>   	bool "kexec file based system call"
+>>   	select KEXEC_CORE
+>> +	select HAVE_IMA_KEXEC
+>>   	help
+>>   	  This is new version of kexec system call. This system call is
+>>   	  file based and takes file descriptors as system call argument
+>> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+>> index 361a1143e09e..0fe3d629eefe 100644
+>> --- a/arch/arm64/kernel/machine_kexec_file.c
+>> +++ b/arch/arm64/kernel/machine_kexec_file.c
+>> @@ -136,6 +136,21 @@ static int setup_dtb(struct kimage *image,
+>>   				FDT_PROP_KASLR_SEED);
+>>   	}
+>>   
+>> +	/* add ima-kexec-buffer */
+>> +	if (image->arch.ima_buffer_size > 0) {
+>> +		ret = fdt_appendprop_addrrange(dtb, 0, off,
+>> +				FDT_PROP_IMA_KEXEC_BUFFER,
+>> +				image->arch.ima_buffer_addr,
+>> +				image->arch.ima_buffer_size);
+>> +		if (ret)
+>> +			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
+>> +
+>> +		ret = fdt_add_mem_rsv(dtb, image->arch.ima_buffer_addr,
+>> +				      image->arch.ima_buffer_size);
+>> +		if (ret)
+>> +			goto out;
+>> +	}
+>> +
+>>   	/* add rng-seed */
+>>   	if (rng_is_initialized()) {
+>>   		void *rng_seed;
 > 
-> #define LOAD_TASK_SIZE_MINUS_N(n) \
-> 	ALTERNATIVE __stringify(mov $((1 << 47) - 4096 - (n)),%rdx), \
-> 		    __stringify(mov $((1 << 56) - 4096 - (n)),%rdx), X86_FEATURE_LA57
+> I just noticed one more thing this code isn't doing compared to the
+> powerpc version (sorry to bring these issues piecemeal, I didn't realize
+> this before):
 > 
-> there?
+> You're not checking whether there already is a device tree property and
+> corresponding memory reservation for an IMA kexec buffer that the
+> currently running kernel might have received from a previous kernel. In
+> that case, this code will do the wrong thing because
+> fdt_appendprop_addrrange() will append the range to the existing
+> property, which is not what you want. You'll also have a memory
+> reservation entry for a stale IMA kexec buffer, which just wastes
+> memory.
+> 
+> So one thing you need to do, whether or not there's an IMA kexec buffer
+> to be passed to the next kernel, is to remove any existing
+> FDT_PROP_IMA_KEXEC_BUFFER property and also its corresponding memory
+> reservation, so that you avoid accumulating stale memory reservations
+> for non-existing IMA kexec buffers from previous kexecs.
+> 
 
-Pushed out with the following folded in.
+That's good catch Thiago. Thanks for the feedback. I'll make this change 
+and update.
 
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index 94f7be4971ed..2f052bc96866 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -37,8 +37,8 @@
- 
- #ifdef CONFIG_X86_5LEVEL
- #define LOAD_TASK_SIZE_MINUS_N(n) \
--	ALTERNATIVE "mov $((1 << 47) - 4096 - (n)),%rdx", \
--		    "mov $((1 << 56) - 4096 - (n)),%rdx", X86_FEATURE_LA57
-+	ALTERNATIVE __stringify(mov $((1 << 47) - 4096 - (n)),%rdx), \
-+		    __stringify(mov $((1 << 56) - 4096 - (n)),%rdx), X86_FEATURE_LA57
- #else
- #define LOAD_TASK_SIZE_MINUS_N(n) \
- 	mov $(TASK_SIZE_MAX - (n)),%_ASM_DX
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 445374885153..358239d77dff 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -33,8 +33,8 @@
- 
- #ifdef CONFIG_X86_5LEVEL
- #define LOAD_TASK_SIZE_MINUS_N(n) \
--	ALTERNATIVE "mov $((1 << 47) - 4096 - (n)),%rbx", \
--		    "mov $((1 << 56) - 4096 - (n)),%rbx", X86_FEATURE_LA57
-+	ALTERNATIVE __stringify(mov $((1 << 47) - 4096 - (n)),%rbx), \
-+		    __stringify(mov $((1 << 56) - 4096 - (n)),%rbx), X86_FEATURE_LA57
- #else
- #define LOAD_TASK_SIZE_MINUS_N(n) \
- 	mov $(TASK_SIZE_MAX - (n)),%_ASM_BX
+thanks,
+  -lakshmi
+
