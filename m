@@ -2,118 +2,111 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F40C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99D6C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B56D20770
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KqciaOou"
+	by mail.kernel.org (Postfix) with ESMTP id 78D7320770
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:26:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599233201;
+	bh=7ETwMr2woIdl6WmCKhWye9ZYfEI514T+ZyzZWn5CT8Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bsfSeW0qCSldMJuSVaxpWVxpT5tw3i+3HHn+1bl/vuv35/9Cxh50SLpmgOnwvxzFU
+	 XAlfS/9E6VRYTkcySouwo3+p11s1k+EYghShT5ljz6MQIeivW0SAdVdQJe4/u72akt
+	 EPYtZdQRyxXERWM6Kvh5dodaLsie2VRiicYKQea4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgIDP00 (ORCPT
+        id S1731009AbgIDPYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 11:26:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730784AbgIDP0W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 11:26:22 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD3EC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 08:26:21 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u20so4814316pfn.0
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 08:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=to:cc:from:subject:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=5282YCIbjYXuoDELr0tgCw3lmbT1e3lQtz3uBh49A5w=;
-        b=KqciaOouN3G0T0BpZ+nf3ctA74+2AtRh6tEhtU9HzF5zny++REty5f+5upK7wBTdT0
-         ZSD1SVZWQRZRcM/2VKoRlJEA5LO8fEpumqdT7HRfaWci2v8omzhLuF4oEKWy8QmNqH0r
-         iPE7seIHejvz+6TspV1qVue7CafhahPjlFPiVLzX6Wtn/smZZlQ/apex3bFHk5HZ23rE
-         KeynWoZJf++xordcvhc1Nab8GR6aO2Wu3rQgs/Sj9n9aMrnnKyu6xxryFYgS66oRvl6h
-         B1N5+V0mjXaWnnJz1F7iDCqhQwMBIYaNRHZSbiM3cv8UFkl1qSagq5pXLYUwm0+CTrXq
-         T0bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=5282YCIbjYXuoDELr0tgCw3lmbT1e3lQtz3uBh49A5w=;
-        b=QugOsVXNyTiIjLACd6kx/ElxiFHX82rquAWyAmtTrutIdoCQDnX/VBdzyOSj6ix+5n
-         kMAlk33gQsCMemwmfJ6uZFiRQ8FixTy7o3QXdFU09C4MIEsxLSivytmev0/tGO21ZNvs
-         Kw721mJ0TtyLuTbQ95fuW71J8hNNt9w4VQ9dQ5zt1yTcsO/gGSGBkcvy5JxVi+hLKXk7
-         U5cMucSc6YOPW+kXY/f8dvRRpct+OWtC8kMHPi24gTYrPbhyzTxHwRUatOvglhlQM4Ij
-         Btbminl9SOZA4qgUVt3P+j0nXYtEPe6/RfhTtu8JpYb2ZAKhS0chFv9QMp4NEfYkR0xJ
-         FxAQ==
-X-Gm-Message-State: AOAM531tZsegqBca2QzwQTOPg4P/pVJk/Nw/tzz+Ntlo/e8s7W56/vap
-        GriZ9d14m0Tvi88GK0P77rZtcHmSBm6mXPde
-X-Google-Smtp-Source: ABdhPJzWB1+Vzj3MMeE+uWismLmPVQESORqcKfWp3rBhgKzrwzRcqAem1QG2+r6cwXW16qiQ02z6kQ==
-X-Received: by 2002:a63:a53:: with SMTP id z19mr7435489pgk.67.1599233176257;
-        Fri, 04 Sep 2020 08:26:16 -0700 (PDT)
-Received: from [192.168.1.11] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id v10sm6707177pff.192.2020.09.04.08.26.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 04 Sep 2020 08:26:07 -0700 (PDT)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     IDE/ATA development list <linux-ide@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Subject: [GIT PULL] libata fixes for 5.9-rc4
-Message-ID: <ecf36c20-0cfd-9010-84f7-334e3ea3b67d@kernel.dk>
-Date:   Fri, 4 Sep 2020 09:26:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Fri, 4 Sep 2020 11:24:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730991AbgIDPYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:24:42 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD344207EA;
+        Fri,  4 Sep 2020 15:24:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599233082;
+        bh=7ETwMr2woIdl6WmCKhWye9ZYfEI514T+ZyzZWn5CT8Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FoWZJaagfp5IWcPyqFJnSqZN1o7c6hZJr4jH2FTrJjHMmkX8nZUQuGncGh6Z/hRW/
+         CxGHmJjgGM3959BM0hTZqSyUX3MTb6EGY/8QlKZFq3ybiJQws+x21A+nas/DmLp9YQ
+         DOxRgVxFOM6i/y2A621fDktzdpgHjO2OqAPf8dMM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v3 05/14] dt-bindings: watchdog: fsl-imx-wdt: Add i.MX 8M compatibles
+Date:   Fri,  4 Sep 2020 17:23:55 +0200
+Message-Id: <20200904152404.20636-6-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200904152404.20636-1-krzk@kernel.org>
+References: <20200904152404.20636-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+DTSes with new i.MX 8M SoCs introduce their own compatibles so add them
+to fix dtbs_check warnings like:
 
-- Improve Sandisks ATA_HORKAGE on NCQ (Tejun)
+  arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+    compatible:0: 'fsl,imx8mm-wdt' is not one of ['fsl,imx21-wdt']
+    From schema: Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
 
-- link printk cleanup (Xu)
+  arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+    compatible: ['fsl,imx8mm-wdt', 'fsl,imx21-wdt'] is too long
 
-Please pull!
+  arch/arm64/boot/dts/freescale/imx8mm-var-som-symphony.dt.yaml: watchdog@30280000:
+    compatible: Additional items are not allowed ('fsl,imx21-wdt' was unexpected)
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+ .../devicetree/bindings/watchdog/fsl-imx-wdt.yaml     | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.dk/linux-block.git tags/libata-5.9-2020-09-04
-
-for you to fetch changes up to 3b5455636fe26ea21b4189d135a424a6da016418:
-
-  libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks (2020-09-02 11:31:23 -0600)
-
-----------------------------------------------------------------
-libata-5.9-2020-09-04
-
-----------------------------------------------------------------
-Tejun Heo (1):
-      libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-
-Xu Wang (1):
-      ata: ahci: use ata_link_info() instead of ata_link_printk()
-
- drivers/ata/ahci.c        | 3 +--
- drivers/ata/libata-core.c | 5 ++---
- drivers/ata/libata-scsi.c | 8 +++++++-
- include/linux/libata.h    | 1 +
- 4 files changed, 11 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+index d96b93b11fad..991b4e33486e 100644
+--- a/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/fsl-imx-wdt.yaml
+@@ -14,8 +14,15 @@ allOf:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - fsl,imx21-wdt
++    oneOf:
++      - const: fsl,imx21-wdt
++      - items:
++          - enum:
++              - fsl,imx8mm-wdt
++              - fsl,imx8mn-wdt
++              - fsl,imx8mp-wdt
++              - fsl,imx8mq-wdt
++          - const: fsl,imx21-wdt
+ 
+   reg:
+     maxItems: 1
 -- 
-Jens Axboe
+2.17.1
 
