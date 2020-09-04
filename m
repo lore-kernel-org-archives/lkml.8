@@ -2,245 +2,163 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F5AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AB5C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF3C420758
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52C9205CB
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 01:20:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="mQU+aM+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgIDBM4 (ORCPT
+        id S1729405AbgIDBU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 21:12:56 -0400
-Received: from mga09.intel.com ([134.134.136.24]:15668 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbgIDBM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 21:12:56 -0400
-IronPort-SDR: qaLi+hVmA1bQH1k/WDPGPuEtcW9a9SMTcFneM3zyd6FggmnbfAnUzmW9yJAi8UDmrIbKqRYt2t
- lrkAnATPL+nw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="158658854"
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="158658854"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 18:12:55 -0700
-IronPort-SDR: 1A2Grwsws4l6bNTQS50Sh+Kbul7Nb1FbNeb8S1u8XR52KiDvMuqDxu7vfS6k1yznVa3MuQomR7
- dwNfQbDokatg==
-X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
-   d="scan'208";a="478264128"
-Received: from sliu49-mobl1.ccr.corp.intel.com (HELO [10.249.174.205]) ([10.249.174.205])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 18:12:51 -0700
-Subject: Re: [PATCH v2 05/17] virt: acrn: Introduce ACRN HSM basic driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yu Wang <yu1.wang@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Zhi Wang <zhi.a.wang@intel.com>,
-        Zhenyu Wang <zhenyuw@linux.intel.com>
-References: <20200903124201.17275-1-shuo.a.liu@intel.com>
- <20200903124201.17275-6-shuo.a.liu@intel.com>
- <20200903125359.GA2778029@kroah.com>
-From:   "Liu, Shuo A" <shuo.a.liu@intel.com>
-Message-ID: <f2f33bee-8aef-f2e6-89a3-4e417dc6071d@intel.com>
-Date:   Fri, 4 Sep 2020 09:12:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Thu, 3 Sep 2020 21:20:28 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:42224 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbgIDBU1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 21:20:27 -0400
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4D17E277;
+        Fri,  4 Sep 2020 03:20:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599182424;
+        bh=h+UWj+YWC7qG0b3g8wEpqmRH0C5HgRlo+QQRG2z9LWs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mQU+aM+XbZwbm5L+kxz8MmJ1zt+seUET7sJDp80Q5hfqaybG0qeifHdMr1Te7dFF/
+         dn5i3znGLGqJVOz6NhLVZynKkDPrxJi8GXhBfxDUWyJK+D3zucJs3nmX20DcDO4hny
+         fjlx8W0g+7+cWBtAqOaBDfpYqqb42nt0LThPODFk=
+Date:   Fri, 4 Sep 2020 04:20:00 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Jacopo Mondi <jacopo@jmondi.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH v3 1/2] media: i2c: ov772x: Add support for BT656 mode
+Message-ID: <20200904012000.GA9369@pendragon.ideasonboard.com>
+References: <20200824190406.27478-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-In-Reply-To: <20200903125359.GA2778029@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200824190406.27478-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Prabhakar,
 
+Thank you for the patch.
 
-On 9/3/2020 20:53, Greg Kroah-Hartman wrote:
-> On Thu, Sep 03, 2020 at 08:41:49PM +0800, shuo.a.liu@intel.com wrote:
->> From: Shuo Liu <shuo.a.liu@intel.com>
->>
->> ACRN Hypervisor Service Module (HSM) is a kernel module in Service VM
->> which communicates with ACRN userspace through ioctls and talks to ACRN
->> Hypervisor through hypercalls.
->>
->> Add a basic HSM driver which allows Service VM userspace to communicate
->> with ACRN. The following patches will add more ioctls, guest VM memory
->> mapping caching, I/O request processing, ioeventfd and irqfd into this
->> module. HSM exports a char device interface (/dev/acrn_hsm) to userspace.
->>
->> Signed-off-by: Shuo Liu <shuo.a.liu@intel.com>
->> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
->> Cc: Dave Hansen <dave.hansen@intel.com>
->> Cc: Zhi Wang <zhi.a.wang@intel.com>
->> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
->> Cc: Yu Wang <yu1.wang@intel.com>
->> Cc: Reinette Chatre <reinette.chatre@intel.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> ---
->>  .../userspace-api/ioctl/ioctl-number.rst      |  1 +
->>  MAINTAINERS                                   |  2 +
->>  drivers/virt/Kconfig                          |  2 +
->>  drivers/virt/Makefile                         |  1 +
->>  drivers/virt/acrn/Kconfig                     | 14 +++
->>  drivers/virt/acrn/Makefile                    |  3 +
->>  drivers/virt/acrn/acrn_drv.h                  | 19 ++++
->>  drivers/virt/acrn/hsm.c                       | 98 +++++++++++++++++++
->>  include/uapi/linux/acrn.h                     | 17 ++++
->>  9 files changed, 157 insertions(+)
->>  create mode 100644 drivers/virt/acrn/Kconfig
->>  create mode 100644 drivers/virt/acrn/Makefile
->>  create mode 100644 drivers/virt/acrn/acrn_drv.h
->>  create mode 100644 drivers/virt/acrn/hsm.c
->>  create mode 100644 include/uapi/linux/acrn.h
->>
->> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
->> index 2a198838fca9..ac60efedb104 100644
->> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
->> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
->> @@ -319,6 +319,7 @@ Code  Seq#    Include File                                           Comments
->>  0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
->>                                                                       <mailto:kenji@bitgate.com>
->>  0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
->> +0xA2  all    uapi/linux/acrn.h                                       ACRN hypervisor
+On Mon, Aug 24, 2020 at 08:04:05PM +0100, Lad Prabhakar wrote:
+> Add support to read the bus-type and enable BT656 mode if needed.
 > 
-> You don't have any ioctls in this patch, so why add this documentation
-> here? 
-
-This was left when i removed an api version ioctl from the v1 patch set.
-Let me move it to a later patch.
-
->>  0xA3  80-8F                                                          Port ACL  in development:
->>                                                                       <mailto:tlewis@mindspring.com>
->>  0xA3  90-9F  linux/dtlk.h
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index e0fea5e464b4..d4c1ef303c2d 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -442,6 +442,8 @@ L:	acrn-dev@lists.projectacrn.org
->>  S:	Supported
->>  W:	https://projectacrn.org
->>  F:	Documentation/virt/acrn/
->> +F:	drivers/virt/acrn/
->> +F:	include/uapi/linux/acrn.h
+> Also fail probe if unsupported bus_type is detected.
 > 
-> This uapi file is not used in this patch, please add it in a later
-> patch.
-
-OK.
-
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+>  drivers/media/i2c/ov772x.c | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
->> +static long acrn_dev_ioctl(struct file *filp, unsigned int cmd,
->> +			   unsigned long ioctl_param)
->> +{
->> +	return 0;
->> +}
-> 
-> As your ioctl does nothing, no need to include it here, add it in a
-> later patch.
+> diff --git a/drivers/media/i2c/ov772x.c b/drivers/media/i2c/ov772x.c
+> index 2cc6a678069a..67764d647526 100644
+> --- a/drivers/media/i2c/ov772x.c
+> +++ b/drivers/media/i2c/ov772x.c
+> @@ -31,6 +31,7 @@
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-event.h>
+> +#include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-image-sizes.h>
+>  #include <media/v4l2-subdev.h>
+>  
+> @@ -434,6 +435,7 @@ struct ov772x_priv {
+>  #ifdef CONFIG_MEDIA_CONTROLLER
+>  	struct media_pad pad;
+>  #endif
+> +	struct v4l2_fwnode_endpoint ep;
+>  };
+>  
+>  /*
+> @@ -581,6 +583,13 @@ static int ov772x_s_stream(struct v4l2_subdev *sd, int enable)
+>  	if (priv->streaming == enable)
+>  		goto done;
+>  
+> +	if (priv->ep.bus_type == V4L2_MBUS_BT656) {
+> +		ret = regmap_update_bits(priv->regmap, COM7, ITU656_ON_OFF,
+> +					 enable ? ITU656_ON_OFF : ~ITU656_ON_OFF);
+> +		if (ret)
+> +			goto done;
+> +	}
+> +
+>  	ret = regmap_update_bits(priv->regmap, COM2, SOFT_SLEEP_MODE,
+>  				 enable ? 0 : SOFT_SLEEP_MODE);
+>  	if (ret)
+> @@ -1354,6 +1363,7 @@ static const struct v4l2_subdev_ops ov772x_subdev_ops = {
+>  
+>  static int ov772x_probe(struct i2c_client *client)
+>  {
+> +	struct fwnode_handle *endpoint;
+>  	struct ov772x_priv	*priv;
+>  	int			ret;
+>  	static const struct regmap_config ov772x_regmap_config = {
+> @@ -1415,6 +1425,28 @@ static int ov772x_probe(struct i2c_client *client)
+>  		goto error_clk_put;
+>  	}
+>  
+> +	endpoint = fwnode_graph_get_next_endpoint(dev_fwnode(&client->dev),
+> +						  NULL);
+> +	if (!endpoint) {
+> +		dev_err(&client->dev, "endpoint node not found\n");
+> +		ret = -EINVAL;
+> +		goto error_clk_put;
+> +	}
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(endpoint, &priv->ep);
 
-OK.
+v4l2_fwnode_endpoint_parse() is deprecated for new drivers,
+v4l2_fwnode_endpoint_alloc_parse() is recommended instead. Please note
+that v4l2_fwnode_endpoint_free() then needs to be called in the error
+path and in remove().
 
-> 
->> +
->> +static int acrn_dev_release(struct inode *inode, struct file *filp)
->> +{
->> +	struct acrn_vm *vm = filp->private_data;
->> +
->> +	kfree(vm);
->> +	return 0;
->> +}
->> +
->> +static const struct file_operations acrn_fops = {
->> +	.owner		= THIS_MODULE,
->> +	.open		= acrn_dev_open,
->> +	.release	= acrn_dev_release,
->> +	.unlocked_ioctl	= acrn_dev_ioctl,
->> +};
->> +
->> +static struct miscdevice acrn_dev = {
->> +	.minor	= MISC_DYNAMIC_MINOR,
->> +	.name	= "acrn_hsm",
->> +	.fops	= &acrn_fops,
->> +};
->> +
->> +static int __init hsm_init(void)
->> +{
->> +	int ret;
->> +
->> +	if (x86_hyper_type != X86_HYPER_ACRN)
->> +		return -ENODEV;
->> +
->> +	if (!acrn_is_privileged_vm())
->> +		return -EPERM;
->> +
->> +	ret = misc_register(&acrn_dev);
->> +	if (ret) {
->> +		pr_err("Create misc dev failed!\n");
->> +		return ret;
->> +	}
->> +
->> +	return 0;
-> 
-> Tiny tiny nit, these lines can be rewritten as:
-> 	if (ret)
-> 		pr_err("Create misc dev failed!\n");
-> 
-> 	return ret;
-> 
-> :)
+On the other hand, not setting .bus_type and letting the parse()
+function determine the but type automatically is also deprecated, and I
+don't think forcing drivers to call v4l2_fwnode_endpoint_alloc_parse()
+once for each bus type until one succeeds is a good API. As change will
+be needed in that API, you can ignore v4l2_fwnode_endpoint_alloc_parse()
+for the time being if you want.
 
-OK. Thanks.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-> 
->> +}
->> +
->> +static void __exit hsm_exit(void)
->> +{
->> +	misc_deregister(&acrn_dev);
->> +}
->> +module_init(hsm_init);
->> +module_exit(hsm_exit);
->> +
->> +MODULE_AUTHOR("Intel Corporation");
->> +MODULE_LICENSE("GPL");
->> +MODULE_DESCRIPTION("ACRN Hypervisor Service Module (HSM)");
->> diff --git a/include/uapi/linux/acrn.h b/include/uapi/linux/acrn.h
->> new file mode 100644
->> index 000000000000..4ae34f86e2be
->> --- /dev/null
->> +++ b/include/uapi/linux/acrn.h
->> @@ -0,0 +1,17 @@
->> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->> +/*
->> + * Userspace interface for /dev/acrn_hsm - ACRN Hypervisor Service Module
->> + *
->> + * This file can be used by applications that need to communicate with the HSM
->> + * via the ioctl interface.
->> + */
->> +
->> +#ifndef _UAPI_ACRN_H
->> +#define _UAPI_ACRN_H
->> +
->> +#include <linux/types.h>
->> +
->> +/* The ioctl type, documented in ioctl-number.rst */
->> +#define ACRN_IOCTL_TYPE			0xA2
-> 
-> This isn't used in this patch, so save it for a later one please.
+> +	fwnode_handle_put(endpoint);
+> +	if (ret) {
+> +		dev_err(&client->dev, "Could not parse endpoint\n");
+> +		goto error_clk_put;
+> +	}
+> +
+> +	if (priv->ep.bus_type != V4L2_MBUS_PARALLEL &&
+> +	    priv->ep.bus_type != V4L2_MBUS_BT656) {
+> +		dev_err(&client->dev, "Unsupported bus type %d\n",
+> +			priv->ep.bus_type);
+> +		goto error_clk_put;
+> +	}
+> +
+>  	ret = ov772x_video_probe(priv);
+>  	if (ret < 0)
+>  		goto error_gpio_put;
 
-Sure. I will move to later one.
+-- 
+Regards,
 
-Thanks
-shuo
+Laurent Pinchart
