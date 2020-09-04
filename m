@@ -2,28 +2,27 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46550C28E83
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A27C2BC84
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09EBB206A5
+	by mail.kernel.org (Postfix) with ESMTP id BBB1C2074D
 	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 07:44:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbgIDHoR (ORCPT
+        id S1729731AbgIDHoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 4 Sep 2020 03:44:17 -0400
-Received: from lucky1.263xmail.com ([211.157.147.131]:48578 "EHLO
+Received: from lucky1.263xmail.com ([211.157.147.130]:54374 "EHLO
         lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728170AbgIDHoP (ORCPT
+        with ESMTP id S1726171AbgIDHoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 03:44:15 -0400
+        Fri, 4 Sep 2020 03:44:16 -0400
 Received: from localhost (unknown [192.168.167.223])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 4E516B21EC;
-        Fri,  4 Sep 2020 15:44:11 +0800 (CST)
+        by lucky1.263xmail.com (Postfix) with ESMTP id CCA0FCC317;
+        Fri,  4 Sep 2020 15:44:09 +0800 (CST)
 X-MAIL-GRAY: 0
 X-MAIL-DELIVERY: 1
 X-ADDR-CHECKED4: 1
@@ -31,9 +30,9 @@ X-ANTISPAM-LEVEL: 2
 X-ABS-CHECKED: 0
 Received: from localhost.localdomain (unknown [58.22.7.114])
         by smtp.263.net (postfix) whith ESMTP id P15471T140656136742656S1599205448140075_;
-        Fri, 04 Sep 2020 15:44:10 +0800 (CST)
+        Fri, 04 Sep 2020 15:44:09 +0800 (CST)
 X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <4dac87a665b377536b15cc5cfbba7e94>
+X-UNIQUE-TAG: <476be6e72284b797704417aaac901372>
 X-RL-SENDER: zhangqing@rock-chips.com
 X-SENDER: zhangqing@rock-chips.com
 X-LOGIN-NAME: zhangqing@rock-chips.com
@@ -49,35 +48,54 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org,
         linux-kernel@vger.kernel.org, xxx@rock-chips.com,
         xf@rock-chips.com, huangtao@rock-chips.com,
         kever.yang@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v3 2/6] clk: rockchip: Export rockchip_clk_register_ddrclk()
-Date:   Fri,  4 Sep 2020 15:44:01 +0800
-Message-Id: <20200904074405.24439-3-zhangqing@rock-chips.com>
+Subject: [PATCH v3 0/6] clk: rockchip: Support module build
+Date:   Fri,  4 Sep 2020 15:43:59 +0800
+Message-Id: <20200904074405.24439-1-zhangqing@rock-chips.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904074405.24439-1-zhangqing@rock-chips.com>
-References: <20200904074405.24439-1-zhangqing@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is used by the Rockchip clk driver, export it to allow that
-driver to be compiled as a module..
+Export some APIs for module drivers.
+Fix the clock config to support module build.
+Fix the clk driver init, add module author, description
+and license to support building RK3399 SoC clock driver as module.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
----
- drivers/clk/rockchip/clk-ddr.c | 1 +
- 1 file changed, 1 insertion(+)
+Change in V2:
+[PATCH v2 1/6]: remove "clk",and check "hw" isn't an error value.
+[PATCH v2 6/6]: store a function pointer in the match data.
 
-diff --git a/drivers/clk/rockchip/clk-ddr.c b/drivers/clk/rockchip/clk-ddr.c
-index 9273bce4d7b6..282b6f22eb22 100644
---- a/drivers/clk/rockchip/clk-ddr.c
-+++ b/drivers/clk/rockchip/clk-ddr.c
-@@ -136,3 +136,4 @@ struct clk *rockchip_clk_register_ddrclk(const char *name, int flags,
- 
- 	return clk;
- }
-+EXPORT_SYMBOL(rockchip_clk_register_ddrclk);
+Change in V3:
+[PATCH v3 1/6]: fix up the compiler warning.
+drivers/clk/rockchip/clk.c: In function 'rockchip_clk_register_branch':
+>> drivers/clk/rockchip/clk.c:52:6: warning: variable 'ret' set but not
+>> used [-Wunused-but-set-variable]
+      52 |  int ret;
+         |      ^~~
+
+Elaine Zhang (6):
+  clk: rockchip: Use clk_hw_register_composite instead of
+    clk_register_composite calls
+  clk: rockchip: Export rockchip_clk_register_ddrclk()
+  clk: rockchip: Export rockchip_register_softrst()
+  clk: rockchip: Export some clock common APIs for module drivers
+  clk: rockchip: fix the clk config to support module build
+  clk: rockchip: rk3399: Support module build
+
+ drivers/clk/Kconfig                     |   1 +
+ drivers/clk/rockchip/Kconfig            |  78 ++++++++++++++++
+ drivers/clk/rockchip/Makefile           |  42 ++++-----
+ drivers/clk/rockchip/clk-ddr.c          |   1 +
+ drivers/clk/rockchip/clk-half-divider.c |  18 ++--
+ drivers/clk/rockchip/clk-rk3399.c       |  55 ++++++++++++
+ drivers/clk/rockchip/clk.c              | 113 +++++++++++++-----------
+ drivers/clk/rockchip/softrst.c          |   7 +-
+ 8 files changed, 231 insertions(+), 84 deletions(-)
+ create mode 100644 drivers/clk/rockchip/Kconfig
+
+
+base-commit: b36c969764ab12faebb74711c942fa3e6eaf1e96
 -- 
 2.17.1
 
