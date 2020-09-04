@@ -2,96 +2,138 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5089CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D216206E7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:03:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FA9206F2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 06:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="iRNNr3B2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tmglZImb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgIDGDp (ORCPT
+        id S1726898AbgIDGEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 02:03:45 -0400
-Received: from www.zeus03.de ([194.117.254.33]:46214 "EHLO mail.zeus03.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbgIDGDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 02:03:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=2j2B6NemcV8Dxeu6oSNbEuFBis/7
-        VkF6rkRjkhOxqCQ=; b=iRNNr3B2DUSgFPPfphdXJmRk/r1Ok2OTR4IJi6L6UwsU
-        MPi5BE0sy8aFqkiipm4rjGfBw60v2jM9lSB/+FAxwJuBrjKUBlLgwP3heNdbi8As
-        l7F+An0yjq9qwJ0nZefjKOi+l+kJJgLrO0X5SXFv5XSFtGMj8gYFkUqRAUJGCkI=
-Received: (qmail 3465450 invoked from network); 4 Sep 2020 08:03:41 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 4 Sep 2020 08:03:41 +0200
-X-UD-Smtp-Session: l3s3148p1@lax2oXauHqEgAwDPXwlxANIWpbLKE1Uh
-Date:   Fri, 4 Sep 2020 08:03:38 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     ulf.hansson@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: renesas_sdhi: Drop local dma_parms
-Message-ID: <20200904060338.GA1506@ninjato>
-References: <85e1fc97dbec3dea96102785a5e308ccb5e91cfe.1599167798.git.robin.murphy@arm.com>
+        Fri, 4 Sep 2020 02:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbgIDGEi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 02:04:38 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D09C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 23:04:38 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id n133so5354714qkn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 23:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :organization:user-agent:mime-version:content-transfer-encoding;
+        bh=Y4+nyUm6P1sliqzR8n00yXfDoX7E3MCV3APAcgzk2PM=;
+        b=tmglZImbSzoU+BhJ6jX9g28qc3bA3Dg4gsr18kTGq4SIswhoONwdW7lTJ37ErdYH0f
+         VKyDWeCmNhGNRuUWPMOfVZvdpsarevt9GZbHmqKNG6BX8v9uCTcz18gw2QfND7xyROPn
+         I5onuGEu9zZ8T7eG1A9YU+Qeda0oJGkZQqSPMAracI4OGeh4zjnr3aDbyk18h7+sgx42
+         lMlfdjNK7LOhmKh3PC7sGNuJPRJLK1RCRQg7wXFJQcqqokjcOMERWdmR93IHzj/Cc7BO
+         YnFOCZH/UTY9v5tuKcTJYdM5R+c1654bmqEBluKZ5d+j+dy7CHCso8Hbs2vdo/ILThNg
+         RmEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=Y4+nyUm6P1sliqzR8n00yXfDoX7E3MCV3APAcgzk2PM=;
+        b=OuQktHOQYl2uNxoADS4MtnwIkX0dJoVqUwAuKl5fzOaFy7S9YSMBArMCuZ0sFn1sfq
+         6f6Z0/uyoOHYaaJ1kAv94E3/hm2+HzlZsh7aqxMTv2aoun4taENXdX+M+FjuFs/Clsop
+         B147/nPhpa+FEYwVuRl3v9kdGBzxpi1FzGMM4rELV4t8ZogT/yWkSWbzhEH4IXVgRn4p
+         ryVjlwfchXAlXuI49AW1T6+w//CvaKd1JP6ZmLsK1hLnzOrEve7fQ0goPsJLRDnjkI1o
+         nXG48WJvzkMrNLNfHNi2lsCaWLLJcEznNv+hsPcuNpB+mxJpcrPj8idPeQyU2sDIql+m
+         FMsQ==
+X-Gm-Message-State: AOAM53385nYiefWkzUidFnux4u0efO2w/SlGv3vRxZnaclUhJnPAK0vm
+        sigI4nRqh7iQ2ZftUU7ymcM=
+X-Google-Smtp-Source: ABdhPJyMROFWR3SpJFpKskeTIMVkr4OkfgySEus//Cvb5l6RUUinHU1UFOrJ5iRJ1avXPXHMpAtDwA==
+X-Received: by 2002:a37:a3cf:: with SMTP id m198mr6676667qke.410.1599199475491;
+        Thu, 03 Sep 2020 23:04:35 -0700 (PDT)
+Received: from LeoBras (179-125-130-62.dynamic.desktop.com.br. [179.125.130.62])
+        by smtp.gmail.com with ESMTPSA id 103sm3808531qta.31.2020.09.03.23.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Sep 2020 23:04:34 -0700 (PDT)
+Message-ID: <ef7e80b0a7399bad607324301a604bfb46c2de05.camel@gmail.com>
+Subject: Re: [PATCH v1 02/10] powerpc/kernel/iommu: Align size for
+ IOMMU_PAGE_SIZE on iommu_*_coherent()
+From:   Leonardo Bras <leobras.c@gmail.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Fri, 04 Sep 2020 03:04:28 -0300
+In-Reply-To: <8f569f68-5145-676e-50a1-b13f3fbd69cc@ozlabs.ru>
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+         <20200817234033.442511-3-leobras.c@gmail.com>
+         <7b9640e0-568f-1470-40f4-a3ccec8abcf2@ozlabs.ru>
+         <c67c66e466ad27d15aa2b970c48d2336d95b2971.camel@gmail.com>
+         <da473389-f921-075a-ec8e-ea516de4f177@ozlabs.ru>
+         <2aacd45f047489642da1731c92d3555ad101e3c7.camel@gmail.com>
+         <81f106bd-8962-22f2-f14a-378d3486f57e@ozlabs.ru>
+         <39ad3a9c103faf9c5fc2fd5700d8606eb4a2b67e.camel@gmail.com>
+         <8f569f68-5145-676e-50a1-b13f3fbd69cc@ozlabs.ru>
+Organization: IBM
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
-Content-Disposition: inline
-In-Reply-To: <85e1fc97dbec3dea96102785a5e308ccb5e91cfe.1599167798.git.robin.murphy@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2020-09-03 at 14:41 +1000, Alexey Kardashevskiy wrote:
+> I am new to this, so I am trying to understand how a memory page mapped
+> > as DMA, and used for something else could be a problem.
+> 
+>  From the device prospective, there is PCI space and everything from 0 
+> till 1<<64 is accessible and what is that mapped to - the device does 
+> not know. PHB's IOMMU is the thing to notice invalid access and raise 
+> EEH but PHB only knows about PCI->physical memory mapping (with IOMMU 
+> pages) but nothing about the host kernel pages. Does this help? Thanks,
 
---Q68bSM7Ycu6FN28Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+According to our conversation on Slack:
+1- There is a problem if a hypervisor gives to it's VMs contiguous
+memory blocks that are not aligned to IOMMU pages, because then an 
+iommu_map_page() could map some memory in this VM and some memory in
+other VM / process.
+2- To guarantee this, we should have system pagesize >= iommu_pagesize 
 
-On Thu, Sep 03, 2020 at 10:18:06PM +0100, Robin Murphy wrote:
-> Since commit 9495b7e92f71 ("driver core: platform: Initialize dma_parms
-> for platform devices"), struct platform_device already provides a
-> dma_parms structure, so we can save allocating another one.
->=20
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+One way to get (2) is by doing this in enable_ddw():
+	if ((query.page_size & 4) && PAGE_SHIFT >= 24) {
+		page_shift = 24; /* 16MB */
+	} else if ((query.page_size & 2) &&  PAGE_SHIFT >= 16 ) {
+		page_shift = 16; /* 64kB */
+	} else if (query.page_size & 1 &&  PAGE_SHIFT >= 12) {
+		page_shift = 12; /* 4kB */
+	[...]
 
-Double-checked the mentioned commit above:
+Another way of solving this, would be adding in LoPAR documentation
+that the blocksize of contiguous memory the hypervisor gives a VM
+should always be aligned to IOMMU pagesize offered.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+I think the best approach would be first sending the above patch, which
+is faster, and then get working into adding that to documentation, so
+hypervisors guarantee this.
 
-No regression and same performance when checksumming a large file:
+If this gets into the docs, we can revert the patch.
 
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+What do you think?
 
-Thanks for the patch!
+Best regards!
 
-
---Q68bSM7Ycu6FN28Q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9R2LYACgkQFA3kzBSg
-KbYNPQ/+LySpPJv7gjCKYrfj8+CLJgz77TYtIdkVeOYKkZWvz5CEvrYPquOJ6Otx
-9z66asp0e9aupqEevqSy/sdFcvBnCnUfzGWfm6aY7C2bvTW/ay7hSk9mqHz4yoMd
-LqS9oXdRfL9pfurPh68MFx0kM2HWTCV38YF6Hm9Rwlnwct/Ea2l48YpZx9dpiYm1
-M2SkP5DvhBlMJAlJ2bE3m6RqSN7O7gQtPmNCHrT+ixiLiv3mQCPtO3YAY8CMcaeu
-igP4qvt5drOLPyNqlCsdJLLzu9H9I8aSg6RkkUVxnLIT7q3JLYa/oGuwGfAkX0ne
-wnX4fZS06sM3i2ZS3UVHHt9nUKbGKre/yGoCNFzS4XNwLwqXBvClVKNCeyJHS59T
-rnF3MCNWKskFCblmRB9VTOOKlNDnEVjv0Nmx91SY4ijQIr87Fxe5GcEGcJRYNRlE
-JL12rNV0xUk0oLNP/ZEEIWsy90k/p5H/U+P/Zp2bz7cay+VuoMSrH9dJ7aGhN8WQ
-kyKmM95BVYc/9GeXt/Zwl24pMzskICwwJWA4T3joNo3tuJrJ0hjsi/XUrYXrFeuq
-bLojTEqnSvq1FMga6sqFASH89bmZ4sdurAncU4bEIil4bRzXrS0om19xlkKqMVu3
-wqnbh3+0ASBDxHZdkJZVvnoifhoahlzosNNvhW27FBFSvZ8du6Q=
-=Q1Tk
------END PGP SIGNATURE-----
-
---Q68bSM7Ycu6FN28Q--
