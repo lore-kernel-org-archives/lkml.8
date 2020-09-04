@@ -2,145 +2,92 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C3F1C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF37C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 141CC206B7
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599229355;
-	bh=wvxtajZLIXfuNmxZJFRiIF+SaRJ8cKhztaeZ5ho8vSM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NtrcltNcUQ6Xtw9tRdxjO8eSuPRNLwMN2JGu9xv8VzlDwIbz77KZHv0WJqmLxDHlQ
-	 8xdR01TzF65YED3/0O9KL41Oerpyq+zoBMH8CkXmM/xvBQCfupmYjcu6o0dnXfS85d
-	 HQkv1afPuS0gW6CuETbYJTorZBqXI4lonTHIRx1Y=
+	by mail.kernel.org (Postfix) with ESMTP id A1454206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:23:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YlWKbQnY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbgIDOWa (ORCPT
+        id S1730604AbgIDOXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730455AbgIDNeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:34:23 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2F2821582;
-        Fri,  4 Sep 2020 13:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226257;
-        bh=wvxtajZLIXfuNmxZJFRiIF+SaRJ8cKhztaeZ5ho8vSM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZHRpDb2i3nlvTU6bfSEM/HUQ/rL7EUZH2+1BJJPU80LdC+5021ICTi/88lJYqoOQ
-         BjAQDV/k6z3yXxvdtkkTZfyRANS7Vq/Q6PSSXC3BWXo8dZcIXgUgLzPo0HcKjL01wQ
-         nC5L5bhhu86OHxoKSOJsjkkO6gbK2MIgENdzrJxs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
-        Jann Horn <jannh@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 04/17] mm: fix pin vs. gup mismatch with gate pages
-Date:   Fri,  4 Sep 2020 15:30:03 +0200
-Message-Id: <20200904120258.196815367@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
-References: <20200904120257.983551609@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Fri, 4 Sep 2020 10:23:14 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26582 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730786AbgIDOWY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 10:22:24 -0400
+X-UUID: 59a2a1d3f91243169abb6ca8014e754a-20200904
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=d6kOW52w5IkfV9rG1/hHcYEAa68TX5XY3lJUkDhh0sM=;
+        b=YlWKbQnYppFVrqwFSjGBq/D7yof7wPF/LittSaBZx4a0qIvovNUwY69BplsPZlQQo94BFBFMJh3fB9ORHi17q9uXks5NQfqPY3SAQEUlrUD+/kfA+3U+G+oaSZXJJjPH6xfnUDzIAi0A7uL7AsCH9lKRFHYK5NtDzq7AkMatIvI=;
+X-UUID: 59a2a1d3f91243169abb6ca8014e754a-20200904
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
+        (envelope-from <landen.chao@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1470373698; Fri, 04 Sep 2020 22:22:17 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 4 Sep 2020 22:22:14 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 4 Sep 2020 22:22:14 +0800
+From:   Landen Chao <landen.chao@mediatek.com>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>
+CC:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
+        <opensource@vdorst.com>, <dqfext@gmail.com>,
+        Landen Chao <landen.chao@mediatek.com>
+Subject: [PATCH net-next v3 1/6] net: dsa: mt7530: Refine message in Kconfig
+Date:   Fri, 4 Sep 2020 22:21:56 +0800
+Message-ID: <38268b91c7dc7296764795aac3c710378d2d24a8.1599228079.git.landen.chao@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <cover.1599228079.git.landen.chao@mediatek.com>
+References: <cover.1599228079.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
-
-commit 9fa2dd946743ae6f30dc4830da19147bf100a7f2 upstream.
-
-Gate pages were missed when converting from get to pin_user_pages().
-This can lead to refcount imbalances.  This is reliably and quickly
-reproducible running the x86 selftests when vsyscall=emulate is enabled
-(the default).  Fix by using try_grab_page() with appropriate flags
-passed.
-
-The long story:
-
-Today, pin_user_pages() and get_user_pages() are similar interfaces for
-manipulating page reference counts.  However, "pins" use a "bias" value
-and manipulate the actual reference count by 1024 instead of 1 used by
-plain "gets".
-
-That means that pin_user_pages() must be matched with unpin_user_pages()
-and can't be mixed with a plain put_user_pages() or put_page().
-
-Enter gate pages, like the vsyscall page.  They are pages usually in the
-kernel image, but which are mapped to userspace.  Userspace is allowed
-access to them, including interfaces using get/pin_user_pages().  The
-refcount of these kernel pages is manipulated just like a normal user
-page on the get/pin side so that the put/unpin side can work the same
-for normal user pages or gate pages.
-
-get_gate_page() uses try_get_page() which only bumps the refcount by
-1, not 1024, even if called in the pin_user_pages() path.  If someone
-pins a gate page, this happens:
-
-	pin_user_pages()
-		get_gate_page()
-			try_get_page() // bump refcount +1
-	... some time later
-	unpin_user_pages()
-		page_ref_sub_and_test(page, 1024))
-
-... and boom, we get a refcount off by 1023.  This is reliably and
-quickly reproducible running the x86 selftests when booted with
-vsyscall=emulate (the default).  The selftests use ptrace(), but I
-suspect anything using pin_user_pages() on gate pages could hit this.
-
-To fix it, simply use try_grab_page() instead of try_get_page(), and
-pass 'gup_flags' in so that FOLL_PIN can be respected.
-
-This bug traces back to the very beginning of the FOLL_PIN support in
-commit 3faa52c03f44 ("mm/gup: track FOLL_PIN pages"), which showed up in
-the 5.7 release.
-
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Fixes: 3faa52c03f44 ("mm/gup: track FOLL_PIN pages")
-Reported-by: Peter Zijlstra <peterz@infradead.org>
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: x86@kernel.org
-Cc: Jann Horn <jannh@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/gup.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -843,7 +843,7 @@ static int get_gate_page(struct mm_struc
- 			goto unmap;
- 		*page = pte_page(*pte);
- 	}
--	if (unlikely(!try_get_page(*page))) {
-+	if (unlikely(!try_grab_page(*page, gup_flags))) {
- 		ret = -ENOMEM;
- 		goto unmap;
- 	}
-
+UmVmaW5lIG1lc3NhZ2UgaW4gS2NvbmZpZyB3aXRoIGZpeGluZyB0eXBvIGFuZCBhbiBleHBsaWNp
+dCBNVDc2MjEgc3VwcG9ydC4NCg0KU2lnbmVkLW9mZi1ieTogTGFuZGVuIENoYW8gPGxhbmRlbi5j
+aGFvQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IFNlYW4gV2FuZyA8c2Vhbi53YW5nQG1l
+ZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdt
+YWlsLmNvbT4NCi0tLQ0KIGRyaXZlcnMvbmV0L2RzYS9LY29uZmlnIHwgNiArKystLS0NCiAxIGZp
+bGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9uZXQvZHNhL0tjb25maWcgYi9kcml2ZXJzL25ldC9kc2EvS2NvbmZpZw0KaW5k
+ZXggNDY4YjNjNDI3M2M1Li4wNmQ2OGE4NDg3NzQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL25ldC9k
+c2EvS2NvbmZpZw0KKysrIGIvZHJpdmVycy9uZXQvZHNhL0tjb25maWcNCkBAIC0zMywxMiArMzMs
+MTIgQEAgY29uZmlnIE5FVF9EU0FfTEFOVElRX0dTV0lQDQogCSAgdGhlIHhyeDIwMCAvIFZSOSBT
+b0MuDQogDQogY29uZmlnIE5FVF9EU0FfTVQ3NTMwDQotCXRyaXN0YXRlICJNZWRpYXRlayBNVDc1
+MzAgRXRoZXJuZXQgc3dpdGNoIHN1cHBvcnQiDQorCXRyaXN0YXRlICJNZWRpYVRlayBNVDc1MzAg
+YW5kIE1UNzYyMSBFdGhlcm5ldCBzd2l0Y2ggc3VwcG9ydCINCiAJZGVwZW5kcyBvbiBORVRfRFNB
+DQogCXNlbGVjdCBORVRfRFNBX1RBR19NVEsNCiAJaGVscA0KLQkgIFRoaXMgZW5hYmxlcyBzdXBw
+b3J0IGZvciB0aGUgTWVkaWF0ZWsgTVQ3NTMwIEV0aGVybmV0IHN3aXRjaA0KLQkgIGNoaXAuDQor
+CSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIHRoZSBNZWRpYVRlayBNVDc1MzAgYW5kIE1UNzYy
+MSBFdGhlcm5ldA0KKwkgIHN3aXRjaCBjaGlwLg0KIA0KIGNvbmZpZyBORVRfRFNBX01WODhFNjA2
+MA0KIAl0cmlzdGF0ZSAiTWFydmVsbCA4OEU2MDYwIGV0aGVybmV0IHN3aXRjaCBjaGlwIHN1cHBv
+cnQiDQotLSANCjIuMTcuMQ0K
 
