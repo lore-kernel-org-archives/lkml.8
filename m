@@ -2,141 +2,72 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75DA2C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4682073B
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 14:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3536C2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 15:03:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599231784;
+	bh=wycQ6jI9pjOiTB5GIp2mZuyFyDlyeuQ9huVpOEiGNBc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zvnBk5Fpvxk9cBH5f7bX84kUN13wjoMhLBVGd1I/i0EBac1LFq0mkaxfHkpldilso
+	 PAeHSttlgUj4CQxZWPTK50RvVXWb7VrUF5JZWWhOlCkhjIuGVFnWp8bo2mTuZ8N7Lg
+	 28Ey8WjPX5kk8Js9U4WUKKpe6E6oj4yIavI5Fv3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbgIDO7j (ORCPT
+        id S1730521AbgIDPDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 10:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730799AbgIDO7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 10:59:37 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97A51C061246
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 07:59:37 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kEDBW-0003Rl-CT; Fri, 04 Sep 2020 16:59:26 +0200
-Message-ID: <b9d49549cc357958d114566bebb11fe75324ce7d.camel@pengutronix.de>
-Subject: Re: [PATCH 09/13] arm64: dts: imx8mp-evk: Align pin configuration
- group names with schema
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>, Li Yang <leoyang.li@nxp.com>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, etnaviv@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org
-Date:   Fri, 04 Sep 2020 16:59:46 +0200
-In-Reply-To: <20200904145312.10960-10-krzk@kernel.org>
-References: <20200904145312.10960-1-krzk@kernel.org>
-         <20200904145312.10960-10-krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Fri, 4 Sep 2020 11:03:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730202AbgIDPC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 11:02:59 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5FE42073B;
+        Fri,  4 Sep 2020 15:02:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599231779;
+        bh=wycQ6jI9pjOiTB5GIp2mZuyFyDlyeuQ9huVpOEiGNBc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=htsQ614gJzrBICf3ZITx+iZk2nx7WN/yqvMGOxY3MATmyUrnWJsSI9Pg0c3Jq56tm
+         63i5K7T62hgsFtEj1HoH3hQQu95Nn0y+RDaLW8QQ+6nXu2QzYeu2fLGevjksP5N8mq
+         KZ9E3hS88vzoqWlLX6qsM7yhXbGaZrZ6HsHaovXg=
+Date:   Fri, 4 Sep 2020 08:02:57 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Henrik Bjoernlund <henrik.bjoernlund@microchip.com>
+Cc:     <davem@davemloft.net>, <roopa@nvidia.com>, <nikolay@nvidia.com>,
+        <jiri@mellanox.com>, <idosch@mellanox.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>,
+        <UNGLinuxDriver@microchip.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: Re: [PATCH RFC 4/7] bridge: cfm: Kernel space implementation of
+ CFM.
+Message-ID: <20200904080257.6b2a643f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200904091527.669109-5-henrik.bjoernlund@microchip.com>
+References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
+        <20200904091527.669109-5-henrik.bjoernlund@microchip.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 2020-09-04 at 16:53 +0200, Krzysztof Kozlowski wrote:
-> Device tree schema expects pin configuration groups to end with 'grp'
-> suffix, otherwise dtbs_check complain with a warning like:
-> 
->   ... 'usdhc3grp-100mhz', 'usdhc3grp-200mhz' do not match any of the regexes: 'grp$', 'pinctrl-[0-9]+'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+On Fri, 4 Sep 2020 09:15:24 +0000 Henrik Bjoernlund wrote:
+> +	rcu_read_lock();
+> +	b_port = rcu_dereference(mep->b_port);
+> +	if (!b_port)
+> +		return NULL;
+> +	skb = dev_alloc_skb(CFM_CCM_MAX_FRAME_LENGTH);
+> +	if (!skb)
+> +		return NULL;
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> index 3d535f1b3440..ad66f1286d95 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-> @@ -157,7 +157,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmc {
-> +	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_SD2_RESET_B__GPIO2_IO19	0x41
->  		>;
-> @@ -182,7 +182,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_usdhc2_100mhz: usdhc2grp-100mhz {
-> +	pinctrl_usdhc2_100mhz: usdhc2-100mhzgrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x194
->  			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD	0x1d4
-> @@ -194,7 +194,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_usdhc2_200mhz: usdhc2grp-200mhz {
-> +	pinctrl_usdhc2_200mhz: usdhc2-200mhzgrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_SD2_CLK__USDHC2_CLK	0x196
->  			MX8MP_IOMUXC_SD2_CMD__USDHC2_CMD	0x1d6
-> @@ -206,7 +206,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_usdhc2_gpio: usdhc2grp-gpio {
-> +	pinctrl_usdhc2_gpio: usdhc2gpiogrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_SD2_CD_B__GPIO2_IO12	0x1c4
->  		>;
-> @@ -228,7 +228,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_usdhc3_100mhz: usdhc3grp-100mhz {
-> +	pinctrl_usdhc3_100mhz: usdhc3-100mhzgrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK	0x194
->  			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD	0x1d4
-> @@ -244,7 +244,7 @@
->  		>;
->  	};
->  
-> -	pinctrl_usdhc3_200mhz: usdhc3grp-200mhz {
-> +	pinctrl_usdhc3_200mhz: usdhc3-200mhzgrp {
->  		fsl,pins = <
->  			MX8MP_IOMUXC_NAND_WE_B__USDHC3_CLK	0x196
->  			MX8MP_IOMUXC_NAND_WP_B__USDHC3_CMD	0x1d6
-
+net/bridge/br_cfm.c:171:23: warning: context imbalance in 'ccm_frame_build' - different lock contexts for basic block
