@@ -2,123 +2,183 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DB8C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A66C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CAE62067C
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MRIf1HBg"
+	by mail.kernel.org (Postfix) with ESMTP id 1CBBD206B7
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 02:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgIDCTJ (ORCPT
+        id S1729598AbgIDCVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 3 Sep 2020 22:19:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729468AbgIDCTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 3 Sep 2020 22:19:08 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEADAC061245
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 19:19:07 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id b12so4586758edz.11
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 19:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LrAdzv24TvKINI+TSt9YrTxl/N6E+xS4y6ll+3lQsBM=;
-        b=MRIf1HBgmWXfY1BikF2IYGavdlt4nQmFrVJ6Mi+ad+vUFt0vx2nR0LP2LhUjG+MOoy
-         y/BaY2dLXwr0smwGz3krb1Tp8HTvrZBPaxjjJswpXWPxv6eY9MBUdVuGde7aYtuDJ4fl
-         vM4WtJ4alvKrxThlhkLGNlCGI2rDb91JN/ZjFLZ/CRmly547F0A2OlB7yDF546n0qcGv
-         32QV9KC3cBX+N7U5ISIfjFklMV66lljsGD2vDQSqAPwrTrxnegtZENKpP7AlOhf8OuAe
-         bEWWikidflcbq6YaJCTNtFrd7PAjhQh5W4X+VczD8GPAuWc4xbg7ba7h8uc9XO9w0sRy
-         Mwrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LrAdzv24TvKINI+TSt9YrTxl/N6E+xS4y6ll+3lQsBM=;
-        b=jUf0ClM26EknSDg3HqZwhYo1mwU25nbumA7o3o28oW3hVpY78BtmIbbJTvfRxrLai1
-         PaQcsOMHnszF8nBigZUHTDQsY4EZr1oBvfgbKAAN6b4PXswiw7XpRUyF2e18gZhbhjo+
-         tQbglNFvOA7MqODes8fFx85wPHFTtkx6MzJmr/JwOu1+WxamccUgTRPJXDLCaez59iJ9
-         5FCAIOv/Paj3QhM/LXV+HqLPz1SVyBQGb31/iiqfp2CfRG95o/ur1RPkTnF7kcDlIRRn
-         DNRyStKPtE6kgVEPwVloobODFeaq1Hf6AvMmI+vX7ssgnsjZZaGQwKWwXEsQjJGQiaov
-         SRGQ==
-X-Gm-Message-State: AOAM531ejbyH+Qy1B6KAtQyVrAjMitAkVmxTjMeufIuEEbrLKm6dB/R8
-        3SpD6HxEds+9XAF0oHexGR9Te4g2Qk9rfuLIpJth3w==
-X-Google-Smtp-Source: ABdhPJxs5wovzcetJu5uDT3AQi1FzFLV1CCc/+8EIHAU6I/Z4nPfDoYG4OvY59GtSoCuXmq4fFtncIcI2zqBYqdeokE=
-X-Received: by 2002:a50:d809:: with SMTP id o9mr6138860edj.12.1599185946357;
- Thu, 03 Sep 2020 19:19:06 -0700 (PDT)
+        Thu, 3 Sep 2020 22:21:45 -0400
+Received: from mga09.intel.com ([134.134.136.24]:33414 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728684AbgIDCVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 3 Sep 2020 22:21:45 -0400
+IronPort-SDR: cq+/z12XJIzCyQhHZzwFD3PL7tF0SAyV45/QFEamQE+LzU9nEVQvcNKigdWv5QSoFjZfwO3+5D
+ E7shoswsRPFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9733"; a="158663527"
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="158663527"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2020 19:21:44 -0700
+IronPort-SDR: i2m3C7pd7AOxFIR86a3NAYw5p5XIkpI9ax4IrhOzWJ4OTOE9Kvnd9kqCj0XOGcxZTm9uEYvL+A
+ K2Fajbri+7eA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,387,1592895600"; 
+   d="scan'208";a="331995898"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by orsmga008.jf.intel.com with ESMTP; 03 Sep 2020 19:21:42 -0700
+Cc:     baolu.lu@linux.intel.com, "Raj, Ashok" <ashok.raj@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH v2 1/1] iommu/vt-d: Use device numa domain if RHSA is
+ missing
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200904010303.2961-1-baolu.lu@linux.intel.com>
+ <MWHPR11MB1645A817E0C928BA83002B4C8C2D0@MWHPR11MB1645.namprd11.prod.outlook.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <07fc34e2-27bb-590e-805d-083985acc39f@linux.intel.com>
+Date:   Fri, 4 Sep 2020 10:16:02 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200902125935.20646-1-graf@amazon.com> <20200902125935.20646-6-graf@amazon.com>
-In-Reply-To: <20200902125935.20646-6-graf@amazon.com>
-From:   Aaron Lewis <aaronlewis@google.com>
-Date:   Thu, 3 Sep 2020 19:18:55 -0700
-Message-ID: <CAAAPnDH2D6fANhZzy3fAL2XKO4ROrvbOoqPme2Ww6q5XcVJfog@mail.gmail.com>
-Subject: Re: [PATCH v6 5/7] KVM: x86: VMX: Prevent MSR passthrough when MSR
- access is denied
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        kvm list <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <MWHPR11MB1645A817E0C928BA83002B4C8C2D0@MWHPR11MB1645.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +/*
-> + * List of MSRs that can be directly passed to the guest.
-> + * In addition to these x2apic and PT MSRs are handled specially.
-> + */
-> +static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSGHROUGH_MSRS] = {
+Hi Kevin,
 
-MAX_POSSIBLE_PASSGHROUGH_MSRS should be MAX_POSSIBLE_PASSTHROUGH_MSRS
+On 9/4/20 10:16 AM, Tian, Kevin wrote:
+>> From: Lu Baolu
+>> Sent: Friday, September 4, 2020 9:03 AM
+>>
+>> If there are multiple NUMA domains but the RHSA is missing in ACPI/DMAR
+>> table, we could default to the device NUMA domain as fall back. This could
+>> also benefit a vIOMMU use case where only single vIOMMU is exposed,
+>> hence
+>> no RHSA will be present but device numa domain can be correct.
+> 
+> My comment on this is not fixed. It is not restricted to single-vIOMMU situation.
+> and actually this may also happen on physical platform if some FW doesn't
+> provide RHSA information.
 
-> +       MSR_IA32_SPEC_CTRL,
-> +       MSR_IA32_PRED_CMD,
-> +       MSR_IA32_TSC,
-> +       MSR_FS_BASE,
-> +       MSR_GS_BASE,
-> +       MSR_KERNEL_GS_BASE,
-> +       MSR_IA32_SYSENTER_CS,
-> +       MSR_IA32_SYSENTER_ESP,
-> +       MSR_IA32_SYSENTER_EIP,
-> +       MSR_CORE_C1_RES,
-> +       MSR_CORE_C3_RESIDENCY,
-> +       MSR_CORE_C6_RESIDENCY,
-> +       MSR_CORE_C7_RESIDENCY,
-> +};
+Ah, yes. I will remove this sentence since it's same for both bare metal
+and virtualization.
 
-Is there any reason not to construct this list on the fly?  That could
-help prevent the list from becoming stale over time if this is missed
-when calls to vmx_disable_intercept_for_msr() are added.
+> 
+> with that being fixed:
+> 
+> Reviewed-by: Kevin Tian <kevin.tian@intel.com>
 
-> +
->  /*
->   * These 2 parameters are used to config the controls for Pause-Loop Exiting:
->   * ple_gap:    upper bound on the amount of time between two successive
-> @@ -622,6 +642,41 @@ static inline bool report_flexpriority(void)
->         return flexpriority_enabled;
->  }
+Thank you!
 
-One thing that seems to be missing is removing MSRs from the
-permission bitmap or resetting the permission bitmap to its original
-state before adding changes on top of it.  This would be needed on
-subsequent calls to kvm_vm_ioctl_set_msr_filter().  When that happens
-the original changes made by KVM_REQ_MSR_FILTER_CHANGED need to be
-backed out before applying the new set.
+Best regards,
+baolu
+
+> 
+>>
+>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>> Cc: Kevin Tian <kevin.tian@intel.com>
+>> Cc: Ashok Raj <ashok.raj@intel.com>
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> ---
+>>   drivers/iommu/intel/iommu.c | 37
+>> +++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 35 insertions(+), 2 deletions(-)
+>>
+>> Change log:
+>> v1->v2:
+>>    - Add a comment as suggested by Kevin.
+>>      https://lore.kernel.org/linux-
+>> iommu/MWHPR11MB1645E6D6BD1EFDFA139AA37C8C520@MWHPR11MB1
+>> 645.namprd11.prod.outlook.com/
+>>
+>> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+>> index 7f844d1c8cd9..69d5a87188f4 100644
+>> --- a/drivers/iommu/intel/iommu.c
+>> +++ b/drivers/iommu/intel/iommu.c
+>> @@ -698,12 +698,47 @@ static int
+>> domain_update_iommu_superpage(struct dmar_domain *domain,
+>>   	return fls(mask);
+>>   }
+>>
+>> +static int domain_update_device_node(struct dmar_domain *domain)
+>> +{
+>> +	struct device_domain_info *info;
+>> +	int nid = NUMA_NO_NODE;
+>> +
+>> +	assert_spin_locked(&device_domain_lock);
+>> +
+>> +	if (list_empty(&domain->devices))
+>> +		return NUMA_NO_NODE;
+>> +
+>> +	list_for_each_entry(info, &domain->devices, link) {
+>> +		if (!info->dev)
+>> +			continue;
+>> +
+>> +		/*
+>> +		 * There could possibly be multiple device numa nodes as
+>> devices
+>> +		 * within the same domain may sit behind different IOMMUs.
+>> There
+>> +		 * isn't perfect answer in such situation, so we select first
+>> +		 * come first served policy.
+>> +		 */
+>> +		nid = dev_to_node(info->dev);
+>> +		if (nid != NUMA_NO_NODE)
+>> +			break;
+>> +	}
+>> +
+>> +	return nid;
+>> +}
+>> +
+>>   /* Some capabilities may be different across iommus */
+>>   static void domain_update_iommu_cap(struct dmar_domain *domain)
+>>   {
+>>   	domain_update_iommu_coherency(domain);
+>>   	domain->iommu_snooping =
+>> domain_update_iommu_snooping(NULL);
+>>   	domain->iommu_superpage =
+>> domain_update_iommu_superpage(domain, NULL);
+>> +
+>> +	/*
+>> +	 * If RHSA is missing, we should default to the device numa domain
+>> +	 * as fall back.
+>> +	 */
+>> +	if (domain->nid == NUMA_NO_NODE)
+>> +		domain->nid = domain_update_device_node(domain);
+>>   }
+>>
+>>   struct context_entry *iommu_context_addr(struct intel_iommu *iommu, u8
+>> bus,
+>> @@ -5096,8 +5131,6 @@ static struct iommu_domain
+>> *intel_iommu_domain_alloc(unsigned type)
+>>   		if (type == IOMMU_DOMAIN_DMA)
+>>   			intel_init_iova_domain(dmar_domain);
+>>
+>> -		domain_update_iommu_cap(dmar_domain);
+>> -
+>>   		domain = &dmar_domain->domain;
+>>   		domain->geometry.aperture_start = 0;
+>>   		domain->geometry.aperture_end   =
+>> --
+>> 2.17.1
+>>
+>> _______________________________________________
+>> iommu mailing list
+>> iommu@lists.linux-foundation.org
+>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
