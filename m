@@ -2,177 +2,120 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44286C433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D776CC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBEB206A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Ub8eFJOc"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA2A2073B
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 19:19:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599247160;
+	bh=3/XHR9KmR5+E+hPmAKgHDEXT1FicpzNwBSYSgTYPZNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Q11DFdxUqFGbtX4Q8Vmg0dwvgsd61xOdA+Me72PSjZfzg6vaIVfDBcAr+TpGZjW67
+	 92V6NJiM5kLyrrQaqX42blDlliD4DTH2fYnyMI/tXJTiZpfmn3o2UZxZboiR60E+rl
+	 drkYX9hhzyneurv7IfTDhq3JoFSMOKjgEDzcN09o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbgIDTTN (ORCPT
+        id S1728014AbgIDTTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 15:19:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727797AbgIDTSz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 15:18:55 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650F5C061245
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 12:18:55 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 7so4800565pgm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 12:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+o1kTnhnkf8evW6DjpPlTqc5IbDQ2l+8IQNKfObPRcg=;
-        b=Ub8eFJOcHhnkBjBNAVs7WoqcLH2R/3NwLdwwS0gTm/e8FHPJTcm9PdMr4xtQq687OW
-         1kMyPGFLWm3aht89kYBy3SpWUepnRBWyzL84ZpVd2XD3P6ypNmxOLfHd32/Fz8mI2q18
-         sFram9TXrekM5y0v7M3eFwJtFfjsjd6QIYsVU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+o1kTnhnkf8evW6DjpPlTqc5IbDQ2l+8IQNKfObPRcg=;
-        b=mmeeZZsw+Oei0cqCcDixqzVGQAhpAhb+wRZZcyeLdoRkvQNIo1HT5e6jCA8lose/SF
-         +ybniFvr1PaJZSVI0T/pcZYq+4pTLMSmLmf/kA/ftVE8D3QUEIRQ39+psK0N+F7aGYxX
-         dj2VOcWk2NmrHVwKoRFWcDAkD3Hggdwm5GxcvgwEljQ+josnoZ5Z3n6VOHRB0exdhKJQ
-         HYv5WTm1CbjIB2oVnn4f0UF9Iu0TdARx48RTTwcUQ8Lbr7VvU0eNFxIFsrSN/xJ4zcVE
-         +tFU8umDpgZr1FBA2HiupjnojyLntQRtMRV4rjhAUmwthbKMaskbyCnSzkrl6wwKl0AI
-         oYeQ==
-X-Gm-Message-State: AOAM533a6ttJWJKmawbpZ4caZ66q8UBxjEf5jxCZsuza8QsMNj8H/VCo
-        rs++fRgqGl7kDZi5fuQMZnz4Aw==
-X-Google-Smtp-Source: ABdhPJxeupP/Y8O6Ovq4KCzOQMOefBkJ1+gUf8zE0vGCTLY0jHVuKQCOd0weoS9P60yGUbzIS2mn/w==
-X-Received: by 2002:a62:406:: with SMTP id 6mr10016207pfe.193.1599247132975;
-        Fri, 04 Sep 2020 12:18:52 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:c809:c7d5:b9ea:24bf:6b2b:1eee])
-        by smtp.gmail.com with ESMTPSA id t4sm5986001pje.56.2020.09.04.12.18.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 12:18:52 -0700 (PDT)
-From:   Jagan Teki <jagan@amarulasolutions.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     Tom Cubie <tom@radxa.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-amarula@amarulasolutions.com,
-        Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 1/3] dt-bindings: extcon: Document Type-C Virtual PD driver
-Date:   Sat,  5 Sep 2020 00:48:28 +0530
-Message-Id: <20200904191830.387296-2-jagan@amarulasolutions.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200904191830.387296-1-jagan@amarulasolutions.com>
-References: <20200904191830.387296-1-jagan@amarulasolutions.com>
+        Fri, 4 Sep 2020 15:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727797AbgIDTTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 15:19:14 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BCA20684;
+        Fri,  4 Sep 2020 19:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599247154;
+        bh=3/XHR9KmR5+E+hPmAKgHDEXT1FicpzNwBSYSgTYPZNg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YLiouQIN7OnbOd1Lo/0aSn+Ks/3xl5tv1+NflqUwsH5rv0vmI/tLjs6TYOhSvN6On
+         zSHkAn7x9mRVwwXIY6aOvgqULRJ6UX1po9hD9lqWcCTFgO7jq7OG56vlxuXSWzTR78
+         cSRcBMxtKrqIeYJtoptYfRAlpPjLwIKSQ0hkN1io=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1E2F740D3D; Fri,  4 Sep 2020 16:19:12 -0300 (-03)
+Date:   Fri, 4 Sep 2020 16:19:12 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Kim Phillips <kim.phillips@amd.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vijay Thakkar <vijaythakkar@me.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yunfeng Ye <yeyunfeng@huawei.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Borislav Petkov <bp@suse.de>, Jon Grimm <jon.grimm@amd.com>,
+        Martin Jambor <mjambor@suse.cz>,
+        Michael Petlan <mpetlan@redhat.com>,
+        William Cohen <wcohen@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/4] perf vendor events amd: Add ITLB Instruction Fetch
+ Hits event for zen1
+Message-ID: <20200904191912.GF3753976@kernel.org>
+References: <20200901220944.277505-1-kim.phillips@amd.com>
+ <20200901220944.277505-2-kim.phillips@amd.com>
+ <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fW84gvGr+RxovDrFaRozHEY-_9mV2K-_bG04pmg8SJGvw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-USB Type-C protocol supports various modes of operations
-includes PD, USB3, and Altmode. If the platform design
-supports a Type-C connector then configuring these modes
-can be done via enumeration.
+Em Wed, Sep 02, 2020 at 11:03:38PM -0700, Ian Rogers escreveu:
+> On Tue, Sep 1, 2020 at 3:10 PM Kim Phillips <kim.phillips@amd.com> wrote:
+> >
+> > The ITLB Instruction Fetch Hits event isn't documented even in
+> > later zen1 PPRs, but it seems to count correctly on zen1 hardware.
+> >
+> > Add it to zen1 group so zen1 users can use the upcoming IC Fetch Miss
+> > Ratio Metric.
+> >
+> > The IF1G, 1IF2M, IF4K (Instruction fetches to a 1 GB, 2 MB, and 4K page)
+> > unit masks are not added because unlike zen2 hardware, zen1 hardware
+> > counts all its unit masks with a 0 unit mask according to the old
+> > convention:
+> >
+> > zen1$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
+> >
+> >  Performance counter stats for 'sleep 1':
+> >
+> >            211,318      cpu/event=0x94/u
+> >            211,318      cpu/event=0x94,umask=0xff/u
+> >
+> > Rome/zen2:
+> >
+> > zen2$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
+> >
+> >  Performance counter stats for 'sleep 1':
+> >
+> >                  0      cpu/event=0x94/u
+> >            190,744      cpu/event=0x94,umask=0xff/u
+> >
+> > Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-However, there are some platforms that design these modes
-of operations as separate protocol connectors like design
-Display Port from on-chip USB3 controller. So accessing
-Type-C Altmode Display Port via onboard Display Port
-connector instead of a Type-C connector.
+Thanks, applied.
 
-These kinds of platforms require an explicit extcon driver
-in order to handle Power Delivery and Port Detection.
-
-Document dt-bindings for it.
-
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
- .../extcon/extcon-usbc-virtual-pd.yaml        | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml
-
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml b/Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml
-new file mode 100644
-index 000000000000..8110fbe2ddc2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-virtual-pd.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/extcon/extcon-usbc-virtual-pd.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Type-C Virtual PD extcon
-+
-+maintainers:
-+  - Jagan Teki <jagan@amarulasolutions.com>
-+
-+description: |
-+  USB Type-C protocol supports various modes of operations includes PD,
-+  USB3, and Altmode. If the platform design supports a Type-C connector
-+  then configuring these modes can be done via enumeration.
-+
-+  However, there are some platforms that design these modes as separate
-+  protocol connectors like design Display Port from on-chip USB3 controller.
-+  So we can access Type-C Altmode Display Port via onboard Display Port
-+  connector instead of a Type-C connector. These kinds of platforms require
-+  an explicit extcon driver in order to handle Power Delivery and
-+  Port Detection.
-+
-+properties:
-+  compatible:
-+    const: linux,extcon-usbc-virtual-pd
-+
-+  det-gpios:
-+    description: Detect GPIO pin. Pin can be Display Port Detect or USB ID.
-+    maxItems: 1
-+
-+  vpd-polarity:
-+    description: USB Type-C Polarity. false for Normal and true for Flip.
-+    type: boolean
-+
-+  vpd-super-speed:
-+    description: USB Super Speed. false for USB2 and true for USB3.
-+    type: boolean
-+
-+  vpd-data-role:
-+    description: USB Data roles for Virtual Type-C.
-+    $ref: /schemas/types.yaml#definitions/string
-+
-+    enum:
-+      - host
-+      - device
-+      - display-port
-+
-+required:
-+  - compatible
-+  - det-gpios
-+  - vpd-data-role
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/pinctrl/rockchip.h>
-+
-+    virtual_pd: virtual-pd {
-+        compatible = "linux,extcon-usbc-virtual-pd";
-+        det-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
-+        vpd-data-role = "display-port";
-+        vpd-super-speed;
-+    };
--- 
-2.25.1
-
+- Arnaldo
