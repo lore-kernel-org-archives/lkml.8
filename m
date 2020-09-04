@@ -2,266 +2,228 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8D52064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599237839;
-	bh=M0F0NujsJbA6VRAoiFk6VohTncRpdlqvI+V+EXO6eTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rxZFIONdUfZa/J9SA+fKpjRi0HdpZyXQeVndAAdsxEPU+hWochbzf0N1P1VWOmGqU
-	 cKq+dQhmn1urPIFVuyvfynlOylLNjHCuHd3nWyXHFv9zvf7N9wrpn92/eDE4udomAZ
-	 KEdnX89vreDQbobaCKWbI1rWATBSIPthBpWXpghk=
+	by mail.kernel.org (Postfix) with ESMTP id 536EC2064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:45:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726290AbgIDQn6 (ORCPT
+        id S1726794AbgIDQpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36422 "EHLO mail.kernel.org"
+        Fri, 4 Sep 2020 12:45:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:38205 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbgIDQnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:43:49 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808062074D;
-        Fri,  4 Sep 2020 16:43:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599237828;
-        bh=M0F0NujsJbA6VRAoiFk6VohTncRpdlqvI+V+EXO6eTI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YNhuRd9bPGkZy4dXcqM4wKBiNUbzE9fZg+ZWuG0rftUJ+tr0tNSNpYkBZTA38LTUr
-         C2BCBXN88B/3wM5OaP8T8RT99NAHiaGDVfp8omRAWmcls7cWRlAVAhuHexZ1jV1ODZ
-         D3tvHvz+KgvITSlGuGrAtkaCNFw9z57g2bkJBSCk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Prabu Thangamuthu <prabu.t@synopsys.com>,
-        Manjunath M B <manjumb@synopsys.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@axis.com
-Cc:     =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH v2 2/2] mmc: host: Enable compile testing of multiple drivers
-Date:   Fri,  4 Sep 2020 18:43:15 +0200
-Message-Id: <20200904164315.24618-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904164315.24618-1-krzk@kernel.org>
-References: <20200904164315.24618-1-krzk@kernel.org>
+        id S1726063AbgIDQo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 12:44:58 -0400
+IronPort-SDR: C0kOaKZJAzfpkUppuJsCOfhyFvUUC7bo254sl40DpHW+D5BsAKEu1E6qG0V/TkK8w+1zCHg+OX
+ Ds1sycPYgfKA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="157049423"
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="157049423"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 09:44:57 -0700
+IronPort-SDR: Oie5QzQ0tzzT+nQnAyakUiCrWWpi6nDRX9O5hX6yfVdrWgR8EUWaK6RXggI7xnmxgPq6M8pW+k
+ dttV/muhL2dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,390,1592895600"; 
+   d="scan'208";a="332217655"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 04 Sep 2020 09:44:54 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kEEjE-00EKKi-H8; Fri, 04 Sep 2020 19:38:20 +0300
+Date:   Fri, 4 Sep 2020 19:38:20 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 04/23] gpiolib: generalize devprop_gpiochip_set_names()
+ for device properties
+Message-ID: <20200904163820.GX1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-5-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904154547.3836-5-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multiple MMC host controller driver can be compile tested as they do not
-depend on architecture specific headers.
+On Fri, Sep 04, 2020 at 05:45:28PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> devprop_gpiochip_set_names() is overly complicated with taking the
+> fwnode argument (which requires using dev_fwnode() & of_fwnode_handle()
+> in ACPI and OF GPIO code respectively). Let's just switch to using the
+> generic device properties.
+> 
+> This allows us to pull the code setting line names directly into
+> gpiochip_add_data_with_key() instead of handling it separately for
+> ACPI and OF.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c    |  3 ---
+>  drivers/gpio/gpiolib-devprop.c | 19 ++++++++++---------
+>  drivers/gpio/gpiolib-of.c      |  5 -----
+>  drivers/gpio/gpiolib.c         |  8 ++++----
+>  include/linux/gpio/driver.h    |  3 +--
+>  5 files changed, 15 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 54ca3c18b291..834a12f3219e 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1221,9 +1221,6 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
+>  		return;
+>  	}
+>  
+> -	if (!chip->names)
+> -		devprop_gpiochip_set_names(chip, dev_fwnode(chip->parent));
+> -
+>  	acpi_gpiochip_request_regions(acpi_gpio);
+>  	acpi_gpiochip_scan_gpios(acpi_gpio);
+>  	acpi_walk_dep_device_list(handle);
+> diff --git a/drivers/gpio/gpiolib-devprop.c b/drivers/gpio/gpiolib-devprop.c
+> index 26741032fa9e..a28659b4f9c9 100644
+> --- a/drivers/gpio/gpiolib-devprop.c
+> +++ b/drivers/gpio/gpiolib-devprop.c
+> @@ -17,25 +17,24 @@
+>  /**
+>   * devprop_gpiochip_set_names - Set GPIO line names using device properties
+>   * @chip: GPIO chip whose lines should be named, if possible
+> - * @fwnode: Property Node containing the gpio-line-names property
+>   *
+>   * Looks for device property "gpio-line-names" and if it exists assigns
+>   * GPIO line names for the chip. The memory allocated for the assigned
+> - * names belong to the underlying firmware node and should not be released
+> + * names belong to the underlying software node and should not be released
+>   * by the caller.
+>   */
+> -void devprop_gpiochip_set_names(struct gpio_chip *chip,
+> -				const struct fwnode_handle *fwnode)
+> +int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  {
+>  	struct gpio_device *gdev = chip->gpiodev;
+> +	struct device *dev = chip->parent;
+>  	const char **names;
+>  	int ret, i;
+>  	int count;
+>  
+> -	count = fwnode_property_read_string_array(fwnode, "gpio-line-names",
+> +	count = device_property_read_string_array(dev, "gpio-line-names",
+>  						  NULL, 0);
+>  	if (count < 0)
+> -		return;
+> +		return 0;
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Can we introduce a followup to 33ee09cd59ce ("device property: Add helpers to
+count items in an array") for strings?
 
----
+>  	if (count > gdev->ngpio) {
+>  		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
+> @@ -45,19 +44,21 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip,
+>  
+>  	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
+>  	if (!names)
+> -		return;
+> +		return -ENOMEM;
+>  
+> -	ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
+> +	ret = device_property_read_string_array(dev, "gpio-line-names",
+>  						names, count);
+>  	if (ret < 0) {
+>  		dev_warn(&gdev->dev, "failed to read GPIO line names\n");
+>  		kfree(names);
+> -		return;
+> +		return ret;
+>  	}
+>  
+>  	for (i = 0; i < count; i++)
+>  		gdev->descs[i].name = names[i];
+>  
+>  	kfree(names);
+> +
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(devprop_gpiochip_set_names);
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index bd31dd3b6a75..2f895a2b8411 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -1026,11 +1026,6 @@ int of_gpiochip_add(struct gpio_chip *chip)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* If the chip defines names itself, these take precedence */
+> -	if (!chip->names)
+> -		devprop_gpiochip_set_names(chip,
+> -					   of_fwnode_handle(chip->of_node));
+> -
+>  	of_node_get(chip->of_node);
+>  
+>  	ret = of_gpiochip_scan_gpios(chip);
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 80137c1b3cdc..0d390f0ec32c 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -340,9 +340,6 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
+>  	struct gpio_device *gdev = gc->gpiodev;
+>  	int i;
+>  
+> -	if (!gc->names)
+> -		return 0;
+> -
+>  	/* First check all names if they are unique */
+>  	for (i = 0; i != gc->ngpio; ++i) {
+>  		struct gpio_desc *gpio;
+> @@ -621,7 +618,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	INIT_LIST_HEAD(&gdev->pin_ranges);
+>  #endif
+>  
+> -	ret = gpiochip_set_desc_names(gc);
+> +	if (gc->names)
+> +		ret = gpiochip_set_desc_names(gc);
+> +	else
+> +		ret = devprop_gpiochip_set_names(gc);
+>  	if (ret)
+>  		goto err_remove_from_list;
+>  
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index d1cef5c2715c..56485a040b82 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -756,8 +756,7 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+>  					    enum gpiod_flags dflags);
+>  void gpiochip_free_own_desc(struct gpio_desc *desc);
+>  
+> -void devprop_gpiochip_set_names(struct gpio_chip *gc,
+> -				const struct fwnode_handle *fwnode);
+> +int devprop_gpiochip_set_names(struct gpio_chip *gc);
+>  
+>  #ifdef CONFIG_GPIOLIB
+>  
+> -- 
+> 2.26.1
+> 
 
-Changes since v1:
-1. Add COMMON_CLK dependency to MESON_GX to fix errors like:
-   ERROR: modpost: "devm_clk_register" [drivers/mmc/host/meson-gx-mmc.ko] undefined!
----
- drivers/mmc/host/Kconfig | 41 +++++++++++++++++++++-------------------
- 1 file changed, 22 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index eea01fde0591..93db789cf8ec 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -178,7 +178,7 @@ config MMC_SDHCI_OF_AT91
- config MMC_SDHCI_OF_ESDHC
- 	tristate "SDHCI OF support for the Freescale eSDHC controller"
- 	depends on MMC_SDHCI_PLTFM
--	depends on PPC || ARCH_MXC || ARCH_LAYERSCAPE
-+	depends on PPC || ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
- 	select MMC_SDHCI_IO_ACCESSORS
- 	select FSL_GUTS
- 	help
-@@ -216,7 +216,7 @@ config MMC_SDHCI_OF_DWCMSHC
- config MMC_SDHCI_OF_SPARX5
- 	tristate "SDHCI OF support for the MCHP Sparx5 SoC"
- 	depends on MMC_SDHCI_PLTFM
--	depends on ARCH_SPARX5
-+	depends on ARCH_SPARX5 || COMPILE_TEST
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  found in the MCHP Sparx5 SoC.
-@@ -238,7 +238,7 @@ config MMC_SDHCI_CADENCE
- 
- config MMC_SDHCI_CNS3XXX
- 	tristate "SDHCI support on the Cavium Networks CNS3xxx SoC"
--	depends on ARCH_CNS3XXX
-+	depends on ARCH_CNS3XXX || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	help
- 	  This selects the SDHCI support for CNS3xxx System-on-Chip devices.
-@@ -262,7 +262,7 @@ config MMC_SDHCI_ESDHC_MCF
- 
- config MMC_SDHCI_ESDHC_IMX
- 	tristate "SDHCI support for the Freescale eSDHC/uSDHC i.MX controller"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	select MMC_CQHCI
-@@ -276,7 +276,7 @@ config MMC_SDHCI_ESDHC_IMX
- 
- config MMC_SDHCI_DOVE
- 	tristate "SDHCI support on Marvell's Dove SoC"
--	depends on ARCH_DOVE || MACH_DOVE
-+	depends on ARCH_DOVE || MACH_DOVE || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	help
-@@ -289,7 +289,7 @@ config MMC_SDHCI_DOVE
- 
- config MMC_SDHCI_TEGRA
- 	tristate "SDHCI platform support for the Tegra SD/MMC Controller"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	select MMC_CQHCI
-@@ -301,7 +301,8 @@ config MMC_SDHCI_TEGRA
- 
- config MMC_SDHCI_S3C
- 	tristate "SDHCI support on Samsung S3C SoC"
--	depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS)
-+	depends on MMC_SDHCI
-+	depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
- 	  often referrered to as the HSMMC block in some of the Samsung S3C
-@@ -313,7 +314,7 @@ config MMC_SDHCI_S3C
- 
- config MMC_SDHCI_SIRF
- 	tristate "SDHCI support on CSR SiRFprimaII and SiRFmarco SoCs"
--	depends on ARCH_SIRF
-+	depends on ARCH_SIRF || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	help
-@@ -351,7 +352,8 @@ config MMC_SDHCI_PXAV2
- 
- config MMC_SDHCI_SPEAR
- 	tristate "SDHCI support on ST SPEAr platform"
--	depends on MMC_SDHCI && PLAT_SPEAR
-+	depends on MMC_SDHCI
-+	depends on PLAT_SPEAR || COMPILE_TEST
- 	depends on OF
- 	help
- 	  This selects the Secure Digital Host Controller Interface (SDHCI)
-@@ -374,7 +376,7 @@ config MMC_SDHCI_S3C_DMA
- 
- config MMC_SDHCI_BCM_KONA
- 	tristate "SDHCI support on Broadcom KONA platform"
--	depends on ARCH_BCM_MOBILE
-+	depends on ARCH_BCM_MOBILE || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	help
- 	  This selects the Broadcom Kona Secure Digital Host Controller
-@@ -422,7 +424,8 @@ config MMC_SDHCI_IPROC
- 
- config MMC_MESON_GX
- 	tristate "Amlogic S905/GX*/AXG SD/MMC Host Controller support"
--	depends on ARCH_MESON
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on COMMON_CLK
- 	help
- 	  This selects support for the Amlogic SD/MMC Host Controller
- 	  found on the S905/GX*/AXG family of SoCs.  This controller is
-@@ -458,7 +461,7 @@ config MMC_MESON_MX_SDIO
- 
- config MMC_MOXART
- 	tristate "MOXART SD/MMC Host Controller support"
--	depends on ARCH_MOXART
-+	depends on ARCH_MOXART || COMPILE_TEST
- 	help
- 	  This selects support for the MOXART SD/MMC Host Controller.
- 	  MOXA provides one multi-functional card reader which can
-@@ -467,7 +470,7 @@ config MMC_MOXART
- 
- config MMC_SDHCI_ST
- 	tristate "SDHCI support on STMicroelectronics SoC"
--	depends on ARCH_STI || FSP2
-+	depends on ARCH_STI || FSP2 || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	help
-@@ -587,7 +590,7 @@ config MMC_TIFM_SD
- 
- config MMC_MVSDIO
- 	tristate "Marvell MMC/SD/SDIO host driver"
--	depends on PLAT_ORION
-+	depends on PLAT_ORION || (COMPILE_TEST && ARM)
- 	depends on OF
- 	help
- 	  This selects the Marvell SDIO host driver.
-@@ -599,7 +602,7 @@ config MMC_MVSDIO
- 
- config MMC_DAVINCI
- 	tristate "TI DAVINCI Multimedia Card Interface support"
--	depends on ARCH_DAVINCI
-+	depends on ARCH_DAVINCI || COMPILE_TEST
- 	help
- 	  This selects the TI DAVINCI Multimedia card Interface.
- 	  If you have an DAVINCI board with a Multimedia Card slot,
-@@ -628,7 +631,7 @@ config MMC_SPI
- 
- config MMC_S3C
- 	tristate "Samsung S3C SD/MMC Card Interface support"
--	depends on ARCH_S3C24XX
-+	depends on ARCH_S3C24XX || COMPILE_TEST
- 	depends on S3C24XX_DMAC
- 	help
- 	  This selects a driver for the MCI interface found in
-@@ -681,7 +684,7 @@ config MMC_SDRICOH_CS
- 
- config MMC_SDHCI_SPRD
- 	tristate "Spreadtrum SDIO host Controller"
--	depends on ARCH_SPRD
-+	depends on ARCH_SPRD || COMPILE_TEST
- 	depends on MMC_SDHCI_PLTFM
- 	select MMC_SDHCI_IO_ACCESSORS
- 	select MMC_HSQ
-@@ -698,7 +701,7 @@ config MMC_TMIO_CORE
- 
- config MMC_TMIO
- 	tristate "Toshiba Mobile IO Controller (TMIO) MMC/SD function support"
--	depends on MFD_TMIO || MFD_ASIC3
-+	depends on MFD_TMIO || MFD_ASIC3 || COMPILE_TEST
- 	select MMC_TMIO_CORE
- 	help
- 	  This provides support for the SD/MMC cell found in TC6393XB,
-@@ -971,7 +974,7 @@ config MMC_REALTEK_USB
- 
- config MMC_SUNXI
- 	tristate "Allwinner sunxi SD/MMC Host Controller support"
--	depends on ARCH_SUNXI
-+	depends on ARCH_SUNXI || COMPILE_TEST
- 	help
- 	  This selects support for the SD/MMC Host Controller on
- 	  Allwinner sunxi SoCs.
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
