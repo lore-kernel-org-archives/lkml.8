@@ -2,162 +2,102 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4D2C43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9629BC43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55F8206C9
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C147206C9
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 05:42:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uYwRCB5k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qT/uDgXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgIDFla (ORCPT
+        id S1727916AbgIDFmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 01:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35264 "EHLO
+        Fri, 4 Sep 2020 01:42:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbgIDFl2 (ORCPT
+        with ESMTP id S1725812AbgIDFmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 01:41:28 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0947FC061244
-        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:41:27 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a9so4891192wmm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:41:27 -0700 (PDT)
+        Fri, 4 Sep 2020 01:42:32 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027B4C061244
+        for <linux-kernel@vger.kernel.org>; Thu,  3 Sep 2020 22:42:32 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id d2so3233073lfj.1
+        for <linux-kernel@vger.kernel.org>; Thu, 03 Sep 2020 22:42:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nxEHmah9blk5L82GWsoRPi5EZiYjjH11uscySYlFpC4=;
-        b=uYwRCB5kDNzhf606GuU4XzIiuAokdeoihG+bPh6wUT/0YFUOFDMrZqdUb9wBz91MUv
-         3ghwwJQBbDTQ9Cli+XHglA+eEp4olBMsHDbTQ/I7V47gct5s29XlGJJl5Z8bXZ8wovuA
-         PB3oSidPEgd1HK1btHYp8YcRq3pYkYBMqurbBSl/5LxnMF37z7D+8xFP7osk3kyp4IaG
-         5l5HvkaPV7Yi5WbjDLKB/jyYAQZWpTuKc7N5XFpSlTnVhkQzaOX2ny91lTCUp1o1DMmv
-         0LbvL+9lKzGeFO859nwN2ez8WdnkPYgfQ53xfKyFLW55LjPdFqUH2QwmbGXMz00L3YFr
-         qcGg==
+        bh=xWE10/K9CdFjBv2+wzy4YEN9T1BSrnV8vM6ktgt0toM=;
+        b=qT/uDgXWPcQsd24EQCgcu4CWbwJIAUTNgfme8/lkOFA42DoVWt1PbhTKdJAeq+lLYh
+         t3br+09SgcUwwvnFrR3qvf3CLAl2mRGkSHYS3Pr6pvhid2+AFFTfqbHiwovz8u+I3fj5
+         pb4I2pOBtRqpnuNAhG47SGVDkdrESBRMo3Y8npnZ14sYI/pSL7Zh3k95HjYfVSCLnbC2
+         VG+NdoOnziBzWvtu3Kgwo1B7x0etM+Bw1Ipzmo7xWiLEac7f9UGsB/X2bJpMBlEfR0fe
+         JSL8+DgFhkWYr+/0eEheK16utPiKIzEBDwc9fFp90jIwewySB+deOe6TKVKPO6e2HR+v
+         693Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nxEHmah9blk5L82GWsoRPi5EZiYjjH11uscySYlFpC4=;
-        b=NyiyEfvWY6HdtNytTFZvpZCu+tfDfohuv2tnmTBAQYuzW7Y+E/jUIK+vIU9hfdM1l2
-         t8sFqcKaeVVK/b2SBd5c6xZ6OddVa6okUgaLPkx44umjHW3MbxmmFHEYtC626jVmeuGv
-         dAKL1mpRlXlUL16Orh+kXnP8/egpwOoI8rREiLB6djZ2AjRgNfMJ5ND5hidywgtgptZP
-         zrwA/OCfzZDacoA1xlDbgbVYQcC0gAItXHqTjuT1Ys91x/T9TsT1W7vv9SIojQ+pCneb
-         zEN616Qvhd+HIBtvfCbMyFHvU0tMVYUk394O0VCMziO8/8Xv73zaUZGnNJhg0E2l4OR1
-         Alpw==
-X-Gm-Message-State: AOAM532fMTlgV2xOel83GLc+9OcBzyupmBieW9A4HNlTQBnRRCdln8cJ
-        HGtwlpmQDyEfSnxQD9gDsrR5AoZ7r7fJ93Mm23Fqlw==
-X-Google-Smtp-Source: ABdhPJwSXPbM7H8AqFNPB15V4yVaM1G5f3+f/ye53ieg94IdFB/Ad1I8DJEeSI2HAhrh+Kas0Sed8LPWXccTgf6MFNM=
-X-Received: by 2002:a1c:5a56:: with SMTP id o83mr5966208wmb.77.1599198085991;
- Thu, 03 Sep 2020 22:41:25 -0700 (PDT)
+        bh=xWE10/K9CdFjBv2+wzy4YEN9T1BSrnV8vM6ktgt0toM=;
+        b=Ut/BX0Ts3Ibe0XpVWy8IrLG+G2XjyVPTOU0SwLdG7ylIXQfY3sHf537DKEq/Hr2EP1
+         jDS7gG9DCYGBiEAC1OkAOozpuaDo/SJt20nC7bFXBRxNknZDmoJOUnB4hcLOntSIbHyO
+         7j8OumpQDLCk0ATrJLzl/NJQCn01WJeJsGf8iuHRBJSQMDcUI+Sex7qeW9Gc3SgMGTI5
+         yAYUpXF4jGDDy/JrkKabaC/t7IyF+n5czwMgE+lbQg6K3t29o9pGXLkSUtASrQFsJLNo
+         9XTmC+tsLqutmIZeCSnoQlRYG7KGjopnPT7IwWusyWqsNJFWFyxFqpJ9pdXz3pVP07/V
+         HqyA==
+X-Gm-Message-State: AOAM531faUJ9qkP/SZzLz3LDpfTxx8AhAQv6JFbi8EIcCWW3HL9p5hTu
+        UkkelWaNmEDc2j+TZsJ78O9VQ9cc3EoJ5ouXJ/I=
+X-Google-Smtp-Source: ABdhPJzD7zGzQHYFJeDWLorqEQq4ojs3xApgUz5COGWUj77dfYdgIGVzPuxgohSjOE0S2prMRS2X6XSProsry3Km0UI=
+X-Received: by 2002:ac2:44b7:: with SMTP id c23mr3019396lfm.128.1599198150454;
+ Thu, 03 Sep 2020 22:42:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200728085734.609930-1-irogers@google.com> <20200728085734.609930-3-irogers@google.com>
- <20200728155940.GC1319041@krava> <20200728160954.GD1319041@krava> <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
-In-Reply-To: <CAP-5=fVqto0LrwgW6dHQupp7jFA3wToRBonBaXXQW4wwYcTreg@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 3 Sep 2020 22:41:14 -0700
-Message-ID: <CAP-5=fWNniZuYfYhz_Cz7URQ+2E4T4Kg3DJqGPtDg70i38Er_A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] perf record: Prevent override of
- attr->sample_period for libpfm4 events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
+References: <20200902225911.209899-1-ndesaulniers@google.com>
+ <CA+icZUXCLyGmYCnHSBJ+8s5QdbPRr+fsfpW43M7pYFEDFOOdJA@mail.gmail.com> <20200903172847.GA1928336@ubuntu-n2-xlarge-x86>
+In-Reply-To: <20200903172847.GA1928336@ubuntu-n2-xlarge-x86>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 4 Sep 2020 07:42:19 +0200
+Message-ID: <CANiq72nmm=pcaL1Vn+G3v3+Q8M=EcRNvvsFM9TG5soCpWzJ9sg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] set clang minimum version to 10.0.1
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Stephane Eranian <eranian@google.com>
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 29, 2020 at 4:24 PM Ian Rogers <irogers@google.com> wrote:
+On Thu, Sep 3, 2020 at 7:28 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
 >
-> On Tue, Jul 28, 2020 at 9:10 AM Jiri Olsa <jolsa@redhat.com> wrote:
-> >
-> > On Tue, Jul 28, 2020 at 05:59:46PM +0200, Jiri Olsa wrote:
-> > > On Tue, Jul 28, 2020 at 01:57:31AM -0700, Ian Rogers wrote:
-> > > > From: Stephane Eranian <eranian@google.com>
-> > > >
-> > > > Before:
-> > > > $ perf record -c 10000 --pfm-events=cycles:period=77777
-> > > >
-> > > > Would yield a cycles event with period=10000, instead of 77777.
-> > > >
-> > > > This was due to an ordering issue between libpfm4 parsing
-> > > > the event string and perf record initializing the event.
-> > > >
-> > > > This patch fixes the problem by preventing override for
-> > > > events with attr->sample_period != 0 by the time
-> > > > perf_evsel__config() is invoked. This seems to have been the
-> > > > intent of the author.
-> > > >
-> > > > Signed-off-by: Stephane Eranian <eranian@google.com>
-> > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  tools/perf/util/evsel.c | 3 +--
-> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > > > index 811f538f7d77..8afc24e2ec52 100644
-> > > > --- a/tools/perf/util/evsel.c
-> > > > +++ b/tools/perf/util/evsel.c
-> > > > @@ -976,8 +976,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-> > > >      * We default some events to have a default interval. But keep
-> > > >      * it a weak assumption overridable by the user.
-> > > >      */
-> > > > -   if (!attr->sample_period || (opts->user_freq != UINT_MAX ||
-> > > > -                                opts->user_interval != ULLONG_MAX)) {
-> > > > +   if (!attr->sample_period) {
-> > >
-> > > I was wondering why this wouldn't break record/top
-> > > but we take care of the via record_opts__config
-> > >
-> > > as long as 'perf test attr' works it looks ok to me
-> >
-> > hum ;-)
-> >
-> > [jolsa@krava perf]$ sudo ./perf test 17 -v
-> > 17: Setup struct perf_event_attr                          :
-> > ...
-> > running './tests/attr/test-record-C0'
-> > expected sample_period=4000, got 3000
-> > FAILED './tests/attr/test-record-C0' - match failure
->
-> I'm not able to reproduce this. Do you have a build configuration or
-> something else to look at? The test doesn't seem obviously connected
-> with this patch.
->
-> Thanks,
-> Ian
+> I would say this should go through either Andrew or Masahiro. We do not
+> have a formal git tree plus I believe there are other things that need
+> to happen before we can push stuff to Linus.
 
-Jiri, any update? Thanks,
-Ian
+Note that a git.kernel.org repo/account isn't required to send PRs.
+The hard requirement is getting your keys signed. Putting stuff into
+-next is also important.
 
-> > jirka
-> >
-> > >
-> > > Acked-by: Jiri Olsa <jolsa@redhat.com>
-> > >
-> > > thanks,
-> > > jirka
-> >
+> Given that this is not a regression or a bug fix, it should go into 5.10
+> in my opinion.
+
+It is a bit late, yeah.
+
+Cheers,
+Miguel
