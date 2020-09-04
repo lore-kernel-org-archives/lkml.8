@@ -2,159 +2,113 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA70C2BB84
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6521C43461
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A27E2064E
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9731C2064E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 16:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iZxxLwxo";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="QpgdcYSb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YYMIgsum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbgIDQkr (ORCPT
+        id S1726606AbgIDQk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 12:40:47 -0400
-Received: from a27-186.smtp-out.us-west-2.amazonses.com ([54.240.27.186]:48534
-        "EHLO a27-186.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbgIDQkp (ORCPT
+        Fri, 4 Sep 2020 12:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52414 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbgIDQkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 12:40:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599237645;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=j4XVxVZyCl1nvm0HzA9cJkMT53izM1ras/rv8ANF328=;
-        b=iZxxLwxomH125oyY+8CYLCOliqDKkXPK2cnFSdqMWafW2raMYf7wNINtA5Gvsovr
-        eeXIG6uJE15o1WDcqRYbKzYeA3jpkk+Fn7x+cNwfZrEbMGKKcQnsCrju+ubAAn35+sB
-        LIjf9HXHqnGL4DsUiFjVqFf+sjHkmrmYVMb+0nHU=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599237645;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Feedback-ID;
-        bh=j4XVxVZyCl1nvm0HzA9cJkMT53izM1ras/rv8ANF328=;
-        b=QpgdcYSbT4xa/xKmfYBHC+fbDffIJKs/+c7qVrXHyKaALo6+KjHBHNUCjFK5OYAp
-        hfiPtnhGqheHWKHCHVx6HmE6EPKSb7GSYAL4iSMUrioWBrwoGDRd+pDLpYViG5wv3P/
-        DukQWJPUn7DpstbVZqQvtRryVixpzsV4LO0ilzu0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1C43C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Kalle Valo'" <kvalo@codeaurora.org>
-Cc:     <ath10k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org> <87y2ls4lbf.fsf@codeaurora.org>
-In-Reply-To: <87y2ls4lbf.fsf@codeaurora.org>
-Subject: RE: [PATCH] ath10k: Use bdf calibration variant for snoc targets
-Date:   Fri, 4 Sep 2020 16:40:44 +0000
-Message-ID: <0101017459fde1e4-001edcbb-cfa8-42f9-9865-2913f410e67c-000000@us-west-2.amazonses.com>
+        Fri, 4 Sep 2020 12:40:51 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167DEC061244;
+        Fri,  4 Sep 2020 09:40:51 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u128so4899344pfb.6;
+        Fri, 04 Sep 2020 09:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wxaOHZ/W1bVPPlxPYI5KsnVzXfiQ47igg0n361NfZVU=;
+        b=YYMIgsumLdhBj/Uz4ivpuN1T8qckEYHF5ibmSzT6XM8nIJeoLtEfMPAwstTBRyx8ux
+         XzRWyjQsIDt1vRYxng/Kb4Q4jaMy8HWc+0LYoEgbGY7qvRxh2MI7prC+4B7wX/LPK2Bf
+         5EhGX0jH48u9WUNq2eo7zEOYU9VhKlSaMTnLsojzC8CUnK9hogywvDpdQco0tdkSi6An
+         LqFNvRaOo36VBS4w6mpwOM92+J5i1dolqU0jO3dmLbMzSj4uU1XZ71BYAV8Xyxttv4LY
+         KAwcI569arZ6HeP++Atg/6h9k5GKUD7GIxKCFwHMLaxZbvocWcWn7SDBEWihIwZ/0nxn
+         VjQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wxaOHZ/W1bVPPlxPYI5KsnVzXfiQ47igg0n361NfZVU=;
+        b=FasfeJF3U2l5dt9y8Y4Ba7301hU6v9D2pM3gtFkEvJBUvKALBWGQkOEg0wPOn4Hq4n
+         ZSo4WknWA28vtC0nj8zqDKUtggZHiRb7cZo62wfgHocB7dlCs4VMI021g+bA2JQecCIP
+         voJ6bu2dxhnRMBtxB1viNCKA4d6p026kkv6fobHPXeGo0WtRDLIZACFH69EYFe+1rLhH
+         9tp/TRK7g0DMztYw3iNImlcJXaB1zM6e3D+uI/UzivQCwOapEQjYt561l3LzDBXsiYIb
+         DwfZehPlL0Bq802aPX1Trl5sGGWywc/+wFA6xjMuxTx5Wx8m+AVtcqxstxEfHU9dN0bj
+         6DmQ==
+X-Gm-Message-State: AOAM530vwSTT/FAXoiZyTvCbUjqrHtPbEPGjpj1nps8LsqiC8NKpVlDn
+        sqbL+HCxA77wfVLzSC8+Om8=
+X-Google-Smtp-Source: ABdhPJyxnXlyyApI5AYlSrIq+cwIZjdS/B/NM81GNpsZ9HImOzNeZz5Q3xFV/SocTAxCWUFC6shKug==
+X-Received: by 2002:a63:f09:: with SMTP id e9mr7987808pgl.334.1599237650528;
+        Fri, 04 Sep 2020 09:40:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j19sm7105220pfi.51.2020.09.04.09.40.49
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 04 Sep 2020 09:40:49 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 09:40:48 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lars Povlsen <lars.povlsen@microchip.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: sparx5: Fix initial reading of temperature
+Message-ID: <20200904164048.GA74175@roeck-us.net>
+References: <20200903134704.8949-1-lars.povlsen@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJRm8Tt2m+V2vXQfAtV0J7j7miBFwIt3U/7qFENAoA=
-Content-Language: en-us
-X-SES-Outgoing: 2020.09.04-54.240.27.186
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200903134704.8949-1-lars.povlsen@microchip.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kalle,
-
-
-> -----Original Message-----
-> From: Kalle Valo <kvalo@codeaurora.org>
-> Sent: Wednesday, September 2, 2020 2:17 PM
-> To: Rakesh Pillai <pillair@codeaurora.org>
-> Cc: ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
+On Thu, Sep 03, 2020 at 03:47:04PM +0200, Lars Povlsen wrote:
+> If the temperature is read before the internal calibration is
+> completed, the driver returns -EIO. Instead it should return -EAGAIN
+> to encourage repeating the operation.
 > 
-> Rakesh Pillai <pillair@codeaurora.org> writes:
-> 
-> > Board Data File (BDF) is loaded upon driver boot-up procedure.
-> > The right board data file is identified using bus and qmi-board-id.
-> >
-> > The problem, however, can occur when the (default) board data
-> > file cannot fulfill with the vendor requirements and it is
-> > necessary to use a different board data file.
-> >
-> > Add the support to get the variant field from DTSI and
-> > use tht information to load the vendor specific BDF.
-> >
-> > The device tree requires addition strings to define the variant name
-> >
-> >     wifi@a000000 {
-> >             status = "okay";
-> >             qcom,ath10k-calibration-variant = "xyz-v2";
-> >     };
-> >
-> >     wifi@a800000 {
-> >             status = "okay";
-> >             qcom,ath10k-calibration-variant = "xyz-v1";
-> >     };
-> >
-> > This would create the boarddata identifiers for the board-2.bin search
-> >
-> >  *  bus=snoc,qmi-board-id=16,qmi-chip-id=0,variant=xyz-v1
-> >  *  bus=snoc,qmi-board-id=17,qmi-chip-id=0,variant=xyz-v2
-> 
-> You mention nothing about qmi-chip-id in the commit log. Please document
-> what it is and also give some examples what kind of values there can be.
+> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
 
+Applied. I added a note stating that I would prefer -ENODATA, and why,
+but that this is not feasible due to thermal subsystem requirements. 
 
-Let me add a bit more details about the chip-id and send v2 for this change.
+Thanks,
+Guenter
 
-
-> 
-> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
-> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
-> > @@ -576,6 +576,8 @@ static int ath10k_qmi_cap_send_sync_msg(struct
-> ath10k_qmi *qmi)
-> >  	if (resp->chip_info_valid) {
-> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
-> >  		qmi->chip_info.chip_family = resp->chip_info.chip_family;
-> > +	} else {
-> > +		qmi->chip_info.chip_id = 0xFF;
-> >  	}
-> 
-> So you hard code chip_id to 0xff if it's not valid. Is it 100%
-> guaranteed that there never will be a chip id with 0xff?
-
-0x0 and 0xff are invalid chip id and are are not used.
-If the chip_id read fails, we fallback to the default board data.
-0xff is used to go to the default board data (Also this is in alignment with
-the current implementation of board_id)
-
-Does that make sense ?
-
-
-> 
-> >
-> >  	if (resp->board_info_valid)
-> > @@ -817,12 +819,18 @@ static void
-> ath10k_qmi_event_server_arrive(struct ath10k_qmi *qmi)
-> >  static int ath10k_qmi_fetch_board_file(struct ath10k_qmi *qmi)
-> >  {
-> >  	struct ath10k *ar = qmi->ar;
-> > +	int ret;
-> >
-> >  	ar->hif.bus = ATH10K_BUS_SNOC;
-> >  	ar->id.qmi_ids_valid = true;
-> >  	ar->id.qmi_board_id = qmi->board_info.board_id;
-> > +	ar->id.qmi_chip_id = qmi->chip_info.chip_id;
-> 
-> To me a safer, and cleaner, option would be to have
-> ar->id.qmi_chip_id_valid, and only add qmi-chip-id=%x to the board id if
-> qmi_chip_id_valid is true. That way there's not this magic 0xff value
-> hardcoded anywhere.
+> ---
+>  drivers/hwmon/sparx5-temp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingp
-> atches
-
+> 2.27.0
+> 
+> diff --git a/drivers/hwmon/sparx5-temp.c b/drivers/hwmon/sparx5-temp.c
+> index 1a2b1026b026..98be48e3a22a 100644
+> --- a/drivers/hwmon/sparx5-temp.c
+> +++ b/drivers/hwmon/sparx5-temp.c
+> @@ -56,7 +56,7 @@ static int s5_read(struct device *dev, enum hwmon_sensor_types type,
+>  	case hwmon_temp_input:
+>  		stat = readl_relaxed(hwmon->base + TEMP_STAT);
+>  		if (!(stat & TEMP_STAT_VALID))
+> -			return -EIO;
+> +			return -EAGAIN;
+>  		value = stat & TEMP_STAT_TEMP;
+>  		/*
+>  		 * From register documentation:
