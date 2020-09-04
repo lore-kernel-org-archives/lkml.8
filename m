@@ -2,94 +2,109 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C020AC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:22:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F68FC433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7F820578
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:22:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF595204EC
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 18:30:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VtELwxuP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ow3E4S2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbgIDSWi (ORCPT
+        id S1726267AbgIDSaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 14:22:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:53613 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726047AbgIDSWi (ORCPT
+        Fri, 4 Sep 2020 14:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41058 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbgIDSaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 14:22:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599243757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rsib+tmV5EtJHf3qVbLEvuMYy7KgO7QA3QRt3DTHtZU=;
-        b=VtELwxuP4FUMKMsurmTErGH19FHNZJqdm1HqL0KVYS9TKKoQBE+4z5felL0ochJSPjgRvS
-        COByn1L2Ghv6IYzlEKI2kf3sGL/guf4lQgTbwQcuThLW3o6WagoUt8eHj749nljn3UrHuH
-        6GCZ/YR343eBRmWbDCAuYNwlNFSBhWk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-rxSz6AWrOU6Dsphy59XPIg-1; Fri, 04 Sep 2020 14:22:34 -0400
-X-MC-Unique: rxSz6AWrOU6Dsphy59XPIg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B43A4100670D;
-        Fri,  4 Sep 2020 18:22:32 +0000 (UTC)
-Received: from treble (ovpn-117-138.rdu2.redhat.com [10.10.117.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3A317E419;
-        Fri,  4 Sep 2020 18:22:31 +0000 (UTC)
-Date:   Fri, 4 Sep 2020 13:22:29 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org
-Subject: Re: [PATCH v3 02/10] objtool: Make sync-check consider the target
- architecture
-Message-ID: <20200904182229.nw5ootdhd2gjdgbd@treble>
-References: <20200904153028.32676-1-jthierry@redhat.com>
- <20200904153028.32676-3-jthierry@redhat.com>
+        Fri, 4 Sep 2020 14:30:13 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A79C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 11:30:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=u57HCbbo/U9xGCFmuh/B7qrQY5Pwi48i+mgDDmKW8zQ=; b=Ow3E4S2mrJf2o3M7SDusR2C/5n
+        QidmcA3Z5NX64nyw+VwvdNALNBq4XCRYXaFftHI9RNCNllJTbvoTrCn5ahZ0fJiPmJLhdodygOBRP
+        4TSYF+CAoM2z7mOE9Hlp4DcQ6Am8rR8LNncbuj1ZaVgN6adwMMAnKBkA5ejIX8O5K7hV8oLAfdsus
+        xodBKk10VfxDZ3khBzOu26sqE9RXGGBmEL0lQHWTMiVn6eC5CLqvVX4O5/nOGTlGuaH1lLbK+rGFt
+        sCwbLDqexttRgR4Bu44Wt5hrbKQDomLdIgdASz2fD+8Ry3Zcd59UMQQqSCBhEDe+zZeZKW0KcNMz+
+        EXB9PCcQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEGTI-0006d8-Bt; Fri, 04 Sep 2020 18:30:00 +0000
+Subject: Re: [PATCH] drm: xlnx: fix build warning & errors when DMADEVICES is
+ not set
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Hyun Kwon <hyun.kwon@xilinx.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     kernel test robot <lkp@intel.com>
+References: <1f7bdabb-e28b-2cc1-5fbd-92c381299ba9@infradead.org>
+Message-ID: <58bb811e-7ca5-10e9-fcab-39fd5bdc857d@infradead.org>
+Date:   Fri, 4 Sep 2020 11:29:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <1f7bdabb-e28b-2cc1-5fbd-92c381299ba9@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200904153028.32676-3-jthierry@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:30:20PM +0100, Julien Thierry wrote:
-> Do not take into account outdated headers unrelated to the build of the
-> current architecture.
+On 9/3/20 9:41 PM, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
 > 
-> Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-> Signed-off-by: Julien Thierry <jthierry@redhat.com>
-> ---
->  tools/objtool/Makefile      | 2 +-
->  tools/objtool/sync-check.sh | 4 ++++
->  2 files changed, 5 insertions(+), 1 deletion(-)
+> Fix kconfig warnings & build errors caused by DRM_ZYNQMP_DPSUB.
 > 
-> diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-> index 33d1e3ca8efd..20df5541ca43 100644
-> --- a/tools/objtool/Makefile
-> +++ b/tools/objtool/Makefile
-> @@ -64,7 +64,7 @@ export srctree OUTPUT CFLAGS SRCARCH AWK
->  include $(srctree)/tools/build/Makefile.include
->  
->  $(OBJTOOL_IN): fixdep FORCE
-> -	@$(CONFIG_SHELL) ./sync-check.sh
-> +	@$(CONFIG_SHELL) ./sync-check.sh $(SRCARCH)
->  	@$(MAKE) $(build)=objtool
+> Any driver that selects DMA_ENGINE should make sure that
+> DMADEVICES is already enabled.
+> As is, this causes build errors in many other drivers.
+> 
+> See https://lore.kernel.org/lkml/202009020239.oUPh82Xc%25lkp@intel.com/
+> for the numerous build errors.
+> 
+> WARNING: unmet direct dependencies detected for DMA_ENGINE
+>   Depends on [n]: DMADEVICES [=n]
+>   Selected by [y]:
+>   - DRM_ZYNQMP_DPSUB [=y] && HAS_IOMEM [=y] && (ARCH_ZYNQMP || COMPILE_TEST [=y]) && COMMON_CLK [=y] && DRM [=y] && OF [=y]
+> 
 
-SRCARCH is already exported by the Makefile, so should sync-check.sh
-just check $SRCARCH directly (and error out if it doesn't exist)?
+Sorry, this is a duplicate of a patch that Laurent has already posted
+so my patch isn't needed.
+
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  drivers/gpu/drm/xlnx/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> --- linux-next-20200903.orig/drivers/gpu/drm/xlnx/Kconfig
+> +++ linux-next-20200903/drivers/gpu/drm/xlnx/Kconfig
+> @@ -2,6 +2,7 @@ config DRM_ZYNQMP_DPSUB
+>  	tristate "ZynqMP DisplayPort Controller Driver"
+>  	depends on ARCH_ZYNQMP || COMPILE_TEST
+>  	depends on COMMON_CLK && DRM && OF
+> +	depends on DMADEVICES
+>  	select DMA_ENGINE
+>  	select DRM_GEM_CMA_HELPER
+>  	select DRM_KMS_CMA_HELPER
+> 
+
 
 -- 
-Josh
+~Randy
 
