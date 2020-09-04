@@ -2,125 +2,319 @@ Return-Path: <SRS0=2gBQ=CN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A547FC43461
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D44C433E2
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73AB1204FD
-	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599227144;
-	bh=aTdgrapGl6hhy72V1j6OvtPhsNpHmNOqrIOa/HJfm8Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w7s9aHXxOay+VRZ8qbm/SBHULEptJwLSplL4rDN3n1NdkxPL2kRicjoqcKXtVMnxn
-	 +m9tDKx2iYRgS98P5qgQzSwXikFLm1+IoRe6QlSUk5PADFNZyd1Hpp1rUhKxwdO5Zl
-	 370Nn3RVw4q+CgM0Ts/Lzj+NYNkImDGeH5tZDH6A=
+	by mail.kernel.org (Postfix) with ESMTP id BEE3B2078E
+	for <linux-kernel@archiver.kernel.org>; Fri,  4 Sep 2020 13:46:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TrFotY08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgIDNp2 (ORCPT
+        id S1730621AbgIDNp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 09:45:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbgIDNmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 09:42:33 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A94A520C09;
-        Fri,  4 Sep 2020 13:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599226227;
-        bh=aTdgrapGl6hhy72V1j6OvtPhsNpHmNOqrIOa/HJfm8Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nE87rAyXzK6VI1WLFVLiKC9cALLyVrFxJbyW6cpgXaJfvcR1Mj9De6yhJcY7ImuwJ
-         xHbpVCrlpZbx9sWbMrQBBLGpbJpO8+wgpI8O5mSl1k6vo9EX8sK+aQxwVeXKh8MutI
-         zI0PAsTPPuzBv0YMUjCrnqueqqJadda9oVvppF0w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 15/16] scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
-Date:   Fri,  4 Sep 2020 15:30:08 +0200
-Message-Id: <20200904120257.940624145@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200904120257.203708503@linuxfoundation.org>
-References: <20200904120257.203708503@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Fri, 4 Sep 2020 09:45:56 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:42642 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730534AbgIDNnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 09:43:35 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200904133454euoutp02bf99aa9ba0177501545c73dd8c6f5f1e~xmAYWri_O2781727817euoutp02Q
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 13:34:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200904133454euoutp02bf99aa9ba0177501545c73dd8c6f5f1e~xmAYWri_O2781727817euoutp02Q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599226494;
+        bh=KCi/GbphBLSraprwOjyfcB36mqU8mZ8VDc8Ut3h1H4g=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=TrFotY08g1iven9X00Yk6aJKLNFGgqN7xq8rwaMH+/0pbscWed6IA1SNxeohL9HGB
+         Bc3yetyOy5b9DqXM14OdRrrvNYr2n4Xlv7VBjjoIif3C/9rol3lVuxl2LeezcUjlAo
+         4RI9GLWgDx+ocBcc1qUR9r4YqzcLZVBtYjJFlt4U=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133454eucas1p2bbcf9ad6cb1fb5ed267dbf9b681ae4e4~xmAXyySov1447014470eucas1p2e;
+        Fri,  4 Sep 2020 13:34:54 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 1C.29.06318.D72425F5; Fri,  4
+        Sep 2020 14:34:53 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133453eucas1p16a41f7340d48b2675ea6527bba165962~xmAXLZRl80115901159eucas1p1m;
+        Fri,  4 Sep 2020 13:34:53 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200904133453eusmtrp249cb8216c81bd04f89cfaea5a13a06b1~xmAXKtGmu0905709057eusmtrp2V;
+        Fri,  4 Sep 2020 13:34:53 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-80-5f52427dc913
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 59.90.06017.D72425F5; Fri,  4
+        Sep 2020 14:34:53 +0100 (BST)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200904133452eusmtip1d1fda55d701ecddb4d628b063e08f524~xmAWotL3r1926319263eusmtip1Z;
+        Fri,  4 Sep 2020 13:34:52 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v10 00/30] DRM: fix struct sg_table nents vs. orig_nents
+ misuse
+Date:   Fri,  4 Sep 2020 15:16:41 +0200
+Message-Id: <20200904131711.12950-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsWy7djP87q1TkHxBos2mlv0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs1h75C67xcEPT1gduD3WzFvD
+        6LH32wIWj+3fHrB63O8+zuSxeUm9x+1/j5k9Jt9Yzuix+2YDm0ffllWMHp83yQVwRXHZpKTm
+        ZJalFunbJXBlLDh9hK1gUkDF0anzWBoY9zh0MXJySAiYSDSeX8TSxcjFISSwglHi3fIDrBDO
+        F0aJR9++QDmfGSV+LW1gh2npnreTDSKxnFFi3txWZriW0xO+M4NUsQkYSnS97WIDsUUEWhkl
+        TvTygNjMAjOYJI6+LgWxhQUCJdbuWgVWwyKgKrH+6zYmEJtXwFai61g/C8Q2eYnVGw6ALZAQ
+        mMwu8WDiNVaIhIvEh0P9zBC2sMSr41ugzpOR+L9zPhNEQzOjxMNza9khnB5GictNMxghqqwl
+        7pz7BbSaA+gkTYn1u/Qhwo4SGx/+ZgQJSwjwSdx4KwhxNJ/EpG3TmSHCvBIdbUIQ1WoSs46v
+        g1t78MIlqHM8JN4sOgIWFxKIlXjcuZl1AqPcLIRdCxgZVzGKp5YW56anFhvnpZbrFSfmFpfm
+        pesl5+duYgQmmdP/jn/dwbjvT9IhRgEORiUeXgb7oHgh1sSy4srcQ4wSHMxKIrxOZ0/HCfGm
+        JFZWpRblxxeV5qQWH2KU5mBREuc1XvQyVkggPbEkNTs1tSC1CCbLxMEp1cA4ycdF+1KTxbSY
+        JuZLN+XklFkezGg/6BN3ufJDzPRFy+IXfbt77cL2n26vPT4Z2i4oiJr1vK7Ha55RTWxj1H7O
+        k+W9xr/lW8S4AwXnRU22yzm11WeB/mb2ul67lfz2kh4vE88lfP0wX611UW/lfpYIPtXsyrsv
+        nvXHrunySDQ+Nfm98QvhMlklluKMREMt5qLiRAD26KhYLgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrELMWRmVeSWpSXmKPExsVy+t/xu7q1TkHxBldf8Vv0njvJZLFxxnpW
+        i//bJjJbXPn6ns1i5eqjTBYL9ltbfLnykMli0+NrrBaXd81hs1h75C67xcEPT1gduD3WzFvD
+        6LH32wIWj+3fHrB63O8+zuSxeUm9x+1/j5k9Jt9Yzuix+2YDm0ffllWMHp83yQVwRenZFOWX
+        lqQqZOQXl9gqRRtaGOkZWlroGZlY6hkam8daGZkq6dvZpKTmZJalFunbJehlLDh9hK1gUkDF
+        0anzWBoY9zh0MXJySAiYSHTP28nWxcjFISSwlFHiybpWFoiEjMTJaQ2sELawxJ9rXVBFnxgl
+        NuyezAaSYBMwlOh6C5EQEehklJjW/ZEdxGEWmMcksejhIXaQKmEBf4lXc1eDdbAIqEqs/7qN
+        CcTmFbCV6DrWD7VOXmL1hgPMExh5FjAyrGIUSS0tzk3PLTbSK07MLS7NS9dLzs/dxAgM723H
+        fm7Zwdj1LvgQowAHoxIPL4N9ULwQa2JZcWXuIUYJDmYlEV6ns6fjhHhTEiurUovy44tKc1KL
+        DzGaAi2fyCwlmpwPjL28knhDU0NzC0tDc2NzYzMLJXHeDoGDMUIC6YklqdmpqQWpRTB9TByc
+        Ug2Mlse8e5smLrrt8iJWUeNswuLg65xtiYdCSxdcfch1/82EgKlN9Uyd8rLzfv10Lg0+PG8P
+        Q3Ddco9HgqYtK+c6SB9oX6L+535V5a0E+UCjZQ1PN69w8HNi7VHZK3Tx6CKDiKu/hRxWpSs/
+        9/nfo7X+jwNLXA7jyxiW9UslK3ifOq/m2rh6kZW2EktxRqKhFnNRcSIA9w9gw4UCAAA=
+X-CMS-MailID: 20200904133453eucas1p16a41f7340d48b2675ea6527bba165962
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200904133453eucas1p16a41f7340d48b2675ea6527bba165962
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200904133453eucas1p16a41f7340d48b2675ea6527bba165962
+References: <CGME20200904133453eucas1p16a41f7340d48b2675ea6527bba165962@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Dear All,
 
-commit 8c4e0f212398cdd1eb4310a5981d06a723cdd24f upstream.
+During the Exynos DRM GEM rework and fixing the issues in the.
+drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
+drivers in DRM framework incorrectly use nents and orig_nents entries of
+the struct sg_table.
 
-1) If remaining ring space before the end of the ring is smaller then the
-   next cmd to write, tcmu writes a padding entry which fills the remaining
-   space at the end of the ring.
+In case of the most DMA-mapping implementations exchanging those two
+entries or using nents for all loops on the scatterlist is harmless,
+because they both have the same value. There exists however a DMA-mapping
+implementations, for which such incorrect usage breaks things. The nents
+returned by dma_map_sg() might be lower than the nents passed as its
+parameter and this is perfectly fine. DMA framework or IOMMU is allowed
+to join consecutive chunks while mapping if such operation is supported
+by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
+where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
+is described here [2]
 
-   Then tcmu calls tcmu_flush_dcache_range() with the size of struct
-   tcmu_cmd_entry as data length to flush.  If the space filled by the
-   padding was smaller then tcmu_cmd_entry, tcmu_flush_dcache_range() is
-   called for an address range reaching behind the end of the vmalloc'ed
-   ring.
+The DMA-mapping framework documentation [3] states that dma_map_sg()
+returns the numer of the created entries in the DMA address space.
+However the subsequent calls to dma_sync_sg_for_{device,cpu} and
+dma_unmap_sg must be called with the original number of entries passed to
+dma_map_sg. The common pattern in DRM drivers were to assign the
+dma_map_sg() return value to sg_table->nents and use that value for
+the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
+the code iterated over nents times to access the pages stored in the
+processed scatterlist, while it should use orig_nents as the numer of
+the page entries.
 
-   tcmu_flush_dcache_range() in a loop calls
-   flush_dcache_page(virt_to_page(start)); for every page being part of the
-   range. On x86 the line is optimized out by the compiler, as
-   flush_dcache_page() is empty on x86.
+I've tried to identify all such incorrect usage of sg_table->nents and
+this is a result of my research. It looks that the incorrect pattern has
+been copied over the many drivers mainly in the DRM subsystem. Too bad in
+most cases it even worked correctly if the system used a simple, linear
+DMA-mapping implementation, for which swapping nents and orig_nents
+doesn't make any difference. To avoid similar issues in the future, I've
+introduced a common wrappers for DMA-mapping calls, which operate directly
+on the sg_table objects. I've also added wrappers for iterating over the
+scatterlists stored in the sg_table objects and applied them where
+possible. This, together with some common DRM prime helpers, allowed me
+to almost get rid of all nents/orig_nents usage in the drivers. I hope
+that such change makes the code robust, easier to follow and copy/paste
+safe.
 
-   But I assume the above can cause trouble on other architectures that
-   really have a flush_dcache_page().  For paddings only the header part of
-   an entry is relevant due to alignment rules the header always fits in
-   the remaining space, if padding is needed.  So tcmu_flush_dcache_range()
-   can safely be called with sizeof(entry->hdr) as the length here.
+The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
+it fully. The driver creatively uses sg_table->orig_nents to store the
+size of the allocate scatterlist and ignores the number of the entries
+returned by dma_map_sg function. In this patchset I only fixed the
+sg_table objects exported by dmabuf related functions. I hope that I
+didn't break anything there.
 
-2) After it has written a command to cmd ring, tcmu calls
-   tcmu_flush_dcache_range() using the size of a struct tcmu_cmd_entry as
-   data length to flush.  But if a command needs many iovecs, the real size
-   of the command may be bigger then tcmu_cmd_entry, so a part of the
-   written command is not flushed then.
+Patches are based on top of Linux next-20200903. The required changes to
+DMA-mapping framework has been already merged to v5.9-rc3.
 
-Link: https://lore.kernel.org/r/20200528193108.9085-1-bstroesser@ts.fujitsu.com
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If possible I would like ask for merging most of the patches via DRM
+tree.
 
----
- drivers/target/target_core_user.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Best regards,
+Marek Szyprowski
 
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1007,7 +1007,7 @@ static int queue_cmd_ring(struct tcmu_cm
- 		entry->hdr.cmd_id = 0; /* not used for PAD */
- 		entry->hdr.kflags = 0;
- 		entry->hdr.uflags = 0;
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		tcmu_flush_dcache_range(entry, sizeof(entry->hdr));
- 
- 		UPDATE_HEAD(mb->cmd_head, pad_size, udev->cmdr_size);
- 		tcmu_flush_dcache_range(mb, sizeof(*mb));
-@@ -1072,7 +1072,7 @@ static int queue_cmd_ring(struct tcmu_cm
- 	cdb_off = CMDR_OFF + cmd_head + base_command_size;
- 	memcpy((void *) mb + cdb_off, se_cmd->t_task_cdb, scsi_command_size(se_cmd->t_task_cdb));
- 	entry->req.cdb_off = cdb_off;
--	tcmu_flush_dcache_range(entry, sizeof(*entry));
-+	tcmu_flush_dcache_range(entry, command_size);
- 
- 	UPDATE_HEAD(mb->cmd_head, command_size, udev->cmdr_size);
- 	tcmu_flush_dcache_range(mb, sizeof(*mb));
 
+References:
+
+[1] https://lkml.org/lkml/2020/3/27/555
+[2] https://lkml.org/lkml/2020/3/29/65
+[3] Documentation/DMA-API-HOWTO.txt
+[4] https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/#ma18c958a48c3b241d5409517fa7d192eef87459b
+
+Changelog:
+
+v10:
+- addressed more issues pointed by Robin Murphy in his review:
+ * prime: restored WARN_ON() in drm_prime_sg_to_page_addr_arrays()
+ * armada: simplified cleanup path
+ * msm: fixed arm64 build
+ * omapdrm: removed WARN_ON(), which is now in drm_prime_sg_to_page_addr_arrays()
+ * omapdrm: dropped the incorrect nents/orig_nents patch
+ * media: pci: also update to use modern DMA_FROM_DEVICE definitions
+- dropped merged patches
+
+v9: https://lore.kernel.org/linux-iommu/20200826063316.23486-1-m.szyprowski@samsung.com/T/
+- rebased onto Linux next-20200825, which is based on v5.9-rc2; fixed conflicts
+- dropped merged patches
+
+v8:
+- rapidio: fixed issues pointed by kbuilt test robot (use of uninitialized
+    variable
+- vb2: rebased after recent changes in the code
+
+v7: https://lore.kernel.org/linux-iommu/20200619103636.11974-1-m.szyprowski@samsung.com/
+- changed DMA page interators to standard DMA SG iterators in drm/prime and
+  videobuf2-dma-contig as suggested by Robin Murphy
+- fixed build issues
+
+v6: https://lore.kernel.org/linux-iommu/20200618153956.29558-1-m.szyprowski@samsung.com/T/
+- rebased onto Linux next-20200618, which is based on v5.8-rc1; fixed conflicts
+
+v5: https://lore.kernel.org/linux-iommu/20200513132114.6046-1-m.szyprowski@samsung.com/T/
+- fixed some minor style issues and typos
+- fixed lack of the attrs argument in ion, dmabuf, rapidio, fastrpc and
+  vfio patches
+
+v4: https://lore.kernel.org/linux-iommu/20200512121931.GD20393@lst.de/T/
+- added for_each_sgtable_* wrappers and applied where possible
+- added drm_prime_get_contiguous_size() and applied where possible
+- applied drm_prime_sg_to_page_addr_arrays() where possible to remove page
+  extraction from sg_table objects
+- added documentation for the introduced wrappers
+- improved patches description a bit
+
+v3: https://lore.kernel.org/dri-devel/20200505083926.28503-1-m.szyprowski@samsung.com/
+- introduce dma_*_sgtable_* wrappers and use them in all patches
+
+v2: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- dropped most of the changes to drm/i915
+- added fixes for rcar-du, xen, media and ion
+- fixed a few issues pointed by kbuild test robot
+- added wide cc: list for each patch
+
+v1: https://lore.kernel.org/linux-iommu/c01c9766-9778-fd1f-f36e-2dc7bd376ba4@arm.com/T/
+- initial version
+
+
+Patch summary:
+
+Marek Szyprowski (30):
+  drm: prime: add common helper to check scatterlist contiguity
+  drm: prime: use sgtable iterators in
+    drm_prime_sg_to_page_addr_arrays()
+  drm: core: fix common struct sg_table related issues
+  drm: armada: fix common struct sg_table related issues
+  drm: etnaviv: fix common struct sg_table related issues
+  drm: exynos: use common helper for a scatterlist contiguity check
+  drm: exynos: fix common struct sg_table related issues
+  drm: i915: fix common struct sg_table related issues
+  drm: lima: fix common struct sg_table related issues
+  drm: mediatek: use common helper for a scatterlist contiguity check
+  drm: mediatek: use common helper for extracting pages array
+  drm: msm: fix common struct sg_table related issues
+  drm: omapdrm: use common helper for extracting pages array
+  drm: panfrost: fix common struct sg_table related issues
+  drm: rockchip: use common helper for a scatterlist contiguity check
+  drm: rockchip: fix common struct sg_table related issues
+  drm: tegra: fix common struct sg_table related issues
+  drm: v3d: fix common struct sg_table related issues
+  drm: virtio: fix common struct sg_table related issues
+  drm: vmwgfx: fix common struct sg_table related issues
+  drm: xen: fix common struct sg_table related issues
+  xen: gntdev: fix common struct sg_table related issues
+  drm: host1x: fix common struct sg_table related issues
+  drm: rcar-du: fix common struct sg_table related issues
+  dmabuf: fix common struct sg_table related issues
+  staging: tegra-vde: fix common struct sg_table related issues
+  rapidio: fix common struct sg_table related issues
+  samples: vfio-mdev/mbochs: fix common struct sg_table related issues
+  media: pci: fix common ALSA DMA-mapping related codes
+  videobuf2: use sgtable-based scatterlist wrappers
+
+ drivers/dma-buf/heaps/heap-helpers.c          | 13 ++-
+ drivers/dma-buf/udmabuf.c                     |  7 +-
+ drivers/gpu/drm/armada/armada_gem.c           | 24 +++--
+ drivers/gpu/drm/drm_cache.c                   |  2 +-
+ drivers/gpu/drm/drm_gem_cma_helper.c          | 23 +----
+ drivers/gpu/drm/drm_gem_shmem_helper.c        | 14 ++-
+ drivers/gpu/drm/drm_prime.c                   | 91 +++++++++++--------
+ drivers/gpu/drm/etnaviv/etnaviv_gem.c         | 12 +--
+ drivers/gpu/drm/etnaviv/etnaviv_mmu.c         | 15 +--
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c       | 10 +-
+ drivers/gpu/drm/exynos/exynos_drm_gem.c       | 23 +----
+ drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c    | 11 +--
+ .../gpu/drm/i915/gem/selftests/mock_dmabuf.c  |  7 +-
+ drivers/gpu/drm/lima/lima_gem.c               | 11 ++-
+ drivers/gpu/drm/lima/lima_vm.c                |  5 +-
+ drivers/gpu/drm/mediatek/mtk_drm_gem.c        | 37 ++------
+ drivers/gpu/drm/msm/msm_gem.c                 | 13 +--
+ drivers/gpu/drm/msm/msm_gpummu.c              | 15 ++-
+ drivers/gpu/drm/msm/msm_iommu.c               |  2 +-
+ drivers/gpu/drm/omapdrm/omap_gem.c            | 14 +--
+ drivers/gpu/drm/panfrost/panfrost_gem.c       |  4 +-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c       |  7 +-
+ drivers/gpu/drm/rcar-du/rcar_du_vsp.c         |  3 +-
+ drivers/gpu/drm/rockchip/rockchip_drm_gem.c   | 42 +++------
+ drivers/gpu/drm/tegra/gem.c                   | 27 ++----
+ drivers/gpu/drm/tegra/plane.c                 | 15 +--
+ drivers/gpu/drm/v3d/v3d_mmu.c                 | 13 ++-
+ drivers/gpu/drm/virtio/virtgpu_object.c       | 36 +++++---
+ drivers/gpu/drm/virtio/virtgpu_vq.c           | 12 +--
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c    | 17 +---
+ drivers/gpu/drm/xen/xen_drm_front_gem.c       |  2 +-
+ drivers/gpu/host1x/job.c                      | 22 ++---
+ .../common/videobuf2/videobuf2-dma-contig.c   | 34 +++----
+ .../media/common/videobuf2/videobuf2-dma-sg.c | 32 +++----
+ .../common/videobuf2/videobuf2-vmalloc.c      | 12 +--
+ drivers/media/pci/cx23885/cx23885-alsa.c      |  4 +-
+ drivers/media/pci/cx25821/cx25821-alsa.c      |  4 +-
+ drivers/media/pci/cx88/cx88-alsa.c            |  6 +-
+ drivers/media/pci/saa7134/saa7134-alsa.c      |  4 +-
+ drivers/media/platform/vsp1/vsp1_drm.c        |  8 +-
+ drivers/rapidio/devices/rio_mport_cdev.c      | 11 +--
+ drivers/staging/media/tegra-vde/iommu.c       |  4 +-
+ drivers/xen/gntdev-dmabuf.c                   | 13 ++-
+ include/drm/drm_prime.h                       |  2 +
+ samples/vfio-mdev/mbochs.c                    |  3 +-
+ 45 files changed, 280 insertions(+), 406 deletions(-)
+
+-- 
+2.17.1
 
