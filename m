@@ -2,84 +2,113 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3AFC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51CFBC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC9DB20663
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjMGYubx"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE5B206A5
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599298007;
+	bh=+ezArp0Mamo42Sub1yNL7kJYleMMNAOOe6LKTy4sgDA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JIZo1yw+VDGtYRX+YzOFsHyKjbTJTDaVmi5PU2FnDp5nbZNwjtJGnIOgDhb8qo6hE
+	 aFH9mW2+xEVYUV0QPyldemF/SvA73ntLtuN43G6C/a2BB7OAm0C996forWkXd5dQH0
+	 I6mQyBrYiBBOTbZ6sm6CGs6qrptlHbDrOistE5is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728322AbgIEJUs (ORCPT
+        id S1728389AbgIEJ0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 05:20:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgIEJUr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 05:20:47 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB45C061244;
-        Sat,  5 Sep 2020 02:20:47 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id e33so5579378pgm.0;
-        Sat, 05 Sep 2020 02:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e3y7TtM1JD4U0ZffjOd3KNj7XrU0K7i58kkxLru4syI=;
-        b=MjMGYubx0SYscDX2p1a1H6uD7JtzYiTkJ4Y1Eb/7x5ZYYCtql/QvlEcR+Os+gYIN0n
-         HjBqaDTtetEHIB5P0ArJkahJLDgozRXx4AlmRXhKAL1UHwjmKh/irsvnGqS2fphfwr0l
-         zhcfa0wyuN5VQbsQHZfQ2TxuCuFiPGYVxmlg7fEgGk/Thhpr6j0kKmC8j75ou0w4axQ+
-         4I6lFGOZ60pBeBqQ7Mjie2PBxJFRP6k7VM0qENR4BOGrPah1ocprsdoZSXClX+dwQ5lk
-         kMSxxPQAHo8U6u1iPTG8QjeDyXnrMzrTeoYcG0gFFBK+Sf7ZqEdvTG1RuBAVPCYHiuwD
-         4L7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e3y7TtM1JD4U0ZffjOd3KNj7XrU0K7i58kkxLru4syI=;
-        b=qZZl9E1FWoQ8dnBAk+F1zhgHLHnyiZ1ybhVWmENNq/CTRuwzga9e5gsaug3OkzeCmc
-         ZxTBcSZ/OU9V6oGhuzMvQDy+pAGeQNKW/NHSke0f2RDHGyDRrUTdb1juRMntR77rnLcz
-         qWDvAe884U32UZn4mSfgzHVg+lI+d+PvFC31eetlafrx4b+WpyN3V8t+soVhirp7K43U
-         pNKgGXUhNZNEKAXTcZF/ecc8dOR5qeux1AJQR2u1lXgm1PcsEmVE495ARrXijm3ySs5n
-         E84euzlsrAAvp3HL6rzkXFt8xceE6nR/Z6hlD9o6br/qru/lvkeNqfahNEN/ILMMjc0O
-         dYkQ==
-X-Gm-Message-State: AOAM530lJmENl1qmNSOLnoUaEtFOluAyDh3npytey/CpObdEGO4uDrT2
-        tjN0ZDAadVb3IIoBWft9tWW7bQyz1VQaUQoG0Rw=
-X-Google-Smtp-Source: ABdhPJyg4/3ir6a2udyWDViNAOHiA6KwVTSKIsQHw/1Ee+7elKMhbRgdi8MSL/gai9YKpK6BCJG4+VBzYraH4AzzzyI=
-X-Received: by 2002:a63:4923:: with SMTP id w35mr10042456pga.368.1599297646736;
- Sat, 05 Sep 2020 02:20:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200903000658.89944-1-xie.he.0141@gmail.com> <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CAJht_EN+=WTuduvm43_Lq=XWL78AcF5q6Zoyg8S5fao_udL=+Q@mail.gmail.com>
- <CAJht_ENKyfMm7wAxcVSThEG63oVe72FvMs-5VaLWemKvveY+dQ@mail.gmail.com> <20200904213621.05dd6462@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200904213621.05dd6462@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Sat, 5 Sep 2020 02:20:35 -0700
-Message-ID: <CAJht_EPf2Ht-mGEiim0oR7emkTwarpjv8uUvuQ439U1KCzsV-w@mail.gmail.com>
-Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
- PVC devices
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sat, 5 Sep 2020 05:26:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40342 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728206AbgIEJ0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 05:26:45 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6BA72074D;
+        Sat,  5 Sep 2020 09:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599298005;
+        bh=+ezArp0Mamo42Sub1yNL7kJYleMMNAOOe6LKTy4sgDA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fENLhbl67GGyW+NF0HoaCKwXUKFlVytSUYB/S73xmr+joXH3DSAk9tOKaD6o3lQ+/
+         Ze/8Zlifu1te4Ri/q8GITddFkxykxTdzYP6h1PorVhsdN5zVL8/aujqI/VwdMdARhI
+         nA+kUTxEjq8dtPmF5WQ6b9svgYDi69P8/KyXyrOI=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kEUT4-009LMf-No; Sat, 05 Sep 2020 10:26:42 +0100
+Date:   Sat, 05 Sep 2020 10:26:33 +0100
+Message-ID: <878sdomv5i.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com
+Subject: Re: [PATCH v2 1/4] genirq: Walk the irq_data hierarchy when resending an interrupt
+In-Reply-To: <jhj4kodxrx5.mognet@arm.com>
+References: <20200903183206.104838-1-maz@kernel.org>
+        <20200903183206.104838-2-maz@kernel.org>
+        <jhj4kodxrx5.mognet@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net, tglx@linutronix.de, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 9:36 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> Applied to net, thank you!
+Hi Valentin,
 
-Thank you, Jakub!
+On Fri, 04 Sep 2020 20:28:38 +0100,
+Valentin Schneider <valentin.schneider@arm.com> wrote:
+> 
+> 
+> Hi Marc,
+> 
+> On 03/09/20 19:32, Marc Zyngier wrote:
+> > On resending an interrupt, we only check the topmost irqchip for
+> > a irq_retrigger callback. However, this callback could be implemented
+> > at a lower level. Use irq_chip_retrigger_hierarchy() in this case.
+> >
+> 
+> Rookie wording question here; re-reading this I'm questioning which way is
+> up.
+> 
+> From an irq_data hierarchy PoV, the topmost chip (i.e. last ->parent)
+> should be the root irqchip. However, the irq_desc we get from irq_to_desc()
+> ought to hold the irq_data for the lowermost irqchip in that irq_data
+> hierarchy.
+> 
+> Is it that here by "topmost" you instead mean topmost of the irqchip stack
+> on top of the root (IOW furthest away from the root)?
+
+That's indeed what I mean, but I agree that the terminology is
+confusing, and often used inconsistently (by me included).
+
+<random>
+Maybe considering the irqchip stack along a vertical axis is the wrong
+thing to do, and that looking at it as a volume would be marginally
+better?
+
+How about innermost (close to the CPU) vs outermost (close to the
+device)?
+</random>
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
