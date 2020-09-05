@@ -4,41 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A971C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F25C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF8920757
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DA320760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgIEMQb (ORCPT
+        id S1728537AbgIEMQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 08:16:31 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34072 "EHLO huawei.com"
+        Sat, 5 Sep 2020 08:16:44 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10775 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726597AbgIEMQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 08:16:26 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1BBD328909026AC3E515;
-        Sat,  5 Sep 2020 20:16:23 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
- 20:16:16 +0800
+        id S1726597AbgIEMQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 08:16:43 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 60A29CC98773454FEC5E;
+        Sat,  5 Sep 2020 20:16:41 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
+ 20:16:32 +0800
 From:   YueHaibing <yuehaibing@huawei.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
-        <matthias.bgg@gmail.com>, <sean.wang@mediatek.com>
-CC:     <linux-bluetooth@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] Bluetooth: btmtksdio: use NULL instead of zero
-Date:   Sat, 5 Sep 2020 20:15:49 +0800
-Message-ID: <20200905121549.32936-1-yuehaibing@huawei.com>
+To:     <selvin.xavier@broadcom.com>, <devesh.sharma@broadcom.com>,
+        <somnath.kotur@broadcom.com>, <sriharsha.basavapatna@broadcom.com>,
+        <nareshkumar.pbs@broadcom.com>, <dledford@redhat.com>,
+        <jgg@ziepe.ca>
+CC:     <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] RDMA/bnxt_re: Remove set but not used variable 'qplib_ctx'
+Date:   Sat, 5 Sep 2020 20:16:24 +0800
+Message-ID: <20200905121624.32776-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.179.108]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,38 +47,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix sparse warnings:
-
-drivers/bluetooth/btmtksdio.c:499:57: warning: Using plain integer as NULL pointer
-drivers/bluetooth/btmtksdio.c:533:57: warning: Using plain integer as NULL pointer
+drivers/infiniband/hw/bnxt_re/main.c:1012:25:
+ warning: variable ‘qplib_ctx’ set but not used [-Wunused-but-set-variable]
 
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/bluetooth/btmtksdio.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/bnxt_re/main.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/bluetooth/btmtksdio.c b/drivers/bluetooth/btmtksdio.c
-index c7ab7a23bd67..ba45c59bd9f3 100644
---- a/drivers/bluetooth/btmtksdio.c
-+++ b/drivers/bluetooth/btmtksdio.c
-@@ -496,7 +496,7 @@ static void btmtksdio_interrupt(struct sdio_func *func)
- 	sdio_claim_host(bdev->func);
+diff --git a/drivers/infiniband/hw/bnxt_re/main.c b/drivers/infiniband/hw/bnxt_re/main.c
+index 13bbeb42794f..53aee5a42ab8 100644
+--- a/drivers/infiniband/hw/bnxt_re/main.c
++++ b/drivers/infiniband/hw/bnxt_re/main.c
+@@ -1009,7 +1009,6 @@ static void bnxt_re_free_res(struct bnxt_re_dev *rdev)
+ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
+ {
+ 	struct bnxt_re_ring_attr rattr = {};
+-	struct bnxt_qplib_ctx *qplib_ctx;
+ 	int num_vec_created = 0;
+ 	int rc = 0, i;
+ 	u8 type;
+@@ -1032,7 +1031,6 @@ static int bnxt_re_alloc_res(struct bnxt_re_dev *rdev)
+ 	if (rc)
+ 		goto dealloc_res;
  
- 	/* Disable interrupt */
--	sdio_writel(func, C_INT_EN_CLR, MTK_REG_CHLPCR, 0);
-+	sdio_writel(func, C_INT_EN_CLR, MTK_REG_CHLPCR, NULL);
+-	qplib_ctx = &rdev->qplib_ctx;
+ 	for (i = 0; i < rdev->num_msix - 1; i++) {
+ 		struct bnxt_qplib_nq *nq;
  
- 	int_status = sdio_readl(func, MTK_REG_CHISR, NULL);
- 
-@@ -530,7 +530,7 @@ static void btmtksdio_interrupt(struct sdio_func *func)
- 	}
- 
- 	/* Enable interrupt */
--	sdio_writel(func, C_INT_EN_SET, MTK_REG_CHLPCR, 0);
-+	sdio_writel(func, C_INT_EN_SET, MTK_REG_CHLPCR, NULL);
- 
- 	pm_runtime_mark_last_busy(bdev->dev);
- 	pm_runtime_put_autosuspend(bdev->dev);
 -- 
 2.17.1
 
