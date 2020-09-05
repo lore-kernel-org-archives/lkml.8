@@ -2,197 +2,240 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A3BC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D66072073B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="c+hvCrq5"
+	by mail.kernel.org (Postfix) with ESMTP id 9C20820760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgIEVpJ (ORCPT
+        id S1728745AbgIEVtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 17:45:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgIEVpI (ORCPT
+        Sat, 5 Sep 2020 17:49:23 -0400
+Received: from mail-il1-f208.google.com ([209.85.166.208]:38759 "EHLO
+        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgIEVtV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 17:45:08 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12457C061244
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 14:45:05 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id cv8so4793490qvb.12
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 14:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Jo+x3ygNJUcdlrYICkZmsk+2QAhcF8Yk5mFLT3AVPmg=;
-        b=c+hvCrq5uiCy8BKe7xVVa7AIPHpDg6tXyWfIQj7019XeQOOOCKi16S7H+S75dhJFFr
-         OQCJljLzq+EevC7xhWJCRNAiu8xN6s7BRd/mvMRm8rl33oTzKMKGc+lWivFKM15ADIrY
-         pHNWSKBcxdt0lQ+qoMyUOi+f7gIyT8C6BCFhw=
+        Sat, 5 Sep 2020 17:49:21 -0400
+Received: by mail-il1-f208.google.com with SMTP id m10so7378353ild.5
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 14:49:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Jo+x3ygNJUcdlrYICkZmsk+2QAhcF8Yk5mFLT3AVPmg=;
-        b=BT1TwcLr80RkXpoPUWcBKdcd60OQnRkT3g+hF04XDByeZVod97b/8fuIK9KMLV7yHY
-         Wv5ZEY/sb9xJ2ClDMefb1eKXtD+ly7QmgHkxXh2u4i2EBdBaeEK6NvTDI2KPurF/5q7I
-         TKV3IJCJXbFyDDf4fqfgcQ40r08PZ1PVm0If+LIPWCgP3BYjAQnmVIoXNbZ0QTZ/LYGv
-         Oi05GFWS/UHr3yO280IKYl55tj2ruKeobIukGrehCp/DAn8uFXILh9nEKBX0G+s+5ZDV
-         xXGgA1l8YrtV0zpDP4Q6GkewxLPK78r0cl4qoUzy2Oe4biGM/h6Tymukz4p5wA89RyZP
-         T1TQ==
-X-Gm-Message-State: AOAM530i7eGDQ/w2azKFh2QI5DGaTRo/7NDDJTxHrlkYLXXn3u0sZOnR
-        0gGj43tqJPGdD5jdQOxN66BYsg==
-X-Google-Smtp-Source: ABdhPJx7Q2e64ttjhMH9nMRrZDlJvanCrvsR5dzTVoJahcbuYlsxL+c7R+NYEY+oDshzxLdP3z61vw==
-X-Received: by 2002:ad4:476a:: with SMTP id d10mr14312781qvx.167.1599342304182;
-        Sat, 05 Sep 2020 14:45:04 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id w194sm7522133qkb.130.2020.09.05.14.45.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 14:45:03 -0700 (PDT)
-Date:   Sat, 5 Sep 2020 17:45:02 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>, peterz@infradead.org,
-        mingo@redhat.com, will@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Question on task_blocks_on_rt_mutex()
-Message-ID: <20200905214502.GA2631534@google.com>
-References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
- <20200831232130.GA28456@paulmck-ThinkPad-P72>
- <20200901174938.GA8158@paulmck-ThinkPad-P72>
- <20200901235821.GA8516@paulmck-ThinkPad-P72>
- <20200902015128.wsulcxhbo7dutcjz@linux-p48b>
- <20200902155410.GH29330@paulmck-ThinkPad-P72>
- <20200903200639.GA8956@paulmck-ThinkPad-P72>
- <20200905212406.GA2074270@google.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=weeIe4DxO66YUuOJzm/p0aGV6L+9I3moxUH8ZlMVdk0=;
+        b=TTgw3/5FBDenwxvfFKoNEMeO90yY3Zpqt3+9G+g+nOHagonsoGeZMP760cZQ/m5Lwz
+         VvyhIYFEelShrSanBLJFSiyLjLm28ARenkcxjFEo64aq0L8qlyeJ0E50wTgcyeZSlT2O
+         RwoXJbTiiosrLaQ7b8FhTQkgKDPdhSZsfqO7ixQz4Fs0A8JpEnBU5Ua+AfkkmEj8lmn5
+         j6wenP0yKT1NDR48wM37eBKA1p3dg9++Eq6i+bxZV3EmzH/zuTlSoTVyDPJER2ao7DZs
+         PALaW+Cff9gFyp9HLfZvSQuO5pj9rosI91VOSyuQle/0xw1N0WM5Zpvc/l03ne663Kui
+         Cafg==
+X-Gm-Message-State: AOAM531Om3Ucb3EZNCOQEZh6sohiKGjji12CMt2YDbhMooQw+5CxuFrx
+        wC2ENEv3nFgKazYzVU1Kv8h702CPoN9Zx++fY+ZsrL9UVh3J
+X-Google-Smtp-Source: ABdhPJx0/vz3dH5qp8QUwUYobtoI7qfEfWE3f+jtDaM01iExAdIcJGgvejXb/AmJ587qSi8ya6/g5KbXtYy29zxhp7e6K+/PzmHm
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200905212406.GA2074270@google.com>
+X-Received: by 2002:a92:35c8:: with SMTP id c69mr12780003ilf.244.1599342560333;
+ Sat, 05 Sep 2020 14:49:20 -0700 (PDT)
+Date:   Sat, 05 Sep 2020 14:49:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002ed85c05ae97f519@google.com>
+Subject: possible deadlock in iter_file_splice_write
+From:   syzbot <syzbot+a196bb0e96837b9ae756@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 05:24:06PM -0400, Joel Fernandes wrote:
-> Hi Paul,
-> 
-> On Thu, Sep 03, 2020 at 01:06:39PM -0700, Paul E. McKenney wrote:
-> > On Wed, Sep 02, 2020 at 08:54:10AM -0700, Paul E. McKenney wrote:
-> > > On Tue, Sep 01, 2020 at 06:51:28PM -0700, Davidlohr Bueso wrote:
-> > > > On Tue, 01 Sep 2020, Paul E. McKenney wrote:
-> > > > 
-> > > > > And it appears that a default-niced CPU-bound SCHED_OTHER process is
-> > > > > not preempted by a newly awakened MAX_NICE SCHED_OTHER process.  OK,
-> > > > > OK, I never waited for more than 10 minutes, but on my 2.2GHz that is
-> > > > > close enough to a hang for most people.
-> > > > > 
-> > > > > Which means that the patch below prevents the hangs.  And maybe does
-> > > > > other things as well, firing rcutorture up on it to check.
-> > > > > 
-> > > > > But is this indefinite delay expected behavior?
-> > > > > 
-> > > > > This reproduces for me on current mainline as follows:
-> > > > > 
-> > > > > tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
-> > > > > 
-> > > > > This hangs within a minute of boot on my setup.  Here "hangs" is defined
-> > > > > as stopping the per-15-second console output of:
-> > > > > 	Writes:  Total: 569906696 Max/Min: 81495031/63736508   Fail: 0
-[...]
-> > ------------------------------------------------------------------------
-> > 
-> > commit d93a64389f4d544ded241d0ba30b2586497f5dc0
-> > Author: Paul E. McKenney <paulmck@kernel.org>
-> > Date:   Tue Sep 1 16:58:41 2020 -0700
-> > 
-> >     torture: Periodically pause in stutter_wait()
-> >     
-> >     Running locktorture scenario LOCK05 results in hangs:
-> >     
-> >     tools/testing/selftests/rcutorture/bin/kvm.sh --allcpus --torture lock --duration 3 --configs LOCK05
-> >     
-> >     The lock_torture_writer() kthreads set themselves to MAX_NICE while
-> >     running SCHED_OTHER.  Other locktorture kthreads run at default niceness,
-> >     also SCHED_OTHER.  This results in these other locktorture kthreads
-> >     indefinitely preempting the lock_torture_writer() kthreads.  Note that
-> 
-> In the past I have seen issues with niceness and CFS. Those issues were
-> related to tick granularity, if the scheduler tick is too coarse, then
-> scheduler may allow a low priority task to run for a bit longer. But this
-> also means that higher priority tasks will take even longer to catch up to
-> the vruntime of the lower priority ones. IIRC, this can run into several
-> seconds.
-> 
-> Not fully sure if that's what you're seeing. If you drop the niceness by some
-> amount, does the issue go away or get better?
-> 
-> >     the cond_resched() in the stutter_wait() function's loop is ineffective
-> >     because this scenario is built with CONFIG_PREEMPT=y.
-> >     
-> >     It is not clear that such indefinite preemption is supposed to happen, but
-> >     in the meantime this commit prevents kthreads running in stutter_wait()
-> >     from being completely CPU-bound, thus allowing the other threads to get
-> >     some CPU in a timely fashion.  This commit also uses hrtimers to provide
-> >     very short sleeps to avoid degrading the sudden-on testing that stutter
-> >     is supposed to provide.
-> 
-> There is a CFS tracepoint called sched:sched_stat_runtime. That could be
-> enabled to see what happens to the vruntime values on the wakeup of the lower
-> prio task.
-> 
-> I'm also seeing the LOCK05 failure, I see that some writer threads are in
-> TASK_UNINTERRUPTIBLE state shown by hung task detector on LOCK05. So these
-> writers didn't wake up for over 2 minutes to begin with:
-> 
-> [  246.797326] task:lock_torture_wr state:D stack:14696 pid:   72 ppid:     2 flags:0x00004000
-> [  246.798826] Call Trace:
-> [  246.799282]  __schedule+0x414/0x6a0
-> [  246.799917]  schedule+0x41/0xe0
-> [  246.800510]  __rt_mutex_slowlock+0x49/0xd0
-> [  246.801259]  rt_mutex_slowlock+0xca/0x1e0
-> [  246.801994]  ? lock_torture_reader+0x110/0x110
-> [  246.802799]  torture_rtmutex_lock+0xc/0x10
-> [  246.803545]  lock_torture_writer+0x72/0x150
-> [  246.804322]  kthread+0x120/0x160
-> [  246.804911]  ? kthread_park+0x80/0x80
-> [  246.805581]  ret_from_fork+0x22/0x30
-> [  246.806237] INFO: task lock_torture_wr:73 blocked for more than 122 seconds.
-> [  246.807505]       Not tainted 5.9.0-rc1+ #26
-> [  246.808287] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [  246.809690] task:lock_torture_wr state:D stack:14696 pid:   73 ppid:     2 flags:0x00004000
-> [  246.811208] Call Trace:
-> [  246.811657]  __schedule+0x414/0x6a0
-> [  246.812306]  schedule+0x41/0xe0
-> [  246.812881]  __rt_mutex_slowlock+0x49/0xd0
-> [  246.813636]  rt_mutex_slowlock+0xca/0x1e0
-> [  246.814371]  ? lock_torture_reader+0x110/0x110
-> [  246.815182]  torture_rtmutex_lock+0xc/0x10
-> [  246.815923]  lock_torture_writer+0x72/0x150
-> [  246.816692]  kthread+0x120/0x160
-> [  246.817287]  ? kthread_park+0x80/0x80
-> [  246.817952]  ret_from_fork+0x22/0x30
-> 
-> Could this just be a side effect of the issue you are seeing?  (A writer
-> acquired a lock but never got CPU to release it, which inturn caused lock
-> acquirers to block in D-state indefinitely).
+Hello,
 
-It appears to me the reason could be because the higher priority task is RT:
+syzbot found the following issue on:
 
-sched_switch: prev_comm=lock_torture_wr prev_pid=74 prev_prio=139 prev_state=R+ ==> next_comm=lock_torture_wr next_pid=70 next_prio=49
+HEAD commit:    b51594df Merge tag 'docs-5.9-3' of git://git.lwn.net/linux
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=12bcc1c1900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
+dashboard link: https://syzkaller.appspot.com/bug?extid=a196bb0e96837b9ae756
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
 
-After this, only pid=70 runs till the hungtasks detector screams.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Could this because the writer calls cur_ops->task_boost(); which sets pid=70
-to RT?  As long as RT task runs, it will block the CFS task without giving it CPU.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a196bb0e96837b9ae756@syzkaller.appspotmail.com
 
-thanks,
+======================================================
+WARNING: possible circular locking dependency detected
+5.9.0-rc3-syzkaller #0 Not tainted
+------------------------------------------------------
+syz-executor.0/609 is trying to acquire lock:
+ffff88804da52c68 (&pipe->mutex/1){+.+.}-{3:3}, at: iter_file_splice_write+0x1b4/0xdf0 fs/splice.c:699
 
- - Joel
+but task is already holding lock:
+ffff888098062450 (sb_writers#4){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:2783 [inline]
+ffff888098062450 (sb_writers#4){.+.+}-{0:0}, at: do_splice+0xd4b/0x1a50 fs/splice.c:1143
 
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #4 (sb_writers#4){.+.+}-{0:0}:
+       lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+       percpu_down_read include/linux/percpu-rwsem.h:51 [inline]
+       __sb_start_write+0x14b/0x410 fs/super.c:1672
+       sb_start_write include/linux/fs.h:1643 [inline]
+       mnt_want_write+0x45/0x90 fs/namespace.c:354
+       ovl_create_object+0xb1/0x2b0 fs/overlayfs/dir.c:625
+       lookup_open fs/namei.c:3103 [inline]
+       open_last_lookups fs/namei.c:3177 [inline]
+       path_openat+0x17e1/0x3840 fs/namei.c:3365
+       do_filp_open+0x191/0x3a0 fs/namei.c:3395
+       do_sys_openat2+0x463/0x830 fs/open.c:1168
+       do_sys_open fs/open.c:1184 [inline]
+       __do_sys_open fs/open.c:1192 [inline]
+       __se_sys_open fs/open.c:1188 [inline]
+       __x64_sys_open+0x1af/0x1e0 fs/open.c:1188
+       do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+-> #3 (&ovl_i_mutex_dir_key[depth]){++++}-{3:3}:
+       lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+       down_read+0x36/0x50 kernel/locking/rwsem.c:1492
+       inode_lock_shared include/linux/fs.h:789 [inline]
+       lookup_slow fs/namei.c:1560 [inline]
+       walk_component+0x435/0x680 fs/namei.c:1860
+       lookup_last fs/namei.c:2309 [inline]
+       path_lookupat+0x19d/0x960 fs/namei.c:2333
+       filename_lookup+0x1ab/0x5d0 fs/namei.c:2366
+       create_local_trace_uprobe+0x3f/0x5f0 kernel/trace/trace_uprobe.c:1574
+       perf_uprobe_init+0xfe/0x1a0 kernel/trace/trace_event_perf.c:323
+       perf_uprobe_event_init+0xfe/0x180 kernel/events/core.c:9580
+       perf_try_init_event+0x13e/0x3a0 kernel/events/core.c:10899
+       perf_init_event kernel/events/core.c:10951 [inline]
+       perf_event_alloc+0xda1/0x28f0 kernel/events/core.c:11229
+       __do_sys_perf_event_open kernel/events/core.c:11724 [inline]
+       __se_sys_perf_event_open+0x6e7/0x3f60 kernel/events/core.c:11598
+       do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+-> #2 (&sig->exec_update_mutex){+.+.}-{3:3}:
+       lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+       __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_killable_nested+0x1a/0x20 kernel/locking/mutex.c:1133
+       exec_mmap fs/exec.c:1113 [inline]
+       begin_new_exec+0x66c/0x15c0 fs/exec.c:1392
+       load_elf_binary+0x60f/0x48a0 fs/binfmt_elf.c:974
+       search_binary_handler fs/exec.c:1819 [inline]
+       exec_binprm fs/exec.c:1860 [inline]
+       bprm_execve+0x919/0x1500 fs/exec.c:1931
+       kernel_execve+0x871/0x970 fs/exec.c:2080
+       try_to_run_init_process init/main.c:1344 [inline]
+       kernel_init+0xc4/0x290 init/main.c:1453
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+-> #1 (&sig->cred_guard_mutex){+.+.}-{3:3}:
+       lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+       __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_interruptible_nested+0x1a/0x20 kernel/locking/mutex.c:1140
+       proc_pid_attr_write+0x3b4/0x4a0 fs/proc/base.c:2734
+       __kernel_write+0x1ac/0xac0 fs/read_write.c:528
+       write_pipe_buf+0xf9/0x150 fs/splice.c:799
+       splice_from_pipe_feed fs/splice.c:502 [inline]
+       __splice_from_pipe+0x351/0x8b0 fs/splice.c:626
+       splice_from_pipe fs/splice.c:661 [inline]
+       default_file_splice_write fs/splice.c:811 [inline]
+       do_splice_from fs/splice.c:847 [inline]
+       do_splice+0xf1b/0x1a50 fs/splice.c:1144
+       __do_sys_splice fs/splice.c:1419 [inline]
+       __se_sys_splice fs/splice.c:1401 [inline]
+       __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+       do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+-> #0 (&pipe->mutex/1){+.+.}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:2496 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+       validate_chain+0x1b0c/0x88a0 kernel/locking/lockdep.c:3218
+       __lock_acquire+0x110b/0x2ae0 kernel/locking/lockdep.c:4426
+       lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+       __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+       __mutex_lock kernel/locking/mutex.c:1103 [inline]
+       mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
+       iter_file_splice_write+0x1b4/0xdf0 fs/splice.c:699
+       do_splice_from fs/splice.c:846 [inline]
+       do_splice+0xdd1/0x1a50 fs/splice.c:1144
+       __do_sys_splice fs/splice.c:1419 [inline]
+       __se_sys_splice fs/splice.c:1401 [inline]
+       __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+       do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+other info that might help us debug this:
+
+Chain exists of:
+  &pipe->mutex/1 --> &ovl_i_mutex_dir_key[depth] --> sb_writers#4
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(sb_writers#4);
+                               lock(&ovl_i_mutex_dir_key[depth]);
+                               lock(sb_writers#4);
+  lock(&pipe->mutex/1);
+
+ *** DEADLOCK ***
+
+1 lock held by syz-executor.0/609:
+ #0: ffff888098062450 (sb_writers#4){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:2783 [inline]
+ #0: ffff888098062450 (sb_writers#4){.+.+}-{0:0}, at: do_splice+0xd4b/0x1a50 fs/splice.c:1143
+
+stack backtrace:
+CPU: 1 PID: 609 Comm: syz-executor.0 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1d6/0x29e lib/dump_stack.c:118
+ print_circular_bug+0xc72/0xea0 kernel/locking/lockdep.c:1703
+ check_noncircular+0x1fb/0x3a0 kernel/locking/lockdep.c:1827
+ check_prev_add kernel/locking/lockdep.c:2496 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+ validate_chain+0x1b0c/0x88a0 kernel/locking/lockdep.c:3218
+ __lock_acquire+0x110b/0x2ae0 kernel/locking/lockdep.c:4426
+ lock_acquire+0x140/0x6f0 kernel/locking/lockdep.c:5006
+ __mutex_lock_common+0x189/0x2fc0 kernel/locking/mutex.c:956
+ __mutex_lock kernel/locking/mutex.c:1103 [inline]
+ mutex_lock_nested+0x1a/0x20 kernel/locking/mutex.c:1118
+ iter_file_splice_write+0x1b4/0xdf0 fs/splice.c:699
+ do_splice_from fs/splice.c:846 [inline]
+ do_splice+0xdd1/0x1a50 fs/splice.c:1144
+ __do_sys_splice fs/splice.c:1419 [inline]
+ __se_sys_splice fs/splice.c:1401 [inline]
+ __x64_sys_splice+0x14f/0x1f0 fs/splice.c:1401
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc20cea2c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 0000000000033980 RCX: 000000000045d5b9
+RDX: 0000000000000005 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 000000000118d038 R08: 00000000ffffffff R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cfec
+R13: 00007ffecc00982f R14: 00007fc20cea39c0 R15: 000000000118cfec
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
