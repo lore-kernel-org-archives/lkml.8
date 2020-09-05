@@ -2,171 +2,201 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CADE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4EDC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8791F206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80AA9206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R6WsoWXs"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Hnu0TMoi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728395AbgIEPml (ORCPT
+        id S1728138AbgIEPpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 11:42:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37672 "EHLO
+        Sat, 5 Sep 2020 11:45:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728331AbgIEPmL (ORCPT
+        with ESMTP id S1726266AbgIEPp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 11:42:11 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676D8C061244
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 08:42:11 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id a8so3233842ilk.1
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 08:42:11 -0700 (PDT)
+        Sat, 5 Sep 2020 11:45:29 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D059C061244
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 08:45:29 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id q3so2494240pls.11
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 08:45:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=oavwsui6np9I0SfKH1zAjIQ7ScxL8JKCQoJQZLHKCqc=;
-        b=R6WsoWXsX3lDoDV9TSgES6XDTt1pcEoS8Le8Le5Fk8z+JYSMc82y/2smFqKPoeZ3dd
-         MqroeFGZ2WR5psSrtu0+5AmVDGxoTFmEXiLVrkt4kRvI5AwMCem47nWVGFzAM4nXgfwD
-         x2+e30bcBj6cRLA401fxyESjAIuGE7C8Ynf2Xb9uOA+RTS9/cUF0hwKPOUKcIiCoPwcD
-         eID/CMQS1b4D+D4oc6dTmrTBgvy36Zv0WEXpnGca84WtkA1xOmRYW1+dspml3u9vFmMf
-         063LpY3dlQT8btXVH/eOE9qZexDLFkejTJ0r8MbjatMZouHK7HBZRB6FY2bDeoW6NuTt
-         iCww==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0zomv6SLpBCgRUcNigIvJpvA8Tydvp1pLbt33s7KfSg=;
+        b=Hnu0TMoiEodwJYjQuYaWa1t2E+EpttYP4C490ikFzotrHDz6qAJBxTSBFrzBM9ZWFV
+         rlJOySqH7G7hN7IYcBZDSQ4IoOZTMhy0m+8VIsKIQ4QSWRRgbMZIsztMcCzfk9DmFbHy
+         8Dg6Yc+q3/o3SRY7/RIUOoW5mKjeMe35qCXWfrslnb1fCi13pdd3EM37UFUuQfHGAltL
+         keQHRRBWLicT0pLW5vtR+CKe7sn2VXWnPG++EEi0qVq2QmkQoEcwLwSUFOaBBUPQ4Uc3
+         qmRxoht8EFp8lgseX12iqurjQfGvOi3uikHIwDwOe8MOCLrXdhZo/XYFicKrYcN01vbM
+         XPwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=oavwsui6np9I0SfKH1zAjIQ7ScxL8JKCQoJQZLHKCqc=;
-        b=qBCQwz8JHU5Na2y3gXu9p/hh9edtvRvpjlBiUr2IUHsGKhYYSppWrV9L3lTM18OnXR
-         NSe8KNhd3ujcRnQ/CPyNxoT13S/lDPbMcXtmyxwwqI4SIMmZdKxe08UjK/V81X1cd8W/
-         O+FK0hkBPkr2cC6Kz0V+knjdeGdpAIJIj3vrXm2xLn3YPqxhMVVat/HRYvdOcgY+NPsf
-         8o4T1EvpM9z0f4SlUTelwe3KCdy0OEXTxi2C28xUNMVt2P9FBy/cXLIh3IHelwIkMNB6
-         anLtd5cKLWtnpkHqxdJKZnA/iPRrkD912Aw2GQe3KRmDBRLPIE0rXonw/MADW1unOVge
-         t7eA==
-X-Gm-Message-State: AOAM5317Pn6f+UuvrhF+VLRL8QfzWnSYHv2F4NzwZXIXMtyS7eHi15s1
-        vedeDjjtQcpgPkHU7E7nWu41Cg==
-X-Google-Smtp-Source: ABdhPJxcw6xsEQPHoX5ZPR5XyUr4+XR87kRTiIKJKtBnMz6G01P7DuSk7X6dEo44hRKuMAMUHyjJhA==
-X-Received: by 2002:a92:35d0:: with SMTP id c77mr11513440ilf.183.1599320530673;
-        Sat, 05 Sep 2020 08:42:10 -0700 (PDT)
-Received: from localhost ([2601:441:27f:8f73:89be:770e:7358:ee10])
-        by smtp.gmail.com with ESMTPSA id o12sm227414ilq.29.2020.09.05.08.42.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 08:42:10 -0700 (PDT)
-Date:   Sat, 5 Sep 2020 10:42:09 -0500
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-Subject: Re: [PATCH 5.8 00/17] 5.8.7-rc1 review
-Message-ID: <20200905154209.gpv5povvpn2v3i3o@nuc.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
-        akpm@linux-foundation.org, torvalds@linux-foundation.org,
-        linux@roeck-us.net
-References: <20200904120257.983551609@linuxfoundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0zomv6SLpBCgRUcNigIvJpvA8Tydvp1pLbt33s7KfSg=;
+        b=inpDtHloIUq6PimITW0aAOuqsuFy80UKIYjvp/kbG2bLSsZX13/6Gn4Qb4Nr3OKYig
+         kleMkHuyiHUvo/fAELWBSWbh9tTtlxAnNTngj4SVDkYIPb+6fKfClzR3T+GKZlhWJJfU
+         fCAT+bRTAgQSbzvHkb6k4EhLG7/idr70Ik4fvMaMLqLd3gDyMW9AmEz+BG05+5CL8Su9
+         eCOOPgMqsLqnjX0krtPdLufuP3XX0beDq5fuLNQYXXOnYD5M7JPuwi5BlYPv4sBu2geO
+         TTnIau9JHrz/vER41H5oW158RpNFMVFK0a0P4BAWO3lynupkwN0RwXOjfeV4NTEhvcab
+         CcCA==
+X-Gm-Message-State: AOAM531hBA0C72t/OImmPEtXrJMGgMp/WrNnEHVhJRGzEfQ+vcPpERvb
+        Zfgm1FFY8A0QGOoykD9sQhW07yIKfoqA4LNK
+X-Google-Smtp-Source: ABdhPJy2DO7Qwem10G6tlX9grnI3fcQoduoCr4ZB3PxiacIYR680sRJ0i6xLUCnOjlQ7wVZiNvvTjg==
+X-Received: by 2002:a17:90a:f117:: with SMTP id cc23mr12744737pjb.155.1599320729072;
+        Sat, 05 Sep 2020 08:45:29 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id c22sm1900861pgb.52.2020.09.05.08.45.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 08:45:27 -0700 (PDT)
+Subject: Re: [PATCH 5/5] powerpc: use the generic dma_ops_bypass mode
+To:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Cc:     iommu@lists.linux-foundation.org,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, Lu Baolu <baolu.lu@linux.intel.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, aacraid@microsemi.com
+References: <20200708152449.316476-1-hch@lst.de>
+ <20200708152449.316476-6-hch@lst.de>
+ <505bcc1d-01a7-9655-88e1-ebddd0b94d56@kaod.org>
+ <20200831064038.GB27617@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Message-ID: <48e38110-2a8f-1701-2e30-06fb07bbfffe@ozlabs.ru>
+Date:   Sun, 6 Sep 2020 01:45:20 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <20200831064038.GB27617@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200904120257.983551609@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:29:59PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.8.7 release.
-> There are 17 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Results from Linaro’s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
 
-Summary
-------------------------------------------------------------------------
+On 31/08/2020 16:40, Christoph Hellwig wrote:
+> On Sun, Aug 30, 2020 at 11:04:21AM +0200, Cédric Le Goater wrote:
+>> Hello,
+>>
+>> On 7/8/20 5:24 PM, Christoph Hellwig wrote:
+>>> Use the DMA API bypass mechanism for direct window mappings.  This uses
+>>> common code and speed up the direct mapping case by avoiding indirect
+>>> calls just when not using dma ops at all.  It also fixes a problem where
+>>> the sync_* methods were using the bypass check for DMA allocations, but
+>>> those are part of the streaming ops.
+>>>
+>>> Note that this patch loses the DMA_ATTR_WEAK_ORDERING override, which
+>>> has never been well defined, as is only used by a few drivers, which
+>>> IIRC never showed up in the typical Cell blade setups that are affected
+>>> by the ordering workaround.
+>>>
+>>> Fixes: efd176a04bef ("powerpc/pseries/dma: Allow SWIOTLB")
+>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>> ---
+>>>   arch/powerpc/Kconfig              |  1 +
+>>>   arch/powerpc/include/asm/device.h |  5 --
+>>>   arch/powerpc/kernel/dma-iommu.c   | 90 ++++---------------------------
+>>>   3 files changed, 10 insertions(+), 86 deletions(-)
+>>
+>> I am seeing corruptions on a couple of POWER9 systems (boston) when
+>> stressed with IO. stress-ng gives some results but I have first seen
+>> it when compiling the kernel in a guest and this is still the best way
+>> to raise the issue.
+>>
+>> These systems have of a SAS Adaptec controller :
+>>
+>>    0003:01:00.0 Serial Attached SCSI controller: Adaptec Series 8 12G SAS/PCIe 3 (rev 01)
+>>
+>> When the failure occurs, the POWERPC EEH interrupt fires and dumps
+>> lowlevel PHB4 registers among which :
+>> 					
+>>    [ 2179.251069490,3] PHB#0003[0:3]:           phbErrorStatus = 0000028000000000
+>>    [ 2179.251117476,3] PHB#0003[0:3]:      phbFirstErrorStatus = 0000020000000000
+>>
+>> The bits raised identify a PPC 'TCE' error, which means it is related
+>> to DMAs. See below for more details.
+>>
+>>
+>> Reverting this patch "fixes" the issue but it is probably else where,
+>> in some other layers or in the aacraid driver. How should I proceed
+>> to get more information ?
+> 
+> The aacraid DMA masks look like a mess.
 
-kernel: 5.8.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-5.8.y
-git commit: 072d7559faf2a3b9f3c93e5cc96b276c6f02adec
-git describe: v5.8.5-272-g072d7559faf2
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8.5-272-g072d7559faf2
 
-No regressions (compared to build v5.8.5)
+It kinds does and is. The thing is that after f1565c24b596 the driver 
+sets 32 bit DMA mask which in turn enables the small DMA window (not 
+bypass) and since the aacraid driver has at least one bug with double 
+unmap of the same DMA handle, this somehow leads to EEH (PCI DMA error).
 
-No fixes (compared to build v5.8.5)
 
-Ran 35624 total tests in the following environments and test suites.
+The driver sets 32but mask because it callis dma_get_required_mask() 
+_before_ setting the mask so dma_get_required_mask() does not go the 
+dma_alloc_direct() path and calls the powerpc's 
+dma_iommu_get_required_mask() which:
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
+1. does the math like this (spot 2 bugs):
 
-Test Suites
------------
-* igt-gpu-tools
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-tracing-tests
-* ltp-cve-tests
-* ltp-sched-tests
-* v4l2-compliance
-* ltp-open-posix-tests
-* network-basic-tests
+mask = 1ULL < (fls_long(tbl->it_offset + tbl->it_size) - 1)
 
---
-Linaro LKFT
-https://lkft.linaro.org
+2. but even after fixing that, the driver crashes as f1565c24b596 
+removed the call to dma_iommu_bypass_supported() so it enforces IOMMU.
+
+
+The patch below (the first hunk to be precise) brings the things back to 
+where they were (64bit mask). The double unmap bug in the driver is 
+still to be investigated.
+
+
+
+diff --git a/arch/powerpc/kernel/dma-iommu.c 
+b/arch/powerpc/kernel/dma-iommu.c
+index 569fecd7b5b2..785abccb90fc 100644
+--- a/arch/powerpc/kernel/dma-iommu.c
++++ b/arch/powerpc/kernel/dma-iommu.c
+@@ -117,10 +117,18 @@ u64 dma_iommu_get_required_mask(struct device *dev)
+         struct iommu_table *tbl = get_iommu_table_base(dev);
+         u64 mask;
+
++       if (dev_is_pci(dev)) {
++               u64 bypass_mask = dma_direct_get_required_mask(dev);
++
++               if (dma_iommu_bypass_supported(dev, bypass_mask))
++                       return bypass_mask;
++       }
++
+         if (!tbl)
+                 return 0;
+
+-       mask = 1ULL < (fls_long(tbl->it_offset + tbl->it_size) - 1);
++       mask = 1ULL << (fls_long(tbl->it_offset + tbl->it_size) +
++                       tbl->it_page_shift - 1);
+         mask += mask - 1;
+
+         return mask;
+
+
+
+-- 
+Alexey
