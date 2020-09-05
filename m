@@ -2,118 +2,86 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B1AC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A50C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A119520760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255BF2078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:18:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="Ekwlpd2I"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VdmgoSgt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbgIECGm (ORCPT
+        id S1728239AbgIECSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 22:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgIECGj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 22:06:39 -0400
-X-Greylist: delayed 337 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 04 Sep 2020 19:06:38 PDT
-Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1923C061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 19:06:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
-        Message-Id; bh=WDY/ng54ptRjxNOdlrNswcBzY0b31g2Ob6RSh0Ebatc=; b=E
-        kwlpd2IWey2PfXRRtQAsFBhUlEpungtVhMjTadjjYfJUZ4dapmPP49RhQ38PrD8L
-        cEGHlhNLYSbRvxg4Uu5A/vROGUozaLXi2HJEihnq2KHj/Bz9RieE44xOe08exZ2m
-        pXPgnP48QlFLTMS8UlxZxCX5FGy84SawI0e1gDk+YM=
-Received: from localhost.localdomain (unknown [112.32.131.40])
-        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygBXcZ9Q8VJfUjcCAA--.4145S2;
-        Sat, 05 Sep 2020 10:00:49 +0800 (CST)
-From:   Calvin Zhang <zhq2014@mail.ustc.edu.cn>
-To:     yhs@fb.com
-Cc:     mhiramat@kernel.org, daniel@iogearbox.net, songliubraving@fb.com,
-        acme@redhat.com, zhq2014@mail.ustc.edu.cn,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] tools: fix incorrect setting of CC_NO_CLANG
-Date:   Wed, 19 Aug 2020 20:50:56 -0400
-Message-Id: <20200820005056.3357743-1-zhq2014@mail.ustc.edu.cn>
-X-Mailer: git-send-email 2.18.4
-X-CM-TRANSID: LkAmygBXcZ9Q8VJfUjcCAA--.4145S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykCw1fJr1fKrWfKr17ZFb_yoW8Aw18pa
-        n0kw47C3y8trW0kw1kCa1qqr1UJa18tryqqFyvg3WkZF4fCrn2vrZ3tr45KF43uFsFya1U
-        ta4agryUX3WDG37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9I14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK6x804I0_KFvE3s1l8cAvFVAK0II2c7
-        xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE
-        2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
-        xK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
-        6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
-        I_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
-        wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
-        WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-        IYCTnIWIevJa73UjIFyTuYvjfUFYFADUUUU
-X-CM-SenderInfo: h2ktjiyru6zt1loo32lwfovvfxof0/1tbiAQsHAVQhnwvOKAAesV
+        Fri, 4 Sep 2020 22:18:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52747 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbgIECSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 22:18:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bjyrs6MPBz9sTd;
+        Sat,  5 Sep 2020 12:18:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599272318;
+        bh=9xTsIfpKFrJK+6CcxEyuNQq1X6wX2Zpz7mBvSHpJa+8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=VdmgoSgtUsgcWLKyiYYKApVHPr/bIRN65VNzEem2NeVLSA7ukGRyegsoKXkfhXhLt
+         pbB+dOELBVrNaJEO6SSMGtfK3iFV8VR9P2L/FNAaZJa8ox9AVw3bbkJfvmw3+wUWfZ
+         tZp43Pgbd4o5Y2xWvsR+nkj0sZVLjrakm/r2rHPzrWIHO2bdBTfbe/ZQyHqRFc8rRN
+         CdQff9khtMiBSdsLdrTRZsBTPiZHaGRnKmqrYB21aCA+ti3A1OMc7zWvHxvKmt1n3p
+         GJlgpdKbv3LUAJamiI9psws7eWXA/lsPoYguOSAgiwdCntDZcTcIknZzlmXmsnRnZp
+         1yg/SvLjlxurw==
+Date:   Sat, 5 Sep 2020 12:18:27 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the printk tree
+Message-ID: <20200905121827.22fb4037@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ae+uAE5g57V.AWQ6ZTLbzem";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC_NO_CLANG should be set according to the value of CC after overridden.
+--Sig_/ae+uAE5g57V.AWQ6ZTLbzem
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I have linked /usr/bin/cc to /usr/bin/clang and I built perf with a gcc
-cross-compiler:
+Hi all,
 
-    $ ARCH=arm64 CROSS_COMPILE=aarch64-calvin-linux-gnu- make -C \
-        ../linux/tools/perf/ O=$(pwd)
+Commit
 
-It worked well. But when I tried to rebuild that with FIXDEP=1:
+  4c31ead75f41 ("printk: ringbuffer: support dataless records")
 
-    $ ARCH=arm64 CROSS_COMPILE=aarch64-calvin-linux-gnu- make -C \
-        ../linux/tools/perf/ O=$(pwd) FIXDEP=1
+is missing a Signed-off-by from its committer.
 
-Every .o files were rebuilt since EXTRA_WARNINGS was changed due to
-false value of CC_NO_CLANG. Things worked in first build because submake
-of Makefile.perf inherited CC from first make and CC_NO_CLANG was
-rectified in submake.
+--=20
+Cheers,
+Stephen Rothwell
 
-Signed-off-by: Calvin Zhang <zhq2014@mail.ustc.edu.cn>
----
- tools/scripts/Makefile.include | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--Sig_/ae+uAE5g57V.AWQ6ZTLbzem
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index a7974638561c..dc887669828b 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -39,8 +39,6 @@ EXTRA_WARNINGS += -Wundef
- EXTRA_WARNINGS += -Wwrite-strings
- EXTRA_WARNINGS += -Wformat
- 
--CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
--
- # Makefiles suck: This macro sets a default value of $(2) for the
- # variable named by $(1), unless the variable has been set by
- # environment or command line. This is necessary for CC and AR
-@@ -59,6 +57,8 @@ $(call allow-override,LD,$(CROSS_COMPILE)ld)
- $(call allow-override,CXX,$(CROSS_COMPILE)g++)
- $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
- 
-+CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
-+
- ifeq ($(CC_NO_CLANG), 1)
- EXTRA_WARNINGS += -Wstrict-aliasing=3
- endif
--- 
-2.18.4
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9S9XMACgkQAVBC80lX
+0GyeBggAhLs/myYpmuJulQz/QfTiSizT5ROEVYr/pPbLXIPC3kAaxTd0W2LEbMSq
+NkUv56TOlT9yDDRkOolzPPXximDk9vXQp3z78T+Ie6KNMVIjOg3U/j7XjJ5gRIBl
+iJF4aaU3E8qLmdp8cbs+n+FECX8tpWqV5ELARmaFn71LVztmhxmNuW0xz3u7ILw5
+z73omK6fHSA+N/6+15A8GtmwMChlgArTOphefH9g3IbixJtIMqjZtu8x5cfUXZmn
+7GHf3HFvLkUcr8u7sjjJY2AWoBg3dSyDlM/ZQ4wV8e8V1ZvdHT1BkGckuZOLdg5H
+daDdAwvI/S8MA0muShAO6nVqLMo9bQ==
+=cz9H
+-----END PGP SIGNATURE-----
 
+--Sig_/ae+uAE5g57V.AWQ6ZTLbzem--
