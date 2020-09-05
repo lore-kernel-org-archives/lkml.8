@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E60C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB21C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAC320797
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86D5320797
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599349032;
-	bh=rpeS5XHUij27LdjfSXTm57hB+BZoxEGDguTEGPPB1XY=;
+	s=default; t=1599349627;
+	bh=Jc4C4306EMKNApeBOPwe0aG1NL20wAkllgNlUjKDkF4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Oua+JUWgzhYK+LkIQpb1PCBbDfeBeeO4cK5xrlVh+46s16B/cD8fofbpicqB9M5v6
-	 tV90QxF4yUERZ8oxkMJzvc5jhu+IQXoebAP7IJ8MpxUzWRezXAGOQ0NuyalYKRPVZe
-	 9AJ6wm55sFCDppzC+nwVGBAl6rISuR0hSXU/RFPw=
+	b=eJzotXoCJjWqxfs6sgMkp47mbhI4N2Jk+BY3xvoD63Hcj2wxcY01dQrMRHH3iCr78
+	 cHe7oo+MBgbar82yIAhTPJnlBb+suMtmsouCwyHuA0hLDcz+7bRh/yh5iMlhP5wnov
+	 AqHIXIf1xxxx+utgY9x91/tcu4McPagVQ/TGT9do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgIEXhK (ORCPT
+        id S1728844AbgIEXrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 19:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
+        Sat, 5 Sep 2020 19:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEXhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 19:37:09 -0400
+        id S1728103AbgIEXrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 19:47:05 -0400
 Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DDAF20760;
-        Sat,  5 Sep 2020 23:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3D8020760;
+        Sat,  5 Sep 2020 23:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599349029;
-        bh=rpeS5XHUij27LdjfSXTm57hB+BZoxEGDguTEGPPB1XY=;
+        s=default; t=1599349624;
+        bh=Jc4C4306EMKNApeBOPwe0aG1NL20wAkllgNlUjKDkF4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fj9AGwiRHUE4yk+KXhFmB7MuGeJ+yfwxEs9krALrdFd4z9ZKrxI0PT0F4w0rslDxS
-         gbsrnSN4Ln61IQLrCV54Zb5BjSyKCV4zsvP4YD8x81rLVcdNTit0lornd8uUS2w0+i
-         E2AP8cR6ir1bgoY37X/fOh4Kyf/7cfdOP2P+jmDY=
-Date:   Sat, 5 Sep 2020 16:37:06 -0700
+        b=J1v6d2SUgIcy4tmkWlM8Km+S/gablUSqu8w/cx9InbPwTAQNPb4FWvt/4bJ0YpncB
+         OFJFeKFWZtGltJ/Gjp9Uyhiq945U6JhIdfx13gYx/YtysNVHFN+Gw3tsYrQ26edzi8
+         aUbaI5cAw5O3wuuFcZm9sHdaXZgHjDVRJ3tWrpVc=
+Date:   Sat, 5 Sep 2020 16:47:02 -0700
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     Landen Chao <landen.chao@mediatek.com>
 Cc:     Andrew Lunn <andrew@lunn.ch>,
@@ -55,12 +55,12 @@ Cc:     Andrew Lunn <andrew@lunn.ch>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
         <opensource@vdorst.com>, <dqfext@gmail.com>
-Subject: Re: [PATCH net-next v3 3/6] dt-bindings: net: dsa: add new MT7531
- binding to support MT7531
-Message-ID: <20200905163706.60cdceb5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <4ec3c9e6a219c09fc90d1be8d3d63da587ef6fba.1599228079.git.landen.chao@mediatek.com>
+Subject: Re: [PATCH net-next v3 2/6] net: dsa: mt7530: Extend device data
+ ready for adding a new hardware
+Message-ID: <20200905164702.72edf26c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <3cf9909d7b06346b8aa339c346e19585cccf74c8.1599228079.git.landen.chao@mediatek.com>
 References: <cover.1599228079.git.landen.chao@mediatek.com>
-        <4ec3c9e6a219c09fc90d1be8d3d63da587ef6fba.1599228079.git.landen.chao@mediatek.com>
+        <3cf9909d7b06346b8aa339c346e19585cccf74c8.1599228079.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -69,18 +69,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 22:21:58 +0800 Landen Chao wrote:
-> @@ -32,10 +33,13 @@ Required properties for the child nodes within ports container:
+On Fri, 4 Sep 2020 22:21:57 +0800 Landen Chao wrote:
+> +static bool
+> +mt7530_phy_mode_supported(struct dsa_switch *ds, int port,
+> +			  const struct phylink_link_state *state)
+>  {
+>  	struct mt7530_priv *priv = ds->priv;
+> -	u32 mcr_cur, mcr_new;
 >  
->  - reg: Port address described must be 6 for CPU port and from 0 to 5 for
->  	user ports.
-> -- phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
-> -	 "cpu".
-> +- phy-mode: String, the follow value would be acceptable for port labeled "cpu"
+>  	switch (port) {
+>  	case 0: /* Internal phy */
+> @@ -1363,33 +1364,114 @@ static void mt7530_phylink_mac_config(struct dsa_switch *ds, int port,
+>  	case 3:
+>  	case 4:
+>  		if (state->interface != PHY_INTERFACE_MODE_GMII)
+> -			return;
+> +			goto unsupported;
 
-... the following values are acceptable for port labeled "cpu":
+return false;
 
-> +	If compatible mediatek,mt7530 or mediatek,mt7621 is set,
-> +	must be either "trgmii" or "rgmii"
-> +	If compatible mediatek,mt7531 is set,
-> +	must be either "sgmii", "1000base-x" or "2500base-x"
+Jumping to a label which does nothing but returns makes the code less
+readable.
+
+>  		break;
+>  	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
+> -		if (priv->p5_interface == state->interface)
+> -			break;
+>  		if (!phy_interface_mode_is_rgmii(state->interface) &&
+>  		    state->interface != PHY_INTERFACE_MODE_MII &&
+>  		    state->interface != PHY_INTERFACE_MODE_GMII)
+> -			return;
+> +			goto unsupported;
+> +		break;
+> +	case 6: /* 1st cpu port */
+> +		if (state->interface != PHY_INTERFACE_MODE_RGMII &&
+> +		    state->interface != PHY_INTERFACE_MODE_TRGMII)
+> +			goto unsupported;
+> +		break;
+> +	default:
+> +		dev_err(priv->dev, "%s: unsupported port: %i\n", __func__,
+> +			port);
+> +		goto unsupported;
+> +	}
+> +
+> +	return true;
+> +
+> +unsupported:
+> +	return false;
+> +}
+
+> +static void
+> +mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+> +			  const struct phylink_link_state *state)
+> +{
+> +	struct mt7530_priv *priv = ds->priv;
+> +	u32 mcr_cur, mcr_new;
+> +
+> +	if (!mt753x_phy_mode_supported(ds, port, state))
+> +		goto unsupported;
+> +
+> +	switch (port) {
+> +	case 0: /* Internal phy */
+> +	case 1:
+> +	case 2:
+> +	case 3:
+> +	case 4:
+
+case 0 ... 4:
+
+> +		if (state->interface != PHY_INTERFACE_MODE_GMII)
+> +			goto unsupported;
+> +		break;
+> +	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
+> +		if (priv->p5_interface == state->interface)
+> +			break;
+
+> +static void
+> +mt753x_phylink_validate(struct dsa_switch *ds, int port,
+> +			unsigned long *supported,
+> +			struct phylink_link_state *state)
+> +{
+> +	struct mt7530_priv *priv = ds->priv;
+>  	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+
+Please keep the variables longest to shortest (reverse xmas tree).
