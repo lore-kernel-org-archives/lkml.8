@@ -2,237 +2,299 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E306C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD38C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071FE2078E
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107542078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="B957L+tJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="My+gzL1d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgIEONn (ORCPT
+        id S1728653AbgIEOPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 10:13:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7518 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgIEONl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 10:13:41 -0400
-IronPort-SDR: Jc/N2AXq59bGBw29aCQ/5EwDttu75wXe9GxkmpLX+n6OlBM1M35x0E38GK9C4pRWy+B54nCpYW
- dReaFla/334A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="155265018"
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="155265018"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 07:13:40 -0700
-IronPort-SDR: VWtPjrnJh1Y+OnzKl9a3PbxL1rx31ZdxvBQ+1KeByruhYLohTu20nXxQQ5Czoc/JtSQOxDe01d
- oeUCnX7FSijQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="284819116"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Sep 2020 07:13:40 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 5 Sep 2020 07:13:39 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 5 Sep 2020 07:13:39 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sat, 5 Sep 2020 07:13:39 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.109)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Sat, 5 Sep 2020 07:13:32 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UA/QzwgM5j4/NZu1BuSlLGr6synHMA3ApJp57pUPIvWqO9KQP9vCufXH0UxXbeBBvEf8isWQodnXOqETAOqVzWD/cRZfXG5kuyGB3VfFgnCTe9hyGA2c0KnWk7m4DYX5h3yf8T4htuy6bvXlPWFyV+jgNvpCHR1YsArH+qiGq3kAYNS9bWbTcBThvep3mkXj4DMjvazwIj0QPEw5SOQnIXubm493dixZE+yvbQFBgacCsRqAza9c7ezczjECa+nZ0MPPKiNcgz98SUcwmjqwFxj7LfXr3ieQr4mX3yRHZNCaQ89YU3eev4ssfHIx7QqNesVOO+L2Cr7eWC+n2jnPvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uA/Kke5+qzMoE83GapssNDTQwYJzbM3IRxzk8E9v6Y8=;
- b=LmevT3NTKJbPyCrUy9/YET4F7DB8LLuK32L8KKsMrcqUH9NpbGsaKi+fKvkAIkKiY57MIQTajMaxXZjkcuAbhJjRYYIEWqJ7cB1COQ/qem9+jyolRM1XI5+aX+20jIxe/2IDhyEE7WwlPnV2ag+yXyPvEz9HqFthUiM7m3qzSci6mb+gslVzbE7Pi61ff31LVobV5B+ny8rQQeUYEby/J2pK+oUx13sz9V4l95aVnt8/pQYkcDN4nSX3z2NosXvKDHrLSxK1KDOh0VaPU54YO/14u2Yym4+nuif/K6wJjtJRjlF4CjkkoB0DL9htLVqPexmOTe93OdKcVQujFHg4iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uA/Kke5+qzMoE83GapssNDTQwYJzbM3IRxzk8E9v6Y8=;
- b=B957L+tJAOwLgImUjQYvQG1KyPAT3ao5V+7cVz/RB0erMlmRydY7K8vD3kOuMQUJ1iLHS02DzXy9RYtzyo9P001eR75j0FMiDy9IX+5S2G7oapW8O7qPE3JX4e0ovn3IZBtXZUJWi2R8t1lwJx5Ic9DlAUg8awplFPEePUVWSUE=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM6PR11MB3820.namprd11.prod.outlook.com (2603:10b6:5:140::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Sat, 5 Sep
- 2020 14:13:14 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::7823:516e:1ec4:a60d]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::7823:516e:1ec4:a60d%5]) with mapi id 15.20.3348.017; Sat, 5 Sep 2020
- 14:13:14 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     "Weight, Russell H" <russell.h.weight@intel.com>,
-        "mdf@kernel.org" <mdf@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        "Xu, Yilun" <yilun.xu@intel.com>,
-        "Gerlach, Matthew" <matthew.gerlach@intel.com>
-Subject: RE: [PATCH v1 00/12] Intel FPGA Security Manager Class Driver
-Thread-Topic: [PATCH v1 00/12] Intel FPGA Security Manager Class Driver
-Thread-Index: AQHWgxgQpWSE/ewYT0qNmW7SyBgTh6laDZzA
-Date:   Sat, 5 Sep 2020 14:13:13 +0000
-Message-ID: <DM6PR11MB38198EC62FA2C63B3E5BC8D0852A0@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
-In-Reply-To: <20200904235305.6254-1-russell.h.weight@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e583869d-2fa9-42c0-62d3-08d851a5d426
-x-ms-traffictypediagnostic: DM6PR11MB3820:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB382049218338C58DBE6EE090852A0@DM6PR11MB3820.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pVxwF0Wjpb3WZgrALAmAcpjAdeS17XLzeZVd1D20pU0xyTS9qCTyerll+lpolsgph3/8ZL3A2BGZ8viRO4g3lHS+tJQkbe1/+OiMILPQWEq2vh3V0yqwsGw4WpcGMr09z2tYSvO4ZxFEIk1V8tYsV7cN7wkb41B4dIiNWTWYI3yQ06XC5HfHyYcE+3QQmFBdl9qYGiiEidN1yY0XErXmGIdf114E1iYtZJD6Y0PYT/Ane/hKYMmurXI8kdcQ3ry82svEwOY5a2Id5OwRVIOhBazK/NL0jik/SzF8J5GunqRqHl08ImMtDExXJU77XXo1R/IZs/S7Z5Sfp+ZcNprvgg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(396003)(346002)(136003)(39860400002)(478600001)(26005)(54906003)(66476007)(15650500001)(55016002)(8936002)(71200400001)(4326008)(66446008)(66556008)(64756008)(52536014)(76116006)(86362001)(110136005)(107886003)(66946007)(83380400001)(8676002)(186003)(33656002)(9686003)(7696005)(316002)(5660300002)(2906002)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 9R/2vAtmckNhzI1ND556N9teSvo/oxZXLlbAJc/53BW7BwJTmL+QxOtbaeZN3/JF95cuv0/2p+3Vl1ofa+FAjgYavisxi2Md2Jvha2c5qIKgRjIs2mmAtFHv7UZlQR9gvI4H9MtdjiPls5NfJ1SRrfJ6JMW+Sq0yaePcEJViiHNJCw8M8yP7x3L/W8aaq2JtF5nCXfejMCr4uv1AU+Fr7+LU5ytvqITRZXlEWve/p/gVRXQSUK7as2IuGaNfT7jBiq664EXjlMwwtINKwPAdh6Jum94SE8cwcyTHeA6z6K408CMoMw+0gXZ8L7voN+sYf/mvYyq05smqQHiTcK+3cCls6aaZvHadQcuYEREhnaqXoxNbD/xNT7StUTxTCwa3dsmEwCrEBNlB45vUbdGwHr6AVeHSR0vJ/VVO8rCckMJxBDs30CrD7xPvn7+gCaawNo7UTAwk6s+OEBjI7NIQ3kXYlM+dDSFAxkPaBzKzYUISj8niPKBaYwnHO1YMR3V0RTbluGiWpWshfv41P8sYCfjoJZazTm/ZxaW7CxiphH7lM0QFyvDATURPlgwmMsk+Udxo3BOinAJ6Z8B6RCxfKsRSkO2yfp+v5P0CF1bh4AMUn7BaFHpRPgpwgYWo3qh51aGS/wAgKdGt389dIHqI4w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sat, 5 Sep 2020 10:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728585AbgIEOPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 10:15:12 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7766C061244;
+        Sat,  5 Sep 2020 07:15:11 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id f142so9074380qke.13;
+        Sat, 05 Sep 2020 07:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xrOzHn7owdx7Uqk54xwEOBwQTc/5Zou/9tg+v3Sm5mM=;
+        b=My+gzL1dtCDjCYwsGT/4wS8pFAtxO3R60DrrBWntr1/NSvAgMoNCo0Xuatox/F4lkR
+         1iB7IHmjqtvhqCKwvGzkuC9K0wHUlLe0DqK9xeMhInyAzYLtDhauNPT9hAi0HpwAfk/g
+         Hw4KscWqZExiJr9gZVgssgm/P7ebgoWeqCZ6SXMmlR1FqfxEGeBjlUR2eS25GA+0tmDY
+         DRGkK0Hzf7Kqf+vl/rwWN8/TwixQnyXV17Deq0oQU7Z9lKc3MyQtQM9hYWyydyWRGJ2d
+         G9M5gW1ZSOopaSMlZcaDCK/FRUf+4EAOIrp+R9GgU9Ip+nPMl1/bc9TDLad7rc1Gyr/o
+         ztKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xrOzHn7owdx7Uqk54xwEOBwQTc/5Zou/9tg+v3Sm5mM=;
+        b=AIzda0G8AJwVndPMdX265TCO3eUGzrAkPzgSmfQCoeP48++zzdgA0sfmkEk8Qw9zQb
+         XXIz+AGVrhAnDjNtoNtP4EOE4xPBvt9Wxf6DzskxXWTlsgHGgud0ee+dmRBtWOqo6/VM
+         Urc75fTysK8SHdm5IKl2+wQ+tYOsiqFaO5qpgnDcKaMONSJHmLdczfdeL7NaDjy/35YC
+         m4Lddomn2YN16ykp0anBGtcwRDPOlrfioEJANc2wOjiKnKECxkH4CqD/sn8CG+4Lt5Gm
+         iUYjjLare++CY/S0hd3HnyYiw/vlHy3LJuB+SsUNNHU3i9YpsEeBve7WXUYtuxwdLSq4
+         +SEA==
+X-Gm-Message-State: AOAM530/DGZLxbXaBrlSp6wD3Ny3POm2wyouqHAhrrxCD/h2M8YT7oUn
+        OSRavKHOHgKq+j7iij/yUq4=
+X-Google-Smtp-Source: ABdhPJwfsxdbs3JPOHiHC4r6Z4olxcV3GzGLqJuHQ1rPyT7rdVeDcxNhdvzqkxj9kuS616KSDYqEnA==
+X-Received: by 2002:a37:aa4d:: with SMTP id t74mr1366942qke.222.1599315308727;
+        Sat, 05 Sep 2020 07:15:08 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id z29sm7090588qtj.79.2020.09.05.07.15.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 05 Sep 2020 07:15:07 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailauth.nyi.internal (Postfix) with ESMTP id F09E827C0054;
+        Sat,  5 Sep 2020 10:15:05 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 05 Sep 2020 10:15:05 -0400
+X-ME-Sender: <xms:aZ1TX5PYNMtj8B87J-MXKNFXhjboT9twHSY1T92lrKXEbEWBxmszTg>
+    <xme:aZ1TX79kjmkP3zWDBMSXYz6eKVtG2fxzy6GeZHqh1pVaMPr70xALNZjiv9HVZBJK0
+    tL1pUY994xUSXr6AQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudeghedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
+    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrth
+    htvghrnhepvdelieegudfggeevjefhjeevueevieetjeeikedvgfejfeduheefhffggedv
+    geejnecukfhppeehvddrudehhedrudduuddrjedunecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgv
+    rhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfh
+    gvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:aZ1TX4TXmFnUSA7XBjjsVJ9HBrVLzCN4a3UExPk-788jSExZlt5xeA>
+    <xmx:aZ1TX1vHR-LhMYqw_oyolzs8nGiSc3JCc1x5XbFmnHKma2GCJYTA-A>
+    <xmx:aZ1TXxdo08OU905OUlSyK4Qt7qWxgKImZHDwbAPKi6CNCfPK7KCvAA>
+    <xmx:aZ1TXx9l944jXfjKKNgGKgQLvWQOOLWTgIxT0Qh6aOXe0Gn4KAe4KNDZ0Z0>
+Received: from localhost (unknown [52.155.111.71])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C602C3280059;
+        Sat,  5 Sep 2020 10:15:04 -0400 (EDT)
+Date:   Sat, 5 Sep 2020 22:15:03 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [RFC v2 11/11] scsi: storvsc: Support PAGE_SIZE larger than 4K
+Message-ID: <20200905141503.GD7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+References: <20200902030107.33380-1-boqun.feng@gmail.com>
+ <20200902030107.33380-12-boqun.feng@gmail.com>
+ <MW2PR2101MB10523D98F77D5A80468A07CDD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e583869d-2fa9-42c0-62d3-08d851a5d426
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2020 14:13:14.0106
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BRc1dh6ejX+VG8pqWzmdwpjW6SdzjZ0y+HpKnuJtbb7LMn4WOMT04Hu7cEtSW/1r1sB4v1p7mIOBNaBLrGRu7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3820
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10523D98F77D5A80468A07CDD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: [PATCH v1 00/12] Intel FPGA Security Manager Class Driver
->=20
->=20
-> These patches depend on the patchset: "add regmap-spi-avmm & Intel
-> Max10 BMC chip support" which is currently under review.
->=20
->            --------------------------------------------------
->=20
-> This patchset introduces the Intel Security Manager class driver
-> for managing secure updates on Intel FPGA Cards. It also provides
-> the n3000bmc-secure mfd sub-driver for the MAX10 BMC for the n3000
-> Programmable Acceleration Cards (PAC). The n3000bmc-secure driver
-> is implemented using the Intel Security Manager class driver.
+On Sat, Sep 05, 2020 at 02:55:48AM +0000, Michael Kelley wrote:
+> From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 1, 2020 8:01 PM
+> > 
+> > Hyper-V always use 4k page size (HV_HYP_PAGE_SIZE), so when
+> > communicating with Hyper-V, a guest should always use HV_HYP_PAGE_SIZE
+> > as the unit for page related data. For storvsc, the data is
+> > vmbus_packet_mpb_array. And since in scsi_cmnd, sglist of pages (in unit
+> > of PAGE_SIZE) is used, we need convert pages in the sglist of scsi_cmnd
+> > into Hyper-V pages in vmbus_packet_mpb_array.
+> > 
+> > This patch does the conversion by dividing pages in sglist into Hyper-V
+> > pages, offset and indexes in vmbus_packet_mpb_array are recalculated
+> > accordingly.
+> > 
+> > Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> > ---
+> >  drivers/scsi/storvsc_drv.c | 60 ++++++++++++++++++++++++++++++++++----
+> >  1 file changed, 54 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > index 8f5f5dc863a4..3f6610717d4e 100644
+> > --- a/drivers/scsi/storvsc_drv.c
+> > +++ b/drivers/scsi/storvsc_drv.c
+> > @@ -1739,23 +1739,71 @@ static int storvsc_queuecommand(struct Scsi_Host *host, struct
+> > scsi_cmnd *scmnd)
+> >  	payload_sz = sizeof(cmd_request->mpb);
+> > 
+> >  	if (sg_count) {
+> > -		if (sg_count > MAX_PAGE_BUFFER_COUNT) {
+> > +		unsigned int hvpg_idx = 0;
+> > +		unsigned int j = 0;
+> > +		unsigned long hvpg_offset = sgl->offset & ~HV_HYP_PAGE_MASK;
+> > +		unsigned int hvpg_count = HVPFN_UP(hvpg_offset + length);
+> > 
+> > -			payload_sz = (sg_count * sizeof(u64) +
+> > +		if (hvpg_count > MAX_PAGE_BUFFER_COUNT) {
+> > +
+> > +			payload_sz = (hvpg_count * sizeof(u64) +
+> >  				      sizeof(struct vmbus_packet_mpb_array));
+> >  			payload = kzalloc(payload_sz, GFP_ATOMIC);
+> >  			if (!payload)
+> >  				return SCSI_MLQUEUE_DEVICE_BUSY;
+> >  		}
+> > 
+> > +		/*
+> > +		 * sgl is a list of PAGEs, and payload->range.pfn_array
+> > +		 * expects the page number in the unit of HV_HYP_PAGE_SIZE (the
+> > +		 * page size that Hyper-V uses, so here we need to divide PAGEs
+> > +		 * into HV_HYP_PAGE in case that PAGE_SIZE > HV_HYP_PAGE_SIZE.
+> > +		 */
+> >  		payload->range.len = length;
+> > -		payload->range.offset = sgl[0].offset;
+> > +		payload->range.offset = sgl[0].offset & ~HV_HYP_PAGE_MASK;
+> > +		hvpg_idx = sgl[0].offset >> HV_HYP_PAGE_SHIFT;
+> > 
+> >  		cur_sgl = sgl;
+> > -		for (i = 0; i < sg_count; i++) {
+> > -			payload->range.pfn_array[i] =
+> > -				page_to_pfn(sg_page((cur_sgl)));
+> > +		for (i = 0, j = 0; i < sg_count; i++) {
+> > +			/*
+> > +			 * "PAGE_SIZE / HV_HYP_PAGE_SIZE - hvpg_idx" is the #
+> > +			 * of HV_HYP_PAGEs in the current PAGE.
+> > +			 *
+> > +			 * "hvpg_count - j" is the # of unhandled HV_HYP_PAGEs.
+> > +			 *
+> > +			 * As shown in the following, the minimal of both is
+> > +			 * the # of HV_HYP_PAGEs, we need to handle in this
+> > +			 * PAGE.
+> > +			 *
+> > +			 * |------------------ PAGE ----------------------|
+> > +			 * |   PAGE_SIZE / HV_HYP_PAGE_SIZE in total      |
+> > +			 * |hvpg|hvpg| ...                 |hvpg|... |hvpg|
+> > +			 *           ^                     ^
+> > +			 *         hvpg_idx                |
+> > +			 *           ^                     |
+> > +			 *           +---(hvpg_count - j)--+
+> > +			 *
+> > +			 * or
+> > +			 *
+> > +			 * |------------------ PAGE ----------------------|
+> > +			 * |   PAGE_SIZE / HV_HYP_PAGE_SIZE in total      |
+> > +			 * |hvpg|hvpg| ...                 |hvpg|... |hvpg|
+> > +			 *           ^                                           ^
+> > +			 *         hvpg_idx                                      |
+> > +			 *           ^                                           |
+> > +			 *           +---(hvpg_count - j)------------------------+
+> > +			 */
+> > +			unsigned int nr_hvpg = min((unsigned int)(PAGE_SIZE / HV_HYP_PAGE_SIZE) - hvpg_idx,
+> > +						   hvpg_count - j);
+> > +			unsigned int k;
+> > +
+> > +			for (k = 0; k < nr_hvpg; k++) {
+> > +				payload->range.pfn_array[j] =
+> > +					page_to_hvpfn(sg_page((cur_sgl))) + hvpg_idx + k;
+> > +				j++;
+> > +			}
+> >  			cur_sgl = sg_next(cur_sgl);
+> > +			hvpg_idx = 0;
+> >  		}
+> 
+> This code works; I don't see any errors.  But I think it can be made simpler based
+> on doing two things:
+> 1)  Rather than iterating over the sg_count, and having to calculate nr_hvpg on
+> each iteration, base the exit decision on having filled up the pfn_array[].  You've
+> already calculated the exact size of the array that is needed given the data
+> length, so it's easy to exit when the array is full.
+> 2) In the inner loop, iterate from hvpg_idx to PAGE_SIZE/HV_HYP_PAGE_SIZE
+> rather than from 0 to a calculated value.
+> 
+> Also, as an optimization, pull page_to_hvpfn(sg_page((cur_sgl)) out of the
+> inner loop.
+> 
+> I think this code does it (though I haven't tested it):
+> 
+>                 for (j = 0; ; sgl = sg_next(sgl)) {
+>                         unsigned int k;
+>                         unsigned long pfn;
+> 
+>                         pfn = page_to_hvpfn(sg_page(sgl));
+>                         for (k = hvpg_idx; k < (unsigned int)(PAGE_SIZE /HV_HYP_PAGE_SIZE); k++) {
+>                                 payload->range.pfn_array[j] = pfn + k;
+>                                 if (++j == hvpg_count)
+>                                         goto done;
+>                         }
+>                         hvpg_idx = 0;
+>                 }
+> done:
+> 
+> This approach also makes the limit of the inner loop a constant, and that
+> constant will be 1 when page size is 4K.  So the compiler should be able to
+> optimize away the loop in that case.
+> 
 
-So this patchset contains two parts
-(1) adding a new class driver for Intel FPGA secure update.
-(2) a new driver which uses (1) to implement secure update for n3000 PAC.
+Good point! I like your suggestion, and after thinking a bit harder
+based on your approach, I come up with the following:
 
-And only part (2) depends on "Intel MAX10 BMC chip support" patchset.
-(Maybe you can provide a link to that thread).=20
+#define HV_HYP_PAGES_IN_PAGE ((unsigned int)(PAGE_SIZE / HV_HYP_PAGE_SIZE))
 
-Is my understanding correct? If yes, is it possible to reorder these patche=
-s?
-At least there is no dependency on the class driver patches, right?
+		for (j = 0; j < hvpg_count; j++) {
+			unsigned int k = (j + hvpg_idx) % HV_HYP_PAGES_IN_PAGE;
 
->=20
-> The Intel Security Manager class driver provides a common API for
-> user-space tools to manage updates for Secure FPGA devices. Device
-> drivers that instantiate the Intel Security Manager class driver will
-> interact with the HW secure update engine in order to transfer
-> new FPGA and BMC images to FLASH so that they will be automatically
-> loaded when the FPGA card reboots.
->=20
-> The API consists of sysfs nodes and supports the following functions:
->=20
-> (1) Instantiate and monitor a secure update
-> (2) Display security information including: Root Entry Hashes (REH),
->     Cancelled Code Signing Keys (CSK), and flash update counts for
->     both BMC and FPGA images.
->=20
-> Secure updates make use of the request_firmware framework, which
-> requires that image files are accessible under /lib/firmware. A request
-> for a secure update returns immediately, while the update itself
-> proceeds in the context of a kernel worker thread. Sysfs files provide
-> a means for monitoring the progress of a secure update and for
-> retrieving error information in the event of a failure.
+			/*
+			 * Two cases that we need to fetch a page:
+			 * a) j == 0: the first step or
+			 * b) k == 0: when we reach the boundary of a
+			 * page.
+			 * 
+			if (k == 0 || j == 0) {
+				pfn = page_to_hvpfn(sg_page(cur_sgl));
+				cur_sgl = sg_next(cur_sgl);
+			}
 
-Maybe you can explain a little more on why we need to have this done
-via a class driver not just some internal code in max10 driver? This class
-driver will be reused in different cases? And why adding a new class
-driver not just reuse or extend fpga manager (existing fpga mgr is used
-to update fpga too).
+			payload->range.pfn_arrary[j] = pfn + k;
+		}
 
->=20
-> The n3000bmc-secure driver instantiates the Intel Security Manager
-> class driver and provides the callback functions required to support
-> secure updates on Intel n3000 PAC devices.
->=20
-> Russ Weight (12):
->   fpga: fpga security manager class driver
+, given the HV_HYP_PAGES_IN_PAGE is always a power of 2, so I think
+compilers could easily optimize the "%" into bit masking operation. And
+when HV_HYP_PAGES_IN_PAGE is 1, I think compilers can easily figure out
+k is always zero, then the if-statement can be optimized as always
+taken. And that gives us the same code as before ;-)
 
-Intel FPGA Security Manager?
+Thoughts? I will try with a test to see if I'm missing something subtle.
 
->   fpga: create intel max10 bmc security engine
->   fpga: expose max10 flash update counts in sysfs
->   fpga: expose max10 canceled keys in sysfs
->   fpga: enable secure updates
->   fpga: add max10 secure update functions
->   fpga: expose sec-mgr update status
->   fpga: expose sec-mgr update errors
->   fpga: expose sec-mgr update size
->   fpga: enable sec-mgr update cancel
->   fpga: expose hardware error info in sysfs
+Thanks for looking into this!
 
-For these patches, is it possible to have a better title for these patches.
-Then it will be easier to know which component this patch is going to modif=
-y.
-e.g. fpga: ifpga-sec-mgr: xxxxxx
+Regards,
+Boqun
 
-Thanks
-Hao
 
->   fpga: add max10 get_hw_errinfo callback func
->=20
->  .../ABI/testing/sysfs-class-ifpga-sec-mgr     | 151 ++++
->  MAINTAINERS                                   |   8 +
->  drivers/fpga/Kconfig                          |  20 +
->  drivers/fpga/Makefile                         |   6 +
->  drivers/fpga/ifpga-sec-mgr.c                  | 669 ++++++++++++++++++
->  drivers/fpga/intel-m10-bmc-secure.c           | 557 +++++++++++++++
->  include/linux/fpga/ifpga-sec-mgr.h            | 201 ++++++
->  include/linux/mfd/intel-m10-bmc.h             | 116 +++
->  8 files changed, 1728 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
->  create mode 100644 drivers/fpga/ifpga-sec-mgr.c
->  create mode 100644 drivers/fpga/intel-m10-bmc-secure.c
->  create mode 100644 include/linux/fpga/ifpga-sec-mgr.h
->=20
-> --
-> 2.17.1
-
+> Michael
+> 
+> 
+> 
+> 
+> 
+> 
+> >  	}
+> > 
+> > --
+> > 2.28.0
+> 
