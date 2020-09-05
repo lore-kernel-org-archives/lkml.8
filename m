@@ -8,128 +8,135 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A61B2C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1CA20760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:45:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66362074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Q+F3ABzx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6QU02nT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbgIEUpY (ORCPT
+        id S1728975AbgIEUp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:45:24 -0400
-Received: from mout.gmx.net ([212.227.15.19]:55085 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbgIEUoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:44:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599338649;
-        bh=Be/pWWRCdG9k6oAZQXTcja1Tc2WaPrzbgsSdvaLxfZ4=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Q+F3ABzxf6onrrkrNJBPuXNu0dHuu9JfTv44cr3smoCoqnowKl48cJP03RfzrOOgV
-         W4NVpd2hjTXwrX9EEkoZAaocaQdV6foAoBm/Vx4baoGrLkHw1eoYcT5xjH8psHIz33
-         gM07c/GiOEtF8MWNhGf6Ef9XereN855HQXghhVyE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mof5H-1ktzCz3e93-00p6n5; Sat, 05
- Sep 2020 22:44:09 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-mtd@lists.infradead.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Richard Weinberger <richard@nod.at>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
-        Jaskaran Singh <jaskaransingh7654321@gmail.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] docs: ubifs-authentication: Add a top-level heading
-Date:   Sat,  5 Sep 2020 22:43:26 +0200
-Message-Id: <20200905204326.1378339-3-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200905204326.1378339-1-j.neuschaefer@gmx.net>
-References: <20200905204326.1378339-1-j.neuschaefer@gmx.net>
+        Sat, 5 Sep 2020 16:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728732AbgIEUmn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 16:42:43 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD327C061251;
+        Sat,  5 Sep 2020 13:42:42 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c2so11745876ljj.12;
+        Sat, 05 Sep 2020 13:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=awLSeV2Z+rtM7VgtALGSpyYZLB8XgYyFATh83dG2VAk=;
+        b=U6QU02nTrbCYvhTJP8nKo3faoUQ5yN7PFq7AEFDPxztZ6JoJGLuhgDPSKMuVM0l6Na
+         gw3ZrVSw0GRa5sn6/8By8B8Iw32riZr4+Va5SJ63eR0YisRIllMn/r3BLhRG1lM/bYJT
+         F65SGGlqghKV8KuPcHI/TPidVQmtdfoNtVDitrvAg0758ZSzDb2Ykxoct0Mh7cUgHaO+
+         bA7XlhGSUqwuFCLbfFvJIx76onQ5mj6iFUDo2kpGIgiJ2t+w+qTRIU+pCK+LWcw7vMu/
+         eShTIRJ3N1QbxA8yC0TYpXnBvaHxDDx+zKVRtQSJEExdFZ7aDfJEtgoO5xAVXhOfgZWP
+         /HdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=awLSeV2Z+rtM7VgtALGSpyYZLB8XgYyFATh83dG2VAk=;
+        b=PCVurmxCIkpJxbMx3LRinSCkp68ptUbRcyNFEpVoIXmDqfO2M72Be58Gq+XubYPS1M
+         ltw0ZZC0rrXSgMjkm/pgijK+7CtqJy5yg0JGiJnSlEX98/pvip8rWKYWzN5U1Xvzl6b2
+         dXtUBdNpoVsnT4VZNMhOdfuTQSnjt8NSyfukmnOPms7vGtclJminhXro20NnM5s08ZJd
+         VUi3owlNjE7Ig9ggumWZI9OqkOjEz+PUjuANvK/B6amZP3EY33SUkEUe59HU0rXYfdfD
+         ur/XDLWDGKDBjsgZRLgMMD7lgVMbpJqjxsFpc5/st8ekhm4p+CoXuHhYNl7auEaKW2Dd
+         UsQw==
+X-Gm-Message-State: AOAM531kYasW75N3NkSPSd2c3xyguuR6OnC5VNa9i3DaXZ1IBWr/i/8g
+        lOJqIgw+4he1IzIa/Axci3Q=
+X-Google-Smtp-Source: ABdhPJwOSpMvUluNXcAAVMQ2/3ptwiUkDHhpW29MCnCdU4/NzraZQkHAY1ybvJkiklvJZPfZvRuyow==
+X-Received: by 2002:a2e:e1a:: with SMTP id 26mr5060631ljo.377.1599338561168;
+        Sat, 05 Sep 2020 13:42:41 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 13:42:40 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 18/31] i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
+Date:   Sat,  5 Sep 2020 23:41:38 +0300
+Message-Id: <20200905204151.25343-19-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200905204151.25343-1-digetx@gmail.com>
+References: <20200905204151.25343-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JCZ9dogxu6N+RKhbMPfW1OC69oFNA7oU53WsieXUXkqlBdaEgxw
- hYf9C8XKUtNhM+adsNx2AyU1FWtSjEi+tJO0PI+5RcAUrSnXgUcPBfYmjkkpKs9VgnoA3kc
- CoWDSA6KjQrnwq8KD1aov7dV1gi3/NoD1xAKaeeI7z5nMBrZMP9rGI03q/b5ofl6UVzBVFF
- 27/UcfcBJroX8S6wxPeHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/tKJFPdbk3k=:gQcm/T0WkZ6j+W/XpL/lxc
- wV5Wkmt829NuLGiAFrCJPtKya5IXazn/hlJWwEjxSrB7oSj+BGzBXeMeX0Kg2dVEU5ZRZa+DH
- 46/B2zyQFsIDjC6mYTSVv+XbMStQE3/Ani/Swt4mSu1Q8ZdMre1L0GXgJZ5SIFB8FKXp7cHmE
- 5tuR81mWAFCTaEuPFedO/H8h4LSWSohFfnrDlKsDh/cfoiKjWBD13111rWMDPOos98/ZI5aXC
- k9c4cD6pzaR2biKqpiLw34T0AieqQ6v7ubNC/rDuMn8gKgA3DhGNr3RJ/1MSsCR9p+DU0KN27
- pMKNgsK6QDuI2xUJ+FVwXbIi6sFNvf+gpNeeoeYkd0jLj5590EcvV20QYcu/Qo0hACnNE46gO
- HPC3hmjS/g9BEtDi8u4vI5d6GvcC/fqwkLYRCIHekx+Bq50hDpR8nIbzMRQIWOfia119NswpZ
- VtX4RmW2KWe3pgndT1BUNx6liyQyTz3tFHpVN7JxavtuW2kLKubc3LvXnp/5zvgkuH3BJKaHx
- iDcQNKix1kD9b8mrmrkodrFB0VLRAtwgs+gzcJgK5YC0W2CND38ZwJoSAzCWIKmakm68OzSLw
- fk8PwbMFkeiQh6G8eteFm0Kjbeo88GpEgjPYDTVHvb+3Bn3vpV6P0E7qfA9SXaQb4mqilLk9h
- z3hOu9w25HnAakxUivbJblwBirV+EnXft5scev6UKtFc6qfcX5wkrqEiuzXh5fZRfC1JVWikX
- +qaUemnQ8n6yY79YA3jQ6Po+awvTuELETQXBedzzqwruDfDDA+BgJ7O7xw3khq0YB8uxbVcVv
- RpbW/O0fNL66YyeuxW6Hm17+ubi7Xj+yQ456NNoDp82/8ngxNXj11HyylOIFY8UH9lPA9obqB
- Iu6G0yf8ypjB6HZaBcLksEcxZaFFHZhsDM7IG7qzi73qgBRvtLkB5CSAlD17J1weAjBImuEPO
- qal/sV5wFVkJbl7oFPlXqjKm3W0xgdx2vXcvLqTOWyNRcdr3F9tEZHTT0PBM/RYSepem9+Z1D
- iD0QHnkIvNRl8NHlKc4pUaM8Wj1YWRZC8VZfSx5dvwB9DSki+HPR83EJOOEXj8dmvOrDLK8DC
- QhPCvhpyLBzZ/hiPA58ih8/JsoromNyNTGg/EVT07WoBemWtiIOP2ixTR1G+qnM3EdaDIG/oT
- KoM8aXAkbdj9zmxOdXk5tmMEzcmKAEBDMXvh55D+H4WrM8j/NIHVEjiXt3NcccQuDs8lQqI8K
- kIdSIiTFQitcFOpHSs0AK3unodCkOrvKIeNTv5g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This prevents the chapter headings from showing up in the table of
-contents in filesystems/index.html.
+Improve coding style of the tegra_i2c_wait_for_config_load() function by
+removing need to wrap code in order make it more readable and to adhere to
+the common kernel coding style.
 
-Note that I didn't pick "UBIFS Authentication" as the document title,
-because there is a chapter of the same name, and Sphinx complains about
-multiple headings with the same name:
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 34 ++++++++++++++++------------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
 
-  /.../Documentation/filesystems/ubifs-authentication.rst:207:
-  WARNING: duplicate label filesystems/ubifs-authentication:ubifs
-  authentication, other instance in
-  /.../Documentation/filesystems/ubifs-authentication.rst
-
-Remove the :orphan: tag, as the document has been included into the
-toctree.
-
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/filesystems/ubifs-authentication.rst | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/filesystems/ubifs-authentication.rst b/Document=
-ation/filesystems/ubifs-authentication.rst
-index 1f39c8cea7029..5210aed2afbc3 100644
-=2D-- a/Documentation/filesystems/ubifs-authentication.rst
-+++ b/Documentation/filesystems/ubifs-authentication.rst
-@@ -1,11 +1,13 @@
- .. SPDX-License-Identifier: GPL-2.0
-
--:orphan:
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index a2ae4dab8001..dc9948d816ac 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -700,25 +700,23 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+ 	u32 val;
+ 	int err;
+ 
+-	if (i2c_dev->hw->has_config_load_reg) {
+-		reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
+-		addr = i2c_dev->base + reg_offset;
+-		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
 -
- .. UBIFS Authentication
- .. sigma star gmbh
- .. 2018
-
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-+UBIFS Authentication Support
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
+-		if (i2c_dev->is_curr_atomic_xfer)
+-			err = readl_relaxed_poll_timeout_atomic(
+-						addr, val, val == 0, 1000,
+-						I2C_CONFIG_LOAD_TIMEOUT);
+-		else
+-			err = readl_relaxed_poll_timeout(
+-						addr, val, val == 0, 1000,
+-						I2C_CONFIG_LOAD_TIMEOUT);
++	if (!i2c_dev->hw->has_config_load_reg)
++		return 0;
+ 
+-		if (err) {
+-			dev_warn(i2c_dev->dev,
+-				 "timeout waiting for config load\n");
+-			return err;
+-		}
++	reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
++	addr = i2c_dev->base + reg_offset;
++	i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
 +
- Introduction
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-=2D-
-2.28.0
++	if (i2c_dev->is_curr_atomic_xfer)
++		err = readl_relaxed_poll_timeout_atomic(addr, val, val == 0, 1000,
++							I2C_CONFIG_LOAD_TIMEOUT);
++	else
++		err = readl_relaxed_poll_timeout(addr, val, val == 0, 1000,
++						 I2C_CONFIG_LOAD_TIMEOUT);
++
++	if (err) {
++		dev_warn(i2c_dev->dev, "timeout waiting for config load\n");
++		return err;
+ 	}
+ 
+ 	return 0;
+-- 
+2.27.0
 
