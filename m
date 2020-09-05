@@ -2,160 +2,201 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10028C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3288AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC6972072D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9E8720760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="bPa0lMgH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBzN4GfK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgIENqY (ORCPT
+        id S1728629AbgIENql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 09:46:24 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1787 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728665AbgIENj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:39:29 -0400
-IronPort-SDR: vkSo6TQefU5x6/oo+lNRDNM2/x4TZFPYZenT8xH/waVVu/lndsXHRR9u/XHLKC6CjuNfIhiPeq
- Uv3dW/B7S5yw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="155363723"
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="155363723"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 06:39:23 -0700
-IronPort-SDR: Pu5JTQ/1SogNxEW351vDf+ozvCIml0cBGi40etkEE3ZN/t7pX2k6jZZk087wxMxGURousWX3/q
- dxX0SSVjLrjg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="316237171"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by orsmga002.jf.intel.com with ESMTP; 05 Sep 2020 06:39:22 -0700
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sat, 5 Sep 2020 06:39:22 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Sat, 5 Sep 2020 06:39:22 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.1713.5; Sat, 5 Sep 2020 06:39:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VT4EXlJZHpZtxzqc4g1ATVGEIDKRCpXEsaheV3IRQQc0/ZBYZQpdEF94NL2XewfJlcSu/I2J+Q0CRn2RzO4jSAW+W6uiYXHZgCxMC9xOxeJPslSZ9DnXrSAe4TPZqrifgkwFR1fpDPPs9AeDGm00NrRjkLda7vjcDW+G4J66KPzgG4ypZaWqVwLNIC6ZM4ksY7Hy2w3/n/hvsZwcMQDEj8gldDzcHjTwIoqIXXXN+BMDxRs+zPVinYIrOsjt9Bsi0s7AxKq/FV7GptsYI9KNPW0Bk1PBmEj/OaBFoCR/4cBXR1jZ+MysmZOWOsdBsEmUtdfj23nnMU8AsHZAvvVbaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P4zWbK6PgD0uoqs5mGKBzD0cSuhRK26llirMwmnpJy0=;
- b=ZksBogxF88fmR1K+VsFACL9yRZfx77GBWdu9DfQhABA/xqWN9tstucvBwVHPRofAMkcg4Girs91adeR65FyVOT5zcw4zL3ZYEhNk2L3vcGAJhMJ+G9Rlyl65YdoIPOoE3pnTbhn+24OLE9E9CTCRQWh0xZ0G+qgRFmsDY2z3q/zYzjOfXz9W7DTG80mTr9VqcwdzdE8HVdUTDH13ZyvOqJcuLth/rCEDKDN2R4xeBGendV7/EqceEvlLW8kd/9Y7Rk/FjhiCGs0P+BP65a1I6PKLFy1KBKcdMPBJwkzwcqSDnxyHVMtWfnYC/13Nd2n0CWppKv0rhuUUV7NSNg+uhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P4zWbK6PgD0uoqs5mGKBzD0cSuhRK26llirMwmnpJy0=;
- b=bPa0lMgH5ugkEKEJfSGhgG7ttRQs32qpOuGrPmstfNp5c9zT33S5zIT7eAY2nRdgKGwiTr1Xp//4/31Ex988dOauuh2fOiwMsyZi/UA64xMbQlR+NHGPp170oY/U7ODDKFp4zPfQ4oyzv+Lru5uW41yPls/2Xl8dKwkNxmYPBls=
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com (2603:10b6:5:13f::31)
- by DM6PR11MB3817.namprd11.prod.outlook.com (2603:10b6:5:13a::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Sat, 5 Sep
- 2020 13:39:20 +0000
-Received: from DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::7823:516e:1ec4:a60d]) by DM6PR11MB3819.namprd11.prod.outlook.com
- ([fe80::7823:516e:1ec4:a60d%5]) with mapi id 15.20.3348.017; Sat, 5 Sep 2020
- 13:39:19 +0000
-From:   "Wu, Hao" <hao.wu@intel.com>
-To:     "Weight, Russell H" <russell.h.weight@intel.com>,
-        Moritz Fischer <mdf@kernel.org>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "trix@redhat.com" <trix@redhat.com>,
-        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
-        "Xu, Yilun" <yilun.xu@intel.com>,
-        "Gerlach, Matthew" <matthew.gerlach@intel.com>
-Subject: RE: [PATCH v1 01/12] fpga: fpga security manager class driver
-Thread-Topic: [PATCH v1 01/12] fpga: fpga security manager class driver
-Thread-Index: AQHWgxa1h9ciP5la3kGmVnu8RretTKlZL1sAgAAGBgCAAM+KoA==
-Date:   Sat, 5 Sep 2020 13:39:19 +0000
-Message-ID: <DM6PR11MB3819EC0246B210F32C3EE12B852A0@DM6PR11MB3819.namprd11.prod.outlook.com>
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
- <20200904235305.6254-2-russell.h.weight@intel.com>
- <20200905002324.GA3157@epycbox.lan>
- <58a1b51a-4c01-248f-1ee7-fc541e417b44@intel.com>
-In-Reply-To: <58a1b51a-4c01-248f-1ee7-fc541e417b44@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d25f2027-7d2b-4300-c852-08d851a11788
-x-ms-traffictypediagnostic: DM6PR11MB3817:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB38174D1753E41D3354E32B50852A0@DM6PR11MB3817.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hHQTxIl7Na4Hdve+7tDW2nJRYM47XjRcDgoeHY96bS4iLKRS5HMs/HatDZo7SDVtuFOS9C4VKwP1WUIquvf7JjgH65ab9ZtNk9lJlcsJI9hzZJS7P4x9uU0+vHpuSjKNyK1DYqkgzKEAYeN9VB0Lb05cEfOxZkRLdUzdyYUzD3v2JVQkSjDOR+K4f5B8NE2vIh3MtIrvzDwi75snSzjRYHxaQT+GF4tygkMseKcgwQGveiwvK3MSw/8RM0/jCrSzf0LuNLFl1ORAbWxPd6Bo25g1c/cA+478OOQsffmN2I03Sbf4XzCCJNse07012cPKziaoHwhS1Ezi1qclYG6zxg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3819.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(366004)(396003)(39860400002)(376002)(54906003)(86362001)(4326008)(33656002)(478600001)(71200400001)(52536014)(66446008)(316002)(83380400001)(76116006)(66946007)(64756008)(66556008)(2906002)(66476007)(55016002)(5660300002)(6506007)(110136005)(186003)(53546011)(26005)(107886003)(9686003)(8936002)(8676002)(7696005)(15650500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: /uFkA0zuwkCExXQzJmcL4++rwXp0qF41vxhO8hAtPQqUjrWpYbyByvD+f3zNKHTkWzebIQqJy1+TJZPAo0iPcPvN6E86A7Ak/+a8HEb3yr2n+r1l7lsPlNTm07YiCv2a56lwUp0fYNGhnPzloTvi3kNZsGgClPFHQ8MUbt7PuF+vflM/nL/z8FjQy/HKf6CkOi3hsksZSBjamW115rcBSwcnWQ2REI0m+J5Gx9wiJuBLd0l21qiTVQx99+uXKfna6RWUWl7MzvmWgFL/c8gQx2URywiv2X5wv3uJLsV0RuLtYhR/rsZZEUKguVw5rbdT9KdVsfqBrJIVd1pqm1/fQ02PjXBzm2ufn7dfbcD3GF/UA4v263GJDRhEcKhUIPUNesJj5b0aj+3ogdHmRK/Rgt8/6oeCZvaJ+V2yIVMdECyiZi5du5Zc6mgkIK9M5V7LQHibZOZ+u/5fzg7fCZV9LXxFs8s6HCjDsf2cX60XWKgxjvU9vP9QNoCulSNepDcwmJvDKSejg5o6B0upUx2IuOEV9Y8S1HAT3ohwZy7YcuwY+IJNQSihdA3Z3cG0caLJ4ajHI1QVXvn8wEu/TuxBK0kRHm3Z19B1ngYuu0zdzdBsOUTQU7+iNxmPaVSrJLCPwuVQ7ipz336JU4skKWEGXg==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 5 Sep 2020 09:46:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728663AbgIENjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 09:39:22 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AAACC061246;
+        Sat,  5 Sep 2020 06:39:22 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id kk9so1936202pjb.2;
+        Sat, 05 Sep 2020 06:39:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
+        b=gBzN4GfKP4e9KGrA1rJIlb+hRY7To/3CR74YhVa94ot8jSHVg1gWaNqzLHivLQkn1m
+         03Nfz4CAzhfFgalDY8YeifzA6WGGa510ECRN4sB+MSJQmESLYGgHDHGPTgjmphur+iu9
+         z2+JMMi+C0v7I00qO/OZzI8YEfuaA8yYAm95YjnA9ABjF1cmsZtda6mBIjMul3vVG+YD
+         ALssmLS+KXiKcMG2HjgWodac0/Vi57crtp6rzXWcqyS+EVPVcwW7PqreEFPZpn4flE8j
+         SshLiDGp7HVIoC9fvXPkFypgPBWDtvM1sQ8/ec+jYL8fTWZfIswWP4ZDXOG5z1TMkOMl
+         lYyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zeAqt+L6g1vrQKWXIoolqUPOf3l3HNvz8g6zB2yyrdI=;
+        b=jcLYDcGpDlpKZIkxYRkdeXeKh6Kd9caVDwD6OkOBddUspxiqcmxaIlcKJOCb18g7Zv
+         +o5bTx9mUThJLsTFm2U0cIEnb1qtZcS2B6EFTC68Nf1kjXA/wQ3/+GDgzhJfz5nwfzmh
+         anKF++WTv35CBlmIlCn+pqeO5o1AekIxG4QsAcMf50bW3GhIAykhKmYUkyaYNnVdknlw
+         bHX+SnaevzM8dDL3TbSnCI4nFnMJaZyhBKlTT+zpPJv0jDOt8l7C/fFR4SqFTsqgl2Fy
+         D992Jf4qFRloWpo1p1PePIbBZLZ+7kOLywsJn/k4FJikoirDBaeWtS9ouVjCVor1Bx99
+         OJkw==
+X-Gm-Message-State: AOAM532LZWalUmzsxMmyk86MF4LHVBOT66zBXeFUJwJ7VzJ4+aD2itFy
+        7SbKN0RVtxzsQSBkpj5lhcdFXJulWKE=
+X-Google-Smtp-Source: ABdhPJzqrbin2rkrBsOhnuOsP+GhW1muSTil0mTs38nRCMFjQNRRwLY8XPJx6XwH0UjbkY9vefiEdQ==
+X-Received: by 2002:a17:90b:1211:: with SMTP id gl17mr12928742pjb.87.1599313159641;
+        Sat, 05 Sep 2020 06:39:19 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 06:39:19 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v7 19/20] tools: gpio: add multi-line monitoring to gpio-event-mon
+Date:   Sat,  5 Sep 2020 21:35:48 +0800
+Message-Id: <20200905133549.24606-20-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200905133549.24606-1-warthog618@gmail.com>
+References: <20200905133549.24606-1-warthog618@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3819.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d25f2027-7d2b-4300-c852-08d851a11788
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2020 13:39:19.7600
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2TN5Z6kJ2PrvAI9bN2t6QnPjbufRghOM6NY313OW9ILNYfjhyjUmB0wrc6BmdSHijm9txIgBeUDTJ82WtEo0Ow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3817
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiA5LzQvMjAgNToyMyBQTSwgTW9yaXR6IEZpc2NoZXIgd3JvdGU6DQo+ID4gSGkgUnVzcywN
-Cj4gPg0KPiA+IE9uIEZyaSwgU2VwIDA0LCAyMDIwIGF0IDA0OjUyOjU0UE0gLTA3MDAsIFJ1c3Mg
-V2VpZ2h0IHdyb3RlOg0KPiA+PiBDcmVhdGUgdGhlIEludGVsIFNlY3VyaXR5IE1hbmFnZXIgY2xh
-c3MgZHJpdmVyLiBUaGUgc2VjdXJpdHkNCj4gPj4gbWFuYWdlciBwcm92aWRlcyBpbnRlcmZhY2Vz
-IHRvIG1hbmFnZSBzZWN1cmUgdXBkYXRlcyBmb3IgdGhlDQo+ID4+IEZQR0EgYW5kIEJNQyBpbWFn
-ZXMgdGhhdCBhcmUgc3RvcmVkIGluIEZMQVNILiBUaGUgZHJpdmVyIGNhbg0KPiA+PiBhbHNvIGJl
-IHVzZWQgdG8gdXBkYXRlIHJvb3QgZW50cnkgaGFzaGVzIGFuZCB0byBjYW5jZWwgY29kZQ0KPiA+
-PiBzaWduaW5nIGtleXMuDQo+ID4+DQo+ID4+IFRoaXMgcGF0Y2ggY3JlYXRlcyB0aGUgY2xhc3Mg
-ZHJpdmVyIGFuZCBwcm92aWRlcyBzeXNmcw0KPiA+PiBpbnRlcmZhY2VzIGZvciBkaXNwbGF5aW5n
-IHJvb3QgZW50cnkgaGFzaGVzLCBjYW5jZWxlZCBjb2RlDQo+ID4+IHNpZ25pbmcga2V5cyBhbmQg
-Zmxhc2ggY291bnRzLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSdXNzIFdlaWdodCA8cnVz
-c2VsbC5oLndlaWdodEBpbnRlbC5jb20+DQo+ID4+IFNpZ25lZC1vZmYtYnk6IFh1IFlpbHVuIDx5
-aWx1bi54dUBpbnRlbC5jb20+DQo+ID4gQXMgZm9yIFJldmlld2VkLWJ5IHRhZ3MgSSBoYWQgc2Vl
-biBvbiBvdGhlciBwYXRjaGVzIGluIHRoZSBzZXJpZXMsIEknZA0KPiA+IHByZWZlciBmb3IgdGhh
-dCB0byBoYXBwZW4gb24gcHVibGljIG1haWxpbmcgbGlzdHMuIElmIEhhbyByZXZpZXdlZA0KPiA+
-IHBhdGNoZXMgb24gc29tZSBpbnRlcm5hbCBJbnRlbCBsaXN0IEkgd29uJ3Qga25vdyBhYm91dCBp
-dCwgc28gcGxlYXNlDQo+ID4gaGF2ZSBoaW0gcHJvcGVybHkgQWNrL1Jldmlld2VkLWJ5IHRhZyB0
-aGluZ3Mgb24gYSBwdWJsaWMgbWFpbGluZyBsaXN0Lg0KPiANCj4gU3VyZSAtIEknbGwgcmVtb3Zl
-IHRoZSBBY2svUmV2aWV3ZWQtYnkgdGFncyB0aGF0IHdlcmUgYWRkZWQgaW50ZXJuYWxseQ0KPiBi
-ZWZvcmUgSSBzdWJtaXQgdGhlIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2hzZXQgKGV4Y2VwdCB3
-aGVyZSBIYW8NCj4gcmUtYWRkcyB0aGVtIG9uIHRoZSBwdWJsaWMgbGlzdCBkdXJpbmcgdGhpcyBy
-ZXZpZXcgY3ljbGUpLg0KDQpZZXMsIHBsZWFzZSByZW1vdmUgaXQgdG8gYXZvaWQgY29uZnVzaW5n
-LiBJIGhhdmVuJ3QgbG9va2VkIGF0IHRoZSBsYXRlc3QgY29kZSB5ZXQuDQpBbnl3YXksIGxldCdz
-IGZvbGxvdyB1cCB0aGlzIGluIHB1YmxpYyBtYWlsaW5nIGxpc3QuDQoNClRoYW5rcw0KSGFvDQo=
+Extend gpio-event-mon to support monitoring multiple lines.
+This would require multiple lineevent requests to implement using uAPI v1,
+but can be performed with a single line request using uAPI v2.
+
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tools/gpio/gpio-event-mon.c | 45 ++++++++++++++++++++++++++++---------
+ 1 file changed, 34 insertions(+), 11 deletions(-)
+
+diff --git a/tools/gpio/gpio-event-mon.c b/tools/gpio/gpio-event-mon.c
+index d6a831200c18..e50bb107ea3a 100644
+--- a/tools/gpio/gpio-event-mon.c
++++ b/tools/gpio/gpio-event-mon.c
+@@ -26,7 +26,8 @@
+ #include "gpio-utils.h"
+ 
+ int monitor_device(const char *device_name,
+-		   unsigned int line,
++		   unsigned int *lines,
++		   unsigned int num_lines,
+ 		   struct gpio_v2_line_config *config,
+ 		   unsigned int loops)
+ {
+@@ -47,7 +48,7 @@ int monitor_device(const char *device_name,
+ 		goto exit_free_name;
+ 	}
+ 
+-	ret = gpiotools_request_line(device_name, &line, 1, config,
++	ret = gpiotools_request_line(device_name, lines, num_lines, config,
+ 				     "gpio-event-mon");
+ 	if (ret < 0)
+ 		goto exit_device_close;
+@@ -55,8 +56,10 @@ int monitor_device(const char *device_name,
+ 		lfd = ret;
+ 
+ 	/* Read initial states */
+-	values.mask = 1;
++	values.mask = 0;
+ 	values.bits = 0;
++	for (i = 0; i < num_lines; i++)
++		gpiotools_set_bit(&values.mask, i);
+ 	ret = gpiotools_get_values(lfd, &values);
+ 	if (ret < 0) {
+ 		fprintf(stderr,
+@@ -65,9 +68,23 @@ int monitor_device(const char *device_name,
+ 		goto exit_line_close;
+ 	}
+ 
+-	fprintf(stdout, "Monitoring line %d on %s\n", line, device_name);
+-	fprintf(stdout, "Initial line value: %d\n",
+-		gpiotools_test_bit(values.bits, 0));
++	if (num_lines == 1) {
++		fprintf(stdout, "Monitoring line %d on %s\n", lines[0], device_name);
++		fprintf(stdout, "Initial line value: %d\n",
++			gpiotools_test_bit(values.bits, 0));
++	} else {
++		fprintf(stdout, "Monitoring lines %d", lines[0]);
++		for (i = 1; i < num_lines - 1; i++)
++			fprintf(stdout, ", %d", lines[i]);
++		fprintf(stdout, " and %d on %s\n", lines[i], device_name);
++		fprintf(stdout, "Initial line values: %d",
++			gpiotools_test_bit(values.bits, 0));
++		for (i = 1; i < num_lines - 1; i++)
++			fprintf(stdout, ", %d",
++				gpiotools_test_bit(values.bits, i));
++		fprintf(stdout, " and %d\n",
++			gpiotools_test_bit(values.bits, i));
++	}
+ 
+ 	while (1) {
+ 		struct gpio_v2_line_event event;
+@@ -126,7 +143,7 @@ void print_usage(void)
+ 	fprintf(stderr, "Usage: gpio-event-mon [options]...\n"
+ 		"Listen to events on GPIO lines, 0->1 1->0\n"
+ 		"  -n <name>  Listen on GPIOs on a named device (must be stated)\n"
+-		"  -o <n>     Offset to monitor\n"
++		"  -o <n>     Offset of line to monitor (may be repeated)\n"
+ 		"  -d         Set line as open drain\n"
+ 		"  -s         Set line as open source\n"
+ 		"  -r         Listen for rising edges\n"
+@@ -146,7 +163,8 @@ void print_usage(void)
+ int main(int argc, char **argv)
+ {
+ 	const char *device_name = NULL;
+-	unsigned int line = -1;
++	unsigned int lines[GPIO_V2_LINES_MAX];
++	unsigned int num_lines = 0;
+ 	unsigned int loops = 0;
+ 	struct gpio_v2_line_config config;
+ 	int c;
+@@ -162,7 +180,12 @@ int main(int argc, char **argv)
+ 			device_name = optarg;
+ 			break;
+ 		case 'o':
+-			line = strtoul(optarg, NULL, 10);
++			if (num_lines >= GPIO_V2_LINES_MAX) {
++				print_usage();
++				return -1;
++			}
++			lines[num_lines] = strtoul(optarg, NULL, 10);
++			num_lines++;
+ 			break;
+ 		case 'd':
+ 			config.flags |= GPIO_V2_LINE_FLAG_OPEN_DRAIN;
+@@ -182,7 +205,7 @@ int main(int argc, char **argv)
+ 		}
+ 	}
+ 
+-	if (!device_name || line == -1) {
++	if (!device_name || num_lines == 0) {
+ 		print_usage();
+ 		return -1;
+ 	}
+@@ -191,5 +214,5 @@ int main(int argc, char **argv)
+ 		       "falling edges\n");
+ 		config.flags |= EDGE_FLAGS;
+ 	}
+-	return monitor_device(device_name, line, &config, loops);
++	return monitor_device(device_name, lines, num_lines, &config, loops);
+ }
+-- 
+2.28.0
+
