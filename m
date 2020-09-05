@@ -2,227 +2,138 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4681C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A316C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5482073B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69112073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:57:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWYdNE+N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728517AbgIELt6 (ORCPT
+        id S1728503AbgIEL5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 07:49:58 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:53388 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgIELtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 07:49:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 6D8F6FB03;
-        Sat,  5 Sep 2020 13:49:52 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id h1Oeo-a0KcPD; Sat,  5 Sep 2020 13:49:49 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 2433B45B81; Sat,  5 Sep 2020 13:49:49 +0200 (CEST)
-Date:   Sat, 5 Sep 2020 13:49:49 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>
-Cc:     Lucas Stach <l.stach@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        lukas@mntmn.com
-Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
- Subsystem
-Message-ID: <20200905114949.GA111526@bogon.m.sigxcpu.org>
-References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
- <20200731085429.GD12560@bogon.m.sigxcpu.org>
+        Sat, 5 Sep 2020 07:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgIEL5i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 07:57:38 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1ECC061244
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 04:57:37 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id e11so9168037wme.0
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 04:57:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4aoGFxNszSIUAcbHGuDlBMtXkOLa4x8B3iFVhhfOO8=;
+        b=PWYdNE+NkrEnk5G1ea8IxtZb2eUKVlxu/lz5HtaK6VGQ7XedtklWR1ea0nIVkQIaPM
+         4nRCXWrLS3/WiTXWVTSaT8RSJ5Y8iGZBJ3/MMAEWWiYBPaD1xzUTVJLCH/DAOklkWInV
+         Qi/4qUzTUGaf3qV2Hmgg1ITFXec5HtwSQZ8kMw8gG01Qu37MTCmVmpaDEcj3YEi7k/F7
+         pBMCj7iMRWIM499k83tzUx25OCJeItKjcqMop8Ti3l0VcqNlDLa3uoJFjAwIEEIe5SeU
+         FzvU+7RclG0DUCKU/o5jzl9lnEcaYFj5LywYo7zRq+oAmmxkBfd5QMxnQPaBZ+JVMUAO
+         5HMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4aoGFxNszSIUAcbHGuDlBMtXkOLa4x8B3iFVhhfOO8=;
+        b=EBesO0w8HHoE76Kb8lCqFBvWBRInqYWfNALkFrXn7VJIju0hREU9myoXb+W5AelRgK
+         yBwDffOAvUTD6N3ijiNeAYs0o7TESOAdu2ZePEWkkkXBDyt2ggW71hYfEc8FfGB9PQFc
+         /ENkSu5FAmeBaJCQAAwn2BydiR2N4z1hm/D216VKXTE4XaMOiUXf3k5wpNK8IkNI+xP5
+         JrCg9FZ68YNn8mJFo/fHFIMsj0AeqCQy4dtPBnBbCDzAAMf0qV16B0ljR2DH6ROywF4A
+         aCUUJ2uRLZS4Diu0IA/Xm7ypesiM+yg/geZHba2h0XdqPaC2wkGHXNyovcw0mr8O2aJr
+         uz3g==
+X-Gm-Message-State: AOAM530DCsOgr8id9Kf5xY0votQcD/zu9Fse1QvyT1wlNv4zNu0SwP+t
+        xw/k4ny+tfOJslSAGSAQQtg=
+X-Google-Smtp-Source: ABdhPJwsEVFfVGJILIA8cv1wnvjyfLmYey8Y0tyNh5XX02jhX04pVWvRybUxGEDN8UiM6HgvS7hiCQ==
+X-Received: by 2002:a7b:c44b:: with SMTP id l11mr11789966wmi.52.1599307052463;
+        Sat, 05 Sep 2020 04:57:32 -0700 (PDT)
+Received: from localhost.localdomain (ipservice-092-219-207-123.092.219.pools.vodafone-ip.de. [92.219.207.123])
+        by smtp.gmail.com with ESMTPSA id 124sm17517159wmd.31.2020.09.05.04.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 04:57:31 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: clean up whitespace in wpa_set_encryption()
+Date:   Sat,  5 Sep 2020 13:53:58 +0200
+Message-Id: <20200905115358.10278-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200731085429.GD12560@bogon.m.sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurentiu,
-On Fri, Jul 31, 2020 at 10:54:29AM +0200, Guido Günther wrote:
-> Hi,
-> On Fri, Jul 31, 2020 at 11:18:28AM +0300, Laurentiu Palcu wrote:
-> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
-> > 
-> > Hi,
-> > 
-> > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
-> > includes only graphics plane support (no video planes), no HDR10 capabilities,
-> > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
-> > 
-> > Support for the rest of the features will be added incrementally, in subsequent
-> > patches.
-> > 
-> > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
-> > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
-> > 
-> > Thanks,
-> > Laurentiu
-> > 
-> > Changes in v9:
-> >  * Fixed a compilation issue found by Guido in his setup: 'select
-> >    VIDEOMODE_HELPERS' was missing from Kconfig;
-> >  * Use imx8mq-clock.h in the bindings file so one can understand what
-> >    those clock values mean;
-> >  * no other changes done. Couldn't address the hang Guido reported as
-> >    it's not happening in my setup. However, in my tree, there are some
-> >    extra NWL and ADV patches applied on top of upstream ones... Also,
-> >    removing them and testing only with upstream, even if there's no
-> >    image out, does not produce a hang... :/
-> 
-> I don't think this should hold up merging.
+Clean up unnecessary whitespace in wpa_set_encryption() by removing
+extra spaces and replacing tabs with spaces. Clears a checkpatch error.
 
-And i retested your v9 series on next-20200903 on a librem5 devkit and
-it works. Looking back I spotted an error in my clock configuration, so
+ERROR: space prohibited before that close parenthesis ')'
 
-Tested-by: Guido Günther <agx@sigxcpu.org>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Cheers,
- -- Guido
+diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+index dbcfdd7cae32..77ecf4fe8382 100644
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -343,9 +343,9 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ {
+ 	int ret = 0;
+ 	u32 wep_key_idx, wep_key_len, wep_total_len;
+-	struct ndis_802_11_wep	 *pwep = NULL;
++	struct ndis_802_11_wep *pwep = NULL;
+ 	struct adapter *padapter = rtw_netdev_priv(dev);
+-	struct mlme_priv	*pmlmepriv = &padapter->mlmepriv;
++	struct mlme_priv *pmlmepriv = &padapter->mlmepriv;
+ 	struct security_priv *psecuritypriv = &padapter->securitypriv;
+ 
+ 	param->u.crypt.err = 0;
+@@ -437,11 +437,11 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 					psta->ieee8021x_blocked = false;
+ 
+ 				if ((padapter->securitypriv.ndisencryptstatus == Ndis802_11Encryption2Enabled) ||
+-				    (padapter->securitypriv.ndisencryptstatus ==  Ndis802_11Encryption3Enabled))
++				    (padapter->securitypriv.ndisencryptstatus == Ndis802_11Encryption3Enabled))
+ 					psta->dot118021XPrivacy = padapter->securitypriv.dot11PrivacyAlgrthm;
+ 
+ 				if (param->u.crypt.set_tx == 1) { /* pairwise key */
+-					memcpy(psta->dot118021x_UncstKey.skey,  param->u.crypt.key, min_t(u16, param->u.crypt.key_len, 16));
++					memcpy(psta->dot118021x_UncstKey.skey, param->u.crypt.key, min_t(u16, param->u.crypt.key_len, 16));
+ 
+ 					if (strcmp(param->u.crypt.alg, "TKIP") == 0) { /* set mic key */
+ 						memcpy(psta->dot11tkiptxmickey.skey, &param->u.crypt.key[16], 8);
+@@ -453,7 +453,7 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 
+ 					rtw_setstakey_cmd(padapter, (unsigned char *)psta, true);
+ 				} else { /* group key */
+-					memcpy(padapter->securitypriv.dot118021XGrpKey[param->u.crypt.idx].skey,  param->u.crypt.key, min_t(u16, param->u.crypt.key_len, 16 ));
++					memcpy(padapter->securitypriv.dot118021XGrpKey[param->u.crypt.idx].skey, param->u.crypt.key, min_t(u16, param->u.crypt.key_len, 16));
+ 					memcpy(padapter->securitypriv.dot118021XGrptxmickey[param->u.crypt.idx].skey, &param->u.crypt.key[16], 8);
+ 					memcpy(padapter->securitypriv.dot118021XGrprxmickey[param->u.crypt.idx].skey, &param->u.crypt.key[24], 8);
+ 					padapter->securitypriv.binstallGrpkey = true;
+@@ -473,7 +473,7 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 					pbcmc_sta->ieee8021x_blocked = false;
+ 
+ 				if ((padapter->securitypriv.ndisencryptstatus == Ndis802_11Encryption2Enabled) ||
+-				    (padapter->securitypriv.ndisencryptstatus ==  Ndis802_11Encryption3Enabled))
++				    (padapter->securitypriv.ndisencryptstatus == Ndis802_11Encryption3Enabled))
+ 					pbcmc_sta->dot118021XPrivacy = padapter->securitypriv.dot11PrivacyAlgrthm;
+ 			}
+ 		}
+-- 
+2.28.0
 
-> Cheers,
->  -- Guido
-> 
-> > 
-> > Changes in v8:
-> >  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
-> >    out. SRC is not used in DCSS driver;
-> >  * Nothing else changed;
-> > 
-> > Changes in v7:
-> >  * Added a patch to initialize the connector using the drm_bridge_connector
-> >    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
-> >    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
-> >    patches for ADV and NWL were needed, from our downstream tree, which
-> >    will be upstreamed soon by their author;
-> >  * Rest of the patches are untouched;
-> > 
-> > [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
-> > [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
-> > 
-> > Changes in v6:
-> >  * Addressed Rob's comment and added "additionalProperties: false" at
-> >    the end of the bindings' properties. However, this change surfaced
-> >    an issue with the assigned-clock* properties not being documented in
-> >    the properties section. Added the descriptions and the bindings patch
-> >    will need another review;
-> >  * Added an entry for DCSS driver in the MAINTAINERS file;
-> >  * Removed the component framework patch altogether;
-> > 
-> > Changes in v5:
-> >  * Rebased to latest;
-> >  * Took out component framework support and made it a separate patch so
-> >    that people can still test with HDP driver, which makes use of it.
-> >    But the idea is to get rid of it once HDP driver's next versions
-> >    will remove component framework as well;
-> >  * Slight improvement to modesetting: avoid cutting off the pixel clock
-> >    if the new mode and the old one are equal. Also, in this case, is
-> >    not necessary to wait for DTG to shut off. This would allow to switch
-> >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
-> >    from DCSS point of view);
-> >  * Do not fire off CTXLD when going to suspend, unless it still has
-> >    entries that need to be committed to DCSS;
-> >  * Addressed Rob's comments on bindings;
-> > 
-> > Changes in v4:
-> >  * Addressed Lucas and Philipp's comments:
-> >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
-> >    * Removed usage of devm_ functions since I'm already doing all the
-> >      clean-up in the submodules_deinit();
-> >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
-> >    * Removed en_completion variable from dcss_crtc since this was
-> >      introduced mainly to avoid vblank timeout warnings which were fixed
-> >      by arming the vblank event in flush() instead of begin();
-> >    * Removed clks_on and irq_enabled flags since all the calls to
-> >      enabling/disabling clocks and interrupts were balanced;
-> >    * Removed the custom atomic_commit callback and used the DRM core
-> >      helper and, in the process, got rid of a workqueue that wasn't
-> >      necessary anymore;
-> >    * Fixed some minor DT binding issues flagged by Philipp;
-> >    * Some other minor changes suggested by Lucas;
-> >  * Removed YUV formats from the supported formats as these cannot work
-> >    without the HDR10 module CSCs and LUTs. Will add them back when I
-> >    will add support for video planes;
-> > 
-> > Changes in v3:
-> >  * rebased to latest linux-next and made it compile as drmP.h was
-> >    removed;
-> >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
-> >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
-> >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
-> >    by me several times;
-> >  * mask DPR and DTG interrupts by default, as they may come enabled from
-> >    U-boot;
-> > 
-> > Changes in v2:
-> >  * Removed '0x' in node's unit-address both in DT and yaml;
-> >  * Made the address region size lowercase, to be consistent;
-> >  * Removed some left-over references to P010;
-> >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
-> >    issues reported by kbuild for other architectures;
-> > 
-> > 
-> > Laurentiu Palcu (5):
-> >   drm/imx: compile imx directory by default
-> >   drm/imx: Add initial support for DCSS on iMX8MQ
-> >   drm/imx/dcss: use drm_bridge_connector API
-> >   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
-> >   dt-bindings: display: imx: add bindings for DCSS
-> > 
-> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
-> >  MAINTAINERS                                   |   8 +
-> >  drivers/gpu/drm/Makefile                      |   2 +-
-> >  drivers/gpu/drm/imx/Kconfig                   |   2 +
-> >  drivers/gpu/drm/imx/Makefile                  |   1 +
-> >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
-> >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
-> >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
-> >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
-> >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
-> >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
-> >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
-> >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
-> >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
-> >  20 files changed, 4112 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
-> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
-> > 
-> > -- 
-> > 2.23.0
-> > 
