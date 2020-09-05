@@ -2,212 +2,128 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA36C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E956206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7SZq3di"
+	by mail.kernel.org (Postfix) with ESMTP id 8A271206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599299296;
+	bh=q9hHeNfdmmBESDQ+NBQkYcYrFydynelEFh0AsG82ahc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bQo8IQuoJqnP138dMzOfk8/+2YTB67keFKaJxdN61G0k3iVeZY0TKBV5LRz9p6XBC
+	 W8BUa3cA4H+ldFdDfBB/xiaemOh3hlVro4yrpqwBe9Lnt9h606P4nuxRRSdZBQSlll
+	 gT9lNsF5fIchxe6PsIA25bg0rLzkuQyKDU9L8ibw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbgIEJoo (ORCPT
+        id S1728269AbgIEJsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 05:44:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39588 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbgIEJom (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 05:44:42 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60AC9C061244;
-        Sat,  5 Sep 2020 02:44:42 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id r9so9552432ioa.2;
-        Sat, 05 Sep 2020 02:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MRAOg+eYaa2rEsb3DX+nTvExN1Y8ZloMTYBxu2WO+Og=;
-        b=P7SZq3diaIqpOcHQNTbt285fzLsPKCXGaGACEZpnnaDtyRNjG7brmP+FENF8JvhrQh
-         K4VgQs8XIqs2AyysPXUUVASiC9DV8Bs2StFORdMsYxe96+bOL/nd0Dx8h6o5tODfc18T
-         CCWlvEgZFp/lgB8lGeAV41IucRWGlJyPDBlc0tpxTfMfcimJJNjTK1qI1K222nfE2Zcg
-         fm9sUFsCplDn3sSMwuFTYgKecfqBxTCDFJUq7r/DHqx0ZjSGg82n/o9T1+bBRS1BuE06
-         W6GIYrnA+9f8uLqBuRliozk12JNtRc+f9R5+Hk2Bh0EX83qW8F/OhI1YcScDzC7bVjHs
-         uZOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MRAOg+eYaa2rEsb3DX+nTvExN1Y8ZloMTYBxu2WO+Og=;
-        b=psTR9Jho5kFuB0Cyf0nuOWxG3oMlA/+PHlxZ5nSv8dB2dVCQ4UDNoR2H00yt/atexm
-         swK7Yh/xAfzTS2/aBfdJWa4RvzvuPAfnlN014o66QBpjY3mna72tgnrXTBCDAsDyWXBF
-         2o+9DVPWXhafqxGBRnyBkRHvTasyBmP1kPlKlqLnhL4QWFCVDeVdtlum9fUlp6RRrOP5
-         onTn1BDc8VTt97fLoxn8xbU++uWgz73RNhl1SOrbPUJrxMHNWdF0oAMOVt7k1RDyc8od
-         96Nd8X7p3bWcS8LNMvp3bqEOGBvRicXnAQYwVin85dUhAGxpfVi1j+o5TjHB+KfBIDHR
-         owWA==
-X-Gm-Message-State: AOAM5310wkaNKm10XbU3ESBSw5PX2u7WFFl3RGopT8Z0H1qOJ0E2H8r8
-        RIXJ8XNC8nPTZA3iCeFDgx3ek66JMfyuw0e7IC4=
-X-Google-Smtp-Source: ABdhPJyXfvK1S863k7/77Ze1ILkQ4pn0uoDYrNx4ieLIKuFYPgjXVZsg68a5vnb//UDFJVFIlHWJ43gpZjQFmNJGfcE=
-X-Received: by 2002:a6b:e017:: with SMTP id z23mr10805226iog.101.1599299081475;
- Sat, 05 Sep 2020 02:44:41 -0700 (PDT)
+        Sat, 5 Sep 2020 05:48:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726302AbgIEJsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 05:48:12 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16C5220757;
+        Sat,  5 Sep 2020 09:48:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599299291;
+        bh=q9hHeNfdmmBESDQ+NBQkYcYrFydynelEFh0AsG82ahc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rYVW4QOww5raXKMYefedzZI4wFFYt9tMjdQ+LttdoVS/EENTgJPc2OSHBKMsCXacm
+         Kj3pKfQQ/SzOxIQvUsB+3mfgwQ1jtQlO+tuJwJfmOtnLDaLJUqYDMZ4Qhj2lSFsr2y
+         +EIzGUJ3cB6bwMBeimapJsXSjQJP3LIEkl6QjAvk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, jslaby@suse.cz,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Linux 5.4.63
+Date:   Sat,  5 Sep 2020 11:48:29 +0200
+Message-Id: <159929930931111@kroah.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200903203034.1057334-1-peron.clem@gmail.com>
- <20200903203034.1057334-3-peron.clem@gmail.com> <7259829d-142e-b518-52a7-6fef388b27d2@sholland.org>
-In-Reply-To: <7259829d-142e-b518-52a7-6fef388b27d2@sholland.org>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Sat, 5 Sep 2020 11:44:30 +0200
-Message-ID: <CAJiuCcew35XzvA0gW=rq57RE3Oqxsa6y1UyeBJ+1HPoK4fyWgQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/20] ASoC: sun4i-i2s: Add support for H6 I2S
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Marcus Cooper <codekipper@gmail.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Samuel,
+I'm announcing the release of the 5.4.63 kernel.
 
-On Fri, 4 Sep 2020 at 05:16, Samuel Holland <samuel@sholland.org> wrote:
->
-> Cl=C3=A9ment,
->
-> On 9/3/20 3:30 PM, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 I2S is very similar to that in H3, except it supports up to 16
-> > channels.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Marcus Cooper <codekipper@gmail.com>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  sound/soc/sunxi/sun4i-i2s.c | 221 ++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 221 insertions(+)
-> >
-> > diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-> > index fabff7bcccbc..acf24f512f2c 100644
-> > --- a/sound/soc/sunxi/sun4i-i2s.c
-> > +++ b/sound/soc/sunxi/sun4i-i2s.c
->
-> [snip]
->
-> > @@ -474,6 +489,65 @@ static int sun8i_i2s_set_chan_cfg(const struct sun=
-4i_i2s *i2s,
-> >       return 0;
-> >  }
-> >
-> > +static int sun50i_h6_i2s_set_chan_cfg(const struct sun4i_i2s *i2s,
-> > +                                   const struct snd_pcm_hw_params *par=
-ams)
-> > +{
-> > +     unsigned int channels =3D params_channels(params);
-> > +     unsigned int slots =3D channels;
-> > +     unsigned int lrck_period;
-> > +
-> > +     if (i2s->slots)
-> > +             slots =3D i2s->slots;
-> > +
-> > +     /* Map the channels for playback and capture */
-> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_TX_CHAN_MAP1_REG, 0x76543=
-210);
-> > +     regmap_write(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_MAP1_REG, 0x76543=
-210);
-> > +
-> > +     /* Configure the channels */
-> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-> > +     regmap_update_bits(i2s->regmap, SUN50I_H6_I2S_RX_CHAN_SEL_REG,
-> > +                        SUN50I_H6_I2S_TX_CHAN_SEL_MASK,
-> > +                        SUN50I_H6_I2S_TX_CHAN_SEL(channels));
-> > +
-> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM_MASK,
-> > +                        SUN8I_I2S_CHAN_CFG_TX_SLOT_NUM(channels));
-> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_CHAN_CFG_REG,
-> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM_MASK,
-> > +                        SUN8I_I2S_CHAN_CFG_RX_SLOT_NUM(channels));
-> > +
-> > +     switch (i2s->format & SND_SOC_DAIFMT_FORMAT_MASK) {
-> > +     case SND_SOC_DAIFMT_DSP_A:
-> > +     case SND_SOC_DAIFMT_DSP_B:
-> > +     case SND_SOC_DAIFMT_LEFT_J:
-> > +     case SND_SOC_DAIFMT_RIGHT_J:
->
-> These cases don't match the documentation: LEFT_J and RIGHT_J are documen=
-ted to
-> behave like I2S (lrck_period =3D=3D slot_width), not like DSP_A/B (lrck_p=
-eriod =3D=3D
-> slot_width * slots).
->
-> > +             lrck_period =3D params_physical_width(params) * slots;
-> > +             break;
-> > +
-> > +     case SND_SOC_DAIFMT_I2S:
-> > +             lrck_period =3D params_physical_width(params);
-> > +             break;
-> > +
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     if (i2s->slot_width)
-> > +             lrck_period =3D i2s->slot_width;
->
-> Here, i2s->slot_width is the number of bits for each slot, but in PCM mod=
-e, you
-you mean TDM here right?
+All users of the 5.4 kernel series must upgrade.
 
-> need to multiply by the number of slots, like above.
->
-> Also, there is already logic in sun4i_i2s_hw_params to use i2s->slot_widt=
-h and
-> i2s->slots. You could avoid the duplication by passing slot_width/slots a=
-s
-> parameters to set_chan_cfg.
+The updated 5.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
-Thanks for the catch, I will fix this.
+thanks,
 
-Regards,
-Clement
+greg k-h
 
->
-> Regards,
-> Samuel
->
-> > +
-> > +     regmap_update_bits(i2s->regmap, SUN4I_I2S_FMT0_REG,
-> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD_MASK,
-> > +                        SUN8I_I2S_FMT0_LRCK_PERIOD(lrck_period));
-> > +
-> > +     regmap_update_bits(i2s->regmap, SUN8I_I2S_TX_CHAN_SEL_REG,
-> > +                        SUN50I_H6_I2S_TX_CHAN_EN_MASK,
-> > +                        SUN50I_H6_I2S_TX_CHAN_EN(channels));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static int sun4i_i2s_hw_params(struct snd_pcm_substream *substream,
-> >                              struct snd_pcm_hw_params *params,
-> >                              struct snd_soc_dai *dai)
->
-> [snip]
+------------
+
+ Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt |   32 ++++
+ Makefile                                                       |    2 
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi                       |   20 +--
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi                       |   15 +-
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi                       |   20 +--
+ arch/arm64/include/asm/kvm_arm.h                               |    3 
+ arch/arm64/include/asm/kvm_asm.h                               |   43 ++++++
+ arch/arm64/kernel/vmlinux.lds.S                                |    8 +
+ arch/arm64/kvm/hyp/entry.S                                     |   15 +-
+ arch/arm64/kvm/hyp/hyp-entry.S                                 |   65 ++++++----
+ arch/arm64/kvm/hyp/switch.c                                    |   39 +++++-
+ drivers/gpu/drm/etnaviv/etnaviv_buffer.c                       |   60 ++++++++-
+ drivers/gpu/drm/etnaviv/state_blt.xml.h                        |    2 
+ drivers/gpu/drm/scheduler/sched_main.c                         |    7 -
+ drivers/hid/hid-core.c                                         |   15 ++
+ drivers/hid/hid-input.c                                        |    4 
+ drivers/hid/hid-multitouch.c                                   |    2 
+ drivers/mmc/host/sdhci-tegra.c                                 |    2 
+ drivers/target/target_core_user.c                              |   15 +-
+ include/linux/hid.h                                            |   42 ++++--
+ tools/perf/Documentation/perf-record.txt                       |    4 
+ tools/perf/Documentation/perf-stat.txt                         |    4 
+ 22 files changed, 328 insertions(+), 91 deletions(-)
+
+Andrey Grodzovsky (1):
+      drm/sched: Fix passing zero to 'PTR_ERR' warning v2
+
+Bodo Stroesser (2):
+      scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
+      scsi: target: tcmu: Optimize use of flush_dcache_page
+
+Greg Kroah-Hartman (1):
+      Linux 5.4.63
+
+James Morse (3):
+      KVM: arm64: Add kvm_extable for vaxorcism code
+      KVM: arm64: Survive synchronous exceptions caused by AT instructions
+      KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
+
+Kim Phillips (1):
+      perf record/stat: Explicitly call out event modifiers in the documentation
+
+Lucas Stach (1):
+      drm/etnaviv: fix TS cache flushing on GPUs with BLT engine
+
+Marc Zyngier (2):
+      HID: core: Correctly handle ReportSize being zero
+      HID: core: Sanitize event code and type when mapping input
+
+Sowjanya Komatineni (6):
+      dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
+      arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+      arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
+      arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
+      sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
+      sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
+
