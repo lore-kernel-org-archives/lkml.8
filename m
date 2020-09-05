@@ -2,169 +2,142 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0191FC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62EFAC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E53620760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A6420760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INjEBySK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nr30d4CV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgIEUkA (ORCPT
+        id S1728711AbgIEUmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:40:00 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54265 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728400AbgIEUj4 (ORCPT
+        Sat, 5 Sep 2020 16:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgIEUma (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:39:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599338395;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Kx8HzmaZpeYZYpWwlpa7IbVO/+/3Ogwe4v1RfYOzGi8=;
-        b=INjEBySK9TSpKil5sFytoBsY2jYb3sweOs8lkR3tmb8whmw4rhCUCe7I1qaNDFy/o/GAR/
-        mc/6hQypLj8lX8+wbWfBtq3W3HJRDDBrXPIK46hqTQvrl51+hkhEj7GN1yGBMWpBWiKZ7s
-        Wid45J4Vg5lgqO73hPkm2VdGCp+u6zk=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-351-_MKVJSABOVKnKbywJJQ0gg-1; Sat, 05 Sep 2020 16:39:54 -0400
-X-MC-Unique: _MKVJSABOVKnKbywJJQ0gg-1
-Received: by mail-qv1-f72.google.com with SMTP id p20so5686777qvl.4
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 13:39:54 -0700 (PDT)
+        Sat, 5 Sep 2020 16:42:30 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B8AC061245;
+        Sat,  5 Sep 2020 13:42:29 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s205so11804710lja.7;
+        Sat, 05 Sep 2020 13:42:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=u+k/j54UUFXpl3cJ5D3v+AZkJutbwOs6dE47dPPkwck=;
+        b=nr30d4CVnAIMuyV90BnlCD+DOS5KDp0LJPQAdF4e9nDkcXSmU521yzPgD0hXRF5ppI
+         QMKdgcXWvG8cKhnRg8hNzUbdRac5phUlXXVmB0QIPokAznRmU+oCxNN8yIeUNxmgOkoN
+         4SrgbxOpalyYAE4tbsSvFPLf1PHZAYyYMcoA8MyDXJkawMDHB9Pg3weqKUj+EsQNgowC
+         R38C3cO8quUEQudNy16OAgHSs4NdH1To9QJsfX3Ki726ReFpRL+pXuyhFHEt2X1AiVqZ
+         ihszFgKGfQAKyXV/aaRzPztaiP+ShEQ334DH426z42D1UFWmVQcXWgv96gGYDi+FBhu9
+         Pz3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Kx8HzmaZpeYZYpWwlpa7IbVO/+/3Ogwe4v1RfYOzGi8=;
-        b=CwKbF3rREHWJN/3ovJTFlE6fY256JfLSZTYqAslNS4kPYzXq2K5UJ6SibYwn/7xmQ/
-         Mvs+hmwDmDdcabC1yvqN0Wq55n6Xr//m3AmhzqASlmoAGFkQnRnSiGZkGf1qj21d5doT
-         bOF/cKeskAJ8Y5zNJFGd13GdGbx8k5dhtfDvXVRCvtbNL4K3eBDdECg3dpmvQwOfd8rm
-         nDOBhirnP7JOlW8Rvs3wq/s/kSU6FMa/hUmVhtcuHPCZ8oxExxYAQb8CMvpCAc7JX990
-         uUA8PHnGsKAv79GfbbSy4RwwJkpLM7BvPzLi+WQK4A/32YSYsUdfD2MEYnGt+mzQ/xNw
-         d58w==
-X-Gm-Message-State: AOAM531f+MMLnvePjidzM66iwa7MEGgyCkNy6ezvQD8DTQKEbZAgsym7
-        6IQLkTX7xTK2TWqVKQlJFezxiwI61LxwCyjz4h7ZZLId8rBq2TKWNFdAzJNfiIafwAV1usXqZu+
-        TQ9J+UNyk1VPtPbSwUYHvrVPE
-X-Received: by 2002:ac8:411b:: with SMTP id q27mr14554196qtl.255.1599338393664;
-        Sat, 05 Sep 2020 13:39:53 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxEEppV8KOTKDOVXJjHNDLaJizH+e1HUtcIP/UpF9boOGOaBHyt97v0JQjlD2oPNxl6jMi+TQ==
-X-Received: by 2002:ac8:411b:: with SMTP id q27mr14554188qtl.255.1599338393436;
-        Sat, 05 Sep 2020 13:39:53 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id l13sm6440861qtv.82.2020.09.05.13.39.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 13:39:52 -0700 (PDT)
-Subject: Re: [PATCH v1 03/12] fpga: expose max10 flash update counts in sysfs
-To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
-        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=u+k/j54UUFXpl3cJ5D3v+AZkJutbwOs6dE47dPPkwck=;
+        b=JAkoHFnXd6Dj/maUJnJ5fuvbAgzX736jUB3rNdzvRe/fTEFK7gdQPr1Zf+P3Pwce0I
+         masJPFR4dBq9+6U54XQ51+GwzqlOTSaGJXgrm9/z+BXZPL49KlfGdbQAeBUUIj0OCInI
+         2pR4BILHcxMXaY5QCl123lRVh8JdlmL3ECQfdeT7BAooU3Dn8ZV542eS1o0irbZFMKMH
+         g3vEkglJBhif5W4xyIjip8wTlWUP72L9vFb2if2YuBZ/MUKFiSly/2oOZPgrVwErbeUO
+         rSkoiJ0gi82U/eAuXS42XLzWjbdhEQM2aAN4g9XwTrF9YD0y+nnkg2Ncopk1jvSSMffB
+         x2Yg==
+X-Gm-Message-State: AOAM533utLevHLBoBs3xMyuNzqffR1hnt9nPJNby2x0LdKB2M/qP5J9V
+        8B+qVZEIeYjc9WUl26JUFEs=
+X-Google-Smtp-Source: ABdhPJz3tpVNaCtO9sbEYbj9fx6Tzm1Y34zYbSK1cEhRpaUF46xySO+uk2UqqPf4Q7CA/LmUz4dDdw==
+X-Received: by 2002:a2e:9019:: with SMTP id h25mr6770880ljg.186.1599338546024;
+        Sat, 05 Sep 2020 13:42:26 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 13:42:25 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
-        matthew.gerlach@intel.com
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
- <20200904235305.6254-4-russell.h.weight@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <a4ee319d-9f6f-5a27-415e-b1fabd1d5465@redhat.com>
-Date:   Sat, 5 Sep 2020 13:39:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: [PATCH v4 01/31] i2c: tegra: Make tegra_i2c_flush_fifos() usable in atomic transfer
+Date:   Sat,  5 Sep 2020 23:41:21 +0300
+Message-Id: <20200905204151.25343-2-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200905204151.25343-1-digetx@gmail.com>
+References: <20200905204151.25343-1-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904235305.6254-4-russell.h.weight@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The tegra_i2c_flush_fifos() shouldn't sleep in atomic transfer and jiffies
+are not updating if interrupts are disabled. Let's switch to use iopoll
+API helpers for register-polling. The iopoll API provides helpers for both
+atomic and non-atomic cases.
 
-On 9/4/20 4:52 PM, Russ Weight wrote:
-> Extend the MAX10 BMC Security Engine driver to provide a
-> handler to expose the flash update count for the FPGA user
-> image.
->
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Reviewed-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/intel-m10-bmc-secure.c | 32 +++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->
-> diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
-> index 1f86bfb694b4..b824790e43aa 100644
-> --- a/drivers/fpga/intel-m10-bmc-secure.c
-> +++ b/drivers/fpga/intel-m10-bmc-secure.c
-> @@ -10,6 +10,7 @@
->  #include <linux/mfd/intel-m10-bmc.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/slab.h>
->  #include <linux/vmalloc.h>
->  
->  struct m10bmc_sec {
-> @@ -99,7 +100,38 @@ SYSFS_GET_REH(bmc, BMC_REH_ADDR)
->  SYSFS_GET_REH(sr, SR_REH_ADDR)
->  SYSFS_GET_REH(pr, PR_REH_ADDR)
->  
-> +#define FLASH_COUNT_SIZE 4096
-This seems too high at most it should be 64.
-> +#define USER_FLASH_COUNT 0x17ffb000
-Why shouldn't this be in intel-m10-bmc.h ?
-> +
-> +static int get_qspi_flash_count(struct ifpga_sec_mgr *imgr)
+Note that this patch doesn't fix any known problem because normally FIFO
+is flushed at the time of starting a new transfer.
 
-what does 'qspi' mean ?
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-unless there are going to be several *flash_count's consider
-
-removing this substring.
-
-> +{
-> +	struct m10bmc_sec *sec = imgr->priv;
-> +	unsigned int stride = regmap_get_reg_stride(sec->m10bmc->regmap);
-> +	unsigned int cnt, num_bits = FLASH_COUNT_SIZE * 8;
-> +	u8 *flash_buf;
-> +	int ret;
-> +
-> +	flash_buf = kmalloc(FLASH_COUNT_SIZE, GFP_KERNEL);
-> +	if (!flash_buf)
-> +		return -ENOMEM;
-> +
-> +	ret = m10bmc_raw_bulk_read(sec->m10bmc, USER_FLASH_COUNT, flash_buf,
-> +				   FLASH_COUNT_SIZE / stride);
-> +	if (ret) {
-> +		dev_err(sec->dev, "%s failed to read %d\n", __func__, ret);
-> +		goto exit_free;
-> +	}
-> +
-> +	cnt = num_bits - bitmap_weight((unsigned long *)flash_buf, num_bits);
-Simplify ret = num_bits...
-> +
-> +exit_free:
-> +	kfree(flash_buf);
-> +
-> +	return ret ? : cnt;
-
-Then simplify
-
-return ret;
-
-Tom
-
-> +}
-> +
->  static const struct ifpga_sec_mgr_ops m10bmc_iops = {
-> +	.user_flash_count = get_qspi_flash_count,
->  	.bmc_root_entry_hash = get_bmc_root_entry_hash,
->  	.sr_root_entry_hash = get_sr_root_entry_hash,
->  	.pr_root_entry_hash = get_pr_root_entry_hash,
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 00d3e4d7a01e..ab88cdd70376 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -470,9 +470,9 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+ 
+ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ {
+-	unsigned long timeout = jiffies + HZ;
+-	unsigned int offset;
+-	u32 mask, val;
++	u32 mask, val, offset, reg_offset;
++	void __iomem *addr;
++	int err;
+ 
+ 	if (i2c_dev->hw->has_mst_fifo) {
+ 		mask = I2C_MST_FIFO_CONTROL_TX_FLUSH |
+@@ -488,12 +488,19 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 	val |= mask;
+ 	i2c_writel(i2c_dev, val, offset);
+ 
+-	while (i2c_readl(i2c_dev, offset) & mask) {
+-		if (time_after(jiffies, timeout)) {
+-			dev_warn(i2c_dev->dev, "timeout waiting for fifo flush\n");
+-			return -ETIMEDOUT;
+-		}
+-		usleep_range(1000, 2000);
++	reg_offset = tegra_i2c_reg_addr(i2c_dev, offset);
++	addr = i2c_dev->base + reg_offset;
++
++	if (i2c_dev->is_curr_atomic_xfer)
++		err = readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
++							1000, 1000000);
++	else
++		err = readl_relaxed_poll_timeout(addr, val, !(val & mask),
++						 1000, 1000000);
++
++	if (err) {
++		dev_err(i2c_dev->dev, "failed to flush FIFO\n");
++		return err;
+ 	}
+ 	return 0;
+ }
+-- 
+2.27.0
 
