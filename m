@@ -2,193 +2,120 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107DCC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968D2C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EEE20797
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 394D3207EA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:28:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDeQiHJZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zimnoxn8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgIEBZF (ORCPT
+        id S1728233AbgIEB2y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 21:25:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48272 "EHLO
+        Fri, 4 Sep 2020 21:28:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgIEBZF (ORCPT
+        with ESMTP id S1726277AbgIEB2x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 21:25:05 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC0F8C061244;
-        Fri,  4 Sep 2020 18:25:04 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id u27so4735296lfm.13;
-        Fri, 04 Sep 2020 18:25:04 -0700 (PDT)
+        Fri, 4 Sep 2020 21:28:53 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49DFC061244;
+        Fri,  4 Sep 2020 18:28:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id c142so5525914pfb.7;
+        Fri, 04 Sep 2020 18:28:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Gz2Zs59lr0OT5rRSLvbdS3pphO697NYICUlFWA2KU8Y=;
-        b=PDeQiHJZ1kR0rdRhMm3ibnMS+UdCLKeNQwn4K54NpebqCadc7/mgtzlGuIdq09XAql
-         qy5q6utByc6++EfzmgOBptbivO3qyUWgDmJeljC6dgSJaWpqwpDOAah383cYcamuL2UN
-         2W1b0yas1CwXDOLld9zu+h5hNblvhH47hHjR4j2rKaH9POBMDAMIrxaRt9BIqOuJOpq4
-         Gv5bKz3OFS8r80TXOEgs6Tzoz23zZL821oOZupVDSjU/XcyLBPRmfxMr+WRHi667fwwv
-         C6ncI9CghU92/JQTUXlCCYW32ixrzInSvMZ7PD2pAkxx8QBgcMh2viM3ODqtkycoLIp0
-         SqOQ==
+         :cc;
+        bh=MIoqWzM7oHXf+obL3wtLv7wSPLoC1E+S6MGKQMl9fAg=;
+        b=Zimnoxn8ogLfyaclqMhIwhkKsvsv3m4CVED6ZQ3mRVOGf1k1lmOTSAb5LpoYYeA1gs
+         8mvnqSfsQ58viypaidR8Paq9jzu1/vjiliFYlD5hnC/I3txxG4LRPhQuKjhSCqC2XmwO
+         1xPpT0iqg3c9Cs11GygDWJOXSwDFmlJKGZMSe+WXs5ciB2fFmRM6+2c94KvuN94j8s+2
+         fM5ojg9K2vWlyn0RVo2yHsIm68C/BTOMksyYwUnNslkBM+q0WYQ+59HUMxxkrOPwASk3
+         s9Sfh8H+zycMtHY6jjPURiMRlxiq6n2DiDBwNlKpwva6Cwy567EExXNKBVV11MsL4Ti7
+         r84w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Gz2Zs59lr0OT5rRSLvbdS3pphO697NYICUlFWA2KU8Y=;
-        b=tw7av6PlUoxmfImO7XVtmR8m5iAagQZWaTX7+M8lSvIylA1hqkvBfwA3540BGs5vZD
-         3bGamTnSB++gx1cdeKkYyMUDZuLIHJFQnPvI90d6eyNt64dfDkNBjUVCmMf48PtUdkGO
-         +LdwBrRCgG8AfiU+Nd2S7NBaaWMPOvGp//Xj1OhVJT1j5GRgT15pWmw9shg/EFYcyWYM
-         Pb1rMu263jWdveWxE5o1PMlxq9GdLC3nvL3QG6opcrHv/eI/seARxTH4kfu+4pngEUeW
-         vuan7oc2by/SmhrVnMrPh2+5GMUZ1/3G4XTcihchTkICZpmdli1LX9fTBIaH6zmIaK3y
-         oREg==
-X-Gm-Message-State: AOAM533cGli3iGoyYlVZYyz9RssQgeHGsfw1xnGHIbKASXedSSBE7uvu
-        mh5jNXpkzhGPuFWAN6/su5H7I5U4HMRtAUQhsRE=
-X-Google-Smtp-Source: ABdhPJyxrsUKxF22uxdyYAa/Xp+qw/ZuKxc7IdKhzVtp+FVens6NNhQ3NiuzwJzS3snv5XG/XN/rMFxMEaQ50kRJ5MU=
-X-Received: by 2002:a19:457:: with SMTP id 84mr5037845lfe.191.1599269101709;
- Fri, 04 Sep 2020 18:25:01 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=MIoqWzM7oHXf+obL3wtLv7wSPLoC1E+S6MGKQMl9fAg=;
+        b=FW6zRym3xP+8hcN3q9SlkSn44QZP9FK5uG7unnMpnSzuIKfOyOFhon9KmVyUjI8+Uw
+         jsgOqmN0J19rrtutYd6B2WSybIg491rwhsbHbEKpuLkjDBqJO52vFT0t5A8arpHEoDdM
+         8zkVpAkyr4bkZePNuyN+yzTIGgfbomd+SvVEzGoui9GjadKYPFQyaqNZpw4MgF1zRM7t
+         z+XKr0uJOrYKEW2yFOlx2HFPWDl/hWnU9yS6SHtRNIQCDI9wwTj3ft+eX2qhN5A1y4aL
+         V2SUsincbDOLq3Ij0TwbWddN194BNgrEN1aL6jSdD2GBYfPPs0gnf12NHPunqvI1ntAa
+         3pjQ==
+X-Gm-Message-State: AOAM530W6oPZx/8BBaOz8tEBcSTCQpTR7meRaV+Ma9imRmLb1/Ydnbp5
+        44sz6TLGP57SK3wW893btTZzRtTclHSG+ybCDKsO1m9rywY=
+X-Google-Smtp-Source: ABdhPJymDz3stfxbn4JH5etSAf9doa0r3U6zowq1s8w9+Yjttnq9fxYYLN6hEwWZUzcyKxsQUOqjJo24VHsnxEo8Qh8=
+X-Received: by 2002:a63:b24b:: with SMTP id t11mr9273063pgo.233.1599269329649;
+ Fri, 04 Sep 2020 18:28:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <1599060933-8092-1-git-send-email-u0084500@gmail.com>
- <20200902165713.GG56237@roeck-us.net> <CADiBU3_iHk4aoM8o6GcaTmWDZT4ymvb0Ff-XeLLZ0C9dhCnLZQ@mail.gmail.com>
- <fd2a33fc-2383-66cb-0fd7-d5aa0cc9111f@roeck-us.net>
-In-Reply-To: <fd2a33fc-2383-66cb-0fd7-d5aa0cc9111f@roeck-us.net>
-From:   ChiYuan Huang <u0084500@gmail.com>
-Date:   Sat, 5 Sep 2020 09:24:50 +0800
-Message-ID: <CADiBU3_vYAmHDCONrExzyM+1CTfqJx_eS1hYG8aHkNWFzTcwfg@mail.gmail.com>
-Subject: Re: [PATCH] usb: typec: tcpm: Fix if vbus before cc, hard_reset_count
- not reset issue
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cy_huang <cy_huang@richtek.com>
+References: <20200903000658.89944-1-xie.he.0141@gmail.com> <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Fri, 4 Sep 2020 18:28:38 -0700
+Message-ID: <CAJht_EN+=WTuduvm43_Lq=XWL78AcF5q6Zoyg8S5fao_udL=+Q@mail.gmail.com>
+Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
+ PVC devices
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B49=E6=9C=885=E6=97=
-=A5 =E9=80=B1=E5=85=AD =E4=B8=8A=E5=8D=883:41=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On 9/3/20 9:21 AM, ChiYuan Huang wrote:
-> > Guenter Roeck <linux@roeck-us.net> =E6=96=BC 2020=E5=B9=B49=E6=9C=883=
-=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=8812:57=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> >>
-> >> On Wed, Sep 02, 2020 at 11:35:33PM +0800, cy_huang wrote:
-> >>> From: ChiYuan Huang <cy_huang@richtek.com>
-> >>>
-> >>> Fix: If vbus event is before cc_event trigger, hard_reset_count
-> >>> won't bt reset for some case.
-> >>>
-> >>> Signed-off-by: ChiYuan Huang <cy_huang@richtek.com>
-> >>> ---
-> >>> Below's the flow.
-> >>>
-> >>> _tcpm_pd_vbus_off() -> run_state_machine to change state to SNK_UNATT=
-ACHED
-> >>> call tcpm_snk_detach() -> tcpm_snk_detach() -> tcpm_detach()
-> >>> tcpm_port_is_disconnected() will be called.
-> >>> But port->attached is still true and port->cc1=3Dopen and port->cc2=
-=3Dopen
-> >>>
-> >>> It cause tcpm_port_is_disconnected return false, then hard_reset_coun=
-t won't be reset.
-> >>> After that, tcpm_reset_port() is called.
-> >>> port->attached become false.
-> >>>
-> >>> After that, cc now trigger cc_change event, the hard_reset_count will=
- be kept.
-> >>> Even tcpm_detach will be called, due to port->attached is false, tcpm=
-_detach()
-> >>> will directly return.
-> >>>
-> >>> CC_EVENT will only trigger drp toggling again.
-> >>> ---
-> >>>  drivers/usb/typec/tcpm/tcpm.c | 3 +--
-> >>>  1 file changed, 1 insertion(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/t=
-cpm.c
-> >>> index a48e3f90..5c73e1d 100644
-> >>> --- a/drivers/usb/typec/tcpm/tcpm.c
-> >>> +++ b/drivers/usb/typec/tcpm/tcpm.c
-> >>> @@ -2797,8 +2797,7 @@ static void tcpm_detach(struct tcpm_port *port)
-> >>>               port->tcpc->set_bist_data(port->tcpc, false);
-> >>>       }
-> >>>
-> >>> -     if (tcpm_port_is_disconnected(port))
-> >>> -             port->hard_reset_count =3D 0;
-> >>> +     port->hard_reset_count =3D 0;
-> >>>
-> >>
-> >> Doesn't that mean that the state machine will never enter
-> >> error recovery ?
-> >>
-> > I think it does't affect the error recovery.
-> > All error recovery seems to check pd_capable flag.
-> >
-> >>From my below case, it's A to C cable only. There is no USBPD contract
-> > will be estabilished.
-> >
-> > This case occurred following by the below test condition
-> > Cable -> A to C (default Rp bind to vbus) connected to PC.
-> > 1. first time plugged in the cable with PC
-> > It will make HARD_RESET_COUNT  to be equal 2
-> > 2. And then plug out. At that time HARD_RESET_COUNT is till 2.
-> > 3. next time plugged in again.
-> > Due to hard_reset_count is still 2 , after wait_cap_timeout, the state
-> > eventually changed to SNK_READY.
-> > But during the state transition, no hard_reset  be sent.
-> >
-> > Defined in the USBPD policy engine, typec transition to USBPD, all
-> > variables must be reset included hard_reset_count.
-> > So it expected SNK must send hard_reset again.
-> >
-> > The original code defined hard_reset_count must be reset only when
-> > tcpm_port_is_disconnected.
-> >
-> > It doesn't make sense that it only occurred in some scenario.
-> > If tcpm_detach is called, hard_reset count must be reset also.
-> >
->
-> If a hard reset fails, the state machine may cycle through states
-> HARD_RESET_SEND, HARD_RESET_START, SRC_HARD_RESET_VBUS_OFF,
-> SRC_HARD_RESET_VBUS_ON back to SRC_UNATTACHED. In this state,
-> tcpm_src_detach() and with it tcpm_detach() is called. The hard
-> reset counter is incremented in HARD_RESET_SEND. If tcpm_detach()
-> resets the counter, the state machine will keep cycling through hard
-> resets without ever entering the error recovery state. I am not
-> entirely sure where the counter should be reset, but tcpm_detach()
-> seems to be the wrong place.
+Thank you for your email, Jakub!
 
-This case you specified means locally error occurred.
-It intended to re-run the state machine from typec  to USBPD.
-From my understanding, hard_reset_count to be reset is reasonable.
+On Fri, Sep 4, 2020 at 3:14 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> Since this is a tunnel protocol on top of HDLC interfaces, and
+> hdlc_setup_dev() sets dev->hard_header_len = 16; should we actually
+> set the needed_headroom to 10 + 16 = 26? I'm not clear on where/if
+> hdlc devices actually prepend 16 bytes of header, though.
 
-The normal stare from the state transition you specified is
-HARD_RESET_SEND, HARD_RESET_START -> SRC_HARD_RESET_VBUS_OFF,
-SRC_HARD_RESET_VBUS_ON -> received VBUS_EVENT then go to SRC_STARTUP.
+The HDLC device is not actually prepending any header when it is used
+with this driver. When the PVC device has prepended its header and
+handed over the skb to the HDLC device, the HDLC device just hands it
+over to the hardware driver for transmission without prepending any
+header.
 
+If we grep "header_ops" and "skb_push" in "hdlc.c" and "hdlc_fr.c", we
+can see there is no "header_ops" implemented in these two files and
+all "skb_push" happen in the PVC device in hdlc_fr.c.
+
+For this reason, I have previously submitted a patch to change the
+value of hard_header_len of the HDLC device from 16 to 0, because it
+is not actually used.
+
+See:
+2b7bcd967a0f (drivers/net/wan/hdlc: Change the default of hard_header_len to 0)
+
+> > diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
+> > index 9acad651ea1f..12b35404cd8e 100644
+> > --- a/drivers/net/wan/hdlc_fr.c
+> > +++ b/drivers/net/wan/hdlc_fr.c
+> > @@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
+> >  {
+> >       dev->type = ARPHRD_DLCI;
+> >       dev->flags = IFF_POINTOPOINT;
+> > -     dev->hard_header_len = 10;
+> > +     dev->hard_header_len = 0;
 >
-> Guenter
->
-> >> Guenter
-> >>
-> >>>       tcpm_reset_port(port);
-> >>>  }
-> >>> --
-> >>> 2.7.4
-> >>>
->
+> Is there a need to set this to 0? Will it not be zero after allocation?
+
+Oh. I understand your point. Theoretically we don't need to set it to
+0 because it already has the default value of 0. I'm setting it to 0
+only because I want to tell future developers that this value is
+intentionally set to 0, and it is not carelessly missed out.
