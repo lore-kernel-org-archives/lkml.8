@@ -2,86 +2,61 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DF8C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C846C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49DE020760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599325428;
-	bh=bYePyoygb5sypUBeDHzAvhU73UeSVNStq9eAPSiouAY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=lorbqfk4/gafXHnnycEw4G1wXkqrpLNIICKmFZl+9JbH/tAbUWucJKxz9f9E3Go2c
-	 h9FL49ZKsoKg6zymeuJTRwam7+u03FKp8gyLLgnjU7Fl3Yyd049pFw0q58EwBPv8RU
-	 jPlVsPy2X0ORqWax7Uds0zfa4Sig1kXu5+T/nteg=
+	by mail.kernel.org (Postfix) with ESMTP id C2F4420760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:05:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VVwD2FT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgIERDp (ORCPT
+        id S1728451AbgIERFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 13:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgIERDl (ORCPT
+        Sat, 5 Sep 2020 13:05:06 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20213 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728323AbgIERE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 13:03:41 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC539C061245
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 10:03:40 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id m5so4567750lfp.7
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 10:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yq3SfrK7yZAtmYRnvDmja3vYq8mdQSVjPiEi6mwaMYI=;
-        b=b0r56yrMlN887hWaFszKtt3otNFfkTZGY9PBeAnyiPugAfYpUMCfOTBWDohK5Luc/G
-         +LqYWBwLdx1jUaxLPC79yX0fHBJTRyN1py7Wq/ZzjBRr+LK88BEB8cL1Zhj8z/OzGL05
-         1K+nOaaiL2yDxhltK+DQ4feWYgd8jEHvr7JnM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yq3SfrK7yZAtmYRnvDmja3vYq8mdQSVjPiEi6mwaMYI=;
-        b=sGNIAibCK96IhcNvUXVyizvrksmD2w1gwwd/7GckscipmVz7EqIfF6lwZ80vrlHCz9
-         EjfKl3W8XPJ7p7r5i3A9nacWVC0n4+tG8OhZXs/2CleowNBzHafqHUBDj7I72oiIqawo
-         C8WnG1g4fI6n257Kn/AS7vLGdcR9jjNH1cygNAroizXFPbFQvhMROD8Lzz550X/6KDJx
-         /Lsov+GOx8oCziyaHWYNmskEnmMouZ9QMbWJaIgj8MZVBNz3EF4iLgNnrHNBvM62OW0q
-         LtDgQD2IbM7jYP3ObbJY28T3WxV+IhSCSK8PwoN8Pf47bpbRMLZH7J2UiCIXL0ASMs9X
-         0tug==
-X-Gm-Message-State: AOAM532JS7kchx+mM4W1bGTPsG0osIflZVTZXoJB9gujLzAuSWS6b/hx
-        FEV/nd6DAvh4wmaITV/AfTg9fvXjgFYFbA==
-X-Google-Smtp-Source: ABdhPJxPuZvEJ7ypQ2lWYJaBDd6klSwkfw1LdhE3Yo0D+jpJZSOJYCHHMzH54F1rGknzuwIQkVxopw==
-X-Received: by 2002:a19:ee0d:: with SMTP id g13mr6420213lfb.139.1599325418311;
-        Sat, 05 Sep 2020 10:03:38 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id 69sm2563820lfm.83.2020.09.05.10.03.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 10:03:37 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id z19so5466982lfr.4
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 10:03:36 -0700 (PDT)
-X-Received: by 2002:a05:6512:403:: with SMTP id u3mr6534077lfk.10.1599325416665;
- Sat, 05 Sep 2020 10:03:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com>
- <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 5 Sep 2020 10:03:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgNoq2kh_xYKtTX38GJdEC_iAvoeFU9gpj6kFVaiA0o=A@mail.gmail.com>
-Message-ID: <CAHk-=wgNoq2kh_xYKtTX38GJdEC_iAvoeFU9gpj6kFVaiA0o=A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] xfs: don't update mtime on COW faults
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dave Chinner <dchinner@redhat.com>,
+        Sat, 5 Sep 2020 13:04:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599325495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bBI7if0KCVvWvaBOwMDsnEtZiJjjihsjAtqSgtT6RaA=;
+        b=VVwD2FT7G+kk7Ux2AH6kVQVywMXVhIpucWPtLGf3SeFfBZChFDtjXVaXC5xecCZr8hRDAN
+        TqELawgWqgiaROTilcPx6TOjMHu4iwaF72FMZe426vWeEf6k+B2WF32YR+g0PLblTjU5qf
+        XFvp3hiiXKX5TdjQMmwzMB1sICqeZho=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-mgO_poxTNXWtVk_hTdv0qg-1; Sat, 05 Sep 2020 13:04:51 -0400
+X-MC-Unique: mgO_poxTNXWtVk_hTdv0qg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82964185A0F8;
+        Sat,  5 Sep 2020 17:04:49 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5831F7ED60;
+        Sat,  5 Sep 2020 17:04:46 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 085H4jOV003056;
+        Sat, 5 Sep 2020 13:04:45 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 085H4jxR003052;
+        Sat, 5 Sep 2020 13:04:45 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Sat, 5 Sep 2020 13:04:45 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Dave Chinner <dchinner@redhat.com>,
         Jann Horn <jannh@google.com>, Christoph Hellwig <hch@lst.de>,
         Oleg Nesterov <oleg@redhat.com>,
         Kirill Shutemov <kirill@shutemov.name>,
@@ -95,39 +70,81 @@ Cc:     Jan Kara <jack@suse.cz>,
         linux-nvdimm <linux-nvdimm@lists.01.org>,
         Ext4 Developers List <linux-ext4@vger.kernel.org>,
         linux-xfs <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH 2/2 v2] xfs: don't update mtime on COW faults
+In-Reply-To: <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
+Message-ID: <alpine.LRH.2.02.2009051302400.542@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2009031328040.6929@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2009041200570.27312@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2009050805250.12419@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2009050812060.12419@file01.intranet.prod.int.rdu2.redhat.com> <CAHk-=wh=0V27kdRkBAOkCDXSeFYmB=VzC0hMQVbmaiFV_1ZaCA@mail.gmail.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 9:47 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So your patch is obviously correct, [..]
+When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
+when the user hits a COW fault.
 
-Oh, and I had a xfs pull request in my inbox already, so rather than
-expect Darrick to do another one just for this and have Jan do one for
-ext2, I just applied these two directly as "ObviouslyCorrect(tm)".
+This breaks building of the Linux kernel.
+How to reproduce:
+1. extract the Linux kernel tree on dax-mounted xfs filesystem
+2. run make clean
+3. run make -j12
+4. run make -j12
+- at step 4, make would incorrectly rebuild the whole kernel (although it
+  was already built in step 3).
 
-I added the "inline" as suggested by Darrick, and I also added
-parenthesis around the bit tests.
+The reason for the breakage is that almost all object files depend on
+objtool. When we run objtool, it takes COW page fault on its .data
+section, and these faults will incorrectly update the timestamp of the
+objtool binary. The updated timestamp causes make to rebuild the whole
+tree.
 
-Yes, I know the C precedence rules, but I just personally find the
-code easier to read if I don't even have to think about it and the
-different subexpressions of a logical operation are just visually very
-clear. And as I was editing the patch anyway...
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
 
-So that xfs helper function now looks like this
+---
+ fs/xfs/xfs_file.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
+Index: linux-2.6/fs/xfs/xfs_file.c
+===================================================================
+--- linux-2.6.orig/fs/xfs/xfs_file.c	2020-09-05 18:48:54.000000000 +0200
++++ linux-2.6/fs/xfs/xfs_file.c	2020-09-05 18:56:48.000000000 +0200
+@@ -1223,14 +1223,21 @@ __xfs_filemap_fault(
+ 	return ret;
+ }
+ 
 +static inline bool
-+xfs_is_write_fault(
-+       struct vm_fault         *vmf)
++xfs_is_shared_dax_write_fault(
++	struct vm_fault		*vmf)
 +{
-+       return (vmf->flags & FAULT_FLAG_WRITE) &&
-+              (vmf->vma->vm_flags & VM_SHARED);
++	return IS_DAX(file_inode(vmf->vma->vm_file)) &&
++	       vmf->flags & FAULT_FLAG_WRITE && vmf->vma->vm_flags & VM_SHARED;
 +}
++
+ static vm_fault_t
+ xfs_filemap_fault(
+ 	struct vm_fault		*vmf)
+ {
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, PE_SIZE_PTE,
+-			IS_DAX(file_inode(vmf->vma->vm_file)) &&
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_shared_dax_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
+@@ -1243,7 +1250,7 @@ xfs_filemap_huge_fault(
+ 
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, pe_size,
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_shared_dax_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
 
-instead.
-
-            Linus
