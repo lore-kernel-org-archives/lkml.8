@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F30AC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76066C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339E72078E
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FC6206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:51:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="IPcOeu/n";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="mke0N8Gm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dAEp9IzG";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TthukJJ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbgIEPqw (ORCPT
+        id S1728206AbgIEPu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 11:46:52 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:46572 "EHLO
+        Sat, 5 Sep 2020 11:50:56 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:46688 "EHLO
         bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726261AbgIEPqk (ORCPT
+        by vger.kernel.org with ESMTP id S1726261AbgIEPux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 11:46:40 -0400
+        Sat, 5 Sep 2020 11:50:53 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 1F5638EE112;
-        Sat,  5 Sep 2020 08:46:39 -0700 (PDT)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id A05BF8EE112;
+        Sat,  5 Sep 2020 08:50:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1599320799;
-        bh=uuZwcuWqye3Jc50GpB/RasDOKF7Bok/BlMWQ3nC8shA=;
+        s=20151216; t=1599321052;
+        bh=7DqLMBAim3TLV7CCpapqN2oVi0HwtXEehiJyKhXCJ3Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=IPcOeu/nD8EEaTOanrSjdimEprZPoxMXq+HbxBPlWLjLXBUHVzSjaXACgrHe+4Jy+
-         aEA8fhvxKFQjuoWylT7lwvB4zCsht2sCqNnw4bvED9g5hxODMpsg6k6iUFJm9jkS/4
-         5M0Ug4oKqKBSUPmoEbfMV2wu4jr7PzXO8iFTOkD0=
+        b=dAEp9IzGlRMMJN5Ba8HmPY5w6FRO2xbQp2r4JI6BbbqrFrq4RbUm5vm/tlyyMfcOx
+         YbBZp5l74ktnzdRhMlu1eokeGXBBdeK0EAr99v3GdvMPA/QHOzDSODW0K8xM52LK53
+         kytI/YmAIprdKwOzQcJnI60vJaC3E4nQ4kNerjk0=
 Received: from bedivere.hansenpartnership.com ([127.0.0.1])
         by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xRcJOAM4hkOC; Sat,  5 Sep 2020 08:46:38 -0700 (PDT)
+        with ESMTP id zJ1denWn5qXV; Sat,  5 Sep 2020 08:50:48 -0700 (PDT)
 Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C87418EE100;
-        Sat,  5 Sep 2020 08:46:37 -0700 (PDT)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id E493B8EE100;
+        Sat,  5 Sep 2020 08:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1599320798;
-        bh=uuZwcuWqye3Jc50GpB/RasDOKF7Bok/BlMWQ3nC8shA=;
+        s=20151216; t=1599321044;
+        bh=7DqLMBAim3TLV7CCpapqN2oVi0HwtXEehiJyKhXCJ3Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mke0N8GmVsaGqDCnDo1Xevave0JV+Ok2cWL6w8idVDY1Ot0Fj/AbNErCQQRg3ESYs
-         3jgSfrtRZagN7f0a8PfMR2oRtAz3nSfMt+fuXzkKruqdGOJlDSNW72Stg7HclqO/N+
-         JuyCutuhMmqqeGaf7bkGnnUGnkZe/XQ336n3uKRs=
-Message-ID: <1599320796.11726.5.camel@HansenPartnership.com>
+        b=TthukJJ15LDoRS0MfGU/WPdrtBcsG6PrF7Mc5VF1oTLIa5EBZnV93IpKgi+GMFp8K
+         23UVNjYDfACS59OeZfC+9seFNvPhF3dg8wNdgIrs6qEn8X/RPyuXr6xuq84QrGSCQf
+         LzQ7rvvAIj569qiFecC96bxFFxbtYFqEJ/9Eh0iY=
+Message-ID: <1599321042.11726.6.camel@HansenPartnership.com>
 Subject: Re: [PATCH] dma-direct: zero out DMA_ATTR_NO_KERNEL_MAPPING buf
 From:   James Bottomley <James.Bottomley@HansenPartnership.com>
 To:     Hillf Danton <hdanton@sina.com>
@@ -57,8 +57,8 @@ Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
         linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Matthew Wilcox <willy@infradead.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-arch@vger.kernel.come
-Date:   Sat, 05 Sep 2020 08:46:36 -0700
+        linux-arch@vger.kernel.org
+Date:   Sat, 05 Sep 2020 08:50:42 -0700
 In-Reply-To: <20200905073528.9464-1-hdanton@sina.com>
 References: <20200904152550.17964-1-hdanton@sina.com>
          <20200905073528.9464-1-hdanton@sina.com>
@@ -71,6 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[resend with correct linux-arch address]
 On Sat, 2020-09-05 at 15:35 +0800, Hillf Danton wrote:
 > On Fri, 04 Sep 2020 08:34:39 -0700 James Bottomley wrote:
 > > On Fri, 2020-09-04 at 23:25 +0800, Hillf Danton wrote:
@@ -112,7 +113,7 @@ On Sat, 2020-09-05 at 15:35 +0800, Hillf Danton wrote:
 > > architectures.
 > 
 > Correct.
->
+> 
 > > What's the reason for clearing it?  This could also be
 > 
 > 	/* we always manually zero the memory once we are done: */
