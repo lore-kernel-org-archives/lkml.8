@@ -2,71 +2,74 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A73C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5956EC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD422098B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 171592078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JptF3z+t"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/0klVtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728691AbgIENlR (ORCPT
+        id S1728556AbgIENmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 09:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
+        Sat, 5 Sep 2020 09:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728521AbgIENgd (ORCPT
+        with ESMTP id S1728618AbgIENh1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:36:33 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0C5C061245;
-        Sat,  5 Sep 2020 06:36:31 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id x18so2419924pll.6;
-        Sat, 05 Sep 2020 06:36:31 -0700 (PDT)
+        Sat, 5 Sep 2020 09:37:27 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5377FC061258;
+        Sat,  5 Sep 2020 06:37:26 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id b16so4486512pjp.0;
+        Sat, 05 Sep 2020 06:37:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vQZ80LFA88ZvxsuB5GXh97wkMTlbjoteepSRvpUw2jQ=;
-        b=JptF3z+tYDwf82Mv6lyPrGlYCQ/lUrJAP3M4ZbNDUND1KzSL0pa3okb/fKP7PJnb1G
-         KEwJy1AkUVaHWnOs2i5DofeAwqNcgiTanNA3u5zlGG7e24OKOcvXc8MZ7g4VsxHIqHw1
-         aDuzEzXvEq0hl+iCfOGeGBrRlYtZcDKGZo98uX64XF+boRJG9R/ANqY69joOcUWmOi2O
-         fdSlxzKAbO+g2N2/NRgBPL+OGB4hc2nihFwkOSBrtmxYMY6sBBzlakybPC32tGCrtnln
-         hf+1r8j2++dxZs1/YSvO+ZEhXSupyRup3sBKFeSQjXzwcB2qyChrC7vEcr1JmPqcLajq
-         +ERA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XkUqnVE+e8JnchkHV5MBfgoc14AXpDqeCvw9QbCzaI0=;
+        b=u/0klVtOJyDkSQBav7MR5yDAg8TIxVVSgEG9HiIKunpkrGIEJ7q4jyoHU+Cxm4JTj9
+         4GYh6b+8ToFfQgtojtVVGquPNRg40H+Ht+twi4rN29BUDw90JUb9D+pYIX4hhDo1hIw1
+         /NCvA3QiDZzDfb0DDHv4O522pSGeZX/xu6ybWVG3eJPfjnfVY9f6IkqrOt8i8KVazQBE
+         tMfvfmhqkO17GDFfK8ipNtW/J+mriSOclu/TICBIAb2TcRPxIV0yZZr4yQMQIIpohHLx
+         JPBybQ5nnHkGsDB/oTt7XOqe5Fyq8j5T2L6AvLXLFgrXyOif1pm7/16bzLpb8cVHN8h0
+         j+YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vQZ80LFA88ZvxsuB5GXh97wkMTlbjoteepSRvpUw2jQ=;
-        b=iJ6TPSYKn+ZZsiWscVLFfH3sjPA3IdkECXfXU3VLeSz5mSvc6DduxehWYWk6FJ0dSa
-         tzlalUsCYtT1S/7hJgxoGR0uqr4/4g+muez0UC4WZdXqMM8i65GGbYHqXfp7kueRgRsk
-         Z6GeuRqn1h7LHbcNfpGotIL89W0Uuebkx07FAReR8fIQJOSPcRhI5xRP5wCkRG29BkDT
-         +jmCd/66WUwd3Cc5O+pVW13eNqQu9BY3T1qdwhHg+TDrmhQ2hfnMMD8rnLgEMWjla/G0
-         vMyFru/zc2/vDlcaxUf5dtH+0DFyUmP5kKGZLvK58gjoWqJAJ5tuU1vl/jT1O0Kw5qaB
-         OAvg==
-X-Gm-Message-State: AOAM530MO/OEOcfROLxsXmhc1nQbSQIFI7AsPvrkkHd44SY0SCd0cqUR
-        TklF+5R4tyPpnRHhxrGZ1fIXQo7KPUU=
-X-Google-Smtp-Source: ABdhPJwkhX8i7gLi5bhzmP98ZS9SYKWDm0Fk22/i0pyOGPUlrnlOLJ18Cwrx7w6nxwWov07XKD2caw==
-X-Received: by 2002:a17:90a:c505:: with SMTP id k5mr11994540pjt.188.1599312981860;
-        Sat, 05 Sep 2020 06:36:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XkUqnVE+e8JnchkHV5MBfgoc14AXpDqeCvw9QbCzaI0=;
+        b=T5HbJD/nAXeSRueAmVyJdq6s4Jl1UmFO9ZgyuzEoJmRVMQYLXMMs15riAj/eFXtcHp
+         a/z1h/mdjjT1SDcsqOzB+tPu7nx4PQOFbs3WV2twhYrI6hTcw7yXG7RoifVL6hFxpFJ6
+         ZDKjtKMC8Q+2NhnKB7hHfeF8v/8EA7jPWvTge0YX4D75n0BQv+6EM2TDChFTT3qY+mg/
+         7KeTEe3bqNbryp74u4weaVID04G8Xc+l5ixQyrXW+8ZR3rzZziHvgl/+sTWhnBvufHWW
+         7n4B4g4bZy3SaRAjx/YDqB9q/gqmccBMsIq9AsYRNhMbXKw9Uzy8zQL3brQoGaFcpvXa
+         U6Bw==
+X-Gm-Message-State: AOAM532b8ri1ElPJKGRLg9/fkq6z6WFDviy6vi1VTkVAawFqJ42vdTNo
+        NYv80FLzZgyKEphmebzgVv1JnSJz0eM=
+X-Google-Smtp-Source: ABdhPJym1NtJbGnYQK8Xe3Gky1iQh5Iw0HCK8/ovLPMvDjzzQBRAdAbjc3Ws1YuI1CZ6TnYjLMiYwA==
+X-Received: by 2002:a17:90a:f298:: with SMTP id fs24mr12975003pjb.4.1599313044742;
+        Sat, 05 Sep 2020 06:37:24 -0700 (PDT)
 Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.36.18
+        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.37.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 06:36:20 -0700 (PDT)
+        Sat, 05 Sep 2020 06:37:24 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         bgolaszewski@baylibre.com, linus.walleij@linaro.org
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v7 00/20] gpio: cdev: add uAPI v2
-Date:   Sat,  5 Sep 2020 21:35:29 +0800
-Message-Id: <20200905133549.24606-1-warthog618@gmail.com>
+Subject: [PATCH v7 06/20] gpiolib: add build option for CDEV v1 ABI
+Date:   Sat,  5 Sep 2020 21:35:35 +0800
+Message-Id: <20200905133549.24606-7-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200905133549.24606-1-warthog618@gmail.com>
+References: <20200905133549.24606-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,127 +77,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset defines and implements a new version of the
-GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
-support for debounce, event sequence numbers, and allow for requested
-lines with different configurations.
-It provides some future proofing by adding optional configuration fields
-and padding reserved for future use.
+Add a build option to allow the removal of the CDEV v1 ABI.
 
-The series can be partitioned into three blocks; the first two patches
-are minor fixes that impact later patches, the next eleven contain the
-v2 uAPI definition and implementation, and the final seven port the GPIO
-tools to the v2 uAPI and extend them to use new uAPI features.
+Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-The more complicated patches include their own commentary where
-appropriate.
+This patch is before the v2 implementation, and is non-functional until
+that patch, as some parts of that patch would be written slightly
+differently if removing v1 was not considered.
+Adding this patch after that would necessitate revisiting the v2 changes,
+so this ordering results in two simpler patches.
 
-Cheers,
-Kent.
+ drivers/gpio/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Changes for v7:
- - use _BITULL for ULL flag definitions (patch 04)
- - add check on kmalloc_array return value in linereq_get_values()
-   (patch 07) and linereq_set_values_unlocked() (patch 11)
- - restore v1 functions used by gpio-mockup selftests (patch 17)
-
-Changes for v6:
- - flags variable in linereq_create() should be u64 not unsigned long
-   (patch 07)
- - remove restrictions on configuration changes - any change from one
-   valid state to another valid state is allowed. (patches 09, 10, 12)
-
-Changes for v5:
-
-All changes for v5 fix issues with the gpiolib-cdev.c implementation,
-in patches 07-12.
-The uAPI is unchanged from v4, as is the port of the tools.
-
- - use IS_ALIGNED in BUILD_BUG_ON checks (patch 07)
- - relocate BUILD_BUG_ON checks to gpiolib_cdev_register (patch 07)
- - s/requies/requires/ (patch 07)
- - use unsigned int for variables that are never negative
- - change lineinfo_get() parameter from cmd to bool watch (patch 08)
- - flagsv2 in gpio_v2_line_info_to_v1() should be u64, not int (patch 08)
- - change "_locked" suffixed function names to "_unlocked" (patch 10 and
-   11)
- - be less eager breaking long lines
- - move commentary into checkin comment where appropriate - particularly
-   patch 12
- - restructure the request/line split - rename struct line to
-   struct linereq, and struct edge_detector to struct line, and relocate
-   the desc field from linereq to line.  The linereq name was selected
-   over line_request as function names such as linereq_set_values() are
-   more clearly associated with requests than line_request_set_values(),
-   particularly as there is also a struct line.  And linereq is as
-   informative as linerequest, so I went with the shortened form.
-   
-Changes for v4:
- - bitmap width clarification in gpiod.h (patch 04)
- - fix info offset initialisation bug (patch 08 and inserting patch 01)
- - replace strncpy with strscpy to remove compiler warnings
-   (patch 08 and inserting patch 02)
- - fix mask handling in line_get_values (patch 07)
-
-Changes for v3:
- - disabling the character device from the build requires EXPERT
- - uAPI revisions (see patch 02)
- - replace padding_not_zeroed with calls to memchr_inv
- - don't use bitops on 64-bit flags as that doesn't work on BE-32
- - accept first attribute matching a line in gpio_v2_line_config.attrs
-   rather than the last
- - rework lsgpio port to uAPI v2 as flags reverted to v1 like layout
-   (since patch v2)
- - swapped patches 17 and 18 to apply debounce to multiple monitored
-   lines
-
-Changes for v2:
- - split out cleanup patches into a separate series.
- - split implementation patch into a patch for each ioctl or major feature.
- - split tool port patch into a patch per tool.
- - rework uAPI to allow requested lines with different configurations.
-
-Kent Gibson (20):
-  gpiolib: cdev: desc_to_lineinfo should set info offset
-  gpiolib: cdev: replace strncpy with strscpy
-  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
-  gpio: uapi: define uAPI v2
-  gpiolib: make cdev a build option
-  gpiolib: add build option for CDEV v1 ABI
-  gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and
-    GPIO_V2_LINE_GET_VALUES_IOCTL
-  gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
-    GPIO_V2_GET_LINEINFO_WATCH_IOCTL
-  gpiolib: cdev: support edge detection for uAPI v2
-  gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
-  gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
-  gpiolib: cdev: support setting debounce
-  gpio: uapi: document uAPI v1 as deprecated
-  tools: gpio: port lsgpio to v2 uAPI
-  tools: gpio: port gpio-watch to v2 uAPI
-  tools: gpio: rename nlines to num_lines
-  tools: gpio: port gpio-hammer to v2 uAPI
-  tools: gpio: port gpio-event-mon to v2 uAPI
-  tools: gpio: add multi-line monitoring to gpio-event-mon
-  tools: gpio: add debounce support to gpio-event-mon
-
- drivers/gpio/Kconfig        |   29 +-
- drivers/gpio/Makefile       |    2 +-
- drivers/gpio/gpiolib-cdev.c | 1277 +++++++++++++++++++++++++++++++++--
- drivers/gpio/gpiolib-cdev.h |   15 +
- drivers/gpio/gpiolib.c      |    5 +
- drivers/gpio/gpiolib.h      |    6 +
- include/uapi/linux/gpio.h   |  317 ++++++++-
- tools/gpio/gpio-event-mon.c |  146 ++--
- tools/gpio/gpio-hammer.c    |   56 +-
- tools/gpio/gpio-utils.c     |  176 ++++-
- tools/gpio/gpio-utils.h     |   48 +-
- tools/gpio/gpio-watch.c     |   16 +-
- tools/gpio/lsgpio.c         |   60 +-
- 13 files changed, 1948 insertions(+), 205 deletions(-)
-
-
-base-commit: feeaefd378cae2f6840f879d6123ef265f8aee79
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index e4debd66d71f..ff9ca836026b 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -82,6 +82,18 @@ config GPIO_CDEV
+ 
+ 	  If unsure, say Y.
+ 
++config GPIO_CDEV_V1
++	bool "Support GPIO ABI Version 1"
++	default y
++	depends on GPIO_CDEV
++	help
++	  Say Y here to support version 1 of the GPIO CDEV ABI.
++
++	  This ABI version is deprecated and will be removed in the future.
++	  Please use the latest ABI for new developments.
++
++	  If unsure, say Y.
++
+ config GPIO_GENERIC
+ 	depends on HAS_IOMEM # Only for IOMEM drivers
+ 	tristate
 -- 
 2.28.0
 
