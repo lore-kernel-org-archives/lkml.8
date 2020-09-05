@@ -2,139 +2,70 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940DBC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 06:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD280C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 07:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA66208DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 06:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF9B206B5
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 07:02:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599289366;
+	bh=Q03gpUTD+ItXovuZ926XLppjFN6H1ht+Re/yp7B5QUI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l2bjrWy59HSuXCPrg+Bc0MjwYcGAnkkYPDfQVZPyuU4qrjdvHRbZuUKgAk1M3u56m
+	 uCsRmplH+DpduvAF1DLBhMlWLn5mQWzgtz9RE0xvpdrKdemfhtXUbk79RunD9bKERP
+	 1cMMIfQz/SPbO68yttTMdtvTOGpDxfvoi17Xr3Mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726694AbgIEGWz (ORCPT
+        id S1726476AbgIEHCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 02:22:55 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49017 "EHLO mga18.intel.com"
+        Sat, 5 Sep 2020 03:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgIEGWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 02:22:52 -0400
-IronPort-SDR: 2OFQ4m1nvSiut1YDwvID1eEQr00bkDz6RzMla967eGVnwCrgQYShfOj1y1DVXvQjd1x4M4otFt
- yWgj2vOUx+KA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="145547461"
-X-IronPort-AV: E=Sophos;i="5.76,392,1592895600"; 
-   d="scan'208";a="145547461"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 23:22:51 -0700
-IronPort-SDR: XHKZPE1pnjJxVEqYHA9SQHCGYf1cI1IGLzueIWa1oY4RSdmcaJrtWtCdTpA97zCD3b+7FS0S/v
- ddaKZCMdNjgg==
-X-IronPort-AV: E=Sophos;i="5.76,392,1592895600"; 
-   d="scan'208";a="478804292"
-Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2020 23:22:47 -0700
-From:   Bard Liao <yung-chuan.liao@linux.intel.com>
-To:     alsa-devel@alsa-project.org, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
-        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        mengdong.lin@intel.com, bard.liao@intel.com
-Subject: [PATCH v3 3/3]  ASoC: Intel: sof_sdw: add dailink .prepare and .hw_free callback
-Date:   Sat,  5 Sep 2020 02:28:54 +0800
-Message-Id: <20200904182854.3944-4-yung-chuan.liao@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200904182854.3944-1-yung-chuan.liao@linux.intel.com>
-References: <20200904182854.3944-1-yung-chuan.liao@linux.intel.com>
+        id S1725818AbgIEHCk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 03:02:40 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EF1F206B5;
+        Sat,  5 Sep 2020 07:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599289360;
+        bh=Q03gpUTD+ItXovuZ926XLppjFN6H1ht+Re/yp7B5QUI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WPf+9cD5I+h2On16GS2JVIPaPk4fZ1KJ1oZlkeBRSOsy4x+6Z4frnHVhjy1fwd1mI
+         DwNf1yybGDoo2p0l9qjxAbSf5a6fvYD49o4P+WrSS6skk6rmGzsxq1uDDtsrqdOD2D
+         PY41YJAU64vrj12Rvot7r5nHKNzr8Qszq5p5VF4A=
+Date:   Sat, 5 Sep 2020 15:01:42 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     robh+dt@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com,
+        Anson.Huang@nxp.com, kernel@pengutronix.de, linux-imx@nxp.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 RESEND] ARM64: dts: imx8mp: correct sdma1 clk setting
+Message-ID: <20200905070140.GH9261@dragon>
+References: <1598955709-28688-1-git-send-email-yibin.gong@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598955709-28688-1-git-send-email-yibin.gong@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+On Tue, Sep 01, 2020 at 06:21:49PM +0800, Robin Gong wrote:
+> Correct sdma1 ahb clk, otherwise wrong 1:1 clk ratio will be chosed so
+> that sdma1 function broken. sdma1 should use 1:2 clk, while sdma2/3 use
+> 1:1.
+> 
+> Fixes: 6d9b8d20431f ("arm64: dts: freescale: Add i.MX8MP dtsi support")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 
-Add .prepare and .hw_free callback to dailink.
-
-The companion patch for this patch is the removal of stream operations
-in the .prepare and .hw_free callbacks at the DAI level in
-drivers/soundwire/intel.c
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
----
- sound/soc/intel/boards/sof_sdw.c | 40 ++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/sound/soc/intel/boards/sof_sdw.c b/sound/soc/intel/boards/sof_sdw.c
-index f251e046d74d..16503772965c 100644
---- a/sound/soc/intel/boards/sof_sdw.c
-+++ b/sound/soc/intel/boards/sof_sdw.c
-@@ -195,6 +195,25 @@ int sdw_startup(struct snd_pcm_substream *substream)
- 	return sdw_startup_stream(substream);
- }
- 
-+static int sdw_prepare(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
-+	struct sdw_stream_runtime *sdw_stream;
-+	struct snd_soc_dai *dai;
-+
-+	/* Find stream from first CPU DAI */
-+	dai = asoc_rtd_to_cpu(rtd, 0);
-+
-+	sdw_stream = snd_soc_dai_get_sdw_stream(dai, substream->stream);
-+
-+	if (IS_ERR(sdw_stream)) {
-+		dev_err(rtd->dev, "no stream found for DAI %s", dai->name);
-+		return PTR_ERR(sdw_stream);
-+	}
-+
-+	return sdw_prepare_stream(sdw_stream);
-+}
-+
- static int sdw_trigger(struct snd_pcm_substream *substream, int cmd)
- {
- 	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
-@@ -235,6 +254,25 @@ static int sdw_trigger(struct snd_pcm_substream *substream, int cmd)
- 	return ret;
- }
- 
-+static int sdw_hw_free(struct snd_pcm_substream *substream)
-+{
-+	struct snd_soc_pcm_runtime *rtd = asoc_substream_to_rtd(substream);
-+	struct sdw_stream_runtime *sdw_stream;
-+	struct snd_soc_dai *dai;
-+
-+	/* Find stream from first CPU DAI */
-+	dai = asoc_rtd_to_cpu(rtd, 0);
-+
-+	sdw_stream = snd_soc_dai_get_sdw_stream(dai, substream->stream);
-+
-+	if (IS_ERR(sdw_stream)) {
-+		dev_err(rtd->dev, "no stream found for DAI %s", dai->name);
-+		return PTR_ERR(sdw_stream);
-+	}
-+
-+	return sdw_deprepare_stream(sdw_stream);
-+}
-+
- void sdw_shutdown(struct snd_pcm_substream *substream)
- {
- 	sdw_shutdown_stream(substream);
-@@ -242,7 +280,9 @@ void sdw_shutdown(struct snd_pcm_substream *substream)
- 
- static const struct snd_soc_ops sdw_ops = {
- 	.startup = sdw_startup,
-+	.prepare = sdw_prepare,
- 	.trigger = sdw_trigger,
-+	.hw_free = sdw_hw_free,
- 	.shutdown = sdw_shutdown,
- };
- 
--- 
-2.17.1
-
+Applied, thanks.
