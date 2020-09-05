@@ -2,471 +2,277 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C9C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EC4C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A20C20760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6873220760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGX80LKI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hv7xmvBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbgIEWE5 (ORCPT
+        id S1728777AbgIEWIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:04:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42644 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728563AbgIEWEz (ORCPT
+        Sat, 5 Sep 2020 18:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728680AbgIEWIY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:04:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599343492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=krSP1Od3NvD32XLPbchEvpqQvwJQGXJbXl1FT179Xsw=;
-        b=FGX80LKITXr8nE/4d6bEALIUYeH/2/HZNuHIHmOPouEsQ6fu+hIkrTSskcrp25VqV3r3Vx
-        wPshbI0UCg77f4j6la1e0vaH9XdlFqoz4CI1gi5L65kfJtq2k71+bjSdeHBDGDUZvhelQT
-        ASwChaUb1IRHfIIIPXvkn8zz+q9cBLY=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-173-lyPwqupQP5Kyf34BOiH3vQ-1; Sat, 05 Sep 2020 18:04:50 -0400
-X-MC-Unique: lyPwqupQP5Kyf34BOiH3vQ-1
-Received: by mail-qt1-f199.google.com with SMTP id o13so6628666qtl.6
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 15:04:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=krSP1Od3NvD32XLPbchEvpqQvwJQGXJbXl1FT179Xsw=;
-        b=ugX9czsx/QXWRFA+dasvFRXvjVv7hvxuP6VbBNfsXZB+8nHhbN/0wd5AbKKwQoKWVU
-         TimJK7i36Nj1vrsHgti8CiEbdODGwqEAqcb1r13mTsEGD5n6KdsVc2YJaMnavUbkM7ar
-         U80K++/yhQaaoxmUB/Dd4OIf3MUJAyTnOmEgAj5uIFYZ/1sQooaOqTMSfavu5UUOXCLZ
-         oqdJEbqbL1W7cabNsUyIhCPrt0VwbYflhDy49yQN3pvnLy9gPZw0ZjJgM6QCi5zjD5TQ
-         pNirNrF+5QV0g6FjxPN5m8cN0fIm+m2/BAhVHdzRyAnkwr6kubaK3t0hXaEbRnxk3e8d
-         1VhQ==
-X-Gm-Message-State: AOAM53314GRP25ZMgYiYO67GvilQl99ypg+i2cSpRhe5QXCMC+vi3Hgk
-        aN6e65r3k/jLF46XsaWETOXZ/BPzG2F66dxQrwJTgaJfWJPBwcLS5ZvrITNDkURFjKAiNuom5nn
-        au+9B9a6lMFKquUccjHeJ4J6J
-X-Received: by 2002:ac8:7b95:: with SMTP id p21mr14622255qtu.139.1599343490069;
-        Sat, 05 Sep 2020 15:04:50 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJySRikCCor5yr0BDNe9+iwoIDyju7V6u1adnNggK8GYcJEWS1t2AsE88quSFPb5nSXUZrvyKQ==
-X-Received: by 2002:ac8:7b95:: with SMTP id p21mr14622237qtu.139.1599343489711;
-        Sat, 05 Sep 2020 15:04:49 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b13sm7617761qkl.46.2020.09.05.15.04.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 15:04:49 -0700 (PDT)
-Subject: Re: [PATCH v1 05/12] fpga: enable secure updates
-To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
-        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
-        matthew.gerlach@intel.com
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
- <20200904235305.6254-6-russell.h.weight@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <3c3440c3-1087-f1aa-d25f-52156b68020c@redhat.com>
-Date:   Sat, 5 Sep 2020 15:04:47 -0700
+        Sat, 5 Sep 2020 18:08:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DB3C061244;
+        Sat,  5 Sep 2020 15:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=gaAlMrKWUPQqhJQ7Zgj/9HIIFFg/+6XEEbU/k8yPdE8=; b=hv7xmvBCfx3bE9TA+cWsI/birV
+        4ANvnYRoJweMgxoKQ6RyH3YRiih/cWyK1EU6Miy8rxVQQLuj+PKGywI1ZLEnJUzGlf+BQ17zgUmB8
+        irwMKnJHhzp1Ki+kJspGUOwGBRTeM586FZr0/9t4vNqbCr/tBie7QKAyO3JQrMhWRlRvBx2MskY7V
+        +cqLw87SP68OMgglhRkSfQLtQ45hGc9iFn1pNeKVxx5zF3dWmuATC8TlfrK0cWHOlOe9JUwfGgAsj
+        vTkROhbbJFYf/FUxSSdoHw4sqOcQlkim5xa/63nrqpjFr5JBSsB6A2m98kRkLzJoepZH7fbQQ0JWW
+        /F59H1/w==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEgM6-00087y-VD; Sat, 05 Sep 2020 22:08:20 +0000
+Subject: Re: [PATCH v3 17/17] Documentation: PCI: Add userguide for PCI
+ endpoint NTB function
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-ntb@googlegroups.com
+References: <20200904075052.8911-1-kishon@ti.com>
+ <20200904075052.8911-18-kishon@ti.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f16f5a90-13c1-bfc6-ad83-1c6becbf1629@infradead.org>
+Date:   Sat, 5 Sep 2020 15:08:12 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200904235305.6254-6-russell.h.weight@intel.com>
+In-Reply-To: <20200904075052.8911-18-kishon@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 9/4/20 4:52 PM, Russ Weight wrote:
-> Extend the FPGA Intel Security Manager class driver to
-> include an update/filename sysfs node that can be used
-> to initiate a security update.  The filename of a secure
-> update file (BMC image, FPGA image, Root Entry Hash image,
-> or Code Signing Key cancellation image) can be written to
-> this sysfs entry to cause a secure update to occur.
->
-> The write of the filename will return immediately, and the
-> update will begin in the context of a kernel worker thread.
-> This tool utilizes the request_firmware framework, which
-> requires that the image file reside under /lib/firmware.
->
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+On 9/4/20 12:50 AM, Kishon Vijay Abraham I wrote:
+> Add documentation to help users use pci-epf-ntb function driver and
+> existing host side NTB infrastructure for NTB functionality.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  .../ABI/testing/sysfs-class-ifpga-sec-mgr     |  13 ++
->  drivers/fpga/ifpga-sec-mgr.c                  | 155 ++++++++++++++++++
->  include/linux/fpga/ifpga-sec-mgr.h            |  49 ++++++
->  3 files changed, 217 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-> index 86f8992559bf..a476504b7ae9 100644
-> --- a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-> +++ b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
-> @@ -73,3 +73,16 @@ Contact:	Russ Weight <russell.h.weight@intel.com>
->  Description:	Read only. Returns number of times the BMC image has been
->  		flashed.
->  		Format: "%d".
-> +
-> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/update/filename
-> +Date:		Sep 2020
-> +KernelVersion:  5.10
-> +Contact:	Russ Weight <russell.h.weight@intel.com>
-> +Description:	Write only. Write the filename of an Intel image
-> +		file to this sysfs file to initiate a secure
-> +		update. The file must have an appropriate header
-> +		which, among other things, identifies the target
-> +		for the update. This mechanism is used to update
-> +		BMC images, BMC firmware, Static Region images,
-> +		and Root Entry Hashes, and to cancel Code Signing
-> +		Keys (CSK).
-> diff --git a/drivers/fpga/ifpga-sec-mgr.c b/drivers/fpga/ifpga-sec-mgr.c
-> index 97bf80277ed2..73173badbe96 100644
-> --- a/drivers/fpga/ifpga-sec-mgr.c
-> +++ b/drivers/fpga/ifpga-sec-mgr.c
-> @@ -5,8 +5,11 @@
->   * Copyright (C) 2019-2020 Intel Corporation, Inc.
->   */
->  
-> +#include <linux/delay.h>
-> +#include <linux/firmware.h>
->  #include <linux/fpga/ifpga-sec-mgr.h>
->  #include <linux/idr.h>
-> +#include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> @@ -14,6 +17,8 @@
->  static DEFINE_IDA(ifpga_sec_mgr_ida);
->  static struct class *ifpga_sec_mgr_class;
->  
-> +#define WRITE_BLOCK_SIZE	0x4000
-> +
->  static ssize_t show_canceled_csk(struct ifpga_sec_mgr *imgr,
->  				 sysfs_csk_hndlr_t get_csk,
->  				 sysfs_csk_nbits_t get_csk_nbits,
-> @@ -134,6 +139,91 @@ static struct attribute *sec_mgr_security_attrs[] = {
->  	NULL,
->  };
->  
-> +static void ifpga_sec_dev_error(struct ifpga_sec_mgr *imgr,
-> +				enum ifpga_sec_err err_code)
-> +{
-> +	imgr->err_code = err_code;
-> +	imgr->iops->cancel(imgr);
-> +}
-> +
-> +static void progress_complete(struct ifpga_sec_mgr *imgr)
-> +{
-> +	mutex_lock(&imgr->lock);
-> +	imgr->progress = IFPGA_SEC_PROG_IDLE;
-> +	complete_all(&imgr->update_done);
-> +	mutex_unlock(&imgr->lock);
-> +}
-> +
-> +static void ifpga_sec_mgr_update(struct work_struct *work)
-> +{
-> +	u32 size, blk_size, offset = 0;
-> +	struct ifpga_sec_mgr *imgr;
-> +	const struct firmware *fw;
-> +	enum ifpga_sec_err ret;
-> +
-> +	imgr = container_of(work, struct ifpga_sec_mgr, work);
+>  Documentation/PCI/endpoint/index.rst         |   1 +
+>  Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
+>  2 files changed, 161 insertions(+)
+>  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
 
-Why not lock here ? It seems like filename and other
+Hi,
+There are a few edits below:
 
-state could be changed out from under the work func.
 
+> diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+> new file mode 100644
+> index 000000000000..2fbb0a051c3b
+> --- /dev/null
+> +++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
+> @@ -0,0 +1,160 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +	get_device(&imgr->dev);
-> +	if (request_firmware(&fw, imgr->filename, &imgr->dev)) {
-> +		imgr->err_code = IFPGA_SEC_ERR_FILE_READ;
-> +		goto idle_exit;
-> +	}
+> +======================
+> +PCI NTB EPF User Guide
+> +======================
 > +
-> +	imgr->data = fw->data;
-> +	imgr->remaining_size = fw->size;
+> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
 > +
-> +	if (!try_module_get(imgr->dev.parent->driver->owner)) {
-> +		imgr->err_code = IFPGA_SEC_ERR_BUSY;
-> +		goto release_fw_exit;
-> +	}
+> +This document is a guide to help users use pci-epf-ntb function driver
+> +and ntb_hw_epf host driver for NTB functionality. The list of steps to
+> +be followed in the host side and EP side is given below. For the hardware
+> +configuration and internals of NTB using configurable endpoints see
+> +Documentation/PCI/endpoint/pci-ntb-function.rst
 > +
-> +	imgr->progress = IFPGA_SEC_PROG_PREPARING;
-> +	ret = imgr->iops->prepare(imgr);
-> +	if (ret) {
-> +		ifpga_sec_dev_error(imgr, ret);
-> +		goto modput_exit;
-> +	}
+> +Endpoint Device
+> +===============
 > +
-> +	imgr->progress = IFPGA_SEC_PROG_WRITING;
-> +	size = imgr->remaining_size;
-> +	while (size) {
-> +		blk_size = min_t(u32, size, WRITE_BLOCK_SIZE);
-> +		size -= blk_size;
-> +		ret = imgr->iops->write_blk(imgr, offset, blk_size);
+> +Endpoint Controller Devices
+> +---------------------------
+> +
+> +For implementing NTB functionality atleast two endpoint controller devices
 
-Check for function pointer later, good.
+                                      at least
 
-Could writing a short block be handled like libc's write()
+> +are required.
+> +To find the list of endpoint controller devices in the system::
+> +
+> +        # ls /sys/class/pci_epc/
+> +          2900000.pcie-ep  2910000.pcie-ep
+> +
+> +If PCI_ENDPOINT_CONFIGFS is enabled::
+> +
+> +	# ls /sys/kernel/config/pci_ep/controllers
+> +	  2900000.pcie-ep  2910000.pcie-ep
+> +
+> +
+> +Endpoint Function Drivers
+> +-------------------------
+> +
+> +To find the list of endpoint function drivers in the system::
+> +
+> +	# ls /sys/bus/pci-epf/drivers
+> +	  pci_epf_ntb   pci_epf_ntb
+> +
+> +If PCI_ENDPOINT_CONFIGFS is enabled::
+> +
+> +	# ls /sys/kernel/config/pci_ep/functions
+> +	  pci_epf_ntb   pci_epf_ntb
+> +
+> +
+> +Creating pci-epf-ntb Device
+> +----------------------------
+> +
+> +PCI endpoint function device can be created using the configfs. To create
+> +pci-epf-ntb device, the following commands can be used::
+> +
+> +	# mount -t configfs none /sys/kernel/config
+> +	# cd /sys/kernel/config/pci_ep/
+> +	# mkdir functions/pci_epf_ntb/func1
+> +
+> +The "mkdir func1" above creates the pci-epf-ntb function device that will
+> +be probed by pci_epf_ntb driver.
+> +
+> +The PCI endpoint framework populates the directory with the following
+> +configurable fields::
+> +
+> +	# ls functions/pci_epf_ntb/func1
+> +          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
+> +          progif_code       secondary         subsys_id         vendorid
+> +          cache_line_size   interrupt_pin     msix_interrupts   primary
+> +          revid             subclass_code     subsys_vendor_id
+> +
+> +The PCI endpoint function driver populates these entries with default values
+> +when the device is bound to the driver. The pci-epf-ntb driver populates
+> +vendorid with 0xffff and interrupt_pin with 0x0001::
+> +
+> +	# cat functions/pci_epf_ntb/func1/vendorid
+> +	  0xffff
+> +	# cat functions/pci_epf_ntb/func1/interrupt_pin
+> +	  0x0001
+> +
+> +
+> +Configuring pci-epf-ntb Device
+> +-------------------------------
+> +
+> +The user can configure the pci-epf-ntb device using configfs entry. In order
 
-by passing back the bytes written ?
+                                                 using its configfs entry.
 
-> +		if (ret) {
-> +			ifpga_sec_dev_error(imgr, ret);
-> +			goto done;
-> +		}
+> +to change the vendorid and the deviceid, the following
+> +commands can be used::
 > +
-> +		imgr->remaining_size = size;
-> +		offset += blk_size;
-> +	}
+> +	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
+> +	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
 > +
-> +	imgr->progress = IFPGA_SEC_PROG_PROGRAMMING;
-> +	ret = imgr->iops->poll_complete(imgr);
-> +	if (ret) {
-> +		ifpga_sec_dev_error(imgr, ret);
-> +		goto done;
-> +	}
-Add a paranoid crc check the flash is what was written ?
-> +
-> +done:
-> +	if (imgr->iops->cleanup)
-> +		imgr->iops->cleanup(imgr);
-> +
-> +modput_exit:
-> +	module_put(imgr->dev.parent->driver->owner);
-> +
-> +release_fw_exit:
-> +	imgr->data = NULL;
-clear remaining_size ?
-> +	release_firmware(fw);
-> +
-> +idle_exit:
-> +	kfree(imgr->filename);
-> +	imgr->filename = NULL;
-> +	put_device(&imgr->dev);
-> +	progress_complete(imgr);
-> +}
-> +
->  #define check_attr(attribute, _name) \
->  	((attribute) == &dev_attr_##_name.attr && imgr->iops->_name)
->  
-> @@ -161,6 +251,51 @@ static struct attribute_group sec_mgr_security_attr_group = {
->  	.is_visible = sec_mgr_visible,
->  };
->  
-> +static ssize_t filename_store(struct device *dev, struct device_attribute *attr,
-> +			      const char *buf, size_t count)
-> +{
-> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
-> +	int ret = 0;
-> +
-> +	if (count == 0 || count >= PATH_MAX)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&imgr->lock);
-> +	if (imgr->driver_unload || imgr->progress != IFPGA_SEC_PROG_IDLE) {
-> +		ret = -EBUSY;
-> +		goto unlock_exit;
-> +	}
-> +
-> +	imgr->filename = kstrndup(buf, PATH_MAX - 1, GFP_KERNEL);
-shouldn't this be 'count - 1' ?
-> +	if (!imgr->filename) {
-> +		ret = -ENOMEM;
-> +		goto unlock_exit;
-> +	}
-> +
-> +	if (imgr->filename[strlen(imgr->filename) - 1] == '\n')
-> +		imgr->filename[strlen(imgr->filename) - 1] = '\0';
+> +In-order to configure NTB specific attributes, a new sub-directory to func1
 
-If you are catching the '\n' is a more general striping of
+   In order
 
-whitespace needed ?
+> +should be created::
+> +
+> +	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
+> +
+> +The NTB function driver will populate this directory with various attributes
+> +that can be configured by the user::
+> +
+> +	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
+> +          db_count    mw1         mw2         mw3         mw4         num_mws
+> +          spad_count
+> +
+> +A sample configuration for NTB function is given below::
+> +
+> +	# echo 4 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/db_count
+> +	# echo 128 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/spad_count
+> +	# echo 2 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/num_mws
+> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw1
+> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw2
+> +
+> +Binding pci-epf-ntb Device to EP Controller
+> +--------------------------------------------
+> +
+> +NTB function device should be attached to two PCIe endpoint controllers
+> +connected to the two hosts. Use the 'primary' and 'secondary' entries
+> +inside NTB function device to attach one PCIe endpoint controller to
+> +primary interface and the other PCIe endpoint controller to the secondary
+> +interface. ::
+> +
+> +        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
+> +        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
+> +
+> +Once the above step is completed, both the PCI endpoint controllers is ready to
 
-Could a file exists check be done before kicking off the worker?
+                                                                       are ready
 
+> +establish a link with the host.
 > +
-> +	imgr->err_code = IFPGA_SEC_ERR_NONE;
-> +	imgr->progress = IFPGA_SEC_PROG_READ_FILE;
-> +	reinit_completion(&imgr->update_done);
-> +	schedule_work(&imgr->work);
+> +
+> +Start the Link
+> +--------------
+> +
+> +In order for the endpoint device to establish a link with the host, the _start_
+> +field should be populated with '1'. For NTB, both the PCIe endpoint controllers
+> +should establish link with the host::
+> +
+> +        #echo 1 > controllers/2900000.pcie-ep/start
+> +        #echo 1 > controllers/2910000.pcie-ep/start
+> +
+> +
+> +RootComplex Device
+> +==================
+> +
+> +lspci Output
+> +------------
+> +
+> +Note that the devices listed here correspond to the value populated in 1.4
 
-Skip the if-check at the end
+Can you use a section name (or reference) here instead of "1.4"?  I can't see 1.4
+when reading with an editor.
 
-ret = count.
+> +above::
+> +
+> +        # lspci
+> +        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
+> +        0000:01:00.0 RAM memory: Texas Instruments Device b00d
+> +
+> +
+> +Using ntb_hw_epf Device
+> +-----------------------
+> +
+> +The host side software follows the standard NTB software architecture in Linux.
+> +All the existing client side NTB utilities like NTB Transport Client and NTB
+> +Netdev, NTB Ping Pong Test Client and NTB Tool Test Clientcan be used with NTB
 
-> +
-> +unlock_exit:
-> +	mutex_unlock(&imgr->lock);
-> +	return ret ? : count;
-> +}
-> +static DEVICE_ATTR_WO(filename);
-> +
-> +static struct attribute *sec_mgr_update_attrs[] = {
-> +	&dev_attr_filename.attr,
-> +	NULL,
-> +};
-> +
-> +static struct attribute_group sec_mgr_update_attr_group = {
-> +	.name = "update",
-> +	.attrs = sec_mgr_update_attrs,
-> +};
-> +
->  static ssize_t name_show(struct device *dev,
->  			 struct device_attribute *attr, char *buf)
->  {
-> @@ -182,6 +317,7 @@ static struct attribute_group sec_mgr_attr_group = {
->  static const struct attribute_group *ifpga_sec_mgr_attr_groups[] = {
->  	&sec_mgr_attr_group,
->  	&sec_mgr_security_attr_group,
-> +	&sec_mgr_update_attr_group,
->  	NULL,
->  };
->  
-> @@ -233,6 +369,12 @@ ifpga_sec_mgr_register(struct device *dev, const char *name,
->  	struct ifpga_sec_mgr *imgr;
->  	int id, ret;
->  
-> +	if (!iops || !iops->cancel || !iops->prepare ||
-> +	    !iops->write_blk || !iops->poll_complete) {
-Comments in ifpga-sec-mgr.h say 'Required: ' good.
-> +		dev_err(dev, "Attempt to register without ifpga_sec_mgr_ops\n");
-without required ifpga_sec_mgr_ops
-> +		return NULL;
-> +	}
-> +
->  	if (!check_reh_handler(dev, iops, bmc) ||
->  	    !check_reh_handler(dev, iops, sr) ||
->  	    !check_reh_handler(dev, iops, pr) ||
-> @@ -254,6 +396,8 @@ ifpga_sec_mgr_register(struct device *dev, const char *name,
->  	imgr->name = name;
->  	imgr->priv = priv;
->  	imgr->iops = iops;
-> +	init_completion(&imgr->update_done);
-> +	INIT_WORK(&imgr->work, ifpga_sec_mgr_update);
->  	mutex_init(&imgr->lock);
->  
->  	id = ida_simple_get(&ifpga_sec_mgr_ida, 0, 0, GFP_KERNEL);
-> @@ -299,6 +443,17 @@ void ifpga_sec_mgr_unregister(struct ifpga_sec_mgr *imgr)
->  {
->  	dev_info(&imgr->dev, "%s %s\n", __func__, imgr->name);
->  
-> +	mutex_lock(&imgr->lock);
-> +	imgr->driver_unload = true;
-> +	if (imgr->progress == IFPGA_SEC_PROG_IDLE) {
-> +		mutex_unlock(&imgr->lock);
-> +		goto unregister;
-> +	}
-> +
-> +	mutex_unlock(&imgr->lock);
-> +	wait_for_completion(&imgr->update_done);
-> +
-> +unregister:
->  	device_unregister(&imgr->dev);
->  }
->  EXPORT_SYMBOL_GPL(ifpga_sec_mgr_unregister);
-> diff --git a/include/linux/fpga/ifpga-sec-mgr.h b/include/linux/fpga/ifpga-sec-mgr.h
-> index e391b0c8f448..4da2864e251c 100644
-> --- a/include/linux/fpga/ifpga-sec-mgr.h
-> +++ b/include/linux/fpga/ifpga-sec-mgr.h
-> @@ -7,6 +7,7 @@
->  #ifndef _LINUX_IFPGA_SEC_MGR_H
->  #define _LINUX_IFPGA_SEC_MGR_H
->  
-> +#include <linux/completion.h>
->  #include <linux/device.h>
->  #include <linux/mutex.h>
->  #include <linux/types.h>
-> @@ -86,6 +87,19 @@ typedef int (*sysfs_csk_nbits_t)(struct ifpga_sec_mgr *imgr);
->  typedef int (*sysfs_csk_hndlr_t)(struct ifpga_sec_mgr *imgr,
->  				 unsigned long *csk_map, unsigned int nbits);
->  
-> +enum ifpga_sec_err {
-> +	IFPGA_SEC_ERR_NONE	   = 0x0,
-> +	IFPGA_SEC_ERR_HW_ERROR	   = 0x1,
-> +	IFPGA_SEC_ERR_TIMEOUT	   = 0x2,
-> +	IFPGA_SEC_ERR_CANCELED	   = 0x3,
-> +	IFPGA_SEC_ERR_BUSY	   = 0x4,
-> +	IFPGA_SEC_ERR_INVALID_SIZE = 0x5,
-> +	IFPGA_SEC_ERR_RW_ERROR	   = 0x6,
-> +	IFPGA_SEC_ERR_WEAROUT	   = 0x7,
-> +	IFPGA_SEC_ERR_FILE_READ	   = 0x8,
-> +	IFPGA_SEC_ERR_MAX	   = 0x9
-The initializers are redundant.
-> +};
-> +
->  /**
->   * struct ifpga_sec_mgr_ops - device specific operations
->   * @user_flash_count:	    Optional: Return sysfs string output for FPGA
-> @@ -110,6 +124,17 @@ typedef int (*sysfs_csk_hndlr_t)(struct ifpga_sec_mgr *imgr,
->   * @bmc_reh_size:	    Optional: Return byte size for BMC root entry hash
->   * @sr_reh_size:	    Optional: Return byte size for SR root entry hash
->   * @pr_reh_size:	    Optional: Return byte size for PR root entry hash
-> + * @prepare:		    Required: Prepare secure update
-> + * @write_blk:		    Required: Write a block of data
-> + * @poll_complete:	    Required: Check for the completion of the
-> + *			    HW authentication/programming process. This
-> + *			    function should check for imgr->driver_unload
-> + *			    and abort with IFPGA_SEC_ERR_CANCELED when true.
-> + * @cancel:		    Required: Signal HW to cancel update
-> + * @cleanup:		    Optional: Complements the prepare()
-> + *			    function and is called at the completion
-> + *			    of the update, whether success or failure,
-> + *			    if the prepare function succeeded.
->   */
->  struct ifpga_sec_mgr_ops {
->  	sysfs_cnt_hndlr_t user_flash_count;
-> @@ -127,6 +152,22 @@ struct ifpga_sec_mgr_ops {
->  	sysfs_csk_nbits_t bmc_canceled_csk_nbits;
->  	sysfs_csk_nbits_t sr_canceled_csk_nbits;
->  	sysfs_csk_nbits_t pr_canceled_csk_nbits;
-> +	enum ifpga_sec_err (*prepare)(struct ifpga_sec_mgr *imgr);
-> +	enum ifpga_sec_err (*write_blk)(struct ifpga_sec_mgr *imgr,
-> +					u32 offset, u32 size);
-> +	enum ifpga_sec_err (*poll_complete)(struct ifpga_sec_mgr *imgr);
-> +	void (*cleanup)(struct ifpga_sec_mgr *imgr);
-> +	enum ifpga_sec_err (*cancel)(struct ifpga_sec_mgr *imgr);
-> +};
-> +
-> +/* Update progress codes */
-> +enum ifpga_sec_prog {
-> +	IFPGA_SEC_PROG_IDLE	   = 0x0,
-> +	IFPGA_SEC_PROG_READ_FILE   = 0x1,
-> +	IFPGA_SEC_PROG_PREPARING   = 0x2,
-> +	IFPGA_SEC_PROG_WRITING	   = 0x3,
-> +	IFPGA_SEC_PROG_PROGRAMMING = 0x4,
-> +	IFPGA_SEC_PROG_MAX	   = 0x5
+                                                       Client can be
 
-ditto
+> +function device.
+> +
+> +For more information on NTB see
+> +Documentation/driver-api/ntb.rst
 
-Tom
 
->  };
->  
->  struct ifpga_sec_mgr {
-> @@ -134,6 +175,14 @@ struct ifpga_sec_mgr {
->  	struct device dev;
->  	const struct ifpga_sec_mgr_ops *iops;
->  	struct mutex lock;		/* protect data structure contents */
-> +	struct work_struct work;
-> +	struct completion update_done;
-> +	char *filename;
-> +	const u8 *data;			/* pointer to update data */
-> +	u32 remaining_size;		/* size remaining to transfer */
-> +	enum ifpga_sec_prog progress;
-> +	enum ifpga_sec_err err_code;	/* security manager error code */
-> +	bool driver_unload;
->  	void *priv;
->  };
->  
+thanks.
+-- 
+~Randy
 
