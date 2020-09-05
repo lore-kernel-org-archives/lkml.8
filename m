@@ -2,100 +2,108 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBDEC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B18C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F6E02078E
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F322072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:07:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ezkdcm/1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFsIMyvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgIEN53 (ORCPT
+        id S1728521AbgIEOHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 09:57:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49922 "EHLO
+        Sat, 5 Sep 2020 10:07:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726302AbgIEN5Y (ORCPT
+        with ESMTP id S1728646AbgIEOHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:57:24 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3F0C061244
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 06:57:19 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id p9so12179571ejf.6
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 06:57:19 -0700 (PDT)
+        Sat, 5 Sep 2020 10:07:04 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 597D3C061244;
+        Sat,  5 Sep 2020 07:07:01 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id c2so11091502ljj.12;
+        Sat, 05 Sep 2020 07:07:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i7vHnbsQaTVoLJzyyFyi0SrSiuFZTKN5WtNqQ73f1pI=;
-        b=Ezkdcm/1AiLLyGLqw7QrBbjI+ob4TYlIspAe7l+941Y2g3E0mPSWsG3hMwoRGUPB3W
-         xNlF/hGQtEgiTXCLt4dxKF9zIOSHpd1K4uF35xysMtsgvkXfR9xWXC0dbLJYdVOlKKKa
-         IY7RuWuQ85bNjJOVp/esmgzhuhFv8LNzToFB4Wfuxi909jyjQDmf2Y0wKrcqmw+ogdtX
-         J8ZnnH0Ig/1YGLAUy5iQHUYrKq5Fe1ilJ1SHAAQCcbnotfa0X7duvruzGGzcZHYLJvpc
-         bnjuAMzYov5r+RR3IaUpk6V6pCUA3LEeuqLHHSYLqMlvU4zCkpJ1ktl0aOoZj12MQUdH
-         2Q6w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UsMH9oFKoKw5wtKE8tTX6u0+nR0l/m8vLr2EslovcJM=;
+        b=GFsIMyvudYBts5WQ+GafkjGrp1luzKtgFZANgm9aV3Vig+TLrMecdD731YjR+3ji3u
+         j4PqZMWyFoAmnKtrLvqXxeQJqSIbHIFZ+RVsK0+A/RXffKGP7OKtUp+7aR6rjkL7VqRH
+         htsca8scN5B7lrpi+2QRHRrwCaaBRzm6j0Q40CkTYXNpixZe9qSO1VmEn4ESV4H3M+ej
+         w82vDvIbhQRvj8DnrLiAgGI3CEc+gA0zLdbdOYXwkUVh8/vxq7jJhqwOvVfiz11cyhno
+         Yih+To6KsxRB7OxS2q9hUpBNXKEhTvzX6/I7u6gzL/x9PI8g4JQbhm6oP3Fthj0G22Uc
+         G6dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i7vHnbsQaTVoLJzyyFyi0SrSiuFZTKN5WtNqQ73f1pI=;
-        b=cHNB4elAtxXl7/8+jlbBz/IQ2jHozqu6bWQgnG2dxiD1dAHtk2VfioddZlzMN7+qDf
-         YA0qjwWzGVRpAhDIpo2sBiFjM5vUbjVl4lMjPsdIMSdVeZ/2YI6oDtidvIPocNjoBkPw
-         JsCfqzs8JK9JPRwizIuj+lsCsl3Sgx9f2zmuJ1P5Au/78783Ja/XfRtqcxEPoBm29GTC
-         dS2e0xao8wbwZD9FcbyEBZECGo91X4ltM6zgd2G6D7kaEunU4z/z4WdTqDvBRkeJ238z
-         k0Rr9NbEvtxzIITzmNSrYjYdnH32v9ELE+Y1oCohhjkVKtRjYwcyj8zRQxFENUQo+bi9
-         /MVA==
-X-Gm-Message-State: AOAM530w7Au0J8DTw85sMvfewQ0VmwJfV0ikdivfJFX1N/F0rfIa11HC
-        ZkJ+zzOM+Ulat3wq9XCiAmSkke36Wgw=
-X-Google-Smtp-Source: ABdhPJyZXke4ITsp+HoHza4LYDRy+JGbTyBl/Psg2ZtgrlX6lJGnxACB8hPu2U8b2bXCly7ymlR5LA==
-X-Received: by 2002:a17:906:1d08:: with SMTP id n8mr12978014ejh.236.1599314236978;
-        Sat, 05 Sep 2020 06:57:16 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:a7fb:e200:e1b1:2430:dffc:e425])
-        by smtp.gmail.com with ESMTPSA id f13sm9142992ejb.81.2020.09.05.06.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 06:57:16 -0700 (PDT)
-Date:   Sat, 5 Sep 2020 15:57:14 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        openrisc@lists.librecores.org
-Subject: Re: [PATCH v2 3/3] openrisc: Fix issue with get_user for 64-bit
- values
-Message-ID: <20200905135714.74bsr5h423k7guw4@ltop.local>
-References: <20200905131935.972386-1-shorne@gmail.com>
- <20200905131935.972386-4-shorne@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UsMH9oFKoKw5wtKE8tTX6u0+nR0l/m8vLr2EslovcJM=;
+        b=ZDo3BPUt99XaCxwkfgjZpnusbxk++YQQJSuaz2VhVqV9yuTq7zH+LUjD+HaUhFsys4
+         /O4qE+DaNnOdn+UqZQlHNd9tbD64kY8zUtKYBh7y/6ZcoAIMWOX7bicoEtvEdJuRTElP
+         bRuyREGPeP+5Nf1vX/j0x456FJvTbXAaVGOuw9j6fOBsNwBuOqQW8nZzKEUT9c2Gue6S
+         ZslHMJIP/XhT5HIp7txkPdo/Z/t1n58eAynu9Hqz1ciAC1MYBR0U9kMk6BcQw9gViP5i
+         ffUVVacgknJwQQ3Fwb8WNgP1q7eC1c3w/F/vz6Yn5hffYeFZ4+vmbl0nSQtr2vJtE03M
+         5zcA==
+X-Gm-Message-State: AOAM530V8MF7HZ3F38MvPx2uZXM4+/gfXpNoYEhO2TcLz7wweNw0rnHJ
+        95pooS/RbIp+QbfRJQxZFys=
+X-Google-Smtp-Source: ABdhPJwg0eDa1hWo4UPV9eOVCjj/uh3hI1onyI6LNncAurDcSTNdZW1EZv+ZOvUh9KplPjrqolD+VA==
+X-Received: by 2002:a2e:9e98:: with SMTP id f24mr6085749ljk.204.1599314819310;
+        Sat, 05 Sep 2020 07:06:59 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id 68sm2163082ljj.135.2020.09.05.07.06.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 07:06:58 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - implement I2C retries
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrew_Gabbasov@mentor.com, erosca@de.adit-jv.com
+References: <20200903155904.17454-1-jiada_wang@mentor.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <88f1aa79-56e1-d41a-a29d-0f7c5d9bd990@gmail.com>
+Date:   Sat, 5 Sep 2020 17:06:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200905131935.972386-4-shorne@gmail.com>
+In-Reply-To: <20200903155904.17454-1-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 10:19:35PM +0900, Stafford Horne wrote:
+03.09.2020 18:59, Jiada Wang пишет:
+> From: Nick Dyer <nick.dyer@itdev.co.uk>
+> 
+> Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
+> when they are in a sleep state. It must be retried after a delay for the
+> chip to wake up.
+> 
+> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+> Acked-by: Yufeng Shen <miletus@chromium.org>
+> (cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
+> [gdavis: Forward port and fix conflicts.]
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> [jiada: return exact errno when i2c_transfer & i2c_master_send fails]
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
+>  1 file changed, 30 insertions(+), 15 deletions(-)
 
-Hi,
+Hello, Jiada!
 
-The change for 64-bit get_user() looks good to me.
-But I wonder, given that openrisc is big-endian, what will happen
-you have the opposite situation:
-	u32 *ptr;
-	u64 val;
-	...
-	get_user(val, ptr);
+Everything works well on Acer A500 tablet device that uses mXT1386 for
+the touchscreen controller! Thank you very much!
 
-Won't you end with the value in the most significant part of
-the register pair?
-
--- Luc
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
