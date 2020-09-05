@@ -2,116 +2,85 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AECFC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1611FC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6197D20797
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5A020797
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgIEWXN convert rfc822-to-8bit (ORCPT
+        id S1728772AbgIEWXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:23:13 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33906 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEWXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:23:11 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1kEgaT-0005tc-Kq; Sun, 06 Sep 2020 00:23:09 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 1/6] pinctrl: rockchip: make driver be tristate module
-Date:   Sun, 06 Sep 2020 00:23:09 +0200
-Message-ID: <2623687.OKfBHSCOjT@diego>
-In-Reply-To: <2671833.MsR7uBhjTv@diego>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831084753.7115-2-jay.xu@rock-chips.com> <2671833.MsR7uBhjTv@diego>
+        Sat, 5 Sep 2020 18:23:30 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36859 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgIEWXZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:23:25 -0400
+Received: by mail-qv1-f68.google.com with SMTP id f11so4864266qvw.3
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 15:23:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o9C3RF43smdLyRCYoPU7N3p1alftqLdC9coi9jw2anA=;
+        b=Wib/99MY0LXfwbLcjfFoUYT31yZM16k34zVuzvDTKOzGII/SlsWNwAKN4MJvyj3fcj
+         KGRuJegqgKwVA0SUlba/yp7nUaib+KC1cLltVMYKW0w4EhTKJ/kyUw1izxfdWQMJAuRw
+         TH82d6u1RbUxx7BVXAzGCO23dx8vyEqlVFICKyWvQzM2iQgw4lGljNVvCuYbdc7gwfl/
+         0IPEum94wQv3k5cq7U8h6WUuuUHwLNq0jSEHVdadNdcHe2tseUsGhe7+ZXLcoy3543U/
+         kWbstNfEvIrywGPjlrAxoO0YRHXulynDfr9H+fjnXiiuMKKDF5HuG2A/4w4SQjP8mW8O
+         FnhQ==
+X-Gm-Message-State: AOAM533lfeKBjVeLQW7vSXKjToDp3gg1em5ZeC6a+QaDJ9iojPFLGbOi
+        XblwnJAr0Sg2l/Z0CRTO4PnIvmyjB/A=
+X-Google-Smtp-Source: ABdhPJwnEp8mYYHrEf29nP9VkSEUP+QaWApqefZijQDy9Suhzq3yjwi7h7A+SA5emDG9jZZu6frAlA==
+X-Received: by 2002:a0c:e303:: with SMTP id s3mr3593467qvl.61.1599344604618;
+        Sat, 05 Sep 2020 15:23:24 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id n203sm7323886qke.66.2020.09.05.15.23.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 15:23:24 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     x86@kernel.org, kasan-dev@googlegroups.com
+Cc:     Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/2] Allow use of lib/string in early boot
+Date:   Sat,  5 Sep 2020 18:23:21 -0400
+Message-Id: <20200905222323.1408968-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Sonntag, 6. September 2020, 00:01:55 CEST schrieb Heiko Stübner:
-> Am Montag, 31. August 2020, 10:47:48 CEST schrieb Jianqun Xu:
-> > Make pinctrl-rockchip driver to be tristate module, support to build as
-> > a module, this is useful for GKI.
-> > 
-> > Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> 
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+The string functions can currently not be used safely in early boot
+code, at least on x86, as some of that code will be executing out of
+the identity mapping rather than kernel virtual address space.
+Instrumentation options that insert accesses to any global data will
+cause a crash.
 
-I take this back.
+I'm proposing to disable instrumentation for lib/string.c to allow the
+string functions to be usable, and the second patch is an example use
+case.
 
+However, I'm not very familiar with the actual uses of that
+instrumentation and don't know whether disabling it all for lib/string
+would be a terrible idea, hence the RFC.
 
-What happens when you actually unload the module now?
-I checked and all the pinctrl stuff itself is using devm-functions
-so should be safe, but you're missing the 
+Thanks.
 
-platform_driver_unregister part that should happen as well.
+Arvind Sankar (2):
+  lib/string: Disable instrumentation
+  x86/cmdline: Use strscpy to initialize boot_command_line
 
+ arch/x86/kernel/head64.c  |  2 +-
+ arch/x86/kernel/head_32.S | 11 +++++------
+ lib/Makefile              | 11 +++++++----
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-Heiko
-
-> > ---
-> >  drivers/pinctrl/Kconfig            | 2 +-
-> >  drivers/pinctrl/pinctrl-rockchip.c | 7 +++++++
-> >  2 files changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > index 8828613c4e0e..dd4874e2ac67 100644
-> > --- a/drivers/pinctrl/Kconfig
-> > +++ b/drivers/pinctrl/Kconfig
-> > @@ -207,7 +207,7 @@ config PINCTRL_OXNAS
-> >  	select MFD_SYSCON
-> >  
-> >  config PINCTRL_ROCKCHIP
-> > -	bool
-> > +	tristate "Rockchip gpio and pinctrl driver"
-> >  	select PINMUX
-> >  	select GENERIC_PINCONF
-> >  	select GENERIC_IRQ_CHIP
-> > diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> > index c07324d1f265..24dfc814dee1 100644
-> > --- a/drivers/pinctrl/pinctrl-rockchip.c
-> > +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> > @@ -16,10 +16,12 @@
-> >   */
-> >  
-> >  #include <linux/init.h>
-> > +#include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/io.h>
-> >  #include <linux/bitops.h>
-> >  #include <linux/gpio/driver.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/pinctrl/machine.h>
-> > @@ -4256,3 +4258,8 @@ static int __init rockchip_pinctrl_drv_register(void)
-> >  	return platform_driver_register(&rockchip_pinctrl_driver);
-> >  }
-> >  postcore_initcall(rockchip_pinctrl_drv_register);
-> > +
-> > +MODULE_DESCRIPTION("ROCKCHIP Pin Controller Driver");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("platform:pinctrl-rockchip");
-> > +MODULE_DEVICE_TABLE(of, rockchip_pinctrl_dt_match);
-> > 
-> 
-> 
-
-
-
+-- 
+2.26.2
 
