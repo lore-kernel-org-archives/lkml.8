@@ -2,118 +2,109 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FD8C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 16:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B786C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 16:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A2C2074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 16:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17E52078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 16:07:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DXiRUtx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbgIEQDU (ORCPT
+        id S1728363AbgIEQHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 12:03:20 -0400
-Received: from gw.c-home.cz ([89.24.150.100]:41857 "EHLO dmz.c-home.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726261AbgIEQDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 12:03:10 -0400
-X-Greylist: delayed 510 seconds by postgrey-1.27 at vger.kernel.org; Sat, 05 Sep 2020 12:03:08 EDT
-Received: from dmz.c-home.cz (localhost [127.0.0.1])
-        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 085Fpslm003231;
-        Sat, 5 Sep 2020 17:51:59 +0200 (CEST)
-Received: from localhost (martin@localhost)
-        by dmz.c-home.cz (8.14.4+Sun/8.14.4/Submit) with ESMTP id 085FpmfW003227;
-        Sat, 5 Sep 2020 17:51:48 +0200 (CEST)
-X-Authentication-Warning: dmz.c-home.cz: martin owned process doing -bs
-Date:   Sat, 5 Sep 2020 17:51:48 +0200 (CEST)
-From:   Martin Cerveny <martin@c-home.cz>
-Reply-To: Martin Cerveny <M.Cerveny@computer.org>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-cc:     Maxime Ripard <maxime@cerno.tech>,
-        Martin Cerveny <m.cerveny@computer.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for V3s
-In-Reply-To: <20200902062824.GA17544@Red>
-Message-ID: <alpine.GSO.2.00.2009051749080.3102@dmz.c-home.cz>
-References: <20200831073101.3608-1-m.cerveny@computer.org> <20200831073101.3608-2-m.cerveny@computer.org> <20200901093249.orwyc5sr3z2y43fz@gilmour.lan> <20200901105719.GA2639@Red> <20200901114015.qivovvjqvmhkicdl@gilmour.lan> <20200902062824.GA17544@Red>
-User-Agent: Alpine 2.00 (GSO 1167 2008-08-23)
+        Sat, 5 Sep 2020 12:07:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41604 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgIEQHt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 12:07:49 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D3DC061244;
+        Sat,  5 Sep 2020 09:07:48 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id B6C3A335;
+        Sat,  5 Sep 2020 18:07:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599322057;
+        bh=IB7aiNF5Sb4q/FXtKiMOEHFOQFRZ3n8rv9ArPIC44tk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DXiRUtx74nhKWsTE0dT3zhkPyvZLLHKqpS8m2WCGl5PGMiYJQEDpp0by3Ai2QEcw/
+         ewP2tHRhGjQnr2voRHeinE+hAayuvTUV4JfGTwM618+0kLicpIjgju2gQs4XWNjCxL
+         v5QKfyk7CrN4Ats/cfMYBiHh2lhiwm3sd1/a9gIM=
+Date:   Sat, 5 Sep 2020 19:07:14 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     "Robert Chiras (OSS)" <robert.chiras@oss.nxp.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ondrej Jirman <megous@megous.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: [PATCH 4/5] dt-bindings: display/bridge: nwl-dsi: Document
+ fsl,clock-drop-level property
+Message-ID: <20200905160714.GA6319@pendragon.ideasonboard.com>
+References: <1598613212-1113-1-git-send-email-robert.chiras@oss.nxp.com>
+ <1598613212-1113-5-git-send-email-robert.chiras@oss.nxp.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1598613212-1113-5-git-send-email-robert.chiras@oss.nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robert,
 
-On Wed, 2 Sep 2020, Corentin Labbe wrote:
-> On Tue, Sep 01, 2020 at 01:40:15PM +0200, Maxime Ripard wrote:
->> On Tue, Sep 01, 2020 at 12:57:19PM +0200, Corentin Labbe wrote:
->>> On Tue, Sep 01, 2020 at 11:32:49AM +0200, Maxime Ripard wrote:
->>>> On Mon, Aug 31, 2020 at 09:30:59AM +0200, Martin Cerveny wrote:
->>>>> Like A33 "sun4i-ss" has a difference, it give SHA1 digest
->>>>> directly in BE. So add new compatible.
->>>>>
->>>>> Tested-by: Martin Cerveny <m.cerveny@computer.org>
->>>>
->>>> The Tested-by tag is for the other developpers. You're very much
->>>> expected to have tested your patch before contributing it.
->>>>
->>>>> Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
->>>>> ---
->>>>>  .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml          | 5 ++++-
->>>>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
->>>>> index fc823572b..180efd13a 100644
->>>>> --- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
->>>>> +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
->>>>> @@ -25,6 +25,7 @@ properties:
->>>>>            - const: allwinner,sun4i-a10-crypto
->>>>>        - items:
->>>>>            - const: allwinner,sun8i-a33-crypto
->>>>> +      - const: allwinner,sun8i-v3s-crypto
->>>>
->>>> If it's compatible with the A33, why do we need to introduce a new compatible?
->>>>
->>>>>
->>>>>    reg:
->>>>>      maxItems: 1
->>>>> @@ -59,7 +60,9 @@ if:
->>>>>    properties:
->>>>>      compatible:
->>>>>        contains:
->>>>> -        const: allwinner,sun6i-a31-crypto
->>>>> +        oneOf:
->>>>> +          - const: allwinner,sun6i-a31-crypto
->>>>> +          - const: allwinner,sun8i-v3s-crypto
->>>>
->>>> I guess the A33 compatible should be on that list as well?
->>>
->>> This is the list of "need reset".
->>> So we cannot use allwinner,sun8i-a33-crypto
->>> Probably this explanation should be in the commit message.
->>
->> But the A33 has a reset in the DTSI
->>
->
->
-> Oh right so I need to send a fix for that and Martin Cerveny could simply use the "allwinner,sun8i-a33-crypto" (and so keep only patch #1(DTS))
->
-> Regards
->
+Thank you for the patch.
 
-What is "right" solution for DTSI ?
-- compatible = "allwinner,sun8i-a33-crypto";
-OR
-- compatible = "allwinner,sun8i-v3s-crypto", "allwinner,sun8i-a33-crypto";
-(but unimplemented "allwinner,sun8i-v3s-crypto")
+On Fri, Aug 28, 2020 at 02:13:31PM +0300, Robert Chiras (OSS) wrote:
+> From: Robert Chiras <robert.chiras@nxp.com>
+> 
+> Add documentation for a new property: 'fsl,clock-drop-level'.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> index 8b5741b..b415f4e 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/nwl-dsi.yaml
+> @@ -143,6 +143,10 @@ properties:
+>  
+>      additionalProperties: false
+>  
+> +  clock-drop-level:
+> +    description:
+> +      Specifies the level at wich the crtc_clock should be dropped
+> +
 
-Regards
+There's no "crtc_clock" defined in the bindings. As DT bindings
+shouldn't be tied to a particular driver implementation, could you
+document this property without referring to concepts specific to the
+driver ? I think the documentation should also be extended, looking at
+this patch I have no idea what this does and how to compute the value
+that should be set.
+
+>  patternProperties:
+>    "^panel@[0-9]+$":
+>      type: object
+
+-- 
+Regards,
+
+Laurent Pinchart
