@@ -2,112 +2,111 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 006BFC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B429A2074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31F02074D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:58:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1RmBQpd"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="TWi018zm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgIES5R (ORCPT
+        id S1728659AbgIES6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 14:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39438 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgIES5N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 14:57:13 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE3EC061244;
-        Sat,  5 Sep 2020 11:57:12 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id b12so5537096lfp.9;
-        Sat, 05 Sep 2020 11:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=JFaZX1yPOD5YrQmNNicSv1U0vDJOVK3tkWFEsyFX4y4=;
-        b=B1RmBQpdyLlyQgJYVUrPN9Cvl8GQ++LbY4Lt3/r+6FNcLlrHHi3xyKUU1hvbb49LE0
-         BJzRGQkIs2RhGGcCcu6TopgxIhQBi47AN2TmI0fy9Uk8Ua07PkPE2HWrdCGdPXAhaLoG
-         VR9VnG3UNvHjD8wP+wQVG5IRplNurGSyNUlo0XvgyoirnVoYDnDNnyaDqf7V8JR37wVq
-         nDc9wddtckAigqQC96qxoAaMXiwCfNe5F+MfiJacds0S9DSkwWNsq5MUDYMH1WjnOFsn
-         pY2uvrdUOXMVhBf4sUZwUjC1KIFkeL9z5wY0idygzWZJbZ5sNAr5Wu6bfIW2Y7BBI8Gm
-         Vn6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=JFaZX1yPOD5YrQmNNicSv1U0vDJOVK3tkWFEsyFX4y4=;
-        b=qqKf44pRn3yvBdTNT/UrKnreaWQctPGUSuVsstGA1CJ3+88SkyBAA6u7dKApE7Vrf3
-         i44IQzXWvQQie9RBJ0heMzBArPVl8rtdsdzZmIkPg6YZaNH6g+o4yl7K4xsR2ANWnmeZ
-         l1DrndKIBp5a8aNwVORRGXDdIRgacrbqnySQEZwIHR03kU5z7cDDHBsyICi0qfTlStpZ
-         nnOoWaxZTBwt8aJ5PAyJW0Gyp8NOUKTigu1Gvox95IO62oulOcaY4o6r5KoI8f/HnQ5M
-         qsDZgMpRzrGIFw8MsiKiQhF/Uk86ed1kR5dcHd9+iTQr91k/X6Kgq6B16u7acIAVEKBJ
-         YWpQ==
-X-Gm-Message-State: AOAM53102AFyn+Hka1WlQHj2tCzajDoLNBSAJg24/EuFq+HIidnLqrjU
-        0QY4LvifXxpEskozhTluCo0=
-X-Google-Smtp-Source: ABdhPJxhBO9puaUXmB4DBnS0NwVqnuYWcXfGNDEU/UyZMtvQEza5s0m079mZOr7saQ6QL9Ja8TMTzA==
-X-Received: by 2002:ac2:5547:: with SMTP id l7mr6639332lfk.153.1599332230136;
-        Sat, 05 Sep 2020 11:57:10 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id q7sm2742041lfr.16.2020.09.05.11.57.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 11:57:09 -0700 (PDT)
-Subject: Re: [PATCH v2 1/1] Input: atmel_mxt_ts - implement I2C retries
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jiada Wang <jiada_wang@mentor.com>
-Cc:     "nick@shmanahar.org" <nick@shmanahar.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Andrew_Gabbasov@mentor.com" <Andrew_Gabbasov@mentor.com>,
-        "erosca@de.adit-jv.com" <erosca@de.adit-jv.com>
-References: <20200903155904.17454-1-jiada_wang@mentor.com>
- <CAHp75Vfw1bJ+0pRJKVJ=nCJ-5rVzYLjkP4iWPqiG-it0qp5GFg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <610b2513-7d62-386d-ed2a-54e1bea4df43@gmail.com>
-Date:   Sat, 5 Sep 2020 21:57:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 5 Sep 2020 14:58:22 -0400
+Received: from mout.gmx.net ([212.227.17.21]:55755 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728397AbgIES6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 14:58:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599332291;
+        bh=TkGpYY/6EDgbnT0a86RTNRITMYLHSTqyXnL8bd4MYVE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=TWi018zmRaGxDuFFnRdTpepmlB9utag3EC8fYqtyNC7efAwWSWjXCp2IuXbj9UxNL
+         gisl3Grszl47F79vNKsiiQdXndGkMFdo1AS7EPJoQQKimtny0PZGf0DIPOFexszmpy
+         sFozM4+7mFIfczM3SAChteehJFmrp0yOwN4QJfq8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8GMq-1kaRXf0aky-014BUq; Sat, 05
+ Sep 2020 20:58:11 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mfd: ab8500: Remove weird Unicode characters
+Date:   Sat,  5 Sep 2020 20:58:03 +0200
+Message-Id: <20200905185803.1293715-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vfw1bJ+0pRJKVJ=nCJ-5rVzYLjkP4iWPqiG-it0qp5GFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:h6qh5LM/YWGtSyC3mtaQUaFkSpy1jhmsE3oYG9+6DYdST1F+Eor
+ rYcJ6Gdc6YyH647QK7qoJK5Ge+C/jhwxNabb9ZVd4q23rLge9Yj9eXQb5XCpCO6ajICO5Op
+ vyM622Oa5XM69cYdBmQG286r0I7crSK0dMYnH+dkOIiD9XJhCPFY+TGuFwgOrm012CPJ3ms
+ 1WLdGyETlS5WVF0MJeF6g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Wg01hww6n3o=:lHta6WGavXuPpIZE9eshi/
+ BOYGc7vinGYFivnQhCKZad7SBFcept97KWonFlZGwj8vuYthd5094U+ep8rIY139eA9xT+0rf
+ GGupnLB2n0NTg493e1gBPFQb3dprsSsh+Tva1xRIqYV9ZVJ6o8bJXngV1nRhVbKfrIL4civ/e
+ QYAE4wrAuDPEFHy7n9ti2H0/WfUxp55YRC8fHdksI6s5D6NxufkEfGoUbSwh6a+b4t9THq3LU
+ 0BZyyNzyOiZ7m1aLYetyK3WXGSGGGQPWiQ+YNQOESWIOTw1ryA6bxM+OJ+OBQDdkFOyiH3g2Y
+ h29dg8iBRuOCQvhYMc+nvXVbEbtMQdtv7u+/NaAZeMA8qXF0SiFB2s8nN0hVdDmGxDPj0DKoW
+ 9/A1MrbRuD8Y6OtHqK5GC9U45PWF0NB0QvXDEnoYrEFUL0ClG5Z+iSs0cRk7+f25eh0RqsvSS
+ DKwkoMG2j50rqyvvZFqwimxGExYtT7uH9XlpwGcyhjCeOn1s5KJZHOxXTnvT+v4iKZ2pHUqFJ
+ OWElqTVvwIlMi1O03A+dDWHVBq/KAapmiHYfXfkZ/+rhTv2CV4Xkd21QRsBmsHP0m8/udsK7I
+ Rb9y6Ww2fYLZDeCMWMYUoehb/vERo/DVR09ZUS6WMvarJfSRdK0iIb/tHIQ9cQBItjfuc28ZI
+ b3Oih0wKMjlomb4SVV6gq2Rr0ouQHoV7Fp9sfckrc93VcXE6vluh66Pf8iH5QSfYPE5Ns1qQE
+ spZMfhxPTgEOpAZeST/dzQre1HuuBPQ2AZC+0LlYQGl6eiqsfAqrOcqsWnCy9Ujev8oDOs/c8
+ aLtpRJfYq/hOcJIAzklo9zq4a1EjitpPbHdJ598fwiV/DMkWZ33X4QUYhYHD8WPVTOqL+r+7W
+ Wx3y9NI54a8ZEwLeJg8FTDmr1mr0W7s3qey2yzkNlV8QkrWQw9Ai9qCzSZsJ8UwFxjAzSIzvY
+ a2rRz1XtbBWkhOkGW5B4Dm0/5QzfmndiZixpSgItU4BGBLeJSo18S71+qLrnC0ntmzgCQ9YpC
+ sKfbVoqqpHeybBbduHYUD2njQJn9FPLyehIzCtZDwthH/psRRKzmcVtg6M/Nzt69+g21YHH70
+ kZpVUVcd68v9ROt4LtSEVUZ2z3kfXrevgq4ST3YWQswAEZJqSrT7s5uAOB9ceFO4ykhvHSzAE
+ pMaw+rO4W0QtzBikly1ZMMNntPJjlul3cK23FDnBxXIq0LmaqJLs+/wpT+7SoH1LRNkytKPHJ
+ dwy6j1qHm3Qh7ECWTGQIXeTz1c4MuSkk5vjEhng==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-05.09.2020 21:02, Andy Shevchenko пишет:
-...
->      #define MXT_CRC_TIMEOUT                1000    /* msec */
->      #define MXT_FW_RESET_TIME      3000    /* msec */
->      #define MXT_FW_CHG_TIMEOUT     300     /* msec */
->     +#define MXT_WAKEUP_TIME                25      /* msec */
-> 
-> 
-> Can we simple add _MS unit suffix to the definition?
+There are stray Unicode quotation marks (U+201C	DOUBLE TURNED COMMA
+QUOTATION MARK) in the file. Remove them, as they don't serve a purpose.
 
-I'd expect this
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/devicetree/bindings/mfd/ab8500.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->      /* Command to unlock bootloader */
->      #define MXT_UNLOCK_CMD_MSB     0xaa
->     @@ -626,6 +627,7 @@ static int __mxt_read_reg(struct i2c_client *client,
->             struct i2c_msg xfer[2];
->             u8 buf[2];
->             int ret;
->     +       bool retry = false;
-> 
-> 
-> Keep this ordered by length.
+diff --git a/Documentation/devicetree/bindings/mfd/ab8500.txt b/Documentat=
+ion/devicetree/bindings/mfd/ab8500.txt
+index 5c6eabeed3413..d2a6e835c2575 100644
+=2D-- a/Documentation/devicetree/bindings/mfd/ab8500.txt
++++ b/Documentation/devicetree/bindings/mfd/ab8500.txt
+@@ -31,8 +31,8 @@ ab8500-btemp		 :			: vtvout       : Battery Temperature
+ 			 : BAT_CTRL_INDB        :              : Battery Removal Indicator
+ 			 : BTEMP_LOW            :              : Btemp < BtempLow, if battery =
+temperature is lower than -10=C2=B0C
+ 			 : BTEMP_LOW_MEDIUM     :              : BtempLow < Btemp < BtempMediu=
+m,if battery temperature is between -10 and 0=C2=B0C
+-			 : BTEMP_MEDIUM_HIGH    :	       : BtempMedium < Btemp < BtempHigh,if =
+battery temperature is between 0=C2=B0C and=E2=80=9CMaxTemp
+-			 : BTEMP_HIGH           :              : Btemp > BtempHigh, if battery=
+ temperature is higher than =E2=80=9CMaxTemp
++			 : BTEMP_MEDIUM_HIGH    :	       : BtempMedium < Btemp < BtempHigh,if =
+battery temperature is between 0=C2=B0C and MaxTemp
++			 : BTEMP_HIGH           :              : Btemp > BtempHigh, if battery=
+ temperature is higher than MaxTemp
+ ab8500-charger		 :			: vddadc       : Charger interface
+ 			 : MAIN_CH_UNPLUG_DET	:	       : main charger unplug detection managem=
+ent (not in 8505)
+ 			 : MAIN_CHARGE_PLUG_DET	:	       : main charger plug detection managem=
+ent (not in 8505)
+=2D-
+2.28.0
 
-and this to be separate patches that are cleaning whole driver code,
-otherwise there are no much benefits.
