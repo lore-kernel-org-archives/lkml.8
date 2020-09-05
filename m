@@ -2,88 +2,84 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2305C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3AFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F9920760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:16:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC9DB20663
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjMGYubx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgIEJQL (ORCPT
+        id S1728322AbgIEJUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 05:16:11 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52730 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726302AbgIEJQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 05:16:10 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 349ED62A50FAD10BA682;
-        Sat,  5 Sep 2020 17:16:08 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
- 17:16:00 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <steffen.klassert@secunet.com>,
-        <willemb@google.com>, <mstarovoitov@marvell.com>,
-        <kuba@kernel.org>, <mchehab+huawei@kernel.org>,
-        <antoine.tenart@bootlin.com>, <edumazet@google.com>,
-        <Jason@zx2c4.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Fix some comments
-Date:   Sat, 5 Sep 2020 05:14:48 -0400
-Message-ID: <20200905091448.48165-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 5 Sep 2020 05:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbgIEJUr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 05:20:47 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB45C061244;
+        Sat,  5 Sep 2020 02:20:47 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e33so5579378pgm.0;
+        Sat, 05 Sep 2020 02:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e3y7TtM1JD4U0ZffjOd3KNj7XrU0K7i58kkxLru4syI=;
+        b=MjMGYubx0SYscDX2p1a1H6uD7JtzYiTkJ4Y1Eb/7x5ZYYCtql/QvlEcR+Os+gYIN0n
+         HjBqaDTtetEHIB5P0ArJkahJLDgozRXx4AlmRXhKAL1UHwjmKh/irsvnGqS2fphfwr0l
+         zhcfa0wyuN5VQbsQHZfQ2TxuCuFiPGYVxmlg7fEgGk/Thhpr6j0kKmC8j75ou0w4axQ+
+         4I6lFGOZ60pBeBqQ7Mjie2PBxJFRP6k7VM0qENR4BOGrPah1ocprsdoZSXClX+dwQ5lk
+         kMSxxPQAHo8U6u1iPTG8QjeDyXnrMzrTeoYcG0gFFBK+Sf7ZqEdvTG1RuBAVPCYHiuwD
+         4L7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e3y7TtM1JD4U0ZffjOd3KNj7XrU0K7i58kkxLru4syI=;
+        b=qZZl9E1FWoQ8dnBAk+F1zhgHLHnyiZ1ybhVWmENNq/CTRuwzga9e5gsaug3OkzeCmc
+         ZxTBcSZ/OU9V6oGhuzMvQDy+pAGeQNKW/NHSke0f2RDHGyDRrUTdb1juRMntR77rnLcz
+         qWDvAe884U32UZn4mSfgzHVg+lI+d+PvFC31eetlafrx4b+WpyN3V8t+soVhirp7K43U
+         pNKgGXUhNZNEKAXTcZF/ecc8dOR5qeux1AJQR2u1lXgm1PcsEmVE495ARrXijm3ySs5n
+         E84euzlsrAAvp3HL6rzkXFt8xceE6nR/Z6hlD9o6br/qru/lvkeNqfahNEN/ILMMjc0O
+         dYkQ==
+X-Gm-Message-State: AOAM530lJmENl1qmNSOLnoUaEtFOluAyDh3npytey/CpObdEGO4uDrT2
+        tjN0ZDAadVb3IIoBWft9tWW7bQyz1VQaUQoG0Rw=
+X-Google-Smtp-Source: ABdhPJyg4/3ir6a2udyWDViNAOHiA6KwVTSKIsQHw/1Ee+7elKMhbRgdi8MSL/gai9YKpK6BCJG4+VBzYraH4AzzzyI=
+X-Received: by 2002:a63:4923:: with SMTP id w35mr10042456pga.368.1599297646736;
+ Sat, 05 Sep 2020 02:20:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+References: <20200903000658.89944-1-xie.he.0141@gmail.com> <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CAJht_EN+=WTuduvm43_Lq=XWL78AcF5q6Zoyg8S5fao_udL=+Q@mail.gmail.com>
+ <CAJht_ENKyfMm7wAxcVSThEG63oVe72FvMs-5VaLWemKvveY+dQ@mail.gmail.com> <20200904213621.05dd6462@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200904213621.05dd6462@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Sat, 5 Sep 2020 02:20:35 -0700
+Message-ID: <CAJht_EPf2Ht-mGEiim0oR7emkTwarpjv8uUvuQ439U1KCzsV-w@mail.gmail.com>
+Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
+ PVC devices
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 8d7017fd621d ("blackhole_netdev: use blackhole_netdev to
-invalidate dst entries"), we use blackhole_netdev to invalidate dst entries
-instead of loopback device anymore. Also fix broken NETIF_F_HW_CSUM spell.
+On Fri, Sep 4, 2020 at 9:36 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> Applied to net, thank you!
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- include/linux/netdev_features.h | 2 +-
- net/core/dst.c                  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/netdev_features.h b/include/linux/netdev_features.h
-index 2cc3cf80b49a..0b17c4322b09 100644
---- a/include/linux/netdev_features.h
-+++ b/include/linux/netdev_features.h
-@@ -193,7 +193,7 @@ static inline int find_next_netdev_feature(u64 feature, unsigned long start)
- #define NETIF_F_GSO_MASK	(__NETIF_F_BIT(NETIF_F_GSO_LAST + 1) - \
- 		__NETIF_F_BIT(NETIF_F_GSO_SHIFT))
- 
--/* List of IP checksum features. Note that NETIF_F_ HW_CSUM should not be
-+/* List of IP checksum features. Note that NETIF_F_HW_CSUM should not be
-  * set in features when NETIF_F_IP_CSUM or NETIF_F_IPV6_CSUM are set--
-  * this would be contradictory
-  */
-diff --git a/net/core/dst.c b/net/core/dst.c
-index d6b6ced0d451..0c01bd8d9d81 100644
---- a/net/core/dst.c
-+++ b/net/core/dst.c
-@@ -144,7 +144,7 @@ static void dst_destroy_rcu(struct rcu_head *head)
- 
- /* Operations to mark dst as DEAD and clean up the net device referenced
-  * by dst:
-- * 1. put the dst under loopback interface and discard all tx/rx packets
-+ * 1. put the dst under blackhole interface and discard all tx/rx packets
-  *    on this route.
-  * 2. release the net_device
-  * This function should be called when removing routes from the fib tree
--- 
-2.19.1
-
+Thank you, Jakub!
