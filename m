@@ -2,126 +2,99 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC33C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8736C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56B452072D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6543F2072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:24:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dL62SZE+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ukx6fPK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgIENU0 (ORCPT
+        id S1728535AbgIENYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 09:20:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        Sat, 5 Sep 2020 09:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728566AbgIENUQ (ORCPT
+        with ESMTP id S1728372AbgIENYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:20:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E77C061244
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 06:20:14 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b124so6116018pfg.13
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 06:20:14 -0700 (PDT)
+        Sat, 5 Sep 2020 09:24:10 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6609C061244
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 06:24:08 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id g29so5764929pgl.2
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 06:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3M12r6RBsgDh9Kn7e4dzNB2fHG/fqe+ly7p4h+ugstE=;
-        b=dL62SZE+PPlLRxt+Ptikpj96vd99o31DUJX7SKAqCdm5ULXLVFP40N4tHovLGVMN4T
-         QLb2gpOqckjeMjbpyq1LcyjW/Z+zquvGapHE3dy5BqGLR3/D0nlqW2gRagGhXBMz497C
-         /n4/Aclo4uUuAQDXn4I9PwbAKfKRhOqXDYYXeyqb2HGez5LHAHMHVPURC8PovEBCV2KA
-         xd2hPsm9KSlkNddthIlp2mAKVVULCOsM45jnMrNuHQl/MZxBlk5yaF0vmE2kRwwdTRok
-         zyXHsA7A0Qh6rFxF10/vvp882dhW8C/0Ilh6mgsB6GTQAygkTv7y1+aD/F8YVy/eMF6f
-         sKaA==
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=MIB+UBZFOOBgK1ZZjQbbWacd4uOacu/apLAxUjh2HeY=;
+        b=ukx6fPK6xJPjw0J89aFeu8RRL6gfR6rHg+4xp8CcdqYuVnK/v17V1ceAdDaCUz3STy
+         KJMyyaYjW355ntF0pUY7cSyxVrXjLQ5D9tSv/ZACDEVk6xfMpLiPqbQGyWu8FN50E5SG
+         LvrUT1q4A1x60bn8qfBSi2NOP03cziylYa6MapilxsB+gbok76401hfxNcU6ppkHSvW9
+         2NSbWrxM3ecanWm8LWoM7AgRrMQyqi0tQzPZnc2kHHEzjhrbLm0HlsKAW1xCUrvE+yX0
+         w2/Vh1dVlhH019fuHq7HnDJkiUSB1S4BS/SyP4XX1bGo8oQ8qXZEgocNnbWpuMLj6r/b
+         E0kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3M12r6RBsgDh9Kn7e4dzNB2fHG/fqe+ly7p4h+ugstE=;
-        b=MDpvoWGCvyaloEUp5oFH89QI2oBo0lHE7spHJlxlx51YTFWbSrA3I1oGCT5Jdq6Ggz
-         dJBLGdtO1YAA3LipjyDzVK8fhrK/IteKkCyihL0BQYZZVA/zdYZUaCN9XkjUBNK7kMQx
-         SdNpxjPNNHeaxyJdxRfDNv611iZduINbY3uhBWMTJJC7sj1JIKqblTVKLqSnBbgGUMyz
-         yLGEEwkI8v+jt9JvwVYub+KClkrvFOnimydtlBFBwXrtiL2/y+WkujNhXnmfde0uEz8h
-         ql2Sz2ZNmaq77yhu8SvP/Fehe7K0Vg8w7aBfoFahT8HxigpEOKgVcnlEIV/pvKxpfgPn
-         38cg==
-X-Gm-Message-State: AOAM530XVuuvhmXFNpZFLoDPYppAy8g/7wpaDHbXYoDagtcK7MgWQjZK
-        y5bYB4bjf2TXzkVMipnl/qYZw0W4Hm0=
-X-Google-Smtp-Source: ABdhPJxWO+qkptDPOMTPwZRyc53hCMYBkR2mBSoOwsoH3PZwxA8AzWoAuXHU0Dko62LsE0nD812dqA==
-X-Received: by 2002:a63:f752:: with SMTP id f18mr10350651pgk.94.1599312013624;
-        Sat, 05 Sep 2020 06:20:13 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=MIB+UBZFOOBgK1ZZjQbbWacd4uOacu/apLAxUjh2HeY=;
+        b=ryzjJa6EjipoyMaCj0AaOleNLROmCgdqIiWGU4Y+RVTz8POKq//DspyFXud3XlRoxi
+         OIHWw/uvXiR/61UAWjaI+LXeX1ATVv3lcsGLLytNCdBwwJ+EHWHaCFcR4rtCvoBMXA4t
+         8/ighAb+T2XCdYYay7W3AAPoErSKQ88ZDacr9BqgfnGvHyBEcZPYVPgFcWuq1GZPaUsu
+         vGLYD+PK7bgBrsb94ekQbgMorhIB9z2Fp3SlJHcJg3eCZosEU8+3rmbQgftPf7RSZsV4
+         bCZdULb+MpEWVtPjiC2bqNB43BlJuGKcL4wVBEx2g9U2b7iqtfQRGr48cNK8bHU6YojM
+         z4EA==
+X-Gm-Message-State: AOAM530IDh/aSFfDWg/wGRNaFZnios+tiVRIa6axkazJEO2TDHsS/O5z
+        NihfzusDAeHiJr9E0R0IkDOBcqQuzDs=
+X-Google-Smtp-Source: ABdhPJxm26tumvGuDf6XfdE/HIS+KKTTjeeUkaj4Wwxqa0m9GZ8gz5fK8BLGtrL6WzcvPh4nqnX9RQ==
+X-Received: by 2002:a63:1f42:: with SMTP id q2mr10579931pgm.265.1599312247938;
+        Sat, 05 Sep 2020 06:24:07 -0700 (PDT)
 Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
-        by smtp.gmail.com with ESMTPSA id j18sm8478509pgm.30.2020.09.05.06.20.12
+        by smtp.gmail.com with ESMTPSA id o30sm8734945pgc.45.2020.09.05.06.24.06
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 06:20:12 -0700 (PDT)
+        Sat, 05 Sep 2020 06:24:07 -0700 (PDT)
+Date:   Sat, 5 Sep 2020 22:24:05 +0900
 From:   Stafford Horne <shorne@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        openrisc@lists.librecores.org
-Subject: [PATCH v2 2/3] openrisc: Fix cache API compile issue when not inlining
-Date:   Sat,  5 Sep 2020 22:19:34 +0900
-Message-Id: <20200905131935.972386-3-shorne@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200905131935.972386-1-shorne@gmail.com>
+Subject: Re: [PATCH v2 0/3] OpenRISC fixes for 5.9
+Message-ID: <20200905132405.GG3562056@lianli.shorne-pla.net>
 References: <20200905131935.972386-1-shorne@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200905131935.972386-1-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I found this when compiling a kbuild random config with GCC 11.  The
-config enables CONFIG_DEBUG_SECTION_MISMATCH, which sets CFLAGS
--fno-inline-functions-called-once. This causes the call to cache_loop in
-cache.c to not be inlined causing the below compile error.
+On Sat, Sep 05, 2020 at 10:19:32PM +0900, Stafford Horne wrote:
+> Changes since v1:
+> 
+>  - Now a series, v1 was only the "Reserve memblock for initrd" patch
+>  - Added fixes for compiler issues pointed out by the kbuild robot
+Forgot to mention:
+  - Updated "Reserve memblock for initrd", as per Mike's comments
 
-    In file included from arch/openrisc/mm/cache.c:13:
-    arch/openrisc/mm/cache.c: In function 'cache_loop':
-    ./arch/openrisc/include/asm/spr.h:16:27: warning: 'asm' operand 0 probably does not match constraints
-       16 | #define mtspr(_spr, _val) __asm__ __volatile__ (  \
-	  |                           ^~~~~~~
-    arch/openrisc/mm/cache.c:25:3: note: in expansion of macro 'mtspr'
-       25 |   mtspr(reg, line);
-	  |   ^~~~~
-    ./arch/openrisc/include/asm/spr.h:16:27: error: impossible constraint in 'asm'
-       16 | #define mtspr(_spr, _val) __asm__ __volatile__ (  \
-	  |                           ^~~~~~~
-    arch/openrisc/mm/cache.c:25:3: note: in expansion of macro 'mtspr'
-       25 |   mtspr(reg, line);
-	  |   ^~~~~
-    make[1]: *** [scripts/Makefile.build:283: arch/openrisc/mm/cache.o] Error 1
-
-The asm constraint "K" requires a immediate constant argument to mtspr,
-however because of no inlining a register argument is passed causing a
-failure.  Fix this by using __always_inline.
-
-Link: https://lore.kernel.org/lkml/202008200453.ohnhqkjQ%25lkp@intel.com/
-Signed-off-by: Stafford Horne <shorne@gmail.com>
----
- arch/openrisc/mm/cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/openrisc/mm/cache.c b/arch/openrisc/mm/cache.c
-index 08f56af387ac..534a52ec5e66 100644
---- a/arch/openrisc/mm/cache.c
-+++ b/arch/openrisc/mm/cache.c
-@@ -16,7 +16,7 @@
- #include <asm/cacheflush.h>
- #include <asm/tlbflush.h>
- 
--static void cache_loop(struct page *page, const unsigned int reg)
-+static __always_inline void cache_loop(struct page *page, const unsigned int reg)
- {
- 	unsigned long paddr = page_to_pfn(page) << PAGE_SHIFT;
- 	unsigned long line = paddr & ~(L1_CACHE_BYTES - 1);
--- 
-2.26.2
-
+> This is a few fixes found during testing 5.9.
+> 
+> Stafford Horne (3):
+>   openrisc: Reserve memblock for initrd
+>   openrisc: Fix cache API compile issue when not inlining
+>   openrisc: Fix issue with get_user for 64-bit values
+> 
+>  arch/openrisc/include/asm/uaccess.h | 16 ++++++++--------
+>  arch/openrisc/kernel/setup.c        | 10 ++++++++++
+>  arch/openrisc/mm/cache.c            |  2 +-
+>  3 files changed, 19 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.26.2
+> 
