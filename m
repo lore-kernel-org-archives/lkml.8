@@ -2,92 +2,147 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E97FC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF54C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5238520760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD49208C7
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 18:18:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599329884;
+	bh=531Tacsm9qEnm8tPEhULr0JTsL/WaQbglnAVWly9wrk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=plqdLkU3blcJARH6Jncr7wB+lOjvVjFn5F+j/X5/ZhK+OWq6f9k0SPV+WS3CJmu5h
+	 ZvmwNNOa4ILjvaZ4wyOstarhENI/1/VUeKL+q/IjO7cMIW9VnXUkLf0Cq9G3k4wwmk
+	 aqYw8KBJequGxg97/0ToQTaaMC2PTYcofBaNwXJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgIER6f (ORCPT
+        id S1728473AbgIESSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 13:58:35 -0400
-Received: from smtprelay0111.hostedemail.com ([216.40.44.111]:36470 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728387AbgIER6d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 13:58:33 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 1EF071E01;
-        Sat,  5 Sep 2020 17:58:32 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: earth46_3514226270bc
-X-Filterd-Recvd-Size: 2360
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf07.hostedemail.com (Postfix) with ESMTPA;
-        Sat,  5 Sep 2020 17:58:30 +0000 (UTC)
-Message-ID: <afc2cffdd315d3e4394af149278df9e8af7f49f4.camel@perches.com>
-Subject: [PATCH] checkpatch: Warn on self-assignments
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     cocci@systeme.lip6.fr, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Denis Efremov <efremov@linux.com>, julia.lawall@inria.fr
-Date:   Sat, 05 Sep 2020 10:58:29 -0700
-In-Reply-To: <20200901094812.428896-1-efremov@linux.com>
-References: <20200811210127.11889-1-efremov@linux.com>
-         <20200901094812.428896-1-efremov@linux.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Sat, 5 Sep 2020 14:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728393AbgIESR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 14:17:58 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B30CA2078E;
+        Sat,  5 Sep 2020 18:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599329877;
+        bh=531Tacsm9qEnm8tPEhULr0JTsL/WaQbglnAVWly9wrk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GM3lvXFMCDeGKwgtTJMY14EjBiG679FJhE/qa0Ul78+6lEPWcou0iUgnqB7XXmSpj
+         iRcxb26HvEXGUiM0E+ldXK7ZwT32nacLIvRN117sfv1Mk8ZR4vID9I007wfnv0tgam
+         y/Sjj3af78FTQRca5Ch32nk6H+5tj5HYGQo/WJ4M=
+Date:   Sat, 5 Sep 2020 11:17:55 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     <davem@davemloft.net>, <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        <hkallweit1@gmail.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 1/3] net: dp83869: Add ability to advertise
+ Fiber connection
+Message-ID: <20200905111755.4bd874b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200903114259.14013-2-dmurphy@ti.com>
+References: <20200903114259.14013-1-dmurphy@ti.com>
+        <20200903114259.14013-2-dmurphy@ti.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The uninitialized_var() macro was removed recently via
-commit 63a0895d960a ("compiler: Remove uninitialized_var() macro")
-as it's not a particularly useful warning and its use can
-"paper over real bugs".
+On Thu, 3 Sep 2020 06:42:57 -0500 Dan Murphy wrote:
+> Add the ability to advertise the Fiber connection if the strap or the
+> op-mode is configured for 100Base-FX.
+> 
+> Auto negotiation is not supported on this PHY when in fiber mode.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 
-Add a checkpatch test to warn on self-assignments as a means
-to avoid compiler warnings and as a back-door mechanism to
-reproduce the old uninitialized_var macro behavior.
+Some comments, I'm not very phy-knowledgeable so bear with me
+(hopefully PHY maintainers can correct me, too).
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- scripts/checkpatch.pl | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> index 58103152c601..48a68474f89c 100644
+> --- a/drivers/net/phy/dp83869.c
+> +++ b/drivers/net/phy/dp83869.c
+> @@ -52,6 +52,11 @@
+>  					 BMCR_FULLDPLX | \
+>  					 BMCR_SPEED1000)
+>  
+> +#define MII_DP83869_FIBER_ADVERTISE    (ADVERTISED_TP | ADVERTISED_MII | \
+> +					ADVERTISED_FIBRE | ADVERTISED_BNC |  \
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 149518d2a6a7..300b2659aab3 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -3901,6 +3901,17 @@ sub process {
- #ignore lines not being added
- 		next if ($line =~ /^[^\+]/);
- 
-+# check for self assigments used to avoid compiler warnings
-+# e.g.:	int foo = foo, *bar = NULL;
-+#	struct foo bar = *(&(bar));
-+		if ($line =~ /^\+\s*(?:$Declare)?([A-Za-z_][A-Za-z\d_]*)\s*=/) {
-+			my $var = $1;
-+			if ($line =~ /^\+\s*(?:$Declare)?$var\s*=\s*(?:$var|\*\s*\(?\s*&\s*\(?\s*$var\s*\)?\s*\)?)\s*[;,]/) {
-+				WARN("SELF_ASSIGNMENT",
-+				     "Do not use self-assignments to avoid compiler warnings\n" . $herecurr);
-+			}
-+		}
-+
- # check for dereferences that span multiple lines
- 		if ($prevline =~ /^\+.*$Lval\s*(?:\.|->)\s*$/ &&
- 		    $line =~ /^\+\s*(?!\#\s*(?!define\s+|if))\s*$Lval/) {
+I'm not actually sure myself what the semantics of port type advertise
+bits are, but if this is fiber why advertise TP and do you really have
+BNC connectors? :S
 
+> +					ADVERTISED_Pause | ADVERTISED_Asym_Pause | \
+> +					ADVERTISED_100baseT_Full)
 
+You say 100Base-FX, yet you advertise 100Base-T?
+
+>  /* This is the same bit mask as the BMCR so re-use the BMCR default */
+>  #define DP83869_FX_CTRL_DEFAULT	MII_DP83869_BMCR_DEFAULT
+>  
+> @@ -300,6 +305,7 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>  {
+>  	int phy_ctrl_val;
+>  	int ret;
+> +	int bmcr;
+
+Please keep reverse xmas tree ordering.
+
+>  	if (dp83869->mode < DP83869_RGMII_COPPER_ETHERNET ||
+>  	    dp83869->mode > DP83869_SGMII_COPPER_ETHERNET)
+> @@ -383,7 +389,37 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+>  
+>  		break;
+>  	case DP83869_RGMII_1000_BASE:
+> +		break;
+>  	case DP83869_RGMII_100_BASE:
+> +		/* Only allow advertising what this PHY supports */
+> +		linkmode_and(phydev->advertising, phydev->advertising,
+> +			     phydev->supported);
+> +
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->supported);
+> +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> +				 phydev->advertising);
+> +
+> +		/* Auto neg is not supported in fiber mode */
+> +		bmcr = phy_read(phydev, MII_BMCR);
+> +		if (bmcr < 0)
+> +			return bmcr;
+> +
+> +		phydev->autoneg = AUTONEG_DISABLE;
+> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +				   phydev->supported);
+> +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> +				   phydev->advertising);
+> +
+> +		if (bmcr & BMCR_ANENABLE) {
+> +			ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +
+> +		phy_modify_changed(phydev, MII_ADVERTISE,
+> +				   MII_DP83869_FIBER_ADVERTISE,
+> +				   MII_DP83869_FIBER_ADVERTISE);
+
+This only accesses standard registers, should it perhaps be a helper in
+the kernel's phy code?
+
+>  		break;
+>  	default:
+>  		return -EINVAL;
 
