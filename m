@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1385C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA99C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD812206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4E42078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgIEPjT (ORCPT
+        id S1728474AbgIEPje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 11:39:19 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31671 "EHLO mga02.intel.com"
+        Sat, 5 Sep 2020 11:39:34 -0400
+Received: from mga12.intel.com ([192.55.52.136]:36437 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgIEPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 11:38:18 -0400
-IronPort-SDR: lTOIurTzZn6jWlBIWLKanGIaRP6shr5HSE14uIG+bffG6SjiepmS8Q0P8QwaW82X4/RjwiIUx2
- VhuSUxeWUA/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="145596713"
+        id S1728390AbgIEPiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 11:38:20 -0400
+IronPort-SDR: pgZlFUiyfETZy3yo2ntoOQOWUjE6Dl/vMfTem4ZAiDNe8bM3Du0KQ9qKM1SA1+aIax8b6WOiCK
+ 2s4NIAqR3ypg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137386015"
 X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="145596713"
+   d="scan'208";a="137386015"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 08:38:08 -0700
-IronPort-SDR: tn6T/rRBjIV2vN/X2QfRfL9mT6tkpLh+UxRaqWstkHc6PZc+0K+aOIJFXx8XY39PRJPqPFOph8
- lTnYbGekSGMQ==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 08:38:08 -0700
+IronPort-SDR: jHffHXJylpLBz21bhFsYuLTiG4xJBG9xaSyBKRB/F9l7WHB2c25q7vVgGFI9ImoZksg3w4NLQw
+ s8JVCXB5p4FQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="447750203"
+   d="scan'208";a="342593896"
 Received: from lkp-server02.sh.intel.com (HELO c089623da072) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 05 Sep 2020 08:38:07 -0700
+  by orsmga007.jf.intel.com with ESMTP; 05 Sep 2020 08:38:07 -0700
 Received: from kbuild by c089623da072 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1kEaGU-0000Gh-Dq; Sat, 05 Sep 2020 15:38:06 +0000
-Date:   Sat, 05 Sep 2020 23:37:15 +0800
+        id 1kEaGU-0000GZ-Co; Sat, 05 Sep 2020 15:38:06 +0000
+Date:   Sat, 05 Sep 2020 23:37:19 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     "Paul E. McKenney" <paulmck@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:lkmm] BUILD SUCCESS 0ce0c78eff7d22c8a261de6c4305a5abb638c200
-Message-ID: <5f53b0ab.H0L8qxFnKypdTyg0%lkp@intel.com>
+Subject: [rcu:lkmm-dev] BUILD SUCCESS
+ 2d8019da3183abd48739b1c4d7bbd5e4ec1c0b88
+Message-ID: <5f53b0af.mc+jkRJaKL4EtE+X%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -54,8 +55,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm
-branch HEAD: 0ce0c78eff7d22c8a261de6c4305a5abb638c200  tools/memory-model: Expand the cheatsheet.txt notion of relaxed
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  lkmm-dev
+branch HEAD: 2d8019da3183abd48739b1c4d7bbd5e4ec1c0b88  tools/memory-model: Use "-unroll 0" to keep --hw runs finite
 
 elapsed time: 1067m
 
