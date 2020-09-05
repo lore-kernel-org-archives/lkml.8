@@ -2,75 +2,115 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5060C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17FEC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6FF20639
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="Ro3pMIse"
+	by mail.kernel.org (Postfix) with ESMTP id 9004520760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbgIEWKq (ORCPT
+        id S1728720AbgIEWOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:10:46 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:2432 "EHLO rere.qmqm.pl"
+        Sat, 5 Sep 2020 18:14:15 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:33838 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728563AbgIEWKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:10:45 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BkTHN1bC9z2F;
-        Sun,  6 Sep 2020 00:09:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1599343792; bh=sCmAZA43hEK5ITAt71q/tlretXbcM8e9LoMlx1QzCXQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ro3pMIse9R3FLxhO0BX8OoOZ3px/+AL9aAaVYSNdPB4yRWqJNqGFLEKYbTC7HJuHm
-         jEOAdLNT85fU5pDZnNh+vOW3G7CY3nkrKg06sggSSgxfyQ9NJRMH7witMr0MNS7Tz7
-         W7EXNayGQXVFT+2gUfOwoXPtjF0CT4mZWiNEyRi1fnXpKB++ZOOhlJej+KTI6bMyYK
-         iqCw7sIrBEr/ip+0QhJJZ0JQVDKquid50GKdjYvbGNy1cAzw9XxltLm1P1rhfO9aiw
-         iObmpWze7HWuunQ8LQpE57ACSAXl8mT3AkKF7xhyD6S4YEAN8O2ZPr1WKlAab5gaFQ
-         BHs43pcAXVtkA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Sun, 6 Sep 2020 00:10:42 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 11/31] i2c: tegra: Factor out runtime PM and hardware
- initialization
-Message-ID: <20200905221042.GB18554@qmqm.qmqm.pl>
-References: <20200905204151.25343-1-digetx@gmail.com>
- <20200905204151.25343-12-digetx@gmail.com>
+        id S1728103AbgIEWOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:14:15 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kEgRp-0005oz-3h; Sun, 06 Sep 2020 00:14:13 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH 5/6] pinctrl: rockchip: fix crash caused by invalid gpio bank
+Date:   Sun, 06 Sep 2020 00:14:12 +0200
+Message-ID: <6529745.9OfISSL0U5@diego>
+In-Reply-To: <20200831085010.7235-1-jay.xu@rock-chips.com>
+References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831085010.7235-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200905204151.25343-12-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 11:41:31PM +0300, Dmitry Osipenko wrote:
-> Factor out runtime PM and hardware initialization into separate function
-> in order have a cleaner error unwinding in the probe function.
-[...]
-> +	ret = tegra_i2c_init_runtime_pm_and_hardware(i2c_dev);
-[...]
+Hi,
 
-This one doesn't improve the code for me. The problems are: 1) putting two
-unrelated parts in one function, 2) silently reordered initialization.
+Am Montag, 31. August 2020, 10:50:10 CEST schrieb Jianqun Xu:
+> Add valid check for gpio bank.
 
-Best Regards,
-Micha³ Miros³aw
+Please add more description on where this happened.
+
+
+> Change-Id: Ia4609c3045b5df7879beab3c15d791ff54a1f49b
+
+Please drop the change-id.
+
+
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+>  drivers/pinctrl/pinctrl-rockchip.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+> index 6080573155f6..5b16b69e311f 100644
+> --- a/drivers/pinctrl/pinctrl-rockchip.c
+> +++ b/drivers/pinctrl/pinctrl-rockchip.c
+> @@ -2526,9 +2526,9 @@ static int rockchip_pmx_set(struct pinctrl_dev *pctldev, unsigned selector,
+>  			break;
+>  	}
+>  
+> -	if (ret) {
+> +	if (ret && cnt) {
+>  		/* revert the already done pin settings */
+> -		for (cnt--; cnt >= 0; cnt--)
+> +		for (cnt--; cnt >= 0 && !data[cnt].func; cnt--)
+
+This looks unrelated and as it's not a "check for a valid gpio-bank" it
+should become a separate patch with a commit message describing it nicely.
+
+>  			rockchip_set_mux(bank, pins[cnt] - bank->pin_base, 0);
+>  
+>  		return ret;
+> @@ -2599,9 +2599,13 @@ static int rockchip_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
+>  					      unsigned offset, bool input)
+>  {
+>  	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+> +	struct rockchip_pin_bank *bank = &info->ctrl->pin_banks[offset / 32];
+>  	struct gpio_chip *chip;
+>  	int pin;
+>  
+> +	if (!bank || !bank->valid)
+> +		return 0;
+> +
+>  	chip = range->gc;
+>  	pin = offset - chip->base;
+>  	dev_dbg(info->dev, "gpio_direction for pin %u as %s-%d to %s\n",
+> @@ -3022,6 +3026,8 @@ static int rockchip_pinctrl_register(struct platform_device *pdev,
+>  
+>  	for (bank = 0; bank < info->ctrl->nr_banks; ++bank) {
+>  		pin_bank = &info->ctrl->pin_banks[bank];
+> +		if (!pin_bank->valid)
+> +			continue;
+
+Please add a blank line here
+
+>  		pin_bank->grange.name = pin_bank->name;
+>  		pin_bank->grange.id = bank;
+>  		pin_bank->grange.pin_base = pin_bank->pin_base;
+> 
+
+
+Thanks
+Heiko
+
+
