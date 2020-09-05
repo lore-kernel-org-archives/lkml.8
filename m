@@ -4,112 +4,77 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422E4C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EECC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A7F22074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:33:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7562074D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:35:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgIEIdk (ORCPT
+        id S1728305AbgIEIfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 04:33:40 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49066 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725818AbgIEIdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 04:33:40 -0400
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxv99XTVNfeyMRAA--.623S2;
-        Sat, 05 Sep 2020 16:33:29 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: [RFC PATCH] PCI/portdrv: No need to call pci_disable_device() during shutdown
-Date:   Sat,  5 Sep 2020 16:33:26 +0800
-Message-Id: <1599294806-13889-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9Dxv99XTVNfeyMRAA--.623S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KryDZr4UJr18Gr1xCryUZFb_yoW8CF47pF
-        WUGasIkry0qry7Xr43ta47ZFy5XFnFy3409rWxGw43Wrs7Aa48Ar43JF90vrn5X3ykXFy3
-        Gr95JFy8CFWDJF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_
-        GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
-        WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
-        7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
-        1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4U
-        MIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjxR65UUUU
-        U==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Sat, 5 Sep 2020 04:35:39 -0400
+Received: from smtp.h3c.com ([60.191.123.50]:59841 "EHLO h3cspam02-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgIEIfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 04:35:38 -0400
+Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam02-ex.h3c.com with ESMTP id 0857MrRw079323;
+        Sat, 5 Sep 2020 15:22:53 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam02-ex.h3c.com with ESMTPS id 0857MkCp079300
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 5 Sep 2020 15:22:46 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 5 Sep 2020 15:22:48 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <viro@zeniv.linux.org.uk>
+CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] fs: use correct parameter in notes of generic_file_llseek_size()
+Date:   Sat, 5 Sep 2020 15:15:25 +0800
+Message-ID: <20200905071525.12259-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam02-ex.h3c.com 0857MkCp079300
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 745be2e700cd ("PCIe: portdrv: call pci_disable_device
-during remove") and commit cc27b735ad3a ("PCI/portdrv: Turn off PCIe
-services during shutdown"), it also calls pci_disable_device() during
-shutdown, this seems unnecessary, so just remove it.
+Fix warning when compiling with W=1:
+fs/read_write.c:88: warning: Function parameter or member 'maxsize' not described in 'generic_file_llseek_size'
+fs/read_write.c:88: warning: Excess function parameter 'size' description in 'generic_file_llseek_size'
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
 ---
- drivers/pci/pcie/portdrv_core.c |  1 -
- drivers/pci/pcie/portdrv_pci.c  | 14 +++++++++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ fs/read_write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 50a9522..1991aca 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -491,7 +491,6 @@ void pcie_port_device_remove(struct pci_dev *dev)
- {
- 	device_for_each_child(&dev->dev, NULL, remove_iter);
- 	pci_free_irq_vectors(dev);
--	pci_disable_device(dev);
- }
- 
- /**
-diff --git a/drivers/pci/pcie/portdrv_pci.c b/drivers/pci/pcie/portdrv_pci.c
-index 3a3ce40..cab37a8 100644
---- a/drivers/pci/pcie/portdrv_pci.c
-+++ b/drivers/pci/pcie/portdrv_pci.c
-@@ -143,6 +143,18 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
- 	}
- 
- 	pcie_port_device_remove(dev);
-+	pci_disable_device(dev);
-+}
-+
-+static void pcie_portdrv_shutdown(struct pci_dev *dev)
-+{
-+	if (pci_bridge_d3_possible(dev)) {
-+		pm_runtime_forbid(&dev->dev);
-+		pm_runtime_get_noresume(&dev->dev);
-+		pm_runtime_dont_use_autosuspend(&dev->dev);
-+	}
-+
-+	pcie_port_device_remove(dev);
- }
- 
- static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-@@ -211,7 +223,7 @@ static struct pci_driver pcie_portdriver = {
- 
- 	.probe		= pcie_portdrv_probe,
- 	.remove		= pcie_portdrv_remove,
--	.shutdown	= pcie_portdrv_remove,
-+	.shutdown	= pcie_portdrv_shutdown,
- 
- 	.err_handler	= &pcie_portdrv_err_handler,
- 
+diff --git a/fs/read_write.c b/fs/read_write.c
+index 5db58b8c7..058563ee2 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -71,7 +71,7 @@ EXPORT_SYMBOL(vfs_setpos);
+  * @file:	file structure to seek on
+  * @offset:	file offset to seek to
+  * @whence:	type of seek
+- * @size:	max size of this file in file system
++ * @maxsize:	max size of this file in file system
+  * @eof:	offset used for SEEK_END position
+  *
+  * This is a variant of generic_file_llseek that allows passing in a custom
 -- 
-2.1.0
+2.17.1
 
