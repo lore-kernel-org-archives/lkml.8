@@ -2,576 +2,262 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E811C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38263C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFB022087C
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:32:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599265957;
-	bh=g6uCc8Tn9mY5PpKtwE4O8COoLXE5ZtmI3vlIEDhx1+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S+QVeDe5MWQEGPO8V4pv9CRtrnuXaygocVsv6QDBipWMIR7vlztOsLACySTBgDd6n
-	 lkrKVrsHy2AH5UNnPrIudcGEXbigfv8ay5d9VobRJOQ8uU2kzW8okjsApVWI3slAQL
-	 BmFGYmucq9y+OZs4vjlA9mdbF3N/Vij5CrbqcIxc=
+	by mail.kernel.org (Postfix) with ESMTP id EC49E2087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:36:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E1y2EOsE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgIEAcf (ORCPT
+        id S1728098AbgIEAgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 20:32:35 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36299 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbgIEAce (ORCPT
+        Fri, 4 Sep 2020 20:36:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgIEAgQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 20:32:34 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p37so5139985pgl.3;
-        Fri, 04 Sep 2020 17:32:33 -0700 (PDT)
+        Fri, 4 Sep 2020 20:36:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E803C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 17:36:15 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id m17so8884400ioo.1
+        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 17:36:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=MIVXqzuKXJr11dfoTHnTlrj+2SwhBNnLLWr83/0KD3w=;
+        b=E1y2EOsETk3pbdJ6/iRUlu7O0cJxQvNJIexWcxc141uC4ftHh2EdX/3IBHJl/mgpox
+         +evW4Te59Tfu4p7IYZm9RL9vW1U2LXnqbpRr10oMGX1NGMRhKF09mvOZvd8EC56mjJCa
+         KiFXsjTz4muznj2ugtZnS0NGZyEzOMK8Zv29Iw+ThzgRjM/c5VQWdrrhIh+wlJbrQeeW
+         1Lf9+/fvyMhxTPBF+qtwn6TgwCt1RE7sfl+FmP2vaFVSP0++cw0m1cOIpSOmka4nYI8F
+         aHjaRZkBmzzhrmiCSGbWvbOwG5dQeKDyRKTsOLaFVNbXY6S1I/JjEc6CULIjK9WCJOgO
+         Facg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=g4tViWJurInNJW6j1i2BR3GFwck5EH43I9Jofii8+Cc=;
-        b=X3dHUfmlrLIBMQmaxho8D2VNseDwHme34tILktiQ3pgOdN18qEFAedjScLuIwazRvU
-         jvyNvHdrtTGs13Yr2K06vwVCfo1JltRI5WVWDCtvaXtym5S+w32+AWUmItOhHPvq0J6H
-         P4pjHgxHIzih4GzpLfmSieyGViZ2DI6tXRSvedlKRIm23ecSIawQskE91FPX/amCGkrx
-         qnRLR2sgfiInGXzds06g5Z0lyxhl+XIEPkQc5ykgNm87vKCxJ/Qh2y/oQLE5iPYltUT1
-         HwskV+nTA4UqvmliT9Rvk9/MjHC1HxFooVo81Y3e3HWPey+VH4zjqfovWkcs5dSkg6kf
-         7NVw==
-X-Gm-Message-State: AOAM531oY9kW/H6Y0VvJkcq8MjHS8u2YRe9X9MC+AAAER+RJmyEexYTg
-        of4lc1ggbMAi3GpDx/wT49DFOaNnBmU=
-X-Google-Smtp-Source: ABdhPJzZHAJ7rFX4lvEJSjJGCWVD0MqPIuUA8gaVy+4mAgeZyFtVUngfOG/JUuiO0LFf3hN2Lq1sbQ==
-X-Received: by 2002:a65:679a:: with SMTP id e26mr9424036pgr.167.1599265952458;
-        Fri, 04 Sep 2020 17:32:32 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id z22sm11804089pjq.2.2020.09.04.17.32.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 17:32:31 -0700 (PDT)
-Date:   Fri, 4 Sep 2020 17:32:31 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Xu Yilun <yilun.xu@intel.com>
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, trix@redhat.com, lgoncalv@redhat.com,
-        Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: Re: [PATCH v7 2/3] fpga: dfl: create a dfl bus type to support DFL
- devices
-Message-ID: <20200905003231.GB3157@epycbox.lan>
-References: <1597823121-26424-1-git-send-email-yilun.xu@intel.com>
- <1597823121-26424-3-git-send-email-yilun.xu@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MIVXqzuKXJr11dfoTHnTlrj+2SwhBNnLLWr83/0KD3w=;
+        b=AdORsVcUnw3y0AHn8bw3ssPL2APWyPRlON83LeYdgT/mLsnxsZWp1IF4zdzghvdmfd
+         oKQVOBOusmxhi5UVwn66cvGcXN/YaVrSMqFYN/yAbh5RUE4h7w98S7rXeHLjXfjVIPcK
+         GMixhF7BNNSCWBqyss8tlNyWb0r0xNBq4jvkJcx+264ZisDTE7OjaOMJlHzTYdLIDfvL
+         ihe+1Q1CHJLCB1s3z1sUJVCxYs8J6/M/GCdu03fDMWjQUGReBYxd7BlqF4+QwHAIqPJS
+         1/YN1S0Kwukf+svdrid1l2Mi1WEj3disskBJAainvNJ/3Guqe0O3l5f6R1+5tybPdWef
+         qORg==
+X-Gm-Message-State: AOAM530cfZcNcXd46gLFgZZ7cF5yvlkVZ3K4w+WKRnKjwOdWeKDlk1uV
+        uZ0ZYJuW86yswRh9hpik9ZuAf9hotQ+DKQyaZQoStA==
+X-Google-Smtp-Source: ABdhPJwg4P/h/dvV1e5l1S3VhBd+msHGjLCJ0u/x18+jLCreCfOviqUykA7CF5eTj0VlHEXl8SiXP4yNS4usvSInq8s=
+X-Received: by 2002:a02:780e:: with SMTP id p14mr2360306jac.144.1599266173913;
+ Fri, 04 Sep 2020 17:36:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597823121-26424-3-git-send-email-yilun.xu@intel.com>
+References: <20200520195134.GK26186@redhat.com> <CA+EESO4wEQz3CMxNLh8mQmTpUHdO+zZbV10zUfYGKEwfRPK2nQ@mail.gmail.com>
+ <20200520211634.GL26186@redhat.com> <CABXk95A-E4NYqA5qVrPgDF18YW-z4_udzLwa0cdo2OfqVsy=SQ@mail.gmail.com>
+ <CA+EESO4kLaje0yTOyMSxHfSLC0n86zAF+M1DWB_XrwFDLOCawQ@mail.gmail.com>
+ <CAFJ0LnGfrzvVgtyZQ+UqRM6F3M7iXOhTkUBTc+9sV+=RrFntyQ@mail.gmail.com>
+ <20200724093852-mutt-send-email-mst@kernel.org> <CAFJ0LnEZghYj=d3w8Fmko4GZAWw6Qc5rgAMmXj-8qgXtyU3bZQ@mail.gmail.com>
+ <20200806004351-mutt-send-email-mst@kernel.org> <CA+EESO6bxhKf5123feNX1LZyyN2QL4Ti5ApPAu=xb3pHXd7cwQ@mail.gmail.com>
+ <20200904033438.GI9411@redhat.com>
+In-Reply-To: <20200904033438.GI9411@redhat.com>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Fri, 4 Sep 2020 17:36:02 -0700
+Message-ID: <CA+EESO7yc9k79TxyQk+XvWbMfhMmax5GtJTYbNhDrb-0VgJunA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Add a new sysctl knob: unprivileged_userfaultfd_user_mode_only
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jerome Glisse <jglisse@redhat.com>, Shaohua Li <shli@fb.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Tim Murray <timmurray@google.com>,
+        Minchan Kim <minchan@google.com>,
+        Sandeep Patil <sspatil@google.com>, kernel@android.com,
+        Daniel Colascione <dancol@dancol.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xu,
+On Thu, Sep 3, 2020 at 8:34 PM Andrea Arcangeli <aarcange@redhat.com> wrote=
+:
+>
+> Hello,
+>
+> On Mon, Aug 17, 2020 at 03:11:16PM -0700, Lokesh Gidra wrote:
+> > There has been an emphasis that Android is probably the only user for
+> > the restriction of userfaults from kernel-space and that it wouldn=E2=
+=80=99t
+> > be useful anywhere else. I humbly disagree! There are various areas
+> > where the PROT_NONE+SIGSEGV trick is (and can be) used in a purely
+> > user-space setting. Basically, any lazy, on-demand,
+>
+> For the record what I said is quoted below
+> https://lkml.kernel.org/r/20200520194804.GJ26186@redhat.com :
+>
+> """It all boils down of how peculiar it is to be able to leverage only
+> the acceleration [..] Right now there's a single user that can cope
+> with that limitation [..] If there will be more users [..]  it'd be
+> fine to add a value "2" later."""
+>
+> Specifically I never said "that it wouldn=E2=80=99t be useful anywhere el=
+se.".
+>
+Thanks a lot for clarifying.
 
-On Wed, Aug 19, 2020 at 03:45:20PM +0800, Xu Yilun wrote:
-> A new bus type "dfl" is introduced for private features which are not
-> initialized by DFL feature drivers (dfl-fme & dfl-afu drivers). So these
-> private features could be handled by separate driver modules.
-> 
-> DFL feature drivers (dfl-fme, dfl-port) will create DFL devices on
-> enumeration. DFL drivers could be registered on this bus to match these
-> DFL devices. They are matched by dfl type & feature_id.
-> 
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Reviewed-by: Tom Rix <trix@redhat.com>
-> Acked-by: Wu Hao <hao.wu@intel.com>
-> ---
-> v2: change the bus uevent format.
->     change the dfl device's sysfs name format.
->     refactor dfl_dev_add().
->     minor fixes for comments from Hao and Tom.
-> v3: no change.
-> v4: improve the uevent format, 4 bits for type & 12 bits for id.
->     change dfl_device->type to u8.
->     A dedicate field in struct dfl_feature for dfl device instance.
->     error out if dfl_device already exist on dfl_devs_init().
-> v5: minor fixes for Hao's comments
-> v6: the input param of dfl_devs_add() changes to struct
->     dfl_feature_platform_data.
->     improve the comments.
-> v7: no change.
-> ---
->  Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
->  drivers/fpga/dfl.c                      | 262 +++++++++++++++++++++++++++++++-
->  drivers/fpga/dfl.h                      |  86 +++++++++++
->  3 files changed, 355 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-dfl b/Documentation/ABI/testing/sysfs-bus-dfl
-> new file mode 100644
-> index 0000000..23543be
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-bus-dfl
-> @@ -0,0 +1,15 @@
-> +What:		/sys/bus/dfl/devices/dfl_dev.X/type
-> +Date:		Aug 2020
-> +KernelVersion:	5.10
-> +Contact:	Xu Yilun <yilun.xu@intel.com>
-> +Description:	Read-only. It returns type of DFL FIU of the device. Now DFL
-> +		supports 2 FIU types, 0 for FME, 1 for PORT.
-> +		Format: 0x%x
-> +
-> +What:		/sys/bus/dfl/devices/dfl_dev.X/feature_id
-> +Date:		Aug 2020
-> +KernelVersion:	5.10
-> +Contact:	Xu Yilun <yilun.xu@intel.com>
-> +Description:	Read-only. It returns feature identifier local to its DFL FIU
-> +		type.
-> +		Format: 0x%x
-> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-> index 52cafa2..c5ba4ac9 100644
-> --- a/drivers/fpga/dfl.c
-> +++ b/drivers/fpga/dfl.c
-> @@ -30,12 +30,6 @@ static DEFINE_MUTEX(dfl_id_mutex);
->   * index to dfl_chardevs table. If no chardev support just set devt_type
->   * as one invalid index (DFL_FPGA_DEVT_MAX).
->   */
-> -enum dfl_id_type {
-> -	FME_ID,		/* fme id allocation and mapping */
-> -	PORT_ID,	/* port id allocation and mapping */
-> -	DFL_ID_MAX,
-> -};
-> -
->  enum dfl_fpga_devt_type {
->  	DFL_FPGA_DEVT_FME,
->  	DFL_FPGA_DEVT_PORT,
-> @@ -250,6 +244,244 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
->  }
->  EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
->  
-> +static DEFINE_IDA(dfl_device_ida);
-> +
-> +static const struct dfl_device_id *
-> +dfl_match_one_device(const struct dfl_device_id *id, struct dfl_device *ddev)
-> +{
-> +	if (id->type == ddev->type && id->feature_id == ddev->feature_id)
-> +		return id;
-> +
-> +	return NULL;
-> +}
-> +
-> +static int dfl_bus_match(struct device *dev, struct device_driver *drv)
-> +{
-> +	struct dfl_device *ddev = to_dfl_dev(dev);
-> +	struct dfl_driver *ddrv = to_dfl_drv(drv);
-> +	const struct dfl_device_id *id_entry = ddrv->id_table;
-> +
-> +	if (id_entry) {
-> +		while (id_entry->feature_id) {
-> +			if (dfl_match_one_device(id_entry, ddev)) {
-> +				ddev->id_entry = id_entry;
-> +				return 1;
-> +			}
-> +			id_entry++;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dfl_bus_probe(struct device *dev)
-> +{
-> +	struct dfl_device *ddev = to_dfl_dev(dev);
-> +	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-Can you swap those for reverse x-mas tree where possible?
+> Also I'm only arguing about the sysctl visible kABI change in patch
+> 2/2: the flag passed as parameter to the syscall in patch 1/2 is all
+> great, because seccomp needs it in the scalar parameter of the syscall
+> to implement a filter equivalent to your sysctl "2" policy with only
+> patch 1/2 applied.
+>
+> I've two more questions now:
+>
+> 1) why don't you enforce the block of kernel initiated faults with
+>    seccomp-bpf instead of adding a sysctl value 2? Is the sysctl just
+>    an optimization to remove a few instructions per syscall in the bpf
+>    execution of Android unprivileged apps? You should block a lot of
+>    other syscalls by default to all unprivileged processes, including
+>    vmsplice.
+>
+>    In other words if it's just for Android, why can't Android solve it
+>    with only patch 1/2 by tweaking the seccomp filter?
 
-        struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-        struct dfl_device *ddev = to_dfl_dev(dev);
-	...
+I would let Nick (nnk@) and Jeff (jeffv@) respond to this.
 
-> +
-> +	return ddrv->probe(ddev);
-> +}
-> +
-> +static int dfl_bus_remove(struct device *dev)
-> +{
-> +	struct dfl_device *ddev = to_dfl_dev(dev);
-> +	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
+The previous responses from both of them on this email thread
+(https://lore.kernel.org/lkml/CABXk95A-E4NYqA5qVrPgDF18YW-z4_udzLwa0cdo2Ofq=
+Vsy=3DSQ@mail.gmail.com/
+and https://lore.kernel.org/lkml/CAFJ0LnGfrzvVgtyZQ+UqRM6F3M7iXOhTkUBTc+9sV=
++=3DRrFntyQ@mail.gmail.com/)
+suggest that the performance overhead of seccomp-bpf is too much. Kees
+also objected to it
+(https://lore.kernel.org/lkml/202005200921.2BD5A0ADD@keescook/)
 
-Same here.
-> +
-> +	if (ddrv->remove)
-> +		ddrv->remove(ddev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
-> +{
-> +	struct dfl_device *ddev = to_dfl_dev(dev);
-> +
-> +	/* The type has 4 valid bits and feature_id has 12 valid bits */
-> +	return add_uevent_var(env, "MODALIAS=dfl:t%01Xf%03X",
-> +			      ddev->type, ddev->feature_id);
-> +}
-> +
-> +/* show dfl info fields */
-> +#define dfl_info_attr(field, format_string)				\
-> +static ssize_t								\
-> +field##_show(struct device *dev, struct device_attribute *attr,		\
-> +	     char *buf)							\
-> +{									\
-> +	struct dfl_device *ddev = to_dfl_dev(dev);			\
-> +									\
-> +	return sprintf(buf, format_string, ddev->field);		\
-> +}									\
-> +static DEVICE_ATTR_RO(field)
-> +
-> +dfl_info_attr(type, "0x%x\n");
-> +dfl_info_attr(feature_id, "0x%x\n");
-Can you either caplitalize those or if it's just two fields, keep them
-without a macro?
-> +
-> +static struct attribute *dfl_dev_attrs[] = {
-> +	&dev_attr_type.attr,
-> +	&dev_attr_feature_id.attr,
-> +	NULL,
-> +};
-> +
-> +ATTRIBUTE_GROUPS(dfl_dev);
-> +
-> +static struct bus_type dfl_bus_type = {
-> +	.name		= "dfl",
-> +	.match		= dfl_bus_match,
-> +	.probe		= dfl_bus_probe,
-> +	.remove		= dfl_bus_remove,
-> +	.uevent		= dfl_bus_uevent,
-> +	.dev_groups	= dfl_dev_groups,
-> +};
-> +
-> +static void release_dfl_dev(struct device *dev)
-> +{
-> +	struct dfl_device *ddev = to_dfl_dev(dev);
-> +
-> +	if (ddev->mmio_res.parent)
-> +		release_resource(&ddev->mmio_res);
-> +
-> +	ida_simple_remove(&dfl_device_ida, ddev->id);
-> +	kfree(ddev->irqs);
-> +	kfree(ddev);
-> +}
-> +
-> +static struct dfl_device *
-> +dfl_dev_add(struct dfl_feature_platform_data *pdata,
-> +	    struct dfl_feature *feature)
-> +{
-> +	struct platform_device *pdev = pdata->dev;
-> +	struct resource *parent_res;
-> +	struct dfl_device *ddev;
-> +	int id, i, ret;
-> +
-> +	ddev = kzalloc(sizeof(*ddev), GFP_KERNEL);
-> +	if (!ddev)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	id = ida_simple_get(&dfl_device_ida, 0, 0, GFP_KERNEL);
-> +	if (id < 0) {
-> +		dev_err(&pdev->dev, "unable to get id\n");
-> +		kfree(ddev);
-> +		return ERR_PTR(id);
-> +	}
-> +
-> +	/* freeing resources by put_device() after device_initialize() */
-> +	device_initialize(&ddev->dev);
-> +	ddev->dev.parent = &pdev->dev;
-> +	ddev->dev.bus = &dfl_bus_type;
-> +	ddev->dev.release = release_dfl_dev;
-> +	ddev->id = id;
-> +	ret = dev_set_name(&ddev->dev, "dfl_dev.%d", id);
-> +	if (ret)
-> +		goto put_dev;
-> +
-> +	ddev->type = feature_dev_id_type(pdev);
-> +	ddev->feature_id = feature->id;
-> +	ddev->cdev = pdata->dfl_cdev;
-> +
-> +	/* add mmio resource */
-> +	parent_res = &pdev->resource[feature->resource_index];
-> +	ddev->mmio_res.flags = IORESOURCE_MEM;
-> +	ddev->mmio_res.start = parent_res->start;
-> +	ddev->mmio_res.end = parent_res->end;
-> +	ddev->mmio_res.name = dev_name(&ddev->dev);
-> +	ret = insert_resource(parent_res, &ddev->mmio_res);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s failed to claim resource: %pR\n",
-> +			dev_name(&ddev->dev), &ddev->mmio_res);
-> +		goto put_dev;
-> +	}
-> +
-> +	/* then add irq resource */
-> +	if (feature->nr_irqs) {
-> +		ddev->irqs = kcalloc(feature->nr_irqs,
-> +				     sizeof(*ddev->irqs), GFP_KERNEL);
-> +		if (!ddev->irqs) {
-> +			ret = -ENOMEM;
-> +			goto put_dev;
-> +		}
-> +
-> +		for (i = 0; i < feature->nr_irqs; i++)
-> +			ddev->irqs[i] = feature->irq_ctx[i].irq;
-> +
-> +		ddev->num_irqs = feature->nr_irqs;
-> +	}
-> +
-> +	ret = device_add(&ddev->dev);
-> +	if (ret)
-> +		goto put_dev;
-> +
-> +	dev_info(&pdev->dev, "add dfl_dev: %s\n", dev_name(&ddev->dev));
-Consider making this dev_dbg().
-> +	return ddev;
-> +
-> +put_dev:
-> +	/* calls release_dfl_dev() which does the clean up  */
-> +	put_device(&ddev->dev);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static void dfl_devs_remove(struct dfl_feature_platform_data *pdata)
-> +{
-> +	struct dfl_feature *feature;
-> +
-> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
-> +		if (feature->ddev) {
-> +			device_unregister(&feature->ddev->dev);
-> +			feature->ddev = NULL;
-> +		}
-> +	}
-> +}
-> +
-> +static int dfl_devs_add(struct dfl_feature_platform_data *pdata)
-> +{
-> +	struct dfl_feature *feature;
-> +	struct dfl_device *ddev;
-> +	int ret;
-> +
-> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
-> +		if (feature->ioaddr)
-> +			continue;
-> +
-> +		if (feature->ddev) {
-> +			ret = -EEXIST;
-> +			goto err;
-> +		}
-> +
-> +		ddev = dfl_dev_add(pdata, feature);
-> +		if (IS_ERR(ddev)) {
-> +			ret = PTR_ERR(ddev);
-> +			goto err;
-> +		}
-> +
-> +		feature->ddev = ddev;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	dfl_devs_remove(pdata);
-> +	return ret;
-> +}
-> +
-> +int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner)
-> +{
-> +	if (!dfl_drv || !dfl_drv->probe || !dfl_drv->id_table)
-> +		return -EINVAL;
-> +
-> +	dfl_drv->drv.owner = owner;
-> +	dfl_drv->drv.bus = &dfl_bus_type;
-> +
-> +	return driver_register(&dfl_drv->drv);
-> +}
-> +EXPORT_SYMBOL(__dfl_driver_register);
-> +
-> +void dfl_driver_unregister(struct dfl_driver *dfl_drv)
-> +{
-> +	driver_unregister(&dfl_drv->drv);
-> +}
-> +EXPORT_SYMBOL(dfl_driver_unregister);
-> +
->  #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
->  
->  /**
-> @@ -261,12 +493,15 @@ void dfl_fpga_dev_feature_uinit(struct platform_device *pdev)
->  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
->  	struct dfl_feature *feature;
->  
-> -	dfl_fpga_dev_for_each_feature(pdata, feature)
-> +	dfl_devs_remove(pdata);
-> +
-> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
->  		if (feature->ops) {
->  			if (feature->ops->uinit)
->  				feature->ops->uinit(pdev, feature);
->  			feature->ops = NULL;
->  		}
-> +	}
->  }
->  EXPORT_SYMBOL_GPL(dfl_fpga_dev_feature_uinit);
->  
-> @@ -347,6 +582,10 @@ int dfl_fpga_dev_feature_init(struct platform_device *pdev,
->  		drv++;
->  	}
->  
-> +	ret = dfl_devs_add(pdata);
-> +	if (ret)
-> +		goto exit;
-> +
->  	return 0;
->  exit:
->  	dfl_fpga_dev_feature_uinit(pdev);
-> @@ -1284,11 +1523,17 @@ static int __init dfl_fpga_init(void)
->  {
->  	int ret;
->  
-> +	ret = bus_register(&dfl_bus_type);
-> +	if (ret)
-> +		return ret;
-> +
->  	dfl_ids_init();
->  
->  	ret = dfl_chardev_init();
-> -	if (ret)
-> +	if (ret) {
->  		dfl_ids_destroy();
-> +		bus_unregister(&dfl_bus_type);
-> +	}
->  
->  	return ret;
->  }
-> @@ -1626,6 +1871,7 @@ static void __exit dfl_fpga_exit(void)
->  {
->  	dfl_chardev_uinit();
->  	dfl_ids_destroy();
-> +	bus_unregister(&dfl_bus_type);
->  }
->  
->  module_init(dfl_fpga_init);
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index 5973769..5dc758f 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -236,6 +236,7 @@ struct dfl_feature_irq_ctx {
->   * @irq_ctx: interrupt context list.
->   * @nr_irqs: number of interrupt contexts.
->   * @ops: ops of this sub feature.
-> + * @ddev: ptr to the dfl device of this sub feature.
->   * @priv: priv data of this feature.
->   */
->  struct dfl_feature {
-> @@ -246,6 +247,7 @@ struct dfl_feature {
->  	struct dfl_feature_irq_ctx *irq_ctx;
->  	unsigned int nr_irqs;
->  	const struct dfl_feature_ops *ops;
-> +	struct dfl_device *ddev;
->  	void *priv;
->  };
->  
-> @@ -514,4 +516,88 @@ long dfl_feature_ioctl_set_irq(struct platform_device *pdev,
->  			       struct dfl_feature *feature,
->  			       unsigned long arg);
->  
-> +/**
-> + * enum dfl_id_type - define the DFL FIU types
-> + */
-> +enum dfl_id_type {
-> +	FME_ID,
-> +	PORT_ID,
-> +	DFL_ID_MAX,
-> +};
-> +
-> +/**
-> + * struct dfl_device_id -  dfl device identifier
-> + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-> + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-> + * @driver_data: driver specific data.
-> + */
-> +struct dfl_device_id {
-> +	u8 type;
-> +	u16 feature_id;
-> +	unsigned long driver_data;
-> +};
-> +
-> +/**
-> + * struct dfl_device - represent an dfl device on dfl bus
-> + *
-> + * @dev: generic device interface.
-> + * @id: id of the dfl device.
-> + * @type: type of DFL FIU of the device. See enum dfl_id_type.
-> + * @feature_id: 16 bits feature identifier local to its DFL FIU type.
-> + * @mmio_res: mmio resource of this dfl device.
-> + * @irqs: list of Linux IRQ numbers of this dfl device.
-> + * @num_irqs: number of IRQs supported by this dfl device.
-> + * @cdev: pointer to DFL FPGA container device this dfl device belongs to.
-> + * @id_entry: matched id entry in dfl driver's id table.
-> + */
-> +struct dfl_device {
-> +	struct device dev;
-> +	int id;
-> +	u8 type;
-> +	u16 feature_id;
-> +	struct resource mmio_res;
-> +	int *irqs;
-> +	unsigned int num_irqs;
-> +	struct dfl_fpga_cdev *cdev;
-> +	const struct dfl_device_id *id_entry;
-> +};
-> +
-> +/**
-> + * struct dfl_driver - represent an dfl device driver
-> + *
-> + * @drv: driver model structure.
-> + * @id_table: pointer to table of device IDs the driver is interested in.
-> + *	      { } member terminated.
-> + * @probe: mandatory callback for device binding.
-> + * @remove: callback for device unbinding.
-> + */
-> +struct dfl_driver {
-> +	struct device_driver drv;
-> +	const struct dfl_device_id *id_table;
-> +
-> +	int (*probe)(struct dfl_device *dfl_dev);
-> +	void (*remove)(struct dfl_device *dfl_dev);
-> +};
-> +
-> +#define to_dfl_dev(d) container_of(d, struct dfl_device, dev)
-> +#define to_dfl_drv(d) container_of(d, struct dfl_driver, drv)
-> +
-> +/*
-> + * use a macro to avoid include chaining to get THIS_MODULE.
-> + */
-> +#define dfl_driver_register(drv) \
-> +	__dfl_driver_register(drv, THIS_MODULE)
-> +int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner);
-> +void dfl_driver_unregister(struct dfl_driver *dfl_drv);
-> +
-> +/*
-> + * module_dfl_driver() - Helper macro for drivers that don't do
-> + * anything special in module init/exit.  This eliminates a lot of
-> + * boilerplate.  Each module may only use this macro once, and
-> + * calling it replaces module_init() and module_exit().
-> + */
-> +#define module_dfl_driver(__dfl_driver) \
-> +	module_driver(__dfl_driver, dfl_driver_register, \
-> +		      dfl_driver_unregister)
-> +
->  #endif /* __FPGA_DFL_H */
-> -- 
-> 2.7.4
-> 
+I'm not familiar with how seccomp-bpf works. All that I can add here
+is that userfaultfd syscall is usually not invoked in a performance
+critical code path. So, if the performance overhead of seccomp-bpf (if
+enabled) is observed on all syscalls originating from a process, then
+I'd say patch 2/2 is essential. Otherwise, it should be ok to let
+seccomp perform the same functionality instead.
 
-Thanks,
-Moritz
+>
+> 2) given that Android is secure enough with the sysctl at value 2, why
+>    should we even retain the current sysctl 0 semantics? Why can't
+>    more secure systems just use seccomp and block userfaultfd, as it
+>    is already happens by default in the podman default seccomp
+>    whitelist (for those containers that don't define a new json
+>    whitelist in the OCI schema)? Shouldn't we focus our energy in
+>    making containers more secure by preventing the OCI schema of a
+>    random container to re-enable userfaultfd in the container seccomp
+>    filter instead of trying to solve this with a global sysctl?
+>
+>    What's missing in my view is a kubernetes hard allowlist/denylist
+>    that cannot be overridden with the OCI schema in case people has
+>    the bad idea of running containers downloaded from a not fully
+>    trusted source, without adding virt isolation and that's an
+>    userland problem to be solved in the container runtime, not a
+>    kernel issue. Then you'd just add userfaultfd to the json of the
+>    k8s hard seccomp denylist instead of going around tweaking sysctl.
+>
+> What's your take in changing your 2/2 patch to just replace value "0"
+> and avoid introducing a new value "2"?
+
+SGTM. Disabling uffd completely for unprivileged processes can be
+achieved either using seccomp-bpf, or via SELinux, once the following
+patch series is upstreamed
+https://lore.kernel.org/lkml/20200827063522.2563293-1-lokeshgidra@google.co=
+m/
+
+>
+> The value "0" was motivated by the concern that uffd can enlarge the
+> race window for use after free by providing one more additional way to
+> block kernel faults, but value "2" is already enough to solve that
+> concern completely and it'll be the default on all Android.
+>
+> In other words by adding "2" you're effectively doing a more
+> finegrined and more optimal implementation of "0" that remains useful
+> and available to unprivileged apps and it already resolves all
+> "robustness against side effects other kernel bugs" concerns. Clearly
+> "0" is even more secure statistically but that would apply to every
+> other syscall including vmsplice, and there's no
+> /proc/sys/vm/unprivileged_vmsplice sysctl out there.
+>
+> The next issue we have now is with the pipe mutex (which is not a
+> major concern but we need to solve it somehow for correctness). So I
+> wonder if should make the default value to be "0" (or "2" if think we
+> should not replace "0") and to allow only user initiated faults by
+> default.
+>
+> Changing the sysctl default to be 0, will make live migration fail to
+> switch to postcopy which will be (unnoticeable to the guest), instead
+> of risking the VM to be killed because of network latency
+> outlier. Then we wouldn't need to change the pipe code at all.
+>
+SGTM. I can change the default value to '0' (or '2') in the next
+revision of patch 2/2, unless somebody objects to this.
+
+> Alternatively we could still fix the pipe code so it runs better (but
+> it'll be more complex) or to disable uffd faults only in the pipe
+> code.
+>
+> One thing to keep in mind is that if we change the default, then
+> hypervisor hosts running QEMU would need to set:
+>
+> vm.userfaultfd =3D 1
+>
+> in /etc/sysctl.conf if postcopy live migration is required, that's not
+> particularly concerning constraint for qemu (there are likely other
+> tweaks required and it looks less risky than an arbitrary timeout
+> which could kill the VM: if the above is forgotten the postcopy live
+> migration won't even start and it'll be unnoticeable to the guest).
+>
+> The main concern really are future apps that may want to use uffd for
+> kernel initiated faults won't be allowed to do so by default anymore,
+> those apps will be heavily incentivated to use bounce buffers before
+> passing data to syscalls, similarly to the current use case of patch 2/2.
+>
+> Comments welcome,
+> Andrea
+>
+> PS. Another usage of uffd that remains possible without privilege with
+> the 2/2 patch sysctl "2" behavior (besides the strict SIGSEGV
+> acceleration) is the UFFD_FEATURE_SIGBUS. That's good so a malloc lib
+> will remain possible without requiring extra privileges, by adding a
+> UFFDIO_POPULATE to use in combination with UFFD_FEATURE_SIGBUS
+> (UFFDIO_POPULATE just needs to zero out a page and map it, it'll be
+> indistinguishable to UFFDIO_ZEROPAGE but it will solve the last
+> performance bottleneck by avoiding a wrprotect fault after the
+> allocation and it will be THP capable too). Memory will be freed with
+> MADV_DONTNEED, without ever having to call mmap/mumap. It could move
+> memory around with UFFDIO_COPY+MADV_DONTNEED or by adding UFFDIO_REMAP
+> which already exists.
+>
+UFFDIO_POPULATE sounds like a really useful feature. I don't see it in
+the kernel yet. Is there a patch under work on this? If so, kindly
+share.
