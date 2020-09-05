@@ -2,89 +2,130 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACFBC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8EF420797
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A03D20760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="SkMJgkQR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2sjWJ41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbgIEWrG (ORCPT
+        id S1728771AbgIEWso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:47:06 -0400
-Received: from rere.qmqm.pl ([91.227.64.183]:35934 "EHLO rere.qmqm.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728505AbgIEWrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:47:06 -0400
-Received: from remote.user (localhost [127.0.0.1])
-        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BkV5K4ydVz2F;
-        Sun,  6 Sep 2020 00:46:13 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
-        t=1599345973; bh=cXdoLr9r1Y2QHKKy1RKjNqHVui3mw8L8/D8IL2R1Uqo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SkMJgkQRAwDulgzvNMZ8QUJPwuFx5IfH91s/jUH81Da27uepC0u9U54qhjY247JdQ
-         6dj3rwI+8UMCY/QFTkMmroIX8HJgoqATMOv9Tp1C+lrQ7Kzb1D+YaQIQaRQT4WbX+u
-         37DA5+NDwUfuC9BLD/wFSikx52YnARFXwe5xkqe76EDjLuqFry7lnniMnMyM8KJlmk
-         Fm91vit1Cu/1w24f1cqFCnjlUMuzqGlGAVUgE34BdDaNDD0HxcXddncuh312sQXOsz
-         q9faAweh+AymTb+WGrCtevn8N5rmBApVvYEytrFYzEBh0+GWxUXv8N7e3OCKxI5kvx
-         mDGt3DC4IaUUA==
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.102.4 at mail
-Date:   Sun, 6 Sep 2020 00:47:02 +0200
-From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Sat, 5 Sep 2020 18:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46526 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgIEWsn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:48:43 -0400
+Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47227C061244;
+        Sat,  5 Sep 2020 15:48:42 -0700 (PDT)
+Received: by mail-qt1-x841.google.com with SMTP id n10so7512097qtv.3;
+        Sat, 05 Sep 2020 15:48:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dYL37oonxahMiERY6M7bI0fQzZLAfl7INM1zulnY34U=;
+        b=i2sjWJ41j0LCW9MSNR1r+BVTos+aNU/sQNRWMGLG3Xma5GsC0JJOMnRi2RFJtAuqeZ
+         0lHzhBvxAsBMOF3NMXNMwQD+MuIZx5VzzycZN/qia173TCug2EPrmCp/1flJHsFHFloR
+         3VwMI8lSCupizstJ9n/tk5eH9GL5wojfKV9z2jtfNZI2gEbcRbZlgndrrSdimkuu3NM1
+         I50PNYQ9ZRV5w6K1nEe5yUUyjb+54T0D1PA3Cyds+//mrHOpI0X1ugO2t6yIT4THAprZ
+         PEySoMqWEQwDcQTH3SGaEir1HOXMu+jm+kXFGkB+kxz9Qk3oB/KbAa6ykOY2+TF9iqFW
+         JmZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=dYL37oonxahMiERY6M7bI0fQzZLAfl7INM1zulnY34U=;
+        b=QnwAFk0CzywhDdZCTVa/+JbDIw6qTFDrx0zcZcfuG9PNe0v1prSs+zDHlGTS8ib/Cy
+         unyfaUHpi8TNoPR6v/cPBCSNPEK75aocpHFgmRO8KW8r6bojukmH9A9LLkjFyN23LVzj
+         es/Er+Slgg+N6uNkkVCALL/b9N2ivYbgvFdb0/TPtVojNkiqMO2qMCJLRKMCf6XJaDSJ
+         LV9GtzXUNFfenGChalHT+uh12c5eCQrXHi+nsDr6vYkDWricqcU8yqteU+rR9mk1WkB/
+         g9CMROa6Tdg68FJKyruB+fl6OOLdta4fy6AWph+wHbNH5NvxJvVPnPgakcWL5OGcpXq8
+         xhHA==
+X-Gm-Message-State: AOAM533oSOXN+wjvzlBVtvuWgoQCsu1rtCD4Z0AyIEJxE5pT9SSYTJqx
+        xs382JY9+oe9u4m8hWqdyHo=
+X-Google-Smtp-Source: ABdhPJzozlDPhyXr6JOZFagjTaiEP3QCjS39SNNHLMhx0wYBQR2VlcAzn6ysX8qJ/+qxrT46u/KrJA==
+X-Received: by 2002:ac8:fbb:: with SMTP id b56mr14999497qtk.307.1599346118622;
+        Sat, 05 Sep 2020 15:48:38 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d16sm8184604qte.19.2020.09.05.15.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 15:48:38 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 5 Sep 2020 18:48:35 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 30/31] i2c: tegra: Clean up and improve comments
-Message-ID: <20200905224702.GD18554@qmqm.qmqm.pl>
-References: <20200905204151.25343-1-digetx@gmail.com>
- <20200905204151.25343-31-digetx@gmail.com>
+Subject: Re: [PATCH v7 4/5] x86/build: Warn on orphan section placement
+Message-ID: <20200905224835.GA1500331@rani.riverdale.lan>
+References: <20200902025347.2504702-1-keescook@chromium.org>
+ <20200902025347.2504702-5-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200905204151.25343-31-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200902025347.2504702-5-keescook@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 11:41:50PM +0300, Dmitry Osipenko wrote:
-> Make all comments to be consistent in regards to capitalization and
-> punctuation, correct spelling and grammar errors.
-[...]
-> -	/* Rounds down to not include partial word at the end of buf */
-> +	/* rounds down to not include partial word at the end of buffer */
->  	words_to_transfer = buf_remaining / BYTES_PER_FIFO_WORD;
+On Tue, Sep 01, 2020 at 07:53:46PM -0700, Kees Cook wrote:
+> We don't want to depend on the linker's orphan section placement
+> heuristics as these can vary between linkers, and may change between
+> versions. All sections need to be explicitly handled in the linker script.
+> 
+> Now that all sections are explicitly handled, enable orphan section
+> warnings.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 4346ffb2e39f..154259f18b8b 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -209,6 +209,10 @@ ifdef CONFIG_X86_64
+>  LDFLAGS_vmlinux += -z max-page-size=0x200000
+>  endif
 >  
-> -	/* It's very common to have < 4 bytes, so optimize that case. */
-> +	/* it's very common to have < 4 bytes, so optimize that case */
->  	if (words_to_transfer) {
->  		if (words_to_transfer > tx_fifo_avail)
->  			words_to_transfer = tx_fifo_avail;
+> +# We never want expected sections to be placed heuristically by the
+> +# linker. All sections should be explicitly named in the linker script.
+> +LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
+> +
+>  archscripts: scripts_basic
+>  	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
 >  
->  		/*
-> -		 * Update state before writing to FIFO.  If this casues us
-> +		 * Update state before writing to FIFO.  If this causes us
->  		 * to finish writing all bytes (AKA buf_remaining goes to 0) we
->  		 * have a potential for an interrupt (PACKET_XFER_COMPLETE is
->  		 * not maskable).  We need to make sure that the isr sees
-> @@ -800,8 +799,8 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->  	}
+> -- 
+> 2.25.1
+> 
 
-Those first letters don't look consistently capitalized. :-)
+With LLVM=1 and GCOV_KERNEL/GCOV_PROFILE_ALL enabled, there are
+.eh_frame sections created. I see that KASAN and KCSAN currently discard
+them. Does GCOV actually need them or should it also discard?
 
-Best Regards,
-Micha³ Miros³aw
+Thanks.
