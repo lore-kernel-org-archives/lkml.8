@@ -2,183 +2,67 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=0.1 required=3.0 tests=BAYES_50,
+	FREEMAIL_REPLYTO_END_DIGIT,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D1C43461
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B444C433E2
 	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB819208B3
+	by mail.kernel.org (Postfix) with ESMTP id B8CB72078E
 	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 15:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgIEPjx (ORCPT
+        id S1728566AbgIEPj5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 11:39:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:31934 "EHLO mga04.intel.com"
+        Sat, 5 Sep 2020 11:39:57 -0400
+Received: from mx.metalurgs.lv ([81.198.125.103]:58825 "EHLO mx.metalurgs.lv"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgIEPiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 11:38:18 -0400
-IronPort-SDR: kJlxygLw+Z4e67Xj4AdwmUIrj4E/w9eGmCH13CKK6PZzhkQMuk1SSn4omWxKeptO6DW1VNimzH
- Qo+EeJ7JjEUA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="155269136"
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="155269136"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 08:38:08 -0700
-IronPort-SDR: dMeQCOEO02VcL3gAx3XQImn4654P4ytx9Fc4Ytp+Mmjs4JM9nEoydnn7YftGmJVu6xAbYrcnmt
- PA4ITNLnazMA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="503940016"
-Received: from lkp-server02.sh.intel.com (HELO c089623da072) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2020 08:38:07 -0700
-Received: from kbuild by c089623da072 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kEaGU-0000Ge-DW; Sat, 05 Sep 2020 15:38:06 +0000
-Date:   Sat, 05 Sep 2020 23:37:21 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 60fd60941f88ef4dd448ecdf3e664986974639e6
-Message-ID: <5f53b0b1.J8jQ0WLhsxXnfjj6%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728371AbgIEPiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 11:38:50 -0400
+Received: from mx.metalurgs.lv (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id 4B69C63F72
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 18:01:55 +0300 (EEST)
+Received: from kas30pipe.localhost (localhost [127.0.0.1])
+        by mx.metalurgs.lv (Postfix) with ESMTP id 0A6FB64A09
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 17:20:05 +0300 (EEST)
+Received: by mx.metalurgs.lv (Postfix, from userid 1005)
+        id 27ADE2E9C4; Sat,  5 Sep 2020 16:44:08 +0300 (EEST)
+Received: from [192.168.8.10] (ip168-243-231-195.intercom.com.sv [168.243.231.195])
+        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: admin)
+        by mx.metalurgs.lv (Postfix) with ESMTPSA id 1949133B83
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 15:47:15 +0300 (EEST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Description: Mail message body
+To:     linux-kernel@vger.kernel.org
+From:   "Angel Investors" <info@unituscapital.com>
+Date:   Sat, 05 Sep 2020 06:47:00 -0600
+Reply-To: andrewmacklin12@gmail.com
+X-SpamTest-Envelope-From: info@unituscapital.com
+X-SpamTest-Group-ID: 00000000
+X-SpamTest-Info: Profiles 71303 [Jan 01 2015]
+X-SpamTest-Info: {RECEIVED: dynamic ip detected}
+X-SpamTest-Info: {DATE: unreal year}
+X-SpamTest-Method: none
+X-SpamTest-Rate: 35
+X-SpamTest-Status: Not detected
+X-SpamTest-Status-Extended: not_detected
+X-SpamTest-Version: SMTP-Filter Version 3.0.0 [0284], KAS30/Release
+Message-ID: <20200905134839.27ADE2E9C4@mx.metalurgs.lv>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Subject: GREETINGS!!!  
+X-Anti-Virus: Kaspersky Anti-Virus for Linux Mail Server 5.6.39/RELEASE,
+         bases: 20140401 #7726142, check: 20200905 notchecked
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 60fd60941f88ef4dd448ecdf3e664986974639e6  rcu: Panic after fixed number of stalls
-
-elapsed time: 767m
-
-configs tested: 111
-configs skipped: 8
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arc                 nsimosci_hs_smp_defconfig
-m68k                          atari_defconfig
-mips                     loongson1c_defconfig
-mips                       bmips_be_defconfig
-xtensa                              defconfig
-mips                      maltaaprp_defconfig
-nios2                               defconfig
-sh                           se7751_defconfig
-m68k                         apollo_defconfig
-sh                        edosk7760_defconfig
-arc                         haps_hs_defconfig
-arm                              zx_defconfig
-powerpc                      ppc64e_defconfig
-arm                       imx_v6_v7_defconfig
-parisc                           allyesconfig
-sh                         ecovec24_defconfig
-h8300                            allyesconfig
-arm                      footbridge_defconfig
-arm                          iop32x_defconfig
-xtensa                       common_defconfig
-arc                     haps_hs_smp_defconfig
-arm                      tct_hammer_defconfig
-sh                             sh03_defconfig
-mips                      loongson3_defconfig
-sh                        edosk7705_defconfig
-powerpc                           allnoconfig
-arc                              allyesconfig
-sh                   sh7724_generic_defconfig
-riscv                             allnoconfig
-ia64                         bigsur_defconfig
-arc                     nsimosci_hs_defconfig
-sh                           se7750_defconfig
-mips                      fuloong2e_defconfig
-powerpc                       ppc64_defconfig
-arm                         palmz72_defconfig
-s390                             alldefconfig
-arm                  colibri_pxa270_defconfig
-xtensa                           allyesconfig
-mips                            ar7_defconfig
-mips                           xway_defconfig
-m68k                       m5275evb_defconfig
-arm                            qcom_defconfig
-openrisc                         alldefconfig
-m68k                        stmark2_defconfig
-powerpc                      ep88xc_defconfig
-mips                          ath25_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a006-20200905
-x86_64               randconfig-a004-20200905
-x86_64               randconfig-a003-20200905
-x86_64               randconfig-a005-20200905
-x86_64               randconfig-a001-20200905
-x86_64               randconfig-a002-20200905
-i386                 randconfig-a004-20200904
-i386                 randconfig-a005-20200904
-i386                 randconfig-a006-20200904
-i386                 randconfig-a002-20200904
-i386                 randconfig-a003-20200904
-i386                 randconfig-a001-20200904
-x86_64               randconfig-a013-20200904
-x86_64               randconfig-a011-20200904
-x86_64               randconfig-a016-20200904
-x86_64               randconfig-a012-20200904
-x86_64               randconfig-a015-20200904
-x86_64               randconfig-a014-20200904
-i386                 randconfig-a016-20200904
-i386                 randconfig-a015-20200904
-i386                 randconfig-a011-20200904
-i386                 randconfig-a013-20200904
-i386                 randconfig-a014-20200904
-i386                 randconfig-a012-20200904
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Attention To Email : linux-kernel@vger.kernel.org
+Good Day Sir,
+Our Group have the financial capability to finance any investment portfolio as far as is genuine, all we need is a capable business partner that possesses investment strategies for profitable business information for good turn over within 10-30years. Our Partners are willing to invest 10million — 5billon USD. We can provide proof of funds on demand, after certification of your documents/details. Please write me back if you can work with me on this project. Thank You,
+Best Regards
+Andrew Macklin
