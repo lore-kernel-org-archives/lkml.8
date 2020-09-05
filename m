@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C248AC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA8BC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8612F20760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894A62072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMPXgFVm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJWpLBX3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgIEUEr (ORCPT
+        id S1728929AbgIEUFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:04:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
+        Sat, 5 Sep 2020 16:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728778AbgIEUEf (ORCPT
+        with ESMTP id S1728807AbgIEUEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:04:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A43C061244;
-        Sat,  5 Sep 2020 13:04:34 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 7so6062363pgm.11;
-        Sat, 05 Sep 2020 13:04:34 -0700 (PDT)
+        Sat, 5 Sep 2020 16:04:46 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 644A0C061244;
+        Sat,  5 Sep 2020 13:04:46 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id 67so6056036pgd.12;
+        Sat, 05 Sep 2020 13:04:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WoDQiEeJAqzvSQPZDGTbwnwbGBKVRcssr2a0VUJTcQk=;
-        b=CMPXgFVmXxKH0kT3BlX77la7lmdAWUB37i8xHViv7ZWX7BSVkG1MNTyZhUxbUUZz4A
-         asb6BXXszSN3Ej8leMM0yKJhMmSWPLhP6t98MKdF1qgzoNx8umresqrCL/T3bzX3TPew
-         7f7a9QDEX9lqjOGo+tHdXMJvFA2zkN/UVbDySpfvOxbj5z51dF2WG0DPXA3Vm6ariZyp
-         4Q9/G9KT6WeaXLskR6p2t85aYKFEa7lbxgpTi+fjbeZgtl2ysnLM5v82RC/LnOLMPcui
-         JP593y9xIK5SHdPiSu5R01ipee8AtreHDfYoH7xybzuf4gNN3a2WSuUilQGLNbEKjgkr
-         MYlA==
+        bh=e9NL/zqQnmkXSTv+zE5CjT9WgTIhkDu67eIbOBI/UcM=;
+        b=qJWpLBX3BN5Ib4S/O1F+pNVX46jTvS1ANVk9MZKZIuWywQ8rZcsisijsBx89YRRB0J
+         6LR6FiUvFbSRt59Frj8PzeWeOJaHY8hKbHWNr7vwcP4LEgOjVmQeE0R3R0H09pAlHpxy
+         /2scji24tl9yX3ehjujzji7GJZuSLfw6HM5U3ymbQSyygpoXsYkrka9Ab6RqTbbdfibs
+         Z32R/OEgf0WqKsevevUtRGA0EUr5h7wfxX+OB0WcGBUbii0G7IJrKz0x6YUCyQ6rOi61
+         VWvtvopixYc7A2kgIMvCBKzLF6Rh00/KmuTMxI81lM5sR2iHMCUq+2yULYmmIoO2s+oD
+         evlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WoDQiEeJAqzvSQPZDGTbwnwbGBKVRcssr2a0VUJTcQk=;
-        b=EFFeVnvMptLnJAkKLBiDmB4Bv21d2l35vJPX1gaeiy8nT6euGUFs7FmQ7K6FlYy8BT
-         YrqnmBTx+xyBEk1IRPEFqulX69aZjtInzXOu+2SN4fcL4kccizXzZBwtDhghGNuXNGbV
-         4dhOKXLO4J/E+hxzqz4Ns1UvUMSWzE0JV/1+CUDFJ1Ird1gwCQBgFppEJJUR7fD2N674
-         VsDvLPkrEsvGmI7PCt9XzNTRRgOKk9yXMqpihu5/rM9/7YOie5tRr4q5l9JqBQto2Bb1
-         9Cln1cfGwHDQVlZoIWUiewrLJDNzpRavWkMdG0rkCeDhtY9IPjLXUYs/W7ipBnaxFog3
-         kF1Q==
-X-Gm-Message-State: AOAM531BGo9tQzCdmw4AvJmIrUc5gJR0lq/t2wCo7f9I6P1lWcgOfTm4
-        4v13SzPa/RSLVfP4MYIbCus=
-X-Google-Smtp-Source: ABdhPJw9loIT+njDOeojgNCy4ZHg6fr9vwomQL6ClUcpRbzB3QxRPpGc8zlQ8LB7Jofwld5GBq5o2g==
-X-Received: by 2002:a65:4b86:: with SMTP id t6mr11280051pgq.81.1599336274174;
-        Sat, 05 Sep 2020 13:04:34 -0700 (PDT)
+        bh=e9NL/zqQnmkXSTv+zE5CjT9WgTIhkDu67eIbOBI/UcM=;
+        b=Bg8xnhxqCGAhNmLJz8ST8TKErtAjnrSbWjaE1yMQtQ+r/5Vv5tj9uubGiT00KD8+2K
+         UTGHQOahlSkQYVDHJMtebIidqMkqNXyruhL8MZ6eicszYy186MSErTU3jtXBUldFLUKX
+         Y5bAIk3k1SlQL1IcIeDZGAICxlHHTSZtjpW8C4qSKO7HstXMU2mzOygbkUCdPWq9ttu9
+         3t5owhO3YTsxv0JV8aDbqUjCQmjVmLt3aw4bH5oxa8Lf00C2mLGCplbaOSu8fil3j14k
+         05TX9uWlcNKqGsYWbfBTe6AAQD249p7AH46jGnglRinSBcrBFjfJUTZJo/m0FZKj9e6C
+         I7OQ==
+X-Gm-Message-State: AOAM531SQY8pJAu3XjcWD870mWqaRyVF7GfB9/G7KQ3kungqOs2S93mL
+        G6GieioThGcoBbmsu2S738M=
+X-Google-Smtp-Source: ABdhPJxgesOh+xuv4X94jfnmkmCH7Wm8RioS1UX5J4aYVo2SA7dE2CqOeJRSiDPq1l6ZAHLcrL/b2A==
+X-Received: by 2002:a63:1a23:: with SMTP id a35mr11401805pga.86.1599336285831;
+        Sat, 05 Sep 2020 13:04:45 -0700 (PDT)
 Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id x19sm9954261pfm.28.2020.09.05.13.04.32
+        by smtp.gmail.com with ESMTPSA id j26sm2059066pfa.160.2020.09.05.13.04.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:04:32 -0700 (PDT)
+        Sat, 05 Sep 2020 13:04:44 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org,
         Will Deacon <will@kernel.org>,
@@ -73,16 +73,13 @@ Cc:     linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         Akhil P Oommen <akhilpo@codeaurora.org>,
         Jordan Crouse <jcrouse@codeaurora.org>,
         Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Eric Anholt <eric@anholt.net>,
-        Sharat Masetty <smasetty@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v17 10/20] drm/msm/a6xx: Add support for per-instance pagetables
-Date:   Sat,  5 Sep 2020 13:04:16 -0700
-Message-Id: <20200905200454.240929-11-robdclark@gmail.com>
+Subject: [PATCH v17 13/20] iommu/arm-smmu: Add support for split pagetables
+Date:   Sat,  5 Sep 2020 13:04:19 -0700
+Message-Id: <20200905200454.240929-14-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200905200454.240929-1-robdclark@gmail.com>
 References: <20200905200454.240929-1-robdclark@gmail.com>
@@ -95,143 +92,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Add support for using per-instance pagetables if all the dependencies are
-available.
+Enable TTBR1 for a context bank if IO_PGTABLE_QUIRK_ARM_TTBR1 is selected
+by the io-pgtable configuration.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 62 +++++++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
- drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
- 3 files changed, 64 insertions(+)
+ drivers/iommu/arm/arm-smmu/arm-smmu.c | 19 +++++++++++++++----
+ drivers/iommu/arm/arm-smmu/arm-smmu.h | 25 +++++++++++++++++++------
+ 2 files changed, 34 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index f6aad038d8b6..92ebc73f51e6 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -81,6 +81,49 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
- }
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+index 37d8d49299b4..8e884e58f208 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
+@@ -552,11 +552,15 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+ 			cb->ttbr[0] = pgtbl_cfg->arm_v7s_cfg.ttbr;
+ 			cb->ttbr[1] = 0;
+ 		} else {
+-			cb->ttbr[0] = pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+-			cb->ttbr[0] |= FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+-						  cfg->asid);
++			cb->ttbr[0] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
++						 cfg->asid);
+ 			cb->ttbr[1] = FIELD_PREP(ARM_SMMU_TTBRn_ASID,
+ 						 cfg->asid);
++
++			if (pgtbl_cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1)
++				cb->ttbr[1] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
++			else
++				cb->ttbr[0] |= pgtbl_cfg->arm_lpae_s1_cfg.ttbr;
+ 		}
+ 	} else {
+ 		cb->ttbr[0] = pgtbl_cfg->arm_lpae_s2_cfg.vttbr;
+@@ -822,7 +826,14 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
  
-+static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
-+		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
-+{
-+	phys_addr_t ttbr;
-+	u32 asid;
-+	u64 memptr = rbmemptr(ring, ttbr0);
+ 	/* Update the domain's page sizes to reflect the page table format */
+ 	domain->pgsize_bitmap = pgtbl_cfg.pgsize_bitmap;
+-	domain->geometry.aperture_end = (1UL << ias) - 1;
 +
-+	if (ctx == a6xx_gpu->cur_ctx)
-+		return;
++	if (pgtbl_cfg.quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
++		domain->geometry.aperture_start = ~0UL << ias;
++		domain->geometry.aperture_end = ~0UL;
++	} else {
++		domain->geometry.aperture_end = (1UL << ias) - 1;
++	}
 +
-+	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
-+
-+	OUT_RING(ring,
-+		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
-+		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
-+
-+	/*
-+	 * Write the new TTBR0 to the memstore. This is good for debugging.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
-+	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
-+
-+	/*
-+	 * And finally, trigger a uche flush to be sure there isn't anything
-+	 * lingering in that part of the GPU
-+	 */
-+
-+	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-+	OUT_RING(ring, 0x31);
-+
-+	a6xx_gpu->cur_ctx = ctx;
-+}
-+
- static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+ 	domain->geometry.force_aperture = true;
+ 
+ 	/* Initialise the context bank with our page table cfg */
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index 83294516ac08..f3e456893f28 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -169,10 +169,12 @@ enum arm_smmu_cbar_type {
+ #define ARM_SMMU_CB_TCR			0x30
+ #define ARM_SMMU_TCR_EAE		BIT(31)
+ #define ARM_SMMU_TCR_EPD1		BIT(23)
++#define ARM_SMMU_TCR_A1			BIT(22)
+ #define ARM_SMMU_TCR_TG0		GENMASK(15, 14)
+ #define ARM_SMMU_TCR_SH0		GENMASK(13, 12)
+ #define ARM_SMMU_TCR_ORGN0		GENMASK(11, 10)
+ #define ARM_SMMU_TCR_IRGN0		GENMASK(9, 8)
++#define ARM_SMMU_TCR_EPD0		BIT(7)
+ #define ARM_SMMU_TCR_T0SZ		GENMASK(5, 0)
+ 
+ #define ARM_SMMU_VTCR_RES1		BIT(31)
+@@ -350,12 +352,23 @@ struct arm_smmu_domain {
+ 
+ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
  {
- 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
-@@ -90,6 +133,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- 	struct msm_ringbuffer *ring = submit->ring;
- 	unsigned int i;
- 
-+	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
+-	return ARM_SMMU_TCR_EPD1 |
+-	       FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+-	       FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+-	       FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
+-	       FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
+-	       FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
++	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
++		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
++		FIELD_PREP(ARM_SMMU_TCR_ORGN0, cfg->arm_lpae_s1_cfg.tcr.orgn) |
++		FIELD_PREP(ARM_SMMU_TCR_IRGN0, cfg->arm_lpae_s1_cfg.tcr.irgn) |
++		FIELD_PREP(ARM_SMMU_TCR_T0SZ, cfg->arm_lpae_s1_cfg.tcr.tsz);
 +
- 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
- 		rbmemptr_stats(ring, index, cpcycles_start));
- 
-@@ -704,6 +749,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	/* Always come up on rb 0 */
- 	a6xx_gpu->cur_ring = gpu->rb[0];
- 
-+	a6xx_gpu->cur_ctx = NULL;
++       /*
++	* When TTBR1 is selected shift the TCR fields by 16 bits and disable
++	* translation in TTBR0
++	*/
++	if (cfg->quirks & IO_PGTABLE_QUIRK_ARM_TTBR1) {
++		tcr = (tcr << 16) & ~ARM_SMMU_TCR_A1;
++		tcr |= ARM_SMMU_TCR_EPD0;
++	} else
++		tcr |= ARM_SMMU_TCR_EPD1;
 +
- 	/* Enable the SQE_to start the CP engine */
- 	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
- 
-@@ -1016,6 +1063,20 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
++	return tcr;
  }
  
-+static struct msm_gem_address_space *
-+a6xx_create_private_address_space(struct msm_gpu *gpu)
-+{
-+	struct msm_mmu *mmu;
-+
-+	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-+
-+	if (IS_ERR(mmu))
-+		return ERR_CAST(mmu);
-+
-+	return msm_gem_address_space_create(mmu,
-+		"gpu", 0x100000000ULL, 0x1ffffffffULL);
-+}
-+
- static const struct adreno_gpu_funcs funcs = {
- 	.base = {
- 		.get_param = adreno_get_param,
-@@ -1039,6 +1100,7 @@ static const struct adreno_gpu_funcs funcs = {
- 		.gpu_state_put = a6xx_gpu_state_put,
- #endif
- 		.create_address_space = adreno_iommu_create_address_space,
-+		.create_private_address_space = a6xx_create_private_address_space,
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
- };
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-index 03ba60d5b07f..da22d7549d9b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-@@ -19,6 +19,7 @@ struct a6xx_gpu {
- 	uint64_t sqe_iova;
- 
- 	struct msm_ringbuffer *cur_ring;
-+	struct msm_file_private *cur_ctx;
- 
- 	struct a6xx_gmu gmu;
- };
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-index 7764373d0ed2..0987d6bf848c 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
- 	volatile uint32_t fence;
- 
- 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-+	volatile u64 ttbr0;
- };
- 
- struct msm_ringbuffer {
+ static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
 -- 
 2.26.2
 
