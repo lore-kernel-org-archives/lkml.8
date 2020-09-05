@@ -2,75 +2,94 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23C52C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37989C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9A7520796
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B56E220760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 21:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="SL9c69wo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbgIEVym (ORCPT
+        id S1728737AbgIEV4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 17:54:42 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33710 "EHLO gloria.sntech.de"
+        Sat, 5 Sep 2020 17:56:14 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:58754 "EHLO rere.qmqm.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEVyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 17:54:41 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1kEg8t-0005am-Mf; Sat, 05 Sep 2020 23:54:39 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 2/6] pinctrl: rockchip: enable gpio pclk for rockchip_gpio_to_irq
-Date:   Sat, 05 Sep 2020 23:54:39 +0200
-Message-ID: <5350783.eb3pjRP6yQ@diego>
-In-Reply-To: <20200831084753.7115-3-jay.xu@rock-chips.com>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831084753.7115-3-jay.xu@rock-chips.com>
+        id S1728103AbgIEV4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 17:56:13 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 4BkSyb1Nssz2F;
+        Sat,  5 Sep 2020 23:55:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1599342919; bh=rYmTcMELA+20hqUbQWfmBH4UEfHZtGVP6M4zSQre8g0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SL9c69woItKdVhfLH3GN0w/HQlpEgbLwfHlR88bWj7wIyurTVKSglqkqBC5l6wLIQ
+         8SdAOuL18OwfK+8fEAxlA3nWDXcJN+P2YRsHsWqe5CswV/2EveQJ8exEBJyIP/v1vO
+         aGhhcKpMm9brvgP/MpRidyot+XR9Br3bC+BKPj4DSnxhzQZpdAQEekWe2EY5XUOA3d
+         5dbgDrAIBuOb5F1IoILH18UsUoFO++eYZfVw8jusyS2USY8A5d9B4N074e7kGZKz8e
+         UVvoFGS0ZX/CWBmFnwrflnDdghMjIveDWCykPuWKBrbIgeViN3MRTymub9ru+NmMFh
+         RUX3exYuRYxsg==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.4 at mail
+Date:   Sat, 5 Sep 2020 23:56:08 +0200
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 10/31] i2c: tegra: Use clk-bulk helpers
+Message-ID: <20200905215608.GA18554@qmqm.qmqm.pl>
+References: <20200905204151.25343-1-digetx@gmail.com>
+ <20200905204151.25343-11-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-2
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200905204151.25343-11-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 31. August 2020, 10:47:49 CEST schrieb Jianqun Xu:
-> There need to enable pclk_gpio when do irq_create_mapping, since it will
-> do access to gpio controller.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+On Sat, Sep 05, 2020 at 11:41:30PM +0300, Dmitry Osipenko wrote:
+> Use clk-bulk helpers and factor out clocks initialization into separate
+> function in order to make code cleaner.
+[...]
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+[...]
+>  static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+>  	.has_continue_xfer_support = true,
+>  	.has_per_pkt_xfer_complete_irq = true,
+> -	.has_single_clk_source = true,
+>  	.clk_divisor_hs_mode = 1,
+>  	.clk_divisor_std_mode = 0x4f,
+>  	.clk_divisor_fast_mode = 0x3c,
+[...]
+> +static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +	unsigned int i;
+> +	int err;
+> +
+> +	err = devm_clk_bulk_get_all(i2c_dev->dev, &i2c_dev->clocks);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	i2c_dev->nclocks = err
+[...]
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+You loose checking whether number of clocks matches the device version.
+Is this intended?
 
-> ---
->  drivers/pinctrl/pinctrl-rockchip.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 24dfc814dee1..54abda7b7be8 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3155,7 +3155,9 @@ static int rockchip_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
->  	if (!bank->domain)
->  		return -ENXIO;
->  
-> +	clk_enable(bank->clk);
->  	virq = irq_create_mapping(bank->domain, offset);
-> +	clk_disable(bank->clk);
->  
->  	return (virq) ? : -ENXIO;
->  }
-> 
-
-
-
-
+Best Regards,
+Micha³ Miros³aw
