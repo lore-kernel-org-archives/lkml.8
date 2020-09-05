@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7754C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DBFC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722F5206B8
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49713206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599299312;
-	bh=TdTgQ2+JgbmcNnmWK9igNlhqeBcAimeEGXtYuYL89js=;
+	s=default; t=1599299317;
+	bh=7GBfT4p1K9K+h0WgWUkSmTDnUHp8R+AncdDELlCnDb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IbympXE6RtAecm/O2Y4Da2UVbZQWsVmcSGCareBO9FTWkU4rD4choQsXHxu6HIutH
-	 t8qaxUscgnEeFOBOilLiPVnD1qXhKUSYED/hK8KYLiDSm6EJQFmvgM0XqAh7Jgzj6b
-	 4qH4hccuRjhquA0GLG5nvteGYGVh2KeLBXvF8WQs=
+	b=kQHyK8vPHYSE3g/gxWA5BKP33Pd/d280FZ0TrVgGZHZ177GCFpMk4cLRW9vc8AJb0
+	 6/lJpoViwHG2q+tWTqW7yzwrr+GqiKA4MnOmLqOMTZcziGdALfXrcUeI5bHPvJTbNE
+	 gwpg1fdzbaGIsDK/GvIS81aZZkVAhLZb/C+phqaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbgIEJsX (ORCPT
+        id S1728450AbgIEJsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 05:48:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
+        Sat, 5 Sep 2020 05:48:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726302AbgIEJsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 05:48:19 -0400
+        id S1728302AbgIEJs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 05:48:28 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F56A20757;
-        Sat,  5 Sep 2020 09:48:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56676206B8;
+        Sat,  5 Sep 2020 09:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599299297;
-        bh=TdTgQ2+JgbmcNnmWK9igNlhqeBcAimeEGXtYuYL89js=;
+        s=default; t=1599299306;
+        bh=7GBfT4p1K9K+h0WgWUkSmTDnUHp8R+AncdDELlCnDb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OUL8KBdXurBcOUrwv7yCh4re0NQLaucF0Rdd48Lwl0aGeNDzhSgQcIzToAiJO0mrd
-         5lEU7RIaKkPXh1ZSVYFfciLomWPVGPV1lRUwlq1CjE56rwDLEFLQ/FYAWWbdzmdCTR
-         UEg68ndEcSc/2YmZExTGLMpXq3ANivL51Uw0Anbs=
+        b=Q09GzgoeJX635I2U99OW9Dp6o03XD7RMon/9LenQQE54gQdx0QO7lZfNZkS0+/cpR
+         cSx8Ng36+OkX8jGygt7uHzsohzuB5UCEM00wODEhcb/GfnXRuhS9hKP3AQMx1yimiJ
+         aSIgYAneGiYiy2579uOVhwDzCvvxnNvFZ3uwNt8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, jslaby@suse.cz,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: Linux 5.4.63
-Date:   Sat,  5 Sep 2020 11:48:30 +0200
-Message-Id: <1599299309150116@kroah.com>
+Subject: Re: Linux 5.8.7
+Date:   Sat,  5 Sep 2020 11:48:36 +0200
+Message-Id: <159929931616817@kroah.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <159929930931111@kroah.com>
-References: <159929930931111@kroah.com>
+In-Reply-To: <1599299316180106@kroah.com>
+References: <1599299316180106@kroah.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -112,23 +112,23 @@ index 2cf3affa1be7..96c0b1440c9c 100644
 +	status = "disabled";
 +};
 diff --git a/Makefile b/Makefile
-index aece56450bd9..418814b108ae 100644
+index 5cf35650373b..5081bd85af29 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,7 +1,7 @@
  # SPDX-License-Identifier: GPL-2.0
  VERSION = 5
- PATCHLEVEL = 4
--SUBLEVEL = 62
-+SUBLEVEL = 63
+ PATCHLEVEL = 8
+-SUBLEVEL = 6
++SUBLEVEL = 7
  EXTRAVERSION =
  NAME = Kleptomaniac Octopus
  
 diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-index 47cd831fcf44..9abf0cb1dd67 100644
+index 58100fb9cd8b..93236febd327 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-@@ -309,8 +309,9 @@
+@@ -331,8 +331,9 @@ sdmmc1: sdhci@3400000 {
  		compatible = "nvidia,tegra186-sdhci";
  		reg = <0x0 0x03400000 0x0 0x10000>;
  		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
@@ -140,7 +140,7 @@ index 47cd831fcf44..9abf0cb1dd67 100644
  		resets = <&bpmp TEGRA186_RESET_SDMMC1>;
  		reset-names = "sdhci";
  		iommus = <&smmu TEGRA186_SID_SDMMC1>;
-@@ -335,8 +336,9 @@
+@@ -357,8 +358,9 @@ sdmmc2: sdhci@3420000 {
  		compatible = "nvidia,tegra186-sdhci";
  		reg = <0x0 0x03420000 0x0 0x10000>;
  		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
@@ -152,7 +152,7 @@ index 47cd831fcf44..9abf0cb1dd67 100644
  		resets = <&bpmp TEGRA186_RESET_SDMMC2>;
  		reset-names = "sdhci";
  		iommus = <&smmu TEGRA186_SID_SDMMC2>;
-@@ -356,8 +358,9 @@
+@@ -378,8 +380,9 @@ sdmmc3: sdhci@3440000 {
  		compatible = "nvidia,tegra186-sdhci";
  		reg = <0x0 0x03440000 0x0 0x10000>;
  		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
@@ -164,7 +164,7 @@ index 47cd831fcf44..9abf0cb1dd67 100644
  		resets = <&bpmp TEGRA186_RESET_SDMMC3>;
  		reset-names = "sdhci";
  		iommus = <&smmu TEGRA186_SID_SDMMC3>;
-@@ -379,8 +382,9 @@
+@@ -401,8 +404,9 @@ sdmmc4: sdhci@3460000 {
  		compatible = "nvidia,tegra186-sdhci";
  		reg = <0x0 0x03460000 0x0 0x10000>;
  		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
@@ -177,10 +177,10 @@ index 47cd831fcf44..9abf0cb1dd67 100644
  				  <&bpmp TEGRA186_CLK_PLLC4_VCO>;
  		assigned-clock-parents = <&bpmp TEGRA186_CLK_PLLC4_VCO>;
 diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index 2f3926719434..5728255bd0c1 100644
+index 4bc187a4eacd..980a8500b4b2 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -403,8 +403,9 @@
+@@ -453,8 +453,9 @@ sdmmc1: sdhci@3400000 {
  			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
  			reg = <0x03400000 0x10000>;
  			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
@@ -192,7 +192,7 @@ index 2f3926719434..5728255bd0c1 100644
  			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
  			reset-names = "sdhci";
  			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
-@@ -425,8 +426,9 @@
+@@ -475,8 +476,9 @@ sdmmc3: sdhci@3440000 {
  			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
  			reg = <0x03440000 0x10000>;
  			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
@@ -204,7 +204,7 @@ index 2f3926719434..5728255bd0c1 100644
  			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
  			reset-names = "sdhci";
  			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
-@@ -448,8 +450,9 @@
+@@ -498,8 +500,9 @@ sdmmc4: sdhci@3460000 {
  			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
  			reg = <0x03460000 0x10000>;
  			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
@@ -217,10 +217,10 @@ index 2f3926719434..5728255bd0c1 100644
  					  <&bpmp TEGRA194_CLK_PLLC4>;
  			assigned-clock-parents =
 diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 659753118e96..078d2506365c 100644
+index 08655081f72d..04f3a2d4990d 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1116,8 +1116,9 @@
+@@ -1180,8 +1180,9 @@ sdhci@700b0000 {
  		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
  		reg = <0x0 0x700b0000 0x0 0x200>;
  		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
@@ -232,7 +232,7 @@ index 659753118e96..078d2506365c 100644
  		resets = <&tegra_car 14>;
  		reset-names = "sdhci";
  		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1144,8 +1145,9 @@
+@@ -1208,8 +1209,9 @@ sdhci@700b0200 {
  		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
  		reg = <0x0 0x700b0200 0x0 0x200>;
  		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
@@ -244,7 +244,7 @@ index 659753118e96..078d2506365c 100644
  		resets = <&tegra_car 9>;
  		reset-names = "sdhci";
  		pinctrl-names = "sdmmc-1v8-drv";
-@@ -1161,8 +1163,9 @@
+@@ -1225,8 +1227,9 @@ sdhci@700b0400 {
  		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
  		reg = <0x0 0x700b0400 0x0 0x200>;
  		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
@@ -256,7 +256,7 @@ index 659753118e96..078d2506365c 100644
  		resets = <&tegra_car 69>;
  		reset-names = "sdhci";
  		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
-@@ -1184,8 +1187,9 @@
+@@ -1248,8 +1251,9 @@ sdhci@700b0600 {
  		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
  		reg = <0x0 0x700b0600 0x0 0x200>;
  		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
@@ -268,29 +268,11 @@ index 659753118e96..078d2506365c 100644
  		resets = <&tegra_car 15>;
  		reset-names = "sdhci";
  		pinctrl-names = "sdmmc-3v3-drv", "sdmmc-1v8-drv";
-diff --git a/arch/arm64/include/asm/kvm_arm.h b/arch/arm64/include/asm/kvm_arm.h
-index ddf9d762ac62..a4ffd9b55e72 100644
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -72,11 +72,12 @@
-  * IMO:		Override CPSR.I and enable signaling with VI
-  * FMO:		Override CPSR.F and enable signaling with VF
-  * SWIO:	Turn set/way invalidates into set/way clean+invalidate
-+ * PTW:		Take a stage2 fault if a stage1 walk steps in device memory
-  */
- #define HCR_GUEST_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
- 			 HCR_TVM | HCR_BSU_IS | HCR_FB | HCR_TAC | \
- 			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
--			 HCR_FMO | HCR_IMO)
-+			 HCR_FMO | HCR_IMO | HCR_PTW )
- #define HCR_VIRT_EXCP_MASK (HCR_VSE | HCR_VI | HCR_VF)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK)
- #define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H)
 diff --git a/arch/arm64/include/asm/kvm_asm.h b/arch/arm64/include/asm/kvm_asm.h
-index 44a243754c1b..64d79b288434 100644
+index 352aaebf4198..2eff49d81be2 100644
 --- a/arch/arm64/include/asm/kvm_asm.h
 +++ b/arch/arm64/include/asm/kvm_asm.h
-@@ -88,6 +88,34 @@ extern u32 __kvm_get_mdcr_el2(void);
+@@ -121,6 +121,34 @@ extern char __smccc_workaround_1_smc[__SMCCC_WORKAROUND_1_SMC_SZ];
  		*__hyp_this_cpu_ptr(sym);				\
  	 })
  
@@ -325,7 +307,7 @@ index 44a243754c1b..64d79b288434 100644
  #else /* __ASSEMBLY__ */
  
  .macro hyp_adr_this_cpu reg, sym, tmp
-@@ -113,6 +141,21 @@ extern u32 __kvm_get_mdcr_el2(void);
+@@ -146,6 +174,21 @@ extern char __smccc_workaround_1_smc[__SMCCC_WORKAROUND_1_SMC_SZ];
  	kern_hyp_va	\vcpu
  .endm
  
@@ -348,10 +330,10 @@ index 44a243754c1b..64d79b288434 100644
  
  #endif /* __ARM_KVM_ASM_H__ */
 diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index 8d0374ffdd2d..4f77de8ce138 100644
+index 5423ffe0a987..1417a9042d13 100644
 --- a/arch/arm64/kernel/vmlinux.lds.S
 +++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -24,6 +24,13 @@ ENTRY(_text)
+@@ -21,6 +21,13 @@ ENTRY(_text)
  
  jiffies = jiffies_64;
  
@@ -365,7 +347,7 @@ index 8d0374ffdd2d..4f77de8ce138 100644
  #define HYPERVISOR_TEXT					\
  	/*						\
  	 * Align to 4 KB so that			\
-@@ -39,6 +46,7 @@ jiffies = jiffies_64;
+@@ -36,6 +43,7 @@ jiffies = jiffies_64;
  	__hyp_idmap_text_end = .;			\
  	__hyp_text_start = .;				\
  	*(.hyp.text)					\
@@ -374,10 +356,10 @@ index 8d0374ffdd2d..4f77de8ce138 100644
  
  #define IDMAP_TEXT					\
 diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
-index e5cc8d66bf53..dc3d7bc2292f 100644
+index 90186cf6473e..c2e6da356408 100644
 --- a/arch/arm64/kvm/hyp/entry.S
 +++ b/arch/arm64/kvm/hyp/entry.S
-@@ -173,20 +173,23 @@ alternative_endif
+@@ -198,20 +198,23 @@ alternative_endif
  	// This is our single instruction exception window. A pending
  	// SError is guaranteed to occur at the earliest when we unmask
  	// it, and at the latest just after the ISB.
@@ -408,7 +390,7 @@ index e5cc8d66bf53..dc3d7bc2292f 100644
  	msr	esr_el2, x3
  	msr	spsr_el2, x4
 diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
-index ffa68d5713f1..f36aad0f207b 100644
+index 9c5cfb04170e..741f7cbaeb79 100644
 --- a/arch/arm64/kvm/hyp/hyp-entry.S
 +++ b/arch/arm64/kvm/hyp/hyp-entry.S
 @@ -15,6 +15,30 @@
@@ -502,18 +484,18 @@ index ffa68d5713f1..f36aad0f207b 100644
  	sb
  
 diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 6f4838b475d0..65660b614474 100644
+index 9270b14157b5..ba225e09aaf1 100644
 --- a/arch/arm64/kvm/hyp/switch.c
 +++ b/arch/arm64/kvm/hyp/switch.c
 @@ -14,6 +14,7 @@
  
- #include <asm/arch_gicv3.h>
+ #include <asm/barrier.h>
  #include <asm/cpufeature.h>
 +#include <asm/extable.h>
  #include <asm/kprobes.h>
  #include <asm/kvm_asm.h>
  #include <asm/kvm_emulate.h>
-@@ -25,6 +26,9 @@
+@@ -24,6 +25,9 @@
  #include <asm/processor.h>
  #include <asm/thread_info.h>
  
@@ -523,7 +505,7 @@ index 6f4838b475d0..65660b614474 100644
  /* Check whether the FP regs were dirtied while in the host-side run loop: */
  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
  {
-@@ -257,10 +261,10 @@ static bool __hyp_text __translate_far_to_hpfar(u64 far, u64 *hpfar)
+@@ -299,10 +303,10 @@ static bool __hyp_text __translate_far_to_hpfar(u64 far, u64 *hpfar)
  	 * saved the guest context yet, and we may return early...
  	 */
  	par = read_sysreg(par_el1);
@@ -538,7 +520,7 @@ index 6f4838b475d0..65660b614474 100644
  	write_sysreg(par, par_el1);
  
  	if (unlikely(tmp & SYS_PAR_EL1_F))
-@@ -791,3 +795,30 @@ void __hyp_text __noreturn hyp_panic(struct kvm_cpu_context *host_ctxt)
+@@ -934,3 +938,30 @@ void __hyp_text __noreturn hyp_panic(struct kvm_cpu_context *host_ctxt)
  
  	unreachable();
  }
@@ -569,162 +551,6 @@ index 6f4838b475d0..65660b614474 100644
 +
 +	hyp_panic(host_ctxt);
 +}
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-index 7e4e2959bf4f..0c9c40720ca9 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_buffer.c
-@@ -12,6 +12,7 @@
- 
- #include "common.xml.h"
- #include "state.xml.h"
-+#include "state_blt.xml.h"
- #include "state_hi.xml.h"
- #include "state_3d.xml.h"
- #include "cmdstream.xml.h"
-@@ -233,6 +234,8 @@ void etnaviv_buffer_end(struct etnaviv_gpu *gpu)
- 	struct etnaviv_cmdbuf *buffer = &gpu->buffer;
- 	unsigned int waitlink_offset = buffer->user_size - 16;
- 	u32 link_target, flush = 0;
-+	bool has_blt = !!(gpu->identity.minor_features5 &
-+			  chipMinorFeatures5_BLT_ENGINE);
- 
- 	lockdep_assert_held(&gpu->lock);
- 
-@@ -248,16 +251,38 @@ void etnaviv_buffer_end(struct etnaviv_gpu *gpu)
- 	if (flush) {
- 		unsigned int dwords = 7;
- 
-+		if (has_blt)
-+			dwords += 10;
-+
- 		link_target = etnaviv_buffer_reserve(gpu, buffer, dwords);
- 
- 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		}
- 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE, flush);
--		if (gpu->exec_state == ETNA_PIPE_3D)
--			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
--				       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		if (gpu->exec_state == ETNA_PIPE_3D) {
-+			if (has_blt) {
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
-+				CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+			} else {
-+				CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
-+					       VIVS_TS_FLUSH_CACHE_FLUSH);
-+			}
-+		}
- 		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		}
- 		CMD_END(buffer);
- 
- 		etnaviv_buffer_replace_wait(buffer, waitlink_offset,
-@@ -323,6 +348,8 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
- 	bool switch_mmu_context = gpu->mmu_context != mmu_context;
- 	unsigned int new_flush_seq = READ_ONCE(gpu->mmu_context->flush_seq);
- 	bool need_flush = switch_mmu_context || gpu->flush_seq != new_flush_seq;
-+	bool has_blt = !!(gpu->identity.minor_features5 &
-+			  chipMinorFeatures5_BLT_ENGINE);
- 
- 	lockdep_assert_held(&gpu->lock);
- 
-@@ -433,6 +460,15 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
- 	 * 2 semaphore stall + 1 event + 1 wait + 1 link.
- 	 */
- 	return_dwords = 7;
-+
-+	/*
-+	 * When the BLT engine is present we need 6 more dwords in the return
-+	 * target: 3 enable/flush/disable + 4 enable/semaphore stall/disable,
-+	 * but we don't need the normal TS flush state.
-+	 */
-+	if (has_blt)
-+		return_dwords += 6;
-+
- 	return_target = etnaviv_buffer_reserve(gpu, buffer, return_dwords);
- 	CMD_LINK(cmdbuf, return_dwords, return_target);
- 
-@@ -447,11 +483,25 @@ void etnaviv_buffer_queue(struct etnaviv_gpu *gpu, u32 exec_state,
- 		CMD_LOAD_STATE(buffer, VIVS_GL_FLUSH_CACHE,
- 				       VIVS_GL_FLUSH_CACHE_DEPTH |
- 				       VIVS_GL_FLUSH_CACHE_COLOR);
--		CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
--				       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		if (has_blt) {
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_SET_COMMAND, 0x1);
-+			CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+		} else {
-+			CMD_LOAD_STATE(buffer, VIVS_TS_FLUSH_CACHE,
-+					       VIVS_TS_FLUSH_CACHE_FLUSH);
-+		}
- 	}
- 	CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
- 	CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_PE);
-+
-+	if (has_blt) {
-+		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x1);
-+		CMD_SEM(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+		CMD_STALL(buffer, SYNC_RECIPIENT_FE, SYNC_RECIPIENT_BLT);
-+		CMD_LOAD_STATE(buffer, VIVS_BLT_ENABLE, 0x0);
-+	}
-+
- 	CMD_LOAD_STATE(buffer, VIVS_GL_EVENT, VIVS_GL_EVENT_EVENT_ID(event) |
- 		       VIVS_GL_EVENT_FROM_PE);
- 	CMD_WAIT(buffer);
-diff --git a/drivers/gpu/drm/etnaviv/state_blt.xml.h b/drivers/gpu/drm/etnaviv/state_blt.xml.h
-index daae55995def..0e8bcf9dcc93 100644
---- a/drivers/gpu/drm/etnaviv/state_blt.xml.h
-+++ b/drivers/gpu/drm/etnaviv/state_blt.xml.h
-@@ -46,6 +46,8 @@ DEALINGS IN THE SOFTWARE.
- 
- /* This is a cut-down version of the state_blt.xml.h file */
- 
-+#define VIVS_BLT_SET_COMMAND					0x000140ac
-+
- #define VIVS_BLT_ENABLE						0x000140b8
- #define VIVS_BLT_ENABLE_ENABLE					0x00000001
- 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index dfb29e6eeff1..30c5ddd6d081 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -496,8 +496,10 @@ void drm_sched_resubmit_jobs(struct drm_gpu_scheduler *sched)
- 		fence = sched->ops->run_job(s_job);
- 
- 		if (IS_ERR_OR_NULL(fence)) {
-+			if (IS_ERR(fence))
-+				dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
-+
- 			s_job->s_fence->parent = NULL;
--			dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
- 		} else {
- 			s_job->s_fence->parent = fence;
- 		}
-@@ -748,8 +750,9 @@ static int drm_sched_main(void *param)
- 					  r);
- 			dma_fence_put(fence);
- 		} else {
-+			if (IS_ERR(fence))
-+				dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
- 
--			dma_fence_set_error(&s_fence->finished, PTR_ERR(fence));
- 			drm_sched_process_job(NULL, &sched_job->cb);
- 		}
- 
 diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
 index 359616e3efbb..d2ecc9c45255 100644
 --- a/drivers/hid/hid-core.c
@@ -781,10 +607,10 @@ index e8641ce677e4..e3d475f4baf6 100644
  	    device->driver->input_mapped(device, hidinput, field, usage,
  					 &bit, &max) < 0) {
 diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-index 39e4da7468e1..128d8f4319b9 100644
+index 3f94b4954225..e3152155c4b8 100644
 --- a/drivers/hid/hid-multitouch.c
 +++ b/drivers/hid/hid-multitouch.c
-@@ -864,6 +864,8 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
+@@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
  			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
  
  		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
@@ -793,11 +619,79 @@ index 39e4da7468e1..128d8f4319b9 100644
  		input_set_capability(hi->input, EV_KEY, code);
  		return 1;
  
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 2322f08a98be..5e057f798a15 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -3186,14 +3186,16 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ #ifdef CONFIG_COMPAT_32BIT_TIME
+ 	case VIDIOC_DQEVENT_TIME32: {
+ 		struct v4l2_event *ev = parg;
+-		struct v4l2_event_time32 ev32 = {
+-			.type		= ev->type,
+-			.pending	= ev->pending,
+-			.sequence	= ev->sequence,
+-			.timestamp.tv_sec  = ev->timestamp.tv_sec,
+-			.timestamp.tv_nsec = ev->timestamp.tv_nsec,
+-			.id		= ev->id,
+-		};
++		struct v4l2_event_time32 ev32;
++
++		memset(&ev32, 0, sizeof(ev32));
++
++		ev32.type	= ev->type;
++		ev32.pending	= ev->pending;
++		ev32.sequence	= ev->sequence;
++		ev32.timestamp.tv_sec	= ev->timestamp.tv_sec;
++		ev32.timestamp.tv_nsec	= ev->timestamp.tv_nsec;
++		ev32.id		= ev->id;
+ 
+ 		memcpy(&ev32.u, &ev->u, sizeof(ev->u));
+ 		memcpy(&ev32.reserved, &ev->reserved, sizeof(ev->reserved));
+@@ -3207,21 +3209,23 @@ static int video_put_user(void __user *arg, void *parg, unsigned int cmd)
+ 	case VIDIOC_DQBUF_TIME32:
+ 	case VIDIOC_PREPARE_BUF_TIME32: {
+ 		struct v4l2_buffer *vb = parg;
+-		struct v4l2_buffer_time32 vb32 = {
+-			.index		= vb->index,
+-			.type		= vb->type,
+-			.bytesused	= vb->bytesused,
+-			.flags		= vb->flags,
+-			.field		= vb->field,
+-			.timestamp.tv_sec	= vb->timestamp.tv_sec,
+-			.timestamp.tv_usec	= vb->timestamp.tv_usec,
+-			.timecode	= vb->timecode,
+-			.sequence	= vb->sequence,
+-			.memory		= vb->memory,
+-			.m.userptr	= vb->m.userptr,
+-			.length		= vb->length,
+-			.request_fd	= vb->request_fd,
+-		};
++		struct v4l2_buffer_time32 vb32;
++
++		memset(&vb32, 0, sizeof(vb32));
++
++		vb32.index	= vb->index;
++		vb32.type	= vb->type;
++		vb32.bytesused	= vb->bytesused;
++		vb32.flags	= vb->flags;
++		vb32.field	= vb->field;
++		vb32.timestamp.tv_sec	= vb->timestamp.tv_sec;
++		vb32.timestamp.tv_usec	= vb->timestamp.tv_usec;
++		vb32.timecode	= vb->timecode;
++		vb32.sequence	= vb->sequence;
++		vb32.memory	= vb->memory;
++		vb32.m.userptr	= vb->m.userptr;
++		vb32.length	= vb->length;
++		vb32.request_fd	= vb->request_fd;
+ 
+ 		if (copy_to_user(arg, &vb32, sizeof(vb32)))
+ 			return -EFAULT;
 diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index a25c3a4d3f6c..e37d271ca963 100644
+index 3a372ab3d12e..db1a8d1c96b3 100644
 --- a/drivers/mmc/host/sdhci-tegra.c
 +++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1370,7 +1370,6 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
+@@ -1409,7 +1409,6 @@ static const struct sdhci_ops tegra210_sdhci_ops = {
  
  static const struct sdhci_pltfm_data sdhci_tegra210_pdata = {
  	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
@@ -805,7 +699,7 @@ index a25c3a4d3f6c..e37d271ca963 100644
  		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
  		  SDHCI_QUIRK_NO_HISPD_BIT |
  		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
-@@ -1407,7 +1406,6 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
+@@ -1447,7 +1446,6 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
  
  static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
  	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
@@ -814,7 +708,7 @@ index a25c3a4d3f6c..e37d271ca963 100644
  		  SDHCI_QUIRK_NO_HISPD_BIT |
  		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
 diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 8888cdf3eead..ea925b102b32 100644
+index 9ab960cc39b6..0209bc23e631 100644
 --- a/drivers/target/target_core_user.c
 +++ b/drivers/target/target_core_user.c
 @@ -676,8 +676,10 @@ static void scatter_data_area(struct tcmu_dev *udev,
@@ -864,24 +758,6 @@ index 8888cdf3eead..ea925b102b32 100644
  			memcpy(to + sg->length - sg_remaining, from + offset,
  					copy_bytes);
  
-@@ -1007,7 +1010,7 @@ static int queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, sense_reason_t *scsi_err)
- 		entry->hdr.cmd_id = 0; /* not used for PAD */
- 		entry->hdr.kflags = 0;
- 		entry->hdr.uflags = 0;
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		tcmu_flush_dcache_range(entry, sizeof(entry->hdr));
- 
- 		UPDATE_HEAD(mb->cmd_head, pad_size, udev->cmdr_size);
- 		tcmu_flush_dcache_range(mb, sizeof(*mb));
-@@ -1072,7 +1075,7 @@ static int queue_cmd_ring(struct tcmu_cmd *tcmu_cmd, sense_reason_t *scsi_err)
- 	cdb_off = CMDR_OFF + cmd_head + base_command_size;
- 	memcpy((void *) mb + cdb_off, se_cmd->t_task_cdb, scsi_command_size(se_cmd->t_task_cdb));
- 	entry->req.cdb_off = cdb_off;
--	tcmu_flush_dcache_range(entry, sizeof(*entry));
-+	tcmu_flush_dcache_range(entry, command_size);
- 
- 	UPDATE_HEAD(mb->cmd_head, command_size, udev->cmdr_size);
- 	tcmu_flush_dcache_range(mb, sizeof(*mb));
 diff --git a/include/linux/hid.h b/include/linux/hid.h
 index 875f71132b14..c7044a14200e 100644
 --- a/include/linux/hid.h
@@ -958,8 +834,93 @@ index 875f71132b14..c7044a14200e 100644
  }
  
  /**
+diff --git a/mm/gup.c b/mm/gup.c
+index 6f47697f8fb0..0d8d76f10ac6 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -843,7 +843,7 @@ static int get_gate_page(struct mm_struct *mm, unsigned long address,
+ 			goto unmap;
+ 		*page = pte_page(*pte);
+ 	}
+-	if (unlikely(!try_get_page(*page))) {
++	if (unlikely(!try_grab_page(*page, gup_flags))) {
+ 		ret = -ENOMEM;
+ 		goto unmap;
+ 	}
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index b6aad3fc46c3..b85ce6f0c0a6 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -238,21 +238,27 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 	 *
+ 	 * b1. _ _ __>|  !_ _ __|  (insert end before existing start)
+ 	 * b2. _ _ ___|  !_ _ _>|  (insert end after existing start)
+-	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end)
++	 * b3. _ _ ___! >|_ _ __|  (insert start after existing end, as a leaf)
++	 *            '--' no nodes falling in this range
++	 * b4.          >|_ _   !  (insert start before existing start)
+ 	 *
+ 	 * Case a3. resolves to b3.:
+ 	 * - if the inserted start element is the leftmost, because the '0'
+ 	 *   element in the tree serves as end element
+-	 * - otherwise, if an existing end is found. Note that end elements are
+-	 *   always inserted after corresponding start elements.
++	 * - otherwise, if an existing end is found immediately to the left. If
++	 *   there are existing nodes in between, we need to further descend the
++	 *   tree before we can conclude the new start isn't causing an overlap
++	 *
++	 * or to b4., which, preceded by a3., means we already traversed one or
++	 * more existing intervals entirely, from the right.
+ 	 *
+ 	 * For a new, rightmost pair of elements, we'll hit cases b3. and b2.,
+ 	 * in that order.
+ 	 *
+ 	 * The flag is also cleared in two special cases:
+ 	 *
+-	 * b4. |__ _ _!|<_ _ _   (insert start right before existing end)
+-	 * b5. |__ _ >|!__ _ _   (insert end right after existing start)
++	 * b5. |__ _ _!|<_ _ _   (insert start right before existing end)
++	 * b6. |__ _ >|!__ _ _   (insert end right after existing start)
+ 	 *
+ 	 * which always happen as last step and imply that no further
+ 	 * overlapping is possible.
+@@ -272,7 +278,7 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 			if (nft_rbtree_interval_start(new)) {
+ 				if (nft_rbtree_interval_end(rbe) &&
+ 				    nft_set_elem_active(&rbe->ext, genmask) &&
+-				    !nft_set_elem_expired(&rbe->ext))
++				    !nft_set_elem_expired(&rbe->ext) && !*p)
+ 					overlap = false;
+ 			} else {
+ 				overlap = nft_rbtree_interval_end(rbe) &&
+@@ -288,10 +294,9 @@ static int __nft_rbtree_insert(const struct net *net, const struct nft_set *set,
+ 					  nft_set_elem_active(&rbe->ext,
+ 							      genmask) &&
+ 					  !nft_set_elem_expired(&rbe->ext);
+-			} else if (nft_rbtree_interval_end(rbe) &&
+-				   nft_set_elem_active(&rbe->ext, genmask) &&
++			} else if (nft_set_elem_active(&rbe->ext, genmask) &&
+ 				   !nft_set_elem_expired(&rbe->ext)) {
+-				overlap = true;
++				overlap = nft_rbtree_interval_end(rbe);
+ 			}
+ 		} else {
+ 			if (nft_rbtree_interval_end(rbe) &&
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 7fbca0854265..279c87a2a523 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -6010,7 +6010,7 @@ static int nl80211_set_station(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	if (info->attrs[NL80211_ATTR_HE_6GHZ_CAPABILITY])
+ 		params.he_6ghz_capa =
+-			nla_data(info->attrs[NL80211_ATTR_HE_CAPABILITY]);
++			nla_data(info->attrs[NL80211_ATTR_HE_6GHZ_CAPABILITY]);
+ 
+ 	if (info->attrs[NL80211_ATTR_AIRTIME_WEIGHT])
+ 		params.airtime_weight =
 diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index c6f9f31b6039..15fd108afbe6 100644
+index fa8a5fcd27ab..950e4ad21374 100644
 --- a/tools/perf/Documentation/perf-record.txt
 +++ b/tools/perf/Documentation/perf-record.txt
 @@ -33,6 +33,10 @@ OPTIONS
@@ -974,7 +935,7 @@ index c6f9f31b6039..15fd108afbe6 100644
  	  'param1', 'param2', etc are defined as formats for the PMU in
  	  /sys/bus/event_source/devices/<pmu>/format/*.
 diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 930c51c01201..9abf1cf217e2 100644
+index b029ee728a0b..c8209467076b 100644
 --- a/tools/perf/Documentation/perf-stat.txt
 +++ b/tools/perf/Documentation/perf-stat.txt
 @@ -39,6 +39,10 @@ report::
@@ -988,3 +949,50 @@ index 930c51c01201..9abf1cf217e2 100644
  	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
  	  param1 and param2 are defined as formats for the PMU in
  	  /sys/bus/event_source/devices/<pmu>/format/*
+diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+index c41f24b517f4..65c141ebfbbd 100644
+--- a/tools/testing/selftests/x86/test_vsyscall.c
++++ b/tools/testing/selftests/x86/test_vsyscall.c
+@@ -462,6 +462,17 @@ static int test_vsys_x(void)
+ 	return 0;
+ }
+ 
++/*
++ * Debuggers expect ptrace() to be able to peek at the vsyscall page.
++ * Use process_vm_readv() as a proxy for ptrace() to test this.  We
++ * want it to work in the vsyscall=emulate case and to fail in the
++ * vsyscall=xonly case.
++ *
++ * It's worth noting that this ABI is a bit nutty.  write(2) can't
++ * read from the vsyscall page on any kernel version or mode.  The
++ * fact that ptrace() ever worked was a nice courtesy of old kernels,
++ * but the code to support it is fairly gross.
++ */
+ static int test_process_vm_readv(void)
+ {
+ #ifdef __x86_64__
+@@ -477,8 +488,12 @@ static int test_process_vm_readv(void)
+ 	remote.iov_len = 4096;
+ 	ret = process_vm_readv(getpid(), &local, 1, &remote, 1, 0);
+ 	if (ret != 4096) {
+-		printf("[OK]\tprocess_vm_readv() failed (ret = %d, errno = %d)\n", ret, errno);
+-		return 0;
++		/*
++		 * We expect process_vm_readv() to work if and only if the
++		 * vsyscall page is readable.
++		 */
++		printf("[%s]\tprocess_vm_readv() failed (ret = %d, errno = %d)\n", vsyscall_map_r ? "FAIL" : "OK", ret, errno);
++		return vsyscall_map_r ? 1 : 0;
+ 	}
+ 
+ 	if (vsyscall_map_r) {
+@@ -488,6 +503,9 @@ static int test_process_vm_readv(void)
+ 			printf("[FAIL]\tIt worked but returned incorrect data\n");
+ 			return 1;
+ 		}
++	} else {
++		printf("[FAIL]\tprocess_rm_readv() succeeded, but it should have failed in this configuration\n");
++		return 1;
+ 	}
+ #endif
+ 
