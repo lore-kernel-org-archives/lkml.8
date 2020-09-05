@@ -2,193 +2,117 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D938AC2BB84
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 03:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAABC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 03:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D05320795
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 03:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EbPjQKy5"
+	by mail.kernel.org (Postfix) with ESMTP id 99F64207EA
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 03:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599276391;
+	bh=01tIjTZuasEjJoIdOz5XD0XpaFwGQuC7wLSUcu7mhRA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GAV57CmNl5Loda4OngR5Tj+Y9YJWO8heUfORBJ4jVrW14VZqka1A2Q7NIzc0KMAKm
+	 5Q8k+WzoydXh3zlec8eUfp4kn2R62Ju5vHSPfd9Dw2HR1s8GssxZOTonGwdBaxRjB0
+	 wfnlqK33SVNJW5Jk5qJLnUXJ0shslh4Zw5AqBFlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgIEDQO (ORCPT
+        id S1728289AbgIED0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 23:16:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgIEDQO (ORCPT
+        Fri, 4 Sep 2020 23:26:30 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33758 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbgIED01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 23:16:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57646C061244;
-        Fri,  4 Sep 2020 20:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=hzcswmMwNT559dhICIggfDQsKXgz2tnBEKWAXq1CvMk=; b=EbPjQKy5mHuEsRvHD0LtSju15w
-        e/POC6OtiTd1jGuxH1WfatomtddnS4izVIfMw4H7ouCTmd8YCzYovYM/hDgKKtLpmGK1aQUzEMfqB
-        ubipMtPQPfHcknIORAAyBQWzbiZnBOmQ1L9ujgYEmrcjuLii5bb1uHyGMPshwQANL3vk1eDVMiBBL
-        N1bwF2asqr7X7j9AJst6mllFwwCySdPeKyNKjLL1OLt6vpsQTe1suGXGgFv/RqBoGLSi5DwqiyIBj
-        sjD/8VNv61TTlqDto46NALwdTuTz0glQPDLcZXZNRntCUjHjwvGJhMOlT04F0gay9iBeF29i0awXB
-        fX5Mrh0g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEOgQ-0001Ei-9v; Sat, 05 Sep 2020 03:16:07 +0000
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
- gpio-mockup
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-24-brgl@bgdev.pl>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
-Date:   Fri, 4 Sep 2020 20:15:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 4 Sep 2020 23:26:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m6so9337131wrn.0;
+        Fri, 04 Sep 2020 20:26:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cOkNEwPOi5SXJh6SoYsauM4+KcbahN2QQZ3aZqvPfME=;
+        b=JSQy0ljHAt8+IUt7Xlscr2+xsfXpc7s4KLv1LEWQMgmBJbk7U9RCo/i2cnq5PwujHE
+         fIpXMvtXcPqRU3tjpyLGuQSxNeUrYY88iNUSwwuEf+DSn837EwUWkfxZ8MfTfT1hJIVz
+         br5ooN3LT/vyogWolYeh1vcTPozwhNr/l09JU7vPX7efVOJJ5XVI632DEFWaVhlq1nkD
+         mr5nYoe4fAsEdqeEFf8n/pzaO4+3a0iHIR6OH68ES3pKp8tONvI32Oaaty5sD39uFc8I
+         f1bMhAGFP9CnSvzAwV3JdOkODTDbDN5QCRC+Ig4eJov9TeHX8RI17hbt08mIFsTnStcv
+         nTLw==
+X-Gm-Message-State: AOAM533C3IQaOHNyAHIfY4Didw2jH9KOIK5sG34cldafsIVWHbe23218
+        NV9E4BgKLLnpQ+ho0KJDVMCT3UKx6eX2UOVhrbUO5J47qfLQOQ==
+X-Google-Smtp-Source: ABdhPJx+V4nRsHKMSu7Ubt3VS7tNWDf4i2Z/lEAWaB8C59mCt74wZZjIlgT+sXywraOBPqZRkCwTV9h/otyOwkJ7o5g=
+X-Received: by 2002:adf:a3c9:: with SMTP id m9mr10411898wrb.80.1599276385714;
+ Fri, 04 Sep 2020 20:26:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200904154547.3836-24-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200904202611.GJ3753976@kernel.org>
+In-Reply-To: <20200904202611.GJ3753976@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Sat, 5 Sep 2020 12:26:14 +0900
+Message-ID: <CAM9d7cj0PpuFDTQ+iqAtaFS=SCRM+=1bmV=jC5+eKbTfne4Z_A@mail.gmail.com>
+Subject: Re: [PATCH] tools feature: Add missing -lzstd to the fast path
+ feature detection
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Sep 5, 2020 at 5:26 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>
+> We were failing that due to GTK2+ and then for the ZSTD test, which made
+> test-all.c, the fast path feature detection file to fail and thus
+> trigger building all of the feature tests, slowing down the test.
+>
+> Eventually the ZSTD test would be built and would succeed, since it had
+> the needed -lzstd, avoiding:
+>
+>   $ cat /tmp/build/perf/feature/test-all.make.output
+>   /usr/bin/ld: /tmp/ccRRJQ4u.o: in function `main_test_libzstd':
+>   /home/acme/git/perf/tools/build/feature/test-libzstd.c:8: undefined reference to `ZSTD_createCStream'
+>   /usr/bin/ld: /home/acme/git/perf/tools/build/feature/test-libzstd.c:9: undefined reference to `ZSTD_freeCStream'
+>   collect2: error: ld returned 1 exit status
+>   $
+>
+> Fix it by adding -lzstd to the test-all target.
+>
+> Now I need an entry to 'perf test' to make sure that
+> /tmp/build/perf/feature/test-all.make.output is empty...
+>
+> Fixes: 3b1c5d9659718263 ("tools build: Implement libzstd feature check, LIBZSTD_DIR and NO_LIBZSTD defines")
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> There's some documentation for gpio-mockup's debugfs interface in the
-> driver's source but it's not much. Add proper documentation for this
-> testing module.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks
+Namhyung
+
+>
 > ---
->  .../admin-guide/gpio/gpio-mockup.rst          | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/admin-guide/gpio/gpio-mockup.rst
-> 
-> diff --git a/Documentation/admin-guide/gpio/gpio-mockup.rst b/Documentation/admin-guide/gpio/gpio-mockup.rst
-> new file mode 100644
-> index 000000000000..1d452ee55f8d
-> --- /dev/null
-> +++ b/Documentation/admin-guide/gpio/gpio-mockup.rst
-> @@ -0,0 +1,87 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +GPIO Testing Driver
-> +===================
-> +
-> +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> +chips for testing purposes. There are two ways of configuring the chips exposed
-> +by the module. The lines can be accessed using the standard GPIO character
-> +device interface as well as manipulated using the dedicated debugfs directory
-> +structure.
-
-Could configfs be used for this instead of debugfs?
-debugfs is ad hoc.
-
-> +
-> +Creating simulated chips using debugfs
-> +--------------------------------------
-> +
-> +When the gpio-mockup module is loaded (or builtin) it creates its own directory
-> +in debugfs. Assuming debugfs is mounted at /sys/kernel/debug/, the directory
-> +will be located at /sys/kernel/debug/gpio-mockup/. Inside this directory there
-> +are two attributes: new_device and delete_device.
-> +
-> +New chips can be created by writing a single line containing a number of
-> +options to "new_device". For example:
-> +
-> +.. code-block:: sh
-> +
-> +    $ echo "label=my-mockup num_lines=4 named_lines" > /sys/kernel/debug/gpio-mockup/new_device
-> +
-> +Supported options:
-> +
-> +    num_lines=<num_lines> - number of GPIO lines to expose
-> +
-> +    label=<label> - label of the dummy chip
-> +
-> +    named_lines - defines whether dummy lines should be named, the names are
-> +                  of the form X-Y where X is the chip's label and Y is the
-> +                  line's offset
-> +
-> +Note: only num_lines is mandatory.
-> +
-> +Chips can be dynamically removed by writing the chip's label to
-> +"delete_device". For example:
-> +
-> +.. code-block:: sh
-> +
-> +    echo "gpio-mockup.0" > /sys/kernel/debug/gpio-mockup/delete_device
-> +
-> +Creating simulated chips using module params
-> +--------------------------------------------
-> +
-> +Note: this is an older, now deprecated method kept for backward compatibility
-> +for user-space tools.
-> +
-> +When loading the gpio-mockup driver a number of parameters can be passed to the
-> +module.
-> +
-> +    gpio_mockup_ranges
-> +
-> +        This parameter takes an argument in the form of an array of integer
-> +        pairs. Each pair defines the base GPIO number (if any) and the number
-> +        of lines exposed by the chip. If the base GPIO is -1, the gpiolib
-> +        will assign it automatically.
-> +
-> +        Example: gpio_mockup_ranges=-1,8,-1,16,405,4
-> +
-> +        The line above creates three chips. The first one will expose 8 lines,
-> +        the second 16 and the third 4. The base GPIO for the third chip is set
-> +        to 405 while for two first chips it will be assigned automatically.
-> +
-> +    gpio_named_lines
-> +
-> +        This parameter doesn't take any arguments. It lets the driver know that
-> +        GPIO lines exposed by it should be named.
-> +
-> +        The name format is: gpio-mockup-X-Y where X is the letter associated
-> +        with the mockup chip and Y is the line offset.
-
-Where does this 'X' letter associated with the mockup chip come from?
-
-> +
-> +Manipulating simulated lines
-> +----------------------------
-> +
-> +Each mockup chip creates its own subdirectory in /sys/kernel/debug/gpio-mockup/.
-> +The directory is named after the chip's label. A symlink is also created, named
-> +after the chip's name, which points to the label directory.
-> +
-> +Inside each subdirectory, there's a separate attribute for each GPIO line. The
-> +name of the attribute represents the line's offset in the chip.
-> +
-> +Reading from a line attribute returns the current value. Writing to it (0 or 1)
-> +changes its pull.
-
-What does "pull" mean here?
-
-
-thanks.
-
--- 
-~Randy
-
+>
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 977067e34dff064d..ec815ffc7777a02b 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -91,7 +91,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+>  ###############################
+>
+>  $(OUTPUT)test-all.bin:
+> -       $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
+> +       $(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
+>
+>  $(OUTPUT)test-hello.bin:
+>         $(BUILD)
