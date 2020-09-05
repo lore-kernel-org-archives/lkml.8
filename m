@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2417C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C802EC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B952220760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8791D20796
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5qNZwmz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s0XKWbS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgIEUnF (ORCPT
+        id S1728826AbgIEUnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55482 "EHLO
+        Sat, 5 Sep 2020 16:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728718AbgIEUml (ORCPT
+        with ESMTP id S1728327AbgIEUmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:42:41 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8639AC061249;
-        Sat,  5 Sep 2020 13:42:39 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id c2so11745797ljj.12;
-        Sat, 05 Sep 2020 13:42:39 -0700 (PDT)
+        Sat, 5 Sep 2020 16:42:47 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23122C061249;
+        Sat,  5 Sep 2020 13:42:47 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w3so11781671ljo.5;
+        Sat, 05 Sep 2020 13:42:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HxuDydUSZoNI1+yqMsxkzReEarnq7zj4OINQ+mfVftk=;
-        b=j5qNZwmzjvOCpiECSExMfb+O0OOPERaXVl7QgSzXSOq48f0jKrmM2R7YHOusPdm05d
-         BDY/QyyEQjyMyGC/Ti0/MXOHWvBbKwwNR58oAj1oB7hJ8AFE1KctkeezVz30viCDZsBU
-         M9KUhkHsyv/U5XrLYlQzY4AE9hvYGPATVPZlCVRnA2EE3JbajPYcBp7n64uLxCj/Ej+L
-         rUizkebfgdWLS6u0lTrMn3FPmpnS21daRTxWXvWaCpsNXftCRws4UlrQCWnhkAMV+HTS
-         lK6U61nWxrmRUjS1CZeF9WqwCD3cEcMrha938nyE26C9H1duRtlXa+9plo6oetNjT8RY
-         EDug==
+        bh=kYXy9dfHExgxjLgpe6Tj48Tl8bg38MQCS+DGdOY/xFg=;
+        b=s0XKWbS8uYdgVzUHXWWGptlnH1s0rkhwEj/WMQzYdgeH61AKW9j+9UT5PCjFIg2OZm
+         4seqyDK83Nu9qYrd3INE2VKjbVEzKt1zxC9SMaZxJkXRMp5WVV/zN6aF6ZoBUDuylT/8
+         +E9vfjxmlF2ow5HHTEL62t+kItlKTyuhHqxZXtG4baryrEhAC/gfgtsTZivuB7+j+an7
+         AU7wUBfO3WOLY1ebuZLaLFbMS2wqmCB/j1661IeBM4lLuit05rzxhyqGlxTH4rFAQFPO
+         FKM6FXRAdh/0M0ROGKaJWd4tCj4pfu8oqnq8FeLNciZwV0gVE6oZtXhERbAhu6EpeZuf
+         KPjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HxuDydUSZoNI1+yqMsxkzReEarnq7zj4OINQ+mfVftk=;
-        b=XMrW2gijpadGOXm2usVqEXpUNZwdXX+OxzKn0SIe8fFMzjbh4hwapj6okUszJpyhJk
-         xzQ/TTlX2/Z3oaEcTPj+a4M/nlG193wgu0JLo6cSkxOaP9x3RDwSTtNBGqiuTKfa48PX
-         eeHqH8nvNHb8OLV0PqluOlsqjfA0pi7760YqXmbNRIw3cRXSuuA+wIJ2RxgcFPJb/QLY
-         rir7f4WgPgAY/9ia3KpLiPI6FoHhukB1BynY8/SUm5WcAeCx1jwpS20PHIu1eW8/OKe1
-         t4AFYbf7TqVLSMTEZ1iL3D/I5B4Sf4wQAOlBrf4x0nbQZ1ubKotZS3gQvBXoFQwQ+B4n
-         HvzQ==
-X-Gm-Message-State: AOAM532NJtUCE+hRZpC+Q/ZK4ODT3rqxeJe/xQBzS4fK0DHJ4Q7dNWrB
-        2mpmfqsrXIrq4ad1/Z53Z+I=
-X-Google-Smtp-Source: ABdhPJzmcCMPtkC0n/mcrr/vCOS0MR2k7/LTSEX6mRWWdd9iUzDkGrJIQhh7BvPi47NOPhQTYJVZqQ==
-X-Received: by 2002:a05:651c:c6:: with SMTP id 6mr6925349ljr.237.1599338557668;
-        Sat, 05 Sep 2020 13:42:37 -0700 (PDT)
+        bh=kYXy9dfHExgxjLgpe6Tj48Tl8bg38MQCS+DGdOY/xFg=;
+        b=eepG53j9/mgzg765LD8Zr9YtnOGLIFcHD2AuFIrQ2wmLf1/zJcGZ+X1fPIFkb6P552
+         TebL/Jbd2hGiH0xVrEdlt2qzq5zRssjaR/nxOyqMjhQOGzJu20dlXIwLCE08zCRljR+H
+         GnwIxMlTIush0uFhXha2jEVFHrd8r7ElhZ73sfBUQqfmfudPHwdnVGCBDAlSaGHBC7kA
+         WLRD5ugTmjQCsgIXSwLreIle4sb2Y1afwjOZMhfJqvHR06KU2Ntcfoekjfai0YrushwB
+         ovH0FatmnvXhuqs9C/7Qogagau1ndH+WhBRypj841ThDGzTEqbhSupTuOSNsFpIeOmew
+         3cQQ==
+X-Gm-Message-State: AOAM531+Kvq0LjSGYPAAMcCtLz24cd/PGERN5aXBoqNnV++ZPZbYp3+V
+        YPRsABPjX7XljdzSiCY7wmv+auP6eXY=
+X-Google-Smtp-Source: ABdhPJwBvmLyCsVEtaWx76LYZv+JCJHrYtvl2886f8XyEircY6dsbf7ypomhCUvhiSROYMWjTrEI+w==
+X-Received: by 2002:a2e:7119:: with SMTP id m25mr1662385ljc.365.1599338565642;
+        Sat, 05 Sep 2020 13:42:45 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.36
+        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:42:37 -0700 (PDT)
+        Sat, 05 Sep 2020 13:42:45 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,53 +69,104 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 14/31] i2c: tegra: Remove likely/unlikely from the code
-Date:   Sat,  5 Sep 2020 23:41:34 +0300
-Message-Id: <20200905204151.25343-15-digetx@gmail.com>
+Subject: [PATCH v4 23/31] i2c: tegra: Factor out register polling into separate function
+Date:   Sat,  5 Sep 2020 23:41:43 +0300
+Message-Id: <20200905204151.25343-24-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200905204151.25343-1-digetx@gmail.com>
 References: <20200905204151.25343-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The likely/unlikely annotations should be used only in a hot paths of
-performance-critical code. The I2C driver doesn't have such paths, and
-thus, there is no justification for usage of likely/unlikely annotations
-in the code. Hence remove them.
+Factor out register polling into a separate function in order to remove
+boilerplate code and make code cleaner.
 
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 43 +++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index d8b7373673ea..33d37a40fa83 100644
+index 129ca5a6cb85..68b2be321f9a 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -890,7 +890,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 		goto err;
- 	}
+@@ -466,10 +466,24 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
+ 	return err;
+ }
  
--	if (unlikely(status & status_err)) {
-+	if (status & status_err) {
- 		tegra_i2c_disable_packet_mode(i2c_dev);
- 		if (status & I2C_INT_NO_ACK)
- 			i2c_dev->msg_err |= I2C_ERR_NO_ACK;
-@@ -1330,7 +1330,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 		i2c_dev->msg_err);
++static int tegra_i2c_poll_register(struct tegra_i2c_dev *i2c_dev,
++				   u32 reg, u32 mask, u32 delay_us,
++				   u32 timeout_us)
++{
++	void __iomem *addr = i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg);
++	u32 val;
++
++	if (!i2c_dev->is_curr_atomic_xfer)
++		return readl_relaxed_poll_timeout(addr, val, !(val & mask),
++						  delay_us, timeout_us);
++
++	return readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
++						 delay_us, timeout_us);
++}
++
+ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ {
+-	u32 mask, val, offset, reg_offset;
+-	void __iomem *addr;
++	u32 mask, val, offset;
+ 	int err;
  
- 	i2c_dev->is_curr_dma_xfer = false;
--	if (likely(i2c_dev->msg_err == I2C_ERR_NONE))
-+	if (i2c_dev->msg_err == I2C_ERR_NONE)
+ 	if (i2c_dev->hw->has_mst_fifo) {
+@@ -486,16 +500,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 	val |= mask;
+ 	i2c_writel(i2c_dev, val, offset);
+ 
+-	reg_offset = tegra_i2c_reg_addr(i2c_dev, offset);
+-	addr = i2c_dev->base + reg_offset;
+-
+-	if (i2c_dev->is_curr_atomic_xfer)
+-		err = readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
+-							1000, 1000000);
+-	else
+-		err = readl_relaxed_poll_timeout(addr, val, !(val & mask),
+-						 1000, 1000000);
+-
++	err = tegra_i2c_poll_register(i2c_dev, offset, mask, 1000, 1000000);
+ 	if (err) {
+ 		dev_err(i2c_dev->dev, "failed to flush FIFO\n");
+ 		return err;
+@@ -695,25 +700,15 @@ static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+ 
+ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+ {
+-	unsigned long reg_offset;
+-	void __iomem *addr;
+-	u32 val;
+ 	int err;
+ 
+ 	if (!i2c_dev->hw->has_config_load_reg)
  		return 0;
  
- 	tegra_i2c_init(i2c_dev);
+-	reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
+-	addr = i2c_dev->base + reg_offset;
+ 	i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
+ 
+-	if (i2c_dev->is_curr_atomic_xfer)
+-		err = readl_relaxed_poll_timeout_atomic(addr, val, val == 0, 1000,
+-							I2C_CONFIG_LOAD_TIMEOUT);
+-	else
+-		err = readl_relaxed_poll_timeout(addr, val, val == 0, 1000,
+-						 I2C_CONFIG_LOAD_TIMEOUT);
+-
++	err = tegra_i2c_poll_register(i2c_dev, I2C_CONFIG_LOAD, 0xffffffff,
++				      1000, I2C_CONFIG_LOAD_TIMEOUT);
+ 	if (err) {
+ 		dev_warn(i2c_dev->dev, "timeout waiting for config load\n");
+ 		return err;
 -- 
 2.27.0
 
