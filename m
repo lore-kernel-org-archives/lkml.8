@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B984C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2417C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07E0B20796
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B952220760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQH3mROS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j5qNZwmz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgIEUmw (ORCPT
+        id S1728798AbgIEUnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:42:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55442 "EHLO
+        Sat, 5 Sep 2020 16:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728713AbgIEUmj (ORCPT
+        with ESMTP id S1728718AbgIEUml (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:42:39 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F7C3C061245;
-        Sat,  5 Sep 2020 13:42:37 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v23so11835759ljd.1;
-        Sat, 05 Sep 2020 13:42:37 -0700 (PDT)
+        Sat, 5 Sep 2020 16:42:41 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8639AC061249;
+        Sat,  5 Sep 2020 13:42:39 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id c2so11745797ljj.12;
+        Sat, 05 Sep 2020 13:42:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=om5ZqYOPV7zYUej5+9JU/7wsUAJSLxumWbEil6zQbhY=;
-        b=TQH3mROSnPqiFC5GgotpGRVgLnIsvuTdMNUq8gIWIbXUbjalS7xrvCFGcI9xcXkD9g
-         TKUbgB220Vjm7mr4YR3XNLsf3wiMQoQkuWi2RX/XY9e4XMIRUS07RWhiX8coZQ7hVQ1B
-         WprOEKphzSD+h+Ga7k+sJO8IClFTvVDRlDgyY/rjveFNeB/k77AksjQ7UWQ7xYc7vdOU
-         /UCWu04V8ZADAIFrfNmejyOvK8Iu2lmWKcS2x1pHHj7BchezcKXlPueO1BmyjyrJLLJY
-         D+85BQUXjPJoMMBwiJsXTkBfNch8YCveCzhpn/huVjYUEsxAcsJCvZX9T3Vmi6OV9KUV
-         6yVw==
+        bh=HxuDydUSZoNI1+yqMsxkzReEarnq7zj4OINQ+mfVftk=;
+        b=j5qNZwmzjvOCpiECSExMfb+O0OOPERaXVl7QgSzXSOq48f0jKrmM2R7YHOusPdm05d
+         BDY/QyyEQjyMyGC/Ti0/MXOHWvBbKwwNR58oAj1oB7hJ8AFE1KctkeezVz30viCDZsBU
+         M9KUhkHsyv/U5XrLYlQzY4AE9hvYGPATVPZlCVRnA2EE3JbajPYcBp7n64uLxCj/Ej+L
+         rUizkebfgdWLS6u0lTrMn3FPmpnS21daRTxWXvWaCpsNXftCRws4UlrQCWnhkAMV+HTS
+         lK6U61nWxrmRUjS1CZeF9WqwCD3cEcMrha938nyE26C9H1duRtlXa+9plo6oetNjT8RY
+         EDug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=om5ZqYOPV7zYUej5+9JU/7wsUAJSLxumWbEil6zQbhY=;
-        b=Tb2cE/+QpRR/YmED06Wkgu+n6PP9O8BTi6BHa5Rnrz4Ur9vrkK/fMVrycemFLn9f1+
-         3Hv1J/wiNLUchsJ33QZMFKLxI7DcBVA761g9W0iuZ9WqcroN4Z+Qsq3Pg+2CMyUZFsXf
-         zg1uSvpAWwkeooN7u4nnjWqwd1sGQ/YwpBsRGzQa4yEjNVBG3bPab7Q5a90jd9+QVhOP
-         IjVZ5BbU5OPkKtQIMo2wsEqpcBAg85HqPR05f2OFciTjcP1LDRBiUgTV6minXblg7k3P
-         jR/lUp4ujxXl2Dd4N42maEdrWjFMfjFAl1D6xrozrHPLfsyCbfyEx+Fceo4ewZfOeVkQ
-         wWZg==
-X-Gm-Message-State: AOAM530e81f7RRALheW6r1GMDj9thEKF1RjTBQCqTfVuH0fPgZpNmT91
-        9mBsCMixMzsbMgImnvDQxnc=
-X-Google-Smtp-Source: ABdhPJyQtkh+776YlePdn2LGvn/pl5vPELb5m/QV1cHzjOk9tK6Mf7xGiW5grew8km+7rg9TZtILoQ==
-X-Received: by 2002:a2e:964a:: with SMTP id z10mr6719114ljh.463.1599338555890;
-        Sat, 05 Sep 2020 13:42:35 -0700 (PDT)
+        bh=HxuDydUSZoNI1+yqMsxkzReEarnq7zj4OINQ+mfVftk=;
+        b=XMrW2gijpadGOXm2usVqEXpUNZwdXX+OxzKn0SIe8fFMzjbh4hwapj6okUszJpyhJk
+         xzQ/TTlX2/Z3oaEcTPj+a4M/nlG193wgu0JLo6cSkxOaP9x3RDwSTtNBGqiuTKfa48PX
+         eeHqH8nvNHb8OLV0PqluOlsqjfA0pi7760YqXmbNRIw3cRXSuuA+wIJ2RxgcFPJb/QLY
+         rir7f4WgPgAY/9ia3KpLiPI6FoHhukB1BynY8/SUm5WcAeCx1jwpS20PHIu1eW8/OKe1
+         t4AFYbf7TqVLSMTEZ1iL3D/I5B4Sf4wQAOlBrf4x0nbQZ1ubKotZS3gQvBXoFQwQ+B4n
+         HvzQ==
+X-Gm-Message-State: AOAM532NJtUCE+hRZpC+Q/ZK4ODT3rqxeJe/xQBzS4fK0DHJ4Q7dNWrB
+        2mpmfqsrXIrq4ad1/Z53Z+I=
+X-Google-Smtp-Source: ABdhPJzmcCMPtkC0n/mcrr/vCOS0MR2k7/LTSEX6mRWWdd9iUzDkGrJIQhh7BvPi47NOPhQTYJVZqQ==
+X-Received: by 2002:a05:651c:c6:: with SMTP id 6mr6925349ljr.237.1599338557668;
+        Sat, 05 Sep 2020 13:42:37 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.34
+        by smtp.gmail.com with ESMTPSA id e17sm1677763ljn.18.2020.09.05.13.42.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:42:35 -0700 (PDT)
+        Sat, 05 Sep 2020 13:42:37 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,63 +69,53 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 12/31] i2c: tegra: Move out all device-tree parsing into tegra_i2c_parse_dt()
-Date:   Sat,  5 Sep 2020 23:41:32 +0300
-Message-Id: <20200905204151.25343-13-digetx@gmail.com>
+Subject: [PATCH v4 14/31] i2c: tegra: Remove likely/unlikely from the code
+Date:   Sat,  5 Sep 2020 23:41:34 +0300
+Message-Id: <20200905204151.25343-15-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200905204151.25343-1-digetx@gmail.com>
 References: <20200905204151.25343-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move out code related to device-tree parsing from the probe function into
-tegra_i2c_parse_dt() in order to make code more consistent.
+The likely/unlikely annotations should be used only in a hot paths of
+performance-critical code. The I2C driver doesn't have such paths, and
+thus, there is no justification for usage of likely/unlikely annotations
+in the code. Hence remove them.
 
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 6e5af03d0b1d..d6bc23bf765e 100644
+index d8b7373673ea..33d37a40fa83 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1416,6 +1416,12 @@ static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+@@ -890,7 +890,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 		goto err;
+ 	}
  
- 	multi_mode = of_property_read_bool(np, "multi-master");
- 	i2c_dev->is_multimaster_mode = multi_mode;
-+
-+	if (of_device_is_compatible(np, "nvidia,tegra20-i2c-dvc"))
-+		i2c_dev->is_dvc = true;
-+
-+	if (of_device_is_compatible(np, "nvidia,tegra210-i2c-vi"))
-+		i2c_dev->is_vi = true;
- }
+-	if (unlikely(status & status_err)) {
++	if (status & status_err) {
+ 		tegra_i2c_disable_packet_mode(i2c_dev);
+ 		if (status & I2C_INT_NO_ACK)
+ 			i2c_dev->msg_err |= I2C_ERR_NO_ACK;
+@@ -1330,7 +1330,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		i2c_dev->msg_err);
  
- static const struct i2c_algorithm tegra_i2c_algo = {
-@@ -1703,7 +1709,6 @@ static int tegra_i2c_init_runtime_pm_and_hardware(struct tegra_i2c_dev *i2c_dev)
+ 	i2c_dev->is_curr_dma_xfer = false;
+-	if (likely(i2c_dev->msg_err == I2C_ERR_NONE))
++	if (i2c_dev->msg_err == I2C_ERR_NONE)
+ 		return 0;
  
- static int tegra_i2c_probe(struct platform_device *pdev)
- {
--	struct device *dev = &pdev->dev;
- 	struct tegra_i2c_dev *i2c_dev;
- 	struct resource *res;
- 	void __iomem *base;
-@@ -1747,10 +1752,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	i2c_dev->hw = of_device_get_match_data(&pdev->dev);
--	i2c_dev->is_dvc = of_device_is_compatible(pdev->dev.of_node,
--						  "nvidia,tegra20-i2c-dvc");
--	i2c_dev->is_vi = of_device_is_compatible(dev->of_node,
--						 "nvidia,tegra210-i2c-vi");
- 	i2c_dev->adapter.quirks = i2c_dev->hw->quirks;
- 	i2c_dev->dma_buf_size = i2c_dev->adapter.quirks->max_write_len +
- 				I2C_PACKET_HEADER_SIZE;
+ 	tegra_i2c_init(i2c_dev);
 -- 
 2.27.0
 
