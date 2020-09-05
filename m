@@ -2,136 +2,471 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E931C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E124920760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A20C20760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGX80LKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728736AbgIEWDw (ORCPT
+        id S1728743AbgIEWE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:03:52 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33778 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgIEWDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:03:52 -0400
-Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1kEgHm-0005ic-Pe; Sun, 06 Sep 2020 00:03:50 +0200
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 3/6] pinctrl: rockchip: create irq mapping in gpio_to_irq
-Date:   Sun, 06 Sep 2020 00:03:50 +0200
-Message-ID: <3620235.rk29NJRsjD@diego>
-In-Reply-To: <20200831084753.7115-4-jay.xu@rock-chips.com>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831084753.7115-4-jay.xu@rock-chips.com>
+        Sat, 5 Sep 2020 18:04:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42644 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728563AbgIEWEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:04:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599343492;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=krSP1Od3NvD32XLPbchEvpqQvwJQGXJbXl1FT179Xsw=;
+        b=FGX80LKITXr8nE/4d6bEALIUYeH/2/HZNuHIHmOPouEsQ6fu+hIkrTSskcrp25VqV3r3Vx
+        wPshbI0UCg77f4j6la1e0vaH9XdlFqoz4CI1gi5L65kfJtq2k71+bjSdeHBDGDUZvhelQT
+        ASwChaUb1IRHfIIIPXvkn8zz+q9cBLY=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-173-lyPwqupQP5Kyf34BOiH3vQ-1; Sat, 05 Sep 2020 18:04:50 -0400
+X-MC-Unique: lyPwqupQP5Kyf34BOiH3vQ-1
+Received: by mail-qt1-f199.google.com with SMTP id o13so6628666qtl.6
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 15:04:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=krSP1Od3NvD32XLPbchEvpqQvwJQGXJbXl1FT179Xsw=;
+        b=ugX9czsx/QXWRFA+dasvFRXvjVv7hvxuP6VbBNfsXZB+8nHhbN/0wd5AbKKwQoKWVU
+         TimJK7i36Nj1vrsHgti8CiEbdODGwqEAqcb1r13mTsEGD5n6KdsVc2YJaMnavUbkM7ar
+         U80K++/yhQaaoxmUB/Dd4OIf3MUJAyTnOmEgAj5uIFYZ/1sQooaOqTMSfavu5UUOXCLZ
+         oqdJEbqbL1W7cabNsUyIhCPrt0VwbYflhDy49yQN3pvnLy9gPZw0ZjJgM6QCi5zjD5TQ
+         pNirNrF+5QV0g6FjxPN5m8cN0fIm+m2/BAhVHdzRyAnkwr6kubaK3t0hXaEbRnxk3e8d
+         1VhQ==
+X-Gm-Message-State: AOAM53314GRP25ZMgYiYO67GvilQl99ypg+i2cSpRhe5QXCMC+vi3Hgk
+        aN6e65r3k/jLF46XsaWETOXZ/BPzG2F66dxQrwJTgaJfWJPBwcLS5ZvrITNDkURFjKAiNuom5nn
+        au+9B9a6lMFKquUccjHeJ4J6J
+X-Received: by 2002:ac8:7b95:: with SMTP id p21mr14622255qtu.139.1599343490069;
+        Sat, 05 Sep 2020 15:04:50 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJySRikCCor5yr0BDNe9+iwoIDyju7V6u1adnNggK8GYcJEWS1t2AsE88quSFPb5nSXUZrvyKQ==
+X-Received: by 2002:ac8:7b95:: with SMTP id p21mr14622237qtu.139.1599343489711;
+        Sat, 05 Sep 2020 15:04:49 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b13sm7617761qkl.46.2020.09.05.15.04.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 15:04:49 -0700 (PDT)
+Subject: Re: [PATCH v1 05/12] fpga: enable secure updates
+To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
+        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@intel.com
+References: <20200904235305.6254-1-russell.h.weight@intel.com>
+ <20200904235305.6254-6-russell.h.weight@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <3c3440c3-1087-f1aa-d25f-52156b68020c@redhat.com>
+Date:   Sat, 5 Sep 2020 15:04:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200904235305.6254-6-russell.h.weight@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 31. August 2020, 10:47:50 CEST schrieb Jianqun Xu:
-> Remove totally irq mappings create in probe, the gpio irq mapping will
-> be created when do
->     gpio_to_irq ->
->         rockchip_gpio_to_irq ->
->             irq_create_mapping
-> 
-> This patch can speed up system boot on, also abandon many unused irq
-> mappings' create.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
+On 9/4/20 4:52 PM, Russ Weight wrote:
+> Extend the FPGA Intel Security Manager class driver to
+> include an update/filename sysfs node that can be used
+> to initiate a security update.  The filename of a secure
+> update file (BMC image, FPGA image, Root Entry Hash image,
+> or Code Signing Key cancellation image) can be written to
+> this sysfs entry to cause a secure update to occur.
+>
+> The write of the filename will return immediately, and the
+> update will begin in the context of a kernel worker thread.
+> This tool utilizes the request_firmware framework, which
+> requires that the image file reside under /lib/firmware.
+>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 > ---
->  drivers/pinctrl/pinctrl-rockchip.c | 28 ++++++++++++----------------
->  1 file changed, 12 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-> index 54abda7b7be8..265d64b8c4f5 100644
-> --- a/drivers/pinctrl/pinctrl-rockchip.c
-> +++ b/drivers/pinctrl/pinctrl-rockchip.c
-> @@ -3196,7 +3196,7 @@ static void rockchip_irq_demux(struct irq_desc *desc)
->  
->  		irq = __ffs(pend);
->  		pend &= ~BIT(irq);
-> -		virq = irq_linear_revmap(bank->domain, irq);
-> +		virq = irq_find_mapping(bank->domain, irq);
->  
->  		if (!virq) {
->  			dev_err(bank->drvdata->dev, "unmapped irq %d\n", irq);
-> @@ -3375,7 +3375,7 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
->  	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
->  	struct irq_chip_generic *gc;
->  	int ret;
-> -	int i, j;
-> +	int i;
->  
->  	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
->  		if (!bank->valid) {
-> @@ -3402,7 +3402,7 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
->  
->  		ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
->  					 "rockchip_gpio_irq", handle_level_irq,
-> -					 clr, 0, IRQ_GC_INIT_MASK_CACHE);
-> +					 clr, 0, 0);
->  		if (ret) {
->  			dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
->  				bank->name);
-> @@ -3411,14 +3411,6 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
->  			continue;
->  		}
->  
-> -		/*
-> -		 * Linux assumes that all interrupts start out disabled/masked.
-> -		 * Our driver only uses the concept of masked and always keeps
-> -		 * things enabled, so for us that's all masked and all enabled.
-> -		 */
-> -		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
-> -		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-> -
->  		gc = irq_get_domain_generic_chip(bank->domain, 0);
->  		gc->reg_base = bank->reg_base;
->  		gc->private = bank;
-> @@ -3435,13 +3427,17 @@ static int rockchip_interrupts_register(struct platform_device *pdev,
->  		gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
->  		gc->wake_enabled = IRQ_MSK(bank->nr_pins);
->  
-> +		/*
-> +		 * Linux assumes that all interrupts start out disabled/masked.
-> +		 * Our driver only uses the concept of masked and always keeps
-> +		 * things enabled, so for us that's all masked and all enabled.
-> +		 */
-> +		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
-> +		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-> +		gc->mask_cache = 0xffffffff;
+>  .../ABI/testing/sysfs-class-ifpga-sec-mgr     |  13 ++
+>  drivers/fpga/ifpga-sec-mgr.c                  | 155 ++++++++++++++++++
+>  include/linux/fpga/ifpga-sec-mgr.h            |  49 ++++++
+>  3 files changed, 217 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> index 86f8992559bf..a476504b7ae9 100644
+> --- a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> +++ b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> @@ -73,3 +73,16 @@ Contact:	Russ Weight <russell.h.weight@intel.com>
+>  Description:	Read only. Returns number of times the BMC image has been
+>  		flashed.
+>  		Format: "%d".
 > +
->  		irq_set_chained_handler_and_data(bank->irq,
->  						 rockchip_irq_demux, bank);
-> -
-> -		/* map the gpio irqs here, when the clock is still running */
-> -		for (j = 0 ; j < 32 ; j++)
-> -			irq_create_mapping(bank->domain, j);
-> -
->  		clk_disable(bank->clk);
->  	}
+> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/update/filename
+> +Date:		Sep 2020
+> +KernelVersion:  5.10
+> +Contact:	Russ Weight <russell.h.weight@intel.com>
+> +Description:	Write only. Write the filename of an Intel image
+> +		file to this sysfs file to initiate a secure
+> +		update. The file must have an appropriate header
+> +		which, among other things, identifies the target
+> +		for the update. This mechanism is used to update
+> +		BMC images, BMC firmware, Static Region images,
+> +		and Root Entry Hashes, and to cancel Code Signing
+> +		Keys (CSK).
+> diff --git a/drivers/fpga/ifpga-sec-mgr.c b/drivers/fpga/ifpga-sec-mgr.c
+> index 97bf80277ed2..73173badbe96 100644
+> --- a/drivers/fpga/ifpga-sec-mgr.c
+> +++ b/drivers/fpga/ifpga-sec-mgr.c
+> @@ -5,8 +5,11 @@
+>   * Copyright (C) 2019-2020 Intel Corporation, Inc.
+>   */
 >  
-> 
+> +#include <linux/delay.h>
+> +#include <linux/firmware.h>
+>  #include <linux/fpga/ifpga-sec-mgr.h>
+>  #include <linux/idr.h>
+> +#include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+> @@ -14,6 +17,8 @@
+>  static DEFINE_IDA(ifpga_sec_mgr_ida);
+>  static struct class *ifpga_sec_mgr_class;
+>  
+> +#define WRITE_BLOCK_SIZE	0x4000
+> +
+>  static ssize_t show_canceled_csk(struct ifpga_sec_mgr *imgr,
+>  				 sysfs_csk_hndlr_t get_csk,
+>  				 sysfs_csk_nbits_t get_csk_nbits,
+> @@ -134,6 +139,91 @@ static struct attribute *sec_mgr_security_attrs[] = {
+>  	NULL,
+>  };
+>  
+> +static void ifpga_sec_dev_error(struct ifpga_sec_mgr *imgr,
+> +				enum ifpga_sec_err err_code)
+> +{
+> +	imgr->err_code = err_code;
+> +	imgr->iops->cancel(imgr);
+> +}
+> +
+> +static void progress_complete(struct ifpga_sec_mgr *imgr)
+> +{
+> +	mutex_lock(&imgr->lock);
+> +	imgr->progress = IFPGA_SEC_PROG_IDLE;
+> +	complete_all(&imgr->update_done);
+> +	mutex_unlock(&imgr->lock);
+> +}
+> +
+> +static void ifpga_sec_mgr_update(struct work_struct *work)
+> +{
+> +	u32 size, blk_size, offset = 0;
+> +	struct ifpga_sec_mgr *imgr;
+> +	const struct firmware *fw;
+> +	enum ifpga_sec_err ret;
+> +
+> +	imgr = container_of(work, struct ifpga_sec_mgr, work);
 
+Why not lock here ? It seems like filename and other
 
+state could be changed out from under the work func.
 
+> +
+> +	get_device(&imgr->dev);
+> +	if (request_firmware(&fw, imgr->filename, &imgr->dev)) {
+> +		imgr->err_code = IFPGA_SEC_ERR_FILE_READ;
+> +		goto idle_exit;
+> +	}
+> +
+> +	imgr->data = fw->data;
+> +	imgr->remaining_size = fw->size;
+> +
+> +	if (!try_module_get(imgr->dev.parent->driver->owner)) {
+> +		imgr->err_code = IFPGA_SEC_ERR_BUSY;
+> +		goto release_fw_exit;
+> +	}
+> +
+> +	imgr->progress = IFPGA_SEC_PROG_PREPARING;
+> +	ret = imgr->iops->prepare(imgr);
+> +	if (ret) {
+> +		ifpga_sec_dev_error(imgr, ret);
+> +		goto modput_exit;
+> +	}
+> +
+> +	imgr->progress = IFPGA_SEC_PROG_WRITING;
+> +	size = imgr->remaining_size;
+> +	while (size) {
+> +		blk_size = min_t(u32, size, WRITE_BLOCK_SIZE);
+> +		size -= blk_size;
+> +		ret = imgr->iops->write_blk(imgr, offset, blk_size);
+
+Check for function pointer later, good.
+
+Could writing a short block be handled like libc's write()
+
+by passing back the bytes written ?
+
+> +		if (ret) {
+> +			ifpga_sec_dev_error(imgr, ret);
+> +			goto done;
+> +		}
+> +
+> +		imgr->remaining_size = size;
+> +		offset += blk_size;
+> +	}
+> +
+> +	imgr->progress = IFPGA_SEC_PROG_PROGRAMMING;
+> +	ret = imgr->iops->poll_complete(imgr);
+> +	if (ret) {
+> +		ifpga_sec_dev_error(imgr, ret);
+> +		goto done;
+> +	}
+Add a paranoid crc check the flash is what was written ?
+> +
+> +done:
+> +	if (imgr->iops->cleanup)
+> +		imgr->iops->cleanup(imgr);
+> +
+> +modput_exit:
+> +	module_put(imgr->dev.parent->driver->owner);
+> +
+> +release_fw_exit:
+> +	imgr->data = NULL;
+clear remaining_size ?
+> +	release_firmware(fw);
+> +
+> +idle_exit:
+> +	kfree(imgr->filename);
+> +	imgr->filename = NULL;
+> +	put_device(&imgr->dev);
+> +	progress_complete(imgr);
+> +}
+> +
+>  #define check_attr(attribute, _name) \
+>  	((attribute) == &dev_attr_##_name.attr && imgr->iops->_name)
+>  
+> @@ -161,6 +251,51 @@ static struct attribute_group sec_mgr_security_attr_group = {
+>  	.is_visible = sec_mgr_visible,
+>  };
+>  
+> +static ssize_t filename_store(struct device *dev, struct device_attribute *attr,
+> +			      const char *buf, size_t count)
+> +{
+> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
+> +	int ret = 0;
+> +
+> +	if (count == 0 || count >= PATH_MAX)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&imgr->lock);
+> +	if (imgr->driver_unload || imgr->progress != IFPGA_SEC_PROG_IDLE) {
+> +		ret = -EBUSY;
+> +		goto unlock_exit;
+> +	}
+> +
+> +	imgr->filename = kstrndup(buf, PATH_MAX - 1, GFP_KERNEL);
+shouldn't this be 'count - 1' ?
+> +	if (!imgr->filename) {
+> +		ret = -ENOMEM;
+> +		goto unlock_exit;
+> +	}
+> +
+> +	if (imgr->filename[strlen(imgr->filename) - 1] == '\n')
+> +		imgr->filename[strlen(imgr->filename) - 1] = '\0';
+
+If you are catching the '\n' is a more general striping of
+
+whitespace needed ?
+
+Could a file exists check be done before kicking off the worker?
+
+> +
+> +	imgr->err_code = IFPGA_SEC_ERR_NONE;
+> +	imgr->progress = IFPGA_SEC_PROG_READ_FILE;
+> +	reinit_completion(&imgr->update_done);
+> +	schedule_work(&imgr->work);
+
+Skip the if-check at the end
+
+ret = count.
+
+> +
+> +unlock_exit:
+> +	mutex_unlock(&imgr->lock);
+> +	return ret ? : count;
+> +}
+> +static DEVICE_ATTR_WO(filename);
+> +
+> +static struct attribute *sec_mgr_update_attrs[] = {
+> +	&dev_attr_filename.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group sec_mgr_update_attr_group = {
+> +	.name = "update",
+> +	.attrs = sec_mgr_update_attrs,
+> +};
+> +
+>  static ssize_t name_show(struct device *dev,
+>  			 struct device_attribute *attr, char *buf)
+>  {
+> @@ -182,6 +317,7 @@ static struct attribute_group sec_mgr_attr_group = {
+>  static const struct attribute_group *ifpga_sec_mgr_attr_groups[] = {
+>  	&sec_mgr_attr_group,
+>  	&sec_mgr_security_attr_group,
+> +	&sec_mgr_update_attr_group,
+>  	NULL,
+>  };
+>  
+> @@ -233,6 +369,12 @@ ifpga_sec_mgr_register(struct device *dev, const char *name,
+>  	struct ifpga_sec_mgr *imgr;
+>  	int id, ret;
+>  
+> +	if (!iops || !iops->cancel || !iops->prepare ||
+> +	    !iops->write_blk || !iops->poll_complete) {
+Comments in ifpga-sec-mgr.h say 'Required: ' good.
+> +		dev_err(dev, "Attempt to register without ifpga_sec_mgr_ops\n");
+without required ifpga_sec_mgr_ops
+> +		return NULL;
+> +	}
+> +
+>  	if (!check_reh_handler(dev, iops, bmc) ||
+>  	    !check_reh_handler(dev, iops, sr) ||
+>  	    !check_reh_handler(dev, iops, pr) ||
+> @@ -254,6 +396,8 @@ ifpga_sec_mgr_register(struct device *dev, const char *name,
+>  	imgr->name = name;
+>  	imgr->priv = priv;
+>  	imgr->iops = iops;
+> +	init_completion(&imgr->update_done);
+> +	INIT_WORK(&imgr->work, ifpga_sec_mgr_update);
+>  	mutex_init(&imgr->lock);
+>  
+>  	id = ida_simple_get(&ifpga_sec_mgr_ida, 0, 0, GFP_KERNEL);
+> @@ -299,6 +443,17 @@ void ifpga_sec_mgr_unregister(struct ifpga_sec_mgr *imgr)
+>  {
+>  	dev_info(&imgr->dev, "%s %s\n", __func__, imgr->name);
+>  
+> +	mutex_lock(&imgr->lock);
+> +	imgr->driver_unload = true;
+> +	if (imgr->progress == IFPGA_SEC_PROG_IDLE) {
+> +		mutex_unlock(&imgr->lock);
+> +		goto unregister;
+> +	}
+> +
+> +	mutex_unlock(&imgr->lock);
+> +	wait_for_completion(&imgr->update_done);
+> +
+> +unregister:
+>  	device_unregister(&imgr->dev);
+>  }
+>  EXPORT_SYMBOL_GPL(ifpga_sec_mgr_unregister);
+> diff --git a/include/linux/fpga/ifpga-sec-mgr.h b/include/linux/fpga/ifpga-sec-mgr.h
+> index e391b0c8f448..4da2864e251c 100644
+> --- a/include/linux/fpga/ifpga-sec-mgr.h
+> +++ b/include/linux/fpga/ifpga-sec-mgr.h
+> @@ -7,6 +7,7 @@
+>  #ifndef _LINUX_IFPGA_SEC_MGR_H
+>  #define _LINUX_IFPGA_SEC_MGR_H
+>  
+> +#include <linux/completion.h>
+>  #include <linux/device.h>
+>  #include <linux/mutex.h>
+>  #include <linux/types.h>
+> @@ -86,6 +87,19 @@ typedef int (*sysfs_csk_nbits_t)(struct ifpga_sec_mgr *imgr);
+>  typedef int (*sysfs_csk_hndlr_t)(struct ifpga_sec_mgr *imgr,
+>  				 unsigned long *csk_map, unsigned int nbits);
+>  
+> +enum ifpga_sec_err {
+> +	IFPGA_SEC_ERR_NONE	   = 0x0,
+> +	IFPGA_SEC_ERR_HW_ERROR	   = 0x1,
+> +	IFPGA_SEC_ERR_TIMEOUT	   = 0x2,
+> +	IFPGA_SEC_ERR_CANCELED	   = 0x3,
+> +	IFPGA_SEC_ERR_BUSY	   = 0x4,
+> +	IFPGA_SEC_ERR_INVALID_SIZE = 0x5,
+> +	IFPGA_SEC_ERR_RW_ERROR	   = 0x6,
+> +	IFPGA_SEC_ERR_WEAROUT	   = 0x7,
+> +	IFPGA_SEC_ERR_FILE_READ	   = 0x8,
+> +	IFPGA_SEC_ERR_MAX	   = 0x9
+The initializers are redundant.
+> +};
+> +
+>  /**
+>   * struct ifpga_sec_mgr_ops - device specific operations
+>   * @user_flash_count:	    Optional: Return sysfs string output for FPGA
+> @@ -110,6 +124,17 @@ typedef int (*sysfs_csk_hndlr_t)(struct ifpga_sec_mgr *imgr,
+>   * @bmc_reh_size:	    Optional: Return byte size for BMC root entry hash
+>   * @sr_reh_size:	    Optional: Return byte size for SR root entry hash
+>   * @pr_reh_size:	    Optional: Return byte size for PR root entry hash
+> + * @prepare:		    Required: Prepare secure update
+> + * @write_blk:		    Required: Write a block of data
+> + * @poll_complete:	    Required: Check for the completion of the
+> + *			    HW authentication/programming process. This
+> + *			    function should check for imgr->driver_unload
+> + *			    and abort with IFPGA_SEC_ERR_CANCELED when true.
+> + * @cancel:		    Required: Signal HW to cancel update
+> + * @cleanup:		    Optional: Complements the prepare()
+> + *			    function and is called at the completion
+> + *			    of the update, whether success or failure,
+> + *			    if the prepare function succeeded.
+>   */
+>  struct ifpga_sec_mgr_ops {
+>  	sysfs_cnt_hndlr_t user_flash_count;
+> @@ -127,6 +152,22 @@ struct ifpga_sec_mgr_ops {
+>  	sysfs_csk_nbits_t bmc_canceled_csk_nbits;
+>  	sysfs_csk_nbits_t sr_canceled_csk_nbits;
+>  	sysfs_csk_nbits_t pr_canceled_csk_nbits;
+> +	enum ifpga_sec_err (*prepare)(struct ifpga_sec_mgr *imgr);
+> +	enum ifpga_sec_err (*write_blk)(struct ifpga_sec_mgr *imgr,
+> +					u32 offset, u32 size);
+> +	enum ifpga_sec_err (*poll_complete)(struct ifpga_sec_mgr *imgr);
+> +	void (*cleanup)(struct ifpga_sec_mgr *imgr);
+> +	enum ifpga_sec_err (*cancel)(struct ifpga_sec_mgr *imgr);
+> +};
+> +
+> +/* Update progress codes */
+> +enum ifpga_sec_prog {
+> +	IFPGA_SEC_PROG_IDLE	   = 0x0,
+> +	IFPGA_SEC_PROG_READ_FILE   = 0x1,
+> +	IFPGA_SEC_PROG_PREPARING   = 0x2,
+> +	IFPGA_SEC_PROG_WRITING	   = 0x3,
+> +	IFPGA_SEC_PROG_PROGRAMMING = 0x4,
+> +	IFPGA_SEC_PROG_MAX	   = 0x5
+
+ditto
+
+Tom
+
+>  };
+>  
+>  struct ifpga_sec_mgr {
+> @@ -134,6 +175,14 @@ struct ifpga_sec_mgr {
+>  	struct device dev;
+>  	const struct ifpga_sec_mgr_ops *iops;
+>  	struct mutex lock;		/* protect data structure contents */
+> +	struct work_struct work;
+> +	struct completion update_done;
+> +	char *filename;
+> +	const u8 *data;			/* pointer to update data */
+> +	u32 remaining_size;		/* size remaining to transfer */
+> +	enum ifpga_sec_prog progress;
+> +	enum ifpga_sec_err err_code;	/* security manager error code */
+> +	bool driver_unload;
+>  	void *priv;
+>  };
+>  
 
