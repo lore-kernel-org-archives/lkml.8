@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7F2C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA1C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBA5E2086A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:40:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D872078E
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 17:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="blpD3fnj"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="PQI3pEBu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgIERk4 (ORCPT
+        id S1728561AbgIERlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 13:40:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
+        Sat, 5 Sep 2020 13:41:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728443AbgIERkP (ORCPT
+        with ESMTP id S1728397AbgIERkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 13:40:15 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D978C061258
-        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 10:40:10 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id j3so4652476qvi.7
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 10:40:10 -0700 (PDT)
+        Sat, 5 Sep 2020 13:40:09 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C189FC061247
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 10:40:07 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id 19so5686427qtp.1
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 10:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=clxiZVTp9IbXkL/ODJWDej3rLeQuCQZfJj2JCOZ4XcQ=;
-        b=blpD3fnjIVvM2UjG69yRj3YsVpySHlyRssil72WnBLEgXMyIIgE2fFoHiWmPNv5KfQ
-         ZITYlMCVFWQEv1GdzHRxmoCEy/B0MTqX9yk68IsSNZqS75q6ClyWfS4otL6JK08bTcko
-         XbSKbb7N3OC2PHCyYzV6wHXyNxG8XXzbON8uVjINd1sBlqg4qiqwfRX+Eg0t7FCNYqtb
-         SeotVZ6KCCgexrPc6a1EFS3twfu3vAa+w/rz8OU9K82KJVXjQ4fDdMHIRx1sUinY0+OI
-         IeVt0MK6rT6xu92SG7kzODJ4kWv4PfDuuHc6naWm1/eH40hkZK7LDFKi9om9i67vAmBk
-         IkYQ==
+        bh=0O2sDN9MRUJx80UJH/oPfzt4dGApmPFTm8Og0trLMlM=;
+        b=PQI3pEBu3s9c3wGVmIuNH334mS4Xc4eJzP8j71PrrLcxVfR5EeZBMcR+Auusaw6/Ff
+         1Fw+D1h5tmrw410p9aWH+jF5Z6dnxjbIEeE8J+In0S47NcWyOr0vBighN1vBS3/I+N8t
+         n9VYeGfCxt7F4CbUBDAUk9DlIoEz+kJfWhdIGY/EY2XPGAsDrKhZQlUhDEf/ez9cb9Z0
+         +hIc9YK3pnmY/ms0/Uo1h0c7mEiEpKJx0wPTUtky8whMSvqzRf3vJ0tXk2/adb+V0Xkl
+         nyEaTca83iCgVUT5X2KZzNhHyEgCmexoxmyxXY5r6kPXh9lsiSd/W+eN1IAo++f2Wkiy
+         iW9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=clxiZVTp9IbXkL/ODJWDej3rLeQuCQZfJj2JCOZ4XcQ=;
-        b=Py4qLhg3F9bSRzRVKrrji2Siam0nlAXiJ0G/x9te+p1AD7q89d8t9CKQz6DCzQLyrE
-         aAehKw0LkddWJrFvAnWuvXElLR0qWJjyZ6zyZWsKnmAyI7I2jtgJKHzUVStFHjfk/JMx
-         vZvv2m4BwqDZwuIQe/+Q47VdLnfkInXfkycolz5BO+nPwKiHK9iOJe0iSU5GDdWzJq8t
-         LbVB2kRFLZd622zKZV5edbQkcUVlII/m9PuoysK1CY9/dVQIzJgAFkDGc0LrpHKes2fF
-         E+qvcMGstprW0tjO3oc9ryXvXaOneSFqAhYmXMBdT0bQ1I5UP39+F+4xIMq3hcLDIFlO
-         NpBQ==
-X-Gm-Message-State: AOAM530RvAbGKfKighKJ0NW26OrpK7kKAaASIlVlhxIMIvgzfFwKxCAH
-        L6s/5Inh4mSUe2Y0gxNvd05NkUGkFUiwhJAeUYE=
-X-Google-Smtp-Source: ABdhPJzUx2oIqqILgTzU+sFcy14bKR7Lc4YYcEuNwCsXTBdV0KZMOPD0VXj9GSfNBWcaubjZI7bJtw==
-X-Received: by 2002:a0c:edaa:: with SMTP id h10mr12414932qvr.12.1599327608255;
-        Sat, 05 Sep 2020 10:40:08 -0700 (PDT)
+        bh=0O2sDN9MRUJx80UJH/oPfzt4dGApmPFTm8Og0trLMlM=;
+        b=k0sqXS4wga6t/gfJ0g7JFoeIhNxBJhkRWIakCp7kOA3UJLi2N1encHAu3ihq5oYgk8
+         8VI8pAwbJY8/1tSRs0gL/yEZFfhCCBjVbGfAmab4fqiJ8dF05U52VCXrx/GA1aeII7m/
+         ct0LYNeuaxbU8PLk2gOTQQE2sx/l1zAis/GYzNjNsYly26yza9FLWOH9J169Rl4Q4b1v
+         lXo0wQIFP3BlpcKE3eGpOLzo9Ka53J2fWCG9QPv5NxUOTpiqnFZPKN/YPLvPSh04Yoga
+         UCoz6nd5JQZA3S7cnz81ZBz9+d01iHacWjCM+n8nVjeER07o1lyiIeVCocHoLLxlzyeZ
+         K5Fw==
+X-Gm-Message-State: AOAM531TQTFOShq7BRuBVcvdkrXmfolupMlzAt0inc1K0yF9c5evSNwK
+        YyBfX1jzuq/P21/4yqA9pE+xRQ==
+X-Google-Smtp-Source: ABdhPJxvu7IqOsyVda774F6SOjLfLez3tafKaihOLf6twPF1uFQYTPqcfzR9nDz531vmBmKxjwOt6w==
+X-Received: by 2002:aed:2d06:: with SMTP id h6mr14027558qtd.301.1599327605930;
+        Sat, 05 Sep 2020 10:40:05 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id k22sm4612076qkk.13.2020.09.05.10.40.07
+        by smtp.gmail.com with ESMTPSA id k22sm4612076qkk.13.2020.09.05.10.40.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 10:40:07 -0700 (PDT)
+        Sat, 05 Sep 2020 10:40:05 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vinod Koul <vkoul@kernel.org>,
         Bard Liao <yung-chuan.liao@linux.intel.com>,
@@ -69,9 +70,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         Sanyog Kale <sanyog.r.kale@intel.com>,
         alsa-devel@alsa-project.org (moderated list:SOUNDWIRE SUBSYSTEM),
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/4] soundwire: qcom: add support for mmio soundwire master devices
-Date:   Sat,  5 Sep 2020 13:39:04 -0400
-Message-Id: <20200905173905.16541-4-jonathan@marek.ca>
+Subject: [PATCH v2 1/4] soundwire: qcom: fix abh/ahb typo
+Date:   Sat,  5 Sep 2020 13:39:02 -0400
+Message-Id: <20200905173905.16541-2-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200905173905.16541-1-jonathan@marek.ca>
 References: <20200905173905.16541-1-jonathan@marek.ca>
@@ -82,81 +83,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds support for qcom soundwire devices with memory mapped IO registers.
+The function name qcom_swrm_abh_reg_read should say ahb, fix that.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/soundwire/qcom.c | 29 +++++++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ drivers/soundwire/qcom.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
-index 6401ad451eee..ff28794868ca 100644
+index 915c2cf0c274..d1e33ef1afac 100644
 --- a/drivers/soundwire/qcom.c
 +++ b/drivers/soundwire/qcom.c
-@@ -34,6 +34,7 @@
- #define SWRM_INTERRUPT_STATUS_SPECIAL_CMD_ID_FINISHED		BIT(10)
- #define SWRM_INTERRUPT_MASK_ADDR				0x204
- #define SWRM_INTERRUPT_CLEAR					0x208
-+#define SWRM_INTERRUPT_CPU_EN					0x210
- #define SWRM_CMD_FIFO_WR_CMD					0x300
- #define SWRM_CMD_FIFO_RD_CMD					0x304
- #define SWRM_CMD_FIFO_CMD					0x308
-@@ -90,6 +91,7 @@ struct qcom_swrm_ctrl {
- 	struct sdw_bus bus;
- 	struct device *dev;
- 	struct regmap *regmap;
-+	void __iomem *mmio;
- 	struct completion *comp;
- 	struct work_struct slave_work;
- 	/* read/write lock */
-@@ -154,6 +156,20 @@ static int qcom_swrm_ahb_reg_write(struct qcom_swrm_ctrl *ctrl,
- 	return SDW_CMD_OK;
- }
+@@ -114,7 +114,7 @@ struct qcom_swrm_ctrl {
  
-+static int qcom_swrm_cpu_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
-+				  u32 *val)
-+{
-+	*val = readl(ctrl->mmio + reg);
-+	return SDW_CMD_OK;
-+}
-+
-+static int qcom_swrm_cpu_reg_write(struct qcom_swrm_ctrl *ctrl, int reg,
-+				   int val)
-+{
-+	writel(val, ctrl->mmio + reg);
-+	return SDW_CMD_OK;
-+}
-+
- static int qcom_swrm_cmd_fifo_wr_cmd(struct qcom_swrm_ctrl *ctrl, u8 cmd_data,
- 				     u8 dev_addr, u16 reg_addr)
+ #define to_qcom_sdw(b)	container_of(b, struct qcom_swrm_ctrl, bus)
+ 
+-static int qcom_swrm_abh_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
++static int qcom_swrm_ahb_reg_read(struct qcom_swrm_ctrl *ctrl, int reg,
+ 				  u32 *val)
  {
-@@ -310,6 +326,12 @@ static int qcom_swrm_init(struct qcom_swrm_ctrl *ctrl)
- 	ctrl->reg_write(ctrl, SWRM_COMP_CFG_ADDR,
- 			SWRM_COMP_CFG_IRQ_LEVEL_OR_PULSE_MSK |
- 			SWRM_COMP_CFG_ENABLE_MSK);
-+
-+	/* enable CPU IRQs */
-+	if (ctrl->mmio) {
-+		ctrl->reg_write(ctrl, SWRM_INTERRUPT_CPU_EN,
-+				SWRM_INTERRUPT_STATUS_RMSK);
-+	}
- 	return 0;
- }
+ 	struct regmap *wcd_regmap = ctrl->regmap;
+@@ -754,7 +754,7 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
-@@ -764,8 +786,11 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+ 	if (dev->parent->bus == &slimbus_bus) {
+-		ctrl->reg_read = qcom_swrm_abh_reg_read;
++		ctrl->reg_read = qcom_swrm_ahb_reg_read;
+ 		ctrl->reg_write = qcom_swrm_ahb_reg_write;
+ 		ctrl->regmap = dev_get_regmap(dev->parent, NULL);
  		if (!ctrl->regmap)
- 			return -EINVAL;
- 	} else {
--		/* Only WCD based SoundWire controller is supported */
--		return -ENOTSUPP;
-+		ctrl->reg_read = qcom_swrm_cpu_reg_read;
-+		ctrl->reg_write = qcom_swrm_cpu_reg_write;
-+		ctrl->mmio = devm_platform_ioremap_resource(pdev, 0);
-+		if (IS_ERR(ctrl->mmio))
-+			return PTR_ERR(ctrl->mmio);
- 	}
- 
- 	ctrl->irq = of_irq_get(dev->of_node, 0);
 -- 
 2.26.1
 
