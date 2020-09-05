@@ -2,81 +2,88 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378D1C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CB2C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E97CF206A5
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599298114;
-	bh=/A50ZbK+4T3DpwzsRWE24zHeV6HPq3Y0Se11BWsh19M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0NQBbsBN4w7ERC41y44VrO2mjWFZsRRWrHecJpCkY/y3PDtReHtWvttMPzTJeT/Dm
-	 GeaXrSZ4pMoRXQ3MQa9KLt+u4CF5i1aEV2TqiB0VtWJ8yzMUQBiY2yCZ7CWR95frv+
-	 xqd7lPU1C5VgnXf/eEdCHM5jVrJvkpFd/W87/f64=
+	by mail.kernel.org (Postfix) with ESMTP id 5A7B72074D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 09:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgIEJ2b (ORCPT
+        id S1728452AbgIEJ2x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 05:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbgIEJ2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 05:28:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D690E2074D;
-        Sat,  5 Sep 2020 09:28:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599298110;
-        bh=/A50ZbK+4T3DpwzsRWE24zHeV6HPq3Y0Se11BWsh19M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sEQWMwmI7ro+bm1OkH8+f/b0k9wZ8cBrKWRK0ZGB4FlfsT8SJAjifnDeOX5oQNVNA
-         Xwcp+6o7yQUbynj75qI78+ozqug1F8YPdBwrEsvRzav5uYc3TzCO4CiKaFxKcn7euC
-         VuM+VeBuEqMtsxSAlqZVt5/ceoFzonuPa4sLHFWQ=
-Date:   Sat, 5 Sep 2020 11:28:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.8 00/17] 5.8.7-rc1 review
-Message-ID: <20200905092849.GB3975295@kroah.com>
-References: <20200904120257.983551609@linuxfoundation.org>
- <20200904192345.GB211974@roeck-us.net>
+        Sat, 5 Sep 2020 05:28:53 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10772 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728430AbgIEJ2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 05:28:52 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 40BF594029903E1A9AF8;
+        Sat,  5 Sep 2020 17:28:48 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
+ 17:28:40 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <mingo@redhat.com>, <peterz@infradead.org>,
+        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
+        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
+        <bsegall@google.com>, <mgorman@suse.de>
+CC:     <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] sched: Fix some comments
+Date:   Sat, 5 Sep 2020 05:27:27 -0400
+Message-ID: <20200905092727.57471-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904192345.GB211974@roeck-us.net>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 12:23:45PM -0700, Guenter Roeck wrote:
-> On Fri, Sep 04, 2020 at 03:29:59PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.8.7 release.
-> > There are 17 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sun, 06 Sep 2020 12:02:48 +0000.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 154 pass: 154 fail: 0
-> Qemu test results:
-> 	total: 430 pass: 430 fail: 0
-> 
-> Tested-by: Guenter Roeck <linux@roeck-us.net>
+Since commit dfa50b605c2a ("sched: Make finish_task_switch() return 'struct
+rq *'"), prev == current is incorrect in finish_task_switch(). Also fix a
+typo in the comment of struct dl_bandwidth.
 
-Thanks for testing both of these and letting me know.
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ kernel/sched/core.c  | 4 ++--
+ kernel/sched/sched.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-greg k-h
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8471a0f7eb32..725ccab230da 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3571,8 +3571,8 @@ prepare_task_switch(struct rq *rq, struct task_struct *prev,
+  *
+  * The context switch have flipped the stack from under us and restored the
+  * local variables which were saved when this task called schedule() in the
+- * past. prev == current is still correct but we need to recalculate this_rq
+- * because prev may have moved to another CPU.
++ * past. We need to recalculate this_rq because prev may have moved to
++ * another CPU.
+  */
+ static struct rq *finish_task_switch(struct task_struct *prev)
+ 	__releases(rq->lock)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 28709f6b0975..1d7e45f7fbb9 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -278,7 +278,7 @@ void __dl_clear_params(struct task_struct *p);
+  * consume bandwidth on the CPU they're running on.
+  * Finally, dl_total_bw_cpu is used to cache the index of dl_total_bw
+  * that will be shown the next time the proc or cgroup controls will
+- * be red. It on its turn can be changed by writing on its own
++ * be read. It on its turn can be changed by writing on its own
+  * control.
+  */
+ struct dl_bandwidth {
+-- 
+2.19.1
+
