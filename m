@@ -2,98 +2,85 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2FEC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E60C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2EF20709
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:35:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkU1vZdd"
+	by mail.kernel.org (Postfix) with ESMTP id 4FAC320797
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599349032;
+	bh=rpeS5XHUij27LdjfSXTm57hB+BZoxEGDguTEGPPB1XY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Oua+JUWgzhYK+LkIQpb1PCBbDfeBeeO4cK5xrlVh+46s16B/cD8fofbpicqB9M5v6
+	 tV90QxF4yUERZ8oxkMJzvc5jhu+IQXoebAP7IJ8MpxUzWRezXAGOQ0NuyalYKRPVZe
+	 9AJ6wm55sFCDppzC+nwVGBAl6rISuR0hSXU/RFPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgIEXfk (ORCPT
+        id S1728876AbgIEXhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 19:35:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728828AbgIEXfj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 19:35:39 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE1DC061244;
-        Sat,  5 Sep 2020 16:35:39 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a22so5606363ljp.13;
-        Sat, 05 Sep 2020 16:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Y1pIlSrGTn5ZDpLvpkfGwdcqQFtt1c+b+IXrwdEm6i0=;
-        b=YkU1vZddrsgHPRtBqEKHWR6xR18SxEnyMwtjhaY+tFYuA+0CoD0wztJvA38WJ1sFFM
-         YBQJUnfn1GXX2R4LxS5Txh9U8DqPGN4Kv9FZs/RXHGEDcdlUfCEbrWmWsshURdUyUCG8
-         f8Z9BOMB1kFNLXVT8kF7iaub2VaTx1wkwFeMgDg0Cbg/zYBXYdVE6ReiDjhwCVG7uGSr
-         H9EknIes0/OjzV4cPADgK6atQJ0+69oXBeEqJcXkodonSqR8k7nMUgrPW2EP9iT/cOAq
-         Qjs61hcA+XZrrrL3ZzjUCUpvo2vr4ecRGqmjq+GdvmdTIStZrkFQEkpO2B3Hlb9V6Ul/
-         8Yww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Y1pIlSrGTn5ZDpLvpkfGwdcqQFtt1c+b+IXrwdEm6i0=;
-        b=KQUrEC7FQCcqQLar3ANAfMYwp/T/H5OvMIZFkMziV9IhiOlWuwaNc4zkfSgIZReZh9
-         vxSFrftDV1ivJbEa2bG83bsOyDA3WoKJ9VZ56luE0UGB53WpSka73l1lE4RmjQlv/MBf
-         EevcN4bTsE3dkFZAvn3V7XdaVF3Nqv7FnGhPewg/8u9q+hZYB0DKSfOZedZzpDiDRkVq
-         kK0svdb/CzTKhcwXvbL+C76PRsP1Q7ACYvDASDcF2Sn6baz842ohK3Ol1y8XWsVdeftF
-         lWHImCbFn2n7Ry8amfyJFz+zTWoueX4it5BGKRdpSX3KyvQod0pdZf6PA4gtKGWH2FWt
-         8fjg==
-X-Gm-Message-State: AOAM530kyVdeunTlin5+LmKIONwiCFD2RACgmsWylH0TTyUfMPua+Tl9
-        ktts9BgXjsH3drChtFD5XggpJCDV4eM=
-X-Google-Smtp-Source: ABdhPJyO1aRBX72BVHozg/FWZOmcWIUUe1HQYh8IxoUDfHuj/KE7zFo5oI8Nm2YX5nJKeuZ9BTdhvQ==
-X-Received: by 2002:a2e:9988:: with SMTP id w8mr7409663lji.286.1599348937860;
-        Sat, 05 Sep 2020 16:35:37 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id f12sm3174906lfp.69.2020.09.05.16.35.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 16:35:37 -0700 (PDT)
-Subject: Re: [PATCH v4 00/31] Improvements for Tegra I2C driver
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200905204151.25343-1-digetx@gmail.com>
- <20200905231625.GH18554@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <81e6606c-f7fd-aa2f-1f8a-5bed83d7d94f@gmail.com>
-Date:   Sun, 6 Sep 2020 02:35:36 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Sat, 5 Sep 2020 19:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728103AbgIEXhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 19:37:09 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DDAF20760;
+        Sat,  5 Sep 2020 23:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599349029;
+        bh=rpeS5XHUij27LdjfSXTm57hB+BZoxEGDguTEGPPB1XY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fj9AGwiRHUE4yk+KXhFmB7MuGeJ+yfwxEs9krALrdFd4z9ZKrxI0PT0F4w0rslDxS
+         gbsrnSN4Ln61IQLrCV54Zb5BjSyKCV4zsvP4YD8x81rLVcdNTit0lornd8uUS2w0+i
+         E2AP8cR6ir1bgoY37X/fOh4Kyf/7cfdOP2P+jmDY=
+Date:   Sat, 5 Sep 2020 16:37:06 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <frank-w@public-files.de>,
+        <opensource@vdorst.com>, <dqfext@gmail.com>
+Subject: Re: [PATCH net-next v3 3/6] dt-bindings: net: dsa: add new MT7531
+ binding to support MT7531
+Message-ID: <20200905163706.60cdceb5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <4ec3c9e6a219c09fc90d1be8d3d63da587ef6fba.1599228079.git.landen.chao@mediatek.com>
+References: <cover.1599228079.git.landen.chao@mediatek.com>
+        <4ec3c9e6a219c09fc90d1be8d3d63da587ef6fba.1599228079.git.landen.chao@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200905231625.GH18554@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.09.2020 02:16, Michał Mirosław пишет:
-> On Sat, Sep 05, 2020 at 11:41:20PM +0300, Dmitry Osipenko wrote:
->> Hello!
->>
->> This series performs refactoring of the Tegra I2C driver code and hardens
->> the atomic-transfer mode.
-> [...]
-> 
-> Pending comments, all LGTM.
+On Fri, 4 Sep 2020 22:21:58 +0800 Landen Chao wrote:
+> @@ -32,10 +33,13 @@ Required properties for the child nodes within ports container:
+>  
+>  - reg: Port address described must be 6 for CPU port and from 0 to 5 for
+>  	user ports.
+> -- phy-mode: String, must be either "trgmii" or "rgmii" for port labeled
+> -	 "cpu".
+> +- phy-mode: String, the follow value would be acceptable for port labeled "cpu"
 
-Thank you!
+... the following values are acceptable for port labeled "cpu":
+
+> +	If compatible mediatek,mt7530 or mediatek,mt7621 is set,
+> +	must be either "trgmii" or "rgmii"
+> +	If compatible mediatek,mt7531 is set,
+> +	must be either "sgmii", "1000base-x" or "2500base-x"
