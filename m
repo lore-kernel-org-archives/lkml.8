@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9634DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2478C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE322074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7BD2072D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:05:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Owm67BOy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pns3oHCb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgIEUF2 (ORCPT
+        id S1728912AbgIEUFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49778 "EHLO
+        Sat, 5 Sep 2020 16:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728861AbgIEUFI (ORCPT
+        with ESMTP id S1728878AbgIEUFS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:05:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3BA6C061244;
-        Sat,  5 Sep 2020 13:05:07 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so225304plt.9;
-        Sat, 05 Sep 2020 13:05:07 -0700 (PDT)
+        Sat, 5 Sep 2020 16:05:18 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAD4C061245;
+        Sat,  5 Sep 2020 13:05:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id m8so784042pgi.3;
+        Sat, 05 Sep 2020 13:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DvFdTPchcbyWEX++eP+RtKIp66/AsHgH2aEoABwhrPw=;
-        b=Owm67BOye7cLn9/FM8RhXNLMKAdbSblV5WEyMv7bJR8n9ma1DGn8BAfSLnoMQDMxMt
-         EPDu/uwUkDOVTGgmEoieRU+cWIYSRwpP6G179J2U3AyXFcG4RCTV7Omxd2wkMnw2R+v+
-         fRwVl1GJL4pcAu5p6rbMdMtSy5hWFVfpMXB3Fi5mveMK8gC97pkmbrGKY/DZmIW3QNIx
-         g445ia8irLz4OwfA70RY95WQn+fFk8xzYycE4n89onbedeNxEeQr88b+I+Cj/mOsx3yg
-         hpA3R3zMSS120XHism4saTnqpyqyPLWgVOM3h/VOWflTvyH5NhYGduGtkTNrC9FD701Z
-         gevw==
+        bh=lMN6Aad98rZkq5O2asxI/gYil5amAFJMEDxEz6HXvq8=;
+        b=Pns3oHCbWFzzejByOVGuRtp6qKL3sl4mj7AykBUBeMIX6DG8SR1IsoN6Ja6JU7Mmo7
+         89KRmzbpwRMJZgVFooJIgnPncIpgSt+0EQvYxbEtZvr/exYq5DPPfS7S+ncnjbEhencR
+         RH5YuTk5AGbsVWb0tGdT7dOwa0QwL6iFKmCTJEejA59iNmhNep/3QwIBxY7vvSa5bfZl
+         928en8I2HTpfpoKWubThI/PwTsU8ldfmeANtINBPqLG2F2UTWsghPvDW3iuMWy0jWS7r
+         KftJtF16JX0Ubuj9I3CFNVPkiwX+Irnt9JioDg924zLZRFRuzWi8RIzaliNNfS10b6oh
+         2IJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DvFdTPchcbyWEX++eP+RtKIp66/AsHgH2aEoABwhrPw=;
-        b=GdDalkbu+r9qtIfrQ3bHWhhilHsBT6qxo4Y9l+uWD70ltodsdLWLapPQ9axVEpD4OH
-         xt4Iht8G9I+VWXVDIvnpAnctkHGIttoavU+wC7I6Lh4lESHTay+sxWYw6ghGyWPhbI2k
-         ItSU/lGDQpH0+Vyk3Unny5bU4+wxtjSkXlNkvjrEXt17bL9wU5sMX3qHGztNc6ba0eNH
-         vpo3mo6xGi5hkY7wdDly9YSaoPQ8nwdgSz7DQ6Fy9uQCDZ1F450J/0IMuIiG3nj0stNX
-         XNqCWHQ1kAnI7v2nq4dFGzsaXHPdAzGnwk0t+E9faZ29pqoKzwdqtQEAmCk2uC3YYiG4
-         +GAg==
-X-Gm-Message-State: AOAM533ZsTd9eYatbDgoDe3VMPMSWl3pup/QR3oN1b+LeP46Cs9HaqRd
-        h+drrfoQJh4aV4UY9HgpWng=
-X-Google-Smtp-Source: ABdhPJxcnTtjrFZorqcAMTBoFnU7uOJs0ZXz5XW2NjfoAJXt07Zkspj2KF6vavtuzciDC2NujMM/Qw==
-X-Received: by 2002:a17:90a:8402:: with SMTP id j2mr13744447pjn.153.1599336307437;
-        Sat, 05 Sep 2020 13:05:07 -0700 (PDT)
+        bh=lMN6Aad98rZkq5O2asxI/gYil5amAFJMEDxEz6HXvq8=;
+        b=gsswa0AuTNL3NBr2ilwjPw6uyrmZEYEpm/VxQ0lT+RPVV3lfux3ksRNnOWxZBhSOri
+         9cFnuUITkNI5VDteOrxkOtjBAPZLFehlX6uSplNjb7re0GqxzlBOqVHmmo4ssX7uq3Kg
+         SPNhisQmmyBISc4x048VAlUduiPXhcaVYNzDlvQNmjSNVgQTXRlr3XHCG0DBT2kxdSM7
+         43e2RJFfl3JlEzoecH3o9SNJsy1GUxZ2DkW2ZmDzzO+lkbDNFvIc3VY1CbebFzn7crfY
+         pe/X4DyhFVQqHQV6wGfZ9HK+uvyWZhi3IPRgCVwKsMH0R3O/w2OdiNqjyuMet1vZZWFI
+         Azww==
+X-Gm-Message-State: AOAM530ttS2knHCh9VCaqcDMXGbXf5owIXUwQNccrVhlmb0wDyNruIAk
+        Xb+AQajty+9JuzNj9PNyGL0=
+X-Google-Smtp-Source: ABdhPJxtD01crAlFjZ6W6bU8A0+Jv4zKtX9LztW24Q4Cb6srFiKHgkdX/x8tPcvikAdykSvAmRGnSg==
+X-Received: by 2002:a63:fa10:: with SMTP id y16mr5293364pgh.304.1599336314974;
+        Sat, 05 Sep 2020 13:05:14 -0700 (PDT)
 Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id 70sm10615253pfu.107.2020.09.05.13.05.05
+        by smtp.gmail.com with ESMTPSA id e18sm8722752pgr.53.2020.09.05.13.05.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:05:06 -0700 (PDT)
+        Sat, 05 Sep 2020 13:05:13 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org,
         Will Deacon <will@kernel.org>,
@@ -72,16 +72,13 @@ Cc:     linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         Stephen Boyd <swboyd@chromium.org>,
         Akhil P Oommen <akhilpo@codeaurora.org>,
         Rob Clark <robdclark@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v17 17/20] iommu/arm-smmu: Add a way for implementations to influence SCTLR
-Date:   Sat,  5 Sep 2020 13:04:23 -0700
-Message-Id: <20200905200454.240929-18-robdclark@gmail.com>
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v17 20/20] arm: dts: qcom: sc7180: Set the compatible string for the GPU SMMU
+Date:   Sat,  5 Sep 2020 13:04:26 -0700
+Message-Id: <20200905200454.240929-21-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200905200454.240929-1-robdclark@gmail.com>
 References: <20200905200454.240929-1-robdclark@gmail.com>
@@ -94,71 +91,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-For the Adreno GPU's SMMU, we want SCTLR.HUPCF set to ensure that
-pending translations are not terminated on iova fault.  Otherwise
-a terminated CP read could hang the GPU by returning invalid
-command-stream data.
+Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+split pagetables and per-instance pagetables for drm/msm.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 6 ++++++
- drivers/iommu/arm/arm-smmu/arm-smmu.c      | 3 +++
- drivers/iommu/arm/arm-smmu/arm-smmu.h      | 3 +++
- 3 files changed, 12 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 1e942eed2dfc..0663d7d26908 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -129,6 +129,12 @@ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
- 	    (smmu_domain->cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64))
- 		pgtbl_cfg->quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index d46b3833e52f..f3bef1cad889 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -1937,7 +1937,7 @@ opp-180000000 {
+ 		};
  
-+	/*
-+	 * On the GPU device we want to process subsequent transactions after a
-+	 * fault to keep the GPU from hanging
-+	 */
-+	smmu_domain->cfg.sctlr_set |= ARM_SMMU_SCTLR_HUPCF;
-+
- 	/*
- 	 * Initialize private interface with GPU:
- 	 */
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index dad7fa86fbd4..1f06ab219819 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -617,6 +617,9 @@ void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
- 	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
- 		reg |= ARM_SMMU_SCTLR_E;
- 
-+	reg |= cfg->sctlr_set;
-+	reg &= ~cfg->sctlr_clr;
-+
- 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
- }
- 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index 6c5ff9999eae..ddf2ca4c923d 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -144,6 +144,7 @@ enum arm_smmu_cbar_type {
- #define ARM_SMMU_CB_SCTLR		0x0
- #define ARM_SMMU_SCTLR_S1_ASIDPNE	BIT(12)
- #define ARM_SMMU_SCTLR_CFCFG		BIT(7)
-+#define ARM_SMMU_SCTLR_HUPCF		BIT(8)
- #define ARM_SMMU_SCTLR_CFIE		BIT(6)
- #define ARM_SMMU_SCTLR_CFRE		BIT(5)
- #define ARM_SMMU_SCTLR_E		BIT(4)
-@@ -341,6 +342,8 @@ struct arm_smmu_cfg {
- 		u16			asid;
- 		u16			vmid;
- 	};
-+	u32				sctlr_set;    /* extra bits to set in SCTLR */
-+	u32				sctlr_clr;    /* bits to mask in SCTLR */
- 	enum arm_smmu_cbar_type		cbar;
- 	enum arm_smmu_context_fmt	fmt;
- };
+ 		adreno_smmu: iommu@5040000 {
+-			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
++			compatible = "qcom,sc7180-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
+ 			reg = <0 0x05040000 0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
 -- 
 2.26.2
 
