@@ -2,120 +2,139 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968D2C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB96C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 394D3207EA
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE8220797
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 01:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zimnoxn8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcPialkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbgIEB2y (ORCPT
+        id S1728270AbgIEBat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 21:28:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgIEB2x (ORCPT
+        Fri, 4 Sep 2020 21:30:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26561 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726456AbgIEBar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 21:28:53 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B49DFC061244;
-        Fri,  4 Sep 2020 18:28:50 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id c142so5525914pfb.7;
-        Fri, 04 Sep 2020 18:28:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MIoqWzM7oHXf+obL3wtLv7wSPLoC1E+S6MGKQMl9fAg=;
-        b=Zimnoxn8ogLfyaclqMhIwhkKsvsv3m4CVED6ZQ3mRVOGf1k1lmOTSAb5LpoYYeA1gs
-         8mvnqSfsQ58viypaidR8Paq9jzu1/vjiliFYlD5hnC/I3txxG4LRPhQuKjhSCqC2XmwO
-         1xPpT0iqg3c9Cs11GygDWJOXSwDFmlJKGZMSe+WXs5ciB2fFmRM6+2c94KvuN94j8s+2
-         fM5ojg9K2vWlyn0RVo2yHsIm68C/BTOMksyYwUnNslkBM+q0WYQ+59HUMxxkrOPwASk3
-         s9Sfh8H+zycMtHY6jjPURiMRlxiq6n2DiDBwNlKpwva6Cwy567EExXNKBVV11MsL4Ti7
-         r84w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MIoqWzM7oHXf+obL3wtLv7wSPLoC1E+S6MGKQMl9fAg=;
-        b=FW6zRym3xP+8hcN3q9SlkSn44QZP9FK5uG7unnMpnSzuIKfOyOFhon9KmVyUjI8+Uw
-         jsgOqmN0J19rrtutYd6B2WSybIg491rwhsbHbEKpuLkjDBqJO52vFT0t5A8arpHEoDdM
-         8zkVpAkyr4bkZePNuyN+yzTIGgfbomd+SvVEzGoui9GjadKYPFQyaqNZpw4MgF1zRM7t
-         z+XKr0uJOrYKEW2yFOlx2HFPWDl/hWnU9yS6SHtRNIQCDI9wwTj3ft+eX2qhN5A1y4aL
-         V2SUsincbDOLq3Ij0TwbWddN194BNgrEN1aL6jSdD2GBYfPPs0gnf12NHPunqvI1ntAa
-         3pjQ==
-X-Gm-Message-State: AOAM530W6oPZx/8BBaOz8tEBcSTCQpTR7meRaV+Ma9imRmLb1/Ydnbp5
-        44sz6TLGP57SK3wW893btTZzRtTclHSG+ybCDKsO1m9rywY=
-X-Google-Smtp-Source: ABdhPJymDz3stfxbn4JH5etSAf9doa0r3U6zowq1s8w9+Yjttnq9fxYYLN6hEwWZUzcyKxsQUOqjJo24VHsnxEo8Qh8=
-X-Received: by 2002:a63:b24b:: with SMTP id t11mr9273063pgo.233.1599269329649;
- Fri, 04 Sep 2020 18:28:49 -0700 (PDT)
+        Fri, 4 Sep 2020 21:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599269446;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3SbbgKalcr5xmssml+g6cMxSIZlFM2ReWbmS6BC9CpM=;
+        b=NcPialkJ8r5vnvqaAIwVRR8fsbZe48boM7DlgY7cAlZbnNuQo4s51B4zTaJ01x/1etqtBt
+        nnC3qmuU4NzWkmzrLIZ2qDUGB7AOBi68/wB2Dt0P36E1hlHLiORvBvgo10SuJuuKdc8rdv
+        Wj/O2wKeIHVHfqfZoU3q4+5b9QYd5zw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-543-a4drdPbVNVCRdiCkc0cVOw-1; Fri, 04 Sep 2020 21:30:43 -0400
+X-MC-Unique: a4drdPbVNVCRdiCkc0cVOw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A608F802B72;
+        Sat,  5 Sep 2020 01:30:40 +0000 (UTC)
+Received: from [10.10.65.66] (ovpn-65-66.rdu2.redhat.com [10.10.65.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 296127EED7;
+        Sat,  5 Sep 2020 01:30:39 +0000 (UTC)
+Subject: Re: [PATCH 0/3] integrity: Load certs from EFI MOK config table
+To:     Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-security-module@vger.kernel.org, ardb@kernel.org,
+        jmorris@namei.org, serge@hallyn.com, keescook@chromium.org,
+        bp@alien8.de, pjones@redhat.com, dhowells@redhat.com,
+        prarit@redhat.com
+References: <20200826034455.28707-1-lszubowi@redhat.com>
+ <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
+From:   Lenny Szubowicz <lszubowi@redhat.com>
+Message-ID: <1e4d1f97-e1c1-d76d-1f91-135290da625c@redhat.com>
+Date:   Fri, 4 Sep 2020 21:30:38 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200903000658.89944-1-xie.he.0141@gmail.com> <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Fri, 4 Sep 2020 18:28:38 -0700
-Message-ID: <CAJht_EN+=WTuduvm43_Lq=XWL78AcF5q6Zoyg8S5fao_udL=+Q@mail.gmail.com>
-Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
- PVC devices
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6f63a0cf1349281ef2c407d95abedfba1f90345a.camel@linux.ibm.com>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your email, Jakub!
+On 8/26/20 7:55 AM, Mimi Zohar wrote:
+> Hi Lenny,
+> 
+> On Tue, 2020-08-25 at 23:44 -0400, Lenny Szubowicz wrote:
+>> Because of system-specific EFI firmware limitations,
+>> EFI volatile variables may not be capable of holding the
+>> required contents of the Machine Owner Key (MOK) certificate
+>> store. Therefore, an EFI boot loader may pass the MOK certs
+>> via a EFI configuration table created specifically for this
+>> purpose to avoid this firmware limitation.
+>>
+>> An EFI configuration table is a simpler and more robust mechanism
+>> compared to EFI variables and is well suited for one-way passage
+>> of static information from a pre-OS environment to the kernel.
+>>
+>> This patch set does not remove the support for loading certs
+>> from the EFI MOK variables into the platform key ring.
+>> However, if both the EFI MOK config table and corresponding
+>> EFI MOK variables are present, the MOK table is used as the
+>> source of MOK certs.
+>>
+>> The contents of the individual named MOK config table entries are
+>> made available to user space via read-only sysfs binary files under:
+>>
+>> 	/sys/firmware/efi/mok-variables/
+> 
+> Please include a security section in this cover letter with a
+> comparison of the MoK variables and the EFI configuration table
+> security (eg. same mechanism?).  Has mokutil been updated?  If so,
+> please provide a link.
+> 
+> Mimi
+> 
 
-On Fri, Sep 4, 2020 at 3:14 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> Since this is a tunnel protocol on top of HDLC interfaces, and
-> hdlc_setup_dev() sets dev->hard_header_len = 16; should we actually
-> set the needed_headroom to 10 + 16 = 26? I'm not clear on where/if
-> hdlc devices actually prepend 16 bytes of header, though.
+I've included some more information about the MOK config table
+entries in the V2 cover letter.
 
-The HDLC device is not actually prepending any header when it is used
-with this driver. When the PVC device has prepended its header and
-handed over the skb to the HDLC device, the HDLC device just hands it
-over to the hardware driver for transmission without prepending any
-header.
+[root@localhost ~]# ls -l /sys/firmware/efi/mok-variables
+total 0
+-r--------. 1 root root     0 Sep  4 21:10 MokIgnoreDB
+-r--------. 1 root root 18184 Sep  4 21:10 MokListRT
+-r--------. 1 root root    76 Sep  4 21:10 MokListXRT
+-r--------. 1 root root     0 Sep  4 21:10 MokSBStateRT
 
-If we grep "header_ops" and "skb_push" in "hdlc.c" and "hdlc_fr.c", we
-can see there is no "header_ops" implemented in these two files and
-all "skb_push" happen in the PVC device in hdlc_fr.c.
+The roughly 18KB of data in /sys/firmware/efi/mok-variables/MokListRT
+is exactly the same data that is returned by a EFI GetVariable()
+call for MokListRT. Of course, that's on a system where the EFI
+firmware can handle a volatile variable with that much data.
 
-For this reason, I have previously submitted a patch to change the
-value of hard_header_len of the HDLC device from 16 to 0, because it
-is not actually used.
+Therefore, load_moklist_certs() can pass the mokvar_entry data directly
+to parse_efi_signature_list() in the same way it does for the
+efi.get_variable() data that it obtains via get_cert_list().
 
-See:
-2b7bcd967a0f (drivers/net/wan/hdlc: Change the default of hard_header_len to 0)
+Unfortunately, there is no updated mokutil available yet that
+uses the new sysfs entries.
 
-> > diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
-> > index 9acad651ea1f..12b35404cd8e 100644
-> > --- a/drivers/net/wan/hdlc_fr.c
-> > +++ b/drivers/net/wan/hdlc_fr.c
-> > @@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
-> >  {
-> >       dev->type = ARPHRD_DLCI;
-> >       dev->flags = IFF_POINTOPOINT;
-> > -     dev->hard_header_len = 10;
-> > +     dev->hard_header_len = 0;
->
-> Is there a need to set this to 0? Will it not be zero after allocation?
+Also relevant is availability of an updated shim, which builds
+the EFI MOK variable configuration table.
 
-Oh. I understand your point. Theoretically we don't need to set it to
-0 because it already has the default value of 0. I'm setting it to 0
-only because I want to tell future developers that this value is
-intentionally set to 0, and it is not carelessly missed out.
+Of course, both of these should show up as upstream pull requests
+and also in Fedora rawhide at some point.
+
+Thank you for your review.
+
+                       -Lenny.
+
+
+
