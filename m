@@ -2,410 +2,143 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFF3C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C4F42074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9E12073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f8jgMxll"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KwpVtoi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbgIEUGF (ORCPT
+        id S1728649AbgIEUOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgIEUE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:04:27 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7832FC061244;
-        Sat,  5 Sep 2020 13:04:27 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w186so6066498pgb.8;
-        Sat, 05 Sep 2020 13:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nv0NB+4QKtoM6jAPeQvhvbaLuTfjjxZvGCIP8sMMMgk=;
-        b=f8jgMxllP2ZhgGqg89bgtt8ZyUJhkMwLlHRMKbccobZzftlPpGbHnCV+Azd45nGZyi
-         ust7FDQKJp1QB5Y+cJQ0iu2dJp5MH8vorVkcc/S4Ie6Tpc8fWCmXTOtPZU2kIOUwOJHz
-         GzhwNHXk3Rd6qMIq3VMtYoUn/m6nQU3sxluz7i/S+yevS40lwJreR7rSeFL0lXZRbNQQ
-         8kXeukGW6G8fwuvBU00qnMT9hevhOPmhXH2QANA3cEj/frKrntyhPvyFdUAdDkj+M2qZ
-         BpaIummG75mBAHKb1H5kZtDV6tzBTMly3h8q9S7SLurz5Ns92HD4OWAe5pZQZwEMG5Z1
-         cMeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nv0NB+4QKtoM6jAPeQvhvbaLuTfjjxZvGCIP8sMMMgk=;
-        b=oaMC4oROXwOMkToXVHB7nT+hWrJQ7h0d5+aDrV47uv6WiHWhhVxCKCcAAv0K0DDy8d
-         NOOQogCfv2ZEbHJaBzw6HgydlELsHai04Jz9KAszqjtkLjGCgV4IMLKAUjU1156wuOlH
-         vfZnMn2GkncJ8pXOVoA0GcAZqFnAcq/CJkHa6hF4EFDTr63nbkHvrlzNZFqfjb4mJyPd
-         sAJw4ea9tLMKVAmJk6x199+EFwelrvvEPGDgVBsRhJy1TC0U4ouH4cdzYmkRqGoUM4eA
-         UuDY1iLd979tyLpXMv1uoQlfUfwOkCB5meVw/eMXcqqfYhTZ8BE41bLILa4vTBe5CNGN
-         /e0A==
-X-Gm-Message-State: AOAM530Dr0b5g5rZDCDcNfpHop09tVf+zKwSIuchsPs1Pm8hvW7T7zQZ
-        4Fm0YeQMsnhL3T7EqZTxijX6ZjlKVIYvG6BlLDM=
-X-Google-Smtp-Source: ABdhPJwAuA2HNXcVlwfVFfpq4juLWYioWTISVISa1sNhGs+f4u4OXcvGiOMrt2RZ2RQEjzHPfCeBSA==
-X-Received: by 2002:a63:f546:: with SMTP id e6mr11430161pgk.7.1599336266922;
-        Sat, 05 Sep 2020 13:04:26 -0700 (PDT)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id x9sm5193620pfj.96.2020.09.05.13.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:04:25 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v17 08/20] drm/msm: Add support to create a local pagetable
-Date:   Sat,  5 Sep 2020 13:04:14 -0700
-Message-Id: <20200905200454.240929-9-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200905200454.240929-1-robdclark@gmail.com>
-References: <20200905200454.240929-1-robdclark@gmail.com>
+        Sat, 5 Sep 2020 16:14:45 -0400
+Received: from mail-vi1eur05on2054.outbound.protection.outlook.com ([40.107.21.54]:52396
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728103AbgIEUOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 16:14:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Il4NH2AU4Ue+j0JX3p4DaHT7ye6IHA+XRQofxI6OpAUmRT8mqd6ZYIIypOpyjIiZDKnp15sC+JCAYtsFAmfR/MegI9O+UrvTtgwBt2hFQSs7WzxAFKKeBlwfyP1F6EsyBGTE9juEBYlzcQbACmrAlGxzB6jSiAl10VlYtgJNDFG7MnUKgs/YD6FGAQICulhB8sX+/l2yUiIxr4fccgMexFGFGZSoMmUXZXyjXrnFVlHhpWOZftejAzRT5HzSqcmQs8QycUBst4PAMWilkxe98wNNCxHdYcuQy/mbPWYG5m1TJseCu6WgoolMDpKHaQu2H4hbZiVET2of6Sf6F7NoSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eFpnjI+DrRmKd2PLv69U6RFx9v1dbMFrrIaNnzJlac4=;
+ b=EpvMwy9CoWMc3xU44UvQSF1IU1JoirHFjP+mdsgt5AqmnzLDbwiBLfe5exCC0C8dNJVYoLBQZJYOj7eKk3X47NkPakDoJYuOT1/R0dAKPZVZ/usGAybzocAXwlWGwlyOAD0sP1SiKrNLJ7H+MtlL5u4iK4Gg8ocY+pZ90MtBSFc16kZKkrzECsX1DXxCRHmkErVYkNBAK/4V94VimcDJUXS3/KmuZT1UvadvxHoy7ukMBQOrdON3HSBsaMVQbBSIheoRwc9QYgS5fSTRBx7OvsXm7e6j8FXpEF0iKBtiJHt3IMcr5bNJ77NBooEa4pum4v3oYLdKpNaFD+AVcyfGmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eFpnjI+DrRmKd2PLv69U6RFx9v1dbMFrrIaNnzJlac4=;
+ b=KwpVtoi/FgKWErSYIiUvC8vCijVA6z/VCwGS+yy8SnuiBJsyrCg8L1K0PTTXAfu5eBAlnSL1TSfSBS5mnyA6H7l4SHzu3aOj+yTjsJqEA9lLuNJ3lrJmqgmDGynpbI/rfzOwR0M+pF3ScNkodA6gJIYbxWTzX3JS0veiowqb1F4=
+Received: from VI1PR0402MB3871.eurprd04.prod.outlook.com
+ (2603:10a6:803:16::14) by VI1PR04MB4510.eurprd04.prod.outlook.com
+ (2603:10a6:803:65::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Sat, 5 Sep
+ 2020 20:14:38 +0000
+Received: from VI1PR0402MB3871.eurprd04.prod.outlook.com
+ ([fe80::9488:e177:a8e8:9037]) by VI1PR0402MB3871.eurprd04.prod.outlook.com
+ ([fe80::9488:e177:a8e8:9037%7]) with mapi id 15.20.3348.017; Sat, 5 Sep 2020
+ 20:14:38 +0000
+From:   Ioana Ciornei <ioana.ciornei@nxp.com>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
+Thread-Topic: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
+Thread-Index: AQHWg3CDYFPbFVYb4kqvsJNhHF1856lafGCQ
+Date:   Sat, 5 Sep 2020 20:14:37 +0000
+Message-ID: <VI1PR0402MB38710D434D6549E644B241BBE02A0@VI1PR0402MB3871.eurprd04.prod.outlook.com>
+References: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [188.25.217.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6357e594-c357-43df-54a5-08d851d850b8
+x-ms-traffictypediagnostic: VI1PR04MB4510:
+x-microsoft-antispam-prvs: <VI1PR04MB451097C94133F08CBEF9067FE02A0@VI1PR04MB4510.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: JHeVFnPdq4JbwpDzB1lPwkjPcvHQe1vOYiuozQSfRDDmXIhVSBW/T7xBRj5Sax8VktIQC/HpedzC72jHKO2Vkrvkgohknl1E+qWc/EudimKgUYT90R7Ir7vDEamKL2Na0rg1Ll+CyaNqkFIAfs9/SlSG4kZ2HbllGTJXjPBvkPN8T4XhlRltagnpXiaIRHqi6NVoeLzjGApQhuk6lpgqh8/k//wnr1n2+f0qIugx3kLQxjnq/Z9sfgJlqikE3c6Wg36E4LLXfaaBsRQuZfzkwwx06hxY4Xtf7p4tZ8SydXQWw8+I5z7BIomyhgD8AOe+D3TbfVuAt8y7WGgJQA1x2Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB3871.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(8676002)(186003)(55016002)(9686003)(4326008)(33656002)(86362001)(71200400001)(44832011)(5660300002)(52536014)(66446008)(64756008)(66476007)(66556008)(66946007)(76116006)(478600001)(110136005)(54906003)(7696005)(316002)(6506007)(26005)(8936002)(83380400001)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: z0uKZQAFweMEtzQxW68a0irdXA9AAoBpVKVbtfUrstA4QLBWYz9kW9NyMbVcyXbk2e0aLs0L0FMmp72h0yqdx0e7KwpFfmyYdK3AVLCL/jGRCnJw2ho2GTa4N2I1gKez0FjyM6TD7pei8oseAOafxiToWYAOag5UhKFOHqt3IqeZwddxj2rIfCuvGOOJB0TFaFseERseEM39+GFmwLaoBFt+rPyEOFcGa4ZKocWPN2R8tJ7NseDQ+V+EofJM/+VZJQMnCbuaREm88rruFNb8HjGuOZ1U46FUQl1sSGWwZwyMDqskGLL/YJBhkYru85zXwuqFAtsm30VU3Vkgc5NmHe3kCe/wlIuF4W4jxj6mOabmDcXk7IModc5ePboCd9rxmfHyDXaMVJAW31RXElxNCnn//FNpH1thBeea1+N99VfjVJr/qfYaxytiraAY0Xvv+OziaV2HSdjUhBiLh9lr2ovX8f1mc15Lhr09QxkgsOKXwexjvzQi5fKpg4MRUZFmxO1++cbXwQd5qloq5oumA6r4/BrGaZvomc7MFUK9L0bjD3EPa6ACHGj2cAudpfDN4mpsQZQVLSg0ZDU7o0W5pTznfEcG4zrGCeVWm3UqDEOMBtXaL/LucEctqzS1+ejyiIjRNFeMI5nGY9T4WVuAPA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB3871.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6357e594-c357-43df-54a5-08d851d850b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2020 20:14:37.9270
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ++TsK41k45UgMMaxQCX4/2tl/le/t76IQIUFXMDEzTqFodZe2uVZmaapLLYtO0iuKsbaacHR3reHtMA4AmSy0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4510
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Add support to create a io-pgtable for use by targets that support
-per-instance pagetables. In order to support per-instance pagetables the
-GPU SMMU device needs to have the qcom,adreno-smmu compatible string and
-split pagetables enabled.
+> Subject: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
+>=20
+> Commit 0da4c3d393e4 ("net: phy: add Lynx PCS module") added the files in
+> ./drivers/net/pcs/, but the new LYNX PCS MODULE section refers to
+> ./drivers/net/phy/.
+>=20
+> Hence, ./scripts/get_maintainer.pl --self-test=3Dpatterns complains:
+>=20
+>   warning: no file matches    F:    drivers/net/phy/pcs-lynx.c
+>=20
+> Repair the LYNX PCS MODULE section by referring to the right location.
+>=20
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/gpu/drm/msm/Kconfig      |   1 +
- drivers/gpu/drm/msm/msm_gpummu.c |   2 +-
- drivers/gpu/drm/msm/msm_iommu.c  | 199 ++++++++++++++++++++++++++++++-
- drivers/gpu/drm/msm/msm_mmu.h    |  16 ++-
- 4 files changed, 215 insertions(+), 3 deletions(-)
+Acked-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 
-diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
-index 6deaa7d01654..5102a58830b9 100644
---- a/drivers/gpu/drm/msm/Kconfig
-+++ b/drivers/gpu/drm/msm/Kconfig
-@@ -8,6 +8,7 @@ config DRM_MSM
- 	depends on MMU
- 	depends on INTERCONNECT || !INTERCONNECT
- 	depends on QCOM_OCMEM || QCOM_OCMEM=n
-+	select IOMMU_IO_PGTABLE
- 	select QCOM_MDT_LOADER if ARCH_QCOM
- 	select REGULATOR
- 	select DRM_KMS_HELPER
-diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-index 310a31b05faa..aab121f4beb7 100644
---- a/drivers/gpu/drm/msm/msm_gpummu.c
-+++ b/drivers/gpu/drm/msm/msm_gpummu.c
-@@ -102,7 +102,7 @@ struct msm_mmu *msm_gpummu_new(struct device *dev, struct msm_gpu *gpu)
- 	}
- 
- 	gpummu->gpu = gpu;
--	msm_mmu_init(&gpummu->base, dev, &funcs);
-+	msm_mmu_init(&gpummu->base, dev, &funcs, MSM_MMU_GPUMMU);
- 
- 	return &gpummu->base;
- }
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 1b6635504069..697cc0a059d6 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -4,15 +4,210 @@
-  * Author: Rob Clark <robdclark@gmail.com>
-  */
- 
-+#include <linux/adreno-smmu-priv.h>
-+#include <linux/io-pgtable.h>
- #include "msm_drv.h"
- #include "msm_mmu.h"
- 
- struct msm_iommu {
- 	struct msm_mmu base;
- 	struct iommu_domain *domain;
-+	atomic_t pagetables;
- };
-+
- #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
- 
-+struct msm_iommu_pagetable {
-+	struct msm_mmu base;
-+	struct msm_mmu *parent;
-+	struct io_pgtable_ops *pgtbl_ops;
-+	phys_addr_t ttbr;
-+	u32 asid;
-+};
-+static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
-+{
-+	return container_of(mmu, struct msm_iommu_pagetable, base);
-+}
-+
-+static int msm_iommu_pagetable_unmap(struct msm_mmu *mmu, u64 iova,
-+		size_t size)
-+{
-+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-+	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-+	size_t unmapped = 0;
-+
-+	/* Unmap the block one page at a time */
-+	while (size) {
-+		unmapped += ops->unmap(ops, iova, 4096, NULL);
-+		iova += 4096;
-+		size -= 4096;
-+	}
-+
-+	iommu_flush_tlb_all(to_msm_iommu(pagetable->parent)->domain);
-+
-+	return (unmapped == size) ? 0 : -EINVAL;
-+}
-+
-+static int msm_iommu_pagetable_map(struct msm_mmu *mmu, u64 iova,
-+		struct sg_table *sgt, size_t len, int prot)
-+{
-+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-+	struct io_pgtable_ops *ops = pagetable->pgtbl_ops;
-+	struct scatterlist *sg;
-+	size_t mapped = 0;
-+	u64 addr = iova;
-+	unsigned int i;
-+
-+	for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-+		size_t size = sg->length;
-+		phys_addr_t phys = sg_phys(sg);
-+
-+		/* Map the block one page at a time */
-+		while (size) {
-+			if (ops->map(ops, addr, phys, 4096, prot, GFP_KERNEL)) {
-+				msm_iommu_pagetable_unmap(mmu, iova, mapped);
-+				return -EINVAL;
-+			}
-+
-+			phys += 4096;
-+			addr += 4096;
-+			size -= 4096;
-+			mapped += 4096;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void msm_iommu_pagetable_destroy(struct msm_mmu *mmu)
-+{
-+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-+	struct msm_iommu *iommu = to_msm_iommu(pagetable->parent);
-+	struct adreno_smmu_priv *adreno_smmu =
-+		dev_get_drvdata(pagetable->parent->dev);
-+
-+	/*
-+	 * If this is the last attached pagetable for the parent,
-+	 * disable TTBR0 in the arm-smmu driver
-+	 */
-+	if (atomic_dec_return(&iommu->pagetables) == 0)
-+		adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, NULL);
-+
-+	free_io_pgtable_ops(pagetable->pgtbl_ops);
-+	kfree(pagetable);
-+}
-+
-+int msm_iommu_pagetable_params(struct msm_mmu *mmu,
-+		phys_addr_t *ttbr, int *asid)
-+{
-+	struct msm_iommu_pagetable *pagetable;
-+
-+	if (mmu->type != MSM_MMU_IOMMU_PAGETABLE)
-+		return -EINVAL;
-+
-+	pagetable = to_pagetable(mmu);
-+
-+	if (ttbr)
-+		*ttbr = pagetable->ttbr;
-+
-+	if (asid)
-+		*asid = pagetable->asid;
-+
-+	return 0;
-+}
-+
-+static const struct msm_mmu_funcs pagetable_funcs = {
-+		.map = msm_iommu_pagetable_map,
-+		.unmap = msm_iommu_pagetable_unmap,
-+		.destroy = msm_iommu_pagetable_destroy,
-+};
-+
-+static void msm_iommu_tlb_flush_all(void *cookie)
-+{
-+}
-+
-+static void msm_iommu_tlb_flush_walk(unsigned long iova, size_t size,
-+		size_t granule, void *cookie)
-+{
-+}
-+
-+static void msm_iommu_tlb_add_page(struct iommu_iotlb_gather *gather,
-+		unsigned long iova, size_t granule, void *cookie)
-+{
-+}
-+
-+static const struct iommu_flush_ops null_tlb_ops = {
-+	.tlb_flush_all = msm_iommu_tlb_flush_all,
-+	.tlb_flush_walk = msm_iommu_tlb_flush_walk,
-+	.tlb_flush_leaf = msm_iommu_tlb_flush_walk,
-+	.tlb_add_page = msm_iommu_tlb_add_page,
-+};
-+
-+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
-+{
-+	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(parent->dev);
-+	struct msm_iommu *iommu = to_msm_iommu(parent);
-+	struct msm_iommu_pagetable *pagetable;
-+	const struct io_pgtable_cfg *ttbr1_cfg = NULL;
-+	struct io_pgtable_cfg ttbr0_cfg;
-+	int ret;
-+
-+	/* Get the pagetable configuration from the domain */
-+	if (adreno_smmu->cookie)
-+		ttbr1_cfg = adreno_smmu->get_ttbr1_cfg(adreno_smmu->cookie);
-+	if (!ttbr1_cfg)
-+		return ERR_PTR(-ENODEV);
-+
-+	pagetable = kzalloc(sizeof(*pagetable), GFP_KERNEL);
-+	if (!pagetable)
-+		return ERR_PTR(-ENOMEM);
-+
-+	msm_mmu_init(&pagetable->base, parent->dev, &pagetable_funcs,
-+		MSM_MMU_IOMMU_PAGETABLE);
-+
-+	/* Clone the TTBR1 cfg as starting point for TTBR0 cfg: */
-+	ttbr0_cfg = *ttbr1_cfg;
-+
-+	/* The incoming cfg will have the TTBR1 quirk enabled */
-+	ttbr0_cfg.quirks &= ~IO_PGTABLE_QUIRK_ARM_TTBR1;
-+	ttbr0_cfg.tlb = &null_tlb_ops;
-+
-+	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
-+		&ttbr0_cfg, iommu->domain);
-+
-+	if (!pagetable->pgtbl_ops) {
-+		kfree(pagetable);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	/*
-+	 * If this is the first pagetable that we've allocated, send it back to
-+	 * the arm-smmu driver as a trigger to set up TTBR0
-+	 */
-+	if (atomic_inc_return(&iommu->pagetables) == 1) {
-+		ret = adreno_smmu->set_ttbr0_cfg(adreno_smmu->cookie, &ttbr0_cfg);
-+		if (ret) {
-+			free_io_pgtable_ops(pagetable->pgtbl_ops);
-+			kfree(pagetable);
-+			return ERR_PTR(ret);
-+		}
-+	}
-+
-+	/* Needed later for TLB flush */
-+	pagetable->parent = parent;
-+	pagetable->ttbr = ttbr0_cfg.arm_lpae_s1_cfg.ttbr;
-+
-+	/*
-+	 * TODO we would like each set of page tables to have a unique ASID
-+	 * to optimize TLB invalidation.  But iommu_flush_tlb_all() will
-+	 * end up flushing the ASID used for TTBR1 pagetables, which is not
-+	 * what we want.  So for now just use the same ASID as TTBR1.
-+	 */
-+	pagetable->asid = 0;
-+
-+	return &pagetable->base;
-+}
-+
- static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
- 		unsigned long iova, int flags, void *arg)
- {
-@@ -85,9 +280,11 @@ struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain)
- 		return ERR_PTR(-ENOMEM);
- 
- 	iommu->domain = domain;
--	msm_mmu_init(&iommu->base, dev, &funcs);
-+	msm_mmu_init(&iommu->base, dev, &funcs, MSM_MMU_IOMMU);
- 	iommu_set_fault_handler(domain, msm_fault_handler, iommu);
- 
-+	atomic_set(&iommu->pagetables, 0);
-+
- 	ret = iommu_attach_device(iommu->domain, dev);
- 	if (ret) {
- 		kfree(iommu);
-diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-index 3a534ee59bf6..61ade89d9e48 100644
---- a/drivers/gpu/drm/msm/msm_mmu.h
-+++ b/drivers/gpu/drm/msm/msm_mmu.h
-@@ -17,18 +17,26 @@ struct msm_mmu_funcs {
- 	void (*destroy)(struct msm_mmu *mmu);
- };
- 
-+enum msm_mmu_type {
-+	MSM_MMU_GPUMMU,
-+	MSM_MMU_IOMMU,
-+	MSM_MMU_IOMMU_PAGETABLE,
-+};
-+
- struct msm_mmu {
- 	const struct msm_mmu_funcs *funcs;
- 	struct device *dev;
- 	int (*handler)(void *arg, unsigned long iova, int flags);
- 	void *arg;
-+	enum msm_mmu_type type;
- };
- 
- static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
--		const struct msm_mmu_funcs *funcs)
-+		const struct msm_mmu_funcs *funcs, enum msm_mmu_type type)
- {
- 	mmu->dev = dev;
- 	mmu->funcs = funcs;
-+	mmu->type = type;
- }
- 
- struct msm_mmu *msm_iommu_new(struct device *dev, struct iommu_domain *domain);
-@@ -41,7 +49,13 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
- 	mmu->handler = handler;
- }
- 
-+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
-+
- void msm_gpummu_params(struct msm_mmu *mmu, dma_addr_t *pt_base,
- 		dma_addr_t *tran_error);
- 
-+
-+int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
-+		int *asid);
-+
- #endif /* __MSM_MMU_H__ */
--- 
-2.26.2
+> ---
+> applies cleanly on next-20200903
+>=20
+> Ioana, please ack.
+> David, please pick this minor non-urgent patch into your net-next.
+>=20
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index bb0cb31d323b..918deaa1d96e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10350,7 +10350,7 @@ LYNX PCS MODULE
+>  M:	Ioana Ciornei <ioana.ciornei@nxp.com>
+>  L:	netdev@vger.kernel.org
+>  S:	Supported
+> -F:	drivers/net/phy/pcs-lynx.c
+> +F:	drivers/net/pcs/pcs-lynx.c
+>  F:	include/linux/pcs-lynx.h
+>=20
+>  M68K ARCHITECTURE
+> --
+> 2.17.1
 
