@@ -2,179 +2,379 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF9E9C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A422073B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599337111;
-	bh=JJsATsMVElGjYABsb0vWB2hqBGkj04Smv3z/n38lfv4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VGtNB5G8mRRxvbzKosQaj5cy8ibTLaGZkOS38YJB5TAPGvObIT8v0Grdm78917Rtl
-	 m0bfet+gxu8RK8X6BNnsWNuD9FhAja1uO9YaaireCkUDRu8VdbGRBnrFF2rJ0z9s+G
-	 plKjFoNHKeZ+u0kJ0UYM/VpTTYJe2FwXVPKp5dtM=
+	by mail.kernel.org (Postfix) with ESMTP id 087902074D
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHJ9kfzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbgIEUSa (ORCPT
+        id S1728656AbgIEUWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:18:30 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:52079 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgIEUSZ (ORCPT
+        Sat, 5 Sep 2020 16:22:12 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56879 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727875AbgIEUWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:18:25 -0400
-X-Greylist: delayed 110455 seconds by postgrey-1.27 at vger.kernel.org; Sat, 05 Sep 2020 16:18:23 EDT
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 085KIAXe008998;
-        Sun, 6 Sep 2020 05:18:11 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 085KIAXe008998
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599337091;
-        bh=AM99QzFxxKGBKlEOzZ//FGYuWqlVjObjhMrW0TXZ1vI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2mT3GBG1wE8G/yhfLSiGJrSIlfMwrbNAUJKfC8gZ3etoILU0Zt8SumIhqPwfSULnc
-         NiTXPP6y+jVKTSdF52qblNj8+Erwe44OAi3+JvNj3bnz1xnxKFq7ODs67zco8o0vN/
-         3TsC6sQGntZygvez3VSOoQd+9TJdtVBzKLn31Tii+GMykpZKux2BYRxCt7WzqItnhf
-         gQF8087kfcTGYy6+HQH8Nm7HxU9Soano2FeVeXwfbVYa1sktzUe5OKbi1/IDSFfoRv
-         AQGmR5q2uh4wolJFo7NXbJsHPQOtZZYon5wxO3OEc6anfYAFK6QTSLvUTvWKMtN4DG
-         SLh9BXK/ERc5Q==
-X-Nifty-SrcIP: [209.85.210.179]
-Received: by mail-pf1-f179.google.com with SMTP id k15so6467835pfc.12;
-        Sat, 05 Sep 2020 13:18:11 -0700 (PDT)
-X-Gm-Message-State: AOAM533M+KOq3mFmd0jb1/ESVUCxpW0tDyvpKFOIZgBluRINYk59EXaY
-        RAVvkRAEokIuKgEPToF2gs+W40wYJInEP73EgFA=
-X-Google-Smtp-Source: ABdhPJyNsnmMbyAG66fOWmKiovR25YJyERnRLtPM25a82Zl3RS3nL26piTxmNQ2uNI60/yqc3rOaDVz5VEX2fwwCiOI=
-X-Received: by 2002:a62:8007:0:b029:13c:1611:6533 with SMTP id
- j7-20020a6280070000b029013c16116533mr12182097pfd.5.1599337089871; Sat, 05 Sep
- 2020 13:18:09 -0700 (PDT)
+        Sat, 5 Sep 2020 16:22:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599337328;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zNCTJqS6mbGKS88CEIkxTroKFm5YN6NqSIoT8sRf740=;
+        b=ZHJ9kfzU3FoHUgE9/Xb3xXz/SpQHXijOKmTifF91TzNAnYhkcyGsiL0FApNG3YUZOfNcK2
+        fNblRLD4wvQj7iqMcWFygcPMgAetUuTD78a7sWhimYGcnmT4jOkHQbZz2DeaO7zpXSVXIc
+        QLP5Xjme7mxqWa3mzRI0uu7Hk6hh8YE=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-186-e4j1wRwRN7C182zy0bES1A-1; Sat, 05 Sep 2020 16:22:06 -0400
+X-MC-Unique: e4j1wRwRN7C182zy0bES1A-1
+Received: by mail-qt1-f199.google.com with SMTP id x10so6515310qtp.18
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 13:22:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=zNCTJqS6mbGKS88CEIkxTroKFm5YN6NqSIoT8sRf740=;
+        b=fcPijJzv0r0ZKCaAjDPYi8ezPcKCC4VmkkoFpIcP4q7VywgCwzMNUBv2RW/Yk6J49V
+         tUOZ5W6/PL933SC+A7+pxrJ7TqroBHGlYjo7HZY3SFlLkH/c9SXLIuELxIcFCe3pUmEw
+         u/0gttHvVSTKtQd7YHm5l/5HurAehJi32BY3PhoO6AvCPz6zz78yfIA3t6phn7wCEi2/
+         +23mWOiOQKKSIyQ2Zio6/bkkhmDzkz2VQGnHW/3ceTWQxIJVSDOspy7lHyV8n0g84ivJ
+         FkP664NQVA3gTUrqCbAtw6XOeV/Kx9iDscFaTPSP4lTOymf8v1g7JntEION1lNnMXrDR
+         p7qQ==
+X-Gm-Message-State: AOAM531gotOqfxa70Ya304cRSqblFE4XQBBitB97WDvDhRbALP+ef1jG
+        mLBvR/yNia6TikBtk4Q5bFuod/wyg6rmg8XA/wG5utTN50y5Sd/PaqnefNQnz8+JFSzEBjMC+hH
+        WIhhU+lG9IuWTFPZdQ2KchLsn
+X-Received: by 2002:a37:9d86:: with SMTP id g128mr13271247qke.26.1599337325669;
+        Sat, 05 Sep 2020 13:22:05 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwatihXkTYaBv09WdilPbOAaZQ58yAyhKx9dzWjxoF1dlcw97eDA1BEjMbmWzwVMAHPu+1O+w==
+X-Received: by 2002:a37:9d86:: with SMTP id g128mr13271232qke.26.1599337325328;
+        Sat, 05 Sep 2020 13:22:05 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id q8sm7617964qkq.57.2020.09.05.13.22.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 13:22:04 -0700 (PDT)
+Subject: Re: [PATCH v1 02/12] fpga: create intel max10 bmc security engine
+To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
+        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@intel.com
+References: <20200904235305.6254-1-russell.h.weight@intel.com>
+ <20200904235305.6254-3-russell.h.weight@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <77143987-4388-9d2a-0ef0-6a1e60ee18f9@redhat.com>
+Date:   Sat, 5 Sep 2020 13:22:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com> <20200903203053.3411268-10-samitolvanen@google.com>
-In-Reply-To: <20200903203053.3411268-10-samitolvanen@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 6 Sep 2020 05:17:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASTtxJ7OCMM_KxmaoSL3CDfTY-65Pu=-MYkMo7iz-_NOQ@mail.gmail.com>
-Message-ID: <CAK7LNASTtxJ7OCMM_KxmaoSL3CDfTY-65Pu=-MYkMo7iz-_NOQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200904235305.6254-3-russell.h.weight@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+
+On 9/4/20 4:52 PM, Russ Weight wrote:
+> Create a platform driver that can be invoked as a sub
+> driver for the Intel MAX10 BMC in order to support
+> secure updates. This sub-driver will invoke an
+> instance of the Intel FPGA Security Manager class driver
+> in order to expose sysfs interfaces for managing and
+> monitoring secure updates to FPGA and BMC images.
 >
-> This change adds build system support for Clang's Link Time
-> Optimization (LTO). With -flto, instead of ELF object files, Clang
-> produces LLVM bitcode, which is compiled into native code at link
-> time, allowing the final binary to be optimized globally. For more
-> details, see:
+> This patch creates the MAX10 BMC Security Engine driver and
+> provides support for displaying the current root entry hashes
+> for the FPGA static region, the FPGA PR region, and the MAX10
+> BMC.
 >
->   https://llvm.org/docs/LinkTimeOptimization.html
->
-> The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
-> which defaults to LTO being disabled. To use LTO, the architecture
-> must select ARCH_SUPPORTS_LTO_CLANG and support:
->
->   - compiling with Clang,
->   - compiling inline assembly with Clang's integrated assembler,
->   - and linking with LLD.
->
-> While using full LTO results in the best runtime performance, the
-> compilation is not scalable in time or memory. CONFIG_THINLTO
-> enables ThinLTO, which allows parallel optimization and faster
-> incremental builds. ThinLTO is used by default if the architecture
-> also selects ARCH_SUPPORTS_THINLTO:
->
->   https://clang.llvm.org/docs/ThinLTO.html
->
-> To enable LTO, LLVM tools must be used to handle bitcode files. The
-> easiest way is to pass the LLVM=1 option to make:
->
->   $ make LLVM=1 defconfig
->   $ scripts/config -e LTO_CLANG
->   $ make LLVM=1
->
-> Alternatively, at least the following LLVM tools must be used:
->
->   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
->
-> To prepare for LTO support with other compilers, common parts are
-> gated behind the CONFIG_LTO option, and LTO can be disabled for
-> specific files by filtering out CC_FLAGS_LTO.
->
-> Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
-> follow-up patches.
->
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Reviewed-by: Wu Hao <hao.wu@intel.com>
 > ---
->  Makefile                          | 18 +++++++-
->  arch/Kconfig                      | 68 +++++++++++++++++++++++++++++++
->  include/asm-generic/vmlinux.lds.h | 11 +++--
->  scripts/Makefile.build            |  9 +++-
->  scripts/Makefile.modfinal         |  9 +++-
->  scripts/Makefile.modpost          | 24 ++++++++++-
->  scripts/link-vmlinux.sh           | 32 +++++++++++----
->  7 files changed, 154 insertions(+), 17 deletions(-)
+>  drivers/fpga/Kconfig                |  11 ++
+>  drivers/fpga/Makefile               |   3 +
+>  drivers/fpga/intel-m10-bmc-secure.c | 170 ++++++++++++++++++++++++++++
+>  include/linux/mfd/intel-m10-bmc.h   |  15 +++
+>  4 files changed, 199 insertions(+)
+>  create mode 100644 drivers/fpga/intel-m10-bmc-secure.c
 >
-> diff --git a/Makefile b/Makefile
-> index a9dae26c93b5..dd49eaea7c25 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -909,6 +909,22 @@ KBUILD_CFLAGS      += $(CC_FLAGS_SCS)
->  export CC_FLAGS_SCS
->  endif
->
-> +ifdef CONFIG_LTO_CLANG
-> +ifdef CONFIG_THINLTO
-> +CC_FLAGS_LTO_CLANG := -flto=thin -fsplit-lto-unit
-> +KBUILD_LDFLAGS += --thinlto-cache-dir=.thinlto-cache
-> +else
-> +CC_FLAGS_LTO_CLANG := -flto
-> +endif
-> +CC_FLAGS_LTO_CLANG += -fvisibility=default
-> +endif
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index 97c0a6cc2ba7..0f0bed68e618 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -244,4 +244,15 @@ config IFPGA_SEC_MGR
+>  	  region and for the BMC. Select this option to enable
+>  	  updates for secure FPGA devices.
+>  
+> +config IFPGA_M10_BMC_SECURE
+> +        tristate "Intel MAX10 BMC security engine"
+> +	depends on MFD_INTEL_M10_BMC && IFPGA_SEC_MGR
+> +        help
+> +          Secure update support for the Intel MAX10 board management
+> +	  controller.
 > +
-> +ifdef CONFIG_LTO
-> +CC_FLAGS_LTO   := $(CC_FLAGS_LTO_CLANG)
+> +	  This is a subdriver of the Intel MAX10 board management controller
+> +	  (BMC) and provides support for secure updates for the BMC image,
+> +	  the FPGA image, the Root Entry Hashes, etc.
+> +
+>  endif # FPGA
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index ec9fbacdedd8..451a23ec3168 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -24,6 +24,9 @@ obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
+>  # Intel FPGA Security Manager Framework
+>  obj-$(CONFIG_IFPGA_SEC_MGR)		+= ifpga-sec-mgr.o
+>  
+> +# Intel Security Manager Drivers
+> +obj-$(CONFIG_IFPGA_M10_BMC_SECURE)	+= intel-m10-bmc-secure.o
+> +
+>  # FPGA Bridge Drivers
+>  obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
+>  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
+> diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
+> new file mode 100644
+> index 000000000000..1f86bfb694b4
+> --- /dev/null
+> +++ b/drivers/fpga/intel-m10-bmc-secure.c
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Intel Max10 Board Management Controller Security Engine Driver
+> + *
+> + * Copyright (C) 2019-2020 Intel Corporation. All rights reserved.
+> + *
+> + */
+> +#include <linux/device.h>
+> +#include <linux/fpga/ifpga-sec-mgr.h>
+> +#include <linux/mfd/intel-m10-bmc.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/vmalloc.h>
+> +
+> +struct m10bmc_sec {
+> +	struct device *dev;
+> +	struct intel_m10bmc *m10bmc;
+> +	struct ifpga_sec_mgr *imgr;
+> +};
+> +
+> +#define SHA256_REH_SIZE		32
+> +#define SHA384_REH_SIZE		48
+> +
+> +static int get_reh_size(struct ifpga_sec_mgr *imgr,
+> +			u32 exp_magic, u32 prog_addr)
+> +{
+> +	struct m10bmc_sec *sec = imgr->priv;
+> +	int sha_num_bytes, ret;
+> +	u32 magic;
+> +
+> +	ret = m10bmc_raw_read(sec->m10bmc, prog_addr, &magic);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(sec->dev, "%s magic 0x%08x\n", __func__, magic);
+> +
+> +	if ((magic & 0xffff) != exp_magic)
+return -EINVAL ?
+> +		return 0;
+> +
+> +	sha_num_bytes = ((magic >> 16) & 0xffff) / 8;
+> +
+> +	if (sha_num_bytes != SHA256_REH_SIZE &&
+> +	    sha_num_bytes != SHA384_REH_SIZE)   {
+> +		dev_err(sec->dev, "%s bad sha num bytes %d\n", __func__,
+> +			sha_num_bytes);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return sha_num_bytes;
+> +}
+> +
+> +#define BMC_REH_ADDR 0x17ffc004
+> +#define BMC_PROG_ADDR 0x17ffc000
+> +#define BMC_PROG_MAGIC 0x5746
+> +
+> +#define SR_REH_ADDR 0x17ffd004
+> +#define SR_PROG_ADDR 0x17ffd000
+> +#define SR_PROG_MAGIC 0x5253
+> +
+> +#define PR_REH_ADDR 0x17ffe004
+> +#define PR_PROG_ADDR 0x17ffe000
+> +#define PR_PROG_MAGIC 0x5250
+Why shouldn't these #defines be collected in the intel-m10-bmc.h ?
+> +
+> +#define SYSFS_GET_REH_SIZE(_name, _exp_magic, _prog_addr) \
+> +static int get_##_name##_reh_size(struct ifpga_sec_mgr *imgr) \
+> +{ \
+> +	return get_reh_size(imgr, _exp_magic, _prog_addr); \
+> +}
+Is this macro overkill for a 1 liner ?
+> +
+> +SYSFS_GET_REH_SIZE(bmc, BMC_PROG_MAGIC, BMC_PROG_ADDR)
+> +SYSFS_GET_REH_SIZE(sr, SR_PROG_MAGIC, SR_PROG_ADDR)
+> +SYSFS_GET_REH_SIZE(pr, PR_PROG_MAGIC, PR_PROG_ADDR)
 
+These and similar below do not directly interact
 
-$(CC_FLAGS_LTO_CLANG) is not used elsewhere.
+with the sysfs so the sysfs_ prefix should not be needed.
 
-Why didn't you add the flags to CC_FLAGS_LTO
-directly?
+> +
+> +static int get_root_entry_hash(struct ifpga_sec_mgr *imgr,
+> +			       u32 hash_addr, u8 *hash,
+> +			       unsigned int size)
+> +{
+> +	struct m10bmc_sec *sec = imgr->priv;
+> +	unsigned int stride = regmap_get_reg_stride(sec->m10bmc->regmap);
+> +	int ret;
+> +
+> +	ret = m10bmc_raw_bulk_read(sec->m10bmc, hash_addr,
+> +				   hash, size / stride);
+> +	if (ret)
+> +		dev_err(sec->dev, "bulk_read of 0x%x failed %d",
+> +			hash_addr, ret);
+> +
+> +	return ret;
+> +}
+> +
+> +#define SYSFS_GET_REH(_name, _hash_addr) \
+> +static int get_##_name##_root_entry_hash(struct ifpga_sec_mgr *imgr, \
+> +					 u8 *hash, unsigned int size) \
+> +{ \
+> +	return get_root_entry_hash(imgr, _hash_addr, hash, size); \
+> +}
+> +
+> +SYSFS_GET_REH(bmc, BMC_REH_ADDR)
+> +SYSFS_GET_REH(sr, SR_REH_ADDR)
+> +SYSFS_GET_REH(pr, PR_REH_ADDR)
+> +
+> +static const struct ifpga_sec_mgr_ops m10bmc_iops = {
+> +	.bmc_root_entry_hash = get_bmc_root_entry_hash,
+> +	.sr_root_entry_hash = get_sr_root_entry_hash,
+> +	.pr_root_entry_hash = get_pr_root_entry_hash,
+> +	.bmc_reh_size = get_bmc_reh_size,
+> +	.sr_reh_size = get_sr_reh_size,
+> +	.pr_reh_size = get_pr_reh_size,
 
-Will it be useful if LTO_GCC is supported ?
+The prefix of the ops should be similar to the file name.
 
+so consider changing get_pr_reh_size to max10_pr_reh_size
 
+> +};
+> +
+> +static void ifpga_sec_mgr_uinit(struct m10bmc_sec *sec)
+> +{
+> +	ifpga_sec_mgr_unregister(sec->imgr);
+> +}
+> +
+> +static int ifpga_sec_mgr_init(struct m10bmc_sec *sec)
+> +{
+> +	struct ifpga_sec_mgr *imgr;
+> +
+> +	imgr = ifpga_sec_mgr_register(sec->dev, "Max10 BMC Security Manager",
+> +				      &m10bmc_iops, sec);
+> +	if (IS_ERR(imgr))
+> +		return PTR_ERR(imgr);
+> +
+> +	sec->imgr = imgr;
+> +	return 0;
+> +}
+> +
+> +static int m10bmc_secure_probe(struct platform_device *pdev)
+> +{
+> +	struct m10bmc_sec *sec;
+> +	int ret;
+> +
+> +	sec = devm_kzalloc(&pdev->dev, sizeof(*sec), GFP_KERNEL);
+> +	if (!sec)
+> +		return -ENOMEM;
+> +
+> +	sec->dev = &pdev->dev;
+> +	sec->m10bmc = dev_get_drvdata(pdev->dev.parent);
+> +	dev_set_drvdata(&pdev->dev, sec);
+> +
+> +	ret = ifpga_sec_mgr_init(sec);
+> +	if (ret)
+> +		dev_err(&pdev->dev,
+> +			"Security manager failed to start: %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int m10bmc_secure_remove(struct platform_device *pdev)
+> +{
+> +	struct m10bmc_sec *sec = dev_get_drvdata(&pdev->dev);
+> +
+> +	ifpga_sec_mgr_uinit(sec);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver intel_m10bmc_secure_driver = {
+> +	.probe = m10bmc_secure_probe,
+> +	.remove = m10bmc_secure_remove,
+> +	.driver = {
+> +		.name = "n3000bmc-secure",
 
-> +KBUILD_CFLAGS  += $(CC_FLAGS_LTO)
-> +export CC_FLAGS_LTO
-> +endif
+From the filename, should this be "max10bmc-secure" ?
 
+> +	},
+> +};
+> +module_platform_driver(intel_m10bmc_secure_driver);
+> +
+> +MODULE_ALIAS("platform:n3000bmc-secure");
+> +MODULE_AUTHOR("Intel Corporation");
+> +MODULE_DESCRIPTION("Intel MAX10 BMC secure engine");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
+> index d4cb01b73357..7fe465c320c2 100644
+> --- a/include/linux/mfd/intel-m10-bmc.h
+> +++ b/include/linux/mfd/intel-m10-bmc.h
+> @@ -63,6 +63,7 @@ struct intel_m10bmc {
+>   * register access helper functions.
+>   *
+>   * m10bmc_raw_read - read m10bmc register per addr
+> + * m10bmc_raw_bulk_read - bulk_read max10 registers per addr
 
+second '_' should be removed so it reads like
 
+bulk read max10 registers..
 
--- 
-Best Regards
-Masahiro Yamada
+Tom
+
+>   * m10bmc_sys_read - read m10bmc system register per offset
+>   */
+>  static inline int
+> @@ -79,6 +80,20 @@ m10bmc_raw_read(struct intel_m10bmc *m10bmc, unsigned int addr,
+>  	return ret;
+>  }
+>  
+> +static inline int
+> +m10bmc_raw_bulk_read(struct intel_m10bmc *m10bmc, unsigned int addr,
+> +		     void *val, size_t cnt)
+> +{
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(m10bmc->regmap, addr, val, cnt);
+> +	if (ret)
+> +		dev_err(m10bmc->dev, "fail to read raw reg %x cnt %zx: %d\n",
+> +			addr, cnt, ret);
+> +
+> +	return ret;
+> +}
+> +
+>  #define m10bmc_sys_read(m10bmc, offset, val) \
+>  	m10bmc_raw_read(m10bmc, M10BMC_SYS_BASE + (offset), val)
+>  
+
