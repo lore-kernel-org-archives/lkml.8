@@ -2,70 +2,131 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77BBC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE3FBC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC402074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4636F20757
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 08:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SICGyzFZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgIEIqP (ORCPT
+        id S1728338AbgIEIqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 04:46:15 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10822 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726403AbgIEIqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 04:46:14 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5E04CB9627187484886C;
-        Sat,  5 Sep 2020 16:46:12 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
- 16:46:05 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <akpm@linux-foundation.org>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] mm: swap: Fix confusing comment in release_pages()
-Date:   Sat, 5 Sep 2020 04:44:53 -0400
-Message-ID: <20200905084453.19353-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Sat, 5 Sep 2020 04:46:37 -0400
+Received: from mout.gmx.net ([212.227.17.20]:46537 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726372AbgIEIqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 04:46:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599295555;
+        bh=eix5yRMvEp6sJh7Rs0RgjDhlP2OHRcoVgdliMP0dXoE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=SICGyzFZzBt8eAG6IBdOujo+77f0mR9q9triWlN0duEh8aKrsoZeup0fORhW5MwQu
+         SXiEFVCl22duHHMfq4M7BByUsSgDNRs+LtVdy+/YnBmu9zD2/h+yGFLylB+ESluLGG
+         Gnkt0uiAKOVE4jaBFYwwwGa4O1Nm7VKDve6q1a4U=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [185.76.98.35] ([185.76.98.35]) by web-mail.gmx.net
+ (3c-app-gmx-bap15.server.lan [172.19.172.85]) (via HTTP); Sat, 5 Sep 2020
+ 10:45:54 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Message-ID: <trinity-03089c68-65a5-4572-95c3-c75b9f7e330a-1599295554893@3c-app-gmx-bap15>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Landen Chao <landen.chao@mediatek.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        opensource@vdorst.com, dqfext@gmail.com,
+        Landen Chao <landen.chao@mediatek.com>
+Subject: Aw: [PATCH net-next v3 0/6] net-next: dsa: mt7530: add support for
+ MT7531
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 5 Sep 2020 10:45:54 +0200
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <cover.1599228079.git.landen.chao@mediatek.com>
+References: <cover.1599228079.git.landen.chao@mediatek.com>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:MMt5CpznMQ6UwycKDY4nf8k4bJDTcA9TPyAL5cJ4hZazWapBftjA95dt/HPJGwzEahN66
+ oWrPR3jwRP8mU4AAiDQnJJLY7m0uC0+fRTItnuV5exivHEEvVPkI2xxo/FVi4T45cgXGW4F40+D9
+ 1rRqURX+4M7x4G7YJ/LDZfTvw6nNvCiCs0882yDk/J1D9l3iD+Wuu4l8sGGeXeVxlbUPUiaIfnnF
+ E3JeEECHuEDd2743H+pyJiSFr0HEbIy1iX1R404LpXTW/uP6LG1QpaKPAaY6ocZGFe/NWJ3KAKK/
+ qc=
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6yCDQ4p7V2Y=:JuebgaHEhNUX3hAMYwU2gF
+ d8uHh70z8sfSWNUbe432CyizKB9xZiWabYmF/7zgDcRrt6W+QF5iE4JwyrGtGrNIktpwSdVD8
+ xldm8vNQHqW70vvMEnvrB4tnvgQWZAjD8D8eWKp4Bd6dzFuSKd3rwo+j7XaR3NbIDuL6PJK4U
+ WnJbg08OJoNb7Ba4UVsZNA44JguMMfc64yapCKLwRHbBfHoVXeEn2HEnZu6ocF1+B82DaDtEV
+ nVk8MFBQjNr0DMVjcNKJPu5G6O8wHPObSgbe63jTw2ICc3a/iMQYu0AFsXj/8cixUirvQNgeM
+ SwN/BB635DM/s5f081c7Z6kqKmvnUGlnGMidwtRsmjSgNW1G3qqzODg0tQ6NMGTlGxPMZepXb
+ LXJnr5EnSUjpZWA/peV305xuJN2x7SpXFoijPMtZVcE0uFMyNpLqargnFHKj0h+b32aESbAia
+ wdnmzShB6ZiLkJL1GZSWEV51DBok5ldQD8RxczczSWWL45Sc82XER1cRLX5E1luVHIbil0bK5
+ OiYHnYp7g9W8szLqN8azU28h1/hnkzGRB+IGO74zpy6vG6uk8FBaY3C/nfKNAEQEEXMzDkbOZ
+ 27t+ze5DIuLH7YRY48dVeUfqgpnQ/FlDdtX7lJD/7ZiCESziQmNjQgLKmuLXS9RRh1Nld8LG1
+ 5rbxDWRUv6crPBqzFWN2PnZ2UgBdz5zX9Iw/q6BWVTc1cJGfkPWrqQ/YoWC8IuPCSF2I=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 07d802699528 ("mm: devmap: refactor 1-based refcounting for
-ZONE_DEVICE pages"), we have renamed the func put_devmap_managed_page() to
-page_is_devmap_managed().
+tested full series on Bananapi-r64 (mt7531) running iperf3-server
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- mm/swap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.09 GBytes   939 Mbits/sec    0             send=
+er
+[  5]   0.00-10.01  sec  1.09 GBytes   935 Mbits/sec                  rece=
+iver
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 999a84dbe12c..041e4e31fb01 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -859,7 +859,7 @@ void release_pages(struct page **pages, int nr)
- 			}
- 			/*
- 			 * ZONE_DEVICE pages that return 'false' from
--			 * put_devmap_managed_page() do not require special
-+			 * page_is_devmap_managed() do not require special
- 			 * processing, and instead, expect a call to
- 			 * put_page_testzero().
- 			 */
--- 
-2.19.1
+reverse mode (-R)
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.01  sec  1.10 GBytes   941 Mbits/sec    0             send=
+er
+[  5]   0.00-10.00  sec  1.09 GBytes   939 Mbits/sec                  rece=
+iver
+
+similar to bananapi-r2 (mt7530)
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.09 GBytes   938 Mbits/sec    0             send=
+er
+[  5]   0.00-10.01  sec  1.09 GBytes   936 Mbits/sec                  rece=
+iver
+
+reverse-mode:
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.01  sec  1.05 GBytes   905 Mbits/sec  14533             se=
+nder <<<<<<<<<<<
+[  5]   0.00-10.00  sec  1.05 GBytes   905 Mbits/sec                  rece=
+iver
+
+on last test i see iperf3 has ~30%cpu load and also ksoftirqd (using debia=
+n buster), so i tried opening server on my Laptop and running iperf -c on =
+BPI-R2 with similar result
+
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  1.03 GBytes   886 Mbits/sec  13990             se=
+nder
+[  5]   0.00-10.00  sec  1.03 GBytes   885 Mbits/sec                  rece=
+iver
+
+in dmesg of both devices only DSA-Messages (nonfatal error -95 setting MTU=
+ on port) because of missing port_change_mtu callback. here i got a patch,=
+ but had not yet time to setup environment for testing jumbo-frames too. B=
+ut this just as side-note
+
+regards Frank
 
