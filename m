@@ -2,79 +2,97 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 053B4C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0F6C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2FFD2074B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H5fhTYLn"
+	by mail.kernel.org (Postfix) with ESMTP id E2A452074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 11:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbgIELZY (ORCPT
+        id S1728461AbgIEL2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 07:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728469AbgIELZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 07:25:09 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89A8BC061244;
-        Sat,  5 Sep 2020 04:24:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RcCo8rpDVaNpQkStt8c1HunAQwH7Y1hkDms25uGh7OM=; b=H5fhTYLnze+6FRQQl4W6tmfH1q
-        pcIodbtZk0OZNy1KMaQTx5BS8S0CDbBZcr/8epL6/qMDSFzs52nOdoO8lVQW9tofPDZJDQx8A+nQZ
-        SP5WBd5Lt7+WFiHjRZ5U5NeD1JdUH8LYQ7LRVitgJBSLXj3PIdezDLjvbFnFEAf/LB+tlBvhjd/P6
-        8W+BoR9OzLU7bO4kjLDP5F483ZezNZPg/YwE/lreGRBFF+PmZJ4NbBZyU+iC9qBiUciNFrmN7V7/I
-        1ls9g2doQTwnJH+JRPyGSZbHF2VKf89ceWGTMDjCGVhY0amiyxJlqK06cFWWIHxhPnmnb1G91GUwD
-        AZ2H91Gw==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEWJC-0006qo-6M; Sat, 05 Sep 2020 11:24:38 +0000
-Date:   Sat, 5 Sep 2020 12:24:38 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        shuah@kernel.org, kernel@collabora.com,
-        Paul Gofman <gofmanp@gmail.com>
-Subject: Re: [PATCH v6 5/9] kernel: Implement selective syscall userspace
- redirection
-Message-ID: <20200905112438.GA16750@casper.infradead.org>
-References: <20200904203147.2908430-1-krisman@collabora.com>
- <20200904203147.2908430-6-krisman@collabora.com>
+        Sat, 5 Sep 2020 07:28:04 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:48500 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728502AbgIEL1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 07:27:35 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0816BF94880A8F88B017;
+        Sat,  5 Sep 2020 19:27:13 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
+ 19:27:04 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+CC:     <mpe@ellerman.id.au>, <benh@kernel.crashing.org>,
+        <yangyingliang@huawei.com>
+Subject: [PATCH -next] powerpc/book3s64: fix link error with CONFIG_PPC_RADIX_MMU=n
+Date:   Sat, 5 Sep 2020 19:25:48 +0800
+Message-ID: <20200905112548.3265530-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904203147.2908430-6-krisman@collabora.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.124.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 04:31:43PM -0400, Gabriel Krisman Bertazi wrote:
-> +int set_syscall_user_dispatch(int mode, unsigned long dispatcher_start,
-> +			      unsigned long dispatcher_end, char __user *selector)
-> +{
-> +	switch (mode) {
-> +	case PR_SYS_DISPATCH_OFF:
-...
-> +	case PR_SYS_DISPATCH_ON:
-...
-> +	default:
-> +		return -EINVAL;
-...
-> +	case PR_SET_SYSCALL_USER_DISPATCH:
-> +		error = set_syscall_user_dispatch((int) arg2, arg3, arg4,
-> +						  (char __user *) arg5);
+Fix link error when CONFIG_PPC_RADIX_MMU is disabled:
+powerpc64-linux-gnu-ld: arch/powerpc/platforms/pseries/lpar.o:(.toc+0x0): undefined reference to `mmu_pid_bits'
 
-This makes aliases of DISPATCH_OFF and DISPATCH_ON every 4GB throughout
-the 64-bit space of arg2.  I don't think that was intentional (nor
-desirable).  I'd suggest just making 'mode' a long and dropping the cast.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ arch/powerpc/mm/book3s64/mmu_context.c | 4 ++++
+ arch/powerpc/platforms/pseries/lpar.c  | 2 ++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/arch/powerpc/mm/book3s64/mmu_context.c b/arch/powerpc/mm/book3s64/mmu_context.c
+index 0ba30b8b935b..a8e292cd88f0 100644
+--- a/arch/powerpc/mm/book3s64/mmu_context.c
++++ b/arch/powerpc/mm/book3s64/mmu_context.c
+@@ -152,6 +152,7 @@ void hash__setup_new_exec(void)
+ 
+ static int radix__init_new_context(struct mm_struct *mm)
+ {
++#ifdef CONFIG_PPC_RADIX_MMU
+ 	unsigned long rts_field;
+ 	int index, max_id;
+ 
+@@ -177,6 +178,9 @@ static int radix__init_new_context(struct mm_struct *mm)
+ 	mm->context.hash_context = NULL;
+ 
+ 	return index;
++#else
++	return -ENOTSUPP;
++#endif
+ }
+ 
+ int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index baf24eacd268..e454e218dbba 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -1726,10 +1726,12 @@ void __init hpte_init_pseries(void)
+ 
+ void radix_init_pseries(void)
+ {
++#ifdef CONFIG_PPC_RADIX_MMU
+ 	pr_info("Using radix MMU under hypervisor\n");
+ 
+ 	pseries_lpar_register_process_table(__pa(process_tb),
+ 						0, PRTB_SIZE_SHIFT - 12);
++#endif
+ }
+ 
+ #ifdef CONFIG_PPC_SMLPAR
+-- 
+2.25.1
+
