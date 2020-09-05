@@ -3,309 +3,575 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EAC7C2BB84
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E811C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D24F3208C7
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:30:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jxhVmPkF"
+	by mail.kernel.org (Postfix) with ESMTP id CFB022087C
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 00:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599265957;
+	bh=g6uCc8Tn9mY5PpKtwE4O8COoLXE5ZtmI3vlIEDhx1+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S+QVeDe5MWQEGPO8V4pv9CRtrnuXaygocVsv6QDBipWMIR7vlztOsLACySTBgDd6n
+	 lkrKVrsHy2AH5UNnPrIudcGEXbigfv8ay5d9VobRJOQ8uU2kzW8okjsApVWI3slAQL
+	 BmFGYmucq9y+OZs4vjlA9mdbF3N/Vij5CrbqcIxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgIEAay (ORCPT
+        id S1728202AbgIEAcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 20:30:54 -0400
-Received: from mail-dm6nam11on2137.outbound.protection.outlook.com ([40.107.223.137]:53024
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbgIEAaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 20:30:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d1Xwn4aRZVgCeiV3/6BjSRAMnbXvBDehqD6ysYXEfR8kXJdBeOp6ne0MCNVro3q7N2Dt1J6/kIyQXpI44iBwORreU6dZHg+48dUQui01MZ4lQyrTc2JQ7H6Mp6G7eU7cFLK30BW70z4hesISt01QM+elmupCAK5GQbzP3DrmSLCthZr4fRppPiAuPnHH9f9Qfb1VrqU37SmUwm8fVsv/SKgRpuw5646JVFWGS1ZKhcNUcWJuQ6IsO2iIkyqU2kaMGFwSnmeIHWL5KDRa3ObwRN95L4xc8G42HHOO6b9dJplEXGeXzUY/1eBSanT9gQ/s10OneI3t+qttt5btGHUixA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wuw9zJ4QKOwjjg1mdUnpEZBfvhm9dNP24eSKeB/l9cQ=;
- b=DzQoHVolVxkNS30CgjSAJYfMcR5xhORKLNEzWJo//kAVoPTSezOGbiRqtn1kOy1ZqOKtiiNx/sRgWqTv17j3sGWsWWKFVUrZfgbAmrZn63w7A170yPHitHlqO+XXjI4uEJpTBGmLLvb/4dvNiigsPf3BqM23vb0cuJpS+jwUBZ0QshQkCvbRIncAh0skRZCirQdetfSj2iq6ulVQEiUXZ4Q5ksBx1TyXVeF1Qb47FxmAwGkC656kZrSY6eP6O0+K+40BbCmmyB5lPsTqXfAxdhLxf+iyEVLWbs38jP4dOkMyur758sqT8SS3bl1pft/p7RdnrV0RXJvbqYCLmXjH7Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wuw9zJ4QKOwjjg1mdUnpEZBfvhm9dNP24eSKeB/l9cQ=;
- b=jxhVmPkFJtTOEBpj9c5NOUZA35SbnKyDD5IFGupMu2ia7Thqj/gKpSFg8RsWN8vn/F8lzZ41tRJS0D8KEEyG+BIOS34yvS/C4AVO85zSRGZzvwewC7GahWAn5+kdfNoHXPTgJlffwTYu6cERb9VyIYSlDng2MLmu788AiQaCP3c=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MWHPR21MB0749.namprd21.prod.outlook.com (2603:10b6:300:76::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.7; Sat, 5 Sep
- 2020 00:30:48 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3370.008; Sat, 5 Sep 2020
- 00:30:48 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     Boqun Feng <boqun.feng@gmail.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: RE: [RFC v2 07/11] hv_netvsc: Use HV_HYP_PAGE_SIZE for Hyper-V
- communication
-Thread-Topic: [RFC v2 07/11] hv_netvsc: Use HV_HYP_PAGE_SIZE for Hyper-V
- communication
-Thread-Index: AQHWgNVetO8hT2p2aECskb2CDLuDyKlZNToA
-Date:   Sat, 5 Sep 2020 00:30:48 +0000
-Message-ID: <MW2PR2101MB10521041242835B2D6E3EA0AD72A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200902030107.33380-1-boqun.feng@gmail.com>
- <20200902030107.33380-8-boqun.feng@gmail.com>
-In-Reply-To: <20200902030107.33380-8-boqun.feng@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-05T00:30:45Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=68df6d7d-4f12-4d3e-abba-2eaecbbf05fb;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 47c18f46-028d-4d74-11c4-08d85132ef92
-x-ms-traffictypediagnostic: MWHPR21MB0749:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR21MB0749B1AC568118280AF730E1D72A0@MWHPR21MB0749.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2657;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kqMNyBas5Ao1IU9ORRjcuaZgJXKO6i/dYO7cwVIG+qqp/v+IUckzJT76RkSHiumHt+5J5e85qNE+K3jBxDT8Q59oqdsSOBzyY2bOuSXrhwQ5+cSs2LzmUwK8tordp9r634YZF2qPDlt43BRafKku+pXIKAbv8dnkRnuHLUKURo8G44lJjNDZnnhlU9ggzq8fbTceuqB9/Fqz2eb7a5WjGvda/LBpQxRwMCLlHbY1WA/IQbpjDpcW1iZb5sev66e7wdqqdnCx2aFqnEo7vIAdHRTXhPL6i5ZY5twFfP51Zb//zPBmhnpux2/qU8hz3tcKHRa9BnmmIDy3BjI5pOihHihgxz8xtKpbcsQqwCTikE9RC0xGuLdRCacYclv/pKv4
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(366004)(66946007)(5660300002)(82950400001)(71200400001)(82960400001)(478600001)(33656002)(55016002)(8676002)(52536014)(8936002)(86362001)(110136005)(66446008)(54906003)(8990500004)(186003)(83380400001)(2906002)(66476007)(10290500003)(76116006)(316002)(64756008)(9686003)(26005)(4326008)(6506007)(66556008)(7416002)(7696005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4JNvSFcURU2B9wguw31zsSXfwvv0xfm0fq4Ih8DWC/nyibVy8miIr8XPkTMjdlvArUntyXKE/rJfeqyS+2XkOfBfxIBtPSaYOFGf7qWsRlyWcrpMQeqljpsKQmrXqWfn4DEW6QweO4g8YtDPCWqKByPeLX7kxyAYob2dmjeYThxTKqWkeJsMiXaq2mUxae3W/m0wGUaq48EGNPfGbkO0kpBOo5LEkhOnokskbXbU5Bu0AAe9B1M7ybizpmPU/bpKP8H8lyp5bRW2RuH0s1bfSt5K1ZaHuRfmrPgn8zQ0n7Cie5C3Jw2rt566IWH9YANwQ/hzQQwTIY+t7Wml8ge+ApSK0okExinwnYBcedcryMm3ixMy008k02PNNJklqDh/mgZ9NylAJk9H6XZYAzfpWKNMQd9EqppGak+X+Dsd704n3xoeTgBo3Pr7rMPAI2QKtDRsnONgClxYXrbkoEgu2GOk3cgFFJ1otemKTi5OOFu5k+Wv2u72/oFNA39OF90m5158HLe2CDkXLyO7UjI35Gd/hWnGfVJvACta89ycPVm4OU+zP0Sv3eX43CLzSVLci4/fFf7veJnG6NxAUzbDstuF3JE8DpAiauE95lcxQ15orKedjEDrWiJ5LWSPAtIJrRftFLSGm7ROTG0i8GFw/w==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 4 Sep 2020 20:32:35 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36299 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbgIEAce (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 20:32:34 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p37so5139985pgl.3;
+        Fri, 04 Sep 2020 17:32:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=g4tViWJurInNJW6j1i2BR3GFwck5EH43I9Jofii8+Cc=;
+        b=X3dHUfmlrLIBMQmaxho8D2VNseDwHme34tILktiQ3pgOdN18qEFAedjScLuIwazRvU
+         jvyNvHdrtTGs13Yr2K06vwVCfo1JltRI5WVWDCtvaXtym5S+w32+AWUmItOhHPvq0J6H
+         P4pjHgxHIzih4GzpLfmSieyGViZ2DI6tXRSvedlKRIm23ecSIawQskE91FPX/amCGkrx
+         qnRLR2sgfiInGXzds06g5Z0lyxhl+XIEPkQc5ykgNm87vKCxJ/Qh2y/oQLE5iPYltUT1
+         HwskV+nTA4UqvmliT9Rvk9/MjHC1HxFooVo81Y3e3HWPey+VH4zjqfovWkcs5dSkg6kf
+         7NVw==
+X-Gm-Message-State: AOAM531oY9kW/H6Y0VvJkcq8MjHS8u2YRe9X9MC+AAAER+RJmyEexYTg
+        of4lc1ggbMAi3GpDx/wT49DFOaNnBmU=
+X-Google-Smtp-Source: ABdhPJzZHAJ7rFX4lvEJSjJGCWVD0MqPIuUA8gaVy+4mAgeZyFtVUngfOG/JUuiO0LFf3hN2Lq1sbQ==
+X-Received: by 2002:a65:679a:: with SMTP id e26mr9424036pgr.167.1599265952458;
+        Fri, 04 Sep 2020 17:32:32 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id z22sm11804089pjq.2.2020.09.04.17.32.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 17:32:31 -0700 (PDT)
+Date:   Fri, 4 Sep 2020 17:32:31 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trix@redhat.com, lgoncalv@redhat.com,
+        Wu Hao <hao.wu@intel.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        Russ Weight <russell.h.weight@intel.com>
+Subject: Re: [PATCH v7 2/3] fpga: dfl: create a dfl bus type to support DFL
+ devices
+Message-ID: <20200905003231.GB3157@epycbox.lan>
+References: <1597823121-26424-1-git-send-email-yilun.xu@intel.com>
+ <1597823121-26424-3-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47c18f46-028d-4d74-11c4-08d85132ef92
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2020 00:30:48.1287
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hrHaf7JoJhrP7hSrycKEVXNoFFeMYtEDSH6F5fPa6WeF10/lmrju7ichiALngxz+BpwJflO4FLyTXSbJtVHs6kJaPqgQqHgvpfnTlg+oh/s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0749
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597823121-26424-3-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boqun Feng <boqun.feng@gmail.com> Sent: Tuesday, September 1, 2020 8:=
-01 PM
->=20
-> When communicating with Hyper-V, HV_HYP_PAGE_SIZE should be used since
-> that's the page size used by Hyper-V and Hyper-V expects all
-> page-related data using the unit of HY_HYP_PAGE_SIZE, for example, the
-> "pfn" in hv_page_buffer is actually the HV_HYP_PAGE (i.e. the Hyper-V
-> page) number.
->=20
-> In order to support guest whose page size is not 4k, we need to make
-> hv_netvsc always use HV_HYP_PAGE_SIZE for Hyper-V communication.
->=20
-> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Hi Xu,
+
+On Wed, Aug 19, 2020 at 03:45:20PM +0800, Xu Yilun wrote:
+> A new bus type "dfl" is introduced for private features which are not
+> initialized by DFL feature drivers (dfl-fme & dfl-afu drivers). So these
+> private features could be handled by separate driver modules.
+> 
+> DFL feature drivers (dfl-fme, dfl-port) will create DFL devices on
+> enumeration. DFL drivers could be registered on this bus to match these
+> DFL devices. They are matched by dfl type & feature_id.
+> 
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Reviewed-by: Tom Rix <trix@redhat.com>
+> Acked-by: Wu Hao <hao.wu@intel.com>
 > ---
->  drivers/net/hyperv/netvsc.c       |  2 +-
->  drivers/net/hyperv/netvsc_drv.c   | 46 +++++++++++++++----------------
->  drivers/net/hyperv/rndis_filter.c | 12 ++++----
->  3 files changed, 30 insertions(+), 30 deletions(-)
->=20
-> diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-> index 41f5cf0bb997..1d6f2256da6b 100644
-> --- a/drivers/net/hyperv/netvsc.c
-> +++ b/drivers/net/hyperv/netvsc.c
-> @@ -794,7 +794,7 @@ static void netvsc_copy_to_send_buf(struct netvsc_dev=
-ice
-> *net_device,
->  	}
->=20
->  	for (i =3D 0; i < page_count; i++) {
-> -		char *src =3D phys_to_virt(pb[i].pfn << PAGE_SHIFT);
-> +		char *src =3D phys_to_virt(pb[i].pfn << HV_HYP_PAGE_SHIFT);
->  		u32 offset =3D pb[i].offset;
->  		u32 len =3D pb[i].len;
->=20
-> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_=
-drv.c
-> index 64b0a74c1523..61ea568e1ddf 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -373,32 +373,29 @@ static u16 netvsc_select_queue(struct net_device *n=
-dev, struct
-> sk_buff *skb,
->  	return txq;
+> v2: change the bus uevent format.
+>     change the dfl device's sysfs name format.
+>     refactor dfl_dev_add().
+>     minor fixes for comments from Hao and Tom.
+> v3: no change.
+> v4: improve the uevent format, 4 bits for type & 12 bits for id.
+>     change dfl_device->type to u8.
+>     A dedicate field in struct dfl_feature for dfl device instance.
+>     error out if dfl_device already exist on dfl_devs_init().
+> v5: minor fixes for Hao's comments
+> v6: the input param of dfl_devs_add() changes to struct
+>     dfl_feature_platform_data.
+>     improve the comments.
+> v7: no change.
+> ---
+>  Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
+>  drivers/fpga/dfl.c                      | 262 +++++++++++++++++++++++++++++++-
+>  drivers/fpga/dfl.h                      |  86 +++++++++++
+>  3 files changed, 355 insertions(+), 8 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-dfl b/Documentation/ABI/testing/sysfs-bus-dfl
+> new file mode 100644
+> index 0000000..23543be
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-bus-dfl
+> @@ -0,0 +1,15 @@
+> +What:		/sys/bus/dfl/devices/dfl_dev.X/type
+> +Date:		Aug 2020
+> +KernelVersion:	5.10
+> +Contact:	Xu Yilun <yilun.xu@intel.com>
+> +Description:	Read-only. It returns type of DFL FIU of the device. Now DFL
+> +		supports 2 FIU types, 0 for FME, 1 for PORT.
+> +		Format: 0x%x
+> +
+> +What:		/sys/bus/dfl/devices/dfl_dev.X/feature_id
+> +Date:		Aug 2020
+> +KernelVersion:	5.10
+> +Contact:	Xu Yilun <yilun.xu@intel.com>
+> +Description:	Read-only. It returns feature identifier local to its DFL FIU
+> +		type.
+> +		Format: 0x%x
+> diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+> index 52cafa2..c5ba4ac9 100644
+> --- a/drivers/fpga/dfl.c
+> +++ b/drivers/fpga/dfl.c
+> @@ -30,12 +30,6 @@ static DEFINE_MUTEX(dfl_id_mutex);
+>   * index to dfl_chardevs table. If no chardev support just set devt_type
+>   * as one invalid index (DFL_FPGA_DEVT_MAX).
+>   */
+> -enum dfl_id_type {
+> -	FME_ID,		/* fme id allocation and mapping */
+> -	PORT_ID,	/* port id allocation and mapping */
+> -	DFL_ID_MAX,
+> -};
+> -
+>  enum dfl_fpga_devt_type {
+>  	DFL_FPGA_DEVT_FME,
+>  	DFL_FPGA_DEVT_PORT,
+> @@ -250,6 +244,244 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
 >  }
->=20
-> -static u32 fill_pg_buf(struct page *page, u32 offset, u32 len,
-> +static u32 fill_pg_buf(unsigned long hvpfn, u32 offset, u32 len,
->  		       struct hv_page_buffer *pb)
->  {
->  	int j =3D 0;
->=20
-> -	/* Deal with compound pages by ignoring unused part
-> -	 * of the page.
-> -	 */
-> -	page +=3D (offset >> PAGE_SHIFT);
-> -	offset &=3D ~PAGE_MASK;
-> +	hvpfn +=3D offset >> HV_HYP_PAGE_SHIFT;
-> +	offset =3D offset & ~HV_HYP_PAGE_MASK;
->=20
->  	while (len > 0) {
->  		unsigned long bytes;
->=20
-> -		bytes =3D PAGE_SIZE - offset;
-> +		bytes =3D HV_HYP_PAGE_SIZE - offset;
->  		if (bytes > len)
->  			bytes =3D len;
-> -		pb[j].pfn =3D page_to_pfn(page);
-> +		pb[j].pfn =3D hvpfn;
->  		pb[j].offset =3D offset;
->  		pb[j].len =3D bytes;
->=20
->  		offset +=3D bytes;
->  		len -=3D bytes;
->=20
-> -		if (offset =3D=3D PAGE_SIZE && len) {
-> -			page++;
-> +		if (offset =3D=3D HV_HYP_PAGE_SIZE && len) {
-> +			hvpfn++;
->  			offset =3D 0;
->  			j++;
+>  EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
+>  
+> +static DEFINE_IDA(dfl_device_ida);
+> +
+> +static const struct dfl_device_id *
+> +dfl_match_one_device(const struct dfl_device_id *id, struct dfl_device *ddev)
+> +{
+> +	if (id->type == ddev->type && id->feature_id == ddev->feature_id)
+> +		return id;
+> +
+> +	return NULL;
+> +}
+> +
+> +static int dfl_bus_match(struct device *dev, struct device_driver *drv)
+> +{
+> +	struct dfl_device *ddev = to_dfl_dev(dev);
+> +	struct dfl_driver *ddrv = to_dfl_drv(drv);
+> +	const struct dfl_device_id *id_entry = ddrv->id_table;
+> +
+> +	if (id_entry) {
+> +		while (id_entry->feature_id) {
+> +			if (dfl_match_one_device(id_entry, ddev)) {
+> +				ddev->id_entry = id_entry;
+> +				return 1;
+> +			}
+> +			id_entry++;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dfl_bus_probe(struct device *dev)
+> +{
+> +	struct dfl_device *ddev = to_dfl_dev(dev);
+> +	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
+Can you swap those for reverse x-mas tree where possible?
+
+        struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
+        struct dfl_device *ddev = to_dfl_dev(dev);
+	...
+
+> +
+> +	return ddrv->probe(ddev);
+> +}
+> +
+> +static int dfl_bus_remove(struct device *dev)
+> +{
+> +	struct dfl_device *ddev = to_dfl_dev(dev);
+> +	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
+
+Same here.
+> +
+> +	if (ddrv->remove)
+> +		ddrv->remove(ddev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
+> +{
+> +	struct dfl_device *ddev = to_dfl_dev(dev);
+> +
+> +	/* The type has 4 valid bits and feature_id has 12 valid bits */
+> +	return add_uevent_var(env, "MODALIAS=dfl:t%01Xf%03X",
+> +			      ddev->type, ddev->feature_id);
+> +}
+> +
+> +/* show dfl info fields */
+> +#define dfl_info_attr(field, format_string)				\
+> +static ssize_t								\
+> +field##_show(struct device *dev, struct device_attribute *attr,		\
+> +	     char *buf)							\
+> +{									\
+> +	struct dfl_device *ddev = to_dfl_dev(dev);			\
+> +									\
+> +	return sprintf(buf, format_string, ddev->field);		\
+> +}									\
+> +static DEVICE_ATTR_RO(field)
+> +
+> +dfl_info_attr(type, "0x%x\n");
+> +dfl_info_attr(feature_id, "0x%x\n");
+Can you either caplitalize those or if it's just two fields, keep them
+without a macro?
+> +
+> +static struct attribute *dfl_dev_attrs[] = {
+> +	&dev_attr_type.attr,
+> +	&dev_attr_feature_id.attr,
+> +	NULL,
+> +};
+> +
+> +ATTRIBUTE_GROUPS(dfl_dev);
+> +
+> +static struct bus_type dfl_bus_type = {
+> +	.name		= "dfl",
+> +	.match		= dfl_bus_match,
+> +	.probe		= dfl_bus_probe,
+> +	.remove		= dfl_bus_remove,
+> +	.uevent		= dfl_bus_uevent,
+> +	.dev_groups	= dfl_dev_groups,
+> +};
+> +
+> +static void release_dfl_dev(struct device *dev)
+> +{
+> +	struct dfl_device *ddev = to_dfl_dev(dev);
+> +
+> +	if (ddev->mmio_res.parent)
+> +		release_resource(&ddev->mmio_res);
+> +
+> +	ida_simple_remove(&dfl_device_ida, ddev->id);
+> +	kfree(ddev->irqs);
+> +	kfree(ddev);
+> +}
+> +
+> +static struct dfl_device *
+> +dfl_dev_add(struct dfl_feature_platform_data *pdata,
+> +	    struct dfl_feature *feature)
+> +{
+> +	struct platform_device *pdev = pdata->dev;
+> +	struct resource *parent_res;
+> +	struct dfl_device *ddev;
+> +	int id, i, ret;
+> +
+> +	ddev = kzalloc(sizeof(*ddev), GFP_KERNEL);
+> +	if (!ddev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	id = ida_simple_get(&dfl_device_ida, 0, 0, GFP_KERNEL);
+> +	if (id < 0) {
+> +		dev_err(&pdev->dev, "unable to get id\n");
+> +		kfree(ddev);
+> +		return ERR_PTR(id);
+> +	}
+> +
+> +	/* freeing resources by put_device() after device_initialize() */
+> +	device_initialize(&ddev->dev);
+> +	ddev->dev.parent = &pdev->dev;
+> +	ddev->dev.bus = &dfl_bus_type;
+> +	ddev->dev.release = release_dfl_dev;
+> +	ddev->id = id;
+> +	ret = dev_set_name(&ddev->dev, "dfl_dev.%d", id);
+> +	if (ret)
+> +		goto put_dev;
+> +
+> +	ddev->type = feature_dev_id_type(pdev);
+> +	ddev->feature_id = feature->id;
+> +	ddev->cdev = pdata->dfl_cdev;
+> +
+> +	/* add mmio resource */
+> +	parent_res = &pdev->resource[feature->resource_index];
+> +	ddev->mmio_res.flags = IORESOURCE_MEM;
+> +	ddev->mmio_res.start = parent_res->start;
+> +	ddev->mmio_res.end = parent_res->end;
+> +	ddev->mmio_res.name = dev_name(&ddev->dev);
+> +	ret = insert_resource(parent_res, &ddev->mmio_res);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "%s failed to claim resource: %pR\n",
+> +			dev_name(&ddev->dev), &ddev->mmio_res);
+> +		goto put_dev;
+> +	}
+> +
+> +	/* then add irq resource */
+> +	if (feature->nr_irqs) {
+> +		ddev->irqs = kcalloc(feature->nr_irqs,
+> +				     sizeof(*ddev->irqs), GFP_KERNEL);
+> +		if (!ddev->irqs) {
+> +			ret = -ENOMEM;
+> +			goto put_dev;
+> +		}
+> +
+> +		for (i = 0; i < feature->nr_irqs; i++)
+> +			ddev->irqs[i] = feature->irq_ctx[i].irq;
+> +
+> +		ddev->num_irqs = feature->nr_irqs;
+> +	}
+> +
+> +	ret = device_add(&ddev->dev);
+> +	if (ret)
+> +		goto put_dev;
+> +
+> +	dev_info(&pdev->dev, "add dfl_dev: %s\n", dev_name(&ddev->dev));
+Consider making this dev_dbg().
+> +	return ddev;
+> +
+> +put_dev:
+> +	/* calls release_dfl_dev() which does the clean up  */
+> +	put_device(&ddev->dev);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +static void dfl_devs_remove(struct dfl_feature_platform_data *pdata)
+> +{
+> +	struct dfl_feature *feature;
+> +
+> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
+> +		if (feature->ddev) {
+> +			device_unregister(&feature->ddev->dev);
+> +			feature->ddev = NULL;
+> +		}
+> +	}
+> +}
+> +
+> +static int dfl_devs_add(struct dfl_feature_platform_data *pdata)
+> +{
+> +	struct dfl_feature *feature;
+> +	struct dfl_device *ddev;
+> +	int ret;
+> +
+> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
+> +		if (feature->ioaddr)
+> +			continue;
+> +
+> +		if (feature->ddev) {
+> +			ret = -EEXIST;
+> +			goto err;
+> +		}
+> +
+> +		ddev = dfl_dev_add(pdata, feature);
+> +		if (IS_ERR(ddev)) {
+> +			ret = PTR_ERR(ddev);
+> +			goto err;
+> +		}
+> +
+> +		feature->ddev = ddev;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	dfl_devs_remove(pdata);
+> +	return ret;
+> +}
+> +
+> +int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner)
+> +{
+> +	if (!dfl_drv || !dfl_drv->probe || !dfl_drv->id_table)
+> +		return -EINVAL;
+> +
+> +	dfl_drv->drv.owner = owner;
+> +	dfl_drv->drv.bus = &dfl_bus_type;
+> +
+> +	return driver_register(&dfl_drv->drv);
+> +}
+> +EXPORT_SYMBOL(__dfl_driver_register);
+> +
+> +void dfl_driver_unregister(struct dfl_driver *dfl_drv)
+> +{
+> +	driver_unregister(&dfl_drv->drv);
+> +}
+> +EXPORT_SYMBOL(dfl_driver_unregister);
+> +
+>  #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
+>  
+>  /**
+> @@ -261,12 +493,15 @@ void dfl_fpga_dev_feature_uinit(struct platform_device *pdev)
+>  	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
+>  	struct dfl_feature *feature;
+>  
+> -	dfl_fpga_dev_for_each_feature(pdata, feature)
+> +	dfl_devs_remove(pdata);
+> +
+> +	dfl_fpga_dev_for_each_feature(pdata, feature) {
+>  		if (feature->ops) {
+>  			if (feature->ops->uinit)
+>  				feature->ops->uinit(pdev, feature);
+>  			feature->ops = NULL;
 >  		}
-> @@ -421,23 +418,26 @@ static u32 init_page_array(void *hdr, u32 len, stru=
-ct sk_buff *skb,
->  	 * 2. skb linear data
->  	 * 3. skb fragment data
->  	 */
-> -	slots_used +=3D fill_pg_buf(virt_to_page(hdr),
-> -				  offset_in_page(hdr),
-> -				  len, &pb[slots_used]);
-> +	slots_used +=3D fill_pg_buf(virt_to_hvpfn(hdr),
-> +				  offset_in_hvpage(hdr),
-> +				  len,
-> +				  &pb[slots_used]);
->=20
->  	packet->rmsg_size =3D len;
->  	packet->rmsg_pgcnt =3D slots_used;
->=20
-> -	slots_used +=3D fill_pg_buf(virt_to_page(data),
-> -				offset_in_page(data),
-> -				skb_headlen(skb), &pb[slots_used]);
-> +	slots_used +=3D fill_pg_buf(virt_to_hvpfn(data),
-> +				  offset_in_hvpage(data),
-> +				  skb_headlen(skb),
-> +				  &pb[slots_used]);
->=20
->  	for (i =3D 0; i < frags; i++) {
->  		skb_frag_t *frag =3D skb_shinfo(skb)->frags + i;
->=20
-> -		slots_used +=3D fill_pg_buf(skb_frag_page(frag),
-> -					skb_frag_off(frag),
-> -					skb_frag_size(frag), &pb[slots_used]);
-> +		slots_used +=3D fill_pg_buf(page_to_hvpfn(skb_frag_page(frag)),
-> +					  skb_frag_off(frag),
-> +					  skb_frag_size(frag),
-> +					  &pb[slots_used]);
->  	}
->  	return slots_used;
+> +	}
 >  }
-> @@ -453,8 +453,8 @@ static int count_skb_frag_slots(struct sk_buff *skb)
->  		unsigned long offset =3D skb_frag_off(frag);
->=20
->  		/* Skip unused frames from start of page */
-> -		offset &=3D ~PAGE_MASK;
-> -		pages +=3D PFN_UP(offset + size);
-> +		offset &=3D ~HV_HYP_PAGE_MASK;
-> +		pages +=3D HVPFN_UP(offset + size);
+>  EXPORT_SYMBOL_GPL(dfl_fpga_dev_feature_uinit);
+>  
+> @@ -347,6 +582,10 @@ int dfl_fpga_dev_feature_init(struct platform_device *pdev,
+>  		drv++;
 >  	}
->  	return pages;
->  }
-> @@ -462,12 +462,12 @@ static int count_skb_frag_slots(struct sk_buff *skb=
-)
->  static int netvsc_get_slots(struct sk_buff *skb)
+>  
+> +	ret = dfl_devs_add(pdata);
+> +	if (ret)
+> +		goto exit;
+> +
+>  	return 0;
+>  exit:
+>  	dfl_fpga_dev_feature_uinit(pdev);
+> @@ -1284,11 +1523,17 @@ static int __init dfl_fpga_init(void)
 >  {
->  	char *data =3D skb->data;
-> -	unsigned int offset =3D offset_in_page(data);
-> +	unsigned int offset =3D offset_in_hvpage(data);
->  	unsigned int len =3D skb_headlen(skb);
->  	int slots;
->  	int frag_slots;
->=20
-> -	slots =3D DIV_ROUND_UP(offset + len, PAGE_SIZE);
-> +	slots =3D DIV_ROUND_UP(offset + len, HV_HYP_PAGE_SIZE);
->  	frag_slots =3D count_skb_frag_slots(skb);
->  	return slots + frag_slots;
+>  	int ret;
+>  
+> +	ret = bus_register(&dfl_bus_type);
+> +	if (ret)
+> +		return ret;
+> +
+>  	dfl_ids_init();
+>  
+>  	ret = dfl_chardev_init();
+> -	if (ret)
+> +	if (ret) {
+>  		dfl_ids_destroy();
+> +		bus_unregister(&dfl_bus_type);
+> +	}
+>  
+>  	return ret;
 >  }
-> diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis=
-_filter.c
-> index b81ceba38218..acc8d957bbfc 100644
-> --- a/drivers/net/hyperv/rndis_filter.c
-> +++ b/drivers/net/hyperv/rndis_filter.c
-> @@ -25,7 +25,7 @@
->=20
->  static void rndis_set_multicast(struct work_struct *w);
->=20
-> -#define RNDIS_EXT_LEN PAGE_SIZE
-> +#define RNDIS_EXT_LEN HV_HYP_PAGE_SIZE
->  struct rndis_request {
->  	struct list_head list_ent;
->  	struct completion  wait_event;
-> @@ -215,18 +215,18 @@ static int rndis_filter_send_request(struct rndis_d=
-evice *dev,
->  	packet->page_buf_cnt =3D 1;
->=20
->  	pb[0].pfn =3D virt_to_phys(&req->request_msg) >>
-> -					PAGE_SHIFT;
-> +					HV_HYP_PAGE_SHIFT;
->  	pb[0].len =3D req->request_msg.msg_len;
->  	pb[0].offset =3D
-> -		(unsigned long)&req->request_msg & (PAGE_SIZE - 1);
-> +		(unsigned long)&req->request_msg & (HV_HYP_PAGE_SIZE - 1);
+> @@ -1626,6 +1871,7 @@ static void __exit dfl_fpga_exit(void)
+>  {
+>  	dfl_chardev_uinit();
+>  	dfl_ids_destroy();
+> +	bus_unregister(&dfl_bus_type);
+>  }
+>  
+>  module_init(dfl_fpga_init);
+> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+> index 5973769..5dc758f 100644
+> --- a/drivers/fpga/dfl.h
+> +++ b/drivers/fpga/dfl.h
+> @@ -236,6 +236,7 @@ struct dfl_feature_irq_ctx {
+>   * @irq_ctx: interrupt context list.
+>   * @nr_irqs: number of interrupt contexts.
+>   * @ops: ops of this sub feature.
+> + * @ddev: ptr to the dfl device of this sub feature.
+>   * @priv: priv data of this feature.
+>   */
+>  struct dfl_feature {
+> @@ -246,6 +247,7 @@ struct dfl_feature {
+>  	struct dfl_feature_irq_ctx *irq_ctx;
+>  	unsigned int nr_irqs;
+>  	const struct dfl_feature_ops *ops;
+> +	struct dfl_device *ddev;
+>  	void *priv;
+>  };
+>  
+> @@ -514,4 +516,88 @@ long dfl_feature_ioctl_set_irq(struct platform_device *pdev,
+>  			       struct dfl_feature *feature,
+>  			       unsigned long arg);
+>  
+> +/**
+> + * enum dfl_id_type - define the DFL FIU types
+> + */
+> +enum dfl_id_type {
+> +	FME_ID,
+> +	PORT_ID,
+> +	DFL_ID_MAX,
+> +};
+> +
+> +/**
+> + * struct dfl_device_id -  dfl device identifier
+> + * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
+> + * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
+> + * @driver_data: driver specific data.
+> + */
+> +struct dfl_device_id {
+> +	u8 type;
+> +	u16 feature_id;
+> +	unsigned long driver_data;
+> +};
+> +
+> +/**
+> + * struct dfl_device - represent an dfl device on dfl bus
+> + *
+> + * @dev: generic device interface.
+> + * @id: id of the dfl device.
+> + * @type: type of DFL FIU of the device. See enum dfl_id_type.
+> + * @feature_id: 16 bits feature identifier local to its DFL FIU type.
+> + * @mmio_res: mmio resource of this dfl device.
+> + * @irqs: list of Linux IRQ numbers of this dfl device.
+> + * @num_irqs: number of IRQs supported by this dfl device.
+> + * @cdev: pointer to DFL FPGA container device this dfl device belongs to.
+> + * @id_entry: matched id entry in dfl driver's id table.
+> + */
+> +struct dfl_device {
+> +	struct device dev;
+> +	int id;
+> +	u8 type;
+> +	u16 feature_id;
+> +	struct resource mmio_res;
+> +	int *irqs;
+> +	unsigned int num_irqs;
+> +	struct dfl_fpga_cdev *cdev;
+> +	const struct dfl_device_id *id_entry;
+> +};
+> +
+> +/**
+> + * struct dfl_driver - represent an dfl device driver
+> + *
+> + * @drv: driver model structure.
+> + * @id_table: pointer to table of device IDs the driver is interested in.
+> + *	      { } member terminated.
+> + * @probe: mandatory callback for device binding.
+> + * @remove: callback for device unbinding.
+> + */
+> +struct dfl_driver {
+> +	struct device_driver drv;
+> +	const struct dfl_device_id *id_table;
+> +
+> +	int (*probe)(struct dfl_device *dfl_dev);
+> +	void (*remove)(struct dfl_device *dfl_dev);
+> +};
+> +
+> +#define to_dfl_dev(d) container_of(d, struct dfl_device, dev)
+> +#define to_dfl_drv(d) container_of(d, struct dfl_driver, drv)
+> +
+> +/*
+> + * use a macro to avoid include chaining to get THIS_MODULE.
+> + */
+> +#define dfl_driver_register(drv) \
+> +	__dfl_driver_register(drv, THIS_MODULE)
+> +int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner);
+> +void dfl_driver_unregister(struct dfl_driver *dfl_drv);
+> +
+> +/*
+> + * module_dfl_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces module_init() and module_exit().
+> + */
+> +#define module_dfl_driver(__dfl_driver) \
+> +	module_driver(__dfl_driver, dfl_driver_register, \
+> +		      dfl_driver_unregister)
+> +
+>  #endif /* __FPGA_DFL_H */
+> -- 
+> 2.7.4
+> 
 
-Use offset_in_hvpage() as defined in patch 6 of the series?
-
->=20
->  	/* Add one page_buf when request_msg crossing page boundary */
-> -	if (pb[0].offset + pb[0].len > PAGE_SIZE) {
-> +	if (pb[0].offset + pb[0].len > HV_HYP_PAGE_SIZE) {
->  		packet->page_buf_cnt++;
-> -		pb[0].len =3D PAGE_SIZE -
-> +		pb[0].len =3D HV_HYP_PAGE_SIZE -
->  			pb[0].offset;
->  		pb[1].pfn =3D virt_to_phys((void *)&req->request_msg
-> -			+ pb[0].len) >> PAGE_SHIFT;
-> +			+ pb[0].len) >> HV_HYP_PAGE_SHIFT;
->  		pb[1].offset =3D 0;
->  		pb[1].len =3D req->request_msg.msg_len -
->  			pb[0].len;
-> --
-> 2.28.0
-
+Thanks,
+Moritz
