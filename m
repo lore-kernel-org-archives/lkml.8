@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B57DC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0B3B20E65
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA84A2073B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:04:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjGHvXUX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLHqe7tu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgIEUEg (ORCPT
+        id S1728796AbgIEUEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49648 "EHLO
+        Sat, 5 Sep 2020 16:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728743AbgIEUEY (ORCPT
+        with ESMTP id S1728764AbgIEUEa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:04:24 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F958C061244;
-        Sat,  5 Sep 2020 13:04:24 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 17so6470964pfw.9;
-        Sat, 05 Sep 2020 13:04:24 -0700 (PDT)
+        Sat, 5 Sep 2020 16:04:30 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5763AC061244;
+        Sat,  5 Sep 2020 13:04:30 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id c142so6478360pfb.7;
+        Sat, 05 Sep 2020 13:04:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6Iw0dHrjTvuCQzC5e/gsNUQGkDUy9ocfveJcatBjwfs=;
-        b=QjGHvXUXJ9nOFPLXCsSKoutaw8jE22c5npdiMT8+5I7EobBt6agwiN7rHYED3vK/9l
-         R7iNxhwTEcVvZRKsF5b100zHVt8h+eF6TN4HcST2l2as/Z2Ezc02V8/N5ZoBWIbYYdoh
-         TV77bcw5cLuGePbrP6NTNgGG7dNpcMgn338v6i5Unr0ThHS2LvAA/y2entZD1lr1kD/x
-         pEOtDdGMn6hE8bDxaGm709UsmY2mIiUhpuRK//Fj+nBP0aDkIsK5ymgOTuvS5b06trvT
-         5XZSFiNBDyWs9+waj326o+ude45/fYU+pfaPis4xi0H0yrJWn7FII3o+LBf1Sg8pj38f
-         r+HA==
+        bh=OfGuu3TfGSC0dAIWAeWJaFVq9ECT1JPqbW2AFayA+GQ=;
+        b=fLHqe7tuHBg643XOnANJa3y5lkVRvNbD+ZY2APv6SzsGfka9WXly+hl1tM7/HJXDHM
+         vwKBLD+qIlrUe9NpiHqak2zmWxwm56lOUAhAAdyheomlL04rTaC9VtT+AX+ZOgsMXfXU
+         U3FLr6o0UstkeYhWw3mbMjl1BIa+yMYr+n15QV1Jp0X5KMyTb+MGiIIxek8E9CE+xG22
+         uGutikItn5mkfK45NlYKVx4ugaGId8YRGL+Y4gI8jbuseRMG1y1GnkkB+QSX8/0Jn7Sj
+         3+8TbeAVw1PfKbWAhoeED7c0mZ55O1CIgOptp+lte/nQpAy0fqjOsCYZu4AdSCk/znXi
+         q5qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6Iw0dHrjTvuCQzC5e/gsNUQGkDUy9ocfveJcatBjwfs=;
-        b=Fd5MyRjdC7SjiM5aHb+UaQZdygS4u1jj0Fa/nXMVi0TH1Hl2gZCrRh6moB+bplFVtC
-         Pjvu6WpzMSJnoNagbsp9a9lyIkZ0WZAKGUrZZzzMe7QHX0m4bFqIZvT7UD8SWP2vktqz
-         RAf0J2RXHRA8TXSUjmn+4hBgoKPcTqRgyllKutEpj7RzhAdac7Mdd3omYzME9DvnF4FA
-         hNKL7sbH5seHqakTM0IPTcJLh7ejoGVL/tU11lwbasphk4+VUcWJk+SQRwxNjUgJF9YZ
-         vjMdc7OgcpB2WuJYuKlnb37rcOgo9/E50H2csR/VZiC5shpEJwb4Bwql2rrmLMEV8Z3s
-         TssA==
-X-Gm-Message-State: AOAM530Pq+BoGlQsfR9YhsKuvn+eSmiYXobLGpSVGE4zRhScOpuIuoyI
-        VBRVeGmdcV8ItHGrXbZrbliWu5RNHeRtbWkdfNs=
-X-Google-Smtp-Source: ABdhPJwA906n2s8az97kUmTej4LoK6ZyRxudC/BY/FsdmgjsN2Waiw224CFDRRMz5qg/zJr43MtwAQ==
-X-Received: by 2002:aa7:93a8:0:b029:13c:1611:6534 with SMTP id x8-20020aa793a80000b029013c16116534mr12211051pff.6.1599336263849;
-        Sat, 05 Sep 2020 13:04:23 -0700 (PDT)
+        bh=OfGuu3TfGSC0dAIWAeWJaFVq9ECT1JPqbW2AFayA+GQ=;
+        b=ZHlJQWixpEpTGQ6WtPvbEeZIKJo6TE/NWWISrkUS9LzIWk8igAki5ICZvFpa56Ra5l
+         CfLDMRlMOiYyCZT9+LNIczY+48sr7bs9pYQtqX7HQwN80+yiWO/WKC72TXjkMTG0lCR/
+         dCSJAYZvoyvyHjOVhK7ZmdzLFcqj6IUm7yLw1U1igZ/kb80IZG54sAcCz1gcXGUWViF5
+         jzvDLEYgVEMU+//dAe+PvsDi+1lPsIW9OBOYSNAF8mtW0pqcoOPTJBwj2vJWnGt+Qep8
+         qPWv4y8zL97P0QjZ2SUnyT5CMxunyK9pcnCwTZv97C6cV0zDUefMphsZZ6i/s+15nc3O
+         SBkA==
+X-Gm-Message-State: AOAM530OFTgTtxxjTIILNqtddHc32aLuqdyqR+ygfV7LMpga1BXckNs5
+        /ylxnu2xnbhQhmFqBjqK8is=
+X-Google-Smtp-Source: ABdhPJw//aNsrYgjcLMECQ4CrSS0sTgYqpUFarDgcROXwMPHuT20MbxLWh8MpFOXkngMosoqQORaVw==
+X-Received: by 2002:aa7:8645:0:b029:13c:de96:6fde with SMTP id a5-20020aa786450000b029013cde966fdemr11646572pfo.14.1599336269399;
+        Sat, 05 Sep 2020 13:04:29 -0700 (PDT)
 Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id 19sm8386881pjk.28.2020.09.05.13.04.21
+        by smtp.gmail.com with ESMTPSA id x19sm9954174pfm.28.2020.09.05.13.04.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 13:04:22 -0700 (PDT)
+        Sat, 05 Sep 2020 13:04:28 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     iommu@lists.linux-foundation.org, dri-devel@lists.freedesktop.org,
         Will Deacon <will@kernel.org>,
@@ -76,13 +76,10 @@ Cc:     linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
         David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v17 07/20] drm/msm: Set the global virtual address range from the IOMMU domain
-Date:   Sat,  5 Sep 2020 13:04:13 -0700
-Message-Id: <20200905200454.240929-8-robdclark@gmail.com>
+Subject: [PATCH v17 09/20] drm/msm: Add support for private address space instances
+Date:   Sat,  5 Sep 2020 13:04:15 -0700
+Message-Id: <20200905200454.240929-10-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200905200454.240929-1-robdclark@gmail.com>
 References: <20200905200454.240929-1-robdclark@gmail.com>
@@ -95,68 +92,168 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Use the aperture settings from the IOMMU domain to set up the virtual
-address range for the GPU. This allows us to transparently deal with
-IOMMU side features (like split pagetables).
+Add support for allocating private address space instances. Targets that
+support per-context pagetables should implement their own function to
+allocate private address spaces.
+
+The default will return a pointer to the global address space.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
- drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c     | 13 +++++++------
+ drivers/gpu/drm/msm/msm_drv.h     |  5 +++++
+ drivers/gpu/drm/msm/msm_gem_vma.c |  9 +++++++++
+ drivers/gpu/drm/msm/msm_gpu.c     | 22 ++++++++++++++++++++++
+ drivers/gpu/drm/msm/msm_gpu.h     |  5 +++++
+ 5 files changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index a712e1cfcba8..b703e5308b01 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
- 	struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
- 	struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
- 	struct msm_gem_address_space *aspace;
-+	u64 start, size;
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 75cd7639f560..7e963f707852 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+ 	kref_init(&ctx->ref);
+ 	msm_submitqueue_init(dev, ctx);
  
--	aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
--		0xffffffff - SZ_16M);
-+	/*
-+	 * Use the aperture start or SZ_16M, whichever is greater. This will
-+	 * ensure that we align with the allocated pagetable range while still
-+	 * allowing room in the lower 32 bits for GMEM and whatnot
-+	 */
-+	start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-+	size = iommu->geometry.aperture_end - start + 1;
-+
-+	aspace = msm_gem_address_space_create(mmu, "gpu",
-+		start & GENMASK(48, 0), size);
- 
- 	if (IS_ERR(aspace) && !IS_ERR(mmu))
- 		mmu->funcs->destroy(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 3a381a9674c9..1b6635504069 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	size_t ret;
- 
-+	/* The arm-smmu driver expects the addresses to be sign extended */
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
- 	WARN_ON(!ret);
- 
-@@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 
-+	if (iova & BIT_ULL(48))
-+		iova |= GENMASK_ULL(63, 49);
-+
- 	iommu_unmap(iommu->domain, iova, len);
+-	ctx->aspace = priv->gpu ? priv->gpu->aspace : NULL;
++	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+ 	file->driver_priv = ctx;
  
  	return 0;
+@@ -780,18 +780,19 @@ static int msm_ioctl_gem_cpu_fini(struct drm_device *dev, void *data,
+ }
+ 
+ static int msm_ioctl_gem_info_iova(struct drm_device *dev,
+-		struct drm_gem_object *obj, uint64_t *iova)
++		struct drm_file *file, struct drm_gem_object *obj,
++		uint64_t *iova)
+ {
+-	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_file_private *ctx = file->driver_priv;
+ 
+-	if (!priv->gpu)
++	if (!ctx->aspace)
+ 		return -EINVAL;
+ 
+ 	/*
+ 	 * Don't pin the memory here - just get an address so that userspace can
+ 	 * be productive
+ 	 */
+-	return msm_gem_get_iova(obj, priv->gpu->aspace, iova);
++	return msm_gem_get_iova(obj, ctx->aspace, iova);
+ }
+ 
+ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+@@ -830,7 +831,7 @@ static int msm_ioctl_gem_info(struct drm_device *dev, void *data,
+ 		args->value = msm_gem_mmap_offset(obj);
+ 		break;
+ 	case MSM_INFO_GET_IOVA:
+-		ret = msm_ioctl_gem_info_iova(dev, obj, &args->value);
++		ret = msm_ioctl_gem_info_iova(dev, file, obj, &args->value);
+ 		break;
+ 	case MSM_INFO_SET_NAME:
+ 		/* length check should leave room for terminating null: */
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index 4561bfb5e745..2ca9c3c03845 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -249,6 +249,10 @@ int msm_gem_map_vma(struct msm_gem_address_space *aspace,
+ void msm_gem_close_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma);
+ 
++
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace);
++
+ void msm_gem_address_space_put(struct msm_gem_address_space *aspace);
+ 
+ struct msm_gem_address_space *
+@@ -434,6 +438,7 @@ static inline void __msm_file_private_destroy(struct kref *kref)
+ 	struct msm_file_private *ctx = container_of(kref,
+ 		struct msm_file_private, ref);
+ 
++	msm_gem_address_space_put(ctx->aspace);
+ 	kfree(ctx);
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 5f6a11211b64..29cc1305cf37 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -27,6 +27,15 @@ void msm_gem_address_space_put(struct msm_gem_address_space *aspace)
+ 		kref_put(&aspace->kref, msm_gem_address_space_destroy);
+ }
+ 
++struct msm_gem_address_space *
++msm_gem_address_space_get(struct msm_gem_address_space *aspace)
++{
++	if (!IS_ERR_OR_NULL(aspace))
++		kref_get(&aspace->kref);
++
++	return aspace;
++}
++
+ /* Actually unmap memory for the vma */
+ void msm_gem_purge_vma(struct msm_gem_address_space *aspace,
+ 		struct msm_gem_vma *vma)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 57532b6b4702..9f1bd17dfa47 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -823,6 +823,28 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+ 	return 0;
+ }
+ 
++/* Return a new address space for a msm_drm_private instance */
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu)
++{
++	struct msm_gem_address_space *aspace = NULL;
++
++	if (!gpu)
++		return NULL;
++
++	/*
++	 * If the target doesn't support private address spaces then return
++	 * the global one
++	 */
++	if (gpu->funcs->create_private_address_space)
++		aspace = gpu->funcs->create_private_address_space(gpu);
++
++	if (IS_ERR_OR_NULL(aspace))
++		aspace = msm_gem_address_space_get(gpu->aspace);
++
++	return aspace;
++}
++
+ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config)
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 5cf696169f93..04a2f7539712 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -66,6 +66,8 @@ struct msm_gpu_funcs {
+ 	void (*gpu_set_freq)(struct msm_gpu *gpu, struct dev_pm_opp *opp);
+ 	struct msm_gem_address_space *(*create_address_space)
+ 		(struct msm_gpu *gpu, struct platform_device *pdev);
++	struct msm_gem_address_space *(*create_private_address_space)
++		(struct msm_gpu *gpu);
+ };
+ 
+ struct msm_gpu {
+@@ -298,6 +300,9 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 		const char *name, struct msm_gpu_config *config);
+ 
++struct msm_gem_address_space *
++msm_gpu_create_private_address_space(struct msm_gpu *gpu);
++
+ void msm_gpu_cleanup(struct msm_gpu *gpu);
+ 
+ struct msm_gpu *adreno_load_gpu(struct drm_device *dev);
 -- 
 2.26.2
 
