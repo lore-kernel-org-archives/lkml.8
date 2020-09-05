@@ -2,75 +2,169 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF612C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0191FC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7341E2074B
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599338201;
-	bh=cs7rrEwHik/Su4uXsEY7WRBvMHghd/7hkKnFHM+VebQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Xudga/KkdruN1T9mtYJdFExQZBEspQcKSpVeP8xZcjCjHKIVNoG3AtzFHwuDLBsWf
-	 9IPnSAkqDaPzhS5WF6W2wzz6xl3HlHNTUmBLpyryzMAIUN5brNY4UERof0G2tdsE0N
-	 n7nsU5FTNHZgPVqg49XI+spT6ONkCKq6SE0WvSPo=
+	by mail.kernel.org (Postfix) with ESMTP id 8E53620760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:40:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INjEBySK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgIEUgk (ORCPT
+        id S1728657AbgIEUkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEUgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:36:37 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 230EB20738;
-        Sat,  5 Sep 2020 20:36:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599338197;
-        bh=cs7rrEwHik/Su4uXsEY7WRBvMHghd/7hkKnFHM+VebQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zdtZtatn/kqpKdEIxI4FrGk03ElUXhFKU4IfSxcj/2d+WDFKEoJYA4iWPx/e0Trbu
-         CqKRLF8IX3YZNwMCIKyhFSxhrR1RP8bOSvLvyHvy6iisIEyAQLgeodTV4c7AbOm51O
-         9jUHUmMtUrIx3QDhGaYqcD3ucXOMzjYsFvm6G9BM=
-Date:   Sat, 5 Sep 2020 13:36:35 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        Sat, 5 Sep 2020 16:40:00 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54265 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728400AbgIEUj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 16:39:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599338395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Kx8HzmaZpeYZYpWwlpa7IbVO/+/3Ogwe4v1RfYOzGi8=;
+        b=INjEBySK9TSpKil5sFytoBsY2jYb3sweOs8lkR3tmb8whmw4rhCUCe7I1qaNDFy/o/GAR/
+        mc/6hQypLj8lX8+wbWfBtq3W3HJRDDBrXPIK46hqTQvrl51+hkhEj7GN1yGBMWpBWiKZ7s
+        Wid45J4Vg5lgqO73hPkm2VdGCp+u6zk=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-_MKVJSABOVKnKbywJJQ0gg-1; Sat, 05 Sep 2020 16:39:54 -0400
+X-MC-Unique: _MKVJSABOVKnKbywJJQ0gg-1
+Received: by mail-qv1-f72.google.com with SMTP id p20so5686777qvl.4
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 13:39:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Kx8HzmaZpeYZYpWwlpa7IbVO/+/3Ogwe4v1RfYOzGi8=;
+        b=CwKbF3rREHWJN/3ovJTFlE6fY256JfLSZTYqAslNS4kPYzXq2K5UJ6SibYwn/7xmQ/
+         Mvs+hmwDmDdcabC1yvqN0Wq55n6Xr//m3AmhzqASlmoAGFkQnRnSiGZkGf1qj21d5doT
+         bOF/cKeskAJ8Y5zNJFGd13GdGbx8k5dhtfDvXVRCvtbNL4K3eBDdECg3dpmvQwOfd8rm
+         nDOBhirnP7JOlW8Rvs3wq/s/kSU6FMa/hUmVhtcuHPCZ8oxExxYAQb8CMvpCAc7JX990
+         uUA8PHnGsKAv79GfbbSy4RwwJkpLM7BvPzLi+WQK4A/32YSYsUdfD2MEYnGt+mzQ/xNw
+         d58w==
+X-Gm-Message-State: AOAM531f+MMLnvePjidzM66iwa7MEGgyCkNy6ezvQD8DTQKEbZAgsym7
+        6IQLkTX7xTK2TWqVKQlJFezxiwI61LxwCyjz4h7ZZLId8rBq2TKWNFdAzJNfiIafwAV1usXqZu+
+        TQ9J+UNyk1VPtPbSwUYHvrVPE
+X-Received: by 2002:ac8:411b:: with SMTP id q27mr14554196qtl.255.1599338393664;
+        Sat, 05 Sep 2020 13:39:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxEEppV8KOTKDOVXJjHNDLaJizH+e1HUtcIP/UpF9boOGOaBHyt97v0JQjlD2oPNxl6jMi+TQ==
+X-Received: by 2002:ac8:411b:: with SMTP id q27mr14554188qtl.255.1599338393436;
+        Sat, 05 Sep 2020 13:39:53 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id l13sm6440861qtv.82.2020.09.05.13.39.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 13:39:52 -0700 (PDT)
+Subject: Re: [PATCH v1 03/12] fpga: expose max10 flash update counts in sysfs
+To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
+        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
-Message-ID: <20200905133635.497c3663@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
-References: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
+Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@intel.com
+References: <20200904235305.6254-1-russell.h.weight@intel.com>
+ <20200904235305.6254-4-russell.h.weight@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <a4ee319d-9f6f-5a27-415e-b1fabd1d5465@redhat.com>
+Date:   Sat, 5 Sep 2020 13:39:50 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200904235305.6254-4-russell.h.weight@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  5 Sep 2020 12:37:00 +0200 Lukas Bulwahn wrote:
-> Commit 0da4c3d393e4 ("net: phy: add Lynx PCS module") added the files in
-> ./drivers/net/pcs/, but the new LYNX PCS MODULE section refers to
-> ./drivers/net/phy/.
-> 
-> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-> 
->   warning: no file matches    F:    drivers/net/phy/pcs-lynx.c
-> 
-> Repair the LYNX PCS MODULE section by referring to the right location.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Applied, thanks!
+On 9/4/20 4:52 PM, Russ Weight wrote:
+> Extend the MAX10 BMC Security Engine driver to provide a
+> handler to expose the flash update count for the FPGA user
+> image.
+>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Reviewed-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  drivers/fpga/intel-m10-bmc-secure.c | 32 +++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>
+> diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
+> index 1f86bfb694b4..b824790e43aa 100644
+> --- a/drivers/fpga/intel-m10-bmc-secure.c
+> +++ b/drivers/fpga/intel-m10-bmc-secure.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/mfd/intel-m10-bmc.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+>  
+>  struct m10bmc_sec {
+> @@ -99,7 +100,38 @@ SYSFS_GET_REH(bmc, BMC_REH_ADDR)
+>  SYSFS_GET_REH(sr, SR_REH_ADDR)
+>  SYSFS_GET_REH(pr, PR_REH_ADDR)
+>  
+> +#define FLASH_COUNT_SIZE 4096
+This seems too high at most it should be 64.
+> +#define USER_FLASH_COUNT 0x17ffb000
+Why shouldn't this be in intel-m10-bmc.h ?
+> +
+> +static int get_qspi_flash_count(struct ifpga_sec_mgr *imgr)
+
+what does 'qspi' mean ?
+
+unless there are going to be several *flash_count's consider
+
+removing this substring.
+
+> +{
+> +	struct m10bmc_sec *sec = imgr->priv;
+> +	unsigned int stride = regmap_get_reg_stride(sec->m10bmc->regmap);
+> +	unsigned int cnt, num_bits = FLASH_COUNT_SIZE * 8;
+> +	u8 *flash_buf;
+> +	int ret;
+> +
+> +	flash_buf = kmalloc(FLASH_COUNT_SIZE, GFP_KERNEL);
+> +	if (!flash_buf)
+> +		return -ENOMEM;
+> +
+> +	ret = m10bmc_raw_bulk_read(sec->m10bmc, USER_FLASH_COUNT, flash_buf,
+> +				   FLASH_COUNT_SIZE / stride);
+> +	if (ret) {
+> +		dev_err(sec->dev, "%s failed to read %d\n", __func__, ret);
+> +		goto exit_free;
+> +	}
+> +
+> +	cnt = num_bits - bitmap_weight((unsigned long *)flash_buf, num_bits);
+Simplify ret = num_bits...
+> +
+> +exit_free:
+> +	kfree(flash_buf);
+> +
+> +	return ret ? : cnt;
+
+Then simplify
+
+return ret;
+
+Tom
+
+> +}
+> +
+>  static const struct ifpga_sec_mgr_ops m10bmc_iops = {
+> +	.user_flash_count = get_qspi_flash_count,
+>  	.bmc_root_entry_hash = get_bmc_root_entry_hash,
+>  	.sr_root_entry_hash = get_sr_root_entry_hash,
+>  	.pr_root_entry_hash = get_pr_root_entry_hash,
+
