@@ -2,149 +2,175 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA360C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 04:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F609C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 04:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9976020E65
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 04:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599280587;
-	bh=+aFBoeHCudO0pNTg+cLcvqXBEd6U5H7kOIhSWlzUzN4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=n1nzgMNOZarM8cP1PfqqpdkrfA6cuwBjRlXrhHZ/QMxWoGURaCvfvHPxLziMVmIBR
-	 kNDHXIzbZ/+TQfZEgXyLK7K8np2x8DsBkZD0LFfKNKvCV/gXhqH8AsBz/U0vQHAY7v
-	 7rtYfFR56VBCT819mx3dnjESyxRXK2exYWiXxmdE=
+	by mail.kernel.org (Postfix) with ESMTP id 40C9220E65
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 04:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbgIEEgZ (ORCPT
+        id S1726420AbgIEEia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 00:36:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725554AbgIEEgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 00:36:25 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9540520E65;
-        Sat,  5 Sep 2020 04:36:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599280584;
-        bh=+aFBoeHCudO0pNTg+cLcvqXBEd6U5H7kOIhSWlzUzN4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aCp1FC7ns4LjzywFifTtqdN8gMlapuGNPqqnW9C9E++PI+rDsOAyMx0nTUOgosKlr
-         Oamfis3EDDzlfaB1PscjYT+keUpZt4O2Ky0vxtDkWxTbIeUJyGQB5i0jBrKPzf6adz
-         xdmxP4rxPCkJJZ59IM9wEoK4UMFk4kAQKFjvtJo4=
-Date:   Fri, 4 Sep 2020 21:36:21 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Subject: Re: [PATCH net v2] drivers/net/wan/hdlc_fr: Add needed_headroom for
- PVC devices
-Message-ID: <20200904213621.05dd6462@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <CAJht_ENKyfMm7wAxcVSThEG63oVe72FvMs-5VaLWemKvveY+dQ@mail.gmail.com>
-References: <20200903000658.89944-1-xie.he.0141@gmail.com>
-        <20200904151441.27c97d80@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAJht_EN+=WTuduvm43_Lq=XWL78AcF5q6Zoyg8S5fao_udL=+Q@mail.gmail.com>
-        <CAJht_ENKyfMm7wAxcVSThEG63oVe72FvMs-5VaLWemKvveY+dQ@mail.gmail.com>
+        Sat, 5 Sep 2020 00:38:30 -0400
+Received: from smtprelay0056.hostedemail.com ([216.40.44.56]:49606 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725554AbgIEEi3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 00:38:29 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 730342478;
+        Sat,  5 Sep 2020 04:38:26 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: cart87_5d0b864270b8
+X-Filterd-Recvd-Size: 6212
+Received: from XPS-9350 (cpe-23-242-83-182.socal.res.rr.com [23.242.83.182])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  5 Sep 2020 04:38:25 +0000 (UTC)
+Message-ID: <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
+Subject: Re: [PATCH] fscrypt: Reduce object size of logging messages
+From:   Joe Perches <joe@perches.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 04 Sep 2020 21:38:23 -0700
+In-Reply-To: <20200904230341.GA6172@sol.localdomain>
+References: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
+         <20200904230341.GA6172@sol.localdomain>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 18:57:27 -0700 Xie He wrote:
-> On Fri, Sep 4, 2020 at 6:28 PM Xie He <xie.he.0141@gmail.com> wrote:
-> >
-> > The HDLC device is not actually prepending any header when it is used
-> > with this driver. When the PVC device has prepended its header and
-> > handed over the skb to the HDLC device, the HDLC device just hands it
-> > over to the hardware driver for transmission without prepending any
-> > header.
-> >
-> > If we grep "header_ops" and "skb_push" in "hdlc.c" and "hdlc_fr.c", we
-> > can see there is no "header_ops" implemented in these two files and
-> > all "skb_push" happen in the PVC device in hdlc_fr.c.  
+On Fri, 2020-09-04 at 16:03 -0700, Eric Biggers wrote:
+> On Fri, Sep 04, 2020 at 03:10:15PM -0700, Joe Perches wrote:
+> > Reduce the object size of logging messages by removing the
+> > separate KERN_LEVEL argument and adding it to the format.
+> > 
+> > Miscellanea:
+> > 
+> > o Rename fscypt_msg to fscrypt_printk
+> > 
+> > x86-64 defconfig with fscrypto:
+> > 
+> > Original sizes:
+> > $ size fs/crypto/built-in.a -t
+> >    text	   data	    bss	    dec	    hex	filename
+> >    3815	    300	     24	   4139	   102b	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
+> >    4354	     84	      0	   4438	   1156	fs/crypto/fname.o (ex fs/crypto/built-in.a)
+> >    1484	     24	      0	   1508	    5e4	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
+> >    2910	     68	      0	   2978	    ba2	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
+> >    7797	    664	     65	   8526	   214e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
+> >    5005	    493	      0	   5498	   157a	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
+> >    2805	      0	    544	   3349	    d15	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
+> >    6391	     90	      0	   6481	   1951	fs/crypto/policy.o (ex fs/crypto/built-in.a)
+> >    1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
+> >   35930	   1763	    633	  38326	   95b6	(TOTALS)
+> > 
+> > New sizes:
+> > $ size fs/crypto/built-in.a -t
+> >    text	   data	    bss	    dec	    hex	filename
+> >    3874	    300	     24	   4198	   1066	fs/crypto/crypto.o (ex fs/crypto/built-in.a)
+> >    4347	     84	      0	   4431	   114f	fs/crypto/fname.o (ex fs/crypto/built-in.a)
+> >    1476	     24	      0	   1500	    5dc	fs/crypto/hkdf.o (ex fs/crypto/built-in.a)
+> >    2902	     68	      0	   2970	    b9a	fs/crypto/hooks.o (ex fs/crypto/built-in.a)
+> >    7781	    664	     65	   8510	   213e	fs/crypto/keyring.o (ex fs/crypto/built-in.a)
+> >    4961	    493	      0	   5454	   154e	fs/crypto/keysetup.o (ex fs/crypto/built-in.a)
+> >    2790	      0	    544	   3334	    d06	fs/crypto/keysetup_v1.o (ex fs/crypto/built-in.a)
+> >    6306	     90	      0	   6396	   18fc	fs/crypto/policy.o (ex fs/crypto/built-in.a)
+> >    1369	     40	      0	   1409	    581	fs/crypto/bio.o (ex fs/crypto/built-in.a)
+> >   35806	   1763	    633	  38202	   953a	(TOTALS)
+> > 
+> > Signed-off-by: Joe Perches <joe@perches.com>
+> > ---
+> >  fs/crypto/crypto.c          | 14 ++++++++------
+> >  fs/crypto/fscrypt_private.h | 12 ++++++------
+> >  2 files changed, 14 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+> > index 9212325763b0..c82cc3907e43 100644
+> > --- a/fs/crypto/crypto.c
+> > +++ b/fs/crypto/crypto.c
+> > @@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
+> >  	return err;
+> >  }
+> >  
+> > -void fscrypt_msg(const struct inode *inode, const char *level,
+> > -		 const char *fmt, ...)
+> > +void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
+> >  {
+> >  	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
+> >  				      DEFAULT_RATELIMIT_BURST);
+> >  	struct va_format vaf;
+> >  	va_list args;
+> > +	int level;
+> >  
+> >  	if (!__ratelimit(&rs))
+> >  		return;
+> >  
+> >  	va_start(args, fmt);
+> > -	vaf.fmt = fmt;
+> > +	level = printk_get_level(fmt);
+> > +	vaf.fmt = printk_skip_level(fmt);
+> >  	vaf.va = &args;
+> >  	if (inode)
+> > -		printk("%sfscrypt (%s, inode %lu): %pV\n",
+> > -		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
+> > +		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
+> > +		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
+> > +		       &vaf);
+> >  	else
+> > -		printk("%sfscrypt: %pV\n", level, &vaf);
+> > +		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
+> >  	va_end(args);
 > 
-> I want to provide a little more information about the flow after an
-> HDLC device's ndo_start_xmit is called.
+> The problem with this approach is that if fscrypt_printk() is called without
+> providing a log level in the format string (which one would assume would work,
+> since printk() allows it), then the real format string will be truncated to just
+> KERN_SOH because 'level' will be 0.
+> Can you find a way to avoid that?
+
+While I don't think this is a problem in that all the fscrypt_<level>
+calls will always prefix a KERN_<LEVEL>, another approach is to use
+what btrfs uses:
+
+	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
+...
+	while ((kern_level = printk_get_level(fmt)) != 0) {
+		size_t size = printk_skip_level(fmt) - fmt;
+
+		if (kern_level >= '0' && kern_level <= '7') {
+			memcpy(lvl, fmt,  size);
+			lvl[size] = '\0';
+		}
+		fmt += size;
+	}
+
+and use "%s...", lvl, ...
+
+
+> > -#define fscrypt_warn(inode, fmt, ...)		\
+> > -	fscrypt_msg((inode), KERN_WARNING, fmt, ##__VA_ARGS__)
+> > -#define fscrypt_err(inode, fmt, ...)		\
+> > -	fscrypt_msg((inode), KERN_ERR, fmt, ##__VA_ARGS__)
+> > +#define fscrypt_err(inode, fmt, ...)					\
+> > +	fscrypt_printk(inode, KERN_ERR fmt, ##__VA_ARGS__)
+> > +#define fscrypt_warn(inode, fmt, ...)					\
+> > +	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
 > 
-> An HDLC hardware driver's ndo_start_xmit is required to point to
-> hdlc_start_xmit in hdlc.c. When a HDLC device receives a call to its
-> ndo_start_xmit, hdlc_start_xmit will check if the protocol driver has
-> provided a xmit function. If it has provided this function,
-> hdlc_start_xmit will call it to start transmission. If it has not,
-> hdlc_start_xmit will directly call the hardware driver's function to
-> start transmission. This driver (hdlc_fr) has not provided a xmit
-> function in its hdlc_proto struct, so hdlc_start_xmit will directly
-> call the hardware driver's function to transmit.
-> 
-> So no header will be prepended after ndo_start_xmit is called.
-> 
-> There would not be any header prepended before ndo_start_xmit is
-> called, either, because there is no header_ops implemented in either
-> hdlc.c or hdlc_fr.c.
+> It's probably best to keep the parentheses around 'inode'.
 
-Thank you for the detailed explanation.
+Not really as it's an independent argument that can't
+effectively have any other purpose but to be an argument
+to the fsrypt_printk function.
 
-> On Fri, Sep 4, 2020 at 6:28 PM Xie He <xie.he.0141@gmail.com> wrote:
-> >
-> > Thank you for your email, Jakub!
-> >
-> > On Fri, Sep 4, 2020 at 3:14 PM Jakub Kicinski <kuba@kernel.org> wrote:  
-> > >
-> > > Since this is a tunnel protocol on top of HDLC interfaces, and
-> > > hdlc_setup_dev() sets dev->hard_header_len = 16; should we actually
-> > > set the needed_headroom to 10 + 16 = 26? I'm not clear on where/if
-> > > hdlc devices actually prepend 16 bytes of header, though.  
-> >
-> > The HDLC device is not actually prepending any header when it is used
-> > with this driver. When the PVC device has prepended its header and
-> > handed over the skb to the HDLC device, the HDLC device just hands it
-> > over to the hardware driver for transmission without prepending any
-> > header.
-> >
-> > If we grep "header_ops" and "skb_push" in "hdlc.c" and "hdlc_fr.c", we
-> > can see there is no "header_ops" implemented in these two files and
-> > all "skb_push" happen in the PVC device in hdlc_fr.c.
-> >
-> > For this reason, I have previously submitted a patch to change the
-> > value of hard_header_len of the HDLC device from 16 to 0, because it
-> > is not actually used.
-> >
-> > See:
-> > 2b7bcd967a0f (drivers/net/wan/hdlc: Change the default of hard_header_len to 0)
 
-Ah, sorry.. the tree I was looking at did not have this commit.
-
-> > > > diff --git a/drivers/net/wan/hdlc_fr.c b/drivers/net/wan/hdlc_fr.c
-> > > > index 9acad651ea1f..12b35404cd8e 100644
-> > > > --- a/drivers/net/wan/hdlc_fr.c
-> > > > +++ b/drivers/net/wan/hdlc_fr.c
-> > > > @@ -1041,7 +1041,7 @@ static void pvc_setup(struct net_device *dev)
-> > > >  {
-> > > >       dev->type = ARPHRD_DLCI;
-> > > >       dev->flags = IFF_POINTOPOINT;
-> > > > -     dev->hard_header_len = 10;
-> > > > +     dev->hard_header_len = 0;  
-> > >
-> > > Is there a need to set this to 0? Will it not be zero after allocation?  
-> >
-> > Oh. I understand your point. Theoretically we don't need to set it to
-> > 0 because it already has the default value of 0. I'm setting it to 0
-> > only because I want to tell future developers that this value is
-> > intentionally set to 0, and it is not carelessly missed out.  
-
-Sounds fair.
-
-Applied to net, thank you!
