@@ -2,233 +2,199 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CF1C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A73C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03BBE2072D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD422098B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 13:41:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="VTrOrwLd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JptF3z+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgIENkO (ORCPT
+        id S1728691AbgIENlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 09:40:14 -0400
-Received: from mout.gmx.net ([212.227.15.18]:60687 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbgIENg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 09:36:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599312868;
-        bh=u6aT3F2Q3gGj9nh0VqE3OXnqr1dQ+ZyFPqUs/hm8TgM=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=VTrOrwLdl4pu3ogu+tX1ulxWEe25edkYiUMGaIhQ/mTYlTRBQOoFvpqExbfUQUSry
-         JOrlpStlTpnVAsnfTjlxaxKe2R/Gunh+GF03rfAbLw6g+nu60sbvsYBZFZsOK+GajF
-         ItQfPSPZGJ6UY6SwcxSmNpqIB/LPZwDjYOYwZzsw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1fis-1kh7lb4104-0121s1; Sat, 05
- Sep 2020 15:34:28 +0200
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: [PATCH v2 04/10] dt-bindings: pwm: Add bindings for PWM function in Netronix EC
-Date:   Sat,  5 Sep 2020 15:32:24 +0200
-Message-Id: <20200905133230.1014581-5-j.neuschaefer@gmx.net>
+        Sat, 5 Sep 2020 09:41:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728521AbgIENgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 09:36:33 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0C5C061245;
+        Sat,  5 Sep 2020 06:36:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x18so2419924pll.6;
+        Sat, 05 Sep 2020 06:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vQZ80LFA88ZvxsuB5GXh97wkMTlbjoteepSRvpUw2jQ=;
+        b=JptF3z+tYDwf82Mv6lyPrGlYCQ/lUrJAP3M4ZbNDUND1KzSL0pa3okb/fKP7PJnb1G
+         KEwJy1AkUVaHWnOs2i5DofeAwqNcgiTanNA3u5zlGG7e24OKOcvXc8MZ7g4VsxHIqHw1
+         aDuzEzXvEq0hl+iCfOGeGBrRlYtZcDKGZo98uX64XF+boRJG9R/ANqY69joOcUWmOi2O
+         fdSlxzKAbO+g2N2/NRgBPL+OGB4hc2nihFwkOSBrtmxYMY6sBBzlakybPC32tGCrtnln
+         hf+1r8j2++dxZs1/YSvO+ZEhXSupyRup3sBKFeSQjXzwcB2qyChrC7vEcr1JmPqcLajq
+         +ERA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vQZ80LFA88ZvxsuB5GXh97wkMTlbjoteepSRvpUw2jQ=;
+        b=iJ6TPSYKn+ZZsiWscVLFfH3sjPA3IdkECXfXU3VLeSz5mSvc6DduxehWYWk6FJ0dSa
+         tzlalUsCYtT1S/7hJgxoGR0uqr4/4g+muez0UC4WZdXqMM8i65GGbYHqXfp7kueRgRsk
+         Z6GeuRqn1h7LHbcNfpGotIL89W0Uuebkx07FAReR8fIQJOSPcRhI5xRP5wCkRG29BkDT
+         +jmCd/66WUwd3Cc5O+pVW13eNqQu9BY3T1qdwhHg+TDrmhQ2hfnMMD8rnLgEMWjla/G0
+         vMyFru/zc2/vDlcaxUf5dtH+0DFyUmP5kKGZLvK58gjoWqJAJ5tuU1vl/jT1O0Kw5qaB
+         OAvg==
+X-Gm-Message-State: AOAM530MO/OEOcfROLxsXmhc1nQbSQIFI7AsPvrkkHd44SY0SCd0cqUR
+        TklF+5R4tyPpnRHhxrGZ1fIXQo7KPUU=
+X-Google-Smtp-Source: ABdhPJwkhX8i7gLi5bhzmP98ZS9SYKWDm0Fk22/i0pyOGPUlrnlOLJ18Cwrx7w6nxwWov07XKD2caw==
+X-Received: by 2002:a17:90a:c505:: with SMTP id k5mr11994540pjt.188.1599312981860;
+        Sat, 05 Sep 2020 06:36:21 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id u3sm7556717pjn.29.2020.09.05.06.36.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 05 Sep 2020 06:36:20 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v7 00/20] gpio: cdev: add uAPI v2
+Date:   Sat,  5 Sep 2020 21:35:29 +0800
+Message-Id: <20200905133549.24606-1-warthog618@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:BsE/idGOdG/2VXSLRx4X2BZv664ZNJ0vKz0CEYNYAzQ7v4uWeOA
- AH0UJ2IvlSFVX/IPDzYUdnVcGC28q2xjtegYX7p1jz6XfdEKfPefQNjGkbZtUVs0iWyDsdq
- pi1cQ/C4oPqlEjjGnAJWf4fX/TKoh1ScMzVbK0LXQgdYA4NsLCioS6RizAlvLK1+CLNqmE7
- y1U84rzjlrWmDVonmfVwQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:l9Pn3RK6sU4=:32jTXN2fuXC35YyG4qm9yc
- rqzKI+D7X8fDm05U4U7UdsotjDgUMgt6dXGzqe6hTgvIDavtF1XZ39TZc9FIAtwNSivTUAZ87
- 281tV/cSuc5eQtMxk22j11gA8XDt4Sz9M7v89ej54wYhswdpfMB5F4enFZSLzC+nSeUIOq5kz
- K12u+VqN7ImWu/xmahRs4V/Wl2NwQIJ44mxCD5CEfKHW/17b+9z2IrDFX5NlEr4b8sYROI3eU
- fxqV3tQc5pDk8pHYIC/IvaHtA28gC4CwPPgW/TfvFBvMm5T6/nVRrZ+sslUbW5dhIRY2hNREj
- 68444En7rlvmeg0JYRA6NNZ4y1fysrOa7GLnp3DbjwFm9rFiRWEhpjayYguXa9abljff42YEx
- cU92jNa7+ccR91m8Ig7QBIRBuLT438N6++695t/lBMNLob/XpYhPZ3Q01yQ+A2BnX47iMpBxp
- TbzowqVtlz5GeBAEZCobwlOLI13McPrvCiOprOpbBmYpkpc2OEkyS/GDm32vQ0q4b/VXDqX8e
- X2JdSvamxIB3A9CHs+sSkzKLRCn61r0+jQHcvsUgz3xq0t8yh8xMiKerGIresipwdmokXOq9p
- yPmXghPsgckUPApCt1KGI7F+uMNoH1jWAoWkedKKofq7VKaM7zZwpxnSD2/4w+C6kQmAS+PPG
- MXFSDiFzpHjz1M3VTDdS5Bkv/YKK28r9c6v7UAvhYH03Kb7tIxjDt2bHhsfD0eoeqCh2IFuVP
- bRRF7hPCqGRjrp6ydImrY+xczgbyTbZZmlCmT4VEW2kr/H4iQhJuviIjpg+HMIyJTSaQxNIOd
- cMdN3flWBpfZe/mc1C6uRmYe/rcYe8ndELUT0LrzitHbqpEeQkOTiNB3cj5AQJRrLFCBxmGWu
- ico6cruOgvc45p2TaVJtL5pV1ry+cMaKB/bHEtjAOWKEuiHSo58E7AZIdMZG8jhI9Y8lvm06K
- ylRtcrbePCjaE+eqAmXEf+pTqpCr5eDNPZU3/4oTs9cKspXsC7muJfU5i+bDBwLmRhElPqjhv
- 5aIMBEjR/7BHC20WhFr8gAGB802rwo+y6dLxiuWQDPwsvtahqvKybyO7az5kI7tlebOvcyesy
- qv/KyjhP0oWNKqQCRro/10VOjjWzUl4frT86KXg+DNrQkq7P9005Het/s7AxMqFJrq38AAL8a
- v0NZHR2T28KJ9c+8pSHqsvvPi98mSqvABWRFJBvtFe/BqN6ilvXx1lV4UdBmRIH9ecgppIhMJ
- Kg2t0RUPELK4a94nagaOer/50rwkWsi54i2g7ig==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Netronix embedded controller as found in Kobo Aura and Tolino Shine
-supports one PWM channel, which is used to control the frontlight
-brightness on these devices.
+This patchset defines and implements a new version of the
+GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+support for debounce, event sequence numbers, and allow for requested
+lines with different configurations.
+It provides some future proofing by adding optional configuration fields
+and padding reserved for future use.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
+The series can be partitioned into three blocks; the first two patches
+are minor fixes that impact later patches, the next eleven contain the
+v2 uAPI definition and implementation, and the final seven port the GPIO
+tools to the v2 uAPI and extend them to use new uAPI features.
 
-v2:
-- Add plaintext binding to patch description, for comparison
-- Fix pwm-cells property (should be 2, not 1)
-- Add dummy regulator to example, because the pwm-backlight binding requir=
-es a
-  power supply
+The more complicated patches include their own commentary where
+appropriate.
+
+Cheers,
+Kent.
+
+Changes for v7:
+ - use _BITULL for ULL flag definitions (patch 04)
+ - add check on kmalloc_array return value in linereq_get_values()
+   (patch 07) and linereq_set_values_unlocked() (patch 11)
+ - restore v1 functions used by gpio-mockup selftests (patch 17)
+
+Changes for v6:
+ - flags variable in linereq_create() should be u64 not unsigned long
+   (patch 07)
+ - remove restrictions on configuration changes - any change from one
+   valid state to another valid state is allowed. (patches 09, 10, 12)
+
+Changes for v5:
+
+All changes for v5 fix issues with the gpiolib-cdev.c implementation,
+in patches 07-12.
+The uAPI is unchanged from v4, as is the port of the tools.
+
+ - use IS_ALIGNED in BUILD_BUG_ON checks (patch 07)
+ - relocate BUILD_BUG_ON checks to gpiolib_cdev_register (patch 07)
+ - s/requies/requires/ (patch 07)
+ - use unsigned int for variables that are never negative
+ - change lineinfo_get() parameter from cmd to bool watch (patch 08)
+ - flagsv2 in gpio_v2_line_info_to_v1() should be u64, not int (patch 08)
+ - change "_locked" suffixed function names to "_unlocked" (patch 10 and
+   11)
+ - be less eager breaking long lines
+ - move commentary into checkin comment where appropriate - particularly
+   patch 12
+ - restructure the request/line split - rename struct line to
+   struct linereq, and struct edge_detector to struct line, and relocate
+   the desc field from linereq to line.  The linereq name was selected
+   over line_request as function names such as linereq_set_values() are
+   more clearly associated with requests than line_request_set_values(),
+   particularly as there is also a struct line.  And linereq is as
+   informative as linerequest, so I went with the shortened form.
+   
+Changes for v4:
+ - bitmap width clarification in gpiod.h (patch 04)
+ - fix info offset initialisation bug (patch 08 and inserting patch 01)
+ - replace strncpy with strscpy to remove compiler warnings
+   (patch 08 and inserting patch 02)
+ - fix mask handling in line_get_values (patch 07)
+
+Changes for v3:
+ - disabling the character device from the build requires EXPERT
+ - uAPI revisions (see patch 02)
+ - replace padding_not_zeroed with calls to memchr_inv
+ - don't use bitops on 64-bit flags as that doesn't work on BE-32
+ - accept first attribute matching a line in gpio_v2_line_config.attrs
+   rather than the last
+ - rework lsgpio port to uAPI v2 as flags reverted to v1 like layout
+   (since patch v2)
+ - swapped patches 17 and 18 to apply debounce to multiple monitored
+   lines
+
+Changes for v2:
+ - split out cleanup patches into a separate series.
+ - split implementation patch into a patch for each ioctl or major feature.
+ - split tool port patch into a patch per tool.
+ - rework uAPI to allow requested lines with different configurations.
+
+Kent Gibson (20):
+  gpiolib: cdev: desc_to_lineinfo should set info offset
+  gpiolib: cdev: replace strncpy with strscpy
+  gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+  gpio: uapi: define uAPI v2
+  gpiolib: make cdev a build option
+  gpiolib: add build option for CDEV v1 ABI
+  gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and
+    GPIO_V2_LINE_GET_VALUES_IOCTL
+  gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
+    GPIO_V2_GET_LINEINFO_WATCH_IOCTL
+  gpiolib: cdev: support edge detection for uAPI v2
+  gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
+  gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
+  gpiolib: cdev: support setting debounce
+  gpio: uapi: document uAPI v1 as deprecated
+  tools: gpio: port lsgpio to v2 uAPI
+  tools: gpio: port gpio-watch to v2 uAPI
+  tools: gpio: rename nlines to num_lines
+  tools: gpio: port gpio-hammer to v2 uAPI
+  tools: gpio: port gpio-event-mon to v2 uAPI
+  tools: gpio: add multi-line monitoring to gpio-event-mon
+  tools: gpio: add debounce support to gpio-event-mon
+
+ drivers/gpio/Kconfig        |   29 +-
+ drivers/gpio/Makefile       |    2 +-
+ drivers/gpio/gpiolib-cdev.c | 1277 +++++++++++++++++++++++++++++++++--
+ drivers/gpio/gpiolib-cdev.h |   15 +
+ drivers/gpio/gpiolib.c      |    5 +
+ drivers/gpio/gpiolib.h      |    6 +
+ include/uapi/linux/gpio.h   |  317 ++++++++-
+ tools/gpio/gpio-event-mon.c |  146 ++--
+ tools/gpio/gpio-hammer.c    |   56 +-
+ tools/gpio/gpio-utils.c     |  176 ++++-
+ tools/gpio/gpio-utils.h     |   48 +-
+ tools/gpio/gpio-watch.c     |   16 +-
+ tools/gpio/lsgpio.c         |   60 +-
+ 13 files changed, 1948 insertions(+), 205 deletions(-)
 
 
-For reference, here is the binding in text form:
-
-
-  PWM functionality in Netronix Embedded Controller
-
-  Required properties:
-  - compatible: should be "netronix,ntxec-pwm"
-  - #pwm-cells: should be 2.
-
-  Available PWM channels:
-  - 0: The PWM channel controlled by registers 0xa1-0xa7
-
-  Example:
-
-  	embedded-controller@43 {
-  		compatible =3D "netronix,ntxec";
-  		...
-
-  		ec_pwm: pwm {
-  			compatible =3D "netronix,ntxec-pwm";
-  			#pwm-cells =3D <1>;
-  		};
-  	};
-
-  	...
-
-  	backlight {
-  		compatible =3D "pwm-backlight";
-  		pwms =3D <&ec_pwm 0 50000>;
-  	};
-=2D--
- .../bindings/mfd/netronix,ntxec.yaml          | 19 +++++++++++
- .../bindings/pwm/netronix,ntxec-pwm.yaml      | 33 +++++++++++++++++++
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/netronix,ntxec-p=
-wm.yaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/D=
-ocumentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-index 596df460f98eb..73c873dda3e70 100644
-=2D-- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-@@ -31,6 +31,9 @@ properties:
-     description:
-       The EC can signal interrupts via a GPIO line
-
-+  pwm:
-+    $ref: ../pwm/netronix,ntxec-pwm.yaml
-+
- required:
-   - compatible
-   - reg
-@@ -53,5 +56,21 @@ examples:
-                     interrupts =3D <11 IRQ_TYPE_EDGE_FALLING>;
-                     interrupt-controller;
-                     #interrupt-cells =3D <1>;
-+
-+                    ec_pwm: pwm {
-+                            compatible =3D "netronix,ntxec-pwm";
-+                            #pwm-cells =3D <2>;
-+                    };
-             };
-     };
-+
-+    backlight {
-+            compatible =3D "pwm-backlight";
-+            pwms =3D <&ec_pwm 0 50000>;
-+            power-supply =3D <&backlight_regulator>;
-+    };
-+
-+    backlight_regulator: regulator-dummy {
-+            compatible =3D "regulator-fixed";
-+            regulator-name =3D "backlight";
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml=
- b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
-new file mode 100644
-index 0000000000000..0c9d2801b8de1
-=2D-- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
-@@ -0,0 +1,33 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/netronix,ntxec-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PWM functionality in Netronix embedded controller
-+
-+maintainers:
-+  - Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-+
-+description: |
-+  See also Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
-+
-+  The Netronix EC contains PWM functionality, which is usually used to dr=
-ive
-+  the backlight LED.
-+
-+  The following PWM channels are supported:
-+    - 0: The PWM channel controlled by registers 0xa1-0xa7
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: netronix,ntxec-pwm
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+  - "#pwm-cells"
-=2D-
+base-commit: feeaefd378cae2f6840f879d6123ef265f8aee79
+-- 
 2.28.0
 
