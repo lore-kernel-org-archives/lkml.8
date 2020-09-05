@@ -2,277 +2,120 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EC4C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DBAC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6873220760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 105C720760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hv7xmvBC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dcwm1rE6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgIEWIZ (ORCPT
+        id S1728788AbgIEWIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40356 "EHLO
+        Sat, 5 Sep 2020 18:08:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728680AbgIEWIY (ORCPT
+        with ESMTP id S1728589AbgIEWIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:08:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DB3C061244;
-        Sat,  5 Sep 2020 15:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=gaAlMrKWUPQqhJQ7Zgj/9HIIFFg/+6XEEbU/k8yPdE8=; b=hv7xmvBCfx3bE9TA+cWsI/birV
-        4ANvnYRoJweMgxoKQ6RyH3YRiih/cWyK1EU6Miy8rxVQQLuj+PKGywI1ZLEnJUzGlf+BQ17zgUmB8
-        irwMKnJHhzp1Ki+kJspGUOwGBRTeM586FZr0/9t4vNqbCr/tBie7QKAyO3JQrMhWRlRvBx2MskY7V
-        +cqLw87SP68OMgglhRkSfQLtQ45hGc9iFn1pNeKVxx5zF3dWmuATC8TlfrK0cWHOlOe9JUwfGgAsj
-        vTkROhbbJFYf/FUxSSdoHw4sqOcQlkim5xa/63nrqpjFr5JBSsB6A2m98kRkLzJoepZH7fbQQ0JWW
-        /F59H1/w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kEgM6-00087y-VD; Sat, 05 Sep 2020 22:08:20 +0000
-Subject: Re: [PATCH v3 17/17] Documentation: PCI: Add userguide for PCI
- endpoint NTB function
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Allen Hubbe <allenbh@gmail.com>, Rob Herring <robh@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tom Joseph <tjoseph@cadence.com>, linux-pci@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-ntb@googlegroups.com
-References: <20200904075052.8911-1-kishon@ti.com>
- <20200904075052.8911-18-kishon@ti.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f16f5a90-13c1-bfc6-ad83-1c6becbf1629@infradead.org>
-Date:   Sat, 5 Sep 2020 15:08:12 -0700
+        Sat, 5 Sep 2020 18:08:43 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF265C061244;
+        Sat,  5 Sep 2020 15:08:41 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id u27so5629859lfm.13;
+        Sat, 05 Sep 2020 15:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=8MoLpRkBfSBRX/tGugQ+DszGpTDOMxPXdZr3qQMsksg=;
+        b=Dcwm1rE6sy/AQgDcUMWsBXrmBU1E+t1K3CGdxIDOyyn13yLOZYeNlBWljrWE3KW11+
+         ADtRvVNAq2oGO+ttYkTeUsIB0q+cUJZ1mW2nLqsgjIY8LWM8WWys6ED+nFzYqm9u2KGt
+         Rb1LJ1kR514fvxT9EfLlIcPf203AK5074hGT0vocAEZrPi/f/ngCMkgtEkbBt5tBo08h
+         08syr6svVSKKZc3D1NjZMDVmiUjbAYq2zaEO9CGuiIBd0lBpQItQ74SYfYGPeI6TdXlL
+         U5O+bek1ky6Wgmuq5B1O/unVqdDtrnxmjOXDOAPLRBWJZLPPVSPII6foKPtZmr8l7dRJ
+         UeMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=8MoLpRkBfSBRX/tGugQ+DszGpTDOMxPXdZr3qQMsksg=;
+        b=KA3BzOw1n8xoQqtgE1kQ1/Y3c9DeWvJfCKnTQgru3O5W68+NBdaN4uR3w/uv804ZUB
+         ZDysDaK+0AOmd/H3FQjXnNtLEpcM80MBNMqOgPUtybgd3d+VX64E6HyPfO/SEDdP1o4L
+         nYnkBlKDSap2p4eO2zF8McnDD3uy3Kh5tWpGkyDLrPBnh9KEknS2yMrrU8OqqP6F9M74
+         iLbNKeWT/63iH45M2hgwTdUjioSZ5+ScOj2wFmJXP1VsonQ2SPkjTUEKEPHUSGVsCtRZ
+         j2+uN/QwzsI/MkN7YkkLAI3bk8SXAyEZBPS09gWGY7R3o7Jaj1GJk0E3HRpEBlTJXVqR
+         64Cg==
+X-Gm-Message-State: AOAM532fruyLNg2L9lHRzMUIuvy5zYCaFd178p9ZsMvbNNfurMA9QN3U
+        7U+SO0El8LjRPHIZzMJlh1guQIha/9o=
+X-Google-Smtp-Source: ABdhPJxou3N3a4bySh1u+0/phGPIwz21KA9EbhpfkV53yGkEfvdfdxRvar55KWcpxMt8LdNWD3agZw==
+X-Received: by 2002:ac2:5de8:: with SMTP id z8mr6817344lfq.204.1599343720193;
+        Sat, 05 Sep 2020 15:08:40 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id j23sm2441730ljh.96.2020.09.05.15.08.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 15:08:39 -0700 (PDT)
+Subject: Re: [PATCH v4 10/31] i2c: tegra: Use clk-bulk helpers
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200905204151.25343-1-digetx@gmail.com>
+ <20200905204151.25343-11-digetx@gmail.com>
+ <20200905215608.GA18554@qmqm.qmqm.pl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fe15f155-becf-5e8e-ce92-962e193c9b14@gmail.com>
+Date:   Sun, 6 Sep 2020 01:08:38 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200904075052.8911-18-kishon@ti.com>
+In-Reply-To: <20200905215608.GA18554@qmqm.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/20 12:50 AM, Kishon Vijay Abraham I wrote:
-> Add documentation to help users use pci-epf-ntb function driver and
-> existing host side NTB infrastructure for NTB functionality.
+06.09.2020 00:56, Michał Mirosław пишет:
+> On Sat, Sep 05, 2020 at 11:41:30PM +0300, Dmitry Osipenko wrote:
+>> Use clk-bulk helpers and factor out clocks initialization into separate
+>> function in order to make code cleaner.
+> [...]
+>> --- a/drivers/i2c/busses/i2c-tegra.c
+>> +++ b/drivers/i2c/busses/i2c-tegra.c
+> [...]
+>>  static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+>>  	.has_continue_xfer_support = true,
+>>  	.has_per_pkt_xfer_complete_irq = true,
+>> -	.has_single_clk_source = true,
+>>  	.clk_divisor_hs_mode = 1,
+>>  	.clk_divisor_std_mode = 0x4f,
+>>  	.clk_divisor_fast_mode = 0x3c,
+> [...]
+>> +static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+>> +{
+>> +	unsigned int i;
+>> +	int err;
+>> +
+>> +	err = devm_clk_bulk_get_all(i2c_dev->dev, &i2c_dev->clocks);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	i2c_dev->nclocks = err
+> [...]
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/PCI/endpoint/index.rst         |   1 +
->  Documentation/PCI/endpoint/pci-ntb-howto.rst | 160 +++++++++++++++++++
->  2 files changed, 161 insertions(+)
->  create mode 100644 Documentation/PCI/endpoint/pci-ntb-howto.rst
+> You loose checking whether number of clocks matches the device version.
+> Is this intended?
 
-Hi,
-There are a few edits below:
-
-
-> diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-> new file mode 100644
-> index 000000000000..2fbb0a051c3b
-> --- /dev/null
-> +++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-> @@ -0,0 +1,160 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +======================
-> +PCI NTB EPF User Guide
-> +======================
-> +
-> +:Author: Kishon Vijay Abraham I <kishon@ti.com>
-> +
-> +This document is a guide to help users use pci-epf-ntb function driver
-> +and ntb_hw_epf host driver for NTB functionality. The list of steps to
-> +be followed in the host side and EP side is given below. For the hardware
-> +configuration and internals of NTB using configurable endpoints see
-> +Documentation/PCI/endpoint/pci-ntb-function.rst
-> +
-> +Endpoint Device
-> +===============
-> +
-> +Endpoint Controller Devices
-> +---------------------------
-> +
-> +For implementing NTB functionality atleast two endpoint controller devices
-
-                                      at least
-
-> +are required.
-> +To find the list of endpoint controller devices in the system::
-> +
-> +        # ls /sys/class/pci_epc/
-> +          2900000.pcie-ep  2910000.pcie-ep
-> +
-> +If PCI_ENDPOINT_CONFIGFS is enabled::
-> +
-> +	# ls /sys/kernel/config/pci_ep/controllers
-> +	  2900000.pcie-ep  2910000.pcie-ep
-> +
-> +
-> +Endpoint Function Drivers
-> +-------------------------
-> +
-> +To find the list of endpoint function drivers in the system::
-> +
-> +	# ls /sys/bus/pci-epf/drivers
-> +	  pci_epf_ntb   pci_epf_ntb
-> +
-> +If PCI_ENDPOINT_CONFIGFS is enabled::
-> +
-> +	# ls /sys/kernel/config/pci_ep/functions
-> +	  pci_epf_ntb   pci_epf_ntb
-> +
-> +
-> +Creating pci-epf-ntb Device
-> +----------------------------
-> +
-> +PCI endpoint function device can be created using the configfs. To create
-> +pci-epf-ntb device, the following commands can be used::
-> +
-> +	# mount -t configfs none /sys/kernel/config
-> +	# cd /sys/kernel/config/pci_ep/
-> +	# mkdir functions/pci_epf_ntb/func1
-> +
-> +The "mkdir func1" above creates the pci-epf-ntb function device that will
-> +be probed by pci_epf_ntb driver.
-> +
-> +The PCI endpoint framework populates the directory with the following
-> +configurable fields::
-> +
-> +	# ls functions/pci_epf_ntb/func1
-> +          baseclass_code    deviceid          msi_interrupts    pci-epf-ntb.0
-> +          progif_code       secondary         subsys_id         vendorid
-> +          cache_line_size   interrupt_pin     msix_interrupts   primary
-> +          revid             subclass_code     subsys_vendor_id
-> +
-> +The PCI endpoint function driver populates these entries with default values
-> +when the device is bound to the driver. The pci-epf-ntb driver populates
-> +vendorid with 0xffff and interrupt_pin with 0x0001::
-> +
-> +	# cat functions/pci_epf_ntb/func1/vendorid
-> +	  0xffff
-> +	# cat functions/pci_epf_ntb/func1/interrupt_pin
-> +	  0x0001
-> +
-> +
-> +Configuring pci-epf-ntb Device
-> +-------------------------------
-> +
-> +The user can configure the pci-epf-ntb device using configfs entry. In order
-
-                                                 using its configfs entry.
-
-> +to change the vendorid and the deviceid, the following
-> +commands can be used::
-> +
-> +	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
-> +	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
-> +
-> +In-order to configure NTB specific attributes, a new sub-directory to func1
-
-   In order
-
-> +should be created::
-> +
-> +	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-> +
-> +The NTB function driver will populate this directory with various attributes
-> +that can be configured by the user::
-> +
-> +	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-> +          db_count    mw1         mw2         mw3         mw4         num_mws
-> +          spad_count
-> +
-> +A sample configuration for NTB function is given below::
-> +
-> +	# echo 4 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/db_count
-> +	# echo 128 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/spad_count
-> +	# echo 2 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/num_mws
-> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw1
-> +	# echo 0x100000 > functions/pci_epf_ntb/func1/pci_epf_ntb.0/mw2
-> +
-> +Binding pci-epf-ntb Device to EP Controller
-> +--------------------------------------------
-> +
-> +NTB function device should be attached to two PCIe endpoint controllers
-> +connected to the two hosts. Use the 'primary' and 'secondary' entries
-> +inside NTB function device to attach one PCIe endpoint controller to
-> +primary interface and the other PCIe endpoint controller to the secondary
-> +interface. ::
-> +
-> +        # ln -s controllers/2900000.pcie-ep/ functions/pci-epf-ntb/func1/primary
-> +        # ln -s controllers/2910000.pcie-ep/ functions/pci-epf-ntb/func1/secondary
-> +
-> +Once the above step is completed, both the PCI endpoint controllers is ready to
-
-                                                                       are ready
-
-> +establish a link with the host.
-> +
-> +
-> +Start the Link
-> +--------------
-> +
-> +In order for the endpoint device to establish a link with the host, the _start_
-> +field should be populated with '1'. For NTB, both the PCIe endpoint controllers
-> +should establish link with the host::
-> +
-> +        #echo 1 > controllers/2900000.pcie-ep/start
-> +        #echo 1 > controllers/2910000.pcie-ep/start
-> +
-> +
-> +RootComplex Device
-> +==================
-> +
-> +lspci Output
-> +------------
-> +
-> +Note that the devices listed here correspond to the value populated in 1.4
-
-Can you use a section name (or reference) here instead of "1.4"?  I can't see 1.4
-when reading with an editor.
-
-> +above::
-> +
-> +        # lspci
-> +        0000:00:00.0 PCI bridge: Texas Instruments Device b00d
-> +        0000:01:00.0 RAM memory: Texas Instruments Device b00d
-> +
-> +
-> +Using ntb_hw_epf Device
-> +-----------------------
-> +
-> +The host side software follows the standard NTB software architecture in Linux.
-> +All the existing client side NTB utilities like NTB Transport Client and NTB
-> +Netdev, NTB Ping Pong Test Client and NTB Tool Test Clientcan be used with NTB
-
-                                                       Client can be
-
-> +function device.
-> +
-> +For more information on NTB see
-> +Documentation/driver-api/ntb.rst
-
-
-thanks.
--- 
-~Randy
-
+Yes, it's not needed. The check wasn't really needed in the first place.
