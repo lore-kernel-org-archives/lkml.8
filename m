@@ -2,112 +2,69 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D196DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEE7C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8554A20DD4
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hul0flwE"
+	by mail.kernel.org (Postfix) with ESMTP id 5829520760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 22:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599345407;
+	bh=WR5uGs+/NFZgVEqlcWJK91hOncPor40GpM8OqKM17II=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=ODp8cUEUf60fYheb/WG0dgxZcUpVjBm3NzNVrIoMp5g8xpsrAjkzNYTUBqhZU/4vU
+	 dMC2XQbeZZU/v5PmQkm5ZFMQW84VvvzKGs2MepnzB0b06DyMiSxGFtTL/GPiGoe3EJ
+	 FfrHFKy486TQqCjvnLe5twDxbhqHkca9plhHDpTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgIEWg2 (ORCPT
+        id S1728869AbgIEWgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 18:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728727AbgIEWgZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 18:36:25 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FA80C061244;
-        Sat,  5 Sep 2020 15:36:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id a15so12008238ljk.2;
-        Sat, 05 Sep 2020 15:36:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wIgbCe+me6m/O/hCjjtMhyNJ1DzGS8TtOXQnp4EnPpc=;
-        b=hul0flwEwmUqgO6VhLHCqWqaMDOs5epAdmW0VnRXtDVG2gCUXITZGAGhxiKSOzLAFw
-         ZJ97VfqEmdxTCuBMu8sO4ccIrWQIzeJy0JT7yPfY8xDCFCKbS9IFy5fTXTYsM8Fp0gif
-         H98FTbzD2DloduoJWVtyiAzeyxdZ2WRSVuo5GApziIAouaWn9ODvgbVmVmpAP41Lpzex
-         14tULhyaO7eakDwuYzEZyTKh7hYnLBA0xJjre9rcROUNeeEWa+mk2PDyoXjUdjYTg1z2
-         yTxKxVEJum8skaAScAyO4IWCCCbkvj8UU7wk6BnaABue2EJ/jaXKxUsAuHfwA1jQ9ks5
-         818Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wIgbCe+me6m/O/hCjjtMhyNJ1DzGS8TtOXQnp4EnPpc=;
-        b=hqTtbTqYSjw1u5QaKctdPMDBfcN3kh4qu32ZYbIdlnZ3VpY5x3Jrpi4a3in9+cz/07
-         BF9gwpMNK4SYaH0ZsJi7SMNVKfR5lEme5Ej3U2r4cJxeTN7AHA97oxmXqVMkJtnAnyFc
-         hurB3B4Q8+mqWvO5Nb1O2dCsbVqMGBbveMmwsFW+mTV4Abnd1rv5Fxixl8jignYUHRyM
-         1EQudsNF9BtWJFIBSzm3fNf4R4n5bxDw7s0PqVYyIB0WK3bIlF97ryZIX/TuU7Uj2t7a
-         W14VHGWIJ54xx3wMX5sbQ04o0ypz+cca2P7ozWDBici1nOTdBTbRpRSbcmR4SGTvRlH7
-         PBnA==
-X-Gm-Message-State: AOAM531rIt2CJkQLE0o1EOKdxS7IhAUl8bW0cfsDBfxUwcWcbVOzrQBx
-        rudUCsq6aa8zUdHe9l56Y6syZTtWYwY=
-X-Google-Smtp-Source: ABdhPJw6FexgpuxJhF9GDPtLS9E9EAb+J6ML8Qr7A2QP/Kmio+lfu/hQvriWTAaS497MVUtVUAJZTA==
-X-Received: by 2002:a05:651c:1032:: with SMTP id w18mr7029893ljm.238.1599345381770;
-        Sat, 05 Sep 2020 15:36:21 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id v18sm2856633ljd.51.2020.09.05.15.36.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 15:36:21 -0700 (PDT)
-Subject: Re: [PATCH v4 16/31] i2c: tegra: Remove "dma" variable from
- tegra_i2c_xfer_msg()
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Sat, 5 Sep 2020 18:36:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728790AbgIEWga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 18:36:30 -0400
+Subject: Re: [GIT PULL] auxdisplay for v5.9-rc4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599345389;
+        bh=WR5uGs+/NFZgVEqlcWJK91hOncPor40GpM8OqKM17II=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=aj+pQWya0CNIapKCxKNOdcolkEN+YIhzaHPfo3KurkazXBtwoGkI0I2IXbTbNaCbc
+         keERWGlKxYeOs98+jZCJzY6LSsqv0trlE6PnOsWMarYksOWznXxdwPCPAeeWZoxDzs
+         blYwg0ECQ7I0pBW9oFpORFCDEFufVhY9TKTOoCg0=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200905113752.GA4762@gmail.com>
+References: <20200905113752.GA4762@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200905113752.GA4762@gmail.com>
+X-PR-Tracked-Remote: https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.9-rc4
+X-PR-Tracked-Commit-Id: 46d4a403a04c0ba46641452367b6a04bcf918a06
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: dd9fb9bb3340c791a2be106fdc895db75f177343
+Message-Id: <159934538972.12925.11078356568448048869.pr-tracker-bot@kernel.org>
+Date:   Sat, 05 Sep 2020 22:36:29 +0000
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         linux-kernel@vger.kernel.org
-References: <20200905204151.25343-1-digetx@gmail.com>
- <20200905204151.25343-17-digetx@gmail.com>
- <20200905222323.GC18554@qmqm.qmqm.pl>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7587704b-7bc1-d6a9-19b4-befcbcbce26c@gmail.com>
-Date:   Sun, 6 Sep 2020 01:36:20 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200905222323.GC18554@qmqm.qmqm.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-06.09.2020 01:23, Michał Mirosław пишет:
-> On Sat, Sep 05, 2020 at 11:41:36PM +0300, Dmitry Osipenko wrote:
->> The "dma" variable of tegra_i2c_xfer_msg() function doesn't bring much in
->> regards to readability and generation of the code, hence let's remove it
->> to clean up code a tad.
-> [...]
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
-> [...]
->> +	if (i2c_dev->is_curr_dma_xfer) {
-> [...]
-> 
-> In this case I like the previous code better: just because there are
-> less letters to read. :-)
+The pull request you sent on Sat, 5 Sep 2020 13:37:52 +0200:
 
-Besides readability, I also don't like much that the is_curr_dma_xfer is
-initialized in tegra_i2c_xfer_msg() and then could be overridden by
-tegra_i2c_config_fifo_trig(). In a result the "dma" variable confuses me
-since it's not instantly obvious why it's set after
-tegra_i2c_config_fifo_trig().
+> https://github.com/ojeda/linux.git tags/auxdisplay-for-linus-v5.9-rc4
 
-Looking at the final result, I think it's better to have the variable
-removed. It makes code more consistent, IMO.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/dd9fb9bb3340c791a2be106fdc895db75f177343
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
