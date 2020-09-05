@@ -2,112 +2,115 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C67AC43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 10:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 10:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05DD520757
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 10:37:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZBSeGqh+"
+	by mail.kernel.org (Postfix) with ESMTP id 6F1292074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 10:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgIEKhP (ORCPT
+        id S1728444AbgIEKoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 06:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbgIEKhN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 06:37:13 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A716CC061244;
-        Sat,  5 Sep 2020 03:37:12 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id b12so8302841edz.11;
-        Sat, 05 Sep 2020 03:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=odY6KbSbKxqDrhObNYwd42zXyBsKpopwTCHslkv93Yg=;
-        b=ZBSeGqh+yeSHUuXd83cOOCh0FqhV/gbWL0FZZuwh3fcRbWKbFjQnc78qMMoGeNbDmE
-         zfMWGtn1wH6hVpeDBgR4/DFdcM+AgH/kXGqCnkIWsjZHeX8kaE0O7oljQltvU3hZ+xpV
-         2nlQdOtVznfq7G6lFS1OIdIHIhWiIPMwQA6f048xqe+WnT7Oxcv4jIJLV6/kGYMsqDrh
-         OJoZ0p5jp22XMRQKZtyclLPAO6fraEiVvavYnlG8CmNG0G1LLPqHWuNkH+4XLzU0oD4k
-         K7GAFc0nnpd1lw9FMjODkwR3F4WFiB2j9eUobIoHwy84UYGsrWwJUOmHuqjNmWTP8ad/
-         wITg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=odY6KbSbKxqDrhObNYwd42zXyBsKpopwTCHslkv93Yg=;
-        b=SDy9FqqE3yc+FxVnB5Ld8s/kYJ99PH607imLxBAG30hIZVirSHN5BErUWNKp9+rax/
-         4Sq3Oy3q4SxbVTOQ5B8R1IvDdMT9NbJ6R5DA+zHUhO0i6IYl+GEAs3hABclQBL6MnFFp
-         7zCVjC4nFABObO3y6SarZuMUeuqOL0NtkWcKEuNx3haHi6XerDzIddkO/pkyYbu/Zw/9
-         z6uzIVT2+N8hnNhIsZWuVA8byooCi1ji4l+m8Dffe6L1ZL0nenTpn0YnVgUlH6KHbi94
-         d5QYJIPils8y6x7Laeu1G4w8xrj7MeaU2zp19WAZKkNyyFoIqDdTTnH5spMXf6hwjIch
-         x6CQ==
-X-Gm-Message-State: AOAM530vupt2p0e3opv00qkUTGbY6eGmQLAozHeZ07zuNU1jwiRYePFH
-        d8Mxnb5X6EIqzrYTZ0FoG17S6uxvCXDjmA==
-X-Google-Smtp-Source: ABdhPJzMEMnlHTtnM7c8zslsF/1YvBY6tY4FsARQfTRiVmLXlohH/ZHNQpDZkoYogmnLc2ijSzyp4w==
-X-Received: by 2002:a50:9fa5:: with SMTP id c34mr5652879edf.2.1599302229721;
-        Sat, 05 Sep 2020 03:37:09 -0700 (PDT)
-Received: from felia.fritz.box ([2001:16b8:2d30:ea00:952f:5889:9d53:77b0])
-        by smtp.gmail.com with ESMTPSA id k6sm8709692ejr.104.2020.09.05.03.37.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Sep 2020 03:37:08 -0700 (PDT)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
-        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
-Date:   Sat,  5 Sep 2020 12:37:00 +0200
-Message-Id: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sat, 5 Sep 2020 06:44:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63247 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgIEKoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 06:44:22 -0400
+IronPort-SDR: lb8bsR65bNWjALm+QHGar4cIUnmuKS4zIdGsNp0owKUTiuoOXhghnntDA7JGzMIFE41YU7FOtp
+ 6WcHPtUKhC0A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="137903333"
+X-IronPort-AV: E=Sophos;i="5.76,393,1592895600"; 
+   d="scan'208";a="137903333"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 03:44:21 -0700
+IronPort-SDR: Px5SDbItv/z3eUH8kE8V+gnKaXytGKj0rfuCIb8KsHy4of2z/ffufTZASb1KsrTUTkl2d4Xj4Y
+ qPGAdCcHKunw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,393,1592895600"; 
+   d="scan'208";a="335303346"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Sep 2020 03:44:20 -0700
+Received: from [10.249.229.135] (abudanko-mobl.ccr.corp.intel.com [10.249.229.135])
+        by linux.intel.com (Postfix) with ESMTP id 791AC580707;
+        Sat,  5 Sep 2020 03:44:17 -0700 (PDT)
+Subject: Re: [PATCH] tools feature: Add missing -lzstd to the fast path
+ feature detection
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20200904202611.GJ3753976@kernel.org>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <2ddf68fc-3079-56eb-4214-e9176909f941@linux.intel.com>
+Date:   Sat, 5 Sep 2020 13:44:16 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <20200904202611.GJ3753976@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0da4c3d393e4 ("net: phy: add Lynx PCS module") added the files in
-./drivers/net/pcs/, but the new LYNX PCS MODULE section refers to
-./drivers/net/phy/.
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+On 04.09.2020 23:26, Arnaldo Carvalho de Melo wrote:
+> We were failing that due to GTK2+ and then for the ZSTD test, which made
+> test-all.c, the fast path feature detection file to fail and thus
+> trigger building all of the feature tests, slowing down the test.
+> 
+> Eventually the ZSTD test would be built and would succeed, since it had
+> the needed -lzstd, avoiding:
+> 
+>   $ cat /tmp/build/perf/feature/test-all.make.output
+>   /usr/bin/ld: /tmp/ccRRJQ4u.o: in function `main_test_libzstd':
+>   /home/acme/git/perf/tools/build/feature/test-libzstd.c:8: undefined reference to `ZSTD_createCStream'
+>   /usr/bin/ld: /home/acme/git/perf/tools/build/feature/test-libzstd.c:9: undefined reference to `ZSTD_freeCStream'
+>   collect2: error: ld returned 1 exit status
+>   $
+> 
+> Fix it by adding -lzstd to the test-all target.
+> 
+> Now I need an entry to 'perf test' to make sure that
+> /tmp/build/perf/feature/test-all.make.output is empty...
+> 
+> Fixes: 3b1c5d9659718263 ("tools build: Implement libzstd feature check, LIBZSTD_DIR and NO_LIBZSTD defines")
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ---
+> 
+> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+> index 977067e34dff064d..ec815ffc7777a02b 100644
+> --- a/tools/build/feature/Makefile
+> +++ b/tools/build/feature/Makefile
+> @@ -91,7 +91,7 @@ __BUILDXX = $(CXX) $(CXXFLAGS) -MD -Wall -Werror -o $@ $(patsubst %.bin,%.cpp,$(
+>  ###############################
+>  
+>  $(OUTPUT)test-all.bin:
+> -	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma
+> +	$(BUILD) -fstack-protector-all -O2 -D_FORTIFY_SOURCE=2 -ldw -lelf -lnuma -lelf -I/usr/include/slang -lslang $(FLAGS_PERL_EMBED) $(FLAGS_PYTHON_EMBED) -DPACKAGE='"perf"' -lbfd -ldl -lz -llzma -lzstd
+>  
+>  $(OUTPUT)test-hello.bin:
+>  	$(BUILD)
+> 
 
-  warning: no file matches    F:    drivers/net/phy/pcs-lynx.c
+Reviewed-by: Alexei Budankov <alexey.budankov@linux.intel.com>
 
-Repair the LYNX PCS MODULE section by referring to the right location.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-applies cleanly on next-20200903
-
-Ioana, please ack.
-David, please pick this minor non-urgent patch into your net-next.
- 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bb0cb31d323b..918deaa1d96e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10350,7 +10350,7 @@ LYNX PCS MODULE
- M:	Ioana Ciornei <ioana.ciornei@nxp.com>
- L:	netdev@vger.kernel.org
- S:	Supported
--F:	drivers/net/phy/pcs-lynx.c
-+F:	drivers/net/pcs/pcs-lynx.c
- F:	include/linux/pcs-lynx.h
- 
- M68K ARCHITECTURE
--- 
-2.17.1
-
+Thanks!
+Alexei
