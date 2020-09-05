@@ -2,81 +2,119 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6087AC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2645BC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A8E20738
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D633F20757
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 12:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5iTRjKU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728548AbgIEMZg (ORCPT
+        id S1728531AbgIEMeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 08:25:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:38094 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726597AbgIEMZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 08:25:34 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 57EFFB9297F9C12ED5B5;
-        Sat,  5 Sep 2020 20:25:31 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Sat, 5 Sep 2020
- 20:25:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ohad@wizery.com>, <bjorn.andersson@linaro.org>, <s-anna@ti.com>,
-        <mathieu.poirier@linaro.org>
-CC:     <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] remoteproc: k3-dsp: Fix return value check in k3_dsp_rproc_of_get_memories()
-Date:   Sat, 5 Sep 2020 20:25:03 +0800
-Message-ID: <20200905122503.17352-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200902140614.28636-1-yuehaibing@huawei.com>
-References: <20200902140614.28636-1-yuehaibing@huawei.com>
+        Sat, 5 Sep 2020 08:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbgIEMeD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 08:34:03 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84605C061244;
+        Sat,  5 Sep 2020 05:34:02 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y17so5234765lfa.8;
+        Sat, 05 Sep 2020 05:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=t854kOldY0BU542TztnP6NrgeTuoBg1ycvUcY82anFQ=;
+        b=K5iTRjKUQPoVE7cAHM46/lEp0UhliJ8Wle8/xWaKuZiwJXrJ4U1Wkyz8WPyzk7wsRk
+         hZtpMmsyztjDcXD43cSp2xi+zeeHvns+uJKjWOYJLNKbrwOKOVR3R86vZGlNM2TnPuIY
+         ebWJp+MkudIlPHFBTdNIpQaJ+YeL3TCRLWou4hAuxH6MC1xXSMINy1U+X6RHUK1bAOQ6
+         zqfNldaBzU8LZL8Og4PXkAPt5ekd1cfyHIp7tp1emkN2wHhLHaO5kTmktEAh4dWsfI1E
+         xrTHR8Myg6NJNv2sOvTsbPe8HPAvCkNUOx4TBXtl6+K2qQLjN91FE0f1Lk2CbmJS9RB5
+         HWpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=t854kOldY0BU542TztnP6NrgeTuoBg1ycvUcY82anFQ=;
+        b=huh8ntWUzBA7krXVYdgV8vHP6Irbgqgjzmm+G/rh4Mvc10x57/9/yZEMnqKKSYu5Ux
+         hBkwME3QeRnE9ImM+upyg3MF3jrKEFW17qJeH02ZG2C4+/4yvcIomgTUCtTdzknvp4lD
+         qpdDNgvdpjSbaz00uplWOk95Lx2r1r3kN0tcW8KNXXmK2SAdy2qeZ2zuj5jIGZoOT0Pp
+         cZrjwN+MGp/uK6+pygWmbZLdAKgeki2rBgu/6U06iGlKLOT8fCvYctzDoabAeCvuIHe/
+         S1pq8MxhVP4O9fkDMjtm0Ahw+z1xKoL9Xk7pUfmriFvgK8nXWC//NBdXywINv20UyRXY
+         bLJg==
+X-Gm-Message-State: AOAM530EAvyhwXNLLd+OVsuc5guHsydixIBoyeZf+0qaGuFUHeBDMZfB
+        4Sc0eOylDfBQ4hTGjXp7V1iPt/xZmUNHiR6w6BE=
+X-Google-Smtp-Source: ABdhPJw9IKApXgQ3KXOHdrrIQPmofJBHmqvPfVX2J0hAb91U9ujzpIr3qrdU4rxZZ/AQskyzCqDUUfl4WM8o/sej22U=
+X-Received: by 2002:ac2:42c2:: with SMTP id n2mr6120796lfl.117.1599309238586;
+ Sat, 05 Sep 2020 05:33:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
+References: <20200904180647.21080-1-trix@redhat.com>
+In-Reply-To: <20200904180647.21080-1-trix@redhat.com>
+From:   Elie Morisse <syniurge@gmail.com>
+Date:   Sat, 5 Sep 2020 14:33:47 +0200
+Message-ID: <CAC_JBqor9K07a_ok35QOtd-CxYjpUu=915+HNcvYmnfunt2-Mw@mail.gmail.com>
+Subject: Re: [PATCH] i2c: amd_mp2: handle num is 0 input for i2c_amd_xfer
+To:     trix@redhat.com
+Cc:     "Shah, Nehal-bakulchandra" <nehal-bakulchandra.shah@amd.com>,
+        Shyam Sundar S K <shyam-sundar.s-k@amd.com>,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_ioremap_wc() returns NULL pointer
-not ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+Acked-by: Elie Morisse <syniurge@gmail.com>
 
-Fixes: 6edbe024ba17 ("remoteproc: k3-dsp: Add a remoteproc driver of K3 C66x DSPs")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Suman Anna <s-anna@ti.com>
----
-v2: return ENOMEM instead of EBUSY, use corret Fixes tag
----
- drivers/remoteproc/ti_k3_dsp_remoteproc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-index 9011e477290c..f373df35d7d0 100644
---- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-+++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
-@@ -445,10 +445,10 @@ static int k3_dsp_rproc_of_get_memories(struct platform_device *pdev,
- 
- 		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
- 							 resource_size(res));
--		if (IS_ERR(kproc->mem[i].cpu_addr)) {
-+		if (!kproc->mem[i].cpu_addr) {
- 			dev_err(dev, "failed to map %s memory\n",
- 				data->mems[i].name);
--			return PTR_ERR(kproc->mem[i].cpu_addr);
-+			return -ENOMEM;
- 		}
- 		kproc->mem[i].bus_addr = res->start;
- 		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
--- 
-2.17.1
-
-
+Le ven. 4 sept. 2020 =C3=A0 20:06, <trix@redhat.com> a =C3=A9crit :
+>
+> From: Tom Rix <trix@redhat.com>
+>
+> clang static analyzer reports this problem
+>
+> i2c-amd-mp2-plat.c:174:9: warning: Branch condition evaluates
+>   to a garbage value
+>         return err ? err : num;
+>                ^~~
+>
+> err is not initialized, it depends on the being set in the
+> transfer loop which will not happen if num is 0.  Surveying
+> other master_xfer() implementations show all handle a 0 num.
+>
+> Because returning 0 is expected, initialize err to 0.
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/i2c/busses/i2c-amd-mp2-plat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-amd-mp2-plat.c b/drivers/i2c/busses/i=
+2c-amd-mp2-plat.c
+> index 17df9e8845b6..506433bc0ff2 100644
+> --- a/drivers/i2c/busses/i2c-amd-mp2-plat.c
+> +++ b/drivers/i2c/busses/i2c-amd-mp2-plat.c
+> @@ -155,7 +155,7 @@ static int i2c_amd_xfer(struct i2c_adapter *adap, str=
+uct i2c_msg *msgs, int num)
+>         struct amd_i2c_dev *i2c_dev =3D i2c_get_adapdata(adap);
+>         int i;
+>         struct i2c_msg *pmsg;
+> -       int err;
+> +       int err =3D 0;
+>
+>         /* the adapter might have been deleted while waiting for the bus =
+lock */
+>         if (unlikely(!i2c_dev->common.mp2_dev))
+> --
+> 2.18.1
+>
