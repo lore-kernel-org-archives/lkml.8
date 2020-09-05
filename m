@@ -2,126 +2,205 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F084C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD1820760
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51EF320795
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:23:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599272379;
-	bh=egaktmLv9vv4SnVSGZWvMCl2L8jomAwlugvUanpRZ3c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gpmU8C5RW2j5b49OhESV6kjsPcx++VH6rFhR0jZ1yuIPFA5gQA9qmBh5RhQ0zBV8v
-	 coyWoHgt9R+R6DqDkZYh1ZAcNLTqTebiWS/IuOSGd4hTG8hEtAqZv0p1ZiHxbeLExV
-	 GuA+RVabp6U7fwHRtgznxH2AtrM6ULn7lu0yITLI=
+	s=default; t=1599272593;
+	bh=WCtm2UmWU8qgNv7O8zpLAkulc+vdzdX4jMDuCdvk39A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=a48A9tgGQ+fSpuFuEHN5aCXf/B8LDwVjzmOAtQlvEvBBfv9IRNDzdpq4/X3vbGDqf
+	 yDXr1SK9SzxdNMqJUvTtso1xqi/YyCIHmR56IIzNK0aGM8ZxL5sfvtw7g0lBadhZXG
+	 xJRTzDmHM/Pw7BV5YQdwjulKiUOMBbLffXZ+iO84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728307AbgIECTi (ORCPT
+        id S1728255AbgIECXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 22:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgIECTg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 22:19:36 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384FCC061244
-        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 19:19:36 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id c142so5570289pfb.7
-        for <linux-kernel@vger.kernel.org>; Fri, 04 Sep 2020 19:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uxinKIwYdmIrjNnt1TtDx7mBkGxJupuWtsWZpbciQxc=;
-        b=CZmnHrVzoBu9rfAQSJCOjZmkc0XQ4oI3FzhhM5AWcqMaTMmTMiXK5W7+Z57u+m4GOe
-         rBT1bkW23MM0pqM7kPTMdEUm5QuJ9Yjpn4ofLYic3I7D8zCAlhoVAbEn6f8GH6Qy5ngl
-         GHfLcOUh/HCBIR9ecSc7bi2eGrhvTO/FHqNw0t4pOnvtSawUlGjiNHDq3vwFs9Sikwz3
-         47WMQc6AB1lQvzcf5W+xdDUMzNAbMowNBy0XrpFANDPhgPwyA/529Ht65gyoR7Cgz+5E
-         VA0Yzfx6jCyitruDgyzfETWiOfjc6ak/nB6QASVLB8dK/Kp7SbjMg6wM848ZwX7Os383
-         kv4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=uxinKIwYdmIrjNnt1TtDx7mBkGxJupuWtsWZpbciQxc=;
-        b=fxxXx1udpJNL8HN0FfN65ab3RPICUM4VRZHWwHxekpxphgNZmJILcHBVHF8MNaCUn4
-         0H6JvqIRbScnNO2l74HRRgwvDjNq77MRpO5MyDheglAg6lTVK533G9n3PhFelK8LJyPl
-         VwdETIQQhyNNOP0oibtV/eMn/Ubw4TtIo7DCSJdNKP6KMqLSkywsu2dz6ud60//40jFo
-         nP/giEif3lgTfjxxQ1N2BJlXTxF5gWDCLD5TopaCxLi00PcUnT6kL0fuun12RWXC+uK5
-         tdVFwYisqCvXID5NyD1N+9UHO0xLK2xku4w8QdCJKmGZ7zdmtATFcTkTwyCu1RFWRMPM
-         8nyA==
-X-Gm-Message-State: AOAM532O+0gFBv0pBTiDX0efBAh5f2VtK/JotNMTG3PVyMcBxLmyLOkt
-        eFFAtL2+f6OCn6GvTnGGDr8=
-X-Google-Smtp-Source: ABdhPJwH7wnMC7wWeF6WnPUaaiI2U+sQ1N1oGbpVXU0YDoyuzoesQqoZanC8Y2iQouyyBEZQnpo/Vg==
-X-Received: by 2002:a65:50c1:: with SMTP id s1mr9208695pgp.341.1599272370373;
-        Fri, 04 Sep 2020 19:19:30 -0700 (PDT)
-Received: from balhae.roam.corp.google.com ([101.235.31.111])
-        by smtp.gmail.com with ESMTPSA id v17sm7691147pfn.24.2020.09.04.19.19.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 19:19:29 -0700 (PDT)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCH v2 2/2] perf metric: Fix some memory leaks - part 2
-Date:   Sat,  5 Sep 2020 11:19:12 +0900
-Message-Id: <20200905021912.621388-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-In-Reply-To: <20200905021912.621388-1-namhyung@kernel.org>
-References: <20200905021912.621388-1-namhyung@kernel.org>
+        Fri, 4 Sep 2020 22:23:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbgIECXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 4 Sep 2020 22:23:10 -0400
+Received: from localhost (227.sub-72-105-116.myvzw.com [72.105.116.227])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A031320791;
+        Sat,  5 Sep 2020 02:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599272589;
+        bh=WCtm2UmWU8qgNv7O8zpLAkulc+vdzdX4jMDuCdvk39A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SD0bpRN6tARd1pDUKMSKmPspzn3fxzd0jM68ayzWXm55F8pkSrVRTSUb+MkDV2zB5
+         KhukNGi3SbTN6a+qJphtI6Uo5SZXMf83/MIFfCw808Qvu7JwYZRhtAUEBayaj0Z7Ev
+         0n+ycxS7PAlmyychENEWArkBr41fFn3U57/U77pA=
+Date:   Fri, 4 Sep 2020 21:23:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kelley, Sean V" <sean.v.kelley@intel.com>
+Cc:     "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 04/10] PCI/RCEC: Add pcie_walk_rcec() to walk
+ associated RCiEPs
+Message-ID: <20200905022308.GA379055@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae1885fcb2dd5f174c8e5f94d1fd31f389776807.camel@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The metric_event_delete() missed to free expr->metric_events and it
-should free an expr when metric_refs allocation failed.
+On Fri, Sep 04, 2020 at 10:18:30PM +0000, Kelley, Sean V wrote:
+> Hi Bjorn,
+> 
+> Quick question below...
+> 
+> On Wed, 2020-09-02 at 14:55 -0700, Sean V Kelley wrote:
+> > Hi Bjorn,
+> > 
+> > On Wed, 2020-09-02 at 14:00 -0500, Bjorn Helgaas wrote:
+> > > On Wed, Aug 12, 2020 at 09:46:53AM -0700, Sean V Kelley wrote:
+> > > > From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > > > 
+> > > > When an RCEC device signals error(s) to a CPU core, the CPU core
+> > > > needs to walk all the RCiEPs associated with that RCEC to check
+> > > > errors. So add the function pcie_walk_rcec() to walk all RCiEPs
+> > > > associated with the RCEC device.
+> > > > 
+> > > > Co-developed-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > > > Signed-off-by: Sean V Kelley <sean.v.kelley@intel.com>
+> > > > Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+> > > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > > ---
+> > > >  drivers/pci/pci.h       |  4 +++
+> > > >  drivers/pci/pcie/rcec.c | 76
+> > > > +++++++++++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 80 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > > > index bd25e6047b54..8bd7528d6977 100644
+> > > > --- a/drivers/pci/pci.h
+> > > > +++ b/drivers/pci/pci.h
+> > > > @@ -473,9 +473,13 @@ static inline void pci_dpc_init(struct
+> > > > pci_dev
+> > > > *pdev) {}
+> > > >  #ifdef CONFIG_PCIEPORTBUS
+> > > >  void pci_rcec_init(struct pci_dev *dev);
+> > > >  void pci_rcec_exit(struct pci_dev *dev);
+> > > > +void pcie_walk_rcec(struct pci_dev *rcec, int (*cb)(struct
+> > > > pci_dev
+> > > > *, void *),
+> > > > +		    void *userdata);
+> > > >  #else
+> > > >  static inline void pci_rcec_init(struct pci_dev *dev) {}
+> > > >  static inline void pci_rcec_exit(struct pci_dev *dev) {}
+> > > > +static inline void pcie_walk_rcec(struct pci_dev *rcec, int
+> > > > (*cb)(struct pci_dev *, void *),
+> > > > +				  void *userdata) {}
+> > > >  #endif
+> > > >  
+> > > >  #ifdef CONFIG_PCI_ATS
+> > > > diff --git a/drivers/pci/pcie/rcec.c b/drivers/pci/pcie/rcec.c
+> > > > index 519ae086ff41..405f92fcdf7f 100644
+> > > > --- a/drivers/pci/pcie/rcec.c
+> > > > +++ b/drivers/pci/pcie/rcec.c
+> > > > @@ -17,6 +17,82 @@
+> > > >  
+> > > >  #include "../pci.h"
+> > > >  
+> > > > +static int pcie_walk_rciep_devfn(struct pci_bus *bus, int
+> > > > (*cb)(struct pci_dev *, void *),
+> > > > +				 void *userdata, const unsigned long
+> > > > bitmap)
+> > > > +{
+> > > > +	unsigned int devn, fn;
+> > > > +	struct pci_dev *dev;
+> > > > +	int retval;
+> > > > +
+> > > > +	for_each_set_bit(devn, &bitmap, 32) {
+> > > > +		for (fn = 0; fn < 8; fn++) {
+> > > > +			dev = pci_get_slot(bus, PCI_DEVFN(devn, fn));
+> > > 
+> > > Wow, this is a lot of churning to call pci_get_slot() 256 times per
+> > > bus for the "associated bus numbers" case where we pass a bitmap of
+> > > 0xffffffff.  They didn't really make it easy for software when they
+> > > added the next/last bus number thing.
+> > > 
+> > > Just thinking out loud here.  What if we could set dev->rcec during
+> > > enumeration, and then use that to build pcie_walk_rcec()?
+> > 
+> > I think follow what you are doing.
+> > 
+> > As we enumerate an RCEC, use the time to discover RCiEPs and
+> > associate
+> > each RCiEP's dev->rcec. Although BIOS already set the bitmap for this
+> > specific RCEC, it's more efficient to simply discover the devices
+> > through the bus walk and verify each one found against the bitmap. 
+> > 
+> > Further, while we can be certain that an RCiEP found with a matching
+> > device no. in a bitmap for an associated RCEC is correct, we cannot
+> > be
+> > certain that any RCiEP found on another bus range is correct unless
+> > we
+> > verify the bus is within that next/last bus range. 
+> > 
+> > Finally, that's where find_rcec() callback for rcec_assoc_rciep()
+> > does
+> > double duty by also checking on the "on-a-separate-bus" case captured
+> > potentially by find_rcec() during an RCiEP's bus walk.
+> > 
+> >  
+> > >   bool rcec_assoc_rciep(rcec, rciep)
+> > >   {
+> > >     if (rcec->bus == rciep->bus)
+> > >       return (rcec->bitmap contains rciep->devfn);
+> > > 
+> > >     return (rcec->next/last contains rciep->bus);
+> > >   }
+> > > 
+> > >   link_rcec(dev, data)
+> > >   {
+> > >     struct pci_dev *rcec = data;
+> > > 
+> > >     if ((dev is RCiEP) && rcec_assoc_rciep(rcec, dev))
+> > >       dev->rcec = rcec;
+> > >   }
+> > > 
+> > >   find_rcec(dev, data)
+> > >   {
+> > >     struct pci_dev *rciep = data;
+> > > 
+> > >     if ((dev is RCEC) && rcec_assoc_rciep(dev, rciep))
+> > >       rciep->rcec = dev;
+> > >   }
+> > > 
+> > >   pci_setup_device
+> > >     ...
+> 
+> I just noticed your use of pci_setup_device(). Are you suggesting
+> moving the call to pci_rcec_init() out of pci_init_capabilities() and
+> move it into pci_setup_device()?  If so, would pci_rcec_exit() still
+> remain in pci_release_capabilities()?
+> 
+> I'm just wondering if it could just remain in pci_init_capabilities().
 
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Ian Rogers <irogers@google.com>
-Fixes: 4ea2896715e67 ("perf metric: Collect referenced metrics in struct metric_expr")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/metricgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+Yeah, I didn't mean in pci_setup_device() specifically, just somewhere
+in the callchain of pci_setup_device().  But you're right, it probably
+would make more sense in pci_init_capabilities(), so I *should* have
+said pci_scan_single_device() to be a little less specific.
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index af664d6218d6..b28c09447c10 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -85,6 +85,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
- 
- 	list_for_each_entry_safe(expr, tmp, &me->head, nd) {
- 		free(expr->metric_refs);
-+		free(expr->metric_events);
- 		free(expr);
- 	}
- 
-@@ -316,6 +317,7 @@ static int metricgroup__setup_events(struct list_head *groups,
- 			if (!metric_refs) {
- 				ret = -ENOMEM;
- 				free(metric_events);
-+				free(expr);
- 				break;
- 			}
- 
--- 
-2.28.0.526.ge36021eeef-goog
-
+Bjorn
