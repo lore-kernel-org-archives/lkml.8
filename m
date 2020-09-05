@@ -2,234 +2,138 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A00E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CFDC433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 742AE2078E
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAB9206B8
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 14:48:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dMCR0RN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgIEOrQ (ORCPT
+        id S1728730AbgIEOsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 10:47:16 -0400
-Received: from mga02.intel.com ([134.134.136.20]:13107 "EHLO mga02.intel.com"
+        Sat, 5 Sep 2020 10:48:09 -0400
+Received: from mout.gmx.net ([212.227.17.22]:52571 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgIEOqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 10:46:43 -0400
-IronPort-SDR: vREh0RwHxBsSHXHNZwbP5x1inYbv06ABOmJAgpe+P2p93oBdOC9t9p2tkmCstH03i4SAL2nPMu
- KbLvHETPqWLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9734"; a="145593995"
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="145593995"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2020 07:46:37 -0700
-IronPort-SDR: 2c14b76laX3JZKQBrKJIi1/abMk3BrSIkxV3AsDthNcGam+M0dvFb1dttE+7gQix8b1BTKqym9
- enseqA86zNmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,394,1592895600"; 
-   d="scan'208";a="316256637"
-Received: from lkp-server02.sh.intel.com (HELO c089623da072) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 05 Sep 2020 07:46:35 -0700
-Received: from kbuild by c089623da072 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kEZSd-0000FM-7F; Sat, 05 Sep 2020 14:46:35 +0000
-Date:   Sat, 05 Sep 2020 22:45:43 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 153908ebc8b5721658c4aba92779fc6e3e2d5a61
-Message-ID: <5f53a497.hMTczxgdwS5SCkue%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728727AbgIEOsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 10:48:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599317191;
+        bh=RAHiNLnG3IuCWYe2owQpbYIJlYLYNj31Ysy4ZzQO/Kk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=dMCR0RN7CYw16iUT/wIpQUPFMBlmQaKJLL1TdAphv4JsiDmmj/iYPbAI5uvW3Zh0h
+         95DqEpidOhK1IFzBUY65Qysczjk0jeaLoGGMrTuIGG3QHmjEXpunhSMzdQdIZjFUOP
+         VzmVHgXQDdALuSI5kwCZM0feNgt54M7xklScj6hQ=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.151]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MOzSu-1jvxiV0uAG-00PQz1; Sat, 05
+ Sep 2020 16:46:31 +0200
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 09/10] MAINTAINERS: Add entry for Netronix embedded controller
+Date:   Sat,  5 Sep 2020 16:45:01 +0200
+Message-Id: <20200905144503.1067124-2-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/DsAtZ/PqYMgUwapHdEQ/vTEgQHX9OrG+983qc0/gY1GqdsLSyE
+ C5PYbHAjRpbdE0HgY/pvNaD7H4MioM5n/jdxlXlWetPImCNmiB4Kcjw1lppFodHRxNywoT/
+ 5k0fx6BVM+VEi+lbYypkVXW54Mxri2GMWWGIsQQcyNPqZ7RhuorWD8WpQIuGO8WgTxx/HMN
+ RPVZxXlmA48rgTjIQohvw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Pwzjcm4O2TA=:qQDZmUS0qVzZRgsOtzbiWH
+ IkeFt2cyWTfeW/yKPTCwEIzZ3LgOmttrphGiHai490XS934R6N2oti1Zc1AMwX4STXfnQtEFD
+ hLykF7MIvSZsjhgFONx/fNWDJ5vXK8QO4rzhLmy4p4VDKc4xEGR+fhQRBAJUOMfprq6a+VbSZ
+ D2zbU9YY8/4LfGS2qyW58wLgFECsCnBAYfuOHYKy5wwoi0JnjzVzbryf0DpTjuhbEk11aMWZL
+ leHxePN/q0unBkwd/sOFgjB7BKmBsAZSqea6fkWg/Wevzyq3y8ZUI1CnYtBogB0genP909U+2
+ EwKLI0W1bGNXQwr6mw8/SwLP6ae0aOd9XXjLHYn1PKMP6J5/aseAQ+VHBZ8hZSF/fcdCxNjy+
+ tGrK4au8kZAkEaVos/0mAFUwy9YvGsFwT/P1vH9NsEUFp2ZN6DHTaMU7+fanlAGs364rE93Ax
+ 6EWj2aA5e7qaPnQ4v/0Ow3GyhUPAsrO2Dsr5QwxdSLMxbIDsNd0Lfa9lyfzThyFstjefhfuEw
+ sJgVYRJMC7QlUr0m6rHcqlWCuQF5Mp5JOLeeLc13jIIzm3QR97L3aEi6X5I3NuhSR9NeKHWIa
+ 2UVHR5V+xXpHQPTdYPevRb54ZqXlD4WQM6SOdlUmBw3oezERoUU6/btIU4RJN86RFO5izPKwZ
+ 93HrmWcAwY3ppZyPcszuUulJyYVZ6KBN70+1uIHhNkQJ2bVkit9aXxQkrAEp9fuPr5EH8nP4+
+ hGsVv0N3NKKhPWLbj3/cvRl7kaHNMtcwmfbUejPpZ9xfO1BtPuoLlKZQDTNmOFlZTekE6boSW
+ Opota3OKF626gA0blkJ2ZsL62P6808S+SFRYPDPYNf3oewvd2vD4RuCyrKRy8K6S3xbm4lhRm
+ tqe+IhQiUsT4bLzqIllbEMjNLJWRwDAj7RDUCUSJGPbZOvWuuOPZdXE9IkFycn1m5Gmn5adeK
+ 0C4pg+HNfm5DCRiBeVDiyOfVAy3bWodXn5RkVjSi/Lf4z9UJd0Fa3bCj6aQfVfVAbj/osqh/1
+ 3cqITHx5n8YXBB/5gDzMHOT85U/4sR1fUDcwzf0XsAphLFAvNKWnk04uz+y5VMdj33dP+uNmZ
+ N9q2KCLWNYo/gOT/VsHVWUrXsyyq5a8Z03gofm595lubGrfuIch5MFhNogo3d5OgaTg+BhhqJ
+ kSNVMeTRoV+jJXDdomj5vOHj01bnLxnC4yFhIA8XeuWiLaMOAD5NKgqkuQlSlbneqQeZvo25S
+ oJn4qIHpr09Fu3hzm2W+l/Zw5Ny5g747WfuM/wQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
-branch HEAD: 153908ebc8b5721658c4aba92779fc6e3e2d5a61  MAINTAINERS: Add myself as SCHED_DEADLINE reviewer
+Let's make sure I'll notice when there are patches for the NTXEC
+drivers.
 
-elapsed time: 1422m
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
 
-configs tested: 160
-configs skipped: 14
+v2:
+- No changes
+=2D--
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4647c84c987e..ffe15a65bae2e 100644
+=2D-- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11995,6 +11995,17 @@ F:	include/net/netrom.h
+ F:	include/uapi/linux/netrom.h
+ F:	net/netrom/
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arc                     haps_hs_smp_defconfig
-m68k                            q40_defconfig
-m68k                       m5208evb_defconfig
-m68k                       m5249evb_defconfig
-arm                         mv78xx0_defconfig
-sh                        edosk7705_defconfig
-arc                 nsimosci_hs_smp_defconfig
-m68k                          atari_defconfig
-mips                     loongson1c_defconfig
-mips                       bmips_be_defconfig
-xtensa                              defconfig
-mips                      maltaaprp_defconfig
-powerpc                     mpc5200_defconfig
-arm                         hackkit_defconfig
-mips                            ar7_defconfig
-arm                           h5000_defconfig
-mips                 decstation_r4k_defconfig
-arm                         axm55xx_defconfig
-xtensa                    xip_kc705_defconfig
-m68k                                defconfig
-powerpc                          allmodconfig
-s390                                defconfig
-powerpc                     powernv_defconfig
-powerpc                        cell_defconfig
-arc                         haps_hs_defconfig
-arm                              zx_defconfig
-powerpc                      ppc64e_defconfig
-arm                        mvebu_v5_defconfig
-mips                          malta_defconfig
-openrisc                 simple_smp_defconfig
-arm                         nhk8815_defconfig
-sh                          rsk7264_defconfig
-powerpc                          allyesconfig
-sh                           se7751_defconfig
-m68k                          amiga_defconfig
-sh                          r7785rp_defconfig
-arm                          moxart_defconfig
-arm                            lart_defconfig
-sh                            shmin_defconfig
-ia64                            zx1_defconfig
-arc                     nsimosci_hs_defconfig
-arm                      tct_hammer_defconfig
-sh                             sh03_defconfig
-mips                      loongson3_defconfig
-powerpc                           allnoconfig
-alpha                            alldefconfig
-mips                        qi_lb60_defconfig
-arm                     am200epdkit_defconfig
-sh                     sh7710voipgw_defconfig
-arm                        multi_v7_defconfig
-nios2                            alldefconfig
-sh                          landisk_defconfig
-sh                           se7619_defconfig
-sh                          kfr2r09_defconfig
-arm64                            alldefconfig
-sh                        apsh4ad0a_defconfig
-mips                  decstation_64_defconfig
-arc                              allyesconfig
-sh                   sh7724_generic_defconfig
-riscv                             allnoconfig
-ia64                         bigsur_defconfig
-sh                           se7206_defconfig
-arm                          gemini_defconfig
-powerpc                          g5_defconfig
-arm                            hisi_defconfig
-powerpc                     skiroot_defconfig
-sh                         ecovec24_defconfig
-arm                            qcom_defconfig
-powerpc                  storcenter_defconfig
-arm                          iop32x_defconfig
-xtensa                generic_kc705_defconfig
-ia64                          tiger_defconfig
-xtensa                           allyesconfig
-mips                           xway_defconfig
-m68k                       m5275evb_defconfig
-m68k                          sun3x_defconfig
-mips                      pistachio_defconfig
-arm                            mps2_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                         alldefconfig
-m68k                        stmark2_defconfig
-m68k                             alldefconfig
-sh                               j2_defconfig
-microblaze                          defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-x86_64               randconfig-a006-20200905
-x86_64               randconfig-a004-20200905
-x86_64               randconfig-a003-20200905
-x86_64               randconfig-a005-20200905
-x86_64               randconfig-a001-20200905
-x86_64               randconfig-a002-20200905
-i386                 randconfig-a004-20200904
-i386                 randconfig-a005-20200904
-i386                 randconfig-a006-20200904
-i386                 randconfig-a002-20200904
-i386                 randconfig-a003-20200904
-i386                 randconfig-a001-20200904
-x86_64               randconfig-a013-20200904
-x86_64               randconfig-a011-20200904
-x86_64               randconfig-a016-20200904
-x86_64               randconfig-a012-20200904
-x86_64               randconfig-a015-20200904
-x86_64               randconfig-a014-20200904
-i386                 randconfig-a016-20200904
-i386                 randconfig-a015-20200904
-i386                 randconfig-a011-20200904
-i386                 randconfig-a013-20200904
-i386                 randconfig-a014-20200904
-i386                 randconfig-a012-20200904
-i386                 randconfig-a016-20200905
-i386                 randconfig-a015-20200905
-i386                 randconfig-a011-20200905
-i386                 randconfig-a013-20200905
-i386                 randconfig-a014-20200905
-i386                 randconfig-a012-20200905
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
++NETRONIX EMBEDDED CONTROLLER
++M:	Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
++S:	Maintained
++F:	Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
++F:	Documentation/devicetree/bindings/pwm/netronix,ntxec-pwm.yaml
++F:	Documentation/devicetree/bindings/rtc/netronix,ntxec-rtc.yaml
++F:	drivers/mfd/ntxec.c
++F:	drivers/pwm/pwm-ntxec.c
++F:	drivers/rtc/rtc-ntxec.c
++F:	include/linux/mfd/ntxec.h
++
+ NETRONOME ETHERNET DRIVERS
+ M:	Simon Horman <simon.horman@netronome.com>
+ R:	Jakub Kicinski <kuba@kernel.org>
+=2D-
+2.28.0
 
-clang tested configs:
-x86_64               randconfig-a006-20200904
-x86_64               randconfig-a004-20200904
-x86_64               randconfig-a003-20200904
-x86_64               randconfig-a005-20200904
-x86_64               randconfig-a001-20200904
-x86_64               randconfig-a002-20200904
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
