@@ -2,131 +2,124 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B9BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18876C43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C52BB20797
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:27:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599348438;
-	bh=A7EvWwYyZIg7QaFOdO9o87JScI5m8RkQBYiqzNGzEvw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=M+Qe1bVoEZW9KH36XYSBxFnT8px7GF6q8PB4GixRCRMRwiTnfwL2cwkkXPwXfXVQw
-	 aHkkEmokIVXwXXF1SBBOrOvcrhUJOTNdjXl36vQyjOrQUVPqF6SzcHWKQhd1lLFHJS
-	 O4Zx1cwLpHJxVMxvnJ0mNJkq2iNWnE8j2xgE2gD8=
+	by mail.kernel.org (Postfix) with ESMTP id C38D720760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 23:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUYXgZmA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgIEX1Q (ORCPT
+        id S1728824AbgIEXfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 19:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgIEX1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 19:27:15 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28E9A20760;
-        Sat,  5 Sep 2020 23:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599348434;
-        bh=A7EvWwYyZIg7QaFOdO9o87JScI5m8RkQBYiqzNGzEvw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KITCRHBKnJrF02EID/fEfEJJHzcNhXJNfg4nlPbAzsMVxUDaKH5HD32plB5WvUD7Z
-         hX9EVWnEpQ6buLJHZate6UPxCIe0g2QH/pOZZeaBGtE2P2zzLUZvwhRt8XZOhF+NaT
-         KYASqugwvRhykwwJvBhofx9gVY+rNhRedN0Pf/+c=
-Date:   Sat, 5 Sep 2020 16:27:12 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, davem@davemloft.net,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH net] hv_netvsc: Fix hibernation for mlx5 VF driver
-Message-ID: <20200905162712.65b886a4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200905025218.45268-1-decui@microsoft.com>
-References: <20200905025218.45268-1-decui@microsoft.com>
+        Sat, 5 Sep 2020 19:35:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53636 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbgIEXfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 19:35:07 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C76FC061244;
+        Sat,  5 Sep 2020 16:35:06 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id u4so11115864ljd.10;
+        Sat, 05 Sep 2020 16:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kGgU1b5RQOsf0Zia5xIA7MAoWf3tsLf1dwu/anlUuvQ=;
+        b=dUYXgZmAsshlZMmTs8921NbWtgPZMwp1N2DFkPJVGgX3DRafiTOMS+yBag48UHJkNu
+         QpHba3Fy0Sr5rb6XoUXKe7xSi3kIDXdgr30q2cNwLqstuDxx9ankzuSxjC6LAQCQYLie
+         Wsq8ckx5SHgQtqx1gzaSCv11GJTTyD7GJzpxTxTu6bewo6OtO3XRa1+Z2ui2gZH6RVd1
+         9P45dKdBhe2017W70ju5Isah6Rv26alXmr2vyBxM+MWAGjpOokywdZ+ovY5CjIzuNpNF
+         /HCZ4onvxlOQSWmx2wKB5ZMmAvHPyRFT5poMBRtEC45v+jvZ9OcnTt4jacvs49+PI/9l
+         28ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kGgU1b5RQOsf0Zia5xIA7MAoWf3tsLf1dwu/anlUuvQ=;
+        b=UVNxa82Kkx/28/GGk2QmKdBxlIq2PyS2p660FrKdoMynNJQZZ7F8Jn+9hbRDnQxcoI
+         QY/fcOhVeDwJMJcgn05M9F7rmitQGgTzBwFVsMVUMXW0IAZqudMAs9lKAUgWXJey/pFM
+         qpf9KFKuF2lnrxUPvC993tQyViT1GirDr779XP15ku/AS196sZ3TZyBpuCMR26Mms6FS
+         38BiNt7NL3JhoFBArTH39YWwmstVJNGgWShx9Xdk7aWjBIJwyuaA0En66rw/Y+qZzhML
+         cF6KgoFjkwV6jb4IpISBnCTzdmDfvabzHmtKjZdOnRTK1O1BSOPcgiJk0LCWgpazXXe0
+         Z+Pw==
+X-Gm-Message-State: AOAM533c91ED6CRC6DB7TjlUMolWPylI7VEt7IMU3a4WYxHvGH8CmqjE
+        2gtM2hEjajyfQqeq33UqXpwjZzP3UkY=
+X-Google-Smtp-Source: ABdhPJzqNKB85lvQnwM6LD990/+UGRsu0dQl7ME0z5fhDDMYry/lZxawTDJUrL+BGPKIUmzfxivZsA==
+X-Received: by 2002:a2e:7f1d:: with SMTP id a29mr7325041ljd.424.1599348903311;
+        Sat, 05 Sep 2020 16:35:03 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id u2sm2913787ljo.48.2020.09.05.16.35.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 05 Sep 2020 16:35:02 -0700 (PDT)
+Subject: Re: [PATCH v4 15/31] i2c: tegra: Remove bogus barrier()
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200905204151.25343-1-digetx@gmail.com>
+ <20200905204151.25343-16-digetx@gmail.com>
+Message-ID: <a7061967-51b2-79f1-a8bb-b149da306c48@gmail.com>
+Date:   Sun, 6 Sep 2020 02:35:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200905204151.25343-16-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  4 Sep 2020 19:52:18 -0700 Dexuan Cui wrote:
-> mlx5_suspend()/resume() keep the network interface, so during hibernation
-> netvsc_unregister_vf() and netvsc_register_vf() are not called, and hence
-> netvsc_resume() should call netvsc_vf_changed() to switch the data path
-> back to the VF after hibernation.
-
-Does suspending the system automatically switch back to the synthetic
-datapath? Please clarify this in the commit message and/or add a code
-comment.
-
-> Similarly, netvsc_suspend() should not call netvsc_unregister_vf().
+05.09.2020 23:41, Dmitry Osipenko пишет:
+> Apparently barrier() was intended to reduce possibility of racing
+> with the interrupt handler, but driver's code evolved significantly
+> and today's driver enables interrupt only when it waits for completion
+> notification. Hence barrier() has no good use anymore, let's remove it.
 > 
-> BTW, mlx4_suspend()/resume() are differnt in that they destroy and
-> re-create the network device, so netvsc_register_vf() and
-> netvsc_unregister_vf() are automatically called. Note: mlx4 can also work
-> with the changes here because in netvsc_suspend()/resume()
-> ndev_ctx->vf_netdev is NULL for mlx4.
-> 
-> Fixes: 0efeea5fb153 ("hv_netvsc: Add the support of hibernation")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 > ---
->  drivers/net/hyperv/netvsc_drv.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+>  drivers/i2c/busses/i2c-tegra.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-> index 64b0a74c1523..f896059a9588 100644
-> --- a/drivers/net/hyperv/netvsc_drv.c
-> +++ b/drivers/net/hyperv/netvsc_drv.c
-> @@ -2587,7 +2587,7 @@ static int netvsc_remove(struct hv_device *dev)
->  static int netvsc_suspend(struct hv_device *dev)
->  {
->  	struct net_device_context *ndev_ctx;
-> -	struct net_device *vf_netdev, *net;
-> +	struct net_device *net;
->  	struct netvsc_device *nvdev;
->  	int ret;
-
-Please keep reverse xmas tree variable ordering.
-
-> @@ -2604,10 +2604,6 @@ static int netvsc_suspend(struct hv_device *dev)
->  		goto out;
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 33d37a40fa83..f69587ca163b 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -600,7 +600,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  		i2c_dev->msg_buf_remaining = buf_remaining;
+>  		i2c_dev->msg_buf = buf +
+>  			words_to_transfer * BYTES_PER_FIFO_WORD;
+> -		barrier();
+>  
+>  		i2c_writesl(i2c_dev, buf, I2C_TX_FIFO, words_to_transfer);
+>  
+> @@ -624,7 +623,6 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>  		/* Again update before writing to FIFO to make sure isr sees. */
+>  		i2c_dev->msg_buf_remaining = 0;
+>  		i2c_dev->msg_buf = NULL;
+> -		barrier();
+>  
+>  		i2c_writel(i2c_dev, val, I2C_TX_FIFO);
 >  	}
->  
-> -	vf_netdev = rtnl_dereference(ndev_ctx->vf_netdev);
-> -	if (vf_netdev)
-> -		netvsc_unregister_vf(vf_netdev);
-> -
->  	/* Save the current config info */
->  	ndev_ctx->saved_netvsc_dev_info = netvsc_devinfo_get(nvdev);
->  
-> @@ -2623,6 +2619,7 @@ static int netvsc_resume(struct hv_device *dev)
->  	struct net_device *net = hv_get_drvdata(dev);
->  	struct net_device_context *net_device_ctx;
->  	struct netvsc_device_info *device_info;
-> +	struct net_device *vf_netdev;
->  	int ret;
->  
->  	rtnl_lock();
-> @@ -2635,6 +2632,10 @@ static int netvsc_resume(struct hv_device *dev)
->  	netvsc_devinfo_put(device_info);
->  	net_device_ctx->saved_netvsc_dev_info = NULL;
->  
-> +	vf_netdev = rtnl_dereference(net_device_ctx->vf_netdev);
-> +	if (vf_netdev && netvsc_vf_changed(vf_netdev) != NOTIFY_OK)
-> +		ret = -EINVAL;
+> 
 
-Should you perhaps remove the VF in case of the failure?
-
->  	rtnl_unlock();
->  
->  	return ret;
-
+It just caught my eye that there is actually a comment there saying that
+barrier() was intended to mitigate the racing with the ISR. Hence that
+comment is outdated now and needs to be removed. I'll correct it in v5.
