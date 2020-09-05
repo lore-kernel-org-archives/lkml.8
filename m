@@ -2,379 +2,75 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF612C433E2
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 087902074D
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZHJ9kfzU"
+	by mail.kernel.org (Postfix) with ESMTP id 7341E2074B
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 20:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599338201;
+	bh=cs7rrEwHik/Su4uXsEY7WRBvMHghd/7hkKnFHM+VebQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Xudga/KkdruN1T9mtYJdFExQZBEspQcKSpVeP8xZcjCjHKIVNoG3AtzFHwuDLBsWf
+	 9IPnSAkqDaPzhS5WF6W2wzz6xl3HlHNTUmBLpyryzMAIUN5brNY4UERof0G2tdsE0N
+	 n7nsU5FTNHZgPVqg49XI+spT6ONkCKq6SE0WvSPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgIEUWM (ORCPT
+        id S1728675AbgIEUgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 16:22:12 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56879 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727875AbgIEUWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 16:22:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599337328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zNCTJqS6mbGKS88CEIkxTroKFm5YN6NqSIoT8sRf740=;
-        b=ZHJ9kfzU3FoHUgE9/Xb3xXz/SpQHXijOKmTifF91TzNAnYhkcyGsiL0FApNG3YUZOfNcK2
-        fNblRLD4wvQj7iqMcWFygcPMgAetUuTD78a7sWhimYGcnmT4jOkHQbZz2DeaO7zpXSVXIc
-        QLP5Xjme7mxqWa3mzRI0uu7Hk6hh8YE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-186-e4j1wRwRN7C182zy0bES1A-1; Sat, 05 Sep 2020 16:22:06 -0400
-X-MC-Unique: e4j1wRwRN7C182zy0bES1A-1
-Received: by mail-qt1-f199.google.com with SMTP id x10so6515310qtp.18
-        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 13:22:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zNCTJqS6mbGKS88CEIkxTroKFm5YN6NqSIoT8sRf740=;
-        b=fcPijJzv0r0ZKCaAjDPYi8ezPcKCC4VmkkoFpIcP4q7VywgCwzMNUBv2RW/Yk6J49V
-         tUOZ5W6/PL933SC+A7+pxrJ7TqroBHGlYjo7HZY3SFlLkH/c9SXLIuELxIcFCe3pUmEw
-         u/0gttHvVSTKtQd7YHm5l/5HurAehJi32BY3PhoO6AvCPz6zz78yfIA3t6phn7wCEi2/
-         +23mWOiOQKKSIyQ2Zio6/bkkhmDzkz2VQGnHW/3ceTWQxIJVSDOspy7lHyV8n0g84ivJ
-         FkP664NQVA3gTUrqCbAtw6XOeV/Kx9iDscFaTPSP4lTOymf8v1g7JntEION1lNnMXrDR
-         p7qQ==
-X-Gm-Message-State: AOAM531gotOqfxa70Ya304cRSqblFE4XQBBitB97WDvDhRbALP+ef1jG
-        mLBvR/yNia6TikBtk4Q5bFuod/wyg6rmg8XA/wG5utTN50y5Sd/PaqnefNQnz8+JFSzEBjMC+hH
-        WIhhU+lG9IuWTFPZdQ2KchLsn
-X-Received: by 2002:a37:9d86:: with SMTP id g128mr13271247qke.26.1599337325669;
-        Sat, 05 Sep 2020 13:22:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwatihXkTYaBv09WdilPbOAaZQ58yAyhKx9dzWjxoF1dlcw97eDA1BEjMbmWzwVMAHPu+1O+w==
-X-Received: by 2002:a37:9d86:: with SMTP id g128mr13271232qke.26.1599337325328;
-        Sat, 05 Sep 2020 13:22:05 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id q8sm7617964qkq.57.2020.09.05.13.22.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Sep 2020 13:22:04 -0700 (PDT)
-Subject: Re: [PATCH v1 02/12] fpga: create intel max10 bmc security engine
-To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
-        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        Sat, 5 Sep 2020 16:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728103AbgIEUgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 16:36:37 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 230EB20738;
+        Sat,  5 Sep 2020 20:36:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599338197;
+        bh=cs7rrEwHik/Su4uXsEY7WRBvMHghd/7hkKnFHM+VebQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zdtZtatn/kqpKdEIxI4FrGk03ElUXhFKU4IfSxcj/2d+WDFKEoJYA4iWPx/e0Trbu
+         CqKRLF8IX3YZNwMCIKyhFSxhrR1RP8bOSvLvyHvy6iisIEyAQLgeodTV4c7AbOm51O
+         9jUHUmMtUrIx3QDhGaYqcD3ucXOMzjYsFvm6G9BM=
+Date:   Sat, 5 Sep 2020 13:36:35 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
-        matthew.gerlach@intel.com
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
- <20200904235305.6254-3-russell.h.weight@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <77143987-4388-9d2a-0ef0-6a1e60ee18f9@redhat.com>
-Date:   Sat, 5 Sep 2020 13:22:03 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Subject: Re: [PATCH] MAINTAINERS: repair reference in LYNX PCS MODULE
+Message-ID: <20200905133635.497c3663@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
+References: <20200905103700.17162-1-lukas.bulwahn@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904235305.6254-3-russell.h.weight@intel.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat,  5 Sep 2020 12:37:00 +0200 Lukas Bulwahn wrote:
+> Commit 0da4c3d393e4 ("net: phy: add Lynx PCS module") added the files in
+> ./drivers/net/pcs/, but the new LYNX PCS MODULE section refers to
+> ./drivers/net/phy/.
+> 
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+> 
+>   warning: no file matches    F:    drivers/net/phy/pcs-lynx.c
+> 
+> Repair the LYNX PCS MODULE section by referring to the right location.
+> 
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-On 9/4/20 4:52 PM, Russ Weight wrote:
-> Create a platform driver that can be invoked as a sub
-> driver for the Intel MAX10 BMC in order to support
-> secure updates. This sub-driver will invoke an
-> instance of the Intel FPGA Security Manager class driver
-> in order to expose sysfs interfaces for managing and
-> monitoring secure updates to FPGA and BMC images.
->
-> This patch creates the MAX10 BMC Security Engine driver and
-> provides support for displaying the current root entry hashes
-> for the FPGA static region, the FPGA PR region, and the MAX10
-> BMC.
->
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Reviewed-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/Kconfig                |  11 ++
->  drivers/fpga/Makefile               |   3 +
->  drivers/fpga/intel-m10-bmc-secure.c | 170 ++++++++++++++++++++++++++++
->  include/linux/mfd/intel-m10-bmc.h   |  15 +++
->  4 files changed, 199 insertions(+)
->  create mode 100644 drivers/fpga/intel-m10-bmc-secure.c
->
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 97c0a6cc2ba7..0f0bed68e618 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -244,4 +244,15 @@ config IFPGA_SEC_MGR
->  	  region and for the BMC. Select this option to enable
->  	  updates for secure FPGA devices.
->  
-> +config IFPGA_M10_BMC_SECURE
-> +        tristate "Intel MAX10 BMC security engine"
-> +	depends on MFD_INTEL_M10_BMC && IFPGA_SEC_MGR
-> +        help
-> +          Secure update support for the Intel MAX10 board management
-> +	  controller.
-> +
-> +	  This is a subdriver of the Intel MAX10 board management controller
-> +	  (BMC) and provides support for secure updates for the BMC image,
-> +	  the FPGA image, the Root Entry Hashes, etc.
-> +
->  endif # FPGA
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index ec9fbacdedd8..451a23ec3168 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -24,6 +24,9 @@ obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
->  # Intel FPGA Security Manager Framework
->  obj-$(CONFIG_IFPGA_SEC_MGR)		+= ifpga-sec-mgr.o
->  
-> +# Intel Security Manager Drivers
-> +obj-$(CONFIG_IFPGA_M10_BMC_SECURE)	+= intel-m10-bmc-secure.o
-> +
->  # FPGA Bridge Drivers
->  obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
->  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)	+= altera-hps2fpga.o altera-fpga2sdram.o
-> diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
-> new file mode 100644
-> index 000000000000..1f86bfb694b4
-> --- /dev/null
-> +++ b/drivers/fpga/intel-m10-bmc-secure.c
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Intel Max10 Board Management Controller Security Engine Driver
-> + *
-> + * Copyright (C) 2019-2020 Intel Corporation. All rights reserved.
-> + *
-> + */
-> +#include <linux/device.h>
-> +#include <linux/fpga/ifpga-sec-mgr.h>
-> +#include <linux/mfd/intel-m10-bmc.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/vmalloc.h>
-> +
-> +struct m10bmc_sec {
-> +	struct device *dev;
-> +	struct intel_m10bmc *m10bmc;
-> +	struct ifpga_sec_mgr *imgr;
-> +};
-> +
-> +#define SHA256_REH_SIZE		32
-> +#define SHA384_REH_SIZE		48
-> +
-> +static int get_reh_size(struct ifpga_sec_mgr *imgr,
-> +			u32 exp_magic, u32 prog_addr)
-> +{
-> +	struct m10bmc_sec *sec = imgr->priv;
-> +	int sha_num_bytes, ret;
-> +	u32 magic;
-> +
-> +	ret = m10bmc_raw_read(sec->m10bmc, prog_addr, &magic);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(sec->dev, "%s magic 0x%08x\n", __func__, magic);
-> +
-> +	if ((magic & 0xffff) != exp_magic)
-return -EINVAL ?
-> +		return 0;
-> +
-> +	sha_num_bytes = ((magic >> 16) & 0xffff) / 8;
-> +
-> +	if (sha_num_bytes != SHA256_REH_SIZE &&
-> +	    sha_num_bytes != SHA384_REH_SIZE)   {
-> +		dev_err(sec->dev, "%s bad sha num bytes %d\n", __func__,
-> +			sha_num_bytes);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return sha_num_bytes;
-> +}
-> +
-> +#define BMC_REH_ADDR 0x17ffc004
-> +#define BMC_PROG_ADDR 0x17ffc000
-> +#define BMC_PROG_MAGIC 0x5746
-> +
-> +#define SR_REH_ADDR 0x17ffd004
-> +#define SR_PROG_ADDR 0x17ffd000
-> +#define SR_PROG_MAGIC 0x5253
-> +
-> +#define PR_REH_ADDR 0x17ffe004
-> +#define PR_PROG_ADDR 0x17ffe000
-> +#define PR_PROG_MAGIC 0x5250
-Why shouldn't these #defines be collected in the intel-m10-bmc.h ?
-> +
-> +#define SYSFS_GET_REH_SIZE(_name, _exp_magic, _prog_addr) \
-> +static int get_##_name##_reh_size(struct ifpga_sec_mgr *imgr) \
-> +{ \
-> +	return get_reh_size(imgr, _exp_magic, _prog_addr); \
-> +}
-Is this macro overkill for a 1 liner ?
-> +
-> +SYSFS_GET_REH_SIZE(bmc, BMC_PROG_MAGIC, BMC_PROG_ADDR)
-> +SYSFS_GET_REH_SIZE(sr, SR_PROG_MAGIC, SR_PROG_ADDR)
-> +SYSFS_GET_REH_SIZE(pr, PR_PROG_MAGIC, PR_PROG_ADDR)
-
-These and similar below do not directly interact
-
-with the sysfs so the sysfs_ prefix should not be needed.
-
-> +
-> +static int get_root_entry_hash(struct ifpga_sec_mgr *imgr,
-> +			       u32 hash_addr, u8 *hash,
-> +			       unsigned int size)
-> +{
-> +	struct m10bmc_sec *sec = imgr->priv;
-> +	unsigned int stride = regmap_get_reg_stride(sec->m10bmc->regmap);
-> +	int ret;
-> +
-> +	ret = m10bmc_raw_bulk_read(sec->m10bmc, hash_addr,
-> +				   hash, size / stride);
-> +	if (ret)
-> +		dev_err(sec->dev, "bulk_read of 0x%x failed %d",
-> +			hash_addr, ret);
-> +
-> +	return ret;
-> +}
-> +
-> +#define SYSFS_GET_REH(_name, _hash_addr) \
-> +static int get_##_name##_root_entry_hash(struct ifpga_sec_mgr *imgr, \
-> +					 u8 *hash, unsigned int size) \
-> +{ \
-> +	return get_root_entry_hash(imgr, _hash_addr, hash, size); \
-> +}
-> +
-> +SYSFS_GET_REH(bmc, BMC_REH_ADDR)
-> +SYSFS_GET_REH(sr, SR_REH_ADDR)
-> +SYSFS_GET_REH(pr, PR_REH_ADDR)
-> +
-> +static const struct ifpga_sec_mgr_ops m10bmc_iops = {
-> +	.bmc_root_entry_hash = get_bmc_root_entry_hash,
-> +	.sr_root_entry_hash = get_sr_root_entry_hash,
-> +	.pr_root_entry_hash = get_pr_root_entry_hash,
-> +	.bmc_reh_size = get_bmc_reh_size,
-> +	.sr_reh_size = get_sr_reh_size,
-> +	.pr_reh_size = get_pr_reh_size,
-
-The prefix of the ops should be similar to the file name.
-
-so consider changing get_pr_reh_size to max10_pr_reh_size
-
-> +};
-> +
-> +static void ifpga_sec_mgr_uinit(struct m10bmc_sec *sec)
-> +{
-> +	ifpga_sec_mgr_unregister(sec->imgr);
-> +}
-> +
-> +static int ifpga_sec_mgr_init(struct m10bmc_sec *sec)
-> +{
-> +	struct ifpga_sec_mgr *imgr;
-> +
-> +	imgr = ifpga_sec_mgr_register(sec->dev, "Max10 BMC Security Manager",
-> +				      &m10bmc_iops, sec);
-> +	if (IS_ERR(imgr))
-> +		return PTR_ERR(imgr);
-> +
-> +	sec->imgr = imgr;
-> +	return 0;
-> +}
-> +
-> +static int m10bmc_secure_probe(struct platform_device *pdev)
-> +{
-> +	struct m10bmc_sec *sec;
-> +	int ret;
-> +
-> +	sec = devm_kzalloc(&pdev->dev, sizeof(*sec), GFP_KERNEL);
-> +	if (!sec)
-> +		return -ENOMEM;
-> +
-> +	sec->dev = &pdev->dev;
-> +	sec->m10bmc = dev_get_drvdata(pdev->dev.parent);
-> +	dev_set_drvdata(&pdev->dev, sec);
-> +
-> +	ret = ifpga_sec_mgr_init(sec);
-> +	if (ret)
-> +		dev_err(&pdev->dev,
-> +			"Security manager failed to start: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int m10bmc_secure_remove(struct platform_device *pdev)
-> +{
-> +	struct m10bmc_sec *sec = dev_get_drvdata(&pdev->dev);
-> +
-> +	ifpga_sec_mgr_uinit(sec);
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver intel_m10bmc_secure_driver = {
-> +	.probe = m10bmc_secure_probe,
-> +	.remove = m10bmc_secure_remove,
-> +	.driver = {
-> +		.name = "n3000bmc-secure",
-
-From the filename, should this be "max10bmc-secure" ?
-
-> +	},
-> +};
-> +module_platform_driver(intel_m10bmc_secure_driver);
-> +
-> +MODULE_ALIAS("platform:n3000bmc-secure");
-> +MODULE_AUTHOR("Intel Corporation");
-> +MODULE_DESCRIPTION("Intel MAX10 BMC secure engine");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
-> index d4cb01b73357..7fe465c320c2 100644
-> --- a/include/linux/mfd/intel-m10-bmc.h
-> +++ b/include/linux/mfd/intel-m10-bmc.h
-> @@ -63,6 +63,7 @@ struct intel_m10bmc {
->   * register access helper functions.
->   *
->   * m10bmc_raw_read - read m10bmc register per addr
-> + * m10bmc_raw_bulk_read - bulk_read max10 registers per addr
-
-second '_' should be removed so it reads like
-
-bulk read max10 registers..
-
-Tom
-
->   * m10bmc_sys_read - read m10bmc system register per offset
->   */
->  static inline int
-> @@ -79,6 +80,20 @@ m10bmc_raw_read(struct intel_m10bmc *m10bmc, unsigned int addr,
->  	return ret;
->  }
->  
-> +static inline int
-> +m10bmc_raw_bulk_read(struct intel_m10bmc *m10bmc, unsigned int addr,
-> +		     void *val, size_t cnt)
-> +{
-> +	int ret;
-> +
-> +	ret = regmap_bulk_read(m10bmc->regmap, addr, val, cnt);
-> +	if (ret)
-> +		dev_err(m10bmc->dev, "fail to read raw reg %x cnt %zx: %d\n",
-> +			addr, cnt, ret);
-> +
-> +	return ret;
-> +}
-> +
->  #define m10bmc_sys_read(m10bmc, offset, val) \
->  	m10bmc_raw_read(m10bmc, M10BMC_SYS_BASE + (offset), val)
->  
-
+Applied, thanks!
