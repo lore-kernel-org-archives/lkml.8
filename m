@@ -2,81 +2,111 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADACDC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DD8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B9E020C09
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5AD320C09
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:52:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgIFUqS (ORCPT
+        id S1726401AbgIFUwi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 16:46:18 -0400
-Received: from mail-il1-f205.google.com ([209.85.166.205]:40664 "EHLO
-        mail-il1-f205.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgIFUqP (ORCPT
+        Sun, 6 Sep 2020 16:52:38 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34949 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726154AbgIFUwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 16:46:15 -0400
-Received: by mail-il1-f205.google.com with SMTP id g188so8782575ilh.7
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 13:46:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=OXZxRvq3DqJBPwA+dOGIvdRIOWgI/Y/fLCG5CNtrTAY=;
-        b=bo2/dPf4VEt9457oP4r1jSEjm/kC/sTkrq+glVedV8bZs9BhUN3dlV5hU78ggJuVYC
-         ALrjbWc3bqNhhXKeusyfHXkN2e9if95GxJzx/saogmZLnBo3D/efF328bczNj8tSH/q6
-         tfuSAwyf92Gd/PopeysSdJZlJwmlmeXe/+BsTNcm0piAPogVIdAXyskNF4hJhb2lyWGQ
-         zkOyiGWFEbWvU4K4sVLOUn7liIOdr2+KtM23miAkTgy2EWtQPwa/+Y3szQ98U2DdD66W
-         ZXHGZDVGu/gHHCc1wYoTYEGVuJpdzMiXoxTSaVZvbXEA2JKWRS8RaIstCUcivTYCs81k
-         4tKw==
-X-Gm-Message-State: AOAM533jZMSkffCvdPYZ+Icua6e1FYfoJfzqduWtLptPsNvRRIHBTRUt
-        UnMf7juu8sg1sI91PpN64aY8UPZolHGd9X796KnoBerXkLCM
-X-Google-Smtp-Source: ABdhPJxqT8+Weff6SJjP8RUHeOyTpDUlTdMlTQ6NlkiLf76krcOpTkn6Ikl2Nut8iksVRbJMLVectQu+VVKz1TPh8ptjDSBVLcPw
+        Sun, 6 Sep 2020 16:52:36 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-224-fEXZTQIXM4uphP0pOlU36w-1; Sun, 06 Sep 2020 21:52:31 +0100
+X-MC-Unique: fEXZTQIXM4uphP0pOlU36w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Sun, 6 Sep 2020 21:52:31 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Sun, 6 Sep 2020 21:52:31 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christophe Leroy' <christophe.leroy@csgroup.eu>,
+        Pavel Machek <pavel@denx.de>
+CC:     Christoph Hellwig <hch@lst.de>, "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] /dev/zero: also implement ->read
+Thread-Topic: [PATCH] /dev/zero: also implement ->read
+Thread-Index: AQHWggy41s1fAL/OckmYjTgFjgCjKqlXb8rwgASFNZ2AACUDkA==
+Date:   Sun, 6 Sep 2020 20:52:31 +0000
+Message-ID: <f2e9c57db2b548949e6bd570a6dc3c5d@AcuMS.aculab.com>
+References: <20200903155922.1111551-1-hch@lst.de>
+ <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
+ <3b0b58be4b844162b73db1b108a9b995@AcuMS.aculab.com>
+ <20200906182122.GA12295@amd>
+ <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
+In-Reply-To: <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6e0b:: with SMTP id d11mr15008259ioh.155.1599425175126;
- Sun, 06 Sep 2020 13:46:15 -0700 (PDT)
-Date:   Sun, 06 Sep 2020 13:46:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006888c905aeab312d@google.com>
-Subject: WARNING: can't access registers at asm_common_interrupt
-From:   syzbot <syzbot+424f7b15245b9615f293@syzkaller.appspotmail.com>
-To:     alexandre.chartre@oracle.com, bp@alien8.de, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Christophe Leroy
+> Sent: 06 September 2020 19:36
+> Hi,
+> 
+> Le 06/09/2020 à 20:21, Pavel Machek a écrit :
+> > Hi!
+> >
+> >>>> Christophe reported a major speedup due to avoiding the iov_iter
+> >>>> overhead, so just add this trivial function.  Note that /dev/zero
+> >>>> already implements both an iter and non-iter writes so this just
+> >>>> makes it more symmetric.
+> >>>>
+> >>>> Christophe Leroy <christophe.leroy@csgroup.eu>
+> >>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> >>>
+> >>> Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> >>
+> >> Any idea what has happened to make the 'iter' version so bad?
+> >
+> > Exactly. Also it would be nice to note how the speedup was measured
+> > and what the speedup is.
+> >
+> 
+> Was measured on an 8xx powerpc running at 132MHz with:
+> 
+> 	dd if=/dev/zero of=/dev/null count=1M
+> 
+> With the patch, dd displays a throughput of 113.5MB/s
+> Without the patch it is 99.9MB/s
 
-syzbot found the following issue on:
+That in itself isn't a problem.
+What was the throughput before any of these patches?
 
-HEAD commit:    59126901 Merge tag 'perf-tools-fixes-for-v5.9-2020-09-03' ..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11221b5d900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=424f7b15245b9615f293
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+I just remember another thread about the same test running
+a lot slower after one of the related changes.
+While this speeds up read /dev/zero (which is uncommon)
+if this is needed to get near the old performance then
+the changes to the 'iter' code will affect real workloads.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+	David
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+424f7b15245b9615f293@syzkaller.appspotmail.com
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-WARNING: can't access registers at asm_common_interrupt+0x1e/0x40 arch/x86/include/asm/idtentry.h:572
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
