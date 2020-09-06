@@ -2,177 +2,178 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666DCC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 01:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3800DC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 02:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07DFE2078D
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 01:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB3942086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 02:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="lSrJiiZR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELRE9Pz+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbgIFBS3 (ORCPT
+        id S1728825AbgIFCSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 5 Sep 2020 21:18:29 -0400
-Received: from mail-mw2nam10on2041.outbound.protection.outlook.com ([40.107.94.41]:44000
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728409AbgIFBS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 5 Sep 2020 21:18:26 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c3W0c49KMdZFRBVafm/KLI8Hs+ig69K41ZzX8j/DTPKYa+fe/VREDnmQ29ziySG9DflFLCgUUS5b+exJUknfoaEUPC34ejsqQMAcbkXk14qGsIgUI6EWXl+N+BS8sT+KFqvtdvp37rK4iEk5v7xmWrjQmugRaDx1eWtZ9S43cuubQgxTdFlRf9N6ITBuIY07C7rMLRGXoaRpSd6tt6XF6tfC0p9htjPgui/j2IAl8O74WiVd/RG5g9LSjsEl4mK3xbZj0JNsnk34K3SVnfVMx6RUQyAAgPbkLL6tQrM5JsewfuExPtMb+VoZMLP0Du7DS8Vu1Qmy2aX4EoaOCYqUoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2cWYuSdJofaQYt75nidga/cw/85dyMEIU9Aj1hCzcg=;
- b=ZsRcXj1nFZRR/l6l1bvmTBnaXohvyks05Z86HdM4R/hO2p8V2j8fk7DZ2hIkZSQJSuPSPatKqdPNXQPD5lunLX74KzbYabf7KFw2vjjPTpBZJ+lJqNC6jVes42Pt17vfqsWyNo8lYQSudiEYbTsOFjXHv9AcPYOxCH9W9BKdFPxMSIr3cEz6Y2TcMx4U+0QvX4ROFXBW3/0ohGnvLEkAdIy4Q1IM4CaybezPAymqf4PL5wk6WnfoJ7Wx42Ck4Rpt5IKZ3irQ4UTnRaVHeUMREvDmOCG3M5cjhjrif0tSxhgvgUrx+yfsCS+rW9kuogtYBwooMZ7vOA6VqRu+KciOOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=sina.com smtp.mailfrom=srdcmail.amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
+        Sat, 5 Sep 2020 22:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbgIFCSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 5 Sep 2020 22:18:13 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0179AC061573
+        for <linux-kernel@vger.kernel.org>; Sat,  5 Sep 2020 19:18:12 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k25so12144402ljg.9
+        for <linux-kernel@vger.kernel.org>; Sat, 05 Sep 2020 19:18:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H2cWYuSdJofaQYt75nidga/cw/85dyMEIU9Aj1hCzcg=;
- b=lSrJiiZRo5oAVM3VVBA0cahoMhThdPD8YGMd2in7PRx2yYeaGAW6+0N0isByzpXk4ECu+3d+sFRBhB/6+GoExUelN4X5fqCn93Eo1ePyoV+OLHOA6RNowNXRBENIXzG5ICtv8wX9vWRcW8A/slIFU8iz1iITV38uR0504f3KWUI=
-Received: from DM5PR18CA0056.namprd18.prod.outlook.com (2603:10b6:3:22::18) by
- BY5PR12MB4100.namprd12.prod.outlook.com (2603:10b6:a03:200::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Sun, 6 Sep
- 2020 01:18:22 +0000
-Received: from DM6NAM11FT037.eop-nam11.prod.protection.outlook.com
- (2603:10b6:3:22:cafe::d6) by DM5PR18CA0056.outlook.office365.com
- (2603:10b6:3:22::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
- Transport; Sun, 6 Sep 2020 01:18:21 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=srdcmail.amd.com; sina.com; dkim=none (message not signed)
- header.d=none;sina.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: srdcmail.amd.com does not
- designate permitted sender hosts)
-Received: from SATLEXMB02.amd.com (165.204.84.17) by
- DM6NAM11FT037.mail.protection.outlook.com (10.13.172.122) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.3326.19 via Frontend Transport; Sun, 6 Sep 2020 01:18:20 +0000
-Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sat, 5 Sep 2020
- 20:18:20 -0500
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB05.amd.com
- (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Sat, 5 Sep 2020
- 20:18:19 -0500
-Received: from atlvmail01.amd.com (10.180.10.61) by SATLEXMB02.amd.com
- (10.181.40.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3 via Frontend
- Transport; Sat, 5 Sep 2020 20:18:19 -0500
-Received: from srdcmail.amd.com (srdcmail.amd.com [10.237.16.23])
-        by atlvmail01.amd.com (8.14.4/8.14.4) with ESMTP id 0861IF2F006359;
-        Sat, 5 Sep 2020 21:18:16 -0400
-Received: from srdcws1054.amd.com (srdcws1054.amd.com [10.66.16.34])
-        by srdcmail.amd.com (8.13.8/8.13.8) with ESMTP id 0861IErh010230;
-        Sun, 6 Sep 2020 09:18:14 +0800
-Received: (from weisheng@localhost)
-        by srdcws1054.amd.com (8.14.7/8.14.7/Submit) id 0861I97R022681;
-        Sun, 6 Sep 2020 09:18:09 +0800
-From:   Wesley Sheng <wesley.sheng@amd.com>
-To:     <joro@8bytes.com>, <iommu@lists.linux-foundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <wesleyshenggit@sina.com>, Wesley Sheng <wesley.sheng@amd.com>
-Subject: [PATCH] iommu/amd: Add prefetch iommu pages command build function
-Date:   Sun, 6 Sep 2020 09:18:08 +0800
-Message-ID: <20200906011808.22614-1-wesley.sheng@amd.com>
-X-Mailer: git-send-email 2.16.2
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JdEr7JFS+a6fS1u7tJOC/cfmSODhMrg80KdXF9LDMpQ=;
+        b=ELRE9Pz+/SWe5t3Fm1Fp9kkPikm4XFONxDCM3ctX1GcDCwx0ASgx0lP3wpzBwIaPlr
+         SjLbrjECpSc0hOotuWXphZyCDda2i4kRqoC6Q2xlcVhlorYzQdbbfL5NrtVEwAtSLRVY
+         Jm0EOgZRQZdTHCjQE8c4WB+yyBlTX7wxer8ZrS7PRhs1BxRdic2p2Bwx09ir3IDCz8YS
+         QomIsTNOBSepP4M+8FA1H3i/JWYR6aDBSqj9SWjBvF4GRGr6KPc3Ndi1AR/bLSNGsetr
+         dnwO3vGm6sgPB6tzWOQ10k7XXrtSZWZ2FeWlAkauxgIa83nu+xtdpcfTveCkwbOcy36f
+         OtwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JdEr7JFS+a6fS1u7tJOC/cfmSODhMrg80KdXF9LDMpQ=;
+        b=AfLhTZcVUrvWU8z6EMIcHVZ3SEpffRfm12PM+yut4Y8UHs4OjjRcrnjUytSEHxcs/0
+         uJJTJ9J/Eq2mXBE8hPj1nc6nD5opY9T1ODcdMFjRt/sST1q62JnQ3MK4DYpUAVfI8owd
+         XiJnX6AeFBis3Ns47kU7CQp1GqgGScQe11JY8LhTcuDuc90EOUTu2bJKEMb+mnw556Dn
+         xOBw7+x/1EjFxRHllP1CnoZFGKbmlcC5CeQPSv9vBx/erR2aZCBqHR6V4TsIltHACwuv
+         WLJn+K6y4Z4qB2ns8or8RfPZl79UXntfAxD87bTCAeAhtBf1PrylmENbgdGQvooSBNJF
+         fh4g==
+X-Gm-Message-State: AOAM5311JE5m78/ykPWKiigK63UsShEtbm8PS2qszyfEChcmvwfKgikh
+        HgaSWT1THXxWzYk0dE7Ja2QN04n1x3IDnttShXE=
+X-Google-Smtp-Source: ABdhPJzUNT+ZZ13GPWHaRNIbDEWHJOpQLtz25rzO1CoVjdY8mtV+8esqYNwA3qszjX1sKw33vEEtVKoac6Yw0MswPrw=
+X-Received: by 2002:a05:651c:2c9:: with SMTP id f9mr6904741ljo.257.1599358688242;
+ Sat, 05 Sep 2020 19:18:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2cda10af-4bda-4ad0-da57-08d85202be39
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4100:
-X-Microsoft-Antispam-PRVS: <BY5PR12MB41001998D53DE668D8B8DE14F02B0@BY5PR12MB4100.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4yHN3FjRhWcfGUWvde3ForY9bXn2r9dP9w0ZfkUerxCD5o7xRELtSbgnLykMP5iDhKpZUokO4C5p43y8cbfHtOyFvkdplGMw8wWLu3MWqTkN9x09py2V2hd57/weZAJVaRwfuH2/9I7Vfd9feReDoStmjQmsk/ZSMEIekCFvy/MfGA6UsQOSHtcheAAdLb9i0vj2CY2BbRGldENBNNBBrmrfsN1qBCuIL9nTfTagxw+Wl4FjWn4ScUK1h7w4b1ZLJTdb8TU0nnHDFWMw/HResdUigLivvdnOl3W3FtAliRQiMfXRsbu00ywjKSreUhRt9q6l5E3UZU+ZVH20+X1EWUfTEVksOTbhQ6DxpFyEB7TiYQePGqemyTvJUO20I1rK9B80epgz2hLyzg7MffoLcg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SATLEXMB02.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966005)(36756003)(110136005)(44832011)(2616005)(54906003)(83170400001)(1076003)(4326008)(82310400003)(2906002)(336012)(47076004)(26005)(42186006)(81166007)(82740400003)(426003)(8676002)(70206006)(70586007)(5660300002)(8936002)(356005)(316002)(498600001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Sep 2020 01:18:20.6960
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cda10af-4bda-4ad0-da57-08d85202be39
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB02.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT037.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4100
+References: <1598995271-6755-1-git-send-email-jrdr.linux@gmail.com>
+ <a3b36dfa-b7bb-e69b-95d5-e7d6dd7bda3f@nvidia.com> <CAFqt6zaB_wcrUzmOJ6kQWMqdcPrENyJO4FNc_UU5z-AQQh_e3w@mail.gmail.com>
+ <4d63100c-fe60-57ad-2924-7b28dbd14c20@nvidia.com>
+In-Reply-To: <4d63100c-fe60-57ad-2924-7b28dbd14c20@nvidia.com>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Sun, 6 Sep 2020 07:47:56 +0530
+Message-ID: <CAFqt6zZ81MwsFUGgfOBG57p=4wfW=5k2RUUub3xgmKNa2cnpzA@mail.gmail.com>
+Subject: Re: [linux-next PATCH v4] drivers/virt/fsl_hypervisor: Fix error
+ handling path
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>, timur@freescale.com,
+        linux-kernel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add function to build prefetch iommu pages command
+On Sat, Sep 5, 2020 at 6:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
+>
+> On 9/4/20 6:16 PM, Souptick Joarder wrote:
+> > Hi Andrew,
+> >
+> > On Wed, Sep 2, 2020 at 3:00 AM John Hubbard <jhubbard@nvidia.com> wrote:
+> >>
+> >> On 9/1/20 2:21 PM, Souptick Joarder wrote:
+> >>> First, when memory allocation for sg_list_unaligned failed, there
+> >>> is a bug of calling put_pages() as we haven't pinned any pages.
+> >>>
+> >>> Second, if get_user_pages_fast() failed we should unpin num_pinned
+> >>> pages.
+> >>>
+> >>> This will address both.
+> >>>
+> >>> As part of these changes, minor update in documentation.
+> >>>
+> >>> Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor
+> >>> management driver")
+> >>> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> >>> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+> >>> Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> >>> ---
+> >>
+> >> This looks good to me.
+> >
+> > Can you please take this patch through the mm tree ?
+> >
+>
+> Is there a problem with sending it through it's normal tree? It would probably
+> get better testing coverage there.
 
-Signed-off-by: Wesley Sheng <wesley.sheng@amd.com>
----
- drivers/iommu/amd/amd_iommu_types.h |  2 ++
- drivers/iommu/amd/iommu.c           | 19 +++++++++++++++++++
- 2 files changed, 21 insertions(+)
+scripts/get_maintainer.pl is showing only general lkml list and few
+commit signer.
+I didn't receive any feedback from anyone except you & Dan in more
+than 12+ weeks
+and mail bounced back from actual author  Timur Tabi.
 
-diff --git a/drivers/iommu/amd/amd_iommu_types.h b/drivers/iommu/amd/amd_iommu_types.h
-index baa31cd2411c..73734a0c4679 100644
---- a/drivers/iommu/amd/amd_iommu_types.h
-+++ b/drivers/iommu/amd/amd_iommu_types.h
-@@ -173,6 +173,7 @@
- #define CMD_INV_IOMMU_PAGES	0x03
- #define CMD_INV_IOTLB_PAGES	0x04
- #define CMD_INV_IRT		0x05
-+#define CMD_PF_IOMMU_PAGES	0x06
- #define CMD_COMPLETE_PPR	0x07
- #define CMD_INV_ALL		0x08
- 
-@@ -181,6 +182,7 @@
- #define CMD_INV_IOMMU_PAGES_SIZE_MASK	0x01
- #define CMD_INV_IOMMU_PAGES_PDE_MASK	0x02
- #define CMD_INV_IOMMU_PAGES_GN_MASK	0x04
-+#define CMD_PF_IOMMU_PAGES_INV_MASK	0x10
- 
- #define PPR_STATUS_MASK			0xf
- #define PPR_STATUS_SHIFT		12
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index ba9f3dbc5b94..b3971595b0e9 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -976,6 +976,25 @@ static void build_inv_irt(struct iommu_cmd *cmd, u16 devid)
- 	CMD_SET_TYPE(cmd, CMD_INV_IRT);
- }
- 
-+static void build_pf_iommu_pages(struct iommu_cmd *cmd, u64 address,
-+					u16 devid, int pfcnt, bool size,
-+					bool inv)
-+{
-+	memset(cmd, 0, sizeof(*cmd));
-+
-+	address &= PAGE_MASK;
-+
-+	cmd->data[0]  = devid;
-+	cmd->data[0] |= (pfcnt & 0xff) << 24;
-+	cmd->data[2]  = lower_32_bits(address);
-+	cmd->data[3]  = upper_32_bits(address);
-+	if (size)
-+		cmd->data[2] |= CMD_INV_IOMMU_PAGES_SIZE_MASK;
-+	if (inv)
-+		cmd->data[2] |= CMD_PF_IOMMU_PAGES_INV_MASK;
-+	CMD_SET_TYPE(cmd, CMD_PF_IOMMU_PAGES);
-+}
-+
- /*
-  * Writes the command to the IOMMUs command buffer and informs the
-  * hardware about the new command.
--- 
-2.16.2
+As it is more than 12 weeks, I requested Andrew to take it through mm tree.
 
+Note -
+
+While running ./scripts/get_maintainer.pl, I observed one issue. Everytime I run
+the script, list is getting changed. Is it an expected behaviour ?
+
+Below is the details ->
+
+jordon@jordon-HP-15-Notebook-PC:~/Documents/virt/linux-next$
+./scripts/get_maintainer.pl
+0001-drivers-virt-fsl_hypervisor-Fix-error-handling-path.patch
+Bjorn Andersson <bjorn.andersson@linaro.org> (commit_signer:1/1=100%)
+Daniel Vetter <daniel.vetter@ffwll.ch> (commit_signer:1/1=100%)
+Dan Williams <dan.j.williams@intel.com> (commit_signer:1/1=100%)
+"Darren Hart (VMware)" <dvhart@infradead.org> (commit_signer:1/1=100%)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:1/1=100%)
+Arnd Bergmann <arnd@arndb.de>
+(authored:1/1=100%,added_lines:1/1=100%,removed_lines:1/1=100%,blamed_fixes:1/1=100%)
+Timur Tabi <timur@freescale.com> (blamed_fixes:1/1=100%)
+Kumar Gala <galak@kernel.crashing.org> (blamed_fixes:1/1=100%)
+linux-kernel@vger.kernel.org (open list)
+
+
+jordon@jordon-HP-15-Notebook-PC:~/Documents/virt/linux-next$
+./scripts/get_maintainer.pl
+0001-drivers-virt-fsl_hypervisor-Fix-error-handling-path.patch
+Bjorn Andersson <bjorn.andersson@linaro.org> (commit_signer:1/1=100%)
+Daniel Vetter <daniel.vetter@ffwll.ch> (commit_signer:1/1=100%)
+Dan Williams <dan.j.williams@intel.com> (commit_signer:1/1=100%)
+"Darren Hart (VMware)" <dvhart@infradead.org> (commit_signer:1/1=100%)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:1/1=100%)
+Arnd Bergmann <arnd@arndb.de>
+(authored:1/1=100%,added_lines:1/1=100%,removed_lines:1/1=100%,blamed_fixes:1/1=100%)
+Timur Tabi <timur@freescale.com> (blamed_fixes:1/1=100%)
+Kumar Gala <galak@kernel.crashing.org> (blamed_fixes:1/1=100%)
+linux-kernel@vger.kernel.org (open list)
+
+
+jordon@jordon-HP-15-Notebook-PC:~/Documents/virt/linux-next$
+./scripts/get_maintainer.pl
+0001-drivers-virt-fsl_hypervisor-Fix-error-handling-path.patch
+Bjorn Andersson <bjorn.andersson@linaro.org> (commit_signer:1/1=100%)
+Daniel Vetter <daniel.vetter@ffwll.ch> (commit_signer:1/1=100%)
+Dan Williams <dan.j.williams@intel.com> (commit_signer:1/1=100%)
+"Darren Hart (VMware)" <dvhart@infradead.org> (commit_signer:1/1=100%)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:1/1=100%)
+Arnd Bergmann <arnd@arndb.de>
+(authored:1/1=100%,added_lines:1/1=100%,removed_lines:1/1=100%,blamed_fixes:1/1=100%)
+Timur Tabi <timur@freescale.com> (blamed_fixes:1/1=100%)
+Kumar Gala <galak@kernel.crashing.org> (blamed_fixes:1/1=100%)
+linux-kernel@vger.kernel.org (open list)
+
+
+>
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
