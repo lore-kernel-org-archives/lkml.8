@@ -2,205 +2,121 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9E1C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C488AC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D960C20714
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599401230;
-	bh=rng+NuRPujUaWXAY59vmPkfS7pvUhDwfWyJ3A9Yj8j8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XPI0ItNNl1B9RPCCQzAgakP8Exkr3Eo3tud1QWbqGJFpvR68rdTfN1jYtLJrzghw2
-	 2D6KIV/Fd9CWpmJ6KZ481aNn1y6XluiVZgis/pvheL+h/JMoQDBKksiFSPqJT2SfeK
-	 HK4Pm8MoGAH9dRoQHiipjsbGrcwf1wkcvV9kShOY=
+	by mail.kernel.org (Postfix) with ESMTP id 859C220760
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:14:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgIFOG4 (ORCPT
+        id S1728895AbgIFONO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 10:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728807AbgIFOGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:06:45 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 738EE20714;
-        Sun,  6 Sep 2020 14:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599401204;
-        bh=rng+NuRPujUaWXAY59vmPkfS7pvUhDwfWyJ3A9Yj8j8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QgnNNWIKMeaEYMb9w1/Lx0ZROYZUqq14DNlM395WAKaQ29NtQ868Ov0Lo9kQsbNIH
-         9iUsUlev6FXrdl6elE6KBWwmopVo37d61nHUUtJHvjny9L+degc3VkgLSZizPaYmHh
-         MumKfYonEz8HIzZVkahClWPiViw2xnQkJCmobbHU=
-Date:   Sun, 6 Sep 2020 15:06:40 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 1/2] MAINTAINERS: Consolidate Analog Devices IIO
- entries and remove Beniamin Bia
-Message-ID: <20200906150640.5ffe7e0f@archlinux>
-In-Reply-To: <20200903181926.5606-1-krzk@kernel.org>
-References: <20200903181926.5606-1-krzk@kernel.org>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Sep 2020 10:13:14 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:38470 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726931AbgIFOMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 10:12:10 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Sun, 6 Sep 2020 07:12:04 -0700
+Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id B392B408D4;
+        Sun,  6 Sep 2020 07:12:03 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>
+CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <peterx@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <vsirnapalli@vmware.com>, <akaher@vmware.com>
+Subject: [PATCH v5.4.y 1/3] vfio/type1: Support faulting PFNMAP vmas
+Date:   Sun, 6 Sep 2020 19:37:54 +0530
+Message-ID: <1599401277-32172-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  3 Sep 2020 20:19:25 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-> Emails to Beniamin Bia bounce with no such address so remove him from
-> maintainers.  After this removal, many entries for Analog Devices Inc
-> IIO drivers look exactly the same so consolidate them.
-> 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: linux-iio <linux-iio@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
 
-As I'd assume a more specific binding always overrides a catch all,
-this has the effect of giving Lars and Michael responsibility
-for a few things they didn't previously cover.  If the two
-of them are fine with it, than that's good, but I'd ideally
-like an Ack from Lars.
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-(we have an indirect one from Michael via Alexandru).
-
-Jonathan
-
-
-> 
-> ---
-> 
-> Changes since v2:
-> 1. Use wildcard for dt-bindings,
-> 2. Add Andy's review.
-> 
-> Changes since v1:
-> 1. Consolidate IIO entries
-> ---
->  MAINTAINERS | 55 +++--------------------------------------------------
->  1 file changed, 3 insertions(+), 52 deletions(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 8107b3d5d6df..4a120aec90a2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -950,38 +950,6 @@ S:	Supported
->  F:	arch/arm64/boot/dts/amd/amd-seattle-xgbe*.dtsi
->  F:	drivers/net/ethernet/amd/xgbe/
->  
-> -ANALOG DEVICES INC AD5686 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-pm@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	drivers/iio/dac/ad5686*
-> -F:	drivers/iio/dac/ad5696*
-> -
-> -ANALOG DEVICES INC AD5758 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
-> -F:	drivers/iio/dac/ad5758.c
-> -
-> -ANALOG DEVICES INC AD7091R5 DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7091r5.yaml
-> -F:	drivers/iio/adc/ad7091r5.c
-> -
-> -ANALOG DEVICES INC AD7124 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> -F:	drivers/iio/adc/ad7124.c
-> -
->  ANALOG DEVICES INC AD7192 DRIVER
->  M:	Alexandru Tachici <alexandru.tachici@analog.com>
->  L:	linux-iio@vger.kernel.org
-> @@ -998,15 +966,6 @@ W:	http://ez.analog.com/community/linux-device-drivers
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
->  F:	drivers/iio/adc/ad7292.c
->  
-> -ANALOG DEVICES INC AD7606 DRIVER
-> -M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
-> -F:	drivers/iio/adc/ad7606.c
-> -
->  ANALOG DEVICES INC AD7768-1 DRIVER
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
->  L:	linux-iio@vger.kernel.org
-> @@ -1068,7 +1027,6 @@ F:	drivers/iio/imu/adis16475.c
->  F:	Documentation/devicetree/bindings/iio/imu/adi,adis16475.yaml
->  
->  ANALOG DEVICES INC ADM1177 DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Supported
-> @@ -1135,15 +1093,6 @@ S:	Supported
->  W:	http://ez.analog.com/community/linux-device-drivers
->  F:	drivers/dma/dma-axi-dmac.c
->  
-> -ANALOG DEVICES INC HMC425A DRIVER
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
-> -M:	Michael Hennerich <michael.hennerich@analog.com>
-> -L:	linux-iio@vger.kernel.org
-> -S:	Supported
-> -W:	http://ez.analog.com/community/linux-device-drivers
-> -F:	Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> -F:	drivers/iio/amplifiers/hmc425a.c
-> -
->  ANALOG DEVICES INC IIO DRIVERS
->  M:	Lars-Peter Clausen <lars@metafoo.de>
->  M:	Michael Hennerich <Michael.Hennerich@analog.com>
-> @@ -1152,8 +1101,11 @@ W:	http://wiki.analog.com/
->  W:	http://ez.analog.com/community/linux-device-drivers
->  F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-ad9523
->  F:	Documentation/ABI/testing/sysfs-bus-iio-frequency-adf4350
-> +F:	Documentation/devicetree/bindings/iio/*/adi,*
-> +F:	Documentation/devicetree/bindings/iio/dac/ad5758.txt
->  F:	drivers/iio/*/ad*
->  F:	drivers/iio/adc/ltc249*
-> +F:	drivers/iio/amplifiers/hmc425a.c
->  F:	drivers/staging/iio/*/ad*
->  X:	drivers/iio/*/adjd*
->  
-> @@ -16537,7 +16489,6 @@ F:	drivers/staging/rtl8712/
->  
->  STAGING - SEPS525 LCD CONTROLLER DRIVERS
->  M:	Michael Hennerich <michael.hennerich@analog.com>
-> -M:	Beniamin Bia <beniamin.bia@analog.com>
->  L:	linux-fbdev@vger.kernel.org
->  S:	Supported
->  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 6cc47af..d679996 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -335,6 +335,32 @@ static int put_pfn(unsigned long pfn, int prot)
+ 	return 0;
+ }
+ 
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 			 int prot, unsigned long *pfn)
+ {
+@@ -377,12 +403,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 
+ 	vaddr = untagged_addr(vaddr);
+ 
++retry:
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
+-- 
+2.7.4
 
