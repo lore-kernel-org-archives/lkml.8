@@ -2,175 +2,82 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF0C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:40:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11AC920759
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8F120759
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599417720;
+	bh=F0mk1QO0HqDSARTtYtap/jH8rSgeDmoL5AM/fRQZRQ4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xcJK/P4yRst5hngo5Ss5rKtXr4LZQvOnlawHQy9MTgn6bjBNS/aczOwKgE5VDG49y
+	 xfdtzcYeBdKWkHddTl4oYR/Vw+IkVLoGadV4jp4lJaUvuy0UEDdYNAQZPuC/rdWJWj
+	 LxFIXqQ6hdneYTGlZm0r5XM7e0kT/dEMOdVm1oF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbgIFSkU (ORCPT
+        id S1729177AbgIFSl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 14:40:20 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:43624 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728662AbgIFSkT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 14:40:19 -0400
-Received: by mail-il1-f197.google.com with SMTP id o2so6165130ilg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 11:40:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=1f2Sd3YunverZuOxt1JS9xlSUV9YCdnCkCHzSghz9Bs=;
-        b=TcvMGND0FQOCnuLuCKaS14mWCy8razMyxnI49VGndJwFRZ+65GjZsYPcdc/1mU31KL
-         /Joh0d88ncSUA0Um58YgT7oFDyFXmJQjgCotKui+SM5hovU8YSzHDQj90gfddpzXysAZ
-         NWKx28PtWNy6zrS6nuhIGBTgUS9PZ0KwhvWGyPYXOd+3G0UtJMQ1l/Sbvj0k41x9dIZZ
-         2r6zGj1VCYrwqCKn2+PRBZ87P3VCmhw9b1l3zH7Ki4KPbx5+5mMKVdyIfRTY5NHD7PYz
-         hrLB36bly+rKUahZQ1cL3/fMtz4LlKDbH3OLeJGEWtYGyoZs6c6s8MRqLdunUSxLhdYJ
-         R4gg==
-X-Gm-Message-State: AOAM533A4HQDBGzd+uK+FGNTTMiTFObMU+fpv+i8Dz8B4pu5AbR2PDcD
-        3CEvlWa0MA5Oqa5fFKhyg+S2uGdZl1wsULub2BrI/0sTueYo
-X-Google-Smtp-Source: ABdhPJyEQVVK8mC5rOgyE48trQrd0UoJRySAu+IUr6+D7PhmWBvywPW1gC7ODdef/oodikYD8aoAv+rWIUv6CFfChaUDat+u/P3h
+        Sun, 6 Sep 2020 14:41:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728662AbgIFSlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 14:41:55 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA74120759;
+        Sun,  6 Sep 2020 18:41:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599417715;
+        bh=F0mk1QO0HqDSARTtYtap/jH8rSgeDmoL5AM/fRQZRQ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=0LSOGShtMWu6ib6qChbBeINrYqL0BHuXV4S3A8cXFMvPC3r4cwXqodmNpjK/bfSga
+         SwH969PRX7XlH6fKLz8CV8pWvYRiQ7fmhyHdgsZoOjioq8yEbq0vJF51W+oM8rskYV
+         eo9QfjUdhfviKLybhwf3bI0qIETTb8e6qlVtOMko=
+Date:   Sun, 6 Sep 2020 11:41:53 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Huazhong Tan <tanhuazhong@huawei.com>
+Cc:     <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <linuxarm@huawei.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Subject: Re: [PATCH net-next 0/2] net: two updates related to UDP GSO
+Message-ID: <20200906114153.7dccce5d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <1599286273-26553-1-git-send-email-tanhuazhong@huawei.com>
+References: <1599286273-26553-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:7785:: with SMTP id g127mr5709131jac.27.1599417617780;
- Sun, 06 Sep 2020 11:40:17 -0700 (PDT)
-Date:   Sun, 06 Sep 2020 11:40:17 -0700
-In-Reply-To: <000000000000903d5805ab908fc4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f498fd05aea96e3a@google.com>
-Subject: Re: INFO: rcu detected stall in smp_call_function
-From:   syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>
-To:     bp@alien8.de, fweisbec@gmail.com, hpa@zytor.com,
-        jpoimboe@redhat.com, linux-kernel@vger.kernel.org, mbenes@suse.cz,
-        mingo@kernel.org, mingo@redhat.com, paulmck@kernel.org,
-        peterz@infradead.org, shile.zhang@linux.alibaba.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Sat, 5 Sep 2020 14:11:11 +0800 Huazhong Tan wrote:
+> There are two updates relates to UDP GSO.
+> #1 adds a new GSO type for UDPv6
+> #2 adds check for UDP GSO when csum is disable in netdev_fix_features().
+> 
+> Changes since RFC V2:
+> - modifies the timing of setting UDP GSO type when doing UDP GRO in #1.
+> 
+> Changes since RFC V1:
+> - updates NETIF_F_GSO_LAST suggested by Willem de Bruijn.
+>   and add NETIF_F_GSO_UDPV6_L4 feature for each driver who support UDP GSO in #1.
+>   - add #2 who needs #1.
 
-HEAD commit:    dd9fb9bb Merge tags 'auxdisplay-for-linus-v5.9-rc4', 'clan..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=124893e1900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bd46548257448703
-dashboard link: https://syzkaller.appspot.com/bug?extid=cb3b69ae80afd6535b0e
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13727231900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132c9fc9900000
+Please CC people who gave you feedback (Willem). 
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com
+I don't feel good about this series. IPv6 is not optional any more.
+AFAIU you have some issues with csum support in your device? Can you
+use .ndo_features_check() to handle this?
 
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	0-....: (1 GPs behind) idle=932/1/0x4000000000000002 softirq=9344/9345 fqs=5247 
-	(detected by 1, t=10502 jiffies, g=10529, q=124891)
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 8110 Comm: syz-executor267 Not tainted 5.9.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:91 [inline]
-RIP: 0010:memory_is_nonzero mm/kasan/generic.c:108 [inline]
-RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:134 [inline]
-RIP: 0010:memory_is_poisoned mm/kasan/generic.c:165 [inline]
-RIP: 0010:check_memory_region_inline mm/kasan/generic.c:183 [inline]
-RIP: 0010:check_memory_region+0xdb/0x180 mm/kasan/generic.c:192
-Code: 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 48 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 <80> 38 00 74 f2 eb d4 41 bc 08 00 00 00 48 89 ea 45 29 dc 4d 8d 1c
-RSP: 0018:ffffc90000007090 EFLAGS: 00000086
-RAX: fffff52000000e30 RBX: fffff52000000e3c RCX: ffffffff81339c7a
-RDX: fffff52000000e3c RSI: 0000000000000060 RDI: ffffc90000007180
-RBP: fffff52000000e30 R08: 0000000000000001 R09: ffffc900000071df
-R10: fffff52000000e3b R11: 0000000000000001 R12: 0000000000000060
-R13: 0000000000000000 R14: 000000000000007f R15: ffffc90000007180
-FS:  0000000000cf9880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000000008319c CR3: 000000009f579000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- memset+0x20/0x40 mm/kasan/common.c:84
- memset include/linux/string.h:391 [inline]
- __unwind_start+0x2a/0x800 arch/x86/kernel/unwind_orc.c:630
- unwind_start arch/x86/include/asm/unwind.h:60 [inline]
- perf_callchain_kernel+0x2f0/0x6a0 arch/x86/events/core.c:2447
- get_perf_callchain+0x16e/0x620 kernel/events/callchain.c:200
- perf_callchain+0x165/0x1c0 kernel/events/core.c:6985
- perf_prepare_sample+0x8fd/0x1d40 kernel/events/core.c:7012
- __perf_event_output kernel/events/core.c:7170 [inline]
- perf_event_output_forward+0xf3/0x270 kernel/events/core.c:7190
- __perf_event_overflow+0x13c/0x370 kernel/events/core.c:8845
- perf_swevent_overflow kernel/events/core.c:8921 [inline]
- perf_swevent_event+0x347/0x550 kernel/events/core.c:8949
- perf_tp_event+0x2e4/0xb50 kernel/events/core.c:9377
- perf_trace_run_bpf_submit+0x11c/0x200 kernel/events/core.c:9351
- perf_trace_preemptirq_template+0x289/0x440 include/trace/events/preemptirq.h:14
- trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
- trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
- trace_hardirqs_on+0x18a/0x220 kernel/trace/trace_preemptirq.c:44
- asm_sysvec_irq_work+0x12/0x20 arch/x86/include/asm/idtentry.h:611
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
-RIP: 0010:rcu_read_unlock_special kernel/rcu/tree_plugin.h:630 [inline]
-RIP: 0010:__rcu_read_unlock+0x26e/0x530 kernel/rcu/tree_plugin.h:395
-Code: ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 a3 02 00 00 48 83 3d d5 9c 54 08 00 0f 84 18 02 00 00 4c 89 e7 57 9d <0f> 1f 44 00 00 e9 07 fe ff ff 0f 0b e9 41 fe ff ff e8 5c b1 52 00
-RSP: 0018:ffffc90000007b40 EFLAGS: 00000282
-RAX: 1ffffffff136c789 RBX: ffffffff89bd9a80 RCX: 0000000000000002
-RDX: dffffc0000000000 RSI: 0000000000000101 RDI: 0000000000000282
-RBP: 0000000000000001 R08: 0000000000000001 R09: ffffffff8c5f4a97
-R10: fffffbfff18be952 R11: 0000000000000001 R12: 0000000000000282
-R13: 0000000000000200 R14: ffff8880ae636c00 R15: 0000000000000000
- rcu_read_unlock include/linux/rcupdate.h:687 [inline]
- mld_sendpack+0x742/0xdb0 net/ipv6/mcast.c:1690
- mld_send_initial_cr.part.0+0x106/0x150 net/ipv6/mcast.c:2096
- mld_send_initial_cr net/ipv6/mcast.c:1191 [inline]
- mld_dad_timer_expire+0x1c7/0x6a0 net/ipv6/mcast.c:2115
- call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
- expire_timers kernel/time/timer.c:1458 [inline]
- __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
- __run_timers kernel/time/timer.c:1736 [inline]
- run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
- __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:393 [inline]
- __irq_exit_rcu kernel/softirq.c:423 [inline]
- irq_exit_rcu+0x235/0x280 kernel/softirq.c:435
- sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
-RIP: 0010:generic_exec_single+0x2b6/0x430 kernel/smp.c:172
-Code: 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 2d 01 00 00 48 83 3d 82 fd 4c 08 00 0f 84 f3 00 00 00 e8 2f 0c 0b 00 48 89 df 57 9d <0f> 1f 44 00 00 45 31 e4 e9 34 fe ff ff e8 18 0c 0b 00 0f 0b e9 95
-RSP: 0018:ffffc90009cbfb08 EFLAGS: 00000293
-RAX: 0000000000000000 RBX: 0000000000000293 RCX: 0000000000000006
-RDX: ffff88809054a380 RSI: ffffffff81693ed1 RDI: 0000000000000293
-RBP: 0000000000000200 R08: 0000000000000001 R09: ffffffff8c5f4ab7
-R10: fffffbfff18be956 R11: 0000000000000001 R12: ffffc90009cbfb80
-R13: ffffffff818dc1d0 R14: ffffc90009cbfc48 R15: 1ffff92001397f9e
- smp_call_function_single+0x186/0x4f0 kernel/smp.c:379
- task_function_call+0xd7/0x160 kernel/events/core.c:116
- perf_install_in_context+0x2cb/0x550 kernel/events/core.c:2895
- __do_sys_perf_event_open+0x1c31/0x2cb0 kernel/events/core.c:11992
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x443f79
-Code: e8 2c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffe1fb0778 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443f79
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000100
-RBP: 000000000008319c R08: 0000000000000000 R09: 0000000100000009
-R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000404da0 R14: 0000000000000000 R15: 0000000000000000
-INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
+The change in semantics of NETIF_F_GSO_UDP_L4 from "v4 and v6" to 
+"just v4" can trip people over; this is not a new feature people 
+may be depending on the current semantics.
 
+Willem, what are your thoughts on this?
