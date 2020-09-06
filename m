@@ -2,150 +2,84 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B3EC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 07:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF030C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 07:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92F5520759
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 07:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D502080A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 07:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599377070;
-	bh=5n5X5iUyrGJWPzvA1Tm/VVj/s2WHWZ1r8eeK/gMsjOA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fnc8wi9EQLg2czLuMHA9D2XNZ6+2Az9X4N3bWHTpdiOAJxwweQ4b+pULiDfyzYmX7
-	 3+lKVhEKD3M45loIyEHtwy3D1KhezIQcFwvvHXy22F3PaSVpNYgZdL+cGCmu9m3EVh
-	 SuNpCFO5RprFZb51lCZNNXuZbxjKfHNjJhlkb58I=
+	s=default; t=1599377825;
+	bh=OIz8h/6QwPMWXdHna/eW6akmH0aWYub1doBQ699tMNA=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=zKF3/lKWRMwDH04HIdjl6hnhiwQJ3h/UP9/18OdtFEbw0us3fXDTPCxzldfkx0io+
+	 TYuFDoAtSUcJ3N4I2MlIDlX26U8gdgdqsaR1GO2C4rJAyJx3C7MH7l/aHDfD7m4X5B
+	 Zdu8pLcXKfbsURLUV3BkNhAfHtAvZ5I3wuMxDEHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgIFHY3 (ORCPT
+        id S1726640AbgIFHhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 03:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725306AbgIFHY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 03:24:26 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF0BEC061573;
-        Sun,  6 Sep 2020 00:24:25 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id z22so13787929ejl.7;
-        Sun, 06 Sep 2020 00:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=tXMiLtKX1CVIBd5uJ7b5aMxZLokTxvClgRBNmQrzapA=;
-        b=BB6hDfiwXqMAUdNYT2xsR71INyutoDM4abdc7WssoypEC7cvIlq13DNAgHvK6T7GdY
-         Jzi/oyql1X0gJuttAMnMhJkncL8eIm3hoICztGz5SWDIDsjANRYzR53+qKT8TV6fFUko
-         vZfGQBkJ4ilgbno7HM5vmieKqDJUPnTH4bRDCjh4ee/CcuPwRMnyLKe+nHp5U4r4veiv
-         NmGKKVYRmcbdNPaw9bbszQTWGJLICm3bve0Xf87WBYOUxz8SzsZVH1ZnDyH+U9zo7eOT
-         sDrq8gvVGT6l95wy13MrqAaXbEHURodxIwpApfovElirb97TAR3S0XTlnE0u/ifw36A/
-         raTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=tXMiLtKX1CVIBd5uJ7b5aMxZLokTxvClgRBNmQrzapA=;
-        b=qZrjKkSBMBaWOjmfoJ431q8LHl+OLhU4uHSgIjQAfuVCctF/K7QdND0OUYgt4AzaFA
-         fSzAaYw9PcbomOp7nb71OCKcELvSyWilaznw1Q2d0ePHcpAGIVoN38ZKMazOVOMi59tw
-         xr/TZ4hb1aOM4lAl/AWdBpFJVhch/lmCdSSnh3hdfMR4MxVaHPqFqh6wO4wenhpVArXa
-         1MUVLA6ovwf1/1++gGli0n8KtdR5gyjE7jt2VeUIgCqTsEoVJ6tMr2WWbj5hunUmKG0r
-         F3BBETsqJgi7dqXSkIbNesPNK54tQdsAF7gsT+dX/bkQcyusTl9ap0jCOLHMCY2GL91E
-         qGAA==
-X-Gm-Message-State: AOAM532UWsh1SqS+PBiz/94b2d0QOF9lQvQ/+bhDMenR4cU+QWLAewxB
-        aN4AsoRBm8sTI93OaM3MiBk=
-X-Google-Smtp-Source: ABdhPJyMlRzN6CqTCfXWY8T1ss4MS9wwNhu1bmJ0xGkO+sRHLhAhEBA9wHjVy8Q0kgH/DWZ5Y85DcA==
-X-Received: by 2002:a17:906:a0c2:: with SMTP id bh2mr16076951ejb.493.1599377064196;
-        Sun, 06 Sep 2020 00:24:24 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id a5sm2709217edl.6.2020.09.06.00.24.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 00:24:22 -0700 (PDT)
-Date:   Sun, 6 Sep 2020 09:24:19 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 0/5] Warn on orphan section placement
-Message-ID: <20200906072419.GA886844@gmail.com>
-References: <20200902025347.2504702-1-keescook@chromium.org>
- <CAKwvOd=r8X1UeBRgYMcjUoQX_nbOEbXCQYGX6n7kMnJhGXis=Q@mail.gmail.com>
- <20200904055825.GA2779622@gmail.com>
- <202009041117.5EAC7C242@keescook>
+        Sun, 6 Sep 2020 03:37:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725306AbgIFHhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 03:37:03 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13A220759;
+        Sun,  6 Sep 2020 07:37:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599377823;
+        bh=OIz8h/6QwPMWXdHna/eW6akmH0aWYub1doBQ699tMNA=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=TkRFfgSNEQIpxJHCHwKRJ9S55Y5LL+y7CcC5JDOVSND7tZiegDhnkXieURk8rXlVa
+         izoWTZQoYsji9xcCcsAyTLpxsQzIiuf8+ecRFl6lyZ8egi/ULaLBjOFQvjhkA3yeI4
+         4lVp80fsjWHhmpge0mC8x2R6ruoYSR0ks45ARFlk=
+Date:   Sun, 6 Sep 2020 09:37:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, shuah@kernel.org,
+        patches@kernelci.org, lkft-triage@lists.linaro.org,
+        ben.hutchings@codethink.co.uk, stable@vger.kernel.org,
+        akpm@linux-foundation.org, torvalds@linux-foundation.org,
+        linux@roeck-us.net
+Subject: Re: [PATCH 5.4 00/16] 5.4.63-rc1 review
+Message-ID: <20200906073700.GA209646@kroah.com>
+References: <20200904120257.203708503@linuxfoundation.org>
+ <20200905153458.hdamqfp6eq4oyeq6@nuc.therub.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202009041117.5EAC7C242@keescook>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200905153458.hdamqfp6eq4oyeq6@nuc.therub.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Kees Cook <keescook@chromium.org> wrote:
-
-> On Fri, Sep 04, 2020 at 07:58:25AM +0200, Ingo Molnar wrote:
-> > 
-> > * Nick Desaulniers <ndesaulniers@google.com> wrote:
-> > 
-> > > On Tue, Sep 1, 2020 at 7:53 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > Hi Ingo,
-> > > >
-> > > > The ever-shortening series. ;) Here is "v7", which is just the remaining
-> > > > Makefile changes to enable orphan section warnings, now updated to
-> > > > include ld-option calls.
-> > > >
-> > > > Thanks for getting this all into -tip!
-> > > 
-> > > For the series,
-> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > 
-> > > As the recent ppc vdso boogaloo exposed, what about the vdsos?
-> > > * arch/x86/entry/vdso/Makefile
-> > > * arch/arm/vdso/Makefile
-> > > * arch/arm64/kernel/vdso/Makefile
-> > > * arch/arm64/kernel/vdso32/Makefile
-> > 
-> > Kees, will these patches DTRT for the vDSO builds? I will be unable to test 
-> > these patches on that old system until tomorrow the earliest.
+On Sat, Sep 05, 2020 at 10:34:58AM -0500, Dan Rue wrote:
+> On Fri, Sep 04, 2020 at 03:29:53PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.4.63 release.
+> > There are 16 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > 
-> I would like to see VDSO done next, but it's entirely separate from
-> this series. This series only touches the core kernel build (i.e. via the
-> interactions with scripts/link-vmlinux.sh) or the boot stubs. So there
-> is no impact on VDSO linking.
+> Sorry for the delay - we are short handed this weekend and I got
+> confused looking at results yesterday and thought we had a systems
+> problem. In fact, the problem was that tags/releases weren't pushed to
+> stable-rc which split-brains our results and I just forgot about that
+> possibility. Is it possible on your side to automate updating the
+> stable-rc repo when you publish a stable release?
 
-Great!
+Yes, I need to do that, sorry.  Will work on that this week...
 
-I also double checked that things still build fine with ancient LD.
-
-> > I'm keeping these latest changes in WIP.core/build for now.
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 > 
-> They should be safe to land in -next, which is important so we can shake
-> out any other sneaky sections that all our existing testing hasn't
-> found. :)
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-OK, cool - I've graduated them over into tip:core/build. :-)
+THanks for testing both of these, and sorry it crossed a weekend.
 
-Thanks,
-
-	Ingo
+greg k-h
