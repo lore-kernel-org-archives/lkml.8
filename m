@@ -2,90 +2,84 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E53A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99211C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F8932078E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:34:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="h2y5++3x"
+	by mail.kernel.org (Postfix) with ESMTP id 626B12078E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbgIFVeY (ORCPT
+        id S1726651AbgIFVkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:34:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgIFVeV (ORCPT
+        Sun, 6 Sep 2020 17:40:10 -0400
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33116 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726292AbgIFVkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:34:21 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C50C061573;
-        Sun,  6 Sep 2020 14:34:20 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bl4Rk44RKz9sSn;
-        Mon,  7 Sep 2020 07:34:10 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599428050;
-        bh=LVae7uBqBlhwsBI4H2pMKvqBdC6VZDlD7oXj1pVtqso=;
-        h=Date:From:To:Cc:Subject:From;
-        b=h2y5++3xKtXtWC3fLP1ZsqetZHKS0Ey5v7A/gfNlaMO04xPLrF9fwv+nTxom5FLG+
-         2sWbYV2NMbjYp0TBU/HrJ8tY9ihVlE4buBksHKakllgpsn8PYkVskLTaNFi43XXBXL
-         u2SJv9OZ9ewUZ0ngfQ8YdqRgOU+lBNX79hfYqduvDxBBlamSbPu+x3T6QuRlSA24sc
-         RUHXqeWtyCXKztIrgcHvicf5I27XzFAye3pBwXA0hDqtCE4097ZNnRelMwqr7How2e
-         0DOpfSk4Em3zP7Lfv9RrMZE6eV7aKFGDoN1ggFtVRmF8OGCQA/xqCfLfOID7O43Isw
-         Rp8nfSZEWCUkg==
-Date:   Mon, 7 Sep 2020 07:34:09 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the imx-mxs tree
-Message-ID: <20200907073409.622c6287@canb.auug.org.au>
+        Sun, 6 Sep 2020 17:40:09 -0400
+Received: from dread.disaster.area (pa49-195-191-192.pa.nsw.optusnet.com.au [49.195.191.192])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DC6FE824631;
+        Mon,  7 Sep 2020 07:40:03 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1kF2OI-0006n6-R9; Mon, 07 Sep 2020 07:40:02 +1000
+Date:   Mon, 7 Sep 2020 07:40:02 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ira.weiny@intel.com, linux-xfs@vger.kernel.org, y-goto@fujitsu.com
+Subject: Re: [PATCH v2] fs: Handle I_DONTCACHE in iput_final() instead of
+ generic_drop_inode()
+Message-ID: <20200906214002.GI12131@dread.disaster.area>
+References: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/JL2+ZEX9=TSdphYJlMdwa.a";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=IuRgj43g c=1 sm=1 tr=0 cx=a_idp_d
+        a=vvDRHhr1aDYKXl+H6jx2TA==:117 a=vvDRHhr1aDYKXl+H6jx2TA==:17
+        a=kj9zAlcOel0A:10 a=reM5J-MqmosA:10 a=VwQbUJbxAAAA:8 a=omOdbC7AAAAA:8
+        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=CYq8bQpZl3HkxBxCX-sA:9
+        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=baC4JDFNLZpnPwus_NF9:22
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/JL2+ZEX9=TSdphYJlMdwa.a
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Sep 04, 2020 at 03:59:39PM +0800, Hao Li wrote:
+> If generic_drop_inode() returns true, it means iput_final() can evict
+> this inode regardless of whether it is dirty or not. If we check
+> I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
+> evicted unconditionally. This is not the desired behavior because
+> I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
+> As for whether we need to evict this inode, this is what
+> generic_drop_inode() should do. This patch corrects the usage of
+> I_DONTCACHE.
+> 
+> This patch was proposed in [1].
+> 
+> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
+> 
+> Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
+> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> ---
+> Changes in v2:
+>  - Adjust code format
+>  - Add Fixes tag in commit message
+> 
+>  fs/inode.c         | 4 +++-
+>  include/linux/fs.h | 3 +--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 
-Hi all,
+Looks good.
 
-Commit
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 
-  0f7242be58fe ("clk: imx: fix composite peripheral flags")
-
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/JL2+ZEX9=TSdphYJlMdwa.a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9VVdEACgkQAVBC80lX
-0GybMAf/bF1Vv54wrq/vgkTnzmYfyiTJCo5LuATbGbOs9U1ZJaXpsCLRlwkUlcw5
-mL8GR7p4TX/3C51wE5oepEwIX6fdoncl0jp57/C/OVtHqSukCVXP3NG+W8sEzfoj
-E+yCtQuUXG/xaxwICf572k0pq3uIzv7bYH5WvNZMlJYU0KNii7nMIb0iRBPD+AB3
-SA8MSrBYmKfqJg2++5JK59FS9C1KfS+7u1oKottT7C/MnB6nsaaFPb/SPuNn4JiN
-EZPckDixhPATgsUBoiA5y6z4thejj5Txdx9pajAHVZZXi3vbHTQB8oSAMz9HTQLC
-pq1gjZKmxwimIA6O90q5qVVy3Ov7ww==
-=3lRe
------END PGP SIGNATURE-----
-
---Sig_/JL2+ZEX9=TSdphYJlMdwa.a--
+-- 
+Dave Chinner
+david@fromorbit.com
