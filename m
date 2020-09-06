@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595BFC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8D5C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16DCA2078E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334382078E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fleSVtUe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FS2VnZXq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbgIFVcE (ORCPT
+        id S1726674AbgIFVb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:32:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        Sun, 6 Sep 2020 17:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgIFVbb (ORCPT
+        with ESMTP id S1726292AbgIFVbU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:31:31 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FC4C061573;
-        Sun,  6 Sep 2020 14:31:30 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id g4so13442616wrs.5;
-        Sun, 06 Sep 2020 14:31:30 -0700 (PDT)
+        Sun, 6 Sep 2020 17:31:20 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA496C061573;
+        Sun,  6 Sep 2020 14:31:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id m6so13466909wrn.0;
+        Sun, 06 Sep 2020 14:31:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DEC8PJlCIjZe2oNZUo4hox8hc523aUy/mjYv1Nt562c=;
-        b=fleSVtUepeTGNXQF6jmWY7QTy2zHj9wkcKr0XnJFIp7kg4P/1ytA+0ZNon5JBOOrqa
-         94WYYkHFnio7sM0VaIyzCCRS1jGIKYp/aqGV36PSM3gtb68IdKsXaJT1dub7fL383TXQ
-         oL1bok0EFo2hcZxZ8bsz90jjggnfzu4cJhRmEuz0xig4qiCd10YLmGVb2CLscdnoFkLy
-         PEamRQl85UQLNSfZDPvl/2CVj+Zi77f4wYgWpwlJKg3wza52s0pFpyQdpAT63U1ZOtp/
-         FOncWyuvDKVnT3nDpk5Ba/Ka/k6M28NTFVjN3B3vWiIMHI4fJaKgS068qmvQrKLFlaP8
-         GERA==
+        bh=bpGLyTGFFFsvy7eUvf4p2N7aeZs8Bgtl+St8PzvtoYc=;
+        b=FS2VnZXqEK4soyQQqvVkielSnrBCZiDdtsGJHVCo3ElxbgBDSfgp+1Kc4U10jLfGvG
+         G9suTjVALZ+Bmkt9qh5aQToqNXhqunB9Or47SbkUrpC5orSTckt6b0YMv6NK97gan7B9
+         Dqvg/EC21qqeA7u3hrFLnX7xFZqU1Z3KUO6iCPy25DGY6826Z/N6VLQyVEesyIYVauxy
+         5kiEP1T8+d0X/rBYdlxSmZqS3eIycoWl2J42pUnP3MyKkTOC6e9ratgW5eOEYhwx1e7v
+         0uhwA+R0xcf+ARAiwviEMSs6fST+df++DNXW4KwumoMO64sI7xEKTh1kTLc5QtllfWlO
+         oL8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DEC8PJlCIjZe2oNZUo4hox8hc523aUy/mjYv1Nt562c=;
-        b=kqOEiVyOFvzMFyvXfOAIBQGr9WNd1F4xkUt0ZgjZEldi9/ITIrlaqO8Sg45KD1sKZf
-         ZMeQp8MbVSBWD8P2vARbLKXd/rxkUXNsMwnDeuIWctN5UfLGswZVBm9byTfbWT/s+hjW
-         BzlAGz+/s9FArqWZSTeV8GFHskDtf2yBY8h3StwKyPv2uG4crtWb0RBmJX8nEfyCDVid
-         N8lIwOy9PCSNNHQ9uz/kInG6rAY2rSs2+aaPm7nJvoAIu+d4bzFaGRqzdzcRYzJD9ytx
-         8G0foaLUQ8YMlR2jQ1MAwbz1QHTYwSUgjOaOKgTxZ/l1hLy5NAiltfapQ1ByFfm8qxsO
-         xppw==
-X-Gm-Message-State: AOAM530Ik0R6uSd6riYMEIcLwqCE836+HI0NXnPnpTMjoIYvj1OZ3LLL
-        9s2RmkZkAjaz2UAP0Zu7Fd8=
-X-Google-Smtp-Source: ABdhPJx2aDzBVfIMtORJ5PfT9WIqiVUuF0mIif962+Q4biGEAEpKnEe4ZQ/q1ojlQ3YAhqSLX5CuDQ==
-X-Received: by 2002:adf:8b8c:: with SMTP id o12mr18191431wra.353.1599427889412;
-        Sun, 06 Sep 2020 14:31:29 -0700 (PDT)
+        bh=bpGLyTGFFFsvy7eUvf4p2N7aeZs8Bgtl+St8PzvtoYc=;
+        b=qGY6tOZ/kr4ZS/RL/slyI1lq9MhacWXXxBQ70qEn31HkQKW5GVsZpk8ryuNb4F3Ntw
+         nbuDEKmncKDXGd90k+viMkdNxbOA//GVsXovJMlCvlwTpLI91hhS7wxoFmlcdSEODOU6
+         qUoaS2yJ63ts/xsI9kCrYgVwFL+Qf3oHVi+C+Iqt5tkxxRc6sfaero6AWDwq36BTse4v
+         b2ls/iA6bYh0Wr70+3IC3tBviG3AONnGAA035cXRgPhPeZTdpOwb1JufMkB+so5DUmxK
+         UhPe+/VY74Pl2yU5DaVQG96sPMZdm+R04dc0iVkpttB4fQwlMhx87go33zRPQW0S8kWg
+         vuOA==
+X-Gm-Message-State: AOAM533C2zgblzyX3I+fe7O0dt2TbY3joNMGVXFtF7fpsHgQ7Ifj3rKT
+        ZP30DKZQsIdNHR1+Nt1KC3Y=
+X-Google-Smtp-Source: ABdhPJx7z/S1YEZ5s0b0cxZIJrCnPHM1XlAwwVpdwEA4SaFyDEZf1DIKbczibKcM1LKyzLdrNnZniQ==
+X-Received: by 2002:adf:b101:: with SMTP id l1mr9964102wra.96.1599427878710;
+        Sun, 06 Sep 2020 14:31:18 -0700 (PDT)
 Received: from localhost ([91.92.14.102])
-        by smtp.gmail.com with ESMTPSA id s5sm24764044wrm.33.2020.09.06.14.31.27
+        by smtp.gmail.com with ESMTPSA id z19sm4605033wmi.3.2020.09.06.14.31.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Sep 2020 14:31:28 -0700 (PDT)
+        Sun, 06 Sep 2020 14:31:18 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -69,9 +69,9 @@ Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         Jonathan Bakker <xc-racer2@live.ca>,
         Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
         Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH v4 6/7] power: supply: max17040: Support setting rcomp
-Date:   Mon,  7 Sep 2020 00:30:55 +0300
-Message-Id: <20200906213056.2161410-7-iskren.chernev@gmail.com>
+Subject: [PATCH v4 1/7] power: supply: max17040: Use devm_ to automate remove
+Date:   Mon,  7 Sep 2020 00:30:50 +0300
+Message-Id: <20200906213056.2161410-2-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200906213056.2161410-1-iskren.chernev@gmail.com>
 References: <20200906213056.2161410-1-iskren.chernev@gmail.com>
@@ -82,173 +82,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Maxim ModelGauge family supports fine-tuning by setting
-a compensation value (named rcomp in the docs). The value is affected by
-battery chemistry and ambient temperature.
+Two actions were performed during remove - power supply dereg and
+delayed work cleanup. Power supply dereg can be handled by using the
+devm_ version of the registration function. Work cleanup can be added as
+a devm_action.
 
-Add support for reading maxim,rcomp from DT and configuring the device
-with the supplied value. Temperature adjustment is not implemented at
-the moment, because there is no provision for receiving the ambient
-temperature at the moment.
+If probe fails after psy registration it will now be cleaned up
+properly.
 
 Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 Tested-by: Jonathan Bakker <xc-racer2@live.ca>
 ---
- drivers/power/supply/max17040_battery.c | 40 +++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/power/supply/max17040_battery.c | 39 +++++++++++++------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 3d5003e3a277a..6ead2fded6a96 100644
+index 6cb31b9a958dd..19b9e710bbd2f 100644
 --- a/drivers/power/supply/max17040_battery.c
 +++ b/drivers/power/supply/max17040_battery.c
-@@ -30,9 +30,11 @@
- 
- #define MAX17040_DELAY		1000
- #define MAX17040_BATTERY_FULL	95
-+#define MAX17040_RCOMP_DEFAULT  0x9700
- 
- #define MAX17040_ATHD_MASK		0x3f
- #define MAX17040_ATHD_DEFAULT_POWER_UP	4
-+#define MAX17040_CFG_RCOMP_MASK		0xff00
- 
- enum chip_id {
- 	ID_MAX17040,
-@@ -52,6 +54,7 @@ struct chip_data {
- 	u16 vcell_mul;
- 	u16 vcell_div;
- 	u8  has_low_soc_alert;
-+	u8  rcomp_bytes;
- };
- 
- static struct chip_data max17040_family[] = {
-@@ -61,6 +64,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 1250,
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 0,
-+		.rcomp_bytes = 2,
- 	},
- 	[ID_MAX17041] = {
- 		.reset_val = 0x0054,
-@@ -68,6 +72,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 2500,
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 0,
-+		.rcomp_bytes = 2,
- 	},
- 	[ID_MAX17043] = {
- 		.reset_val = 0x0054,
-@@ -75,6 +80,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 1250,
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- 	[ID_MAX17044] = {
- 		.reset_val = 0x0054,
-@@ -82,6 +88,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 2500,
- 		.vcell_div = 1,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- 	[ID_MAX17048] = {
- 		.reset_val = 0x5400,
-@@ -89,6 +96,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 625,
- 		.vcell_div = 8,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- 	[ID_MAX17049] = {
- 		.reset_val = 0x5400,
-@@ -96,6 +104,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 625,
- 		.vcell_div = 4,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- 	[ID_MAX17058] = {
- 		.reset_val = 0x5400,
-@@ -103,6 +112,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 625,
- 		.vcell_div = 8,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- 	[ID_MAX17059] = {
- 		.reset_val = 0x5400,
-@@ -110,6 +120,7 @@ static struct chip_data max17040_family[] = {
- 		.vcell_mul = 625,
- 		.vcell_div = 4,
- 		.has_low_soc_alert = 1,
-+		.rcomp_bytes = 1,
- 	},
- };
- 
-@@ -129,6 +140,8 @@ struct max17040_chip {
- 	u32 low_soc_alert;
- 	/* some devices return twice the capacity */
- 	bool quirk_double_soc;
-+	/* higher 8 bits for 17043+, 16 bits for 17040,41 */
-+	u16 rcomp;
- };
- 
- static int max17040_reset(struct max17040_chip *chip)
-@@ -143,6 +156,14 @@ static int max17040_set_low_soc_alert(struct max17040_chip *chip, u32 level)
- 			MAX17040_ATHD_MASK, level);
+@@ -207,6 +207,19 @@ static void max17040_check_changes(struct i2c_client *client)
+ 	max17040_get_status(client);
  }
  
-+static int max17040_set_rcomp(struct max17040_chip *chip, u16 rcomp)
++static void max17040_queue_work(struct max17040_chip *chip)
 +{
-+	u16 mask = chip->data.rcomp_bytes == 2 ?
-+		0xffff : MAX17040_CFG_RCOMP_MASK;
-+
-+	return regmap_update_bits(chip->regmap, MAX17040_CONFIG, mask, rcomp);
++	queue_delayed_work(system_power_efficient_wq, &chip->work,
++			   MAX17040_DELAY);
 +}
 +
- static int max17040_raw_vcell_to_uvolts(struct max17040_chip *chip, u16 vcell)
++static void max17040_stop_work(void *data)
++{
++	struct max17040_chip *chip = data;
++
++	cancel_delayed_work_sync(&chip->work);
++}
++
+ static void max17040_work(struct work_struct *work)
  {
- 	struct chip_data *d = &chip->data;
-@@ -206,6 +227,10 @@ static int max17040_get_status(struct max17040_chip *chip)
- static int max17040_get_of_data(struct max17040_chip *chip)
- {
- 	struct device *dev = &chip->client->dev;
-+	struct chip_data *data = &max17040_family[
-+		(enum chip_id) of_device_get_match_data(dev)];
-+	int rcomp_len;
-+	u8 rcomp[2];
+ 	struct max17040_chip *chip;
+@@ -223,8 +236,7 @@ static void max17040_work(struct work_struct *work)
+ 	if (last_soc != chip->soc || last_status != chip->status)
+ 		power_supply_changed(chip->battery);
  
- 	chip->quirk_double_soc = device_property_read_bool(dev,
- 							   "maxim,double-soc");
-@@ -221,6 +246,19 @@ static int max17040_get_of_data(struct max17040_chip *chip)
- 		return -EINVAL;
+-	queue_delayed_work(system_power_efficient_wq, &chip->work,
+-			   MAX17040_DELAY);
++	max17040_queue_work(chip);
+ }
+ 
+ static irqreturn_t max17040_thread_handler(int id, void *dev)
+@@ -339,7 +351,7 @@ static int max17040_probe(struct i2c_client *client,
+ 	i2c_set_clientdata(client, chip);
+ 	psy_cfg.drv_data = chip;
+ 
+-	chip->battery = power_supply_register(&client->dev,
++	chip->battery = devm_power_supply_register(&client->dev,
+ 				&max17040_battery_desc, &psy_cfg);
+ 	if (IS_ERR(chip->battery)) {
+ 		dev_err(&client->dev, "failed: power supply register\n");
+@@ -368,18 +380,11 @@ static int max17040_probe(struct i2c_client *client,
  	}
  
-+	rcomp_len = device_property_count_u8(dev, "maxim,rcomp");
-+	chip->rcomp = MAX17040_RCOMP_DEFAULT;
-+	if (rcomp_len == data->rcomp_bytes) {
-+		device_property_read_u8_array(dev, "maxim,rcomp",
-+					      rcomp, rcomp_len);
-+		chip->rcomp = rcomp_len == 2 ?
-+			rcomp[0] << 8 | rcomp[1] :
-+			rcomp[0] << 8;
-+	} else if (rcomp_len > 0) {
-+		dev_err(dev, "maxim,rcomp has incorrect length\n");
-+		return -EINVAL;
-+	}
+ 	INIT_DEFERRABLE_WORK(&chip->work, max17040_work);
+-	queue_delayed_work(system_power_efficient_wq, &chip->work,
+-			   MAX17040_DELAY);
+-
+-	return 0;
+-}
+-
+-static int max17040_remove(struct i2c_client *client)
+-{
+-	struct max17040_chip *chip = i2c_get_clientdata(client);
++	ret = devm_add_action(&client->dev, max17040_stop_work, chip);
++	if (ret)
++		return ret;
++	max17040_queue_work(chip);
+ 
+-	power_supply_unregister(chip->battery);
+-	cancel_delayed_work(&chip->work);
+ 	return 0;
+ }
+ 
+@@ -403,12 +408,11 @@ static int max17040_resume(struct device *dev)
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+ 
+-	queue_delayed_work(system_power_efficient_wq, &chip->work,
+-			   MAX17040_DELAY);
+-
+ 	if (client->irq && device_may_wakeup(dev))
+ 		disable_irq_wake(client->irq);
+ 
++	max17040_queue_work(chip);
 +
  	return 0;
  }
  
-@@ -429,6 +467,8 @@ static int max17040_probe(struct i2c_client *client,
- 	if (chip_id == ID_MAX17040 || chip_id == ID_MAX17041)
- 		max17040_reset(chip);
- 
-+	max17040_set_rcomp(chip, chip->rcomp);
-+
- 	/* check interrupt */
- 	if (client->irq && chip->data.has_low_soc_alert) {
- 		ret = max17040_set_low_soc_alert(chip, chip->low_soc_alert);
+@@ -442,7 +446,6 @@ static struct i2c_driver max17040_i2c_driver = {
+ 		.pm	= MAX17040_PM_OPS,
+ 	},
+ 	.probe		= max17040_probe,
+-	.remove		= max17040_remove,
+ 	.id_table	= max17040_id,
+ };
+ module_i2c_driver(max17040_i2c_driver);
 -- 
 2.28.0
 
