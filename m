@@ -2,66 +2,91 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A444C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 16:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3F4C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 16:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3FE52075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 16:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E42920709
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 16:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599409599;
+	bh=hJp+qATOFylIa3y0vlxW2BD+WH7p8cy8K26upvnrakI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MgdyJNnGzmy0WcF72m7pbEoQTJ96PfJlGdmHuFOz+E7EYZNRBZuvhFnv78pWcdMcq
+	 yv4ZNFDhk2zP+OUcuOkbCod8sroCo4rnif3xDrv8wUaPHQatJFVuio6lxbx7o565Wr
+	 I/ze1SO7SmrdF+co0hPf/M2j7AhDaAQTMXQfMLwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgIFQWq (ORCPT
+        id S1728911AbgIFQ0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 12:22:46 -0400
-Received: from gw.c-home.cz ([89.24.150.100]:41975 "EHLO dmz.c-home.cz"
+        Sun, 6 Sep 2020 12:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726209AbgIFQW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 12:22:29 -0400
-Received: from ubuntu1804.c-home.cz (unifi.c-home.cz [192.168.1.239])
-        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 086GLocv011279;
-        Sun, 6 Sep 2020 18:21:59 +0200 (CEST)
-From:   Martin Cerveny <m.cerveny@computer.org>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Martin Cerveny <m.cerveny@computer.org>,
-        Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] drm/sun4i: mixer: Extend regmap max_register
-Date:   Sun,  6 Sep 2020 18:21:40 +0200
-Message-Id: <20200906162140.5584-3-m.cerveny@computer.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200906162140.5584-1-m.cerveny@computer.org>
-References: <20200906162140.5584-1-m.cerveny@computer.org>
+        id S1725816AbgIFQ0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 12:26:24 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C0B820709;
+        Sun,  6 Sep 2020 16:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599409583;
+        bh=hJp+qATOFylIa3y0vlxW2BD+WH7p8cy8K26upvnrakI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZGYWf5GvVkRR144ONX9qVMifl9mCy4NpoNHh9qJHRJnvQ0+OdTn2omykDa9IXuQq2
+         9lC43miWxqIbIqOWwhtjLqLOUQuC1Qp5ZgrnZQdTqYjPdfwHhMeunSHUOMKUEHtpxm
+         3c42pKtZ9tOEvusFFR+kGv8Eb2CCOaUkvhjFnqDg=
+Date:   Sun, 6 Sep 2020 09:26:21 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: Re: [PATCH net] hv_netvsc: Fix hibernation for mlx5 VF driver
+Message-ID: <20200906092621.72005293@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <KU1P153MB012097D6AA971EC957D854B2BF2B0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+References: <20200905025218.45268-1-decui@microsoft.com>
+        <20200905162712.65b886a4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        <KU1P153MB012097D6AA971EC957D854B2BF2B0@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Better guess. Secondary CSC registers are from 0xF0000.
+On Sun, 6 Sep 2020 03:05:48 +0000 Dexuan Cui wrote:
+> > > @@ -2635,6 +2632,10 @@ static int netvsc_resume(struct hv_device *dev)
+> > >  	netvsc_devinfo_put(device_info);
+> > >  	net_device_ctx->saved_netvsc_dev_info = NULL;
+> > >
+> > > +	vf_netdev = rtnl_dereference(net_device_ctx->vf_netdev);
+> > > +	if (vf_netdev && netvsc_vf_changed(vf_netdev) != NOTIFY_OK)
+> > > +		ret = -EINVAL;  
+> > 
+> > Should you perhaps remove the VF in case of the failure?  
+> IMO this failure actually should not happen since we're resuming the netvsc
+> NIC, so we're sure we have a valid pointer to the netvsc net device, and
+> netvsc_vf_changed() should be able to find the netvsc pointer and return
+> NOTIFY_OK. In case of a failure, something really bad must be happening,
+> and I'm not sure if it's safe to simply remove the VF, so I just return
+> -EINVAL for simplicity, since I believe the failure should not happen in practice.
 
-Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
----
- drivers/gpu/drm/sun4i/sun8i_mixer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Okay, I see that the errors propagated by netvsc_vf_changed() aren't
+actually coming from netvsc_switch_datapath(), so you're right. The
+failures here won't be meaningful.
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-index cc4fb916318f..c3304028e3dc 100644
---- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-@@ -307,7 +307,7 @@ static struct regmap_config sun8i_mixer_regmap_config = {
- 	.reg_bits	= 32,
- 	.val_bits	= 32,
- 	.reg_stride	= 4,
--	.max_register	= 0xbfffc, /* guessed */
-+	.max_register	= 0xffffc, /* guessed */
- };
- 
- static int sun8i_mixer_of_get_id(struct device_node *node)
--- 
-2.17.1
+> I would rather keep the code as-is, but I'm OK to add a WARN_ON(1) if you
+> think that's necessary.
 
+No need, I think core will complain when resume callback fails. That
+should be sufficient.
