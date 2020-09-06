@@ -2,161 +2,147 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157F8C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2FE42137B
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4329C214F1
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:04:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efpaYjdt"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="KOcbkH/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726476AbgIFVAq (ORCPT
+        id S1726537AbgIFVEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51858 "EHLO
+        Sun, 6 Sep 2020 17:04:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgIFVAp (ORCPT
+        with ESMTP id S1726154AbgIFVD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:00:45 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B9CAC061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 14:00:45 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id g6so5483455pjl.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 14:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=T1oB7ySbJzhXfoNWBmNgQXBWcU1mfNfTlC7+qBvtFhg=;
-        b=efpaYjdt9SVm2ywPYXlj4yrrEvq8AVqERON4d0w7DHu2Skfekh0oQMMAYAFfCMb8P1
-         h2n0esJ4V/5c0rGuu4S1EoQZOtob1qxllezT2Dri2t4Mk2PZGpmzxn5tBuTGMql9iIuh
-         axheouI4/HX4AxNdVpHqfDYP/5uaicuN7ApqaZoiaUjle/4kzSFQAUPLJKDEdpa0FgPq
-         eTtqyVJA6nrODrackky1vhZxUaA9Ox7LDC6Am2D4Ok4dKcoSzoa7Ns5WaKfnFxEXYmnv
-         79exXkd2NlQqq1dncuYZhePJifPjCqvaY+wnZQFNztNxY5lzWSbZBCNN7UmxVTyy50vI
-         BQkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=T1oB7ySbJzhXfoNWBmNgQXBWcU1mfNfTlC7+qBvtFhg=;
-        b=kmVlqi8WSTbxpSFGwBKZJwnISLdrAxHdsY25tYyZW8WA4yuie/96s3O4yMOFge1LDl
-         ECy6RM5egLHf+06K1PjCJAgHSR0HLidOhtUSuEcG5cehRDdoLULFkNj4vnkuaBTsb2vX
-         uhnqd3tq6d5JCV8Qkg2CahzRRjcdNtqRnvWYXzctX8/Inj9bluRBv4kC/nN0Ykv19Dp4
-         xvxVeNpj3+X1zqMhI4uQ8T2t+xZGUbW/09D2UfYdNK6GH15V1l16paVTBPFNyb2YkDT0
-         aMpGxA0K4JsWz3i/89CiCBR+9Ff5JVBvYLVaFzW/cAAibTpxTKdb6ua/MgmYJ5D43g3g
-         7WZg==
-X-Gm-Message-State: AOAM530c15ONllAbP6ChTteo6eXaI/HPQCNswgEggBqycoOFbM46FCgT
-        zKaTzUONVRrwVCNFubw+u78=
-X-Google-Smtp-Source: ABdhPJx4kM3dYEiZLcwfjTeboiVQbRKFdi/+sJFneYsrc0TbFIZdPbE2kj7RVvRET0yZkXvCavYHVQ==
-X-Received: by 2002:a17:90a:7487:: with SMTP id p7mr6789220pjk.189.1599426044575;
-        Sun, 06 Sep 2020 14:00:44 -0700 (PDT)
-Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
-        by smtp.gmail.com with ESMTPSA id m25sm12735683pfa.32.2020.09.06.14.00.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 14:00:43 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 06:00:41 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Jonas Bonn <jonas@southpole.se>,
-        LKML <linux-kernel@vger.kernel.org>,
-        openrisc@lists.librecores.org, Greentime Hu <green.hu@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [OpenRISC] [PATCH v2 3/3] openrisc: Fix issue with get_user for
- 64-bit values
-Message-ID: <20200906210041.GK3562056@lianli.shorne-pla.net>
-References: <20200905131935.972386-1-shorne@gmail.com>
- <20200905131935.972386-4-shorne@gmail.com>
- <20200905135714.74bsr5h423k7guw4@ltop.local>
- <20200905213408.GI3562056@lianli.shorne-pla.net>
- <20200906002228.mrbs7pdyrf5ooi3c@ltop.local>
+        Sun, 6 Sep 2020 17:03:58 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FCBC061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 14:03:56 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 279B3891B0;
+        Mon,  7 Sep 2020 09:03:48 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599426228;
+        bh=QBa830jtUXjIph86rIi5lGJG6AjNPZpvt0RMV5ZNHUI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=KOcbkH/VF11n/LNlhYdI1bd/9iQl4QZUwXikYs60mtNHm08d0ZgH+2vYKkT9WYwPn
+         Ju43MqLLMtoDzR5YWbwRI9/HG3Uv+pnK53RByWg7tetCDRtffr97Dxi5WtixfFBveV
+         RdLhF2Txrk24xbZRap73agjzCffTWxMy1R+73Xp3/Gdu0QiRMBQtfI8zJGWP0qj7Oj
+         qN/FQDoY5wc2pIx5o2CNAJbOMV4INjLcm839T8+Rc6XV9WC5+Rb31WsQvX30ij24Uv
+         DV6p/5h9HcALRdSixsOOWQR1HmgyaTTjKycPJS7Itm5tdgRxIXn+UUAHRF7waHNzpW
+         YcsH+TD7daW1w==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f554eb40001>; Mon, 07 Sep 2020 09:03:48 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep 2020 09:03:47 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Mon, 7 Sep 2020 09:03:47 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+CC:     Nicholas Piggin <npiggin@gmail.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>
+Subject: Re: fsl_espi errors on v5.7.15
+Thread-Topic: fsl_espi errors on v5.7.15
+Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgIAAOXyAgABIbACAAAjRgIABm7wAgAD5+gCABBXPAIAAjqOAgAALRACAAAUXgIAA9CsAgADXoQCAAFDQAIAETfoAgAEj4oCAA2JSAA==
+Date:   Sun, 6 Sep 2020 21:03:46 +0000
+Message-ID: <ee6a85fd-35d3-2adf-02ea-35009749194b@alliedtelesis.co.nz>
+References: <1598940515.6e06nwgi0c.astroid@bobo.none>
+ <6054f0ec-d994-105b-6399-6cdb65ddd1b6@alliedtelesis.co.nz>
+ <CAFSsGVvRMQoEoBN1hpao_4uM1yF2wwuKPbMkAcwFWyE1X8HDbQ@mail.gmail.com>
+In-Reply-To: <CAFSsGVvRMQoEoBN1hpao_4uM1yF2wwuKPbMkAcwFWyE1X8HDbQ@mail.gmail.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6306C5D7E58A894E995FCB72D9029269@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200906002228.mrbs7pdyrf5ooi3c@ltop.local>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 02:22:28AM +0200, Luc Van Oostenryck wrote:
-> On Sun, Sep 06, 2020 at 06:34:08AM +0900, Stafford Horne wrote:
-> > On Sat, Sep 05, 2020 at 03:57:14PM +0200, Luc Van Oostenryck wrote:
-> > > On Sat, Sep 05, 2020 at 10:19:35PM +0900, Stafford Horne wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > The change for 64-bit get_user() looks good to me.
-> > > But I wonder, given that openrisc is big-endian, what will happen
-> > > you have the opposite situation:
-> > > 	u32 *ptr;
-> > > 	u64 val;
-> > > 	...
-> > > 	get_user(val, ptr);
-> > > 
-> > > Won't you end with the value in the most significant part of
-> > > the register pair?
-> > 
-> > Hi Luc,
-> > 
-> > The get_user function uses the size of the ptr to determine how to do the load ,
-> > so this case would not use the 64-bit pair register logic.  I think it should be
-> > ok, the end result would be the same as c code:
-> > 
-> >   var = *ptr;
-> 
-> Hi,
-> 
-> Sorry to insist but both won't give the same result.
-> The problem comes from the output part of the asm: "=r" (x).
-> 
-> The following code:
-> 	u32 getp(u32 *ptr)
-> 	{
-> 		u64 val;
-> 		val = *ptr;
-> 		return val;
-> 	}
-> will compile to something like:
-> 	getp:
-> 		l.jr	r9
-> 		l.lwz	r11, 0(r3)
-> 
-> The load is written to r11, which is what is returned. OK.
-> 
-> But the get_user() code with a u32 pointer *and* a u64 destination
-> is equivalent to something like:
-> 	u32 getl(u32 *ptr)
-> 	{
-> 		u64 val;
-> 
-> 		asm("l.lwz %0,0(%1)" : "=r"(val) : "r"(ptr));
-> 		return val;
-> 	}
-> and this compiles to:
-> 	getl:
-> 		l.lwz	r17,0(r3)
-> 		l.jr	r9
-> 		l.or	r11, r19, r19
-> 
-> The load is written to r17 but what is returned is the content of r19.
-> Not good.
-> 
-> I think that, in the get_user() code:
-> * if the pointer is a pointer to a 64-bit quantity, then variable
->   used in as the output in the asm needs to be a 64-bit variable
-> * if the pointer is a pointer to a 32-bit quantity, then variable
->   used in as the output in the asm needs to be a 64-bit variable
-> At least one way to guarantee this is to use a temporary variable
-> that matches the size of the pointer.
-
-Hello,
-
-Thanks for taking the time to explain.  I see your point, it makes sense I will
-fix this up.
-
--Stafford
+KHJlc2VuZCBhcyBzb21ldGhpbmcgZGVjaWRlZCB0byBpbnNlcnQgaHRtbCwgc29tZSBjb250ZXh0
+IHN0cmlwcGVkKQ0KDQpPbiA1LzA5LzIwIDU6MjMgYW0sIEhlaW5lciBLYWxsd2VpdCB3cm90ZToN
+Cj4gT24gRnJpIDQuIFNlcCAyMDIwIGF0IDAxOjU4LCBDaHJpcyBQYWNraGFtIA0KPiA8Q2hyaXMu
+UGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56IA0KPiA8bWFpbHRvOkNocmlzLlBhY2toYW1AYWxs
+aWVkdGVsZXNpcy5jby5uej4+IHdyb3RlOg0KPg0KPg0KPHNuaXA+DQo+DQo+DQo+ICAgICBJIHRy
+aWVkIGZ0cmFjZSBidXQgSSByZWFsbHkgd2Fzbid0IHN1cmUgd2hhdCBJIHdhcyBsb29raW5nIGZv
+ci4NCj4NCj4gICAgIENhcHR1cmluZyBhICJiYWQiIGNhc2Ugd2FzIHByZXR0eSB0cmlja3kuIEJ1
+dCBJIHRoaW5rIEkndmUNCj4gICAgIGlkZW50aWZpZWQgYQ0KPg0KPiAgICAgZml4IChJJ2xsIHNl
+bmQgaXQgYXMgYSBwcm9wZXIgcGF0Y2ggc2hvcnRseSkuIFRoZSBnaXN0IGlzDQo+DQo+DQo+DQo+
+ICAgICBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMgYi9kcml2ZXJzL3Nw
+aS9zcGktZnNsLWVzcGkuYw0KPg0KPiAgICAgaW5kZXggN2U3YzkyY2FmZGJiLi5jYjEyMGI2OGMw
+ZTIgMTAwNjQ0DQo+DQo+ICAgICAtLS0gYS9kcml2ZXJzL3NwaS9zcGktZnNsLWVzcGkuYw0KPg0K
+PiAgICAgKysrIGIvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMNCj4NCj4gICAgIEBAIC01NzQs
+MTMgKzU3NCwxNCBAQCBzdGF0aWMgdm9pZCBmc2xfZXNwaV9jcHVfaXJxKHN0cnVjdCBmc2xfZXNw
+aQ0KPg0KPiAgICAgKmVzcGksIHUzMiBldmVudHMpDQo+DQo+ICAgICDCoMKgc3RhdGljIGlycXJl
+dHVybl90IGZzbF9lc3BpX2lycShzMzIgaXJxLCB2b2lkICpjb250ZXh0X2RhdGEpDQo+DQo+ICAg
+ICDCoMKgew0KPg0KPiAgICAgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgZnNsX2VzcGkgKmVzcGkg
+PSBjb250ZXh0X2RhdGE7DQo+DQo+ICAgICAtwqDCoMKgwqDCoMKgIHUzMiBldmVudHM7DQo+DQo+
+ICAgICArwqDCoMKgwqDCoMKgIHUzMiBldmVudHMsIG1hc2s7DQo+DQo+DQo+DQo+ICAgICDCoMKg
+wqDCoMKgwqDCoMKgIHNwaW5fbG9jaygmZXNwaS0+bG9jayk7DQo+DQo+DQo+DQo+ICAgICDCoMKg
+wqDCoMKgwqDCoMKgIC8qIEdldCBpbnRlcnJ1cHQgZXZlbnRzKHR4L3J4KSAqLw0KPg0KPiAgICAg
+wqDCoMKgwqDCoMKgwqDCoCBldmVudHMgPSBmc2xfZXNwaV9yZWFkX3JlZyhlc3BpLCBFU1BJX1NQ
+SUUpOw0KPg0KPiAgICAgLcKgwqDCoMKgwqDCoCBpZiAoIWV2ZW50cykgew0KPg0KPiAgICAgK8Kg
+wqDCoMKgwqDCoCBtYXNrID0gZnNsX2VzcGlfcmVhZF9yZWcoZXNwaSwgRVNQSV9TUElNKTsNCj4N
+Cj4gICAgICvCoMKgwqDCoMKgwqAgaWYgKCEoZXZlbnRzICYgbWFzaykpIHsNCj4NCj4gICAgIMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNwaW5fdW5sb2NrKCZlc3BpLT5sb2NrKTsN
+Cj4NCj4gICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBJUlFfTk9O
+RTsNCj4NCj4gICAgIMKgwqDCoMKgwqDCoMKgwqAgfQ0KPg0KPg0KPg0KPiAgICAgVGhlIFNQSUUg
+cmVnaXN0ZXIgY29udGFpbnMgdGhlIFRYQ05UIHNvIGV2ZW50cyBpcyBwcmV0dHkgbXVjaCBhbHdh
+eXMNCj4NCj4gICAgIGdvaW5nIHRvIGhhdmUgc29tZXRoaW5nIHNldC4gQnkgY2hlY2tpbmcgZXZl
+bnRzIGFnYWluc3Qgd2hhdCB3ZSd2ZQ0KPg0KPiAgICAgYWN0dWFsbHkgcmVxdWVzdGVkIGludGVy
+cnVwdHMgZm9yIHdlIGRvbid0IHNlZSBhbnkgc3B1cmlvdXMgZXZlbnRzLg0KPg0KPg0KPiBVc3Vh
+bGx5IHdlIHNob3VsZG7igJl0IHJlY2VpdmUgaW50ZXJydXB0cyB3ZeKAmXJlIG5vdCBpbnRlcmVz
+dGVkIGluLCANCj4gZXhjZXB0IHRoZSBpbnRlcnJ1cHQgaXMgc2hhcmVkLg0KTXkgdGhlb3J5IGlz
+IHRoYXQgd2UgZ2V0IGFuIGludGVycnVwdCB0byB0aGUgY29yZSBmb3IgUlhUIGFuZCBhbm90aGVy
+IA0KZm9yIERPTi4gV2l0aCB0aGUgY2hhbmdlcyB0byB0aGUgcG93ZXJwYyBpbnRlcnJ1cHQgaGFu
+ZGxpbmcgYW5kIHRoZSBmYWN0IA0KdGhhdCBmc2xfZXNwaV9jcHVfaXJxKCkgZG9lc24ndCBhY3R1
+YWxseSBsb29rIGF0IHRoZSBzcGVjaWZpYyBldmVudCBiaXRzIA0KbWVhbnMgdGhhdCBzb21ldGlt
+ZXMgYm90aCBldmVudHMgYXJlIGhhbmRsZWQgaW4gdGhlIHByb2Nlc3Npbmcgb2YgdGhlIA0KZmly
+c3QgaW50ZXJydXB0IGFuZCB0aGUgc2Vjb25kIG9uZSB0cmlwcyB0aGUgU1BJX0RPTiBub3Qgc2V0
+IGVycm9yLg0KDQpUaGVyZSdzIGFuIG9sZCBjb21tZW50ICJTUEkgYnVzIHNvbWV0aW1lcyBnb3Qg
+bG9zdCBpbnRlcnJ1cHRzLi4uIiB3aGljaCANCm1ha2VzIG1lIHdvbmRlciBpZiB0aGUgaW50ZXJy
+dXB0IGhhbmRsaW5nIGNoYW5nZSBoYXMgZml4ZWQgdGhpcyBvcmlnaW5hbCANCnByb2JsZW0uDQoN
+Ckkgc3RpbGwgdGhpbmsgdGhlIGNoYW5nZSBtYWtlcyBzZW5zZSByZWdhcmRsZXNzIGJlY2F1c2Ug
+dGhlIFNQSUUgDQpyZWdpc3RlciBoYXMgc29tZSBjb3VudGVyIGZpZWxkcyBpbiBpdC4NCg0KPiBU
+aGlzIGxlYWRzIHRvIHRoZSBxdWVzdGlvbjogaXMgdGhlIFNQSSBpbnRlcnJ1cHQgc2hhcmVkIHdp
+dGggYW5vdGhlciANCj4gZGV2aWNlIG9uIHlvdXIgc3lzdGVtPw0KSXQncyBub3Qgc2hhcmVkIG9u
+IGVpdGhlciB0aGUgY3VzdG9tIGJvYXJkIG9yIHRoZSBUMjA4MFJEQi4NCj4gRG8geW91IHNlZSBz
+cHVyaW91cyBpbnRlcnJ1cHRzIHdpdGggdGhlIHBhdGNoIHVuZGVyIA0KPiAvcHJvYy9pcnEvKGly
+cSkvc3B1cmlvdXM/DQoNClllcyBpdCBsb29rcyBsaWtlIGl0DQoNCltyb290QGxpbnV4Ym94IH5d
+IyBjYXQgL3Byb2MvaXJxLzUzL3NwdXJpb3VzDQpjb3VudCAzMTI2DQp1bmhhbmRsZWQgMA0KbGFz
+dF91bmhhbmRsZWQgMCBtcw0KDQpbcm9vdEBsaW51eGJveCB+XSMgL2ZsYXNoL2RkX3Rlc3Quc2gN
+Cg0KW3Jvb3RAbGludXhib3ggfl0jIGNhdCAvcHJvYy9pcnEvNTMvc3B1cmlvdXMNCmNvdW50IDEw
+MTYNCnVuaGFuZGxlZCAwDQpsYXN0X3VuaGFuZGxlZCA0Mjk0NzQ2MTAwIG1zDQoNCltyb290QGxp
+bnV4Ym94IH5dIyAvZmxhc2gvZGRfdGVzdC5zaA0KDQpbcm9vdEBsaW51eGJveCB+XSMgY2F0IC9w
+cm9jL2lycS81My9zcHVyaW91cw0KY291bnQgODgzOTENCnVuaGFuZGxlZCAwDQpsYXN0X3VuaGFu
+ZGxlZCA0Mjk0NzQ2MTAwIG1zDQoNCltyb290QGxpbnV4Ym94IH5dIyAvZmxhc2gvZGRfdGVzdC5z
+aA0KDQpbcm9vdEBsaW51eGJveCB+XSMgY2F0IC9wcm9jL2lycS81My9zcHVyaW91cw0KY291bnQg
+NzI0NTkNCnVuaGFuZGxlZCAyDQpsYXN0X3VuaGFuZGxlZCA0Mjk0NzU4NjMyIG1zDQo+DQo+DQo+
+DQo+ICAgICBJJ3ZlIHRlc3RlZCB0aGlzIG9uIHRoZSBUMjA4MFJEQiBhbmQgb24gb3VyIGN1c3Rv
+bSBoYXJkd2FyZSBhbmQgaXQNCj4gICAgIHNlZW1zDQo+DQo+ICAgICB0byByZXNvbHZlIHRoZSBw
+cm9ibGVtLg0KPg0KPg0KPg==
