@@ -2,165 +2,186 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2858C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70CB020838
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF7920714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599403929;
+	bh=InP0l+FKFxfUCyzLZPZhSXwYzVMvc8E5Css3wMf7MiQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mUYc0iDRknx6OBz7ReHrUKIOAGgoSF5+8jlaWLBC12T5evi8ZXjMK5dq6x/WpX7Wu
+	 qTP5cQm4JzRKZpwX2qiuPUTTPSTiug82KHat/2PwlcOLHFCZ5OqX4BaPGBN634XgM9
+	 BlWadInvp8Yi3jkG1H8enbH6JuvzrirxKqPMZKO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgIFOsn (ORCPT
+        id S1728886AbgIFOwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 10:48:43 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:60921 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgIFOsI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:48:08 -0400
-X-Originating-IP: 195.189.32.242
-Received: from pc.localdomain (unknown [195.189.32.242])
-        (Authenticated sender: contact@artur-rojek.eu)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 88D8040007;
-        Sun,  6 Sep 2020 14:48:03 +0000 (UTC)
-From:   Artur Rojek <contact@artur-rojek.eu>
-To:     Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Paul Cercueil <paul@crapouillou.net>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH v2 1/2] dt-bindings: power: Convert ingenic,battery.txt to YAML
-Date:   Sun,  6 Sep 2020 16:47:25 +0200
-Message-Id: <20200906144726.8852-1-contact@artur-rojek.eu>
-X-Mailer: git-send-email 2.28.0
+        Sun, 6 Sep 2020 10:52:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726931AbgIFOvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 10:51:53 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F5D220714;
+        Sun,  6 Sep 2020 14:51:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599403912;
+        bh=InP0l+FKFxfUCyzLZPZhSXwYzVMvc8E5Css3wMf7MiQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=2RoUnMqJdrlR/rDJgefMAFqd9x+FvxOBqm6wLoDt6Ve43N3hEQe2FaZiO+03bCUK+
+         R/iAwNLbrTzGkKn9fa2Lu3rBX6A3rqdyrPV066JwCc3Qe7TljrIRxIEQHorCQ7c3Dg
+         wakt2VULUbs5+Q4xVs6CXlg+J+PFBbGf7wf2zgWQ=
+Date:   Sun, 6 Sep 2020 15:51:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
+        Darius <darius.berghe@analog.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/3] iio: gyro: adxrs290: Add triggered buffer support
+Message-ID: <20200906155147.662f5df9@archlinux>
+In-Reply-To: <CAEtfd9aB2jphW=x80iZ_vHJmLUGrn-SSCom0NHWbgLH3YnGOpA@mail.gmail.com>
+References: <20200825124711.11455-1-nish.malpani25@gmail.com>
+        <20200825124711.11455-2-nish.malpani25@gmail.com>
+        <20200829174623.422f7e7d@archlinux>
+        <CAEtfd9aB2jphW=x80iZ_vHJmLUGrn-SSCom0NHWbgLH3YnGOpA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the textual documentation of Device Tree bindings for the
-Ingenic JZ47xx SoCs battery to YAML.
+On Thu, 3 Sep 2020 18:07:00 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
+> Hello,
+> 
+> Thanks for the review, Jonathan. Comments inline...
+> 
+...
 
-Changes:
-    v2: move introduction of new compatibles into a separate patch
+> > >
+> > > +static void adxrs290_chip_off_action(void *data)
+> > > +{
+> > > +     struct iio_dev *indio_dev = data;
+> > > +
+> > > +     adxrs290_set_mode(indio_dev, ADXRS290_MODE_STANDBY);
+> > > +}
+> > > +
+> > >  static int adxrs290_read_raw(struct iio_dev *indio_dev,
+> > >                            struct iio_chan_spec const *chan,
+> > >                            int *val,
+> > > @@ -215,24 +287,34 @@ static int adxrs290_read_raw(struct iio_dev *indio_dev,
+> > >
+> > >       switch (mask) {
+> > >       case IIO_CHAN_INFO_RAW:
+> > > +             ret = iio_device_claim_direct_mode(indio_dev);
+> > > +             if (ret)
+> > > +                     return ret;
+> > > +
+> > >               switch (chan->type) {
+> > >               case IIO_ANGL_VEL:
+> > >                       ret = adxrs290_get_rate_data(indio_dev,
+> > >                                                    ADXRS290_READ_REG(chan->address),
+> > >                                                    val);
+> > >                       if (ret < 0)
+> > > -                             return ret;
+> > > +                             goto err_release;
+> > >
+> > > -                     return IIO_VAL_INT;
+> > > +                     ret = IIO_VAL_INT;
+> > > +                     break;
+> > >               case IIO_TEMP:
+> > >                       ret = adxrs290_get_temp_data(indio_dev, val);
+> > >                       if (ret < 0)
+> > > -                             return ret;
+> > > +                             goto err_release;
+> > >
+> > > -                     return IIO_VAL_INT;
+> > > +                     ret = IIO_VAL_INT;
+> > > +                     break;
+> > >               default:
+> > > -                     return -EINVAL;
+> > > +                     ret = -EINVAL;
+> > > +                     break;
+> > >               }
+> > > +err_release:
+> > > +             iio_device_release_direct_mode(indio_dev);
+> > > +             return ret;
+> > >       case IIO_CHAN_INFO_SCALE:
+> > >               switch (chan->type) {
+> > >               case IIO_ANGL_VEL:
+> > > @@ -279,34 +361,53 @@ static int adxrs290_write_raw(struct iio_dev *indio_dev,
+> > >                             long mask)
+> > >  {
+> > >       struct adxrs290_state *st = iio_priv(indio_dev);
+> > > -     int lpf_idx, hpf_idx;
+> > > +     int ret, lpf_idx, hpf_idx;
+> > > +
+> > > +     ret = iio_device_claim_direct_mode(indio_dev);  
+> >
+> > Is there anything in the datasheet that says we can't change the filters
+> > whilst doing captures?  Might get crazy data but if the datasheet doesn't
+> > want against a particular action, then we tend not to try and prevent it.
+> >  
+> 
+> The datasheet, to my knowledge, explicitly doesn't mention any
+> restriction on changing the filter settings during a capture.
+> 
+> Quoting the datasheet, "The group delay of the wideband filter option
+> is less than 0.5ms" (pg. 11) - during an ongoing capture if one
+> re-configures the filter, how do we address this?
 
- .../bindings/power/supply/ingenic,battery.txt | 31 ----------
- .../power/supply/ingenic,battery.yaml         | 60 +++++++++++++++++++
- 2 files changed, 60 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
- create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
+To be honest, I'm not really sure what that means, so will if you think
+it makes sense it is fine to keep protections to not allow a filter update
+during buffered capture.
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt b/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-deleted file mode 100644
-index 66430bf73815..000000000000
---- a/Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
-+++ /dev/null
-@@ -1,31 +0,0 @@
--* Ingenic JZ47xx battery bindings
--
--Required properties:
--
--- compatible: Must be "ingenic,jz4740-battery".
--- io-channels: phandle and IIO specifier pair to the IIO device.
--  Format described in iio-bindings.txt.
--- monitored-battery: phandle to a "simple-battery" compatible node.
--
--The "monitored-battery" property must be a phandle to a node using the format
--described in battery.txt, with the following properties being required:
--
--- voltage-min-design-microvolt: Drained battery voltage.
--- voltage-max-design-microvolt: Fully charged battery voltage.
--
--Example:
--
--#include <dt-bindings/iio/adc/ingenic,adc.h>
--
--simple_battery: battery {
--	compatible = "simple-battery";
--	voltage-min-design-microvolt = <3600000>;
--	voltage-max-design-microvolt = <4200000>;
--};
--
--ingenic_battery {
--	compatible = "ingenic,jz4740-battery";
--	io-channels = <&adc INGENIC_ADC_BATTERY>;
--	io-channel-names = "battery";
--	monitored-battery = <&simple_battery>;
--};
-diff --git a/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml b/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
-new file mode 100644
-index 000000000000..b4e0275ac63a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/supply/ingenic,battery.yaml
-@@ -0,0 +1,60 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright 2019-2020 Artur Rojek
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/power/supply/ingenic,battery.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Ingenic JZ47xx battery bindings
-+
-+maintainers:
-+  - Artur Rojek <contact@artur-rojek.eu>
-+
-+properties:
-+  compatible:
-+    const: ingenic,jz4740-battery
-+
-+  io-channels:
-+    items:
-+      - description: >
-+          phandle and IIO specifier pair to the IIO device.
-+          See Documentation/devicetree/bindings/iio/iio-bindings.txt for more
-+          details.
-+
-+  io-channel-names:
-+    const: "battery"
-+
-+  monitored-battery:
-+    items:
-+      - description: >
-+          phandle to a "simple-battery" compatible node.
-+
-+          This property must be a phandle to a node using the format described
-+          in battery.txt, with the following properties being required:
-+          - voltage-min-design-microvolt: drained battery voltage,
-+          - voltage-max-design-microvolt: fully charged battery voltage.
-+
-+required:
-+  - compatible
-+  - io-channels
-+  - io-channel-names
-+  - monitored-battery
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/iio/adc/ingenic,adc.h>
-+
-+    simple_battery: battery {
-+            compatible = "simple-battery";
-+            voltage-min-design-microvolt = <3600000>;
-+            voltage-max-design-microvolt = <4200000>;
-+    };
-+
-+    ingenic-battery {
-+            compatible = "ingenic,jz4740-battery";
-+            io-channels = <&adc INGENIC_ADC_BATTERY>;
-+            io-channel-names = "battery";
-+            monitored-battery = <&simple_battery>;
-+    };
--- 
-2.28.0
+> 
+> > > +     if (ret)
+> > > +             return ret;
+...
+> > >  static int adxrs290_probe(struct spi_device *spi)
+> > >  {
+> > >       struct iio_dev *indio_dev;
+> > > @@ -384,6 +609,7 @@ static int adxrs290_probe(struct spi_device *spi)
+> > >       indio_dev->channels = adxrs290_channels;
+> > >       indio_dev->num_channels = ARRAY_SIZE(adxrs290_channels);
+> > >       indio_dev->info = &adxrs290_info;
+> > > +     indio_dev->available_scan_masks = adxrs290_avail_scan_masks;
+> > >
+> > >       mutex_init(&st->lock);
+> > >
+> > > @@ -416,6 +642,12 @@ static int adxrs290_probe(struct spi_device *spi)
+> > >       /* max transition time to measurement mode */
+> > >       msleep(ADXRS290_MAX_TRANSITION_TIME_MS);
+> > >
+> > > +     ret = devm_add_action_or_reset(&spi->dev,
+> > > +                                    adxrs290_chip_off_action,
+> > > +                                    indio_dev);  
+> >
+> > What is this unwinding?  We should only be using devm to undo things
+> > that have been 'done' in probe and the association should be clear.
+> >  
+> 
+> This unwinding is for placing the device **back** to its default
+> 'STANDBY' mode. The device, during the probe, was put to 'MEASUREMENT'
+> mode during 'adxrs290_initial_setup()' a few lines back.
+> 
+> How else do you suggest I highlight the association?
 
+Perhaps put it inside the call to initial_setup() so it is clearly
+paired with the 'forwards' action.
+
+Jonathan
