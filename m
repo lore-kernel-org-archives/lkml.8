@@ -2,196 +2,109 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4E5C10DAA
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D191AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB7F21481
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968C720714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:37:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovHw4eZB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728978AbgIFOfB (ORCPT
+        id S1726501AbgIFOhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 10:35:01 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:38470 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728681AbgIFOMU (ORCPT
+        Sun, 6 Sep 2020 10:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728873AbgIFOf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:12:20 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Sun, 6 Sep 2020 07:12:08 -0700
-Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 9EC11408D7;
-        Sun,  6 Sep 2020 07:12:07 -0700 (PDT)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <peterx@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <vsirnapalli@vmware.com>, <akaher@vmware.com>
-Subject: [PATCH v5.4.y 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Date:   Sun, 6 Sep 2020 19:37:55 +0530
-Message-ID: <1599401277-32172-2-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599401277-32172-1-git-send-email-akaher@vmware.com>
-References: <1599401277-32172-1-git-send-email-akaher@vmware.com>
+        Sun, 6 Sep 2020 10:35:58 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25CDDC061573;
+        Sun,  6 Sep 2020 07:35:57 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id p9so14529757ejf.6;
+        Sun, 06 Sep 2020 07:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q89aax93ehgqnDpqySkCBxqHYn5Oh9gR6hW/u8LFBr8=;
+        b=ovHw4eZBdY3L8OapmuNsE8LMwJhhYdwszsQKROWai2wIn78QnSkp5omaRK6a9PWScI
+         M6U8XYgiO4J1uIOy4vzYaxoOOsAQNxzi6sYgj1zUvIMAFnkucTo04lTufCgOVQ5XBn/E
+         LAk+OGyN6WuQ06F49ytIQzl1D577655JnUnE10PgYF+p7ay3UUw9wAGgO9aL76tGpn6F
+         GPuojurSVSU3jB7FdqSm2Y4IBUx/C65Xi9GBRmPRDSZz0TwEc+xzLXW+9dlfL6lG/ujE
+         FWjYhVnsbjCfC+jUa/VQRBoH8SDruTH5HKIm89p644eWTBjfDFmfDlhte/Z8MHSnrOdA
+         cYaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q89aax93ehgqnDpqySkCBxqHYn5Oh9gR6hW/u8LFBr8=;
+        b=j2nKVxa1eG4UV+CMfxAlrfkmHfDiOwXmi5QTL9thXgWPwsEo4wXlHQO5VJ2KdGNJUJ
+         1NcPPa+FpvI9EtdXGy9mp6lpnJsJE+csRzqy/vLiSUoF54A0nfjpjaAF5ZrVoUmuo5jl
+         ed2iLdsypI+gIhm6J6DkHN8L1ViRjCxaGSY8NHmOycEpUsfsOHY/bz3o3ObzP0TpEw3a
+         B6FO6W7D7CrkU0unaZGCfwqPlAObJLafxsVmWd6C7PrVMFOt/y5QywRN33a3Ez9HKc1h
+         ilYXg/DDo+NFMlGvAH/j7WQsnULTs1lxrrXS0hSuZzHntJ2JCWGVMJ6Wo9FTys9rQI1n
+         Nodw==
+X-Gm-Message-State: AOAM53264jbUOiWobdEXeU3RVo47o9XoF+Fcgg/D0pdKCP5f0MIseFO5
+        /9DjM+h5KEh3nehcrTkbMScrtVKudLabFs8D+M8=
+X-Google-Smtp-Source: ABdhPJwBUn7FkQqOkATGfYcz2f4qyMFSilmgB8JIga3Anw9QHKUw13llcT0tygQd2Jo1U8P9yH0qMB88oMP8Duj/6co=
+X-Received: by 2002:a17:906:2c44:: with SMTP id f4mr17092348ejh.52.1599402956383;
+ Sun, 06 Sep 2020 07:35:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+References: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org>
+ <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com>
+ <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com> <CAMi1Hd2ZakhXm+qNh-VMF_OndqCaQxxY3CC+UfQ6x2PyL_5sPQ@mail.gmail.com>
+In-Reply-To: <CAMi1Hd2ZakhXm+qNh-VMF_OndqCaQxxY3CC+UfQ6x2PyL_5sPQ@mail.gmail.com>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Sun, 6 Sep 2020 16:35:20 +0200
+Message-ID: <CAMS8qEVrSBPqtnMhAMY25yrUJ+M+3UrrGt+yikLaCyFDCUqCCw@mail.gmail.com>
+Subject: Re: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
+To:     Amit Pundir <amit.pundir@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dt <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
+> Thank you for the pointer. I dug around the vph_pwr fixed-regulator
+> node used by fellow sdm845 devices. I assume it is safe to copy it
+> from sdm845-mtp but I couldn't verify it in the downstream
+> device-tree, so I'm a bit hesitant. My main concern is that I don't
+> want to burn down my only device :)
 
-Rather than calling remap_pfn_range() when a region is mmap'd, setup
-a vm_ops handler to support dynamic faulting of the range on access.
-This allows us to manage a list of vmas actively mapping the area that
-we can later use to invalidate those mappings.  The open callback
-invalidates the vma range so that all tracking is inserted in the
-fault handler and removed in the close handler.
+Sure, nobody does ^^
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
----
- drivers/vfio/pci/vfio_pci.c         | 76 ++++++++++++++++++++++++++++++++++++-
- drivers/vfio/pci/vfio_pci_private.h |  7 ++++
- 2 files changed, 81 insertions(+), 2 deletions(-)
+> I did find a few regulator nodes downstream which matches with
+> upstream sdm845-mtp but since I'm not using any of them in my
+> beryllium dts, I'm going to skip them for now.
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 0220616..da1d1ea 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1192,6 +1192,70 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
- 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
- }
- 
-+static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-+			    struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
-+	if (!mmap_vma)
-+		return -ENOMEM;
-+
-+	mmap_vma->vma = vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_add(&mmap_vma->vma_next, &vdev->vma_list);
-+	mutex_unlock(&vdev->vma_lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Zap mmaps on open so that we can fault them in on access and therefore
-+ * our vma_list only tracks mappings accessed since last zap.
-+ */
-+static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-+{
-+	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
-+}
-+
-+static void vfio_pci_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
-+		if (mmap_vma->vma == vma) {
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&vdev->vma_lock);
-+}
-+
-+static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+
-+	if (vfio_pci_add_vma(vdev, vma))
-+		return VM_FAULT_OOM;
-+
-+	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-+			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-+		return VM_FAULT_SIGBUS;
-+
-+	return VM_FAULT_NOPAGE;
-+}
-+
-+static const struct vm_operations_struct vfio_pci_mmap_ops = {
-+	.open = vfio_pci_mmap_open,
-+	.close = vfio_pci_mmap_close,
-+	.fault = vfio_pci_mmap_fault,
-+};
-+
- static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- {
- 	struct vfio_pci_device *vdev = device_data;
-@@ -1250,8 +1314,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
- 
--	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
--			       req_len, vma->vm_page_prot);
-+	/*
-+	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-+	 * change vm_flags within the fault handler.  Set them now.
-+	 */
-+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-+	vma->vm_ops = &vfio_pci_mmap_ops;
-+
-+	return 0;
- }
- 
- static void vfio_pci_request(void *device_data, unsigned int count)
-@@ -1327,6 +1397,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	spin_lock_init(&vdev->irqlock);
- 	mutex_init(&vdev->ioeventfds_lock);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-+	mutex_init(&vdev->vma_lock);
-+	INIT_LIST_HEAD(&vdev->vma_list);
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index ee6ee91..8988448 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -84,6 +84,11 @@ struct vfio_pci_reflck {
- 	struct mutex		lock;
- };
- 
-+struct vfio_pci_mmap_vma {
-+	struct vm_area_struct	*vma;
-+	struct list_head	vma_next;
-+};
-+
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
- 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-@@ -122,6 +127,8 @@ struct vfio_pci_device {
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
-+	struct mutex		vma_lock;
-+	struct list_head	vma_list;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
--- 
-2.7.4
+Looking at their DTSes, Xiaomi doesn't seem to stray far away from MTP designs.
 
+> As you pointed out, in case of regulator lookup failure Linux will
+> fall back to dummy regulators, which is working fine for me so far.
+> Also I see that vdd-*-supply properties are optional according to
+> Documentation/devicetree/bindings/regulator/qcom,rpmh-regulator.txt,
+> so I assume it is safe to skip them?
+
+Yes, but keep in mind it would be a good idea to add them later, after
+you're sure everything's okay :)
+
+
+P.S. My current daily driver is Xiaomi Mi 8, which is basically Poco
+with an OLED and glass back (among some other minor nicer things), so
+thanks for your work, I might benefit from it in the future :)
+
+Konrad
