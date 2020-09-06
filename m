@@ -2,98 +2,171 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C909DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3AFC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B8B20708
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:58:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="WfKdMc6v"
+	by mail.kernel.org (Postfix) with ESMTP id 1514720708
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgIFP6M (ORCPT
+        id S1729021AbgIFP7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:58:12 -0400
-Received: from www381.your-server.de ([78.46.137.84]:37266 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726931AbgIFP6B (ORCPT
+        Sun, 6 Sep 2020 11:59:19 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:43975 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726931AbgIFP7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:58:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=QMzIMO+2YyWK71SXQ4n+GW48SMa/9Fleu/rxE0Wd1xA=; b=WfKdMc6vRYLULqFUC/WH0B4OzQ
-        x9qsuSTffgMIV+4NNUW988jklj0xyZ/kr6E7DilFjfE8+GCUDsb/gExOaend+K8sANQLuDDu1rLUF
-        +zMl3lSXy9l7EWFPxqiAIpRu7USnoZSrvo17i73MudDAn00azTQ3OY19zTc2opZXNJkv0xGI5uwh1
-        pdQj2Vq0GqNZOV19gkHv9dcyEs1IWT+Ym/p6MtPbvUK/Sz8yOys/u5+hOOff81VdjKg4/XZQhHShP
-        pcXGrpBUeUMlMbjm25EEfM79Sgbx4Q8OZQJlCQcTvIQ+rxboeNv3f/5C2VGIalUGgjdkCrIElWEU5
-        LFbWvLgQ==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1kEx3C-00011t-TM; Sun, 06 Sep 2020 17:57:55 +0200
-Received: from [62.216.206.78] (helo=[192.168.178.20])
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1kEx3C-0009Lh-Oa; Sun, 06 Sep 2020 17:57:54 +0200
-Subject: Re: [PATCH v3 1/2] MAINTAINERS: Consolidate Analog Devices IIO
- entries and remove Beniamin Bia
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Michael Hennerich <Michael.Hennerich@analog.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20200903181926.5606-1-krzk@kernel.org>
- <20200906150640.5ffe7e0f@archlinux>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <8f7de1d6-0756-8b59-7041-c5ae4773e5f2@metafoo.de>
-Date:   Sun, 6 Sep 2020 17:57:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Sun, 6 Sep 2020 11:59:02 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 481885C00E0;
+        Sun,  6 Sep 2020 11:59:01 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sun, 06 Sep 2020 11:59:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=GrRz/e
+        qbtlSmrGyXDaaMCTI6gWJzvvz6fXmQgN53lF8=; b=OVCEDwoZ78E5mfRCc4xRwU
+        p17rmeNoYd5+EmZwxfREiFG1UjAcPxIVriBR8a1SQP8zera0GcpiHEc50c0khn0Z
+        Qx3tb2y6mWmoEtBr2B7bR1TibZyyYd7uNANKpAIaN1thQPUpj6qRJ86oLxx9NuW7
+        ZxzTLoV3eibDCh2CaoRMvkh39+p+vpByn8PhlPq1mp8dk+CCuUygrMpiTCtwrvvc
+        w6TpnMdK6LqgK6MJIObgvJTEYrN4t4FSFo3nAglXPRqE7R5EPaJ45M0HBpBApXCY
+        ZYgWg000pxC0FbALeTBRMjeQx9meLQaIy/BkAVWNiu85ZrPz2/s1DZpV2O6aQYWw
+        ==
+X-ME-Sender: <xms:RAdVX8hxfi6zidFCNMU0YPhLopyUWBHUHCDqvv-0CKkYFpqpLMJB4w>
+    <xme:RAdVX1A-ZgKzKctDDovRnGlco_vOFVVDiowMjVhlG3_OP6ibQbuYdr6IDk7exhqj-
+    oiJEgCT_L5RcPo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudegjedgleejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
+    gvrhhnpedtffekkeefudffveegueejffejhfetgfeuuefgvedtieehudeuueekhfduheel
+    teenucfkphepkeegrddvvdelrdefiedruddvkeenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehiughoshgthhesihguohhstghhrdhorhhg
+X-ME-Proxy: <xmx:RAdVX0HApKojEA1pE1h0OOKCswkTQ_ctnUcKSsH0uQQ1oJ5khLiaAQ>
+    <xmx:RAdVX9Str4vLVbHckiepFJ_rk-qQgHMuvDVeVTewW_ySgL-Ndzq8lw>
+    <xmx:RAdVX5w_raOSfflJ5z-L7NRKnIdmQ8mLhjjr7tpEbrpr_5_XYqKpZg>
+    <xmx:RQdVX8r209k1aRhd6UYrEauKkgXPYPvw1cl1kDAYpYa1wzxlpVddPg>
+Received: from localhost (igld-84-229-36-128.inter.net.il [84.229.36.128])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 74B6C328005D;
+        Sun,  6 Sep 2020 11:59:00 -0400 (EDT)
+Date:   Sun, 6 Sep 2020 18:58:58 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     Aya Levin <ayal@mellanox.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v1 3/4] devlink: Add hierarchy between traps
+ in device level and port level
+Message-ID: <20200906155858.GB2431016@shredder>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+ <1599060734-26617-4-git-send-email-ayal@mellanox.com>
 MIME-Version: 1.0
-In-Reply-To: <20200906150640.5ffe7e0f@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25922/Sun Sep  6 15:39:20 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599060734-26617-4-git-send-email-ayal@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/20 4:06 PM, Jonathan Cameron wrote:
-> On Thu,  3 Sep 2020 20:19:25 +0200
-> Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
->> Emails to Beniamin Bia bounce with no such address so remove him from
->> maintainers.  After this removal, many entries for Analog Devices Inc
->> IIO drivers look exactly the same so consolidate them.
->>
->> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->> Cc: Michael Hennerich <Michael.Hennerich@analog.com>
->> Cc: Jonathan Cameron <jic23@kernel.org>
->> Cc: linux-iio <linux-iio@vger.kernel.org>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> As I'd assume a more specific binding always overrides a catch all,
-> this has the effect of giving Lars and Michael responsibility
-> for a few things they didn't previously cover.  If the two
-> of them are fine with it, than that's good, but I'd ideally
-> like an Ack from Lars.
+On Wed, Sep 02, 2020 at 06:32:13PM +0300, Aya Levin wrote:
+> Managing large scale port's traps may be complicated. This patch
+> introduces a shortcut: when setting a trap on a device and this trap is
+> not registered on this device, the action will take place on all related
+> ports that did register this trap.
 
-Acked-by: Lars-Peter Clausen <lars@metafoo.de>
+I'm not really a fan of this and I'm not sure there is precedent for
+something similar. Also, it's an optimization, so I wouldn't put it as
+part of the first submission before you gather some operational
+experience with the initial interface.
 
-I think I left a ticket with ADI when I left to update the maintainers 
-entries and replace me with somebody else, must have gotten lost :)
+In addition, I find it very unintuitive for users. When I do 'devlink
+trap show' I will not see anything. I will only see the traps when I
+issue 'devlink port trap show', yet 'devlink trap set ...' is expected
+to work.
 
+Lets assume that this is a valid change, it would be better implemented
+with my suggestion from the previous patch: When devlink sees that a
+trap is registered on all the ports it can auto-register a new
+per-device trap and user space gets the appropriate notification.
+
+> 
+> Signed-off-by: Aya Levin <ayal@mellanox.com>
+> ---
+>  net/core/devlink.c | 43 +++++++++++++++++++++++++++++++++----------
+>  1 file changed, 33 insertions(+), 10 deletions(-)
+> 
+> diff --git a/net/core/devlink.c b/net/core/devlink.c
+> index b13e1b40bf1c..dea5482b2517 100644
+> --- a/net/core/devlink.c
+> +++ b/net/core/devlink.c
+> @@ -6501,23 +6501,46 @@ static int devlink_nl_cmd_trap_set_doit(struct sk_buff *skb,
+>  	struct devlink *devlink = info->user_ptr[0];
+>  	struct devlink_trap_mngr *trap_mngr;
+>  	struct devlink_trap_item *trap_item;
+> +	struct devlink_port *devlink_port;
+>  	int err;
+>  
+> -	trap_mngr = devlink_trap_get_trap_mngr_from_info(devlink, info);
+> -	if (list_empty(&trap_mngr->trap_list))
+> -		return -EOPNOTSUPP;
+> +	devlink_port = devlink_port_get_from_attrs(devlink, info->attrs);
+> +	if (IS_ERR(devlink_port)) {
+> +		trap_mngr =  &devlink->trap_mngr;
+> +		if (list_empty(&trap_mngr->trap_list))
+> +			goto loop_over_ports;
+>  
+> -	trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
+> -	if (!trap_item) {
+> -		NL_SET_ERR_MSG_MOD(extack, "Device did not register this trap");
+> -		return -ENOENT;
+> +		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
+> +		if (!trap_item)
+> +			goto loop_over_ports;
+> +	} else {
+> +		trap_mngr = &devlink_port->trap_mngr;
+> +		if (list_empty(&trap_mngr->trap_list))
+> +			return -EOPNOTSUPP;
+> +
+> +		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
+> +		if (!trap_item) {
+> +			NL_SET_ERR_MSG_MOD(extack, "Port did not register this trap");
+> +			return -ENOENT;
+> +		}
+>  	}
+>  	return devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+>  
+> -	err = devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+> -	if (err)
+> -		return err;
+> +loop_over_ports:
+> +	if (list_empty(&devlink->port_list))
+> +		return -EOPNOTSUPP;
+> +	list_for_each_entry(devlink_port, &devlink->port_list, list) {
+> +		trap_mngr = &devlink_port->trap_mngr;
+> +		if (list_empty(&trap_mngr->trap_list))
+> +			continue;
+>  
+> +		trap_item = devlink_trap_item_get_from_info(trap_mngr, info);
+> +		if (!trap_item)
+> +			continue;
+> +		err = devlink_trap_action_set(devlink, trap_mngr, trap_item, info);
+> +		if (err)
+> +			return err;
+> +	}
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.14.1
+> 
