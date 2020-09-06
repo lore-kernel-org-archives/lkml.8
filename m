@@ -2,98 +2,112 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157E1C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05E6C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0BAF20714
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B86E2078E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599405959;
-	bh=A79A9Iqg7IapUO3QuOtEmzHrXji7k3atFmJOwoO3ZbI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=h2M3ZBEWJn8tpCIskLc2fwU1S5sIxGGtCQdTWhXCvO+qPPJlWIQGzY8PB3/Z5rZ/5
-	 hx+y6MwsfSVfayHKXVNyLEJqYnaJPxmTtBkIKyusX/WUeEBDRQymeWq2yeUccjgk97
-	 XnzKlQ9aDtiFo1x+IaSysGzImJ4Ff/euq565T11w=
+	s=default; t=1599406822;
+	bh=ipXNcf/TRHvf+ZR7u/TpP2y/IWKhoPj+ksZzOBS6oeY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V1bXZawtAePgGWeiR2cSWCuVWHNuLi9Tn6K1C9vKm6b8+Zz8J4en3V4JiTBD5jcxD
+	 dewKPeUfz7/os8NkOpN/JJROVp+xwYZrre5/htB4fhOAHLTOgQ+4DZq4EVHG1iu8Mr
+	 G36SlLNLMYEBektHXxQFdS+gf2l3DxFTE2kBQpaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgIFPZw (ORCPT
+        id S1729058AbgIFPkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44514 "EHLO mail.kernel.org"
+        Sun, 6 Sep 2020 11:40:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728971AbgIFPWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:22:41 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728986AbgIFPhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 11:37:41 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C263320714;
-        Sun,  6 Sep 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F38A420DD4;
+        Sun,  6 Sep 2020 15:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599405759;
-        bh=A79A9Iqg7IapUO3QuOtEmzHrXji7k3atFmJOwoO3ZbI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MsPAbUlthj2WrDZfz3AwTEVTgUeS5QLL4onmQlHQBvaierE/ZG7w69rPpApjAde11
-         kCVvkMdf1lYhguEoAv/mE56+dUFY6uiKMZuUdXp6isQkmK7GEge72WmSrD/YF7V+uZ
-         g6ft6VM6XhwWkhTZ+4WL7gTPOhy2CPBPxn408L94=
-Date:   Sun, 6 Sep 2020 16:22:34 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: sx9310: Prefer async probe
-Message-ID: <20200906162234.4a829a0a@archlinux>
-In-Reply-To: <CAHcu+VarBz3m_zKfDB0osQsjZ0dMpvUk+q2Qt-yC5DbPjr0bRA@mail.gmail.com>
-References: <20200901081920.v2.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
-        <159897502625.334488.7103007623601336114@swboyd.mtv.corp.google.com>
-        <CAHcu+VarBz3m_zKfDB0osQsjZ0dMpvUk+q2Qt-yC5DbPjr0bRA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1599406661;
+        bh=ipXNcf/TRHvf+ZR7u/TpP2y/IWKhoPj+ksZzOBS6oeY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EN5QpLwReQiJ4Glm7ap6/s/E+bad2seEm2qD979OOsHwJO6NxtBNuVQWXu46iwk5I
+         sb3UUYxeaQVGzwhn/yk/g0OKHsuRUBZzCte1FsF7UN0HpJnSG3crg3+F0ct4b95UNf
+         r+XbvXDH1sBVNqzlUD1VNdYoeJsBOswU5qejeKUM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-nfc@lists.01.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 3/9] nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+Date:   Sun,  6 Sep 2020 17:36:48 +0200
+Message-Id: <20200906153654.2925-4-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200906153654.2925-1-krzk@kernel.org>
+References: <20200906153654.2925-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 11:01:29 -0600
-Daniel Campello <campello@chromium.org> wrote:
+The device tree property prefix describes the vendor, which in case of
+S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
+and "fw-gpios" is not correct and should be deprecated.  Introduce
+properly named properties for these GPIOs but still support deprecated
+ones.
 
-> On Tue, Sep 1, 2020 at 9:43 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Douglas Anderson (2020-09-01 08:19:43)  
-> > > On one board I found that:
-> > >   probe of 5-0028 returned 1 after 259547 usecs
-> > >
-> > > While some of this time is attributable to the pile of i2c transfers
-> > > that we do at probe time, the lion's share (over 200 ms) is sitting
-> > > waiting in the polling loop in sx9310_init_compensation() waiting for
-> > > the hardware to indicate that it's done.
-> > >
-> > > There's no reason to block probe of all other devices on our probe.
-> > > Turn on async probe.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---  
-> >
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>  
-> 
-> Reviewed-by: Daniel Campello <campello@chromium.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to poke at it.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/nfc/s3fwrn5/i2c.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-thanks,
-
-Jonathan
-
+diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
+index b4eb926d220a..557279492503 100644
+--- a/drivers/nfc/s3fwrn5/i2c.c
++++ b/drivers/nfc/s3fwrn5/i2c.c
+@@ -200,13 +200,21 @@ static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
+ 	if (!np)
+ 		return -ENODEV;
+ 
+-	phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
+-	if (!gpio_is_valid(phy->gpio_en))
+-		return -ENODEV;
++	phy->gpio_en = of_get_named_gpio(np, "en-gpios", 0);
++	if (!gpio_is_valid(phy->gpio_en)) {
++		/* Support also deprecated property */
++		phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
++		if (!gpio_is_valid(phy->gpio_en))
++			return -ENODEV;
++	}
+ 
+-	phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
+-	if (!gpio_is_valid(phy->gpio_fw_wake))
+-		return -ENODEV;
++	phy->gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
++	if (!gpio_is_valid(phy->gpio_fw_wake)) {
++		/* Support also deprecated property */
++		phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
++		if (!gpio_is_valid(phy->gpio_fw_wake))
++			return -ENODEV;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
 
