@@ -2,84 +2,97 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99211C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E00C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 626B12078E
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FE47207BB
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:15:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgIFVkK (ORCPT
+        id S1726762AbgIFWPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:40:10 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:33116 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726292AbgIFVkJ (ORCPT
+        Sun, 6 Sep 2020 18:15:21 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:50081 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbgIFWPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:40:09 -0400
-Received: from dread.disaster.area (pa49-195-191-192.pa.nsw.optusnet.com.au [49.195.191.192])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id DC6FE824631;
-        Mon,  7 Sep 2020 07:40:03 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kF2OI-0006n6-R9; Mon, 07 Sep 2020 07:40:02 +1000
-Date:   Mon, 7 Sep 2020 07:40:02 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        ira.weiny@intel.com, linux-xfs@vger.kernel.org, y-goto@fujitsu.com
-Subject: Re: [PATCH v2] fs: Handle I_DONTCACHE in iput_final() instead of
- generic_drop_inode()
-Message-ID: <20200906214002.GI12131@dread.disaster.area>
-References: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
+        Sun, 6 Sep 2020 18:15:19 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N95mL-1kaIZX3Pi3-0167Ln; Mon, 07 Sep 2020 00:15:17 +0200
+Received: by mail-qt1-f177.google.com with SMTP id t20so8713697qtr.8;
+        Sun, 06 Sep 2020 15:15:16 -0700 (PDT)
+X-Gm-Message-State: AOAM531zFPZqXvtOSJWCj+LXMT/4OUNq4OkELI+I2sbbJ9P03mJug6Kt
+        qT+oxKi41iA1XOCLUjv3OXDxS/FNluKkLqM0c6c=
+X-Google-Smtp-Source: ABdhPJxwkpjvN/x7Qacu70mZjFWP8AmaMXUiYeZRlF/0mV8kkA+fzaouJtHyixrWIYKaJPrJakvGRGbLSRz/4O5f8dk=
+X-Received: by 2002:ac8:5b47:: with SMTP id n7mr18419344qtw.7.1599430515531;
+ Sun, 06 Sep 2020 15:15:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904075939.176366-1-lihao2018.fnst@cn.fujitsu.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=IuRgj43g c=1 sm=1 tr=0 cx=a_idp_d
-        a=vvDRHhr1aDYKXl+H6jx2TA==:117 a=vvDRHhr1aDYKXl+H6jx2TA==:17
-        a=kj9zAlcOel0A:10 a=reM5J-MqmosA:10 a=VwQbUJbxAAAA:8 a=omOdbC7AAAAA:8
-        a=20KFwNOVAAAA:8 a=7-415B0cAAAA:8 a=CYq8bQpZl3HkxBxCX-sA:9
-        a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22 a=baC4JDFNLZpnPwus_NF9:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20200904165216.1799796-1-hch@lst.de> <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com>
+ <20200905071735.GB13228@lst.de>
+In-Reply-To: <20200905071735.GB13228@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 7 Sep 2020 00:14:59 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
+Message-ID: <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
+Subject: Re: remove set_fs for riscv
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Russell King <rmk@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:RDVpx0wvlKS7kKQF356tU/RCwTwoxIjZ+Szm355OY9IiMxWZIq3
+ dAkD/boYJ8a6aCGhtL3biL/FA0/0ov7bajOFOGn3QkiyKJVpKlgZ+D5FhPIDB0gbMNA2S3r
+ uOLNXygocCY8Mw8SVNy2FolLvewuQW1WYLIBE7KesrlTcNnbiUkrNJRDD2m3mMHtlBTQ7QW
+ GHKH0318/EFVqLblzGNZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wWPfBQ8ZQ2U=:1ix0XHpYN9n5pp6/SnQVOr
+ JBW5xcyPJUker6yLdCXVd4KWJGeuPoMov/k6dA/or1qh+c+KOqdipwEWz7iNk5zix959lfMl8
+ HMvlq7ZGY6betoqWcK+fbLyLKVInBCevfTthuBLszUtFxmQTmPT1rS6vgr7GVyw8Rg5TFPcVD
+ JzpFR7qji5+M9zQPlP3NvM8OceZav+QYL452ihtnwG69Do4k9HtMs8s2Tt23wsTs2qM8Re3wR
+ 9W7sIdx4+MF69EuraKuV2VAnb6KP6wFGBzaOilWvrWwyMudXm/0pHrIa1MEqAseSS3YUT34g5
+ WYk6TZfaefT2/s+6BZYKkcQ0/6zTzOSkLAQ1XNxwmXOAhWVaZZdomle9i3rliM8Nzajn25/pf
+ KL/qd2gHPDiVDo5BYw+swLHKvI8P0SokJOvaq2q2LlTTr0u8VGWpkMHKGZgpGQiOtTzq0h631
+ xfP4hV1x3W1Wz3wRF4QKckgDkZkBU86fo6Plg02Gud28zfGDzyzGd7NjTPMN7LnXdalFEpfhg
+ 3/1mmiASzv20qzlG92PbwHKJm40EUouUkrD0Ya6PTh8j4ezXyfF2fvfrk02dZRPB4F7Swit/Z
+ VPaqgY+KbkLu0TfwKBE3ZYflLVji9yuiCSH1+3/jZ0tF0krocM1q8V41RhroLzsxn1IxKSsUD
+ qtHENpaIt27+PrZZuicmkZRol5TCuuiHBEPsxiCw+llGzJQ0oA9e07pyAhtjhTjqKHhoxgKSP
+ xpjVG5vAhHKklCq7v/yPrsaMRBFs21NlEIWZN9TBwneBRflZfKXo3ZDI+oofdLIC9uQSwr0oH
+ IC4eDr6gWSetTtJo3KwccggxqUaIPrwH2hEPISW04IzH+RsG2vEtOsopeaT4zApHqlZGv5q
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 03:59:39PM +0800, Hao Li wrote:
-> If generic_drop_inode() returns true, it means iput_final() can evict
-> this inode regardless of whether it is dirty or not. If we check
-> I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
-> evicted unconditionally. This is not the desired behavior because
-> I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
-> As for whether we need to evict this inode, this is what
-> generic_drop_inode() should do. This patch corrects the usage of
-> I_DONTCACHE.
-> 
-> This patch was proposed in [1].
-> 
-> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
-> 
-> Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
-> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
-> ---
-> Changes in v2:
->  - Adjust code format
->  - Add Fixes tag in commit message
-> 
->  fs/inode.c         | 4 +++-
->  include/linux/fs.h | 3 +--
->  2 files changed, 4 insertions(+), 3 deletions(-)
+On Sat, Sep 5, 2020 at 9:17 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Sep 04, 2020 at 08:15:03PM +0200, Arnd Bergmann wrote:
+> > Is there a bigger plan for the rest? I can probably have a look at the Arm
+> > OABI code if nobody else working on that yet.
+>
+> m68knommu seems mostly trivial and not interact much with m68k/mmu,
+> so that woud be my next target.  All the other seems to share more
+> code for the mmu and nommu case, so they'd have to be done per arch.
+>
+> arm would be my first target because it is used widespread, and its
+> current set_fs implemenetation is very strange.  But given thar you
+> help maintaining arm SOCs and probably know the arch code much better
+> than I do I'd be more than happy to leave that to you.
 
-Looks good.
+I've had a first pass at this now, see
 
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
+https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=arm-kill-set_fs
 
--- 
-Dave Chinner
-david@fromorbit.com
+There are a couple of things in there that ended up uglier than I was
+hoping for, and it's completely untested beyond compilation. Is this
+roughly what you had in mind? I can do some testing then and post
+it to the Arm mailing list.
+
+      Arnd
