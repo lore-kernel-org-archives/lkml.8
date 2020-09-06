@@ -2,137 +2,123 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F331C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D97C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4EF420714
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F313620714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599404545;
+	bh=B4hJH2Exj10eov4vlPb/9VaNEbHGmeM6Q+hdPmf5u1g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=W6EXl6a0FN9Ep6xBRSn4i8XP0OhryuwAiM9Rz28oHmPhmdoymk9ELcSPXyiWVUmYq
+	 X4wLR0L7Mo6JmwdA/cOwNuaLbY4P+M/mMloAR/7gMPqU0KTv0TD/EP+AhO6KSXwDw8
+	 8E24kw7Tn1mYKfQg4MagyLjvSQMZO1TkSD5v5ujo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgIFPBt (ORCPT
+        id S1728945AbgIFPCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728028AbgIFPBb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:01:31 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A80C061574
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 08:01:30 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 6E14839B; Sun,  6 Sep 2020 17:01:21 +0200 (CEST)
-Date:   Sun, 6 Sep 2020 17:01:20 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.9-rc3
-Message-ID: <20200906150115.GA29365@8bytes.org>
+        Sun, 6 Sep 2020 11:02:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbgIFPB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 11:01:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 538E320714;
+        Sun,  6 Sep 2020 15:01:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599404516;
+        bh=B4hJH2Exj10eov4vlPb/9VaNEbHGmeM6Q+hdPmf5u1g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tzP/88p3dT49e/Xz6wpcBVsfHumavYXE1fNkqD47ygYOemZmeELltPxPuKxL32xru
+         BN9i9EndetOxyBWZHLtBkLAhRRIjbXvZPrhGdRRU+FnTnowSQc6J7a87tiqQHZm7/v
+         Tzpxf5iRpvb30nH7gO+95/Ez9a4nRIPGdnkPNGEY=
+Date:   Sun, 6 Sep 2020 16:01:52 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Nishant Malpani <nish.malpani25@gmail.com>
+Cc:     robh+dt@kernel.org, dragos.bogdan@analog.com,
+        darius.berghe@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        andy.shevchenko@gmail.com
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: gyro: adxrs290: Add interrupts
+ support
+Message-ID: <20200906160152.552d42bb@archlinux>
+In-Reply-To: <20200903130950.6274-3-nish.malpani25@gmail.com>
+References: <20200903130950.6274-1-nish.malpani25@gmail.com>
+        <20200903130950.6274-3-nish.malpani25@gmail.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu,  3 Sep 2020 18:39:49 +0530
+Nishant Malpani <nish.malpani25@gmail.com> wrote:
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Include 'interrupts' property and provide a suitable example for using
+> a GPIO interrupt line.
+> 
+> Signed-off-by: Nishant Malpani <nish.malpani25@gmail.com>
 
-Hi Linus,
-
-The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
-
-  Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.9-rc3
-
-for you to fetch changes up to 29aaebbca4abc4cceb38738483051abefafb6950:
-
-  iommu/vt-d: Handle 36bit addressing for x86-32 (2020-09-04 12:14:28 +0200)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.9-rc3
-
-Including:
-
-	- Three Intel VT-d fixes to fix address handling on 32bit, fix a
-	  NULL pointer dereference bug and serialize a hardware register
-	  access as required by the VT-d spec.
-
-	- Two patches for AMD IOMMU to force AMD GPUs into translation mode
-	  when memory encryption is active and disallow using IOMMUv2
-	  functionality. This makes the AMDGPU driver working when
-	  memory encryption is active.
-
-	- Two more fixes for AMD IOMMU to fix updating the Interrupt
-	  Remapping Table Entries.
-
-	- MAINTAINERS file update for the Qualcom IOMMU driver.
-
-----------------------------------------------------------------
-Chris Wilson (1):
-      iommu/vt-d: Handle 36bit addressing for x86-32
-
-Joerg Roedel (2):
-      iommu/amd: Do not force direct mapping when SME is active
-      iommu/amd: Do not use IOMMUv2 functionality when SME is active
-
-Lu Baolu (2):
-      iommu/vt-d: Serialize IOMMU GCMD register modifications
-      iommu/vt-d: Fix NULL pointer dereference in dev_iommu_priv_set()
-
-Lukas Bulwahn (1):
-      MAINTAINERS: Update QUALCOMM IOMMU after Arm SMMU drivers move
-
-Suravee Suthikulpanit (2):
-      iommu/amd: Restore IRTE.RemapEn bit after programming IRTE
-      iommu/amd: Use cmpxchg_double() when updating 128-bit IRTE
-
- MAINTAINERS                         |   2 +-
- drivers/iommu/amd/Kconfig           |   2 +-
- drivers/iommu/amd/init.c            |  21 ++++++-
- drivers/iommu/amd/iommu.c           |  26 ++++++--
- drivers/iommu/amd/iommu_v2.c        |   7 +++
- drivers/iommu/intel/iommu.c         | 114 ++++++++++++++++++++----------------
- drivers/iommu/intel/irq_remapping.c |  10 +++-
- 7 files changed, 119 insertions(+), 63 deletions(-)
-
-Please pull.
+One little point inline.  Otherwise looks fine to me
 
 Thanks,
 
-	Joerg
+Jonathan
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> ---
+> 
+> Changes in v2:
+> 
+>   - remove 'interrupts' property from the required properties list
+>   - rewrite commit message
+> ---
+>  .../devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml    | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> index 61adb2c2454b..a5f209e8bbef 100644
+> --- a/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> +++ b/Documentation/devicetree/bindings/iio/gyroscope/adi,adxrs290.yaml
+> @@ -28,6 +28,9 @@ properties:
+>  
+>    spi-cpha: true
+>  
+> +  interrupts:
+> +    maxItems: 1
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -39,6 +42,8 @@ additionalProperties: false
+>  
+>  examples:
+>    - |
+> +    #include <dt-bindings/gpio/gpio.h>
 
------BEGIN PGP SIGNATURE-----
+Shouldn't need that header.  I don't see anything being used that
+is defined in gpio.h
 
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl9U+bsACgkQK/BELZcB
-GuOQFA/9FEF/OAEBiLBSlFtyFVNEoVadWTs2RrTmOnXUfufE8dnHCKA3/7qKKDD4
-WwwDZbdPueRQbo/G7REbDkKNrUr+UkRieMWnlpEhXD7w8dV94oVpwKSBHQhR/RZ6
-uzfKHUPth8ttozSxA5PaHdLsxcOB9MMO+wF1JKTURIa1P/5dXmmc3H2Uqmpf6uuG
-GOjlWqTx5lvrnhqGkCIj4TYJiILk2dwbIKcMPCz3FSbvstU9nIXXlJtKAFfDv2m3
-xW+r4M5NXgISI/8Tu8ihAJrP94in2qxauCcbUw+6IMaEtsLhct60PRDf/rPjtQbO
-f8a/EIZPttsfAgkWOxxDT0GtBAzzYtNpcEOEOSDhEBQL68WpTr+nUM3VJp+ZahVa
-fkLM461BonEY4Pqb6PBe2lSWCuMuP2KmpUiZf8Z6hbUOhOB6Z2k4IdDy+Th55Ag3
-AcDbVAVmQ+nG1H0GhRVbKmIvD4wSvYqIqj2nDqpR8gTugz0XfzS2eHoGKm3EJFOJ
-TkjZunRUcHk+H3MMexjZfMSnFVheGB1KAXcbhPfXg8qmcKgnk8QdxHtwkqB3yXs0
-KaqQdzoAIT4Ti7kj6LHlMEw1xbU64NmE9JWqWaMQ3yG98oLAQVD9sO6QZBAzyv83
-e4A782NG0EZ2jNXkPivcfRgfvDetY3tlBfOMuW+rqMQYljRM/ZQ=
-=8Q1t
------END PGP SIGNATURE-----
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+>      spi {
+>          #address-cells = <1>;
+>          #size-cells = <0>;
+> @@ -48,6 +53,8 @@ examples:
+>                     spi-max-frequency = <5000000>;
+>                     spi-cpol;
+>                     spi-cpha;
+> +                   interrupt-parent = <&gpio>;
+> +                   interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+>          };
+>      };
+>  ...
 
---PEIAKu/WMn1b1Hv9--
