@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2436CC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7936FC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D44702075A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428EE2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:44:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599406975;
-	bh=riEwVeVBIORWfwWar/cs3TjEW/xzLOlUM/PuZjLHNds=;
+	s=default; t=1599407074;
+	bh=q4PfSN/iGfvSKBF5OqA0xnoo0M75rGDiILB3JNyi3Sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zvMcGJqwmZ0AQ/umUQcvCuPrDYPB5YVPWqMrnlGpxQkrdbY5taKcFzN95UBADjUPy
-	 dvA73Qyg7GCsguEUa5sGtuSBah8lKcdEsQvkmuyNCqd6Tm2DdSSSqDNao2zVdrYya4
-	 92B/OC1K7uql5CLOfpkG/FQmfJW0Uv85ZDHE4OsY=
+	b=jlYFCcKq4/kd/71djb1GdINrHoxh7TYmRG3+DoCzlHnXrwRSnDJZ/dOhmowUPyOpN
+	 1XjXA/l3FWood+48Y1/Yo5EuK3nXLIVk7GTNdCTTKyLsE8ACjMX1Bq4iJKsrScAVde
+	 jGCafHFJkBDCWZhOrRKIjim6U2SS5v/VpXqFEBVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgIFPmt (ORCPT
+        id S1729077AbgIFPo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:42:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49280 "EHLO mail.kernel.org"
+        Sun, 6 Sep 2020 11:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729039AbgIFPjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:39:08 -0400
+        id S1729028AbgIFPi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 11:38:59 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC6932145D;
-        Sun,  6 Sep 2020 15:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 180932087C;
+        Sun,  6 Sep 2020 15:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599406683;
-        bh=riEwVeVBIORWfwWar/cs3TjEW/xzLOlUM/PuZjLHNds=;
+        s=default; t=1599406668;
+        bh=q4PfSN/iGfvSKBF5OqA0xnoo0M75rGDiILB3JNyi3Sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cp2jKXbMKdKR9Ttiv9ZPUR9LeIjOpqALidfU69eMvTRXTPOe3l1KKWIKYnIQgKFdp
-         BVL+6DbBuhmuVJ687CTnLoJqLzIbh6r8hXYmV5ffV3v5QOskKctwcZkJv+C7rJ19G7
-         DUYcftK3GJysPy0Cg494DFmscESZwsZUDOHNfYcI=
+        b=mefOvFPvkOhJ1KcRy7p46kGHjsedLZGjp2Kt5upg97ASLzTfnGSC8WlkySSNo6pPQ
+         5lebo9u6KrD611LAzv67xR9keoBcwnHUikfjbPOTp0OLAHtocpuxFEVs5MgiNjc2tO
+         X2sH7WwyFAdR9hI3lzU91hR0RQkL2kf7W6eSb6UA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -53,9 +53,9 @@ To:     "David S. Miller" <davem@davemloft.net>,
         linux-samsung-soc@vger.kernel.org
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 9/9] arm64: defconfig: Enable Samsung S3FWRN5 NFC driver
-Date:   Sun,  6 Sep 2020 17:36:54 +0200
-Message-Id: <20200906153654.2925-10-krzk@kernel.org>
+Subject: [PATCH v2 5/9] nfc: s3fwrn5: Add missing CRYPTO_HASH dependency
+Date:   Sun,  6 Sep 2020 17:36:50 +0200
+Message-Id: <20200906153654.2925-6-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200906153654.2925-1-krzk@kernel.org>
 References: <20200906153654.2925-1-krzk@kernel.org>
@@ -64,28 +64,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the Samsung S3FWRN5 NFC driver present in Exynos5433-based
-TM2/TM2E boards.
+The driver uses crypto hash functions so it needs to select CRYPTO_HASH.
+This fixes build errors:
+
+  arc-linux-ld: drivers/nfc/s3fwrn5/firmware.o: in function `s3fwrn5_fw_download':
+  firmware.c:(.text+0x152): undefined reference to `crypto_alloc_shash'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/configs/defconfig | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nfc/s3fwrn5/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index a03cefd58799..b78a14d43f3f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -199,6 +199,9 @@ CONFIG_MAC80211_LEDS=y
- CONFIG_RFKILL=m
- CONFIG_NET_9P=y
- CONFIG_NET_9P_VIRTIO=y
-+CONFIG_NFC=m
-+CONFIG_NFC_NCI=m
-+CONFIG_NFC_S3FWRN5_I2C=m
- CONFIG_PCI=y
- CONFIG_PCIEPORTBUS=y
- CONFIG_PCI_IOV=y
+diff --git a/drivers/nfc/s3fwrn5/Kconfig b/drivers/nfc/s3fwrn5/Kconfig
+index af9d18690afe..3f8b6da58280 100644
+--- a/drivers/nfc/s3fwrn5/Kconfig
++++ b/drivers/nfc/s3fwrn5/Kconfig
+@@ -2,6 +2,7 @@
+ config NFC_S3FWRN5
+ 	tristate
+ 	select CRYPTO
++	select CRYPTO_HASH
+ 	help
+ 	  Core driver for Samsung S3FWRN5 NFC chip. Contains core utilities
+ 	  of chip. It's intended to be used by PHYs to avoid duplicating lots
 -- 
 2.17.1
 
