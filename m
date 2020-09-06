@@ -2,135 +2,361 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ACFC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1070C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 614DB20760
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:39:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3xN9/vE"
+	by mail.kernel.org (Postfix) with ESMTP id 99C5920714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599401080;
+	bh=ZKHR3/YoCbtZkxot3BgUVVfjLR+YJMCjyIihTwxvW0g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=2eEm+suONlKGoyrV7+V1UyFF7buCo02UNEGHgny4lCN2ZylefpKRSDvvsIfxAbjEP
+	 oEVewowS5H63ryC6rUvsHf3fZrSAtZbM6euMl8+t5WlNQVWsivo9IppSmg8s9OjQU3
+	 ZdIv5tFIHCIk9kMzvQVH1887iGhIpPcCtpmdOfL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgIFNiz (ORCPT
+        id S1728830AbgIFOE3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 09:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgIFN16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 09:27:58 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58583C061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 06:27:56 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id w3so13011138ljo.5
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 06:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o9X2quCT3ijRZbfEg1lBDRxkIX0ndQZpXitZWRbnil4=;
-        b=a3xN9/vEhqSkTymr7qjQlPOQeFnCLASezuSHqkwv8HH1ND3Z3EpFQxbFbASRaNolJq
-         kQBpsEKe32xsLDG1rPZzIYqgsh7pbpnjtCsa+8Yx/GvBfsUzX09rvaIsADacDbxH0u3J
-         zMugpdzVAseTcZm+YKs1D86xsA2ynVvJjTFTRnMZPK9l+e01H+hWcH1o47qDsQamz4oM
-         liGr32QxprkkXSbH15BezBZAbmtlizKcN3fiv7+IpAKipENAqri75fZYj+3u+MalZPgo
-         PlmVBS34n0xmcr8vzQXFl6RByJVL0OicuyG0jfN1T2fwcV7wwMlDw+bNuhZz63PLdE7a
-         UWIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o9X2quCT3ijRZbfEg1lBDRxkIX0ndQZpXitZWRbnil4=;
-        b=bXPp6quWWmUHe8XoxPcGhFcP/fPFgjCaMYdxS3Unl4Hxu24KFyogixOMWy39G21UH4
-         I/dtB+j2FPP6OonaQuP+wgRKGxAuAljAq8o2TTh/2YBI7YWHKNEVs0rX9cvTBA18mjix
-         u94j6kB/MwrJ25/3g3T0zeVbEGSRsK78NA8yg3SrIIbonDBsucgi1xt4RhErrdr1Tr13
-         yFWLd9vPu6/fhX+dZTenJlFP9QgN0iaRIcsYO/yJVeMD6AYgzxWOBDm3Difod5B1uZ5G
-         4EwCRH8WoqZCseb7v7dhChuDO1s9m/45xjhlyPE5NmOLcGMhsDIxycNuc7AreUQl97OS
-         jisg==
-X-Gm-Message-State: AOAM533QtOiSjQK/zcCi+KklCcc4iTX+slqQK8GTnpEgN/jJeMwWxGpv
-        TWej6wyvezYa9MWZx2RFzIAfVQMGd30=
-X-Google-Smtp-Source: ABdhPJxi6jKv3UU4V74z8BpHT0legfyJ6m4liwDjnUs26TCqWbf+zXKSGEFe/8+C6okzWB2llg7JkA==
-X-Received: by 2002:a2e:7c18:: with SMTP id x24mr8025546ljc.402.1599398874492;
-        Sun, 06 Sep 2020 06:27:54 -0700 (PDT)
-Received: from alpha (10.177.smarthome.spb.ru. [109.71.177.10])
-        by smtp.gmail.com with ESMTPSA id k10sm4219247lja.112.2020.09.06.06.27.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 06:27:53 -0700 (PDT)
-Received: (nullmailer pid 556475 invoked by uid 1000);
-        Sun, 06 Sep 2020 13:33:01 -0000
-From:   Ivan Safonov <insafonov@gmail.com>
-To:     Larry Finger <Larry.Finger@lwfinger.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Ivan Safonov <insafonov@gmail.com>
-Subject: [PATCH] staging: r8188eu: replace enum rtw_ieee80211_spectrum_mgmt_actioncode with ieee80211_spectrum_mgmt_actioncode
-Date:   Sun,  6 Sep 2020 16:32:37 +0300
-Message-Id: <20200906133236.556427-1-insafonov@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Sun, 6 Sep 2020 10:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725803AbgIFOCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 10:02:54 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 121A320714;
+        Sun,  6 Sep 2020 14:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599400972;
+        bh=ZKHR3/YoCbtZkxot3BgUVVfjLR+YJMCjyIihTwxvW0g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fykDEtkgu2b6/BJMgS0xmiRVI97T34ZxRKxlk48OWHfchiQSUr4F0F7hdHS4jR/AJ
+         Zw3lDWigCNN5pqAx+MdYB6PO2zl82kQAQ2X/IcJhDJJnbh42Txixfo/R+t796glPNj
+         peErsYfLrsSSb4RwQMCchyL4F5oMa3vEvGf3P3dQ=
+Date:   Sun, 6 Sep 2020 15:02:47 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        Daniel Campello <campello@chromium.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Evan Green <evgreen@chromium.org>
+Subject: Re: [PATCH] dt-bindings: iio: sx9310: Add various settings as DT
+ properties
+Message-ID: <20200906150247.3aaef3a3@archlinux>
+In-Reply-To: <20200903221828.3657250-1-swboyd@chromium.org>
+References: <20200903221828.3657250-1-swboyd@chromium.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enum rtw_ieee80211_spectrum_mgmt_actioncode is a duplication
-of ieee80211_spectrum_mgmt_actioncode from include/linux/ieee80211.h.
+On Thu,  3 Sep 2020 15:18:28 -0700
+Stephen Boyd <swboyd@chromium.org> wrote:
 
-Signed-off-by: Ivan Safonov <insafonov@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 10 +++++-----
- drivers/staging/rtl8188eu/include/ieee80211.h | 10 ----------
- 2 files changed, 5 insertions(+), 15 deletions(-)
+> We need to set various bits in the hardware registers for this device to
+> operate properly depending on how it is installed. Add a handful of DT
+> properties to configure these things.
+> 
+> Cc: Daniel Campello <campello@chromium.org>
+> Cc: Lars-Peter Clausen <lars@metafoo.de>
+> Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Douglas Anderson <dianders@chromium.org>
+> Cc: Gwendal Grignou <gwendal@chromium.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+> 
+> I haven't written any code to handle these properties yet. I'd rather do
+> that once the binding patch is reviewed. Patch based on iio.git testing
+> branch.
+Makes sense to do docs first for this.  Quite a bit feels like it isn't
+a feature of the device configuration, but rather of the usecase.  That
+stuff should probably be done with a userspace interface, but you may
+be able to argue me around on some of them! 
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-index 98b1ba2e489f..0eaf81e83ddc 100644
---- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
-@@ -3546,12 +3546,12 @@ static unsigned int on_action_spct(struct adapter *padapter,
- 
- 	action = frame_body[1];
- 	switch (action) {
--	case RTW_WLAN_ACTION_SPCT_MSR_REQ:
--	case RTW_WLAN_ACTION_SPCT_MSR_RPRT:
--	case RTW_WLAN_ACTION_SPCT_TPC_REQ:
--	case RTW_WLAN_ACTION_SPCT_TPC_RPRT:
-+	case WLAN_ACTION_SPCT_MSR_REQ:
-+	case WLAN_ACTION_SPCT_MSR_RPRT:
-+	case WLAN_ACTION_SPCT_TPC_REQ:
-+	case WLAN_ACTION_SPCT_TPC_RPRT:
- 		break;
--	case RTW_WLAN_ACTION_SPCT_CHL_SWITCH:
-+	case WLAN_ACTION_SPCT_CHL_SWITCH:
- 		break;
- 	default:
- 		break;
-diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
-index 83218e7ec0a9..cb6940d2aeab 100644
---- a/drivers/staging/rtl8188eu/include/ieee80211.h
-+++ b/drivers/staging/rtl8188eu/include/ieee80211.h
-@@ -526,16 +526,6 @@ enum rtw_ieee80211_category {
- 	RTW_WLAN_CATEGORY_P2P = 0x7f,/* P2P action frames */
- };
- 
--/* SPECTRUM_MGMT action code */
--enum rtw_ieee80211_spectrum_mgmt_actioncode {
--	RTW_WLAN_ACTION_SPCT_MSR_REQ = 0,
--	RTW_WLAN_ACTION_SPCT_MSR_RPRT = 1,
--	RTW_WLAN_ACTION_SPCT_TPC_REQ = 2,
--	RTW_WLAN_ACTION_SPCT_TPC_RPRT = 3,
--	RTW_WLAN_ACTION_SPCT_CHL_SWITCH = 4,
--	RTW_WLAN_ACTION_SPCT_EXT_CHL_SWITCH = 5,
--};
--
- enum _PUBLIC_ACTION {
- 	ACT_PUBLIC_BSSCOEXIST = 0, /*  20/40 BSS Coexistence */
- 	ACT_PUBLIC_DSE_ENABLE = 1,
--- 
-2.26.2
+Jonathan
+
+> 
+>  .../iio/proximity/semtech,sx9310.yaml         | 182 ++++++++++++++++++
+>  1 file changed, 182 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> index 5739074d3592..e74b81483c14 100644
+> --- a/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> +++ b/Documentation/devicetree/bindings/iio/proximity/semtech,sx9310.yaml
+> @@ -40,6 +40,169 @@ properties:
+>    "#io-channel-cells":
+>      const: 1
+>  
+> +  semtech,cs0-ground:
+> +    description: Indicates the CS0 sensor is connected to ground.
+> +    type: boolean
+
+This one is probably fine. I can't think of a similar interface we need
+to match, but maybe Rob or someone else will have a suggestion.
+
+> +
+> +  semtech,combined-sensors:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 1, 2, 3]
+> +    default: 0
+> +    description:
+> +      Which sensors are combined. 0 for CS3, 1 for CS0+CS1, 2 for CS1+CS2,
+> +      and 3 for all sensors.
+
+Make it clear in this description what 'combined' means.
+Also, I think this would be better as a set of values with an anyOf match to say
+<3>
+<0>, <1> 
+<1>, <2> 
+<1>, <2>, <3>
+
+Fine to insist they are in numeric order.
+
+> +
+> +  semtech,cs0-gain-factor:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [1, 2, 4, 8]
+> +    default: 1
+> +    description:
+> +      Gain factor for CS0 (and combined if any) sensor.
+
+Why is this something that should be in DT as opposed to via
+a userspace control?  We have hardwaregain for this purpose (I think)
+
+Also we mostly use child nodes to allow us to specify characteristics
+of individual channels.
+
+> +
+> +  semtech,cs1-gain-factor:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [1, 2, 4, 8]
+> +    default: 1
+> +    description:
+> +      Gain factor for CS1 sensor.
+> +
+> +  semtech,cs2-gain-factor:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [1, 2, 4, 8]
+> +    default: 1
+> +    description:
+> +      Gain factor for CS2 sensor.
+> +
+> +  semtech,resolution:
+> +    description:
+> +      Capacitance measure resolution.
+> +    enum:
+> +      - coarsest
+> +      - very-coarse
+> +      - coarse
+> +      - medium-coarse
+> +      - medium
+> +      - fine
+> +      - very-fine
+> +      - finest
+I'd normally be very against cases like this where we have something that
+feels like it should have a clear definition rather than a random wordy scale
+but these are all the information I can find in the datasheet.
+
+I would suggest adding a specific reference to the datasheet for this one.
+
+> +
+> +  semtech,startup-sensor:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 1, 2, 3]
+> +    default: 0
+> +    description:
+> +      Sensor used for start-up proximity detection. The combined
+> +      sensor is represented by 3.
+
+This feels like it should be a userspace control rather than in DT?
+
+> +
+> +  semtech,proxraw-strength:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 2, 4, 8]
+> +    default: 2
+> +    description:
+> +      PROXRAW filter strength. A value of 0 represents off, and other values
+> +      represent 1-1/N.
+
+Having looked at the datasheet I have little or now idea of what this filter
+actually is.  However, what is the argument for it being in DT rather than
+exposing a userspace control of some type.
+
+> +
+> +  semtech,compensate-common:
+> +    description: Any sensor triggers compensation of all channels.
+> +    type: boolean
+
+Compensation for what?
+
+> +
+> +  semtech,avg-pos-strength:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 16, 64, 128, 256, 512, 1024, 4294967295]
+> +    default: 16
+> +    description:
+> +      Average positive filter strength. A value of 0 represents off and
+> +      UINT_MAX (4294967295) represents infinite. Other values
+> +      represent 1-1/N.
+
+I'm not sure about using UINT_MAX to represent infinity. Rob any thoughts on
+this?
+
+Again, why does it make sense to have the filter controls in DT?
+
+
+> +
+> +  semtech,cs0-prox-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
+> +               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
+> +               160, 192, 224, 256, 320, 384, 512, 640,
+> +               768, 1024, 1536]
+> +    default: 12
+> +    description:
+> +      Proximity detection threshold for CS0 (and combined if any) sensor.
+
+That is definitely a userspace thing. Why would you put it in DT?
+Also same comment as above for channels as child nodes
+
+> +
+> +  semtech,cs1-prox-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
+> +               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
+> +               160, 192, 224, 256, 320, 384, 512, 640,
+> +               768, 1024, 1536]
+> +    default: 12
+> +    description:
+> +      Proximity detection threshold for CS1 sensor.
+> +
+> +  semtech,cs2-prox-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [2, 4, 6, 8, 12, 16, 20, 24, 28, 32, 40,
+> +               48, 56, 64, 72, 80, 88, 96, 112, 128, 144,
+> +               160, 192, 224, 256, 320, 384, 512, 640,
+> +               768, 1024, 1536]
+> +    default: 12
+> +    description:
+> +      Proximity detection threshold for CS2 sensor.
+> +
+> +  semtech,cs0-body-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
+> +    default: 1800
+> +    description:
+> +      Body detection threshold for CS0 (and combined if any) sensor.
+
+As before, why DT plus child nodes
+
+> +
+> +  semtech,cs1-body-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
+> +    default: 12
+> +    description:
+> +      Body detection threshold for CS1 sensor.
+> +
+> +  semtech,cs2-body-threshold:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 300, 600, 900, 1200, 1500, 1800, 30000]
+> +    default: 12
+> +    description:
+> +      Body detection threshold for CS2 sensor.
+> +
+> +  semtech,hysteresis:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 6, 12, 25]
+> +    default: 0
+> +    description:
+> +      The percentage of hysteresis +/- applied to proximity/body samples.
+
+Is this hysteresis on an event?  If so we have defined ABI to control that
+from userspace, though as an absolute value rather than a precentage so some
+magic will be needed.  Hysteresis is usually defined only the 'not event'
+direction rather than +/-
+
+> +
+> +  semtech,close-debounce-samples:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 2, 4, 8]
+> +    default: 0
+> +    description:
+> +      The number of close samples debounced for proximity/body thresholds.
+
+This feels like something that has more to do with the object motion than
+the sensor setup, so perhaps should be controlled from userspace?
+
+> +
+> +  semtech,far-debounce-samples:
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#definitions/uint32
+> +      - enum: [0, 2, 4, 8]
+> +    default: 0
+> +    description:
+> +      The number of far samples debounced for proximity/body thresholds.
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -61,5 +224,24 @@ examples:
+>          vdd-supply = <&pp3300_a>;
+>          svdd-supply = <&pp1800_prox>;
+>          #io-channel-cells = <1>;
+> +        semtech,cs0-ground;
+> +        semtech,combined-sensors = <0>;
+> +        semtech,cs0-gain-factor = <8>;
+> +        semtech,cs1-gain-factor = <8>;
+> +        semtech,cs2-gain-factor = <8>;
+> +        semtech,resolution = "fine";
+> +        semtech,startup-sensor = <1>;
+> +        semtech,proxraw-strength = <2>;
+> +        semtech,compensate-common;
+> +        semtech,avg-pos-strength = <64>;
+> +        semtech,cs0-prox-threshold = <96>;
+> +        semtech,cs1-prox-threshold = <112>;
+> +        semtech,cs2-prox-threshold = <96>;
+> +        semtech,cs0-body-threshold = <300>;
+> +        semtech,cs1-body-threshold = <300>;
+> +        semtech,cs2-body-threshold = <300>;
+> +        semtech,hysteresis = <0>;
+> +        semtech,close-debounce-samples = <2>;
+> +        semtech,far-debounce-samples = <2>;
+>        };
+>      };
+> 
+> base-commit: 1bebdcb928eba880f3a119bacb8149216206958a
 
