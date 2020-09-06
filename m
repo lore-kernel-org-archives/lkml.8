@@ -2,103 +2,116 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CA3C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BBBEC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E812520C09
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599422956;
-	bh=meX/Fm+ItdLklwXvfvZ1OtWwc9SIs7LcjL3XvWaMhnw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TB0J3eRQBabic0AWpnTpuq/YCuM3x6tVHAX8DUp11R/0UMv7bMHzCrZQhrPxx/nNI
-	 l+gOaBR2mADq6vFfNPeYTj0D/urCtDfEdgqz8smqGx5z9KUdjILoKpjymNBaKKW5VJ
-	 26i3Rd3IcWCpb9Y2srIl2hrkSy8kZDToR+EqEABY=
+	by mail.kernel.org (Postfix) with ESMTP id C67BF208B3
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 20:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4BXwmWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgIFUJQ (ORCPT
+        id S1726530AbgIFUMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 16:09:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbgIFUJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 16:09:14 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 003DB208B3;
-        Sun,  6 Sep 2020 20:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599422953;
-        bh=meX/Fm+ItdLklwXvfvZ1OtWwc9SIs7LcjL3XvWaMhnw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IBFgIQKPUvH9/wjWI+cAznRFeU92TlPIaJ2yzbFjxTyimuAg0Bih/rsjsohGCUuev
-         pjAJLyVY6esCBTg5nwl5yKlrtW2b1RkY1Yjof8L5L022zA8bQBmXaFc36q5AqkbNol
-         0mJ5NARU9kPagKMcRggLgK00Kga/SemNLlrxgHWc=
-Date:   Sun, 6 Sep 2020 22:09:29 +0200
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        David Laight <David.Laight@aculab.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] /dev/zero: also implement ->read
-Message-ID: <20200906200929.GA554621@kroah.com>
-References: <20200903155922.1111551-1-hch@lst.de>
- <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
- <3b0b58be4b844162b73db1b108a9b995@AcuMS.aculab.com>
- <20200906182122.GA12295@amd>
- <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
- <20200906183820.GA13290@amd>
+        Sun, 6 Sep 2020 16:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgIFUMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 16:12:14 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE29C061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 13:12:12 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e33so7046262pgm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 13:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fMygZrwawBCdGQ2bBFDMvJ3Y2e+cfl4sBDGo7UGztys=;
+        b=L4BXwmWDvemqRJGMuLN9aM59ZoBRJbDiKherzXRYsVuFip8Ct5P0Xo8HzEgxOnEJLk
+         fEyfQiKDUZOHF7XLgfXFHdnmZV23yYOSKwrO+2/N5ssNQqqzPcbIFZSzGkLgJkbe3i62
+         jVEIcuIDzeDD26X5lY8scOfzlkXBvamq5dkXqjiDZFCv3RgLpISw25ly12G/Cwk6S48R
+         MFu21cff5CVj4VjLwvZnL7yQqKjP2MNNMaf4lZ5rn4QRtDxvA3usHQiJiCMZMPGo5szU
+         zEn3dnxBuKOgnQ72NzwoQBdCEQMXWuzfwh0XH5wGr5Hf4M0fWz1Xf8slBxWjg0Dedy/p
+         lBQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fMygZrwawBCdGQ2bBFDMvJ3Y2e+cfl4sBDGo7UGztys=;
+        b=rGZsi8NU3F8wT76Cos45ZdCxaeN9pFc4vRrg/WDucMFK7XYvMZx5qi3wM9sfFq3ZhS
+         I5yNbqto5Eq3/ycMZo0Tmhf1sspRho8j3KlcKr3vtJAHKFw2Yk2RuQd6IRORZNtufxXn
+         otSVwQ956IURPEjKL1wZR0L2FthMK0ZgnIMi6Z8LxsJFD/+ab55v/3M07gfqO+9bTNFp
+         PabKa8nPmCow0JNiNJC6ItQBPGHySwgiJOe2jMWnpxTBaDsgmt76h4fCMQVGDMlpOcep
+         0i+rEZUFRjKykh+UrqjakQPiatUGDxr+U/pnAGPUyEmwow/a4VpURQn2efUxu0LL7504
+         Ksig==
+X-Gm-Message-State: AOAM531EjSRGg5gM9SAeSREEI78UI+xAJletcJ5qJ/xw6E29ub+7duxr
+        SJqHO9qw7pyjW0HFzV4VMLQ=
+X-Google-Smtp-Source: ABdhPJwnui4bywCc/fybs+kbVubILOVIYNhTsWjZV7ufrjbUJTklHsHiivFQmhkzH7GUlBTPus5McA==
+X-Received: by 2002:a62:5e04:: with SMTP id s4mr17619755pfb.67.1599423126651;
+        Sun, 06 Sep 2020 13:12:06 -0700 (PDT)
+Received: from localhost.localdomain ([49.207.209.246])
+        by smtp.gmail.com with ESMTPSA id v12sm10705735pgk.81.2020.09.06.13.12.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 13:12:05 -0700 (PDT)
+From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
+        syzbot+b8639c8dcb5ec4483d4f@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: [Linux-kernel-mentees] [PATCH] block : Fix use-after-free Read in delete_partition
+Date:   Mon,  7 Sep 2020 01:41:56 +0530
+Message-Id: <20200906201158.14014-1-anant.thazhemadam@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200906183820.GA13290@amd>
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 08:38:20PM +0200, Pavel Machek wrote:
-> On Sun 2020-09-06 20:35:38, Christophe Leroy wrote:
-> > Hi,
-> > 
-> > Le 06/09/2020 à 20:21, Pavel Machek a écrit :
-> > >Hi!
-> > >
-> > >>>>Christophe reported a major speedup due to avoiding the iov_iter
-> > >>>>overhead, so just add this trivial function.  Note that /dev/zero
-> > >>>>already implements both an iter and non-iter writes so this just
-> > >>>>makes it more symmetric.
-> > >>>>
-> > >>>>Christophe Leroy <christophe.leroy@csgroup.eu>
-> > >>>>Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > >>>
-> > >>>Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> > >>
-> > >>Any idea what has happened to make the 'iter' version so bad?
-> > >
-> > >Exactly. Also it would be nice to note how the speedup was measured
-> > >and what the speedup is.
-> > >
-> > 
-> > Was measured on an 8xx powerpc running at 132MHz with:
-> > 
-> > 	dd if=/dev/zero of=/dev/null count=1M
-> > 
-> > With the patch, dd displays a throughput of 113.5MB/s
-> > Without the patch it is 99.9MB/s
-> 
-> Actually... that does not seem like a huge deal. read(/dev/zero) is
-> not that common operation.
+A use-after-free read of the kobject member being casted out to the
+device structure containing it seems to be potentially possible
+due to unsafe casting using container_of (since an edge case such
+as when the ptr being casted might be NULL or problematic is not
+accounted for).
+Using container_of_safe resolves this issue, with no obvious tradeoffs
+and without considerable expense.
 
-There is nothing wrong with this patch (aside from the sparse warning),
-and it's in my tree now, so I don't understand complaining about it...
+Reported-by: syzbot+b8639c8dcb5ec4483d4f@syzkaller.appspotmail.com
+Tested-by: syzbot+b8639c8dcb5ec4483d4f@syzkaller.appspotmail.com
+Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+---
+ include/linux/device.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/include/linux/device.h b/include/linux/device.h
+index ca18da4768e3..aeb70b7a37e6 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -643,7 +643,7 @@ struct device_link {
+ 
+ static inline struct device *kobj_to_dev(struct kobject *kobj)
+ {
+-	return container_of(kobj, struct device, kobj);
++	return container_of_safe(kobj, struct device, kobj);
+ }
+ 
+ /**
+-- 
+2.25.1
+
