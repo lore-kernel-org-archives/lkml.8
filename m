@@ -2,100 +2,95 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA14C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95729C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A2A5206A5
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="KBLRcTLJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6039F20759
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgIFS1Q (ORCPT
+        id S1729146AbgIFSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 14:27:16 -0400
-Received: from mout.gmx.net ([212.227.15.19]:59137 "EHLO mout.gmx.net"
+        Sun, 6 Sep 2020 14:35:53 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:32069 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728969AbgIFS1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 14:27:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599416804;
-        bh=2Ppyix6Y9pVqwAOomMgrqfY0I+MRBSmelBiqaDpZmwM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:Reply-To:From:Date:
-         In-Reply-To;
-        b=KBLRcTLJOt8YinkXmAmvSvtSwK7m96mWN+HQ99a2lGlgh7sl/knXD53R0I+w1+fG3
-         7w/lh+VKG7iJQdcW8lMe4FALXDVJBjwAnDtu6dGbl6LT8otJPODgUiF+oBp5U7VbZs
-         KZrnxa5ijfSyEFVaYB1GipVu5LyZQxS1C5iEXVsc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from mandree.no-ip.org ([84.160.55.91]) by mail.gmx.com (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRTRH-1jrhjN2t6L-00NTgm; Sun, 06
- Sep 2020 20:26:44 +0200
-Received: from ryzen.an3e.de (localhost [IPv6:::1])
-        by ryzen.an3e.de (Postfix) with ESMTP id BA277120106;
-        Sun,  6 Sep 2020 20:26:41 +0200 (CEST)
-Subject: Re: pcieport 0000:00:01.0: PME: Spurious native interrupt (nvidia
- with nouveau and thunderbolt on thinkpad P73)
-To:     Marc MERLIN <marc_nouveau@merlins.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, nouveau@lists.freedesktop.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <20191004123947.11087-2-mika.westerberg@linux.intel.com>
- <20200808202202.GA12007@merlins.org> <20200906181852.GC13955@merlins.org>
-Reply-To: invalid@invalid.invalid
-From:   Matthias Andree <matthias.andree@gmx.de>
-Message-ID: <83a84ca8-1f61-962e-4329-1a5e85e64dab@gmx.de>
-Date:   Sun, 6 Sep 2020 20:26:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1728969AbgIFSfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 14:35:51 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bl0Tr26tZzB09Zw;
+        Sun,  6 Sep 2020 20:35:44 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 6BBji7Lwk8wd; Sun,  6 Sep 2020 20:35:44 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bl0Tr0vrfzB09Zt;
+        Sun,  6 Sep 2020 20:35:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 096C18B778;
+        Sun,  6 Sep 2020 20:35:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id QNdS5biYzokR; Sun,  6 Sep 2020 20:35:47 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 59D688B75B;
+        Sun,  6 Sep 2020 20:35:47 +0200 (CEST)
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+To:     Pavel Machek <pavel@denx.de>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     Christoph Hellwig <hch@lst.de>, "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200903155922.1111551-1-hch@lst.de>
+ <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
+ <3b0b58be4b844162b73db1b108a9b995@AcuMS.aculab.com>
+ <20200906182122.GA12295@amd>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
+Date:   Sun, 6 Sep 2020 20:35:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200906181852.GC13955@merlins.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:pcuxN8MATZXEDYk6XIomOMPYxsUCRK4B4jiQ41qoH+xG0lXn4ZH
- beUhbkTTeVPibDBDU1POsQ4BIHkExSNLupSujeqSLV+24mCfKR59v8NlECuvWVB5vfeC6vB
- bINs6tqv5euXY/GkuDumkC9fSnGS/Vq84drPmqWpbYt0obQyU4KGm05xVx4Xu2yLHIPNwcc
- s91m0gaSJBD4gO44U0lgQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:q0j6mXjJslo=:XzbW+8WyG6CvL0hx+bMKNF
- hTogB5PUcfv4RidxWHk+a4q3F8Xru3lQUK8W9bPPcvdkUoG3XTSJoo82YA013NfqI3il1NaYX
- APcGGJFIsfi6+RaxNxAFeDY/r8kk1Yes3uUx/pj67RbRGTm0VJvYD6RqW0jvV56PWLLl9bh6E
- 8U1qhKoAHBpmg06SksR/tfIZTNAOyfKw13SaeSVhYYH/cRaRWfOAKANJyaenzCyVvZ2M9KFRn
- /ABxCIN6aUN++Wonj32tdVI0LKx/IcJWtUJ+MrV4lRowdaK1SxFWdevKN9Q6CHNvjVkqOQGaa
- 1TC0kKXLn/r3AngUTUeOT0BjU+Y3YpXYzobaGEcGcfvlDZP6N7YYbi8noHRuN5nRTAePBpseB
- MEKvr844jiaxqce9KFDP0XP6JVzMQbrOyfAdG9oTrSuf0tZj4Pue4/6YH62bmmaVnpNkzi9cJ
- d6Ksb0ESZiwbNFH0+VuP3/o+ckFe7idAN4UzNbBl0pNzF0yZ2HcQcxoIshNipj8Oy2mZRJ9be
- jQMDB1fBuTMIpNxpXNLSGXKywQYbKKemu6Pn9CtT9z3jmqAE2sBBJywsZfONIj9mPpVTpNCC0
- 1fPgZSzPVvAXBkRkmogBlvfFPmAxWW/VmGO5qd3bNyjNPG0BYfMZ5CODLfzth5bnryLSa9KS0
- 9YBXLSbtdqStF39RxFWYokvtVfHCatkJIUaN27WNOySpV4noA/oMiGo72jZhcuhZQHMYJ122H
- fwbqJQQg9ih3zVUUX80GoU8/y0Q5hCIve4+ebVc4rc2ycdsPxh3Bpjd+vSPUOw8/T+lCtSaoc
- ZFr2KsQD3xrQzAdHhEIl5d7NWcgiLiLr3D6drVg4fEVjBGydzd8NCJYB6ZDZ+aJm+HGvByitN
- BVzQbRIu9Jjrg/6famV0oqEAgQNW3kxzOLF61xKacFZIdBuqjjvmyY0Ov3qE3Cuqa63hcq8WN
- GjxDD7zXY+EVYNmvb3EHiBpMFEgwfl3uojZlyjeHT26LJ0aqmlInzsi3ck3juOrtTr4ETunzu
- Ejgpyt2q6ro6IbYYl4m6eB6B8tEi/8i5c55qtLSrItVZVN90EFFnCseU8/7r9M3b85yrMKKmB
- 9yNUcV1wKyWyYYE6/nWp9FsJsoemhgn47WnMox3MalF0xrJkAYJhfb9SH4ohj5/tCq1rkZ1Xm
- 6Fvm5sk+/F28FmBKrCnay6rnI7ghdO3gzOyKq5VIu7tauxDy9pWi83FiY5py0+7lv7NI6Q814
- O91zqWQI6RK9GOwffMEARtex5lTuxCzLp0Ci/5g==
+In-Reply-To: <20200906182122.GA12295@amd>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please everyone stop Cc:ing me on this discussion, I have no interest
-and nothing to contribute here.
+Hi,
 
-I have set an invalid Reply-To: just in case...
+Le 06/09/2020 à 20:21, Pavel Machek a écrit :
+> Hi!
+> 
+>>>> Christophe reported a major speedup due to avoiding the iov_iter
+>>>> overhead, so just add this trivial function.  Note that /dev/zero
+>>>> already implements both an iter and non-iter writes so this just
+>>>> makes it more symmetric.
+>>>>
+>>>> Christophe Leroy <christophe.leroy@csgroup.eu>
+>>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>
+>>> Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>
+>> Any idea what has happened to make the 'iter' version so bad?
+> 
+> Exactly. Also it would be nice to note how the speedup was measured
+> and what the speedup is.
+> 
 
+Was measured on an 8xx powerpc running at 132MHz with:
 
+	dd if=/dev/zero of=/dev/null count=1M
+
+With the patch, dd displays a throughput of 113.5MB/s
+Without the patch it is 99.9MB/s
+
+Christophe
