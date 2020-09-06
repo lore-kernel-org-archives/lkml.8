@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E15C1C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C593EC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5B182080A
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:52:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86855208B3
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:52:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tF3dtYTP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPUd44Hl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbgIFSwT (ORCPT
+        id S1729224AbgIFSwa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 14:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60476 "EHLO
+        Sun, 6 Sep 2020 14:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgIFSvp (ORCPT
+        with ESMTP id S1729122AbgIFSvq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 14:51:45 -0400
+        Sun, 6 Sep 2020 14:51:46 -0400
 Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE04C061755;
-        Sun,  6 Sep 2020 11:51:44 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id a15so13643492ljk.2;
-        Sun, 06 Sep 2020 11:51:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B75C061756;
+        Sun,  6 Sep 2020 11:51:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id k25so985895ljk.0;
+        Sun, 06 Sep 2020 11:51:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=OBUXvlICXAt4XhkXTBZEgHZISfsH0kwsfBBqReQcTB0=;
-        b=tF3dtYTP1OUDdU6viCKHRFrYuoQMQMMHCW93Y/HzQVuQDyfPhNSCdUkdgaNaRqvYy/
-         KeXviAV8gXfVtwefzL6LMzPFeoZDd/nbQGvLNUivrI1bCDCKd+jhrFlVnhLzZAwV68Ni
-         fB/L+8nQh0JwRyFY3sRvNpVWRwtAASvevGC3lIjoQ1WngUWq1svHymP6R31GNLTz3g2T
-         HKg20CLMYHwEP4sT1lgcPTenKfOkFVu+iIF+XHiaTALiNHoHm8ZsZVjX8J51Se3kEpAe
-         Oqys5kmKt3UVg9iMcQ5zUZrj168UuU9bGhPwqp7mWZKelFJubfWuszCVfUqqw+5RZmZd
-         w+JQ==
+        bh=qJN8JDMFMH1+jjJ2ZzpFoBxZu5G7qxZH/FmibKkpCOE=;
+        b=DPUd44Hl9BFXL9ckdYr630ht4J/GZMDwn/otD1LlIFXQUg5AtJnhbhsjDRio6s5ZTq
+         S54xXW838vaz1HMx0OiqZaUBEWTctTMUeiBAo0rxGt6uNXzTKAQMTwyGIuPZ0/i5NkPO
+         x8BONI35Ffdh5w7R7UN7Qn2GOmlUzieuOyO9BydxRLeSTcfrlPDMwjGHI+2XFPheGnww
+         DsM21mSz19For/BfuzdJqk1x7DqtLf6ba5+BVsRv5+sSkJRuXH1pj1DkELhfcRf2g6LL
+         tmpL13rW7hHsI8lOehuWGRtuBDdga0n8vAhQwzskUDpmGhRuPZhBgv0T6ktHWmrt/HW3
+         Q3Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=OBUXvlICXAt4XhkXTBZEgHZISfsH0kwsfBBqReQcTB0=;
-        b=OyJbKhZWLjKFlfQufq2td2b26QyhKwRSXEWjNznfwci5M6IZCOO6eQR/htYY0Uc82N
-         k/AVU6oYRAwuL427QUC2njTheQmvrOBPtq6tLBlCfl9snGzwGczB3Klv3vNu59hA1zUA
-         ume7z/43wdjZuHw2GW5GTeWo0WP9bYRP0CtJZ8rg0M9p1TUKJN2vuUXsmezg+Iw42Jso
-         wua231Rx64SZqBCsLWfT0BNvv2fTo97ELaXbs4W463BK5V8aLjdcKGAkpQXPYdChJ57o
-         0tcChfG76F0SQjItudf6GtKZznnxwAwHz04MfFXU1yLTVOi+CYI0a0M0ZXuS8G3YEXNJ
-         DBHg==
-X-Gm-Message-State: AOAM532zvcQGX1vfozC8T6zBj8gYZPQ1WRunxfcIp+RjeQCownawRraf
-        A01a8d41xHPhalswXIl96NjYZapCzrs=
-X-Google-Smtp-Source: ABdhPJxGdwvw8sgsF6rAG5pZKaW9VOoQEBNSYyDn+n1FfUYH6PBvipwMmgS5hgwW70dgaf3RVux6JA==
-X-Received: by 2002:a2e:980f:: with SMTP id a15mr756737ljj.153.1599418301977;
-        Sun, 06 Sep 2020 11:51:41 -0700 (PDT)
+        bh=qJN8JDMFMH1+jjJ2ZzpFoBxZu5G7qxZH/FmibKkpCOE=;
+        b=EVVJtwRQSO0cfx+zgxoO+UR4BfeCRFT390BETGZCk5cBci0sSe2bsPU6CS+Sd43f18
+         CSuJs/FNPZrDoMziNaGvhEWHzjgtqqnXQBpxZDZHYLqL6rM6kslDqszZPsPlAq3rlhNN
+         cRfUImqoft1groouAQzjeJLSY08eIJh6qfENBqKPbJT6rhy5sS3S6N7d6xmvjdfyuUVS
+         CSMuCg1uVHPeQKU2mVUs9dWUmhaW5UTii0bMKNx/xIDbqRUxmHKyr4B3XOZk6kVxEeTb
+         Fmy1emoG0Zi7uCGNsylPbf73hvB/neQmxkocsgEYjoDIgYgwH0SCA3uN/rvQbJ8q8otf
+         QQzA==
+X-Gm-Message-State: AOAM5317ozyyb+jF8suH7IMrWNnS5S/GzkJ1WgzZJemeSLPS8UiECRNq
+        jzmCmYomyikXUz95P0WiCFw=
+X-Google-Smtp-Source: ABdhPJz51IJTLdpwt7jOkMCqTuDfRxG4Bv68QtS2NBVohChznrzFkZU3+V2wCQd4y3BWIlOoUtaf4Q==
+X-Received: by 2002:a2e:97d0:: with SMTP id m16mr9032797ljj.277.1599418303617;
+        Sun, 06 Sep 2020 11:51:43 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id s3sm4883407ljd.44.2020.09.06.11.51.41
+        by smtp.gmail.com with ESMTPSA id s3sm4883407ljd.44.2020.09.06.11.51.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 11:51:41 -0700 (PDT)
+        Sun, 06 Sep 2020 11:51:43 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,41 +69,130 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 03/36] i2c: tegra: Mask interrupt in tegra_i2c_issue_bus_clear()
-Date:   Sun,  6 Sep 2020 21:50:06 +0300
-Message-Id: <20200906185039.22700-4-digetx@gmail.com>
+Subject: [PATCH v5 05/36] i2c: tegra: Remove i2c_dev.clk_divisor_non_hs_mode member
+Date:   Sun,  6 Sep 2020 21:50:08 +0300
+Message-Id: <20200906185039.22700-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200906185039.22700-1-digetx@gmail.com>
 References: <20200906185039.22700-1-digetx@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tegra_i2c_issue_bus_clear() may fail and in this case BUS_CLR_DONE
-stays unmasked. Hence let's mask it for consistency. This patch doesn't
-fix any known problems.
+The "non_hs_mode" divisor value is fixed, thus there is no need to have
+the variable i2c_dev.clk_divisor_non_hs_mode struct member. Let's remove
+it and move the mode selection into tegra_i2c_init() where it can be
+united with the timing selection.
 
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 45 +++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 307df6f97ed0..d01697995224 100644
+index bfdb8d388ce2..4a9375fc71d8 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1149,6 +1149,8 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+@@ -250,7 +250,6 @@ struct tegra_i2c_hw_feature {
+  * @msg_buf_remaining: size of unsent data in the message buffer
+  * @msg_read: identifies read transfers
+  * @bus_clk_rate: current I2C bus clock rate
+- * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
+  * @is_multimaster_mode: track if I2C controller is in multi-master mode
+  * @tx_dma_chan: DMA transmit channel
+  * @rx_dma_chan: DMA receive channel
+@@ -281,7 +280,6 @@ struct tegra_i2c_dev {
+ 	size_t msg_buf_remaining;
+ 	int msg_read;
+ 	u32 bus_clk_rate;
+-	u16 clk_divisor_non_hs_mode;
+ 	bool is_multimaster_mode;
+ 	struct dma_chan *tx_dma_chan;
+ 	struct dma_chan *rx_dma_chan;
+@@ -783,6 +781,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+ 	u32 val;
+ 	int err;
+ 	u32 clk_divisor, clk_multiplier;
++	u32 non_hs_mode;
+ 	u32 tsu_thd;
+ 	u8 tlow, thigh;
  
- 	time_left = tegra_i2c_wait_completion_timeout(
- 			i2c_dev, &i2c_dev->msg_complete, 50);
-+	tegra_i2c_mask_irq(i2c_dev, I2C_INT_BUS_CLR_DONE);
+@@ -805,24 +804,32 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+ 	if (i2c_dev->is_vi)
+ 		tegra_i2c_vi_init(i2c_dev);
+ 
+-	/* Make sure clock divisor programmed correctly */
+-	clk_divisor = FIELD_PREP(I2C_CLK_DIVISOR_HSMODE,
+-				 i2c_dev->hw->clk_divisor_hs_mode) |
+-		      FIELD_PREP(I2C_CLK_DIVISOR_STD_FAST_MODE,
+-				 i2c_dev->clk_divisor_non_hs_mode);
+-	i2c_writel(i2c_dev, clk_divisor, I2C_CLK_DIVISOR);
+-
+-	if (i2c_dev->bus_clk_rate > I2C_MAX_STANDARD_MODE_FREQ &&
+-	    i2c_dev->bus_clk_rate <= I2C_MAX_FAST_MODE_PLUS_FREQ) {
++	switch (i2c_dev->bus_clk_rate) {
++	case I2C_MAX_STANDARD_MODE_FREQ + 1 ... I2C_MAX_FAST_MODE_PLUS_FREQ:
+ 		tlow = i2c_dev->hw->tlow_fast_fastplus_mode;
+ 		thigh = i2c_dev->hw->thigh_fast_fastplus_mode;
+ 		tsu_thd = i2c_dev->hw->setup_hold_time_fast_fast_plus_mode;
+-	} else {
 +
- 	if (time_left == 0) {
- 		dev_err(i2c_dev->dev, "timed out for bus clear\n");
- 		return -ETIMEDOUT;
++		if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ)
++			non_hs_mode = i2c_dev->hw->clk_divisor_fast_plus_mode;
++		else
++			non_hs_mode = i2c_dev->hw->clk_divisor_fast_mode;
++		break;
++
++	default:
+ 		tlow = i2c_dev->hw->tlow_std_mode;
+ 		thigh = i2c_dev->hw->thigh_std_mode;
+ 		tsu_thd = i2c_dev->hw->setup_hold_time_std_mode;
++		non_hs_mode = i2c_dev->hw->clk_divisor_std_mode;
++		break;
+ 	}
+ 
++	/* Make sure clock divisor programmed correctly */
++	clk_divisor = FIELD_PREP(I2C_CLK_DIVISOR_HSMODE,
++				 i2c_dev->hw->clk_divisor_hs_mode) |
++		      FIELD_PREP(I2C_CLK_DIVISOR_STD_FAST_MODE, non_hs_mode);
++	i2c_writel(i2c_dev, clk_divisor, I2C_CLK_DIVISOR);
++
+ 	if (i2c_dev->hw->has_interface_timing_reg) {
+ 		val = FIELD_PREP(I2C_INTERFACE_TIMING_THIGH, thigh) |
+ 		      FIELD_PREP(I2C_INTERFACE_TIMING_TLOW, tlow);
+@@ -837,7 +844,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+ 		i2c_writel(i2c_dev, tsu_thd, I2C_INTERFACE_TIMING_1);
+ 
+ 	clk_multiplier  = tlow + thigh + 2;
+-	clk_multiplier *= i2c_dev->clk_divisor_non_hs_mode + 1;
++	clk_multiplier *= non_hs_mode + 1;
+ 
+ 	err = clk_set_rate(i2c_dev->div_clk,
+ 			   i2c_dev->bus_clk_rate * clk_multiplier);
+@@ -1750,18 +1757,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		goto unprepare_fast_clk;
+ 	}
+ 
+-	if (i2c_dev->bus_clk_rate > I2C_MAX_FAST_MODE_FREQ &&
+-	    i2c_dev->bus_clk_rate <= I2C_MAX_FAST_MODE_PLUS_FREQ)
+-		i2c_dev->clk_divisor_non_hs_mode =
+-				i2c_dev->hw->clk_divisor_fast_plus_mode;
+-	else if (i2c_dev->bus_clk_rate > I2C_MAX_STANDARD_MODE_FREQ &&
+-		 i2c_dev->bus_clk_rate <= I2C_MAX_FAST_MODE_FREQ)
+-		i2c_dev->clk_divisor_non_hs_mode =
+-				i2c_dev->hw->clk_divisor_fast_mode;
+-	else
+-		i2c_dev->clk_divisor_non_hs_mode =
+-				i2c_dev->hw->clk_divisor_std_mode;
+-
+ 	ret = clk_prepare(i2c_dev->div_clk);
+ 	if (ret < 0) {
+ 		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
 -- 
 2.27.0
 
