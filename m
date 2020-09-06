@@ -2,108 +2,140 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E191FC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07081C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC943207BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF8F02078E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599407320;
+	bh=FhODpJjWGd/j/cspm+BDtNQ6M1PDVW7foEeHBfe5u5Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=a+wcZB68YlxuwzpyzRnzAHMzZvOWFjz2v04hYW43WS7BhdZ9ymO6OV2MP3gNSEtF9
+	 VXzK1pRiJZ8yLvEZgynELNTeLWHSlEXo6qzwku94uJeUnRbgr1C5F3SYDxB2UivL4I
+	 BCgbnsvQBGplCdP7ZSwuVPUFNDf/oFxr7vHBLHak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgIFPra (ORCPT
+        id S1729020AbgIFPsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:47:30 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39463 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729033AbgIFPqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:46:42 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w12so10811132qki.6
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 08:46:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cwfFY7TN/tKtx1/whrHCZkKmf/vlnao87UIaSBAnD6M=;
-        b=TmolK0xPkn3hcaeoeb316dlk9+meudqGXCq0J72njHZjj0nRg9T6Gc1zkwJwXObdNu
-         FSM8mvINwsxycDURjE3/+4I+J/oq0Gb0DeJA+led8fwGje+djTkXirFMBDTe5Ei03G0x
-         SBIR4mA2ciR7WQQBrpPRVPc6lDnpaWaWtPYsUXZk4VfKvzrgQhxb6pPk4PPyWQbYEeKT
-         64yjP0drYT7Jp23wE8PbWu/I+htgjdpPrjBRVj++hCpV3zTMyfdiDgxzXNwYrNM/Feyi
-         Xg1VrYarcn4nXndKjJ0aZAWLmFn/oEzX/V1923OxoTIRzSKZV2JOF1O9hfsZ+IrCFIf0
-         lw3Q==
-X-Gm-Message-State: AOAM5309xGgObxsghtI3aFALlb8EV768crSlYeZIWc8vmBUqifPuFYpt
-        LfUZ6Bfoaaz8NLk1E+6Qp8Q7i3Nh5AU=
-X-Google-Smtp-Source: ABdhPJwVNYcWCwnQKJwB4b0AZCl9ORVySSJIv97QqSUD6+hjpJqR6USO9fdacEEQxDDfN5fQlIavKg==
-X-Received: by 2002:a37:e103:: with SMTP id c3mr15760313qkm.90.1599407199227;
-        Sun, 06 Sep 2020 08:46:39 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u55sm9774286qtu.42.2020.09.06.08.46.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 08:46:38 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/cmdline: Disable instrumentation of cmdline unconditionally
-Date:   Sun,  6 Sep 2020 11:46:37 -0400
-Message-Id: <20200906154637.1618112-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 6 Sep 2020 11:48:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbgIFPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 11:37:38 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BFE2078E;
+        Sun,  6 Sep 2020 15:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599406657;
+        bh=FhODpJjWGd/j/cspm+BDtNQ6M1PDVW7foEeHBfe5u5Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ck3et3uNy28CUlVI6ZZqK9lhRKsJYlllsutSQwZPJP7qjEQdOJ2VyP8DkLYkqu0AV
+         FjSKeBES2epBhb4nU9edbOfelpQkqrOm78GOBmzW52A6IHhw+dZ98n6ZwnwLiUglC0
+         fiH6MFQH7y5LufxLHmcZ6Nt1CSrPrLIhvtrM9ALw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Olof Johansson <olof@lixom.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-nfc@lists.01.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 2/9] dt-bindings: net: nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+Date:   Sun,  6 Sep 2020 17:36:47 +0200
+Message-Id: <20200906153654.2925-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200906153654.2925-1-krzk@kernel.org>
+References: <20200906153654.2925-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit, cmdline_find_option_bool() is used before paging is enabled,
-from check_loader_disabled_bsp() in the early microcode loader.
-Instrumentation options that insert accesses to global data will likely
-crash or corrupt memory at this point.
+The device tree property prefix describes the vendor, which in case of
+S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
+and "fw-gpios" is not correct and should be deprecated.  Introduce
+properly named properties for these GPIOs and rename the fw-gpios" to
+"wake-gpios" to better describe its purpose.
 
-cmdline_find_option{,_bool}() are only used during boot, so
-instrumentation is not that useful anyway.
-
-Disable instrumentation unconditionally, and additionally disable:
-- GCOV
-- UBSAN
-- tracing: change -pg -> CC_FLAGS_FTRACE
-- STACKLEAK_PLUGIN
-- BRANCH_PROFILING
-
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/x86/lib/Makefile | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ .../bindings/net/nfc/samsung,s3fwrn5.yaml     | 24 ++++++++++++++-----
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index aa067859a70b..0ad4ae9def44 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -15,17 +15,19 @@ CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
- endif
+diff --git a/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
+index 81e27cc85dd3..0889d3326f98 100644
+--- a/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
++++ b/Documentation/devicetree/bindings/net/nfc/samsung,s3fwrn5.yaml
+@@ -14,30 +14,42 @@ properties:
+   compatible:
+     const: samsung,s3fwrn5-i2c
  
- # Early boot use of cmdline; don't instrument it
--ifdef CONFIG_AMD_MEM_ENCRYPT
-+GCOV_PROFILE_cmdline.o    := n
- KCOV_INSTRUMENT_cmdline.o := n
- KASAN_SANITIZE_cmdline.o  := n
-+UBSAN_SANITIZE_cmdline.o  := n
- KCSAN_SANITIZE_cmdline.o  := n
++  en-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used for enabling/disabling the chip
++
+   interrupts:
+     maxItems: 1
  
- ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_cmdline.o = -pg
-+CFLAGS_REMOVE_cmdline.o = $(CC_FLAGS_FTRACE)
- endif
+   reg:
+     maxItems: 1
  
- CFLAGS_cmdline.o := -fno-stack-protector -fno-jump-tables
--endif
-+CFLAGS_cmdline.o += $(DISABLE_STACKLEAK_PLUGIN)
-+CFLAGS_cmdline.o += -DDISABLE_BRANCH_PROFILING
++  wake-gpios:
++    maxItems: 1
++    description:
++      Output GPIO pin used to enter firmware mode and sleep/wakeup control
++
+   s3fwrn5,en-gpios:
+     maxItems: 1
++    deprecated: true
+     description:
+-      Output GPIO pin used for enabling/disabling the chip
++      Use en-gpios
  
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
+   s3fwrn5,fw-gpios:
+     maxItems: 1
++    deprecated: true
+     description:
+-      Output GPIO pin used to enter firmware mode and sleep/wakeup control
++      Use wake-gpios
+ 
+ additionalProperties: false
+ 
+ required:
+   - compatible
++  - en-gpios
+   - interrupts
+   - reg
+-  - s3fwrn5,en-gpios
+-  - s3fwrn5,fw-gpios
++  - wake-gpios
+ 
+ examples:
+   - |
+@@ -55,7 +67,7 @@ examples:
+             interrupt-parent = <&gpa1>;
+             interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-            s3fwrn5,en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
+-            s3fwrn5,fw-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
++            en-gpios = <&gpf1 4 GPIO_ACTIVE_HIGH>;
++            wake-gpios = <&gpj0 2 GPIO_ACTIVE_HIGH>;
+         };
+     };
 -- 
-2.26.2
+2.17.1
 
