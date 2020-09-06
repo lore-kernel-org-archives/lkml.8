@@ -1,129 +1,223 @@
-Return-Path: <SRS0=87nF=CT=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B10FC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16C9A214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 10 Sep 2020 18:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1498A2075A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LfyyfQnu";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bXymSkGI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vRzoyIgE";
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="cMQ4hK2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgIJS7l (ORCPT
+        id S1729017AbgIFPiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 10 Sep 2020 14:59:41 -0400
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:41770
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727001AbgIJS5d (ORCPT
+        Sun, 6 Sep 2020 11:38:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59238 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728905AbgIFPh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 10 Sep 2020 14:57:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599764252;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=k0CVrHNZHjKDxCYHpx5Zfcww4H7NJod+HjFj1v8y6r8=;
-        b=LfyyfQnuFIAyxP7gHXj0OXuqKKVSnNDvMqrUZZcUu4ElfToyjRz0Nz4yw5tIs+M6
-        LUQlQbvzlKrnKpodLJ62qgvwS2aNiHYPUV17MWLNS6lW8GC7n6ZIO/ycCobv8Q9a+uw
-        GPTlQVXGCkiEiRAi11VRzEHeWrMGQ0F5LVzY968A=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599764252;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=k0CVrHNZHjKDxCYHpx5Zfcww4H7NJod+HjFj1v8y6r8=;
-        b=bXymSkGIF+wm4rAj3Se6iSDc/hMAW2q60bWHbIKVjLrPYPVQMgESQAPDmYlDjCqr
-        /+0zAhhG5li1sirjbPFmXXi/ulwKMVDmTnVNh9HF9ztln7B5P0iNftFkA7Z4fdAizDZ
-        ldQN0/8eqh7sqZe5Fl0sfqHKMZmkCyKwL1xuMusA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF9B2C433F0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=sidgup@codeaurora.org
-From:   Siddharth Gupta <sidgup@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, ohad@wizery.com
-Cc:     Siddharth Gupta <sidgup@codeaurora.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tsoni@codeaurora.org,
-        psodagud@codeaurora.org, rishabhb@codeaurora.org,
-        linux-doc@vger.kernel.org, Gurbir Arora <gurbaror@codeaurora.org>
-Subject: [PATCH v4 1/3] remoteproc: core: Add ops to enable custom coredump functionality
-Date:   Thu, 10 Sep 2020 18:57:32 +0000
-Message-ID: <01010174796146c8-35d082e7-e9ee-460f-af9e-4e8016b15f6c-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599764242-690-1-git-send-email-sidgup@codeaurora.org>
-References: <1599764242-690-1-git-send-email-sidgup@codeaurora.org>
-X-SES-Outgoing: 2020.09.10-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Sun, 6 Sep 2020 11:37:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B8ACC061573;
+        Sun,  6 Sep 2020 08:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Resent-To:Resent-Message-ID:Resent-Date:
+        Resent-From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        In-Reply-To:References; bh=HHWFRuEjpwIOXF7bCKWeM4a7Gbd1H7mpKL9VNiaPJTA=; b=vR
+        zoyIgEAi4iUhcGAfu05yIGRGLtx/nVRFtggn80AnqsYPDc9KL0pFhrF5eAvXu05ZCOVw3QuT6tpXj
+        htudfgpaP0aaDyrLM9l+i9zd1q7qlKDcFQVpB8dvPDI+7OSGvsFrSMMOlCK/dOz4dLSwEFr9X6jlq
+        bXn9NPZbHQgtuIz8pNOn530Cmny6hS0qylaxd7FIv1qIAZpSJF7rGp8BRPaCjOGtmVqeKIt79APua
+        SUEUAMoCXInqPnxmEDVDTLCJnqxwwU9hkt1nkTC5dhxWfmzFrJAXdKBGSaI8eO9seRoIKsHCzs4QW
+        yTivDneKttLGahhNvYJF1PZHs1mBjhxw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEwj8-0000zW-71; Sun, 06 Sep 2020 15:37:10 +0000
+Received: from mout.gmx.net ([212.227.17.22])
+        by casper.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kEwW8-0000AK-Lu
+        for willy@infradead.org; Sun, 06 Sep 2020 15:23:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1599405812;
+        bh=VROIkO5uZFKsGitKUg2bOT0YSmMyUgd5L55Q6L52pS0=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=cMQ4hK2ttARkZw4TLHsi6zh7VJQMCP0tMItp+XlAPEUO04XF/56UG12jK9keoDhw/
+         atx93ZFSUod4OJLvP3k9lX6suGyu7qUNqqDg5gspwLZElUzNYRB1YHEqwph8sxKjO+
+         Soiv3XirEippebRHbB9uAgskbXsmQl5AfVsn0V34=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([79.150.73.70]) by mail.gmx.com
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1M2O6Y-1kGZsT3j1q-003tW0; Sun, 06 Sep 2020 17:23:32 +0200
+From:   John Wood <john.wood@gmx.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     John Wood <john.wood@gmx.com>
+Subject: [RFC PATCH 4/9] security/fbfam: Add a new sysctl to control the crashing rate threshold
+Date:   Sun,  6 Sep 2020 17:23:17 +0200
+Message-Id: <20200906152317.7205-1-john.wood@gmx.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mk3kJe9rY10ZeHn2yGb+zOmUatUjQwSkdPG9zxQvSGz0VpSRDFT
+ IiAQRrxOwA+CJlE/QUXh740SI2r5nCQs+fY1wqF2ebIeiLQO7Z+yDcbV/FjQinR55Fnm9+q
+ KbYjFECz43ELE1KRM8Gf3ceLvkzveOwV8N/5UNMlCcnJ9OJ9d4bJIuuw4rR9xjkjDM9xyfH
+ orAdS6Vsi7VrOAkLAlHHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hEo3Gmz3Nb4=:IXXiDAOW56JBjOT/9+Rxas
+ BoSQiGtyiEBmcCkFqqi617lG6/SGc7E1JS+NXfE6yLikbfTZ2sm/+gVsGpVmmzhkowL1FwVfk
+ QOS8hKUw/zyR5mGXxlCjCet5M+ZFfNbPidlyU7g3kj+YWsTxXO3IQsNIn9hN98+L0uZjPBczX
+ ky0Mm4R/zouGShz0EcRqfEtxWPwTIKoUhkXkID01ByYrHJYSeTcoT89Z882clzdohXppwLeJc
+ zJaTiQ7ZB2jEsEzAQIY1BApv+fOkexJQod86QUhjtFxAo+Su0ARS0jX4IV8rt0VQOY3m1pRrV
+ 4uErMsfnQx+cTaDqvgS6ZSKMS3VKkQQbvY7PuNrVH9gs8pVo131tzA3JizrnTaTZkgRf/Bgei
+ HDLRJbaPcPneREctNQ+9x1DkUQcVD3va7jPXpCCNoxoP4aRhZyOKaXJ8hnlHpe3zWjonVnqx8
+ sEXolQ3V9bVYVsAlUFbK7oXRUYUrM0H3ExMcLWM74ziZEOrlUjiYTVszAie2TRisfryo2/mS4
+ YW/QTETlIpgCcDw0SsqngN5fhcx8SLUDUWEthjzCAyAkyiYXaa8ej8i1lNPzInu5DT+HGcOg5
+ GDj8huOz26tYRz5Q+VOL2CTClGAnScQTgLMBT9sc+8RdodgMqGI6jMx1wLBYyK2tna7jjAHwh
+ tGsdIFaBp+PGBxa7mGLWs4S6Z0tSZxT+mBFbP9hP/1fb47uTFiXo5IICsEbtFdLMrQNocqJMv
+ Qk1h3TIBLHl31wFyL4AvJ0hwcbV+n4+Fp8UOrZM3EvqxFqKwkApKMsZdK1seuSzzm3tQKapUm
+ qc7si+tMvt9iOYqwkRB47voi3h9J57vAFcpgGUoenNgMmNlTo/+B9Jl0K/ArtMzY2A1/H731T
+ aPYm2ADr/lmxdHy7iMcNBhXnr+rpmnmmMLU/7KmbPEExGkr+Q5tCwr3IAjpg4HIwIbyrcb/Lx
+ Wb9vHPOf8xzBltd6p1mMyQKTzP+S682jxIAoPLbuGhH/CQOj+oe9QVO/74BONmsZc9AaW/Gwv
+ G5cyBd66SF4jkEKQYN9L5YrXrRa5fCCdGkH+QqlhWiIRTVyesvLqSMDzf4KRJ5ZKIKcA06I8Q
+ MNosmeXK8sf38Q0T4U0qvhGSFRJcGDVv7jw2yMdPfSHl806KY3AkmzVdCghR6woP3KJQSgeLg
+ K3nOWHgEaQw8rCKcEmNam0EUuXvIbZ8fbkLW+IuTcT9kUFmPHlU5qbq1pDFOvIE5ur78qf37+
+ +LO4gV8rcRpZnfOo9adVVS1cu3ifVAICvUbmZIw==
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
+X-CRM114-CacheID: sfid-20200906_162344_889745_5F17CC16 
+X-CRM114-Status: GOOD (  15.38  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each remoteproc might have different requirements for coredumps and might
-want to choose the type of dumps it wants to collect. This change allows
-remoteproc drivers to specify their own custom dump function to be executed
-in place of rproc_coredump. If the coredump op is not specified by the
-remoteproc driver it will be set to rproc_coredump by default.The
-priv_cleanup op cleans up the private resources used by the remoteproc.
+This is a previous step to add the detection feature.
 
-Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Signed-off-by: Gurbir Arora <gurbaror@codeaurora.org>
-Signed-off-by: Siddharth Gupta <sidgup@codeaurora.org>
----
- drivers/remoteproc/remoteproc_core.c | 6 +++++-
- include/linux/remoteproc.h           | 4 ++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+A fork brute force attack will be detected when an application crashes
+quickly. Since, a rate can be defined as a time per fault, add a new
+sysctl to control the crashing rate threshold.
 
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index 7f90eee..dcc1341 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1681,7 +1681,7 @@ int rproc_trigger_recovery(struct rproc *rproc)
- 		goto unlock_mutex;
- 
- 	/* generate coredump */
--	rproc_coredump(rproc);
-+	rproc->ops->coredump(rproc);
- 
- 	/* load firmware */
- 	ret = request_firmware(&firmware_p, rproc->firmware, dev);
-@@ -2103,6 +2103,10 @@ static int rproc_alloc_ops(struct rproc *rproc, const struct rproc_ops *ops)
- 	if (!rproc->ops)
- 		return -ENOMEM;
- 
-+	/* Default to rproc_coredump if no coredump function is specified */
-+	if (!rproc->ops->coredump)
-+		rproc->ops->coredump = rproc_coredump;
+This way, each system can tune the detection's sensibility adjusting the
+milliseconds per fault. So, if the application's crashing rate falls
+under this threshold an attack will be detected. So, the higher this
+value, the faster an attack will be detected.
+
+Signed-off-by: John Wood <john.wood@gmx.com>
+=2D--
+ include/fbfam/fbfam.h   |  4 ++++
+ kernel/sysctl.c         |  9 +++++++++
+ security/fbfam/Makefile |  1 +
+ security/fbfam/fbfam.c  | 11 +++++++++++
+ security/fbfam/sysctl.c | 20 ++++++++++++++++++++
+ 5 files changed, 45 insertions(+)
+ create mode 100644 security/fbfam/sysctl.c
+
+diff --git a/include/fbfam/fbfam.h b/include/fbfam/fbfam.h
+index b5b7d1127a52..2cfe51d2b0d5 100644
+=2D-- a/include/fbfam/fbfam.h
++++ b/include/fbfam/fbfam.h
+@@ -3,8 +3,12 @@
+ #define _FBFAM_H_
+
+ #include <linux/sched.h>
++#include <linux/sysctl.h>
+
+ #ifdef CONFIG_FBFAM
++#ifdef CONFIG_SYSCTL
++extern struct ctl_table fbfam_sysctls[];
++#endif
+ int fbfam_fork(struct task_struct *child);
+ int fbfam_execve(void);
+ int fbfam_exit(void);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 287862f91717..104b70c98251 100644
+=2D-- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -77,6 +77,8 @@
+ #include <linux/uaccess.h>
+ #include <asm/processor.h>
+
++#include <fbfam/fbfam.h>
 +
- 	if (rproc->ops->load)
- 		return 0;
- 
-diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
-index 2fa68bf..a489aec 100644
---- a/include/linux/remoteproc.h
-+++ b/include/linux/remoteproc.h
-@@ -375,6 +375,8 @@ enum rsc_handling_status {
-  * @get_boot_addr:	get boot address to entry point specified in firmware
-  * @panic:	optional callback to react to system panic, core will delay
-  *		panic at least the returned number of milliseconds
-+ * @coredump:	  collect firmware dump after the subsystem is shutdown
-+ * @priv_cleanup: cleans up the private resources used by the rproc
-  */
- struct rproc_ops {
- 	int (*prepare)(struct rproc *rproc);
-@@ -393,6 +395,8 @@ struct rproc_ops {
- 	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
- 	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
- 	unsigned long (*panic)(struct rproc *rproc);
-+	void (*coredump)(struct rproc *rproc);
-+	void (*priv_cleanup)(struct rproc *rproc);
+ #ifdef CONFIG_X86
+ #include <asm/nmi.h>
+ #include <asm/stacktrace.h>
+@@ -2661,6 +2663,13 @@ static struct ctl_table kern_table[] =3D {
+ 		.extra1		=3D SYSCTL_ZERO,
+ 		.extra2		=3D SYSCTL_ONE,
+ 	},
++#endif
++#ifdef CONFIG_FBFAM
++	{
++		.procname	=3D "fbfam",
++		.mode		=3D 0555,
++		.child		=3D fbfam_sysctls,
++	},
+ #endif
+ 	{ }
  };
- 
+diff --git a/security/fbfam/Makefile b/security/fbfam/Makefile
+index f4b9f0b19c44..b8d5751ecea4 100644
+=2D-- a/security/fbfam/Makefile
++++ b/security/fbfam/Makefile
+@@ -1,2 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_FBFAM) +=3D fbfam.o
++obj-$(CONFIG_SYSCTL) +=3D sysctl.o
+diff --git a/security/fbfam/fbfam.c b/security/fbfam/fbfam.c
+index 0387f95f6408..9be4639b72eb 100644
+=2D-- a/security/fbfam/fbfam.c
++++ b/security/fbfam/fbfam.c
+@@ -7,6 +7,17 @@
+ #include <linux/refcount.h>
+ #include <linux/slab.h>
+
++/**
++ * sysctl_crashing_rate_threshold - Crashing rate threshold.
++ *
++ * The rate's units are in milliseconds per fault.
++ *
++ * A fork brute force attack will be detected if the application's crashi=
+ng rate
++ * falls under this threshold. So, the higher this value, the faster an a=
+ttack
++ * will be detected.
++ */
++unsigned long sysctl_crashing_rate_threshold =3D 30000;
++
  /**
--- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+  * struct fbfam_stats - Fork brute force attack mitigation statistics.
+  * @refc: Reference counter.
+diff --git a/security/fbfam/sysctl.c b/security/fbfam/sysctl.c
+new file mode 100644
+index 000000000000..430323ad8e9f
+=2D-- /dev/null
++++ b/security/fbfam/sysctl.c
+@@ -0,0 +1,20 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/sysctl.h>
++
++extern unsigned long sysctl_crashing_rate_threshold;
++static unsigned long ulong_one =3D 1;
++static unsigned long ulong_max =3D ULONG_MAX;
++
++struct ctl_table fbfam_sysctls[] =3D {
++	{
++		.procname	=3D "crashing_rate_threshold",
++		.data		=3D &sysctl_crashing_rate_threshold,
++		.maxlen		=3D sizeof(sysctl_crashing_rate_threshold),
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_doulongvec_minmax,
++		.extra1		=3D &ulong_one,
++		.extra2		=3D &ulong_max,
++	},
++	{ }
++};
++
+=2D-
+2.25.1
 
