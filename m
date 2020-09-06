@@ -2,155 +2,263 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85715C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE97C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4763C20709
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GBmYjkkZ"
+	by mail.kernel.org (Postfix) with ESMTP id E04C920709
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:15:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgIFROZ (ORCPT
+        id S1729115AbgIFRPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 13:14:25 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36526 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725816AbgIFROY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 13:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599412463;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sL8tCYNOkqyUsw7ohcLXGgEzt8FWnS+srIzCd4NHd2U=;
-        b=GBmYjkkZ/J5bar4XR3cHCpcMjAHuUHLzLg6iyjflSTwbOxkZrlILceBeVVHZHxKjGkZ07Q
-        FFGJZs/2nNBTUv5wmWwMvQaMUmiAyQbxbh3eG7uW1vgis5pVpdfKfXwkULpw4dtnte3e0R
-        oH1N2kefVO/AIiT0d+2UtHY4SZZCq00=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-bZMwFQekOom87U8REs43eQ-1; Sun, 06 Sep 2020 13:14:19 -0400
-X-MC-Unique: bZMwFQekOom87U8REs43eQ-1
-Received: by mail-qk1-f200.google.com with SMTP id v16so6447245qka.18
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 10:14:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=sL8tCYNOkqyUsw7ohcLXGgEzt8FWnS+srIzCd4NHd2U=;
-        b=Pi4Jd8akE5mUs8d8aRLLOahoyDaSNmD5l/mwfTPIzo5ReddgBOsFIa+X2ojsbwY4ya
-         Ge6CRfKTuuUSXfz9AfV8SrRZZCa5S2JrJcQs1LIR2pEzkqAYW5y+meQ59QeOZp2S2eAQ
-         8F0Ed9HDeG4h0fGWJq1R9toEf8zPMVZOqktuEMO/M77Y4fkcmlmBv47jkuE9h0r3aSdv
-         5GwXGF6Ym3mxjdKR9yM4mdNPOhyvU/BvFtqg7IUuKKj9EzLGTwCgPfiuUpKgIWO0FY57
-         fxwW16esBC0jXwj06GPL9gs5MfckMPo96BGCMju+EDNTYQCI8bYGbJzYfkUxHgrDWBaC
-         9z3Q==
-X-Gm-Message-State: AOAM5315sXDG6OKZvNyPvlrHbYLrUea02nKugf+d3SXJBgoe9NpaKgQw
-        gAYZ5NzxltkwwsNAJ20i4RQ6j7ge9IWMJBdS2AoUyfYFO3xWDiZNyD/iXb2y7tfNRNgCPB6vA6l
-        i1Npirk9EZxUHU1Mdis3WYp3U
-X-Received: by 2002:a0c:c30e:: with SMTP id f14mr2400994qvi.141.1599412459210;
-        Sun, 06 Sep 2020 10:14:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJynPAtXpX1bkHIofdlix+rXLhWcID8OBtEtKgGVuZAfNeH6eIAxrhUsJYQvdJUQt5Mc/iKtSg==
-X-Received: by 2002:a0c:c30e:: with SMTP id f14mr2400978qvi.141.1599412458992;
-        Sun, 06 Sep 2020 10:14:18 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k22sm6589106qkk.13.2020.09.06.10.14.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Sep 2020 10:14:18 -0700 (PDT)
-Subject: Re: [PATCH v1 12/12] fpga: add max10 get_hw_errinfo callback func
-To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
-        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
-        matthew.gerlach@intel.com
-References: <20200904235305.6254-1-russell.h.weight@intel.com>
- <20200904235305.6254-13-russell.h.weight@intel.com>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <b90e8435-651c-e901-8be3-b0dac6eaac22@redhat.com>
-Date:   Sun, 6 Sep 2020 10:14:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200904235305.6254-13-russell.h.weight@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Sun, 6 Sep 2020 13:15:01 -0400
+Received: from wind.enjellic.com ([76.10.64.91]:53650 "EHLO wind.enjellic.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgIFROv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 13:14:51 -0400
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 086HEHep009508;
+        Sun, 6 Sep 2020 12:14:17 -0500
+Received: (from greg@localhost)
+        by wind.enjellic.com (8.15.2/8.15.2/Submit) id 086HEDA0009503;
+        Sun, 6 Sep 2020 12:14:13 -0500
+Date:   Sun, 6 Sep 2020 12:14:13 -0500
+From:   "Dr. Greg" <greg@enjellic.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        krzysztof.struczynski@huawei.com, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, stefanb@linux.vnet.ibm.com,
+        sunyuqiong1988@gmail.com, mkayaalp@cs.binghamton.edu,
+        dmitry.kasatkin@gmail.com, serge@hallyn.com, jmorris@namei.org,
+        christian@brauner.io, silviu.vlasceanu@huawei.com,
+        roberto.sassu@huawei.com, ebiederm@xmission.com,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        luto@amacapital.net, jannh@google.com, nick.dusek@gmail.com
+Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
+Message-ID: <20200906171413.GA8305@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20200818152037.11869-1-krzysztof.struczynski@huawei.com> <20200818164943.va3um7toztazcfud@wittgenstein> <d77a6cd783319702fddd06783cb84fdeb86210a6.camel@linux.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d77a6cd783319702fddd06783cb84fdeb86210a6.camel@linux.ibm.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Sun, 06 Sep 2020 12:14:18 -0500 (CDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Sep 02, 2020 at 03:54:58PM -0400, Mimi Zohar wrote:
 
-On 9/4/20 4:53 PM, Russ Weight wrote:
-> Extend the MAX10 BMC Security Engine driver to include
-> a function that returns 64 bits of additional HW specific
-> data for errors that require additional information.
-> This callback function enables the hw_errinfo sysfs
-> node in the Intel Security Manager class driver.
->
-> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-> Reviewed-by: Wu Hao <hao.wu@intel.com>
-> ---
->  drivers/fpga/intel-m10-bmc-secure.c | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/fpga/intel-m10-bmc-secure.c b/drivers/fpga/intel-m10-bmc-secure.c
-> index 4a66c2d448eb..7fb1c805f654 100644
-> --- a/drivers/fpga/intel-m10-bmc-secure.c
-> +++ b/drivers/fpga/intel-m10-bmc-secure.c
-> @@ -450,6 +450,30 @@ static enum ifpga_sec_err m10bmc_sec_cancel(struct ifpga_sec_mgr *imgr)
->  	return ret ? IFPGA_SEC_ERR_RW_ERROR : IFPGA_SEC_ERR_NONE;
->  }
->  
-> +static u64 m10bmc_sec_hw_errinfo(struct ifpga_sec_mgr *imgr)
-> +{
-> +	struct m10bmc_sec *sec = imgr->priv;
-> +	u32 doorbell = 0, auth_result = 0;
-> +	u64 hw_errinfo = 0;
+Good morning, I hope the weekend is going well for everyone.
 
-hw_errinfo should be initialized to some poison value like -1
+A follow on to my previous e-mail regarding what 'namespaced IMA'
+should look like.
 
-to cover the case if either of sys_read's fail.
+> On Tue, 2020-08-18 at 18:49 +0200, Christian Brauner wrote:
+> > On Tue, Aug 18, 2020 at 05:20:07PM +0200, krzysztof.struczynski@huawei.com wrote:
+> > > From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+> > > IMA has not been designed to work with containers. It handles
+> > > every process in the same way, and it cannot distinguish if a
+> > > process belongs to a container or not.
+> > >
+> > > Containers use namespaces to make it appear to the processes in
+> > > the containers that they have their own isolated instance of the
+> > > global resource. For IMA as well, it is desirable to let
+> > > processes in the
 
-Tom
+> > IMA is brought up on a regular basis with "we want to have this" for
+> > years and then non-one seems to really care enough.
 
-> +
-> +	switch (imgr->err_code) {
-> +	case IFPGA_SEC_ERR_HW_ERROR:
-> +	case IFPGA_SEC_ERR_TIMEOUT:
-> +	case IFPGA_SEC_ERR_BUSY:
-> +	case IFPGA_SEC_ERR_WEAROUT:
-> +		if (!m10bmc_sys_read(sec->m10bmc, M10BMC_DOORBELL, &doorbell))
-> +			hw_errinfo = (u64)doorbell << 32;
-> +
-> +		if (!m10bmc_sys_read(sec->m10bmc, M10BMC_AUTH_RESULT,
-> +				     &auth_result))
-> +			hw_errinfo |= (u64)auth_result;
-> +
-> +		return hw_errinfo;
-> +	default:
-> +		return 0;
-> +	}
-> +}
-> +
->  static const struct ifpga_sec_mgr_ops m10bmc_iops = {
->  	.user_flash_count = get_qspi_flash_count,
->  	.bmc_root_entry_hash = get_bmc_root_entry_hash,
-> @@ -467,7 +491,8 @@ static const struct ifpga_sec_mgr_ops m10bmc_iops = {
->  	.prepare = m10bmc_sec_prepare,
->  	.write_blk = m10bmc_sec_write_blk,
->  	.poll_complete = m10bmc_sec_poll_complete,
-> -	.cancel = m10bmc_sec_cancel
-> +	.cancel = m10bmc_sec_cancel,
-> +	.get_hw_errinfo = m10bmc_sec_hw_errinfo
->  };
->  
->  static void ifpga_sec_mgr_uinit(struct m10bmc_sec *sec)
+I don't think it is a matter of lack of interest or not caring.  The
+challenge becomes whether or not a business case exists for expending
+the resources and navigating the challenges needed to advance
+infrastructure for inclusion in the kernel.
 
+> There is a lot of interest in IMA namespacing, but the question
+> always comes back to how to enable it.  Refer to
+> https://kernsec.org/wiki/index.php/IMA_Namespacing_design_considerations
+> for Stefan's analysis.
+
+As I noted in my previous e-mail, I believe the path forward is not to
+figure out how to address the rather complex and invasive issue of how
+to namespace IMA, but instead, needs to be what a flexible
+'next-generation' architecture for platform behavioral assessment
+looks like.
+
+In a larger context, I believe the future for security is going to
+involve at a minimum the kernel, and more likely, something tightly
+coupled to the kernel, making active decisions on whether or not a
+behavior that the kernel is contemplating mediating is consistent with
+platform or container security policy.
+
+To frame this a bit, the well understood role of the kernel with
+respect to security is to mediate 'Turing Events', or Actor/Subject
+(A/S) interactions.  Both DAC and MAC are based on this concept with
+the interface between an Actor and Subject being a security 'gate'.
+
+Given this model, the most simplistic and direct path forward is to
+provide a namespace capable method of exporting a description of the
+identity parameters that characterize the entities involved in an A/S
+interaction.  The kernel, or as I previously suggested as more likely
+moving forward, a closely linked entity can then make a decision as to
+whether or not the behavior should be allowed.
+
+FWIW, as an example of the minimal impact of this method, here is the
+diffstat of such an implementation:
+
+---------------------------------------------------------------------------
+ arch/x86/entry/syscalls/syscall_32.tbl    |    2 +
+ arch/x86/entry/syscalls/syscall_64.tbl    |    2 +
+ fs/proc/array.c                           |    7 +
+ fs/proc/namespaces.c                      |    4 +
+ include/linux/ima.h                       |   27 +
+ include/linux/nsproxy.h                   |    2 +
+ include/linux/proc_ns.h                   |    2 +
+ include/linux/sched.h                     |    3 +
+ include/linux/syscalls.h                  |    6 +
+ include/uapi/asm-generic/unistd.h         |    7 +-
+ include/uapi/linux/sched.h                |    1 +
+ kernel/fork.c                             |    5 +-
+ kernel/nsproxy.c                          |   18 +-
+ kernel/sys_ni.c                           |    4 +
+ security/Kconfig                          |    1 +
+ security/Makefile                         |    2 +
+ Security/ai/Kconfig                       |   12 +
+ security/ai/Makefile                      |    3 +
+ security/ai/ai.c                          |  137 ++
+ security/integrity/iint.c                 |    5 +
+ security/integrity/ima/Makefile           |    2 +-
+ security/integrity/ima/ima.h              |   17 +
+ security/integrity/ima/ima_api.c          |   37 +-
+ security/integrity/ima/ima_fs.c           |   10 +
+ security/integrity/ima/ima_identity.c     | 2204 +++++++++++++++++++++++++++++
+ security/integrity/ima/ima_init.c         |    6 +-
+ security/integrity/ima/ima_main.c         |    7 +
+ security/integrity/ima/ima_policy.c       |   74 +-
+ security/integrity/ima/ima_queue.c        |   10 +-
+ security/integrity/ima/ima_template.c     |    6 +
+ security/integrity/ima/ima_template_lib.c |   71 +
+ security/integrity/ima/ima_template_lib.h |   10 +
+ security/integrity/integrity.h            |    4 +-
+ security/security.c                       |    1 +
+ 34 files changed, 2684 insertions(+), 25 deletions(-)
+---------------------------------------------------------------------------
+
+As can be seen, this was built out in the context of the IMA
+sub-system with the majority of the changes being encapsulated in one
+file.  This includes all of the infrastructure needed for a Trusted
+Execution Environment (TEE) to enforce kernel security policy
+decisions.
+
+In addition to a container specific representation of the current
+behavioral state, each namespace exports via a sysfs pseudo-file, the
+following behavioral definition for each A/S interaction.
+
+exchange pid{1} event{cboot:/home/greg/runc} actor{uid=0, euid=0, suid=0, gid=0, egid=0, sgid=0, fsuid=0, fsgid=0, cap=0x3fffffffff} subject{uid=50, gid=50, mode=0100755, name_length=15, name=f0da604ff3f0a3e16163bc9d2f99bb9bcd70397d211b746d0104299972cc5505, s_id=sda1, s_uuid=1bfef8aaa45f4bcaa846640ae4547ddc, digest=791a7cf8dec2afe302836b974b3c0f7b0a5983f76d857aa97658ce09d54f60f8}
+
+Which provides the framework for implementing any number of policy
+decisions, of which integrity is only one element.
+
+We had initially used SGX to implement a TEE based enforcement engine,
+but given the direction of hardware support, we have largely shelved
+our SGX development efforts in favor of using a micro-controller based
+approach.
+
+Given what appears to be the direction for mobile devices, a
+collection of specialized harware linked by an OS, the notion of a
+separate entity making security policy decisions seems relevant.
+
+> I understand "containers" is not a kernel construct, but from my very
+> limited perspective, IMA namespacing only makes sense in the context of
+> a "container".  The container owner may want to know which files have
+> been accessed/executed (measurements, remote attestation) and/or
+> constrain which files may be accessed/executed based on signatures
+> (appraisal).
+
+Trying to implement supportable and field maintainable 'trusted
+computing' is a fools errand without the notion of containerization of
+platform behavior.  This is true whether the target is the cloud or
+endpoint/IOT class devices.
+
+It seems well understood, that while containers are not a first class
+kernel entity, the kernel takes responsibility for implementing
+compartmentalization of resources.  It would seem that security event
+characterizations are consistent with that model.
+
+In addition, none of this works without developer support.  Framing
+behavior assessment in the form of containers means that behavioral
+trajectory definitions for the containers can be a byproduct of
+standard DEVOP's pipelines.
+
+> > I'm highly skeptical of the value of ~2500 lines of code even if
+> > it includes a bunch of namespace boilerplate. It's yet another
+> > namespace, and yet another security framework.  Why does IMA need
+> > to be a separate namespace? Keyrings are tied to user namespaces
+> > why can't IMA be?
+
+> In the context of a container, the measurement list and IMA/EVM
+> keyrings need to be setup before the first file is measured,
+> signature verified, or file hash included in the audit log.
+
+As I've noted previously, namespacing IMA is problematic, what is
+needed is something far simpler and more flexible that provides a
+framework for implementing policy outside of the kernel, or if in the
+kernel, in a highly customizable fashion.
+
+I think that it would be found that user namespaces bring too much
+baggage to the table.  The most effective path forward in this venue
+would seem to be to bring forward the most simplistic, flexiable and
+uncomplicated mechanism possible.
+
+In this model, classic IMA would serve as a trust root on whose
+shoulders a security orchestration framework stands.
+
+> > I believe Eric has even pointed that out before.
+> >
+> > Eric, thoughts?
+
+> Any help with the above scenario would very be much appreciated.
+
+Hopefully the conversation will benefit from actual field experience
+with doing this sort of thing in a supportable fashion.
+
+The concept of 'trusted computing' has been around since the days when
+Dave Grawrock designed TXT, which is heavily linked to the heritage of
+IMA.  The fact that effective solutions in widespread practice have
+not emerged, in the face of demonstrated need, suggests the need to
+develop new solution strategies.
+
+Just to be clear, we are not campaigning or advocating what we have
+done but are simply providing background for discussion.  We haven't
+campaigned this approach given how complex the kernel development has
+become, particurlarly with respect to security infrastructure.
+
+Candidly, given the politics of security technology being viewed as
+'constraining' user rights, I think that a lot of forthcoming security
+technology may end up being out of tree moving forward.
+
+> Mimi
+
+Best wishes for a productive week to everyone.
+
+Dr. Greg
+
+As always,
+Dr. Greg Wettstein, Ph.D, Worker      Autonomously self-defensive
+Enjellic Systems Development, LLC     IOT platforms and edge devices.
+4206 N. 19th Ave.
+Fargo, ND  58102
+PH: 701-281-1686                      EMAIL: dg@enjellic.com
+------------------------------------------------------------------------------
+"A large number of the world's technical challenges have been solved.
+ The far greater challenge lies in conveying an understanding of this
+ to the world."
+                                -- Dr. Greg Wettstein
+                                   Resurrection
