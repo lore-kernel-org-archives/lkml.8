@@ -2,61 +2,58 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A33FC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEBD520714
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D18120714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599404626;
-	bh=0a+El6Hu2G19QLat7l/IFDJ+dLadCsCadebv+Wnnbug=;
+	s=default; t=1599405480;
+	bh=lbjXajpDwp46rCIbmdhYv2vqZL2+1OeF2q40klnYeLI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=f+5zeuZVh9in4Q6N0wE2LlMSzPLgCy0PVWRYCzYIm6kIWcTSHn4cqjBBOprUVgyyw
-	 SNwqrwqRgecFCo8mtyb+bcYsBHnUlA3y15tPn/9ftA/W/AQQv+FCn48ZZPwQZlSZdC
-	 HZZiE4poC3XKZz8dFTfFsUreqzojQ22EQotUWZrM=
+	b=DPOZNKP7vThdYj5FDTzIGreMWNNRRb7coA+f7kSE9eHVg1Rb+vc1nW0jR4V1pnxM3
+	 j0i9Z1vyNOuH4Cm1EETNq7fCvlmHnZQNF8v5gHfClDWkpaJvTIlOzfiiIIWzTfC7ZL
+	 SVcJ90vE+WPNbAD5G3QnJ13HZx6f0QAsB1/EnlrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgIFPDm (ORCPT
+        id S1728925AbgIFPR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
+        Sun, 6 Sep 2020 11:17:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728880AbgIFPDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:03:23 -0400
+        id S1728807AbgIFPRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 11:17:46 -0400
 Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD4B920714;
-        Sun,  6 Sep 2020 15:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B21D420714;
+        Sun,  6 Sep 2020 15:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599404603;
-        bh=0a+El6Hu2G19QLat7l/IFDJ+dLadCsCadebv+Wnnbug=;
+        s=default; t=1599405466;
+        bh=lbjXajpDwp46rCIbmdhYv2vqZL2+1OeF2q40klnYeLI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SxJv2acXn0LGN7AkCm/9QXZ3Ff7ISVlvngFTN2IN8yL1+LSUnd+Ia+fAObRp81ARV
-         jgOhvzwg29mGUDLn52tTx0RdRpnDcOLKmVM8ceVPfgTpLWYIGC0udKzugT5Fr+1Gqi
-         Ad/gzcEk8ezHwcBPxqvBHY4jdHtIsjZMoKSIDT20=
-Date:   Sun, 6 Sep 2020 16:03:18 +0100
+        b=vp9++8NngrPkXT2V7R0jX5vrQ7yyyFx+ADzDOUTtYUgNyoi1HZMYtoqjSOqP0apkw
+         9UmjeTFocipI+zcNuOMgK3QxOEUwn4C/UkNb64LLgXE3scjUv14jDUYkY0E7XSNU5i
+         EtETG2ykzgOPoTDUqiV+vpQYg8043olr8dGYoSJc=
+Date:   Sun, 6 Sep 2020 16:17:41 +0100
 From:   Jonathan Cameron <jic23@kernel.org>
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Nishant Malpani <nish.malpani25@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Bogdan, Dragos" <dragos.bogdan@analog.com>,
-        Darius <darius.berghe@analog.com>,
+Cc:     Mircea Caprioru <mircea.caprioru@analog.com>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] iio: gyro: adxrs290: Add debugfs register access
- support
-Message-ID: <20200906160318.13b83634@archlinux>
-In-Reply-To: <CAHp75Vc2UhW5yDhXs0RJZUmXABAqTX12N1NA3CWeSirHWfPCng@mail.gmail.com>
-References: <20200903130950.6274-1-nish.malpani25@gmail.com>
-        <20200903130950.6274-4-nish.malpani25@gmail.com>
-        <CAHp75VfReT-EjCV=cW8mV1MmoMPPdY9q1scoPwbD_DEHpQHd3g@mail.gmail.com>
-        <CAEtfd9ZPkyk9_GV3h-CXFT_j=PYU66SHoYaaE7tytQxb+Q5rVA@mail.gmail.com>
-        <CAHp75Vc2UhW5yDhXs0RJZUmXABAqTX12N1NA3CWeSirHWfPCng@mail.gmail.com>
+        linux-iio <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: ad7124: Fix typo in device name
+Message-ID: <20200906161741.383dfce0@archlinux>
+In-Reply-To: <CAHp75VcYVsFtiHYfy4pzsZdDWOEToU1mf2KmQ2BaEtrVbPy8kA@mail.gmail.com>
+References: <20200902134222.28357-1-mircea.caprioru@analog.com>
+        <CAHp75VcYVsFtiHYfy4pzsZdDWOEToU1mf2KmQ2BaEtrVbPy8kA@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -66,23 +63,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 3 Sep 2020 16:59:12 +0300
+On Wed, 2 Sep 2020 21:05:56 +0300
 Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Thu, Sep 3, 2020 at 4:57 PM Nishant Malpani <nish.malpani25@gmail.com> wrote:
-> > On Thu, Sep 3, 2020 at 6:55 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:  
+> On Wed, Sep 2, 2020 at 4:45 PM Mircea Caprioru
+> <mircea.caprioru@analog.com> wrote:
+> >
+> > This patch fixes the device name typo.
+> >  
 > 
-> ...
-> 
-> > Umm, I'm sorry, I don't see why'd it be favourable for us to do it
-> > this way. Also, I *think* Jonathan is fine with how it's being done
-> > now.  
-> 
-> I have no strong opinion, so whatever Jonathan thinks better.
-> 
+> Luckily it's part of v5.9-rcX, so if Jonathan sends this within v5.9
+> time frame, we are good.
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Applied to the fixes-togreg branch of iio.git.
 
-Andy's suggestion is a little bit nicer, so as you are doing a v3,
-might as well roll that change in as well :)
+Should be plenty of time. :) (famous last words)
 
 Jonathan
+
+> 
+> 
+> > Fixes: 951ad4700313 ("iio: adc: ad7124: move chip ID & name on the chip_info table")
+> > Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> > ---
+> >  drivers/iio/adc/ad7124.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+> > index 8dce06e9e69c..766c73333604 100644
+> > --- a/drivers/iio/adc/ad7124.c
+> > +++ b/drivers/iio/adc/ad7124.c
+> > @@ -177,12 +177,12 @@ static const struct iio_chan_spec ad7124_channel_template = {
+> >
+> >  static struct ad7124_chip_info ad7124_chip_info_tbl[] = {
+> >         [ID_AD7124_4] = {
+> > -               .name = "ad7127-4",
+> > +               .name = "ad7124-4",
+> >                 .chip_id = CHIPID_AD7124_4,
+> >                 .num_inputs = 8,
+> >         },
+> >         [ID_AD7124_8] = {
+> > -               .name = "ad7127-8",
+> > +               .name = "ad7124-8",
+> >                 .chip_id = CHIPID_AD7124_8,
+> >                 .num_inputs = 16,
+> >         },
+> > --
+> > 2.25.1
+> >  
+> 
+> 
+
