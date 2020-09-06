@@ -2,186 +2,113 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9439AC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 09:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA09C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 09:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 526E320C09
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 09:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0276D20C09
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 09:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEcG5nEz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X/xXQA7K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgIFJWd (ORCPT
+        id S1728199AbgIFJ5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 05:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58624 "EHLO
+        Sun, 6 Sep 2020 05:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726501AbgIFJW3 (ORCPT
+        with ESMTP id S1725803AbgIFJ5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 05:22:29 -0400
+        Sun, 6 Sep 2020 05:57:31 -0400
 Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E2AC061573;
-        Sun,  6 Sep 2020 02:22:26 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id a8so3120728plm.2;
-        Sun, 06 Sep 2020 02:22:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FC92C061574
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 02:57:31 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id r24so187654pls.1
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 02:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2vkgR5dUUAZhFpQFp7rxz8yLYngUnHbdC4QEfSe7qDo=;
-        b=rEcG5nEzpysALM3uG6dVN6kct7/Q9MWJt0kd8zTfLXU+W/MC/RGvHepA/TKoeQGrIJ
-         GByz7HwxuVgOHKWcCpZRX7fZIv65POTu8fXl1htfI6eo3gXePZ54p/mRPIaqps/hxTYv
-         2RFHObeHh0NmeiZHerDUsG7FOL7B7bl0ja27+EnX7s0AYoenjuocuL6vYOOzfVPVr3PC
-         GWhgYwxYVFyG/Gysgl2Gwp7FxXyGGuGkvoVUblE/ijl7Dj+ulA+JGiVYhu0q12J35aL/
-         tZN1AXociNgP2jKNSWaerjSkDFHYQ9TdiN9hUTBAu9YL3GWnxfhVuVBbB0Sf4Pi0XX17
-         06Tg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q2SILnBIEirH4TWtGi68qehLBgXZt7pRjYM7YYT/J/Q=;
+        b=X/xXQA7KjAXlhHEWXtOlnmdlGYZ82PRDubSws+IHO5QuygN1YWTfsEWWv5SLWMWDE1
+         Po5lZUgnbS0tbOeomPRm7XYLcg35w4L1+nNrgCib6qYMo6e4JEWDdZk+eszaLhzSrMhJ
+         BZ6VjPROaq5Pw50YFfMq9Jl1iU4vcVRqNX9sY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2vkgR5dUUAZhFpQFp7rxz8yLYngUnHbdC4QEfSe7qDo=;
-        b=nObdgeb+awHJg22Ql5CqRKZdnAFO218cK5alQiMWKBko2Mkl0qo/u4RFzeachyWXRF
-         do/wOUml4VdqtTiR+up1HMNzKBhH5H+4yR9viWD+2MZmWnffEFz/zNWETpGxk8fzhLEl
-         gxMmqXMPwm+t0vnuj/JzyLSNzqGWWWasmESx9Y2VX+JuyTUkynNEpcvIYyfzi+PMQTB0
-         /ZqjZLs7/15Rcwj28spIyBDNabFofz0+2IEm8pftPZbMHU+QbdX1FbkZ8HDMww45gYT4
-         QXZsal+DgJX5K/J8hpyVzK//6tXJWRWBvhrMFBdOnpjg3pS10jIFI+77XGLgA2Knm2fy
-         8Etg==
-X-Gm-Message-State: AOAM531S1zeYJWL4p2urNQOjxebWwXRGYW24IggLtvJ9T8+2/iMyP1HC
-        ID8AQrMbyJB56lsPZveUOyDo7Ch1KDESEscvoXA=
-X-Google-Smtp-Source: ABdhPJxCuYyktptzh0ODw4/TZzFlYBqNM9DOeE902E3MNTK6i4pe5z89kye7j6hvyGcRUnuu0d6O3sddEgAf9YuBxdY=
-X-Received: by 2002:a17:902:b289:: with SMTP id u9mr15420981plr.226.1599384145747;
- Sun, 06 Sep 2020 02:22:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200905163403.64390-1-contact@artur-rojek.eu> <20200905163403.64390-2-contact@artur-rojek.eu>
-In-Reply-To: <20200905163403.64390-2-contact@artur-rojek.eu>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 6 Sep 2020 12:22:09 +0300
-Message-ID: <CAHp75VfixOwpVSXoG1MqaZR2nmgEKumyKW8etLsRj1g=YjgiKw@mail.gmail.com>
-Subject: Re: [PATCH v9 2/2] input: joystick: Add ADC attached joystick driver.
-To:     Artur Rojek <contact@artur-rojek.eu>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
-        linux-input <linux-input@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Q2SILnBIEirH4TWtGi68qehLBgXZt7pRjYM7YYT/J/Q=;
+        b=KVVDCGY4ZRflSqvxljvR4khElIsv2lZ97V2vITN4afLKCtyUWuKWFgVH9sKojEnuRE
+         8hI075mb2T7CVuHz90ShciqxUMmHxgXX8opzZ4UOIfzcRmVdqJ6GNvOUHJEXTmzAKp/C
+         26YSlwx00ab50AUxLZtu8KdDW5Ac1ALSc9pdtoRP1oK1Zo4KKqHtqZTIMZbYLt/KUqRv
+         MWKqydqWiagUX8n0C0eMhXcGiuVHbLXFjSHL3OPh57KXzEERIqo2LJ4EpTv8meI+YCUJ
+         MCo0rnJQiv5P0giYIVImUaxPytD69TLnLzNPJ+/iH0Gqs60dgHaFIr+RxudtqM5K7H9q
+         BPAA==
+X-Gm-Message-State: AOAM530bBVrTI/hCh631yDBE4dzhxYZCuMYrUoKUih26MSlJiRwcHPAu
+        fBHJt0LWfQ36gKjntZQIqb1Jxw==
+X-Google-Smtp-Source: ABdhPJzkAJnCDVOKe7i/BgUKdpebHEmdjzLYkAdn6d/5GqTI6KIttjhyn3LSssnVUAOi2/4uPdrgXA==
+X-Received: by 2002:a17:902:ee03:b029:d0:89f1:9e2b with SMTP id z3-20020a170902ee03b02900d089f19e2bmr13926305plb.7.1599386250044;
+        Sun, 06 Sep 2020 02:57:30 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w185sm12900952pfc.36.2020.09.06.02.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 02:57:28 -0700 (PDT)
+Date:   Sun, 6 Sep 2020 02:57:27 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Joe Perches <joe@perches.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3] lib/string.c: implement stpcpy
+Message-ID: <202009060256.7CE5620A56@keescook>
+References: <20200825135838.2938771-1-ndesaulniers@google.com>
+ <CAK7LNAQvQBhjYgSkvm-dVyNz2Jd2C2qAtfyRk-rngEDfjkc38g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAQvQBhjYgSkvm-dVyNz2Jd2C2qAtfyRk-rngEDfjkc38g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 7:34 PM Artur Rojek <contact@artur-rojek.eu> wrote:
->
-> Add a driver for joystick devices connected to ADC controllers
-> supporting the Industrial I/O subsystem.
+On Thu, Aug 27, 2020 at 12:58:35AM +0900, Masahiro Yamada wrote:
+> On Tue, Aug 25, 2020 at 10:58 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> > [...]
+> > +/**
+> > + * stpcpy - copy a string from src to dest returning a pointer to the new end
+> > + *          of dest, including src's %NUL-terminator. May overrun dest.
+> > + * @dest: pointer to end of string being copied into. Must be large enough
+> > + *        to receive copy.
+> > + * @src: pointer to the beginning of string being copied from. Must not overlap
+> > + *       dest.
+> > + *
+> > + * stpcpy differs from strcpy in a key way: the return value is the new
+> > + * %NUL-terminated character. (for strcpy, the return value is a pointer to
+> > + * src.
+> 
+> 
+> return a pointer to src?
+> 
+> "man 3 strcpy" says:
+> 
+> The strcpy() and strncpy() functions return
+> a pointer to the destination string *dest*.
 
-...
-
-> +static int adc_joystick_handle(const void *data, void *private)
-> +{
-> +       struct adc_joystick *joy = private;
-> +       enum iio_endian endianness;
-> +       int bytes, msb, val, idx, i;
-> +       bool sign;
-> +
-> +       bytes = joy->chans[0].channel->scan_type.storagebits >> 3;
-> +
-> +       for (i = 0; i < joy->num_chans; ++i) {
-> +               idx = joy->chans[i].channel->scan_index;
-> +               endianness = joy->chans[i].channel->scan_type.endianness;
-> +               msb = joy->chans[i].channel->scan_type.realbits - 1;
-
-> +               sign = (tolower(joy->chans[i].channel->scan_type.sign) == 's');
-
-Redundant parentheses.
-
-> +               switch (bytes) {
-> +               case 1:
-> +                       val = ((const u8 *)data)[idx];
-> +                       break;
-> +               case 2:
-
-> +                       if (endianness == IIO_BE)
-> +                               val = be16_to_cpu(((const __be16 *)data)[idx]);
-> +                       else if (endianness == IIO_LE)
-> +                               val = le16_to_cpu(((const __le16 *)data)[idx]);
-> +                       else /* IIO_CPU */
-> +                               val = ((const u16 *)data)[idx];
-> +                       break;
-
-Hmm... I don't like explicit castings to restricted types. On top of
-that is it guaranteed that pointer to data will be aligned?
-As a solution for the first two I would recommend to use
-get_unaligned_be16() / get_unaligned_le16().
-The last one is an interesting case and if data can be unaligned needs
-to be fixed.
-
-> +               default:
-> +                       return -EINVAL;
-> +               }
-> +
-> +               val >>= joy->chans[i].channel->scan_type.shift;
-> +               if (sign)
-> +                       val = sign_extend32(val, msb);
-> +               else
-
-> +                       val &= GENMASK(msb, 0);
-
-It includes msb. Is it expected?
-
-> +               input_report_abs(joy->input, joy->axes[i].code, val);
-> +       }
-> +
-> +       input_sync(joy->input);
-> +
-> +       return 0;
-> +}
-
-...
-
-> +static int adc_joystick_open(struct input_dev *dev)
-
-> +static void adc_joystick_close(struct input_dev *dev)
-
-Just wondering if this is protected against object lifetime cases.
-
-...
-
-> +err:
-
-err_fwnode_put: ?
-
-> +       fwnode_handle_put(child);
-> +       return ret;
-
-...
-
-> +       /* Count how many channels we got. NULL terminated. */
-> +       for (i = 0; joy->chans[i].indio_dev; ++i) {
-> +               bits = joy->chans[i].channel->scan_type.storagebits;
-> +               if (!bits || (bits > 16)) {
-> +                       dev_err(dev, "Unsupported channel storage size\n");
-
-> +                       return -EINVAL;
-
--ERANGE?
-
-> +               }
-> +               if (bits != joy->chans[0].channel->scan_type.storagebits) {
-> +                       dev_err(dev, "Channels must have equal storage size\n");
-> +                       return -EINVAL;
-> +               }
-> +       }
+Agreed; that's a typo.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Kees Cook
