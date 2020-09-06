@@ -2,147 +2,140 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A47C43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4329C214F1
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7F0207BC
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:21:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="KOcbkH/V"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Uf3VnlDn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgIFVEA (ORCPT
+        id S1726511AbgIFVVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:04:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgIFVD6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:03:58 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99FCBC061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 14:03:56 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        Sun, 6 Sep 2020 17:21:49 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47536 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726154AbgIFVVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 17:21:48 -0400
+Received: from zn.tnic (p200300ec2f289700793ea211d80ace44.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:9700:793e:a211:d80a:ce44])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 279B3891B0;
-        Mon,  7 Sep 2020 09:03:48 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1599426228;
-        bh=QBa830jtUXjIph86rIi5lGJG6AjNPZpvt0RMV5ZNHUI=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=KOcbkH/VF11n/LNlhYdI1bd/9iQl4QZUwXikYs60mtNHm08d0ZgH+2vYKkT9WYwPn
-         Ju43MqLLMtoDzR5YWbwRI9/HG3Uv+pnK53RByWg7tetCDRtffr97Dxi5WtixfFBveV
-         RdLhF2Txrk24xbZRap73agjzCffTWxMy1R+73Xp3/Gdu0QiRMBQtfI8zJGWP0qj7Oj
-         qN/FQDoY5wc2pIx5o2CNAJbOMV4INjLcm839T8+Rc6XV9WC5+Rb31WsQvX30ij24Uv
-         DV6p/5h9HcALRdSixsOOWQR1HmgyaTTjKycPJS7Itm5tdgRxIXn+UUAHRF7waHNzpW
-         YcsH+TD7daW1w==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f554eb40001>; Mon, 07 Sep 2020 09:03:48 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep 2020 09:03:47 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Mon, 7 Sep 2020 09:03:47 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-CC:     Nicholas Piggin <npiggin@gmail.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "paulus@samba.org" <paulus@samba.org>
-Subject: Re: fsl_espi errors on v5.7.15
-Thread-Topic: fsl_espi errors on v5.7.15
-Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAA6JQCAAPtUgIAAOXyAgABIbACAAAjRgIABm7wAgAD5+gCABBXPAIAAjqOAgAALRACAAAUXgIAA9CsAgADXoQCAAFDQAIAETfoAgAEj4oCAA2JSAA==
-Date:   Sun, 6 Sep 2020 21:03:46 +0000
-Message-ID: <ee6a85fd-35d3-2adf-02ea-35009749194b@alliedtelesis.co.nz>
-References: <1598940515.6e06nwgi0c.astroid@bobo.none>
- <6054f0ec-d994-105b-6399-6cdb65ddd1b6@alliedtelesis.co.nz>
- <CAFSsGVvRMQoEoBN1hpao_4uM1yF2wwuKPbMkAcwFWyE1X8HDbQ@mail.gmail.com>
-In-Reply-To: <CAFSsGVvRMQoEoBN1hpao_4uM1yF2wwuKPbMkAcwFWyE1X8HDbQ@mail.gmail.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <6306C5D7E58A894E995FCB72D9029269@atlnz.lc>
-Content-Transfer-Encoding: base64
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 44F001EC0299;
+        Sun,  6 Sep 2020 23:21:43 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599427303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=HM5R1OLI2Y86rBU/SMz/D4+lyPnAoxTQUL0ra//iafk=;
+        b=Uf3VnlDnX7R/kPjAFgI0enhWdPylQcuVRhCZ2DZC3oeOmhQvLNSls7cYbWkxV/OLc1XsOX
+        n9GVGYOaEJDnNYyTjJFkxtZ3PimoLtuD+iSAVheJVXLl0AeTSug/UPRqEc5sdirR7Y3++o
+        tVfQqRbcBpGeJZXUvYpUrd8VBv5yzDU=
+Date:   Sun, 6 Sep 2020 23:21:30 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     x86-ml <x86@kernel.org>, Tony Luck <tony.luck@intel.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>
+Subject: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
+Message-ID: <20200906212130.GA28456@zn.tnic>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KHJlc2VuZCBhcyBzb21ldGhpbmcgZGVjaWRlZCB0byBpbnNlcnQgaHRtbCwgc29tZSBjb250ZXh0
-IHN0cmlwcGVkKQ0KDQpPbiA1LzA5LzIwIDU6MjMgYW0sIEhlaW5lciBLYWxsd2VpdCB3cm90ZToN
-Cj4gT24gRnJpIDQuIFNlcCAyMDIwIGF0IDAxOjU4LCBDaHJpcyBQYWNraGFtIA0KPiA8Q2hyaXMu
-UGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56IA0KPiA8bWFpbHRvOkNocmlzLlBhY2toYW1AYWxs
-aWVkdGVsZXNpcy5jby5uej4+IHdyb3RlOg0KPg0KPg0KPHNuaXA+DQo+DQo+DQo+ICAgICBJIHRy
-aWVkIGZ0cmFjZSBidXQgSSByZWFsbHkgd2Fzbid0IHN1cmUgd2hhdCBJIHdhcyBsb29raW5nIGZv
-ci4NCj4NCj4gICAgIENhcHR1cmluZyBhICJiYWQiIGNhc2Ugd2FzIHByZXR0eSB0cmlja3kuIEJ1
-dCBJIHRoaW5rIEkndmUNCj4gICAgIGlkZW50aWZpZWQgYQ0KPg0KPiAgICAgZml4IChJJ2xsIHNl
-bmQgaXQgYXMgYSBwcm9wZXIgcGF0Y2ggc2hvcnRseSkuIFRoZSBnaXN0IGlzDQo+DQo+DQo+DQo+
-ICAgICBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMgYi9kcml2ZXJzL3Nw
-aS9zcGktZnNsLWVzcGkuYw0KPg0KPiAgICAgaW5kZXggN2U3YzkyY2FmZGJiLi5jYjEyMGI2OGMw
-ZTIgMTAwNjQ0DQo+DQo+ICAgICAtLS0gYS9kcml2ZXJzL3NwaS9zcGktZnNsLWVzcGkuYw0KPg0K
-PiAgICAgKysrIGIvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMNCj4NCj4gICAgIEBAIC01NzQs
-MTMgKzU3NCwxNCBAQCBzdGF0aWMgdm9pZCBmc2xfZXNwaV9jcHVfaXJxKHN0cnVjdCBmc2xfZXNw
-aQ0KPg0KPiAgICAgKmVzcGksIHUzMiBldmVudHMpDQo+DQo+ICAgICDCoMKgc3RhdGljIGlycXJl
-dHVybl90IGZzbF9lc3BpX2lycShzMzIgaXJxLCB2b2lkICpjb250ZXh0X2RhdGEpDQo+DQo+ICAg
-ICDCoMKgew0KPg0KPiAgICAgwqDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgZnNsX2VzcGkgKmVzcGkg
-PSBjb250ZXh0X2RhdGE7DQo+DQo+ICAgICAtwqDCoMKgwqDCoMKgIHUzMiBldmVudHM7DQo+DQo+
-ICAgICArwqDCoMKgwqDCoMKgIHUzMiBldmVudHMsIG1hc2s7DQo+DQo+DQo+DQo+ICAgICDCoMKg
-wqDCoMKgwqDCoMKgIHNwaW5fbG9jaygmZXNwaS0+bG9jayk7DQo+DQo+DQo+DQo+ICAgICDCoMKg
-wqDCoMKgwqDCoMKgIC8qIEdldCBpbnRlcnJ1cHQgZXZlbnRzKHR4L3J4KSAqLw0KPg0KPiAgICAg
-wqDCoMKgwqDCoMKgwqDCoCBldmVudHMgPSBmc2xfZXNwaV9yZWFkX3JlZyhlc3BpLCBFU1BJX1NQ
-SUUpOw0KPg0KPiAgICAgLcKgwqDCoMKgwqDCoCBpZiAoIWV2ZW50cykgew0KPg0KPiAgICAgK8Kg
-wqDCoMKgwqDCoCBtYXNrID0gZnNsX2VzcGlfcmVhZF9yZWcoZXNwaSwgRVNQSV9TUElNKTsNCj4N
-Cj4gICAgICvCoMKgwqDCoMKgwqAgaWYgKCEoZXZlbnRzICYgbWFzaykpIHsNCj4NCj4gICAgIMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHNwaW5fdW5sb2NrKCZlc3BpLT5sb2NrKTsN
-Cj4NCj4gICAgIMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBJUlFfTk9O
-RTsNCj4NCj4gICAgIMKgwqDCoMKgwqDCoMKgwqAgfQ0KPg0KPg0KPg0KPiAgICAgVGhlIFNQSUUg
-cmVnaXN0ZXIgY29udGFpbnMgdGhlIFRYQ05UIHNvIGV2ZW50cyBpcyBwcmV0dHkgbXVjaCBhbHdh
-eXMNCj4NCj4gICAgIGdvaW5nIHRvIGhhdmUgc29tZXRoaW5nIHNldC4gQnkgY2hlY2tpbmcgZXZl
-bnRzIGFnYWluc3Qgd2hhdCB3ZSd2ZQ0KPg0KPiAgICAgYWN0dWFsbHkgcmVxdWVzdGVkIGludGVy
-cnVwdHMgZm9yIHdlIGRvbid0IHNlZSBhbnkgc3B1cmlvdXMgZXZlbnRzLg0KPg0KPg0KPiBVc3Vh
-bGx5IHdlIHNob3VsZG7igJl0IHJlY2VpdmUgaW50ZXJydXB0cyB3ZeKAmXJlIG5vdCBpbnRlcmVz
-dGVkIGluLCANCj4gZXhjZXB0IHRoZSBpbnRlcnJ1cHQgaXMgc2hhcmVkLg0KTXkgdGhlb3J5IGlz
-IHRoYXQgd2UgZ2V0IGFuIGludGVycnVwdCB0byB0aGUgY29yZSBmb3IgUlhUIGFuZCBhbm90aGVy
-IA0KZm9yIERPTi4gV2l0aCB0aGUgY2hhbmdlcyB0byB0aGUgcG93ZXJwYyBpbnRlcnJ1cHQgaGFu
-ZGxpbmcgYW5kIHRoZSBmYWN0IA0KdGhhdCBmc2xfZXNwaV9jcHVfaXJxKCkgZG9lc24ndCBhY3R1
-YWxseSBsb29rIGF0IHRoZSBzcGVjaWZpYyBldmVudCBiaXRzIA0KbWVhbnMgdGhhdCBzb21ldGlt
-ZXMgYm90aCBldmVudHMgYXJlIGhhbmRsZWQgaW4gdGhlIHByb2Nlc3Npbmcgb2YgdGhlIA0KZmly
-c3QgaW50ZXJydXB0IGFuZCB0aGUgc2Vjb25kIG9uZSB0cmlwcyB0aGUgU1BJX0RPTiBub3Qgc2V0
-IGVycm9yLg0KDQpUaGVyZSdzIGFuIG9sZCBjb21tZW50ICJTUEkgYnVzIHNvbWV0aW1lcyBnb3Qg
-bG9zdCBpbnRlcnJ1cHRzLi4uIiB3aGljaCANCm1ha2VzIG1lIHdvbmRlciBpZiB0aGUgaW50ZXJy
-dXB0IGhhbmRsaW5nIGNoYW5nZSBoYXMgZml4ZWQgdGhpcyBvcmlnaW5hbCANCnByb2JsZW0uDQoN
-Ckkgc3RpbGwgdGhpbmsgdGhlIGNoYW5nZSBtYWtlcyBzZW5zZSByZWdhcmRsZXNzIGJlY2F1c2Ug
-dGhlIFNQSUUgDQpyZWdpc3RlciBoYXMgc29tZSBjb3VudGVyIGZpZWxkcyBpbiBpdC4NCg0KPiBU
-aGlzIGxlYWRzIHRvIHRoZSBxdWVzdGlvbjogaXMgdGhlIFNQSSBpbnRlcnJ1cHQgc2hhcmVkIHdp
-dGggYW5vdGhlciANCj4gZGV2aWNlIG9uIHlvdXIgc3lzdGVtPw0KSXQncyBub3Qgc2hhcmVkIG9u
-IGVpdGhlciB0aGUgY3VzdG9tIGJvYXJkIG9yIHRoZSBUMjA4MFJEQi4NCj4gRG8geW91IHNlZSBz
-cHVyaW91cyBpbnRlcnJ1cHRzIHdpdGggdGhlIHBhdGNoIHVuZGVyIA0KPiAvcHJvYy9pcnEvKGly
-cSkvc3B1cmlvdXM/DQoNClllcyBpdCBsb29rcyBsaWtlIGl0DQoNCltyb290QGxpbnV4Ym94IH5d
-IyBjYXQgL3Byb2MvaXJxLzUzL3NwdXJpb3VzDQpjb3VudCAzMTI2DQp1bmhhbmRsZWQgMA0KbGFz
-dF91bmhhbmRsZWQgMCBtcw0KDQpbcm9vdEBsaW51eGJveCB+XSMgL2ZsYXNoL2RkX3Rlc3Quc2gN
-Cg0KW3Jvb3RAbGludXhib3ggfl0jIGNhdCAvcHJvYy9pcnEvNTMvc3B1cmlvdXMNCmNvdW50IDEw
-MTYNCnVuaGFuZGxlZCAwDQpsYXN0X3VuaGFuZGxlZCA0Mjk0NzQ2MTAwIG1zDQoNCltyb290QGxp
-bnV4Ym94IH5dIyAvZmxhc2gvZGRfdGVzdC5zaA0KDQpbcm9vdEBsaW51eGJveCB+XSMgY2F0IC9w
-cm9jL2lycS81My9zcHVyaW91cw0KY291bnQgODgzOTENCnVuaGFuZGxlZCAwDQpsYXN0X3VuaGFu
-ZGxlZCA0Mjk0NzQ2MTAwIG1zDQoNCltyb290QGxpbnV4Ym94IH5dIyAvZmxhc2gvZGRfdGVzdC5z
-aA0KDQpbcm9vdEBsaW51eGJveCB+XSMgY2F0IC9wcm9jL2lycS81My9zcHVyaW91cw0KY291bnQg
-NzI0NTkNCnVuaGFuZGxlZCAyDQpsYXN0X3VuaGFuZGxlZCA0Mjk0NzU4NjMyIG1zDQo+DQo+DQo+
-DQo+ICAgICBJJ3ZlIHRlc3RlZCB0aGlzIG9uIHRoZSBUMjA4MFJEQiBhbmQgb24gb3VyIGN1c3Rv
-bSBoYXJkd2FyZSBhbmQgaXQNCj4gICAgIHNlZW1zDQo+DQo+ICAgICB0byByZXNvbHZlIHRoZSBw
-cm9ibGVtLg0KPg0KPg0KPg==
+Hi,
+
+Ingo and I talked about this thing this morning and tglx has had it on
+his to-fix list too so here's a first attempt at it.
+
+Below is just a brain dump of what we talked about so let's start with
+it and see where it would take us.
+
+Thx.
+
+---
+
+From: Borislav Petkov <bp@suse.de>
+
+... without any exception handling and tracing.
+
+If an exception needs to be handled while reading an MSR - which is in
+most of the cases caused by a #GP on a non-existent MSR - then this
+is most likely the incarnation of a BIOS or a hardware bug. Such bug
+violates the architectural guarantee that MSR banks are present with all
+MSRs belonging to them.
+
+The proper fix belongs in the hardware/firmware - not in the kernel.
+
+Handling exceptions while in #MC and while an NMI is being handled would
+cause the nasty NMI nesting issue because of the shortcoming of IRET
+of reenabling NMIs when executed. And the machine is in an #MC context
+already so <Deity> be at its side.
+
+Tracing MSR accesses while in #MC is another no-no due to tracing being
+inherently a bad idea in atomic context:
+
+  vmlinux.o: warning: objtool: do_machine_check()+0x4a: call to mce_rdmsrl() leaves .noinstr.text section
+
+so remove all that "additional" functionality from mce_rdmsrl() and
+concentrate on solely reading the MSRs.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/cpu/mce/core.c | 18 +++++++-----------
+ 1 file changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 0ba24dfffdb2..14ebdf3e22f3 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -376,7 +376,7 @@ static int msr_to_offset(u32 msr)
+ /* MSR access wrappers used for error injection */
+ static u64 mce_rdmsrl(u32 msr)
+ {
+-	u64 v;
++	DECLARE_ARGS(val, low, high);
+ 
+ 	if (__this_cpu_read(injectm.finished)) {
+ 		int offset = msr_to_offset(msr);
+@@ -386,17 +386,13 @@ static u64 mce_rdmsrl(u32 msr)
+ 		return *(u64 *)((char *)this_cpu_ptr(&injectm) + offset);
+ 	}
+ 
+-	if (rdmsrl_safe(msr, &v)) {
+-		WARN_ONCE(1, "mce: Unable to read MSR 0x%x!\n", msr);
+-		/*
+-		 * Return zero in case the access faulted. This should
+-		 * not happen normally but can happen if the CPU does
+-		 * something weird, or if the code is buggy.
+-		 */
+-		v = 0;
+-	}
++	/*
++	 * RDMSR on MCA MSRs should not fault. If they do, this is very much an
++	 * architectural violation and needs to be reported to hw vendor.
++	 */
++	asm volatile("rdmsr" : EAX_EDX_RET(val, low, high) : "c" (msr));
+ 
+-	return v;
++	return EAX_EDX_VAL(val, low, high);
+ }
+ 
+ static void mce_wrmsrl(u32 msr, u64 v)
+-- 
+2.21.0
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
