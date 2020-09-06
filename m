@@ -2,116 +2,132 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5817C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B188C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B3120C09
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:43:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ffu/pVsm"
+	by mail.kernel.org (Postfix) with ESMTP id D9C3820C09
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599396283;
+	bh=HRlZKQz3TCc1TZbzCGrO9aZ+j2yK6L3jRGTsVlI1Qgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pp0WREiqDXJbrlskdp90nyajCIb2jNAeRwe7sJ97XlaD9tvOtAz2q1XenoIQPtAt2
+	 YBwtI0WTpyGfGHyqaVC949MY+QyBhtMDQP7QvgwE3u7JS33+qz65wmM0rYw/q7aXT9
+	 2epWTazU1HfLGsVk51Fglu5QIp7i2Lz43TkLZzM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgIFMnU (ORCPT
+        id S1728877AbgIFMok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 08:43:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26717 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728726AbgIFMl7 (ORCPT
+        Sun, 6 Sep 2020 08:44:40 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:33962 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728726AbgIFMoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 08:41:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599396103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gA3ScU2VHrm7tZuhTSqaYwZlHEEedoUK+tPKPRBeWJg=;
-        b=Ffu/pVsmXEl9oSqb1vOFwac8KwafegxLRJoOPmOGTR3TMzPkQIpgdNCMmJQ34CmRPgzWae
-        dBbqwXwqPcBeRf89MVmRS3kEF/iy1CMsbXRbzFg54Pb1f3PKVxFC975wWkY3wUDjCatBi9
-        EyggqJLZGPP91CAG1Y6j7+QJ5i2zfNE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-403-5DA4mAPqMae1IiAnNNP5CA-1; Sun, 06 Sep 2020 08:41:39 -0400
-X-MC-Unique: 5DA4mAPqMae1IiAnNNP5CA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 960C118A224E;
-        Sun,  6 Sep 2020 12:41:37 +0000 (UTC)
-Received: from krava (ovpn-112-63.ams2.redhat.com [10.36.112.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A6EF03A40;
-        Sun,  6 Sep 2020 12:41:34 +0000 (UTC)
-Date:   Sun, 6 Sep 2020 14:41:33 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2 2/2] perf metric: Fix some memory leaks - part 2
-Message-ID: <20200906124133.GB1199773@krava>
-References: <20200905021912.621388-1-namhyung@kernel.org>
- <20200905021912.621388-2-namhyung@kernel.org>
+        Sun, 6 Sep 2020 08:44:13 -0400
+Received: by mail-ej1-f68.google.com with SMTP id gr14so13212086ejb.1;
+        Sun, 06 Sep 2020 05:44:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ralIEjNoFtwj5RBf8iVIO+7hQNji8TPKqkwx5rPMfW8=;
+        b=YPYDFJCMCRd7MkA0WiDlq0TqsrOCQUV3Yq4cgTFpOJaIsZC+axyRnRcFP0CydQuy2a
+         8ogjIx2PrvU735a+asGRN3JVN/cMF9rtttRKJh6oYk1HfcgUbHFbV3GK9SiAntbl9vZV
+         JI+6x0WvFYLGBNrlHHogJzpcMEdlF6+GghbILKXXDYKKjexDSR7wyiWNEDYAWCqtKYT1
+         8+EWyw/xf2cnjr0E6g1eqzrdphggHnkH6PCQcYq3FC+kYaQ+Ou1OyuNbm/1H5Zsk5axn
+         6USN+x3y8yOw8KwFfYbEC5iGoFPj4IPj4ZqmoXq2nr5ovux8SlO9Q/5QIqqw9RFztR7Q
+         8kbg==
+X-Gm-Message-State: AOAM5313cKTagmdX9I3fFycW6i/zfIw1tZF2iSba2YuOAvfa8Ehc7cig
+        okPNigLBr6FZDvuPDuSjveXGcy35V+Q=
+X-Google-Smtp-Source: ABdhPJzA6dUBJEnmsFqsm7+L48vhwErR8Th/TvoUyATAz1Bfovh0eQUU0X1hyJaz8BYw7hNVPwUa7w==
+X-Received: by 2002:a17:907:2168:: with SMTP id rl8mr16195778ejb.308.1599396250643;
+        Sun, 06 Sep 2020 05:44:10 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id p12sm11877066ejb.42.2020.09.06.05.44.09
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Sep 2020 05:44:09 -0700 (PDT)
+Date:   Sun, 6 Sep 2020 14:44:07 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v2 1/3] ARM: dts: exynos: Add assigned clock parent to
+ CMU in Exynos3250
+Message-ID: <20200906124407.GA4829@kozik-lap>
+References: <CGME20200903181437eucas1p16b97d1c425672700bac7ece19084584c@eucas1p1.samsung.com>
+ <20200903181425.5015-1-krzk@kernel.org>
+ <4bc2ea2e-65a2-6c0b-9557-5777e359241a@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200905021912.621388-2-namhyung@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <4bc2ea2e-65a2-6c0b-9557-5777e359241a@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 11:19:12AM +0900, Namhyung Kim wrote:
-> The metric_event_delete() missed to free expr->metric_events and it
-> should free an expr when metric_refs allocation failed.
+On Fri, Sep 04, 2020 at 08:47:10AM +0200, Marek Szyprowski wrote:
+> Hi Krzysztof,
 > 
-> Cc: Kajol Jain <kjain@linux.ibm.com>
-> Cc: John Garry <john.garry@huawei.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Fixes: 4ea2896715e67 ("perf metric: Collect referenced metrics in struct metric_expr")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-
-thanks,
-jirka
-
-> ---
->  tools/perf/util/metricgroup.c | 2 ++
->  1 file changed, 2 insertions(+)
+> On 03.09.2020 20:14, Krzysztof Kozlowski wrote:
+> > Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
+> > for exynos3250") added assigned clocks under Clock Management Unit to
+> > fix hangs when accessing ISP registers.
+> >
+> > However the dtschema expects "clocks" property if "assigned-clocks" are
+> > used.  Add reference to input clock, the parent used in
+> > "assigned-clock-parents" to silence the dtschema warnings:
+> >
+> >    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Changes since v1:
+> > 1. Add clocks property.
+> >
+> > This is a v2 for:
+> > https://lore.kernel.org/linux-samsung-soc/20200901101534.GE23793@kozik-lap/T/#me85ac382b847dadbc3f6ebf30e94e70b5df1ebb6
+> > ---
+> >   arch/arm/boot/dts/exynos3250.dtsi | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> > index a1e93fb7f694..89b160280469 100644
+> > --- a/arch/arm/boot/dts/exynos3250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> > @@ -214,6 +214,7 @@
+> >   			compatible = "samsung,exynos3250-cmu";
+> >   			reg = <0x10030000 0x20000>;
+> >   			#clock-cells = <1>;
+> > +			clocks = <&cmu CLK_FIN_PLL>;
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index af664d6218d6..b28c09447c10 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -85,6 +85,7 @@ static void metric_event_delete(struct rblist *rblist __maybe_unused,
->  
->  	list_for_each_entry_safe(expr, tmp, &me->head, nd) {
->  		free(expr->metric_refs);
-> +		free(expr->metric_events);
->  		free(expr);
->  	}
->  
-> @@ -316,6 +317,7 @@ static int metricgroup__setup_events(struct list_head *groups,
->  			if (!metric_refs) {
->  				ret = -ENOMEM;
->  				free(metric_events);
-> +				free(expr);
->  				break;
->  			}
->  
+> This is not a correct input clock for this CMU. Please assign it to 
+> xusbxti, xxti or xtcxo in the respective board dts, as this is a board 
+> property.
+
+Makes sense, although all this is kind of a hack as neither the bindings
+nor the driver take the input clock.
+
+
+Best regards,
+Krzysztof
+
+> 
+> >   			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>,
+> >   					  <&cmu CLK_MOUT_ACLK_266_SUB>;
+> >   			assigned-clock-parents = <&cmu CLK_FIN_PLL>,
+> 
+> Best regards
 > -- 
-> 2.28.0.526.ge36021eeef-goog
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
 > 
-
