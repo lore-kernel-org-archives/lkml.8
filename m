@@ -2,108 +2,175 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED947C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B955B20759
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AC920759
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 18:40:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbgIFSiY (ORCPT
+        id S1729167AbgIFSkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 14:38:24 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44526 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728969AbgIFSiX (ORCPT
+        Sun, 6 Sep 2020 14:40:20 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:43624 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728662AbgIFSkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 14:38:23 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 04CAC1C0B7C; Sun,  6 Sep 2020 20:38:21 +0200 (CEST)
-Date:   Sun, 6 Sep 2020 20:38:20 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Pavel Machek <pavel@denx.de>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Christoph Hellwig <hch@lst.de>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] /dev/zero: also implement ->read
-Message-ID: <20200906183820.GA13290@amd>
-References: <20200903155922.1111551-1-hch@lst.de>
- <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
- <3b0b58be4b844162b73db1b108a9b995@AcuMS.aculab.com>
- <20200906182122.GA12295@amd>
- <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
+        Sun, 6 Sep 2020 14:40:19 -0400
+Received: by mail-il1-f197.google.com with SMTP id o2so6165130ilg.10
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 11:40:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1f2Sd3YunverZuOxt1JS9xlSUV9YCdnCkCHzSghz9Bs=;
+        b=TcvMGND0FQOCnuLuCKaS14mWCy8razMyxnI49VGndJwFRZ+65GjZsYPcdc/1mU31KL
+         /Joh0d88ncSUA0Um58YgT7oFDyFXmJQjgCotKui+SM5hovU8YSzHDQj90gfddpzXysAZ
+         NWKx28PtWNy6zrS6nuhIGBTgUS9PZ0KwhvWGyPYXOd+3G0UtJMQ1l/Sbvj0k41x9dIZZ
+         2r6zGj1VCYrwqCKn2+PRBZ87P3VCmhw9b1l3zH7Ki4KPbx5+5mMKVdyIfRTY5NHD7PYz
+         hrLB36bly+rKUahZQ1cL3/fMtz4LlKDbH3OLeJGEWtYGyoZs6c6s8MRqLdunUSxLhdYJ
+         R4gg==
+X-Gm-Message-State: AOAM533A4HQDBGzd+uK+FGNTTMiTFObMU+fpv+i8Dz8B4pu5AbR2PDcD
+        3CEvlWa0MA5Oqa5fFKhyg+S2uGdZl1wsULub2BrI/0sTueYo
+X-Google-Smtp-Source: ABdhPJyEQVVK8mC5rOgyE48trQrd0UoJRySAu+IUr6+D7PhmWBvywPW1gC7ODdef/oodikYD8aoAv+rWIUv6CFfChaUDat+u/P3h
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Content-Disposition: inline
-In-Reply-To: <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Received: by 2002:a02:7785:: with SMTP id g127mr5709131jac.27.1599417617780;
+ Sun, 06 Sep 2020 11:40:17 -0700 (PDT)
+Date:   Sun, 06 Sep 2020 11:40:17 -0700
+In-Reply-To: <000000000000903d5805ab908fc4@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f498fd05aea96e3a@google.com>
+Subject: Re: INFO: rcu detected stall in smp_call_function
+From:   syzbot <syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com>
+To:     bp@alien8.de, fweisbec@gmail.com, hpa@zytor.com,
+        jpoimboe@redhat.com, linux-kernel@vger.kernel.org, mbenes@suse.cz,
+        mingo@kernel.org, mingo@redhat.com, paulmck@kernel.org,
+        peterz@infradead.org, shile.zhang@linux.alibaba.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has found a reproducer for the following issue on:
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+HEAD commit:    dd9fb9bb Merge tags 'auxdisplay-for-linus-v5.9-rc4', 'clan..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=124893e1900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd46548257448703
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb3b69ae80afd6535b0e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13727231900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=132c9fc9900000
 
-On Sun 2020-09-06 20:35:38, Christophe Leroy wrote:
-> Hi,
->=20
-> Le 06/09/2020 =E0 20:21, Pavel Machek a =E9crit=A0:
-> >Hi!
-> >
-> >>>>Christophe reported a major speedup due to avoiding the iov_iter
-> >>>>overhead, so just add this trivial function.  Note that /dev/zero
-> >>>>already implements both an iter and non-iter writes so this just
-> >>>>makes it more symmetric.
-> >>>>
-> >>>>Christophe Leroy <christophe.leroy@csgroup.eu>
-> >>>>Signed-off-by: Christoph Hellwig <hch@lst.de>
-> >>>
-> >>>Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> >>
-> >>Any idea what has happened to make the 'iter' version so bad?
-> >
-> >Exactly. Also it would be nice to note how the speedup was measured
-> >and what the speedup is.
-> >
->=20
-> Was measured on an 8xx powerpc running at 132MHz with:
->=20
-> 	dd if=3D/dev/zero of=3D/dev/null count=3D1M
->=20
-> With the patch, dd displays a throughput of 113.5MB/s
-> Without the patch it is 99.9MB/s
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cb3b69ae80afd6535b0e@syzkaller.appspotmail.com
 
-Actually... that does not seem like a huge deal. read(/dev/zero) is
-not that common operation.
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	0-....: (1 GPs behind) idle=932/1/0x4000000000000002 softirq=9344/9345 fqs=5247 
+	(detected by 1, t=10502 jiffies, g=10529, q=124891)
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 8110 Comm: syz-executor267 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bytes_is_nonzero mm/kasan/generic.c:91 [inline]
+RIP: 0010:memory_is_nonzero mm/kasan/generic.c:108 [inline]
+RIP: 0010:memory_is_poisoned_n mm/kasan/generic.c:134 [inline]
+RIP: 0010:memory_is_poisoned mm/kasan/generic.c:165 [inline]
+RIP: 0010:check_memory_region_inline mm/kasan/generic.c:183 [inline]
+RIP: 0010:check_memory_region+0xdb/0x180 mm/kasan/generic.c:192
+Code: 80 38 00 74 f2 48 89 c2 b8 01 00 00 00 48 85 d2 75 56 5b 5d 41 5c c3 48 85 d2 74 5e 48 01 ea eb 09 48 83 c0 01 48 39 d0 74 50 <80> 38 00 74 f2 eb d4 41 bc 08 00 00 00 48 89 ea 45 29 dc 4d 8d 1c
+RSP: 0018:ffffc90000007090 EFLAGS: 00000086
+RAX: fffff52000000e30 RBX: fffff52000000e3c RCX: ffffffff81339c7a
+RDX: fffff52000000e3c RSI: 0000000000000060 RDI: ffffc90000007180
+RBP: fffff52000000e30 R08: 0000000000000001 R09: ffffc900000071df
+R10: fffff52000000e3b R11: 0000000000000001 R12: 0000000000000060
+R13: 0000000000000000 R14: 000000000000007f R15: ffffc90000007180
+FS:  0000000000cf9880(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000008319c CR3: 000000009f579000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <IRQ>
+ memset+0x20/0x40 mm/kasan/common.c:84
+ memset include/linux/string.h:391 [inline]
+ __unwind_start+0x2a/0x800 arch/x86/kernel/unwind_orc.c:630
+ unwind_start arch/x86/include/asm/unwind.h:60 [inline]
+ perf_callchain_kernel+0x2f0/0x6a0 arch/x86/events/core.c:2447
+ get_perf_callchain+0x16e/0x620 kernel/events/callchain.c:200
+ perf_callchain+0x165/0x1c0 kernel/events/core.c:6985
+ perf_prepare_sample+0x8fd/0x1d40 kernel/events/core.c:7012
+ __perf_event_output kernel/events/core.c:7170 [inline]
+ perf_event_output_forward+0xf3/0x270 kernel/events/core.c:7190
+ __perf_event_overflow+0x13c/0x370 kernel/events/core.c:8845
+ perf_swevent_overflow kernel/events/core.c:8921 [inline]
+ perf_swevent_event+0x347/0x550 kernel/events/core.c:8949
+ perf_tp_event+0x2e4/0xb50 kernel/events/core.c:9377
+ perf_trace_run_bpf_submit+0x11c/0x200 kernel/events/core.c:9351
+ perf_trace_preemptirq_template+0x289/0x440 include/trace/events/preemptirq.h:14
+ trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
+ trace_irq_enable_rcuidle include/trace/events/preemptirq.h:40 [inline]
+ trace_hardirqs_on+0x18a/0x220 kernel/trace/trace_preemptirq.c:44
+ asm_sysvec_irq_work+0x12/0x20 arch/x86/include/asm/idtentry.h:611
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
+RIP: 0010:rcu_read_unlock_special kernel/rcu/tree_plugin.h:630 [inline]
+RIP: 0010:__rcu_read_unlock+0x26e/0x530 kernel/rcu/tree_plugin.h:395
+Code: ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 a3 02 00 00 48 83 3d d5 9c 54 08 00 0f 84 18 02 00 00 4c 89 e7 57 9d <0f> 1f 44 00 00 e9 07 fe ff ff 0f 0b e9 41 fe ff ff e8 5c b1 52 00
+RSP: 0018:ffffc90000007b40 EFLAGS: 00000282
+RAX: 1ffffffff136c789 RBX: ffffffff89bd9a80 RCX: 0000000000000002
+RDX: dffffc0000000000 RSI: 0000000000000101 RDI: 0000000000000282
+RBP: 0000000000000001 R08: 0000000000000001 R09: ffffffff8c5f4a97
+R10: fffffbfff18be952 R11: 0000000000000001 R12: 0000000000000282
+R13: 0000000000000200 R14: ffff8880ae636c00 R15: 0000000000000000
+ rcu_read_unlock include/linux/rcupdate.h:687 [inline]
+ mld_sendpack+0x742/0xdb0 net/ipv6/mcast.c:1690
+ mld_send_initial_cr.part.0+0x106/0x150 net/ipv6/mcast.c:2096
+ mld_send_initial_cr net/ipv6/mcast.c:1191 [inline]
+ mld_dad_timer_expire+0x1c7/0x6a0 net/ipv6/mcast.c:2115
+ call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
+ expire_timers kernel/time/timer.c:1458 [inline]
+ __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
+ __run_timers kernel/time/timer.c:1736 [inline]
+ run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
+ __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
+ asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:393 [inline]
+ __irq_exit_rcu kernel/softirq.c:423 [inline]
+ irq_exit_rcu+0x235/0x280 kernel/softirq.c:435
+ sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
+RIP: 0010:generic_exec_single+0x2b6/0x430 kernel/smp.c:172
+Code: 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 2d 01 00 00 48 83 3d 82 fd 4c 08 00 0f 84 f3 00 00 00 e8 2f 0c 0b 00 48 89 df 57 9d <0f> 1f 44 00 00 45 31 e4 e9 34 fe ff ff e8 18 0c 0b 00 0f 0b e9 95
+RSP: 0018:ffffc90009cbfb08 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: 0000000000000293 RCX: 0000000000000006
+RDX: ffff88809054a380 RSI: ffffffff81693ed1 RDI: 0000000000000293
+RBP: 0000000000000200 R08: 0000000000000001 R09: ffffffff8c5f4ab7
+R10: fffffbfff18be956 R11: 0000000000000001 R12: ffffc90009cbfb80
+R13: ffffffff818dc1d0 R14: ffffc90009cbfc48 R15: 1ffff92001397f9e
+ smp_call_function_single+0x186/0x4f0 kernel/smp.c:379
+ task_function_call+0xd7/0x160 kernel/events/core.c:116
+ perf_install_in_context+0x2cb/0x550 kernel/events/core.c:2895
+ __do_sys_perf_event_open+0x1c31/0x2cb0 kernel/events/core.c:11992
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x443f79
+Code: e8 2c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 0b 09 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffe1fb0778 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000443f79
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000100
+RBP: 000000000008319c R08: 0000000000000000 R09: 0000000100000009
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000404da0 R14: 0000000000000000 R15: 0000000000000000
+INFO: NMI handler (nmi_cpu_backtrace_handler) took too long to run: 0.000 msecs
 
-Are you getting similar speedups on normal hardware?
-
-								Pavel
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl9VLJwACgkQMOfwapXb+vKmrgCdEYmZPgQq+HxpSanlG4HVseFn
-dbsAnRdejmbhYyMrT06l1+feAucNtasq
-=XH8y
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
