@@ -2,126 +2,138 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA515C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA53CC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71916208C7
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8B120714
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 15:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SX4GDYqT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hyT1PpOw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgIFPW5 (ORCPT
+        id S1728998AbgIFPXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 11:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        Sun, 6 Sep 2020 11:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728948AbgIFPTi (ORCPT
+        with ESMTP id S1728807AbgIFPWl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 11:19:38 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C854EC061575
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 08:19:36 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e17so11018066wme.0
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 08:19:36 -0700 (PDT)
+        Sun, 6 Sep 2020 11:22:41 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10F3C061574
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 08:22:27 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id t16so10365978ilf.13
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 08:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uHlPaejxaoEdhUtjcAkbEk5MwemH61sGbulo7nTGaVI=;
-        b=SX4GDYqTPOGWjEBwAPJ+63c5XJ+ugOUtKfk2l97qxzdS2k0Gs3m/RL1RxgLIqb9BGI
-         GJzExp+fn4OA+P/b5Kx45NWqujGTB+EFHnJLjWDAsCu5e9IAyZe5RTNQSeCuXK1iGUBg
-         ViS+LLN/xduUf/moO8/9B9eaCe2k/rBPGM05InBZDCSiKeQiJJgeD5+Wd7nRJfvpJl3D
-         rseB2sAArVCsO6cAhTtEUqykbhjl/MSC3j2sngJ0x8bc5ATvxhvVw41dNoxye+lbXAZg
-         zDoeVjmXF3eC9s4u20sPCwq2i26V0JPWhbcBJaBEQi1yTJcqExo3/h/EsPvOUeklCzVx
-         +XvA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JwN/BVu2qRKl2g6ZpjOhiQKz73AB4SfyAtuVoOPIeRA=;
+        b=hyT1PpOwkbC8e2AEOu/g9Z60NoTSWolqKqKILsHgaokzrv9DdzWF0iGZC3eIzCBK6D
+         mjAV6ZT2C9Vxh1Ly7plpKR9in9PGAr0OEPu+GfdJwmNnPeW0Dd3/ZQzAc66HYh71aN5C
+         VMfFGFfcDlIVIrRL1ePqttKFQ8qYgoqpHy8PXzMGR/gYqjK1Qpv8zkGw2kUyK/2HoiD2
+         VwYvqKKAGM0Zf21f+GjMTO1todjKALyPIATfQQRalp63mcX01/Jwa3v1QyCeUgemW6VI
+         XKlHKjJMx4dpYPWcKV5ts7aO03e7y9HLhoDz5h9FvJKcMQt7mUFEElQYlObrgEwpsp4N
+         gXNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uHlPaejxaoEdhUtjcAkbEk5MwemH61sGbulo7nTGaVI=;
-        b=T5WJZ7oovd+h+nzi9r2+5iKW9CKkfeNBhG858lExrxXA8IGhqawrHdwy3+CsiD80ef
-         lw7/m4J9GZLD0092/6NKkpGdh7Hi7oFMSLg43apQYzoF7W5OcGwW/Sml1KrHqQHcykUz
-         /iKPjvT+cYR0a7claxsnLw2rk3T+6DxROHF5evYJo47sxpxOZmIIEFM2gqL0z+sTbjKZ
-         IN/xOi4gbuQzghQuVtctRlLpgBr11jOh6N5xsCkGmo9rVVzV2d0rNqtjqKutFBBucESI
-         p0Wvyvj2GdZybsXOVgEzMMsYcnGkg/ppIVLd4oRCpZ01NJ9pCQkUVKdPMwqbrv+il+EZ
-         b5wg==
-X-Gm-Message-State: AOAM5332T1b56SN7rkDykgt8kq8To+7TqreaKbVVBSJx0oY9l9ZJkl85
-        2SB/Tcl32GYQQ8c5sVfALqbIH65EcsBjiA==
-X-Google-Smtp-Source: ABdhPJxTiP5W3hXf0jIMlYDRBifFpSbd8PfKRCSzquyfrJqE89SWeJ2IDFhFHf02RC+vrWN02y3xIw==
-X-Received: by 2002:a1c:c90d:: with SMTP id f13mr16979046wmb.25.1599405575412;
-        Sun, 06 Sep 2020 08:19:35 -0700 (PDT)
-Received: from localhost.localdomain (208.19.23.93.rev.sfr.net. [93.23.19.208])
-        by smtp.gmail.com with ESMTPSA id a15sm26420646wrn.3.2020.09.06.08.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 08:19:34 -0700 (PDT)
-From:   Fabien Parent <fparent@baylibre.com>
-To:     iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     joro@8bytes.org, robh+dt@kernel.org, matthias.bgg@gmail.com,
-        yong.wu@mediatek.com, Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH v3 2/3] iommu/mediatek: add flag for legacy ivrp paddr
-Date:   Sun,  6 Sep 2020 17:19:27 +0200
-Message-Id: <20200906151928.881209-2-fparent@baylibre.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200906151928.881209-1-fparent@baylibre.com>
-References: <20200906151928.881209-1-fparent@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JwN/BVu2qRKl2g6ZpjOhiQKz73AB4SfyAtuVoOPIeRA=;
+        b=oDN3e6GUg9uulhZdK5l/SwhMom4BfQch1ajgdXvZN8glaMpPqjB/z/1WltlLadpRWO
+         dDUoBI7Pg9NyIJ+Vm7eh2JwVMqUVUn7KvDSTlaZdFrjDmgzO9li5r7iXZtpatspAWuaS
+         oyN7psUb8pcLqHaD+iZmLcqJtLZoWC1SsvI2RUFwEx5pJ9FUA+UAxbv7OopBJ+FAtrt9
+         oyj1nbRrY3HzdbagqL2VVOknHeT5LYU2fxROroSMKfBe6jVyaa/MSdsZKilvSBPdrusC
+         PKR/5lbyAuv2XJ6uE+co0Z6uglzVfDAWmByNPEROTj5MQE5R7hHaerLiPkqGangxiJ1g
+         SpwQ==
+X-Gm-Message-State: AOAM532PDi2e510XXyH4Z642yW4dA+1hPEm9CB2EcfF484kPIZe7gZ+x
+        cMIM2h4hHD0dEzxCNUbqv/8hcoDPt5fr+0EVLNz7nQ==
+X-Google-Smtp-Source: ABdhPJzKi00xRmsMGDFQSGHtnb/nykiYPK9LVtj52+aSMZYX3f63ZtwA74l54mZTa9IRhJphwOhsRh/ztDf7FIB2f5s=
+X-Received: by 2002:a92:d8c2:: with SMTP id l2mr16266090ilo.301.1599405746941;
+ Sun, 06 Sep 2020 08:22:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200906151928.881209-1-fparent@baylibre.com> <20200906151928.881209-3-fparent@baylibre.com>
+In-Reply-To: <20200906151928.881209-3-fparent@baylibre.com>
+From:   Fabien Parent <fparent@baylibre.com>
+Date:   Sun, 6 Sep 2020 17:22:16 +0200
+Message-ID: <CAOwMV_xzeTXjvay32av9buJeJzSewnOGVWNdte8r-awiQr148g@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] iommu/mediatek: add support for MT8167
+To:     iommu@lists.linux-foundation.org,
+        DTML <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     joro@8bytes.org, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>, yong.wu@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new flag in order to select which IVRP_PADDR format is used
-by an SoC.
+On Sun, Sep 6, 2020 at 5:19 PM Fabien Parent <fparent@baylibre.com> wrote:
+>
+> Add support for the IOMMU on MT8167
+>
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> ---
+>
+> V3:
+>         * use LEGACY_IVRP_PADDR flag instead of using a platform data member
 
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
+Forgot to mention a change here: .larbid_remap has been fixed to only
+contain the number of larb present on MT8167
 
-v3: set LEGACY_IVRP_PADDR as a flag instead of platform data
-v2: new patch
-
----
- drivers/iommu/mtk_iommu.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index 785b228d39a6..b1f85a7e9346 100644
---- a/drivers/iommu/mtk_iommu.c
-+++ b/drivers/iommu/mtk_iommu.c
-@@ -116,6 +116,7 @@
- #define OUT_ORDER_WR_EN			BIT(4)
- #define HAS_SUB_COMM			BIT(5)
- #define WR_THROT_EN			BIT(6)
-+#define HAS_LEGACY_IVRP_PADDR		BIT(7)
- 
- #define MTK_IOMMU_HAS_FLAG(pdata, _x) \
- 		((((pdata)->flags) & (_x)) == (_x))
-@@ -582,7 +583,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
- 		F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
- 	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
- 
--	if (data->plat_data->m4u_plat == M4U_MT8173)
-+	if (MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_LEGACY_IVRP_PADDR))
- 		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
- 	else
- 		regval = lower_32_bits(data->protect_base) |
-@@ -818,7 +819,8 @@ static const struct mtk_iommu_plat_data mt6779_data = {
- 
- static const struct mtk_iommu_plat_data mt8173_data = {
- 	.m4u_plat     = M4U_MT8173,
--	.flags	      = HAS_4GB_MODE | HAS_BCLK | RESET_AXI,
-+	.flags	      = HAS_4GB_MODE | HAS_BCLK | RESET_AXI |
-+			HAS_LEGACY_IVRP_PADDR,
- 	.inv_sel_reg  = REG_MMU_INV_SEL_GEN1,
- 	.larbid_remap = {{0}, {1}, {2}, {3}, {4}, {5}}, /* Linear mapping. */
- };
--- 
-2.28.0
-
+> V2:
+>         * removed if based on m4u_plat, and using instead the new
+>           has_legacy_ivrp_paddr member that was introduced in patch 2.
+>
+> ---
+>  drivers/iommu/mtk_iommu.c | 8 ++++++++
+>  drivers/iommu/mtk_iommu.h | 1 +
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index b1f85a7e9346..6079f6a23c74 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -817,6 +817,13 @@ static const struct mtk_iommu_plat_data mt6779_data = {
+>         .larbid_remap  = {{0}, {1}, {2}, {3}, {5}, {7, 8}, {10}, {9}},
+>  };
+>
+> +static const struct mtk_iommu_plat_data mt8167_data = {
+> +       .m4u_plat     = M4U_MT8167,
+> +       .flags        = HAS_4GB_MODE | RESET_AXI | HAS_LEGACY_IVRP_PADDR,
+> +       .inv_sel_reg  = REG_MMU_INV_SEL_GEN1,
+> +       .larbid_remap = {{0}, {1}, {2}}, /* Linear mapping. */
+> +};
+> +
+>  static const struct mtk_iommu_plat_data mt8173_data = {
+>         .m4u_plat     = M4U_MT8173,
+>         .flags        = HAS_4GB_MODE | HAS_BCLK | RESET_AXI |
+> @@ -835,6 +842,7 @@ static const struct mtk_iommu_plat_data mt8183_data = {
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+>         { .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+>         { .compatible = "mediatek,mt6779-m4u", .data = &mt6779_data},
+> +       { .compatible = "mediatek,mt8167-m4u", .data = &mt8167_data},
+>         { .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
+>         { .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
+>         {}
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 122925dbe547..df32b3e3408b 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -39,6 +39,7 @@ enum mtk_iommu_plat {
+>         M4U_MT2701,
+>         M4U_MT2712,
+>         M4U_MT6779,
+> +       M4U_MT8167,
+>         M4U_MT8173,
+>         M4U_MT8183,
+>  };
+> --
+> 2.28.0
+>
