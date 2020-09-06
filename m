@@ -2,119 +2,135 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B59C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7ACFC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 531F0207BC
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599399393;
-	bh=Jg/ONzkyfeFBjpvfr7GYskrOf0uT3DsXsl8BYu/mmDg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=GRZe8D8RoW0ergOqlAvU2miC5kcL71OttMnRW+kUUaBjbgjKxyVenTsFwB3NIPt1v
-	 BTy3empKTBqU1093fLi0AZIF1LMh8VBNAylzKG0OwBYL14kfH4o3KBMBprRlNGYc5O
-	 ThW2RYSoYV7ME8xYxVuIsB98iqQJww0+ZPsMdNDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 614DB20760
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3xN9/vE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgIFNcX (ORCPT
+        id S1728897AbgIFNiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 09:32:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbgIFN1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 09:27:49 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6D320708;
-        Sun,  6 Sep 2020 13:27:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599398848;
-        bh=Jg/ONzkyfeFBjpvfr7GYskrOf0uT3DsXsl8BYu/mmDg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=a8M9yC8Dd5apF5MDYMZgecvVUe/oS6CVtEiYH5Jf2RKAnxqqIjbiU10vUElvQkWH6
-         miOlGk9Tf92/BS+a3Pg+pQlJL5l4nsR1k6ToXS/LVscdh2PmUPvxIFKo6OC2XSXB9w
-         v8urqfH3XfAUsVDjtbAMs0Fx24BjJQu6lRXLAH/Q=
-Date:   Sun, 6 Sep 2020 14:27:21 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-Cc:     Alex Dewar <alex.dewar90@gmail.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Beniamin Bia <beniamin.bia@analog.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Artur Rojek <contact@artur-rojek.eu>,
-        Alexandru Tachici <alexandru.tachici@analog.com>,
-        Vincent Pelletier <plr.vincent@gmail.com>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] iio: adc: rockchip_saradc: Allow compile-testing with
- !ARM
-Message-ID: <20200906142721.73a533dd@archlinux>
-In-Reply-To: <1602652.ZmzXO7uU3z@diego>
-References: <20200904170416.16061-1-alex.dewar90@gmail.com>
-        <1602652.ZmzXO7uU3z@diego>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 6 Sep 2020 09:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbgIFN16 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 09:27:58 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58583C061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 06:27:56 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id w3so13011138ljo.5
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 06:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o9X2quCT3ijRZbfEg1lBDRxkIX0ndQZpXitZWRbnil4=;
+        b=a3xN9/vEhqSkTymr7qjQlPOQeFnCLASezuSHqkwv8HH1ND3Z3EpFQxbFbASRaNolJq
+         kQBpsEKe32xsLDG1rPZzIYqgsh7pbpnjtCsa+8Yx/GvBfsUzX09rvaIsADacDbxH0u3J
+         zMugpdzVAseTcZm+YKs1D86xsA2ynVvJjTFTRnMZPK9l+e01H+hWcH1o47qDsQamz4oM
+         liGr32QxprkkXSbH15BezBZAbmtlizKcN3fiv7+IpAKipENAqri75fZYj+3u+MalZPgo
+         PlmVBS34n0xmcr8vzQXFl6RByJVL0OicuyG0jfN1T2fwcV7wwMlDw+bNuhZz63PLdE7a
+         UWIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=o9X2quCT3ijRZbfEg1lBDRxkIX0ndQZpXitZWRbnil4=;
+        b=bXPp6quWWmUHe8XoxPcGhFcP/fPFgjCaMYdxS3Unl4Hxu24KFyogixOMWy39G21UH4
+         I/dtB+j2FPP6OonaQuP+wgRKGxAuAljAq8o2TTh/2YBI7YWHKNEVs0rX9cvTBA18mjix
+         u94j6kB/MwrJ25/3g3T0zeVbEGSRsK78NA8yg3SrIIbonDBsucgi1xt4RhErrdr1Tr13
+         yFWLd9vPu6/fhX+dZTenJlFP9QgN0iaRIcsYO/yJVeMD6AYgzxWOBDm3Difod5B1uZ5G
+         4EwCRH8WoqZCseb7v7dhChuDO1s9m/45xjhlyPE5NmOLcGMhsDIxycNuc7AreUQl97OS
+         jisg==
+X-Gm-Message-State: AOAM533QtOiSjQK/zcCi+KklCcc4iTX+slqQK8GTnpEgN/jJeMwWxGpv
+        TWej6wyvezYa9MWZx2RFzIAfVQMGd30=
+X-Google-Smtp-Source: ABdhPJxi6jKv3UU4V74z8BpHT0legfyJ6m4liwDjnUs26TCqWbf+zXKSGEFe/8+C6okzWB2llg7JkA==
+X-Received: by 2002:a2e:7c18:: with SMTP id x24mr8025546ljc.402.1599398874492;
+        Sun, 06 Sep 2020 06:27:54 -0700 (PDT)
+Received: from alpha (10.177.smarthome.spb.ru. [109.71.177.10])
+        by smtp.gmail.com with ESMTPSA id k10sm4219247lja.112.2020.09.06.06.27.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 06:27:53 -0700 (PDT)
+Received: (nullmailer pid 556475 invoked by uid 1000);
+        Sun, 06 Sep 2020 13:33:01 -0000
+From:   Ivan Safonov <insafonov@gmail.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Ivan Safonov <insafonov@gmail.com>
+Subject: [PATCH] staging: r8188eu: replace enum rtw_ieee80211_spectrum_mgmt_actioncode with ieee80211_spectrum_mgmt_actioncode
+Date:   Sun,  6 Sep 2020 16:32:37 +0300
+Message-Id: <20200906133236.556427-1-insafonov@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 04 Sep 2020 19:32:22 +0200
-Heiko St=C3=BCbner <heiko@sntech.de> wrote:
+Enum rtw_ieee80211_spectrum_mgmt_actioncode is a duplication
+of ieee80211_spectrum_mgmt_actioncode from include/linux/ieee80211.h.
 
-> Am Freitag, 4. September 2020, 19:04:16 CEST schrieb Alex Dewar:
-> > There seems no reason to allow for compile-testing on ARM only, so
-> > remove this restriction.
-> >=20
-> > Build-tested with allyesconfig on x86.
-> >=20
-> > Signed-off-by: Alex Dewar <alex.dewar90@gmail.com> =20
->=20
-> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to poke at it and see if we missed anything.
+Signed-off-by: Ivan Safonov <insafonov@gmail.com>
+---
+ drivers/staging/rtl8188eu/core/rtw_mlme_ext.c | 10 +++++-----
+ drivers/staging/rtl8188eu/include/ieee80211.h | 10 ----------
+ 2 files changed, 5 insertions(+), 15 deletions(-)
 
-Thanks,
-
-Jonathan
-
->=20
-> > ---
-> >  drivers/iio/adc/Kconfig | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> > index d94dc800b842..03929606bb01 100644
-> > --- a/drivers/iio/adc/Kconfig
-> > +++ b/drivers/iio/adc/Kconfig
-> > @@ -863,7 +863,7 @@ config RN5T618_ADC
-> > =20
-> >  config ROCKCHIP_SARADC
-> >  	tristate "Rockchip SARADC driver"
-> > -	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
-> > +	depends on ARCH_ROCKCHIP || COMPILE_TEST
-> >  	depends on RESET_CONTROLLER
-> >  	select IIO_BUFFER
-> >  	select IIO_TRIGGERED_BUFFER
-> >  =20
->=20
->=20
->=20
->=20
+diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+index 98b1ba2e489f..0eaf81e83ddc 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8188eu/core/rtw_mlme_ext.c
+@@ -3546,12 +3546,12 @@ static unsigned int on_action_spct(struct adapter *padapter,
+ 
+ 	action = frame_body[1];
+ 	switch (action) {
+-	case RTW_WLAN_ACTION_SPCT_MSR_REQ:
+-	case RTW_WLAN_ACTION_SPCT_MSR_RPRT:
+-	case RTW_WLAN_ACTION_SPCT_TPC_REQ:
+-	case RTW_WLAN_ACTION_SPCT_TPC_RPRT:
++	case WLAN_ACTION_SPCT_MSR_REQ:
++	case WLAN_ACTION_SPCT_MSR_RPRT:
++	case WLAN_ACTION_SPCT_TPC_REQ:
++	case WLAN_ACTION_SPCT_TPC_RPRT:
+ 		break;
+-	case RTW_WLAN_ACTION_SPCT_CHL_SWITCH:
++	case WLAN_ACTION_SPCT_CHL_SWITCH:
+ 		break;
+ 	default:
+ 		break;
+diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
+index 83218e7ec0a9..cb6940d2aeab 100644
+--- a/drivers/staging/rtl8188eu/include/ieee80211.h
++++ b/drivers/staging/rtl8188eu/include/ieee80211.h
+@@ -526,16 +526,6 @@ enum rtw_ieee80211_category {
+ 	RTW_WLAN_CATEGORY_P2P = 0x7f,/* P2P action frames */
+ };
+ 
+-/* SPECTRUM_MGMT action code */
+-enum rtw_ieee80211_spectrum_mgmt_actioncode {
+-	RTW_WLAN_ACTION_SPCT_MSR_REQ = 0,
+-	RTW_WLAN_ACTION_SPCT_MSR_RPRT = 1,
+-	RTW_WLAN_ACTION_SPCT_TPC_REQ = 2,
+-	RTW_WLAN_ACTION_SPCT_TPC_RPRT = 3,
+-	RTW_WLAN_ACTION_SPCT_CHL_SWITCH = 4,
+-	RTW_WLAN_ACTION_SPCT_EXT_CHL_SWITCH = 5,
+-};
+-
+ enum _PUBLIC_ACTION {
+ 	ACT_PUBLIC_BSSCOEXIST = 0, /*  20/40 BSS Coexistence */
+ 	ACT_PUBLIC_DSE_ENABLE = 1,
+-- 
+2.26.2
 
