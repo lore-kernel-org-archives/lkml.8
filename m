@@ -2,209 +2,156 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFCFC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E24ECC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976F220838
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="hdbm0yta"
+	by mail.kernel.org (Postfix) with ESMTP id AFA352080A
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:23:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599402208;
+	bh=Yfm4K/YBgu9cciVqK5uLID5d3xhCSI8ollTmhI7pFOA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JV8NWOxnrCh+vRuYRJTrV7OlX6JEwKIGYjfTWVEf1Ls3VKnE2xvgVnN/6fQQkhwq+
+	 Qke9QxSByhlEjRz+az0CmrAey5wgw/EoaCw+repciiCxJL/m3vj6zy0b21wH8ojyoU
+	 C4ihNdYSJjBsCS5NdaLyWQICrZDnzVV5CDdb5hK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725803AbgIFOUr (ORCPT
+        id S1728938AbgIFOXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 10:20:47 -0400
-Received: from crapouillou.net ([89.234.176.41]:48892 "EHLO crapouillou.net"
+        Sun, 6 Sep 2020 10:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726931AbgIFOTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:19:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599401879; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3VGHxb0zBRlqfKn0TJ498/xXSefydGPoiEnMkv22tQ0=;
-        b=hdbm0ytaOnXi89RB0Ef43tYbHh3eoWK9xR3GTw9tjGSrPusL+OTC+XpTtfaiR7p3ebAteW
-        usn63/BGzTF+UuzzcLEQy6tZqhtUdaCml0oCMJdEXbwTBppxkqjy6Mmw0ROaCq+Ty5EoA7
-        ZYw0x9ULDg04Fp9WeSFBtfHFnQpR8N4=
-Date:   Sun, 06 Sep 2020 16:17:47 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 1/3] pinctrl: Ingenic: Add SSI pins support for JZ4770
- and JZ4780.
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, aric.pzqi@ingenic.com,
-        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Message-Id: <NDQ8GQ.2F1QH5XYPGSV1@crapouillou.net>
-In-Reply-To: <1QY4GQ.ER1P2TWMJCKH@crapouillou.net>
-References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
-        <20200831154324.64951-2-zhouyanjie@wanyeetech.com>
-        <1QY4GQ.ER1P2TWMJCKH@crapouillou.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1728891AbgIFOV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 10:21:57 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED2CB2080A;
+        Sun,  6 Sep 2020 14:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599402117;
+        bh=Yfm4K/YBgu9cciVqK5uLID5d3xhCSI8ollTmhI7pFOA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bi+GHytMd1KAyNF80myj0dpn168NNyPU8sk1iAlHJhNIOS//+KpCcnTFQvQR5YnPH
+         3ZoPfRZbw3LCwRGnafjse3+GKHVszekkY5w88u1QRzRuY2g4kXGn0WY2Uauxn8EP54
+         VGyWuDLfkFsDksELqv8jY/tiXzoBjuee+q7RReGQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: [PATCH v3 3/3] ARM: dts: exynos: Add clocks sound node in Exynos5422 Odroid XU4
+Date:   Sun,  6 Sep 2020 16:21:46 +0200
+Message-Id: <20200906142146.21266-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200906142146.21266-1-krzk@kernel.org>
+References: <20200906142146.21266-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+The dtschema expects "clocks" property if "assigned-clocks" are used.
+Add reference to all parent clocks to silence the dtbs_check warnings.
 
-Le ven. 4 sept. 2020 =C3=A0 15:27, Paul Cercueil <paul@crapouillou.net> a=20
-=C3=A9crit :
-> Hi Zhou,
->=20
-> Le lun. 31 ao=C3=BBt 2020 =C3=A0 23:43, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou=
- Yanjie)=20
-> <zhouyanjie@wanyeetech.com> a =C3=A9crit :
->> Add SSI pins support for the JZ4770 SoC and the
->> JZ4780 SoC from Ingenic.
->>=20
->> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wan=
-yeetech.com>
->> ---
->>=20
->> Notes:
->>     v1->v2:
->>     Rebase on top of kernel 5.9-rc3.
->>=20
->>  drivers/pinctrl/pinctrl-ingenic.c | 267=20
->> =7F++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 267 insertions(+)
->>=20
->> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
->> =7Fb/drivers/pinctrl/pinctrl-ingenic.c
->> index a8d1b53ec4c1..00f29fd684fa 100644
->> --- a/drivers/pinctrl/pinctrl-ingenic.c
->> +++ b/drivers/pinctrl/pinctrl-ingenic.c
->> @@ -633,6 +633,46 @@ static int jz4770_uart2_data_pins[] =3D { 0x5c,=20
->> =7F0x5e, };
->>  static int jz4770_uart2_hwflow_pins[] =3D { 0x5d, 0x5f, };
->>  static int jz4770_uart3_data_pins[] =3D { 0x6c, 0x85, };
->>  static int jz4770_uart3_hwflow_pins[] =3D { 0x88, 0x89, };
->> +static int jz4770_ssi0_dt_a_pins[] =3D { 0x15, };
->> +static int jz4770_ssi0_dt_b_pins[] =3D { 0x35, };
->> +static int jz4770_ssi0_dt_d_pins[] =3D { 0x55, };
->> +static int jz4770_ssi0_dt_e_pins[] =3D { 0x71, };
->> +static int jz4770_ssi0_dr_a_pins[] =3D { 0x14, };
->> +static int jz4770_ssi0_dr_b_pins[] =3D { 0x34, };
->> +static int jz4770_ssi0_dr_d_pins[] =3D { 0x54, };
->> +static int jz4770_ssi0_dr_e_pins[] =3D { 0x6e, };
->> +static int jz4770_ssi0_clk_a_pins[] =3D { 0x12, };
->> +static int jz4770_ssi0_clk_b_pins[] =3D { 0x3c, };
->> +static int jz4770_ssi0_clk_d_pins[] =3D { 0x58, };
->> +static int jz4770_ssi0_clk_e_pins[] =3D { 0x6f, };
->> +static int jz4770_ssi0_gpc_b_pins[] =3D { 0x3e, };
->> +static int jz4770_ssi0_gpc_d_pins[] =3D { 0x56, };
->> +static int jz4770_ssi0_gpc_e_pins[] =3D { 0x73, };
->> +static int jz4770_ssi0_ce0_a_pins[] =3D { 0x13, };
->> +static int jz4770_ssi0_ce0_b_pins[] =3D { 0x3d, };
->> +static int jz4770_ssi0_ce0_d_pins[] =3D { 0x59, };
->> +static int jz4770_ssi0_ce0_e_pins[] =3D { 0x70, };
->> +static int jz4770_ssi0_ce1_b_pins[] =3D { 0x3f, };
->> +static int jz4770_ssi0_ce1_d_pins[] =3D { 0x57, };
->> +static int jz4770_ssi0_ce1_e_pins[] =3D { 0x72, };
->> +static int jz4770_ssi1_dt_b_pins[] =3D { 0x35, };
->> +static int jz4770_ssi1_dt_d_pins[] =3D { 0x55, };
->> +static int jz4770_ssi1_dt_e_pins[] =3D { 0x71, };
->> +static int jz4770_ssi1_dr_b_pins[] =3D { 0x34, };
->> +static int jz4770_ssi1_dr_d_pins[] =3D { 0x54, };
->> +static int jz4770_ssi1_dr_e_pins[] =3D { 0x6e, };
->> +static int jz4770_ssi1_clk_b_pins[] =3D { 0x3c, };
->> +static int jz4770_ssi1_clk_d_pins[] =3D { 0x58, };
->> +static int jz4770_ssi1_clk_e_pins[] =3D { 0x6f, };
->> +static int jz4770_ssi1_gpc_b_pins[] =3D { 0x3e, };
->> +static int jz4770_ssi1_gpc_d_pins[] =3D { 0x56, };
->> +static int jz4770_ssi1_gpc_e_pins[] =3D { 0x73, };
->> +static int jz4770_ssi1_ce0_b_pins[] =3D { 0x3d, };
->> +static int jz4770_ssi1_ce0_d_pins[] =3D { 0x59, };
->> +static int jz4770_ssi1_ce0_e_pins[] =3D { 0x70, };
->> +static int jz4770_ssi1_ce1_b_pins[] =3D { 0x3f, };
->> +static int jz4770_ssi1_ce1_d_pins[] =3D { 0x57, };
->> +static int jz4770_ssi1_ce1_e_pins[] =3D { 0x72, };
->>  static int jz4770_mmc0_1bit_a_pins[] =3D { 0x12, 0x13, 0x14, };
->>  static int jz4770_mmc0_4bit_a_pins[] =3D { 0x15, 0x16, 0x17, };
->>  static int jz4770_mmc0_1bit_e_pins[] =3D { 0x9c, 0x9d, 0x94, };
->> @@ -703,6 +743,46 @@ static int jz4770_uart2_data_funcs[] =3D { 0, 0,=20
->> };
->>  static int jz4770_uart2_hwflow_funcs[] =3D { 0, 0, };
->>  static int jz4770_uart3_data_funcs[] =3D { 0, 1, };
->>  static int jz4770_uart3_hwflow_funcs[] =3D { 0, 0, };
->> +static int jz4770_ssi0_dt_a_funcs[] =3D { 2, };
->> +static int jz4770_ssi0_dt_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_dt_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_dt_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi0_dr_a_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_dr_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_dr_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_dr_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi0_clk_a_funcs[] =3D { 2, };
->> +static int jz4770_ssi0_clk_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_clk_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_clk_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi0_gpc_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_gpc_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_gpc_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi0_ce0_a_funcs[] =3D { 2, };
->> +static int jz4770_ssi0_ce0_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_ce0_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_ce0_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi0_ce1_b_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_ce1_d_funcs[] =3D { 1, };
->> +static int jz4770_ssi0_ce1_e_funcs[] =3D { 0, };
->> +static int jz4770_ssi1_dt_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_dt_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_dt_e_funcs[] =3D { 1, };
->> +static int jz4770_ssi1_dr_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_dr_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_dr_e_funcs[] =3D { 1, };
->> +static int jz4770_ssi1_clk_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_clk_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_clk_e_funcs[] =3D { 1, };
->> +static int jz4770_ssi1_gpc_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_gpc_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_gpc_e_funcs[] =3D { 1, };
->> +static int jz4770_ssi1_ce0_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_ce0_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_ce0_e_funcs[] =3D { 1, };
->> +static int jz4770_ssi1_ce1_b_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_ce1_d_funcs[] =3D { 2, };
->> +static int jz4770_ssi1_ce1_e_funcs[] =3D { 1, };
->>  static int jz4770_mmc0_1bit_a_funcs[] =3D { 1, 1, 0, };
->>  static int jz4770_mmc0_4bit_a_funcs[] =3D { 1, 1, 1, };
->>  static int jz4770_mmc0_1bit_e_funcs[] =3D { 0, 0, 0, };
->> @@ -763,6 +843,46 @@ static const struct group_desc jz4770_groups[]=20
->> =3D =7F{
->>  	INGENIC_PIN_GROUP("uart2-hwflow", jz4770_uart2_hwflow),
->>  	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
->>  	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
->> +	INGENIC_PIN_GROUP("ssi0-dt-a", jz4770_ssi0_dt_a),
->> +	INGENIC_PIN_GROUP("ssi0-dt-b", jz4770_ssi0_dt_b),
->> +	INGENIC_PIN_GROUP("ssi0-dt-d", jz4770_ssi0_dt_d),
->> +	INGENIC_PIN_GROUP("ssi0-dt-e", jz4770_ssi0_dt_e),
->> +	INGENIC_PIN_GROUP("ssi0-dr-a", jz4770_ssi0_dr_a),
->> +	INGENIC_PIN_GROUP("ssi0-dr-b", jz4770_ssi0_dr_b),
->> +	INGENIC_PIN_GROUP("ssi0-dr-d", jz4770_ssi0_dr_d),
->> +	INGENIC_PIN_GROUP("ssi0-dr-e", jz4770_ssi0_dr_e),
->=20
-> The common acronyms associated with SPI are MISO / MOSI, I think it=20
-> would make sense to use them instead of DR / DT. What do you think?
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Just noticed that the X1000 has already SPI pins named DR / DT, so=20
-disregard my comment, it's better to use the same name convention=20
-across the whole file.
+---
 
-So:
-Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Changes since v2:
+1. Move clock properties to i2s, just like Sylwester Nawrocki did for
+   Odroid XU3.
+---
+ arch/arm/boot/dts/exynos5422-odroidxu4.dts | 60 ++++++++++------------
+ 1 file changed, 27 insertions(+), 33 deletions(-)
 
-Cheers,
--Paul
-
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+index 892d389d6d09..ddd55d3bcadd 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+@@ -35,30 +35,6 @@
+ 
+ 		samsung,audio-routing = "I2S Playback", "Mixer DAI TX";
+ 
+-		assigned-clocks = <&clock CLK_MOUT_EPLL>,
+-				<&clock CLK_MOUT_MAU_EPLL>,
+-				<&clock CLK_MOUT_USER_MAU_EPLL>,
+-				<&clock_audss EXYNOS_MOUT_AUDSS>,
+-				<&clock_audss EXYNOS_MOUT_I2S>,
+-				<&clock_audss EXYNOS_DOUT_SRP>,
+-				<&clock_audss EXYNOS_DOUT_AUD_BUS>,
+-				<&clock_audss EXYNOS_DOUT_I2S>;
+-
+-		assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
+-				<&clock CLK_MOUT_EPLL>,
+-				<&clock CLK_MOUT_MAU_EPLL>,
+-				<&clock CLK_MAU_EPLL>,
+-				<&clock_audss EXYNOS_MOUT_AUDSS>;
+-
+-		assigned-clock-rates = <0>,
+-				<0>,
+-				<0>,
+-				<0>,
+-				<0>,
+-				<196608001>,
+-				<(196608002 / 2)>,
+-				<196608000>;
+-
+ 		cpu {
+ 			sound-dai = <&i2s0 0>, <&i2s0 1>;
+ 		};
+@@ -69,17 +45,35 @@
+ 	};
+ };
+ 
+-&clock_audss {
+-	assigned-clocks = <&clock_audss EXYNOS_DOUT_SRP>,
+-			  <&clock CLK_FOUT_EPLL>;
+-	assigned-clock-rates = <(196608000 / 256)>,
+-			       <196608000>;
+-};
+-
+ &i2s0 {
+ 	status = "okay";
+-	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
+-	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
++
++	assigned-clocks = <&clock CLK_MOUT_EPLL>,
++			  <&clock CLK_MOUT_MAU_EPLL>,
++			  <&clock CLK_MOUT_USER_MAU_EPLL>,
++			  <&clock_audss EXYNOS_MOUT_AUDSS>,
++			  <&clock_audss EXYNOS_MOUT_I2S>,
++			  <&i2s0 CLK_I2S_RCLK_SRC>,
++			  <&clock_audss EXYNOS_DOUT_SRP>,
++			  <&clock_audss EXYNOS_DOUT_AUD_BUS>,
++			  <&clock_audss EXYNOS_DOUT_I2S>;
++
++	assigned-clock-parents = <&clock CLK_FOUT_EPLL>,
++				 <&clock CLK_MOUT_EPLL>,
++				 <&clock CLK_MOUT_MAU_EPLL>,
++				 <&clock CLK_MAU_EPLL>,
++				 <&clock_audss EXYNOS_MOUT_AUDSS>,
++				 <&clock_audss EXYNOS_SCLK_I2S>;
++
++	assigned-clock-rates = <0>,
++			       <0>,
++			       <0>,
++			       <0>,
++			       <0>,
++			       <0>,
++			       <196608001>,
++			       <(196608002 / 2)>,
++			       <196608000>;
+ };
+ 
+ &pwm {
+-- 
+2.17.1
 
