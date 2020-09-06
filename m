@@ -2,140 +2,124 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A47C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A046BC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7F0207BC
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AAA62078E
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 21:26:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Uf3VnlDn"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iiw9ZTGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgIFVVt (ORCPT
+        id S1726628AbgIFV0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 17:21:49 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47536 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgIFVVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 17:21:48 -0400
-Received: from zn.tnic (p200300ec2f289700793ea211d80ace44.dip0.t-ipconnect.de [IPv6:2003:ec:2f28:9700:793e:a211:d80a:ce44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 44F001EC0299;
-        Sun,  6 Sep 2020 23:21:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599427303;
+        Sun, 6 Sep 2020 17:26:41 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35205 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726292AbgIFV0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 17:26:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599427593;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:references;
-        bh=HM5R1OLI2Y86rBU/SMz/D4+lyPnAoxTQUL0ra//iafk=;
-        b=Uf3VnlDnX7R/kPjAFgI0enhWdPylQcuVRhCZ2DZC3oeOmhQvLNSls7cYbWkxV/OLc1XsOX
-        n9GVGYOaEJDnNYyTjJFkxtZ3PimoLtuD+iSAVheJVXLl0AeTSug/UPRqEc5sdirR7Y3++o
-        tVfQqRbcBpGeJZXUvYpUrd8VBv5yzDU=
-Date:   Sun, 6 Sep 2020 23:21:30 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     x86-ml <x86@kernel.org>, Tony Luck <tony.luck@intel.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] x86/mce: Make mce_rdmsrl() do a plain RDMSR only
-Message-ID: <20200906212130.GA28456@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+         to:to:cc:cc; bh=+C6m0PVka75w2yKn4NnD8dgwNKYONinv/V5y0NmFCqI=;
+        b=iiw9ZTGa52+9rXHhg+r2KMcrv8QHDDzw2jHlqSiuaeUpP7ZC2OyYQsY9KhA7KpZdB+bcwC
+        13ICtU2VoKW/Dz9RWqul5GVrM4SVve7DUed8xxM0M00YrMWfh+OflER96nhKFIkotO2NVE
+        kULf/wHnokEhM93/CtKIp0sy0MnpGsY=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-xaKh7EJmNMyA2YMgRnlDEg-1; Sun, 06 Sep 2020 17:26:31 -0400
+X-MC-Unique: xaKh7EJmNMyA2YMgRnlDEg-1
+Received: by mail-qv1-f71.google.com with SMTP id a20so6713227qvk.17
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 14:26:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+C6m0PVka75w2yKn4NnD8dgwNKYONinv/V5y0NmFCqI=;
+        b=mNem7SMo186btQdp8O1f9UJFGVnzIxn0Av7JfXvAnwZZ5vbYPuM0hdJamcyVdWSaaH
+         eBsoWSU1lczmvK1CxJS0MjFbFpOPtquciIhvFXEDFPwXbJrZCloTvs2LdSaUPodSl7+M
+         PUm1K4fKhcRp4zO8VSxeNzKqq3ukz13AGv1c0eHkG93/dl6ddsm7MHoTfHx5LrRJZOK8
+         SfbuQc9bt01U++JDyDRiuZASKRbemYzy5skQ/RpwjPv5AzAAiJsX31shX7cr/j7zNWJV
+         3tee0Cf3o3CEt10UbSTcx3F0ibzRR6Vkw/GcU+Ex93Vm9q6d82aTW7FuTWIw/bYekNn0
+         uKug==
+X-Gm-Message-State: AOAM531x7UlpPys1oy1j5ZMbopGbxOOk6xcblfn8W5UVB6uKbiPYT27u
+        hq0piWZH4JEtFl74aGJGRcYsrkYJw6xmDFLn61v6iI5UTv8Bu8I0M8Xn9q0EGFprKFNkQafg0S+
+        jEI0kyteMINXnWwv1XiCZO1yK
+X-Received: by 2002:a05:620a:2006:: with SMTP id c6mr2372110qka.240.1599427591272;
+        Sun, 06 Sep 2020 14:26:31 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyR82s18wWVkyR16S1pfORo4d0KJZMFU6czX4ESIPjhfBt+0VVaE3uGrfuNh/vEQlB+KG5uFQ==
+X-Received: by 2002:a05:620a:2006:: with SMTP id c6mr2372091qka.240.1599427590987;
+        Sun, 06 Sep 2020 14:26:30 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id k6sm9888276qti.23.2020.09.06.14.26.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 14:26:30 -0700 (PDT)
+From:   trix@redhat.com
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org,
+        natechancellor@gmail.com, ndesaulniers@google.com,
+        mkenna@codeaurora.org, vnaralas@codeaurora.org,
+        rmanohar@codeaurora.org, john@phrozen.org
+Cc:     ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com, Tom Rix <trix@redhat.com>
+Subject: [PATCH] ath11k: fix a double free and a memory leak
+Date:   Sun,  6 Sep 2020 14:26:25 -0700
+Message-Id: <20200906212625.17059-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Tom Rix <trix@redhat.com>
 
-Ingo and I talked about this thing this morning and tglx has had it on
-his to-fix list too so here's a first attempt at it.
+clang static analyzer reports this problem
 
-Below is just a brain dump of what we talked about so let's start with
-it and see where it would take us.
+mac.c:6204:2: warning: Attempt to free released memory
+        kfree(ar->mac.sbands[NL80211_BAND_2GHZ].channels);
+        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Thx.
+The channels pointer is allocated in ath11k_mac_setup_channels_rates()
+When it fails midway, it cleans up the memory it has already allocated.
+So the error handling needs to skip freeing the memory.
 
+There is a second problem.
+ath11k_mac_setup_channels_rates(), allocates 3 channels. err_free
+misses releasing ar->mac.sbands[NL80211_BAND_6GHZ].channels
+
+Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+Signed-off-by: Tom Rix <trix@redhat.com>
 ---
+ drivers/net/wireless/ath/ath11k/mac.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-From: Borislav Petkov <bp@suse.de>
-
-... without any exception handling and tracing.
-
-If an exception needs to be handled while reading an MSR - which is in
-most of the cases caused by a #GP on a non-existent MSR - then this
-is most likely the incarnation of a BIOS or a hardware bug. Such bug
-violates the architectural guarantee that MSR banks are present with all
-MSRs belonging to them.
-
-The proper fix belongs in the hardware/firmware - not in the kernel.
-
-Handling exceptions while in #MC and while an NMI is being handled would
-cause the nasty NMI nesting issue because of the shortcoming of IRET
-of reenabling NMIs when executed. And the machine is in an #MC context
-already so <Deity> be at its side.
-
-Tracing MSR accesses while in #MC is another no-no due to tracing being
-inherently a bad idea in atomic context:
-
-  vmlinux.o: warning: objtool: do_machine_check()+0x4a: call to mce_rdmsrl() leaves .noinstr.text section
-
-so remove all that "additional" functionality from mce_rdmsrl() and
-concentrate on solely reading the MSRs.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/cpu/mce/core.c | 18 +++++++-----------
- 1 file changed, 7 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 0ba24dfffdb2..14ebdf3e22f3 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -376,7 +376,7 @@ static int msr_to_offset(u32 msr)
- /* MSR access wrappers used for error injection */
- static u64 mce_rdmsrl(u32 msr)
- {
--	u64 v;
-+	DECLARE_ARGS(val, low, high);
+diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
+index f4a085baff38..f1a964b01a83 100644
+--- a/drivers/net/wireless/ath/ath11k/mac.c
++++ b/drivers/net/wireless/ath/ath11k/mac.c
+@@ -6089,7 +6089,7 @@ static int __ath11k_mac_register(struct ath11k *ar)
+ 	ret = ath11k_mac_setup_channels_rates(ar,
+ 					      cap->supported_bands);
+ 	if (ret)
+-		goto err_free;
++		goto err;
  
- 	if (__this_cpu_read(injectm.finished)) {
- 		int offset = msr_to_offset(msr);
-@@ -386,17 +386,13 @@ static u64 mce_rdmsrl(u32 msr)
- 		return *(u64 *)((char *)this_cpu_ptr(&injectm) + offset);
- 	}
- 
--	if (rdmsrl_safe(msr, &v)) {
--		WARN_ONCE(1, "mce: Unable to read MSR 0x%x!\n", msr);
--		/*
--		 * Return zero in case the access faulted. This should
--		 * not happen normally but can happen if the CPU does
--		 * something weird, or if the code is buggy.
--		 */
--		v = 0;
--	}
-+	/*
-+	 * RDMSR on MCA MSRs should not fault. If they do, this is very much an
-+	 * architectural violation and needs to be reported to hw vendor.
-+	 */
-+	asm volatile("rdmsr" : EAX_EDX_RET(val, low, high) : "c" (msr));
- 
--	return v;
-+	return EAX_EDX_VAL(val, low, high);
+ 	ath11k_mac_setup_ht_vht_cap(ar, cap, &ht_cap);
+ 	ath11k_mac_setup_he_cap(ar, cap);
+@@ -6203,7 +6203,8 @@ static int __ath11k_mac_register(struct ath11k *ar)
+ err_free:
+ 	kfree(ar->mac.sbands[NL80211_BAND_2GHZ].channels);
+ 	kfree(ar->mac.sbands[NL80211_BAND_5GHZ].channels);
+-
++	kfree(ar->mac.sbands[NL80211_BAND_6GHZ].channels);
++err:
+ 	SET_IEEE80211_DEV(ar->hw, NULL);
+ 	return ret;
  }
- 
- static void mce_wrmsrl(u32 msr, u64 v)
 -- 
-2.21.0
+2.18.1
 
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
