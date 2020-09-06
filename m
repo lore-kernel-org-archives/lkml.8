@@ -2,109 +2,93 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E850DC433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A96F720DD4
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 960BD20796
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 13:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599397712;
-	bh=UmyArtRIW5J5QuKVhnzZgbnd7tvhRyU6fqRKtyxG9BA=;
+	s=default; t=1599397908;
+	bh=RwvoKmkqXFzSWzO8EuJyeGXXoNMCcZe3Wdf5nzC6Sng=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qM62eHtpQ+JGr7qfNlom29cyUW8qqmcY7EB+rs04wsNhasFmje437VRLjP1lb7HB+
-	 qfQA4HYGItkSkt5Cz62T5cHEha0zdXJ3rnT4Sb797hYICDnpdGv1FuSu+0PFZP9eO+
-	 dMqzW5iFkr+SXnl5iry4o67llAvJXpoFF4S5OFrk=
+	b=xZK0bmzr/6a1q5pyjeRn6WCfaXRig0/EJLVkIe0UTYACw9yxhcQdrGY8cNWNekbX3
+	 6SkGfQB3LNAeyp7IHfzK7DwFnoX61EonO0VT6oWj6TyOWFdh215ktSByPLANmcYVoO
+	 QPfUutFjkmIGF/gLiMeTFCqoh3iWwF6L5RKqNF7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgIFNIZ (ORCPT
+        id S1728806AbgIFNLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 09:08:25 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35981 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728692AbgIFNG5 (ORCPT
+        Sun, 6 Sep 2020 09:11:34 -0400
+Received: from mail-ej1-f68.google.com ([209.85.218.68]:34575 "EHLO
+        mail-ej1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgIFNLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 09:06:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w1so10101353edr.3;
-        Sun, 06 Sep 2020 06:06:56 -0700 (PDT)
+        Sun, 6 Sep 2020 09:11:01 -0400
+Received: by mail-ej1-f68.google.com with SMTP id gr14so13261336ejb.1;
+        Sun, 06 Sep 2020 06:11:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q92gvnzq1KDD9sdjw9UpZFI+TxFuTVSseQFtpKVlou0=;
-        b=Elh+0BbiDHjPkdTf6ZnRPPkAmxyv+MO/jEcW73Y/UnTq1gVnPXPDmCzf+2Pon37PtX
-         X6hnOhgdY4B5GeRHGOwOEFb7mOd2PKnwQoXM1XUneC8jtGjiJWk5M1ZQn3yaGNu/3Erw
-         /vFKObxkSmhV5D1AjCbIoVIp7ZOcbxhgRE926ONSP3TCcACHOLztkm7DUr3T+okwd+aX
-         OV1rFU+hSfxeDufxg7DVMD3ThPRNsofKicv46n+63rGhgTxYldhJRGxvDBSfmZDABp5p
-         nTI2/7KATR3jpRzD6xes4dDEMGv5LaxBPeae6Zku+R5syr4C1Q9AhaYU4DwFOwv5Amb+
-         Imzw==
-X-Gm-Message-State: AOAM531TDMKMdBS751S5MbFuUaCMHzFjm63+Y6cj65vTztcbxfXjegzK
-        FNKlJ5APGg0PpnqSRJb340M=
-X-Google-Smtp-Source: ABdhPJwXwFbby6FpAtz+yPxA07vNTFv7hzV01/brw5RfYXU77VFYpvM4adzxjQaBESrXXJr4QmE6uw==
-X-Received: by 2002:a50:ce11:: with SMTP id y17mr16761568edi.86.1599397615675;
-        Sun, 06 Sep 2020 06:06:55 -0700 (PDT)
+        bh=nBl9UMlY1oWNy/GCwLn7tQTZrUz9EDW9e61eAlkzz9s=;
+        b=Mc6KJ8gYmLC8mUFWbxctHqS43aZlTIIAFCrWMyyslT1vrs2z+L6JyRywj7y/XpZGvj
+         t4W5ZStfOtXLFbFo7qvUrpMR9haOD3oSp+xSQnQBhT7pBcwoASs9i2jDoNfb8m2RywVt
+         PqUOnp3/UAr3cd6TXsl/aH3jpYSJ+K0xWF5vApv2g18TwUvdvTSi2TcPPi88VUBdvXxs
+         tdhZO00A88ZnpwviYTh0AktDkFnwh6v92w0kaNvCnkpsJXC4HMQyJHAOJ0vLtezjA8rj
+         kTltBXrKxCaVVOLa/xNWpkC0Oes8EzhnRVbUgF1xjfnuuznqRWbNy/H7wH0tFMlbJ8tH
+         Orrw==
+X-Gm-Message-State: AOAM5303ROZVkZKH9WazRR6pIhke3VWh1plcA19/Jz3ziDDBHTHh6zf4
+        ixsoBp9n3l/3xSm8YumiFkfIzMGOxIs=
+X-Google-Smtp-Source: ABdhPJwZpwu8aMycqUKtCNZy10jlArz9SO9TZiCFOz4zSvKdisadZYItdzaDjgXG8etlrzDUL+bNmg==
+X-Received: by 2002:a17:906:d9da:: with SMTP id qk26mr16261105ejb.435.1599397859698;
+        Sun, 06 Sep 2020 06:10:59 -0700 (PDT)
 Received: from kozik-lap ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id d7sm12076911ejk.99.2020.09.06.06.06.54
+        by smtp.googlemail.com with ESMTPSA id v18sm11710019edb.26.2020.09.06.06.10.58
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 06 Sep 2020 06:06:54 -0700 (PDT)
-Date:   Sun, 6 Sep 2020 15:06:52 +0200
+        Sun, 06 Sep 2020 06:10:58 -0700 (PDT)
+Date:   Sun, 6 Sep 2020 15:10:56 +0200
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sylwester Nawrocki <snawrocki@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: exynos: Add assigned clock parent to
- CMU in Exynos5422 Odroid XU3
-Message-ID: <20200906130652.GA11579@kozik-lap>
-References: <20200903181425.5015-1-krzk@kernel.org>
- <20200903181425.5015-3-krzk@kernel.org>
- <d83912b7-d829-4912-9659-de4a9a5e0d1d@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: exynos: Remove I2C9
+ samsung,i2c-slave-addr from Exynos5250 boards
+Message-ID: <20200906131056.GA12691@kozik-lap>
+References: <20200902155733.20271-1-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d83912b7-d829-4912-9659-de4a9a5e0d1d@kernel.org>
+In-Reply-To: <20200902155733.20271-1-krzk@kernel.org>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 12:20:36PM +0200, Sylwester Nawrocki wrote:
-> On 9/3/20 20:14, Krzysztof Kozlowski wrote:
-> > Commit 78a68acf3d33 ("ARM: dts: exynos: Switch to dedicated Odroid XU3
-> > sound card binding") added assigned clocks under sound device node.
-> > 
-> > However the dtschema expects "clocks" property if "assigned-clocks" are
-> > used.  Add reference to input clock, the parent used in
-> > "assigned-clock-parents" to silence the dtschema warnings:
+On Wed, Sep 02, 2020 at 05:57:32PM +0200, Krzysztof Kozlowski wrote:
+> The property samsung,i2c-slave-addr in I2C9 controller on Exynos5250
+> Arndale and SMDK5250 boards, is not actually needed.  There is only one
+> master on this bus.  It's not clear why this property was added at first
+> place.
 > 
-> I'm afraid it doesn't improve anything, we just add another violation of
-> the DT binding rules as the 'sound' node doesn't represent a real HW and
-> shouldn't have 'clocks' property. Instead we could move the assigned-clock*
-> properties to the I2S node, as in below patch. I have tested that already 
-> on xu3.
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > 
-> ----------------------------------8<---------------------------
-> From f98d2f5ac86d1ae13a77ef481fcbf073a1740f26 Mon Sep 17 00:00:00 2001
-> From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Date: Fri, 4 Sep 2020 12:02:11 +0200
-> Subject: [PATCH] ARM: dts: samsung: odroid-xu3: Move assigned-clock*
->  properties to i2s0 node
+> ---
 > 
-> The purpose of those assigned-clock-* properties is to configure clock for
-> for the I2S device so move them to respective node.
-> 
-> This suppresses the dtbs_check warning:
-> arch/arm/boot/dts/exynos5422-odroidxu3.dt.yaml: sound: 'clocks' is a dependency 
-> of 'assigned-clocks'
+> Changes since v1:
+> 1. New patch, Marek already tested the removal so I am adding his tag.
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts  | 1 -
 
-Thanks, this is a good idea.
-
-Applied.
+Applied both.
 
 Best regards,
 Krzysztof
