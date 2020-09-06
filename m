@@ -2,122 +2,133 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FD0C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19731C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5A0E20714
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="I3kztgB5"
+	by mail.kernel.org (Postfix) with ESMTP id CB4A020838
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 14:31:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599402677;
+	bh=cDyc+wot3vTMEATBk2z4vEu0zSazrJ7Fe/RR4d6egKY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=W0qqnFYKFk2I1LjEqT+VpVgmwk0HnUKKXYafBUgzT9RsHxTUQCQFJu9KhwxkCpvWU
+	 fSzDtTkKXPW3eazt9yYscZNun7HTQ4cuT+Mq7oeCN/JUr9bhY3huAlRpAtLR29ETqS
+	 EvSLu2FiXDW4TTJGj2+/tZhDj3E6fCM/jR13bpJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbgIFOaW (ORCPT
+        id S1728955AbgIFOXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 10:30:22 -0400
-Received: from crapouillou.net ([89.234.176.41]:49254 "EHLO crapouillou.net"
+        Sun, 6 Sep 2020 10:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728910AbgIFO1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 10:27:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1599402405; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KMIg6gSjoUBBkt1vAul5NwvJlELxUbfxEDSLNOU8Bco=;
-        b=I3kztgB55Yjx2lb2vme0LIw94rJJmvRipu9FG+441WmmD/Awg+Rs/Ynyv0MDsvP5DuwIS1
-        TxYrsN9sM0A9Ytpf5bUa9VrA5yPlAnFm+g6dN6KGBDG/RnFzjrbZl3NOLW2u4Y0xkMm1zA
-        5+JRvk5g9r3z6g1k+0aSJJCP7R/QZ6Y=
-Date:   Sun, 06 Sep 2020 16:26:34 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 2/3] pinctrl: Ingenic: Correct the pullup and pulldown
- parameters of JZ4780
-To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, aric.pzqi@ingenic.com,
-        dongsheng.qiu@ingenic.com, rick.tyliu@ingenic.com,
-        yanfei.li@ingenic.com, sernia.zhou@foxmail.com,
-        zhenwenjin@gmail.com
-Message-Id: <ASQ8GQ.DEHG1O3SW93A3@crapouillou.net>
-In-Reply-To: <20200831154324.64951-3-zhouyanjie@wanyeetech.com>
-References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
-        <20200831154324.64951-3-zhouyanjie@wanyeetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1728896AbgIFOV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 10:21:56 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2005207BC;
+        Sun,  6 Sep 2020 14:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599402111;
+        bh=cDyc+wot3vTMEATBk2z4vEu0zSazrJ7Fe/RR4d6egKY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UoXNCHzaBtT3ITrr6Y52mq0pWb01bUH+0eJPTdvWjjHlT/g1UIOSprE+ik68wQ/bX
+         Tu3YV+m2f1IaNEor5YJyMvvp424lSWzoelj3ESbPnRa4/m7v3Ky3qLaTPepAVEe8HF
+         9C+3BpMHgNMA0BcMQ/mPY0Aa/YjqNhMNnOcK0vtg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: [PATCH v3 1/3] ARM: dts: exynos: Add assigned clock parent to CMU in Exynos3250
+Date:   Sun,  6 Sep 2020 16:21:44 +0200
+Message-Id: <20200906142146.21266-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhou,
+Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
+for exynos3250") added assigned clocks under Clock Management Unit to
+fix hangs when accessing ISP registers.
 
-Le lun. 31 ao=C3=BBt 2020 =C3=A0 23:43, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Y=
-anjie)=20
-<zhouyanjie@wanyeetech.com> a =C3=A9crit :
-> Correct the pullup and pulldown parameters of JZ4780 to make them
-> consistent with the parameters on the datasheet.
->=20
-> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
-eetech.com>
-> ---
->=20
-> Notes:
->     v2:
->     New patch.
->=20
->  drivers/pinctrl/pinctrl-ingenic.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 00f29fd684fa..ae7b8876d3b4 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -1035,6 +1035,14 @@ static const struct ingenic_chip_info=20
-> jz4770_chip_info =3D {
->  	.pull_downs =3D jz4770_pull_downs,
->  };
->=20
-> +static const u32 jz4780_pull_ups[6] =3D {
-> +	0x3fffffff, 0xfff0f3fc, 0x0fffffff, 0xffff4fff, 0xffff7b7c,=20
-> 0x7fa7f00f,
-> +};
+However the dtschema expects "clocks" property if "assigned-clocks" are
+used.  Add reference to input clock, the parent used in
+"assigned-clock-parents" to silence the dtschema warnings:
 
-PE15 has a pull-up in my datasheet.
+  arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
 
-The rest looks good.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Cheers,
--Paul
+---
 
-> +
-> +static const u32 jz4780_pull_downs[6] =3D {
-> +	0x00000000, 0x000f0c03, 0x00000000, 0x0000b000, 0x00000483,=20
-> 0x00580ff0,
-> +};
-> +
->  static int jz4780_uart2_data_pins[] =3D { 0x66, 0x67, };
->  static int jz4780_uart2_hwflow_pins[] =3D { 0x65, 0x64, };
->  static int jz4780_uart4_data_pins[] =3D { 0x54, 0x4a, };
-> @@ -1301,8 +1309,8 @@ static const struct ingenic_chip_info=20
-> jz4780_chip_info =3D {
->  	.num_groups =3D ARRAY_SIZE(jz4780_groups),
->  	.functions =3D jz4780_functions,
->  	.num_functions =3D ARRAY_SIZE(jz4780_functions),
-> -	.pull_ups =3D jz4770_pull_ups,
-> -	.pull_downs =3D jz4770_pull_downs,
-> +	.pull_ups =3D jz4780_pull_ups,
-> +	.pull_downs =3D jz4780_pull_downs,
->  };
->=20
->  static const u32 x1000_pull_ups[4] =3D {
-> --
-> 2.11.0
->=20
+Changes since v2:
+1. Use XUSBXTI as real input clock.
 
+Changes since v1:
+1. Add clocks property.
+
+This is a v2 for:
+https://lore.kernel.org/linux-samsung-soc/20200901101534.GE23793@kozik-lap/T/#me85ac382b847dadbc3f6ebf30e94e70b5df1ebb6
+---
+ arch/arm/boot/dts/exynos3250-artik5.dtsi | 4 ++++
+ arch/arm/boot/dts/exynos3250-monk.dts    | 4 ++++
+ arch/arm/boot/dts/exynos3250-rinato.dts  | 4 ++++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+index 6c2f320be2f4..12887b3924af 100644
+--- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
++++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+@@ -55,6 +55,10 @@
+ 	assigned-clock-rates = <6000000>;
+ };
+ 
++&cmu {
++	clocks = <&xusbxti>;
++};
++
+ &cpu0 {
+ 	cpu0-supply = <&buck2_reg>;
+ };
+diff --git a/arch/arm/boot/dts/exynos3250-monk.dts b/arch/arm/boot/dts/exynos3250-monk.dts
+index 9d77a73bc92b..c1a68e612037 100644
+--- a/arch/arm/boot/dts/exynos3250-monk.dts
++++ b/arch/arm/boot/dts/exynos3250-monk.dts
+@@ -164,6 +164,10 @@
+ 	status = "okay";
+ };
+ 
++&cmu {
++	clocks = <&xusbxti>;
++};
++
+ &cpu0 {
+ 	cpu0-supply = <&buck2_reg>;
+ };
+diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+index 3df003af0d15..b55afaaa691e 100644
+--- a/arch/arm/boot/dts/exynos3250-rinato.dts
++++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+@@ -205,6 +205,10 @@
+ 	status = "okay";
+ };
+ 
++&cmu {
++	clocks = <&xusbxti>;
++};
++
+ &cpu0 {
+ 	cpu0-supply = <&buck2_reg>;
+ };
+-- 
+2.17.1
 
