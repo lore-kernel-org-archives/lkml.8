@@ -2,124 +2,184 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D728C43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 10:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E941EC43461
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 10:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5696220C09
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 10:06:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c8zUgi6J"
+	by mail.kernel.org (Postfix) with ESMTP id B93E220738
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 10:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgIFKGe (ORCPT
+        id S1728400AbgIFKUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 06:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbgIFKGd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 06:06:33 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5DDC061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 03:06:31 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g29so6608910pgl.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 03:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=KL+wmvrTuOe0huqscDIyhrzn6EBumFuZhyWqH5h7LEk=;
-        b=c8zUgi6JkXaNiny0EIoj552BzqRnjjltlo8I08RQMWCvV/Z11yb8On9JVVQVoQzObr
-         3CM4uU0vNU2Zj5aGS+sBakgrvprdY0vuoo2Q7Y5M0OywcuQGLLhGlYwdk+gp7NMau581
-         iK5NqjE8nTy36uAhqikkekD99FgzN58pPy7bQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=KL+wmvrTuOe0huqscDIyhrzn6EBumFuZhyWqH5h7LEk=;
-        b=Qkm6GGLoTRLSBXoZDtUZbhdWS7367HpwiSfSKCu4A3+Z4gK9U7HkF39bVPqh4Gmy3G
-         rNtA1e/tefXfJUuRgs/ztYpSFxWWQ/uf9FFxdtDJnMQdNCED50VwaNtYyozDbrT4ccDP
-         o8ZV60ESOjhKQAoyrLI4G/mXJIdKREx63ZiwwvuFtGYQAIsovRfYXXz7aMFtPSDu5/Rj
-         HCkNMKamSk9b2KNGj1NDA4wJEg0F7T/1GEmlYYwoNQQUp8i1n9G9WVJTa5zMWIuYPiew
-         EefGNnHonHAKhC9Y/3ZGeUuJnAk15DeSFyownDFGUwyET9Ur2KmuMyekFm1ThEx3Z4Dg
-         EOGg==
-X-Gm-Message-State: AOAM532XrFGMS7SB3A0VmD8fkGvMrZUcBe04A34BMeRUYMfQQV1Z1o+s
-        ljg1goJ1ru6UD044EvaF0A9bzWRYvPrDeQ==
-X-Google-Smtp-Source: ABdhPJwKj3IgZ7OC6OMvIkmlTiTII54sdP29IfEWSFKBQ5QyJdqprdyCDzIAUsoAtXX0Mk/8wYJdTA==
-X-Received: by 2002:a63:593:: with SMTP id 141mr12334377pgf.302.1599386790770;
-        Sun, 06 Sep 2020 03:06:30 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s129sm11795423pfb.39.2020.09.06.03.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 03:06:30 -0700 (PDT)
-Date:   Sun, 6 Sep 2020 03:06:29 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Yury Norov <yury.norov@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lib/string.c: Clarify kerndoc for stpcpy()
-Message-ID: <202009060302.4574D8D0E0@keescook>
+        Sun, 6 Sep 2020 06:20:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:35688 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725788AbgIFKUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 06:20:39 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kErmi-0004EO-0Z; Sun, 06 Sep 2020 12:20:32 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     linus.walleij@linaro.org, Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: Re: [PATCH 6/6] pinctrl: rockchip: populate platform device for rockchip gpio
+Date:   Sun, 06 Sep 2020 12:20:31 +0200
+Message-ID: <76163126.riIkUvEO9g@diego>
+In-Reply-To: <20200831085021.7288-1-jay.xu@rock-chips.com>
+References: <20200831084753.7115-1-jay.xu@rock-chips.com> <20200831085021.7288-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the language around return values to indicate destination instead of
-source.
+Hi Jianqun,
 
-Reported-by: Masahiro Yamada <masahiroy@kernel.org>
-Link: https://lore.kernel.org/lkml/CAK7LNAQvQBhjYgSkvm-dVyNz2Jd2C2qAtfyRk-rngEDfjkc38g
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-This is a fix for lib-stringc-implement-stpcpy.patch in -mm.
+Am Montag, 31. August 2020, 10:50:21 CEST schrieb Jianqun Xu:
+> Register both gpio driver and device as part of driver model, so that
+> the '-gpio'/'-gpios' dependency in dts can be correctly handled by
+> of_devlink/of_fwlink.
+> 
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
-Andrew, please note that it would be nice to get this into -rc6
-to unbreak the clang builds.
+[...]
 
-Thanks!
----
- lib/string.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> -static int rockchip_gpiolib_unregister(struct platform_device *pdev,
+> -						struct rockchip_pinctrl *info)
+> -{
+> -	struct rockchip_pin_ctrl *ctrl = info->ctrl;
+> -	struct rockchip_pin_bank *bank = ctrl->pin_banks;
+> -	int i;
+> +		pctldev = info->pctl_dev;
+> +		if (!pctldev)
+> +			return -ENODEV;
+>  
+> -	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+> -		if (!bank->valid)
+> -			continue;
+> -		gpiochip_remove(&bank->gpio_chip);
+> +		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0, gc->base, gc->ngpio);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to add pin range\n");
+> +			gpiochip_remove(&bank->gpio_chip);
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	return 0;
+> @@ -3752,6 +3734,46 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
+>  static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
+>  			 rockchip_pinctrl_resume);
+>  
+> +static int rockchip_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device *parent = pdev->dev.parent;
+> +	struct rockchip_pinctrl *info = dev_get_drvdata(parent);
+> +	struct rockchip_pin_ctrl *ctrl = info ? (info->ctrl) : NULL;
+> +	struct rockchip_pin_bank *bank;
+> +	int ret, i;
+> +
+> +	if (!info || !ctrl)
+> +		return -EINVAL;
+> +
+> +	if (!of_find_property(np, "gpio-controller", NULL))
+> +		return -ENODEV;
+> +
+> +	bank = ctrl->pin_banks;
+> +	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
+> +		if (!strcmp(bank->name, np->name)) {
+> +			bank->of_node = np;
+> +
+> +			if (!rockchip_get_bank_data(bank, info))
+> +				bank->valid = true;
+> +
+> +			break;
+> +		}
+> +	}
+> +
+> +	bank->of_node = pdev->dev.of_node;
+> +
+> +	ret = rockchip_gpiolib_register(pdev, bank);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = rockchip_interrupts_register(pdev, bank);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static int rockchip_pinctrl_probe(struct platform_device *pdev)
+>  {
+>  	struct rockchip_pinctrl *info;
+> @@ -3823,18 +3845,20 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+>  			return PTR_ERR(info->regmap_pmu);
+>  	}
+>  
+> -	ret = rockchip_gpiolib_register(pdev, info);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = rockchip_pinctrl_register(pdev, info);
+>  	if (ret) {
+> -		rockchip_gpiolib_unregister(pdev, info);
+> +		dev_err(&pdev->dev, "failed to register pinctrl device\n");
+>  		return ret;
+>  	}
+>  
+>  	platform_set_drvdata(pdev, info);
+>  
+> +	ret = of_platform_populate(np, rockchip_bank_match, NULL, dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register gpio device\n");
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -4254,6 +4278,14 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
+>  	{},
+>  };
+>  
+> +static struct platform_driver rockchip_gpio_driver = {
+> +	.probe		= rockchip_gpio_probe,
+> +	.driver = {
+> +		.name	= "rockchip-gpio",
+> +		.of_match_table = rockchip_bank_match,
+> +	},
+> +};
+> +
+>  static struct platform_driver rockchip_pinctrl_driver = {
+>  	.probe		= rockchip_pinctrl_probe,
+>  	.driver = {
+> @@ -4265,7 +4297,9 @@ static struct platform_driver rockchip_pinctrl_driver = {
+>  
+>  static int __init rockchip_pinctrl_drv_register(void)
+>  {
+> -	return platform_driver_register(&rockchip_pinctrl_driver);
+> +	platform_driver_register(&rockchip_pinctrl_driver);
+> +
+> +	return platform_driver_register(&rockchip_gpio_driver);
+>  }
+>  postcore_initcall(rockchip_pinctrl_drv_register);
 
-diff --git a/lib/string.c b/lib/string.c
-index 6bd0cf0fb009..32a56436c7eb 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -280,12 +280,12 @@ EXPORT_SYMBOL(strscpy_pad);
-  * @src: pointer to the beginning of string being copied from. Must not overlap
-  *       dest.
-  *
-- * stpcpy differs from strcpy in a key way: the return value is the new
-- * %NUL-terminated character. (for strcpy, the return value is a pointer to
-- * src. This interface is considered unsafe as it doesn't perform bounds
-- * checking of the inputs. As such it's not recommended for usage. Instead,
-- * its definition is provided in case the compiler lowers other libcalls to
-- * stpcpy.
-+ * stpcpy differs from strcpy in a key way: the return value is a pointer
-+ * to the new %NUL-terminated character in @dest. (For strcpy, the return
-+ * value is a pointer to the start of @dest. This interface is considered
-+ * unsafe as it doesn't perform bounds checking of the inputs. As such it's
-+ * not recommended for usage. Instead, its definition is provided in case
-+ * the compiler lowers other libcalls to stpcpy.
-  */
- char *stpcpy(char *__restrict__ dest, const char *__restrict__ src);
- char *stpcpy(char *__restrict__ dest, const char *__restrict__ src)
--- 
-2.25.1
+This also seems to miss the whole unloading of module paths?
+I'd expect a gpiochip_remove etc in some _remove function and
+of course a platform_driver_unregister.
 
 
--- 
-Kees Cook
+Heiko
+
+
