@@ -2,97 +2,251 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD9DC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585E8C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0245120709
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:02:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599411739;
-	bh=F5utO1Uo9rLljVuEGUdyP6/C57CRj/7DffK2bnMeqYM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=isB8niRIDa1l/UuvpQfLcrf0F9OefuIcrh32ijlmO5FdZyFAE9lJpIOE1o1RVq64l
-	 mMqDdPYLkHcPU1jJmEh58v5yQT4/rSAd0H2NJOzBwfh4SL8VF0GSKSGwp2nu0kKefC
-	 yniSIdRSoQTW7wdj6lEA3aPF4/LrpRpEQGt9W3PU=
+	by mail.kernel.org (Postfix) with ESMTP id 0AF5820709
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 17:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yqc3q4yS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729023AbgIFRCR (ORCPT
+        id S1729032AbgIFRGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 13:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43870 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgIFRCQ (ORCPT
+        Sun, 6 Sep 2020 13:06:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43283 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbgIFRGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 13:02:16 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F58C061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 10:02:15 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id u21so3136394ljl.6
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 10:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iBpy6uI3e4BtHg/8kxvDuOM32+PzqfR21jwNr3B73YQ=;
-        b=MYzp6+RJ0qQcPfwGPVxP1evkhmzNr5bpNK7N37GvQtRp5Fdpt2GbeB+I2RiNE+gmkh
-         bG6fZfHCgtbGGN3WT5WdW65upCG7HzFaPGI6gK9YWZ8jydXEei+P24Z6/svKcyNiPxgC
-         6+2lMVRWm91PhCZlkaop+f6NdSWs4BMQHyPmo=
+        Sun, 6 Sep 2020 13:06:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599411976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T5pi6kmTJtxrXnrQ1o1+D6zOwv348s2nRgWp9tupDkI=;
+        b=Yqc3q4ySWvhIgNg8iRsQDG4d+mbqCWUPSeOzg6ys45RyzLG2zOxsXoqnwNSe1uGYL3ggnr
+        /u+RS64TsFx+KxvMrUJMyb4xI0WHpsMxdCt6Qjy4CfkCpQSoEwcxTQeXS+dvx6ndE1NQLG
+        QlH8ypIK6G/58oK3/aMc4TmsNdJsRjI=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-176-d8kBFekrMiKyPtvILru8_w-1; Sun, 06 Sep 2020 13:06:14 -0400
+X-MC-Unique: d8kBFekrMiKyPtvILru8_w-1
+Received: by mail-qk1-f197.google.com with SMTP id u23so6476954qku.17
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 10:06:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iBpy6uI3e4BtHg/8kxvDuOM32+PzqfR21jwNr3B73YQ=;
-        b=Pr2h1mYRKIRum0nryn/mNAbBKBV1Iq8pQ2vs1Zr47kB7++u2z8vdLwq4+PSRyAhWjD
-         4JAqbu4e/TCv48poaOZQbKaTb8s0WvDIlIKVeQioPU4qPing9OhWK9vwuP1Mu5o+mglT
-         rrmozUEmIJ5bmP1RqUEsdfW1tG1jtT25/np8DPyE0OtDM8nt3PlyJcXqAFRL9j0XtCLU
-         +FLKGzh+6K6QCRb4UxSe5hqOxqZpjV2NLPLDgh19mpU8E0TW9HMCQloD89UvQJ+Se75g
-         91OJ1/MZftnpWaBQI1EcaSJq10rrL7eK09Dn3uwqV/oeIYzzv/EpQFYr+0qOnFqdFMHv
-         SfPg==
-X-Gm-Message-State: AOAM530Q6cfiZB1sspVtmxokFHu2BI/6Sl2ZNXc0J0bEPL8TESP9jFiw
-        hy/XeN4tJ1hp93jW5/zZyGr/2wxjIL9xGw==
-X-Google-Smtp-Source: ABdhPJxb7oo/fWmYYDgLSeRkdm9VaocykJOUHURKNU4+fYnJ2lzOltbsJw9X/9/9JbYLU+2SP+byKg==
-X-Received: by 2002:a2e:92cd:: with SMTP id k13mr7971593ljh.138.1599411731715;
-        Sun, 06 Sep 2020 10:02:11 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id i12sm5036864lfi.48.2020.09.06.10.02.10
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=T5pi6kmTJtxrXnrQ1o1+D6zOwv348s2nRgWp9tupDkI=;
+        b=J1Ty6A8FMoxNG4a4DZVhdJ31pMqFyricbtgRqbZgeI7YrX4TrQjPCpoagx1uxGL4hN
+         T+s+OM7T2vywZqbqHekSZ8gFNGwCdzPu1V1ptNn2TY5Pdww0TqXoXBfBD0T99wSR+23N
+         L21mPqo1MFHO4KHQt/qdkzDJRjxry1D5nGB9cnwlID933bAAop+/FJGxQvMIEPX1oVni
+         pwqjR4n5YKCk3XPr4PJ9Ykjz4PpK7OFJ/CmwiiD28AzJo0GhLOZMYxvtYy/MvMybd2KI
+         /YA3g2kysbti9wbxLFGr5lK2xBVNEgGGjooKvIig5cnVNXDwmm9C/MrJzQ441bREJOcP
+         6+yw==
+X-Gm-Message-State: AOAM530aLjpfj6VnJWI6uE6EnLUQdGtsnCG4lR0+2b9o0d4wHGFJsxpa
+        o5w2LKQiTEqF81mgYx4jYQIzica/zoZ98BZ5kyWbvhM0YfNK3HhRsn6oCwUqEhMK7nt0t9WX6iw
+        cmSx9j7Uz6kielBlX58+uwSQS
+X-Received: by 2002:ac8:100c:: with SMTP id z12mr17095452qti.81.1599411973916;
+        Sun, 06 Sep 2020 10:06:13 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyo748fLBdA5RyKGQNX2aeM+TJI+XXQQaO6Zso/HBz7x5qVE4vXAIL+HZQE97QTNo1oBVMwNQ==
+X-Received: by 2002:ac8:100c:: with SMTP id z12mr17095428qti.81.1599411973625;
+        Sun, 06 Sep 2020 10:06:13 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id g19sm2702267qka.84.2020.09.06.10.06.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Sep 2020 10:02:10 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id a15so13459456ljk.2
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 10:02:10 -0700 (PDT)
-X-Received: by 2002:a2e:b008:: with SMTP id y8mr7614310ljk.421.1599411729954;
- Sun, 06 Sep 2020 10:02:09 -0700 (PDT)
+        Sun, 06 Sep 2020 10:06:12 -0700 (PDT)
+Subject: Re: [PATCH v1 11/12] fpga: expose hardware error info in sysfs
+To:     Russ Weight <russell.h.weight@intel.com>, mdf@kernel.org,
+        lee.jones@linaro.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     lgoncalv@redhat.com, yilun.xu@intel.com, hao.wu@intel.com,
+        matthew.gerlach@intel.com
+References: <20200904235305.6254-1-russell.h.weight@intel.com>
+ <20200904235305.6254-12-russell.h.weight@intel.com>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <35c1452d-9a26-802a-a340-41f1482ef975@redhat.com>
+Date:   Sun, 6 Sep 2020 10:06:10 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200906044433.24820-1-jgross@suse.com>
-In-Reply-To: <20200906044433.24820-1-jgross@suse.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 6 Sep 2020 10:01:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiTZ3V-Jn5xmHTKafZ-vRw-E0n8EMz+PyHKz4CMRwmYxw@mail.gmail.com>
-Message-ID: <CAHk-=wiTZ3V-Jn5xmHTKafZ-vRw-E0n8EMz+PyHKz4CMRwmYxw@mail.gmail.com>
-Subject: Re: [GIT PULL] xen: branch for v5.9-rc4
-To:     Juergen Gross <jgross@suse.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xen-devel@lists.xenproject.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200904235305.6254-12-russell.h.weight@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 9:44 PM Juergen Gross <jgross@suse.com> wrote:
+
+On 9/4/20 4:53 PM, Russ Weight wrote:
+> Extend the Intel Security Manager class driver to include
+> an optional update/hw_errinfo sysfs node that can be used
+> to retrieve 64 bits of device specific error information
+> following a secure update failure.
 >
-> It contains a small series for fixing a problem with Xen PVH guests
-> when running as backends (e.g. as dom0). Mapping other guests' memory
-> now is working via ZONE_DEVICE, thus not requiring to abuse the memory
-> hotplug functionality for that purpose.
+> The underlying driver must provide a get_hw_errinfo() callback
+> function to enable this feature. This data is treated as
+> opaque by the class driver. It is left to user-space software
+> or support personnel to interpret this data.
+>
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Reviewed-by: Wu Hao <hao.wu@intel.com>
+> ---
+>  .../ABI/testing/sysfs-class-ifpga-sec-mgr     | 14 +++++++
+>  drivers/fpga/ifpga-sec-mgr.c                  | 38 +++++++++++++++++++
+>  include/linux/fpga/ifpga-sec-mgr.h            |  5 +++
+>  3 files changed, 57 insertions(+)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> index 762a7dee9453..20bde1abb5e4 100644
+> --- a/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> +++ b/Documentation/ABI/testing/sysfs-class-ifpga-sec-mgr
+> @@ -135,3 +135,17 @@ Description:	Read-only. Returns a string describing the failure
+>  		idle state. If this file is read while a secure
+>  		update is in progress, then the read will fail with
+>  		EBUSY.
+> +
+> +What: 		/sys/class/ifpga_sec_mgr/ifpga_secX/update/hw_errinfo
+> +Date:		Sep 2020
+> +KernelVersion:  5.10
+> +Contact:	Russ Weight <russell.h.weight@intel.com>
+> +Description:	Read-only. Returns a 64 bit error value providing
+> +		hardware specific information that may be useful in
+> +		debugging errors that occur during FPGA image updates.
+> +		This file is only visible if the underlying device
+> +		supports it. The hw_errinfo value is only accessible
+> +		when the secure update engine is in the idle state.
+> +		If this file is read while a secure update is in
+> +		progress, then the read will fail with EBUSY.
+> +		Format: "0x%llx".
+> diff --git a/drivers/fpga/ifpga-sec-mgr.c b/drivers/fpga/ifpga-sec-mgr.c
+> index afd97c135ebe..6944396eff80 100644
+> --- a/drivers/fpga/ifpga-sec-mgr.c
+> +++ b/drivers/fpga/ifpga-sec-mgr.c
+> @@ -152,10 +152,17 @@ static void set_error(struct ifpga_sec_mgr *imgr, enum ifpga_sec_err err_code)
+>  	imgr->err_code = err_code;
+>  }
+>  
+> +static void set_hw_errinfo(struct ifpga_sec_mgr *imgr)
+> +{
+> +	if (imgr->iops->get_hw_errinfo)
+> +		imgr->hw_errinfo = imgr->iops->get_hw_errinfo(imgr);
+> +}
+> +
+>  static void ifpga_sec_dev_error(struct ifpga_sec_mgr *imgr,
+>  				enum ifpga_sec_err err_code)
+>  {
+>  	set_error(imgr, err_code);
+> +	set_hw_errinfo(imgr);
+>  	imgr->iops->cancel(imgr);
+>  }
+>  
+> @@ -348,6 +355,23 @@ error_show(struct device *dev, struct device_attribute *attr, char *buf)
+>  }
+>  static DEVICE_ATTR_RO(error);
+>  
+> +static ssize_t
+> +hw_errinfo_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(dev);
+> +	int ret;
+> +
+> +	mutex_lock(&imgr->lock);
+> +	if (imgr->progress != IFPGA_SEC_PROG_IDLE)
+> +		ret = -EBUSY;
+> +	else
+> +		ret = sprintf(buf, "0x%llx\n", imgr->hw_errinfo);
+> +	mutex_unlock(&imgr->lock);
+> +
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_RO(hw_errinfo);
+> +
+>  static ssize_t remaining_size_show(struct device *dev,
+>  				   struct device_attribute *attr, char *buf)
+>  {
+> @@ -382,6 +406,7 @@ static ssize_t filename_store(struct device *dev, struct device_attribute *attr,
+>  		imgr->filename[strlen(imgr->filename) - 1] = '\0';
+>  
+>  	imgr->err_code = IFPGA_SEC_ERR_NONE;
+> +	imgr->hw_errinfo = 0;
+>  	imgr->request_cancel = false;
+>  	imgr->progress = IFPGA_SEC_PROG_READ_FILE;
+>  	reinit_completion(&imgr->update_done);
+> @@ -416,18 +441,31 @@ static ssize_t cancel_store(struct device *dev, struct device_attribute *attr,
+>  }
+>  static DEVICE_ATTR_WO(cancel);
+>  
+> +static umode_t
+> +sec_mgr_update_visible(struct kobject *kobj, struct attribute *attr, int n)
+> +{
+> +	struct ifpga_sec_mgr *imgr = to_sec_mgr(kobj_to_dev(kobj));
+> +
+> +	if (attr == &dev_attr_hw_errinfo.attr && !imgr->iops->get_hw_errinfo)
+> +		return 0;
+> +
+> +	return attr->mode;
+> +}
+> +
+>  static struct attribute *sec_mgr_update_attrs[] = {
+>  	&dev_attr_filename.attr,
+>  	&dev_attr_cancel.attr,
+>  	&dev_attr_status.attr,
+>  	&dev_attr_error.attr,
+>  	&dev_attr_remaining_size.attr,
+> +	&dev_attr_hw_errinfo.attr,
+>  	NULL,
+>  };
+>  
+>  static struct attribute_group sec_mgr_update_attr_group = {
+>  	.name = "update",
+>  	.attrs = sec_mgr_update_attrs,
+> +	.is_visible = sec_mgr_update_visible,
+>  };
+>  
+>  static ssize_t name_show(struct device *dev,
+> diff --git a/include/linux/fpga/ifpga-sec-mgr.h b/include/linux/fpga/ifpga-sec-mgr.h
+> index f51ed663a723..3be8d8da078a 100644
+> --- a/include/linux/fpga/ifpga-sec-mgr.h
+> +++ b/include/linux/fpga/ifpga-sec-mgr.h
+> @@ -135,6 +135,9 @@ enum ifpga_sec_err {
+>   *			    function and is called at the completion
+>   *			    of the update, whether success or failure,
+>   *			    if the prepare function succeeded.
+> + * @get_hw_errinfo:	    Optional: Return u64 hw specific error info.
+> + *			    The software err_code may used to determine
+> + *			    whether the hw error info is applicable.
+>   */
+>  struct ifpga_sec_mgr_ops {
+>  	sysfs_cnt_hndlr_t user_flash_count;
+> @@ -158,6 +161,7 @@ struct ifpga_sec_mgr_ops {
+>  	enum ifpga_sec_err (*poll_complete)(struct ifpga_sec_mgr *imgr);
+>  	void (*cleanup)(struct ifpga_sec_mgr *imgr);
+>  	enum ifpga_sec_err (*cancel)(struct ifpga_sec_mgr *imgr);
+> +	u64 (*get_hw_errinfo)(struct ifpga_sec_mgr *imgr);
+>  };
+>  
+>  /* Update progress codes */
+> @@ -183,6 +187,7 @@ struct ifpga_sec_mgr {
+>  	enum ifpga_sec_prog progress;
+>  	enum ifpga_sec_prog err_state;	/* progress state at time of failure */
+>  	enum ifpga_sec_err err_code;	/* security manager error code */
+> +	u64 hw_errinfo;			/* 64 bits of HW specific error info */
+>  	bool request_cancel;
+>  	bool driver_unload;
+>  	void *priv;
 
-Tssk. This really isn't a bug-fix, it's clearly new development.
+This looks fine.
 
-I'm going to let it slide since it seems so contained, but don't do this.
+Reviewed-by: Tom Rix <trix@redhat.com>
 
-                  Linus
