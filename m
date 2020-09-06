@@ -2,144 +2,132 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0436FC43461
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEC2C433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6ED8208B3
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:56:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b7wlFKC2"
+	by mail.kernel.org (Postfix) with ESMTP id 667AA208B3
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 12:57:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599397022;
+	bh=ODhN354Jdz2TVVA6NLR4Aj+C2RHHnzqAsADvjCLB/Xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uhcIji/GW6HfHWG5I8cXBlPCyE4HO9E0kRJyLl0xZOGK3h1l1I+T7BlIHjtz/HTKa
+	 p8goykBXCnFkiXx2B+eHQ6YzfcZLZ4YK5ov0UjyQMABqSI8niFIdUxEccFhk+nwQNM
+	 vgEsgCiNDPCznHFXYCWnoyRdTAj8s8tkOxMl0r1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgIFM4f (ORCPT
+        id S1728881AbgIFM5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 08:56:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25503 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728692AbgIFM4G (ORCPT
+        Sun, 6 Sep 2020 08:57:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35400 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgIFM4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 08:56:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599396963;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4ZIYk6eIpSqRXg8aHD2RmgdI5tSsATFe7QlkOtEKQH4=;
-        b=b7wlFKC2bjVcKYE5ozDyoVs2/QSrxGaOiWLkhtlIHScPVWxFn/liJFVVuDScErJ3/fW5bE
-        GtB/kCkCAAoxIdigfAbN4slCFQBjQ0CI9MyxqTvWCPuj6W2vsdomB/yNBvzNAIm1HihlqJ
-        eUdw5OgYKysTAAoKfZXQ/rZbXYgWA4A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-sJLWIHuRMOmKlYVGiTQfgg-1; Sun, 06 Sep 2020 08:55:59 -0400
-X-MC-Unique: sJLWIHuRMOmKlYVGiTQfgg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77C711DDE9;
-        Sun,  6 Sep 2020 12:55:57 +0000 (UTC)
-Received: from krava (ovpn-112-63.ams2.redhat.com [10.36.112.63])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D5DA65D9CC;
-        Sun,  6 Sep 2020 12:55:53 +0000 (UTC)
-Date:   Sun, 6 Sep 2020 14:55:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        john.garry@huawei.com
-Subject: Re: [PATCH v8 3/5] perf jevents: Add support for parsing
- perchip/percore events
-Message-ID: <20200906125552.GC1199773@krava>
-References: <20200906112004.49574-1-kjain@linux.ibm.com>
- <20200906112004.49574-4-kjain@linux.ibm.com>
+        Sun, 6 Sep 2020 08:56:47 -0400
+Received: by mail-wr1-f66.google.com with SMTP id e16so11918728wrm.2;
+        Sun, 06 Sep 2020 05:56:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hi7cBM4dNM9ZHTX+OEtEOLbKuZNyphhpJQFbp8c82F0=;
+        b=psyJwrhfZi/7k3J/aha5qFqRHUIA/FCqaA7ft9sTAZjRKzFT52M2TC7UceCpDxvWR+
+         0iLybJKP5hM86HS+OQ9BWxOFEKtCdJt5lvRKOJ3C7wlfLkigWyzFXvgzE4L4MyIwlscx
+         7EwVHztgOtOHpQdXlhJq4RAfa2/3f+ZUtfYuHjFME+wdbUiEpd34K3FQREgVOJBqiLxp
+         mMLvtAEXN1zZRMZgAv53E+OEpgCiGU5nG2HHZtb4sijh3YoTPuof9CJ+m74cmTJAaBPT
+         5uMaIhapqUVEDqEuEM0cTGFbPNp+GCkk4dAtZ9ZVTQfS3/giI597sPyRZN/owaHbdwIi
+         CGVg==
+X-Gm-Message-State: AOAM531ptw7a4CXdSLhNJ5ucOc/7Qc2qhgB0jy1CLbtG5yQGBD2wEeHi
+        AE5IAbfkKVBvKvIciruzL8k=
+X-Google-Smtp-Source: ABdhPJxC3li2Jb9IyuHE1as9vdJHPOx3it1FByEPx+L86HG7S+i3qvEFts/MuiNOJYEgMcg2x1oKeg==
+X-Received: by 2002:a5d:4bcf:: with SMTP id l15mr16631440wrt.384.1599397004569;
+        Sun, 06 Sep 2020 05:56:44 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id f14sm23696587wrv.72.2020.09.06.05.56.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 06 Sep 2020 05:56:43 -0700 (PDT)
+Date:   Sun, 6 Sep 2020 14:56:40 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v2 2/3] ARM: dts: exynos: Add assigned clock parent to
+ CMU in Exynos4412 Odroid
+Message-ID: <20200906125640.GB4829@kozik-lap>
+References: <20200903181425.5015-1-krzk@kernel.org>
+ <CGME20200903181440eucas1p251f5f467fdacf8d74d3c20418052eb38@eucas1p2.samsung.com>
+ <20200903181425.5015-2-krzk@kernel.org>
+ <d5468bf5-516f-58a8-4544-fe7fc377e7b1@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200906112004.49574-4-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <d5468bf5-516f-58a8-4544-fe7fc377e7b1@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 04:50:02PM +0530, Kajol Jain wrote:
-
-SNIP
-
->  typedef int (*func)(void *data, struct json_event *je);
->  
->  int eprintf(int level, int var, const char *fmt, ...)
-> @@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
->  		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
->  	if (je->perpkg)
->  		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
-> +	if (je->aggr_mode)
-> +		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
->  	if (je->metric_expr)
->  		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
->  	if (je->metric_name)
-> @@ -379,6 +394,7 @@ struct event_struct {
->  	char *pmu;
->  	char *unit;
->  	char *perpkg;
-> +	char *aggr_mode;
->  	char *metric_expr;
->  	char *metric_name;
->  	char *metric_group;
-> @@ -408,6 +424,7 @@ struct event_struct {
->  	op(pmu);						\
->  	op(unit);						\
->  	op(perpkg);						\
-> +	op(aggr_mode);						\
->  	op(metric_expr);					\
->  	op(metric_name);					\
->  	op(metric_group);					\
-> @@ -613,6 +630,8 @@ static int json_events(const char *fn,
->  				addfield(map, &je.unit, "", "", val);
->  			} else if (json_streq(map, field, "PerPkg")) {
->  				addfield(map, &je.perpkg, "", "", val);
-> +			} else if (json_streq(map, field, "AggregationMode")) {
-> +				addfield(map, &je.aggr_mode, "", "", val);
-
-I think you should free je.aggr_mode
-
-jirka
-
->  			} else if (json_streq(map, field, "Deprecated")) {
->  				addfield(map, &je.deprecated, "", "", val);
->  			} else if (json_streq(map, field, "MetricName")) {
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-> index c8f306b572f4..7da1a3743b77 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -2,6 +2,11 @@
->  #ifndef PMU_EVENTS_H
->  #define PMU_EVENTS_H
->  
-> +enum aggr_mode_class {
-> +	PerChip = 1,
-> +	PerCore
-> +};
-> +
->  /*
->   * Describe each PMU event. Each CPU has a table of PMU events.
->   */
-> @@ -14,6 +19,7 @@ struct pmu_event {
->  	const char *pmu;
->  	const char *unit;
->  	const char *perpkg;
-> +	const char *aggr_mode;
->  	const char *metric_expr;
->  	const char *metric_name;
->  	const char *metric_group;
-> -- 
-> 2.26.2
+On Fri, Sep 04, 2020 at 09:02:23AM +0200, Marek Szyprowski wrote:
+> Hi Krzysztof,
 > 
+> On 03.09.2020 20:14, Krzysztof Kozlowski wrote:
+> > Commit 68605101460e ("ARM: dts: exynos: Add support for audio over HDMI
+> > for Odroid X/X2/U3") added assigned clocks under Clock Management Unit.
+> >
+> > However the dtschema expects "clocks" property if "assigned-clocks" are
+> > used.  Add reference to input clock, the parent used in
+> > "assigned-clock-parents" to silence the dtschema warnings:
+> >
+> >    arch/arm/boot/dts/exynos4412-odroidu3.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 1 +
+> >   1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > index ca3c78e0966c..9375df064076 100644
+> > --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> > @@ -120,6 +120,7 @@
+> >   };
+> >   
+> >   &clock {
+> > +	clocks = <&clock CLK_FOUT_EPLL>;
+> 
+> This should be one of xusbxti or xxti, because this is the proper input 
+> clock for the clock controller. However in case of Exynos4, those clocks 
+> needs much more cleanup. For the historical reasons, they don't use 
+> generic 'fixed-clock' property, but the custom one and they are no 
+> instantiated by clock framework, but the exynos4 clock driver...
 
+Indeed, so it would be like:
+
+&clock {
+	clocks = <&clock CLK_XUSBXTI>;
+};
+
+... or convert the driver to take external clocks while keeping the ABI
+(and being bisectable).
+
+Best regards,
+Krzysztof
+
+
+> 
+> >   	assigned-clocks = <&clock CLK_FOUT_EPLL>;
+> >   	assigned-clock-rates = <45158401>;
+> >   };
+> 
+> Best regards
+> -- 
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+> 
