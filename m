@@ -2,97 +2,73 @@ Return-Path: <SRS0=pQss=CP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E00C433E2
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8664AC433E2
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE47207BB
-	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551D420838
+	for <linux-kernel@archiver.kernel.org>; Sun,  6 Sep 2020 22:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgIFWPV (ORCPT
+        id S1726721AbgIFWeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 18:15:21 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:50081 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbgIFWPT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 18:15:19 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N95mL-1kaIZX3Pi3-0167Ln; Mon, 07 Sep 2020 00:15:17 +0200
-Received: by mail-qt1-f177.google.com with SMTP id t20so8713697qtr.8;
-        Sun, 06 Sep 2020 15:15:16 -0700 (PDT)
-X-Gm-Message-State: AOAM531zFPZqXvtOSJWCj+LXMT/4OUNq4OkELI+I2sbbJ9P03mJug6Kt
-        qT+oxKi41iA1XOCLUjv3OXDxS/FNluKkLqM0c6c=
-X-Google-Smtp-Source: ABdhPJxwkpjvN/x7Qacu70mZjFWP8AmaMXUiYeZRlF/0mV8kkA+fzaouJtHyixrWIYKaJPrJakvGRGbLSRz/4O5f8dk=
-X-Received: by 2002:ac8:5b47:: with SMTP id n7mr18419344qtw.7.1599430515531;
- Sun, 06 Sep 2020 15:15:15 -0700 (PDT)
+        Sun, 6 Sep 2020 18:34:13 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:38258 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726165AbgIFWeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 18:34:09 -0400
+Received: from ip5f5aa64a.dynamic.kabel-deutschland.de ([95.90.166.74] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1kF3EY-0002WD-Mo; Mon, 07 Sep 2020 00:34:02 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Elaine Zhang <zhangqing@rock-chips.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, xxx@rock-chips.com,
+        xf@rock-chips.com, huangtao@rock-chips.com,
+        kever.yang@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
+Subject: Re: [PATCH v3 2/6] clk: rockchip: Export rockchip_clk_register_ddrclk()
+Date:   Mon, 07 Sep 2020 00:34:01 +0200
+Message-ID: <2532557.3DXEvePdfh@diego>
+In-Reply-To: <20200904074405.24439-3-zhangqing@rock-chips.com>
+References: <20200904074405.24439-1-zhangqing@rock-chips.com> <20200904074405.24439-3-zhangqing@rock-chips.com>
 MIME-Version: 1.0
-References: <20200904165216.1799796-1-hch@lst.de> <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com>
- <20200905071735.GB13228@lst.de>
-In-Reply-To: <20200905071735.GB13228@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 7 Sep 2020 00:14:59 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
-Message-ID: <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
-Subject: Re: remove set_fs for riscv
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Russell King <rmk@arm.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RDVpx0wvlKS7kKQF356tU/RCwTwoxIjZ+Szm355OY9IiMxWZIq3
- dAkD/boYJ8a6aCGhtL3biL/FA0/0ov7bajOFOGn3QkiyKJVpKlgZ+D5FhPIDB0gbMNA2S3r
- uOLNXygocCY8Mw8SVNy2FolLvewuQW1WYLIBE7KesrlTcNnbiUkrNJRDD2m3mMHtlBTQ7QW
- GHKH0318/EFVqLblzGNZg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wWPfBQ8ZQ2U=:1ix0XHpYN9n5pp6/SnQVOr
- JBW5xcyPJUker6yLdCXVd4KWJGeuPoMov/k6dA/or1qh+c+KOqdipwEWz7iNk5zix959lfMl8
- HMvlq7ZGY6betoqWcK+fbLyLKVInBCevfTthuBLszUtFxmQTmPT1rS6vgr7GVyw8Rg5TFPcVD
- JzpFR7qji5+M9zQPlP3NvM8OceZav+QYL452ihtnwG69Do4k9HtMs8s2Tt23wsTs2qM8Re3wR
- 9W7sIdx4+MF69EuraKuV2VAnb6KP6wFGBzaOilWvrWwyMudXm/0pHrIa1MEqAseSS3YUT34g5
- WYk6TZfaefT2/s+6BZYKkcQ0/6zTzOSkLAQ1XNxwmXOAhWVaZZdomle9i3rliM8Nzajn25/pf
- KL/qd2gHPDiVDo5BYw+swLHKvI8P0SokJOvaq2q2LlTTr0u8VGWpkMHKGZgpGQiOtTzq0h631
- xfP4hV1x3W1Wz3wRF4QKckgDkZkBU86fo6Plg02Gud28zfGDzyzGd7NjTPMN7LnXdalFEpfhg
- 3/1mmiASzv20qzlG92PbwHKJm40EUouUkrD0Ya6PTh8j4ezXyfF2fvfrk02dZRPB4F7Swit/Z
- VPaqgY+KbkLu0TfwKBE3ZYflLVji9yuiCSH1+3/jZ0tF0krocM1q8V41RhroLzsxn1IxKSsUD
- qtHENpaIt27+PrZZuicmkZRol5TCuuiHBEPsxiCw+llGzJQ0oA9e07pyAhtjhTjqKHhoxgKSP
- xpjVG5vAhHKklCq7v/yPrsaMRBFs21NlEIWZN9TBwneBRflZfKXo3ZDI+oofdLIC9uQSwr0oH
- IC4eDr6gWSetTtJo3KwccggxqUaIPrwH2hEPISW04IzH+RsG2vEtOsopeaT4zApHqlZGv5q
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 9:17 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Sep 04, 2020 at 08:15:03PM +0200, Arnd Bergmann wrote:
-> > Is there a bigger plan for the rest? I can probably have a look at the Arm
-> > OABI code if nobody else working on that yet.
->
-> m68knommu seems mostly trivial and not interact much with m68k/mmu,
-> so that woud be my next target.  All the other seems to share more
-> code for the mmu and nommu case, so they'd have to be done per arch.
->
-> arm would be my first target because it is used widespread, and its
-> current set_fs implemenetation is very strange.  But given thar you
-> help maintaining arm SOCs and probably know the arch code much better
-> than I do I'd be more than happy to leave that to you.
+Am Freitag, 4. September 2020, 09:44:01 CEST schrieb Elaine Zhang:
+> This is used by the Rockchip clk driver, export it to allow that
+> driver to be compiled as a module..
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Reviewed-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>  drivers/clk/rockchip/clk-ddr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/clk/rockchip/clk-ddr.c b/drivers/clk/rockchip/clk-ddr.c
+> index 9273bce4d7b6..282b6f22eb22 100644
+> --- a/drivers/clk/rockchip/clk-ddr.c
+> +++ b/drivers/clk/rockchip/clk-ddr.c
+> @@ -136,3 +136,4 @@ struct clk *rockchip_clk_register_ddrclk(const char *name, int flags,
+>  
+>  	return clk;
+>  }
+> +EXPORT_SYMBOL(rockchip_clk_register_ddrclk);
 
-I've had a first pass at this now, see
+EXPORT_SYMBOL_GPL perhaps?
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=arm-kill-set_fs
+The rest of clock-framework exports are already the _GPL variant anyway,
+so ours should probably be too.
 
-There are a couple of things in there that ended up uglier than I was
-hoping for, and it's completely untested beyond compilation. Is this
-roughly what you had in mind? I can do some testing then and post
-it to the Arm mailing list.
 
-      Arnd
+
