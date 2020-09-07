@@ -2,131 +2,156 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA1FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E991C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 512692087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="t+zrA6Za"
+	by mail.kernel.org (Postfix) with ESMTP id E664A2087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbgIGQJH (ORCPT
+        id S1730314AbgIGQJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730284AbgIGQId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:08:33 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD5A0C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:08:26 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id a8so7176094ilk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JqN+Ld3wZPmbVgI62Wk3h0aeRwICf084UpC6lt1ISUQ=;
-        b=t+zrA6Zax5sYBKq6LQ+BBjT0mXvkgqo1EQagCOBiGh7Gw6vDfaDBc1h2BgAQD+5B5Z
-         O4l+DjThBvV07ZhnkrV+Pxdm+gJOJVQTbav12VmkxLaeitbWMcKHcgJ/L263Nz8rCg2P
-         NqYSoiyiMa85MFREwFmfpnKC/0OpLJaP/Ey8Fbd9bB9X2CtM5DjzcJTjUQbmbr01FHEW
-         gAGVicIGl4/5IlJ9zuw5P+XJiOtxfiHinQtO257YEewAFwyVzWUvD96X/KFHHHXscKNv
-         S82b21ElO1RRbvUyYFHUHv/2FKiWT8fwv79tt1LO4pk0JDOGn1lIB6JZaB5ZJTMVBN7P
-         FRGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JqN+Ld3wZPmbVgI62Wk3h0aeRwICf084UpC6lt1ISUQ=;
-        b=ddPLm2kSnTQpOMHhGuUMssmkYOEbbcweBRxolZPvChYANsgm1jeq6eadtfi3ZJxWKw
-         n/jHL3feroNOa0KFR1dLN3M2mYCgFVO+rThFyzzBdhn3PBaLhJpqTDBYvz0YpYz68K5z
-         WI7Pola7quG2gj7cY8sKhI+XzrbSE4J9NYkpvo+DzD8Y5u2bgUBFSXLaHJvMMgJLwKxY
-         PNJVvnAeki8vzV33lq0SMOgrPmsQko1rdlwI33G9Add9WwD2G28wDyE1VjXQXijjLhcC
-         /MlbMMqalh3t+bubDnexYkCDooOFIriko1xjZEFb4o7Ebo56ipOxCpgPLGhCIN94vhgp
-         ET3g==
-X-Gm-Message-State: AOAM532UZAV73JUtlO8KlkynJ0HDhTRs4U/4o0OZNF4iPqeKdkaMIaVv
-        b7o9nzwlQd7WaiifzXROQZsiK8W0SLQUJ9WM4sh+Pw==
-X-Google-Smtp-Source: ABdhPJygbGhzi1UjXL8W5ZYdCpkiPK64via60tqGaifPutE7y9g1OWG5mxVKMiZEo45zI0mgt2/Sl1DPIqvev7fxd84=
-X-Received: by 2002:a92:cb4d:: with SMTP id f13mr16653071ilq.189.1599494905629;
- Mon, 07 Sep 2020 09:08:25 -0700 (PDT)
+        Mon, 7 Sep 2020 12:09:53 -0400
+Received: from mx.socionext.com ([202.248.49.38]:4579 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730295AbgIGQJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:09:27 -0400
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 08 Sep 2020 01:09:24 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 84AF060060;
+        Tue,  8 Sep 2020 01:09:24 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 8 Sep 2020 01:09:24 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id EA8C01A0509;
+        Tue,  8 Sep 2020 01:09:23 +0900 (JST)
+Received: from [10.212.1.10] (unknown [10.212.1.10])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 299A91205FF;
+        Tue,  8 Sep 2020 01:09:23 +0900 (JST)
+Subject: Re: [PATCH v6 5/6] PCI: uniphier: Add iATU register support
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1596795922-705-6-git-send-email-hayashi.kunihiko@socionext.com>
+ <CAL_Jsq+nGtrBpzNKU9+1cHYkuQ3KBHpgwZRQfDKKUMJVSx_b1A@mail.gmail.com>
+ <ab0f7338-045c-8565-134b-757769c9235f@socionext.com>
+ <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <7b6ae470-23c1-735c-08ca-67dd644d7f23@socionext.com>
+Date:   Tue, 8 Sep 2020 01:09:22 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907122238.GA1849893@kroah.com> <CAMpxmJXM=8oGoPSGg8G8XJ4HXJFrAQ2-_EXrz3rf3+ZmCSWB7g@mail.gmail.com>
- <20200907140829.GL1891694@smile.fi.intel.com> <CAMuHMdV42oUu=af_O=aUVED_Nxce0wnTKTMNNSskaSGT=p5ZMw@mail.gmail.com>
-In-Reply-To: <CAMuHMdV42oUu=af_O=aUVED_Nxce0wnTKTMNNSskaSGT=p5ZMw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 7 Sep 2020 18:08:14 +0200
-Message-ID: <CAMRc=MeBL7opS6wBO1nEesHJg8Yv_GR0xxRae3mtQ2xj=eBOGg@mail.gmail.com>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_Jsq+HnaosmJgekrS-DynGvNR742m00vLN1yCiZ4YBf3T2-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 5:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Andy,
->
-> On Mon, Sep 7, 2020 at 4:14 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Sep 07, 2020 at 03:49:23PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> >
-> > ...
-> >
-> > > > Yes it is.  Or at least until you fix all existing users so that if you
-> > > > do change it, no one notices it happening :)
-> > > >
-> > >
-> > > Then another question is: do we really want to commit to a stable ABI
-> > > for a module we only use for testing purposes and which doesn't
-> > > interact with any real hardware.
-> > >
-> > > Rewriting this module without any legacy cruft is tempting though. :)
-> >
-> > Another thought spoken loudly: maybe it can be unified with GPIO aggregator
-> > code? In that case it makes sense.
->
-> You want to aggregate GPIOs out of thin air?
->
-> From DT, that would be something like
->
->     gpios = <&gpio1 2>, <0>, <0>, <&gpio2, 5>;
->
-> ?
->
-> For writing into ".../new_device", we could agree on something like "0"
-> means not backed by an existing GPIO?
->
+Hi Rob,
 
-I'm really not sure this makes any sense. Why complicate an otherwise
-elegant module that is gpio-aggregator with functionalities that
-obviously don't belong here? I want to add various parameters that
-would affect the way the simulated chips work - this really doesn't
-need to go into the aggregator.
+On 2020/09/04 7:12, Rob Herring wrote:
+> On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> On 2020/08/18 1:48, Rob Herring wrote:
+>>> On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
+>>> <hayashi.kunihiko@socionext.com> wrote:
+>>>>
+>>>> This gets iATU register area from reg property. In Synopsys DWC version
+>>>> 4.80 or later, since iATU register area is separated from core register
+>>>> area, this area is necessary to get from DT independently.
+>>>>
+>>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>>> ---
+>>>>    drivers/pci/controller/dwc/pcie-uniphier.c | 5 +++++
+>>>>    1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> index 55a7166..93ef608 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>>> @@ -471,6 +471,11 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>>>>           if (IS_ERR(priv->pci.dbi_base))
+>>>>                   return PTR_ERR(priv->pci.dbi_base);
+>>>>
+>>>> +       priv->pci.atu_base =
+>>>> +               devm_platform_ioremap_resource_byname(pdev, "atu");
+>>>> +       if (IS_ERR(priv->pci.atu_base))
+>>>> +               priv->pci.atu_base = NULL;
+>>>
+>>> Keystone has the same 'atu' resource setup. Please move its code to
+>>> the DW core and use that.
+>>
+>> There are some platforms that pci.atu_base is set by other way.
+>> The 'atu' code shouldn't be conflicted with the following existing code.
+> 
+> No, it's not a conflict but needless duplication.
 
-Bart
+I see.
+
+>>     drivers/pci/controller/dwc/pci-keystone.c:              atu_base = devm_platform_ioremap_resource_byname(pdev, "atu");
+>>     drivers/pci/controller/dwc/pci-keystone.c:              pci->atu_base = atu_base;
+>>     drivers/pci/controller/dwc/pcie-designware.c:                   pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+>>     drivers/pci/controller/dwc/pcie-intel-gw.c:     pci->atu_base = pci->dbi_base + data->pcie_atu_offset;
+> 
+> This one should have had an 'atu' region in DT.
+> 
+>>     drivers/pci/controller/dwc/pcie-tegra194.c:     pci->atu_base = devm_ioremap_resource(dev, atu_dma_res);
+> 
+> Unfortunately, a different name was used. That is the mess which is
+> the DW PCI controller.
+
+Okay, this has already set atu_base, so ignore it for this patch.
+  
+>>
+>> So I'm not sure where to move the code in the DW core.
+>> Is there any idea?
+> 
+> You just need this and then remove the keystone code:
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> b/drivers/pci/controller/dwc/pcie-designware.c
+> index b723e0cc41fb..680084467447 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -556,6 +556,8 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>                                         dw_pcie_iatu_unroll_enabled(pci))) {
+>                  pci->iatu_unroll_enabled = true;
+>                  if (!pci->atu_base)
+> +                       pci->atu_base =
+> devm_platform_ioremap_resource_byname(pdev, "atu");
+> +               if (IS_ERR(pci->atu_base))
+>                          pci->atu_base = pci->dbi_base + DEFAULT_DBI_ATU_OFFSET;
+>          }
+>          dev_dbg(pci->dev, "iATU unroll: %s\n", pci->iatu_unroll_enabled ?
+> 
+
+I've got it. I think I need to add a bit of code to this though,
+I'll try to apply this and remove the duplicate code.
+
+I'll separate this from other PER/AER patches and send new series.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
