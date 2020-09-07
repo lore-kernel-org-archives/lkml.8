@@ -2,134 +2,342 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93633C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C9EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 421C5206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C701206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pv6055qY"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="a4kJCHxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbgIGRqP (ORCPT
+        id S1731346AbgIGRqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:46:15 -0400
-Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:23681
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Mon, 7 Sep 2020 13:46:30 -0400
+Received: from mail-eopbgr00045.outbound.protection.outlook.com ([40.107.0.45]:34478
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729392AbgIGNPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:15:38 -0400
+        id S1729336AbgIGNKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:10:02 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OQqgnEnpmkSSOLoU94iPnRtWuKRB/xUnrRrrTiZK2v9ywY5qI/074A2G/dYnz4hVRnXR0iFikGTGcO8qGu8n3lraBURclOjKv+c1uUyT8yOAd9riVv/abucNbsTNQjlCq4s02l9ZpGYFwlhoZ8VILEk2EvrNkvsbYhrfLclNtoq9SLuzOGUFs9UUz7R9f0kKOAz+4eUxleZ787psaLxUbxZ1RGMWO3+szF8lfT2ltbrjiXHrXstGez2nw6oC+A20AZamX6y+GZ3d5yEr6/mIjmM/tSJqaDSmBIxGVlgn0M1658rO/JJ0NJG60foIZszd51jSKdRmuP2r35kAFStdPw==
+ b=NGfdZPct9XXmIpa174rn8sLLv2R4sIUZg4ObCK+J4+mfwHMuSi/NF5DLCiCBgRBv4TuyVZ9+wn7wS3S++4mSvOzM34GmDXaT68z4PWVULaa4xRzT3ZoKc2XzQuoakpf7tgAPe8CBdCF0qnJIeK0hWpvm9G0o89pjCphr07Z+owH5tYR8gCIilCWdS9erbY7cVQZuuyhsToihjLEdvSaWop20SR11GhozzfyXvkuWJi4TnPvJZ6s7p40JFQLPORpFFjz4iNxauFbbnYJ+rNV4m9SznoI7vz/zi/31U0AxpxNgFvmYKoyz9SWQFSAwIc10LDwuXwnyj8x1AzQyH7gGRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DoePcN69ivmb0SggDRYbg2M7F+yG+BSHLfiE7Hl7W6w=;
- b=W4R2RQ88KV1isL17FlmWx8jP5gcAHvHewtHEMa2IuQlp77ywWPcI3P9YEdxsqP0oIFuzGrrZruoTbPIhf108XgLh+PbE8WEkrGEgX6tTLk5qqyVgjl8PeTE2M4nnDtGrCbNhKMmB+Oydh6vkoy3qtcwkDjxiEgDQyjXg6Om/qMhZKVHiE/UPO/lh72z2gtYC3Rouv4r8V0lNJj5wCjcgr6hgx62+zZ5KhJuXVOqjD9o3RBcHw1igX8mAKXDCPIPKUOwRTREGABSp0gC2gG+e1QEdEDigttC00gJeyJ/8IUsuNnudCHy5jYIz5X4qOua1VUAVwT8ZkC4Sk9GLja3Yzg==
+ bh=5XKWjgJZTJZGvhnNQ9afqQjolLYYjpOoaukTjb0Mi9M=;
+ b=HaIPgh26JOnjyYJM+zkb8l2rGxCN/kiU32bmM71Zg508RfsIG4t9AJmw59Ow+qJM+5tis9IxRd7oGmh1N16hWMwng1k2wP53QAJ1jIRx6nD+mXdpMfzzRrVksHDwpT4oVVxST4ziV+RWpzUkV/SGDl6I57dDzmapj/U9zc4MTw4raVRn5l2Be0ZspklA9JDhr4sWa/beAWs0yaOErFJAOrM5ObAViCeKFLiJW/sXCEx4eJlRkEnGsIVodnrD2sPaEn8KxBecg89AwEKYkAKLsRnVdOXc80eS+mdkC1tdao8hzeFVXt7DCu4VPcfh1ztRIab5laNRuJBju6hUjGnYBg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DoePcN69ivmb0SggDRYbg2M7F+yG+BSHLfiE7Hl7W6w=;
- b=pv6055qYV2mYnbgMWrQbKh2HR8WPCFhqlxkm2X/PBfjFVH2rZ5CrgIUZjvmcNA9YPi+YwaiiEEe1cuwMZtUjo71ThhB0keC9wNKKRNTiJIMs66VzudwYI1lpNYGsMsnDLBc1pBUO2TCDH5aYOCQDQyqhCDIcJ82kGFOFIifB2XU=
-Received: from AM8PR04MB7315.eurprd04.prod.outlook.com (2603:10a6:20b:1d4::7)
- by AM0PR04MB6403.eurprd04.prod.outlook.com (2603:10a6:208:16a::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 13:14:50 +0000
-Received: from AM8PR04MB7315.eurprd04.prod.outlook.com
- ([fe80::c10b:eaf9:da9a:966e]) by AM8PR04MB7315.eurprd04.prod.outlook.com
- ([fe80::c10b:eaf9:da9a:966e%7]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 13:14:50 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] net: ethernet: fec: remove redundant null check
- before clk_disable_unprepare()
-Thread-Topic: [PATCH net-next] net: ethernet: fec: remove redundant null check
- before clk_disable_unprepare()
-Thread-Index: AQHWhRWCkFkK9RfGS0CnsK1Xua9dPKldJlLA
-Date:   Mon, 7 Sep 2020 13:14:50 +0000
-Message-ID: <AM8PR04MB731542047A051973B74BBAD4FF280@AM8PR04MB7315.eurprd04.prod.outlook.com>
-References: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
-In-Reply-To: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
-Accept-Language: zh-CN, en-US
+ bh=5XKWjgJZTJZGvhnNQ9afqQjolLYYjpOoaukTjb0Mi9M=;
+ b=a4kJCHxrQX7qapgk5MUYkBKWPihfmPI6JbANVvXtIyMreMeHBBLKpxyOY//UDdcTUoLryQfkrX1si7wsamHat/4hzh2jy9jv0gntoB0tB6zxofr0eRc/dk4TiAtZt2CWQSnUOQXQ+/+U5Gizw0ijBa5UjVTJ14vzDQRPalB9Ug8=
+Authentication-Results: nxp.com; dkim=none (message not signed)
+ header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
+ (2603:10a6:800:ae::16) by VI1PR04MB7181.eurprd04.prod.outlook.com
+ (2603:10a6:800:12a::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
+ 2020 13:09:56 +0000
+Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::a508:19fb:5b7e:5607]) by VI1PR0402MB2815.eurprd04.prod.outlook.com
+ ([fe80::a508:19fb:5b7e:5607%9]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 13:09:56 +0000
+Subject: Re: [PATCH v4 07/10] vfio/fsl-mc: Add irq infrastructure for fsl-mc
+ devices
+To:     Auger Eric <eric.auger@redhat.com>, alex.williamson@redhat.com,
+        kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
+        laurentiu.tudor@nxp.com, Bharat Bhushan <Bharat.Bhushan@nxp.com>
+References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
+ <20200826093315.5279-8-diana.craciun@oss.nxp.com>
+ <9dacbfc8-32a6-54c9-ce0c-50538ee588bf@redhat.com>
+From:   Diana Craciun OSS <diana.craciun@oss.nxp.com>
+Message-ID: <a98038d7-1a37-94b6-e6e5-51ca7b68a904@oss.nxp.com>
+Date:   Mon, 7 Sep 2020 16:09:52 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <9dacbfc8-32a6-54c9-ce0c-50538ee588bf@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f5383ef1-b98d-42f7-b3ee-08d853300071
-x-ms-traffictypediagnostic: AM0PR04MB6403:
-x-microsoft-antispam-prvs: <AM0PR04MB640370E77CC7439F053EAD10FF280@AM0PR04MB6403.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:483;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZyUVeYENs573Ts9zj+nXRMmEAMlXywpTaMsjXphBP8zDDS1e5TlOEVsojK7ppVOShe0EQTBUB5fhf9CH059OAvTfPO99NFIU3W1IwSNFIwKbnmXGsN2GfdWdAe0UkT9QpBAD7Ju0GUQvsoZNdNSfq8qZ+xM8BwH8mQj9OfAfz7Z/42mpW9Vy/3IhRcz9yRLvAxm388jXnJuMCcONUti9vV3uRBpbDa3B6iKQe2bFg0qvliT4q6/tNPleoCNp1YZylhvvok5fDZcGmP6SnTuYb+5xbkpHzEbonLgBTFNvh4pPZrirpwhC4OB+Vi7s5RZz
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7315.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(7696005)(6506007)(478600001)(2906002)(26005)(5660300002)(316002)(186003)(66946007)(4744005)(76116006)(54906003)(110136005)(4326008)(66476007)(64756008)(66446008)(8936002)(66556008)(55016002)(86362001)(71200400001)(8676002)(52536014)(9686003)(83380400001)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: UbNdXXJShXprBKfOSzJLXMhpCFVP86aGqyRT3sTjMBKpcZ+iPLgQQz7resJeaqER1aGugtLm8gVSs8jYC7C9oJst1WwJBbyMDdAZJxc3oKCY8RtPsHHo42sG3g+79QtDYE6sG21CCTTg84HVtydrYVZ2JdkBhF8dLLFnHUpsL4KXpzYukY/JTtKRhDPk6Ejj738waORoANywhvAq+5o67uk2v+/Cj0V9QOUJvqPIYEbQEHW5mn4gzEnmku+TSt92J6JhqETit6UeSbZeEAKf7qOifXrz6q28zGKlczfd6ijbgqVo7UY9lDGUy9VtIYDsfPjolnKJJtxklHHD+tOKwShlregqSARfo7YpRmbu/GAV094GIejeiwf1v+ntu6XitGM8Fz7NMiRGH4Umh24vaLXAxgd9Br2BC1lIS2CrbS8fKUvEqH1aeZiG6alcMCuyX+CS1BEs8pFearpKY75tu51pSDWTP56xaUlM6jvOWN4UTjPxmv6gPO3QNyDwJAjxTjo/lCK47ohWt9oyx+28pYmCCSwEeEC2eq0a+XZEpsUUdYCfp0lWB0jCuNMA/MFQn3NW1Iq83dzZuc65ut8VwIgmkKayMbUGGR6eQBXVvGQPOzNBvpl3SHdkg00Vom+6Sn1jmwOpf0R9DtaBfciNaQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR01CA0112.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::17) To VI1PR0402MB2815.eurprd04.prod.outlook.com
+ (2603:10a6:800:ae::16)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.122] (188.27.189.94) by AM0PR01CA0112.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 13:09:55 +0000
+X-Originating-IP: [188.27.189.94]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 11e6e257-c198-4e38-3321-08d8532f50e5
+X-MS-TrafficTypeDiagnostic: VI1PR04MB7181:
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR04MB718122AFBE7240CD3B78DE4CBE280@VI1PR04MB7181.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iwMI61N59+DXhKREU+l5huCt+ZjPrOX4b1c1kKn7smgLsOA6yp0mh22A2/qTlrxL1aFdTHTEK1TM2Wrw4tU/ilFM2CHug5IL6rcwJOaRtIUlaeMDEg21SoyN/N+pd78Fn+aaZit7Ki0OVSdqEUCPR26l55qV3V9N8Jc+Az5sFZAXbAdJFZV+1V3oKsKv8n4aTkIcv9Yu1Fzg9noiWNoG8xKTloLkDEL8HiYndULnu/7yw8SdX7dSMWVlTDW07jRnKjt+qlL47GBhXONHLTf27U/LgFnannKEXrmvmVi5C9/zXY3sD0cQ+rdhiaExu4ZFkkewLSniKvjOFmEeF6GLzkJpBtJdDcDgoTYj7/K+W+5spezWwsHuHWe8tzpEEC6Y
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB2815.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(39860400002)(346002)(376002)(86362001)(66556008)(66946007)(66476007)(5660300002)(16576012)(8676002)(2616005)(4326008)(31696002)(316002)(6486002)(956004)(53546011)(16526019)(26005)(186003)(8936002)(6666004)(478600001)(52116002)(31686004)(83380400001)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: z0Njcg+ixThwwf2tB+Zhfpr3cuB323Q6GKpGipRsgPQFy3f8/DJfaGT4nOqvX8bhknA+PcAXRHjVxR26WJyzw1/e+Nwe27f6eA6jniCgTm52a++d35BY6QryYynp2fp2FDBKOMQR/SNFyQCmmwatJ5BfSteyCyUqOp5o8lvsZuUSvh50kkeuumaZ0vM254N8K5YBQssoq5jUa9KruCheqEibf6zh/AsoZAvwq+BUQ31Gbk4S2+kJVEc1NrymYSpT5PfOxTgd/Au29UDS1+OO6gp03vrisrEhy3hrXhNXIoCLwy+g41GSHajEqDsT1ePx6H4iLUkB9EphgRTsW4peRr1yJiRtobw7X163zFRmEzSzUYjWG5X1kgix1tuMhwcwrLc0zWNap4UOUFcX9PVBxzQtDGwepghm0FPSWsZp4+h2l7DUfYi1f0Y4N9pOPSbpHKX5J50VFLWiJJ99JycE9PXR1b/arH/8f3tCAAUcaUVtAYyeqx95TeFJdaXi1FwtWoTmi+2WgrETvCDJ3XG5PL+YKOXqjouVTObQeHxdeSD+QGnQfrS3wD/3fFEoEXAE1yRV5L0LwFXI4zLf9Z/V5kNnEAUVoDlIVT6zgX4q1j5eZwCxx2EGDsZuRDbIx35FyO+0RDLyxe9bER7f+90xvw==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11e6e257-c198-4e38-3321-08d8532f50e5
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB2815.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7315.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5383ef1-b98d-42f7-b3ee-08d853300071
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 13:14:50.3016
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 13:09:56.2769
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ssi9yKZqctULFfkE0pHbL7wH75cdM7EzF6TmPDNIGC44LCFSy1ttC/c7NQwtkA9YEF1jPQ+n/kANxaGQDuC0Fg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6403
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HqYO7hlrwmt5yB/jxtpz+r9M1ZWkVgP0hvZJ8KJIPmR79WPHHYcNkJYdtA/gQq8FuSv6KOYtNt+hzvvjIe/8QA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Changzhong <zhangchangzhong@huawei.com> Sent: Monday, September=
- 7, 2020 8:50 PM
-> Because clk_prepare_enable() and clk_disable_unprepare() already checked
-> NULL clock parameter, so the additional checks are unnecessary, just remo=
-ve
-> them.
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Hi Eric,
 
-Acked-by: Fugang Duan <fugang.duan@nxp.com>
-> ---
->  drivers/net/ethernet/freescale/fec_main.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c
-> b/drivers/net/ethernet/freescale/fec_main.c
-> index fb37816..c043afb 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -1960,8 +1960,7 @@ static int fec_enet_clk_enable(struct net_device
-> *ndev, bool enable)
->  		mutex_unlock(&fep->ptp_clk_mutex);
->  	}
->  failed_clk_ptp:
-> -	if (fep->clk_enet_out)
-> -		clk_disable_unprepare(fep->clk_enet_out);
-> +	clk_disable_unprepare(fep->clk_enet_out);
->=20
->  	return ret;
->  }
-> --
-> 2.9.5
+On 9/3/2020 11:15 PM, Auger Eric wrote:
+> Hi Diana,
+> 
+> On 8/26/20 11:33 AM, Diana Craciun wrote:
+>> This patch adds the skeleton for interrupt support
+>> for fsl-mc devices. The interrupts are not yet functional,
+>> the functionality will be added by subsequent patches.
+>>
+>> Signed-off-by: Bharat Bhushan <Bharat.Bhushan@nxp.com>
+>> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
+>> ---
+>>   drivers/vfio/fsl-mc/Makefile              |  2 +-
+>>   drivers/vfio/fsl-mc/vfio_fsl_mc.c         | 75 ++++++++++++++++++++++-
+>>   drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c    | 63 +++++++++++++++++++
+>>   drivers/vfio/fsl-mc/vfio_fsl_mc_private.h |  7 ++-
+>>   4 files changed, 143 insertions(+), 4 deletions(-)
+>>   create mode 100644 drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+>>
+>> diff --git a/drivers/vfio/fsl-mc/Makefile b/drivers/vfio/fsl-mc/Makefile
+>> index 0c6e5d2ddaae..cad6dbf0b735 100644
+>> --- a/drivers/vfio/fsl-mc/Makefile
+>> +++ b/drivers/vfio/fsl-mc/Makefile
+>> @@ -1,4 +1,4 @@
+>>   # SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>>   
+>> -vfio-fsl-mc-y := vfio_fsl_mc.o
+>> +vfio-fsl-mc-y := vfio_fsl_mc.o vfio_fsl_mc_intr.o
+>>   obj-$(CONFIG_VFIO_FSL_MC) += vfio-fsl-mc.o
+>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> index bbd3365e877e..42014297b484 100644
+>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
+>> @@ -209,11 +209,79 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
+>>   	}
+>>   	case VFIO_DEVICE_GET_IRQ_INFO:
+>>   	{
+>> -		return -ENOTTY;
+>> +		struct vfio_irq_info info;
+>> +
+>> +		minsz = offsetofend(struct vfio_irq_info, count);
+>> +		if (copy_from_user(&info, (void __user *)arg, minsz))
+>> +			return -EFAULT;
+>> +
+>> +		if (info.argsz < minsz)
+>> +			return -EINVAL;
+>> +
+>> +		if (info.index >= mc_dev->obj_desc.irq_count)
+>> +			return -EINVAL;
+>> +
+>> +		info.flags = VFIO_IRQ_INFO_EVENTFD;
+> shouldn't it be MASKABLE as well? I see skeletons for MASK.
+
+The skeletons for mask are not implemented. Maybe I should just remove 
+the skeletons.
+
+>> +		info.count = 1;
+>> +
+>> +		return copy_to_user((void __user *)arg, &info, minsz);
+>>   	}
+>>   	case VFIO_DEVICE_SET_IRQS:
+>>   	{
+>> -		return -ENOTTY;
+>> +		struct vfio_irq_set hdr;
+>> +		u8 *data = NULL;
+>> +		int ret = 0;
+>> +
+>> +		minsz = offsetofend(struct vfio_irq_set, count);
+>> +
+>> +		if (copy_from_user(&hdr, (void __user *)arg, minsz))
+>> +			return -EFAULT;
+>> +
+>> +		if (hdr.argsz < minsz)
+>> +			return -EINVAL;
+>> +
+>> +		if (hdr.index >= mc_dev->obj_desc.irq_count)
+>> +			return -EINVAL;
+>> +
+>> +		if (hdr.start != 0 || hdr.count > 1)
+>> +			return -EINVAL;
+>> +
+>> +		if (hdr.count == 0 &&
+>> +		    (!(hdr.flags & VFIO_IRQ_SET_DATA_NONE) ||
+>> +		    !(hdr.flags & VFIO_IRQ_SET_ACTION_TRIGGER)))
+>> +			return -EINVAL;
+>> +
+>> +		if (hdr.flags & ~(VFIO_IRQ_SET_DATA_TYPE_MASK |
+>> +				  VFIO_IRQ_SET_ACTION_TYPE_MASK))
+>> +			return -EINVAL;
+>> +
+>> +		if (!(hdr.flags & VFIO_IRQ_SET_DATA_NONE)) {
+>> +			size_t size;
+>> +
+>> +			if (hdr.flags & VFIO_IRQ_SET_DATA_BOOL)
+>> +				size = sizeof(uint8_t);
+>> +			else if (hdr.flags & VFIO_IRQ_SET_DATA_EVENTFD)
+>> +				size = sizeof(int32_t);
+>> +			else
+>> +				return -EINVAL;
+>> +
+>> +			if (hdr.argsz - minsz < hdr.count * size)
+>> +				return -EINVAL;
+>> +
+>> +			data = memdup_user((void __user *)(arg + minsz),
+>> +					   hdr.count * size);
+>> +			if (IS_ERR(data))
+>> +				return PTR_ERR(data);
+>> +		}
+> can't you reuse vfio_set_irqs_validate_and_prepare()?
+
+Yes, I think I can reuse it.
+
+>> +
+>> +		mutex_lock(&vdev->igate);
+>> +		ret = vfio_fsl_mc_set_irqs_ioctl(vdev, hdr.flags,
+>> +						 hdr.index, hdr.start,
+>> +						 hdr.count, data);
+>> +		mutex_unlock(&vdev->igate);
+>> +		kfree(data);
+>> +
+>> +		return ret;
+>>   	}
+>>   	case VFIO_DEVICE_RESET:
+>>   	{
+>> @@ -413,6 +481,8 @@ static int vfio_fsl_mc_probe(struct fsl_mc_device *mc_dev)
+>>   		return ret;
+>>   	}
+>>   
+>> +	mutex_init(&vdev->igate);
+>> +
+>>   	return ret;
+>>   }
+>>   
+>> @@ -436,6 +506,7 @@ static int vfio_fsl_mc_remove(struct fsl_mc_device *mc_dev)
+>>   	mc_dev->mc_io = NULL;
+>>   
+>>   	vfio_fsl_mc_reflck_put(vdev->reflck);
+>> +	mutex_destroy(&vdev->igate);
+>>   
+>>   	vfio_iommu_group_put(mc_dev->dev.iommu_group, dev);
+>>   
+>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+>> new file mode 100644
+>> index 000000000000..058aa97aa54a
+>> --- /dev/null
+>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_intr.c
+>> @@ -0,0 +1,63 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+>> +/*
+>> + * Copyright 2013-2016 Freescale Semiconductor Inc.
+>> + * Copyright 2019 NXP
+>> + */
+>> +
+>> +#include <linux/vfio.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/types.h>
+>> +#include <linux/eventfd.h>
+>> +#include <linux/msi.h>
+>> +
+>> +#include "linux/fsl/mc.h"
+>> +#include "vfio_fsl_mc_private.h"
+>> +
+>> +static int vfio_fsl_mc_irq_mask(struct vfio_fsl_mc_device *vdev,
+>> +				unsigned int index, unsigned int start,
+>> +				unsigned int count, u32 flags,
+>> +				void *data)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int vfio_fsl_mc_irq_unmask(struct vfio_fsl_mc_device *vdev,
+>> +				unsigned int index, unsigned int start,
+>> +				unsigned int count, u32 flags,
+>> +				void *data)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int vfio_fsl_mc_set_irq_trigger(struct vfio_fsl_mc_device *vdev,
+>> +				       unsigned int index, unsigned int start,
+>> +				       unsigned int count, u32 flags,
+>> +				       void *data)
+>> +{
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+>> +			       u32 flags, unsigned int index,
+>> +			       unsigned int start, unsigned int count,
+>> +			       void *data)
+>> +{
+>> +	int ret = -ENOTTY;
+>> +
+>> +	switch (flags & VFIO_IRQ_SET_ACTION_TYPE_MASK) {
+>> +	case VFIO_IRQ_SET_ACTION_MASK:
+>> +		ret = vfio_fsl_mc_irq_mask(vdev, index, start, count,
+>> +					   flags, data);
+>> +		break;
+>> +	case VFIO_IRQ_SET_ACTION_UNMASK:
+>> +		ret = vfio_fsl_mc_irq_unmask(vdev, index, start, count,
+>> +					     flags, data);
+>> +		break;
+>> +	case VFIO_IRQ_SET_ACTION_TRIGGER:
+>> +		ret = vfio_fsl_mc_set_irq_trigger(vdev, index, start,
+>> +						  count, flags, data);
+>> +		break;
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> index 3b85d930e060..d5b6fe891a48 100644
+>> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc_private.h
+>> @@ -34,7 +34,12 @@ struct vfio_fsl_mc_device {
+>>   	u32				num_regions;
+>>   	struct vfio_fsl_mc_region	*regions;
+>>   	struct vfio_fsl_mc_reflck   *reflck;
+>> -
+>> +	struct mutex         igate;
+>>   };
+>>   
+>> +extern int vfio_fsl_mc_set_irqs_ioctl(struct vfio_fsl_mc_device *vdev,
+>> +			       u32 flags, unsigned int index,
+>> +			       unsigned int start, unsigned int count,
+>> +			       void *data);
+>> +
+>>   #endif /* VFIO_FSL_MC_PRIVATE_H */
+>>
+> Thanks
+> 
+> Eric
+> 
+
+Regards,
+Diana
 
