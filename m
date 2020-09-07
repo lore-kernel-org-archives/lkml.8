@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DD8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3FCC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8AA52087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE952087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599503638;
-	bh=onAKa5CjT21fFPK1lJhrP23odcNpdwzPlsOxjVyUonc=;
+	s=default; t=1599503645;
+	bh=VxTPRC2Ecn8ToUITeJ8A0G6gERdgh9kacdWNQsyLjew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W+NIrT4Houz8NKR/vD9eozQxBni6LdcjrEpHQ3K+AcRCfHk/k+WJvDyjbcoiaPJeC
-	 FM//gGkNhSeF0GaEkTWyX1uzWpyGrdCPdkrq8qnHb1JzMelEDNoZHqkxJ5bPKhLbL3
-	 D1SD47gZI6uZqMLtprPHATxmgUXsYtY5NH1mhckY=
+	b=nezr4xfbDWIIElV26KC7bTI9PESGySB8NA/jQOC5Vp7KKibwht/HEtCRCxnKedjxm
+	 HODv+WeDkWbLF77zh9+iiXJz0DU4umQnetXVuwGau3aLQa/EBQE29CNdHFVDhmDk8n
+	 D1Xj1BxiqNpI0IqPfb5DCh31txCU/hpmfOKoIGjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgIGSd6 (ORCPT
+        id S1730278AbgIGSeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:33:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 14:34:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730119AbgIGSdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:33:49 -0400
+        id S1730248AbgIGSd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:33:57 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2400D2145D;
-        Mon,  7 Sep 2020 18:33:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4DCC20C09;
+        Mon,  7 Sep 2020 18:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599503628;
-        bh=onAKa5CjT21fFPK1lJhrP23odcNpdwzPlsOxjVyUonc=;
+        s=default; t=1599503637;
+        bh=VxTPRC2Ecn8ToUITeJ8A0G6gERdgh9kacdWNQsyLjew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S06H8aVS0/F1pz7jUvRUie3LfNBZUJyCHP+KAdds0FCEyQTpS3Yaaqn7qvy5lI5zd
-         CF0ofh1YF0i9A3m5uegk1lIokHyJ8K7g3kud0W1nr68qBYfl85QwXX02OWYtqriV46
-         SFDyJw5yjOu1Fs8oSjqlSzJJEpxlmyTsvY1QSljo=
+        b=OyeyUV1S2wnWVYJpF22jPEjXh43I7GUu7rTEw0tS+jHbQeydIglu/Lf+/whNSFKVU
+         OM8DbofbIF6vJXO9xc+kvTJWhDFxU58N2LTWwJvyjJ0oxMipld6ZCcTEX5yg93/phw
+         hnWM1nKpHoIgtb+fc1LC22hR//zi7sgZVWsl4wCM=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH 08/11] ARM: dts: s3c24xx: override nods by label
-Date:   Mon,  7 Sep 2020 20:33:10 +0200
-Message-Id: <20200907183313.29234-9-krzk@kernel.org>
+Subject: [PATCH 11/11] ARM: dts: s3c24xx: move fixed clocks under root node in SMDK2416
+Date:   Mon,  7 Sep 2020 20:33:13 +0200
+Message-Id: <20200907183313.29234-12-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907183313.29234-1-krzk@kernel.org>
 References: <20200907183313.29234-1-krzk@kernel.org>
@@ -62,227 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using full paths to extend or override a device tree node is error
-prone.  If there was a typo error, a new node will be created instead of
-extending the existing node.  This will lead to run-time errors that
-could be hard to detect.
+The fixed clocks are kept under dedicated 'clocks' node but this causes
+multiple dtschema warnings:
 
-A mistyped label on the other hand, will cause a dtc compile error
-(during build time).
+  clocks: $nodename:0: 'clocks' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+  clocks: #size-cells:0:0: 0 is not one of [1, 2]
+  clocks: xti@0:reg:0: [0] is too short
+  clocks: 'ranges' is a required property
+  xti@0: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/s3c2416.dtsi | 104 ++++++++++++++++-----------------
- arch/arm/boot/dts/s3c24xx.dtsi |  22 +++----
- 2 files changed, 63 insertions(+), 63 deletions(-)
+ arch/arm/boot/dts/s3c2416-smdk2416.dts | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/s3c2416.dtsi b/arch/arm/boot/dts/s3c2416.dtsi
-index 6adf64ea3ff2..d1dec9f52f69 100644
---- a/arch/arm/boot/dts/s3c2416.dtsi
-+++ b/arch/arm/boot/dts/s3c2416.dtsi
-@@ -23,49 +23,12 @@
- 		};
+diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+index 811bfdef4e9b..47626ede6fdd 100644
+--- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
++++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+@@ -17,18 +17,11 @@
+ 		reg =  <0x30000000 0x4000000>;
  	};
  
--	interrupt-controller@4a000000 {
--		compatible = "samsung,s3c2416-irq";
--	};
+-	clocks {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -
- 	clocks: clock-controller@4c000000 {
- 		compatible = "samsung,s3c2416-clock";
- 		reg = <0x4c000000 0x40>;
- 		#clock-cells = <1>;
+-		xti: xti@0 {
+-			compatible = "fixed-clock";
+-			reg = <0>;
+-			clock-frequency = <12000000>;
+-			clock-output-names = "xti";
+-			#clock-cells = <0>;
+-		};
++	xti: clock-0 {
++		compatible = "fixed-clock";
++		clock-frequency = <12000000>;
++		clock-output-names = "xti";
++		#clock-cells = <0>;
  	};
- 
--	pinctrl@56000000 {
--		compatible = "samsung,s3c2416-pinctrl";
--	};
--
--	timer@51000000 {
--		clocks = <&clocks PCLK_PWM>;
--		clock-names = "timers";
--	};
--
--	uart_0: serial@50000000 {
--		compatible = "samsung,s3c2440-uart";
--		clock-names = "uart", "clk_uart_baud2",
--				"clk_uart_baud3";
--		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
--				<&clocks SCLK_UART>;
--	};
--
--	uart_1: serial@50004000 {
--		compatible = "samsung,s3c2440-uart";
--		clock-names = "uart", "clk_uart_baud2",
--				"clk_uart_baud3";
--		clocks = <&clocks PCLK_UART1>, <&clocks PCLK_UART1>,
--				<&clocks SCLK_UART>;
--	};
--
--	uart_2: serial@50008000 {
--		compatible = "samsung,s3c2440-uart";
--		clock-names = "uart", "clk_uart_baud2",
--				"clk_uart_baud3";
--		clocks = <&clocks PCLK_UART2>, <&clocks PCLK_UART2>,
--				<&clocks SCLK_UART>;
--	};
--
- 	uart_3: serial@5000c000 {
- 		compatible = "samsung,s3c2440-uart";
- 		reg = <0x5000C000 0x4000>;
-@@ -98,22 +61,59 @@
- 				<&clocks MUX_HSMMC1>;
- 		status = "disabled";
- 	};
-+};
- 
--	watchdog: watchdog@53000000 {
--		interrupts = <1 9 27 3>;
--		clocks = <&clocks PCLK_WDT>;
--		clock-names = "watchdog";
--	};
-+&i2c {
-+	compatible = "samsung,s3c2440-i2c";
-+	clocks = <&clocks PCLK_I2C0>;
-+	clock-names = "i2c";
-+};
- 
--	rtc: rtc@57000000 {
--		compatible = "samsung,s3c2416-rtc";
--		clocks = <&clocks PCLK_RTC>;
--		clock-names = "rtc";
--	};
-+&intc {
-+	compatible = "samsung,s3c2416-irq";
-+};
- 
--	i2c@54000000 {
--		compatible = "samsung,s3c2440-i2c";
--		clocks = <&clocks PCLK_I2C0>;
--		clock-names = "i2c";
--	};
-+&pinctrl_0 {
-+	compatible = "samsung,s3c2416-pinctrl";
-+};
-+
-+&rtc {
-+	compatible = "samsung,s3c2416-rtc";
-+	clocks = <&clocks PCLK_RTC>;
-+	clock-names = "rtc";
-+};
-+
-+&timer {
-+	clocks = <&clocks PCLK_PWM>;
-+	clock-names = "timers";
-+};
-+
-+&uart_0 {
-+	compatible = "samsung,s3c2440-uart";
-+	clock-names = "uart", "clk_uart_baud2",
-+			"clk_uart_baud3";
-+	clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>,
-+			<&clocks SCLK_UART>;
-+};
-+
-+&uart_1 {
-+	compatible = "samsung,s3c2440-uart";
-+	clock-names = "uart", "clk_uart_baud2",
-+			"clk_uart_baud3";
-+	clocks = <&clocks PCLK_UART1>, <&clocks PCLK_UART1>,
-+			<&clocks SCLK_UART>;
-+};
-+
-+&uart_2 {
-+	compatible = "samsung,s3c2440-uart";
-+	clock-names = "uart", "clk_uart_baud2",
-+			"clk_uart_baud3";
-+	clocks = <&clocks PCLK_UART2>, <&clocks PCLK_UART2>,
-+			<&clocks SCLK_UART>;
-+};
-+
-+&watchdog {
-+	interrupts = <1 9 27 3>;
-+	clocks = <&clocks PCLK_WDT>;
-+	clock-names = "watchdog";
  };
-diff --git a/arch/arm/boot/dts/s3c24xx.dtsi b/arch/arm/boot/dts/s3c24xx.dtsi
-index 0d49d7680e72..80d4ce79be55 100644
---- a/arch/arm/boot/dts/s3c24xx.dtsi
-+++ b/arch/arm/boot/dts/s3c24xx.dtsi
-@@ -13,12 +13,12 @@
  
- 	aliases {
- 		pinctrl0 = &pinctrl_0;
--		serial0 = &uart0;
--		serial1 = &uart1;
--		serial2 = &uart2;
-+		serial0 = &uart_0;
-+		serial1 = &uart_1;
-+		serial2 = &uart_2;
- 	};
- 
--	intc:interrupt-controller@4a000000 {
-+	intc: interrupt-controller@4a000000 {
- 		compatible = "samsung,s3c2410-irq";
- 		reg = <0x4a000000 0x100>;
- 		interrupt-controller;
-@@ -39,49 +39,49 @@
- 		};
- 	};
- 
--	timer@51000000 {
-+	timer: timer@51000000 {
- 		compatible = "samsung,s3c2410-pwm";
- 		reg = <0x51000000 0x1000>;
- 		interrupts = <0 0 10 3>, <0 0 11 3>, <0 0 12 3>, <0 0 13 3>, <0 0 14 3>;
- 		#pwm-cells = <3>;
- 	};
- 
--	uart0: serial@50000000 {
-+	uart_0: serial@50000000 {
- 		compatible = "samsung,s3c2410-uart";
- 		reg = <0x50000000 0x4000>;
- 		interrupts = <1 28 0 4>, <1 28 1 4>;
- 		status = "disabled";
- 	};
- 
--	uart1: serial@50004000 {
-+	uart_1: serial@50004000 {
- 		compatible = "samsung,s3c2410-uart";
- 		reg = <0x50004000 0x4000>;
- 		interrupts = <1 23 3 4>, <1 23 4 4>;
- 		status = "disabled";
- 	};
- 
--	uart2: serial@50008000 {
-+	uart_2: serial@50008000 {
- 		compatible = "samsung,s3c2410-uart";
- 		reg = <0x50008000 0x4000>;
- 		interrupts = <1 15 6 4>, <1 15 7 4>;
- 		status = "disabled";
- 	};
- 
--	watchdog@53000000 {
-+	watchdog: watchdog@53000000 {
- 		compatible = "samsung,s3c2410-wdt";
- 		reg = <0x53000000 0x100>;
- 		interrupts = <0 0 9 3>;
- 		status = "disabled";
- 	};
- 
--	rtc@57000000 {
-+	rtc: rtc@57000000 {
- 		compatible = "samsung,s3c2410-rtc";
- 		reg = <0x57000000 0x100>;
- 		interrupts = <0 0 30 3>, <0 0 8 3>;
- 		status = "disabled";
- 	};
- 
--	i2c@54000000 {
-+	i2c: i2c@54000000 {
- 		compatible = "samsung,s3c2410-i2c";
- 		reg = <0x54000000 0x100>;
- 		interrupts = <0 0 27 3>;
 -- 
 2.17.1
 
