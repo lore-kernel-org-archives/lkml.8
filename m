@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE660C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE79C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C3BD208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D04C2206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbgIGRnq (ORCPT
+        id S1731474AbgIGRoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:43:46 -0400
-Received: from 8bytes.org ([81.169.241.247]:41500 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:44:24 -0400
+Received: from 8bytes.org ([81.169.241.247]:41568 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgIGNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:17:47 -0400
+        id S1729419AbgIGNRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:17:46 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id AF0E334A;
-        Mon,  7 Sep 2020 15:16:42 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id AAFB9738;
+        Mon,  7 Sep 2020 15:16:43 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 01/72] KVM: SVM: nested: Don't allocate VMCB structures on stack
-Date:   Mon,  7 Sep 2020 15:15:02 +0200
-Message-Id: <20200907131613.12703-2-joro@8bytes.org>
+Subject: [PATCH v7 03/72] KVM: SVM: Add GHCB Accessor functions
+Date:   Mon,  7 Sep 2020 15:15:04 +0200
+Message-Id: <20200907131613.12703-4-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,110 +60,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
-as these structures will become larger with future extenstions of
-SVM and thus the svm_set_nested_state() function will become a too large
-stack frame.
+Building a correct GHCB for the hypervisor requires setting valid bits
+in the GHCB. Simplify that process by providing accessor functions to
+set values and to update the valid bitmap and to check the valid bitmap
+in KVM.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kvm/svm/nested.c | 47 +++++++++++++++++++++++++++------------
- 1 file changed, 33 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/svm.h | 43 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index fb68467e6049..28036629abf8 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -1060,10 +1060,14 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	struct vmcb *hsave = svm->nested.hsave;
- 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
- 		&user_kvm_nested_state->data.svm[0];
--	struct vmcb_control_area ctl;
--	struct vmcb_save_area save;
-+	struct vmcb_control_area *ctl;
-+	struct vmcb_save_area *save;
-+	int ret;
- 	u32 cr0;
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index acac55d6f941..06e52585aed3 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -345,4 +345,47 @@ struct __attribute__ ((__packed__)) vmcb {
  
-+	BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) >
-+		     KVM_STATE_NESTED_SVM_VMCB_SIZE);
+ #define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+ 
++/* GHCB Accessor functions */
 +
- 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
- 		return -EINVAL;
- 
-@@ -1095,13 +1099,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
- 		return -EINVAL;
--	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
--		return -EFAULT;
--	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
--		return -EFAULT;
- 
--	if (!nested_vmcb_check_controls(&ctl))
--		return -EINVAL;
-+	ret  = -ENOMEM;
-+	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
-+	save = kzalloc(sizeof(*save), GFP_KERNEL);
-+	if (!ctl || !save)
-+		goto out_free;
++#define GHCB_BITMAP_IDX(field)							\
++	(offsetof(struct vmcb_save_area, field) / sizeof(u64))
 +
-+	ret = -EFAULT;
-+	if (copy_from_user(ctl, &user_vmcb->control, sizeof(*ctl)))
-+		goto out_free;
-+	if (copy_from_user(save, &user_vmcb->save, sizeof(*save)))
-+		goto out_free;
++#define DEFINE_GHCB_ACCESSORS(field)						\
++	static inline bool ghcb_##field##_is_valid(const struct ghcb *ghcb)	\
++	{									\
++		return test_bit(GHCB_BITMAP_IDX(field),				\
++				(unsigned long *)&ghcb->save.valid_bitmap);	\
++	}									\
++										\
++	static inline void ghcb_set_##field(struct ghcb *ghcb, u64 value)	\
++	{									\
++		__set_bit(GHCB_BITMAP_IDX(field),				\
++			  (unsigned long *)&ghcb->save.valid_bitmap);		\
++		ghcb->save.field = value;					\
++	}
 +
-+	ret = -EINVAL;
-+	if (!nested_vmcb_check_controls(ctl))
-+		goto out_free;
- 
- 	/*
- 	 * Processor state contains L2 state.  Check that it is
-@@ -1109,15 +1122,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 */
- 	cr0 = kvm_read_cr0(vcpu);
-         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
--                return -EINVAL;
-+		goto out_free;
- 
- 	/*
- 	 * Validate host state saved from before VMRUN (see
- 	 * nested_svm_check_permissions).
- 	 * TODO: validate reserved bits for all saved state.
- 	 */
--	if (!(save.cr0 & X86_CR0_PG))
--		return -EINVAL;
-+	if (!(save->cr0 & X86_CR0_PG))
-+		goto out_free;
- 
- 	/*
- 	 * All checks done, we can enter guest mode.  L1 control fields
-@@ -1126,15 +1139,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	 * contains saved L1 state.
- 	 */
- 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
--	hsave->save = save;
-+	hsave->save = *save;
- 
- 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
--	load_nested_vmcb_control(svm, &ctl);
-+	load_nested_vmcb_control(svm, ctl);
- 	nested_prepare_vmcb_control(svm);
- 
- out_set_gif:
- 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
--	return 0;
++DEFINE_GHCB_ACCESSORS(cpl)
++DEFINE_GHCB_ACCESSORS(rip)
++DEFINE_GHCB_ACCESSORS(rsp)
++DEFINE_GHCB_ACCESSORS(rax)
++DEFINE_GHCB_ACCESSORS(rcx)
++DEFINE_GHCB_ACCESSORS(rdx)
++DEFINE_GHCB_ACCESSORS(rbx)
++DEFINE_GHCB_ACCESSORS(rbp)
++DEFINE_GHCB_ACCESSORS(rsi)
++DEFINE_GHCB_ACCESSORS(rdi)
++DEFINE_GHCB_ACCESSORS(r8)
++DEFINE_GHCB_ACCESSORS(r9)
++DEFINE_GHCB_ACCESSORS(r10)
++DEFINE_GHCB_ACCESSORS(r11)
++DEFINE_GHCB_ACCESSORS(r12)
++DEFINE_GHCB_ACCESSORS(r13)
++DEFINE_GHCB_ACCESSORS(r14)
++DEFINE_GHCB_ACCESSORS(r15)
++DEFINE_GHCB_ACCESSORS(sw_exit_code)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_1)
++DEFINE_GHCB_ACCESSORS(sw_exit_info_2)
++DEFINE_GHCB_ACCESSORS(sw_scratch)
++DEFINE_GHCB_ACCESSORS(xcr0)
 +
-+	ret = 0;
-+out_free:
-+	kfree(save);
-+	kfree(ctl);
-+
-+	return ret;
- }
- 
- struct kvm_x86_nested_ops svm_nested_ops = {
+ #endif
 -- 
 2.28.0
 
