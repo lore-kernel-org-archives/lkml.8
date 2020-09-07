@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D0CC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5D65207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6762080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497689;
-	bh=c9OGuA9iQBB1RfYnYn4jTEzeb8UzGNCSGSp+JSD1aWo=;
+	s=default; t=1599497697;
+	bh=RLnm2/WdwBdljCPhwPl14tRBTo7Xc6Y33lXFr1ACZyE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbLIgiBb8bYoa74fOrtu5cBVdBp6Uvu+TLRqYl8JgmDrEBQF0lkeNv2Sa2uBFXlL2
-	 TChuVRQtwV7yap+w4MN7XRX1IjXxllZdxoOghq834iDiyXGVOp9fu5RG5JxeD+gZdG
-	 BEiwxwIYrCVPQSC9SfQY4XrpXn5rMLpuSjzigT1s=
+	b=EvLrMrcd3GLah+aM+Qgkxxm+gj2wYme4P3dNLHpKAstmb7Fd57odjUCYEWRRa1PuQ
+	 VHSbOZSkCnyYDGTVgZAJCpC4VZhViRHMf3fRCREWM+oHnibQcqfXgd070bGpV8wvwO
+	 0yOtRa6xhrag3MHQVrKrlRdrAy0OXPG5ZgvW7eUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731040AbgIGQyn (ORCPT
+        id S1730854AbgIGQyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:54:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:54:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729281AbgIGQeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730751AbgIGQeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 12:34:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFB121D1A;
-        Mon,  7 Sep 2020 16:34:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A0CC21D91;
+        Mon,  7 Sep 2020 16:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496461;
-        bh=c9OGuA9iQBB1RfYnYn4jTEzeb8UzGNCSGSp+JSD1aWo=;
+        s=default; t=1599496458;
+        bh=RLnm2/WdwBdljCPhwPl14tRBTo7Xc6Y33lXFr1ACZyE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x53AamPtSZxEMitwJc9P81+tcb9hKZChKud67cO8ntf/PbVkcZTmCH1kGZVqDFim6
-         6WZmpJyPo9N5Y80yKnsOu5P7FHD0G7vDLX01BAWdbycQUI423TI/rZP2hTDi4qSuXQ
-         T36ZOaUXT7WbQgQVW/gFPM0/dzJ16fJzDDeUvPBs=
+        b=WgrWmgz+m/MSAVHW/uhBzNaIGxlxZpLypb+ZX5Itdh+1MHEfGLt+B9mDFgxWQZclf
+         nwAttyyBUnbleZ+KQ6Qr4xsXqMXCbnaXh6NOzD4eRXA5rTi4BzoXQR+S2gR12L+GsG
+         9U8YLa/jv2PWn044qzuOgg9r56qD9wSMpTKtbqQ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 40/43] ALSA: hda: fix a runtime pm issue in SOF when integrated GPU is disabled
-Date:   Mon,  7 Sep 2020 12:33:26 -0400
-Message-Id: <20200907163329.1280888-40-sashal@kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 38/43] arm64/module: set trampoline section flags regardless of CONFIG_DYNAMIC_FTRACE
+Date:   Mon,  7 Sep 2020 12:33:24 -0400
+Message-Id: <20200907163329.1280888-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -64,49 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@intel.com>
+From: Jessica Yu <jeyu@kernel.org>
 
-[ Upstream commit 13774d81f38538c5fa2924bdcdfa509155480fa6 ]
+[ Upstream commit e0328feda79d9681b3e3245e6e180295550c8ee9 ]
 
-In snd_hdac_device_init pm_runtime_set_active is called to
-increase child_count in parent device. But when it is failed
-to build connection with GPU for one case that integrated
-graphic gpu is disabled, snd_hdac_ext_bus_device_exit will be
-invoked to clean up a HD-audio extended codec base device. At
-this time the child_count of parent is not decreased, which
-makes parent device can't get suspended.
+In the arm64 module linker script, the section .text.ftrace_trampoline
+is specified unconditionally regardless of whether CONFIG_DYNAMIC_FTRACE
+is enabled (this is simply due to the limitation that module linker
+scripts are not preprocessed like the vmlinux one).
 
-This patch calls pm_runtime_set_suspended to decrease child_count
-in parent device in snd_hdac_device_exit to match with
-snd_hdac_device_init. pm_runtime_set_suspended can make sure that
-it will not decrease child_count if the device is already suspended.
+Normally, for .plt and .text.ftrace_trampoline, the section flags
+present in the module binary wouldn't matter since module_frob_arch_sections()
+would assign them manually anyway. However, the arm64 module loader only
+sets the section flags for .text.ftrace_trampoline when CONFIG_DYNAMIC_FTRACE=y.
+That's only become problematic recently due to a recent change in
+binutils-2.35, where the .text.ftrace_trampoline section (along with the
+.plt section) is now marked writable and executable (WAX).
 
-Signed-off-by: Rander Wang <rander.wang@intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200902154218.1440441-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+We no longer allow writable and executable sections to be loaded due to
+commit 5c3a7db0c7ec ("module: Harden STRICT_MODULE_RWX"), so this is
+causing all modules linked with binutils-2.35 to be rejected under arm64.
+Drop the IS_ENABLED(CONFIG_DYNAMIC_FTRACE) check in module_frob_arch_sections()
+so that the section flags for .text.ftrace_trampoline get properly set to
+SHF_EXECINSTR|SHF_ALLOC, without SHF_WRITE.
+
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Link: http://lore.kernel.org/r/20200831094651.GA16385@linux-8ccs
+Link: https://lore.kernel.org/r/20200901160016.3646-1-jeyu@kernel.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_device.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/module-plts.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index c946fd8beebca..b84e12f4f8046 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -127,6 +127,8 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_init);
- void snd_hdac_device_exit(struct hdac_device *codec)
- {
- 	pm_runtime_put_noidle(&codec->dev);
-+	/* keep balance of runtime PM child_count in parent device */
-+	pm_runtime_set_suspended(&codec->dev);
- 	snd_hdac_bus_remove_device(codec->bus, codec);
- 	kfree(codec->vendor_name);
- 	kfree(codec->chip_name);
+diff --git a/arch/arm64/kernel/module-plts.c b/arch/arm64/kernel/module-plts.c
+index b182442b87a32..426018ebb7007 100644
+--- a/arch/arm64/kernel/module-plts.c
++++ b/arch/arm64/kernel/module-plts.c
+@@ -270,8 +270,7 @@ int module_frob_arch_sections(Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+ 			mod->arch.core.plt_shndx = i;
+ 		else if (!strcmp(secstrings + sechdrs[i].sh_name, ".init.plt"))
+ 			mod->arch.init.plt_shndx = i;
+-		else if (IS_ENABLED(CONFIG_DYNAMIC_FTRACE) &&
+-			 !strcmp(secstrings + sechdrs[i].sh_name,
++		else if (!strcmp(secstrings + sechdrs[i].sh_name,
+ 				 ".text.ftrace_trampoline"))
+ 			tramp = sechdrs + i;
+ 		else if (sechdrs[i].sh_type == SHT_SYMTAB)
 -- 
 2.25.1
 
