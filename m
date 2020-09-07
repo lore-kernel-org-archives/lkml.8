@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F370C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D49DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443FE21BE5
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202D321556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgIGUlG (ORCPT
+        id S1728150AbgIGUlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:41:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44514 "EHLO
+        Mon, 7 Sep 2020 16:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728081AbgIGUkx (ORCPT
+        with ESMTP id S1728073AbgIGUkx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 16:40:53 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DD2C061575;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D05C061573;
         Mon,  7 Sep 2020 13:40:51 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 797D7290D19
+        with ESMTPSA id 6F9B5285353
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 05CA448010D; Mon,  7 Sep 2020 22:40:47 +0200 (CEST)
+        id 08765480115; Mon,  7 Sep 2020 22:40:47 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
@@ -36,9 +36,9 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 1/4] dt-bindings: input: Convert rotary-encoder bindings to schema
-Date:   Mon,  7 Sep 2020 22:40:42 +0200
-Message-Id: <20200907204045.95530-2-sebastian.reichel@collabora.com>
+Subject: [PATCHv2 2/4] Input: rotary-encoder - Fix steps property reading
+Date:   Mon,  7 Sep 2020 22:40:43 +0200
+Message-Id: <20200907204045.95530-3-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907204045.95530-1-sebastian.reichel@collabora.com>
 References: <20200907204045.95530-1-sebastian.reichel@collabora.com>
@@ -49,178 +49,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert rotary-encoder bindings to YAML schema.
+The DT binding specifies 24 being used by default, but driver
+initializes to 0. The steps variable will be used for a modulo
+operation at a later step, so do not allow 0 (does not make
+sense in any case).
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- .../bindings/input/rotary-encoder.txt         |  50 ---------
- .../bindings/input/rotary-encoder.yaml        | 100 ++++++++++++++++++
- 2 files changed, 100 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/rotary-encoder.txt
- create mode 100644 Documentation/devicetree/bindings/input/rotary-encoder.yaml
+ drivers/input/misc/rotary_encoder.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-deleted file mode 100644
-index a644408b33b8..000000000000
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--Rotary encoder DT bindings
--
--Required properties:
--- gpios: a spec for at least two GPIOs to be used, most significant first
--
--Optional properties:
--- linux,axis: the input subsystem axis to map to this rotary encoder.
--  Defaults to 0 (ABS_X / REL_X)
--- rotary-encoder,steps: Number of steps in a full turnaround of the
--  encoder. Only relevant for absolute axis. Defaults to 24 which is a
--  typical value for such devices.
--- rotary-encoder,relative-axis: register a relative axis rather than an
--  absolute one. Relative axis will only generate +1/-1 events on the input
--  device, hence no steps need to be passed.
--- rotary-encoder,rollover: Automatic rollover when the rotary value becomes
--  greater than the specified steps or smaller than 0. For absolute axis only.
--- rotary-encoder,steps-per-period: Number of steps (stable states) per period.
--  The values have the following meaning:
--  1: Full-period mode (default)
--  2: Half-period mode
--  4: Quarter-period mode
--- wakeup-source: Boolean, rotary encoder can wake up the system.
--- rotary-encoder,encoding: String, the method used to encode steps.
--  Supported are "gray" (the default and more common) and "binary".
--
--Deprecated properties:
--- rotary-encoder,half-period: Makes the driver work on half-period mode.
--  This property is deprecated. Instead, a 'steps-per-period ' value should
--  be used, such as "rotary-encoder,steps-per-period = <2>".
--
--See Documentation/input/devices/rotary-encoder.rst for more information.
--
--Example:
--
--		rotary@0 {
--			compatible = "rotary-encoder";
--			gpios = <&gpio 19 1>, <&gpio 20 0>; /* GPIO19 is inverted */
--			linux,axis = <0>; /* REL_X */
--			rotary-encoder,encoding = "gray";
--			rotary-encoder,relative-axis;
--		};
--
--		rotary@1 {
--			compatible = "rotary-encoder";
--			gpios = <&gpio 21 0>, <&gpio 22 0>;
--			linux,axis = <1>; /* ABS_Y */
--			rotary-encoder,steps = <24>;
--			rotary-encoder,encoding = "binary";
--			rotary-encoder,rollover;
--		};
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.yaml b/Documentation/devicetree/bindings/input/rotary-encoder.yaml
-new file mode 100644
-index 000000000000..5b60ea86bd62
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.yaml
-@@ -0,0 +1,100 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/rotary-encoder.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic Rotary Encoder
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+description:
-+  See Documentation/input/devices/rotary-encoder.rst for more information.
-+
-+properties:
-+  compatible:
-+    const: rotary-encoder
-+
-+  gpios:
-+    minItems: 2
-+    description: GPIOs for the rotation signals, most significant first
-+
-+  linux,axis:
-+    description:
-+      The input subsystem axis to map to this rotary encoder.
-+      Defaults to (ABS_X / REL_X).
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0
-+
-+  rotary-encoder,rollover:
-+    description:
-+      Automatic rollover when the rotary value becomes greater than the
-+      specified steps or smaller than 0. For absolute axis only.
-+    type: boolean
-+
-+  rotary-encoder,steps-per-period:
-+    description: The values have the following meaning
-+      1 - Full-period mode
-+      2 - Half-period mode
-+      4 - Quarter-period mode
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [1, 2, 4]
-+    default: 1
-+
-+  wakeup-source:
-+    description: Rotary encoder can wake up the system.
-+    type: boolean
-+
-+  rotary-encoder,encoding:
-+    description:
-+      Method used to encode steps. Gray code is more common.
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: ["gray", "binary"]
-+    default: "gray"
-+
-+  rotary-encoder,half-period:
-+    description:
-+      Deprecated, use "rotary-encoder,steps-per-period = <2>" instead.
-+    type: boolean
-+    deprecated: True
-+
-+  rotary-encoder,steps:
-+    description:
-+      Number of steps in a full turnaround of the encoder. Only relevant
-+      for absolute axis. Defaults to 24 which is a typical value for such
-+      devices.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 24
-+
-+  rotary-encoder,relative-axis:
-+    description:
-+      register a relative axis rather than an absolute one. Relative axis
-+      will only generate +1/-1 events on the input device, hence no steps
-+      need to be passed.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include "dt-bindings/gpio/gpio.h"
-+    #include "dt-bindings/input/input.h"
-+    rotary-encoder0 {
-+            compatible = "rotary-encoder";
-+            gpios = <&gpio 19 GPIO_ACTIVE_LOW>, <&gpio 20 GPIO_ACTIVE_HIGH>;
-+            linux,axis = <REL_X>;
-+            rotary-encoder,encoding = "gray";
-+            rotary-encoder,relative-axis;
-+    };
-+    rotary-encoder1 {
-+            compatible = "rotary-encoder";
-+            gpios = <&gpio 21 GPIO_ACTIVE_HIGH>, <&gpio 22 GPIO_ACTIVE_HIGH>;
-+            linux,axis = <ABS_Y>;
-+            rotary-encoder,encoding = "binary";
-+            rotary-encoder,rollover;
-+    };
+diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
+index 6d613f2a017c..e9a5dbb10513 100644
+--- a/drivers/input/misc/rotary_encoder.c
++++ b/drivers/input/misc/rotary_encoder.c
+@@ -198,7 +198,12 @@ static int rotary_encoder_probe(struct platform_device *pdev)
+ 
+ 	mutex_init(&encoder->access_mutex);
+ 
++	encoder->steps = 24;
+ 	device_property_read_u32(dev, "rotary-encoder,steps", &encoder->steps);
++	if (!encoder->steps) {
++		dev_err(dev, "invalid steps setting\n");
++		return -EINVAL;
++	}
+ 
+ 	err = device_property_read_u32(dev, "rotary-encoder,steps-per-period",
+ 				       &steps_per_period);
 -- 
 2.28.0
 
