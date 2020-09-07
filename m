@@ -2,73 +2,82 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B69C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9311BC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED60F208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5997D20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgIGIs5 (ORCPT
+        id S1728304AbgIGIte convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:48:57 -0400
-Received: from mail-oo1-f68.google.com ([209.85.161.68]:38836 "EHLO
-        mail-oo1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbgIGIsz (ORCPT
+        Mon, 7 Sep 2020 04:49:34 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26253 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728272AbgIGItc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:48:55 -0400
-Received: by mail-oo1-f68.google.com with SMTP id r10so1667625oor.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 01:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=on9KmRH6DMVHO9fHrpOEj4xnTOOHT8S0iERDSyzY9js=;
-        b=Xc0KnnOfxLmkZ4Kw3X8NnSaSXrLHRG7zXuKQZG5dHcUxKc25zOIVQUia+gfsTunV/W
-         vhk46lXXNFTphHcn7Y7dVY8AUXQefPHZSFF+Zn9m2jsynbx9XjUw33IdLre/+ic1pCwQ
-         JA/L+ERWgnN3aJSqMtqhNNYPhVWSdluigEIw4y8xiwUgJQCawJnpSCCZgGPfe1y4nu5/
-         kQ45639xdMM4ijaORNPV+uyjSy57wmlywvTBifJxIHbxklPme5wfRqsEC82y6EavoNP4
-         GjzyvHpkYsE0Q6SOv/F7pZILkWZwq5ZUAMhJtonqfhxPP5T+1EGnBCWIuPL3tLvTD8Bo
-         upYg==
-X-Gm-Message-State: AOAM532wE9iw6IS0ha1fpytvt73k/vZn0gSIvAtt8/R+rQjC4wJGNAsO
-        CiXBCx9Hv7T+8TdU9i7kl7wpbnIhhYHyfj+KXdDJJAqxhgw=
-X-Google-Smtp-Source: ABdhPJz1aOVXyCVRgUTI6L8X21Ho1uD/s+my3a/lNoe1APa1MVqzndeSETpGkqzwMTfGrSFSEzgf6g8P42wdA5W3lz8=
-X-Received: by 2002:a4a:da4e:: with SMTP id f14mr14285911oou.40.1599468534657;
- Mon, 07 Sep 2020 01:48:54 -0700 (PDT)
+        Mon, 7 Sep 2020 04:49:32 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-35-5zmwIGe8NUucU3bez4pxOg-1; Mon, 07 Sep 2020 09:49:28 +0100
+X-MC-Unique: 5zmwIGe8NUucU3bez4pxOg-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 7 Sep 2020 09:49:28 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 7 Sep 2020 09:49:28 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Using asm_volatile_goto for get_user()
+Thread-Topic: Using asm_volatile_goto for get_user()
+Thread-Index: AdaE8q1aQOesIAbfTka1rFFrCf3mnA==
+Date:   Mon, 7 Sep 2020 08:49:27 +0000
+Message-ID: <39a56b046b104566922dd0d0ce7f794a@AcuMS.aculab.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20200826130103.25381-1-geert@linux-m68k.org>
-In-Reply-To: <20200826130103.25381-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Sep 2020 10:48:43 +0200
-Message-ID: <CAMuHMdWzzWBhdsDVgQR11vmQufj+dwi7SLvmrNrLEf74qVrbgQ@mail.gmail.com>
-Subject: Re: [PATCH] m68k: mm: Use PAGE_ALIGNED() helper
-To:     linux-m68k <linux-m68k@lists.linux-m68k.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 3:01 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Use the existing PAGE_ALIGNED() helper instead of open-coding the same
-> operation.
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+I had an idea that might let 'asm_volatile_goto' be used for
+get_user() even though gcc doesn't allow outputs.
 
-Thanks, queueing in the m68k for-v5.10 branch.
+What if (eg) 'register eax asm ("eax") is used for the
+output and (probably) given in the 'clobber' list.
 
-Gr{oetje,eeting}s,
+Such variables are usually used to get explicit registers
+used when there is no suitable constraint.
+I don't see why it shouldn't work for 'asm goto' as well
+as just 'asm'.
 
-                        Geert
+While this forces the read value into a specific register
+that probably doesn't make much difference to the code.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+	David
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
