@@ -2,294 +2,170 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5647AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E2FC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAB62080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHU9kBGO"
+	by mail.kernel.org (Postfix) with ESMTP id 0C57521775
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgIGQcC (ORCPT
+        id S1729543AbgIGQcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41918 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729748AbgIGOWD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:15 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:3285 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729797AbgIGOWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 10:22:03 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DB8C061795
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 07:21:36 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id n25so5417295ljj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 07:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BIw9xe+LuyILTEIl1MT4esh/VJREnfS5b/q2dSYvFyA=;
-        b=AHU9kBGOz4UTopqSe0MoQzCNlxZF7psWWAbHDXLOqCekd+0vrlXJWTFAR3eJRnCKjc
-         DEpeXR3Tw4PUFDSW1bSyYarpC8r5wm04hB+h9Y6MAtBfpS9WMb/unud/Q2fXISJH7uah
-         DxL5ploKwR/eXWmMhNwsIpGLJONxjmHRx8FFw2CJUpxskchjmxIyHx3n4ITbR8KbVBIb
-         S9H9TAofn2zjchG2Z4jNv0SuILRT6aGkvx72Xh/KFLL4sHxd0h9S8l3swqFfsFMl8kJD
-         iUUa2LOjlB1bx+dTEK6CdV5j7T740ZS8NESxiPOEdyoiKTyA3SSvqhtKGksyqtANk3DX
-         JkKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BIw9xe+LuyILTEIl1MT4esh/VJREnfS5b/q2dSYvFyA=;
-        b=K5B+ZtgUAHSbiPH9g0905ziEpjTk1tHzpmJY5li/DuniOj0io4fhJ1UefdwwuWXZhj
-         MG3+5BbYgAlmd4di24RMCJz2jdPDyu8BjNv6YE7O+o5o+OTXfi24WgQg6kqtX/PeGAGj
-         kct2bCAdH5EA1OAV0HhviBGSQEEklZHjwdcNNDR2pxcjW3GwURQKwI/Ibf6AWPxtfcu9
-         Ea54Y80fWspQGfch+vfnpbMoTHJhBVH+fD8RvkATEFqgZO1vvgXdzsI65tXJ9yBRSVbW
-         PJMDJxvVwdsoMtpxgbweLgLEErDgLsjGy4WiFDc5r7VqvlZWKFcDFqMbdhGOvhj7K1+w
-         mQ/Q==
-X-Gm-Message-State: AOAM5330Bl5fpUQjcg/cWrwIiHAxKVAdWKUr1Yf1GAJeWgqvOwgy0feS
-        yvx05+IjjgPr/bhFJKwBPMI=
-X-Google-Smtp-Source: ABdhPJy3Wss14CvPUjoxWXYr/WXTEfQSvOceB8jCEW7maApDcqK1QyxKr8rf74TjirfT8B+jZOYr9w==
-X-Received: by 2002:a2e:b704:: with SMTP id j4mr7549682ljo.329.1599488494730;
-        Mon, 07 Sep 2020 07:21:34 -0700 (PDT)
-Received: from pc636 (h5ef52e31.seluork.dyn.perspektivbredband.net. [94.245.46.49])
-        by smtp.gmail.com with ESMTPSA id 25sm7242182ljn.120.2020.09.07.07.21.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 07:21:34 -0700 (PDT)
-From:   Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date:   Mon, 7 Sep 2020 16:21:31 +0200
-To:     "Isaac J. Manjarres" <isaacm@codeaurora.org>
-Cc:     "Isaac J. Manjarres" <isaacm@codeaurora.org>,
-        linux-mm.kvack.org@wittgenstein, linux-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, mingo@kernel.org, peterz@infradead.org,
-        ebiederm@xmission.com, esyr@redhat.com, tglx@linutronix.de,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, psodagud@codeaurora.org, pratikp@codeaurora.org
-Subject: Re: [RFC PATCH] fork: Free per-cpu cached vmalloc'ed thread stacks
- with
-Message-ID: <20200907142131.GA16844@pc636>
-References: <010101745b9b7825-f4d1db4b-83fb-450e-9391-82aad77a1bd6-000000@us-west-2.amazonses.com>
- <20200907084538.qz5g4mikznwxr67g@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907084538.qz5g4mikznwxr67g@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BlTwZ0gQ1z9tyLs;
+        Mon,  7 Sep 2020 15:42:06 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id r1NoAQYlxdyc; Mon,  7 Sep 2020 15:42:06 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BlTwY6QQlz9tyLn;
+        Mon,  7 Sep 2020 15:42:05 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 57B798B77F;
+        Mon,  7 Sep 2020 15:42:11 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id ZCPvErvMyktz; Mon,  7 Sep 2020 15:42:11 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EEC5E8B79D;
+        Mon,  7 Sep 2020 15:42:10 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id DBD32656F8; Mon,  7 Sep 2020 13:42:10 +0000 (UTC)
+Message-Id: <8f85e8752ac5af602db7237ef53d634f4f3d3892.1599486108.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <a027d447022a006c9c4958ac734128e577a3c5c1.1599486108.git.christophe.leroy@csgroup.eu>
+References: <a027d447022a006c9c4958ac734128e577a3c5c1.1599486108.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH 2/2] powerpc/32: Fix vmap stack - Properly set r1 before
+ activating MMU
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  7 Sep 2020 13:42:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 10:45:38AM +0200, Christian Brauner wrote:
-> On Sat, Sep 05, 2020 at 12:12:29AM +0000, Isaac J. Manjarres wrote:
-> > The per-cpu cached vmalloc'ed stacks are currently freed in the
-> > CPU hotplug teardown path by the free_vm_stack_cache() callback,
-> > which invokes vfree(), which may result in purging the list of
-> > lazily freed vmap areas.
-> > 
-> > Purging all of the lazily freed vmap areas can take a long time
-> > when the list of vmap areas is large. This is problematic, as
-> > free_vm_stack_cache() is invoked prior to the offline CPU's timers
-> > being migrated. This is not desirable as it can lead to timer
-> > migration delays in the CPU hotplug teardown path, and timer callbacks
-> > will be invoked long after the timer has expired.
-> > 
-> > For example, on a system that has only one online CPU (CPU 1) that is
-> > running a heavy workload, and another CPU that is being offlined,
-> > the online CPU will invoke free_vm_stack_cache() to free the cached
-> > vmalloc'ed stacks for the CPU being offlined. When there are 2702
-> > vmap areas that total to 13498 pages, free_vm_stack_cache() takes
-> > over 2 seconds to execute:
-> > 
-> > [001]   399.335808: cpuhp_enter: cpu: 0005 target:   0 step:  67 (free_vm_stack_cache)
-> > 
-> > /* The first vmap area to be freed */
-> > [001]   399.337157: __purge_vmap_area_lazy: [0:2702] 0xffffffc033da8000 - 0xffffffc033dad000 (5 : 13498)
-> > 
-> > /* After two seconds */
-> > [001]   401.528010: __purge_vmap_area_lazy: [1563:2702] 0xffffffc02fe10000 - 0xffffffc02fe15000 (5 : 5765)
-> > 
-> > Instead of freeing the per-cpu cached vmalloc'ed stacks synchronously
-> > with respect to the CPU hotplug teardown state machine, free them
-> > asynchronously to help move along the CPU hotplug teardown state machine
-> > quickly.
-> > 
-> > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> > ---
-> 
-> This needs reviews and acks from the good folks over at mm/.
-> 
-> >  kernel/fork.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 4d32190..68346a0 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -202,7 +202,7 @@ static int free_vm_stack_cache(unsigned int cpu)
-> >  		if (!vm_stack)
-> >  			continue;
-> >  
-> > -		vfree(vm_stack->addr);
-> > +		vfree_atomic(vm_stack->addr);
-> >  		cached_vm_stacks[i] = NULL;
-> >  	}
-> >  
-Could you please also test below patch?
+We need r1 to be properly set before activating MMU, otherwise any new
+exception taken while saving registers into the stack in exception
+prologs will use the user stack, which is wrong and will even lockup
+or crash when KUAP is selected.
 
-<snip>
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index be4724b916b3..cef7a9768f01 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -419,6 +419,10 @@ static LLIST_HEAD(vmap_purge_list);
- static struct rb_root vmap_area_root = RB_ROOT;
- static bool vmap_initialized __read_mostly;
+Do that by switching the meaning of r11 and r1 until we have saved r1
+to the stack: copy r1 into r11 and setup the new stack pointer in r1.
+To avoid complicating and impacting all generic and specific prolog
+code (and more), copy back r1 into r11 once r11 is save onto
+the stack.
 
-+static struct rb_root purge_vmap_area_root = RB_ROOT;
-+static LIST_HEAD(purge_vmap_area_list);
-+static DEFINE_SPINLOCK(purge_vmap_area_lock);
-+
- /*
-  * This kmem_cache is used for vmap_area objects. Instead of
-  * allocating from slab we reuse an object from this cache to
-@@ -743,7 +747,8 @@ insert_vmap_area_augment(struct vmap_area *va,
-  */
- static __always_inline struct vmap_area *
- merge_or_add_vmap_area(struct vmap_area *va,
--       struct rb_root *root, struct list_head *head)
-+       struct rb_root *root, struct list_head *head,
-+       bool update)
- {
-        struct vmap_area *sibling;
-        struct list_head *next;
-@@ -825,7 +830,9 @@ merge_or_add_vmap_area(struct vmap_area *va,
-        /*
-         * Last step is to check and update the tree.
-         */
--       augment_tree_propagate_from(va);
-+       if (update)
-+               augment_tree_propagate_from(va);
-+
-        return va;
- }
+We could get rid of copying r1 back and forth at the cost of
+rewriting everything to use r1 instead of r11 all the way when
+CONFIG_VMAP_STACK is set, but the effort is probably not worth it.
 
-@@ -1140,7 +1147,7 @@ static void free_vmap_area(struct vmap_area *va)
-         * Insert/Merge it back to the free tree/list.
-         */
-        spin_lock(&free_vmap_area_lock);
--       merge_or_add_vmap_area(va, &free_vmap_area_root, &free_vmap_area_list);
-+       merge_or_add_vmap_area(va, &free_vmap_area_root, &free_vmap_area_list, true);
-        spin_unlock(&free_vmap_area_lock);
- }
- 
-@@ -1328,32 +1335,33 @@ void set_iounmap_nonlazy(void)
- static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- {
-        unsigned long resched_threshold;
--       struct llist_node *valist;
--       struct vmap_area *va;
--       struct vmap_area *n_va;
-+       struct list_head local_pure_list;
-+       struct vmap_area *va, *n_va;
- 
-        lockdep_assert_held(&vmap_purge_lock);
- 
--       valist = llist_del_all(&vmap_purge_list);
--       if (unlikely(valist == NULL))
-+       spin_lock(&purge_vmap_area_lock);
-+       purge_vmap_area_root = RB_ROOT;
-+       list_replace_init(&purge_vmap_area_list, &local_pure_list);
-+       spin_unlock(&purge_vmap_area_lock);
-+
-+       if (unlikely(list_empty(&local_pure_list)))
-                return false;
+Fixes: 028474876f47 ("powerpc/32: prepare for CONFIG_VMAP_STACK")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/head_32.h | 43 +++++++++++++++++++++++------------
+ 1 file changed, 29 insertions(+), 14 deletions(-)
 
--       /*
--        * TODO: to calculate a flush range without looping.
--        * The list can be up to lazy_max_pages() elements.
--        */
--       llist_for_each_entry(va, valist, purge_list) {
--               if (va->va_start < start)
--                       start = va->va_start;
--               if (va->va_end > end)
--                       end = va->va_end;
--       }
-+
-+       start = min(start,
-+                       list_first_entry(&local_pure_list,
-+                               struct vmap_area, list)->va_start);
-+
-+       end = max(end,
-+                       list_last_entry(&local_pure_list,
-+                               struct vmap_area, list)->va_end);
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 21effebb9277..cc36998c5541 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -39,15 +39,24 @@
+ .endm
  
-        flush_tlb_kernel_range(start, end);
-        resched_threshold = lazy_max_pages() << 1;
- 
-        spin_lock(&free_vmap_area_lock);
--       llist_for_each_entry_safe(va, n_va, valist, purge_list) {
-+       list_for_each_entry_safe(va, n_va, &local_pure_list, list) {
-                unsigned long nr = (va->va_end - va->va_start) >> PAGE_SHIFT;
-                unsigned long orig_start = va->va_start;
-                unsigned long orig_end = va->va_end;
-@@ -1364,7 +1372,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
-                 * anything.
-                 */
-                va = merge_or_add_vmap_area(va, &free_vmap_area_root,
--                                           &free_vmap_area_list);
-+                               &free_vmap_area_list, true);
- 
-                if (!va)
-                        continue;
-@@ -1421,9 +1429,19 @@ static void free_vmap_area_noflush(struct vmap_area *va)
-        nr_lazy = atomic_long_add_return((va->va_end - va->va_start) >>
-                                PAGE_SHIFT, &vmap_lazy_nr);
- 
--       /* After this point, we may free va at any time */
--       llist_add(&va->purge_list, &vmap_purge_list);
-+       /*
-+        * But this time the node has been removed from the busy
-+        * data structures therefore, merge or place it to the purge
-+        * tree/list.
-+        */
-+       spin_lock(&purge_vmap_area_lock);
-+       merge_or_add_vmap_area(va,
-+               &purge_vmap_area_root, &purge_vmap_area_list, false);
-+       spin_unlock(&purge_vmap_area_lock);
- 
-+       /*
-+        * After this point, we may free va at any time.
-+        */
-        if (unlikely(nr_lazy > lazy_max_pages()))
-                try_purge_vmap_area_lazy();
- }
-@@ -3352,7 +3370,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-                orig_start = vas[area]->va_start;
-                orig_end = vas[area]->va_end;
-                va = merge_or_add_vmap_area(vas[area], &free_vmap_area_root,
--                                           &free_vmap_area_list);
-+                               &free_vmap_area_list, true);
-                if (va)
-                        kasan_release_vmalloc(orig_start, orig_end,
-                                va->va_start, va->va_end);
-@@ -3402,7 +3420,7 @@ struct vm_struct **pcpu_get_vm_areas(const unsigned long *offsets,
-                orig_start = vas[area]->va_start;
-                orig_end = vas[area]->va_end;
-                va = merge_or_add_vmap_area(vas[area], &free_vmap_area_root,
--                                           &free_vmap_area_list);
-+                               &free_vmap_area_list, true);
-                if (va)
-                        kasan_release_vmalloc(orig_start, orig_end,
-                                va->va_start, va->va_end);
-<snip>
+ .macro EXCEPTION_PROLOG_1 for_rtas=0
++#ifdef CONFIG_VMAP_STACK
++	mr	r11, r1
++	subi	r1, r1, INT_FRAME_SIZE		/* use r1 if kernel */
++	beq	1f
++	mfspr	r1,SPRN_SPRG_THREAD
++	lwz	r1,TASK_STACK-THREAD(r1)
++	addi	r1, r1, THREAD_SIZE - INT_FRAME_SIZE
++#else
+ 	subi	r11, r1, INT_FRAME_SIZE		/* use r1 if kernel */
+ 	beq	1f
+ 	mfspr	r11,SPRN_SPRG_THREAD
+ 	lwz	r11,TASK_STACK-THREAD(r11)
+ 	addi	r11, r11, THREAD_SIZE - INT_FRAME_SIZE
++#endif
+ 1:
+ 	tophys_novmstack r11, r11
+ #ifdef CONFIG_VMAP_STACK
+-	mtcrf	0x7f, r11
++	mtcrf	0x7f, r1
+ 	bt	32 - THREAD_ALIGN_SHIFT, stack_overflow
+ #endif
+ .endm
+@@ -62,6 +71,15 @@
+ 	stw	r10,_CCR(r11)		/* save registers */
+ #endif
+ 	mfspr	r10, SPRN_SPRG_SCRATCH0
++#ifdef CONFIG_VMAP_STACK
++	stw	r11,GPR1(r1)
++	stw	r11,0(r1)
++	mr	r11, r1
++#else
++	stw	r1,GPR1(r11)
++	stw	r1,0(r11)
++	tovirt(r1, r11)		/* set new kernel sp */
++#endif
+ 	stw	r12,GPR12(r11)
+ 	stw	r9,GPR9(r11)
+ 	stw	r10,GPR10(r11)
+@@ -89,9 +107,6 @@
+ 	mfspr	r12,SPRN_SRR0
+ 	mfspr	r9,SPRN_SRR1
+ #endif
+-	stw	r1,GPR1(r11)
+-	stw	r1,0(r11)
+-	tovirt_novmstack r1, r11	/* set new kernel sp */
+ #ifdef CONFIG_40x
+ 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
+ #else
+@@ -309,19 +324,19 @@
+ .macro vmap_stack_overflow_exception
+ #ifdef CONFIG_VMAP_STACK
+ #ifdef CONFIG_SMP
+-	mfspr	r11, SPRN_SPRG_THREAD
+-	lwz	r11, TASK_CPU - THREAD(r11)
+-	slwi	r11, r11, 3
+-	addis	r11, r11, emergency_ctx@ha
++	mfspr	r1, SPRN_SPRG_THREAD
++	lwz	r1, TASK_CPU - THREAD(r1)
++	slwi	r1, r1, 3
++	addis	r1, r1, emergency_ctx@ha
+ #else
+-	lis	r11, emergency_ctx@ha
++	lis	r1, emergency_ctx@ha
+ #endif
+-	lwz	r11, emergency_ctx@l(r11)
+-	cmpwi	cr1, r11, 0
++	lwz	r1, emergency_ctx@l(r1)
++	cmpwi	cr1, r1, 0
+ 	bne	cr1, 1f
+-	lis	r11, init_thread_union@ha
+-	addi	r11, r11, init_thread_union@l
+-1:	addi	r11, r11, THREAD_SIZE - INT_FRAME_SIZE
++	lis	r1, init_thread_union@ha
++	addi	r1, r1, init_thread_union@l
++1:	addi	r1, r1, THREAD_SIZE - INT_FRAME_SIZE
+ 	EXCEPTION_PROLOG_2
+ 	SAVE_NVGPRS(r11)
+ 	addi	r3, r1, STACK_FRAME_OVERHEAD
+-- 
+2.25.0
 
-Thank you!
-
---
-Vlad Rezki
