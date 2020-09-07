@@ -2,95 +2,134 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ACAC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8DBC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3357207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3532E207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FQEYfq0g";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="WOkohfLw"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="baX7fTKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgIGQSZ (ORCPT
+        id S1730338AbgIGQSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:18:25 -0400
-Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:58404
-        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730394AbgIGQR5 (ORCPT
+        Mon, 7 Sep 2020 12:18:20 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:38690 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730363AbgIGQR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 12:17:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599495477;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=fHmkMsSqCrU8zIQPY0mHmkrXR5chyuKH+CWAaoIweHQ=;
-        b=FQEYfq0gGffYY1Ec74e0ofLEgX0B1+/OhdhLfZ1pOWI0arQqmparOJjzooQFj+MP
-        Cx0yb3XNuMgMg4Tt0xIUAPAilzrxx/2Mdfjdp4tAUtvFO364eKXLA6NffVvaKSzySHd
-        b7sjvbGhQEWZ3HoEDadH9imPa0w4WW2gjTCgq5Bc=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599495477;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=fHmkMsSqCrU8zIQPY0mHmkrXR5chyuKH+CWAaoIweHQ=;
-        b=WOkohfLwII1vMzCj+g8XljGkk2sP0NCv1ZRQAwswfrzcrH9JyvEY9iJYDKojWqCl
-        gBSDW7nF6JbnxfGsyRHhqkswqrJwnTCTr8qKPNVIDiFrxZ1b2xtSI4E+3BM6qX6yYVQ
-        JAyykVCvPAv1YGPx3qmqCtQwtii7Ie1/+FxkmPNo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 999ABC38689
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Rakesh Pillai" <pillair@codeaurora.org>
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
-References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>
-        <87y2ls4lbf.fsf@codeaurora.org>
-        <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com>
-Date:   Mon, 7 Sep 2020 16:17:57 +0000
-In-Reply-To: <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com>
-        (Rakesh Pillai's message of "Fri, 4 Sep 2020 16:40:41 +0000")
-Message-ID: <01010174695c181a-6f8e9efc-bbc9-45ff-8d54-62db5e0163f6-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 216E53E;
+        Mon,  7 Sep 2020 18:17:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1599495457;
+        bh=oUXDtmb/aWHYuEDGLK0yDkObyVcA366/VIqlbIpXLAU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=baX7fTKt2b1L58jlqgWnPkjrSCV4QUur25+tDNBEhpeS/yHIOAtaoMaP5TYK3iPOn
+         tlKrBYyt6uPAAc7XB2q22S/1zK4pdAvWU214gn4lydYNPzdXM98PmEKykc0sQe24I4
+         04Q289KjDUzKdloEpOiGT2uAfSno8ceF8330AaN0=
+Date:   Mon, 7 Sep 2020 19:17:12 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     marex@denx.de, airlied@linux.ie, daniel@ffwll.ch,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm: mxsfb: check framebuffer pitch
+Message-ID: <20200907161712.GF6047@pendragon.ideasonboard.com>
+References: <20200907160343.124405-1-stefan@agner.ch>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2020.09.07-54.240.27.185
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907160343.124405-1-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Rakesh Pillai" <pillair@codeaurora.org> writes:
+Hi Stefan,
 
->> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
->> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
->> > @@ -576,6 +576,8 @@ static int ath10k_qmi_cap_send_sync_msg(struct
->> ath10k_qmi *qmi)
->> >  	if (resp->chip_info_valid) {
->> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
->> >  		qmi->chip_info.chip_family = resp->chip_info.chip_family;
->> > +	} else {
->> > +		qmi->chip_info.chip_id = 0xFF;
->> >  	}
->> 
->> So you hard code chip_id to 0xff if it's not valid. Is it 100%
->> guaranteed that there never will be a chip id with 0xff?
->
-> 0x0 and 0xff are invalid chip id and are are not used.
-> If the chip_id read fails, we fallback to the default board data.
-> 0xff is used to go to the default board data (Also this is in alignment with
-> the current implementation of board_id)
->
-> Does that make sense ?
+Thank you for the patch.
 
-I'm a bit hesitant, over the years I have seen cases so many cases where
-"foo is not used anywhere" and later that foo is actually used
-somewhere. 0xff means that there's only 254 different values, but I
-guess there are not that many chip ids? So a chip id is very different
-from a board id, right?
+On Mon, Sep 07, 2020 at 06:03:43PM +0200, Stefan Agner wrote:
+> The lcdif IP does not support a framebuffer pitch (stride) other than
+> the CRTC width. Check for equality and reject the state otherwise.
+> 
+> This prevents a distorted picture when using 640x800 and running the
+> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
+
+s/tires/tries/
+
+> leads at that particular resolution to width != stride. Currently
+> Mesa has no fallback behavior, but rejecting this configuration allows
+> userspace to handle the issue correctly.
+
+I'm increasingly impressed by how featureful this IP core is :-)
+
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_kms.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_kms.c b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+> index b721b8b262ce..79aa14027f91 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
+> @@ -403,14 +403,28 @@ static int mxsfb_plane_atomic_check(struct drm_plane *plane,
+>  {
+>  	struct mxsfb_drm_private *mxsfb = to_mxsfb_drm_private(plane->dev);
+>  	struct drm_crtc_state *crtc_state;
+> +	unsigned int pitch;
+> +	int ret;
+>  
+>  	crtc_state = drm_atomic_get_new_crtc_state(plane_state->state,
+>  						   &mxsfb->crtc);
+>  
+> -	return drm_atomic_helper_check_plane_state(plane_state, crtc_state,
+> -						   DRM_PLANE_HELPER_NO_SCALING,
+> -						   DRM_PLANE_HELPER_NO_SCALING,
+> -						   false, true);
+> +	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
+> +						  DRM_PLANE_HELPER_NO_SCALING,
+> +						  DRM_PLANE_HELPER_NO_SCALING,
+> +						  false, true);
+> +	if (ret || !plane_state->visible)
+
+Would it be more explict to check for !plane_state->fb ? Otherwise I'll
+have to verify that !fb always implies !visible :-)
+
+> +		return ret;
+> +
+> +	pitch = crtc_state->mode.hdisplay *
+> +		plane_state->fb->format->cpp[0];
+
+This holds on a single line.
+
+> +	if (plane_state->fb->pitches[0] != pitch) {
+> +		dev_err(plane->dev->dev,
+> +			"Invalid pitch: fb and crtc widths must be the same");
+
+I'd turn this into a dev_dbg(), printing error messages to the kernel
+log in response to user-triggered conditions is a bit too verbose and
+could flood the log.
+
+Wouldn't it be best to catch this issue when creating the framebuffer ?
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static void mxsfb_plane_primary_atomic_update(struct drm_plane *plane,
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards,
+
+Laurent Pinchart
