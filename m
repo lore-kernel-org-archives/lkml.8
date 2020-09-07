@@ -2,88 +2,104 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35FE7C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB47C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEA60207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB0C20709
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgIGKO6 (ORCPT
+        id S1728505AbgIGKPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:14:58 -0400
-Received: from foss.arm.com ([217.140.110.172]:59700 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgIGKOz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:14:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40919D6E;
-        Mon,  7 Sep 2020 03:14:55 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 448E63F66E;
-        Mon,  7 Sep 2020 03:14:53 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 11:14:50 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH 0/5] Add PCIe EP nodes on RZ/G2[EMN]
-Message-ID: <20200907101450.GG6428@e121166-lin.cambridge.arm.com>
-References: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 7 Sep 2020 06:15:30 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59694 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbgIGKP1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:15:27 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kFEBG-0005Rk-Rm; Mon, 07 Sep 2020 10:15:22 +0000
+Date:   Mon, 7 Sep 2020 12:15:22 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>
+Cc:     luto@kernel.org, tglx@linutronix.de, keescook@chromium.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, willy@infradead.org,
+        linux-kselftest@vger.kernel.org, shuah@kernel.org,
+        kernel@collabora.com
+Subject: Re: [PATCH v6 6/9] kernel: entry: Support Syscall User Dispatch for
+ common syscall entry
+Message-ID: <20200907101522.zo6qzgp4qfzkz7cs@wittgenstein>
+References: <20200904203147.2908430-1-krisman@collabora.com>
+ <20200904203147.2908430-7-krisman@collabora.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200814173037.17822-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200904203147.2908430-7-krisman@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 06:30:32PM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch series adds support for PCIe EP nodes to Renesas r8a774a1,
-> r8a774b1 and r8a774c0 SoC's.
-> 
-> Patches are based on top of [1].
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/
->     pci.git/log/?h=next
-> 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (5):
->   dt-bindings: pci: rcar-pci-ep: Document r8a774a1 and r8a774b1
->   misc: pci_endpoint_test: Add Device ID for RZ/G2M and RZ/G2N PCIe
->     controllers
->   arm64: dts: renesas: r8a774a1: Add PCIe EP nodes
->   arm64: dts: renesas: r8a774b1: Add PCIe EP nodes
->   arm64: dts: renesas: r8a774c0: Add PCIe EP node
-> 
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |  7 +++-
->  arch/arm64/boot/dts/renesas/r8a774a1.dtsi     | 38 +++++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a774b1.dtsi     | 38 +++++++++++++++++++
->  arch/arm64/boot/dts/renesas/r8a774c0.dtsi     | 19 ++++++++++
->  drivers/misc/pci_endpoint_test.c              |  7 +++-
->  5 files changed, 105 insertions(+), 4 deletions(-)
+On Fri, Sep 04, 2020 at 04:31:44PM -0400, Gabriel Krisman Bertazi wrote:
+> Syscall User Dispatch (SUD) must take precedence over seccomp, since the
+> use case is emulation (it can be invoked with a different ABI) such that
+> seccomp filtering by syscall number doesn't make sense in the first
+> place.  In addition, either the syscall is dispatched back to userspace,
+> in which case there is no resource for seccomp to protect, or the
 
-I took the first two patches in pci/rcar, thanks.
+Tbh, I'm torn here. I'm not a super clever attacker but it feels to me
+that this is still at least a clever way to circumvent a seccomp
+sandbox.
+If I'd be confined by a seccomp profile that would cause me to be
+SIGKILLed when I try do open() I could prctl() myself to do user
+dispatch to prevent that from happening, no?
 
-Lorenzo
+> syscall will be executed, and seccomp will execute next.
+> 
+> Regarding ptrace, I experimented with before and after, and while the
+> same ABI argument applies, I felt it was easier to debug if I let ptrace
+> happen for syscalls that are dispatched back to userspace.  In addition,
+> doing it after ptrace makes the code in syscall_exit_work slightly
+> simpler, since it doesn't require special handling for this feature.
+> 
+> Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
+> ---
+>  kernel/entry/common.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+> index 44fd089d59da..fdb0c543539d 100644
+> --- a/kernel/entry/common.c
+> +++ b/kernel/entry/common.c
+> @@ -6,6 +6,8 @@
+>  #include <linux/audit.h>
+>  #include <linux/syscall_intercept.h>
+>  
+> +#include "common.h"
+> +
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/syscalls.h>
+>  
+> @@ -47,6 +49,12 @@ static inline long do_syscall_intercept(struct pt_regs *regs)
+>  	int sysint_work = READ_ONCE(current->syscall_intercept);
+>  	int ret;
+>  
+> +	if (sysint_work & SYSINT_USER_DISPATCH) {
+> +		ret = do_syscall_user_dispatch(regs);
+> +		if (ret == -1L)
+> +			return ret;
+> +	}
+> +
+>  	if (sysint_work & SYSINT_SECCOMP) {
+>  		ret = __secure_computing(NULL);
+>  		if (ret == -1L)
+> -- 
+> 2.28.0
