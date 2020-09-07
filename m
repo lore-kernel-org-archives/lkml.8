@@ -2,87 +2,109 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74089C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63E4D206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1632120709
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:26:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QmBXtZsc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgIGLZ1 (ORCPT
+        id S1728786AbgIGLZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:25:27 -0400
-Received: from goliath.siemens.de ([192.35.17.28]:36358 "EHLO
-        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728812AbgIGLWC (ORCPT
+        Mon, 7 Sep 2020 07:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728949AbgIGLXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:22:02 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 087BL5vl002697
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 13:21:05 +0200
-Received: from [167.87.17.27] ([167.87.17.27])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 087BKxrG020843;
-        Mon, 7 Sep 2020 13:21:02 +0200
-To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mon, 7 Sep 2020 07:23:01 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD7AEC0617B1
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:10:31 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z1so15416121wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 04:10:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hyfLckJhiZ5sjHjg6KN13DoyRvqbjPb2/1GNLHUTQ18=;
+        b=QmBXtZscSFhFSWmsqbWRggCLAvMzSVGeAB6uNwTdM11fep54tfrxptBj+Rd04GjKwU
+         ZO/seRoLaVJDlrcn5Y6Q0GrKitqT9URFvyE7524RsQd0UKxWpDkp5+3VoKjiIB03A7kN
+         7KaO/TzW3UYcLcuzYXkfNpJnYtgbkKkfMJaq2ZGjOvKxpsb8egJGHVNPLx/+YZ7D7HIL
+         X/prO/CU2BMymmOCgs45XbqHNZlv10+915vQvZBs5+UG6V2+a6HZ/qTz0X/nGD7UNIn8
+         wJApzbh0qn5frSxnTrjUygmG6ePUI1fgFhcZ7gy0KmuLbmJ8Kiy1rQVx+IG4GypJQfeZ
+         LOHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hyfLckJhiZ5sjHjg6KN13DoyRvqbjPb2/1GNLHUTQ18=;
+        b=WRweKPvZ0JBTXiTjP1UGzey3TbOqpDDM0yoBgbyXn8X75pDRKFHE4JGZoxgTdrCNo7
+         ar+Eoxilg0LbypPisFF4hcHEppwqKRZBQI75GbDBbnnLA8XNLpuMDJtIvWFQ1hIweJXU
+         rXOUtvDCVXDIaAm/AxmQvE/R/nH/7Fupt1pwctYkRXY1+I4R7Rb0FqaeRwA8fB94Taak
+         EDbW3kbSGZ4ObshTJCDjymjNx9P0fgJRNa/boakep2knSAVBY3LHk+YNaO1tHmrGj/Lm
+         V58Q47V8S9z5JEgz8JU7LuuMugSD91Y5hS/Hr6qzOzlS+p5pMkFjVjif1X5nIgDp1AkC
+         zfLw==
+X-Gm-Message-State: AOAM530sS9kXQjSRBEE4wbcIuzWuqJM+UGBFYw/74uqD8kvldO5wvA+D
+        XlDH82Z7YeZItIKG0PMg5mJRQQ==
+X-Google-Smtp-Source: ABdhPJydVdSsCLGHaYXiDQPPFXJqDlI3Gq8+/+6752E5DlDac2zDdha6cnWoGI5J0cNDYNsz91bj7A==
+X-Received: by 2002:adf:9bc9:: with SMTP id e9mr20751383wrc.123.1599477030165;
+        Mon, 07 Sep 2020 04:10:30 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id u13sm19922111wrm.77.2020.09.07.04.10.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 04:10:29 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     thierry.reding@gmail.com, sam@ravnborg.org
+Cc:     dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
-        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
-        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Subject: watchdog: sp5100_tco support for AMD V/R/E series
-Message-ID: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
-Date:   Mon, 7 Sep 2020 13:20:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/3] drm: panel: add support for TDO tl070wsh30 panel
+Date:   Mon,  7 Sep 2020 13:10:24 +0200
+Message-Id: <20200907111027.21933-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+This adds support bindings and support for the TDO TL070WSH30 TFT-LCD panel
+module shipped with the Amlogic S400 Development Kit.
+The panel has a 1024×600 resolution and uses 24 bit RGB per pixel.
+It provides a MIPI DSI interface to the host, a built-in LED backlight
+and touch controller.
 
-Arsalan reported that the upstream driver for sp5100_tco does not work
-for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
+Changes since v1 at [1]:
+- added missing vendor-prefixes patch
+- removed vrefresh
+- fixed warning on add_panel return
+- removed DRM logging
 
-[   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
-[   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
-[   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
+[1] https://patchwork.freedesktop.org/series/81376/#rev1
 
-..and fix it:
+Neil Armstrong (3):
+  dt-bindings: vendor-prefixes: Add Shanghai Top Display
+    Optolelectronics vendor prefix
+  dt-bindings: display: panel: add TDO tl070wsh30 DSI panel bindings
+  drm: panel: add TDO tl070wsh30 panel driver
 
-diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
-index 85e9664318c9..5482154fde42 100644
---- a/drivers/watchdog/sp5100_tco.c
-+++ b/drivers/watchdog/sp5100_tco.c
-@@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
- 		/* Set the Watchdog timer resolution to 1 sec and enable */
- 		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
- 					  ~EFCH_PM_WATCHDOG_DISABLE,
--					  EFCH_PM_DECODEEN_SECOND_RES);
-+					  EFCH_PM_DECODEEN_SECOND_RES |
-+					  EFCH_PM_DECODEEN_WDT_TMREN);
- 		break;
- 	}
- }
-
-Does anyone have an idea if such unconditional setting could be 
-problematic on older/different efch? We probe for that bit in
-sp5100_tco_setupdevice but we never set it so far.
-
-I'm missing specs...
-
-Thanks,
-Jan
+ .../display/panel/tdo,tl070wsh30.yaml         |  58 ++++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ drivers/gpu/drm/panel/Kconfig                 |  11 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c  | 256 ++++++++++++++++++
+ 5 files changed, 328 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/tdo,tl070wsh30.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c
 
 -- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+2.22.0
+
