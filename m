@@ -2,209 +2,127 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDA8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6E2C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F029C21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E776021473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpl+dwPK"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="c0pEUhxC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgIGWcf (ORCPT
+        id S1728140AbgIGWh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgIGWcb (ORCPT
+        Mon, 7 Sep 2020 18:37:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727847AbgIGWh2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:32:31 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F393C061573;
-        Mon,  7 Sep 2020 15:32:29 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a65so13287560otc.8;
-        Mon, 07 Sep 2020 15:32:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SSBsABurBTaJlix9WRMaGS9qOSk/fDmwyNLZ018o2GE=;
-        b=cpl+dwPKLTo5K/wLy+LwcB3EG0XcfQTMi47Ahqcq+blt/HE+MXXf5MDcnc76jtQL9u
-         TO78WVd7w+mm1v97gvyHLWUS7tRPcwPgm+zrUwQ5XPhC2G0Mm3ptg4vRZzsyV4CdR2YI
-         kmoazwyQPo6JssFM2xaVNSMBKiH+KNAnGGlONe+hsTTm+R/WKNmPuWzz/g0RQgIDGF3e
-         aEsiUOo9Va/XBW9cBIENDFUaAGIkBZ/zL3bDdYLNxY6pQzOw1jXW84n8cRu6JytwWC3e
-         aE72uoDE9vd4rNEu3z03IyGbMuIjvWT0a4s7ReBJnSsIBk6HWGhSrvaAIFcqVMIwPav5
-         Gd2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SSBsABurBTaJlix9WRMaGS9qOSk/fDmwyNLZ018o2GE=;
-        b=G/Sk8lzlxzRtnQ5DYLKr/bjq0DAmREgb97yAmJPyOLQ6Jfgol+ZpSk6wQFVFrboYv9
-         CKtiK2AQLng72PXgKhJJIt9ujKGbwpQ+6Zt316XUpy2PBPN97SzyjV0FAo8R7VUGxQgr
-         lE5VVVFg5Qhy4VPig6cAIOP7GDIUAJYYLgM1fXahQFJeypXLxwI1Cg7P3+BrOuMU1nbu
-         JQmCAY4MGjgDscBh5JafVnnJ6I8MSLjJx/pFXPHVkvGGVJWMPf3+xmiVS9Zi5UzYsmzD
-         q4puMQr6TQeDcjsbnlq/6aeGvxk/X5v+d+c1pbxsTQknt7usGCEJEBwZf9tFnRuTQfK0
-         miiA==
-X-Gm-Message-State: AOAM531BWzeINSHOwd9ClQHkpJDUdzKQGRnaf7GpFGH9PZPwCnzIoQgr
-        QlU8BMX1byYSivEWYQRqWzpKs7Bwjj6bmvBJqHA=
-X-Google-Smtp-Source: ABdhPJz74VcXi1cwh9+WOlsVSrO6zUKdBwfLGyeDlIfpAepoIuLWWH+eHJPcQh6Gl6wZsLOJJpRF9dRLcvMlh96I1sw=
-X-Received: by 2002:a05:6830:1be7:: with SMTP id k7mr15979909otb.162.1599517949078;
- Mon, 07 Sep 2020 15:32:29 -0700 (PDT)
+        Mon, 7 Sep 2020 18:37:28 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087MXAeD099931;
+        Mon, 7 Sep 2020 18:37:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=BcgkjGw3jUcEDjS4EdUvb/Ujr7WSNppz/N64wzWxzfM=;
+ b=c0pEUhxC3k3H/6Xq7Zr89wwXaSQYbeElZAsdY5Un+hvmpPMzSUTcM7EijNjzEmDGu7VI
+ A+QiZHfO0nTlqH4QozRhu20mRUWkEqaFGzavdJ6l3s+trAnpEBuG9j87lda5hnLcotfp
+ MpO8IkmCqI1p+Mx3gjP4AaBa2esndCALWAY/DHWBWaQORvUpM34VyvKTZ50nCZDIZijx
+ CZb63XGLfCSTeHWiGxigyh1WTeDfvsisXd1nkKDvGsgy49ZmKyuvRxvlhcqOwVp/KEAH
+ 32jcb1MMX1yD4QBCIbUThZo1oS0lyK4Kyheb6hINXfewS4+bzf0j0ht4nRmXELqjqo/2 1Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33dwffrcea-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 18:37:22 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 087MXkb7100914;
+        Mon, 7 Sep 2020 18:37:22 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33dwffrcdm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 18:37:22 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 087MW4xL004327;
+        Mon, 7 Sep 2020 22:37:20 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8at2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 22:37:19 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 087MZiHq49807660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Sep 2020 22:35:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05CE74C066;
+        Mon,  7 Sep 2020 22:37:17 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E9964C073;
+        Mon,  7 Sep 2020 22:37:16 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.173.93])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Sep 2020 22:37:16 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 00:37:14 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+Message-ID: <20200908003714.6233107d.pasic@linux.ibm.com>
+In-Reply-To: <1599471547-28631-3-git-send-email-pmorel@linux.ibm.com>
+References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
+        <1599471547-28631-3-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200907213855.3572-1-nramas@linux.microsoft.com>
-In-Reply-To: <20200907213855.3572-1-nramas@linux.microsoft.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Mon, 7 Sep 2020 18:32:16 -0400
-Message-ID: <CAEjxPJ5C64AmmVKuuPmtbfnY06w49ziryRAnARurWxpQumzfow@mail.gmail.com>
-Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, Paul Moore <paul@paul-moore.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Tyler Hicks <tyhicks@linux.microsoft.com>,
-        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        linux-integrity@vger.kernel.org,
-        SElinux list <selinux@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ mlxscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ mlxlogscore=999 suspectscore=0 adultscore=0 impostorscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009070218
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 5:39 PM Lakshmi Ramasubramanian
-<nramas@linux.microsoft.com> wrote:
->
-> Critical data structures of security modules are currently not measured.
-> Therefore an attestation service, for instance, would not be able to
-> attest whether the security modules are always operating with the policie=
-s
-> and configuration that the system administrator had setup. The policies
-> and configuration for the security modules could be tampered with by
-> rogue user mode agents or modified through some inadvertent actions on
-> the system. Measuring such critical data would enable an attestation
-> service to reliably assess the security configuration of the system.
->
-> SELinux configuration and policy are some of the critical data for this
-> security module that needs to be measured. This measurement can be used
-> by an attestation service, for instance, to verify if the configuration
-> and policies have been setup correctly and that they haven't been tampere=
-d
-> with at runtime.
->
-> Measure SELinux configuration, policy capabilities settings, and the hash
-> of the loaded policy by calling the IMA hook ima_measure_critical_data().
-> Since the size of the loaded policy can be quite large, hash of the polic=
-y
-> is measured instead of the entire policy to avoid bloating the IMA log.
->
-> Enable early boot measurement for SELinux in IMA since SELinux
-> initializes its state and policy before custom IMA policy is loaded.
->
-> Sample measurement of SELinux state and hash of the policy:
->
-> 10 e32e...5ac3 ima-buf sha256:86e8...4594 selinux-state-1595389364:287899=
-386 696e697469616c697a65643d313b656e61626c65643d313b656e666f7263696e673d303=
-b636865636b72657170726f743d313b6e6574776f726b5f706565725f636f6e74726f6c733d=
-313b6f70656e5f7065726d733d313b657874656e6465645f736f636b65745f636c6173733d3=
-13b616c776179735f636865636b5f6e6574776f726b3d303b6367726f75705f7365636c6162=
-656c3d313b6e6e705f6e6f737569645f7472616e736974696f6e3d313b67656e66735f73656=
-36c6162656c5f73796d6c696e6b733d303
-> 10 9e81...0857 ima-buf sha256:4941...68fc selinux-policy-hash-1597335667:=
-462051628 8d1d...1834
->
-> To verify the measurement check the following:
->
-> Execute the following command to extract the measured data
-> from the IMA log for SELinux configuration (selinux-state).
->
->   grep -m 1 "selinux-state" /sys/kernel/security/integrity/ima/ascii_runt=
-ime_measurements | cut -d' ' -f 6 | xxd -r -p
->
-> The output should be the list of key-value pairs. For example,
->  initialized=3D1;enabled=3D1;enforcing=3D0;checkreqprot=3D1;network_peer_=
-controls=3D1;open_perms=3D1;extended_socket_class=3D1;always_check_network=
-=3D0;cgroup_seclabel=3D1;nnp_nosuid_transition=3D1;genfs_seclabel_symlinks=
-=3D0;
->
-> To verify the measured data with the current SELinux state:
->
->  =3D> enabled should be set to 1 if /sys/fs/selinux folder exists,
->     0 otherwise
->
-> For other entries, compare the integer value in the files
->  =3D> /sys/fs/selinux/enforce
->  =3D> /sys/fs/selinux/checkreqprot
-> And, each of the policy capabilities files under
->  =3D> /sys/fs/selinux/policy_capabilities
->
-> For selinux-policy-hash, the hash of SELinux policy is included
-> in the IMA log entry.
->
-> To verify the measured data with the current SELinux policy run
-> the following commands and verify the output hash values match.
->
->   sha256sum /sys/fs/selinux/policy | cut -d' ' -f 1
->
->   grep -m 1 "selinux-policy-hash" /sys/kernel/security/integrity/ima/asci=
-i_runtime_measurements | cut -d' ' -f 6
->
-> This patch is based on commit 66ccd2560aff ("selinux: simplify away secur=
-ity_policydb_len()")
-> in "next" branch in https://git.kernel.org/pub/scm/linux/kernel/git/pcmoo=
-re/selinux.git
->
-> This patch is dependent on the following patch series and must be
-> applied in the given order:
->         https://patchwork.kernel.org/patch/11709527/
->         https://patchwork.kernel.org/patch/11730193/
->         https://patchwork.kernel.org/patch/11730757/
->
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> Suggested-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declarat=
-ion of function 'vfree'
-> Reported-by: kernel test robot <lkp@intel.com> # error: implicit declarat=
-ion of function 'crypto_alloc_shash'
-> Reported-by: kernel test robot <lkp@intel.com> # sparse: symbol 'security=
-_read_selinux_policy' was not declared. Should it be static?
+On Mon,  7 Sep 2020 11:39:07 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Not sure these Reported-by lines are useful since they were just on
-submitted versions of the patch not on an actual merged commit.
+> If protected virtualization is active on s390, VIRTIO has only retricted
+> access to the guest memory.
+> Define CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS and export
+> arch_has_restricted_virtio_memory_access to advertize VIRTIO if that's
+> the case, preventing a host error on access attempt.
 
-> diff --git a/security/selinux/measure.c b/security/selinux/measure.c
-> new file mode 100644
-> index 000000000000..caf9107937d9
-> --- /dev/null
-> +++ b/security/selinux/measure.c
-<snip>
-> +void selinux_measure_state(struct selinux_state *state, bool policy_mute=
-x_held)
-> +{
-<snip>
-> +
-> +       if (!policy_mutex_held)
-> +               mutex_lock(&state->policy_mutex);
-> +
-> +       rc =3D security_read_policy_kernel(state, &policy, &policy_len);
-> +
-> +       if (!policy_mutex_held)
-> +               mutex_unlock(&state->policy_mutex);
+The description is a little inaccurate, but I don't care hence the r-b.
 
-This kind of conditional taking of a mutex is generally frowned upon
-in my experience.
-You should likely just always take the mutex in the callers of
-selinux_measure_state() instead.
-In some cases, it may be the caller of the caller.  Arguably selinuxfs
-could be taking it around all state modifying operations (e.g.
-enforce, checkreqprot) not just policy modifying ones although it
-isn't strictly for that purpose.
+The function arch_has_restricted_virtio_memory_access() returning true
+can not prevent the host from attempting to access memory if it decides
+to do so. And as far as I know there was no host error on access attempt.
+The page gets exported, and the host will operate on the encrypted
+page. But in the end we do run into trouble, which is usually fatal for
+the guest (not the host).
+
+What we actually do here is the following. If we detect
+an ill configured device we fail it (device status field), because
+attempting to drive it is a recipe for disaster.
+
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
