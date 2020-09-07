@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D0EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7179C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2DE02080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7618E206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgIGRgg (ORCPT
+        id S1730827AbgIGRgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:36:36 -0400
-Received: from 8bytes.org ([81.169.241.247]:43636 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:36:31 -0400
+Received: from 8bytes.org ([81.169.241.247]:43658 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgIGNSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:07 -0400
+        id S1729476AbgIGNSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:16 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 634A2FC1;
-        Mon,  7 Sep 2020 15:16:54 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 5B5F5F13;
+        Mon,  7 Sep 2020 15:16:51 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 24/72] x86/boot/compressed/64: Unmap GHCB page before booting the kernel
-Date:   Mon,  7 Sep 2020 15:15:25 +0200
-Message-Id: <20200907131613.12703-25-joro@8bytes.org>
+Subject: [PATCH v7 18/72] x86/boot/compressed/64: Change add_identity_map() to take start and end
+Date:   Mon,  7 Sep 2020 15:15:19 +0200
+Message-Id: <20200907131613.12703-19-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,110 +60,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Force a page-fault on any further accesses to the GHCB page when they
-shouldn't happen anymore. This will catch the bugs where a #VC exception
-is raised when no one is expected anymore.
+Changing the function to take start and end as parameters instead of
+start and size simplifies the callers, which don't need to calculate
+the size if they already have start and end.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 17 +++++++++++++++--
- arch/x86/boot/compressed/misc.h         |  6 ++++++
- arch/x86/boot/compressed/sev-es.c       | 14 ++++++++++++++
- 3 files changed, 35 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 05742f641a06..063a60edcf99 100644
+index c63257bf8373..62e42c11a336 100644
 --- a/arch/x86/boot/compressed/ident_map_64.c
 +++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -298,6 +298,11 @@ int set_page_encrypted(unsigned long address)
- 	return set_clr_page_flags(&mapping_info, address, _PAGE_ENC, 0);
+@@ -89,10 +89,8 @@ static struct x86_mapping_info mapping_info;
+ /*
+  * Adds the specified range to the identity mappings.
+  */
+-static void add_identity_map(unsigned long start, unsigned long size)
++static void add_identity_map(unsigned long start, unsigned long end)
+ {
+-	unsigned long end = start + size;
+-
+ 	/* Align boundary to 2M. */
+ 	start = round_down(start, PMD_SIZE);
+ 	end = round_up(end, PMD_SIZE);
+@@ -107,8 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
+-	unsigned long start, size;
+-
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
+ 
+@@ -155,9 +151,7 @@ void initialize_identity_maps(void)
+ 	 * New page-table is set up - map the kernel image and load it
+ 	 * into cr3.
+ 	 */
+-	start = (unsigned long)_head;
+-	size  = _end - _head;
+-	add_identity_map(start, size);
++	add_identity_map((unsigned long)_head, (unsigned long)_end);
+ 	write_cr3(top_level_pgt);
  }
  
-+int set_page_non_present(unsigned long address)
-+{
-+	return set_clr_page_flags(&mapping_info, address, 0, _PAGE_PRESENT);
-+}
-+
- static void do_pf_error(const char *msg, unsigned long error_code,
- 			unsigned long address, unsigned long ip)
- {
-@@ -316,8 +321,14 @@ static void do_pf_error(const char *msg, unsigned long error_code,
+@@ -189,7 +183,8 @@ static void do_pf_error(const char *msg, unsigned long error_code,
  
  void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
  {
--	unsigned long address = native_read_cr2() & PMD_MASK;
--	unsigned long end = address + PMD_SIZE;
-+	unsigned long address = native_read_cr2();
-+	unsigned long end;
-+	bool ghcb_fault;
-+
-+	ghcb_fault = sev_es_check_ghcb_fault(address);
-+
-+	address   &= PMD_MASK;
-+	end        = address + PMD_SIZE;
+-	unsigned long address = native_read_cr2();
++	unsigned long address = native_read_cr2() & PMD_MASK;
++	unsigned long end = address + PMD_SIZE;
  
  	/*
  	 * Check for unexpected error codes. Unexpected are:
-@@ -327,6 +338,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 */
- 	if (error_code & (X86_PF_PROT | X86_PF_USER | X86_PF_RSVD))
- 		do_pf_error("Unexpected page-fault:", error_code, address, regs->ip);
-+	else if (ghcb_fault)
-+		do_pf_error("Page-fault on GHCB page:", error_code, address, regs->ip);
- 
- 	/*
+@@ -204,5 +199,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
  	 * Error code is sane - now identity map the 2M region around
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 9995c70ca813..c0e0ffeee50a 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -100,6 +100,7 @@ static inline void choose_random_location(unsigned long input,
- #ifdef CONFIG_X86_64
- extern int set_page_decrypted(unsigned long address);
- extern int set_page_encrypted(unsigned long address);
-+extern int set_page_non_present(unsigned long address);
- extern unsigned char _pgtable[];
- #endif
- 
-@@ -117,8 +118,13 @@ void set_sev_encryption_mask(void);
- 
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- void sev_es_shutdown_ghcb(void);
-+extern bool sev_es_check_ghcb_fault(unsigned long address);
- #else
- static inline void sev_es_shutdown_ghcb(void) { }
-+static inline bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	return false;
-+}
- #endif
- 
- /* acpi.c */
-diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
-index 633d47df702f..ea656b22743b 100644
---- a/arch/x86/boot/compressed/sev-es.c
-+++ b/arch/x86/boot/compressed/sev-es.c
-@@ -121,6 +121,20 @@ void sev_es_shutdown_ghcb(void)
+ 	 * the faulting address.
  	 */
- 	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
- 		error("Can't map GHCB page encrypted");
-+
-+	/*
-+	 * GHCB page is mapped encrypted again and flushed from the cache.
-+	 * Mark it non-present now to catch bugs when #VC exceptions trigger
-+	 * after this point.
-+	 */
-+	if (set_page_non_present((unsigned long)&boot_ghcb_page))
-+		error("Can't unmap GHCB page");
-+}
-+
-+bool sev_es_check_ghcb_fault(unsigned long address)
-+{
-+	/* Check whether the fault was on the GHCB page */
-+	return ((address & PAGE_MASK) == (unsigned long)&boot_ghcb_page);
+-	add_identity_map(address & PMD_MASK, PMD_SIZE);
++	add_identity_map(address, end);
  }
- 
- void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
 -- 
 2.28.0
 
