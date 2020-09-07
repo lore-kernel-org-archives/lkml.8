@@ -7,34 +7,37 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B5FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C472321556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19334215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgIGOOy (ORCPT
+        id S1730856AbgIGROb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:14:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10832 "EHLO huawei.com"
+        Mon, 7 Sep 2020 13:14:31 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52550 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729707AbgIGOJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:09:42 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 47D942B6B023013B0D8C;
-        Mon,  7 Sep 2020 22:09:36 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
- 22:09:32 +0800
+        id S1729772AbgIGOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:14:56 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 97629845ECC8F70CA9D2;
+        Mon,  7 Sep 2020 22:14:46 +0800 (CST)
+Received: from huawei.com (10.175.113.133) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
+ 22:14:43 +0800
 From:   Wang Hai <wanghai38@huawei.com>
-To:     <axboe@kernel.dk>, <rostedt@goodmis.org>, <mingo@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-block@vger.kernel.org>
-Subject: [PATCH -next] blktrace: make function blk_trace_bio_get_cgid() static
-Date:   Mon, 7 Sep 2020 22:06:52 +0800
-Message-ID: <20200907140652.9060-1-wanghai38@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>, <f.fainelli@gmail.com>,
+        <timur@kernel.org>, <zhengdejin5@gmail.com>,
+        <hkallweit1@gmail.com>, <leon@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: ethernet: dnet: Remove set but unused variable 'len'
+Date:   Mon, 7 Sep 2020 22:12:07 +0800
+Message-ID: <20200907141207.11778-1-wanghai38@huawei.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.175.113.133]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,33 +45,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sparse tool complains as follows:
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-kernel/trace/blktrace.c:796:5: warning:
- symbol 'blk_trace_bio_get_cgid' was not declared. Should it be static?
+drivers/net/ethernet/dnet.c: In function dnet_start_xmit
+drivers/net/ethernet/dnet.c:511:15: warning: variable ‘len’ set but not used [-Wunused-but-set-variable]
 
-This function is not used outside of blktrace.c, so this commit
-marks it static.
+commit 4796417417a6 ("dnet: Dave DNET ethernet controller driver (updated)")
+involved this unused variable, remove it.
 
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Wang Hai <wanghai38@huawei.com>
 ---
- kernel/trace/blktrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/dnet.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 4b3a42fc3b24..c0887f32f647 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -793,7 +793,7 @@ static u64 blk_trace_bio_get_cgid(struct request_queue *q, struct bio *bio)
- 	return cgroup_id(bio_blkcg(bio)->css.cgroup);
- }
- #else
--u64 blk_trace_bio_get_cgid(struct request_queue *q, struct bio *bio)
-+static u64 blk_trace_bio_get_cgid(struct request_queue *q, struct bio *bio)
- {
- 	return 0;
- }
+diff --git a/drivers/net/ethernet/dnet.c b/drivers/net/ethernet/dnet.c
+index db98274501a0..3143df9a398c 100644
+--- a/drivers/net/ethernet/dnet.c
++++ b/drivers/net/ethernet/dnet.c
+@@ -508,7 +508,7 @@ static netdev_tx_t dnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	struct dnet *bp = netdev_priv(dev);
+ 	u32 tx_status, irq_enable;
+-	unsigned int len, i, tx_cmd, wrsz;
++	unsigned int i, tx_cmd, wrsz;
+ 	unsigned long flags;
+ 	unsigned int *bufp;
+ 
+@@ -518,9 +518,6 @@ static netdev_tx_t dnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	       skb->len, skb->head, skb->data);
+ 	dnet_print_skb(skb);
+ 
+-	/* frame size (words) */
+-	len = (skb->len + 3) >> 2;
+-
+ 	spin_lock_irqsave(&bp->lock, flags);
+ 
+ 	tx_status = dnet_readl(bp, TX_STATUS);
 -- 
 2.17.1
 
