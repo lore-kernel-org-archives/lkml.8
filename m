@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140C6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFF7E2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7EE206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729583AbgIGR2L (ORCPT
+        id S1730965AbgIGR2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:28:11 -0400
-Received: from 8bytes.org ([81.169.241.247]:43636 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:28:19 -0400
+Received: from 8bytes.org ([81.169.241.247]:43622 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729519AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:19:37 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 708EA3AA3;
-        Mon,  7 Sep 2020 15:17:15 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 5DE823A56;
+        Mon,  7 Sep 2020 15:17:14 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 63/72] x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
-Date:   Mon,  7 Sep 2020 15:16:04 +0200
-Message-Id: <20200907131613.12703-64-joro@8bytes.org>
+Subject: [PATCH v7 61/72] x86/sev-es: Handle #DB Events
+Date:   Mon,  7 Sep 2020 15:16:02 +0200
+Message-Id: <20200907131613.12703-62-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -58,74 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Implement the callbacks to copy the processor state required by KVM to
-the GHCB.
+Handle #VC exceptions caused by #DB exceptions in the guest. Those
+must be handled outside of instrumentation_begin()/end() so that the
+handler will not be raised recursively.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Split out of a larger patch
-                   - Adapt to different callback functions ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
+Handle them by calling the kernels debug exception handler.
+
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/kernel/kvm.c | 35 +++++++++++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 6 deletions(-)
+ arch/x86/kernel/sev-es.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 08320b0b2b27..0f9597275e9c 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -36,6 +36,8 @@
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
-+#include <asm/ptrace.h>
-+#include <asm/svm.h>
- 
- DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
- 
-@@ -746,13 +748,34 @@ static void __init kvm_init_platform(void)
- 	x86_platform.apic_post_init = kvm_apic_init;
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index f78ab9369b9c..3eea4e910fc1 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -922,6 +922,14 @@ static enum es_result vc_handle_trap_ac(struct ghcb *ghcb,
+ 	return ES_EXCEPTION;
  }
  
-+#if defined(CONFIG_AMD_MEM_ENCRYPT)
-+static void kvm_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
++static __always_inline void vc_handle_trap_db(struct pt_regs *regs)
 +{
-+	/* RAX and CPL are already in the GHCB */
-+	ghcb_set_rbx(ghcb, regs->bx);
-+	ghcb_set_rcx(ghcb, regs->cx);
-+	ghcb_set_rdx(ghcb, regs->dx);
-+	ghcb_set_rsi(ghcb, regs->si);
++	if (user_mode(regs))
++		noist_exc_debug(regs);
++	else
++		exc_debug(regs);
 +}
 +
-+static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
-+{
-+	/* No checking of the return state needed */
-+	return true;
-+}
-+#endif
-+
- const __initconst struct hypervisor_x86 x86_hyper_kvm = {
--	.name			= "KVM",
--	.detect			= kvm_detect,
--	.type			= X86_HYPER_KVM,
--	.init.guest_late_init	= kvm_guest_init,
--	.init.x2apic_available	= kvm_para_available,
--	.init.init_platform	= kvm_init_platform,
-+	.name				= "KVM",
-+	.detect				= kvm_detect,
-+	.type				= X86_HYPER_KVM,
-+	.init.guest_late_init		= kvm_guest_init,
-+	.init.x2apic_available		= kvm_para_available,
-+	.init.init_platform		= kvm_init_platform,
-+#if defined(CONFIG_AMD_MEM_ENCRYPT)
-+	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
-+	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
-+#endif
- };
+ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 					 struct ghcb *ghcb,
+ 					 unsigned long exit_code)
+@@ -1033,6 +1041,15 @@ DEFINE_IDTENTRY_VC_SAFE_STACK(exc_vmm_communication)
+ 	struct ghcb *ghcb;
  
- static __init int activate_jump_labels(void)
+ 	lockdep_assert_irqs_disabled();
++
++	/*
++	 * Handle #DB before calling into !noinstr code to avoid recursive #DB.
++	 */
++	if (error_code == SVM_EXIT_EXCP_BASE + X86_TRAP_DB) {
++		vc_handle_trap_db(regs);
++		return;
++	}
++
+ 	instrumentation_begin();
+ 
+ 	/*
 -- 
 2.28.0
 
