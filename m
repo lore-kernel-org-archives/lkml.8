@@ -2,105 +2,76 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A606CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E509DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6411B2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpZGZSLN"
+	by mail.kernel.org (Postfix) with ESMTP id 9903C2087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgIGQFY (ORCPT
+        id S1730335AbgIGQFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:05:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729976AbgIGOrM (ORCPT
+        Mon, 7 Sep 2020 12:05:31 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:40388 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729915AbgIGOrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 10:47:12 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E821FC061575;
-        Mon,  7 Sep 2020 07:36:33 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id z19so7611951lfr.4;
-        Mon, 07 Sep 2020 07:36:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LbYatuVWRGYewGcDmiye1sSegUENy4SIbsUeZ7U/qG4=;
-        b=JpZGZSLNqRaE0exdU8CU465eqriG0RqHm2s6LczbPE71uOTMNdEZz2JGG4y3tK/LN6
-         y9z23DLcygyjqprpVkOT06L6PCQk7ujXbG2vpwyayBtKAx6x4S/N9Fz8Fo+RkcgBOxew
-         SsIrCfAsYkObkThkDYUhnCHbE21CoRRqUfeqtmKedhHMwRNy+nkcdNnpJpEBxmD8wG95
-         o3WDxGmVPtu4+n7pi1LD0AS3B3M/MTOub3vyAsO2IUZrHXIgToj4MI3m9COtHplDVFtN
-         sqjJs1GtnnWxbyO0ZtijkeJRWgOt+OqHYwHKJcMtmbVvZTIUubGSiJv7Fw6urR21wEsb
-         cumQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LbYatuVWRGYewGcDmiye1sSegUENy4SIbsUeZ7U/qG4=;
-        b=G2zU1TzviXkEobesClo7cgXQjKm9EN7+foJrfYhkSlHrexEm9Ckc2N+Ld/5csytyiS
-         zD2LdINMHgAutuKR+DStS0vI2yB+VQGETxX06tWUoN8qDNNsdZkDynJfcBo72UPZQzq3
-         LWNqCaCL0Y/x74GhBdpb3HWKLccQDvt3s4Z6/3G/1PIzwe9N/xkhSioeQD7E8qQMbEgr
-         164TTwSktVAzXTBxrjfoXCLgzAmV5LTgkp8l76MZeiTc1mp8bp5HS98d4fFRTGJdBdqG
-         x4sN2NhxMGP5Zh3gnO0dgANenylkaPMp7oEt+34VBuy83SDDpnadaysQWYgAF6nAPppt
-         1z4g==
-X-Gm-Message-State: AOAM533DgXf7SpsdEQUNUWY56Hgxc3p5zprsbH3nmeXSmBmHF8JC1XkY
-        lmmtkF1RDiz8obN4PkhbkYQTAggXp50=
-X-Google-Smtp-Source: ABdhPJz9601EdKos+ms9H/SphtscTtUQmKponvS3+EYjzKvYmMOrE5RHyzgfpE/oiJUjRRrNVcr5nQ==
-X-Received: by 2002:a19:82c3:: with SMTP id e186mr10075422lfd.144.1599489391997;
-        Mon, 07 Sep 2020 07:36:31 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t13sm7639481lfg.53.2020.09.07.07.36.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 07:36:31 -0700 (PDT)
-Subject: Re: [PATCH v5 27/36] i2c: tegra: Reorder location of functions in the
- code
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200906185039.22700-1-digetx@gmail.com>
- <20200906185039.22700-28-digetx@gmail.com>
- <CAHp75VfSyfJoEbFGEH32=841_2h4_8r+vVYO2BPHgSVvuatOag@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <61845513-bf41-1c15-126d-8470a23b178e@gmail.com>
-Date:   Mon, 7 Sep 2020 17:36:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VfSyfJoEbFGEH32=841_2h4_8r+vVYO2BPHgSVvuatOag@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-IronPort-AV: E=Sophos;i="5.76,402,1592838000"; 
+   d="scan'208";a="56367466"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 07 Sep 2020 23:46:07 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 8B1B442FBA1B;
+        Mon,  7 Sep 2020 23:46:04 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: media: renesas,vin: Add device tree support for r8a7742
+Date:   Mon,  7 Sep 2020 15:45:08 +0100
+Message-Id: <20200907144509.8861-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907144509.8861-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200907144509.8861-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.09.2020 11:27, Andy Shevchenko пишет:
-> On Sun, Sep 6, 2020 at 9:52 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Reorder location of functions in the code in order to have definition
->> of functions closer to the place of the invocation. This change makes
->> easier to navigate around the code and removes the need to have a
->> prototype for tegra_i2c_init().
->>
-> 
-> This patch as 25th and one I commented before have a ping-pong style
-> of programming (you touch a lot of LOCs which you introduced in
-> previous patches). Please try to reorder series in a way that you
-> minimize the churn of shuffling the code.
+Add compatible string for r8a7742. No driver change is needed as
+"renesas,rcar-gen2-vin" will activate the right code.
 
-Okay, I'll improve the ordering in v6. Thanks!
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+---
+ Documentation/devicetree/bindings/media/renesas,vin.yaml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/media/renesas,vin.yaml b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+index 53c0a7238bac..7f0dd2a08613 100644
+--- a/Documentation/devicetree/bindings/media/renesas,vin.yaml
++++ b/Documentation/devicetree/bindings/media/renesas,vin.yaml
+@@ -24,6 +24,7 @@ properties:
+     oneOf:
+       - items:
+           - enum:
++              - renesas,vin-r8a7742  # RZ/G1H
+               - renesas,vin-r8a7743  # RZ/G1M
+               - renesas,vin-r8a7744  # RZ/G1N
+               - renesas,vin-r8a7745  # RZ/G1E
+-- 
+2.17.1
+
