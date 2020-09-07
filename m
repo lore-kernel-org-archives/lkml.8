@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14A4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B584C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7E3208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E34C2208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497177;
-	bh=+AXgOdv8EoZXwhDmI8inikJXHg/STxz2MzjWVDFiXkI=;
+	s=default; t=1599497188;
+	bh=WR+g6BJmosRtwJSoMvEhD8ZZWYEATjLLIsh6e4mzX3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QoP3OF2TkNFfdcpy5FcC9x1BfjWRD0kJx9IUpDd4WximgNW3cWUd0foDr2xdvSWQK
-	 6wRceinWvRUuxmHY8bbJ0HWVi3jRIKTilff1drSulcbHuwu4+8Sx43nrQKreBNHOM4
-	 7PE7eZmDXaAn8HaWM6IiATLZ+ebHDrPZtF13iG48=
+	b=2uP3wKi5cJ48X3AC1339xVJvt8ir25J9HxruTmwAyUYBZMPVQGvO+5kFNPqlg8xcx
+	 FSuAfmo9i+O+eVICsUNDuuyvFQC7rkto7rhg58eCUYgbn0TctrcEDNrBZbpPuqKk3C
+	 w2FJK6Q1cxmh+Br3TkOE44/kUYmp3qopZyyi1djE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbgIGQp7 (ORCPT
+        id S1731106AbgIGQp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 7 Sep 2020 12:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48954 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730582AbgIGQf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:29 -0400
+        id S1730836AbgIGQfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D1D222205;
-        Mon,  7 Sep 2020 16:35:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2936822204;
+        Mon,  7 Sep 2020 16:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496529;
-        bh=+AXgOdv8EoZXwhDmI8inikJXHg/STxz2MzjWVDFiXkI=;
+        s=default; t=1599496532;
+        bh=WR+g6BJmosRtwJSoMvEhD8ZZWYEATjLLIsh6e4mzX3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w0R172/T+MEi6azuCMr9fmslr+G5tDstA1U+LjswpaJAu1voCVeYLKdGb4kQiXZ7y
-         9c/FEnbivuY/pyHDzsYtpJLf+WJGaj7OtqzPc77Jqnwpmfi3NMq9Y/Wti0yYVDIHnM
-         DaKNk9UQv+LnvhKIXfYffChsCz08qxZILKBTXPms=
+        b=v3IaHXs2wsYi896xT3GLhPTv2XknHHH0u5BuJFaZdeb4KSq7vAe3C4AySPj1qG6pP
+         HwlSK7ZDCVD0pGGXFo6uCuPg5e2KItoLTGOy7FKl/rg63LKLOECdAyyptLmq4CVJys
+         ZiifZh0vGcOtKJl+0/w8Un47ra1TOacv1rXTUxp8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/13] firestream: Fix memleak in fs_open
-Date:   Mon,  7 Sep 2020 12:35:14 -0400
-Message-Id: <20200907163524.1281734-3-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/13] drivers/net/wan/lapbether: Set network_header before transmitting
+Date:   Mon,  7 Sep 2020 12:35:16 -0400
+Message-Id: <20200907163524.1281734-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163524.1281734-1-sashal@kernel.org>
 References: <20200907163524.1281734-1-sashal@kernel.org>
@@ -60,32 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 15ac5cdafb9202424206dc5bd376437a358963f9 ]
+[ Upstream commit 91244d108441013b7367b3b4dcc6869998676473 ]
 
-When make_rate() fails, vcc should be freed just
-like other error paths in fs_open().
+Set the skb's network_header before it is passed to the underlying
+Ethernet device for transmission.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+This patch fixes the following issue:
+
+When we use this driver with AF_PACKET sockets, there would be error
+messages of:
+   protocol 0805 is buggy, dev (Ethernet interface name)
+printed in the system "dmesg" log.
+
+This is because skbs passed down to the Ethernet device for transmission
+don't have their network_header properly set, and the dev_queue_xmit_nit
+function in net/core/dev.c complains about this.
+
+Reason of setting the network_header to this place (at the end of the
+Ethernet header, and at the beginning of the Ethernet payload):
+
+Because when this driver receives an skb from the Ethernet device, the
+network_header is also set at this place.
+
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/firestream.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wan/lapbether.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
-index 82296fe2ba3bd..7cb2b863e653e 100644
---- a/drivers/atm/firestream.c
-+++ b/drivers/atm/firestream.c
-@@ -1013,6 +1013,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
- 				error = make_rate (pcr, r, &tmc0, NULL);
- 				if (error) {
- 					kfree(tc);
-+					kfree(vcc);
- 					return error;
- 				}
- 			}
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 5befc7f3f0e7a..c6db9a4e7c457 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -213,6 +213,8 @@ static void lapbeth_data_transmit(struct net_device *ndev, struct sk_buff *skb)
+ 
+ 	skb->dev = dev = lapbeth->ethdev;
+ 
++	skb_reset_network_header(skb);
++
+ 	dev_hard_header(skb, dev, ETH_P_DEC, bcast_addr, NULL, 0);
+ 
+ 	dev_queue_xmit(skb);
 -- 
 2.25.1
 
