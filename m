@@ -2,186 +2,123 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01064C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:58:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D07C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BB421741
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:58:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599494315;
-	bh=ucJr+saLVcP0I55uqGtU5DQWyYXMW2U5WBZWrLtx+zk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0L/4lg4MWgyR4RieLv8Mc6TLc55DR0ICd8k/uFf/1y8RN8rzCRXDW2nZrIrpOJ0Vy
-	 5kTtJsnIlti1IIYYTts7CT0bnJheyCklsODsiYzfppTaXBVDK/Crq7R8eNxewcp6UL
-	 vzof7yA/3GJ9Zezq/eZy6sAGOTHg+lMwkyLEdV3s=
+	by mail.kernel.org (Postfix) with ESMTP id 6D7832087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbgIGP6d (ORCPT
+        id S1730286AbgIGP6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 11:58:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:37630 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730008AbgIGOuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:50:09 -0400
-Received: from coco.lan (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 650DE21532;
-        Mon,  7 Sep 2020 14:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599490208;
-        bh=ucJr+saLVcP0I55uqGtU5DQWyYXMW2U5WBZWrLtx+zk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jJTNEKN6B2ykUQfSlOxxOquiv+y2ri4qBpvBA0yy2WBHyYQ7U60vuSx9SEBF9QlBn
-         Ar+/7pK9BivK2eSYEDscpEZzduRbW2j7hxwiRljDzqT3vtxs/9Pq1T4PlIi/i4lUpu
-         MPpNKwTKS8Igkyfh9QzkF30mEKEu4P5RLAI0SoJo=
-Date:   Mon, 7 Sep 2020 16:50:00 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Felipe Balbi <balbi@kernel.org>, Yu Chen <chenyu56@huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
-        suzhuangluan@hisilicon.com, kongfei@hisilicon.com,
-        liuyu712@hisilicon.com, wanghu17@hisilicon.com,
-        butao@hisilicon.com, chenyao11@huawei.com,
-        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
-        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
-        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
-        zangleigang@hisilicon.com,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>
-Subject: Re: [PATCH v6 04/13] usb: dwc3: Add splitdisable quirk for
- Hisilicon Kirin Soc
-Message-ID: <20200907165000.7c42a6da@coco.lan>
-In-Reply-To: <874ko9of80.fsf@kernel.org>
-References: <20190420064019.57522-1-chenyu56@huawei.com>
-        <20190420064019.57522-5-chenyu56@huawei.com>
-        <20200907150631.70e1bce0@coco.lan>
-        <874ko9of80.fsf@kernel.org>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1730002AbgIGOuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:50:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94E4E31B;
+        Mon,  7 Sep 2020 07:38:25 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88153F73C;
+        Mon,  7 Sep 2020 07:38:23 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:38:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     hongxing.zhu@nxp.com, l.stach@pengutronix.de, robh@kernel.org,
+        bhelgaas@google.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2] PCI: imx6: Do not output error message when
+ devm_clk_get() failed with -EPROBE_DEFER
+Message-ID: <20200907143821.GD9474@e121166-lin.cambridge.arm.com>
+References: <1597109364-4739-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1597109364-4739-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 07 Sep 2020 17:04:31 +0300
-Felipe Balbi <balbi@kernel.org> escreveu:
-
-> Hi Mauro,
+On Tue, Aug 11, 2020 at 09:29:24AM +0800, Anson Huang wrote:
+> When devm_clk_get() returns -EPROBE_DEFER, i.MX6 PCI driver should
+> NOT print error message, use dev_err_probe() to handle it.
 > 
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 35 +++++++++++++++--------------------
+>  1 file changed, 15 insertions(+), 20 deletions(-)
+
+Applied to pci/imx6, thanks.
+
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 90df28c..e6d6116 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -1073,38 +1073,33 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+>  
+>  	/* Fetch clocks */
+>  	imx6_pcie->pcie_phy = devm_clk_get(dev, "pcie_phy");
+> -	if (IS_ERR(imx6_pcie->pcie_phy)) {
+> -		dev_err(dev, "pcie_phy clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_phy);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie_phy))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_phy),
+> +				     "pcie_phy clock source missing or invalid\n");
+>  
+>  	imx6_pcie->pcie_bus = devm_clk_get(dev, "pcie_bus");
+> -	if (IS_ERR(imx6_pcie->pcie_bus)) {
+> -		dev_err(dev, "pcie_bus clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie_bus);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie_bus))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_bus),
+> +				     "pcie_bus clock source missing or invalid\n");
+>  
+>  	imx6_pcie->pcie = devm_clk_get(dev, "pcie");
+> -	if (IS_ERR(imx6_pcie->pcie)) {
+> -		dev_err(dev, "pcie clock source missing or invalid\n");
+> -		return PTR_ERR(imx6_pcie->pcie);
+> -	}
+> +	if (IS_ERR(imx6_pcie->pcie))
+> +		return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie),
+> +				     "pcie clock source missing or invalid\n");
+>  
+>  	switch (imx6_pcie->drvdata->variant) {
+>  	case IMX6SX:
+>  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+>  							   "pcie_inbound_axi");
+> -		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+> -			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+> -		}
+> +		if (IS_ERR(imx6_pcie->pcie_inbound_axi))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_inbound_axi),
+> +					     "pcie_inbound_axi clock missing or invalid\n");
+>  		break;
+>  	case IMX8MQ:
+>  		imx6_pcie->pcie_aux = devm_clk_get(dev, "pcie_aux");
+> -		if (IS_ERR(imx6_pcie->pcie_aux)) {
+> -			dev_err(dev, "pcie_aux clock source missing or invalid\n");
+> -			return PTR_ERR(imx6_pcie->pcie_aux);
+> -		}
+> +		if (IS_ERR(imx6_pcie->pcie_aux))
+> +			return dev_err_probe(dev, PTR_ERR(imx6_pcie->pcie_aux),
+> +					     "pcie_aux clock source missing or invalid\n");
+>  		/* fall through */
+>  	case IMX7D:
+>  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> -- 
+> 2.7.4
 > 
-> > Hi Felipe/Greg,
-> >
-> > What's the status of this patch?   
-> 
-> to be frank, I don't think I have this in my inbox anymore.
-> 
-> > I tested here, together with the Hikey 970 phy RFC patches I sent
-> > last week.
-> >
-> > Without this patch, the USB HID driver receives -EPROTO from
-> > submitted URBs, causing it to enter into an endless reset cycle
-> > on every 500 ms, at the hid_io_error() logic.  
-> 
-> > Tested-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> >
-> > If you prefer, I can re-submit this one with my SOB.  
-> 
-> Please do, but since you're changing device tree, I need Rob's acked-by.
-
-Ok, I'll do that.
-
-> > Thanks,
-> > Mauro
-> >
-> > Em Sat, 20 Apr 2019 14:40:10 +0800
-> > Yu Chen <chenyu56@huawei.com> escreveu:
-> >  
-> >> SPLIT_BOUNDARY_DISABLE should be set for DesignWare USB3 DRD Core
-> >> of Hisilicon Kirin Soc when dwc3 core act as host.  
-> 
-> is this Kirin-specific or is this something that we should do a revision
-> check? 
-
-I've no idea. I don't have any datasheets from this device.
-
-> Why does it affect only Hikey kirin? 
-
-As John Stultz didn't re-submit this one (and looking at the DT
-between Kirin 960 and 970 from the original Kernel 4.9 official
-drivers), I suspect that only Kirin 970 requires this quirk.
-
-It could well be due to some Dwc3 revision, but it could also be due
-to some differences at the USB part of the SoC, as there are a
-few other things different between hikey 960 and 970: it has a
-different PHY driver, and there are also some differences at the
-USB HUB which is connected into it.
-
-On both devices, the USB physical ports are actually connected
-into a HUB. In the case of Hikey 970, the hub seems to be a
-TI TUSB8041 4-Port Hub:
-	
-	$ lsusb
-	Bus 002 Device 002: ID 0451:8140 Texas Instruments, Inc. TUSB8041 4-Port Hub
-	Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
-	Bus 001 Device 004: ID 090c:1000 Silicon Motion, Inc. - Taiwan (formerly Feiya Technology Corp.) Flash Drive
-	Bus 001 Device 003: ID 413c:301a Dell Computer Corp. Dell MS116 Optical Mouse
-	Bus 001 Device 002: ID 0451:8142 Texas Instruments, Inc. TUSB8041 4-Port Hub
-	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
-
-> What's the dwc3 revision on
-> that SoC (grep SNPSID /sys/kernel/debugfs/*dwc3/regdump)?
-
-	GSNPSID = 0x33313130
-
-> 
-> >> @@ -1825,10 +1834,27 @@ static int dwc3_resume(struct device *dev)
-> >>  
-> >>  	return 0;
-> >>  }
-> >> +
-> >> +static void dwc3_complete(struct device *dev)
-> >> +{
-> >> +	struct dwc3	*dwc = dev_get_drvdata(dev);
-> >> +	u32		reg;
-> >> +
-> >> +	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_HOST &&
-> >> +			dwc->dis_split_quirk) {
-> >> +		dev_dbg(dwc->dev, "set DWC3_GUCTL3_SPLITDISABLE\n");  
-> 
-> no more dev_dbg() should be added. This driver relies exclusively on
-> tracepoints for debugging.
-
-Ok. 
-
-> 
-> >> +		reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
-> >> +		reg |= DWC3_GUCTL3_SPLITDISABLE;
-> >> +		dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
-> >> +	}
-> >> +}
-> >> +#else
-> >> +#define dwc3_complete NULL
-> >>  #endif /* CONFIG_PM_SLEEP */
-> >>  
-> >>  static const struct dev_pm_ops dwc3_dev_pm_ops = {
-> >>  	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
-> >> +	.complete = dwc3_complete,  
-> 
-> why is this done on complete? Why can't it be done at the end of
-> dwc3_resume()?
-
-Again, no idea. I didn't actually tried to suspend/resume.
-
-Maybe the original author can shed a light on it.
-
-Thanks,
-Mauro
