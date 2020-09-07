@@ -2,202 +2,89 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49BCC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7781E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WPvQMiZH"
+	by mail.kernel.org (Postfix) with ESMTP id C1BEF206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgIGJjb (ORCPT
+        id S1728392AbgIGJko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:39:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59102 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728300AbgIGJj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:39:29 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0879Vp67008621;
-        Mon, 7 Sep 2020 05:39:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=/zsoqtLlLbEPeX56/5WqT6AsOKEzVbCt1a7Ompwymls=;
- b=WPvQMiZHoj+krc7szVHr3KR8Dth4u7rrk9gmXULVKwKiISKoxDWdeR00fSQ6/wFaWLw3
- y8uX0uio5xDMuMmySUIHW2qtUqGZblyjAZ8AgeNEToC/9q/FMb6wgbalFfMELy3FxInl
- D0yXYsss5nKqlNqiLnuvm4f/MW+M16GYVnVQY3oRuel2bDMRfxYUUBX5ia+ydCwzFEWT
- q29+3TgLu7XBZXMxr676edSqVK/6TKLlIylfCmaFBdLimeUDZKG7K+ixv5QPuO8Pg34p
- 2tHtbQD7hG7hTek66KdO00IxUgiNFhb0y4gCbKFPmYanVAVgip0d7UfYszfIeHMUDW/O 5g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33dff85k9c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 05:39:16 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0879WrP2011545;
-        Mon, 7 Sep 2020 05:39:16 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33dff85k88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 05:39:15 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0879bbYJ001949;
-        Mon, 7 Sep 2020 09:39:13 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 33c2a827c7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 09:39:13 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0879dAIb32244048
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 09:39:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 389B3A4065;
-        Mon,  7 Sep 2020 09:39:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62105A4060;
-        Mon,  7 Sep 2020 09:39:09 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.86.222])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Sep 2020 09:39:09 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
-Date:   Mon,  7 Sep 2020 11:39:05 +0200
-Message-Id: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-07_04:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
- suspectscore=1 impostorscore=0 bulkscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009070090
+        Mon, 7 Sep 2020 05:40:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:58950 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728141AbgIGJkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:40:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40E6630E;
+        Mon,  7 Sep 2020 02:40:36 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B6583F66E;
+        Mon,  7 Sep 2020 02:40:34 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 10:40:32 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>, marek.behun@nic.cz
+Subject: Re: [PATCH v2 0/5] PCIe aardvark controller improvements
+Message-ID: <20200907094032.GD6428@e121166-lin.cambridge.arm.com>
+References: <20200804115747.7078-1-pali@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200804115747.7078-1-pali@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Tue, Aug 04, 2020 at 01:57:42PM +0200, Pali Rohár wrote:
+> Hi,
+> 
+> we have some more improvements for PCIe aardvark controller (Armada 3720
+> SOC - EspressoBIN and Turris MOX).
+> 
+> The main improvement is that with these patches the driver can be compiled
+> as a module, and can be reloaded at runtime.
+> 
+> This series applies on top of Linus' master branch.
 
-The goal of the series is to give a chance to the architecture
-to validate VIRTIO device features.
+Hi,
 
-The tests are back to virtio_finalize_features.
+can you rebase it on top of v5.9-rc1 and resend, thanks.
 
-No more argument for the architecture callback which only reports
-if the architecture needs guest memory access restrictions for
-VIRTIO.
+Lorenzo
 
-I renamed the callback to arch_has_restricted_virtio_memory_access,
-the config option to ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS,
-and VIRTIO_F_IOMMU_PLATFORM to VIRTIO_F_ACCESS_PLATFORM.
-
-Regards,
-Pierre
-
-Pierre Morel (2):
-  virtio: let arch advertise guest's memory access restrictions
-  s390: virtio: PV needs VIRTIO I/O device protection
-
- arch/s390/Kconfig             |  1 +
- arch/s390/mm/init.c           | 10 ++++++++++
- drivers/virtio/Kconfig        |  6 ++++++
- drivers/virtio/virtio.c       | 15 +++++++++++++++
- include/linux/virtio_config.h | 10 ++++++++++
- 5 files changed, 42 insertions(+)
-
--- 
-2.17.1
-
-Changelog
-
-to v11:
-- replaced VIRTIO_F_IOMMU_PLATFORM with VIRTIO_F_ACCESS_PLATFORM
-
-to v10:
-- removed virtio_config.h unnecessary include
-- wording
-  (Connie)
-
-to v9:
-
-- move virtio tests back to virtio_finalize_features
-  (Connie)
-
-- remove virtio device argument
-
-to v8:
-
-- refactoring by using an optional callback
-  (Connie)
-
-to v7:
-
-- typo in warning message
-  (Connie)
-to v6:
-
-- rewording warning messages
-  (Connie, Halil)
-
-to v5:
-
-- return directly from S390 arch_validate_virtio_features()
-  when the guest is not protected.
-  (Connie)
-
-- Somme rewording
-  (Connie, Michael)
-
-- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
-  (Christian)
-
-to v4:
-
-- separate virtio and arch code
-  (Pierre)
-
-- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
-  (as interpreted from Heiko's comment)
-
-- moved validation inside the arch code
-  (Connie)
-
-- moved the call to arch validation before VIRTIO_F_1 test
-  (Michael)
-
-to v3:
-
-- add warning
-  (Connie, Christian)
-
-- add comment
-  (Connie)
-
-- change hook name
-  (Halil, Connie)
-
-to v2:
-
-- put the test in virtio_finalize_features()
-  (Connie)
-
-- put the test inside VIRTIO core
-  (Jason)
-
-- pass a virtio device as parameter
-  (Halil)
-
-
+> Marek & Pali
+> 
+> 
+> Changes in V2 for patch 4/5:
+> * Protect pci_stop_root_bus() and pci_remove_root_bus() function calls by
+>   pci_lock_rescan_remove() and pci_unlock_rescan_remove()
+> 
+> 
+> Pali Rohár (5):
+>   PCI: aardvark: Fix compilation on s390
+>   PCI: aardvark: Check for errors from pci_bridge_emul_init() call
+>   PCI: pci-bridge-emul: Export API functions
+>   PCI: aardvark: Implement driver 'remove' function and allow to build
+>     it as module
+>   PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
+> 
+>  drivers/pci/controller/Kconfig        |   2 +-
+>  drivers/pci/controller/pci-aardvark.c | 104 ++++++++++++++++----------
+>  drivers/pci/pci-bridge-emul.c         |   4 +
+>  3 files changed, 71 insertions(+), 39 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
