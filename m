@@ -2,198 +2,160 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EC1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E952C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C1A206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F67206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:47:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X4t7VR+h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbgIGPrC (ORCPT
+        id S1730183AbgIGPr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:47:02 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:56407 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730200AbgIGPjl (ORCPT
+        Mon, 7 Sep 2020 11:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730087AbgIGPmr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:39:41 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MAORp-1kQ5023Wyx-00Bvxy; Mon, 07 Sep 2020 17:39:25 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christoph Hellwig <hch@lst.de>,
-        Russell King <rmk@arm.linux.org.uk>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linus.walleij@linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 7/9] ARM: oabi-compat: rework fcntl64() emulation
-Date:   Mon,  7 Sep 2020 17:36:48 +0200
-Message-Id: <20200907153701.2981205-8-arnd@arndb.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200907153701.2981205-1-arnd@arndb.de>
-References: <20200907153701.2981205-1-arnd@arndb.de>
+        Mon, 7 Sep 2020 11:42:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76936C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 08:42:46 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id j7so1804042plk.11
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 08:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=scYv+JiFixkFWNYkQzmkDbHirjVb4zjS1yIiBjdW4yA=;
+        b=X4t7VR+h7AagjcBWbmhb0jnKlXvURPYz7YSJmTKjUwm7bFWt2LgutX+e83J0pfqCSb
+         nTTmdDTxb2Ob2OknduMdc0YIKYBDtl65Q8FsbrrxLcuHpGVM/YizFBsiIk1v9ikdywhR
+         hupAqKClEFc0eoLcANc+LwEpkUqT8Mb3J3U11OhaQ4lvpqNd8b1jIi51dBSTwdMkYKw7
+         2gQN7nAESE0fLfwhsYYa1YzQSQlg5HGvcP5wWYzS3qOCoSry/lhDeiiq4PEoQXO/zpsC
+         pyfbEQA3xpXbYYFYcvf6jLAAQUwThJUBCAal1XCyYQAHnwUooKFoFw0Z61LySM0GU/TM
+         jQ4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=scYv+JiFixkFWNYkQzmkDbHirjVb4zjS1yIiBjdW4yA=;
+        b=YUnRb1oTKaiEznV7vUPpwtDtpFy+gEtfSMe7hoH36Z7SlfHiEzl7DsaJIGa9b/lRW7
+         tL++/C56JyypUgtKaLicanlsZ5fNiHkxvP8jZBBSDBHA4nuvVvKCYc2JCugs046BRwNo
+         K/QJt089t8BAVWjC99bW2wJG0/D6kv3UbCZkGrBLH/ILI0Gb+PoieOI4kWwuZz/pQNK2
+         XTQU7gpWsva7z0sxnca/aRg6Qxr51+J2DFLVS+tUpGJnEaiz/1ujQw8nU2N7cqKqTON6
+         PNBmwM0OygOMnziN5/AaRWlQRK6XJXSSkv/VdoxjvK8ghn0falKLyKn7DFQKPoI+T4/G
+         egXg==
+X-Gm-Message-State: AOAM533I7xTZuAE2ZEgPDpMm45iu49D7mDn28wtOPFanjqA/3zmAlIQt
+        d64Vm0lcCktX8beobwxZsXy/8baS3QqfK+JmHGYcDQ==
+X-Google-Smtp-Source: ABdhPJyn1CGlaUUZP/OxCa11KPVLeBGwzD2x9GxEkg5Jp5TSxt7TuYgXrPjqnwr4M89Zttc+Z8bwxN+z1VJCvRB/Kbw=
+X-Received: by 2002:a17:90a:19d1:: with SMTP id 17mr20268147pjj.93.1599493365374;
+ Mon, 07 Sep 2020 08:42:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:iM3qzQMw61BcTGiic5QvpuR9DDlQ2H9fxdB7ia6fbwKIF2rg5p2
- V18En2TVQVNG4HbPQ2wa7eIIqALISwGgeXc1mmgLE5Je3OZh2qIdhV+YjlwP5SU30hRd2yS
- rx/WWztONnhHPkSV+3Zf5cVgLOhS3dyTBZMeeVNPAcm3O8lRFzxlV+SDTnM52bhDb7mGHsB
- +h5osVMZ5Ta9LTH4J0Vgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:s60HJleClaw=:lbmhK3Xm/0z9REWma3f77D
- cMoqTTOR2LwDWRq6qlTcEar8Q4fy61sav0V1g9eHzmC4ndwEo9mShY2d0oyZkosycaqPYK4Q2
- +ZdNNgagoWe7M4yqiF8Y+lJSNKqVT5K64zXzLOGeUNjRVT8e/vYNnolbe+i9rZZygsue6If7Q
- gXeF6gFM4Bn/rn5fKLnjmyYrCMkV7q79vhbhj8XnJbHManeDG4SgtaXmAX5igex0UEVubqCfm
- kAkMiJYF2JsiudZxo4YOvhObQ68K2NPhhWeSx3wLqKB/pYElDKw0fAMSMV9lt8W/ixqLgd4/2
- EIBqMDe7/qh8t7QN5W2N5T5o2HaAiCxHzj8zfR2uLgOdFQlS2rC5bYoUJIwktjJwa2a2+ITno
- X4zkp+ob8HDpEgF5UreZ3s8/T31EkHUqYmhCRkFu++iqQzDFay94bGK0l96dOngXFQzbjCeTn
- e0zKR07k6sYB2oPrq18q6RVaWNuOu5PdfDcuT+/59Oopy0EkvuW17Nt/+x4G7jaZ8tx8mo/vR
- o3WnOpCd9WLRErMXxtyI7rhyw2eF9rfWC1V6wXNPcdCjja44utbhsA26vKatI6CCgIVnGpmEi
- 8uScto1tfUrhNC1cgG6IMnpy3tAgfwFIbhw8SbLHpyHm1s2xFMdi/DhKh+FdKRG0qs+8jBrvC
- NjkIaSB6KVaMxKSJMr8V8NbcP4++mMiZDqXzHFN/xyeVIvHIKyFXolRxluhRsh7zwvbISumCk
- xITHajoFxmT1Rb3pS1IrtxPOytKvripyv9NMcSrpkDguIKa86ZFrQxc6f/MJOoXMKrlNI5Szu
- wdjlP49Lq+7yzbdCsttR3WU/sygLGgHQAFEXPEuI0leE8DP2S+0+VwaqNhBhJChtOVGGY+y
+References: <20200904155025.55718-1-xypron.glpk@gmx.de> <CAD8XO3ZLqkuajo3GVRdvXiFXMH9P-vp-PX5s6idgA51ouVDpKQ@mail.gmail.com>
+ <fec7e55e-154c-5348-5181-6d9efdc0245a@gmx.de> <CAD8XO3YGKwqbt6cYZQgauioeywLFg56tm+PFM6_nGhuJwSk4Jg@mail.gmail.com>
+In-Reply-To: <CAD8XO3YGKwqbt6cYZQgauioeywLFg56tm+PFM6_nGhuJwSk4Jg@mail.gmail.com>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Mon, 7 Sep 2020 18:42:34 +0300
+Message-ID: <CAD8XO3a+TtYciQR4UmprvxHcN8E9wNABEVdt0JsN-GDhJeZJzA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is one of the last users of get_fs(), and this is fairly easy to
-change, since the infrastructure for it is already there.
+Tested both original and (md->type == EFI_CONVENTIONAL_MEMORY)
+versions - they fix qemu v7 boot under qemu. I think the second
+version is more correct.
 
-The replacement here is essentially a copy of the existing fcntl64()
-syscall entry function.
+Regards,
+Maxim.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/kernel/sys_oabi-compat.c | 93 ++++++++++++++++++++-----------
- 1 file changed, 60 insertions(+), 33 deletions(-)
-
-diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
-index d3c6460d13ca..13956d5e50d7 100644
---- a/arch/arm/kernel/sys_oabi-compat.c
-+++ b/arch/arm/kernel/sys_oabi-compat.c
-@@ -194,56 +194,83 @@ struct oabi_flock64 {
- 	pid_t	l_pid;
- } __attribute__ ((packed,aligned(4)));
- 
--static long do_locks(unsigned int fd, unsigned int cmd,
--				 unsigned long arg)
-+static int get_oabi_flock(struct flock64 *kernel, struct oabi_flock64 __user *arg)
- {
--	struct flock64 kernel;
- 	struct oabi_flock64 user;
--	mm_segment_t fs;
--	long ret;
- 
- 	if (copy_from_user(&user, (struct oabi_flock64 __user *)arg,
- 			   sizeof(user)))
- 		return -EFAULT;
--	kernel.l_type	= user.l_type;
--	kernel.l_whence	= user.l_whence;
--	kernel.l_start	= user.l_start;
--	kernel.l_len	= user.l_len;
--	kernel.l_pid	= user.l_pid;
--
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--	ret = sys_fcntl64(fd, cmd, (unsigned long)&kernel);
--	set_fs(fs);
--
--	if (!ret && (cmd == F_GETLK64 || cmd == F_OFD_GETLK)) {
--		user.l_type	= kernel.l_type;
--		user.l_whence	= kernel.l_whence;
--		user.l_start	= kernel.l_start;
--		user.l_len	= kernel.l_len;
--		user.l_pid	= kernel.l_pid;
--		if (copy_to_user((struct oabi_flock64 __user *)arg,
--				 &user, sizeof(user)))
--			ret = -EFAULT;
--	}
--	return ret;
-+
-+	kernel->l_type	 = user.l_type;
-+	kernel->l_whence = user.l_whence;
-+	kernel->l_start	 = user.l_start;
-+	kernel->l_len	 = user.l_len;
-+	kernel->l_pid	 = user.l_pid;
-+
-+	return 0;
-+}
-+
-+static int put_oabi_flock(struct flock64 *kernel, struct oabi_flock64 __user *arg)
-+{
-+	struct oabi_flock64 user;
-+
-+	user.l_type	= kernel->l_type;
-+	user.l_whence	= kernel->l_whence;
-+	user.l_start	= kernel->l_start;
-+	user.l_len	= kernel->l_len;
-+	user.l_pid	= kernel->l_pid;
-+
-+	if (copy_to_user((struct oabi_flock64 __user *)arg,
-+			 &user, sizeof(user)))
-+		return -EFAULT;
-+
-+	return 0;
- }
- 
- asmlinkage long sys_oabi_fcntl64(unsigned int fd, unsigned int cmd,
- 				 unsigned long arg)
- {
-+	void __user *argp = (void __user *)arg;
-+	struct fd f = fdget_raw(fd);
-+	struct flock64 flock;
-+	long err = -EBADF;
-+
-+	if (!f.file)
-+		goto out;
-+
- 	switch (cmd) {
--	case F_OFD_GETLK:
--	case F_OFD_SETLK:
--	case F_OFD_SETLKW:
- 	case F_GETLK64:
-+	case F_OFD_GETLK:
-+		err = security_file_fcntl(f.file, cmd, arg);
-+		if (err)
-+			break;
-+		err = get_oabi_flock(&flock, argp);
-+		if (err)
-+			break;
-+		err = fcntl_getlk64(f.file, cmd, &flock);
-+		if (!err)
-+		       err = put_oabi_flock(&flock, argp);
-+		break;
- 	case F_SETLK64:
- 	case F_SETLKW64:
--		return do_locks(fd, cmd, arg);
--
-+	case F_OFD_SETLK:
-+	case F_OFD_SETLKW:
-+		err = security_file_fcntl(f.file, cmd, arg);
-+		if (err)
-+			break;
-+		err = get_oabi_flock(&flock, argp);
-+		if (err)
-+			break;
-+		err = fcntl_setlk64(fd, f.file, cmd, &flock);
-+		break;
- 	default:
--		return sys_fcntl64(fd, cmd, arg);
-+		err = sys_fcntl64(fd, cmd, arg);
-+		break;
- 	}
-+	fdput(f);
-+out:
-+	return err;
- }
- 
- struct oabi_epoll_event {
--- 
-2.27.0
-
+On Mon, 7 Sep 2020 at 13:21, Maxim Uvarov <maxim.uvarov@linaro.org> wrote:
+>
+> On Mon, 7 Sep 2020 at 11:31, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> >
+> > On 07.09.20 09:00, Maxim Uvarov wrote:
+> > > On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> > >>
+> > >> In the memory map the regions with the lowest addresses may be of type
+> > >> EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
+> > >> rest of the memory. So for calculating the maximum loading address for the
+> > >> device tree and the initial ramdisk image these reserved areas should not
+> > >> be taken into account.
+> > >>
+> > >> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> > >> ---
+> > >>  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
+> > >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >>
+> > >> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> > >> index c2484bf75c5d..13058ac75765 100644
+> > >> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> > >> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> > >> @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
+> > >>         map.map_end = map.map + map_size;
+> > >>
+> > >>         for_each_efi_memory_desc_in_map(&map, md) {
+> > >> -               if (md->attribute & EFI_MEMORY_WB) {
+> > >> +               if (md->attribute & EFI_MEMORY_WB &&
+> > >> +                   md->type != EFI_RESERVED_TYPE) {
+> > >
+> > > shouldn't the type here be CONVENTIONAL?
+> >
+> > In 32bit ARM reserve_kernel_base() the following are considered:
+> >
+> > * EFI_LOADER_CODE
+> > * EFI_LOADER_DATA
+> > * EFI_BOOT_SERVICES_CODE
+> > * EFI_BOOT_SERVICES_DATA
+> > * EFI_CONVENTIONAL_MEMORY
+> >
+> > What I have not yet fully understood is why Linux on ARM 32bit tries to
+> > put the kernel into the first 128 MiB. Cf. handle_kernel_image() in
+> > drivers/firmware/efi/libstub/arm32-stub.c.
+> >
+>
+> Are you looking to the latest kernel?
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/efi/libstub/arm32-stub.c?h=v5.9-rc4#n211
+> efi_bs_call(allocate_pages,..) is only for EFI_CONVENTIONAL_MEMORY.
+>
+> > According to the comments this is due to some implementation detail in
+> > the Linux zImage decompressor and not required by UEFI or the hardware:
+> >
+> >          Verify that the DRAM base address is compatible with the ARM
+> >          boot protocol, which determines the base of DRAM by masking
+> >          off the low 27 bits of the address at which the zImage is
+> >          loaded. These assumptions are made by the decompressor,
+> >          before any memory map is available.
+>
+> I think that is also fixed with:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/firmware/efi/libstub/arm32-stub.c?h=v5.9-rc4&id=d0f9ca9be11f25ef4151195eab7ea36d136084f6
+>
+> Maxim.
+>
+> >
+> > Best regards
+> >
+> > Heinrich
+> >
+> > >
+> > >>                         if (membase > md->phys_addr)
+> > >>                                 membase = md->phys_addr;
+> > >>                 }
+> > >> --
+> > >> 2.28.0
+> > >>
+> >
