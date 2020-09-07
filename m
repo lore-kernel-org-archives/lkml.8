@@ -2,187 +2,95 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E7C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C32C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54683215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8F521897
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599517424;
-	bh=Pao4NsJGj158+INc442LutV3UkAUffpThetfSRwJlm8=;
+	s=default; t=1599517448;
+	bh=Zw8k17EFrc+/63emBncYD49Ff5pxZKxzzOMgy+BQJLI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jKrk1p3C9lflrMCJW0VYpAlyVwCZiQ7aeZ6Gr4MIPLrW3T4IaJOeja4t0yZbT5qJe
-	 VZnBdTn+5GMTkpqN1Yn8kJ3ME4hXVhEtjn7Jvpct1oahors359tUDC1vWlkE1W0F2k
-	 tfB8TWIdjz0m7L41WHIY8TMFnTKqJaoHzDVrhxbk=
+	b=SNHHLjZUA8o1uy7rKR+M4zt+jYjlDM5xs845nNvajDb7PR2+DWmRr2kSUiqbuqLDa
+	 dag1mypWnXyO47/Qf+3ngb1Sw7SeHcawUDuusCOAYp7ll9E3PL2vw8wU5L7RTrKweL
+	 /8EyESHjwDtf8FOhSB0KhJ10x+c27hXK7wODoV5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgIGWXm (ORCPT
+        id S1728163AbgIGWYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 18:24:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgIGWXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:23:41 -0400
-Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        id S1727773AbgIGWYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:24:05 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C2F4215A4;
-        Mon,  7 Sep 2020 22:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FC482177B;
+        Mon,  7 Sep 2020 22:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599517420;
-        bh=Pao4NsJGj158+INc442LutV3UkAUffpThetfSRwJlm8=;
+        s=default; t=1599517445;
+        bh=Zw8k17EFrc+/63emBncYD49Ff5pxZKxzzOMgy+BQJLI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GOjvICHaaE1GyrJlCxMfbMuPlPP46n6ugcwDfu/sCesso3O2kYDTCKLE5GjgAG1K1
-         G205SVk3bVh1QKiQRi3yOTrBuyAuzbdBHvcj7xqbCbFYWg5PTqxGTwQ4aRbQV2YfuP
-         0qhk2GV32r+L3xdL/iEYhrUXiUB6acvpVr/gYVSQ=
-Date:   Mon, 7 Sep 2020 15:23:38 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fscrypt: Reduce object size of logging messages
-Message-ID: <20200907222338.GA68127@sol.localdomain>
-References: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
- <20200904230341.GA6172@sol.localdomain>
- <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
+        b=dCQM0mMbBmsuXq6UiB6gfFobsHNxnlX3Kk4wLQa8AevAHky7abtJqi/+ADi5VCech
+         AimdyxuYXf0XIhdZP91Xjk4gQYYSIVwEHMDANE0DH5RqXC/Vxo1TxhoENe+na8hCS9
+         KpNgXEXwD6oqJYWh/Feb1GZ86rYfY8DK9ZhM4KRM=
+Date:   Mon, 7 Sep 2020 18:24:03 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Mingming Cao <mmc@linux.vnet.ibm.com>,
+        Dany Madden <drt@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.8 14/53] ibmvnic fix NULL tx_pools and rx_tools
+ issue at do_reset
+Message-ID: <20200907222403.GQ8670@sasha-vm>
+References: <20200907163220.1280412-1-sashal@kernel.org>
+ <20200907163220.1280412-14-sashal@kernel.org>
+ <20200907141026.093fc160@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
+In-Reply-To: <20200907141026.093fc160@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 09:38:23PM -0700, Joe Perches wrote:
-> > > diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-> > > index 9212325763b0..c82cc3907e43 100644
-> > > --- a/fs/crypto/crypto.c
-> > > +++ b/fs/crypto/crypto.c
-> > > @@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
-> > >  	return err;
-> > >  }
-> > >  
-> > > -void fscrypt_msg(const struct inode *inode, const char *level,
-> > > -		 const char *fmt, ...)
-> > > +void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
-> > >  {
-> > >  	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
-> > >  				      DEFAULT_RATELIMIT_BURST);
-> > >  	struct va_format vaf;
-> > >  	va_list args;
-> > > +	int level;
-> > >  
-> > >  	if (!__ratelimit(&rs))
-> > >  		return;
-> > >  
-> > >  	va_start(args, fmt);
-> > > -	vaf.fmt = fmt;
-> > > +	level = printk_get_level(fmt);
-> > > +	vaf.fmt = printk_skip_level(fmt);
-> > >  	vaf.va = &args;
-> > >  	if (inode)
-> > > -		printk("%sfscrypt (%s, inode %lu): %pV\n",
-> > > -		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
-> > > +		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
-> > > +		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
-> > > +		       &vaf);
-> > >  	else
-> > > -		printk("%sfscrypt: %pV\n", level, &vaf);
-> > > +		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
-> > >  	va_end(args);
-> > 
-> > The problem with this approach is that if fscrypt_printk() is called without
-> > providing a log level in the format string (which one would assume would work,
-> > since printk() allows it), then the real format string will be truncated to just
-> > KERN_SOH because 'level' will be 0.
-> > Can you find a way to avoid that?
-> 
-> While I don't think this is a problem in that all the fscrypt_<level>
-> calls will always prefix a KERN_<LEVEL>,
+On Mon, Sep 07, 2020 at 02:10:26PM -0700, Jakub Kicinski wrote:
+>On Mon,  7 Sep 2020 12:31:40 -0400 Sasha Levin wrote:
+>> [ Upstream commit 9f13457377907fa253aef560e1a37e1ca4197f9b ]
+>
+>> @@ -2024,10 +2033,14 @@ static int do_reset(struct ibmvnic_adapter *adapter,
+>>  		} else {
+>>  			rc = reset_tx_pools(adapter);
+>>  			if (rc)
+>> +				netdev_dbg(adapter->netdev, "reset tx pools failed (%d)\n",
+>> +						rc);
+>>  				goto out;
+>>
+>>  			rc = reset_rx_pools(adapter);
+>>  			if (rc)
+>> +				netdev_dbg(adapter->netdev, "reset rx pools failed (%d)\n",
+>> +						rc);
+>>  				goto out;
+>>  		}
+>>  		ibmvnic_disable_irqs(adapter);
+>
+>Hi Sasha!
+>
+>I just pushed this to net:
+>
+>8ae4dff882eb ("ibmvnic: add missing parenthesis in do_reset()")
+>
+>You definitely want to pull that in if you decide to backport this one.
 
-It's still a pitfall that people could run into later.  It would be better to
-make fscrypt_printk() work in the expected way.
+Will do, thanks!
 
-> what btrfs uses:
-> 
-> 	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
-> ...
-> 	while ((kern_level = printk_get_level(fmt)) != 0) {
-> 		size_t size = printk_skip_level(fmt) - fmt;
-> 
-> 		if (kern_level >= '0' && kern_level <= '7') {
-> 			memcpy(lvl, fmt,  size);
-> 			lvl[size] = '\0';
-> 		}
-> 		fmt += size;
-> 	}
-> 
-> and use "%s...", lvl, ...
-> 
-
-Is the loop really needed?  How about just:
-
-diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-index 9212325763b0f..c5a87c2fe1020 100644
---- a/fs/crypto/crypto.c
-+++ b/fs/crypto/crypto.c
-@@ -329,11 +329,12 @@ int fscrypt_initialize(unsigned int cop_flags)
- 	return err;
- }
- 
--void fscrypt_msg(const struct inode *inode, const char *level,
--		 const char *fmt, ...)
-+void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
- {
- 	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
- 				      DEFAULT_RATELIMIT_BURST);
-+	const char *raw_fmt = printk_skip_level(fmt);
-+	int hdr_len = raw_fmt - fmt;
- 	struct va_format vaf;
- 	va_list args;
- 
-@@ -341,13 +342,13 @@ void fscrypt_msg(const struct inode *inode, const char *level,
- 		return;
- 
- 	va_start(args, fmt);
--	vaf.fmt = fmt;
-+	vaf.fmt = raw_fmt;
- 	vaf.va = &args;
- 	if (inode)
--		printk("%sfscrypt (%s, inode %lu): %pV\n",
--		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
-+		printk("%.*sfscrypt (%s, inode %lu): %pV\n",
-+		       hdr_len, fmt, inode->i_sb->s_id, inode->i_ino, &vaf);
- 	else
--		printk("%sfscrypt: %pV\n", level, &vaf);
-+		printk("%.*sfscrypt: %pV\n", hdr_len, fmt, &vaf);
- 	va_end(args);
- }
-
-> 
-> > > -#define fscrypt_warn(inode, fmt, ...)		\
-> > > -	fscrypt_msg((inode), KERN_WARNING, fmt, ##__VA_ARGS__)
-> > > -#define fscrypt_err(inode, fmt, ...)		\
-> > > -	fscrypt_msg((inode), KERN_ERR, fmt, ##__VA_ARGS__)
-> > > +#define fscrypt_err(inode, fmt, ...)					\
-> > > +	fscrypt_printk(inode, KERN_ERR fmt, ##__VA_ARGS__)
-> > > +#define fscrypt_warn(inode, fmt, ...)					\
-> > > +	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
-> > 
-> > It's probably best to keep the parentheses around 'inode'.
-> 
-> Not really as it's an independent argument that can't
-> effectively have any other purpose but to be an argument
-> to the fsrypt_printk function.
-
-True, but since forgetting to include parentheses around macro arguments is such
-a common mistake, IMO they should just always be included so that people don't
-have to think about whether the omission is correct or not.
-
-- Eric
+-- 
+Thanks,
+Sasha
