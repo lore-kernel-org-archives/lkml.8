@@ -2,344 +2,222 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E844C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 847FEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 034EA21481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:31:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/zu1uo0"
+	by mail.kernel.org (Postfix) with ESMTP id 4E7BF21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgIGLaY (ORCPT
+        id S1728779AbgIGLbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:30:24 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42224 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728985AbgIGLYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:24:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599477880;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Helxr2TL3FWwvXuVr8Bc/R5+M7Jza/GFAwsBUbUC86o=;
-        b=Z/zu1uo0G+QKqEpLtrd30ykj8ok7/sS2tuwegAo0lrylgSXytHVWRaLG/NxddhzOKQSGEk
-        isHb2bqNPRPeuMIcTTrHEpTAcAjmwD3xOsonZTYSEyBiUvUkwhR46AS4B/ARi2LnvI+yM8
-        9cU1kJkPfumIW/YDfLMjD+sxVKy09kE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-epmww-bXOvabWxKWaU32Hw-1; Mon, 07 Sep 2020 07:24:35 -0400
-X-MC-Unique: epmww-bXOvabWxKWaU32Hw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 068D2873084;
-        Mon,  7 Sep 2020 11:24:31 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D6B015C1BB;
-        Mon,  7 Sep 2020 11:24:26 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 2CE7D9A83; Mon,  7 Sep 2020 13:24:26 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     christian.koenig@amd.com, Gerd Hoffmann <kraxel@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        amd-gfx@lists.freedesktop.org (open list:RADEON and AMDGPU DRM DRIVERS),
-        linux-kernel@vger.kernel.org (open list),
-        etnaviv@lists.freedesktop.org (moderated list:DRM DRIVERS FOR VIVANTE
-        GPU IP),
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU),
-        nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA
-        GEFORCE/QUADRO GPUS),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Rockchip SoC
-        support),
-        linux-rockchip@lists.infradead.org (open list:ARM/Rockchip SoC support),
-        linux-tegra@vger.kernel.org (open list:DRM DRIVERS FOR NVIDIA TEGRA),
-        xen-devel@lists.xenproject.org (moderated list:DRM DRIVERS FOR XEN)
-Subject: [PATCH v4 1/1] drm: allow limiting the scatter list size.
-Date:   Mon,  7 Sep 2020 13:24:25 +0200
-Message-Id: <20200907112425.15610-2-kraxel@redhat.com>
-In-Reply-To: <20200907112425.15610-1-kraxel@redhat.com>
-References: <20200907112425.15610-1-kraxel@redhat.com>
+        Mon, 7 Sep 2020 07:31:16 -0400
+Received: from mga07.intel.com ([134.134.136.100]:14653 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728913AbgIGLY6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:24:58 -0400
+IronPort-SDR: wwd0a+z9M75QE6cjLp5ZXtBLRm9ILwtaQVtT1vMKEPMXPK5dQ+6LMcNa+H0drDelarUCsAEXhr
+ zXTcePAcDz5g==
+X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="222196737"
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="222196737"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 04:05:47 -0700
+IronPort-SDR: /v5b++m3kkkbfFA9wbim3ZJdffEEVpxjZhqPtTvjdgKUi4hmW4iO8F388Pcbzls2iqus21xquf
+ ByBivjDzRdqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="303700090"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 07 Sep 2020 04:05:45 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 07 Sep 2020 14:05:44 +0300
+Date:   Mon, 7 Sep 2020 14:05:44 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Zwane Mwaikambo <zwane@yosper.io>
+Cc:     Lyude Paul <lyude@redhat.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>, zwanem@gmail.com,
+        dkwon@redhat.com, Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH]] drm/dp check aux_dev before use in
+ drm_dp_aux_dev_get_by_minor()
+Message-ID: <20200907110544.GE6112@intel.com>
+References: <alpine.DEB.2.21.2008101004110.27032@montezuma.home>
+ <20200811085830.GZ2352366@phenom.ffwll.local>
+ <alpine.DEB.2.21.2008111514210.35094@montezuma.home>
+ <CAKMK7uHxikojLQNbsnnfDfGZ3tFP9CRUTzvr+DsZghzQupaBGg@mail.gmail.com>
+ <a1141faf8c6a0a924d87132fb4a297cd6d47e09d.camel@redhat.com>
+ <alpine.DEB.2.21.2008121314020.39850@montezuma.home>
+ <alpine.DEB.2.21.2009031042400.44355@montezuma.home>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <alpine.DEB.2.21.2009031042400.44355@montezuma.home>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add drm_device argument to drm_prime_pages_to_sg(), so we can
-call dma_max_mapping_size() to figure the segment size limit
-and call into __sg_alloc_table_from_pages() with the correct
-limit.
+On Fri, Sep 04, 2020 at 12:21:26AM -0700, Zwane Mwaikambo wrote:
+> I observed this when unplugging a DP monitor whilst a computer is asleep 
+> and then waking it up. This left DP chardev nodes still being present on 
+> the filesystem and accessing these device nodes caused an oops because 
+> drm_dp_aux_dev_get_by_minor() assumes a device exists if it is opened. 
+> This can also be reproduced by creating a device node with mknod(1) and 
+> issuing an open(2)
+> 
+> [166164.933198] BUG: kernel NULL pointer dereference, address: 0000000000000018
+> [166164.933202] #PF: supervisor read access in kernel mode
+> [166164.933204] #PF: error_code(0x0000) - not-present page
+> [166164.933205] PGD 0 P4D 0 
+> [166164.933208] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [166164.933211] CPU: 4 PID: 99071 Comm: fwupd Tainted: G        W         
+> 5.8.0-rc6+ #1
+> [166164.933213] Hardware name: LENOVO 20RD002VUS/20RD002VUS, BIOS R16ET25W 
+> (1.11 ) 04/21/2020
+> [166164.933232] RIP: 0010:drm_dp_aux_dev_get_by_minor+0x29/0x70 
+> [drm_kms_helper]
+> [166164.933234] Code: 00 0f 1f 44 00 00 55 48 89 e5 41 54 41 89 fc 48 c7 
+> c7 60 01 a4 c0 e8 26 ab 30 d7 44 89 e6 48 c7 c7 80 01 a4 c0 e8 47 94 d6 d6 
+> <8b> 50 18 49 89 c4 48 8d 78 18 85 d2 74 33 8d 4a 01 89 d0 f0 0f b1
+> [166164.933236] RSP: 0018:ffffb7d7c41cbbf0 EFLAGS: 00010246
+> [166164.933237] RAX: 0000000000000000 RBX: ffff8a90001fe900 RCX: 0000000000000000
+> [166164.933238] RDX: 0000000000000000 RSI: 0000000000000003 RDI: ffffffffc0a40180
+> [166164.933239] RBP: ffffb7d7c41cbbf8 R08: 0000000000000000 R09: ffff8a93e157d6d0
+> [166164.933240] R10: 0000000000000000 R11: ffffffffc0a40188 R12: 0000000000000003
+> [166164.933241] R13: ffff8a9402200e80 R14: ffff8a90001fe900 R15: 0000000000000000
+> [166164.933244] FS:  00007f7fb041eb00(0000) GS:ffff8a9411500000(0000) 
+> knlGS:0000000000000000
+> [166164.933245] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [166164.933246] CR2: 0000000000000018 CR3: 00000000352c2003 CR4: 00000000003606e0
+> [166164.933247] Call Trace:
+> [166164.933264]  auxdev_open+0x1b/0x40 [drm_kms_helper]
+> [166164.933278]  chrdev_open+0xa7/0x1c0
+> [166164.933282]  ? cdev_put.part.0+0x20/0x20
+> [166164.933287]  do_dentry_open+0x161/0x3c0
+> [166164.933291]  vfs_open+0x2d/0x30
+> [166164.933297]  path_openat+0xb27/0x10e0
+> [166164.933306]  ? atime_needs_update+0x73/0xd0
+> [166164.933309]  do_filp_open+0x91/0x100
+> [166164.933313]  ? __alloc_fd+0xb2/0x150
+> [166164.933316]  do_sys_openat2+0x210/0x2d0
+> [166164.933318]  do_sys_open+0x46/0x80
+> [166164.933320]  __x64_sys_openat+0x20/0x30
+> [166164.933328]  do_syscall_64+0x52/0xc0
+> [166164.933336]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> 
+> (gdb) disassemble drm_dp_aux_dev_get_by_minor+0x29
+> Dump of assembler code for function drm_dp_aux_dev_get_by_minor:
+>    0x0000000000017b10 <+0>:     callq  0x17b15 <drm_dp_aux_dev_get_by_minor+5>
+>    0x0000000000017b15 <+5>:     push   %rbp
+>    0x0000000000017b16 <+6>:     mov    %rsp,%rbp
+>    0x0000000000017b19 <+9>:     push   %r12
+>    0x0000000000017b1b <+11>:    mov    %edi,%r12d
+>    0x0000000000017b1e <+14>:    mov    $0x0,%rdi
+>    0x0000000000017b25 <+21>:    callq  0x17b2a <drm_dp_aux_dev_get_by_minor+26>
+>    0x0000000000017b2a <+26>:    mov    %r12d,%esi
+>    0x0000000000017b2d <+29>:    mov    $0x0,%rdi
+>    0x0000000000017b34 <+36>:    callq  0x17b39 <drm_dp_aux_dev_get_by_minor+41>
+>    0x0000000000017b39 <+41>:    mov    0x18(%rax),%edx <=========
+>    0x0000000000017b3c <+44>:    mov    %rax,%r12
+>    0x0000000000017b3f <+47>:    lea    0x18(%rax),%rdi
+>    0x0000000000017b43 <+51>:    test   %edx,%edx
+>    0x0000000000017b45 <+53>:    je     0x17b7a <drm_dp_aux_dev_get_by_minor+106>
+>    0x0000000000017b47 <+55>:    lea    0x1(%rdx),%ecx
+>    0x0000000000017b4a <+58>:    mov    %edx,%eax
+>    0x0000000000017b4c <+60>:    lock cmpxchg %ecx,(%rdi)
+>    0x0000000000017b50 <+64>:    jne    0x17b76 <drm_dp_aux_dev_get_by_minor+102>
+>    0x0000000000017b52 <+66>:    test   %edx,%edx
+>    0x0000000000017b54 <+68>:    js     0x17b6d <drm_dp_aux_dev_get_by_minor+93>
+>    0x0000000000017b56 <+70>:    test   %ecx,%ecx
+>    0x0000000000017b58 <+72>:    js     0x17b6d <drm_dp_aux_dev_get_by_minor+93>
+>    0x0000000000017b5a <+74>:    mov    $0x0,%rdi
+>    0x0000000000017b61 <+81>:    callq  0x17b66 <drm_dp_aux_dev_get_by_minor+86>
+>    0x0000000000017b66 <+86>:    mov    %r12,%rax
+>    0x0000000000017b69 <+89>:    pop    %r12
+>    0x0000000000017b6b <+91>:    pop    %rbp
+>    0x0000000000017b6c <+92>:    retq   
+>    0x0000000000017b6d <+93>:    xor    %esi,%esi
+>    0x0000000000017b6f <+95>:    callq  0x17b74 <drm_dp_aux_dev_get_by_minor+100>
+>    0x0000000000017b74 <+100>:   jmp    0x17b5a <drm_dp_aux_dev_get_by_minor+74>
+>    0x0000000000017b76 <+102>:   mov    %eax,%edx
+>    0x0000000000017b78 <+104>:   jmp    0x17b43 <drm_dp_aux_dev_get_by_minor+51>
+>    0x0000000000017b7a <+106>:   xor    %r12d,%r12d
+>    0x0000000000017b7d <+109>:   jmp    0x17b5a <drm_dp_aux_dev_get_by_minor+74>
+> End of assembler dump.
+> 
+> (gdb) list *drm_dp_aux_dev_get_by_minor+0x29
+> 0x17b39 is in drm_dp_aux_dev_get_by_minor (drivers/gpu/drm/drm_dp_aux_dev.c:65).
+> 60      static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+> 61      {
+> 62              struct drm_dp_aux_dev *aux_dev = NULL;
+> 63
+> 64              mutex_lock(&aux_idr_mutex);
+> 65              aux_dev = idr_find(&aux_idr, index);
+> 66              if (!kref_get_unless_zero(&aux_dev->refcount))
+> 67                      aux_dev = NULL;
+> 68              mutex_unlock(&aux_idr_mutex);
+> 69
+> (gdb) p/x &((struct drm_dp_aux_dev *)(0x0))->refcount
+> $8 = 0x18
+> 
+> Looking at the caller, checks on the minor are pushed down to 
+> drm_dp_aux_dev_get_by_minor()
+> 
+> static int auxdev_open(struct inode *inode, struct file *file)
+> {
+>     unsigned int minor = iminor(inode);
+>     struct drm_dp_aux_dev *aux_dev;
+> 
+>     aux_dev = drm_dp_aux_dev_get_by_minor(minor); <====
+>     if (!aux_dev)
+>         return -ENODEV;
+> 
+>     file->private_data = aux_dev;
+>     return 0;
+> }
+> 
+> 
+> Fixes: e94cb37b34eb8 ("Add a drm_aux-dev module for reading/writing dpcd registers")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Zwane Mwaikambo <zwane@yosper.io>
+> ---
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_aux_dev.c b/drivers/gpu/drm/drm_dp_aux_dev.c
+> index 2510717d5a08..e25181bf2c48 100644
+> --- a/drivers/gpu/drm/drm_dp_aux_dev.c
+> +++ b/drivers/gpu/drm/drm_dp_aux_dev.c
+> @@ -63,7 +63,7 @@ static struct drm_dp_aux_dev *drm_dp_aux_dev_get_by_minor(unsigned index)
+>  
+>  	mutex_lock(&aux_idr_mutex);
+>  	aux_dev = idr_find(&aux_idr, index);
+> -	if (!kref_get_unless_zero(&aux_dev->refcount))
+> +	if (aux_dev && !kref_get_unless_zero(&aux_dev->refcount))
 
-This fixes virtio-gpu with sev.  Possibly it'll fix other bugs
-too given that drm seems to totaly ignore segment size limits
-so far ...
+Dejavu
 
-v2: place max_segment in drm driver not gem object.
-v3: move max_segment next to the other gem fields.
-v4: just use dma_max_mapping_size().
+https://lists.freedesktop.org/archives/dri-devel/2019-May/218855.html
+https://lists.freedesktop.org/archives/dri-devel/2019-July/226168.html
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- include/drm/drm_prime.h                     |  3 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c |  3 ++-
- drivers/gpu/drm/drm_gem_shmem_helper.c      |  2 +-
- drivers/gpu/drm/drm_prime.c                 | 13 ++++++++++---
- drivers/gpu/drm/etnaviv/etnaviv_gem.c       |  3 ++-
- drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c |  2 +-
- drivers/gpu/drm/msm/msm_gem.c               |  2 +-
- drivers/gpu/drm/msm/msm_gem_prime.c         |  2 +-
- drivers/gpu/drm/nouveau/nouveau_prime.c     |  2 +-
- drivers/gpu/drm/radeon/radeon_prime.c       |  2 +-
- drivers/gpu/drm/rockchip/rockchip_drm_gem.c |  5 +++--
- drivers/gpu/drm/tegra/gem.c                 |  2 +-
- drivers/gpu/drm/vgem/vgem_drv.c             |  2 +-
- drivers/gpu/drm/xen/xen_drm_front_gem.c     |  3 ++-
- 14 files changed, 29 insertions(+), 17 deletions(-)
+I guess we just got stuck waiting for confirmation that it reproduces
+with the bogus device node trick.
 
-diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
-index 9af7422b44cf..bf141e74a1c2 100644
---- a/include/drm/drm_prime.h
-+++ b/include/drm/drm_prime.h
-@@ -88,7 +88,8 @@ void drm_gem_dmabuf_vunmap(struct dma_buf *dma_buf, void *vaddr);
- int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
- int drm_gem_dmabuf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *vma);
- 
--struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages);
-+struct sg_table *drm_prime_pages_to_sg(struct drm_device *dev,
-+				       struct page **pages, unsigned int nr_pages);
- struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
- 				     int flags);
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-index 519ce4427fce..d7050ab95946 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-@@ -302,7 +302,8 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma_buf_attachment *attach,
- 
- 	switch (bo->tbo.mem.mem_type) {
- 	case TTM_PL_TT:
--		sgt = drm_prime_pages_to_sg(bo->tbo.ttm->pages,
-+		sgt = drm_prime_pages_to_sg(obj->dev,
-+					    bo->tbo.ttm->pages,
- 					    bo->tbo.num_pages);
- 		if (IS_ERR(sgt))
- 			return sgt;
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index 4b7cfbac4daa..0a952f27c184 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -656,7 +656,7 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_object *obj)
- 
- 	WARN_ON(shmem->base.import_attach);
- 
--	return drm_prime_pages_to_sg(shmem->pages, obj->size >> PAGE_SHIFT);
-+	return drm_prime_pages_to_sg(obj->dev, shmem->pages, obj->size >> PAGE_SHIFT);
- }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_get_sg_table);
- 
-diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-index 1693aa7c14b5..8a6a3c99b7d8 100644
---- a/drivers/gpu/drm/drm_prime.c
-+++ b/drivers/gpu/drm/drm_prime.c
-@@ -802,9 +802,11 @@ static const struct dma_buf_ops drm_gem_prime_dmabuf_ops =  {
-  *
-  * This is useful for implementing &drm_gem_object_funcs.get_sg_table.
-  */
--struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages)
-+struct sg_table *drm_prime_pages_to_sg(struct drm_device *dev,
-+				       struct page **pages, unsigned int nr_pages)
- {
- 	struct sg_table *sg = NULL;
-+	size_t max_segment = 0;
- 	int ret;
- 
- 	sg = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
-@@ -813,8 +815,13 @@ struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_page
- 		goto out;
- 	}
- 
--	ret = sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
--				nr_pages << PAGE_SHIFT, GFP_KERNEL);
-+	if (dev)
-+		max_segment = dma_max_mapping_size(dev->dev);
-+	if (max_segment == 0 || max_segment > SCATTERLIST_MAX_SEGMENT)
-+		max_segment = SCATTERLIST_MAX_SEGMENT;
-+	ret = __sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
-+					  nr_pages << PAGE_SHIFT,
-+					  max_segment, GFP_KERNEL);
- 	if (ret)
- 		goto out;
- 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-index f06e19e7be04..ea19f1d27275 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-@@ -103,7 +103,8 @@ struct page **etnaviv_gem_get_pages(struct etnaviv_gem_object *etnaviv_obj)
- 		int npages = etnaviv_obj->base.size >> PAGE_SHIFT;
- 		struct sg_table *sgt;
- 
--		sgt = drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-+		sgt = drm_prime_pages_to_sg(etnaviv_obj->base.dev,
-+					    etnaviv_obj->pages, npages);
- 		if (IS_ERR(sgt)) {
- 			dev_err(dev->dev, "failed to allocate sgt: %ld\n",
- 				PTR_ERR(sgt));
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-index 6d9e5c3c4dd5..4aa3426a9ba4 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-@@ -19,7 +19,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
- 		return ERR_PTR(-EINVAL);
- 
--	return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-+	return drm_prime_pages_to_sg(obj->dev, etnaviv_obj->pages, npages);
- }
- 
- void *etnaviv_gem_prime_vmap(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index b2f49152b4d4..b4553caaa196 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -126,7 +126,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
- 
- 		msm_obj->pages = p;
- 
--		msm_obj->sgt = drm_prime_pages_to_sg(p, npages);
-+		msm_obj->sgt = drm_prime_pages_to_sg(obj->dev, p, npages);
- 		if (IS_ERR(msm_obj->sgt)) {
- 			void *ptr = ERR_CAST(msm_obj->sgt);
- 
-diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-index d7c8948427fe..515ef80816a0 100644
---- a/drivers/gpu/drm/msm/msm_gem_prime.c
-+++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-@@ -19,7 +19,7 @@ struct sg_table *msm_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	if (WARN_ON(!msm_obj->pages))  /* should have already pinned! */
- 		return NULL;
- 
--	return drm_prime_pages_to_sg(msm_obj->pages, npages);
-+	return drm_prime_pages_to_sg(obj->dev, msm_obj->pages, npages);
- }
- 
- void *msm_gem_prime_vmap(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/nouveau/nouveau_prime.c b/drivers/gpu/drm/nouveau/nouveau_prime.c
-index bae6a3eccee0..7766b810653f 100644
---- a/drivers/gpu/drm/nouveau/nouveau_prime.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_prime.c
-@@ -32,7 +32,7 @@ struct sg_table *nouveau_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	struct nouveau_bo *nvbo = nouveau_gem_object(obj);
- 	int npages = nvbo->bo.num_pages;
- 
--	return drm_prime_pages_to_sg(nvbo->bo.ttm->pages, npages);
-+	return drm_prime_pages_to_sg(obj->dev, nvbo->bo.ttm->pages, npages);
- }
- 
- void *nouveau_gem_prime_vmap(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/radeon/radeon_prime.c b/drivers/gpu/drm/radeon/radeon_prime.c
-index b906e8fbd5f3..ea4c900e7c41 100644
---- a/drivers/gpu/drm/radeon/radeon_prime.c
-+++ b/drivers/gpu/drm/radeon/radeon_prime.c
-@@ -36,7 +36,7 @@ struct sg_table *radeon_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	struct radeon_bo *bo = gem_to_radeon_bo(obj);
- 	int npages = bo->tbo.num_pages;
- 
--	return drm_prime_pages_to_sg(bo->tbo.ttm->pages, npages);
-+	return drm_prime_pages_to_sg(obj->dev, bo->tbo.ttm->pages, npages);
- }
- 
- void *radeon_gem_prime_vmap(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-index b9275ba7c5a5..77eeaf3439f6 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-@@ -85,7 +85,8 @@ static int rockchip_gem_get_pages(struct rockchip_gem_object *rk_obj)
- 
- 	rk_obj->num_pages = rk_obj->base.size >> PAGE_SHIFT;
- 
--	rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-+	rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->base.dev,
-+					    rk_obj->pages, rk_obj->num_pages);
- 	if (IS_ERR(rk_obj->sgt)) {
- 		ret = PTR_ERR(rk_obj->sgt);
- 		goto err_put_pages;
-@@ -442,7 +443,7 @@ struct sg_table *rockchip_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	int ret;
- 
- 	if (rk_obj->pages)
--		return drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-+		return drm_prime_pages_to_sg(obj->dev,rk_obj->pages, rk_obj->num_pages);
- 
- 	sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
- 	if (!sgt)
-diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
-index 723df142a981..47e2935b8c68 100644
---- a/drivers/gpu/drm/tegra/gem.c
-+++ b/drivers/gpu/drm/tegra/gem.c
-@@ -284,7 +284,7 @@ static int tegra_bo_get_pages(struct drm_device *drm, struct tegra_bo *bo)
- 
- 	bo->num_pages = bo->gem.size >> PAGE_SHIFT;
- 
--	bo->sgt = drm_prime_pages_to_sg(bo->pages, bo->num_pages);
-+	bo->sgt = drm_prime_pages_to_sg(bo->gem.dev, bo->pages, bo->num_pages);
- 	if (IS_ERR(bo->sgt)) {
- 		err = PTR_ERR(bo->sgt);
- 		goto put_pages;
-diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-index 313339bbff90..15dd41e67de3 100644
---- a/drivers/gpu/drm/vgem/vgem_drv.c
-+++ b/drivers/gpu/drm/vgem/vgem_drv.c
-@@ -321,7 +321,7 @@ static struct sg_table *vgem_prime_get_sg_table(struct drm_gem_object *obj)
- {
- 	struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
- 
--	return drm_prime_pages_to_sg(bo->pages, bo->base.size >> PAGE_SHIFT);
-+	return drm_prime_pages_to_sg(obj->dev, bo->pages, bo->base.size >> PAGE_SHIFT);
- }
- 
- static struct drm_gem_object* vgem_prime_import(struct drm_device *dev,
-diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-index 39ff95b75357..aed7510e2710 100644
---- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
-+++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-@@ -179,7 +179,8 @@ struct sg_table *xen_drm_front_gem_get_sg_table(struct drm_gem_object *gem_obj)
- 	if (!xen_obj->pages)
- 		return ERR_PTR(-ENOMEM);
- 
--	return drm_prime_pages_to_sg(xen_obj->pages, xen_obj->num_pages);
-+	return drm_prime_pages_to_sg(gem_obj->dev,
-+				     xen_obj->pages, xen_obj->num_pages);
- }
- 
- struct drm_gem_object *
+>  		aux_dev = NULL;
+>  	mutex_unlock(&aux_idr_mutex);
+>  
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.27.0
-
+Ville Syrjälä
+Intel
