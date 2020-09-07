@@ -2,114 +2,103 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC965C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 374BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3322145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC7C2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:11:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uU60CYHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgIGILR (ORCPT
+        id S1727965AbgIGILh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:11:17 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:47619 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727965AbgIGIKi (ORCPT
+        Mon, 7 Sep 2020 04:11:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgIGILN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:10:38 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R501e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U89b3zw_1599466229;
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0U89b3zw_1599466229)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 07 Sep 2020 16:10:29 +0800
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-To:     tj@kernel.org, axboe@kernel.dk
-Cc:     baolin.wang@linux.alibaba.com, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] blk-throttle: Fix some comments' typos
-Date:   Mon,  7 Sep 2020 16:10:13 +0800
-Message-Id: <e9451429c646d2f34b4225e2f0d716bc1e8dad5f.1599458244.git.baolin.wang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1599458244.git.baolin.wang@linux.alibaba.com>
-References: <cover.1599458244.git.baolin.wang@linux.alibaba.com>
-In-Reply-To: <cover.1599458244.git.baolin.wang@linux.alibaba.com>
-References: <cover.1599458244.git.baolin.wang@linux.alibaba.com>
+        Mon, 7 Sep 2020 04:11:13 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 612A6C061573;
+        Mon,  7 Sep 2020 01:11:12 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 31so7655952pgy.13;
+        Mon, 07 Sep 2020 01:11:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vzc+Ve94tqVOyavHE937TTCNAw3aMiGnomApaCg9IK0=;
+        b=uU60CYHYyWwQ+Y94TdC3dYbvbtWH6ln2wiTglbCatcBtIwuYa5c+7Yyfuhqt+By2aW
+         yXcxleGrBLQiIpuMiIbLZHtHWrlbaWBU14aPbiRWf+Yh59+oZjZ58mdTr9DIh0LMVlMZ
+         7poj4D1sDdG7OsfZKSrjYZV5KjcS4NIRzVDNKCgjgoUvvNVo0OeZBTROm1a1ZQZ3smFF
+         tOFwmZGfmn+OVilSGJvquNEgm5f9T77lU05WWNMOqu2T8Qk8eqCZyFcA9LL1PELZonyt
+         XUhvkDWwyY33cFqTc2ef50DnwkypYnWlJLkHhjuODJcXHv7Q7/oC0qGjyQauREvpmdFj
+         IKWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vzc+Ve94tqVOyavHE937TTCNAw3aMiGnomApaCg9IK0=;
+        b=bLOOMpRYdmvQ1yNkStVxaDtULdDVsgfO5SpLU85pcdvFcUJI8hQywbMdOTBa/w0L1V
+         ACsGYhUQ5N3SLJDSPKNLpmyE60uyCcO906WF+eIxD3HlIsWfx3pzLYFeulRgORvESg2N
+         XG2gbbq6ePDS/2AJ1VMrTzmcKrIIZjJhbYO/U9jx3PjdgbJ/mIsbsJilNZD2QGVtT0sH
+         zTRPH4ainzFhf8MxOWwHNo7W7T1cWPa3BSHQbuOSUUIoejBdoA1FaXSJG9vTkyrOFU5G
+         FJGqd62JcXT3+/ANkPUgE2SEXjh2E8GNSa3+sdOa2PNGQannppZgZgd1N+GL5fngR9N5
+         2Zsg==
+X-Gm-Message-State: AOAM532CUCNiqWyWAehddsbrrp5jVH2n7692m2JVo2Mt3unTDmgmA6uO
+        geJTLmFCbfALO7UJKwhki1GXVL0T1AmzWi/nFpg=
+X-Google-Smtp-Source: ABdhPJxNRkgS1zU0aqXnER0O5BVfgdwen8wDhVwqSPf9js+Uw/DnB7AlvFex+0BuuzMHjlIcWSbD/9bksHzmRja/5vk=
+X-Received: by 2002:aa7:988d:: with SMTP id r13mr15580501pfl.93.1599466271848;
+ Mon, 07 Sep 2020 01:11:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200906185039.22700-1-digetx@gmail.com> <20200906185039.22700-7-digetx@gmail.com>
+In-Reply-To: <20200906185039.22700-7-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Sep 2020 11:10:54 +0300
+Message-ID: <CAHp75VevXe3c2LGF3jZyDfvPpRAz+-GQKvXEO4OKvuur=RgXCQ@mail.gmail.com>
+Subject: Re: [PATCH v5 06/36] i2c: tegra: Runtime PM always available on Tegra
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some comments' typos.
+On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> The runtime PM is guaranteed to be always available on Tegra after commit
+> 40b2bb1b132a ("ARM: tegra: enforce PM requirement"). Hence let's remove
+> all the RPM-availability checking and handling from the code.
 
-Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
----
- block/blk-throttle.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> +       if (ret < 0) {
+> +               dev_err(dev, "runtime resume failed\n");
+> +               goto disable_rpm;
 
-diff --git a/block/blk-throttle.c b/block/blk-throttle.c
-index fee3325..2fc6c3e 100644
---- a/block/blk-throttle.c
-+++ b/block/blk-throttle.c
-@@ -150,7 +150,7 @@ struct throtl_grp {
- 	/* user configured IOPS limits */
- 	unsigned int iops_conf[2][LIMIT_CNT];
- 
--	/* Number of bytes disptached in current slice */
-+	/* Number of bytes dispatched in current slice */
- 	uint64_t bytes_disp[2];
- 	/* Number of bio's dispatched in current slice */
- 	unsigned int io_disp[2];
-@@ -852,7 +852,7 @@ static inline void throtl_trim_slice(struct throtl_grp *tg, bool rw)
- 	/*
- 	 * A bio has been dispatched. Also adjust slice_end. It might happen
- 	 * that initially cgroup limit was very low resulting in high
--	 * slice_end, but later limit was bumped up and bio was dispached
-+	 * slice_end, but later limit was bumped up and bio was dispatched
- 	 * sooner, then we need to reduce slice_end. A high bogus slice_end
- 	 * is bad because it does not allow new slice to start.
- 	 */
-@@ -1082,7 +1082,7 @@ static void throtl_add_bio_tg(struct bio *bio, struct throtl_qnode *qn,
- 	 * If @tg doesn't currently have any bios queued in the same
- 	 * direction, queueing @bio can change when @tg should be
- 	 * dispatched.  Mark that @tg was empty.  This is automatically
--	 * cleaered on the next tg_update_disptime().
-+	 * cleared on the next tg_update_disptime().
- 	 */
- 	if (!sq->nr_queued[rw])
- 		tg->flags |= THROTL_TG_WAS_EMPTY;
-@@ -1303,7 +1303,7 @@ static void throtl_pending_timer_fn(struct timer_list *t)
- 			}
- 		}
- 	} else {
--		/* reached the top-level, queue issueing */
-+		/* reached the top-level, queue issuing */
- 		queue_work(kthrotld_workqueue, &td->dispatch_work);
- 	}
- out_unlock:
-@@ -1314,8 +1314,8 @@ static void throtl_pending_timer_fn(struct timer_list *t)
-  * blk_throtl_dispatch_work_fn - work function for throtl_data->dispatch_work
-  * @work: work item being executed
-  *
-- * This function is queued for execution when bio's reach the bio_lists[]
-- * of throtl_data->service_queue.  Those bio's are ready and issued by this
-+ * This function is queued for execution when bios reach the bio_lists[]
-+ * of throtl_data->service_queue.  Those bios are ready and issued by this
-  * function.
-  */
- static void blk_throtl_dispatch_work_fn(struct work_struct *work)
-@@ -2230,7 +2230,7 @@ bool blk_throtl_bio(struct bio *bio)
- 
- 		/*
- 		 * @bio passed through this layer without being throttled.
--		 * Climb up the ladder.  If we''re already at the top, it
-+		 * Climb up the ladder.  If we're already at the top, it
- 		 * can be executed directly.
- 		 */
- 		qn = &tg->qnode_on_parent[rw];
+As in the original code here is a refcount leak.
+Should call pm_runtime_put_noidle(). (Possible to use goto put_rpm;
+but in that case the code a bit confusing to the reader)
+
+>         }
+
+>  put_rpm:
+> +       pm_runtime_put_sync(&pdev->dev);
+>
+>  disable_rpm:
+
 -- 
-1.8.3.1
-
+With Best Regards,
+Andy Shevchenko
