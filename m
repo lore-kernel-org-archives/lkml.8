@@ -2,357 +2,183 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C30C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F706C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C50A4206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45800206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:47:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RLPoOVz4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YZbOtOvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgIGNF1 (ORCPT
+        id S1731286AbgIGRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:05:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729385AbgIGNDE (ORCPT
+        Mon, 7 Sep 2020 13:47:31 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56358 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgIGRrN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:03:04 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F46FC061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:02:13 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g29so8019236pgl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=TfN+Y8Oke+jMwtvScglOk1PgLulTQLYuci/ZH5OTFxM=;
-        b=RLPoOVz4Fzx8lG+9snNJeLaJCUAime79D4HaC3aSm5eoE5un2v0opG5OntZzndYIJF
-         revIL7zEbh10boTjiZjdUWw14RSqlcL4xEq9YFERXT2xMDgscWmpXtwk6LMHdHiHH1wk
-         AWB4Wf+1Gq7catcTFOrYBeHlnFNdM1fHM5EHm37HQomiCK9MRCX/g6/bgwI4Xn2xs1I+
-         q3WfYRAE/0ow8h+zC8ubt7cQwgq7VczCGpPvTCFvNq4fWUNm+hnEYNBocLYG5/EmOFW9
-         R29+TYI4W2B88ABILQQqdPNpUbiDHSxHIn6s2a3cYr4SwtMwgSQQh08TTU++VQpGGOtr
-         P3yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TfN+Y8Oke+jMwtvScglOk1PgLulTQLYuci/ZH5OTFxM=;
-        b=QaVcgONPxtd8+XiALr/7GIJWmk+vUpmB/G+FaxW6iwgsGpGolea9W3gjUlqbv2NUTd
-         pB4jgxPOJ5DbxripL60EBtChHQE1KesdtgMBDuIsj1OSAoR3JpBoWPTIvutBUM/y2z7i
-         EIobBMaXxYdR36G5/O9KbTXqZ5nf3doSs4DAmLbswWyNNY/ACF2RTS8XGI7mO7PYqdzW
-         F7pbT42opBmOZX73ztIeZZrj5GuLkeidvcmMVYudZAZxDxy9q9hZZUMiX/NUi652quRx
-         Ghd3P4Q79ndvASDSucYl0MWXpwrbPmaN+y/e+NKeCE6kGKmCUFFO/C2DdlcYB112UFAM
-         kaHg==
-X-Gm-Message-State: AOAM531Z3XP03Au6VCpz+Kq1nXrDqzDkkd+TvQ1hW+5z50osQRJua1lC
-        o+RLRwPsBt/QStEAfSJZHAmrEw==
-X-Google-Smtp-Source: ABdhPJzwpJ8j0CAu5wMiv8JFmnTJkPpoMY/TTIzAbw+ZcHas98liT9Z3QbWsgsCoOJ5uOYKbWXWnig==
-X-Received: by 2002:a63:1848:: with SMTP id 8mr16749718pgy.347.1599483732822;
-        Mon, 07 Sep 2020 06:02:12 -0700 (PDT)
-Received: from localhost ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id n2sm9344335pja.41.2020.09.07.06.02.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 07 Sep 2020 06:02:12 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v7] perf test: Introduce script for Arm CoreSight testing
-Date:   Mon,  7 Sep 2020 21:01:54 +0800
-Message-Id: <20200907130154.9601-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 7 Sep 2020 13:47:13 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200907174711euoutp0152f3784ebeaa24512507411d323f7232~ykYgyymTX0317703177euoutp01E;
+        Mon,  7 Sep 2020 17:47:11 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200907174711euoutp0152f3784ebeaa24512507411d323f7232~ykYgyymTX0317703177euoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599500831;
+        bh=2f3Zlbb9MfhG3U2/hoCNyDLjCAD54iZz9Q/qF4M3Xus=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YZbOtOvAL1C8e8VMwvoFqv3ZPMAyEyAzYfKw//6sEB5r2fC4Etmsc5FCfe73QfN/M
+         UqNJlErmQWNgfpyhjEYB4cVWnmfqyqAR1rm9fwa2lAgjrsT+si0Oeo67SFIvbtPRpY
+         9+CESvRobfjRQ/XJWD4ubRodtRE6DQtwlQzPAeOg=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200907174710eucas1p1f644e6cc129e68610510e4cf2cd0fecd~ykYf7JaP-1825918259eucas1p1Q;
+        Mon,  7 Sep 2020 17:47:10 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id BF.5D.05997.E12765F5; Mon,  7
+        Sep 2020 18:47:10 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200907174710eucas1p1b06f854222c255719a63c72b043ecda2~ykYfaKHxg0045100451eucas1p1u;
+        Mon,  7 Sep 2020 17:47:10 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200907174710eusmtrp2df84bfd6bc6cb18b9d95329bfb255928~ykYfZdNEG2165721657eusmtrp2T;
+        Mon,  7 Sep 2020 17:47:10 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-12-5f56721e4ded
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 34.54.06017.E12765F5; Mon,  7
+        Sep 2020 18:47:10 +0100 (BST)
+Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200907174710eusmtip2e0d48ef0a4bfc9c6fa84403036f23177~ykYfN4YTR0136101361eusmtip2J;
+        Mon,  7 Sep 2020 17:47:10 +0000 (GMT)
+From:   Lukasz Stelmach <l.stelmach@samsung.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
+ Driver
+Date:   Mon, 07 Sep 2020 19:47:09 +0200
+In-Reply-To: <CAMuHMdWNdMEnSnLRkUkRmLop4E-tnBirjfMw06e_40Ss-V-JyQ@mail.gmail.com>
+        (Geert Uytterhoeven's message of "Wed, 26 Aug 2020 09:13:14 +0200")
+Message-ID: <dleftjo8mhqy1u.fsf%l.stelmach@samsung.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
+        protocol="application/pgp-signature"
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3bO2Y7L2XFmvSyRWkY3dFmZx250Aw+ZIAUWQq1VBzW3KZt2
+        8R+ttFIqwwxzTqemXSzNpiy1ZrZMMS8zZmFRdNEyL2WkRYZd3D6D/vt97/c8z8vz8dGE9Dsl
+        o2O1ibxOq1LLhWLS0jze6e+ri1QuaxhWsPZXNoK9fekWxRrtaSRrauqk2A8vrAI2q3eIYO32
+        KhHbZTlHsebeZxTrqDcK2Uv2BgFru2hFbEXTKxHbXDSLTbc2iTbM4BzPnhBczfXnAs5cniHk
+        bA9PI666NIWrqx0VcOdqyhE3avaNoKPEaw/w6thDvE6xfq84pu5HB0poZI5ktDeTqShHkonc
+        aGBWgqElQ5SJxLSUuYYgvzQT4cMYgtzjDymnSsqMIih6KshEtMuRd3M61lxF0JSeQ+JDP4Ih
+        U4fIKRIyAVBRscuJMxl/MI4LnDEEY6DA/n2nk72YHXD5aTvhZJJZADbHG9deNyYXgTXd6jJI
+        mGAo+2JwsTcTAjUfX4vw3BNa8/pIHKqBPPuwywxMAQ2pg8UErrYFCt/2UJi9YLClRoTZB/7U
+        mabKpMCF7FXYewaBxfiDxJo18LLzpxDzRrjTXkBhvQf0fPLEez0g25JL4LEETp+UYrUfVGbd
+        m0qRwdnBawgzB2OPzk49VSmC5x1W6jyaa/ivjuG/OobJWIJZDLfqFXi8FK4UDxGY10Fl5QhZ
+        hKhyNJtP0muief1yLX84QK/S6JO00QH74zVmNPkD2363jNWi+ol9NsTQSO4u+bI1UimlVIf0
+        RzU25DeZ9K7qRheSkdp4LS+fKdnU0bZHKjmgOprM6+KVuiQ1r7ehOTQpny1ZUTKwW8pEqxL5
+        OJ5P4HX/bgW0mywVBQu0sZu0v0rMn/NLPaICHvT5BVqDVycUKvL9+g0L1WW1hdsd1bzyq2Ui
+        O3m9ug38U9wXnUq2Gfunye7PN90PGQr1OUZ31beKw/eZlCOh4Tktj7/5HowoUh+0N2Z1K8Le
+        j2yPT5u3bfy6I7Y5rOd80ImQl68HvgVFdnvGTd+8xfuunNTHqAKXEDq96i/eJkCDiQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xe7pyRWHxBnNe8Vucv3uI2WLjjPWs
+        FnPOt7BYzD9yjtXi2a29TBb9j18zW5w/v4Hd4sK2PlaLTY+vsVpc3jWHzWLG+X1MFoem7mW0
+        WHvkLrvFsQViFq17j7A78HtcvnaR2WPLyptMHptWdbJ5HDrcweixeUm9x84dn5k8+rasYvT4
+        vEkugCNKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnfziYlNSezLLVI3y5B
+        L2Pnj7OMBQcEKjrPHGNpYJzC28XIwSEhYCIxcw13FyMXh5DAUkaJK0t+s0LEpSRWzk3vYuQE
+        MoUl/lzrYoOoecooMXfVYWaQGjYBPYm1ayNATBEBXYk5P5lASpgFOlkllp+/xQjSKywQKPFg
+        3il2kBohgQCJ56sdQcIsAqoShy4/YASp5xSYziixt3UvE0iCV8BcYumHWWC2qIClxJYX99kh
+        4oISJ2c+YQGxmQWyJb6ufs48gVFgFpLULCSpWUDrmAU0Jdbv0ocIa0ssW/iaGcK2lVi37j3L
+        AkbWVYwiqaXFuem5xUZ6xYm5xaV56XrJ+bmbGIHxu+3Yzy07GLveBR9iFOBgVOLh/eAVFi/E
+        mlhWXJl7iFEFaMyjDasvMEqx5OXnpSqJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6NGJzFKi
+        yfnAlJNXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFRYaFa3PT8
+        vysWVTTofou/tqac40neoai85fK+jaq1nxmUnBi2fl7p+YarxnHbCW0V684v/3xXrbglxxrb
+        cqdbffc90R/pG2tU/5qf+80meIXvCs+5dJEjjTtf2zxne1FVZ7a6mSksXe69K8uFnHVJWfZ7
+        vy19+Ts19FjpMu0F+5Zy61TmbjypxFKckWioxVxUnAgA33f64AEDAAA=
+X-CMS-MailID: 20200907174710eucas1p1b06f854222c255719a63c72b043ecda2
+X-Msg-Generator: CA
+X-RootMTR: 20200907174710eucas1p1b06f854222c255719a63c72b043ecda2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200907174710eucas1p1b06f854222c255719a63c72b043ecda2
+References: <CAMuHMdWNdMEnSnLRkUkRmLop4E-tnBirjfMw06e_40Ss-V-JyQ@mail.gmail.com>
+        <CGME20200907174710eucas1p1b06f854222c255719a63c72b043ecda2@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need a simple method to test Perf with Arm CoreSight drivers, this
-could be used for smoke testing when new patch is coming for perf or
-CoreSight drivers, and we also can use the test to confirm if the
-CoreSight has been enabled successfully on new platforms.
+--=-=-=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This patch introduces the shell script test_arm_coresight.sh which is
-under the 'pert test' framework.  This script provides three testing
-scenarios:
+It was <2020-08-26 =C5=9Bro 09:13>, when Geert Uytterhoeven wrote:
+> On Tue, Aug 25, 2020 at 8:02 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>> On Tue, Aug 25, 2020 at 07:03:09PM +0200, =C5=81ukasz Stelmach wrote:
+>> > +     if (netif_msg_pktdata(ax_local)) {
+>> > +             int loop;
+>> > +             netdev_info(ndev, "TX packet len %d, total len %d, seq %=
+d\n",
+>> > +                             pkt_len, tx_skb->len, seq_num);
+>> > +
+>> > +             netdev_info(ndev, "  Dump SPI Header:\n    ");
+>> > +             for (loop =3D 0; loop < 4; loop++)
+>> > +                     netdev_info(ndev, "%02x ", *(tx_skb->data + loop=
+));
+>> > +
+>> > +             netdev_info(ndev, "\n");
+>>
+>> This no longer works as far as i remember. Lines are terminate by
+>> default even if they don't have a \n.
+>>
+>> Please you should not be using netdev_info(). netdev_dbg() please.
+>
+> We have a nice helper for this: print_hex_dump_debug().
 
-Test scenario 1: traverse all possible paths between source and sink
+It is good to know.
 
-For traversing possible paths, simply to say, the testing rationale
-is source oriented testing, it traverses every source (now only refers
-to ETM device) and test its all possible sinks.  To search the complete
-paths from one specific source to its sinks, this patch relies on the
-sysfs '/sys/bus/coresight/devices/devX/out:Y' for depth-first search
-(DFS) for iteration connected device nodes, if the output device is
-detected as a sink device (the script will exclude TPIU device which can
-not be supported for perf PMU), then it will test trace data recording
-and decoding for it.
+Actually I think printe_hex_dump(KERN_INFO) is here more
+appropriate.  With *_debug() functions and dynamic debug enabled users
+need to flip two switches to see messages. I think that if msglvl
+(pktdata in this case) is not turned on by default and users need to use
+ethtool to switch it, they shouldn't be required to fiddle with dynamic
+debug too.
 
-The script runs three output testings for every trace data:
-- Test branch samples dumping with 'perf script' command;
-- Test branch samples reporting with 'perf report' command;
-- Use option '--itrace=i1000i' to insert synthesized instructions events
-  and the script will check if perf can output the percentage value
-  successfully based on the instruction samples.
+=2D-=20
+=C5=81ukasz Stelmach
+Samsung R&D Institute Poland
+Samsung Electronics
 
-Test scenario 2: system-wide test
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For system-wide testing, it passes option '-a' to perf tool to enable
-tracing on all CPUs, so it's hard to say which program will be traced.
-But perf tool itself contributes much overload in this case, so it will
-parse trace data and check if process 'perf' can be detected or not.
+-----BEGIN PGP SIGNATURE-----
 
-Test scenario 3: snapshot mode test.
-
-For snapshot mode testing, it uses 'dd' command to launch a long running
-program, so this can give chance to send signal -USR2; it will check the
-captured trace data contains 'dd' related thread info or not.
-
-If any test fails, it will report failure and directly exit with error.
-This test will be only applied on a platform with PMU event 'cs_etm//',
-otherwise will skip the testing.
-
-Below is detailed usage for it:
-
-  # cd $linux/tools/perf  -> This is important so can use shell script
-  # perf test list
-    [...]
-    70: probe libc's inet_pton & backtrace it with ping
-    71: Check Arm CoreSight trace data recording and synthesized samples
-    72: Check open filename arg using perf trace + vfs_getname
-    73: Zstd perf.data compression/decompression
-    74: Add vfs_getname probe to get syscall args filenames
-    75: Use vfs_getname probe to get syscall args filenames
-
-  # perf test 71
-    71: Check Arm CoreSight trace data recording and branch samples: Ok
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
-
-Changes in v7:
-- Changed to use "trap cleanup_files exit" to clean up files (Suzuki);
-- Changed to use "basename" to retrieve the device name (Suzuki);
-- Added new function is_device_sink() (Suzuki).
-
-Changes in v6:
-- Fixed indentation for arm_cs_iterate_devices() (Mathieu);
-- Changed to remove ${perfdata} and ${file} for failure cases (Mathieu);
-- Changed test name from "... branch samples" to "... synthesized samples".
-
-Changes in v5:
-- Fixed testing name to system-wide testing (Suzuki);
-- Used 'enable_sink' existence to check if the device is a sink (Suzuki);
-- Excluded TPIU from sink devices;
-- Fixed Misleading output (Suzuki);
-- Removed '--per-thread' option from snapshot testing (Suzuki).
-
-
- tools/perf/tests/shell/test_arm_coresight.sh | 183 +++++++++++++++++++
- 1 file changed, 183 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_arm_coresight.sh
-
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-new file mode 100755
-index 000000000000..8d84fdbed6a6
---- /dev/null
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -0,0 +1,183 @@
-+#!/bin/sh
-+# Check Arm CoreSight trace data recording and synthesized samples
-+
-+# Uses the 'perf record' to record trace data with Arm CoreSight sinks;
-+# then verify if there have any branch samples and instruction samples
-+# are generated by CoreSight with 'perf script' and 'perf report'
-+# commands.
-+
-+# SPDX-License-Identifier: GPL-2.0
-+# Leo Yan <leo.yan@linaro.org>, 2020
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+file=$(mktemp /tmp/temporary_file.XXXXX)
-+
-+skip_if_no_cs_etm_event() {
-+	perf list | grep -q 'cs_etm//' && return 0
-+
-+	# cs_etm event doesn't exist
-+	return 2
-+}
-+
-+skip_if_no_cs_etm_event || exit 2
-+
-+cleanup_files()
-+{
-+	rm -f ${perfdata}
-+	rm -f ${file}
-+}
-+
-+trap cleanup_files exit
-+
-+record_touch_file() {
-+	echo "Recording trace (only user mode) with path: CPU$2 => $1"
-+	rm -f $file
-+	perf record -o ${perfdata} -e cs_etm/@$1/u --per-thread \
-+		-- taskset -c $2 touch $file
-+}
-+
-+perf_script_branch_samples() {
-+	echo "Looking at perf.data file for dumping branch samples:"
-+
-+	# Below is an example of the branch samples dumping:
-+	#   touch  6512          1         branches:u:      ffffb220824c strcmp+0xc (/lib/aarch64-linux-gnu/ld-2.27.so)
-+	#   touch  6512          1         branches:u:      ffffb22082e0 strcmp+0xa0 (/lib/aarch64-linux-gnu/ld-2.27.so)
-+	#   touch  6512          1         branches:u:      ffffb2208320 strcmp+0xe0 (/lib/aarch64-linux-gnu/ld-2.27.so)
-+	perf script -F,-time -i ${perfdata} | \
-+		egrep " +$1 +[0-9]+ .* +branches:([u|k]:)? +"
-+}
-+
-+perf_report_branch_samples() {
-+	echo "Looking at perf.data file for reporting branch samples:"
-+
-+	# Below is an example of the branch samples reporting:
-+	#   73.04%    73.04%  touch    libc-2.27.so      [.] _dl_addr
-+	#    7.71%     7.71%  touch    libc-2.27.so      [.] getenv
-+	#    2.59%     2.59%  touch    ld-2.27.so        [.] strcmp
-+	perf report --stdio -i ${perfdata} | \
-+		egrep " +[0-9]+\.[0-9]+% +[0-9]+\.[0-9]+% +$1 "
-+}
-+
-+perf_report_instruction_samples() {
-+	echo "Looking at perf.data file for instruction samples:"
-+
-+	# Below is an example of the instruction samples reporting:
-+	#   68.12%  touch    libc-2.27.so   [.] _dl_addr
-+	#    5.80%  touch    libc-2.27.so   [.] getenv
-+	#    4.35%  touch    ld-2.27.so     [.] _dl_fixup
-+	perf report --itrace=i1000i --stdio -i ${perfdata} | \
-+		egrep " +[0-9]+\.[0-9]+% +$1"
-+}
-+
-+is_device_sink() {
-+	# If the node of "enable_sink" is existed under the device path, this
-+	# means the device is a sink device.  Need to exclude 'tpiu' since it
-+	# cannot support perf PMU.
-+	echo "$1" | egrep -q -v "tpiu"
-+
-+	if [ $? -eq 0 -a -e "$1/enable_sink" ]; then
-+
-+		pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$2"
-+
-+		# Warn if the device is not supported by PMU
-+		if ! [ -f $pmu_dev ]; then
-+			echo "PMU doesn't support $pmu_dev"
-+		fi
-+
-+		return 0
-+	fi
-+
-+	# Otherwise, it's not a sink device
-+	return 1
-+}
-+
-+arm_cs_iterate_devices() {
-+	for dev in $1/connections/out\:*; do
-+
-+		# Skip testing if it's not a directory
-+		! [ -d $dev ] && continue;
-+
-+		# Read out its symbol link file name
-+		path=`readlink -f $dev`
-+
-+		# Extract device name from path, e.g.
-+		#   path = '/sys/devices/platform/20010000.etf/tmc_etf0'
-+		#     `> device_name = 'tmc_etf0'
-+		device_name=$(basename $path)
-+
-+		if is_device_sink $path $devce_name; then
-+
-+			record_touch_file $device_name $2 &&
-+			perf_script_branch_samples touch &&
-+			perf_report_branch_samples touch &&
-+			perf_report_instruction_samples touch
-+
-+			err=$?
-+
-+			# Exit when find failure
-+			[ $err != 0 ] && exit $err
-+		fi
-+
-+		arm_cs_iterate_devices $dev $2
-+	done
-+}
-+
-+arm_cs_etm_traverse_path_test() {
-+	# Iterate for every ETM device
-+	for dev in /sys/bus/coresight/devices/etm*; do
-+
-+		# Find the ETM device belonging to which CPU
-+		cpu=`cat $dev/cpu`
-+
-+		echo $dev
-+		echo $cpu
-+
-+		# Use depth-first search (DFS) to iterate outputs
-+		arm_cs_iterate_devices $dev $cpu
-+	done
-+}
-+
-+arm_cs_etm_system_wide_test() {
-+	echo "Recording trace with system wide mode"
-+	perf record -o ${perfdata} -e cs_etm// -a -- ls
-+
-+	perf_script_branch_samples perf &&
-+	perf_report_branch_samples perf &&
-+	perf_report_instruction_samples perf
-+
-+	err=$?
-+
-+	# Exit when find failure
-+	[ $err != 0 ] && exit $err
-+}
-+
-+arm_cs_etm_snapshot_test() {
-+	echo "Recording trace with snapshot mode"
-+	perf record -o ${perfdata} -e cs_etm// -S \
-+		-- dd if=/dev/zero of=/dev/null &
-+	PERFPID=$!
-+
-+	# Wait for perf program
-+	sleep 1
-+
-+	# Send signal to snapshot trace data
-+	kill -USR2 $PERFPID
-+
-+	# Stop perf program
-+	kill $PERFPID
-+	wait $PERFPID
-+
-+	perf_script_branch_samples dd &&
-+	perf_report_branch_samples dd &&
-+	perf_report_instruction_samples dd
-+
-+	err=$?
-+
-+	# Exit when find failure
-+	[ $err != 0 ] && exit $err
-+}
-+
-+arm_cs_etm_traverse_path_test
-+arm_cs_etm_system_wide_test
-+arm_cs_etm_snapshot_test
-+exit 0
--- 
-2.17.1
-
+iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9Wch0ACgkQsK4enJil
+gBABSQgAny+wC1IDEaru39HexqqTPsadTBNssgte1kbooXvX8pDpAttJeryYX5WK
+sUjSHqF290dL3qTu5MLYP4+GCWN0eCykHH33bYhkImSEmeLmiGI1psJotcdLR4Wl
+1eLZBCbhjSHoBMbRJlXAp9zJi+t2/4USxrA6Tu+acHt8moa9UoVVgO4KZ/2EbWwQ
+V7/HVZnaa1IQ31FtbunDdHGqvbTlRNccMt5F20ksgM0zTOfDLdYQRo85blfFlO3R
+nCDXalGUg8qs7fasThmnXpg9jDEwDF4KvmKm9Q2nBifE2s5DdY5mC0XF7/m3Hmv+
+FcvX47xKzrk7nH7EmcncoybkHU827g==
+=wlMo
+-----END PGP SIGNATURE-----
+--=-=-=--
