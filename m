@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DD8C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0FDC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C94C21D80
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6308721D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496796;
-	bh=0xZQn08ge8u1b7LENZ75nSqgq2FnbOiaRR1KLQ2HahE=;
+	s=default; t=1599496802;
+	bh=220WQSCvWpVzzRaLtJvMKBQoxy7hu4+7yitqzYcjZU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1kYpp8vXgGJh4Tladvz6niR4rqJuq2apmMU0c4p8wRnXyT+K9kTI7PUzePUU6fN1z
-	 cPo+s3yiMxq4VhSJI4vwHKdOnHBVmfw9vTQ9npUVIKmXs9DjNQWtLPpf0tUY1b11bl
-	 NmFpiiS/mcWblPNwWjUQpIk69IHduq4MnMec9wQ0=
+	b=HRhcygdbo1jwBG6AQwXgAuPR97dgoFv8d6viFgPIQe8+9c1vFHMvC/nbJKr6CG0am
+	 oZQREQofVMPgJl2kp6fBgQk/pZIUh5/KXw85FwDy4OClJyuR5rQSRNxchIgT6jr0j7
+	 b22dRJ3AWxfanTs1FDOrnvFWjaiu36P3X7rmfoLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730595AbgIGQjy (ORCPT
+        id S1730673AbgIGQj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:39:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:39:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbgIGQfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:55 -0400
+        id S1730866AbgIGQfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 011D021941;
-        Mon,  7 Sep 2020 16:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B58921D92;
+        Mon,  7 Sep 2020 16:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496554;
-        bh=0xZQn08ge8u1b7LENZ75nSqgq2FnbOiaRR1KLQ2HahE=;
+        s=default; t=1599496552;
+        bh=220WQSCvWpVzzRaLtJvMKBQoxy7hu4+7yitqzYcjZU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l3toXp60rJyWmUbe32NOMHgwOx5oMwi0Q7IdW57Lx7WKp5j8Ap/D/Lc9G6px4998i
-         cJe5xYRt4m2L0VYPnqcuX0hEbu5pZBUImqNVF6mX7O905GpMyhDGjuxgO8XptMfTtZ
-         tADDJwvTmCPlvy3io+gkgAVUASrMH9BBOJfR8InI=
+        b=gmZggTGw0Y3PPUm9HPmuze72AaYh/Iw7IryfZESMve7pcwU4R1/biLdptXDlvxY1x
+         h0jCiXLcs2aqDoCe6OeOE64JmpB0rUhvfdyObZ/un3AUjGt/PNmZlB8VblJaSq0IhW
+         fJBSzBkht21uzeiGGsL4HVWgl90ZKTA/tv5yJCVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamil Lorenc <kamil@re-ws.pl>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 08/10] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
-Date:   Mon,  7 Sep 2020 12:35:41 -0400
-Message-Id: <20200907163543.1281889-8-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 06/10] xfs: initialize the shortform attr header padding entry
+Date:   Mon,  7 Sep 2020 12:35:39 -0400
+Message-Id: <20200907163543.1281889-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
 References: <20200907163543.1281889-1-sashal@kernel.org>
@@ -60,34 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Lorenc <kamil@re-ws.pl>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
+[ Upstream commit 125eac243806e021f33a1fdea3687eccbb9f7636 ]
 
-Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
+Don't leak kernel memory contents into the shortform attr fork.
 
-Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/dm9601.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/xfs/libxfs/xfs_attr_leaf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/usb/dm9601.c b/drivers/net/usb/dm9601.c
-index 0b4bdd39106b0..fb18801d0fe7b 100644
---- a/drivers/net/usb/dm9601.c
-+++ b/drivers/net/usb/dm9601.c
-@@ -624,6 +624,10 @@ static const struct usb_device_id products[] = {
- 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
- 	 .driver_info = (unsigned long)&dm9601_info,
- 	},
-+	{
-+	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
-+	 .driver_info = (unsigned long)&dm9601_info,
-+	},
- 	{},			// END
- };
- 
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 445a3f2f871fb..da8747b870df3 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -514,8 +514,8 @@ xfs_attr_shortform_create(xfs_da_args_t *args)
+ 		ASSERT(ifp->if_flags & XFS_IFINLINE);
+ 	}
+ 	xfs_idata_realloc(dp, sizeof(*hdr), XFS_ATTR_FORK);
+-	hdr = (xfs_attr_sf_hdr_t *)ifp->if_u1.if_data;
+-	hdr->count = 0;
++	hdr = (struct xfs_attr_sf_hdr *)ifp->if_u1.if_data;
++	memset(hdr, 0, sizeof(*hdr));
+ 	hdr->totsize = cpu_to_be16(sizeof(*hdr));
+ 	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
+ }
 -- 
 2.25.1
 
