@@ -2,109 +2,127 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28E0B206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DADCA207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:03:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iGE5Cdik"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGZAavdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgIGHBl (ORCPT
+        id S1726927AbgIGHC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
+        Mon, 7 Sep 2020 03:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbgIGHAb (ORCPT
+        with ESMTP id S1726771AbgIGHCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:00:31 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D56C061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:00:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id v15so7593914pgh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:00:30 -0700 (PDT)
+        Mon, 7 Sep 2020 03:02:09 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE63C061574;
+        Mon,  7 Sep 2020 00:02:08 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id g4so14563479wrs.5;
+        Mon, 07 Sep 2020 00:02:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZB01nxLyQQ2oxAI+dDxfZXKWbIvB8x5H0InVProFwEk=;
-        b=iGE5Cdikz2WDHv2brLa0kGSf0Oyke/kI5FiddDBhh+ZQu4j85gbU3TlsK0oCn2Lu0w
-         hqcU3iLfW5vzpOogIiR3dfTDtzFuE76qTO2JIgH6nMQmsEZEWDgI0wqCE6WIRGk6A27+
-         1RLgd92imZ0HxzZxA9lXP9kFMJFZRW2WZpfLSgwQSrhJ00/4+p08wqADrOPRtjaDnyvr
-         SJrJ1nKQ3a8Ey7Uov3UZhW+p/Oc/7YDmr1VHA8eib4ofkHMi4By9OyXHwRJnI9g4DPNO
-         PaxzkYx0GVXvR/OOkgOhvBGUApvewi6a7MRXJ2P5p/2ZqGjOng2enxCX/DFGsnxbGP/X
-         io8A==
+        bh=ylv/Ec3IQY/nRnVl7KUf4rlIbzcbzilcAdfCxVxqCdM=;
+        b=eGZAavdZlKtcT3lSWI7KautQwycdwOhhWwW/QEDVhWUcao0t3/TnmTEfUdfslBudpC
+         8nOaO+bFIkEwWAZNjSOuhZ6S26BDST+w8i732lh7nQ3kIYL04wbpYO6FdH0Xvm/2JWaJ
+         ySiPaxUHkEGfTtRKfTj2b7T2yXI56gul9vy5dixsvYnOcR6BLkNU5NcTV5022OWDUrso
+         uPL9AKxRJWrPp+jiZrtrq8sEq5j4iSINePJYRZ86f9QwUqYx7XzAfdVcV+/qz1oqvkxz
+         NHic36LO7xaBXZ7JXPidaQ6oPLkn4BoGtaSdmOAQohYSiqIQdzMaGTWbAUJrsDHKZnGF
+         B4dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZB01nxLyQQ2oxAI+dDxfZXKWbIvB8x5H0InVProFwEk=;
-        b=MgbMDPlOLF6yAmCNvCV9rM4y1qDw3Stkgc1jDwzXudFEvsC4c3cO3G6MGHcou5c2v6
-         rA1Qp6XMiFbr3TIEjWQQwBEnKtl+dbmNg3g9ZJwYtgqFqKBBXiyTQHkBKgiEfbgbo5ZS
-         oEhJ2CdAoHU/wQ7P5/D4nnt2q2ovo6wHF1Ctd8p3wNFJCmNped3q6QfwZQD+FDnnTeJb
-         u+OCeB2IGwV/HnBTIFwfznIpyryGmqpDfhk7yqYP9H+z7vT7npV6Pca8+lIvzZ14C2ru
-         kxoJl3e+1ri7phAaqmpzIkMHN5CBhfmjwFf42kHK2auBuvkH23c3SWKNi5F5zo6HlsM5
-         Rpow==
-X-Gm-Message-State: AOAM533iZMCkMx85ZxKzTov19bdu9a7RHy82lU2z71bvET0mGYQPqSJr
-        fvG1aAiOIXzoBr4ja8gdz5C1bsnmPbwdXivBzA9tJRD5AjX/Fw==
-X-Google-Smtp-Source: ABdhPJxuNIxHplTBaOBAdYC4reZOx0YehpPyyImzvd9PJ/q1QoVrRnICkvZUEj+F6D3F2KJO1GuoRJoMsZo/pllt2kA=
-X-Received: by 2002:aa7:8756:: with SMTP id g22mr18657106pfo.37.1599462025620;
- Mon, 07 Sep 2020 00:00:25 -0700 (PDT)
+        bh=ylv/Ec3IQY/nRnVl7KUf4rlIbzcbzilcAdfCxVxqCdM=;
+        b=kQUDjwR2DxLPzrntfzoR9k/MdjyFt6rlbGZtMCSw5Vt9VpyCtCFFU4semoqizrrweQ
+         VUypzNBmKZDVrMZmd0EGCI9UnRTGogBSVjnBKhcbYs+0xk6B9KoC1fpGQ+xIDTLL8QLR
+         2mmrM506vf4qZylzZJVelTBeQyroR0tfryYQtBu0eDUUtTNLc0DnM+MDLU0kszCDO+l3
+         kZO8cmvGqknukajxJFLlc4u363sH1KpSSVcSnpMwvPVYZ45x9OsHDHJa9qcrTikGFVfE
+         xabPK9yEfFvwddCm3whbjkjFAZiMoCR2g6tohykE9gAsB1qX3q87x8LNADmgFN3d74U0
+         w4yw==
+X-Gm-Message-State: AOAM531PTa1voJrZuf1Y/KWhLy0ldCfaU5mGR2l7OoP42nrrKS+7iTY9
+        oeOhqr243+cKS7HFCjoQZR5E+ochjg20EumOTlU=
+X-Google-Smtp-Source: ABdhPJw8TAjLd5BYGCY0Tr5/xWkqYwtfubZPgWpkYEtQ1vEu4nZ7Ih5my0t7n5KCYlQdFMaMMGHicv8EGLY6kCKlCsI=
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr19759514wrm.355.1599462127129;
+ Mon, 07 Sep 2020 00:02:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904155025.55718-1-xypron.glpk@gmx.de>
-In-Reply-To: <20200904155025.55718-1-xypron.glpk@gmx.de>
-From:   Maxim Uvarov <maxim.uvarov@linaro.org>
-Date:   Mon, 7 Sep 2020 10:00:14 +0300
-Message-ID: <CAD8XO3ZLqkuajo3GVRdvXiFXMH9P-vp-PX5s6idgA51ouVDpKQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
-To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+References: <20200731064526.GA25674@infradead.org> <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
+ <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731091416.GA29634@infradead.org> <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731094135.GA4104@infradead.org> <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
+ <20200731125110.GA11500@infradead.org> <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200814081411.GA16943@infradead.org>
+In-Reply-To: <20200814081411.GA16943@infradead.org>
+From:   Kanchan Joshi <joshiiitr@gmail.com>
+Date:   Mon, 7 Sep 2020 12:31:42 +0530
+Message-ID: <CA+1E3r+WXC_MK5Zf2OZEv17ddJDjtXbhpRFoeDns4F341xMhow@mail.gmail.com>
+Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
+To:     "hch@infradead.org" <hch@infradead.org>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Javier Gonzalez <javier.gonz@samsung.com>,
+        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+On Fri, Aug 14, 2020 at 1:44 PM hch@infradead.org <hch@infradead.org> wrote:
 >
-> In the memory map the regions with the lowest addresses may be of type
-> EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
-> rest of the memory. So for calculating the maximum loading address for the
-> device tree and the initial ramdisk image these reserved areas should not
-> be taken into account.
+> On Wed, Aug 05, 2020 at 07:35:28AM +0000, Damien Le Moal wrote:
+> > > the write pointer.  The only interesting addition is that we also want
+> > > to report where we wrote.  So I'd rather have RWF_REPORT_OFFSET or so.
+> >
+> > That works for me. But that rules out having the same interface for raw block
+> > devices since O_APPEND has no meaning in that case. So for raw block devices, it
+> > will have to be through zonefs. That works for me, and I think it was your idea
+> > all along. Can you confirm please ?
 >
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-> ---
->  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
-> index c2484bf75c5d..13058ac75765 100644
-> --- a/drivers/firmware/efi/libstub/efi-stub.c
-> +++ b/drivers/firmware/efi/libstub/efi-stub.c
-> @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
->         map.map_end = map.map + map_size;
->
->         for_each_efi_memory_desc_in_map(&map, md) {
-> -               if (md->attribute & EFI_MEMORY_WB) {
-> +               if (md->attribute & EFI_MEMORY_WB &&
-> +                   md->type != EFI_RESERVED_TYPE) {
+> Yes.  I don't think think raw syscall level access to the zone append
+> primitive makes sense.  Either use zonefs for a file-like API, or
+> use the NVMe pass through interface for 100% raw access.
 
-shouldn't the type here be CONVENTIONAL?
+But there are use-cases which benefit from supporting zone-append on
+raw block-dev path.
+Certain user-space log-structured/cow FS/DB will use the device that
+way. Aerospike is one example.
+Pass-through is synchronous, and we lose the ability to use io-uring.
 
->                         if (membase > md->phys_addr)
->                                 membase = md->phys_addr;
->                 }
-> --
-> 2.28.0
->
+For async uring/aio to block-dev, file-pointer will not be moved to
+EoF, but that position was not very important anyway- as with this
+interface we expect many async appends outstanding, all with
+zone-start.
+Do you think RWF_APPEND | RWF_REPORT_OFFSET_DIRECT/INDIRECT is too bad
+for direct block-dev. Could you please suggest another way to go about
+it?
+
+
+
+--
+Kanchan
