@@ -2,116 +2,81 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD4CC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5804DC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A82E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:23:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix+SP49a"
+	by mail.kernel.org (Postfix) with ESMTP id 1BFC22078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599470693;
+	bh=MF3X8v5mIVSH9DjNRPkf+bnMwllLl549DAVJziB2y3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K3DD9Ioj+6tEamoGMIs40lXlryphqaEyd/KLT8T3088qjJUMl3zQJsmy0TFsPJTY8
+	 ychO6natkzU4k06OrABkzhIulFINnyk6dU3y4Ka3dxFUWOl123biY0gzCHqz+0J7if
+	 1M2IENksCFUbgV4Cp35moX7kmX/ZRIBO11P/UR/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgIGJXW (ORCPT
+        id S1728326AbgIGJYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:23:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbgIGJXV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:23:21 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8857CC061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 02:23:20 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id y15so3979961uan.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 02:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GBjC6LgsXmyRTFlOrXgXx23bviroU6DrK6ZiFWBgik0=;
-        b=Ix+SP49aOyHAg/LDL0Qfvoem123dBoUolQTXi7YjAo0uuVk0297CdTiC3zll82eiwX
-         OIFk0d2c4pI1jm7uoNB+hwGS3lkU8t7LXUp6g4NOn2lP+TWO8ZA8MyLksvKmEndRpFb0
-         G/uPQAgjEp3FLZCxIan72e6ghxZ7gtTcR/E7gbQDdNupo19nZ9Nml1dklJqEMvRmhUnm
-         ZIzaYQ+BE1Fejp3GRiEF1iqePsK/WCtnvvWykHLUtCg4WE52KTCMDSEim0hNOIqhrgTl
-         S+YIF8ZYPswYhgGPHgM0VYOfnPiGcDLpV5YPbvmiINDTKy+5aqHrG7Xpm2O1jGCzxrdO
-         Cubw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GBjC6LgsXmyRTFlOrXgXx23bviroU6DrK6ZiFWBgik0=;
-        b=UFOCC5NeNdukG3Z69kWXNk1egvoj/jluvqZRT2tggZifce3CYqyaCZEuaXnxitrfO9
-         ZtWgy1ZR3zOpUNW2wOmrCZYypZ17BVI4UcUneYFAQgjjhtnifUVM2GciQKavvBFRga5E
-         IjSV79lo+Wk/h2cA7d/q/GLeFOih8PzKBOeF6+L6bGvSUgU+HMxBniKs414gjph+bMm4
-         7q4sO8YVcaOK/vWywMCVIGoRg8vds1tVh/NWCWXdUOAeD7VPRfe8yGnkLLsD4Klj1fwZ
-         7PtnrliTtCFhGexgAje00eBVEKGJ5atP6kWRjz6sfB2bsKCBU3torA8EHatdAyHuAf9k
-         8VAg==
-X-Gm-Message-State: AOAM531TYyoJBQYuelxjZp72e339Z5aU5P00aO1kycfVEsXWzQ+cj54m
-        +pCfb8hEHiMZ0OkzYFyaAiNqf4p9zCTz/w==
-X-Google-Smtp-Source: ABdhPJympCXlRh7+J3sWe7BIH8oVaW4oyseH3WTG0LKg3ah1OWs7BaPY3N3q4IjFLQnVsKAT8zUv8A==
-X-Received: by 2002:ab0:1e84:: with SMTP id o4mr10943217uak.74.1599470594225;
-        Mon, 07 Sep 2020 02:23:14 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id f190sm853570vka.1.2020.09.07.02.23.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 02:23:13 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id b123so7024342vsd.10
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 02:23:12 -0700 (PDT)
-X-Received: by 2002:a67:ebc4:: with SMTP id y4mr11763629vso.119.1599470592359;
- Mon, 07 Sep 2020 02:23:12 -0700 (PDT)
+        Mon, 7 Sep 2020 05:24:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727122AbgIGJYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:24:49 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E6CB2078E;
+        Mon,  7 Sep 2020 09:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599470688;
+        bh=MF3X8v5mIVSH9DjNRPkf+bnMwllLl549DAVJziB2y3o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sYQhFQProeTUxz41B/fAN+u00aIzNiBOvvfGQdrtIhyKndVNP0j8lNqQWz/bSkCia
+         GtIMLvLp0bq9K95zQVxT4ijHJcw3u9JzE9nF8uvQT63XarslFfXw7CtMU11pQt/eJQ
+         h3o3ef5AOr/VEm9nGEGTJduqzROMWdMAGLI0pT34=
+Date:   Mon, 7 Sep 2020 11:25:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     ricky_wu@realtek.com
+Cc:     arnd@arndb.de, bhelgaas@google.com, ulf.hansson@linaro.org,
+        rui_feng@realsil.com.cn, linux-kernel@vger.kernel.org,
+        puranjay12@gmail.com, linux-pci@vger.kernel.org,
+        vailbhavgupta40@gmail.com
+Subject: Re: [PATCH v4 1/2] misc: rtsx: Fix power down flow
+Message-ID: <20200907092503.GA1393659@kroah.com>
+References: <20200904094220.27533-1-ricky_wu@realtek.com>
 MIME-Version: 1.0
-References: <1599286273-26553-1-git-send-email-tanhuazhong@huawei.com> <20200906114153.7dccce5d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200906114153.7dccce5d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 7 Sep 2020 11:22:33 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
-Message-ID: <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/2] net: two updates related to UDP GSO
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Huazhong Tan <tanhuazhong@huawei.com>,
-        David Miller <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200904094220.27533-1-ricky_wu@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 6, 2020 at 8:42 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Sat, 5 Sep 2020 14:11:11 +0800 Huazhong Tan wrote:
-> > There are two updates relates to UDP GSO.
-> > #1 adds a new GSO type for UDPv6
-> > #2 adds check for UDP GSO when csum is disable in netdev_fix_features().
-> >
-> > Changes since RFC V2:
-> > - modifies the timing of setting UDP GSO type when doing UDP GRO in #1.
-> >
-> > Changes since RFC V1:
-> > - updates NETIF_F_GSO_LAST suggested by Willem de Bruijn.
-> >   and add NETIF_F_GSO_UDPV6_L4 feature for each driver who support UDP GSO in #1.
-> >   - add #2 who needs #1.
->
-> Please CC people who gave you feedback (Willem).
->
-> I don't feel good about this series. IPv6 is not optional any more.
-> AFAIU you have some issues with csum support in your device? Can you
-> use .ndo_features_check() to handle this?
->
-> The change in semantics of NETIF_F_GSO_UDP_L4 from "v4 and v6" to
-> "just v4" can trip people over; this is not a new feature people
-> may be depending on the current semantics.
->
-> Willem, what are your thoughts on this?
+On Fri, Sep 04, 2020 at 05:42:19PM +0800, ricky_wu@realtek.com wrote:
+> From: Ricky Wu <ricky_wu@realtek.com>
+> 
+> Fix and sort out rtsx driver power down flow
+> 
+> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+> ---
+>  drivers/misc/cardreader/rts5227.c  | 15 ---------------
+>  drivers/misc/cardreader/rts5228.c  |  5 ++---
+>  drivers/misc/cardreader/rts5249.c  | 17 -----------------
+>  drivers/misc/cardreader/rts5260.c  | 16 ----------------
+>  drivers/misc/cardreader/rtsx_pcr.c | 16 ++++++++++++++++
+>  5 files changed, 18 insertions(+), 51 deletions(-)
 
-If that is the only reason, +1 on fixing it up in the driver's
-ndo_features_check.
+What changed from the previous versions?  That always needs to go below
+the --- line.
+
+Please fix up and resend a v5.
+
+thanks,
+
+greg k-h
