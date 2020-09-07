@@ -2,153 +2,102 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2E1C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D5BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23FFD20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2679F20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:26:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726941AbgIGHZ4 (ORCPT
+        id S1726969AbgIGH0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:25:56 -0400
-Received: from mga14.intel.com ([192.55.52.115]:30922 "EHLO mga14.intel.com"
+        Mon, 7 Sep 2020 03:26:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40780 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726422AbgIGHZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:25:56 -0400
-IronPort-SDR: lgOO3hWUxi/1H93nBNgTxabjuscYQ0QwLnwio3b6fEtqELkiPoFBmwcV5NKT0MjTfAVugkhffR
- g24/5H6qVwgw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="157230084"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="157230084"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 00:25:55 -0700
-IronPort-SDR: gMnuKmvulw1ma0Oz55zxirLkE65wgpB6LgqRu06Lc08ddIDw9pROLgYUgyrLtzgtuJlETwozlP
- Vd9T307B6qoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="340736982"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Sep 2020 00:25:55 -0700
-Received: from [10.214.170.27] (mreddy3x-MOBL.gar.corp.intel.com [10.214.170.27])
-        by linux.intel.com (Postfix) with ESMTP id 1D30E58077A;
-        Mon,  7 Sep 2020 00:25:51 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Rob Herring <robh@kernel.org>
-Cc:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
- <354cc7a4-de2f-1ed4-882d-3a285f565a26@ti.com>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <327e291d-7a49-ae1e-d5a3-55953e312ce5@linux.intel.com>
-Date:   Mon, 7 Sep 2020 15:25:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726888AbgIGH0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 03:26:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0F480AD6B;
+        Mon,  7 Sep 2020 07:26:10 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 09:26:08 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+Message-ID: <20200907072608.GE30144@dhcp22.suse.cz>
+References: <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
+ <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz>
+ <20200902151306.GL4617@dhcp22.suse.cz>
+ <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz>
+ <20200903063806.GM4617@dhcp22.suse.cz>
+ <c6b11905-2456-52a0-3b15-d4ceae6e7f54@redhat.com>
+ <CA+CK2bBTfmhTWNRrxnVKi=iknqq-iZxNZSnwNA9C9tWAJzRxmw@mail.gmail.com>
+ <d89510b1-a6a2-a874-7ffc-ba7a37d4212d@redhat.com>
+ <20200904070235.GA15277@dhcp22.suse.cz>
+ <CA+CK2bDON8A5AmKqPFWOytP-B29U-YAc9maQAvV-oGffaek6Yg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <354cc7a4-de2f-1ed4-882d-3a285f565a26@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bDON8A5AmKqPFWOytP-B29U-YAc9maQAvV-oGffaek6Yg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 04-09-20 10:25:02, Pavel Tatashin wrote:
+> > Another alternative would be to enable/disable static branch only from
+> > users who really care but this is quite tricky because how do you tell
+> > you need or not? It seems that alloc_contig_range would be just fine
+> > with a weaker semantic because it would "only" to a spurious failure.
+> > Memory hotplug on the other hand really needs to have a point where
+> > nobody interferes with the offlined memory so it could ask for a
+> > stronger semantic.
+> >
+> > Yet another option would be to make draining stronger and actually
+> > guarantee there are no in-flight pages to be freed to the pcp list.
+> > One way would be to tweak pcp->high and implement a strong barrier
+> > (IPI?) to sync with all CPUs. Quite expensive, especially when there are
+> > many draining requests (read cma users because hotplug doesn't really
+> > matter much as it happens seldom).
+> >
+> > So no nice&cheap solution I can think of...
+> 
+> I think start_isolate_page_range() should not be doing page draining
+> at all. It should isolate ranges, meaning set appropriate flags, but
+> draining should be performed by the users when appropriate: next to
+> lru_add_drain_all() calls both in CMA and hotplug.
 
-On 9/4/2020 2:31 PM, Peter Ujfalusi wrote:
->
-> On 18/08/2020 10.00, Reddy, MallikarjunaX wrote:
->> Hi Rob,
->> Thanks for your valuable comments. Please see my comments inline..
->>
->> On 8/15/2020 4:32 AM, Rob Herring wrote:
->>> On Fri, Aug 14, 2020 at 01:26:09PM +0800, Amireddy Mallikarjuna reddy
->>> wrote:
->>>> Add DT bindings YAML schema for DMA controller driver
->>>> of Lightning Mountain(LGM) SoC.
->>>>
->>>> Signed-off-by: Amireddy Mallikarjuna reddy
->>>> <mallikarjunax.reddy@linux.intel.com>
->>>> ---
->>>> v1:
->>>> - Initial version.
->>>>
->>>> v2:
->>>> - Fix bot errors.
->>>>
->>>> v3:
->>>> - No change.
->>>>
->>>> v4:
->>>> - Address Thomas langer comments
->>>>     - use node name pattern as dma-controller as in common binding.
->>>>     - Remove "_" (underscore) in instance name.
->>>>     - Remove "port-" and "chan-" in attribute name for both
->>>> 'dma-ports' & 'dma-channels' child nodes.
->>>>
->>>> v5:
->>>> - Moved some of the attributes in 'dma-ports' & 'dma-channels' child
->>>> nodes to dma client/consumer side as cells in 'dmas' properties.
->>>> ---
->>>>    .../devicetree/bindings/dma/intel,ldma.yaml        | 319
->>>> +++++++++++++++++++++
->>>>    1 file changed, 319 insertions(+)
->>>>    create mode 100644
->>>> Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>>> b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>>> new file mode 100644
->>>> index 000000000000..9beaf191a6de
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/dma/intel,ldma.yaml
->>>> @@ -0,0 +1,319 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/dma/intel,ldma.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Lightning Mountain centralized low speed DMA and high speed
->>>> DMA controllers.
->>>> +
->>>> +maintainers:
->>>> +  - chuanhua.lei@intel.com
->>>> +  - mallikarjunax.reddy@intel.com
->>>> +
->>>> +allOf:
->>>> +  - $ref: "dma-controller.yaml#"
->>>> +
->>>> +properties:
->>>> + $nodename:
->>>> +   pattern: "^dma-controller(@.*)?$"
->>>> +
->>>> + "#dma-cells":
->>>> +   const: 1
->>> Example says 3.
->> OK, i will fix it.
-> It would help if you would add description of what is the meaning of the
-> individual cell.
-I am already prepared the patch by addressing previous comments and just 
-before sending i received your review comment. :-)
+I disagree. The pcp draining is an implementation detail and we
+shouldn't bother callers to be aware of it.
 
-Let me Edit , include the description and prepare the patch again.
->
-> - Péter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->
+> Currently, the way start_isolate_page_range() drains pages is very
+> inefficient. It calls drain_all_pages() for every valid page block,
+> which is a slow call as it starts a thread per cpu, and waits for
+> those threads to finish before returning.
+
+This is an implementation detail.
+
+> We could optimize by moving the drain_all_pages() calls from
+> set_migratetype_isolate() to start_isolate_page_range() and call it
+> once for every different zone, but both current users of this
+> interface guarantee that all pfns [start_pfn, end_pfn] are within the
+> same zone, and I think we should keep it this way, so again the extra
+> traversal is going to be overhead overhead.
+
+Again this just leads to tricky code. Just look at how easy it was to
+break this by removing something that looked clearly a duplicate call.
+It is true that memory isolation usage is limited to only few usecasaes
+but I would strongly prefer to make the semantic clear so that we do not
+repeat this regressions.
+-- 
+Michal Hocko
+SUSE Labs
