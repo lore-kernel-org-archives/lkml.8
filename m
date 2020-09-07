@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A654C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECAECC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07A75207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7146207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:51:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497481;
-	bh=jtXOQm4tHRZLmtlSGl9h0CdfQhfRJHUaGfBsqSV88Jc=;
+	s=default; t=1599497491;
+	bh=4ABVsmh5jI5NnXO2oNl8UNhINhHcy7IXqkNT+Q5jG1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=akE67aI6dXB7MaH0zHUZSBxJ8Xsmj4Mpupa3faSAjBl1EIKNeMAfQZ9U8fr2pxOZ3
-	 kbkAclvXbRNgWAnPgfDYys1YxBm9/aNEdI3GkojFQ1mCJCVqSacOJx0cPRQgO0DRh1
-	 KF+pdx8ydtql71KgOSIr6aNYpmWqkmdY18NoYwAc=
+	b=X53G2oc2FeNaVVYoYtxx1PwOlauxqMRn8bQx4pGZXVAknF1MEBVJyaVHMDfbv8dqp
+	 Ucf7v9I8ADJKFjnvJO5m3GlqTd0ddxL/4T0CHQeFUH6Hvl0vXcQZrpbiYsEwBq5cs1
+	 wAV8b6w3kL+p2OP8r2IZTHmIKPylpwmW0nT8puBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbgIGQvT (ORCPT
+        id S1730330AbgIGQvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:51:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48646 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:51:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730765AbgIGQev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:51 -0400
+        id S1730768AbgIGQeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA80221D81;
-        Mon,  7 Sep 2020 16:34:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1E0221E7;
+        Mon,  7 Sep 2020 16:34:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496485;
-        bh=jtXOQm4tHRZLmtlSGl9h0CdfQhfRJHUaGfBsqSV88Jc=;
+        s=default; t=1599496489;
+        bh=4ABVsmh5jI5NnXO2oNl8UNhINhHcy7IXqkNT+Q5jG1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dAwNmtfngimZmcQSih8xA63gslp1bHRlawjIl5kfNVpo7+tCcHz77FYZJMWsjHZCE
-         URQokBr1oZSCQnWn16SE5UYwHNSReAl6KIBeMLcb4BzfGz/0xz9hvh3O+A72jZQ1qG
-         OofLezLcFM4JLnQpceh7BhU76v5wXYOxGQVxM8E4=
+        b=PvJ3RZ2SmMhHdPfzspkrLAnUaGwrO3tTSsMbsxRwO1XOmBLu74yYogBweVFSmRn0a
+         128oXrAsaBkrwhet/a6Ufzz1ss7P5NYFZgRnYlD9076+cV99FPHKulJH7NR3j1fTbp
+         AQQn4yiRv3cfHkjhACeNj+dT5oJvvcAJReifoUSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        James Smart <james.smart@broadcom.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 15/26] nvme-rdma: serialize controller teardown sequences
-Date:   Mon,  7 Sep 2020 12:34:15 -0400
-Message-Id: <20200907163426.1281284-15-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/26] HID: elan: Fix memleak in elan_input_configured
+Date:   Mon,  7 Sep 2020 12:34:18 -0400
+Message-Id: <20200907163426.1281284-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
 References: <20200907163426.1281284-1-sashal@kernel.org>
@@ -59,82 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 5110f40241d08334375eb0495f174b1d2c07657e ]
+[ Upstream commit b7429ea53d6c0936a0f10a5d64164f0aea440143 ]
 
-In the timeout handler we may need to complete a request because the
-request that timed out may be an I/O that is a part of a serial sequence
-of controller teardown or initialization. In order to complete the
-request, we need to fence any other context that may compete with us
-and complete the request that is timing out.
+When input_mt_init_slots() fails, input should be freed
+to prevent memleak. When input_register_device() fails,
+we should call input_mt_destroy_slots() to free memory
+allocated by input_mt_init_slots().
 
-In this case, we could have a potential double completion in case
-a hard-irq or a different competing context triggered error recovery
-and is running inflight request cancellation concurrently with the
-timeout handler.
-
-Protect using a ctrl teardown_lock to serialize contexts that may
-complete a cancelled request due to error recovery or a reset.
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/hid/hid-elan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index f393a6193252e..7e2cdb17c26d8 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -118,6 +118,7 @@ struct nvme_rdma_ctrl {
- 	struct sockaddr_storage src_addr;
- 
- 	struct nvme_ctrl	ctrl;
-+	struct mutex		teardown_lock;
- 	bool			use_inline_data;
- };
- 
-@@ -880,6 +881,7 @@ static int nvme_rdma_configure_io_queues(struct nvme_rdma_ctrl *ctrl, bool new)
- static void nvme_rdma_teardown_admin_queue(struct nvme_rdma_ctrl *ctrl,
- 		bool remove)
- {
-+	mutex_lock(&ctrl->teardown_lock);
- 	blk_mq_quiesce_queue(ctrl->ctrl.admin_q);
- 	nvme_rdma_stop_queue(&ctrl->queues[0]);
- 	if (ctrl->ctrl.admin_tagset)
-@@ -887,11 +889,13 @@ static void nvme_rdma_teardown_admin_queue(struct nvme_rdma_ctrl *ctrl,
- 			nvme_cancel_request, &ctrl->ctrl);
- 	blk_mq_unquiesce_queue(ctrl->ctrl.admin_q);
- 	nvme_rdma_destroy_admin_queue(ctrl, remove);
-+	mutex_unlock(&ctrl->teardown_lock);
- }
- 
- static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
- 		bool remove)
- {
-+	mutex_lock(&ctrl->teardown_lock);
- 	if (ctrl->ctrl.queue_count > 1) {
- 		nvme_stop_queues(&ctrl->ctrl);
- 		nvme_rdma_stop_io_queues(ctrl);
-@@ -902,6 +906,7 @@ static void nvme_rdma_teardown_io_queues(struct nvme_rdma_ctrl *ctrl,
- 			nvme_start_queues(&ctrl->ctrl);
- 		nvme_rdma_destroy_io_queues(ctrl, remove);
+diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
+index 07e26c3567eb9..6346282e0ff05 100644
+--- a/drivers/hid/hid-elan.c
++++ b/drivers/hid/hid-elan.c
+@@ -192,6 +192,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
++		input_free_device(input);
+ 		return ret;
  	}
-+	mutex_unlock(&ctrl->teardown_lock);
- }
  
- static void nvme_rdma_stop_ctrl(struct nvme_ctrl *nctrl)
-@@ -1955,6 +1960,7 @@ static struct nvme_ctrl *nvme_rdma_create_ctrl(struct device *dev,
- 		return ERR_PTR(-ENOMEM);
- 	ctrl->ctrl.opts = opts;
- 	INIT_LIST_HEAD(&ctrl->list);
-+	mutex_init(&ctrl->teardown_lock);
- 
- 	if (opts->mask & NVMF_OPT_TRSVCID)
- 		port = opts->trsvcid;
+@@ -202,6 +203,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to register elan input device: %d\n",
+ 			ret);
++		input_mt_destroy_slots(input);
+ 		input_free_device(input);
+ 		return ret;
+ 	}
 -- 
 2.25.1
 
