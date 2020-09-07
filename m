@@ -2,166 +2,289 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A213C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA47C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B61C220757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:53:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uy6UIlJN"
+	by mail.kernel.org (Postfix) with ESMTP id 00E02208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:55:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599468904;
+	bh=h0dzECAlJcaUj2DyOGtmStzWmm1Oimzbwx2te+tHEwU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=0u4B45xwnZwnUfxJU8rM/0yiCyzdBCzRPqFrO3Jh7Pr0O7qLdsJuec8CeXtDX2Btz
+	 LryvoZgwPEf9RgiEP0KDNCFzT05Q2IvLlUoYRII6Yklou9KkZedkeyFtjIFsJ/ahPs
+	 V9TGpY4xivnmq7D9hR86tanpsesR6kB3jvLdsMJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728235AbgIGIxT (ORCPT
+        id S1728160AbgIGIzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727122AbgIGIxR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:53:17 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFDDC061573;
-        Mon,  7 Sep 2020 01:53:15 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id j2so14907713wrx.7;
-        Mon, 07 Sep 2020 01:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=A7Ob64uVCgQyADTz7K9otXCMPdV+q+h2KonSWJg/dPI=;
-        b=uy6UIlJNIh28BNN2taXnkM+toeAasVWdnK9mRy7byXZuqptwG1fsA2L+o850ffbvdO
-         2UEq0I5MVdwC6jdAL2XJGP4vJc6dEwDr4AuQjGrYpHEXfZOSkHPOISDqJVvXE4GPuC0s
-         hCmmsbakV0DfbXdlnedXJ9NhCT6ZHvquFYWltQjtx7vUOy+zd4Q57zocg+2j6SXIMDvb
-         sm3KgsWRZ5Eu4gjm+n9DY9Z1jG2j9bsi1Hy8GFvP9BkTXvVolM5G0dADZXuWz/MXkiP/
-         qC6K8cpkLtC3Om+9y8WOA2XLwhpCHf/xKCr2NohzK/D+sMlj6RPwH68XVc20ZNypBECU
-         GXkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=A7Ob64uVCgQyADTz7K9otXCMPdV+q+h2KonSWJg/dPI=;
-        b=prIvkhClPK0MEOmEbILmpp268g/DaXMCCKr/UuqH3zYYg48DXcHpwjcC4VEMPNsZ3f
-         HwMzdNwBwVuH+yJ6NOjp+9YoE+hRurKkQoGBsyRgYw/oXAGlENePpm12bW8ue/38flcG
-         wx/PXpCFWIz50a72F13uP0VjzRaVe+z61FDk1R6VOFT1h7uZAHVnvWLmccy8DM2+xcQS
-         7B3rkNjdFPsCgMEleytEsPXywxlb1xmvuPzKmFaTIqOEYqinpp1VP/4LIsE2ZPe5jn1o
-         OBNbMXr7pD5OQnxRhghLqYTSc1omkYWTD+9YTcloHBgkQtzXC/IDTbVXCnaXqlzeVCkh
-         T7xw==
-X-Gm-Message-State: AOAM532t0pmXNjJxnWs5DCbR/kHqv+XcAaWPMy/29vacGiGzXojl7F9M
-        h5i1o4tBvFhWXrZnVriw/wCA+5r0pa9XVA==
-X-Google-Smtp-Source: ABdhPJzsehv6jbJ8lt2kbSXmHNnBpQQh2rLMyffPbBF17Yag9pcsdk7Srj4wgBWeISN7k76h43/gew==
-X-Received: by 2002:a5d:4448:: with SMTP id x8mr21753846wrr.207.1599468794056;
-        Mon, 07 Sep 2020 01:53:14 -0700 (PDT)
-Received: from [192.168.43.239] ([5.100.193.184])
-        by smtp.gmail.com with ESMTPSA id 189sm26411087wmb.3.2020.09.07.01.53.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 01:53:13 -0700 (PDT)
-Subject: Re: [PATCH next] io_uring: fix task hung in io_uring_setup
-To:     Jens Axboe <axboe@kernel.dk>, Hillf Danton <hdanton@sina.com>
-Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        viro@zeniv.linux.org.uk,
-        syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-References: <20200903132119.14564-1-hdanton@sina.com>
- <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
-Date:   Mon, 7 Sep 2020 11:50:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 7 Sep 2020 04:55:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55742 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726978AbgIGIzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:55:01 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82AF720757;
+        Mon,  7 Sep 2020 08:54:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599468899;
+        bh=h0dzECAlJcaUj2DyOGtmStzWmm1Oimzbwx2te+tHEwU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=erArDS/k5tl0YdDvN8AQKEBXad+mxvHAMDPO1ZzBi4LTztrqdD8bEVz+C8WT+Nc5l
+         avyVnLlnU+sU2hSd0kICBhZxf+eAkQAaKhZ5ZKqt6lJEFg5crYUfmmXPAXdqVxI2B+
+         S+zXVCN1qryM2oFOI5PrvKTLWQ4OmTTYl4RooQXM=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kFCvR-009iBY-K7; Mon, 07 Sep 2020 09:54:57 +0100
 MIME-Version: 1.0
-In-Reply-To: <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Mon, 07 Sep 2020 09:54:57 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Justin He <Justin.He@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+References: <20200904092744.167655-1-jianyong.wu@arm.com>
+ <20200904092744.167655-9-jianyong.wu@arm.com> <874kocmqqx.wl-maz@kernel.org>
+ <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <366387fa507f9c5d5044549cea958ce1@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/09/2020 17:04, Jens Axboe wrote:
-> On 9/3/20 7:21 AM, Hillf Danton wrote:
->>
->> The smart syzbot found the following issue:
->>
->> INFO: task syz-executor047:6853 blocked for more than 143 seconds.
->>       Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
->> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> task:syz-executor047 state:D stack:28104 pid: 6853 ppid:  6847 flags:0x00004000
->> Call Trace:
->>  context_switch kernel/sched/core.c:3777 [inline]
->>  __schedule+0xea9/0x2230 kernel/sched/core.c:4526
->>  schedule+0xd0/0x2a0 kernel/sched/core.c:4601
->>  schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
->>  do_wait_for_common kernel/sched/completion.c:85 [inline]
->>  __wait_for_common kernel/sched/completion.c:106 [inline]
->>  wait_for_common kernel/sched/completion.c:117 [inline]
->>  wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
->>  io_sq_thread_stop fs/io_uring.c:6906 [inline]
->>  io_finish_async fs/io_uring.c:6920 [inline]
->>  io_sq_offload_create fs/io_uring.c:7595 [inline]
->>  io_uring_create fs/io_uring.c:8671 [inline]
->>  io_uring_setup+0x1495/0x29a0 fs/io_uring.c:8744
->>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> because the sqo_thread kthread is created in io_sq_offload_create() without
->> being waked up. Then in the error branch of that function we will wait for
->> the sqo kthread that never runs. It's fixed by waking it up before waiting.
+On 2020-09-07 09:40, Jianyong Wu wrote:
+> Hi Marc,
 > 
-> Looks good - applied, thanks.
+>> -----Original Message-----
+>> From: Marc Zyngier <maz@kernel.org>
+>> Sent: Saturday, September 5, 2020 7:02 PM
+>> To: Jianyong Wu <Jianyong.Wu@arm.com>
+>> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+>> tglx@linutronix.de; pbonzini@redhat.com; 
+>> sean.j.christopherson@intel.com;
+>> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
+>> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
+>> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+>> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Justin He
+>> <Justin.He@arm.com>; nd <nd@arm.com>
+>> Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
+>> 
+>> On Fri, 04 Sep 2020 10:27:42 +0100,
+>> Jianyong Wu <jianyong.wu@arm.com> wrote:
+>> >
+>> > Currently, there is no mechanism to keep time sync between guest and
+>> > host in arm64 virtualization environment. Time in guest will drift
+>> > compared with host after boot up as they may both use third party time
+>> > sources to correct their time respectively. The time deviation will be
+>> > in order of milliseconds. But in some scenarios,like in cloud
+>> > envirenment, we ask for higher time precision.
+>> >
+>> > kvm ptp clock, which choose the host clock source as a reference clock
+>> > to sync time between guest and host, has been adopted by x86 which
+>> > makes the time sync order from milliseconds to nanoseconds.
+>> >
+>> > This patch enables kvm ptp clock for arm64 and improve clock sync
+>> > precison significantly.
+>> >
+>> > Test result comparisons between with kvm ptp clock and without it in
+>> > arm64 are as follows. This test derived from the result of command
+>> > 'chronyc sources'. we should take more care of the last sample column
+>> > which shows the offset between the local clock and the source at the last
+>> measurement.
+>> >
+>> > no kvm ptp in guest:
+>> > MS Name/IP address   Stratum Poll Reach LastRx Last sample
+>> >
+>> ==========================================================
+>> ==============
+>> > ^* dns1.synet.edu.cn      2   6   377    13  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    21  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    29  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    37  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    45  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    53  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    61  +1040us[+1581us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377     4   -130us[ +796us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    12   -130us[ +796us] +/-   21ms
+>> > ^* dns1.synet.edu.cn      2   6   377    20   -130us[ +796us] +/-   21ms
+>> >
+>> > in host:
+>> > MS Name/IP address   Stratum Poll Reach LastRx Last sample
+>> >
+>> ==========================================================
+>> ==============
+>> > ^* 120.25.115.20          2   7   377    72   -470us[ -603us] +/-   18ms
+>> > ^* 120.25.115.20          2   7   377    92   -470us[ -603us] +/-   18ms
+>> > ^* 120.25.115.20          2   7   377   112   -470us[ -603us] +/-   18ms
+>> > ^* 120.25.115.20          2   7   377     2   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377    22   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377    43   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377    63   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377    83   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377   103   +872ns[-6808ns] +/-   17ms
+>> > ^* 120.25.115.20          2   7   377   123   +872ns[-6808ns] +/-   17ms
+>> >
+>> > The dns1.synet.edu.cn is the network reference clock for guest and
+>> > 120.25.115.20 is the network reference clock for host. we can't get
+>> > the clock error between guest and host directly, but a roughly
+>> > estimated value will be in order of hundreds of us to ms.
+>> >
+>> > with kvm ptp in guest:
+>> > chrony has been disabled in host to remove the disturb by network clock.
+>> >
+>> > MS Name/IP address         Stratum Poll Reach LastRx Last sample
+>> >
+>> ==========================================================
+>> ==============
+>> > * PHC0                    0   3   377     8     -7ns[   +1ns] +/-    3ns
+>> > * PHC0                    0   3   377     8     +1ns[  +16ns] +/-    3ns
+>> > * PHC0                    0   3   377     6     -4ns[   -0ns] +/-    6ns
+>> > * PHC0                    0   3   377     6     -8ns[  -12ns] +/-    5ns
+>> > * PHC0                    0   3   377     5     +2ns[   +4ns] +/-    4ns
+>> > * PHC0                    0   3   377    13     +2ns[   +4ns] +/-    4ns
+>> > * PHC0                    0   3   377    12     -4ns[   -6ns] +/-    4ns
+>> > * PHC0                    0   3   377    11     -8ns[  -11ns] +/-    6ns
+>> > * PHC0                    0   3   377    10    -14ns[  -20ns] +/-    4ns
+>> > * PHC0                    0   3   377     8     +4ns[   +5ns] +/-    4ns
+>> >
+>> > The PHC0 is the ptp clock which choose the host clock as its source
+>> > clock. So we can see that the clock difference between host and guest
+>> > is in order of ns.
+>> >
+>> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+>> > ---
+>> >  drivers/clocksource/arm_arch_timer.c | 24 +++++++++++++
+>> >  drivers/ptp/Kconfig                  |  2 +-
+>> >  drivers/ptp/ptp_kvm_arm64.c          | 53
+>> ++++++++++++++++++++++++++++
+>> >  3 files changed, 78 insertions(+), 1 deletion(-)  create mode 100644
+>> > drivers/ptp/ptp_kvm_arm64.c
+>> >
+>> > diff --git a/drivers/clocksource/arm_arch_timer.c
+>> > b/drivers/clocksource/arm_arch_timer.c
+>> > index d55acffb0b90..aaf286e90092 100644
+>> > --- a/drivers/clocksource/arm_arch_timer.c
+>> > +++ b/drivers/clocksource/arm_arch_timer.c
+>> > @@ -1650,3 +1650,27 @@ static int __init arch_timer_acpi_init(struct
+>> > acpi_table_header *table)  }  TIMER_ACPI_DECLARE(arch_timer,
+>> > ACPI_SIG_GTDT, arch_timer_acpi_init);  #endif
+>> > +
+>> > +#if IS_ENABLED(CONFIG_PTP_1588_CLOCK_KVM)
+>> > +#include <linux/arm-smccc.h>
+>> > +int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct
+>> timespec64 *ts,
+>> > +			      struct clocksource **cs)
+>> > +{
+>> > +	struct arm_smccc_res hvc_res;
+>> > +	ktime_t ktime;
+>> > +
+>> > +	/* Currently, linux guest will always use the virtual counter */
+>> > +
+>> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FU
+>> NC_ID,
+>> > +			     ARM_PTP_VIRT_COUNTER, &hvc_res);
+>> > +	if ((long long)(hvc_res.a0) < 0)
+>> > +		return -EOPNOTSUPP;
+>> > +
+>> > +	ktime = (long long)hvc_res.a0;
+>> > +	*ts = ktime_to_timespec64(ktime);
+>> > +	*cycle = (long long)hvc_res.a1;
+>> > +	*cs = &clocksource_counter;
+>> > +
+>> > +	return 0;
+>> > +}
+>> > +EXPORT_SYMBOL_GPL(kvm_arch_ptp_get_crosststamp);
+>> > +#endif
+>> > diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig index
+>> > 942f72d8151d..127e96f14f89 100644
+>> > --- a/drivers/ptp/Kconfig
+>> > +++ b/drivers/ptp/Kconfig
+>> > @@ -106,7 +106,7 @@ config PTP_1588_CLOCK_PCH  config
+>> > PTP_1588_CLOCK_KVM
+>> >  	tristate "KVM virtual PTP clock"
+>> >  	depends on PTP_1588_CLOCK
+>> > -	depends on KVM_GUEST && X86
+>> > +	depends on KVM_GUEST && X86 || ARM64 && ARM_ARCH_TIMER
+>> &&
+>> > +ARM_PSCI_FW
+>> >  	default y
+>> >  	help
+>> >  	  This driver adds support for using kvm infrastructure as a PTP
+>> > diff --git a/drivers/ptp/ptp_kvm_arm64.c b/drivers/ptp/ptp_kvm_arm64.c
+>> > new file mode 100644 index 000000000000..961abed93dfd
+>> > --- /dev/null
+>> > +++ b/drivers/ptp/ptp_kvm_arm64.c
+>> > @@ -0,0 +1,53 @@
+>> > +// SPDX-License-Identifier: GPL-2.0-only
+>> > +/*
+>> > + *  Virtual PTP 1588 clock for use with KVM guests
+>> > + *  Copyright (C) 2019 ARM Ltd.
+>> > + *  All Rights Reserved
+>> > + */
+>> > +
+>> > +#include <linux/kernel.h>
+>> > +#include <linux/err.h>
+>> > +#include <asm/hypervisor.h>
+>> > +#include <linux/module.h>
+>> > +#include <linux/psci.h>
+>> > +#include <linux/arm-smccc.h>
+>> > +#include <linux/timecounter.h>
+>> > +#include <linux/sched/clock.h>
+>> > +#include <asm/arch_timer.h>
+>> > +
+>> > +int kvm_arch_ptp_init(void)
+>> > +{
+>> > +	struct arm_smccc_res hvc_res;
+>> > +
+>> > +
+>> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_FEATUR
+>> ES_FUNC_ID,
+>> > +			     &hvc_res);
+>> > +	if (!(hvc_res.a0 | BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
+>> > +		return -EOPNOTSUPP;
+>> > +
+>> > +	return 0;
+>> 
+>> What happens if the
+>> ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID function isn't
+>> implemented (on an old kernel or a non-KVM hypervisor)? The expected
+>> behaviour is that a0 will contain SMCCC_RET_NOT_SUPPORTED, which is 
+>> -1.
+>> The result is that this function always returns "supported". Not an 
+>> acceptable
+>> behaviour.
+>> 
+> Oh!  it's really a stupid mistake, should be "&" not "|".
 
-BTW, I don't see the patch itself, and it's neither in io_uring, block
-nor fs mailing lists. Hillf, could you please CC proper lists next time?
+But even then. (-1 & whatever) is always true.
 
+         M.
 -- 
-Pavel Begunkov
+Jazz is not dead. It just smells funny...
