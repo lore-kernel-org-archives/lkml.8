@@ -2,167 +2,126 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490B3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C27C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E164206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F17206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDZFrT3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbgIGRl4 (ORCPT
+        id S1731154AbgIGRnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:41:56 -0400
-Received: from 8bytes.org ([81.169.241.247]:43572 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbgIGNR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:17:56 -0400
-Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id E514012D3;
-        Mon,  7 Sep 2020 15:17:07 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 50/72] x86/sev-es: Handle MMIO String Instructions
-Date:   Mon,  7 Sep 2020 15:15:51 +0200
-Message-Id: <20200907131613.12703-51-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
-References: <20200907131613.12703-1-joro@8bytes.org>
+        Mon, 7 Sep 2020 13:43:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729408AbgIGNRv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:17:51 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB79C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:17:48 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id 5so8040692pgl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:17:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=tXlaUzLwVVKkp2nug9LSgDtLZzxwlV3OQrTwOaM4mCk=;
+        b=KDZFrT3FUBB8HCrkkMnC0JoRhryFVJVEbvDoEnKDDDrbvyB1TEY+8XUaj7rYgbZ/mE
+         pVjrk4ACiNUHNmMPKLOjaKbZQlbMonq3ZFL3mERUDc3PX5h68nkuoyhrTvv9JxePD0kW
+         TdllSXmLkyy25eJXKuv53OIv5xdVOsCLwYpUJppm6Q9T0SKTUBmAdxGiEvTdHUPhKqO1
+         ScGUoNxdA+/n1icMgAKHFSzzZdT6U2Kh8eL7I7KHV67SvAL7C3z8UeEBGPoxDGsb6/RX
+         Rn8WBCMmfRBR9I2CuMyrkhRhZ965+5KzcxjIjRUMnNhO94DUwtpvZnQahfveNNOKntNw
+         bXLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=tXlaUzLwVVKkp2nug9LSgDtLZzxwlV3OQrTwOaM4mCk=;
+        b=VP+waZrS/JmuC58ZXH0uf/lX5Gv32CAFz+dgFjRnNZFnwZnlrAH8l6Fxc/oOorMr5x
+         0sMJGHL7Qjsp24jpzBBvcmD6bZjYz5t7zWMAlX8caNOz8nvdlLgz5mwA0ES1nUH6UTjc
+         hc8QM4ucB3t4GC15OEo4TY5NfxqI6B2zxShV/ARndlY0zOjJr5jQA93NXYS8WMwTGMP8
+         DD/nZnrvYQPdbGdSus4l5awvwwwyE0lODuGnr7gCnWIcSu/1nJzYBFjgokCw+l+yiaAd
+         kzCzL1SykC3Zu94uecYofr6QeU2Ot2CDyj4FkEGBiAmBMQ4debzEsFZ3wdnf8YGuK7rJ
+         jz2A==
+X-Gm-Message-State: AOAM532qJMnVTeSrYcH6jrDn5XngI3AQxBO/udxEoNoJ/USfxxRC+wMq
+        I8such+ZtPUnTzNgfAIWKa7njBZFdc5DlkAP
+X-Google-Smtp-Source: ABdhPJwaTYgLkTQwOysWc7yonPdFc+sJbfNmtrJWF6MBXnMw8UrqnBEKagL7vJYmfsdcXugRtIwQAw==
+X-Received: by 2002:a62:fccf:: with SMTP id e198mr20409326pfh.183.1599484668372;
+        Mon, 07 Sep 2020 06:17:48 -0700 (PDT)
+Received: from adolin ([49.207.196.129])
+        by smtp.gmail.com with ESMTPSA id m13sm5229752pjl.45.2020.09.07.06.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 06:17:47 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 18:47:44 +0530
+From:   Sumera Priyadarsini <sylphrenadin@gmail.com>
+To:     Julia.Lawall@lip6.fr
+Cc:     Gilles.Muller@lip6.fr, nicolas.palix@imag.fr,
+        michal.lkml@markovi.net, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] scripts: coccicheck: Do not use shift command when rule is
+ specfified
+Message-ID: <20200907131744.xovlxbmrzrfm2w3x@adolin>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+The command "make coccicheck C=1 CHECK=scripts/coccicheck" results in the
+error:
+	./scripts/coccicheck: line 65: -1: shift count out of range
 
-Add handling for emulation the MOVS instruction on MMIO regions, as done
-by the memcpy_toio() and memcpy_fromio() functions.
+This happens because every time the C variable is specified,
+the shell arguments need to be "shifted" in order to take only
+the last argument, which is the C file to test. These shell arguments
+mostly comprise flags that have been set in the Makfeile. However,
+when coccicheck is specified in the make command as a rule,
+number of shell arguments is zero, thus paasing the invalid value -1
+to the shift command, resuting in an error.
 
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+This patch modifies coccicheck to use the shift command only when
+number of shell arguments is not zero.
+
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
 ---
- arch/x86/kernel/sev-es.c | 77 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 77 insertions(+)
+ scripts/coccicheck | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 62fd0ebf2a67..a79c7fc32bc6 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -594,6 +594,73 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
- 	return ret;
- }
+diff --git a/scripts/coccicheck b/scripts/coccicheck
+index e04d328210ac..5c8df337e1e3 100755
+--- a/scripts/coccicheck
++++ b/scripts/coccicheck
+@@ -61,9 +61,19 @@ COCCIINCLUDE=${COCCIINCLUDE// -include/ --include}
+ if [ "$C" = "1" -o "$C" = "2" ]; then
+     ONLINE=1
  
-+/*
-+ * The MOVS instruction has two memory operands, which raises the
-+ * problem that it is not known whether the access to the source or the
-+ * destination caused the #VC exception (and hence whether an MMIO read
-+ * or write operation needs to be emulated).
-+ *
-+ * Instead of playing games with walking page-tables and trying to guess
-+ * whether the source or destination is an MMIO range, split the move
-+ * into two operations, a read and a write with only one memory operand.
-+ * This will cause a nested #VC exception on the MMIO address which can
-+ * then be handled.
-+ *
-+ * This implementation has the benefit that it also supports MOVS where
-+ * source _and_ destination are MMIO regions.
-+ *
-+ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
-+ * rare operation. If it turns out to be a performance problem the split
-+ * operations can be moved to memcpy_fromio() and memcpy_toio().
-+ */
-+static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
-+					  unsigned int bytes)
-+{
-+	unsigned long ds_base, es_base;
-+	unsigned char *src, *dst;
-+	unsigned char buffer[8];
-+	enum es_result ret;
-+	bool rep;
-+	int off;
-+
-+	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
-+	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
-+
-+	if (ds_base == -1L || es_base == -1L) {
-+		ctxt->fi.vector = X86_TRAP_GP;
-+		ctxt->fi.error_code = 0;
-+		return ES_EXCEPTION;
-+	}
-+
-+	src = ds_base + (unsigned char *)ctxt->regs->si;
-+	dst = es_base + (unsigned char *)ctxt->regs->di;
-+
-+	ret = vc_read_mem(ctxt, src, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	ret = vc_write_mem(ctxt, dst, buffer, bytes);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (ctxt->regs->flags & X86_EFLAGS_DF)
-+		off = -bytes;
+-    # Take only the last argument, which is the C file to test
+-    shift $(( $# - 1 ))
+-    OPTIONS="$COCCIINCLUDE $1"
++    # If the rule coccicheck is specified when calling make, number of
++    # arguments is zero
++    if [ $# -ne 0 ]; then
++	    # Take only the last argument, which is the C file to test
++	    shift $(( $# -1 ))
++	    OPTIONS="$COCCIINCLUDE $1"
++    else
++	if [ "$KBUILD_EXTMOD" = "" ] ; then
++		OPTIONS="--dir $srctree $COCCIINCLUDE"
 +	else
-+		off =  bytes;
-+
-+	ctxt->regs->si += off;
-+	ctxt->regs->di += off;
-+
-+	rep = insn_has_rep_prefix(&ctxt->insn);
-+	if (rep)
-+		ctxt->regs->cx -= 1;
-+
-+	if (!rep || ctxt->regs->cx == 0)
-+		return ES_OK;
-+	else
-+		return ES_RETRY;
-+}
-+
- static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 				     struct es_em_ctxt *ctxt)
- {
-@@ -655,6 +722,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 		memcpy(reg_data, ghcb->shared_buffer, bytes);
- 		break;
++		OPTIONS="--dir $KBUILD_EXTMOD $COCCIINCLUDE"
++	fi
++    fi
  
-+		/* MOVS instruction */
-+	case 0xa4:
-+		bytes = 1;
-+		fallthrough;
-+	case 0xa5:
-+		if (!bytes)
-+			bytes = insn->opnd_bytes;
-+
-+		ret = vc_handle_mmio_movs(ctxt, bytes);
-+		break;
- 		/* Two-Byte Opcodes */
- 	case 0x0f:
- 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
+     # No need to parallelize Coccinelle since this mode takes one input file.
+     NPROC=1
 -- 
-2.28.0
+2.25.1
 
