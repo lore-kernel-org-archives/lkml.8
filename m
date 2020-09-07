@@ -2,181 +2,107 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A93BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:05:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F988207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6198215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:05:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sdlgVprv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbgIGMEF (ORCPT
+        id S1729139AbgIGMFA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:04:05 -0400
-Received: from kernel.crashing.org ([76.164.61.194]:59480 "EHLO
-        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729184AbgIGL7b (ORCPT
+        Mon, 7 Sep 2020 08:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729190AbgIGL7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:59:31 -0400
-Received: from localhost (gate.crashing.org [63.228.1.57])
-        (authenticated bits=0)
-        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 087Bwjb2023420
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 7 Sep 2020 06:58:49 -0500
-Message-ID: <6161b96a30e51ff77a387a71eee6a46400530155.camel@kernel.crashing.org>
-Subject: Re: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade
- and fix-ups.
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Daniel Vetter <daniel@ffwll.ch>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Date:   Mon, 07 Sep 2020 21:58:44 +1000
-In-Reply-To: <20200907075559.GN2352366@phenom.ffwll.local>
-References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
-         <20200907075559.GN2352366@phenom.ffwll.local>
+        Mon, 7 Sep 2020 07:59:48 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2994C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:59:47 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id c10so12525384edk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 04:59:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bR2mzR5z4Fp1s//vb7R8PemzbT1nIPea5CxsPeQGbCo=;
+        b=sdlgVprv5Ml6FcGFfq4SFwKLBdhqpgt1/tD2prJUf3yezMMf+zk3OqmlSCmjl90GHA
+         9J+0bfsuL2zGyEMQv67lgp7Uh5bekpJZkJHE6RCa3MxRx2asJEH0Rqd9mlGTMD/4z6Ur
+         rlj+DdN2WEqADLINNVdSYBEhSR/vahUY1tKDlmtHNxKtIAaiKOIlwVeS9MfAxEMbdzNI
+         veqHk6YVwBCiYL+JFMHTSCZgP67iVXGNuh01a9SlxoSynu7DM83hrYh4tzt5UwLCwkk9
+         giM2ryBZgwbxSSOdWZIXQxuIHht3JyKr6Uv/HaVrENAUpyjSEsHY1RcTVtVySWPD86y2
+         ro2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bR2mzR5z4Fp1s//vb7R8PemzbT1nIPea5CxsPeQGbCo=;
+        b=O6x6LeFBICqtwfQk6jNduTJj+qKzTSEm+RqgHccsy/+UpNYZyKnLcvdu4N5WI+rMOU
+         Z919d2YoXBBGkbpV6Se+oevVWPmHYmtRRySfcKiaFQPSzFCCmZSJSmvAYekOOXW5hSsP
+         Jchc2nkRzLSSPQmhFH/lv0pmhkY6YYLWqhP6XB+CSp6gBNmPkIAkcWr5HSP59kLJBeNd
+         9+L4c0S95A+Mu9PY2JLGdadIFNL1U+nULLuvgrpcRIbH4SOllIgPlYUZY896fnnrZqlv
+         pDZpjJ3bVLMuaSD70MS8v963ftZ1womAV+1kIDAM700F0Oa8c5J+ivKhrfBpPNz8NHMO
+         0sWQ==
+X-Gm-Message-State: AOAM532RFHOLsiIj0vvDQIuL6srd5P6dm9vVR9CYAiqkNSwckqbOVtuk
+        twqwKaN2ubfV/NJl+7NE/ghVOdT0ozVGH23fXjhUU/T6vcU=
+X-Google-Smtp-Source: ABdhPJyvgUJP0ylxO5qehk4m0jdhpk8hsO0Sw1TL7vejIAJ+s0I1Q151uttBgmbE3hq97WmzbCF8SLXZr4mDtGwGZag=
+X-Received: by 2002:a50:f687:: with SMTP id d7mr22155378edn.353.1599479986024;
+ Mon, 07 Sep 2020 04:59:46 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-16-brgl@bgdev.pl>
+ <20200904164917.GC1891694@smile.fi.intel.com> <CAMRc=MeG8xuB0GNbMLi6+QZTphSN==77Hsw1fjVNU_+Z=Ky2qQ@mail.gmail.com>
+ <20200907115051.GY1891694@smile.fi.intel.com>
+In-Reply-To: <20200907115051.GY1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 7 Sep 2020 13:59:35 +0200
+Message-ID: <CAMpxmJWM265uk39mddEwVUYJdnM+1Stx3Ds8O9-ucYvMnV7hRw@mail.gmail.com>
+Subject: Re: [PATCH 15/23] gpio: mockup: use dynamic device IDs
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-09-07 at 09:55 +0200, Daniel Vetter wrote:
-> On Thu, Aug 06, 2020 at 12:52:54PM +0530, Vaibhav Gupta wrote:
-> > Linux Kernel Mentee: Remove Legacy Power Management. 
-> > 
-> > The original goal of the patch series is to upgrade the power
-> > management
-> > framework of radeonfb fbdev driver. This has been done by upgrading
-> > .suspend()
-> > and .resume() callbacks.
-> > 
-> > The upgrade makes sure that the involvement of PCI Core does not
-> > change the
-> > order of operations executed in a driver. Thus, does not change its
-> > behavior.
-> > 
-> > During this process, it was found that "#if defined(CONFIG_PM)" at
-> > line 1434 is
-> > redundant. This was introduced in the commit
-> > 42ddb453a0cd ("radeon: Conditionally compile PM code").
-> 
-> I do wonder whether it wouldn't be better to just outright delete
-> these,
-> we have the drm radeon driver for pretty much all the same hardware
-> ...
+On Mon, Sep 7, 2020 at 1:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Sep 07, 2020 at 01:04:29PM +0200, Bartosz Golaszewski wrote:
+> > On Fri, Sep 4, 2020 at 6:49 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Fri, Sep 04, 2020 at 05:45:39PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > > >
+> > > > We're currently creating chips at module init time only so using a
+> > > > static index for dummy devices is fine. We want to support dynamically
+> > > > created chips however so we need to switch to dynamic device IDs.
+> > >
+> > > It misses ida_destroy().
+> >
+> > No, we always call ida_free() for separate IDs when removing devices
+> > and we remove all devices at module exit so no need to call
+> > ida_destroy().
+>
+> Perhaps couple of words about this in the commit message?
+>
 
-The only thing is, afaik, the DRM drivers never got the D2/D3 code that
-I wrote for radeonfb to get old powerbooks to suspend/resume.
+But ida_destroy() and ida_free() are already well documented. It's
+clear that we remove all devices at exit and that every device removes
+its ID, there's really no point in mentioning it again.
 
-Cheers,
-Ben.
-
-> -Daniel
-> 
-> > 
-> > ------------
-> > 
-> > Before 42ddb453a0cd:
-> > $ git show 65122f7e80b5:drivers/video/aty/radeon_pm.c | grep -n
-> > "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
-> > 
-> > Based on output in terminal:
-> > 
-> > 547:#ifdef CONFIG_PM
-> >        |-- 959:#ifdef CONFIG_PPC_PMAC
-> >        |-- 972:#endif
-> >        |-- 1291:#ifdef CONFIG_PPC_OF
-> >        |-- 1301:#endif /* CONFIG_PPC_OF */
-> >        |-- 1943:#ifdef CONFIG_PPC_OF
-> >                    |-- 2206:#if 0 /* Not ready yet */
-> >                    |-- 2508:#endif /* 0 */
-> >        |-- 2510:#endif /* CONFIG_PPC_OF */
-> >        |-- 2648:#ifdef CONFIG_PPC_PMAC
-> >        |-- 2654:#endif /* CONFIG_PPC_PMAC */
-> >        |-- 2768:#ifdef CONFIG_PPC_PMAC
-> >        |-- 2774:#endif /* CONFIG_PPC_PMAC */
-> >        |-- 2791:#ifdef CONFIG_PPC_OF__disabled
-> >        |-- 2801:#endif /* CONFIG_PPC_OF */
-> > 2803:#endif /* CONFIG_PM */
-> > 
-> > ------------
-> > 
-> > After 42ddb453a0cd:
-> > $ git show 42ddb453a0cd:drivers/video/aty/radeon_pm.c | grep -n
-> > "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
-> > 
-> > Based on output in terminal:
-> > 
-> > 547:#ifdef CONFIG_PM
-> >        |-- 959:#ifdef CONFIG_PPC_PMAC
-> >        |-- 972:#endif
-> >        |-- 1291:#ifdef CONFIG_PPC_OF
-> >        |-- 1301:#endif /* CONFIG_PPC_OF */
-> >        |-- 1430:#if defined(CONFIG_PM)
-> >                    |-- 1431:#if defined(CONFIG_X86) ||
-> > defined(CONFIG_PPC_PMAC)
-> >                    |-- 1944:#endif
-> >                    |-- 1946:#ifdef CONFIG_PPC_OF
-> >                                |-- 1947:#ifdef CONFIG_PPC_PMAC
-> >                                |-- 2208:#endif
-> >                    |-- 2209:#endif
-> >                    |-- 2211:#if 0 /* Not ready yet */
-> >                    |-- 2513:#endif /* 0 */
-> >        |-- 2515:#endif /* CONFIG_PPC_OF */
-> >        |-- 2653:#ifdef CONFIG_PPC_PMAC
-> >        |-- 2659:#endif /* CONFIG_PPC_PMAC */
-> >        |-- 2773:#ifdef CONFIG_PPC_PMAC
-> >        |-- 2779:#endif /* CONFIG_PPC_PMAC */
-> >        |-- 2796:#ifdef CONFIG_PPC_OF__disabled
-> >        |-- 2806:#endif /* CONFIG_PPC_OF */
-> > 2808:#endif /* CONFIG_PM */
-> > 
-> > ------------
-> > 
-> > This also affected the CONFIG_PPC_OF container (line 1943 at commit
-> > 65122f7e80b5)
-> > 
-> > The patch-series fixes it along with PM upgrade.
-> > 
-> > All patches are compile-tested only.
-> > 
-> > Test tools:
-> >     - Compiler: gcc (GCC) 10.1.0
-> >     - allmodconfig build: make -j$(nproc) W=1 all
-> > 
-> > Vaibhav Gupta (2):
-> >   video: fbdev: aty: radeon_pm: remove redundant CONFIG_PM
-> > container
-> >   fbdev: radeonfb:use generic power management
-> > 
-> >  drivers/video/fbdev/aty/radeon_base.c | 10 ++++---
-> >  drivers/video/fbdev/aty/radeon_pm.c   | 38 ++++++++++++++++++++---
-> > ----
-> >  drivers/video/fbdev/aty/radeonfb.h    |  3 +--
-> >  3 files changed, 35 insertions(+), 16 deletions(-)
-> > 
-> > -- 
-> > 2.27.0
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> 
-
+Bart
