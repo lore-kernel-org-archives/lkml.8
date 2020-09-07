@@ -2,106 +2,95 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F58AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217E6C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C949215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gidG8iko"
+	by mail.kernel.org (Postfix) with ESMTP id BA33D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgIGLpJ (ORCPT
+        id S1729108AbgIGLpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:45:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:30815 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729043AbgIGLnL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:43:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599478990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Up+NtoEoKF1B3IFUbGlV4iwCjaDtp0Abje/+V+Ja+dY=;
-        b=gidG8iko2bR8798ai1rgrwdV/XPFt9G0nsZCxcMRq3BOjgv6nLhi+V+aI7GFWw4q+CW0c1
-        MWLeSn1ZxmWKjzMMrB0mwHM4Yc139rE4nNqFbXSZysch81gCyb/Sdktsj0mD6atNxpVYbD
-        NpGcXBf/cTD8a4ZsJ/gAixDqj13Y3e8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-KTPUyLjDNq2xpVad29wziw-1; Mon, 07 Sep 2020 07:43:06 -0400
-X-MC-Unique: KTPUyLjDNq2xpVad29wziw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 7 Sep 2020 07:45:40 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:38180 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728973AbgIGLYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:24:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 01FBD2019C;
+        Mon,  7 Sep 2020 13:24:13 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CLT690AUOpRN; Mon,  7 Sep 2020 13:24:12 +0200 (CEST)
+Received: from cas-essen-01.secunet.de (201.40.53.10.in-addr.arpa [10.53.40.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2BAFA1007461;
-        Mon,  7 Sep 2020 11:43:05 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.127])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 724625C26B;
-        Mon,  7 Sep 2020 11:43:03 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon,  7 Sep 2020 13:43:04 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 13:43:02 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     rostedt@goodmis.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] fgraph: Convert ret_stack tasklist scanning to rcu
-Message-ID: <20200907114301.GA31050@redhat.com>
-References: <20200907013326.9870-1-dave@stgolabs.net>
+        by a.mx.secunet.com (Postfix) with ESMTPS id 8AE202008D;
+        Mon,  7 Sep 2020 13:24:12 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 7 Sep 2020 13:24:12 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Mon, 7 Sep 2020
+ 13:24:12 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+        id E2400318450A; Mon,  7 Sep 2020 13:24:11 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 13:24:11 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Dmitry Safonov <dima@arista.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 1/6] xfrm/compat: Add 64=>32-bit messages translator
+Message-ID: <20200907112411.GK20687@gauss3.secunet.de>
+References: <20200826014949.644441-1-dima@arista.com>
+ <20200826014949.644441-2-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200907013326.9870-1-dave@stgolabs.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200826014949.644441-2-dima@arista.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/06, Davidlohr Bueso wrote:
->
-> Here tasklist_lock does not protect anything other than the list
-> against concurrent fork/exit. And considering that the whole thing
-> is capped by FTRACE_RETSTACK_ALLOC_SIZE (32), it should not be a
-> problem to have a pontentially stale, yet stable, list. The task cannot
-> go away either, so we don't risk racing with ftrace_graph_exit_task()
-> which clears the retstack.
+On Wed, Aug 26, 2020 at 02:49:44AM +0100, Dmitry Safonov wrote:
+> XFRM is disabled for compatible users because of the UABI difference.
+> The difference is in structures paddings and in the result the size
+> of netlink messages differ.
+> 
+> Possibility for compatible application to manage xfrm tunnels was
+> disabled by: the commmit 19d7df69fdb2 ("xfrm: Refuse to insert 32 bit
+> userspace socket policies on 64 bit systems") and the commit 74005991b78a
+> ("xfrm: Do not parse 32bits compiled xfrm netlink msg on 64bits host").
+> 
+> This is my second attempt to resolve the xfrm/compat problem by adding
+> the 64=>32 and 32=>64 bit translators those non-visibly to a user
+> provide translation between compatible user and kernel.
+> Previous attempt was to interrupt the message ABI according to a syscall
+> by xfrm_user, which resulted in over-complicated code [1].
+> 
+> Florian Westphal provided the idea of translator and some draft patches
+> in the discussion. In these patches, his idea is reused and some of his
+> initial code is also present.
 
-I don't understand this code but I think you right, tasklist_lock buys
-nothing.
+One comment on this. Looks like the above is the same in all
+commit messages. Please provide that generic information
+with the patch 0/n and remove it from the other patches.
 
-Afaics, with or without this change alloc_retstack_tasklist() can race
-with copy_process() and miss the new child; ftrace_graph_init_task()
-can't help, ftrace_graph_active can be set right after the check and
-for_each_process_thread() can't see the new process yet.
-
-This can't race with ftrace_graph_exit_task(), it is called after the
-full gp pass. But this function looks very confusing to me, I don't
-understand the barrier and the "NULL must become visible to IRQs before
-we free it" comment.
-
-Looks like, ftrace_graph_exit_task() was called by the exiting task
-in the past? Indeed, see 65afa5e603d50 ("tracing/function-return-tracer:
-free the return stack on free_task()"). I think it makes sense to
-simplify this function now, it can simply do kfree(t->ret_stack) and
-nothing more.
-
-ACK, but ...
-
-> @@ -387,8 +387,8 @@ static int alloc_retstack_tasklist(struct ftrace_ret_stack **ret_stack_list)
->  		}
->  	}
->  
-> -	read_lock(&tasklist_lock);
-
-then you should probably rename alloc_retstack_tasklist() ?
-
-Oleg.
 
