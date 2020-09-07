@@ -2,310 +2,116 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C42C2BC11
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCE9C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3499021D20
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F54421927
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:43:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hGvO3IpU"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CiMaDb29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbgIGXex (ORCPT
+        id S1728021AbgIGXnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
+        Mon, 7 Sep 2020 19:43:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgIGXeu (ORCPT
+        with ESMTP id S1727769AbgIGXn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:34:50 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8ACCC061573;
-        Mon,  7 Sep 2020 16:34:50 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id p81so4237793ybc.12;
-        Mon, 07 Sep 2020 16:34:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fN1I6SHp+yyKrFdwoEH2+iiRLtt4UeYbF3vg0IC+s0s=;
-        b=hGvO3IpU8RMdEsRL22+GskEwjyCRabmdpO/bn2DOQwR1L4B0DVre9FE+mIvZ5vN2S8
-         2lk6IS71V0Et7x8kW13n0fiTYcnKuMKc398WFXGbeVXYAmrYnjJJNLz8isysubAJy9hH
-         0tx54sQLFi116ZQ3IKE+6C0d0I6jYoouQDkQGNY8ZBA/VgokFKjKO0/pYK+mjIdRFmSM
-         i6nqn/woqVktnIdEyfBZwSKADq3Ii5uVFeRbx1iN2QB+ed1Zq5zcm55dDwVLrKWBt3X2
-         SlMYKIW6mFDAmZrKVKU9hSZfn1zaeuC6sDHGEPBoKLGypjrFEPMw0LfUtmOCnvqi9Le/
-         A4Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fN1I6SHp+yyKrFdwoEH2+iiRLtt4UeYbF3vg0IC+s0s=;
-        b=lRnmZAYg965tsHMDbMbQYvIMXwkNVUDAywzuB2iaYHFRBC2g7Pc1V8d17VlVMKjeOU
-         v0JamMG7fxxEGMfnN1hnhdfWAEhxQt1+wYc5zS4YI5J8KLt3ad+HXttJgF6EaEcZh75k
-         Dp78dTv0cZN6QYm3TXkFRGOc3pksNoMS3zZD+3Sled7AKh4lTkZvL/F4a/3pBBIA9TSE
-         /DvFDsQ1qup1YyQ6D/D/gUScuPK6AeiU3qal9e90OMrXeo1EbOPldHSP4UtUfO1TGJ3X
-         TztWJRn6Lkl2qA3ZYXJurvmD8vLDhh1L0n3fzh6K+3mOqmCj+Zumf1j4j//FQO9uDgf+
-         PZmQ==
-X-Gm-Message-State: AOAM531WvT1TYTfd41aXohA2BfWMJ8ROr7ABoay0MZQ6nndYPe7xT95v
-        7W0Bw8E39DpfuQRQT7fuGrg6cz2U6393RVz2sS8=
-X-Google-Smtp-Source: ABdhPJw3WLNX7QHF7YvBW7jxFP/63pL1HzshEVNrIGJe9EB3pZxYHrJNUMf69WjyZII4aEZiA+pXy8ACMkEc/Y8QAxs=
-X-Received: by 2002:a25:c07:: with SMTP id 7mr20563467ybm.200.1599521689774;
- Mon, 07 Sep 2020 16:34:49 -0700 (PDT)
+        Mon, 7 Sep 2020 19:43:29 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60090C061573;
+        Mon,  7 Sep 2020 16:43:28 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BllGG03QVz9sR4;
+        Tue,  8 Sep 2020 09:43:17 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599522198;
+        bh=BIr9aLATK/fIc7nAGDKco1dJkX6S6hj+9Uc6Rg3zqqw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CiMaDb290e08zfSq/pwXQ0rfOOR9C8SJO3kONZVzZLd2fNDTXDORrT4ntTUkujees
+         8sAXsi6KZK7CFxPCMAesuJX4pJnqfOTS1O2r9NezV6sHE+J1OJkUCwb1EEGFSi+U87
+         nzix3hMSUIHg285xb7fiaSn7lMLOpSAyB3UWELiX96uWogN/epEEtACRbwnm5o54lS
+         NSkQTEjRhZCdSpO4tAfyhe3D/F/mEfXgjHor3+h4+PXrFBziJOG7cuJBea+UqCwSBu
+         UCH6Y4oqhXCPY63wP+b8fvNVfJT42yChylFSIlX1WPuNeJuNrfDCFcbb019IMR4bP7
+         WPzPmhwhIo4Iw==
+Date:   Tue, 8 Sep 2020 09:43:17 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Jim Cromie <jim.cromie@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the char-misc.current tree
+Message-ID: <20200908094317.6dc1cb2a@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200904202813.1260202-1-lyude@redhat.com>
-In-Reply-To: <20200904202813.1260202-1-lyude@redhat.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Tue, 8 Sep 2020 09:34:38 +1000
-Message-ID: <CACAvsv6ptDgHGCyikmNABS8BQbuL4dsh1CczwDARBDbDpsDviQ@mail.gmail.com>
-Subject: Re: [Nouveau] [PATCH v5 1/2] drm/nouveau/kms/nv50-: Program notifier
- offset before requesting disp caps
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Nirmoy Das <nirmoy.aiemd@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/E8tCM5jXcPbyFzTFOo73b6d";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 5 Sep 2020 at 06:28, Lyude Paul <lyude@redhat.com> wrote:
->
-> Not entirely sure why this never came up when I originally tested this
-> (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
-> appears to cause the display engine to throw an exception on driver
-> init, at least on my ThinkPad P72:
->
-> nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
->
-> This is magic nvidia speak for "You need to have the DMA notifier offset
-> programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
-> this by doing that, and also perform an update afterwards to prevent
-> racing with the GPU when reading capabilities.
->
-> v2:
-> * Don't just program the DMA notifier offset, make sure to actually
->   perform an update
-> v3:
-> * Don't call UPDATE()
-> * Actually read the correct notifier fields, as apparently the
->   CAPABILITIES_DONE field lives in a different location than the main
->   NV_DISP_CORE_NOTIFIER_1 field. As well, 907d+ use a different
->   CAPABILITIES_DONE field then pre-907d cards.
-> v4:
-> * Don't forget to check the return value of core507d_read_caps()
-> v5:
-> * Get rid of NV50_DISP_CAPS_NTFY[14], use NV50_DISP_CORE_NTFY
-> * Disable notifier after calling GetCapabilities()
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP interlacing support")
-> Cc: <stable@vger.kernel.org> # v5.8+
-Thanks Lyude, looks good, and merged!
+--Sig_/E8tCM5jXcPbyFzTFOo73b6d
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Ben.
+Hi all,
 
-> ---
->  drivers/gpu/drm/nouveau/dispnv50/core.h       |  2 +
->  drivers/gpu/drm/nouveau/dispnv50/core507d.c   | 41 ++++++++++++++++++-
->  drivers/gpu/drm/nouveau/dispnv50/core907d.c   | 36 +++++++++++++++-
->  drivers/gpu/drm/nouveau/dispnv50/core917d.c   |  2 +-
->  .../drm/nouveau/include/nvhw/class/cl507d.h   |  5 ++-
->  .../drm/nouveau/include/nvhw/class/cl907d.h   |  4 ++
->  6 files changed, 85 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/core.h b/drivers/gpu/drm/nouveau/dispnv50/core.h
-> index 498622c0c670d..f75088186fba3 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/core.h
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/core.h
-> @@ -44,6 +44,7 @@ int core507d_new_(const struct nv50_core_func *, struct nouveau_drm *, s32,
->                   struct nv50_core **);
->  int core507d_init(struct nv50_core *);
->  void core507d_ntfy_init(struct nouveau_bo *, u32);
-> +int core507d_read_caps(struct nv50_disp *disp);
->  int core507d_caps_init(struct nouveau_drm *, struct nv50_disp *);
->  int core507d_ntfy_wait_done(struct nouveau_bo *, u32, struct nvif_device *);
->  int core507d_update(struct nv50_core *, u32 *, bool);
-> @@ -55,6 +56,7 @@ extern const struct nv50_outp_func pior507d;
->  int core827d_new(struct nouveau_drm *, s32, struct nv50_core **);
->
->  int core907d_new(struct nouveau_drm *, s32, struct nv50_core **);
-> +int core907d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp);
->  extern const struct nv50_outp_func dac907d;
->  extern const struct nv50_outp_func sor907d;
->
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> index 248edf69e1683..e6f16a7750f07 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
-> @@ -78,18 +78,55 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32 offset)
->  }
->
->  int
-> -core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
-> +core507d_read_caps(struct nv50_disp *disp)
->  {
->         struct nvif_push *push = disp->core->chan.push;
->         int ret;
->
-> -       if ((ret = PUSH_WAIT(push, 2)))
-> +       ret = PUSH_WAIT(push, 6);
-> +       if (ret)
->                 return ret;
->
-> +       PUSH_MTHD(push, NV507D, SET_NOTIFIER_CONTROL,
-> +                 NVDEF(NV507D, SET_NOTIFIER_CONTROL, MODE, WRITE) |
-> +                 NVVAL(NV507D, SET_NOTIFIER_CONTROL, OFFSET, NV50_DISP_CORE_NTFY >> 2) |
-> +                 NVDEF(NV507D, SET_NOTIFIER_CONTROL, NOTIFY, ENABLE));
-> +
->         PUSH_MTHD(push, NV507D, GET_CAPABILITIES, 0x00000000);
-> +
-> +       PUSH_MTHD(push, NV507D, SET_NOTIFIER_CONTROL,
-> +                 NVDEF(NV507D, SET_NOTIFIER_CONTROL, NOTIFY, DISABLE));
-> +
->         return PUSH_KICK(push);
->  }
->
-> +int
-> +core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
-> +{
-> +       struct nv50_core *core = disp->core;
-> +       struct nouveau_bo *bo = disp->sync;
-> +       s64 time;
-> +       int ret;
-> +
-> +       NVBO_WR32(bo, NV50_DISP_CORE_NTFY, NV_DISP_CORE_NOTIFIER_1, CAPABILITIES_1,
-> +                                    NVDEF(NV_DISP_CORE_NOTIFIER_1, CAPABILITIES_1, DONE, FALSE));
-> +
-> +       ret = core507d_read_caps(disp);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       time = nvif_msec(core->chan.base.device, 2000ULL,
-> +                        if (NVBO_TD32(bo, NV50_DISP_CORE_NTFY,
-> +                                      NV_DISP_CORE_NOTIFIER_1, CAPABILITIES_1, DONE, ==, TRUE))
-> +                                break;
-> +                        usleep_range(1, 2);
-> +                        );
-> +       if (time < 0)
-> +               NV_ERROR(drm, "core caps notifier timeout\n");
-> +
-> +       return 0;
-> +}
-> +
->  int
->  core507d_init(struct nv50_core *core)
->  {
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/core907d.c b/drivers/gpu/drm/nouveau/dispnv50/core907d.c
-> index b17c03529c784..8564d4dffaff0 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/core907d.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/core907d.c
-> @@ -22,11 +22,45 @@
->  #include "core.h"
->  #include "head.h"
->
-> +#include <nvif/push507c.h>
-> +#include <nvif/timer.h>
-> +
-> +#include <nvhw/class/cl907d.h>
-> +
-> +#include "nouveau_bo.h"
-> +
-> +int
-> +core907d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
-> +{
-> +       struct nv50_core *core = disp->core;
-> +       struct nouveau_bo *bo = disp->sync;
-> +       s64 time;
-> +       int ret;
-> +
-> +       NVBO_WR32(bo, NV50_DISP_CORE_NTFY, NV907D_CORE_NOTIFIER_3, CAPABILITIES_4,
-> +                                    NVDEF(NV907D_CORE_NOTIFIER_3, CAPABILITIES_4, DONE, FALSE));
-> +
-> +       ret = core507d_read_caps(disp);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       time = nvif_msec(core->chan.base.device, 2000ULL,
-> +                        if (NVBO_TD32(bo, NV50_DISP_CORE_NTFY,
-> +                                      NV907D_CORE_NOTIFIER_3, CAPABILITIES_4, DONE, ==, TRUE))
-> +                                break;
-> +                        usleep_range(1, 2);
-> +                        );
-> +       if (time < 0)
-> +               NV_ERROR(drm, "core caps notifier timeout\n");
-> +
-> +       return 0;
-> +}
-> +
->  static const struct nv50_core_func
->  core907d = {
->         .init = core507d_init,
->         .ntfy_init = core507d_ntfy_init,
-> -       .caps_init = core507d_caps_init,
-> +       .caps_init = core907d_caps_init,
->         .ntfy_wait_done = core507d_ntfy_wait_done,
->         .update = core507d_update,
->         .head = &head907d,
-> diff --git a/drivers/gpu/drm/nouveau/dispnv50/core917d.c b/drivers/gpu/drm/nouveau/dispnv50/core917d.c
-> index 66846f3720805..1cd3a2a35dfb7 100644
-> --- a/drivers/gpu/drm/nouveau/dispnv50/core917d.c
-> +++ b/drivers/gpu/drm/nouveau/dispnv50/core917d.c
-> @@ -26,7 +26,7 @@ static const struct nv50_core_func
->  core917d = {
->         .init = core507d_init,
->         .ntfy_init = core507d_ntfy_init,
-> -       .caps_init = core507d_caps_init,
-> +       .caps_init = core907d_caps_init,
->         .ntfy_wait_done = core507d_ntfy_wait_done,
->         .update = core507d_update,
->         .head = &head917d,
-> diff --git a/drivers/gpu/drm/nouveau/include/nvhw/class/cl507d.h b/drivers/gpu/drm/nouveau/include/nvhw/class/cl507d.h
-> index 2e444bac701dd..6a463f308b64f 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvhw/class/cl507d.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvhw/class/cl507d.h
-> @@ -32,7 +32,10 @@
->  #define NV_DISP_CORE_NOTIFIER_1_COMPLETION_0_DONE_TRUE                               0x00000001
->  #define NV_DISP_CORE_NOTIFIER_1_COMPLETION_0_R0                                      15:1
->  #define NV_DISP_CORE_NOTIFIER_1_COMPLETION_0_TIMESTAMP                               29:16
-> -
-> +#define NV_DISP_CORE_NOTIFIER_1_CAPABILITIES_1                                       0x00000001
-> +#define NV_DISP_CORE_NOTIFIER_1_CAPABILITIES_1_DONE                                  0:0
-> +#define NV_DISP_CORE_NOTIFIER_1_CAPABILITIES_1_DONE_FALSE                            0x00000000
-> +#define NV_DISP_CORE_NOTIFIER_1_CAPABILITIES_1_DONE_TRUE                             0x00000001
->
->  // class methods
->  #define NV507D_UPDATE                                                           (0x00000080)
-> diff --git a/drivers/gpu/drm/nouveau/include/nvhw/class/cl907d.h b/drivers/gpu/drm/nouveau/include/nvhw/class/cl907d.h
-> index 34bc3eafac7d1..79aff6ff31385 100644
-> --- a/drivers/gpu/drm/nouveau/include/nvhw/class/cl907d.h
-> +++ b/drivers/gpu/drm/nouveau/include/nvhw/class/cl907d.h
-> @@ -24,6 +24,10 @@
->  #ifndef _cl907d_h_
->  #define _cl907d_h_
->
-> +#define NV907D_CORE_NOTIFIER_3_CAPABILITIES_4                                       0x00000004
-> +#define NV907D_CORE_NOTIFIER_3_CAPABILITIES_4_DONE                                  0:0
-> +#define NV907D_CORE_NOTIFIER_3_CAPABILITIES_4_DONE_FALSE                            0x00000000
-> +#define NV907D_CORE_NOTIFIER_3_CAPABILITIES_4_DONE_TRUE                             0x00000001
->  #define NV907D_CORE_NOTIFIER_3_CAPABILITIES_CAP_SOR0_20                             0x00000014
->  #define NV907D_CORE_NOTIFIER_3_CAPABILITIES_CAP_SOR0_20_SINGLE_LVDS18               0:0
->  #define NV907D_CORE_NOTIFIER_3_CAPABILITIES_CAP_SOR0_20_SINGLE_LVDS18_FALSE         0x00000000
-> --
-> 2.26.2
->
-> _______________________________________________
-> Nouveau mailing list
-> Nouveau@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/nouveau
+After merging the char-misc.current tree, today's linux-next build
+(x86_64 allmodconfig) produced this warning:
+
+In file included from include/linux/printk.h:7,
+                 from include/linux/kernel.h:15,
+                 from lib/dynamic_debug.c:16:
+lib/dynamic_debug.c: In function 'ddebug_parse_query':
+include/linux/kern_levels.h:5:18: warning: format '%s' expects a matching '=
+char *' argument [-Wformat=3D]
+    5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */
+      |                  ^~~~~~
+include/linux/kern_levels.h:14:19: note: in expansion of macro 'KERN_SOH'
+   14 | #define KERN_INFO KERN_SOH "6" /* informational */
+      |                   ^~~~~~~~
+include/linux/printk.h:369:9: note: in expansion of macro 'KERN_INFO'
+  369 |  printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+      |         ^~~~~~~~~
+lib/dynamic_debug.c:116:3: note: in expansion of macro 'pr_info'
+  116 |   pr_info(fmt, ##__VA_ARGS__);   \
+      |   ^~~~~~~
+lib/dynamic_debug.c:119:28: note: in expansion of macro 'vnpr_info'
+  119 | #define vpr_info(fmt, ...) vnpr_info(1, fmt, ##__VA_ARGS__)
+      |                            ^~~~~~~~~
+lib/dynamic_debug.c:388:3: note: in expansion of macro 'vpr_info'
+  388 |   vpr_info("module:%s queries:'%s'\n", modname);
+      |   ^~~~~~~~
+
+Introduced by commit
+
+  42f07816ac0c ("dyndbg: fix problem parsing format=3D"foo bar"")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/E8tCM5jXcPbyFzTFOo73b6d
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9WxZUACgkQAVBC80lX
+0Gy1rwf/RG91RZh3+yPekVSQyWNs7+7KWRNHPCiEKCfAiyaayRlXOdXLhOurMyzb
+9/CpeJdGbufexKXXEJuUTYkkmG3Ixia2bsbR/3HZmBRh9FCwwQH1CprONMupts4y
+q56+UPQexveVTzeleuWTtCqDFslnuiFmqpokW7lmDKx52R3dNLDLI0YGM2SUCVwQ
+afFRweBZtMcVyjKM7lCObEorQWZJH0zWZY5IH6A34rwv5aml1D3S7zbR1B4JOzky
+GVjGlIlz44PDWXJS2g38E+SgBJZTcAUs44LCWM0ztgMZj1YaiO8iOgnZ2MT7QNtX
+zuOp2GU5MlU0Vnbqy916oU1TuaR0ag==
+=LNS3
+-----END PGP SIGNATURE-----
+
+--Sig_/E8tCM5jXcPbyFzTFOo73b6d--
