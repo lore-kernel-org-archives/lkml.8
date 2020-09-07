@@ -2,101 +2,73 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98A4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E852207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B6A20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbgIGQRP (ORCPT
+        id S1730500AbgIGQRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:17:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:40042 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729973AbgIGQQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:16:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2845831B;
-        Mon,  7 Sep 2020 09:16:29 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0DBE93F68F;
-        Mon,  7 Sep 2020 09:16:27 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 17:16:25 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Cc:     ray.jui@broadcom.com, helgaas@kernel.org, sbranden@broadcom.com,
-        f.fainelli@gmail.com, robh@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] PCI: iproc: Set affinity mask on MSI interrupts
-Message-ID: <20200907161625.GB10272@e121166-lin.cambridge.arm.com>
-References: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
+        Mon, 7 Sep 2020 12:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730517AbgIGQQ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:16:58 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2861C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:16:57 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1kFJp7-0002Ke-ID; Mon, 07 Sep 2020 18:16:53 +0200
+Message-ID: <68d7b3327052757d0cd6359a6c9015a85b437232.camel@pengutronix.de>
+Subject: tracer_init_tracefs really slow
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Date:   Mon, 07 Sep 2020 18:16:52 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200803035241.7737-1-mark.tomlinson@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 03, 2020 at 03:52:40PM +1200, Mark Tomlinson wrote:
-> The core interrupt code expects the irq_set_affinity call to update the
-> effective affinity for the interrupt. This was not being done, so update
-> iproc_msi_irq_set_affinity() to do so.
-> 
-> Fixes: 3bc2b2348835 ("PCI: iproc: Add iProc PCIe MSI support")
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-> ---
-> changes in v2:
->  - Patch 1/2 Added Fixes tag
->  - Patch 2/2 Replace original change with change suggested by Bjorn
->    Helgaas.
-> 
-> changes in v3:
->  - Use bitfield rather than bool to save memory.
-> 
->  drivers/pci/controller/pcie-iproc-msi.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
+Hi all,
 
-Applied to pci/qcom, thanks.
+one of my colleagues has taken a look at device boot times and stumbled
+across a pretty big amount of kernel boot time being spent in
+tracer_init_tracefs(). On this particular i.MX6Q based device the
+kernel spends more than 1 second in this function, which is a
+significant amount of the overall kernel inititalization time. While
+this machine is no rocket with its Cortex A9 @ 800MHz, the amount of
+CPU time being used there is pretty irritating.
 
-Lorenzo
+Specifically the issue lies within trace_event_eval_update where ~1100
+trace_event_calls get updated with ~500 trace_eval_maps. I haven't had
+a chance yet to dig any deeper or try to understand more of what's
+going on there, but I wanted to get the issue out there in case anyone
+has some cycles to spare to help us along.
 
-> diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
-> index 3176ad3ab0e5..908475d27e0e 100644
-> --- a/drivers/pci/controller/pcie-iproc-msi.c
-> +++ b/drivers/pci/controller/pcie-iproc-msi.c
-> @@ -209,15 +209,20 @@ static int iproc_msi_irq_set_affinity(struct irq_data *data,
->  	struct iproc_msi *msi = irq_data_get_irq_chip_data(data);
->  	int target_cpu = cpumask_first(mask);
->  	int curr_cpu;
-> +	int ret;
->  
->  	curr_cpu = hwirq_to_cpu(msi, data->hwirq);
->  	if (curr_cpu == target_cpu)
-> -		return IRQ_SET_MASK_OK_DONE;
-> +		ret = IRQ_SET_MASK_OK_DONE;
-> +	else {
-> +		/* steer MSI to the target CPU */
-> +		data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +		ret = IRQ_SET_MASK_OK;
-> +	}
->  
-> -	/* steer MSI to the target CPU */
-> -	data->hwirq = hwirq_to_canonical_hwirq(msi, data->hwirq) + target_cpu;
-> +	irq_data_update_effective_affinity(data, cpumask_of(target_cpu));
->  
-> -	return IRQ_SET_MASK_OK;
-> +	return ret;
->  }
->  
->  static void iproc_msi_irq_compose_msi_msg(struct irq_data *data,
-> -- 
-> 2.28.0
-> 
+The obvious questions for now are:
+1. Why is this function so damn expensive (at least on this whimpy ARM
+machine)? and
+2. Could any of this be done asynchronously, to not block the kernel in
+early init?
+
+Regards,
+Lucas
+
