@@ -2,131 +2,91 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB7DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A87CDC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A50E321582
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:31:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QjObz1im"
+	by mail.kernel.org (Postfix) with ESMTP id 69D6321582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbgIGGbA (ORCPT
+        id S1726732AbgIGGdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:31:00 -0400
-Received: from mail-eopbgr1310125.outbound.protection.outlook.com ([40.107.131.125]:50000
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        Mon, 7 Sep 2020 02:33:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41204 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725823AbgIGGa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:30:59 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HoyP7+vNbX1FCm+Zqe4Yki88gpz/8+Gy1U0CIHBoDu4mEIv3cnU7jcoV9pBrGE1N049iwwtOCax917cbOV2Kzfzu9hjpJ5wDOAlfy52qWsks5/jsc62XSUNbHhXN3TB0VaxYLg/yeY/utUkhOI+X7HmpdKP8HjtLslSVcJuGfRJ9Wt0Bue2DNAouCtfd2nMsiAJzRHXkLpuG27PEIBpzr5OfLjwBNzV5AFcWXkeSVlqRqqRdbvAg/ekx970xola5J/P/iCXceIXhfFpS8fbOmWWev5RrIJiUTQ69d35PghpewZ8+fU34HcKJ/pLpr34C+uuWdiKkj46BTD8Rn0Y4ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3PCMxeJsmyDGnQkGWQIC0tvWy6MBa1bRGEmDr02x3LQ=;
- b=jB+fekBk9YzuCYzwVOOuc3tAsdT8CzDeCT4hrCkdHM2J/ZDl4rwxPOk0/89HYSnBD2Ed2b1KX2niX3iywygGYSI6n6eem9VAEUYQfxYB4jRb7ITT3BhgNkrzT2ddF/xrXa78FtBYRpgVTwr3gCIXtodyCdcZoWmGTtHV2UkbmY8JHybDDjhPbhe51QctbsVu4Jb6en/PoS2M2aT8TFUY7sbjr3pnD5uV4acKPgjldDRP9YSVhIgUCq1DJxJGmimBJ5yX92wn7pUaJ1HthIsNp5DUMnPY2pOJMs8mwaBnQiDMXjcAb+3ehG7CnVIxSBWcaOcQOR0jqAb2aGl23WsPVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3PCMxeJsmyDGnQkGWQIC0tvWy6MBa1bRGEmDr02x3LQ=;
- b=QjObz1imAIfd/IjbAmcp2TaR0m+dBRuy7e+/T6eWkEiFf5bb3+gll6Q1tpC9CSQn3wex283bqfbWjjE94lQdfHFB9iB/IgJmpElELEXUIu028efJ6kIr9FIG1U7icF74011n9HD3cYRD49vQsCyuvNqZ1QNWnzkj2N8ajv/71zg=
-Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
- by KU1P153MB0200.APCP153.PROD.OUTLOOK.COM (2603:1096:802:2a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.3; Mon, 7 Sep
- 2020 06:30:48 +0000
-Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
- ([fe80::800c:633d:2d74:4f61]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
- ([fe80::800c:633d:2d74:4f61%5]) with mapi id 15.20.3391.003; Mon, 7 Sep 2020
- 06:30:48 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "namit@vmware.com" <namit@vmware.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Long Li <longli@microsoft.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-Subject: RE: [RESEND][PATCH v3] x86/apic/flat64: Add back the
- early_param("apic", parse_apic)
-Thread-Topic: [RESEND][PATCH v3] x86/apic/flat64: Add back the
- early_param("apic", parse_apic)
-Thread-Index: AQHWXDqcBL16zQ0AeEGLYyUOD3kNpalccIfQ
-Date:   Mon, 7 Sep 2020 06:30:47 +0000
-Message-ID: <KU1P153MB01207E71069B0883E44218E4BF280@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
-References: <20200626182106.57219-1-decui@microsoft.com>
- <87mu3ys391.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87mu3ys391.fsf@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9a8210d2-6baa-4293-a33a-cc8a3a861df6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-06T21:27:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: linutronix.de; dkim=none (message not signed)
- header.d=none;linutronix.de; dmarc=none action=none
- header.from=microsoft.com;
-x-originating-ip: [2601:600:105:f217:6c5f:7d2:8c52:e817]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0684c8e4-2046-4788-bc0a-08d852f78ef4
-x-ms-traffictypediagnostic: KU1P153MB0200:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <KU1P153MB0200C0A528C76B26E545DF6CBF280@KU1P153MB0200.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jJafX5rQwxWzQbikTlUMcwyghxKiKAOBBMO4PryG1X6U6+nGmHvubr1LHi+Ldv/ZBXTnVuJimzvijp1Xs/iQ1dnGaAhqza002GXJJoQgVIMeVflrF9ssYyTPcf4auguI3jD1J7Z6yHwOSfFAWxHEE+i3JRJc15NDoHi4FhNYAZEwBoeGAGFo4rAeyIGaHyiILXH9IBRklBG92bkzbXUKjtE1LEOG29ywDFwnYXXBmPzl6tqZ/T6pIp+MFyTHbntqyOUdfK2GkUn8TXaW4OkHv1vkRGVCCJar24r4KPnO6rTfhYSrtGE0o+0LsqBHADlbiEuPKCjv5nMWsOUBmm/MxHE7nQwoZXLZAfgF3TuOweVy18DynzPirkGTsmZujgNR8xOcvXB1NNFAEz9e8d/VH5DuA2VIxSBP/nnqTkv/reY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(366004)(376002)(136003)(33656002)(5660300002)(4326008)(54906003)(52536014)(7696005)(6506007)(4744005)(110136005)(478600001)(2906002)(316002)(8676002)(8936002)(6636002)(9686003)(66476007)(66446008)(55016002)(7416002)(64756008)(82960400001)(66946007)(10290500003)(71200400001)(82950400001)(76116006)(66556008)(186003)(8990500004)(86362001)(921003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: afr8yxZtMx079Zrkj/rIbWdI5NvkM8lU9YDzEzpDPhTG7LtxfSha6hb/c3ohrXssgZZfvWsr1oA0Zy3AptzrA0vhr33r/GzE4rLE1vJjeepdKZPMFDc+oP0D1EAQ0R5Mc87EYwV9qvxSbKGBDHSNsn5ywjsgdGtcDjBJymStB+eNE65ittYwQJNVhoKNOAaBdCUfwEPdKvOSuuqHYTDftZk47euuWqqLR50vo48kte2SYH/2UrII/2jjl7Vn9WMO2OQAfkSjFpi2q0uP6GiwoKIpEtNQvdAjzqm8QSfP5XL8O3CiyjfuYiljdBjPVsFKlGRj9PMV5oBwthjpnG414fsGZlEgTU1GkZPReCbQ8NvFqievbBxGaukR2iyxRByMGn/Ioz8ijYJN2V3JpAgYv8QwX1+6Jln//uTqkX++paypvHGQaSHpJ+aKONpjEViawpewTIbjGbTFlUuAam+XPb81l5pOiSgj8Xx8lFEHMCQtaeYOl1W5g2wZGXpzSevyEQ179UZDlAutpRnEeG7U0wAvKzmaom3DH6/nzT/ieM/a2RkTWHVXMiuKddwCrcrVGsr/GYPoxxrVbTixUhwiGOd8AGLMw9QQDwGMeaTCmdp3ntmn7Ex9+0xTDG7EGLQ1jD8zaeniMep9uUqwzMGdUZMMKfTFKS3pUJE/TzZ8zEasYEVPwCVfcVM54kOGApfkG4NVxGOT1C7SqWth9bUTuw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726278AbgIGGcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 02:32:51 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3DCC047700AF50E80729;
+        Mon,  7 Sep 2020 14:32:48 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 7 Sep 2020 14:32:43 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <robin@protonic.nl>, <linux@rempel-privat.de>,
+        <kernel@pengutronix.de>, <socketcan@hartkopp.net>,
+        <mkl@pengutronix.de>, <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net] can: j1939: j1939_sk_bind(): return failure if netdev is down
+Date:   Mon, 7 Sep 2020 14:31:48 +0800
+Message-ID: <1599460308-18770-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0684c8e4-2046-4788-bc0a-08d852f78ef4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 06:30:47.5901
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Z7bV8hdAQc5zL33A1ZWOV+73q6aRbv4E4C1AYG1b1nKkVvP7NPYGEZ2k/9LJbgr9dcIv9D5sdooJ29TjXizuLA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0200
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> Sent: Friday, July 17, 2020 6:03 AM
-> [...]
-Hi, I'm very sorry for this extremely late reply -- I was sidetracked by so=
-mething
-else and I just had a chance to revisit the issue. Thank you tglx for the c=
-omments
-and suggestions, which I think are reasonable. I realized this patch is pro=
-blematic.
-The good news is that the LAPIC emulation bug has been fixed in the latest =
-version
-of Hyper-V and now kdump can work reliably. I think the hypervisor fix woul=
-d be=20
-backported to old Hyper-V versions, so hopefully this won't be an issue ove=
-r time.
+When a netdev down event occurs after a successful call to
+j1939_sk_bind(), j1939_netdev_notify() can handle it correctly.
 
-Thanks,
--- Dexuan
+But if the netdev already in down state before calling j1939_sk_bind(),
+j1939_sk_release() will stay in wait_event_interruptible() blocked
+forever. Because in this case, j1939_netdev_notify() won't be called and
+j1939_tp_txtimer() won't call j1939_session_cancel() or other function
+to clear session for ENETDOWN error, this lead to mismatch of
+j1939_session_get/put() and jsk->skb_pending will never decrease to
+zero.
+
+To reproduce it use following commands:
+1. ip link add dev vcan0 type vcan
+2. j1939acd -r 100,80-120 1122334455667788 vcan0
+3. presses ctrl-c and thread will be blocked forever
+
+This patch adds check for ndev->flags in j1939_sk_bind() to avoid this
+kind of situation and return with -ENETDOWN.
+
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+---
+ net/can/j1939/socket.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 1be4c89..f239665 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -475,6 +475,12 @@ static int j1939_sk_bind(struct socket *sock, struct sockaddr *uaddr, int len)
+ 			goto out_release_sock;
+ 		}
+ 
++		if (!(ndev->flags & IFF_UP)) {
++			dev_put(ndev);
++			ret = -ENETDOWN;
++			goto out_release_sock;
++		}
++
+ 		priv = j1939_netdev_start(ndev);
+ 		dev_put(ndev);
+ 		if (IS_ERR(priv)) {
+-- 
+2.9.5
+
