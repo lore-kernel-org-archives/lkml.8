@@ -2,42 +2,43 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F94C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E237C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD83B21775
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593EA21556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495128;
-	bh=EgcGYI2rVd7bR3g7yzbftA3wisdwdNpGYVOuaoZF1uw=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=TjxVB9urbVt825AJmJTEz7t4eI5GCQQTseo1jUAhK4ADnXmtHy4NU9jda0Sjt728X
-	 lLgI4tNFUpU4no/bqx+tPUAh+5n27X1ZxK3TqojH5IGpZi6gyPu5FePk8Gsqo9mfG8
-	 dDIAPyNjqh3PE+DFk3SJztdUSKgbsMgI4CJcp4WA=
+	s=default; t=1599495173;
+	bh=mmrbMHMlywRamMbAoD8m1NVZ3xc1llmLdf9vpJqmSWo=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H43WTK6nOtJNY0+GRE7uwnCVQIQBUd4MGPoNNP0xJLY62Wom6kzVmzjvoNwN3HkQM
+	 KTMqef2rDti/YQnpDB83zlCTxuFqM6HCKbWdfcC86HV6iD60fbRidRHn5zc5EOY9YJ
+	 kev8YC88kpXonsQ4/7ey5Y3nDhLDOA1FtCeERImQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgIGQMI (ORCPT
+        id S1729956AbgIGQMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:12:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgIGQME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:12:04 -0400
+        id S1729931AbgIGQMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:12:30 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0689C206E6;
-        Mon,  7 Sep 2020 16:11:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9171206E6;
+        Mon,  7 Sep 2020 16:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495124;
-        bh=EgcGYI2rVd7bR3g7yzbftA3wisdwdNpGYVOuaoZF1uw=;
-        h=From:To:Subject:Date:From;
-        b=pxiV/AJBlGNy8ZHR6Z8x38a0poEEfzUKVHS7Cb32JKvz1ZgEt5gBx7TC3Q7J3BN8N
-         rXRiyTmTsFpe9mITp5oU0WNAHgxcrxI+NUd2HmwG3HZtIt1Ahwp0Jc2Ii0nYuvRoJ/
-         Pa7gelW4fJ1U+9Az06VsxsOKUk2phXa5amm7OPC0=
+        s=default; t=1599495149;
+        bh=mmrbMHMlywRamMbAoD8m1NVZ3xc1llmLdf9vpJqmSWo=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Hxu6rgxfiW5iKv9B71dOEX1kzrSB+ZYt+jhvfDbkfRFnmnvS6eX2DH/XPC4N3lKpu
+         /PgWsiwEnSuoQx8iUkpRVrFOYYn0uFjBMWSd1s4UXaTA9DNVQxGibJkseL5//NfLG9
+         Eyb3VQ6NgnRYkwyP7nrUpwzH/UwHSLEBjRIPMdzQ=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -50,69 +51,62 @@ To:     Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 00/25] ARM: dts: s5pv210: Cleanup - dtschema warnings
-Date:   Mon,  7 Sep 2020 18:11:16 +0200
-Message-Id: <20200907161141.31034-1-krzk@kernel.org>
+Subject: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second interrupt with touch screen
+Date:   Mon,  7 Sep 2020 18:11:18 +0200
+Message-Id: <20200907161141.31034-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
+References: <20200907161141.31034-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
+screen.  In such case the second interrupt is required.  This second
+interrupt can be anyway provided, even without touch screens.  This
+fixes dtbs_check warnings like:
 
-The patchset tries to remove most of the dtschema warnings.  Due to lack
-of hardware it was not tested.
+  arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
 
-Best regards,
-Krzysztof
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../bindings/iio/adc/samsung,exynos-adc.yaml      | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-
-Krzysztof Kozlowski (25):
-  dt-bindings: samsung: pmu: document S5Pv210
-  dt-bindings: iio: adc: exynos-adc: require second interrupt with touch
-    screen
-  dt-bindings: iio: adc: exynos-adc: do not require syscon on S5Pv210
-  ARM: dts: s5pv210: fix pinctrl property of "vibrator-en" regulator in
-    Aries
-  ARM: dts: s5pv210: remove DMA controller bus node name to fix dtschema
-    warnings
-  ARM: dts: s5pv210: move fixed clocks under root node
-  ARM: dts: s5pv210: move PMU node out of clock controller
-  ARM: dts: s5pv210: remove dedicated 'audio-subsystem' node
-  ARM: dts: s5pv210: fix number of I2S DAI cells
-  ARM: dts: s5pv210: add RTC 32 KHz clock in Aquilla
-  ARM: dts: s5pv210: add RTC 32 KHz clock in Aries family
-  ARM: dts: s5pv210: add RTC 32 KHz clock in Goni
-  ARM: dts: s5pv210: add RTC 32 KHz clock in SMDKC110
-  ARM: dts: s5pv210: add RTC 32 KHz clock in SMDKV210
-  ARM: dts: s5pv210: add RTC 32 KHz clock in Torbreck
-  ARM: dts: s5pv210: use defines for GPIO flags in Aquila
-  ARM: dts: s5pv210: use defines for GPIO flags in Goni
-  ARM: dts: s5pv210: use defines for IRQ flags in SMDKV210
-  ARM: dts: s5pv210: use defines for IRQ flags in Goni
-  ARM: dts: s5pv210: move fixed regulators under root node in Aquila
-  ARM: dts: s5pv210: move fixed regulators under root node in Goni
-  ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in
-    Aquila
-  ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in
-    Goni
-  ARM: dts: s5pv210: align SPI GPIO node name with dtschema in Aries
-  ARM: dts: s5pv210: align DMA channels with dtschema
-
- .../devicetree/bindings/arm/samsung/pmu.yaml  |   2 +
- .../bindings/iio/adc/samsung,exynos-adc.yaml  |  16 +-
- arch/arm/boot/dts/s5pv210-aquila.dts          |  73 ++++----
- arch/arm/boot/dts/s5pv210-aries.dtsi          |  16 +-
- arch/arm/boot/dts/s5pv210-fascinate4g.dts     |   2 +-
- arch/arm/boot/dts/s5pv210-galaxys.dts         |   2 +-
- arch/arm/boot/dts/s5pv210-goni.dts            |  97 +++++-----
- arch/arm/boot/dts/s5pv210-smdkc110.dts        |   9 +
- arch/arm/boot/dts/s5pv210-smdkv210.dts        |  12 +-
- arch/arm/boot/dts/s5pv210-torbreck.dts        |   9 +
- arch/arm/boot/dts/s5pv210.dtsi                | 175 ++++++++----------
- 11 files changed, 230 insertions(+), 183 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+index cc3c8ea6a894..89b4f9c252a6 100644
+--- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+@@ -41,7 +41,10 @@ properties:
+     maxItems: 2
+ 
+   interrupts:
+-    maxItems: 1
++    description:
++      ADC interrupt followed by optional touchscreen interrupt.
++    minItems: 1
++    maxItems: 2
+ 
+   "#io-channel-cells":
+     const: 1
+@@ -107,6 +110,16 @@ allOf:
+           items:
+             - const: adc
+ 
++  - if:
++      properties:
++        has-touchscreen:
++          true
++    then:
++      properties:
++        interrupts:
++          minItems: 2
++          maxItems: 2
++
+ examples:
+   - |
+     adc: adc@12d10000 {
 -- 
 2.17.1
 
