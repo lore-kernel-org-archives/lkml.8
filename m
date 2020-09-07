@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B089C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F05F62080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2382206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731321AbgIGRco (ORCPT
+        id S1731340AbgIGRct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:32:44 -0400
-Received: from 8bytes.org ([81.169.241.247]:43586 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:32:49 -0400
+Received: from 8bytes.org ([81.169.241.247]:43570 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729479AbgIGNS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:27 -0400
+        id S1729480AbgIGNS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:26 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id B2718A8D;
-        Mon,  7 Sep 2020 15:16:44 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id CE991D77;
+        Mon,  7 Sep 2020 15:16:47 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 05/72] x86/cpufeatures: Add SEV-ES CPU feature
-Date:   Mon,  7 Sep 2020 15:15:06 +0200
-Message-Id: <20200907131613.12703-6-joro@8bytes.org>
+Subject: [PATCH v7 11/72] x86/insn: Add insn_has_rep_prefix() helper
+Date:   Mon,  7 Sep 2020 15:15:12 +0200
+Message-Id: <20200907131613.12703-12-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -58,65 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Add CPU feature detection for Secure Encrypted Virtualization with
-Encrypted State. This feature enhances SEV by also encrypting the
-guest register state, making it in-accessible to the hypervisor.
+Add a function to check whether an instruction has a REP prefix.
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/include/asm/cpufeatures.h | 1 +
- arch/x86/kernel/cpu/amd.c          | 3 ++-
- arch/x86/kernel/cpu/scattered.c    | 1 +
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index e1013056eb12..0f1da4a6e886 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -236,6 +236,7 @@
- #define X86_FEATURE_EPT_AD		( 8*32+17) /* Intel Extended Page Table access-dirty bit */
- #define X86_FEATURE_VMCALL		( 8*32+18) /* "" Hypervisor supports the VMCALL instruction */
- #define X86_FEATURE_VMW_VMMCALL		( 8*32+19) /* "" VMware prefers VMMCALL hypercall instruction */
-+#define X86_FEATURE_SEV_ES		( 8*32+20) /* AMD Secure Encrypted Virtualization - Encrypted State */
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index f748f57f1491..a0f839aa144d 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -15,6 +15,7 @@
+ #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
+ #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
  
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EBX), word 9 */
- #define X86_FEATURE_FSGSBASE		( 9*32+ 0) /* RDFSBASE, WRFSBASE, RDGSBASE, WRGSBASE instructions*/
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index dcc3d943c68f..6062ce586b95 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -614,7 +614,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 	 *	      If BIOS has not enabled SME then don't advertise the
- 	 *	      SME feature (set in scattered.c).
- 	 *   For SEV: If BIOS has not enabled SEV then don't advertise the
--	 *            SEV feature (set in scattered.c).
-+	 *            SEV and SEV_ES feature (set in scattered.c).
- 	 *
- 	 *   In all cases, since support for SME and SEV requires long mode,
- 	 *   don't advertise the feature under CONFIG_X86_32.
-@@ -645,6 +645,7 @@ static void early_detect_mem_encrypt(struct cpuinfo_x86 *c)
- 		setup_clear_cpu_cap(X86_FEATURE_SME);
- clear_sev:
- 		setup_clear_cpu_cap(X86_FEATURE_SEV);
-+		setup_clear_cpu_cap(X86_FEATURE_SEV_ES);
++bool insn_has_rep_prefix(struct insn *insn);
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index f20942ce76c6..58f7fb95c7f4 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
  	}
  }
  
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index bccfc9ff3cc1..bf01a9693c6c 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -42,6 +42,7 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_MBA,		CPUID_EBX,  6, 0x80000008, 0 },
- 	{ X86_FEATURE_SME,		CPUID_EAX,  0, 0x8000001f, 0 },
- 	{ X86_FEATURE_SEV,		CPUID_EAX,  1, 0x8000001f, 0 },
-+	{ X86_FEATURE_SEV_ES,		CPUID_EAX,  3, 0x8000001f, 0 },
- 	{ 0, 0, 0, 0, 0 }
- };
- 
++/**
++ * insn_has_rep_prefix() - Determine if instruction has a REP prefix
++ * @insn:	Instruction containing the prefix to inspect
++ *
++ * Returns:
++ *
++ * true if the instruction has a REP prefix, false if not.
++ */
++bool insn_has_rep_prefix(struct insn *insn)
++{
++	int i;
++
++	insn_get_prefixes(insn);
++
++	for (i = 0; i < insn->prefixes.nbytes; i++) {
++		insn_byte_t p = insn->prefixes.bytes[i];
++
++		if (p == 0xf2 || p == 0xf3)
++			return true;
++	}
++
++	return false;
++}
++
+ /**
+  * get_seg_reg_override_idx() - obtain segment register override index
+  * @insn:	Valid instruction with segment override prefixes
 -- 
 2.28.0
 
