@@ -7,67 +7,60 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629C7C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35009C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33F662145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A1621556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgIGHen (ORCPT
+        id S1727930AbgIGHeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:34:43 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:51507 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727030AbgIGHeR (ORCPT
+        Mon, 7 Sep 2020 03:34:46 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:5627 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgIGHek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:34:17 -0400
+        Mon, 7 Sep 2020 03:34:40 -0400
+X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 8B79F100003;
-        Mon,  7 Sep 2020 07:34:13 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 573F8240005;
+        Mon,  7 Sep 2020 07:34:35 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
-        Vincenzo Aliberti <vincenzo.aliberti@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>
-Cc:     Richard Fontana <rfontana@redhat.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] mtd: lpddr: fix excessive stack usage with clang
-Date:   Mon,  7 Sep 2020 09:34:12 +0200
-Message-Id: <20200907073412.27402-1-miquel.raynal@bootlin.com>
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v2 3/3] mtd: lpddr: Move function print_drs_error to lpddr_cmds.c
+Date:   Mon,  7 Sep 2020 09:34:34 +0200
+Message-Id: <20200907073434.27599-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200505140136.263461-1-arnd@arndb.de>
+In-Reply-To: <e0063cbd65f3b47be1db34efc494ea3047634d88.1588016644.git.gustavo@embeddedor.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 3e1b6469f8324bee5927b063e2aca30d3e56b907
+X-linux-mtd-patch-commit: 1a64026eda1642c81425e48550fd4bd3f73d0ab5
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-05-05 at 14:01:16 UTC, Arnd Bergmann wrote:
-> Building lpddr2_nvm with clang can result in a giant stack usage
-> in one function:
+On Mon, 2020-04-27 at 19:56:08 UTC, "Gustavo A. R. Silva" wrote:
+> Function print_drs_error is only used in drivers/mtd/lpddr/lpddr_cmds.c
+> so, better to move it there.
 > 
-> drivers/mtd/lpddr/lpddr2_nvm.c:399:12: error: stack frame size of 1144 bytes in function 'lpddr2_nvm_probe' [-Werror,-Wframe-larger-than=]
+> Also, notice that there's no need for inline as the function is used
+> once.  Lastly, fix the following checkpatch warning:
 > 
-> The problem is that clang decides to build a copy of the mtd_info
-> structure on the stack and then do a memcpy() into the actual version. It
-> shouldn't really do it that way, but it's not strictly a bug either.
+> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
+> +static void print_drs_error(unsigned dsr)
 > 
-> As a workaround, use a static const version of the structure to assign
-> most of the members upfront and then only set the few members that
-> require runtime knowledge at probe time.
-> 
-> Fixes: 96ba9dd65788 ("mtd: lpddr: add driver for LPDDR2-NVM PCM memories")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
 
