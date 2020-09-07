@@ -2,136 +2,97 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D21FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5745CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5892145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D65BE208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="V17bMqD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgIGIZ6 (ORCPT
+        id S1728225AbgIGI1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:25:58 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10781 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727943AbgIGIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:24:39 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D6AE1E99CC644FB78895;
-        Mon,  7 Sep 2020 16:24:34 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 16:24:25 +0800
-From:   Yang Shen <shenyang39@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 05/10] crypto: hisilicon/zip - use a enum parameter instead of some macros
-Date:   Mon, 7 Sep 2020 16:21:57 +0800
-Message-ID: <1599466922-10323-6-git-send-email-shenyang39@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
-References: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
+        Mon, 7 Sep 2020 04:27:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgIGI1E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:27:04 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B8C2C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 01:27:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=qnwYE2OXqJPyGJ1Z6lt7Krlp010h2nSE4niWx+cXvY8=; b=V17bMqD9tDMFdzBW/auH/HdokX
+        rpBj8Bb+K1/gIlR8+SmJgTttJ/k6k+EeynpdvcINSQ/L/aiHxpV4AriI0n/Uzd+weRqdw81HDIWRr
+        6EjElxjLHaK+bZlnOxG3rSx1/XOAjAq35fbTFxGql+TmyPhvnqGCVDcrxTMOcE3yXRGDElWvS6ZDF
+        Ulfpu9EZoTTJcbuH02L9gmmTJH1AmNv3kS9Yfy6yKw+h55ddcmAorxK86yBelyRx8RDA2wBXROr4J
+        jNjP1oJA3OPui9Aehd1Tj5U8a0GHE/X9uO23y8QgpWKNDzTBl+B72Lzsh68sCXUpiblM/j6TrsfOx
+        M8feRwwg==;
+Received: from 213-225-10-73.nat.highway.a1.net ([213.225.10.73] helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFCUP-0003Zp-Ld; Mon, 07 Sep 2020 08:27:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: [PATCH] /dev/zero: fixups for ->read
+Date:   Mon,  7 Sep 2020 10:27:00 +0200
+Message-Id: <20200907082700.2057137-1-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macros 'QPC_COMP', 'QPC_DECOMP' and 'HZIP_CTX_Q_NUM' are relative and
-incremental. So, use an enum instead.
+Reported the cleared bytes in case of a partial clear_user instead
+of -EFAULT, and remove a pointless conditional, as cleared must be
+non-zero by the time we hit the signal_pending check.
 
-Signed-off-by: Yang Shen <shenyang39@huawei.com>
-Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+Reported-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/crypto/hisilicon/zip/zip_crypto.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/char/mem.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/crypto/hisilicon/zip/zip_crypto.c b/drivers/crypto/hisilicon/zip/zip_crypto.c
-index aba1600..c2ea849 100644
---- a/drivers/crypto/hisilicon/zip/zip_crypto.c
-+++ b/drivers/crypto/hisilicon/zip/zip_crypto.c
-@@ -19,7 +19,6 @@
- #define GZIP_HEAD_FEXTRA_XLEN			2
- #define GZIP_HEAD_FHCRC_SIZE			2
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 1dc99ab158457a..94c2b556cf9728 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -733,14 +733,20 @@ static ssize_t read_zero(struct file *file, char __user *buf,
  
--#define HZIP_CTX_Q_NUM				2
- #define HZIP_GZIP_HEAD_BUF			256
- #define HZIP_ALG_PRIORITY			300
- #define HZIP_SGL_SGE_NR				10
-@@ -32,6 +31,12 @@ enum hisi_zip_alg_type {
- 	HZIP_ALG_TYPE_DECOMP = 1,
- };
+ 	while (count) {
+ 		size_t chunk = min_t(size_t, count, PAGE_SIZE);
++		size_t left;
  
-+enum {
-+	HZIP_QPC_COMP,
-+	HZIP_QPC_DECOMP,
-+	HZIP_CTX_Q_NUM
-+};
-+
- #define COMP_NAME_TO_TYPE(alg_name)					\
- 	(!strcmp((alg_name), "zlib-deflate") ? HZIP_ALG_TYPE_ZLIB :	\
- 	 !strcmp((alg_name), "gzip") ? HZIP_ALG_TYPE_GZIP : 0)		\
-@@ -71,8 +76,6 @@ struct hisi_zip_qp_ctx {
- };
+-		if (clear_user(buf + cleared, chunk))
+-			return cleared ? cleared : -EFAULT;
++		left = clear_user(buf + cleared, chunk);
++		if (unlikely(left)) {
++			cleared += (chunk - left);
++			if (!cleared)
++				return -EFAULT;
++			break;
++		}
+ 		cleared += chunk;
+ 		count -= chunk;
  
- struct hisi_zip_ctx {
--#define QPC_COMP	0
--#define QPC_DECOMP	1
- 	struct hisi_zip_qp_ctx qp_ctx[HZIP_CTX_Q_NUM];
- };
+ 		if (signal_pending(current))
+-			return cleared ? cleared : -ERESTARTSYS;
++			break;
+ 		cond_resched();
+ 	}
  
-@@ -264,11 +267,11 @@ static int hisi_zip_create_req_q(struct hisi_zip_ctx *ctx)
- 	return 0;
- 
- err_free_loop1:
--	kfree(ctx->qp_ctx[QPC_DECOMP].req_q.req_bitmap);
-+	kfree(ctx->qp_ctx[HZIP_QPC_DECOMP].req_q.req_bitmap);
- err_free_loop0:
--	kfree(ctx->qp_ctx[QPC_COMP].req_q.q);
-+	kfree(ctx->qp_ctx[HZIP_QPC_COMP].req_q.q);
- err_free_bitmap:
--	kfree(ctx->qp_ctx[QPC_COMP].req_q.req_bitmap);
-+	kfree(ctx->qp_ctx[HZIP_QPC_COMP].req_q.req_bitmap);
- 	return ret;
- }
- 
-@@ -303,8 +306,8 @@ static int hisi_zip_create_sgl_pool(struct hisi_zip_ctx *ctx)
- 	return 0;
- 
- err_free_sgl_pool0:
--	hisi_acc_free_sgl_pool(&ctx->qp_ctx[QPC_COMP].qp->qm->pdev->dev,
--			       ctx->qp_ctx[QPC_COMP].sgl_pool);
-+	hisi_acc_free_sgl_pool(&ctx->qp_ctx[HZIP_QPC_COMP].qp->qm->pdev->dev,
-+			       ctx->qp_ctx[HZIP_QPC_COMP].sgl_pool);
- 	return -ENOMEM;
- }
- 
-@@ -539,7 +542,7 @@ static int hisi_zip_do_work(struct hisi_zip_req *req,
- static int hisi_zip_acompress(struct acomp_req *acomp_req)
- {
- 	struct hisi_zip_ctx *ctx = crypto_tfm_ctx(acomp_req->base.tfm);
--	struct hisi_zip_qp_ctx *qp_ctx = &ctx->qp_ctx[QPC_COMP];
-+	struct hisi_zip_qp_ctx *qp_ctx = &ctx->qp_ctx[HZIP_QPC_COMP];
- 	struct hisi_zip_req *req;
- 	int head_size;
- 	int ret;
-@@ -563,7 +566,7 @@ static int hisi_zip_acompress(struct acomp_req *acomp_req)
- static int hisi_zip_adecompress(struct acomp_req *acomp_req)
- {
- 	struct hisi_zip_ctx *ctx = crypto_tfm_ctx(acomp_req->base.tfm);
--	struct hisi_zip_qp_ctx *qp_ctx = &ctx->qp_ctx[QPC_DECOMP];
-+	struct hisi_zip_qp_ctx *qp_ctx = &ctx->qp_ctx[HZIP_QPC_DECOMP];
- 	struct hisi_zip_req *req;
- 	size_t head_size;
- 	int ret;
 -- 
-2.7.4
+2.28.0
 
