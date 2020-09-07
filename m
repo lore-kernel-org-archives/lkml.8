@@ -2,114 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE55BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE11C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:53:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD19B20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:49:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O6LLROK7"
+	by mail.kernel.org (Postfix) with ESMTP id B8B9321481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599486798;
+	bh=PWtmn+Z9RrLCbibZwYxdj5VdBnfGeAWKO2SOBBWHdOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XTXURHCyaijACHE5tUgHdUhORwvVME4bURF0RV5XiiSiB2uznhn2vGKVfKXKAmifM
+	 BYUQf/OneqY1STP1twzR3b+hD9HFsM/khdbgzb8ktGJ+ZozfAK8Y2ab2jcR3ne1Dpo
+	 wn9U2GLC4RJYCTi+muRhTY5x0jo+DZB2X1yEoNWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgIGNtR (ORCPT
+        id S1729603AbgIGNu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:49:17 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:47370 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729585AbgIGNnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:43:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599486213; x=1631022213;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=tt6wtfdb3398uJssYij92A1z15vJIiwy4hdYo2eToCU=;
-  b=O6LLROK7t/YJ527m/XO++o2zlCwMYScvCM/jTM4VtfGpb9kPO/t7gcS6
-   yA7MiTU2CLJl1egbEiDNa2i2RSzvY9El3FFASaQ82OEMfwBJM08sDxaNz
-   C5hEw189a4YadQAyGk6RdxGA5IHBpWG+jM5Fz39qGho6PG78Bd4yWddr0
-   o=;
-X-IronPort-AV: E=Sophos;i="5.76,401,1592870400"; 
-   d="scan'208";a="66028583"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Sep 2020 13:43:30 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
-        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id BDED9C05E1;
-        Mon,  7 Sep 2020 13:43:27 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 7 Sep 2020 13:43:17 +0000
-Subject: Re: [PATCH v8 17/18] nitro_enclaves: Add overview documentation
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        David Duncan <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
- <20200904173718.64857-18-andraprs@amazon.com>
- <20200907090126.GD1101646@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <44a8a921-1fb4-87ab-b8f2-c168c615dbbd@amazon.com>
-Date:   Mon, 7 Sep 2020 16:43:11 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.1
+        Mon, 7 Sep 2020 09:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729604AbgIGNp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:45:29 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F7920757;
+        Mon,  7 Sep 2020 13:35:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599485750;
+        bh=PWtmn+Z9RrLCbibZwYxdj5VdBnfGeAWKO2SOBBWHdOs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UARSrkQBalFJiyuplZd86WZgcGkPGkHh4W5UB3z6sPDs/iucB9oO+xQADt4eocjHx
+         a/hL0/+MUz5WolqcV42GXojvatVRW78Ddr5uHibtCwV4KY+/0ANcxtSt5i675YoajP
+         kCiipNsHVLex8nVpM+VaHz/nDMFGtmygwkSiWfkA=
+Date:   Mon, 7 Sep 2020 15:36:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Denis Efremov <efremov@linux.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2] sysfs: Add sysfs_emit and sysfs_emit_at to format
+ sysfs output
+Message-ID: <20200907133604.GA2779041@kroah.com>
+References: <a9054fb521e65f2809671fa9c18e2453061e9d91.1598744610.git.joe@perches.com>
+ <c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907090126.GD1101646@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.161.85]
-X-ClientProxiedBy: EX13D36UWA001.ant.amazon.com (10.43.160.71) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAwNy8wOS8yMDIwIDEyOjAxLCBHcmVnIEtIIHdyb3RlOgo+Cj4gT24gRnJpLCBTZXAgMDQs
-IDIwMjAgYXQgMDg6Mzc6MTdQTSArMDMwMCwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBBbmRyYSBQYXJhc2NoaXYgPGFuZHJhcHJzQGFtYXpvbi5jb20+Cj4+IFJldmll
-d2VkLWJ5OiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPgo+PiAtLS0KPj4gQ2hhbmdl
-bG9nCj4+Cj4+IHY3IC0+IHY4Cj4+Cj4+ICogQWRkIGluZm8gYWJvdXQgdGhlIHByaW1hcnkgLyBw
-YXJlbnQgVk0gQ0lEIHZhbHVlLgo+PiAqIFVwZGF0ZSByZWZlcmVuY2UgbGluayBmb3IgaHVnZSBw
-YWdlcy4KPj4gKiBBZGQgcmVmZXJlbmNlIGxpbmsgZm9yIHRoZSB4ODYgYm9vdCBwcm90b2NvbC4K
-Pj4gKiBBZGQgbGljZW5zZSBtZW50aW9uIGFuZCB1cGRhdGUgZG9jIHRpdGxlIC8gY2hhcHRlciBm
-b3JtYXR0aW5nLgo+Pgo+PiB2NiAtPiB2Nwo+Pgo+PiAqIE5vIGNoYW5nZXMuCj4+Cj4+IHY1IC0+
-IHY2Cj4+Cj4+ICogTm8gY2hhbmdlcy4KPj4KPj4gdjQgLT4gdjUKPj4KPj4gKiBObyBjaGFuZ2Vz
-Lgo+Pgo+PiB2MyAtPiB2NAo+Pgo+PiAqIFVwZGF0ZSBkb2MgdHlwZSBmcm9tIC50eHQgdG8gLnJz
-dC4KPj4gKiBVcGRhdGUgZG9jdW1lbnRhdGlvbiBiYXNlZCBvbiB0aGUgY2hhbmdlcyBmcm9tIHY0
-Lgo+Pgo+PiB2MiAtPiB2Mwo+Pgo+PiAqIE5vIGNoYW5nZXMuCj4+Cj4+IHYxIC0+IHYyCj4+Cj4+
-ICogTmV3IGluIHYyLgo+PiAtLS0KPj4gICBEb2N1bWVudGF0aW9uL25pdHJvX2VuY2xhdmVzL25l
-X292ZXJ2aWV3LnJzdCB8IDk1ICsrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDk1IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
-bi9uaXRyb19lbmNsYXZlcy9uZV9vdmVydmlldy5yc3QKPiBBIHdob2xlIG5ldyBzdWJkaXIsIGZv
-ciBhIHNpbmdsZSBkcml2ZXIsIGFuZCBub3QgdGllZCBpbnRvIHRoZSBrZXJuZWwKPiBkb2N1bWVu
-dGF0aW9uIGJ1aWxkIHByb2Nlc3MgYXQgYWxsPyAgTm90IGdvb2QgOigKPgoKV291bGQgdGhlICJ2
-aXJ0IiBkaXJlY3RvcnkgYmUgYSBiZXR0ZXIgb3B0aW9uIGZvciB0aGlzIGRvYyBmaWxlPwoKSSBj
-YW4gdGhlbiBhZGQgdGhlIGRvYyBuYW1lIHRvIHRoZSBjb3JyZXNwb25kaW5nIGluZGV4IGZpbGUg
-YXMgd2VsbC4KClRoYW5rcywKQW5kcmEKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9t
-YW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJD
-NSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJl
-ZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
+On Sat, Aug 29, 2020 at 05:43:58PM -0700, Joe Perches wrote:
+> On Sat, 2020-08-29 at 16:48 -0700, Joe Perches wrote:
+> > Output defects can exist in sysfs content using sprintf and snprintf.
+> > 
+> > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
+> > used for outputting sysfs content and it's possible to overrun the
+> > PAGE_SIZE buffer length.
+> > 
+> > Add a generic sysfs_emit function that knows that the size of the
+> > temporary buffer and ensures that no overrun is done.
+> > 
+> > Add a generic sysfs_emit_at function that can be used in multiple
+> > call situations that also ensures that no overrun is done.
+> 
+> This preliminary coccinelle script converts ~5000 instances treewide.
+> There are still many remaining instances that could be converted.
+> 
+> $ git grep -w sysfs_emit -- '*.[ch]'|wc -l
+> 4702
+> $ git grep -w sysfs_emit_at -- '*.[ch]'|wc -l
+> 229
 
+Can you send a patch that would at least convert the driver core code
+(drivers/base/*) to use these new helpers so we have an in-tree user
+when applying the first patch?
+
+thanks,
+
+greg k-h
