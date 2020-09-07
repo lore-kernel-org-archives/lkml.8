@@ -2,82 +2,94 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9311BC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E039C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5997D20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB70E208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:49:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZAP2S7DZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgIGIte convert rfc822-to-8bit (ORCPT
+        id S1728339AbgIGIts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:49:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:26253 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728272AbgIGItc (ORCPT
+        Mon, 7 Sep 2020 04:49:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728272AbgIGItq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:49:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-35-5zmwIGe8NUucU3bez4pxOg-1; Mon, 07 Sep 2020 09:49:28 +0100
-X-MC-Unique: 5zmwIGe8NUucU3bez4pxOg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 7 Sep 2020 09:49:28 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 7 Sep 2020 09:49:28 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Christoph Hellwig' <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: Using asm_volatile_goto for get_user()
-Thread-Topic: Using asm_volatile_goto for get_user()
-Thread-Index: AdaE8q1aQOesIAbfTka1rFFrCf3mnA==
-Date:   Mon, 7 Sep 2020 08:49:27 +0000
-Message-ID: <39a56b046b104566922dd0d0ce7f794a@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 7 Sep 2020 04:49:46 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C97C061573;
+        Mon,  7 Sep 2020 01:49:46 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id y5so11683957otg.5;
+        Mon, 07 Sep 2020 01:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U3euzQ0Swe5yymHZPecrNgR6N5TksT5qVYOuQ4FkYtc=;
+        b=ZAP2S7DZI5vT7BHFsnBBOKOhCb2zFyruwKgW++3sF+IVjBUKHUsOt8v+ufKBbv0qUD
+         VJcKDlrSeabFQdul2azOOhbYEak24M9fdot4l16Mrwc43zlXQeutqm40FBGwnkxSSDDd
+         3DT+6lUsm1FjeBhiEmT31WCRr7i9pShb6qH32osuTlSK+TPHVJUwqwQQ42h0MBRZyA4z
+         g79/4VwkpQsRS/45RWtdAwZQZQOvMCOoe5vMfPjjX2c98IpSQ8eOEyamuA//6BGQdOmx
+         Bj215qtZ6WjSmicwu3zLUH/v+UUf4rnK8dwwmmspBnYrzbgwkTVrjVm63Yc3F3NOLw9h
+         c7YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U3euzQ0Swe5yymHZPecrNgR6N5TksT5qVYOuQ4FkYtc=;
+        b=bNreNQlqCKvrlPhvbd+qNUumI0vG6oRUFM9M7+71bi9eEn0kI++rzIs5dwxJ0NEJmU
+         al3I5HZtaTTG0rfknVKorjzrwCQjaGizwNdj1ROfld9eT3zPvRGb50yT+GVPlgz4LQ6u
+         fF3OpQoL6CGIePz5L1fchxuN+cNVxzx4rf7XCnqrR6QlLArIVHYpHS4TemFG++MPypDV
+         O+HqJi43905+SpVGkY9uXgE9uowHgPz6P5oLZvTKNL3xPjruj2VEUibiTVifL6xV3UlW
+         yV4QKVQ5Yq7SunFKWcA8mbv7cR2fjJRNOa2B9dBeX26dhGMxSTxO0Y5fzL73BSxv40NS
+         mgDg==
+X-Gm-Message-State: AOAM530qg6onmy7sEf0hK/EkrZYQZe/gfo5rX/hRi5KRZHNw47vaQgt6
+        YfBfhauVSZbSxD2oOmvCRTp2e7mnuyobWogkdSg=
+X-Google-Smtp-Source: ABdhPJzF+TwUsvyBcUC5Igw0RzmgIn/yJwLk/28MlDO8QiD1vOSkudFQXkePOwUmc5tMyeeVGBDajuygXy/aFVRP8Uk=
+X-Received: by 2002:a9d:7745:: with SMTP id t5mr13692171otl.114.1599468584605;
+ Mon, 07 Sep 2020 01:49:44 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
+References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
+ <87wo7una02.fsf@miraculix.mork.no> <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
+ <CAKfDRXg2xRbLu=ZcQYdJUuYbfMQbav9pUDwcVMc-S+hwV3Johw@mail.gmail.com>
+ <87v9gqghda.fsf@miraculix.mork.no> <CAGRyCJFcDZzfahSsexnVN0tA6DU=LYYL2erSHJaOXZWAr=Sn6A@mail.gmail.com>
+In-Reply-To: <CAGRyCJFcDZzfahSsexnVN0tA6DU=LYYL2erSHJaOXZWAr=Sn6A@mail.gmail.com>
+From:   Kristian Evensen <kristian.evensen@gmail.com>
+Date:   Mon, 7 Sep 2020 10:49:33 +0200
+Message-ID: <CAKfDRXjLmT32sFB40OV8ywm9vwNkn3-n_a2zcC-3o2wJa-tvFg@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the
+ ring buffer used by the xHCI controller.
+To:     Daniele Palmas <dnlplm@gmail.com>
+Cc:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>,
+        Paul Gildea <paul.gildea@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I had an idea that might let 'asm_volatile_goto' be used for
-get_user() even though gcc doesn't allow outputs.
+Hi Daniele,
 
-What if (eg) 'register eax asm ("eax") is used for the
-output and (probably) given in the 'clobber' list.
+On Mon, Sep 7, 2020 at 10:35 AM Daniele Palmas <dnlplm@gmail.com> wrote:
+> there was also another recent thread about this and the final plan was
+> to simply increase the rx urb size setting to the highest value we are
+> aware of (see https://www.spinics.net/lists/linux-usb/msg198858.html):
+> this should solve the babble issue without breaking aggregation.
+>
+> The change should be simple, I was just waiting to perform some sanity
+> tests with different models I have. Hope to have it done by this week.
 
-Such variables are usually used to get explicit registers
-used when there is no suitable constraint.
-I don't see why it shouldn't work for 'asm goto' as well
-as just 'asm'.
+Thanks for letting me know. Looking forward to the patch and dropping
+my own work-around :)
 
-While this forces the read value into a specific register
-that probably doesn't make much difference to the code.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Kristian
