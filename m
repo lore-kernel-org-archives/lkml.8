@@ -2,189 +2,154 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A94C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C25C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6EF3206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="heIZT8iB"
+	by mail.kernel.org (Postfix) with ESMTP id 011C22080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgIGRTk (ORCPT
+        id S1729709AbgIGNyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:19:40 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17671 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729728AbgIGN42 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:56:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f563bd50000>; Mon, 07 Sep 2020 06:55:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 06:56:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 07 Sep 2020 06:56:22 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
- 2020 13:56:22 +0000
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
- by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 7 Sep 2020 13:56:22 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C99uI33Ejcp5m1W5+ADIBM7M0nN8Mql/kaHfr14HSIJVdM4b0FMUQ93xjCxPaWl+getiCaGLoRCBGFU/jKy5OWdGNYNGv7Bl5AODvtI9JyOboZZ7IhjKqoZf6LCtHyjSAuPmXAmHdVZcbkx1LS0aaC5kBHx/4Y7BNjUbRDQ0VzN1V11goeHiDooslNzRB+pR0heG4H1+xOYNDu065qPIWxRFllGfbSK+TGvlfmNeX7sSy1yefrD8ENq3p2FWoESSg0/GqYFDJQemJyXVQzpGCSvWv8j/K9HQtHpmyQQ+K07MZbANIeUYF4es+bDU4oO+qGUgRH10h44rFuLH7V+ugg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fcdNVEB31jSW8JH9uBQsMpkXEOBy9vl0s3QLbyVTAAs=;
- b=QAP5+9lkl+DA2ou++fFC+0F+uI0L84BNJdvP2bhgzfOdDT7L5JlkGJ2Bhx56+awrckT9nZnjQtZMDEge9adNwJAKK0pj/mW3RLwbNqQCDfzI9dhinLXiHHICA0I9ndeZyBC5OpXJEbdUyedoaLkJw8gur18/B2LyDRxNjUIqhryFzss+ZqSdBW7oyKlv1jB0S/iNlC8SwWkv0Tu5Hps/AYM+7YSoFx0QxH5pGta4MzDEzN/5XdBbpj8asiQGhl1bwWshehNX4mo3+mjI1awFMAQf0BTQRcKwCoZ/hBXtclICvmrrjt16sbBkZ59dclrKFGp7+06RrlaL3mWYGQGOFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2823.namprd12.prod.outlook.com (2603:10b6:a03:96::33)
- by BY5PR12MB4164.namprd12.prod.outlook.com (2603:10b6:a03:207::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 13:56:20 +0000
-Received: from BYAPR12MB2823.namprd12.prod.outlook.com
- ([fe80::7dd0:ad41:3d71:679b]) by BYAPR12MB2823.namprd12.prod.outlook.com
- ([fe80::7dd0:ad41:3d71:679b%6]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 13:56:20 +0000
-From:   Nikolay Aleksandrov <nikolay@nvidia.com>
-To:     "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>
-CC:     "bridge@lists.linux-foundation.org" 
-        <bridge@lists.linux-foundation.org>,
-        "henrik.bjoernlund@microchip.com" <henrik.bjoernlund@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH RFC 0/7] net: bridge: cfm: Add support for Connectivity
- Fault Management(CFM)
-Thread-Topic: [PATCH RFC 0/7] net: bridge: cfm: Add support for Connectivity
- Fault Management(CFM)
-Thread-Index: AQHWgpxscb2zVIk4hE+OH7ymotxKpKlZFJEAgALbSoCAAUg+gA==
-Date:   Mon, 7 Sep 2020 13:56:20 +0000
-Message-ID: <b36a32dbf3b4b315fc4cbfdf06084b75a7c58729.camel@nvidia.com>
-References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
-         <20200904154406.4fe55b9d@hermes.lan>
-         <20200906182129.274fimjyo7l52puj@soft-dev3.localdomain>
-In-Reply-To: <20200906182129.274fimjyo7l52puj@soft-dev3.localdomain>
-Reply-To: Nikolay Aleksandrov <nikolay@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-authentication-results: networkplumber.org; dkim=none (message not signed)
- header.d=none;networkplumber.org; dmarc=none action=none
- header.from=nvidia.com;
-x-originating-ip: [84.238.136.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ede4199d-2f42-4555-8f59-08d85335cca9
-x-ms-traffictypediagnostic: BY5PR12MB4164:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR12MB4164E57FC2F4EFE67929B5CADF280@BY5PR12MB4164.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JKOztMeuwfB/U577iL6q+pPzGfOsfwEB0P3oSpK1iZUnEWmnopyIq2ZLnfVA8+Hm2xM48W7MD47wWb/xw5OJz551W5nP2MIjczCy/irtp4U6e3UywzgZYtv0le23DKQCaqUka65jT4IWoRK7ybnJrKzV8zg+gq+BffsrIh1v0RJPv2l/TIgrgycBYShwtML9KdlRW5UKqyIblNnlxZB/UYCMrNuSHqYdd4/mbce2oSnw68Wra6dRTf4MykmRFYqDEtfNalSCIo/baHsXuaG6KsH64v30b/febPZ2REI54kmFnWhviTJ2rABPbr3leqAWkrvuL26PPEGZGZyIuN1KxcdI8rLMDLRFo+WRPf+s3alpTQriTuGdcDGk7yQJXxzJPsxvFdkilA0MztnEzIhcng==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2823.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(376002)(39860400002)(346002)(2616005)(26005)(478600001)(3450700001)(83380400001)(71200400001)(6486002)(36756003)(86362001)(54906003)(4326008)(76116006)(8936002)(64756008)(186003)(2906002)(66476007)(66556008)(66446008)(91956017)(966005)(8676002)(6512007)(66946007)(316002)(110136005)(5660300002)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: wJW6J+sLhME3s057mcq94pkWyZbIPrUZLr7fZxjvn+/pynr6h9Wc1D2fOyLjtz+LVR0SW3dFfbX16inUyRaNoz8ygzEEjlf2BXhf9DRrUx8EjifpQiXau/U3hCvsv3ptQlRd2+0P8Qx78DV8KGDzdenTcq0Jy4sbDn8FBL1uwY94pHbC9l9BoAvIQIMOGg9FtNMJ65oWQCHoDBpPJq7AIe/TLriDTcAA/HTIQ3Kfao4wQ2U6Dca97kw/qzCLfzwAMD0v3hhwqeUrbPv6bAIgrxRL6aHKaPa9/J2NIzG3YUB/lgKC0uZZqVBJHfqmDutIsUnSJtEzlC/0Hsb1Gpj9+D53cfKlxnE7qF7DOVVdGpVVeCOJOOGtzLUm0YtvhUUqiPXxj4Nx9RCa2DjxB/GyYswijbulsa+xwnUQ+2Hs7+Yb04ZVlqvU2FxyZmK1Rbttv1ZHEv4ACKm9cjExEV7ypfEyPTeD4ST6VsM7my86WMveiFxCi/iMOf1E5VI1wH7G71aASkIPanfu0QwPkKQ9OjvH21B031N7KyGIUH7VmVKn0238QLxHDtb5O/6QTKoU2pssmk6TD8cO8VhytJgh8k81hnRr3ELRIUzvle6ypmlc5tM28Tt28ccH76Mbgb2C1aAfyxTTEBtULeSaD+fnQg==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <94F99F6A221CFA4CB7EA968A51B4F31B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 7 Sep 2020 09:54:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53338 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729677AbgIGNri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:47:38 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2DADF59F934B4E5D052B;
+        Mon,  7 Sep 2020 21:47:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 7 Sep 2020 21:46:54 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <chenzhou10@huawei.com>
+Subject: [PATCH v12 8/9] arm64: kdump: add memory for devices by DT property linux,usable-memory-range
+Date:   Mon, 7 Sep 2020 21:47:44 +0800
+Message-ID: <20200907134745.25732-9-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2823.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ede4199d-2f42-4555-8f59-08d85335cca9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 13:56:20.3412
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fa3Pa3sWSjArxVMQli7eqfZZMKGZzNColt6KRhMH1S9xdLn+JdqXcGZ30JUBy18jkksJeScvnKbKeUPTzvKzDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4164
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599486933; bh=fcdNVEB31jSW8JH9uBQsMpkXEOBy9vl0s3QLbyVTAAs=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:Reply-To:
-         Accept-Language:Content-Language:X-MS-Has-Attach:
-         X-MS-TNEF-Correlator:user-agent:authentication-results:
-         x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
-         x-microsoft-antispam:x-microsoft-antispam-message-info:
-         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
-         Content-Type:Content-ID:Content-Transfer-Encoding:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=heIZT8iBcMGIj/ifRH1l57uqW943Xhgw1awfp5i1zeTOtsfQ4UOSnldmSVdEhRtKW
-         bXsOOw1VmjEiHOpA5C5zojRt8cgDlPJCP0Mkq8a4B4/b8PMAhkj/JLhKkII/ZSbXsc
-         fEqo+yCOMk9PjOXrp0q+XG9r55SFiflMnCf90SNoznrDemjE1rxZ/GMUAxzAWU5ItF
-         0eM9qb9TaK3v0dDm+4EJPl1bCdtlC9TnhFKRE+u10qFX3AE4Of6qF8WqFF8/ofVnWT
-         M2YO+lwU+i4hFy3LwEpj9c6oIoBqvD6LsdcHgEYozRCySt4l2CYoJyzwJqA7sxnqJo
-         rBAk8KVDY7GdA==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTA5LTA2IGF0IDIwOjIxICswMjAwLCBIb3JhdGl1IFZ1bHR1ciB3cm90ZToN
-Cj4gVGhlIDA5LzA0LzIwMjAgMTU6NDQsIFN0ZXBoZW4gSGVtbWluZ2VyIHdyb3RlOg0KPiA+IE9u
-IEZyaSwgNCBTZXAgMjAyMCAwOToxNToyMCArMDAwMA0KPiA+IEhlbnJpayBCam9lcm5sdW5kIDxo
-ZW5yaWsuYmpvZXJubHVuZEBtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4gPiANCj4gPiA+IENvbm5l
-Y3Rpdml0eSBGYXVsdCBNYW5hZ2VtZW50IChDRk0pIGlzIGRlZmluZWQgaW4gODAyLjFRIHNlY3Rp
-b24gMTIuMTQuDQo+ID4gPiANCj4gPiA+IA0KW3NuaXBdDQo+ID4gPiBDdXJyZW50bHkgdGhpcyAn
-Y2ZtJyBhbmQgJ2NmbV9zZXJ2ZXInIHByb2dyYW1zIGFyZSBzdGFuZGFsb25lIHBsYWNlZCBpbiBh
-DQo+ID4gPiBjZm0gcmVwb3NpdG9yeSBodHRwczovL2dpdGh1Yi5jb20vbWljcm9jaGlwLXVuZy9j
-Zm0gYnV0IGl0IGlzIGNvbnNpZGVyZWQNCj4gPiA+IHRvIGludGVncmF0ZSB0aGlzIGludG8gJ2lw
-cm91dGUyJy4NCj4gPiA+IA0KPiA+ID4gUmV2aWV3ZWQtYnk6IEhvcmF0aXUgVnVsdHVyICA8aG9y
-YXRpdS52dWx0dXJAbWljcm9jaGlwLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEhlbnJpayBC
-am9lcm5sdW5kICA8aGVucmlrLmJqb2Vybmx1bmRAbWljcm9jaGlwLmNvbT4NCj4gDQo+IEhpIFN0
-ZXBoZW4sDQo+IA0KPiA+IENvdWxkIHRoaXMgYmUgZG9uZSBpbiB1c2Vyc3BhY2U/IEl0IGlzIGEg
-Y29udHJvbCBwbGFuZSBwcm90b2NvbC4NCj4gPiBDb3VsZCBpdCBiZSBkb25lIGJ5IHVzaW5nIGVC
-UEY/DQo+IA0KPiBJIG1pZ2h0IGJlIGFibGUgdG8gYW5zd2VyIHRoaXMuIFdlIGhhdmUgbm90IGNv
-bnNpZGVyZWQgdGhpcyBhcHByb2FjaCBvZg0KPiB1c2luZyBlQlBGLiBCZWNhdXNlIHdlIHdhbnQg
-YWN0dWFsbHkgdG8gcHVzaCB0aGlzIGluIEhXIGV4dGVuZGluZw0KPiBzd2l0Y2hkZXYgQVBJLiBJ
-IGtub3cgdGhhdCB0aGlzIHNlcmllcyBkb2Vzbid0IGNvdmVyIHRoZSBzd2l0Y2hkZXYgcGFydA0K
-PiBidXQgd2UgcG9zdGVkIGxpa2UgdGhpcyBiZWNhdXNlIHdlIHdhbnRlZCB0byBnZXQgc29tZSBm
-ZWVkYmFjayBmcm9tDQo+IGNvbW11bml0eS4gV2UgaGFkIGEgc2ltaWxhciBhcHByb2FjaCBmb3Ig
-TVJQLCB3aGVyZSB3ZSBleHRlbmRlZCB0aGUNCj4gYnJpZGdlIGFuZCBzd2l0Y2hkZXYgQVBJLCBz
-byB3ZSB0b3VnaHQgdGhhdCBpcyB0aGUgd2F5IHRvIGdvIGZvcndhcmQuDQo+IA0KPiBSZWdhcmRp
-bmcgZUJQRiwgSSBjYW4ndCBzYXkgdGhhdCBpdCB3b3VsZCB3b3JrIG9yIG5vdCBiZWNhdXNlIEkg
-bGFjaw0KPiBrbm93bGVkZ2UgaW4gdGhpcy4NCj4gDQo+ID4gQWRkaW5nIG1vcmUgY29kZSBpbiBi
-cmlkZ2UgaW1wYWN0cyBhIGxhcmdlIG51bWJlciBvZiB1c2VycyBvZiBMaW51eCBkaXN0cm9zLg0K
-PiA+IEl0IGNyZWF0ZXMgYmxvYXQgYW5kIHBvdGVudGlhbCBzZWN1cml0eSB2dWxuZXJhYmlsaXRp
-ZXMuDQoNCkhpLA0KSSBhbHNvIGhhZCB0aGUgc2FtZSBpbml0aWFsIHRob3VnaHQgLSB0aGlzIHJl
-YWxseSBkb2Vzbid0IHNlZW0gdG8gYWZmZWN0IHRoZQ0KYnJpZGdlIGluIGFueSB3YXksIGl0J3Mg
-b25seSBjb2xsZWN0aW5nIGFuZCB0cmFuc21pdHRpbmcgaW5mb3JtYXRpb24uIEkgZ2V0DQp0aGF0
-IHlvdSdkIGxpa2UgdG8gdXNlIHRoZSBicmlkZ2UgYXMgYSBwYXNzdGhyb3VnaCBkZXZpY2UgdG8g
-c3dpdGNoZGV2IHRvDQpwcm9ncmFtIHlvdXIgaHcsIGNvdWxkIHlvdSBzaGFyZSB3aGF0IHdvdWxk
-IGJlIG9mZmxvYWRlZCBtb3JlIHNwZWNpZmljYWxseSA/DQoNCkFsbCB5b3UgZG8gLSBzbm9vcGlu
-ZyBhbmQgYmxvY2tpbmcgdGhlc2UgcGFja2V0cyBjYW4gZWFzaWx5IGJlIGRvbmUgZnJvbSB1c2Vy
-LQ0Kc3BhY2Ugd2l0aCB0aGUgaGVscCBvZiBlYnRhYmxlcywgYnV0IHNpbmNlIHdlIG5lZWQgdG8g
-aGF2ZSBhIHNvZnR3YXJlDQppbXBsZW1lbnRhdGlvbi9mYWxsYmFjayBvZiBhbnl0aGluZyBiZWlu
-ZyBvZmZsb2FkZWQgdmlhIHN3aXRjaGRldiB3ZSBtaWdodCBuZWVkDQp0aGlzIGFmdGVyIGFsbCwg
-SSdkIGp1c3QgcHJlZmVyIHRvIHB1c2ggYXMgbXVjaCBhcyBwb3NzaWJsZSB0byB1c2VyLXNwYWNl
-Lg0KDQpJIHBsYW4gdG8gcmV2aWV3IHRoZSBpbmRpdmlkdWFsIHBhdGNoZXMgdG9tb3Jyb3cuDQoN
-ClRoYW5rcywNCiBOaWsNCg0K
+When reserving crashkernel in high memory, some low memory is reserved
+for crash dump kernel devices and never mapped by the first kernel.
+This memory range is advertised to crash dump kernel via DT property
+under /chosen,
+	linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+
+We reused the DT property linux,usable-memory-range and made the low
+memory region as the second range "BASE2 SIZE2", which keeps compatibility
+with existing user-space and older kdump kernels.
+
+Crash dump kernel reads this property at boot time and call memblock_add()
+to add the low memory region after memblock_cap_memory_range() has been
+called.
+
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/mm/init.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e56a0e5d5b77..2af8c38279d9 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -76,6 +76,15 @@ static void __init reserve_crashkernel(void)
+ }
+ #endif
+ 
++/*
++ * The main usage of linux,usable-memory-range is for crash dump kernel.
++ * Originally, the number of usable-memory regions is one. Now there may
++ * be two regions, low region and high region.
++ * To make compatibility with existing user-space and older kdump, the low
++ * region is always the last range of linux,usable-memory-range if exist.
++ */
++#define MAX_USABLE_RANGES	2
++
+ #ifdef CONFIG_CRASH_DUMP
+ static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+ 		const char *uname, int depth, void *data)
+@@ -191,9 +200,9 @@ early_param("mem", early_mem);
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
+ {
+-	struct memblock_region *usablemem = data;
+-	const __be32 *reg;
+-	int len;
++	struct memblock_region *usable_rgns = data;
++	const __be32 *reg, *endp;
++	int len, nr = 0;
+ 
+ 	if (depth != 1 || strcmp(uname, "chosen") != 0)
+ 		return 0;
+@@ -202,22 +211,36 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+ 		return 1;
+ 
+-	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++	endp = reg + (len / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		usable_rgns[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		usable_rgns[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++		if (++nr >= MAX_USABLE_RANGES)
++			break;
++	}
+ 
+ 	return 1;
+ }
+ 
+ static void __init fdt_enforce_memory_region(void)
+ {
+-	struct memblock_region reg = {
+-		.size = 0,
++	struct memblock_region usable_rgns[MAX_USABLE_RANGES] = {
++		{ .size = 0 },
++		{ .size = 0 }
+ 	};
+ 
+-	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &usable_rgns);
+ 
+-	if (reg.size)
+-		memblock_cap_memory_range(reg.base, reg.size);
++	/*
++	 * The first range of usable-memory regions is for crash dump
++	 * kernel with only one region or for high region with two regions,
++	 * the second range is dedicated for low region if exist.
++	 */
++	if (usable_rgns[0].size)
++		memblock_cap_memory_range(usable_rgns[0].base, usable_rgns[0].size);
++	if (usable_rgns[1].size)
++		memblock_add(usable_rgns[1].base, usable_rgns[1].size);
+ }
+ 
+ void __init arm64_memblock_init(void)
+-- 
+2.20.1
+
