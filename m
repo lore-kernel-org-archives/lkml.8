@@ -4,35 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3104FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1910DC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9DD021481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C06A8215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbgIGIYr (ORCPT
+        id S1728177AbgIGIZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:24:47 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10777 "EHLO huawei.com"
+        Mon, 7 Sep 2020 04:25:21 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10786 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727964AbgIGIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:24:39 -0400
+        id S1728018AbgIGIYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:24:42 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D26145277C38C64B3F19;
-        Mon,  7 Sep 2020 16:24:34 +0800 (CST)
+        by Forcepoint Email with ESMTP id 01FB5D3A27C20FD243C0;
+        Mon,  7 Sep 2020 16:24:35 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 16:24:25 +0800
+ 14.3.487.0; Mon, 7 Sep 2020 16:24:26 +0800
 From:   Yang Shen <shenyang39@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 07/10] crypto: hisilicon/zip - fix static check warning
-Date:   Mon, 7 Sep 2020 16:21:59 +0800
-Message-ID: <1599466922-10323-8-git-send-email-shenyang39@huawei.com>
+Subject: [PATCH v2 10/10] crypto: hisilicon/zip - fix some coding styles
+Date:   Mon, 7 Sep 2020 16:22:02 +0800
+Message-ID: <1599466922-10323-11-git-send-email-shenyang39@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
 References: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
@@ -45,62 +45,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix some code for PClint warning:
-    Warning - Suspicious Cast
+1.Unified alignment styles
+2.Remove unnecessary goto branch
+3.Remove address printf
 
 Signed-off-by: Yang Shen <shenyang39@huawei.com>
 Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
 ---
- drivers/crypto/hisilicon/zip/zip_crypto.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/crypto/hisilicon/zip/zip_crypto.c | 14 +++++++-------
+ drivers/crypto/hisilicon/zip/zip_main.c   | 16 ++++------------
+ 2 files changed, 11 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/crypto/hisilicon/zip/zip_crypto.c b/drivers/crypto/hisilicon/zip/zip_crypto.c
-index e58baeb..246a43e 100644
+index ba73bd8..38f92d4 100644
 --- a/drivers/crypto/hisilicon/zip/zip_crypto.c
 +++ b/drivers/crypto/hisilicon/zip/zip_crypto.c
-@@ -16,7 +16,7 @@
+@@ -38,8 +38,10 @@
+ #define HZIP_SGL_SGE_NR				10
  
- #define GZIP_HEAD_FLG_SHIFT			3
- #define GZIP_HEAD_FEXTRA_SHIFT			10
--#define GZIP_HEAD_FEXTRA_XLEN			2
-+#define GZIP_HEAD_FEXTRA_XLEN			2UL
- #define GZIP_HEAD_FHCRC_SIZE			2
+ static const u8 zlib_head[HZIP_ZLIB_HEAD_SIZE] = {0x78, 0x9c};
+-static const u8 gzip_head[HZIP_GZIP_HEAD_SIZE] = {0x1f, 0x8b, 0x08, 0x0, 0x0,
+-						  0x0, 0x0, 0x0, 0x0, 0x03};
++static const u8 gzip_head[HZIP_GZIP_HEAD_SIZE] = {
++	0x1f, 0x8b, 0x08, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x03
++};
++
+ enum hisi_zip_alg_type {
+ 	HZIP_ALG_TYPE_COMP = 0,
+ 	HZIP_ALG_TYPE_DECOMP = 1,
+@@ -359,7 +361,6 @@ static void hisi_zip_acomp_cb(struct hisi_qp *qp, void *data)
  
- #define HZIP_GZIP_HEAD_BUF			256
-@@ -51,13 +51,13 @@ enum {
+ 	atomic64_inc(&dfx->recv_cnt);
+ 	status = sqe->dw3 & HZIP_BD_STATUS_M;
+-
+ 	if (status != 0 && status != HZIP_NC_ERR) {
+ 		dev_err(dev, "%scompress fail in qp%u: %u, output: %u\n",
+ 			(qp->alg_type == 0) ? "" : "de", qp->qp_id, status,
+@@ -520,8 +521,7 @@ static int hisi_zip_do_work(struct hisi_zip_req *req,
+ 	struct hisi_acc_sgl_pool *pool = qp_ctx->sgl_pool;
+ 	struct hisi_zip_dfx *dfx = &qp_ctx->zip_dev->dfx;
+ 	struct hisi_zip_sqe zip_sqe;
+-	dma_addr_t input;
+-	dma_addr_t output;
++	dma_addr_t input, output;
+ 	int ret;
  
- struct hisi_zip_req {
- 	struct acomp_req *req;
--	int sskip;
--	int dskip;
-+	u32 sskip;
-+	u32 dskip;
- 	struct hisi_acc_hw_sgl *hw_src;
- 	struct hisi_acc_hw_sgl *hw_dst;
- 	dma_addr_t dma_src;
- 	dma_addr_t dma_dst;
--	int req_id;
-+	u16 req_id;
+ 	if (!a_req->src || !a_req->slen || !a_req->dst || !a_req->dlen)
+@@ -540,9 +540,9 @@ static int hisi_zip_do_work(struct hisi_zip_req *req,
+ 						    (req->req_id << 1) + 1,
+ 						    &output);
+ 	if (IS_ERR(req->hw_dst)) {
+-		dev_err(dev, "failed to map the dst buffer to hw slg (%ld)!\n",
+-			PTR_ERR(req->hw_dst));
+ 		ret = PTR_ERR(req->hw_dst);
++		dev_err(dev, "failed to map the dst buffer to hw slg (%d)!\n",
++			ret);
+ 		goto err_unmap_input;
+ 	}
+ 	req->dma_dst = output;
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index d077cc4..f5b9f47 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -258,6 +258,7 @@ static int hisi_zip_set_user_domain_and_cache(struct hisi_qm *qm)
+ 	/* qm cache */
+ 	writel(AXI_M_CFG, base + QM_AXI_M_CFG);
+ 	writel(AXI_M_CFG_ENABLE, base + QM_AXI_M_CFG_ENABLE);
++
+ 	/* disable FLR triggered by BME(bus master enable) */
+ 	writel(PEH_AXUSER_CFG, base + QM_PEH_AXUSER_CFG);
+ 	writel(PEH_AXUSER_CFG_ENABLE, base + QM_PEH_AXUSER_CFG_ENABLE);
+@@ -311,7 +312,7 @@ static void hisi_zip_hw_error_enable(struct hisi_qm *qm)
+ 	writel(0x1, qm->io_base + HZIP_CORE_INT_RAS_CE_ENB);
+ 	writel(0x0, qm->io_base + HZIP_CORE_INT_RAS_FE_ENB);
+ 	writel(HZIP_CORE_INT_RAS_NFE_ENABLE,
+-		qm->io_base + HZIP_CORE_INT_RAS_NFE_ENB);
++	       qm->io_base + HZIP_CORE_INT_RAS_NFE_ENB);
+ 
+ 	/* enable ZIP hw error interrupts */
+ 	writel(0, qm->io_base + HZIP_CORE_INT_MASK_REG);
+@@ -487,7 +488,6 @@ static const struct file_operations ctrl_debug_fops = {
+ 	.write = hisi_zip_ctrl_debug_write,
  };
  
- struct hisi_zip_req_q {
-@@ -119,7 +119,7 @@ static void hisi_zip_config_tag(struct hisi_zip_sqe *sqe, u32 tag)
- 
- static void hisi_zip_fill_sqe(struct hisi_zip_sqe *sqe, u8 req_type,
- 			      dma_addr_t s_addr, dma_addr_t d_addr, u32 slen,
--			      u32 dlen, int sskip, int dskip)
-+			      u32 dlen, u32 sskip, u32 dskip)
+-
+ static int zip_debugfs_atomic64_set(void *data, u64 val)
  {
- 	memset(sqe, 0, sizeof(struct hisi_zip_sqe));
+ 	if (val)
+@@ -632,7 +632,7 @@ static void hisi_zip_log_hw_error(struct hisi_qm *qm, u32 err_sts)
+ 	while (err->msg) {
+ 		if (err->int_msk & err_sts) {
+ 			dev_err(dev, "%s [error status=0x%x] found\n",
+-				 err->msg, err->int_msk);
++				err->msg, err->int_msk);
  
-@@ -573,7 +573,7 @@ static int hisi_zip_acompress(struct acomp_req *acomp_req)
- 		return head_size;
+ 			if (err->int_msk & HZIP_CORE_INT_STATUS_M_ECC) {
+ 				err_val = readl(qm->io_base +
+@@ -640,9 +640,6 @@ static void hisi_zip_log_hw_error(struct hisi_qm *qm, u32 err_sts)
+ 				dev_err(dev, "hisi-zip multi ecc sram num=0x%x\n",
+ 					((err_val >>
+ 					HZIP_SRAM_ECC_ERR_NUM_SHIFT) & 0xFF));
+-				dev_err(dev, "hisi-zip multi ecc sram addr=0x%x\n",
+-					(err_val >>
+-					HZIP_SRAM_ECC_ERR_ADDR_SHIFT));
+ 			}
+ 		}
+ 		err++;
+@@ -902,15 +899,10 @@ static int __init hisi_zip_init(void)
+ 
+ 	ret = pci_register_driver(&hisi_zip_pci_driver);
+ 	if (ret < 0) {
++		hisi_zip_unregister_debugfs();
+ 		pr_err("Failed to register pci driver.\n");
+-		goto err_pci;
  	}
  
--	req = hisi_zip_create_req(acomp_req, qp_ctx, (size_t)head_size, true);
-+	req = hisi_zip_create_req(acomp_req, qp_ctx, head_size, true);
- 	if (IS_ERR(req))
- 		return PTR_ERR(req);
+-	return 0;
+-
+-err_pci:
+-	hisi_zip_unregister_debugfs();
+-
+ 	return ret;
+ }
  
 -- 
 2.7.4
