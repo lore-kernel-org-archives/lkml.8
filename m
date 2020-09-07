@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E50C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A25CCC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197E421481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF6421481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qbK0Faqw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1slvBdVF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgIGIDH (ORCPT
+        id S1727871AbgIGIDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:03:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39776 "EHLO
+        Mon, 7 Sep 2020 04:03:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgIGICe (ORCPT
+        with ESMTP id S1727823AbgIGICs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:02:34 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEF0CC061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 01:02:33 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id x23so3502963wmi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 01:02:33 -0700 (PDT)
+        Mon, 7 Sep 2020 04:02:48 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9014EC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 01:02:47 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id e11so11773130wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 01:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:references:from:autocrypt:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=k+3iNNz2e3VIUSi9ibKxGbdLF6tlcFaTW710S6m0llY=;
-        b=qbK0Faqwnh+3VnUqgOulQ3FopzqfMJStave8qNsnmGcUju8EdeqYrEVrZOBeX5QbZC
-         MWVSYrPhAAYThaQl9CHruIfVm3QSn9pyZj8hP21Yf3PhRAf0XpypRbz+zC9Hg9qc5+Qq
-         nN+tc4tqpAiOoMJN4obq+QIo/SIXW+Qn/JWJCETrL8XdQ5++/7+qUWE3hDUhBVz9pKIs
-         PODuduHz83o9lnSgpBMmHMwJtTotlM3lmkTwxOa3hzPRGfmz0+HB65g+PDBOIUk3/vXI
-         f1ID3y8o+meBCEAFHWXY46tgz9iCNe8cHrSLKUH9iOa9AQmAiZeiLc5QJupyJdMuXHnQ
-         pN/w==
+        bh=FOIGm+MeZY0iZ8ZG3rTpB5cPrFLcLRaJXQUNLhkaUH8=;
+        b=1slvBdVF6gktdLRkcVj06lZvoe6Qrqs3W66mp8erMOhDkKIW2iON4VPXYv+vn+wTtW
+         9iuhcOGBdhYIBG39D6C2bgsiUHkc7D11VWGYSzYdKWTrOI59kEDFKYrcIFU1GKJuYx4M
+         7cyeguz8SkW0dUfj3KldhTyby5nuL5x0Pod27dUm2pQcTg25yLS9g/Z9AcNAKoLbfqML
+         hk8bCjU/TMJUVhI9o9B0wqsxjqshbAZwWN/E/zvsy9PFURtbH9UU+kTi0a/6xjGYlO5w
+         pUAGZSDkk0jq5AL56cd+WtiVrbnzMKcioH0vaaJLwaE2uvyCwaEjRUBePfV11J45MmjE
+         VDPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:references:from:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=k+3iNNz2e3VIUSi9ibKxGbdLF6tlcFaTW710S6m0llY=;
-        b=rpVN4beQpLlvJKQzKHelFj4XAWluUkE3wqVTFaaEvWSlFQlMdNHOF6DV70MFyASbcK
-         HKRt+5JtTjj82Lcz7uhIr/YufMeiUwZpkqkINJqyjlthgDTZY5FjIPuOPwcDGzjDW0El
-         /Pn1hPUfY5C/7HqfMVj6ZR5cqjMN/SzPQZKn97uPTNyOpuiCGt4t4zTZbXkBW6sC5JdQ
-         KDZScjCzdAB1d0qnZE+kvd+hhDTge0VZL56Dj5s7o7nuDF01QcFweluKHsCgQG7eF1Ue
-         +biXu8RayLyyWwx/aCZr5LjCl2oIyLDxcmq7lgQttC/cv86TYttS99dC3lTVHYU5MD0U
-         0S4A==
-X-Gm-Message-State: AOAM533GcW7EXzWb6FVRFkLg7TP2P48XtGaDQsnF/ohFgIb34DD/hhkK
-        z3+n+OChusqskYyrVBBIsJxIeVKmESWTUnZg
-X-Google-Smtp-Source: ABdhPJxuyg+sX2JhC+TERapyb7IL3F3vKLKONH3dc2Z3CFDaK0tcZiT+P0V12b1hK8PvP3FVac/gyA==
-X-Received: by 2002:a1c:9a48:: with SMTP id c69mr18783360wme.43.1599465751929;
-        Mon, 07 Sep 2020 01:02:31 -0700 (PDT)
+        bh=FOIGm+MeZY0iZ8ZG3rTpB5cPrFLcLRaJXQUNLhkaUH8=;
+        b=ESt8wkXTHp45rvj8FAvuD43/rmlDR38Xka7HSytNR3KToErW55e5OerQ0PWeIWXePJ
+         NKoBZsqmRoANevWc53pzyOd5nU/DzdQfpPNFcAysPnxoLnmsstzj0WmWrAB9FRoPrZOM
+         SicunNSZ6VbVZ0zxDQoilVDeBsE/0fXi9QQ9dNic/qtZQNV4Sz2CA8pRi2Jt3MOQdZMG
+         Lyb1LD3ZieZle7v4ecWJ5DuSpgLI8/k4LGvJloG6/DnVLNi0EQWFikXr0JGXaMYAYgk3
+         cc+nw4xKwd5vUrNKvoOioQIB68DXOEpxwBIlwVyjJnvpPxaY8y5BPdQ7hfjGzUpkZVIJ
+         4Q2w==
+X-Gm-Message-State: AOAM533rJsnvJXcZyVZk+1hh5WpXL8QbATitpZJ1yNs62msaSHejGrxC
+        OKaut0f6GOZQ70rw+Mfrbp/1zy6uLHLwIJDl
+X-Google-Smtp-Source: ABdhPJzA303LnVSpPs0rqqJVdZ6G5OpDglfAlF6qYYFUtQ+Oe38yabLNx+Gpkfq7wzvX9BSBqalEbA==
+X-Received: by 2002:a1c:b703:: with SMTP id h3mr19171992wmf.131.1599465765687;
+        Mon, 07 Sep 2020 01:02:45 -0700 (PDT)
 Received: from ?IPv6:2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac? ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id h76sm27154621wme.10.2020.09.07.01.02.30
+        by smtp.gmail.com with ESMTPSA id b1sm27730168wru.54.2020.09.07.01.02.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 01:02:31 -0700 (PDT)
-Subject: Re: [PATCH v2] drm/bridge/synopsys: dsi: allow LP commands in video
- mode
+        Mon, 07 Sep 2020 01:02:45 -0700 (PDT)
+Subject: Re: [PATCH] drm/bridge/synopsys: dsi: allow sending longer LP
+ commands
 To:     Yannick Fertre <yannick.fertre@st.com>,
         Philippe Cornu <philippe.cornu@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>,
@@ -73,7 +73,7 @@ To:     Yannick Fertre <yannick.fertre@st.com>,
         dri-devel@lists.freedesktop.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200708140836.32418-1-yannick.fertre@st.com>
+References: <20200701143131.841-1-yannick.fertre@st.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -125,12 +125,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
  BSwxi7g3Mu7u5kUByanqHyA=
 Organization: Baylibre
-Message-ID: <00e65daf-d5c1-86da-f4ae-7b53fd484790@baylibre.com>
-Date:   Mon, 7 Sep 2020 10:02:29 +0200
+Message-ID: <10134f03-3bb9-072b-a70f-edc972f7bf57@baylibre.com>
+Date:   Mon, 7 Sep 2020 10:02:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200708140836.32418-1-yannick.fertre@st.com>
+In-Reply-To: <20200701143131.841-1-yannick.fertre@st.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -139,46 +139,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/07/2020 16:08, Yannick Fertre wrote:
+On 01/07/2020 16:31, Yannick Fertre wrote:
 > From: Antonio Borneo <antonio.borneo@st.com>
 > 
-> Current code only sends LP commands in command mode.
+> Current code does not properly computes the max length of LP
+> commands that can be send during H or V sync, and rely on static
+> values.
+> Limiting the max LP length to 4 byte during the V-sync is overly
+> conservative.
 > 
-> Allows sending LP commands also in video mode by setting the
-> proper flag in DSI_VID_MODE_CFG.
+> Relax the limit and allows longer LP commands (16 bytes) to be
+> sent during V-sync.
 > 
 > Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
 > ---
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
 > 
 > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> index 1a24ea648ef8..e9a0f42ff99f 100644
+> index d580b2aa4ce9..1a24ea648ef8 100644
 > --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
 > +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> @@ -89,6 +89,7 @@
->  #define VID_MODE_TYPE_NON_BURST_SYNC_EVENTS	0x1
->  #define VID_MODE_TYPE_BURST			0x2
->  #define VID_MODE_TYPE_MASK			0x3
-> +#define ENABLE_LOW_POWER_CMD		BIT(15)
->  #define VID_MODE_VPG_ENABLE		BIT(16)
->  #define VID_MODE_VPG_HORIZONTAL		BIT(24)
+> @@ -360,6 +360,15 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
+>  	bool lpm = msg->flags & MIPI_DSI_MSG_USE_LPM;
+>  	u32 val = 0;
 >  
-> @@ -376,6 +377,13 @@ static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
->  
->  	dsi_write(dsi, DSI_LPCLK_CTRL, lpm ? 0 : PHY_TXREQUESTCLKHS);
->  	dsi_write(dsi, DSI_CMD_MODE_CFG, val);
+> +	/*
+> +	 * TODO dw drv improvements
+> +	 * largest packet sizes during hfp or during vsa/vpb/vfp
+> +	 * should be computed according to byte lane, lane number and only
+> +	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
+> +	 */
+> +	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(16)
+> +		  | INVACT_LPCMD_TIME(4));
 > +
-> +	val = dsi_read(dsi, DSI_VID_MODE_CFG);
-> +	if (lpm)
-> +		val |= ENABLE_LOW_POWER_CMD;
-> +	else
-> +		val &= ~ENABLE_LOW_POWER_CMD;
-> +	dsi_write(dsi, DSI_VID_MODE_CFG, val);
+>  	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
+>  		val |= ACK_RQST_EN;
+>  	if (lpm)
+> @@ -611,14 +620,6 @@ static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
+>  	dsi_write(dsi, DSI_DPI_VCID, DPI_VCID(dsi->channel));
+>  	dsi_write(dsi, DSI_DPI_COLOR_CODING, color);
+>  	dsi_write(dsi, DSI_DPI_CFG_POL, val);
+> -	/*
+> -	 * TODO dw drv improvements
+> -	 * largest packet sizes during hfp or during vsa/vpb/vfp
+> -	 * should be computed according to byte lane, lane number and only
+> -	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
+> -	 */
+> -	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(4)
+> -		  | INVACT_LPCMD_TIME(4));
 >  }
 >  
->  static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
+>  static void dw_mipi_dsi_packet_handler_config(struct dw_mipi_dsi *dsi)
 > 
+
 
 Tested on Amlogic AXG (v1.21a)
 
