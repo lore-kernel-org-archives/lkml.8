@@ -2,35 +2,34 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A84CC2D0E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 804CAC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED01721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57CC0215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726341AbgIGEft (ORCPT
+        id S1726389AbgIGEfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 00:35:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:42261 "EHLO
+        Mon, 7 Sep 2020 00:35:52 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:50567 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbgIGEfo (ORCPT
+        with ESMTP id S1725798AbgIGEfo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 00:35:44 -0400
 Received: from methusalix.internal.home.lespocky.de ([109.250.103.148]) by
  mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mo7eX-1kv1HS40OB-00peP4; Mon, 07 Sep 2020 06:35:26 +0200
+ id 1Mz9EL-1kSX8A19FL-00wDcn; Mon, 07 Sep 2020 06:35:25 +0200
 Received: from lemmy.internal.home.lespocky.de ([192.168.243.176] helo=lemmy.home.lespocky.de)
         by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
         (Exim 4.94)
         (envelope-from <alex@home.lespocky.de>)
-        id 1kF8sF-0003Dt-8E; Mon, 07 Sep 2020 06:35:24 +0200
-Received: (nullmailer pid 3034 invoked by uid 2001);
-        Mon, 07 Sep 2020 04:35:22 -0000
+        id 1kF8s9-0003Dm-FZ; Mon, 07 Sep 2020 06:35:22 +0200
+Received: (nullmailer pid 3024 invoked by uid 2001);
+        Mon, 07 Sep 2020 04:35:17 -0000
 From:   Alexander Dahl <post@lespocky.de>
 To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
@@ -38,203 +37,71 @@ Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         Alexander Dahl <ada@thorsis.com>,
         Alexander Dahl <post@lespocky.de>
-Subject: [PATCH v3 2/2] dt-bindings: leds: Convert pwm to yaml
-Date:   Mon,  7 Sep 2020 06:34:59 +0200
-Message-Id: <20200907043459.2961-3-post@lespocky.de>
+Subject: [PATCH v3 0/2] leds: pwm: Make automatic labels work
+Date:   Mon,  7 Sep 2020 06:34:57 +0200
+Message-Id: <20200907043459.2961-1-post@lespocky.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907043459.2961-1-post@lespocky.de>
-References: <20200907043459.2961-1-post@lespocky.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scan-Signature: aeccb8aefab59fbde7e356a50a7ae5d4
-X-Provags-ID: V03:K1:reAS4raqoeBOUkE3pXwNeoECAwdzbFetknoL5wqhuRmCwuihMnV
- 1ZA2QqR121kH2MBavLTZh5DY6h40G7ewnCDnEGkGd4oECGRQupquxnGhOYjoCqgL7HKOwdd
- +dgI10b/DDLjgf8nk4RB7rXRI0bC5SBIOgdsLWbvoYgNnt/rww5lIKPPVM+XVY+v9rp9LLJ
- Iiz0iHLNZ/gdMEZWo8XHA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rheK7m+48fI=:W/b0BQN9Xwwjub3wYBxRgM
- 6w+IjiA/Vu6AnAWXqQLramWgJFksk2/4fwB+Hk3t2jHH5cPk0RLfLvWfX2CtamFssVwLyj+VP
- ARl2gbGvJF49Twxwj2KXdq0JDn4jbWDClvEolYWlAP9eheBl13noNq9xOzKQOfJpIzimPyNRV
- k89WwMMNjmOLio+yNZWKS7WOdN2g/paEwRnBBQdy70kxb4QhLsG7GR01Cjlnr29vYYWUfJCl+
- womAydpDAmOALUsUjewb5jNGTwrPuBW77Z5OrPNBoH565R5Dyy0eeZylDVsq0vQmT7ZE8PqpC
- GpzCRxOqTQCTQfkTFgAlSI7lxUv3jsice0fGPE1eJynlS7jMnp9IL5+PkusqoYyhSI2aOuEil
- 1xOIZX4FG8RWtHmuTxbI35OM59eBWu4R3u+o++ZkSmo1M3Y4NKthK2jGk3qBnfOPV9RS3NBy7
- x98OJuwGIyFqWjB0AJIw2qet4YOAfmmkauvYSGVyQ/g9728pQBMNWT5PfxDOiwlusajt7WBVe
- lrkkTBWHn5dsrlxazLTMyW/js1cE1Cyt22N0eX4m5Aoes11aVw/lsfik6t13CLJ10o/jKKDRt
- ObEjjlNGNdiXjMUxlulT8i09mANMajyk6pysEDeir2ubylsP3VOp7N0X4WxUG7uVCYEwsllJx
- XDn8fqwWlygYtJ6nDIKCXMw2jvhlUrvDdlq6T5P3ATUjMZLAlbclPrnMAKfCuiQE/wOFwSNel
- AREp3IncXThZN9zUp7y5PChUd0P91LG5Wx8hixOtYCBjZvXoNB+yRUaFG8MrZu9NoB1lIQRdr
- laYHtDMW48ARNXL1QR9wAI4yzMfYYUZzizB0l+a4REUr82DHQr1AaHtGd3AT6DCBFYptUR1
+X-Scan-Signature: 2c58665afdcdd1fd53023359626f008f
+X-Provags-ID: V03:K1:ScF1MQBk/AxpO1TWNpfRufpoudosd15+nmSnLm6gHtoc7zrSKvF
+ jW14Xh+XfCi7fdwBHt/UW3VFVWXOQCDH/+QJeiddO+MiKU3XDiXFWww16P1YYA5Jvqg97Fl
+ bkpf72GS1tLcMXmT/5u8+xCSs6I/aR+ShysJmJEmE5bse1LbV9hM0LA/YQAOXO5bG3wg3z2
+ qpAaQfgoBgnyjKD1YzZIA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:VpvWmfjSw+o=:nkm2EC8sQhLHJ5EPlDcbNo
+ 4sim7YjjgHexPfF4upka/bWF/Nv8AwBDLZFZNc7G1nYy9y47nprnfmJLNrRj9RA2HfH/c7UYp
+ GNv5wKhv1rVrsQ+2sXqgw7xdVdgxbda7Df4xRyYvC7wx5TxhK9Gco1BuieaolmDebaQrPnGLe
+ AfQ5TdIV9VbdMX5Nbla9Z2Qn/xO/5fXctw4gKtwsvsDgU+Ao3xckvUS3URaEC8nMBAPZ2RHcG
+ haNCgZx1UxcZAK0ekpyp0Yxek1yh7ZQs1j+6eu9nRaI/plWyvlpcNEvFBUuJh9TmC+pI4XcgB
+ MuDRhtJLt2K7drs6vWescGjk3NxTtyVA9P+Gp8wrYINs1MFikfjfunCZkcQGgzmUyNr9lkgWo
+ aolvlp877zjcj4AtoZoQYx47tF3663mRtRN1A9dbDwdGCNc/yS5NA5WyZfTVM89qp7DPtFV7A
+ nO689lyjfa/wsXK7x8FDAdNL9hvS0uZI5x0r7hxTnp/33KaOj2VNifvS9zhQDezApyF2CUbas
+ 0zi2mvZ9/AeHjRn144CF9ENktHNvd35UJzZh9ugTH3Ytp1IyuaTAKZTImMidL8QmYGNZUAmsb
+ jiVY/EOFPc+zxl6sIDL3F8IMfR1Op7VIowB2RdsL2ygjlfeFAGom/gE9/VO/Rw0I/bpI6MTbu
+ z9kIJa9/O5qkt+ASWu+pfZ013XZoqoWLSjUTCF/hXS3D28bU5i8spvKsFZ+Qy0uJFtOqrsAEz
+ g3L1uA5kKY4QDjDKY8ZZ7V/g/uaMSnmDRU/oqcmHRMErff1lkZucja5iCb6rx2lZiKcutb9HW
+ CoNdDyFXNaJbBWCh28vhvaLi1it0wYGBkD8ljxY5tXpuOwMynzXPR6ecSURFtn4coYi4BPy
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The example was adapted slightly to make use of the 'function' and
-'color' properties.
+Hei hei,
 
-Suggested-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
+for leds-gpio you can use the properties 'function' and 'color' in the
+devicetree node and omit 'label', the label is constructed
+automatically.  This is a common feature supposed to be working for all
+LED drivers.  However it did not yet work for the 'leds-pwm' driver.
+This series fixes the driver and takes the opportunity to update the
+dt-bindings accordingly.
 
-Notes:
-    v2 -> v3:
-      * change license identifier to recommended one
-      * added Acked-by
+v3:
+- rebased on v5.9-rc4
+- changed license of .yaml file to recommended one
+- added Acked-by
+
+v2:
+- rebased on v5.9-rc3
+- added the dt-bindings update patch
+
+v1:
+- based on v5.9-rc2
+- backport on v5.4.59 tested and working
+
+Greets
+Alex
+
+Alexander Dahl (2):
+  leds: pwm: Allow automatic labels for DT based devices
+  dt-bindings: leds: Convert pwm to yaml
 
  .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
  .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
- 2 files changed, 85 insertions(+), 50 deletions(-)
+ drivers/leds/leds-pwm.c                       |  9 +-
+ 3 files changed, 93 insertions(+), 51 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-deleted file mode 100644
-index 6c6583c35f2f..000000000000
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--LED connected to PWM
--
--Required properties:
--- compatible : should be "pwm-leds".
--
--Each LED is represented as a sub-node of the pwm-leds device.  Each
--node's name represents the name of the corresponding LED.
--
--LED sub-node properties:
--- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
--  specify the period time to be used: <&phandle id period_ns>;
--- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
--  For the pwms and pwm-names property please refer to:
--  Documentation/devicetree/bindings/pwm/pwm.txt
--- max-brightness : Maximum brightness possible for the LED
--- active-low : (optional) For PWMs where the LED is wired to supply
--  rather than ground.
--- label :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- linux,default-trigger :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--
--Example:
--
--twl_pwm: pwm {
--	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
--	compatible = "ti,twl6030-pwm";
--	#pwm-cells = <2>;
--};
--
--twl_pwmled: pwmled {
--	/* provides one PWM (id 0 for Charing indicator LED) */
--	compatible = "ti,twl6030-pwmled";
--	#pwm-cells = <2>;
--};
--
--pwmleds {
--	compatible = "pwm-leds";
--	kpad {
--		label = "omap4::keypad";
--		pwms = <&twl_pwm 0 7812500>;
--		max-brightness = <127>;
--	};
--
--	charging {
--		label = "omap4:green:chrg";
--		pwms = <&twl_pwmled 0 7812500>;
--		max-brightness = <255>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.yaml b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
-new file mode 100644
-index 000000000000..c74867492424
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LEDs connected to PWM
-+
-+maintainers:
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  Each LED is represented as a sub-node of the pwm-leds device.  Each
-+  node's name represents the name of the corresponding LED.
-+
-+properties:
-+  compatible:
-+    const: pwm-leds
-+
-+patternProperties:
-+  "^pwm-led-([0-9a-f])$":
-+    type: object
-+
-+    $ref: common.yaml#
-+
-+    properties:
-+      pwms:
-+        description:
-+          "PWM property to point to the PWM device (phandle)/port (id)
-+          and to specify the period time to be used:
-+          <&phandle id period_ns>;"
-+
-+      pwm-names:
-+        description:
-+          "Name to be used by the PWM subsystem for the PWM device For
-+          the pwms and pwm-names property please refer to:
-+          Documentation/devicetree/bindings/pwm/pwm.txt"
-+
-+      max-brightness:
-+        description:
-+          Maximum brightness possible for the LED
-+
-+      active-low:
-+        description:
-+          For PWMs where the LED is wired to supply rather than ground.
-+
-+    required:
-+      - pwms
-+      - max-brightness
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/leds/common.h>
-+
-+    twl_pwm: pwm {
-+        /* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-+        compatible = "ti,twl6030-pwm";
-+        #pwm-cells = <2>;
-+    };
-+
-+    twl_pwmled: pwmled {
-+        /* provides one PWM (id 0 for Charing indicator LED) */
-+        compatible = "ti,twl6030-pwmled";
-+        #pwm-cells = <2>;
-+    };
-+
-+    pwm_leds {
-+        compatible = "pwm-leds";
-+
-+        pwm-led-1 {
-+            label = "omap4::keypad";
-+            pwms = <&twl_pwm 0 7812500>;
-+            max-brightness = <127>;
-+        };
-+
-+        pwm-led-2 {
-+            color = <LED_COLOR_ID_GREEN>;
-+            function = LED_FUNCTION_CHARGING;
-+            pwms = <&twl_pwmled 0 7812500>;
-+            max-brightness = <255>;
-+        };
-+    };
-+
-+...
 -- 
 2.20.1
 
