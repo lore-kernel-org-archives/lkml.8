@@ -2,92 +2,313 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAAFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83BEC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28C0321655
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55443204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:40:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GNM4cuji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgIGE7M (ORCPT
+        id S1726770AbgIGFko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 00:59:12 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:50656 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726685AbgIGE7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 00:59:11 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kF9F3-0001ZP-Fy; Mon, 07 Sep 2020 14:58:58 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Sep 2020 14:58:57 +1000
-Date:   Mon, 7 Sep 2020 14:58:57 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Keerthy <j-keerthy@ti.com>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: sa2ul.c:undefined reference to `crypto_authenc_extractkeys'
-Message-ID: <20200907045857.GA11307@gondor.apana.org.au>
-References: <202009071150.Sk8aGITA%lkp@intel.com>
+        Mon, 7 Sep 2020 01:40:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:44810 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726708AbgIGFkn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 01:40:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599457240;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jVs6OBNIgqQK9iP2OirhXkE9npkIsWRhVViuh8tTbuI=;
+        b=GNM4cujihv2z8hsEt5UsHynXd7JvxD+d6QDn4/kOdx0uXjRuaNw/lJY8Uig49aP0uka4Mt
+        PoZMu24mTqwRgpTLJgFD7LKhMklnAgc2D+VG0+qceKLQpF6vRgTSc4LN+AlGin/2hpAsgG
+        npC/meF7hV/DmLjOVihMEVrFN9+Gs0k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-50-ZjBFcCuwM2Oa0xEKcpUqdw-1; Mon, 07 Sep 2020 01:40:35 -0400
+X-MC-Unique: ZjBFcCuwM2Oa0xEKcpUqdw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 385EF800050;
+        Mon,  7 Sep 2020 05:40:33 +0000 (UTC)
+Received: from [10.72.13.151] (ovpn-13-151.pek2.redhat.com [10.72.13.151])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8EAB15D9D2;
+        Mon,  7 Sep 2020 05:40:22 +0000 (UTC)
+Subject: Re: [PATCH] i2c: virtio: add a virtio i2c frontend driver
+To:     Jie Deng <jie.deng@intel.com>, linux-i2c@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     mst@redhat.com, wsa+renesas@sang-engineering.com, wsa@kernel.org,
+        andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
+        jdelvare@suse.de, Sergey.Semin@baikalelectronics.ru,
+        krzk@kernel.org, rppt@kernel.org, loic.poulain@linaro.org,
+        tali.perry1@gmail.com, bjorn.andersson@linaro.org,
+        shuo.a.liu@intel.com, conghui.chen@intel.com, yu1.wang@intel.com
+References: <0efc2605c8c06b4b1bf68cbad5536c4a900dc019.1599110284.git.jie.deng@intel.com>
+ <18828d17-c3ac-31bd-2dcf-ecdbd4ad844e@redhat.com>
+ <e63a96bf-65d2-ed03-dadc-42d1d8808c9d@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3dc0d61c-9345-2b61-828c-89ca96555e5e@redhat.com>
+Date:   Mon, 7 Sep 2020 13:40:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202009071150.Sk8aGITA%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <e63a96bf-65d2-ed03-dadc-42d1d8808c9d@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:12:53AM +0800, kernel test robot wrote:
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   f4d51dffc6c01a9e94650d95ce0104964f8ae822
-> commit: d2c8ac187fc922e73930a1b2f6a211e27f595d01 crypto: sa2ul - Add AEAD algorithm support
-> date:   7 weeks ago
-> config: x86_64-randconfig-s022-20200907 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-15) 9.3.0
-> reproduce:
->         # apt-get install sparse
->         # sparse version: v0.6.2-191-g10164920-dirty
->         git checkout d2c8ac187fc922e73930a1b2f6a211e27f595d01
->         # save the attached .config to linux build tree
->         make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' ARCH=x86_64 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    ld: drivers/crypto/sa2ul.o: in function `sa_aead_setkey.constprop.0':
-> >> sa2ul.c:(.text+0x3466): undefined reference to `crypto_authenc_extractkeys'
 
-Thanks for the report.  This should fix it:
+On 2020/9/4 下午9:21, Jie Deng wrote:
+>
+> On 2020/9/4 12:06, Jason Wang wrote:
+>>
+>>> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+>>> index 293e7a0..70c8e30 100644
+>>> --- a/drivers/i2c/busses/Kconfig
+>>> +++ b/drivers/i2c/busses/Kconfig
+>>> @@ -21,6 +21,17 @@ config I2C_ALI1535
+>>>         This driver can also be built as a module.  If so, the module
+>>>         will be called i2c-ali1535.
+>>>   +config I2C_VIRTIO
+>>> +    tristate "Virtio I2C Adapter"
+>>> +    depends on VIRTIO
+>>
+>>
+>> I guess it should depend on some I2C module here.
+>>
+> The dependency of I2C is included in the Kconfig in its parent directory.
+> So there is nothing special to add here.
 
----8<---
-The sa2ul driver uses crypto_authenc_extractkeys and therefore
-must select CRYPTO_AUTHENC.
 
-Fixes: 7694b6ca649f ("crypto: sa2ul - Add crypto driver")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Ok.
 
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index aa3a4ed07a66..c2950127def6 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -873,6 +873,7 @@ config CRYPTO_DEV_SA2UL
- 	select CRYPTO_AES
- 	select CRYPTO_AES_ARM64
- 	select CRYPTO_ALGAPI
-+	select CRYPTO_AUTHENC
- 	select HW_RANDOM
- 	select SG_SPLIT
- 	help
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+
+>
+>
+>>
+>>>
+>>> +struct virtio_i2c_msg {
+>>> +    struct virtio_i2c_hdr hdr;
+>>> +    char *buf;
+>>> +    u8 status;
+>>
+>>
+>> Any reason for separating status out of virtio_i2c_hdr?
+>>
+> The status is not from i2c_msg. 
+
+
+You meant ic2_hdr? You embed status in virtio_i2c_msg anyway.
+
+
+> So I put it out of virtio_i2c_hdr.
+
+
+Something like status or response is pretty common in virtio request 
+(e.g net or scsi), if no special reason, it's better to keep it in the hdr.
+
+
+>
+>>
+>>> +};
+>>> +
+>>> +/**
+>>> + * struct virtio_i2c - virtio I2C data
+>>> + * @vdev: virtio device for this controller
+>>> + * @completion: completion of virtio I2C message
+>>> + * @adap: I2C adapter for this controller
+>>> + * @i2c_lock: lock for virtqueue processing
+>>> + * @vq: the virtio virtqueue for communication
+>>> + */
+>>> +struct virtio_i2c {
+>>> +    struct virtio_device *vdev;
+>>> +    struct completion completion;
+>>> +    struct i2c_adapter adap;
+>>> +    struct mutex i2c_lock;
+>>> +    struct virtqueue *vq;
+>>> +};
+>>> +
+>>> +static void virtio_i2c_msg_done(struct virtqueue *vq)
+>>> +{
+>>> +    struct virtio_i2c *vi = vq->vdev->priv;
+>>> +
+>>> +    complete(&vi->completion);
+>>> +}
+>>> +
+>>> +static int virtio_i2c_add_msg(struct virtqueue *vq,
+>>> +                  struct virtio_i2c_msg *vmsg,
+>>> +                  struct i2c_msg *msg)
+>>> +{
+>>> +    struct scatterlist *sgs[3], hdr, bout, bin, status;
+>>> +    int outcnt = 0, incnt = 0;
+>>> +
+>>> +    if (!msg->len)
+>>> +        return -EINVAL;
+>>> +
+>>> +    vmsg->hdr.addr = msg->addr;
+>>> +    vmsg->hdr.flags = msg->flags;
+>>> +    vmsg->hdr.len = msg->len;
+>>
+>>
+>> Missing endian conversion?
+>>
+> You are right. Need conversion here.
+>>
+>>> +
+>>> +    vmsg->buf = kzalloc(vmsg->hdr.len, GFP_KERNEL);
+>>> +    if (!vmsg->buf)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    sg_init_one(&hdr, &vmsg->hdr, sizeof(struct virtio_i2c_hdr));
+>>> +    sgs[outcnt++] = &hdr;
+>>> +    if (vmsg->hdr.flags & I2C_M_RD) {
+>>> +        sg_init_one(&bin, vmsg->buf, msg->len);
+>>> +        sgs[outcnt + incnt++] = &bin;
+>>> +    } else {
+>>> +        memcpy(vmsg->buf, msg->buf, msg->len);
+>>> +        sg_init_one(&bout, vmsg->buf, msg->len);
+>>> +        sgs[outcnt++] = &bout;
+>>> +    }
+>>> +    sg_init_one(&status, &vmsg->status, sizeof(vmsg->status));
+>>> +    sgs[outcnt + incnt++] = &status;
+>>> +
+>>> +    return virtqueue_add_sgs(vq, sgs, outcnt, incnt, vmsg, 
+>>> GFP_KERNEL);
+>>> +}
+>>> +
+>>> +static int virtio_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg 
+>>> *msgs, int num)
+>>> +{
+>>> +    struct virtio_i2c *vi = i2c_get_adapdata(adap);
+>>> +    struct virtio_i2c_msg *vmsg_o, *vmsg_i;
+>>> +    struct virtqueue *vq = vi->vq;
+>>> +    unsigned long time_left;
+>>> +    int len, i, ret = 0;
+>>> +
+>>> +    vmsg_o = kzalloc(sizeof(*vmsg_o), GFP_KERNEL);
+>>> +    if (!vmsg_o)
+>>> +        return -ENOMEM;
+>>
+>>
+>> It looks to me we can avoid the allocation by embedding 
+>> virtio_i2c_msg into struct virtio_i2c;
+>>
+> Yeah... That's better. Thanks.
+>
+>
+>>
+>>> +
+>>> +    mutex_lock(&vi->i2c_lock);
+>>> +    vmsg_o->buf = NULL;
+>>> +    for (i = 0; i < num; i++) {
+>>> +        ret = virtio_i2c_add_msg(vq, vmsg_o, &msgs[i]);
+>>> +        if (ret) {
+>>> +            dev_err(&adap->dev, "failed to add msg[%d] to 
+>>> virtqueue.\n", i);
+>>> +            goto err_unlock_free;
+>>> +        }
+>>> +
+>>> +        virtqueue_kick(vq);
+>>> +
+>>> +        time_left = wait_for_completion_timeout(&vi->completion, 
+>>> adap->timeout);
+>>> +        if (!time_left) {
+>>> +            dev_err(&adap->dev, "msg[%d]: addr=0x%x timeout.\n", i, 
+>>> msgs[i].addr);
+>>> +            ret = i;
+>>> +            goto err_unlock_free;
+>>> +        }
+>>> +
+>>> +        vmsg_i = (struct virtio_i2c_msg *)virtqueue_get_buf(vq, &len);
+>>> +        if (vmsg_i) {
+>>> +            /* vmsg_i should point to the same address with vmsg_o */
+>>> +            if (vmsg_i != vmsg_o) {
+>>> +                dev_err(&adap->dev, "msg[%d]: addr=0x%x virtqueue 
+>>> error.\n",
+>>> +                    i, vmsg_i->hdr.addr);
+>>> +                ret = i;
+>>> +                goto err_unlock_free;
+>>> +            }
+>>
+>>
+>> Does this imply in order completion of i2c device?  (E.g what happens 
+>> if multiple virtio i2c requests are submitted)
+>>
+>> Btw, this always use a single descriptor once a time which makes me 
+>> suspect if a virtqueue(virtio) is really needed. It looks to me we 
+>> can utilize the virtqueue by submit the request in a batch.
+>>
+> I'm afraid not all physical devices support batch. 
+
+
+Yes but I think I meant for the virtio device not the physical one. It's 
+impossible to forbid batching if you have a queue anyway ...
+
+
+> I'd like to keep the current design and consider
+> your suggestion as a possible optimization in the future.
+>
+> Thanks.
+>
+>
+>>>
+>>> +}
+>>> +
+>>> +static void virtio_i2c_del_vqs(struct virtio_device *vdev)
+>>> +{
+>>> +    vdev->config->reset(vdev);
+>>
+>>
+>> Why need reset here?
+>>
+>> Thanks
+>>
+> I'm following what other virtio drivers do.
+> They reset the devices before they clean up the queues.
+
+
+You're ring.
+
+Thanks
+
+
+>
+>
+>>
+>>> +    vdev->config->del_vqs(vdev);
+>>> +}
+>>> +
+>>> +static int virtio_i2c_setup_vqs(struct virtio_i2c *vi)
+>>> +{
+>>> +    struct virtio_device *vdev = vi->vdev;
+>>> +
+>>> +    vi->vq = virtio_find_single_vq(vdev, virtio_i2c_msg_done, 
+>>> "i2c-msg");
+>>
+>>
+>> We've in the scope of ic2, so "msg" should be sufficient.
+>>
+>>
+> OK. Will change this name. Thanks.
+>
+>
+>>> +    return PTR_ERR_OR_ZERO(vi->vq);
+>
+
