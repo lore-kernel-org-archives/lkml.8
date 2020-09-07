@@ -2,204 +2,117 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBF9C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EF1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84D3206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37EE4206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:16:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Euxtu+tr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeQdiFgF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgIGHOj (ORCPT
+        id S1726994AbgIGHQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:14:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60584 "EHLO
+        Mon, 7 Sep 2020 03:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbgIGHOM (ORCPT
+        with ESMTP id S1726733AbgIGHQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:14:12 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775CDC061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:14:11 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id g26so33385ooa.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:14:11 -0700 (PDT)
+        Mon, 7 Sep 2020 03:16:22 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6936C061573;
+        Mon,  7 Sep 2020 00:16:21 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id g4so14604214wrs.5;
+        Mon, 07 Sep 2020 00:16:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KVfAGFVhhH+3gKxWPx4EEt2i/99FDkLx011kDtsMF+I=;
-        b=Euxtu+trgjabIp7kfpqLzFQS+dE83z6NFR5B38p25hCsIskYQhJEXI8aDOFmjb9/rb
-         ajdQe4bmbBxWioDNhCAVb/QZqh3F00karTYzM2FazYTVvrVMLOroBXd2TBPPFA8thdy7
-         kAmoBHvDcK9wIivmZv2bC4v0rV5TvwkjuxeM4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FDYoXw6R73nLiL24Ngv3nbnKg8vUmYVwbLYzsiw9DXw=;
+        b=CeQdiFgFpsSlgQHs1+T/qdd3Z7lErXzyccZxs80VwvbS1U7yT3eGtFLuknqCpY8q4a
+         XFxR8jFxaNYhRxq/tc3S9atGDtLAVeX6imfi6YHBlqbeStxIm2ZUK+GK8Gwulej5WY8M
+         0xEbE9NxtYcDlqvNd9GSSZEV+Mx8fQWfVlojVa8ia9yI+toTkjpdwX0OxSOt6qRqZUxk
+         uH19ZQE9dyb/aV7l9CZHxSwGiPu9+waMSkHyQO9+s2YqnG32Jony384nAGXed8pj5AUe
+         ikh8UC0M1u00NrPbgvILnmBh9sl7L/XIhG1erbImGgAv8WjvGzhhgOLLUuuMwFQzJIr1
+         F7kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KVfAGFVhhH+3gKxWPx4EEt2i/99FDkLx011kDtsMF+I=;
-        b=FVcNN5DZm9Q+c1C8R1Dm12dNczblYS95LlfujqRbOH8I70unhYpD30xwemoxp8I/qh
-         q+W0Ig/HpkgQaHe0ugHJ/3tBOMy/l0YQibf4IFAVtdNR4XvdYmg7gnlUK8ySWP7vijFB
-         kjz/giaK0dT30u3cfPuqKo9zqjx2rPCZmpz9anQg5SlnK4QxZM/RZsmicqrIGFlcdqF8
-         cc8iX3wULpWeSnG6TbYX5qzqg5VvsHcNk+5JKxEMM57Ro5tEi3DLT7PK8fUkkiLdvI6z
-         KoHrLQZikiRlwrj92QsggrIfszPC5Lpet5QiaKJUJnVovj2Oeu3M8sLMPFdx9Qti2+U/
-         5b+g==
-X-Gm-Message-State: AOAM533LA8hs3GvT3zoXiOU0NdyZ9jLXLsgME2ejYF6X6lo5KQfisxHr
-        pi33yCPXBDO7UvLm5x+iAycg24EP4Upg6U64I68SJQ==
-X-Google-Smtp-Source: ABdhPJyDsSLWPXy8R9Ce8HIpecD+QM6t0+0yQYpXyChVzKDiPvzj0GbvH4ZECIfVS8TxI8k421NQRVJ+suYIajAm3/8=
-X-Received: by 2002:a4a:e98e:: with SMTP id s14mr13829467ood.28.1599462848946;
- Mon, 07 Sep 2020 00:14:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FDYoXw6R73nLiL24Ngv3nbnKg8vUmYVwbLYzsiw9DXw=;
+        b=O/74I4ZtwkHL01DxOTnLwWY3gTD0+JHa/Mk2ZglWo6sFjEgBFyNYN6X/YtGoQtqAKn
+         1NwHQrjNBmEqa3l5+Yg7iKeoNW35eVfAoGqGeHAZDpvPSs2cT9l5Khjvad+INicvUIYO
+         2HpM0uPYghStchXEzu/eKYgpdvoeUYa2jfuJNsoW9nZPj9p6LnGbXaU/7bKHBkfox9Td
+         zYTYv66fUN3cXjOt5KatCRLxQoLCPcaaRmnzbpAkJIHMJfGAQp0gzTu2hIX79H95zWnO
+         AFfnSsLRKakX+Gnb/ppANXjHGpjob3NB/f2SAt7cNRJamzp4Kf89HMvf2fXe2ZFl4UMd
+         sYNg==
+X-Gm-Message-State: AOAM5310dAHBGuJbGg6Mycbw9Z6m5elk0yXjnmm/uu4CsK6735W5tW0m
+        Cf9PN7LIcxcgd0cRU9C95YY=
+X-Google-Smtp-Source: ABdhPJwjXANs2pFjJmj4HveZXsqwk+OFZKCtOAQyb5/uN3UUX5zI1oih8j7thCG9V0iTaXBx4rYLAw==
+X-Received: by 2002:adf:cf01:: with SMTP id o1mr20348930wrj.421.1599462980417;
+        Mon, 07 Sep 2020 00:16:20 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id k84sm25699323wmf.6.2020.09.07.00.16.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 00:16:19 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 09:16:17 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Joe Perches <joe@perches.com>, herbert@gondor.apana.org.au
+Cc:     Corentin Labbe <clabbe@baylibre.com>, davem@davemloft.net,
+        mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [linux-sunxi] Re: [PATCH v6 18/18] crypto: sun8i-ce: fix some
+ style issue
+Message-ID: <20200907071617.GA11894@Red>
+References: <1599217803-29755-1-git-send-email-clabbe@baylibre.com>
+ <1599217803-29755-19-git-send-email-clabbe@baylibre.com>
+ <906c2ffb0ef6b2d87d6aecdf60b61833ea79e4fb.camel@perches.com>
 MIME-Version: 1.0
-References: <20200818092017.26290-1-kraxel@redhat.com> <20200818092017.26290-2-kraxel@redhat.com>
- <20200901074043.GT2352366@phenom.ffwll.local> <20200907063901.atwjdxz7iqyra22h@sirius.home.kraxel.org>
-In-Reply-To: <20200907063901.atwjdxz7iqyra22h@sirius.home.kraxel.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 7 Sep 2020 09:13:58 +0200
-Message-ID: <CAKMK7uFixrbxVoaF4-1hXvQcPySaaYRooQ=LKoivPALH-UCgbw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] drm: allow limiting the scatter list size.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
-        <etnaviv@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <906c2ffb0ef6b2d87d6aecdf60b61833ea79e4fb.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 8:39 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> > > +   /**
-> > > +    * @max_segment:
-> > > +    *
-> > > +    * Max size for scatter list segments.  When unset the default
-> > > +    * (SCATTERLIST_MAX_SEGMENT) is used.
-> > > +    */
-> > > +   size_t max_segment;
-> >
-> > Is there no better place for this then "at the bottom"? drm_device is a
-> > huge structure, piling stuff up randomly doesn't make it better :-)
->
-> Moved next to the other gem fields for now (v3 posted).
->
-> > I think ideally we'd have a gem substruct like we have on the modeset side
-> > at least.
->
-> Phew, that'll be quite some churn in the tree.  And there aren't that many
-> gem-related fields in struct drm_device.
->
-> So you are looking for something like below (header changes only)?
+On Fri, Sep 04, 2020 at 12:37:19PM -0700, Joe Perches wrote:
+> On Fri, 2020-09-04 at 11:10 +0000, Corentin Labbe wrote:
+> > This patch fix a double empty line issue reported by checkpatch.
+> > While at it, since now the maximum line length is now 100, reorder some
+> > wrapped line.
+> []
+> > diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+> []
+> > @@ -164,12 +164,10 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
+> >  				goto theend_key;
+> >  			}
+> >  			offset = areq->cryptlen - ivsize;
+> > -			scatterwalk_map_and_copy(rctx->backup_iv, areq->src,
+> > -						 offset, ivsize, 0);
+> > +			scatterwalk_map_and_copy(rctx->backup_iv, areq->src, offset, ivsize, 0);
+> >  		}
+> >  		memcpy(rctx->bounce_iv, areq->iv, ivsize);
+> > -		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen,
+> > -					 DMA_TO_DEVICE);
+> > +		addr_iv = dma_map_single(ce->dev, rctx->bounce_iv, rctx->ivlen, DMA_TO_DEVICE);
+> 
+> coding-style.rst:
+> 
+>    Statements longer than 80 columns should be broken into sensible chunks,
+>    unless exceeding 80 columns significantly increases readability and does
+>    not hide information.
+> 
+> Do these longer lines make the code significantly more readable?
+> I don't think they do.
+> 
 
-Hm yeah it's a lot less than I thought. And yes I think that would be neat.
--Daniel
+Oh I saw the increase in checkpatch.pl but didnt saw that it was still 80 in coding-style.rst.
+Anyway as maintainer of this driver, I prefer unwrapped lines.
 
->
-> take care,
->   Gerd
->
-> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-> index c455ef404ca6..950167ede98a 100644
-> --- a/include/drm/drm_device.h
-> +++ b/include/drm/drm_device.h
-> @@ -299,22 +299,8 @@ struct drm_device {
->         /** @mode_config: Current mode config */
->         struct drm_mode_config mode_config;
->
-> -       /** @object_name_lock: GEM information */
-> -       struct mutex object_name_lock;
-> -
-> -       /** @object_name_idr: GEM information */
-> -       struct idr object_name_idr;
-> -
-> -       /** @vma_offset_manager: GEM information */
-> -       struct drm_vma_offset_manager *vma_offset_manager;
-> -
-> -       /**
-> -        * @max_segment:
-> -        *
-> -        * Max size for scatter list segments for GEM objects.  When
-> -        * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
-> -        */
-> -       size_t max_segment;
-> +       /** @gem_config: Current GEM config */
-> +       struct drm_gem_config gem_config;
->
->         /** @vram_mm: VRAM MM memory manager */
->         struct drm_vram_mm *vram_mm;
-> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-> index 337a48321705..74129fb29fb8 100644
-> --- a/include/drm/drm_gem.h
-> +++ b/include/drm/drm_gem.h
-> @@ -39,6 +39,25 @@
->
->  #include <drm/drm_vma_manager.h>
->
-> +struct drm_gem_config {
-> +       /** @object_name_lock: GEM information */
-> +       struct mutex object_name_lock;
-> +
-> +       /** @object_name_idr: GEM information */
-> +       struct idr object_name_idr;
-> +
-> +       /** @vma_offset_manager: GEM information */
-> +       struct drm_vma_offset_manager *vma_offset_manager;
-> +
-> +       /**
-> +        * @max_segment:
-> +        *
-> +        * Max size for scatter list segments for GEM objects.  When
-> +        * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
-> +        */
-> +       size_t max_segment;
-> +};
-> +
->  struct drm_gem_object;
->
->  /**
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+I let Herbert to choose to apply the serie without this last patch or not.
