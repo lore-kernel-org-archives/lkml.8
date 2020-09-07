@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17096C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF8DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D05872080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79BC207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497021;
-	bh=M0PtdWcYxeBelsDbpwDJEsRn7qwzPiUFqHU6byxnTwI=;
+	s=default; t=1599497028;
+	bh=FLjVWqdzzGbjc6JJXhuMZ4OiQNBkym+OTNYfGvDLGZY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxuzm2ypE/47g7z8YNX15AW/c7bbq7pewOWhzfkTj3FXk1WNvhJSdX1orayUZ5luu
-	 OLBuDdWVLV1gI6GagVEmanVUxuYPb8nm6T06xhtwSSTu/tWDeO7e4yTiaNL118ujc3
-	 TExq/TIBwpFujuK5ffyXkLknebLzxye0+3Y+1IB8=
+	b=asXyCCNiXQJYIKxHzqpKWn8rp/3Bt2WRPhiJ6GLArhyEOOc27Ar8sOGIrxeitviK/
+	 0yWzp7OhXlORNZ1DHPwuE5shCUDVo2dpIhBTeNZBzLqU+tA0mYmVgtatmG6I5b1/pC
+	 mNXvjjzz47juUg69YdJMilgT1wDGa7vIRcRBKrCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731016AbgIGQnj (ORCPT
+        id S1731054AbgIGQno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:43:39 -0400
+        Mon, 7 Sep 2020 12:43:44 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730868AbgIGQf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:56 -0400
+        id S1730864AbgIGQfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51F2321D95;
-        Mon,  7 Sep 2020 16:35:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD0321D90;
+        Mon,  7 Sep 2020 16:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496556;
-        bh=M0PtdWcYxeBelsDbpwDJEsRn7qwzPiUFqHU6byxnTwI=;
+        s=default; t=1599496550;
+        bh=FLjVWqdzzGbjc6JJXhuMZ4OiQNBkym+OTNYfGvDLGZY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5OXdxQGo8nZbgr7qiMk2cNjYo+7/Zj4I8JMlo+KVRS97fPt6ZfBdSoAHj+4Pb99/
-         kbOpsaKg1ohN9v8+gi/DWAloX75SVCZdttUKH+3StGvi2JTZMlHfnt++41LCzlNjae
-         TrFAJ1fyd+rNMCX+A2/KJAQGPAt8v9ZL9zqJ1hnI=
+        b=iHxHkRRpx+1AzT38M68ZDbKkPxtUdS3YGRYm7fMZ3tGmXuPhmn7yVwrSjA5eBU2Qe
+         wFV0Q+c6hQgvscFL2lX1ecXRxda7FcG/8WhjBpy/wFB5ioRcW6ZiBzrtQuBPlf4SYP
+         gCVUTR/FwtXKx0WFkm5+obNZrbMktDkomEtbaitk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rander Wang <rander.wang@intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.4 09/10] ALSA: hda: fix a runtime pm issue in SOF when integrated GPU is disabled
-Date:   Mon,  7 Sep 2020 12:35:42 -0400
-Message-Id: <20200907163543.1281889-9-sashal@kernel.org>
+Cc:     Himadri Pandya <himadrispandya@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 05/10] net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
+Date:   Mon,  7 Sep 2020 12:35:38 -0400
+Message-Id: <20200907163543.1281889-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
 References: <20200907163543.1281889-1-sashal@kernel.org>
@@ -64,49 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rander Wang <rander.wang@intel.com>
+From: Himadri Pandya <himadrispandya@gmail.com>
 
-[ Upstream commit 13774d81f38538c5fa2924bdcdfa509155480fa6 ]
+[ Upstream commit a092b7233f0e000cc6f2c71a49e2ecc6f917a5fc ]
 
-In snd_hdac_device_init pm_runtime_set_active is called to
-increase child_count in parent device. But when it is failed
-to build connection with GPU for one case that integrated
-graphic gpu is disabled, snd_hdac_ext_bus_device_exit will be
-invoked to clean up a HD-audio extended codec base device. At
-this time the child_count of parent is not decreased, which
-makes parent device can't get suspended.
+The buffer size is 2 Bytes and we expect to receive the same amount of
+data. But sometimes we receive less data and run into uninit-was-stored
+issue upon read. Hence modify the error check on the return value to match
+with the buffer size as a prevention.
 
-This patch calls pm_runtime_set_suspended to decrease child_count
-in parent device in snd_hdac_device_exit to match with
-snd_hdac_device_init. pm_runtime_set_suspended can make sure that
-it will not decrease child_count if the device is already suspended.
-
-Signed-off-by: Rander Wang <rander.wang@intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200902154218.1440441-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/hdac_device.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/usb/asix_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
-index e361024eabb63..020ec48f39048 100644
---- a/sound/hda/hdac_device.c
-+++ b/sound/hda/hdac_device.c
-@@ -123,6 +123,8 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_init);
- void snd_hdac_device_exit(struct hdac_device *codec)
- {
- 	pm_runtime_put_noidle(&codec->dev);
-+	/* keep balance of runtime PM child_count in parent device */
-+	pm_runtime_set_suspended(&codec->dev);
- 	snd_hdac_bus_remove_device(codec->bus, codec);
- 	kfree(codec->vendor_name);
- 	kfree(codec->chip_name);
+diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+index 2092ef6431f20..712765976a221 100644
+--- a/drivers/net/usb/asix_common.c
++++ b/drivers/net/usb/asix_common.c
+@@ -251,7 +251,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
+ 
+ 	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
+ 
+-	if (ret < 0) {
++	if (ret < 2) {
+ 		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
