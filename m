@@ -2,152 +2,89 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E80C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7554C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4471207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6A2E2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599498203;
+	bh=yMbMn15d5ZsiLdDFzu3UAxbc1BWdVwiu6fvD5PtYG3U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qB8w/YmUcwwIsGSdHVKBI61yoajVtKXKCrjw0A/zhxJh4fbDkgPHj1HoV7yTM9YUF
+	 sx87b8UFHRDcTmlCAqM/51HZM70hW7MOeFHFz5+lN3tExN9a1kHesXK7w3ZqEt3dmj
+	 NEBTU/ailcX7kqgmIgGDEtfGLHYbKe5GMUFC8emU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731022AbgIGRDR (ORCPT
+        id S1730799AbgIGRCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:03:17 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:13807
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730783AbgIGRDK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:03:10 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="358316533"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 19:03:05 +0200
-Date:   Mon, 7 Sep 2020 19:03:05 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BCocci=5D_=5BPATCH_v2=5D_Coccinelle=3A_api=3A?=
- =?UTF-8?Q?_Add_SmPL_script_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget?=
- =?UTF-8?Q?=5Fand=5Fioremap=5Fresource=2Ecocci=E2=80=9D?=
-In-Reply-To: <4b505afc-ae48-d8eb-f4e1-8e3f7192f73d@web.de>
-Message-ID: <alpine.DEB.2.22.394.2009071900450.2476@hadrien>
-References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <4b505afc-ae48-d8eb-f4e1-8e3f7192f73d@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 7 Sep 2020 13:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730683AbgIGQdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D28021775;
+        Mon,  7 Sep 2020 16:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599496411;
+        bh=yMbMn15d5ZsiLdDFzu3UAxbc1BWdVwiu6fvD5PtYG3U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=mrkucNY3C0HMttDSUlfdbjGVeP1fAoeqxTd6kN57tRYv/LN5Sp39tnB6ssl3wztAH
+         GxmJXXNjzkd2JE5Sf3Jy48+1gddVUcP0YuH1fGYkz0mwi2Bm4Ki/1b5wwtqMMvdxQC
+         vZ6/1gm8f+83XXYJfKiITfKfsQ1mI6N5Wc9cHb4k=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 01/43] ARC: HSDK: wireup perf irq
+Date:   Mon,  7 Sep 2020 12:32:47 -0400
+Message-Id: <20200907163329.1280888-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Vineet Gupta <vgupta@synopsys.com>
 
+[ Upstream commit fe81d927b78c4f0557836661d32e41ebc957b024 ]
 
-On Mon, 7 Sep 2020, Markus Elfring wrote:
+Newer version of HSDK aka HSDK-4xD (with dual issue HS48x4 CPU) wired up
+the perf interrupt, so enable that in DT.
+This is OK for old HSDK where this irq is ignored because pct irq is not
+wired up in hardware.
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Mon, 7 Sep 2020 18:38:04 +0200
->
-> Another wrapper function is available since the commit 890cc39a879906b63912482dfc41944579df2dc6
-> ("drivers: provide devm_platform_get_and_ioremap_resource()").
-> Provide safe design options for the adjustment of affected source code
-> by the means of the semantic patch language (Coccinelle software).
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->
-> v2:
-> Julia Lawall requested to omit case distinctions (disjunctions) from
-> the first SmPL script.
-> The usage of different expression metavariables for the first parameter
-> of function calls was too questionable for the proposed source
-> code transformation.
->
->
->  ...vm_platform_get_and_ioremap_resource.cocci | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 scripts/coccinelle/api/use_devm_platform_get_and_ioremap_resource.cocci
->
-> diff --git a/scripts/coccinelle/api/use_devm_platform_get_and_ioremap_resource.cocci b/scripts/coccinelle/api/use_devm_platform_get_and_ioremap_resource.cocci
-> new file mode 100644
-> index 000000000000..319583716ac8
-> --- /dev/null
-> +++ b/scripts/coccinelle/api/use_devm_platform_get_and_ioremap_resource.cocci
-> @@ -0,0 +1,48 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/// Simplify a function call combination by using a known wrapper function.
-> +//
-> +// Keywords: wrapper function conversion ioremap resources
-> +// Confidence: High
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arc/boot/dts/hsdk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Shouldn't there be some options?  --no-includes and perhaps
---include-headers would seem reasonable.
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 9acbeba832c0b..5d64a5a940ee6 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -88,6 +88,8 @@ idu_intc: idu-interrupt-controller {
+ 
+ 	arcpct: pct {
+ 		compatible = "snps,archs-pct";
++		interrupt-parent = <&cpu_intc>;
++		interrupts = <20>;
+ 	};
+ 
+ 	/* TIMER0 with interrupt for clockevent */
+-- 
+2.25.1
 
-Please also remove all of the rule names except for "or" which is
-necessary.  The rest just add clutter and make it harder to find the
-useful information, which is the depends on.  Rules only need names if
-some other rule inherits their metavariables.
-
-julia
-
-> +
-> +virtual context, patch, report, org
-> +
-> +@display depends on context@
-> +expression base, device, index, resource;
-> +@@
-> +*resource = platform_get_resource(device, IORESOURCE_MEM, index);
-> + base =
-> +*       devm_ioremap_resource
-> +                             (&device->dev, resource);
-> +
-> +@replacement depends on patch@
-> +expression base, device, index, resource;
-> +@@
-> +-resource = platform_get_resource(device, IORESOURCE_MEM, index);
-> + base =
-> +-       devm_ioremap_resource
-> ++       devm_platform_get_and_ioremap_resource
-> +                             (
-> +-                             &
-> +                               device
-> +-                                    ->dev
-> +                              ,
-> +-                             resource
-> ++                             index, &resource
-> +                             );
-> +
-> +@or depends on org || report@
-> +expression base, device, index, resource;
-> +position p;
-> +@@
-> + resource = platform_get_resource(device, IORESOURCE_MEM, index);
-> + base = devm_ioremap_resource@p(&device->dev, resource);
-> +
-> +@script:python to_do depends on org@
-> +p << or.p;
-> +@@
-> +coccilib.org.print_todo(p[0], "WARNING: opportunity for devm_platform_get_and_ioremap_resource()")
-> +
-> +@script:python reporting depends on report@
-> +p << or.p;
-> +@@
-> +coccilib.report.print_report(p[0], "WARNING: opportunity for devm_platform_get_and_ioremap_resource()")
-> --
-> 2.28.0
->
-> _______________________________________________
-> Cocci mailing list
-> Cocci@systeme.lip6.fr
-> https://systeme.lip6.fr/mailman/listinfo/cocci
->
