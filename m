@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54170C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141E0C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F0F8207DE
+	by mail.kernel.org (Postfix) with ESMTP id C4E0E21789
 	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1599497707;
-	bh=VZJnraZM6yoNBszRUhaP+fnBHLTcAb3TgTZWtLcSQ6c=;
+	bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwPQMKJBlY5SdfXe+NOlkym7oQDmTstD6DjHK2n7tR6XdbqWOGSVUgCrZclQR2ZOj
-	 xRdxliRBHkMv4QQP3qgmq4E92xh5sT52YtwW27ZvSOAN6hD5zctowQ/ciPFBkZa6OB
-	 8RxVftDVtdsosKhT308kSJm8a96YyNfuLdmuwXRE=
+	b=oMfd3M802g5xSEj4Z4SqQ8JXN/Vr+nHc9/rJzTzGDzE0sp1mBQlPpLK3WIeCixR6L
+	 El2fkr+XBWlCrVZsonRLrfSeCbrMuMf6Gnd+xyBDcGfseMgfikBDxfWdCkrviR8zB6
+	 CkWJ5Luiurt6FYzagP1TP8MXh+DPmEmCyyfi0y1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731181AbgIGQzF (ORCPT
+        id S1731189AbgIGQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:55:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730749AbgIGQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730747AbgIGQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 12:34:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB68121D82;
-        Mon,  7 Sep 2020 16:34:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 521BE21D81;
+        Mon,  7 Sep 2020 16:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496454;
-        bh=VZJnraZM6yoNBszRUhaP+fnBHLTcAb3TgTZWtLcSQ6c=;
+        s=default; t=1599496453;
+        bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xUm5ui/M9PL0A7FbaknGP2dK8yMBba2/tJ5xa0Yq0fxLiZQSolWUbPUuX2Fbbp8nD
-         KwVYVTgSCH+l+xiDV8NJJG6fmgGfUDiUSdcJR/lWavdacz5zhD8Qo//Ik8vh+oXsvn
-         U+ftZNrj3QKmIYjzvSARzkiOWeDGmMqCzjTHCh+M=
+        b=etrGPQeyPcHjSpgEcR+PlSFbfXWGYHsXxQIOSzVkezrKr4qQdTne/sn+U0NoSDUD1
+         /HfliiNxUqjWmKXk1zf51Wat1aHeegDICiOgV/kWQe3mdLgAqPxff8MxqxwdCu7NHh
+         YeYkW2vyNNavrNk33jWmbq4L5W6NaEY7DyGSPhfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 35/43] cpufreq: intel_pstate: Refuse to turn off with HWP enabled
-Date:   Mon,  7 Sep 2020 12:33:21 -0400
-Message-Id: <20200907163329.1280888-35-sashal@kernel.org>
+Cc:     Evgeniy Didin <Evgeniy.Didin@synopsys.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 34/43] ARC: [plat-hsdk]: Switch ethernet phy-mode to rgmii-id
+Date:   Mon,  7 Sep 2020 12:33:20 -0400
+Message-Id: <20200907163329.1280888-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -59,50 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+From: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
 
-[ Upstream commit 43298db3009f06fe5c69e1ca8b6cfc2565772fa1 ]
+[ Upstream commit 26907eb605fbc3ba9dbf888f21d9d8d04471271d ]
 
-After commit f6ebbcf08f37 ("cpufreq: intel_pstate: Implement passive
-mode with HWP enabled") it is possible to change the driver status
-to "off" via sysfs with HWP enabled, which effectively causes the
-driver to unregister itself, but HWP remains active and it forces the
-minimum performance, so even if another cpufreq driver is loaded,
-it will not be able to control the CPU frequency.
+HSDK board has Micrel KSZ9031, recent commit
+bcf3440c6dd ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
+caused a breakdown of Ethernet.
+Using 'phy-mode = "rgmii"' is not correct because accodring RGMII
+specification it is necessary to have delay on RX (PHY to MAX)
+which is not generated in case of "rgmii".
+Using "rgmii-id" adds necessary delay and solves the issue.
 
-For this reason, make the driver refuse to change the status to
-"off" with HWP enabled.
+Also adding name of PHY placed on HSDK board.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arc/boot/dts/hsdk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index 927eb3fd23660..5bad88f6ddd59 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -2533,9 +2533,15 @@ static int intel_pstate_update_status(const char *buf, size_t size)
- {
- 	int ret;
- 
--	if (size == 3 && !strncmp(buf, "off", size))
--		return intel_pstate_driver ?
--			intel_pstate_unregister_driver() : -EINVAL;
-+	if (size == 3 && !strncmp(buf, "off", size)) {
-+		if (!intel_pstate_driver)
-+			return -EINVAL;
-+
-+		if (hwp_active)
-+			return -EBUSY;
-+
-+		return intel_pstate_unregister_driver();
-+	}
- 
- 	if (size == 6 && !strncmp(buf, "active", size)) {
- 		if (intel_pstate_driver) {
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 5d64a5a940ee6..dcaa44e408ace 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -210,7 +210,7 @@ gmac: ethernet@8000 {
+ 			reg = <0x8000 0x2000>;
+ 			interrupts = <10>;
+ 			interrupt-names = "macirq";
+-			phy-mode = "rgmii";
++			phy-mode = "rgmii-id";
+ 			snps,pbl = <32>;
+ 			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+@@ -228,7 +228,7 @@ mdio {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				compatible = "snps,dwmac-mdio";
+-				phy0: ethernet-phy@0 {
++				phy0: ethernet-phy@0 { /* Micrel KSZ9031 */
+ 					reg = <0>;
+ 				};
+ 			};
 -- 
 2.25.1
 
