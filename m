@@ -2,168 +2,110 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79532C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 02:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC9EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 02:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31A6A20C09
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 02:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599446039;
-	bh=o7qvPOSfMWTGqMHowfFYfViqaDWC187qZJ6j1AbNTfY=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=q1Efuzv8y9fCM8zWT1IERu4nb/UpIvwrIY6fEFQgSoivWikV/QSUHk/h5+BxepUW3
-	 FrgqExSW3nLMvKz5fuLZOLm3lo5PhOMVMSr922OOpbVRmZuYSM4P2WvrHlYZqxU4+P
-	 q5F9jVGwZk3VV+P8sHPBeHGkQEjsQxJyd9fSuc8Y=
+	by mail.kernel.org (Postfix) with ESMTP id 7281D2151B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 02:34:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hCxQVefu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726361AbgIGCd5 (ORCPT
+        id S1726385AbgIGCev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 22:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726213AbgIGCdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 22:33:54 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C153A20796;
-        Mon,  7 Sep 2020 02:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599446032;
-        bh=o7qvPOSfMWTGqMHowfFYfViqaDWC187qZJ6j1AbNTfY=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=sxuWTh2MHeSTHL1uB+5HQsgi9/YP+FKoYBSLQp5xmoimKY+XPtGbEt87dAc2QSyg7
-         QcAx/Chacb/xEeccjnqDxKe1uqdpr3cXhbp5jxJ0Q3phnBjhWkODhFYaPUuwHQeWIM
-         zc/HM3s/LNiFolgo+63zIa6FOU60udkx39+ZDlXI=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8865E3522EE5; Sun,  6 Sep 2020 19:33:52 -0700 (PDT)
-Date:   Sun, 6 Sep 2020 19:33:52 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Boqun Feng <boqun.feng@gmail.com>
-Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, jiangshanlai@gmail.com,
-        dipankar@in.ibm.com, akpm@linux-foundation.org,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        tglx@linutronix.de, peterz@infradead.org, rostedt@goodmis.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, joel@joelfernandes.org
-Subject: Re: [PATCH tip/core/rcu 05/13] rcu: Always set .need_qs from
- __rcu_read_lock() for strict GPs
-Message-ID: <20200907023352.GZ29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200831181101.GA950@paulmck-ThinkPad-P72>
- <20200831181120.1044-5-paulmck@kernel.org>
- <20200904040534.GD7922@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
- <20200904134142.GB29330@paulmck-ThinkPad-P72>
- <20200907001155.GG7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+        Sun, 6 Sep 2020 22:34:51 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:16197 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgIGCeu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 22:34:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f559c3c0000>; Sun, 06 Sep 2020 19:34:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 06 Sep 2020 19:34:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Sun, 06 Sep 2020 19:34:50 -0700
+Received: from [10.19.100.119] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
+ 2020 02:34:44 +0000
+Subject: Re: [PATCH v2 05/12] phy: tegra: xusb: add sleepwalk and
+ suspend/resume
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <gregkh@linuxfoundation.org>, <robh@kernel.org>,
+        <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <nkristam@nvidia.com>
+References: <20200831044043.1561074-1-jckuo@nvidia.com>
+ <20200831044043.1561074-6-jckuo@nvidia.com> <20200831115857.GC1689119@ulmo>
+X-Nvconfidentiality: public
+From:   JC Kuo <jckuo@nvidia.com>
+Message-ID: <24571c2d-0386-2b49-419d-4eada7a73f8e@nvidia.com>
+Date:   Mon, 7 Sep 2020 10:34:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907001155.GG7503@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200831115857.GC1689119@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599446076; bh=fjuOyfcejLoiM91svaHTJ5EfrAsTKXbximdPX5XFq3M=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hCxQVefuT7GT2kpLYwrZDveJQvY83sqYvTVGgkIWr2VsAzGuD+At0uS5Vcq1riwiC
+         cUQVRjF8o1ZtgKoyzMLfUMNxUixcFiZ6o833Mg9fGVJnyI5Upr2Rv9A1hqARJsw2W4
+         bObZ3wJXSU/+jk1j1IWi8OgcCilL7Iz19SFxDS9tSjxACYMbywpWm7BxCDKPEIzf95
+         qVTzKVIxvTQvlNZMfvOhF7FDgkCFo4sKM5EjmPyy/wpHpgodCuM6eufsq7EhzI8h17
+         D+v2KS+K8p65w3k8J7Gcff+ekafrOiTlxJ9aGVfynOQfYMuCvdXQwMpqudW5Da8vMM
+         3zTCPTpM1aQjw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 08:11:55AM +0800, Boqun Feng wrote:
-> On Fri, Sep 04, 2020 at 06:41:42AM -0700, Paul E. McKenney wrote:
-> > On Fri, Sep 04, 2020 at 12:05:34PM +0800, Boqun Feng wrote:
-> > > Hi Paul,
-> > > 
-> > > On Mon, Aug 31, 2020 at 11:11:12AM -0700, paulmck@kernel.org wrote:
-> > > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > > > 
-> > > > The ->rcu_read_unlock_special.b.need_qs field in the task_struct
-> > > > structure indicates that the RCU core needs a quiscent state from the
-> > > > corresponding task.  The __rcu_read_unlock() function checks this (via
-> > > > an eventual call to rcu_preempt_deferred_qs_irqrestore()), and if set
-> > > > reports a quiscent state immediately upon exit from the outermost RCU
-> > > > read-side critical section.
-> > > > 
-> > > > Currently, this flag is only set when the scheduling-clock interrupt
-> > > > decides that the current RCU grace period is too old, as in about
-> > > > one full second too old.  But if the kernel has been built with
-> > > > CONFIG_RCU_STRICT_GRACE_PERIOD=y, we clearly do not want to wait that
-> > > > long.  This commit therefore sets the .need_qs field immediately at the
-> > > > start of the RCU read-side critical section from within __rcu_read_lock()
-> > > > in order to unconditionally enlist help from __rcu_read_unlock().
-> > > > 
-> > > 
-> > > So why not make rcu_preempt_deferred_qs_irqrestore() always treat
-> > > need_qs is true if CONFIG_RCU_STRICT_GRACE_PERIOD = y? IOW:
-> > > 
-> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > index 982fc5be5269..2a9f31545453 100644
-> > > --- a/kernel/rcu/tree_plugin.h
-> > > +++ b/kernel/rcu/tree_plugin.h
-> > > @@ -449,6 +449,8 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
-> > >  	 * t->rcu_read_unlock_special cannot change.
-> > >  	 */
-> > >  	special = t->rcu_read_unlock_special;
-> > > +	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) && rcu_state.gp_kthread)
-> > > +		special.b.need_qs = true;
-> > >  	rdp = this_cpu_ptr(&rcu_data);
-> > >  	if (!special.s && !rdp->exp_deferred_qs) {
-> > >  		local_irq_restore(flags);
-> > > 
-> > > , and in this way, you can save one store for each rcu_read_lock() ;-)
-> > 
-> > Because unless I am missing something subtle, if the .need_qs
-> > flag is not set, execution is not guaranteed to reach
-> > rcu_preempt_deferred_qs_irqrestore().
+Hi Thierry,
+Thanks for review. I will amend accordingly and submit a new patch.
+
+JC
+
+On 8/31/20 7:58 PM, Thierry Reding wrote:
+> Again, use a capital letter to start the subject after the prefix.
 > 
-> Fair enough. Although I think we can also add IS_ENABLED(...) check to
-> make the outermost rcu_read_unlock() to call rcu_read_unlock_special()
-> unconditionally, but that's too much I think.
-
-You are quite right that there are several ways to make this
-work.  So yes, one alternative would be the IS_ENABLED() check in
-rcu_read_unlock() in conjunction with your suggested added check in
-rcu_preempt_deferred_qs_irqrestore().  But from what I know at the moment,
-the current state is favored.  Smaller change and all that.
-
-							Thanx, Paul
-
-> Regards,
-> Boqun
+> On Mon, Aug 31, 2020 at 12:40:36PM +0800, JC Kuo wrote:
+>> This commit adds sleepwalk/wake and suspend/resume interfaces
+>> to Tegra XUSB PHY driver.
+>>
+>> Tegra XUSB host controller driver makes use of sleepwalk functions
+>> to enable/disable sleepwalk circuit which is in always-on partition
+>> can respond to USB resume signals when controller is not powered.
 > 
-> > 							Thanx, Paul
-> > 
-> > > Regards,
-> > > Boqun
-> > > 
-> > > > But note the additional check for rcu_state.gp_kthread, which prevents
-> > > > attempts to awaken RCU's grace-period kthread during early boot before
-> > > > there is a scheduler.  Leaving off this check results in early boot hangs.
-> > > > So early that there is no console output.  Thus, this additional check
-> > > > fails until such time as RCU's grace-period kthread has been created,
-> > > > avoiding these empty-console hangs.
-> > > > 
-> > > > Reported-by Jann Horn <jannh@google.com>
-> > > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > > ---
-> > > >  kernel/rcu/tree_plugin.h | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > > 
-> > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > > index 44cf77d..668bbd2 100644
-> > > > --- a/kernel/rcu/tree_plugin.h
-> > > > +++ b/kernel/rcu/tree_plugin.h
-> > > > @@ -376,6 +376,8 @@ void __rcu_read_lock(void)
-> > > >  	rcu_preempt_read_enter();
-> > > >  	if (IS_ENABLED(CONFIG_PROVE_LOCKING))
-> > > >  		WARN_ON_ONCE(rcu_preempt_depth() > RCU_NEST_PMAX);
-> > > > +	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) && rcu_state.gp_kthread)
-> > > > +		WRITE_ONCE(current->rcu_read_unlock_special.b.need_qs, true);
-> > > >  	barrier();  /* critical section after entry code. */
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(__rcu_read_lock);
-> > > > -- 
-> > > > 2.9.5
-> > > > 
+> "and can respond to ..."?
+> 
+>> Sleepwalk can be enabled/disabled for any USB phy individually.
+> 
+> "USB PHY"
+> 
+>>
+>>   - tegra_xusb_padctl_enable_phy_sleepwalk()
+>>   - tegra_xusb_padctl_disable_phy_sleepwalk()
+>>
+>> Tegra XUSB host controller driver makes use of wake functions to
+>> enable/disable/query wake circuit which is in always-on partition
+>> can wake system up when USB resume happens.
+>> Wake circuit can be enabled/disabled for any USB phy individually.
+> 
+> "USB PHY"
+> 
+> Thierry
+> 
