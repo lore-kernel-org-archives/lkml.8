@@ -2,131 +2,142 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4130AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09E432080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498908;
-	bh=iVJ4oDTE3gYccFF+I2iu/ZdtCGQPx73HrYF3gXuC4M4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yITDGZd0B5GK9jFHF3freYNUhT3xoYzMR7hWfZzlVRY/g+IFuVrzCyNqHxAECRNj8
-	 dL7Dxqy9tuYye0NNM4eDlJhD+ziaxMzVS6W6WymrKbnI00/fMadR/kDnZTOcSET9yj
-	 OAOfKvca81unUZR8DQYxTyUN6U/94ULHnrp2je7w=
+	by mail.kernel.org (Postfix) with ESMTP id 98FA42080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="ZlFYWNzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730642AbgIGRPG (ORCPT
+        id S1731274AbgIGRPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:15:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46718 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbgIGOHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:07:50 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E38C520714;
-        Mon,  7 Sep 2020 14:07:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599487669;
-        bh=iVJ4oDTE3gYccFF+I2iu/ZdtCGQPx73HrYF3gXuC4M4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=glkIdbX6CZZiAclL+SW/fAIYhujdUPu4LDZ4JR8ScNJL91L3PJ+3OvwpMh3VJSKki
-         dHr3tXDaVE1WVoVz95yZMK8vy9yavYJsvfwRGPaIn5m1ICApC8/nOp2tFPO2Adhuad
-         cs+HF1nnbe6EeSMYKN9Zs9QNptsa4InijNsjK2BI=
-Date:   Mon, 7 Sep 2020 16:08:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        David Duncan <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>, Karen Noel <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        Uwe Dannowski <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-Subject: Re: [PATCH v8 17/18] nitro_enclaves: Add overview documentation
-Message-ID: <20200907140803.GA3719869@kroah.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
- <20200904173718.64857-18-andraprs@amazon.com>
- <20200907090126.GD1101646@kroah.com>
- <44a8a921-1fb4-87ab-b8f2-c168c615dbbd@amazon.com>
+        Mon, 7 Sep 2020 13:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729768AbgIGOGG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:06:06 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC101C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 07:06:04 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id w186so12751348qkd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 07:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=y+uPVxGhTzkdDfUd9wvr+ZuNFUnz8aixgYzEQqrA4MY=;
+        b=ZlFYWNzHSoL0j1+55BOdgwsdhE4/eQ+f5eAIcVhoP8m16P2JaJ+kEJaWXQmU/asTan
+         +FNSTR+7/u2RvbrlmI4pPJvW73nmPOb2MxuCuE6NH6yWwFmfTNC7wNpeLXKlM9tuTmnK
+         CIXvcIk9Qq+lKbbq1o0YV4kQaoy15EP4nk2vQ5zNBoerHdy/Bx7zP3dTJfpmPvqXF1ZO
+         7bXdQXp0kzghs2BDVVQClnumXEmZKLB2D9oeHdc9mY8+3PC4Ztd3GEw1eljJOOtZ+CTE
+         tCZxuSBZ0KcjypKSTgj9lv/qq4OcUzzDAxuYJNFf/+EBzGxThQKd8qwYFubYSRoOcrMp
+         DLSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=y+uPVxGhTzkdDfUd9wvr+ZuNFUnz8aixgYzEQqrA4MY=;
+        b=dl8yinpzY5yphbq1VLjAF3p74Jhp9wFMw1Z0dflPBy2XuB7dhe27tbq8Nh+ZBppvM8
+         NpviNTXXoTVUIbMhFmN4FGa2OhC4HZZQAGk/fV7lMHiAmTxm/7xXaABdJuMG4uNs0kP3
+         PtEUASwZjPjd5cHPEvDl2tiOavV+kp2hHw32yBulIqGJUXkcVq9ToldPDt5JPTDWHgbK
+         4dVMge3ilV4vAq3SplkeBigjFaJ0fEcLL7hcLz5SVR9pR3i6fILK4qTNreq5DuGPLfBl
+         DB6muIXDDq9nwL1vOYyVOsfcGWNbo3GfKyYWavJH/ONNztbhIFPmVigIBIQhe55jI+/8
+         mNYA==
+X-Gm-Message-State: AOAM531lA/py4s+gprjyAPptE0VCZ+jxL19jfbCwtNBio6fHWyvB/XK3
+        +FoFYWp9Qio25CegWP+/MPCrtxnDXJJJk7yHoP0=
+X-Google-Smtp-Source: ABdhPJxhfyBfbzBJNaomyjjA3ICbD0lV5tfufEImskKOSDvkQXT8skDYxgZXb3Qgc3ZCK9uKhlPkew==
+X-Received: by 2002:a37:6cc1:: with SMTP id h184mr14311080qkc.18.1599487561928;
+        Mon, 07 Sep 2020 07:06:01 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id u15sm11951003qtj.3.2020.09.07.07.06.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 07:06:01 -0700 (PDT)
+Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901003300.11985-1-jonathan@marek.ca>
+ <fa436d55-b986-944f-e90f-b81cb32eeb0e@linaro.org>
+ <3f1f8ff1-cf23-ae2c-4cff-cdcce0b11e2e@marek.ca>
+ <f2faa7b2-1e7d-2f39-ef36-a3790cedfab9@linaro.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <682b2972-2762-bb4c-b31b-025ab78aba1f@marek.ca>
+Date:   Mon, 7 Sep 2020 10:05:14 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <44a8a921-1fb4-87ab-b8f2-c168c615dbbd@amazon.com>
+In-Reply-To: <f2faa7b2-1e7d-2f39-ef36-a3790cedfab9@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 04:43:11PM +0300, Paraschiv, Andra-Irina wrote:
+On 9/7/20 10:01 AM, Srinivas Kandagatla wrote:
 > 
 > 
-> On 07/09/2020 12:01, Greg KH wrote:
-> > 
-> > On Fri, Sep 04, 2020 at 08:37:17PM +0300, Andra Paraschiv wrote:
-> > > Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
-> > > Reviewed-by: Alexander Graf <graf@amazon.com>
-> > > ---
-> > > Changelog
-> > > 
-> > > v7 -> v8
-> > > 
-> > > * Add info about the primary / parent VM CID value.
-> > > * Update reference link for huge pages.
-> > > * Add reference link for the x86 boot protocol.
-> > > * Add license mention and update doc title / chapter formatting.
-> > > 
-> > > v6 -> v7
-> > > 
-> > > * No changes.
-> > > 
-> > > v5 -> v6
-> > > 
-> > > * No changes.
-> > > 
-> > > v4 -> v5
-> > > 
-> > > * No changes.
-> > > 
-> > > v3 -> v4
-> > > 
-> > > * Update doc type from .txt to .rst.
-> > > * Update documentation based on the changes from v4.
-> > > 
-> > > v2 -> v3
-> > > 
-> > > * No changes.
-> > > 
-> > > v1 -> v2
-> > > 
-> > > * New in v2.
-> > > ---
-> > >   Documentation/nitro_enclaves/ne_overview.rst | 95 ++++++++++++++++++++
-> > >   1 file changed, 95 insertions(+)
-> > >   create mode 100644 Documentation/nitro_enclaves/ne_overview.rst
-> > A whole new subdir, for a single driver, and not tied into the kernel
-> > documentation build process at all?  Not good :(
-> > 
+> On 07/09/2020 14:47, Jonathan Marek wrote:
+>> On 9/7/20 8:36 AM, Srinivas Kandagatla wrote:
+>>>
+>>>
+>>> On 01/09/2020 01:32, Jonathan Marek wrote:
+>>>> -#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct 
+>>>> fastrpc_req_mmap)
+>>>> -#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct 
+>>>> fastrpc_req_munmap)
+>>>> +#define FASTRPC_IOCTL_MMAP        _IOWR('R', 6, struct 
+>>>> fastrpc_req_mmap)
+>>>> +#define FASTRPC_IOCTL_MUNMAP        _IOWR('R', 7, struct 
+>>>> fastrpc_req_munmap)
+>>>
+>>> Looks like changes that do not belong to this patch!
+>>>
+>>> I wanted to try this patch on SM8250.
+>>> How do you test attaching fastrpc to sensor core?, I mean which 
+>>> userspace lib/tool do you use?
+>>>
+>>> --srini
+>>>
+>>
+>> I pushed my sdsprpcd implementation to github, which is responsible 
+>> for initializing the sensors, and uses this ioctl:
+>>
+>> https://github.com/flto/fastrpc
 > 
-> Would the "virt" directory be a better option for this doc file?
+> Thanks!, I can take a look and see if I can try it out with linaro 
+> fastrpc library!
 
-Yes.
+You don't need linaro fastrpc library to try it, everything you need is 
+in that repo.
+
+>>
+>> Note: it uses my own WIP fastrpc "library" instead of the one from 
+>> linaro, I also have other related code, like a sensor client, and 
+>> cDSP/aDSP compute examples, but need to confirm that I can share them
+>>
+>> Also, the corresponding dts patch I sent has a problem, the label = 
+>> "dsps"; should be label = "sdsp"; (copied the "dsps" from downstream, 
+>> but upstream expects "sdsp"), will send a v2 later today.
+> Also the dts patch will fail to apply as it is, as it seems me that you 
+> have based the patch after adding audio dts patch!
+> 
+
+Thanks for pointing it out, will make sure the v2 applies cleanly 
+without audio dts patches applied.
+
+> 
+> --srini
+>>
+>>>> +#define FASTRPC_IOCTL_INIT_ATTACH_SNS    _IO('R', 8)
