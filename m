@@ -2,127 +2,196 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58952C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DADCA207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEC920768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGZAavdZ"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="I+h/3I2V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgIGHC5 (ORCPT
+        id S1726850AbgIGHEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726771AbgIGHCJ (ORCPT
+        Mon, 7 Sep 2020 03:04:02 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:37679 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgIGHCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:02:09 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BE63C061574;
-        Mon,  7 Sep 2020 00:02:08 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id g4so14563479wrs.5;
-        Mon, 07 Sep 2020 00:02:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ylv/Ec3IQY/nRnVl7KUf4rlIbzcbzilcAdfCxVxqCdM=;
-        b=eGZAavdZlKtcT3lSWI7KautQwycdwOhhWwW/QEDVhWUcao0t3/TnmTEfUdfslBudpC
-         8nOaO+bFIkEwWAZNjSOuhZ6S26BDST+w8i732lh7nQ3kIYL04wbpYO6FdH0Xvm/2JWaJ
-         ySiPaxUHkEGfTtRKfTj2b7T2yXI56gul9vy5dixsvYnOcR6BLkNU5NcTV5022OWDUrso
-         uPL9AKxRJWrPp+jiZrtrq8sEq5j4iSINePJYRZ86f9QwUqYx7XzAfdVcV+/qz1oqvkxz
-         NHic36LO7xaBXZ7JXPidaQ6oPLkn4BoGtaSdmOAQohYSiqIQdzMaGTWbAUJrsDHKZnGF
-         B4dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ylv/Ec3IQY/nRnVl7KUf4rlIbzcbzilcAdfCxVxqCdM=;
-        b=kQUDjwR2DxLPzrntfzoR9k/MdjyFt6rlbGZtMCSw5Vt9VpyCtCFFU4semoqizrrweQ
-         VUypzNBmKZDVrMZmd0EGCI9UnRTGogBSVjnBKhcbYs+0xk6B9KoC1fpGQ+xIDTLL8QLR
-         2mmrM506vf4qZylzZJVelTBeQyroR0tfryYQtBu0eDUUtTNLc0DnM+MDLU0kszCDO+l3
-         kZO8cmvGqknukajxJFLlc4u363sH1KpSSVcSnpMwvPVYZ45x9OsHDHJa9qcrTikGFVfE
-         xabPK9yEfFvwddCm3whbjkjFAZiMoCR2g6tohykE9gAsB1qX3q87x8LNADmgFN3d74U0
-         w4yw==
-X-Gm-Message-State: AOAM531PTa1voJrZuf1Y/KWhLy0ldCfaU5mGR2l7OoP42nrrKS+7iTY9
-        oeOhqr243+cKS7HFCjoQZR5E+ochjg20EumOTlU=
-X-Google-Smtp-Source: ABdhPJw8TAjLd5BYGCY0Tr5/xWkqYwtfubZPgWpkYEtQ1vEu4nZ7Ih5my0t7n5KCYlQdFMaMMGHicv8EGLY6kCKlCsI=
-X-Received: by 2002:adf:dd51:: with SMTP id u17mr19759514wrm.355.1599462127129;
- Mon, 07 Sep 2020 00:02:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200731064526.GA25674@infradead.org> <MWHPR04MB37581344328A42EA7F5ED13EE74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <CA+1E3rLM4G4SwzD6RWsK6Ssp7NmhiPedZDjrqN3kORQr9fxCtw@mail.gmail.com>
- <MWHPR04MB375863C20C1EF2CB27E62703E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731091416.GA29634@infradead.org> <MWHPR04MB37586D39CA389296CE0252A4E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731094135.GA4104@infradead.org> <MWHPR04MB3758A4B2967DB1FABAAD9265E74E0@MWHPR04MB3758.namprd04.prod.outlook.com>
- <20200731125110.GA11500@infradead.org> <CY4PR04MB37517D633920E4D31AC6EA0DE74B0@CY4PR04MB3751.namprd04.prod.outlook.com>
- <20200814081411.GA16943@infradead.org>
-In-Reply-To: <20200814081411.GA16943@infradead.org>
-From:   Kanchan Joshi <joshiiitr@gmail.com>
-Date:   Mon, 7 Sep 2020 12:31:42 +0530
-Message-ID: <CA+1E3r+WXC_MK5Zf2OZEv17ddJDjtXbhpRFoeDns4F341xMhow@mail.gmail.com>
-Subject: Re: [PATCH v4 6/6] io_uring: add support for zone-append
-To:     "hch@infradead.org" <hch@infradead.org>
-Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "bcrl@kvack.org" <bcrl@kvack.org>,
+        Mon, 7 Sep 2020 03:02:46 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200907070236euoutp01cd73acaec4763bf456fac175f85fee73~ybltWsgmT0711607116euoutp01Y
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 07:02:36 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200907070236euoutp01cd73acaec4763bf456fac175f85fee73~ybltWsgmT0711607116euoutp01Y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599462156;
+        bh=ZxtWY66LgnHBrNYge2f9PDhTZ3Wz5P0yo+LHPKSot+Q=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=I+h/3I2VjIcxlVZDH/lNlOOjvMOZclTLJ/2t/GoftpsGxg9jk53gZdIy7AEvehtPh
+         W8gtcUN9X/CZqLNWGwHS/yqyTr6bfdI2FE3fery7EjL+uqjNJOnrTpzDb0lu2EC3DE
+         fd2OpcYiVOeJ0iCTvHb5u/KsiZBPrL0CBZMD8Avk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200907070236eucas1p29628d0052b264a54f3844c09e8df4730~ybltI412B0068800688eucas1p2Z;
+        Mon,  7 Sep 2020 07:02:36 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9B.D3.06456.B0BD55F5; Mon,  7
+        Sep 2020 08:02:35 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200907070235eucas1p22f87f67c713f5b6adcb494a54c5e75d4~yblst14op2412324123eucas1p2F;
+        Mon,  7 Sep 2020 07:02:35 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200907070235eusmtrp1feae73e9984626b93ea2470d306c898e~yblstILju0412504125eusmtrp1u;
+        Mon,  7 Sep 2020 07:02:35 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-c8-5f55db0b287d
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 12.46.06017.B0BD55F5; Mon,  7
+        Sep 2020 08:02:35 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200907070235eusmtip1a5111a2a4d5e325b24b610d4fe22cfd2~yblsNoKBC0360403604eusmtip1F;
+        Mon,  7 Sep 2020 07:02:34 +0000 (GMT)
+Subject: Re: [PATCH] dma-direct: zero out DMA_ATTR_NO_KERNEL_MAPPING buf
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Hillf Danton <hdanton@sina.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         Matthew Wilcox <willy@infradead.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-aio@kvack.org" <linux-aio@kvack.org>,
-        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arch@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <1eb4a2b0-2fd4-9f3c-e610-c8f856027181@samsung.com>
+Date:   Mon, 7 Sep 2020 09:02:34 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <1599321042.11726.6.camel@HansenPartnership.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCKsWRmVeSWpSXmKPExsWy7djPc7rct0PjDZ6sN7NYufook8WBn89Z
+        LDb2c1ic6c616Nj1lcXi8q45bBbzlz1lt/j9Yw6bA4fH7IaLLB7TJp1i89i8Qstj85J6j903
+        G9g8Jr1w9/i8SS6APYrLJiU1J7MstUjfLoErY98VzoKvEhWNsx4zNTC2iHQxcnJICJhIdM1u
+        Y+ti5OIQEljBKHH8/3UmkISQwBdGiRVNghCJz4wSHxf+Ze5i5ADr+NnDDhFfzigx7+pOVgjn
+        PaPEokUzWUC6hQU8JBbtWQBmiwjESVw9PxlsBbPASUaJi5v+MIMk2AQMJbredrGB2LwCdhKf
+        ZrWxgtgsAioSp7tXMoLYokDNx049YoGoEZQ4OfMJmM0pYCux9e0EdhCbWUBeYvvbOcwQtrjE
+        rSfzmUCWSQjsY5f4+eIpG8SjLhKX2m9B2cISr45vYYewZSROT+5hgWhoZpR4eG4tO4TTwyhx
+        uWkGI0SVtcSdc7/YQAHALKApsX6XPkTYUeL+93tMkHDhk7jxVhDiCD6JSdumQ4OLV6KjTQii
+        Wk1i1vF1cGsPXrjEPIFRaRaS12YheWcWkndmIexdwMiyilE8tbQ4Nz212DAvtVyvODG3uDQv
+        XS85P3cTIzAtnf53/NMOxq+Xkg4xCnAwKvHwvhAPjRdiTSwrrsw9xCjBwawkwut09nScEG9K
+        YmVValF+fFFpTmrxIUZpDhYlcV7jRS9jhQTSE0tSs1NTC1KLYLJMHJxSDYyMlYqff9rJd3Nu
+        t0jJWzS5h8Hlg/SpkBdW9z7W/9fQX/zCTFGO60xjr3LawglmPz9paDNWXwjd/ZL9sv3M44s2
+        TUucOe+MywKthxcOWCY/3uEbMm0x+/Pc2Ev/j2+15z13ojY86j33YmNunS9G5x5xHli/cSX7
+        o6VdzpuDFvPzKS7/8+1vuE6vEktxRqKhFnNRcSIAF/iMU0cDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7rct0PjDY68kLFYufook8WBn89Z
+        LDb2c1ic6c616Nj1lcXi8q45bBbzlz1lt/j9Yw6bA4fH7IaLLB7TJp1i89i8Qstj85J6j903
+        G9g8Jr1w9/i8SS6APUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1
+        J7MstUjfLkEvY98VzoKvEhWNsx4zNTC2iHQxcnBICJhI/Oxh72Lk4hASWMooseTJdLYuRk6g
+        uIzEyWkNrBC2sMSfa11sEEVvGSXezO0GKxIW8JBYtGcBC4gtIhAnceXYAyYQm1ngJKPEom1R
+        EA3PGSWmLZzDDpJgEzCU6HrbBdbMK2An8WlWG9gGFgEVidPdKxlBbFGgQWd6XkDVCEqcnPkE
+        bAGngK3E1rcT2CEWmEnM2/yQGcKWl9j+dg6ULS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlW
+        MYqklhbnpucWG+kVJ+YWl+al6yXn525iBMbhtmM/t+xg7HoXfIhRgINRiYf3hXhovBBrYllx
+        Ze4hRgkOZiURXqezp+OEeFMSK6tSi/Lji0pzUosPMZoCPTeRWUo0OR+YIvJK4g1NDc0tLA3N
+        jc2NzSyUxHk7BA7GCAmkJ5akZqemFqQWwfQxcXBKNTDm2638/Zc7706cmv6d9swCgZMTTsja
+        NT88E8174e73AGlns4Uyn59eebRipWfhnFtsDRNvh89Q3O1/7/uu3a/7ruiziKgYSRzKjn1y
+        +7VtfvbNmm/FZ/wb8xud5nw+8saNq9HsmqqXwWSrK1tnnT5urCny/RKz700zqwuK16YGn1/S
+        xsj5+qyTEktxRqKhFnNRcSIAItHzPtkCAAA=
+X-CMS-MailID: 20200907070235eucas1p22f87f67c713f5b6adcb494a54c5e75d4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200905155056eucas1p2d4a2249f73506a765fce2d2f7089748d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200905155056eucas1p2d4a2249f73506a765fce2d2f7089748d
+References: <20200904152550.17964-1-hdanton@sina.com>
+        <20200905073528.9464-1-hdanton@sina.com>
+        <CGME20200905155056eucas1p2d4a2249f73506a765fce2d2f7089748d@eucas1p2.samsung.com>
+        <1599321042.11726.6.camel@HansenPartnership.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 1:44 PM hch@infradead.org <hch@infradead.org> wrote:
->
-> On Wed, Aug 05, 2020 at 07:35:28AM +0000, Damien Le Moal wrote:
-> > > the write pointer.  The only interesting addition is that we also want
-> > > to report where we wrote.  So I'd rather have RWF_REPORT_OFFSET or so.
-> >
-> > That works for me. But that rules out having the same interface for raw block
-> > devices since O_APPEND has no meaning in that case. So for raw block devices, it
-> > will have to be through zonefs. That works for me, and I think it was your idea
-> > all along. Can you confirm please ?
->
-> Yes.  I don't think think raw syscall level access to the zone append
-> primitive makes sense.  Either use zonefs for a file-like API, or
-> use the NVMe pass through interface for 100% raw access.
+Hi James,
 
-But there are use-cases which benefit from supporting zone-append on
-raw block-dev path.
-Certain user-space log-structured/cow FS/DB will use the device that
-way. Aerospike is one example.
-Pass-through is synchronous, and we lose the ability to use io-uring.
+On 05.09.2020 17:50, James Bottomley wrote:
+> [resend with correct linux-arch address]
+> On Sat, 2020-09-05 at 15:35 +0800, Hillf Danton wrote:
+>> On Fri, 04 Sep 2020 08:34:39 -0700 James Bottomley wrote:
+>>> On Fri, 2020-09-04 at 23:25 +0800, Hillf Danton wrote:
+>>>> The DMA buffer allocated is always cleared in DMA core and this
+>>>> is making DMA_ATTR_NO_KERNEL_MAPPING non-special.
+>>>>
+>>>> Fixes: d98849aff879 ("dma-direct: handle
+>>>> DMA_ATTR_NO_KERNEL_MAPPING
+>>>> in common code")
+>>>> Cc: Kees Cook <keescook@chromium.org>
+>>>> Cc: Matthew Wilcox <willy@infradead.org>
+>>>> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+>>>> Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+>>>> Signed-off-by: Hillf Danton <hdanton@sina.com>
+>>>> ---
+>>>>
+>>>> --- a/kernel/dma/direct.c
+>>>> +++ b/kernel/dma/direct.c
+>>>> @@ -178,9 +178,17 @@ void *dma_direct_alloc_pages(struct devi
+>>>>   
+>>>>   	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
+>>>>   	    !force_dma_unencrypted(dev)) {
+>>>> +		int i;
+>>>> +
+>>>>   		/* remove any dirty cache lines on the kernel
+>>>> alias
+>>>> */
+>>>>   		if (!PageHighMem(page))
+>>>>   			arch_dma_prep_coherent(page, size);
+>>>> +
+>>>> +		for (i = 0; i < size/PAGE_SIZE; i++) {
+>>>> +			ret = kmap_atomic(page + i);
+>>>> +			memset(ret, 0, PAGE_SIZE);
+>>>> +			kunmap_atomic(ret);
+>> Hi James
+>>> This is massively expensive on PARISC and likely other VIPT/VIVT
+>>> architectures.
+>> Correct.
+>>
+>>> What's the reason for clearing it?  This could also be
+>> 	/* we always manually zero the memory once we are done: */
+>> 	gfp &= ~__GFP_ZERO;
+>> 	gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
+>> 					   &phys_limit);
+> That's not a reason ... that comment was put in for coherent mappings.
+> What is the reason we should incur all this expense for clearing pages
+> which aren't unmapped in the kernel, because we can update the comment?
+>   The usual rationale for kernel mapped pages is security, because they
+> may leak information but unmapped pages shouldn't have this problem.
 
-For async uring/aio to block-dev, file-pointer will not be moved to
-EoF, but that position was not very important anyway- as with this
-interface we expect many async appends outstanding, all with
-zone-start.
-Do you think RWF_APPEND | RWF_REPORT_OFFSET_DIRECT/INDIRECT is too bad
-for direct block-dev. Could you please suggest another way to go about
-it?
+Any dma_alloc_attrs() buffer might be mmaped to userspace, so the 
+security reason is still valid. Possible lack if kernel mapping was only 
+a hint that driver doesn't need it, so it might be skipped on some 
+architectures, where creating it requires significant resources (i.e. 
+vmalloc area).
 
+>>> really inefficient even on PIPT architectures if the memory is
+>>> device remote.
+>>>
+>>> If we really have to do this, it should likely be done in the arch
+>>> or driver hooks because there are potentially more efficient ways
+>>> we can do this knowing how the architecture behaves.
+>> I'm open to any vintage ideas in your mind wrt clearing dma buf e.g
+>> on platforms like PARISC. Or feel free to offload me the work if it
+>> makes sense to you who are rich of PARISC knowledge.
+> OK, I've cc'd linux-arch because this is a problem for more than just
+> parisc.  However, not having to do it is the best solution ... sort of
+> the doctor, doctor it hurts when I do this answer.
 
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
---
-Kanchan
