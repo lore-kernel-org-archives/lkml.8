@@ -2,106 +2,111 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02768C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A140C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5A9D215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2067721741
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599485961;
+	bh=F+vehrrDrAfIV9i6ID63zh7sEgGFkW6eFJYW5E8YQHQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tVhhjP2y/wYRbARAknjmlrkjAiTNegkReq9siQxzRp5drLBOa6MYRcew1jm/LI/B9
+	 ysmQ5VlETxhCybFAlqBsUyoF7JAyZ5/GjpRN1q8ACXQJB05jpSgS0xodXTvwh8RZkg
+	 2oQP5qZdqzbyjwOAx5R+aVvtmEEkKNHNortKwJAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgIGNeu (ORCPT
+        id S1729545AbgIGNiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:34:50 -0400
-Received: from 8bytes.org ([81.169.241.247]:43596 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729508AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:19:37 -0400
-Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 992521824;
-        Mon,  7 Sep 2020 15:17:11 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 57/72] x86/sev-es: Handle MONITOR/MONITORX Events
-Date:   Mon,  7 Sep 2020 15:15:58 +0200
-Message-Id: <20200907131613.12703-58-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
-References: <20200907131613.12703-1-joro@8bytes.org>
+        Mon, 7 Sep 2020 09:38:25 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36143 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729401AbgIGNXD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:23:03 -0400
+Received: by mail-wr1-f66.google.com with SMTP id z1so15843751wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:22:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jw3ZabYmqpCSQDTYowWmd33rXHnppYFQbMxFutigDOU=;
+        b=kxsPUFaELtJLHPWAoYt1fnYie4NDdmSyfj2XTuHHRtmyelUxLgrfy+MYiiVluR1YnF
+         ch8+T1egldCGhUF5iq5hw7LlxVJwXufICiA5JmXfsW7kL+QDwJdy4S3rq1FNuXDOFdsl
+         0AZuHXvgTwMsURx8WvZ1enLbMM+F7hgKaJtRUkl9bc/E3qfBOVGLmzjgzfVC0cncj6Io
+         VpHkSdXx75Qlh/HTOmroZnT+Ld+q/K4CERVU7tENr7utne38Tcs2LfevyX9fscFe8YV3
+         u41utouiZv6IpasPplIRQkg1B6QxghVwbUNpNgA87PnXO8yVTbOPxpRGRtfUUpPl/lYr
+         3Akg==
+X-Gm-Message-State: AOAM532pvbK8twtCucbiwnXV2bnLFNkbm1a1yWzA9NtflKBNrwzKjLOY
+        qkr7sypIj4O6B2DA0zjY++ejhTNjjd0H+Lmyazs=
+X-Google-Smtp-Source: ABdhPJy+SlaAJQL068e7tf1CGc3id41YdCtykVF6ENJPsogzaYmryxf4shlGtuSlnL+c2XDjfu8nrWoFf6HdOXbZVKs=
+X-Received: by 2002:adf:82d5:: with SMTP id 79mr17700246wrc.60.1599484956845;
+ Mon, 07 Sep 2020 06:22:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200907034502.753230-1-namhyung@kernel.org> <20200907034502.753230-2-namhyung@kernel.org>
+ <20200907112925.GJ1199773@krava> <20200907113201.GK1199773@krava>
+In-Reply-To: <20200907113201.GK1199773@krava>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 7 Sep 2020 22:22:25 +0900
+Message-ID: <CAM9d7cisp7QQJF8RT7fPW4rQ4tTrZtK8PM61fKGFKGE-xHqevw@mail.gmail.com>
+Subject: Re: [PATCH 1/9] perf evlist: Fix cpu/thread map leak
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+Hi Jiri,
 
-Implement a handler for #VC exceptions caused by MONITOR and MONITORX
-instructions.
+On Mon, Sep 7, 2020 at 8:32 PM Jiri Olsa <jolsa@redhat.com> wrote:
+>
+> On Mon, Sep 07, 2020 at 01:29:29PM +0200, Jiri Olsa wrote:
+> > On Mon, Sep 07, 2020 at 12:44:54PM +0900, Namhyung Kim wrote:
+> > > Asan reported leak of cpu and thread maps as they have one more
+> > > refcount than released.  I found that after setting evlist maps it
+> > > should release it's refcount.
+> > >
+> > > It seems to be broken from the beginning so I chose the original
+> > > commit as the culprit.  But not sure how it's applied to stable trees
+> > > since there are many changes in the code after that.
+> > >
+> > > Fixes: 7e2ed097538c5 ("perf evlist: Store pointer to the cpu and thread maps")
+> > > Fixes: 4112eb1899c0e ("perf evlist: Default to syswide target when no thread/cpu maps set")
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > > ---
+> > >  tools/perf/util/evlist.c | 11 ++++++++---
+> > >  1 file changed, 8 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > > index e3fa3bf7498a..c0768c61eb43 100644
+> > > --- a/tools/perf/util/evlist.c
+> > > +++ b/tools/perf/util/evlist.c
+> > > @@ -946,6 +946,10 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
+> > >
+> > >     perf_evlist__set_maps(&evlist->core, cpus, threads);
+> > >
+> > > +   /* as evlist now has references, put count here */
+> > > +   perf_cpu_map__put(cpus);
+> > > +   perf_thread_map__put(threads);
+> >
+> > nice catch, I checked perf_evlist__create_syswide_maps is doing this
+>
+> because you fixed that :))) missed the rest of the patch.. sry
 
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: Adapt to #VC handling infrastructure ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/kernel/sev-es.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+No worries and thanks for the review! :)
 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 7fb17e71ff05..847a578d5158 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -872,6 +872,16 @@ static enum es_result vc_handle_rdpmc(struct ghcb *ghcb, struct es_em_ctxt *ctxt
- 	return ES_OK;
- }
- 
-+static enum es_result vc_handle_monitor(struct ghcb *ghcb,
-+					struct es_em_ctxt *ctxt)
-+{
-+	/*
-+	 * Treat it as a NOP and do not leak a physical address to the
-+	 * hypervisor
-+	 */
-+	return ES_OK;
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -908,6 +918,9 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	case SVM_EXIT_WBINVD:
- 		result = vc_handle_wbinvd(ghcb, ctxt);
- 		break;
-+	case SVM_EXIT_MONITOR:
-+		result = vc_handle_monitor(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_NPF:
- 		result = vc_handle_mmio(ghcb, ctxt);
- 		break;
--- 
-2.28.0
-
+Namhyung
