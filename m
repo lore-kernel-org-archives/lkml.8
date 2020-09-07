@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A816C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1615DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CF3421775
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F6D20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495174;
-	bh=huRRtVQAV4kXuTBNP9D6urMFzmt8KLZCSNdWyYF4x5A=;
+	s=default; t=1599495201;
+	bh=qDYGfZ3RmLMzEdL/D31BVomLhzU4Yf8Q9HdCrkY+B7M=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ef1dp/lm6FIOwLX0PRsjKfcj2BcJh0L1MaKdwDce+UwHiQpyoztqyIwd+ET+BzIOL
-	 o6Y9HS6vMbCbE0cg1L2l46uOAiVZYtMWaiKiUoPz8f5onC3cfYLVON5MxfC5/lfWAY
-	 QaR3koQN6SHCePFp+ZB8MqfZe8/y6MsoAKrJpujc=
+	b=dgEv7bYmWUdD3zssY1rkLxedFRmpt4Sn8gf+nTEnwuoO/FO30Ozo8W3GcAGU3o4xJ
+	 /PnU30wohoc0pm31GYzKqrQlkg03KgpxwAagWe0D6DiygAD6TFfTbPy9dNh89Nxifj
+	 XeuDCsEGzqCS4ZpsCaPNGEOzYWbHTgeDblvoGP/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgIGQMx (ORCPT
+        id S1730388AbgIGQNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:12:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60964 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729937AbgIGQMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:12:36 -0400
+        id S1729937AbgIGQM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:12:56 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1270421789;
-        Mon,  7 Sep 2020 16:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4039206E6;
+        Mon,  7 Sep 2020 16:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495155;
-        bh=huRRtVQAV4kXuTBNP9D6urMFzmt8KLZCSNdWyYF4x5A=;
+        s=default; t=1599495175;
+        bh=qDYGfZ3RmLMzEdL/D31BVomLhzU4Yf8Q9HdCrkY+B7M=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=AAhaIjLCHPgSP4hTnbUU5WAX8BN7tc0jQNKZB7arK9c5SQ+dauvzHVbRJp1wFjsaD
-         OfpmxIivh9T65EjT7ZKDeaMqKx2zM954N46rSbigDf7q82Vjb6kJUpOqXTWMMMOGt6
-         5iqhY+vqX8A2YEuZNS8SXqs9wlQWvLjBVGqvOOt0=
+        b=2HlZYLGDXRkHSOlvKLZG4N1MYxjdg3kgFUw0boXQ+tQCu/eUQINFSNUd4gvaBfJml
+         vQ6L90Mnr1qXXK/azSFdFF7j6CbTXhzC0BhYGaDIZ3Y0mVUtcRqRjt1z8GE8rjbEbu
+         3S3ak1/xNBLuZcOBZm8k3ASFgoZLMORPQTtLcF4Y=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -51,9 +51,9 @@ To:     Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 03/25] dt-bindings: iio: adc: exynos-adc: do not require syscon on S5Pv210
-Date:   Mon,  7 Sep 2020 18:11:19 +0200
-Message-Id: <20200907161141.31034-4-krzk@kernel.org>
+Subject: [RFT 06/25] ARM: dts: s5pv210: move fixed clocks under root node
+Date:   Mon,  7 Sep 2020 18:11:22 +0200
+Message-Id: <20200907161141.31034-7-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
 References: <20200907161141.31034-1-krzk@kernel.org>
@@ -62,29 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ADC in S5Pv210 does not have ADC phy registers in separate block for
-which syscon would be needed.  Remove this requirement to fix dtbs_check
-warnings like:
+The fixed clocks are kept under dedicated 'external-clocks' node, thus a
+fake 'reg' was added.  This is not correct with dtschema as fixed-clock
+binding does not have a 'reg' property.  Moving fixed clocks out of
+'soc' to root node fixes multiple dtbs_check warnings:
 
-  arch/arm/boot/dts/s5pv210-fascinate4g.dt.yaml: adc@e1700000: 'samsung,syscon-phandle' is a required property
+  external-clocks: $nodename:0: 'external-clocks' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+  external-clocks: #size-cells:0:0: 0 is not one of [1, 2]
+  external-clocks: oscillator@0:reg:0: [0] is too short
+  external-clocks: oscillator@1:reg:0: [1] is too short
+  external-clocks: 'ranges' is a required property
+  oscillator@0: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml          | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/s5pv210.dtsi | 36 +++++++++++++---------------------
+ 1 file changed, 14 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-index 89b4f9c252a6..75174af72288 100644
---- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-+++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-@@ -81,7 +81,6 @@ allOf:
-               - samsung,exynos-adc-v2
-               - samsung,exynos3250-adc
-               - samsung,exynos4212-adc
--              - samsung,s5pv210-adc
-     then:
-       required:
-         - samsung,syscon-phandle
+diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+index 84e4447931de..5c760a6d7955 100644
+--- a/arch/arm/boot/dts/s5pv210.dtsi
++++ b/arch/arm/boot/dts/s5pv210.dtsi
+@@ -52,34 +52,26 @@
+ 		};
+ 	};
+ 
++	xxti: oscillator-0 {
++		compatible = "fixed-clock";
++		clock-frequency = <0>;
++		clock-output-names = "xxti";
++		#clock-cells = <0>;
++	};
++
++	xusbxti: oscillator-1 {
++		compatible = "fixed-clock";
++		clock-frequency = <0>;
++		clock-output-names = "xusbxti";
++		#clock-cells = <0>;
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+-		external-clocks {
+-			compatible = "simple-bus";
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			xxti: oscillator@0 {
+-				compatible = "fixed-clock";
+-				reg = <0>;
+-				clock-frequency = <0>;
+-				clock-output-names = "xxti";
+-				#clock-cells = <0>;
+-			};
+-
+-			xusbxti: oscillator@1 {
+-				compatible = "fixed-clock";
+-				reg = <1>;
+-				clock-frequency = <0>;
+-				clock-output-names = "xusbxti";
+-				#clock-cells = <0>;
+-			};
+-		};
+-
+ 		onenand: onenand@b0600000 {
+ 			compatible = "samsung,s5pv210-onenand";
+ 			reg = <0xb0600000 0x2000>,
 -- 
 2.17.1
 
