@@ -2,83 +2,114 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E25C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E912DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9948A21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A980E21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BorI95I0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgIGOWF (ORCPT
+        id S1729824AbgIGOXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:22:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38474 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729549AbgIGONW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:13:22 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 936D919DCD516F507D67;
-        Mon,  7 Sep 2020 22:12:44 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
- 22:12:40 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
-        <ryder.lee@mediatek.com>, <kvalo@codeaurora.org>,
-        <davem@davemloft.net>, <kuba@kernel.org>, <matthias.bgg@gmail.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
-CC:     <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: [PATCH net-next] mt76: mt7615: Remove set but unused variable 'index'
-Date:   Mon, 7 Sep 2020 22:10:02 +0800
-Message-ID: <20200907141002.10745-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 7 Sep 2020 10:23:19 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56810 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729788AbgIGORI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:17:08 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EFTVg053388;
+        Mon, 7 Sep 2020 09:15:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599488129;
+        bh=xUz4wObYEDdENZCNHUrCsFZ25ccgTnFTci7Yd+rcWYw=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=BorI95I0jkWvfjVGA5Ur5yA71XuioNLNRECHjBP6jMYdX+VZhh5z/lPsa3vX49BPw
+         iFy0nXnX+qcRrXeR8cHd1SALmKnsCVg81A+Vpjn1g+VB3t9QTC8Ug65nWqGJVuAR93
+         JzU8X7uyMg5b/+56W8A1o3pMVpXsF1W+j9Q/dgVg=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087EFTtC035999
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Sep 2020 09:15:29 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
+ 2020 09:15:27 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 7 Sep 2020 09:15:27 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EFRfd043562;
+        Mon, 7 Sep 2020 09:15:27 -0500
+Date:   Mon, 7 Sep 2020 09:15:27 -0500
+From:   Nishanth Menon <nm@ti.com>
+To:     Roger Quadros <rogerq@ti.com>
+CC:     <t-kristo@ti.com>, <robh+dt@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
+        <kishon@ti.com>
+Subject: Re: [PATCH 0/6] arm64: dts: ti: Add USB support for J7200 EVM
+Message-ID: <20200907141527.x6gkvbji33r4q64p@akan>
+References: <20200907103810.9870-1-rogerq@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200907103810.9870-1-rogerq@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 13:38-20200907, Roger Quadros wrote:
+> Hi Tero/Nishanth,
+> 
+> This series adds USB2.0 support for the J7200 EVM.
+> 
+> Series is based on top of:
+> 
+>     Faiz's MMC/SD support series
+>     https://lore.kernel.org/lkml/20200907090520.25313-1-faiz_abbas@ti.com/
+>     Lokesh's initial support series
+>     https://patchwork.kernel.org/cover/11740039/
+>     Vignesh's I2C support series
+>     https://lore.kernel.org/patchwork/cover/1282152/
+>     Vignesh's Hyperflash series
+>     https://lore.kernel.org/patchwork/cover/1285326/
+> 
+> cheers,
+> -roger
+> 
+> Kishon Vijay Abraham I (1):
+>   arm64: dts: ti: k3-j7200-common-proc-board: Configure the SERDES lane
+>     function
+> 
+> Roger Quadros (5):
+>   dt-bindings: mux-j7200-wiz: Add lane function defines
+>   arm64: dts: ti: k3-j7200-main: Add SERDES lane control mux
+>   arm64: dts: ti: k3-j7200-main.dtsi: Add USB to SERDES lane MUX
+>   arm64: dts: ti: k3-j7200-main: Add USB controller
+>   arm64: dts: ti: k3-j7200-common-proc-board: Add USB support
+> 
+>  .../dts/ti/k3-j7200-common-proc-board.dts     | 28 ++++++++++
+>  arch/arm64/boot/dts/ti/k3-j7200-main.dtsi     | 51 +++++++++++++++++++
+>  include/dt-bindings/mux/mux-j7200-wiz.h       | 29 +++++++++++
+>  3 files changed, 108 insertions(+)
+>  create mode 100644 include/dt-bindings/mux/mux-j7200-wiz.h
+> 
 
-drivers/net/wireless/mediatek/mt76/mt7615/testmode.c: In function mt7615_tm_set_tx_power
-drivers/net/wireless/mediatek/mt76/mt7615/testmode.c:83:7: warning: variable ‘index’ set but not used [-Wunused-but-set-variable]=
+Too many warnings(W=2 and others) for me to look at this series
+closer.
 
-commit 4f0bce1c8888 ("mt76: mt7615: implement testmode support")
-involved this unused variable, remove it.
-
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
----
- drivers/net/wireless/mediatek/mt76/mt7615/testmode.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/testmode.c b/drivers/net/wireless/mediatek/mt76/mt7615/testmode.c
-index 1730751133aa..de39ea8adb96 100644
---- a/drivers/net/wireless/mediatek/mt76/mt7615/testmode.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/testmode.c
-@@ -80,13 +80,10 @@ mt7615_tm_set_tx_power(struct mt7615_phy *phy)
- 
- 	target_chains = mt7615_ext_pa_enabled(dev, band) ? 1 : n_chains;
- 	for (i = 0; i < target_chains; i++) {
--		int index;
--
- 		ret = mt7615_eeprom_get_target_power_index(dev, chandef->chan, i);
- 		if (ret < 0)
- 			return -EINVAL;
- 
--		index = ret - MT_EE_NIC_CONF_0;
- 		if (tx_power && tx_power[i])
- 			data[ret - MT_EE_NIC_CONF_0] = tx_power[i];
- 	}
 -- 
-2.17.1
-
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
