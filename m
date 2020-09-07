@@ -2,51 +2,51 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 612AFC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4FA621897
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31A5B21897
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgIGVTg (ORCPT
+        id S1728209AbgIGVTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:19:36 -0400
-Received: from mail-il1-f206.google.com ([209.85.166.206]:39001 "EHLO
+        Mon, 7 Sep 2020 17:19:40 -0400
+Received: from mail-il1-f206.google.com ([209.85.166.206]:53952 "EHLO
         mail-il1-f206.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727007AbgIGVTQ (ORCPT
+        with ESMTP id S1727838AbgIGVTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 17:19:16 -0400
-Received: by mail-il1-f206.google.com with SMTP id v17so3528874ilg.6
+Received: by mail-il1-f206.google.com with SMTP id c8so6213988ila.20
         for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 14:19:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Y1HcDzDEp2AuwmzQtpHT6ari7YrwhHpomRXZ5gKlutc=;
-        b=MKKiNeNIK3XjCzo3c4zSLybUG40pGsgbbgThZ/sZpZbSxrQaAiFLQRYMAJMMLYwnBI
-         QeEGsOXtR48tjpFzJK3Y0D0+SEgalM4TABscLX+AWvJ6GSK2SyNFFOjwoxJfhweRvRWE
-         PipYZquDjF+hp7OP4EW/4fWmTDhsJ5bvUcvy4OkoSqEL2ki76oQUCQtzMAVozc05tPXr
-         tQuF3U+NPDcnABQm4b2Z6d0MwE17JAA9xilyKIW4UyggPvtlBUScg0TLms8cmDBDsyTY
-         RrcFTIcf1Xp1bV+4tbTGxiAAG7VDKUNaZkKd7md1Y/DCLLFnbe2jQyoDExXVAI/cnRa5
-         9Ebw==
-X-Gm-Message-State: AOAM5319e4trLxcBtvNbrdrDmYs5iynaX7tybSDIEQkk+FklX9oaPT5L
-        Scbxdsy0RL2VfM2RPTqCzKWLf6S+Esv5mf0/PnqhVtgVOpEV
-X-Google-Smtp-Source: ABdhPJxjSNwEdKDIWU7kZISN3qVKDBhThAAn3f6Z6jsqj6uER75P7M7tAA69P2U4TeQjQqC4FVLQc6DN8YTHaysMpe4aWyDKBdJ1
+        bh=EwRjuQ9atzJc/71khL9ziMZwpDz6RNRGvAyJm8uh71s=;
+        b=VkVamhwNqE47wq9a+UVNaaqY87rHnYrrgkTWtypTrjyMkD0YfGNA2ZooBglK6jIlje
+         Iy6e4098Qs+bAyuYY+DNwqEqibTE32/9CQnGoeFwDPVErLCs4iSuSUYLvzNHOPIjDAs/
+         BuecjpamFAPqP/Lwg3yE0Zi6X/6O2bcsHlNKIzxV96CjizrfN95Eh7bNLUG+IxXWo6cY
+         99Caxw2KgaP7mMeA9G+Wvb7Kdu+a88qofub18853l4OIOKVLjpG/UFtl1VufoavoOWIQ
+         LiFKyXSXp4QoZF+A7h2VVbAc+vR1OE7P40a4Wjc34+A30ndPFmmqZKK5UV6iu4U404Uh
+         8rug==
+X-Gm-Message-State: AOAM532Ck/GUqgNDMptHc9w+h3A/yEK76Y00NAe8dIiXoOlgAksBwxEW
+        javFFGA6eh2SP4vLbsXeYit5m3kCws2Ire9jpUcYT0JxegSp
+X-Google-Smtp-Source: ABdhPJy3NU8sEs7fFpd4pmftyPSS7r9qTsau1MWj3URpOD9bGFaw2zbLzfh7RBlUXCy1NDUr2aO7ZAJ06IOJclihoRRz3T7P8IsF
 MIME-Version: 1.0
-X-Received: by 2002:a92:c8cd:: with SMTP id c13mr11023625ilq.96.1599513555424;
+X-Received: by 2002:a5d:9ed3:: with SMTP id a19mr18703897ioe.28.1599513555606;
  Mon, 07 Sep 2020 14:19:15 -0700 (PDT)
 Date:   Mon, 07 Sep 2020 14:19:15 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048db9a05aebfc503@google.com>
-Subject: memory leak in __team_options_register
-From:   syzbot <syzbot+69b804437cfec30deac3@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, jiri@resnulli.us, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <0000000000004ba2fe05aebfc526@google.com>
+Subject: WARNING: refcount bug in io_wqe_worker
+From:   syzbot <syzbot+956ef5eac18eadd0fb7f@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,115 +57,71 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    f4d51dff Linux 5.9-rc4
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=126a23e1900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7954285d6e960c0f
-dashboard link: https://syzkaller.appspot.com/bug?extid=69b804437cfec30deac3
+HEAD commit:    7a695657 Add linux-next specific files for 20200903
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=152eff5d900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=39134fcec6c78e33
+dashboard link: https://syzkaller.appspot.com/bug?extid=956ef5eac18eadd0fb7f
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1627617d900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122e20dd900000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1086a1a5900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+69b804437cfec30deac3@syzkaller.appspotmail.com
+Reported-by: syzbot+956ef5eac18eadd0fb7f@syzkaller.appspotmail.com
 
-BUG: memory leak
-unreferenced object 0xffff8881197f4cc0 (size 64):
-  comm "syz-executor772", pid 6506, jiffies 4294951766 (age 20.400s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    41 aa 0c 84 ff ff ff ff 01 00 00 00 00 00 00 00  A...............
-  backtrace:
-    [<000000000c781965>] kmemdup+0x23/0x50 mm/util.c:127
-    [<00000000bdcac628>] kmemdup include/linux/string.h:479 [inline]
-    [<00000000bdcac628>] __team_options_register+0xf7/0x2c0 drivers/net/team/team.c:269
-    [<00000000d0decc27>] team_options_register drivers/net/team/team.c:340 [inline]
-    [<00000000d0decc27>] team_init+0x1b2/0x2f0 drivers/net/team/team.c:1643
-    [<00000000b2b1c890>] register_netdevice+0x143/0x760 net/core/dev.c:9760
-    [<000000001344192b>] __rtnl_newlink+0x8f0/0xbc0 net/core/rtnetlink.c:3441
-    [<00000000254132c3>] rtnl_newlink+0x49/0x70 net/core/rtnetlink.c:3500
-    [<000000001566c9e7>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5563
-    [<0000000017d9fa2a>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2470
-    [<00000000c4f11d5e>] netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
-    [<00000000c4f11d5e>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1330
-    [<0000000066743465>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1919
-    [<000000005d0b195e>] sock_sendmsg_nosec net/socket.c:651 [inline]
-    [<000000005d0b195e>] sock_sendmsg+0x4c/0x60 net/socket.c:671
-    [<0000000008f94e79>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2353
-    [<00000000e00d63ed>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2407
-    [<000000005e9d5313>] __sys_sendmmsg+0xda/0x230 net/socket.c:2497
-    [<000000002479ea72>] __do_sys_sendmmsg net/socket.c:2526 [inline]
-    [<000000002479ea72>] __se_sys_sendmmsg net/socket.c:2523 [inline]
-    [<000000002479ea72>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2523
-    [<0000000032159aee>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-
-BUG: memory leak
-unreferenced object 0xffff88811b4e0b80 (size 64):
-  comm "syz-executor772", pid 6508, jiffies 4294951886 (age 19.210s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    41 aa 0c 84 ff ff ff ff 01 00 00 00 00 00 00 00  A...............
-  backtrace:
-    [<000000000c781965>] kmemdup+0x23/0x50 mm/util.c:127
-    [<00000000bdcac628>] kmemdup include/linux/string.h:479 [inline]
-    [<00000000bdcac628>] __team_options_register+0xf7/0x2c0 drivers/net/team/team.c:269
-    [<00000000d0decc27>] team_options_register drivers/net/team/team.c:340 [inline]
-    [<00000000d0decc27>] team_init+0x1b2/0x2f0 drivers/net/team/team.c:1643
-    [<00000000b2b1c890>] register_netdevice+0x143/0x760 net/core/dev.c:9760
-    [<000000001344192b>] __rtnl_newlink+0x8f0/0xbc0 net/core/rtnetlink.c:3441
-    [<00000000254132c3>] rtnl_newlink+0x49/0x70 net/core/rtnetlink.c:3500
-    [<000000001566c9e7>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5563
-    [<0000000017d9fa2a>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2470
-    [<00000000c4f11d5e>] netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
-    [<00000000c4f11d5e>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1330
-    [<0000000066743465>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1919
-    [<000000005d0b195e>] sock_sendmsg_nosec net/socket.c:651 [inline]
-    [<000000005d0b195e>] sock_sendmsg+0x4c/0x60 net/socket.c:671
-    [<0000000008f94e79>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2353
-    [<00000000e00d63ed>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2407
-    [<000000005e9d5313>] __sys_sendmmsg+0xda/0x230 net/socket.c:2497
-    [<000000002479ea72>] __do_sys_sendmmsg net/socket.c:2526 [inline]
-    [<000000002479ea72>] __se_sys_sendmmsg net/socket.c:2523 [inline]
-    [<000000002479ea72>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2523
-    [<0000000032159aee>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-
-BUG: memory leak
-unreferenced object 0xffff88811b4e03c0 (size 64):
-  comm "syz-executor772", pid 6518, jiffies 4294951923 (age 18.840s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    41 aa 0c 84 ff ff ff ff 01 00 00 00 00 00 00 00  A...............
-  backtrace:
-    [<000000000c781965>] kmemdup+0x23/0x50 mm/util.c:127
-    [<00000000bdcac628>] kmemdup include/linux/string.h:479 [inline]
-    [<00000000bdcac628>] __team_options_register+0xf7/0x2c0 drivers/net/team/team.c:269
-    [<00000000d0decc27>] team_options_register drivers/net/team/team.c:340 [inline]
-    [<00000000d0decc27>] team_init+0x1b2/0x2f0 drivers/net/team/team.c:1643
-    [<00000000b2b1c890>] register_netdevice+0x143/0x760 net/core/dev.c:9760
-    [<000000001344192b>] __rtnl_newlink+0x8f0/0xbc0 net/core/rtnetlink.c:3441
-    [<00000000254132c3>] rtnl_newlink+0x49/0x70 net/core/rtnetlink.c:3500
-    [<000000001566c9e7>] rtnetlink_rcv_msg+0x17e/0x460 net/core/rtnetlink.c:5563
-    [<0000000017d9fa2a>] netlink_rcv_skb+0x5b/0x180 net/netlink/af_netlink.c:2470
-    [<00000000c4f11d5e>] netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
-    [<00000000c4f11d5e>] netlink_unicast+0x2b6/0x3c0 net/netlink/af_netlink.c:1330
-    [<0000000066743465>] netlink_sendmsg+0x2ba/0x570 net/netlink/af_netlink.c:1919
-    [<000000005d0b195e>] sock_sendmsg_nosec net/socket.c:651 [inline]
-    [<000000005d0b195e>] sock_sendmsg+0x4c/0x60 net/socket.c:671
-    [<0000000008f94e79>] ____sys_sendmsg+0x118/0x2f0 net/socket.c:2353
-    [<00000000e00d63ed>] ___sys_sendmsg+0x81/0xc0 net/socket.c:2407
-    [<000000005e9d5313>] __sys_sendmmsg+0xda/0x230 net/socket.c:2497
-    [<000000002479ea72>] __do_sys_sendmmsg net/socket.c:2526 [inline]
-    [<000000002479ea72>] __se_sys_sendmmsg net/socket.c:2523 [inline]
-    [<000000002479ea72>] __x64_sys_sendmmsg+0x24/0x30 net/socket.c:2523
-    [<0000000032159aee>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-
-executing program
-executing program
-executing program
-executing program
-executing program
-executing program
-executing program
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 12241 at lib/refcount.c:28 refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Modules linked in:
+CPU: 1 PID: 12241 Comm: io_wqe_worker-1 Not tainted 5.9.0-rc3-next-20200903-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Code: e9 db fe ff ff 48 89 df e8 dc 7e 17 fe e9 8a fe ff ff e8 02 0a d7 fd 48 c7 c7 00 2a 94 88 c6 05 b5 e2 19 07 01 e8 aa 7c a7 fd <0f> 0b e9 af fe ff ff 0f 1f 84 00 00 00 00 00 41 56 41 55 41 54 55
+RSP: 0018:ffffc90009117e08 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff88809d63a340 RSI: ffffffff815dbe97 RDI: fffff52001222fb3
+RBP: 0000000000000003 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880934e10b8
+R13: ffff8880a8a63530 R14: ffff8880a8a63500 R15: ffff8880a7ebfa00
+FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004e47b0 CR3: 0000000097f7c000 CR4: 00000000001506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ refcount_sub_and_test include/linux/refcount.h:274 [inline]
+ refcount_dec_and_test include/linux/refcount.h:294 [inline]
+ io_worker_exit fs/io-wq.c:236 [inline]
+ io_wqe_worker+0xcdb/0x10e0 fs/io-wq.c:596
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 12241 Comm: io_wqe_worker-1 Tainted: G    B             5.9.0-rc3-next-20200903-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x198/0x1fd lib/dump_stack.c:118
+ panic+0x347/0x7c0 kernel/panic.c:231
+ __warn.cold+0x38/0xbd kernel/panic.c:605
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:refcount_warn_saturate+0x1d1/0x1e0 lib/refcount.c:28
+Code: e9 db fe ff ff 48 89 df e8 dc 7e 17 fe e9 8a fe ff ff e8 02 0a d7 fd 48 c7 c7 00 2a 94 88 c6 05 b5 e2 19 07 01 e8 aa 7c a7 fd <0f> 0b e9 af fe ff ff 0f 1f 84 00 00 00 00 00 41 56 41 55 41 54 55
+RSP: 0018:ffffc90009117e08 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff88809d63a340 RSI: ffffffff815dbe97 RDI: fffff52001222fb3
+RBP: 0000000000000003 R08: 0000000000000001 R09: ffff8880ae720f8b
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880934e10b8
+R13: ffff8880a8a63530 R14: ffff8880a8a63500 R15: ffff8880a7ebfa00
+ refcount_sub_and_test include/linux/refcount.h:274 [inline]
+ refcount_dec_and_test include/linux/refcount.h:294 [inline]
+ io_worker_exit fs/io-wq.c:236 [inline]
+ io_wqe_worker+0xcdb/0x10e0 fs/io-wq.c:596
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
