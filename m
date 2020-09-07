@@ -2,245 +2,171 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85891C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F843C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43AA321532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAA620757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8FIeLQO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U4Z4qxvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbgIGQUg (ORCPT
+        id S1730439AbgIGQUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60244 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729888AbgIGQT7 (ORCPT
+        Mon, 7 Sep 2020 12:20:50 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:11923 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730528AbgIGQUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:19:59 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1344C061575;
-        Mon,  7 Sep 2020 09:19:58 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a17so16347088wrn.6;
-        Mon, 07 Sep 2020 09:19:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HT9LfWSpbFaa2y059nuG4LQh40rCzPKm8g3iGLNnnHw=;
-        b=I8FIeLQOJ41T0mfY6F0NWyC/3SOZoWO59jaQHoVtUKuUaKPy7edlULXh+D+P0rUQai
-         /UJYD8qqgVkLUXJnQ1bCiwWdSD4Nl/GPWGyYC0w61t9JyRZtLhueNOkUZgidrID7woS7
-         Pj1uc43IeOSOULacQ/pJcoNzVe2G9AsEuK6FvcfDDR4Rpr7DAlQ8CF/elo2c06E24DHJ
-         XSw9J8aZLZOHbsUl17Z0ryd+39VNszQtAp5j2zYRMDuNEK0kOC4KXqCYMmrj/Rv2DmpY
-         fNOdyNJ3lEXPzWw6z1yoTlDXN4+N+g1Hax6nSciF8h5KD3DdRBYmkp4+2f4PzuNOiaxT
-         7DoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HT9LfWSpbFaa2y059nuG4LQh40rCzPKm8g3iGLNnnHw=;
-        b=rUr1KM1lSvglAp/JYd9PrtfM2yWo6EMNIbzeizLC7oTmGQWDjciV/5Tu/mqqzwLWFj
-         S+WQJV9z3CnTluLjdIX5cokgecDVYxBLFUQGSXVVtWzr1LchNimMctlQAVrI+h5brd0Z
-         4SBKUvLae2QE/8ouuaR/fk7iPxcKB925OJ6wbZcBgOEIF4biO2neKQrHd7Q6lAzg+RlU
-         aHAQLCiKMQUZPM5sZN1lIMTzaiii9XwEh1DRBpR/gfagHftdQjZQHDeHuvLv6PhmK0YN
-         /nhHDqfyeqNG3QLjZnuPGlmH2USTbBdYJCkv/ciU4Qt66rbp3+8fozGr0xCsmR59aKZm
-         S+Gw==
-X-Gm-Message-State: AOAM5302seQi0w3gZkAOx6Df54j8APVpfoHaAY+m3G6pOECls4UjTY2s
-        hQ1zd+sF+LXsBTk1A9bh9Kbir7+g1gsKqx77rLs=
-X-Google-Smtp-Source: ABdhPJzBleaXLySOdMti5XW7/KECaJLPaqF+lt+h5uWNKU4weaPDxs6nqg0P26Fv5Z+XQHfmGnq2Xw==
-X-Received: by 2002:adf:e7ce:: with SMTP id e14mr21624282wrn.43.1599495596179;
-        Mon, 07 Sep 2020 09:19:56 -0700 (PDT)
-Received: from localhost.localdomain (userh713.uk.uudial.com. [194.69.103.86])
-        by smtp.gmail.com with ESMTPSA id y5sm19313717wrh.6.2020.09.07.09.19.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 09:19:55 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Andres Beltran <lkmlabelt@gmail.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Saruhan Karademir <skarade@microsoft.com>,
-        Juan Vazquez <juvazq@microsoft.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH v7 3/3] hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
-Date:   Mon,  7 Sep 2020 18:19:20 +0200
-Message-Id: <20200907161920.71460-4-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907161920.71460-1-parri.andrea@gmail.com>
-References: <20200907161920.71460-1-parri.andrea@gmail.com>
+        Mon, 7 Sep 2020 12:20:33 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f565d910000>; Mon, 07 Sep 2020 09:19:29 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 07 Sep 2020 09:20:19 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 09:20:19 -0700
+Received: from [10.2.173.224] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
+ 2020 16:20:14 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+CC:     <linux-mm@kvack.org>, Roman Gushchin <guro@fb.com>,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 01/16] mm: add pagechain container for storing
+ multiple pages.
+Date:   Mon, 7 Sep 2020 11:11:05 -0400
+X-Mailer: MailMate (1.13.1r5705)
+Message-ID: <50FA95D1-9222-48C0-9223-C1267E8C7A4A@nvidia.com>
+In-Reply-To: <20200907122228.4zlyfysdul3s62me@box>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200902180628.4052244-2-zi.yan@sent.com>
+ <20200907122228.4zlyfysdul3s62me@box>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_C524708B-26F9-4F4E-8D4C-397110CA1F43_=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599495569; bh=XnTErfZJmzsbuFLxuYCSxEnom9P/2j+krPxmhkHI9cY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=U4Z4qxviGFX+btp8OavPkBkMQmHxIBgEyc8CDZ8rE1f+FgYF57mLJMD+CwwzY+fpU
+         GoIMxbRjjG5ehaqoXwcXSkP9UeAJ1qeOdpLssGH+U7brJvKD+GPtcqRXN/ldARgIgb
+         6EFJgUNo+YeqYU5HNOt2pEdhBzoX3Do88Fut1CH8xvOnLGmfCfi928h1oAewYHNHR3
+         3noYaMgLguUaQrOvQCnnmhHeyTc9Bmc4aYRpTAGOhQsXcL52gLG2JYwll0fPq65iRB
+         7R0+FUoMkkUQ7Zy90Lb5kVo1wvyO+fzV17aC49OCM1CPyf5oH9LpqDptBYA4AwWBKC
+         Jw5E8q/1Qs5HA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andres Beltran <lkmlabelt@gmail.com>
+--=_MailMate_C524708B-26F9-4F4E-8D4C-397110CA1F43_=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, pointers to guest memory are passed to Hyper-V as
-transaction IDs in netvsc. In the face of errors or malicious
-behavior in Hyper-V, netvsc should not expose or trust the transaction
-IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-use small integers generated by vmbus_requestor as requests
-(transaction) IDs.
+On 7 Sep 2020, at 8:22, Kirill A. Shutemov wrote:
 
-Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
----
-Changes in v7:
-	- Move the allocation of the request ID after the data has been
-	  copied into the ring buffer (cf. 1/3).
-Changes in v2:
-        - Add casts to unsigned long to fix warnings on 32bit.
-        - Use an inline function to get the requestor size.
+> On Wed, Sep 02, 2020 at 02:06:13PM -0400, Zi Yan wrote:
+>> From: Zi Yan <ziy@nvidia.com>
+>>
+>> When depositing page table pages for 1GB THPs, we need 512 PTE pages +=
 
- drivers/net/hyperv/hyperv_net.h   | 13 +++++++++++++
- drivers/net/hyperv/netvsc.c       | 22 ++++++++++++++++------
- drivers/net/hyperv/rndis_filter.c |  1 +
- include/linux/hyperv.h            |  1 +
- 4 files changed, 31 insertions(+), 6 deletions(-)
+>> 1 PMD page. Instead of counting and depositing 513 pages, we can use t=
+he
+>> PMD page as a leader page and chain the rest 512 PTE pages with ->lru.=
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index 2181d4538ab70..4d2b2d48ff2a1 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -847,6 +847,19 @@ struct nvsp_message {
- 
- #define NETVSC_XDP_HDRM 256
- 
-+#define NETVSC_MIN_OUT_MSG_SIZE (sizeof(struct vmpacket_descriptor) + \
-+				 sizeof(struct nvsp_message))
-+#define NETVSC_MIN_IN_MSG_SIZE sizeof(struct vmpacket_descriptor)
-+
-+/* Estimated requestor size:
-+ * out_ring_size/min_out_msg_size + in_ring_size/min_in_msg_size
-+ */
-+static inline u32 netvsc_rqstor_size(unsigned long ringbytes)
-+{
-+	return ringbytes / NETVSC_MIN_OUT_MSG_SIZE +
-+	       ringbytes / NETVSC_MIN_IN_MSG_SIZE;
-+}
-+
- struct multi_send_data {
- 	struct sk_buff *skb; /* skb containing the pkt */
- 	struct hv_netvsc_packet *pkt; /* netvsc pkt pending */
-diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
-index 41f5cf0bb9971..03e93e3ddbad8 100644
---- a/drivers/net/hyperv/netvsc.c
-+++ b/drivers/net/hyperv/netvsc.c
-@@ -50,7 +50,7 @@ void netvsc_switch_datapath(struct net_device *ndev, bool vf)
- 
- 	vmbus_sendpacket(dev->channel, init_pkt,
- 			       sizeof(struct nvsp_message),
--			       (unsigned long)init_pkt,
-+			       VMBUS_RQST_ID_NO_RESPONSE,
- 			       VM_PKT_DATA_INBAND, 0);
- }
- 
-@@ -163,7 +163,7 @@ static void netvsc_revoke_recv_buf(struct hv_device *device,
- 		ret = vmbus_sendpacket(device->channel,
- 				       revoke_packet,
- 				       sizeof(struct nvsp_message),
--				       (unsigned long)revoke_packet,
-+				       VMBUS_RQST_ID_NO_RESPONSE,
- 				       VM_PKT_DATA_INBAND, 0);
- 		/* If the failure is because the channel is rescinded;
- 		 * ignore the failure since we cannot send on a rescinded
-@@ -213,7 +213,7 @@ static void netvsc_revoke_send_buf(struct hv_device *device,
- 		ret = vmbus_sendpacket(device->channel,
- 				       revoke_packet,
- 				       sizeof(struct nvsp_message),
--				       (unsigned long)revoke_packet,
-+				       VMBUS_RQST_ID_NO_RESPONSE,
- 				       VM_PKT_DATA_INBAND, 0);
- 
- 		/* If the failure is because the channel is rescinded;
-@@ -542,7 +542,7 @@ static int negotiate_nvsp_ver(struct hv_device *device,
- 
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 				sizeof(struct nvsp_message),
--				(unsigned long)init_packet,
-+				VMBUS_RQST_ID_NO_RESPONSE,
- 				VM_PKT_DATA_INBAND, 0);
- 
- 	return ret;
-@@ -599,7 +599,7 @@ static int netvsc_connect_vsp(struct hv_device *device,
- 	/* Send the init request */
- 	ret = vmbus_sendpacket(device->channel, init_packet,
- 				sizeof(struct nvsp_message),
--				(unsigned long)init_packet,
-+				VMBUS_RQST_ID_NO_RESPONSE,
- 				VM_PKT_DATA_INBAND, 0);
- 	if (ret != 0)
- 		goto cleanup;
-@@ -680,10 +680,19 @@ static void netvsc_send_tx_complete(struct net_device *ndev,
- 				    const struct vmpacket_descriptor *desc,
- 				    int budget)
- {
--	struct sk_buff *skb = (struct sk_buff *)(unsigned long)desc->trans_id;
-+	struct sk_buff *skb;
- 	struct net_device_context *ndev_ctx = netdev_priv(ndev);
- 	u16 q_idx = 0;
- 	int queue_sends;
-+	u64 cmd_rqst;
-+
-+	cmd_rqst = vmbus_request_addr(&channel->requestor, (u64)desc->trans_id);
-+	if (cmd_rqst == VMBUS_RQST_ERROR) {
-+		netdev_err(ndev, "Incorrect transaction id\n");
-+		return;
-+	}
-+
-+	skb = (struct sk_buff *)(unsigned long)cmd_rqst;
- 
- 	/* Notify the layer above us */
- 	if (likely(skb)) {
-@@ -1422,6 +1431,7 @@ struct netvsc_device *netvsc_device_add(struct hv_device *device,
- 		       netvsc_poll, NAPI_POLL_WEIGHT);
- 
- 	/* Open the channel */
-+	device->channel->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
- 	ret = vmbus_open(device->channel, netvsc_ring_bytes,
- 			 netvsc_ring_bytes,  NULL, 0,
- 			 netvsc_channel_cb, net_device->chan_table);
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index b81ceba38218c..10489ba44a090 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -1114,6 +1114,7 @@ static void netvsc_sc_open(struct vmbus_channel *new_sc)
- 	/* Set the channel before opening.*/
- 	nvchan->channel = new_sc;
- 
-+	new_sc->rqstor_size = netvsc_rqstor_size(netvsc_ring_bytes);
- 	ret = vmbus_open(new_sc, netvsc_ring_bytes,
- 			 netvsc_ring_bytes, NULL, 0,
- 			 netvsc_channel_cb, nvchan);
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 45c7831ba0ef1..32c03643577b4 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -731,6 +731,7 @@ struct vmbus_requestor {
- 
- #define VMBUS_NO_RQSTOR U64_MAX
- #define VMBUS_RQST_ERROR (U64_MAX - 1)
-+#define VMBUS_RQST_ID_NO_RESPONSE (U64_MAX - 2)
- 
- struct vmbus_device {
- 	u16  dev_type;
--- 
-2.25.1
+>> This, however, prevents us depositing PMD pages with ->lru, which is
+>> currently used by depositing PTE pages for 2MB THPs. So add a new
+>> pagechain container for PMD pages.
+>>
+>> Signed-off-by: Zi Yan <ziy@nvidia.com>
+>
+> Just deposit it to a linked list in the mm_struct as we do for PMD if
+> split ptl disabled.
+>
 
+Thank you for checking the patches. Since we don=E2=80=99t have PUD split=
+ lock
+yet, I store the PMD page table pages in a newly added linked list head
+in mm_struct like you suggested above.
+
+I was too vague about my pagechain design for depositing page table pages=
+
+for PUD THPs. Sorry about the confusion. Let me clarify why
+I am doing this pagechain here too. I am sure there would be
+some other designs and I am happy to change my code.
+
+In my design, I did not store all page table pages in a single list.
+I first deposit 512 PTE pages in one PMD page table page=E2=80=99s pmd_hu=
+ge_pte
+using pgtable_trans_huge_depsit(), then deposit the PMD page to
+a newly added linked list in mm_struct. Since pmd_huge_pte shares space
+with half of lru in struct page, we cannot use lru to link all PMD
+pages together. As a result, I added pagechain. Also in this way,
+we can avoid these things:
+
+1. when we withdraw the PMD page during PUD THP split, we don=E2=80=99t n=
+eed
+to withdraw 513 page, set up one PMD page, then, deposit 512 PTE pages
+in that PMD page.
+
+2. we don=E2=80=99t mix PMD page table pages and PTE page table pages in =
+a single
+list, since they are initialized in different ways. Otherwise, we need
+to maintain a subtle rule in the single page table page list that in ever=
+y
+513 pages, first one is PMD page table page and the rest are PTE page
+table pages.
+
+As I am typing, I also realize that my current design does not work
+when PMD split lock is disabled, so I will fix it. I would store PMD page=
+s
+and PTE pages in two separate lists in mm_struct.
+
+
+Any comments?
+
+
+=E2=80=94
+Best Regards,
+Yan Zi
+
+--=_MailMate_C524708B-26F9-4F4E-8D4C-397110CA1F43_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl9WTYkPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKaqQP/imSOWGHuhcGwPnoJnxwJjrGbjRZgQhosHFn
+GL2NrMdHoCgha78i3hItoR9KE4JvX6U9BmsR45jeJXqFohg+F0WeC1UzbsVwllBL
+DbmM9P9w1QDMTDjrH8YyiSMgXM5V/r0XP/dSQjbV9vPZ57BobkYejOuKfphZ/WWz
++p4kzkJWkidYZH+WiiZ1JCmFwrQyDNjA7QRQPoC74Dm6S1KTDbJnajv85e2TQ7Yf
+emBemN1xMXypJGLyJ1PgnGrhhzmqWFXRjK6pmuLlqA6iuFwJp2oLE62RI4lTS9ZC
+8FVq0Ki5Zkgm8wWsMBfywUGGffLY5c1VnIGtcLrz1/XrFlsbFdBr5mxkegwySmQN
+AiCI9ggPtzC6JAvmicnl9u1Uf1XeS90qJLLhE+qqO0odva6TVsFzvssssTd7YfRu
+ifjitYOk4pt92YuemT3cNdG6Z7x5iHwd6hNLbZ9NP+BQ+/djUeXL/jVE1GUx6Kos
+mzqEBsENb2PxK6+Wakz3gb6kcEcSgqt6dwRSuzmGfCeQVXDqHLUHPS80wlcCC+XX
+961AY56aziAImPO6zWcvqlai2REGFhYSNuaTZfUyoGVOuyrszZrtVRSgd26NJX/W
+K+w9rhNn1SnknzthASwfXet4UfB+XcS0ZuIj7s+7s5RUKD0nIH6DwYTNVfWBIGg9
+av72XkIo
+=Wyrp
+-----END PGP SIGNATURE-----
+
+--=_MailMate_C524708B-26F9-4F4E-8D4C-397110CA1F43_=--
