@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4985CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ACFC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11E5721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1782080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497242;
-	bh=NQKH7qV+mvGMmdYVsn+drBg78YJ7yUGWecvlsGgCjo4=;
+	s=default; t=1599497251;
+	bh=Cez5YrJMd+kRD6GKDOhBagZay32pDINJhG2yn//Ywjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBcXUhfEG6MsK9U4bVMK7cvw43PnQD4UNlnc8W/YPZtqUE8Moxrinpn8dZd1aUxMr
-	 y8ilGPvgZaeoVJ3OEJlnjbvd81mdW6+AqXBQMTX2cXr33WvjYCcGsM43T1tTdC6CyJ
-	 eFxO0LI8xU2z5nLyQqoMNcfzPFaMYIzBcHsdrbcQ=
+	b=WDTxZh1Xz8sFjDaQCxzsn2Q6eCHYLtAs/RkbDr3A69t6G0jGySlWY8vVMG9lLSZl7
+	 HNf7a+BpUq9hl0iskYA5myzTV4EouYv8A+hx6hc/pdUmz7I42zrgdzXoirWKZ3iSXj
+	 6f4BgXFt1i7ZmHx5wVwbuybe+He8WOe0FOTdgAMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbgIGQrD (ORCPT
+        id S1730424AbgIGQfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:47:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49298 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730831AbgIGQfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:24 -0400
+        id S1730372AbgIGQdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C07221F1;
-        Mon,  7 Sep 2020 16:35:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CBE21789;
+        Mon,  7 Sep 2020 16:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496523;
-        bh=NQKH7qV+mvGMmdYVsn+drBg78YJ7yUGWecvlsGgCjo4=;
+        s=default; t=1599496391;
+        bh=Cez5YrJMd+kRD6GKDOhBagZay32pDINJhG2yn//Ywjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OsDyv25Rsf2ltPkWAuLq1HUAgIuMd2WNF9WsKmlZGUFTPIPKRw1um1L3QBKClYOqH
-         TG6n5aL+1ZrFmqE6OxtxaHo1IRXd3ILGlHFqPL/1rgiX79+QLBwl1aryjNeEYf6ZIw
-         qxXRH8/3pJTvdTk8lk+BdgKyaNVuYQ49aVvk+Y1g=
+        b=ZZr+XwSSAKRIy8uDQkeQIwr5YI2rihR70lNYJD9PKtNHnTtLV2zfkwS1RNadGGUjK
+         6J/u9XIx5YIqx8AhGJFE+2KTcCwwWAZTW3UaA8prXdTVVaCrmM4odlweP6+mINp5CB
+         ekS3I8imtG7V8JaEpI6diayOgZUccY9OkpbEXmvk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 17/17] gcov: Disable gcov build with GCC 10
-Date:   Mon,  7 Sep 2020 12:35:00 -0400
-Message-Id: <20200907163500.1281543-17-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 40/53] HID: elan: Fix memleak in elan_input_configured
+Date:   Mon,  7 Sep 2020 12:32:06 -0400
+Message-Id: <20200907163220.1280412-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
-References: <20200907163500.1281543-1-sashal@kernel.org>
+In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
+References: <20200907163220.1280412-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
+[ Upstream commit b7429ea53d6c0936a0f10a5d64164f0aea440143 ]
 
-GCOV built with GCC 10 doesn't initialize n_function variable.  This
-produces different kernel panics as was seen by Colin in Ubuntu and me
-in FC 32.
+When input_mt_init_slots() fails, input should be freed
+to prevent memleak. When input_register_device() fails,
+we should call input_mt_destroy_slots() to free memory
+allocated by input_mt_init_slots().
 
-As a workaround, let's disable GCOV build for broken GCC 10 version.
-
-Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
-Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
-Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/gcov/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-elan.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 1276aabaab550..1d78ed19a3512 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -3,6 +3,7 @@ menu "GCOV-based kernel profiling"
- config GCOV_KERNEL
- 	bool "Enable gcov-based kernel profiling"
- 	depends on DEBUG_FS
-+	depends on !CC_IS_GCC || GCC_VERSION < 100000
- 	select CONSTRUCTORS if !UML
- 	default n
- 	---help---
+diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
+index 45c4f888b7c4e..dae193749d443 100644
+--- a/drivers/hid/hid-elan.c
++++ b/drivers/hid/hid-elan.c
+@@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
++		input_free_device(input);
+ 		return ret;
+ 	}
+ 
+@@ -198,6 +199,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to register elan input device: %d\n",
+ 			ret);
++		input_mt_destroy_slots(input);
+ 		input_free_device(input);
+ 		return ret;
+ 	}
 -- 
 2.25.1
 
