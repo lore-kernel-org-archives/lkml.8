@@ -2,63 +2,91 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39651C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEDAC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0388E208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C72208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgIGHtO (ORCPT
+        id S1727789AbgIGHuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:49:14 -0400
-Received: from verein.lst.de ([213.95.11.211]:48064 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726443AbgIGHtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:49:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 1719868BEB; Mon,  7 Sep 2020 09:49:08 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 09:49:08 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH] dma-direct: zero out DMA_ATTR_NO_KERNEL_MAPPING buf
-Message-ID: <20200907074908.GA20762@lst.de>
-References: <20200904152550.17964-1-hdanton@sina.com> <20200905073528.9464-1-hdanton@sina.com> <CGME20200905155056eucas1p2d4a2249f73506a765fce2d2f7089748d@eucas1p2.samsung.com> <1599321042.11726.6.camel@HansenPartnership.com> <1eb4a2b0-2fd4-9f3c-e610-c8f856027181@samsung.com>
+        Mon, 7 Sep 2020 03:50:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10824 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726443AbgIGHuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 03:50:23 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8FF7D959581DFC30C317;
+        Mon,  7 Sep 2020 15:50:20 +0800 (CST)
+Received: from [127.0.0.1] (10.174.177.253) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
+ 15:50:18 +0800
+Subject: Re: [PATCH 1/1] watchdog: remove unneeded inclusion of
+ <uapi/linux/sched/types.h>
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-watchdog <linux-watchdog@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200827062154.1847-1-thunder.leizhen@huawei.com>
+ <55ad40ff-dcc1-5051-65d2-24201c471a8f@roeck-us.net>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <f80cc7ea-9d1f-64a4-7c18-faf672bf8cf6@huawei.com>
+Date:   Mon, 7 Sep 2020 15:50:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1eb4a2b0-2fd4-9f3c-e610-c8f856027181@samsung.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <55ad40ff-dcc1-5051-65d2-24201c471a8f@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 09:02:34AM +0200, Marek Szyprowski wrote:
-> > That's not a reason ... that comment was put in for coherent mappings.
-> > What is the reason we should incur all this expense for clearing pages
-> > which aren't unmapped in the kernel, because we can update the comment?
-> >   The usual rationale for kernel mapped pages is security, because they
-> > may leak information but unmapped pages shouldn't have this problem.
-> 
-> Any dma_alloc_attrs() buffer might be mmaped to userspace, so the 
-> security reason is still valid. Possible lack if kernel mapping was only 
-> a hint that driver doesn't need it, so it might be skipped on some 
-> architectures, where creating it requires significant resources (i.e. 
-> vmalloc area).
+Hi, Wim Van Sebroeck, Guenter Roeck:
+  What's your opinion? Guenter Roeck given "Reviewed-by" two weeks ago.
 
-Yes.  It seems actually mapping it to userspace in media/drm drivers
-seems to be one of the big use cases.  There other one is memory not
-used by the host at all and just as an extra buffer for hardware so
-that the PCIe device can cut down on DRAM cost.  For that could
-potentially skip the zeroing, but then again you'd need to trust the
-device, which with thunderbolt might not always be a good idea.
+
+On 2020/8/27 21:40, Guenter Roeck wrote:
+> On 8/26/20 11:21 PM, Zhen Lei wrote:
+>> There has been no reference to "struct sched_param" since
+>> commit 94beddacb53c ("sched,watchdog: Convert to sched_set_fifo()"), so
+>> there's no need to include <uapi/linux/sched/types.h> any more, delete
+>> it.
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+>> ---
+>>  drivers/watchdog/watchdog_dev.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+>> index 6798addabd5a067..0f18fa2433310b0 100644
+>> --- a/drivers/watchdog/watchdog_dev.c
+>> +++ b/drivers/watchdog/watchdog_dev.c
+>> @@ -43,8 +43,6 @@
+>>  #include <linux/watchdog.h>	/* For watchdog specific items */
+>>  #include <linux/uaccess.h>	/* For copy_to_user/put_user/... */
+>>  
+>> -#include <uapi/linux/sched/types.h>	/* For struct sched_param */
+>> -
+>>  #include "watchdog_core.h"
+>>  #include "watchdog_pretimeout.h"
+>>  
+>>
+> 
+> 
+> 
+
