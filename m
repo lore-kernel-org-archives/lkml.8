@@ -2,76 +2,86 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F2C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32DBC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7737D208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82466207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="t0md+sgR"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Rhl6gyeo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbgIGQlg (ORCPT
+        id S1731037AbgIGQlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
+        Mon, 7 Sep 2020 12:41:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730923AbgIGQlS (ORCPT
+        with ESMTP id S1730945AbgIGQlD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:41:18 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786A7C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:41:18 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id k13so2722245plk.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:41:18 -0700 (PDT)
+        Mon, 7 Sep 2020 12:41:03 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C59EC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:41:03 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z1so16468986wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:41:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        d=arista.com; s=googlenew;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QI9owJq1qeNIbL5MGRj7H9ZbeWy3uMtOambIfQ05240=;
-        b=t0md+sgRR59HAfNxNXQLb4d8jUGYK95h+b8RqrM3hkSN7fTSAyBDOpGa1vmbd0iKfM
-         T4gFOAu/DuXESBPEiXk4p1IslX8AN2ySHrVut9XG7e359FtcveW84NdBYkOv8cBnhqWX
-         n6Fh/5lJE65g9dwmUzzdWUbU+59YufFdlSEUVS7Tew1s0zHxsfCsBiI9MSMPC7/IJ3E8
-         GDjEuqXJkX7zf3XqnaEhB/yZTMOl9b7L1RFN8r5H+dNs+Fz2Vx5pEKEvt8e/8Ll1vEeX
-         lRsgbhP9G8BlrrHwMRX2UzjBty/etaulP1dKLCDBZwbKWKR0qtD4UsduAdYW7+YKW60M
-         eVKQ==
+        bh=6HzmAVHlN6inWuhNR/qi7K/O/N8qBgMh/gLHImP3oLI=;
+        b=Rhl6gyeocRUMRqArAntovDuFoSik3QlgtAtzFotLuXqcpSRMRkqtNsIv5Gcb9Fnw0e
+         N/C/m4yQ5ky/du94q5SXnkioiql9UDJriC3NLtyFKxqOjpCS6j6HsXlJU+KoORAAK054
+         5t4BCXfaclazE189avFgwVgxqYI0mokQOcsUErfyVofMTwu5z/kxWSugjP7H8Ic89MCN
+         Yr2LriQYIN1sgWopbfmKeM1rhyMgk6hHOwOVM/TW8uCwOLJ9wPgV3wuJDZDTt3lcpt+n
+         XqyjICws/7JQsA0tlT5s/wKwXFpkcMKeZETFvzg9ltUJnKqljlYh+9QbrE0QKEdgi9R0
+         WHrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=QI9owJq1qeNIbL5MGRj7H9ZbeWy3uMtOambIfQ05240=;
-        b=HuWAPGdduCQXF7aanGvdqN0XMY+UMMyC2bMR8jDVTt7UUDGltPO6muf/NEKTkqcjpx
-         OHIWX3X/fzbgClWksGNy15wyClwCvHBxmpu9w/gJG+/QI0CjfcJI9/d+JBWxtZfY2B0y
-         Vnv2LDYHEDOtCJ7PRSTY/jfGZBw9ZMqC48vbjzZRBngQK6pU98//BtLbZkXdNY16Lf3C
-         iWXdxtfFM2/VcDyTAoWBpJMu+yCA5i4Xqr2k26Uz5ij5j2s1xh/gYmsqb3k+v7CAHscD
-         vFtwlSPV7qoMLEx5KUuAa/kBFLKXC6hzpvVdiheGKfQJFwvopoIWvEj/Bkazq74DdsNa
-         XAtA==
-X-Gm-Message-State: AOAM532ehlp7Q49dQwMBqLq9oZ6gYq65xG1YhQl9+rAHTrGfxoQye9mz
-        Ev4LLG2zfbfSiliA6HejvI8vyQ==
-X-Google-Smtp-Source: ABdhPJxjMIPuK22ccwbpfS5Lc4urY7i8nlaAUy+/DPrUiHo0eKcYTMJtQ9YP2xudp317L+vQNfW2pA==
-X-Received: by 2002:a17:90b:117:: with SMTP id p23mr149298pjz.67.1599496877962;
-        Mon, 07 Sep 2020 09:41:17 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id 142sm12521645pgf.68.2020.09.07.09.41.16
+        bh=6HzmAVHlN6inWuhNR/qi7K/O/N8qBgMh/gLHImP3oLI=;
+        b=RMSZeg9KP0BtBZmDfL592Nqb7eebBnIgGAOH6JJzxkfJBQ9Qfvx4ivWOwhwH3hSJ3K
+         XqGwESBu/cCYWe8p5oQOJ+/31/zm/q/SZ6jDGn9OTQgvb+q2KSnkAFDwxBoS4ldmLFeR
+         1HiqA0ikJnNhNyE0S7P9sq+OEHm2l444I/tQ3EBD02H/2lgUXcyPj3ChTCnc0RBWn+U4
+         6nd0UjWCdAjIxmYdTNkNRvZj8haf+avfgy0zPhwlNGh+YXjRBOLbQC3jxKlci1bEuao2
+         18nZL0zCa61qO0pKeVBa8aUq5TSNCWhj04irzDBXrFLG2w6wYOjtJMbRigeNxHbBHr3r
+         G/3w==
+X-Gm-Message-State: AOAM531RjBQXi0FQGwDaO9D38vy6dIY9/BgAfGDHpcE1e8nrORAE1VHr
+        HK3xc9h6pEKP16OrkGpLhBRMlw==
+X-Google-Smtp-Source: ABdhPJwwFuqsNpeKNr2Xcj0G7bwyHTIOXQSxqV9C4cdGzfqKQXz/HEY2/yNVuuYEC8tByhO7f/FTTA==
+X-Received: by 2002:adf:f082:: with SMTP id n2mr16879077wro.35.1599496861873;
+        Mon, 07 Sep 2020 09:41:01 -0700 (PDT)
+Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id i1sm34957035wrc.49.2020.09.07.09.41.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 09:41:17 -0700 (PDT)
-Subject: Re: [PATCH] kyber: Fix crash in kyber_finish_request()
-To:     Yang Yang <yang.yang@vivo.com>, linux-block@vger.kernel.org,
+        Mon, 07 Sep 2020 09:41:01 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] netlink/compat: Append NLMSG_DONE/extack to
+ frag_list
+To:     Johannes Berg <johannes@sipsolutions.net>,
         linux-kernel@vger.kernel.org
-Cc:     onlyfever@icloud.com, Omar Sandoval <osandov@osandov.com>
-References: <20200907074346.5383-1-yang.yang@vivo.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <8b714da7-97b2-f8d2-4be7-c192130c33af@kernel.dk>
-Date:   Mon, 7 Sep 2020 10:41:16 -0600
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        netdev@vger.kernel.org
+References: <20200826014949.644441-1-dima@arista.com>
+ <20200826014949.644441-4-dima@arista.com>
+ <f579efc1375e46d9c2ff999ada1bcfed40ec2a8f.camel@sipsolutions.net>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <ff2e3bfb-f97b-6982-05d8-5448193225ab@arista.com>
+Date:   Mon, 7 Sep 2020 17:41:00 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200907074346.5383-1-yang.yang@vivo.com>
+In-Reply-To: <f579efc1375e46d9c2ff999ada1bcfed40ec2a8f.camel@sipsolutions.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,54 +90,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC Omar
+On 8/26/20 8:19 AM, Johannes Berg wrote:
+> On Wed, 2020-08-26 at 02:49 +0100, Dmitry Safonov wrote:
+[..]
+>> +	nl_dump_check_consistent(cb, nlh);
+>> +	memcpy(nlmsg_data(nlh), &nlk->dump_done_errno,
+>> +			sizeof(nlk->dump_done_errno));
+> 
+> nit: indentation here looks odd.
+> 
+> Other than that, looks reasonable to me.
+> 
+> Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
 
-On 9/7/20 1:43 AM, Yang Yang wrote:
-> Kernel crash when requeue flush request.
-> It can be reproduced as below:
-> 
-> [    2.517297] Unable to handle kernel paging request at virtual address ffffffd8071c0b00
-> ...
-> [    2.517468] pc : clear_bit+0x18/0x2c
-> [    2.517502] lr : sbitmap_queue_clear+0x40/0x228
-> [    2.517503] sp : ffffff800832bc60 pstate : 00c00145
-> ...
-> [    2.517599] Process ksoftirqd/5 (pid: 51, stack limit = 0xffffff8008328000)
-> [    2.517602] Call trace:
-> [    2.517606]  clear_bit+0x18/0x2c
-> [    2.517619]  kyber_finish_request+0x74/0x80
-> [    2.517627]  blk_mq_requeue_request+0x3c/0xc0
-> [    2.517637]  __scsi_queue_insert+0x11c/0x148
-> [    2.517640]  scsi_softirq_done+0x114/0x130
-> [    2.517643]  blk_done_softirq+0x7c/0xb0
-> [    2.517651]  __do_softirq+0x208/0x3bc
-> [    2.517657]  run_ksoftirqd+0x34/0x60
-> [    2.517663]  smpboot_thread_fn+0x1c4/0x2c0
-> [    2.517667]  kthread+0x110/0x120
-> [    2.517669]  ret_from_fork+0x10/0x18
-> 
-> Signed-off-by: Yang Yang <yang.yang@vivo.com>
-> ---
->  block/kyber-iosched.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
-> index a38c5ab103d1..af73afe7a05c 100644
-> --- a/block/kyber-iosched.c
-> +++ b/block/kyber-iosched.c
-> @@ -611,6 +611,9 @@ static void kyber_finish_request(struct request *rq)
->  {
->  	struct kyber_queue_data *kqd = rq->q->elevator->elevator_data;
->  
-> +	if (unlikely(!(rq->rq_flags & RQF_ELVPRIV)))
-> +		return;
-> +
->  	rq_clear_domain_token(kqd, rq);
->  }
->  
-> 
-
+Thank you for the review!
 
 -- 
-Jens Axboe
-
+          Dmitry
