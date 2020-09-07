@@ -2,205 +2,340 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3A6C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A447DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95531208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L5Y9wMv0"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFAE2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:03:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599494616;
+	bh=fBqDIBCosY6jOHB7XMMtIeL5J9D0ebJLl35D+xCMJOE=;
+	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
+	b=ZbqlBcpLHqp0UPIQXCP93oJpGzbgsKagT5NA94N6VCoXAa7S7PNJc+QMAnHX4IyzR
+	 NelyXA7/VwC3kfSNOZc5QSbTc3q8phNwgFKIGSuP+sRDLVb1UOHDDtDVBW16QjV0cn
+	 9ocX9+mNTQBNwyD/Ziw5Vcq0VPHiCeThF8j9uv5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbgIGQCj (ORCPT
+        id S1729966AbgIGQDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730175AbgIGQBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:01:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FD1C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:01:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2eIR6kOywvDQ+JkAQrzHBLrjWuZKaxrdLTttVTI6scY=; b=L5Y9wMv0dx1VLchx7fHIQee8gb
-        YgONFyr1QD5UAt9PYYIAm1/ZKnOBoyD+RMrWoQMoX4nWhB7wmBcti8wMha00+ATo9uLotZZ9h3fv0
-        MryhEHFgJE9ilGNz/ACjBJN0W9SZuEpv2IWBT9dOBY84E7RZAxsQHY5W3gZUDhV+EVKo3rG24cBEp
-        46uRqu3lEOtbdbP7un86pWTEcWfqe267vJiBK8xnTMotHuyKwzBqY79Ejy21TazZE2LxtxEwZm1oi
-        /fTUNGfV5j5Y0iRBTMg3mJXsEgFTD57/aJN32Bk6KhmpPbVrUvEuyBwNOTKKLNFUQf1o2jGVO+mf0
-        7L4RSrSQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFJa0-0006VZ-2J; Mon, 07 Sep 2020 16:01:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 7 Sep 2020 12:03:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730237AbgIGP77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:59:59 -0400
+Received: from mail.kernel.org (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 79AB4303DA0;
-        Mon,  7 Sep 2020 18:01:15 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6729D20107B6F; Mon,  7 Sep 2020 18:01:15 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 18:01:15 +0200
-From:   peterz@infradead.org
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, mark.rutland@arm.com, luto@amacapital.net
-Subject: Re: [PATCH V2 3/3] perf/x86: Reset the dirty counter to prevent the
- leak for an RDPMC task
-Message-ID: <20200907160115.GS2674@hirez.programming.kicks-ass.net>
-References: <20200821195754.20159-1-kan.liang@linux.intel.com>
- <20200821195754.20159-3-kan.liang@linux.intel.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ADED21481;
+        Mon,  7 Sep 2020 15:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599494379;
+        bh=fBqDIBCosY6jOHB7XMMtIeL5J9D0ebJLl35D+xCMJOE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=a/oYXJTJhz0MsqLus8zCoUN+HnefoimE743vPzF2wu5XV91iicyzMr2KY7nkU6rFQ
+         Yx541b1z4ziyc6fDF+TtiEsZAG2UkEsiNxxS936cj445Di10fQaguv8wv4PjfqGw+6
+         gfWdTv1hj4LNMtLdtoZckovaU9cvRr17bO1X59xQ=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kFJYP-00ATv2-EI; Mon, 07 Sep 2020 17:59:37 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 11/11] dts: hisilicon: add support for USB3 on Hikey 970
+Date:   Mon,  7 Sep 2020 17:59:35 +0200
+Message-Id: <3d67ad09724ea8ab39d17d083d971d404a26cf8b.1599493845.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1599493845.git.mchehab+huawei@kernel.org>
+References: <cover.1599493845.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821195754.20159-3-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:57:54PM -0700, kan.liang@linux.intel.com wrote:
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 0f3d01562ded..fa08d810dcd2 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -1440,7 +1440,10 @@ static void x86_pmu_start(struct perf_event *event, int flags)
->  
->  	cpuc->events[idx] = event;
->  	__set_bit(idx, cpuc->active_mask);
-> -	__set_bit(idx, cpuc->running);
-> +	/* The cpuc->running is only used by the P4 PMU */
-> +	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON) &&
-> +	    (boot_cpu_data.x86 == 0xf))
-> +		__set_bit(idx, cpuc->running);
->  	x86_pmu.enable(event);
->  	perf_event_update_userpage(event);
->  }
+Add the USB3 bindings for Kirin 970 phy and Hikey 970 board.
 
-Yuck! Use a static_branch() or something. This is a gnarly nest of code
-that runs 99.9% of the time to conclude a negative. IOW a complete waste
-of cycles for everybody not running a P4 space heater.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ .../boot/dts/hisilicon/hi3670-hikey970.dts    | 102 ++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  58 ++++++++++
+ drivers/misc/hisi_hikey_usb.c                 |  29 ++---
+ 3 files changed, 167 insertions(+), 22 deletions(-)
 
-> @@ -1544,6 +1547,9 @@ static void x86_pmu_del(struct perf_event *event, int flags)
->  	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
->  		goto do_del;
->  
-> +	if (READ_ONCE(x86_pmu.attr_rdpmc) && x86_pmu.sched_task &&
-> +	    test_bit(event->hw.idx, cpuc->active_mask))
-> +		__set_bit(event->hw.idx, cpuc->dirty);
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
+index f218acceec0b..744cdbb9867a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
+@@ -62,6 +62,29 @@ wlan_en: wlan-en-1-8v {
+ 		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 	};
++	hikey_usbhub: hikey_usbhub {
++		compatible = "hisilicon,kirin970_hikey_usbhub";
++
++		typec-vbus-gpios = <&gpio26 1 0>;
++		otg-switch-gpios = <&gpio4 2 0>;
++		hub_reset_en_gpio = <&gpio0 3 0>;
++		hub-vdd-supply = <&ldo17>;
++		usb-role-switch;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			hikey_usb_ep0: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&dwc3_role_switch>;
++			};
++			hikey_usb_ep1: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&rt1711h_ep>;
++			};
++		};
++	};
+ };
+ 
+ /*
+@@ -440,6 +463,57 @@ &uart6 {
+ 	status = "okay";
+ };
+ 
++&i2c1 {
++	status = "okay";
++
++	rt1711h: rt1711h@4e {
++		compatible = "richtek,rt1711h";
++		reg = <0x4e>;
++		status = "ok";
++		interrupt-parent = <&gpio27>;
++		interrupts = <5 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_cfg_func>;
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "dual";
++			try-power-role = "sink";
++			source-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)>;
++			sink-pdos = <PDO_FIXED(5000, 500, PDO_FIXED_USB_COMM)
++				PDO_VAR(5000, 5000, 1000)>;
++			op-sink-microwatt = <10000000>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				port@1 {
++					reg = <1>;
++					usb_con_ss: endpoint {
++						remote-endpoint = <&dwc3_ss>;
++					};
++				};
++			};
++		};
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			rt1711h_ep: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hikey_usb_ep1>;
++			};
++		};
++	};
++};
++
++&i2c2 {
++	/* USB HUB is on this bus at address 0x44 */
++	status = "okay";
++};
++
+ &i2c4 {
+ 	status = "okay";
+ 
+@@ -469,3 +543,31 @@ adv7533_in: endpoint {
+ 		};
+ 	};
+ };
++
++&dwc3 { /* USB */
++	dr_mode = "otg";
++	maximum-speed = "super-speed";
++	phy_type = "utmi";
++	snps,dis-del-phy-power-chg-quirk;
++	snps,dis_u2_susphy_quirk;
++	snps,dis_u3_susphy_quirk;
++	snps,tx_de_emphasis_quirk;
++	snps,tx_de_emphasis = <1>;
++	snps,dis-split-quirk;
++	snps,gctl-reset-quirk;
++	usb-role-switch;
++	role-switch-default-mode = "host";
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		dwc3_role_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&hikey_usb_ep0>;
++		};
++
++		dwc3_ss: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&usb_con_ss>;
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+index e2b2e21295a7..bd88a67ec4a9 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+@@ -8,6 +8,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/hi3670-clock.h>
++#include <dt-bindings/usb/pd.h>
+ 
+ / {
+ 	compatible = "hisilicon,hi3670";
+@@ -800,5 +801,62 @@ i2c4: i2c@fdf0d000 {
+ 			pinctrl-0 = <&i2c4_pmx_func &i2c4_cfg_func>;
+ 			status = "disabled";
+ 		};
++
++		usb3_otg_bc: usb3_otg_bc@ff200000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x0 0xff200000 0x0 0x1000>;
++
++			usb_phy: usbphy {
++				compatible = "hisilicon,hi3670-usb-phy";
++				#phy-cells = <0>;
++				hisilicon,pericrg-syscon = <&crg_ctrl>;
++				hisilicon,pctrl-syscon = <&pctrl>;
++				hisilicon,sctrl-syscon = <&sctrl>;
++				hisilicon,eye-diagram-param = <0xFDFEE4>;
++				hisilicon,tx-vboost-lvl = <0x5>;
++
++				phy-supply = <&ldo17>;
++			};
++		};
++
++		usb31_misc_rst: usb31_misc_rst_controller {
++			compatible = "hisilicon,hi3660-reset";
++			#reset-cells = <2>;
++			hisi,rst-syscon = <&usb3_otg_bc>;
++		};
++
++		usb3: hisi_dwc3 {
++			compatible = "hisilicon,hi3670-dwc3";
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges;
++
++			clocks = <&crg_ctrl HI3670_CLK_GATE_ABB_USB>,
++				  <&crg_ctrl HI3670_HCLK_GATE_USB3OTG>,
++				  <&crg_ctrl HI3670_CLK_GATE_USB3OTG_REF>,
++				  <&crg_ctrl HI3670_ACLK_GATE_USB3DVFS>;
++			clock-names = "clk_gate_abb_usb",
++				      "hclk_gate_usb3otg",
++				      "clk_gate_usb3otg_ref",
++				      "aclk_gate_usb3dvfs";
++
++			assigned-clocks = <&crg_ctrl HI3670_ACLK_GATE_USB3DVFS>;
++			assigned-clock-rates = <238000000>;
++			resets = <&crg_rst 0x90 6>,
++				 <&crg_rst 0x90 7>,
++				 <&usb31_misc_rst 0xA0 8>,
++				 <&usb31_misc_rst 0xA0 9>;
++
++			dwc3: dwc3@ff100000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0xff100000 0x0 0x100000>;
++
++				interrupts = <0 159 IRQ_TYPE_LEVEL_HIGH>,
++					    <0 161 IRQ_TYPE_LEVEL_HIGH>;
++
++				phys = <&usb_phy>;
++				phy-names = "usb3-phy";
++			};
++		};
+ 	};
+ };
+diff --git a/drivers/misc/hisi_hikey_usb.c b/drivers/misc/hisi_hikey_usb.c
+index b884680867a5..2ddd4072788d 100644
+--- a/drivers/misc/hisi_hikey_usb.c
++++ b/drivers/misc/hisi_hikey_usb.c
+@@ -35,6 +35,7 @@ struct hisi_hikey_usb {
+ 	struct gpio_desc *otg_switch;
+ 	struct gpio_desc *typec_vbus;
+ 	struct gpio_desc *hub_vbus;
++	struct gpio_desc *reset;
+ 
+ 	struct regulator *regulator;
+ 
+@@ -53,10 +54,8 @@ static void hub_power_ctrl(struct hisi_hikey_usb *hisi_hikey_usb, int value)
+ {
+ 	int ret, status;
+ 
+-	if (!hisi_hikey_usb->hub_vbus)
+-		return;
+-
+-	gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
++	if (hisi_hikey_usb->hub_vbus)
++		gpiod_set_value_cansleep(hisi_hikey_usb->hub_vbus, value);
+ 
+ 	if (!hisi_hikey_usb->regulator)
+ 		return;
+@@ -152,7 +151,6 @@ static int hisi_hikey_usb_parse_kirin970(struct platform_device *pdev,
+ 					 struct hisi_hikey_usb *hisi_hikey_usb)
+ {
+ 	struct regulator *regulator;
+-	int hub_reset_en_gpio;
+ 	int ret;
+ 
+ 	regulator = devm_regulator_get(&pdev->dev, "hub-vdd");
+@@ -169,23 +167,10 @@ static int hisi_hikey_usb_parse_kirin970(struct platform_device *pdev,
+ 	}
+ 	hisi_hikey_usb->regulator = regulator;
+ 
+-	hub_reset_en_gpio = of_get_named_gpio(pdev->dev.of_node,
+-					      "hub_reset_en_gpio", 0);
+-	if (!gpio_is_valid(hub_reset_en_gpio)) {
+-		dev_err(&pdev->dev, "Failed to get a valid reset gpio\n");
+-		return -ENODEV;
+-	}
+-
+-	ret = devm_gpio_request(&pdev->dev, hub_reset_en_gpio,
+-				"hub_reset_en_gpio");
+-	if (ret) {
+-		dev_err(&pdev->dev, "Failed to request the reset gpio\n");
+-		return ret;
+-	}
+-	ret = gpio_direction_output(hub_reset_en_gpio, 1);
+-	if (ret)
+-		dev_err(&pdev->dev,
+-			"Failed to set the direction of the reset gpio\n");
++	hisi_hikey_usb->reset = devm_gpiod_get(&pdev->dev, "hub_reset_en_gpio",
++					       GPIOD_OUT_HIGH);
++	if (IS_ERR(hisi_hikey_usb->reset))
++		return PTR_ERR(hisi_hikey_usb->reset);
+ 
+ 	return ret;
+ }
+-- 
+2.26.2
 
-And that too seems like an overly complicated set of tests and branches.
-This should be effectivly true for the 99% common case.
-
-> @@ -2219,11 +2225,45 @@ static int x86_pmu_event_init(struct perf_event *event)
->  	return err;
->  }
->  
-> +void x86_pmu_clear_dirty_counters(void)
-> +{
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	int i;
-> +
-> +	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
-> +		return;
-> +
-> +	 /* Don't need to clear the assigned counter. */
-> +	for (i = 0; i < cpuc->n_events; i++)
-> +		__clear_bit(cpuc->assign[i], cpuc->dirty);
-> +
-> +	for_each_set_bit(i, cpuc->dirty, X86_PMC_IDX_MAX) {
-> +		/* Metrics events don't have corresponding HW counters. */
-> +		if (is_metric_idx(i))
-> +			continue;
-> +		else if (i >= INTEL_PMC_IDX_FIXED)
-> +			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
-> +		else
-> +			wrmsrl(x86_pmu_event_addr(i), 0);
-> +	}
-> +
-> +	bitmap_zero(cpuc->dirty, X86_PMC_IDX_MAX);
-> +}
-
-The bitmap_{empty,zero}() do indeed compile into single instructions,
-neat!
-
->  static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
->  {
->  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
->  		return;
->  
-> +	/*
-> +	 * Enable sched_task() for the RDPMC task,
-> +	 * and clear the existing dirty counters.
-> +	 */
-> +	if (x86_pmu.sched_task && event->hw.target && !is_sampling_event(event)) {
-> +		perf_sched_cb_inc(event->ctx->pmu);
-> +		x86_pmu_clear_dirty_counters();
-> +	}
-
-I'm failing to see the correctness of the !is_sampling_event() part
-there.
-
->  	/*
->  	 * This function relies on not being called concurrently in two
->  	 * tasks in the same mm.  Otherwise one task could observe
-> @@ -2246,6 +2286,9 @@ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *m
->  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
->  		return;
->  
-> +	if (x86_pmu.sched_task && event->hw.target && !is_sampling_event(event))
-> +		perf_sched_cb_dec(event->ctx->pmu);
-> +
-
-Idem.
-
->  	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
->  		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
->  }
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index c72e4904e056..e67713bfa33a 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4166,11 +4166,39 @@ static void intel_pmu_cpu_dead(int cpu)
->  	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
->  }
->  
-> +static void intel_pmu_rdpmc_sched_task(struct perf_event_context *ctx)
-> +{
-> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	struct perf_event *event;
-> +
-> +	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
-> +		return;
-> +
-> +	/*
-> +	 * If the new task has the RDPMC enabled, clear the dirty counters to
-> +	 * prevent the potential leak. If the new task doesn't have the RDPMC
-> +	 * enabled, do nothing.
-> +	 */
-> +	list_for_each_entry(event, &ctx->event_list, event_entry) {
-> +		if (event->hw.target &&
-> +		    (event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED) &&
-> +		    !is_sampling_event(event) &&
-> +		    atomic_read(&event->mmap_count))
-> +			break;
-> +	}
-> +	if (&event->event_entry == &ctx->event_list)
-> +		return;
-
-That's horrific, what's wrong with something like:
-
-	if (!atomic_read(&current->mm->context.perf_rdpmc_allowed))
-		return;
-
-> +
-> +	x86_pmu_clear_dirty_counters();
-> +}
-
-How is this Intel specific code? IIRC AMD has RDPMC too.
