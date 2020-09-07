@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CAEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEEC2067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D86206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729696AbgIGR1r (ORCPT
+        id S1729725AbgIGRa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:27:47 -0400
-Received: from 8bytes.org ([81.169.241.247]:43632 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:30:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:43612 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:19:37 -0400
+        id S1729501AbgIGNSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:34 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 8F1453AA6;
-        Mon,  7 Sep 2020 15:17:16 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 135001688;
+        Mon,  7 Sep 2020 15:17:10 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 65/72] x86/realmode: Add SEV-ES specific trampoline entry point
-Date:   Mon,  7 Sep 2020 15:16:06 +0200
-Message-Id: <20200907131613.12703-66-joro@8bytes.org>
+Subject: [PATCH v7 54/72] x86/sev-es: Handle RDTSC(P) Events
+Date:   Mon,  7 Sep 2020 15:15:55 +0200
+Message-Id: <20200907131613.12703-55-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -58,89 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-The code at the trampoline entry point is executed in real-mode. In
-real-mode #VC exceptions can't be handled, so anything that might cause
-such an exception must be avoided.
+Implement a handler for #VC exceptions caused by RDTSC and RDTSCP
+instructions. Also make it available in the pre-decompression stage
+because the KASLR code used RDTSC/RDTSCP to gather entropy and some
+hypervisors intercept these instructions.
 
-In the standard trampoline entry code this is the WBINVD instruction and
-the call to verify_cpu(), which are both not needed anyway when running
-as an SEV-ES guest.
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Adapt to #VC handling infrastructure
+                   - Make it available early ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/realmode.h      |  3 +++
- arch/x86/realmode/rm/header.S        |  3 +++
- arch/x86/realmode/rm/trampoline_64.S | 20 ++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ arch/x86/boot/compressed/sev-es.c |  4 ++++
+ arch/x86/kernel/sev-es-shared.c   | 23 +++++++++++++++++++++++
+ arch/x86/kernel/sev-es.c          |  4 ++++
+ 3 files changed, 31 insertions(+)
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 96118fb041b8..4d4d853f6841 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -21,6 +21,9 @@ struct real_mode_header {
- 	/* SMP trampoline */
- 	u32	trampoline_start;
- 	u32	trampoline_header;
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	u32	sev_es_trampoline_start;
-+#endif
- #ifdef CONFIG_X86_64
- 	u32	trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index af04512c02d9..8c1db5bf5d78 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -20,6 +20,9 @@ SYM_DATA_START(real_mode_header)
- 	/* SMP trampoline */
- 	.long	pa_trampoline_start
- 	.long	pa_trampoline_header
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	.long	pa_sev_es_trampoline_start
-+#endif
- #ifdef CONFIG_X86_64
- 	.long	pa_trampoline_pgd;
- #endif
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 251758ed7443..84c5d1b33d10 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -56,6 +56,7 @@ SYM_CODE_START(trampoline_start)
- 	testl   %eax, %eax		# Check for return code
- 	jnz	no_longmode
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index 57c41c368681..45702b866c33 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -181,6 +181,10 @@ void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
+ 		goto finish;
  
-+.Lswitch_to_protected:
- 	/*
- 	 * GDT tables in non default location kernel can be beyond 16MB and
- 	 * lgdt will not be able to load the address as in real mode default
-@@ -80,6 +81,25 @@ no_longmode:
- 	jmp no_longmode
- SYM_CODE_END(trampoline_start)
+ 	switch (exit_code) {
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(boot_ghcb, &ctxt, exit_code);
++		break;
+ 	case SVM_EXIT_IOIO:
+ 		result = vc_handle_ioio(boot_ghcb, &ctxt);
+ 		break;
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index a6b41910b8ab..92d77b725ccb 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -467,3 +467,26 @@ static enum es_result vc_handle_cpuid(struct ghcb *ghcb,
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/* SEV-ES supports non-zero IP for entry points - no alignment needed */
-+SYM_CODE_START(sev_es_trampoline_start)
-+	cli			# We should be safe anyway
+ 	return ES_OK;
+ }
 +
-+	LJMPW_RM(1f)
-+1:
-+	mov	%cs, %ax	# Code and data in the same place
-+	mov	%ax, %ds
-+	mov	%ax, %es
-+	mov	%ax, %ss
++static enum es_result vc_handle_rdtsc(struct ghcb *ghcb,
++				      struct es_em_ctxt *ctxt,
++				      unsigned long exit_code)
++{
++	bool rdtscp = (exit_code == SVM_EXIT_RDTSCP);
++	enum es_result ret;
 +
-+	# Setup stack
-+	movl	$rm_stack_end, %esp
++	ret = sev_es_ghcb_hv_call(ghcb, ctxt, exit_code, 0, 0);
++	if (ret != ES_OK)
++		return ret;
 +
-+	jmp	.Lswitch_to_protected
-+SYM_CODE_END(sev_es_trampoline_start)
-+#endif	/* CONFIG_AMD_MEM_ENCRYPT */
++	if (!(ghcb_rax_is_valid(ghcb) && ghcb_rdx_is_valid(ghcb) &&
++	     (!rdtscp || ghcb_rcx_is_valid(ghcb))))
++		return ES_VMM_ERROR;
 +
- #include "../kernel/verify_cpu.S"
- 
- 	.section ".text32","ax"
++	ctxt->regs->ax = ghcb->save.rax;
++	ctxt->regs->dx = ghcb->save.rdx;
++	if (rdtscp)
++		ctxt->regs->cx = ghcb->save.rcx;
++
++	return ES_OK;
++}
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index c51cb2673af6..5c155f307129 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -866,6 +866,10 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
+ 	case SVM_EXIT_WRITE_DR7:
+ 		result = vc_handle_dr7_write(ghcb, ctxt);
+ 		break;
++	case SVM_EXIT_RDTSC:
++	case SVM_EXIT_RDTSCP:
++		result = vc_handle_rdtsc(ghcb, ctxt, exit_code);
++		break;
+ 	case SVM_EXIT_CPUID:
+ 		result = vc_handle_cpuid(ghcb, ctxt);
+ 		break;
 -- 
 2.28.0
 
