@@ -2,93 +2,318 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C227C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD42AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45BBF20738
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94FC520738
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:38:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgIGKf4 (ORCPT
+        id S1728670AbgIGKiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:35:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:60366 "EHLO foss.arm.com"
+        Mon, 7 Sep 2020 06:38:22 -0400
+Received: from mga06.intel.com ([134.134.136.31]:32890 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbgIGKfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:35:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B137106F;
-        Mon,  7 Sep 2020 03:35:20 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CCDF53F66E;
-        Mon,  7 Sep 2020 03:35:18 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 11:35:16 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Boyan Karatotev <boyan.karatotev@arm.com>
-Cc:     Shuah Khan <shuah@kernel.org>, boian4o1@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/4] kselftests/arm64: add PAuth test for whether
- exec() changes keys
-Message-ID: <20200907103516.GO6642@arm.com>
-References: <20200831110450.30188-1-boyan.karatotev@arm.com>
- <20200831110450.30188-4-boyan.karatotev@arm.com>
- <20200902170854.GK6642@arm.com>
- <926691e4-1990-207e-bcb9-40ab6d3b0fa0@arm.com>
+        id S1728453AbgIGKhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:37:55 -0400
+IronPort-SDR: 8QznInhQvHdheVgqd8D7wzdtoSU/JKENITwmylQ49HAfi0PptRm+UM5IgW7UR3zl0ppZL8dgQ4
+ ne4ElyEgmcIw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="219541982"
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="219541982"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 03:37:55 -0700
+IronPort-SDR: HZbfChcUMXAjtNiVK/ZLfi9KxYd8hCSRGFQqJEHAZ9lz5ps1ueiPx6BrDUwVI7WlEu4K5JX+K4
+ KFw9sTWBcrhQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="406801321"
+Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2020 03:37:53 -0700
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: [PATCH 1/2] device property: Move fwnode_connection_find_match() under drivers/base/property.c
+Date:   Mon,  7 Sep 2020 13:37:49 +0300
+Message-Id: <20200907103750.9093-2-heikki.krogerus@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907103750.9093-1-heikki.krogerus@linux.intel.com>
+References: <20200907103750.9093-1-heikki.krogerus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <926691e4-1990-207e-bcb9-40ab6d3b0fa0@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 11:48:37AM +0100, Boyan Karatotev wrote:
-> On 02/09/2020 18:08, Dave Martin wrote:
-> > On Mon, Aug 31, 2020 at 12:04:49PM +0100, Boyan Karatotev wrote:
-> >> +/*
-> >> + * fork() does not change keys. Only exec() does so call a worker program.
-> >> + * Its only job is to sign a value and report back the resutls
-> >> + */
-> >> +TEST(exec_unique_keys)
-> >> +{
-> > 
-> > The kernel doesn't guarantee that keys are unique.
-> > 
-> > Can we present all the "unique keys" wording differently, say
-> > 
-> > 	exec_key_collision_likely()
-> 
-> I agree that this test's name is a bit out of place. I would rather have
-> it named "exec_changed_keys" though.
-> 
-> > Otherwise people might infer from this test code that the keys are
-> > supposed to be truly unique and start reporting bugs on the kernel.
-> > 
-> > I can't see an obvious security argument for unique keys (rather, the
-> > keys just need to be "unique enough".  That's the job of
-> > get_random_bytes().)
-> 
-> The "exec_unique_keys" test only checks that the keys changed after an
-> exec() which I think the name change would reflect.
-> 
-> The thing with the "single_thread_unique_keys" test is that the kernel
-> says the the keys will be random. Yes, there is no uniqueness guarantee
-> but I'm not sure how to phrase it differently. There is some minuscule
-> chance that the keys end up the same, but for this test I pretend this
-> will not happen. Would changing up the comments and the failure message
-> communicate this? Maybe substitute "unique" for "different" and say how
-> many keys clashed?
+The function is now only a helper that searches the
+connection from device graph and then by checking if the
+supplied connection identifier matches a property that
+contains reference.
 
-Yes, something like that seems reasonable.
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+---
+ drivers/base/Makefile    |   2 +-
+ drivers/base/devcon.c    | 101 ---------------------------------------
+ drivers/base/property.c  |  73 ++++++++++++++++++++++++++++
+ include/linux/device.h   |   9 ----
+ include/linux/property.h |  14 ++++++
+ 5 files changed, 88 insertions(+), 111 deletions(-)
+ delete mode 100644 drivers/base/devcon.c
 
-Cheers
----Dave
+diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+index 157452080f3d7..41369fc7004fd 100644
+--- a/drivers/base/Makefile
++++ b/drivers/base/Makefile
+@@ -6,7 +6,7 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
+ 			   cpu.o firmware.o init.o map.o devres.o \
+ 			   attribute_container.o transport_class.o \
+ 			   topology.o container.o property.o cacheinfo.o \
+-			   devcon.o swnode.o
++			   swnode.o
+ obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
+ obj-y			+= power/
+ obj-$(CONFIG_ISA_BUS_API)	+= isa.o
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+deleted file mode 100644
+index 1790e84dbe7c2..0000000000000
+--- a/drivers/base/devcon.c
++++ /dev/null
+@@ -1,101 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/**
+- * Device connections
+- *
+- * Copyright (C) 2018 Intel Corporation
+- * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+- */
+-
+-#include <linux/device.h>
+-#include <linux/property.h>
+-
+-static void *
+-fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+-			  void *data, devcon_match_fn_t match)
+-{
+-	struct fwnode_handle *node;
+-	struct fwnode_handle *ep;
+-	void *ret;
+-
+-	fwnode_graph_for_each_endpoint(fwnode, ep) {
+-		node = fwnode_graph_get_remote_port_parent(ep);
+-		if (!fwnode_device_is_available(node))
+-			continue;
+-
+-		ret = match(node, con_id, data);
+-		fwnode_handle_put(node);
+-		if (ret) {
+-			fwnode_handle_put(ep);
+-			return ret;
+-		}
+-	}
+-	return NULL;
+-}
+-
+-static void *
+-fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
+-		    void *data, devcon_match_fn_t match)
+-{
+-	struct fwnode_handle *node;
+-	void *ret;
+-	int i;
+-
+-	for (i = 0; ; i++) {
+-		node = fwnode_find_reference(fwnode, con_id, i);
+-		if (IS_ERR(node))
+-			break;
+-
+-		ret = match(node, NULL, data);
+-		fwnode_handle_put(node);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return NULL;
+-}
+-
+-/**
+- * fwnode_connection_find_match - Find connection from a device node
+- * @fwnode: Device node with the connection
+- * @con_id: Identifier for the connection
+- * @data: Data for the match function
+- * @match: Function to check and convert the connection description
+- *
+- * Find a connection with unique identifier @con_id between @fwnode and another
+- * device node. @match will be used to convert the connection description to
+- * data the caller is expecting to be returned.
+- */
+-void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
+-				   const char *con_id, void *data,
+-				   devcon_match_fn_t match)
+-{
+-	void *ret;
+-
+-	if (!fwnode || !match)
+-		return NULL;
+-
+-	ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
+-	if (ret)
+-		return ret;
+-
+-	return fwnode_devcon_match(fwnode, con_id, data, match);
+-}
+-EXPORT_SYMBOL_GPL(fwnode_connection_find_match);
+-
+-/**
+- * device_connection_find_match - Find physical connection to a device
+- * @dev: Device with the connection
+- * @con_id: Identifier for the connection
+- * @data: Data for the match function
+- * @match: Function to check and convert the connection description
+- *
+- * Find a connection with unique identifier @con_id between @dev and another
+- * device. @match will be used to convert the connection description to data the
+- * caller is expecting to be returned.
+- */
+-void *device_connection_find_match(struct device *dev, const char *con_id,
+-				   void *data, devcon_match_fn_t match)
+-{
+-	return fwnode_connection_find_match(dev_fwnode(dev), con_id, data, match);
+-}
+-EXPORT_SYMBOL_GPL(device_connection_find_match);
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index d58aa98fe9645..4c43d30145c6b 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -1184,3 +1184,76 @@ const void *device_get_match_data(struct device *dev)
+ 	return fwnode_call_ptr_op(dev_fwnode(dev), device_get_match_data, dev);
+ }
+ EXPORT_SYMBOL_GPL(device_get_match_data);
++
++static void *
++fwnode_graph_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
++			  void *data, devcon_match_fn_t match)
++{
++	struct fwnode_handle *node;
++	struct fwnode_handle *ep;
++	void *ret;
++
++	fwnode_graph_for_each_endpoint(fwnode, ep) {
++		node = fwnode_graph_get_remote_port_parent(ep);
++		if (!fwnode_device_is_available(node))
++			continue;
++
++		ret = match(node, con_id, data);
++		fwnode_handle_put(node);
++		if (ret) {
++			fwnode_handle_put(ep);
++			return ret;
++		}
++	}
++	return NULL;
++}
++
++static void *
++fwnode_devcon_match(struct fwnode_handle *fwnode, const char *con_id,
++		    void *data, devcon_match_fn_t match)
++{
++	struct fwnode_handle *node;
++	void *ret;
++	int i;
++
++	for (i = 0; ; i++) {
++		node = fwnode_find_reference(fwnode, con_id, i);
++		if (IS_ERR(node))
++			break;
++
++		ret = match(node, NULL, data);
++		fwnode_handle_put(node);
++		if (ret)
++			return ret;
++	}
++
++	return NULL;
++}
++
++/**
++ * fwnode_connection_find_match - Find connection from a device node
++ * @fwnode: Device node with the connection
++ * @con_id: Identifier for the connection
++ * @data: Data for the match function
++ * @match: Function to check and convert the connection description
++ *
++ * Find a connection with unique identifier @con_id between @fwnode and another
++ * device node. @match will be used to convert the connection description to
++ * data the caller is expecting to be returned.
++ */
++void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
++				   const char *con_id, void *data,
++				   devcon_match_fn_t match)
++{
++	void *ret;
++
++	if (!fwnode || !match)
++		return NULL;
++
++	ret = fwnode_graph_devcon_match(fwnode, con_id, data, match);
++	if (ret)
++		return ret;
++
++	return fwnode_devcon_match(fwnode, con_id, data, match);
++}
++EXPORT_SYMBOL_GPL(fwnode_connection_find_match);
+diff --git a/include/linux/device.h b/include/linux/device.h
+index c3ced17d91ee6..6f76c1f38e116 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -292,15 +292,6 @@ struct device_dma_parameters {
+ 	unsigned long segment_boundary_mask;
+ };
+ 
+-typedef void *(*devcon_match_fn_t)(struct fwnode_handle *fwnode, const char *id,
+-				   void *data);
+-
+-void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
+-				   const char *con_id, void *data,
+-				   devcon_match_fn_t match);
+-void *device_connection_find_match(struct device *dev, const char *con_id,
+-				   void *data, devcon_match_fn_t match);
+-
+ /**
+  * enum device_link_state - Device link states.
+  * @DL_STATE_NONE: The presence of the drivers is not being tracked.
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 9f805c4428195..aedae94dcf41d 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -418,6 +418,20 @@ fwnode_graph_get_endpoint_by_id(const struct fwnode_handle *fwnode,
+ int fwnode_graph_parse_endpoint(const struct fwnode_handle *fwnode,
+ 				struct fwnode_endpoint *endpoint);
+ 
++typedef void *(*devcon_match_fn_t)(struct fwnode_handle *fwnode, const char *id,
++				   void *data);
++
++void *fwnode_connection_find_match(struct fwnode_handle *fwnode,
++				   const char *con_id, void *data,
++				   devcon_match_fn_t match);
++
++static inline void *device_connection_find_match(struct device *dev,
++						 const char *con_id, void *data,
++						 devcon_match_fn_t match)
++{
++	return fwnode_connection_find_match(dev_fwnode(dev), con_id, data, match);
++}
++
+ /* -------------------------------------------------------------------------- */
+ /* Software fwnode support - when HW description is incomplete or missing */
+ 
+-- 
+2.28.0
+
