@@ -2,138 +2,121 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E1AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2B5C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C581F21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD66A20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbgIGEf6 (ORCPT
+        id S1726278AbgIGEoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 00:35:58 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:44139 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725910AbgIGEfr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 00:35:47 -0400
-Received: from methusalix.internal.home.lespocky.de ([109.250.103.148]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1N7RDn-1kbqGg0IVp-017j3H; Mon, 07 Sep 2020 06:35:27 +0200
-Received: from lemmy.internal.home.lespocky.de ([192.168.243.176] helo=lemmy.home.lespocky.de)
-        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <alex@home.lespocky.de>)
-        id 1kF8sH-0003E0-0w; Mon, 07 Sep 2020 06:35:25 +0200
-Received: (nullmailer pid 3032 invoked by uid 2001);
-        Mon, 07 Sep 2020 04:35:21 -0000
-From:   Alexander Dahl <post@lespocky.de>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Dahl <ada@thorsis.com>,
-        Alexander Dahl <post@lespocky.de>
-Subject: [PATCH v3 1/2] leds: pwm: Allow automatic labels for DT based devices
-Date:   Mon,  7 Sep 2020 06:34:58 +0200
-Message-Id: <20200907043459.2961-2-post@lespocky.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907043459.2961-1-post@lespocky.de>
-References: <20200907043459.2961-1-post@lespocky.de>
+        Mon, 7 Sep 2020 00:44:34 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:24303 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbgIGEod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 00:44:33 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BlG093H7Vz9twhX;
+        Mon,  7 Sep 2020 06:44:25 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 4jSMXyYyLRd9; Mon,  7 Sep 2020 06:44:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BlG091y3mz9twhW;
+        Mon,  7 Sep 2020 06:44:25 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4E2E88B779;
+        Mon,  7 Sep 2020 06:44:29 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id J1ciJfXJXz2l; Mon,  7 Sep 2020 06:44:29 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A193B8B75B;
+        Mon,  7 Sep 2020 06:44:28 +0200 (CEST)
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+To:     David Laight <David.Laight@ACULAB.COM>,
+        Pavel Machek <pavel@denx.de>
+Cc:     Christoph Hellwig <hch@lst.de>, "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200903155922.1111551-1-hch@lst.de>
+ <55d1ecb8-4a0c-fa58-d3cf-bf6796eea7bd@csgroup.eu>
+ <3b0b58be4b844162b73db1b108a9b995@AcuMS.aculab.com>
+ <20200906182122.GA12295@amd>
+ <8c353864-76a9-90bf-fa2f-f7a8231b5487@csgroup.eu>
+ <f2e9c57db2b548949e6bd570a6dc3c5d@AcuMS.aculab.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <7ece832b-e2b7-04af-f4bb-e84c909ee332@csgroup.eu>
+Date:   Mon, 7 Sep 2020 06:44:24 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
+In-Reply-To: <f2e9c57db2b548949e6bd570a6dc3c5d@AcuMS.aculab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-Scan-Signature: 5d1699e822705c24f051c25a2c63fb4e
-X-Provags-ID: V03:K1:fRUX15+uW7mKd6C8CLI+hAGFYFkzmXvrZBEIi7c1LGY6RtF5StJ
- nVX9keIxJ2/J6uWXJohAy2NbirnapmDtiuY1O1XjhhEzgP2HZPec2L0suu+MyueyAkVU50h
- X8KIyVFNfYAl1fchQnDq/BgQSKuOMFbaV8oaBwWwqzxG31VPmDDMsvKMmiFDyPzO9RqKrSe
- e4tWPEZaVDJbi9XizLYKw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:eT4etPF3VQs=:GpYLEuBkskH0xCbwM8veRj
- IzPvVPh+3YA2sLQGbKVLpg92rbsUdSUxUJapvDI2LifXP8AcocClNz90PT74L8tdYYwfJ/vmN
- 9IAcWPQ4YB2/4yW8PWCYI3bVwlBpmZNoWO30eZj9B78+hqHz06YzAiOpH0/bEEuA7kH+xCAfS
- xjpYf6UwN/48MaXnRfyJFe+TTugZ/0GtRvTOE/7hfM8Lb44uCP/qck3FhWORsXW/ZXRzkS889
- piJ1qUnzpc+X3O6D6k6kZZTpJ8w1Vd3hDccbLSXdj7AnZHx2IdP9y1NjoEmqkJxx+ziM9esjz
- fYOzvQZHXf5VaPSiw7CZSAtmzfyIoAjJ0Sb9sRFcKwFk38hqpYs5IppIeP0hRCen3Qa0NJqRd
- zk3zX0HHGbZTw2f7stcvK1uYZvwUFLVHcl3uPOAlS0lQ3wRI2oQ3gzaDh4DH17T8j+pfMyvig
- 1hYsAqYknXNqt2lcGGVDZYbdHZPbwo/t9QUeJxvXstXqjdp4mIcnz0P1fSqQ5b6Le7S8SidJc
- yZci0fDeCKDI7xiSLaNiNncBHoEqAmqYsT1BVK9mwVha88muCRVetvyNVvpeu4rhdKiaxky6g
- ORKYgIlgFgBILBVHB3B41C1mGkjj2X1yFyTc+uWaSXsofYoM1Z0kJIzKvNcbohQDxv5iHYsKH
- vTxsXeG1c48BO7SfdumAcY2YCDfltnuC/vaf7i/xNn3nje3HMuaI8SRKn1rPcn0sXxPTlP5PW
- MskHAQJhZfTgXuyef2yVncsbCyO8Imq2Yr544hX+B9RqLkFgQz45b7z6mIM5NFqNTkb9lalk+
- b3k/06PORbfk+mMWzDGngCDyv6pIvawvXxgsN5W582tUcPCAb5TgQ9s1+JExbANqlwxE6TQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If LEDs are configured through device tree and the property 'label' is
-omitted, the label is supposed to be generated from the properties
-'function' and 'color' if present.  While this works fine for e.g. the
-'leds-gpio' driver, it did not for 'leds-pwm'.
 
-The reason is, you get this label naming magic only if you add a LED
-device through 'devm_led_classdev_register_ext()' and pass a pointer to
-the current device tree node.  The approach to fix this was adopted from
-the 'leds-gpio' driver.
 
-For the following node from dts the LED appeared as 'led5' in sysfs
-before and as 'red:debug' after this change.
+Le 06/09/2020 à 22:52, David Laight a écrit :
+> From: Christophe Leroy
+>> Sent: 06 September 2020 19:36
+>> Hi,
+>>
+>> Le 06/09/2020 à 20:21, Pavel Machek a écrit :
+>>> Hi!
+>>>
+>>>>>> Christophe reported a major speedup due to avoiding the iov_iter
+>>>>>> overhead, so just add this trivial function.  Note that /dev/zero
+>>>>>> already implements both an iter and non-iter writes so this just
+>>>>>> makes it more symmetric.
+>>>>>>
+>>>>>> Christophe Leroy <christophe.leroy@csgroup.eu>
+>>>>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>>>>
+>>>>> Tested-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+>>>>
+>>>> Any idea what has happened to make the 'iter' version so bad?
+>>>
+>>> Exactly. Also it would be nice to note how the speedup was measured
+>>> and what the speedup is.
+>>>
+>>
+>> Was measured on an 8xx powerpc running at 132MHz with:
+>>
+>> 	dd if=/dev/zero of=/dev/null count=1M
+>>
+>> With the patch, dd displays a throughput of 113.5MB/s
+>> Without the patch it is 99.9MB/s
+> 
+> That in itself isn't a problem.
+> What was the throughput before any of these patches?
+> 
+> I just remember another thread about the same test running
+> a lot slower after one of the related changes.
 
-        pwm_leds {
-                compatible = "pwm-leds";
+> While this speeds up read /dev/zero (which is uncommon)
+> if this is needed to get near the old performance then
+> the changes to the 'iter' code will affect real workloads.
 
-                led5 {
-                        function = LED_FUNCTION_DEBUG;
-                        color = <LED_COLOR_ID_RED>;
-                        pwms = <&pwm0 2 10000000 0>;
-                        max-brightness = <127>;
+If you are talking about the tests around the set_fs series from 
+Christoph, I identified that the degradation was linked to 
+CONFIG_STACKPROTECTOR_STRONG being selected by default, which provides 
+unreliable results from one patch to another, GCC doing some strange 
+things linked to unrelated changes.
 
-                        linux,default-trigger = "heartbeat";
-                        panic-indicator;
-                };
-        };
+With CONFIG_STACKPROTECTOR set to N, I get stable performance and no 
+degradation with any of the patches of the set_fs series.
 
-Signed-off-by: Alexander Dahl <post@lespocky.de>
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
-
-Notes:
-    v2 -> v3:
-      * added Acked-by
-
- drivers/leds/leds-pwm.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index ef7b91bd2064..a27a1d75a3e9 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -65,6 +65,7 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
- 		       struct led_pwm *led, struct fwnode_handle *fwnode)
- {
- 	struct led_pwm_data *led_data = &priv->leds[priv->num_leds];
-+	struct led_init_data init_data = {};
- 	int ret;
- 
- 	led_data->active_low = led->active_low;
-@@ -90,7 +91,13 @@ static int led_pwm_add(struct device *dev, struct led_pwm_priv *priv,
- 
- 	pwm_init_state(led_data->pwm, &led_data->pwmstate);
- 
--	ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	if (fwnode) {
-+		init_data.fwnode = fwnode;
-+		ret = devm_led_classdev_register_ext(dev, &led_data->cdev,
-+						     &init_data);
-+	} else {
-+		ret = devm_led_classdev_register(dev, &led_data->cdev);
-+	}
- 	if (ret) {
- 		dev_err(dev, "failed to register PWM led for %s: %d\n",
- 			led->name, ret);
--- 
-2.20.1
-
+Christophe
