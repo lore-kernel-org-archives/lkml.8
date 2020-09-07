@@ -2,121 +2,181 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BAFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A93BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0E4207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:03:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hmebUBbh"
+	by mail.kernel.org (Postfix) with ESMTP id 5F988207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:04:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728982AbgIGMCd (ORCPT
+        id S1729165AbgIGMEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:02:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728459AbgIGL6B (ORCPT
+        Mon, 7 Sep 2020 08:04:05 -0400
+Received: from kernel.crashing.org ([76.164.61.194]:59480 "EHLO
+        kernel.crashing.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729184AbgIGL7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:58:01 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C9EC061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:58:00 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id lo4so17877349ejb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 04:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wuNizNJ6r33hGWcPZZ5Js9EvkLS7jqpgkks6hNUFhPA=;
-        b=hmebUBbhYKYjFws6DyXQmTbngYhFOaYQZwILguT9XWAVUF34AkgUhucL2X83PWUz3B
-         O1WILkR2ETVUXAQHnmzJ3T9TOE+BkUDSmBuGiSgS6Sp5sXm97ReIQwhxpvCiXKPYPxwl
-         KmYDUbghifyxlWCuz0FXLZhOP8/WaaBorOGjV0OaPvsg96+OJ9dsVtYXdMjZspZn4Z+G
-         WnnS+fADtLeE8tiSTQ84zNr/1dJ4qnng0gSHl9HGGeZ9NF0QDxScyDw1+vyr5LVHsdpY
-         BHAzbAA6yL4HFjfbQwk6s5dWCoCOvVuf2PpqzV88RAQnteHZ8G9AZHlHpHrnxdKi5Hax
-         Gnmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wuNizNJ6r33hGWcPZZ5Js9EvkLS7jqpgkks6hNUFhPA=;
-        b=j+VeLVdvk3AnnYWbhECPtp9NZocBNcBpj83kwT2k4bPJDTP83a+mk6eRUw5+HYj9pH
-         WBWq0Y+1mIds/E7RPgWqdmjqPFOhjduZPrUsKcCuUORvlhrBnZv8H1ncWwWvn0LZe4to
-         wVDwxSopxAi7hUlUi+8crg4MUVQPOdQOV6W2m97o5WqPWfB/7OLkOp1wxWKcfC6W4+fO
-         hQzpf969cZcCAbjL700lwHMdKIrPGAKSvoWrhIqz1jho5AL3zLlxBGWEowEdawA4QAX/
-         gK0h6Yi7wWe7aogjBFQiX4v2NJdzdQbAiAWyb9wOUq6h0O429tGnQZvKUM3yWfKQgsV4
-         jF8w==
-X-Gm-Message-State: AOAM532PYUVBu8OWzdTtYvth03wCORsOXD5HCBuN7dgqKE7GDLJcz2xT
-        dTBvkZkcafKbbQKDzzZCcygWkIfRcRmfxpyDJJ/LzA==
-X-Google-Smtp-Source: ABdhPJy6SVnws0uCzDJjVt4W73YHn0MvifY/aOZ9PPy9nsKFI6ForeXnVBcXyVqA8gP/QTrekOcYQwHkOSe341Q0TzI=
-X-Received: by 2002:a17:906:174e:: with SMTP id d14mr3022559eje.225.1599479879319;
- Mon, 07 Sep 2020 04:57:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-4-brgl@bgdev.pl>
- <20200904163517.GW1891694@smile.fi.intel.com> <CAMpxmJWQsgV5WZrdPW3UUOVTEy1L6Y_rb7ThQK1QTRinmHSqWA@mail.gmail.com>
- <CAHp75VdOWdwT-e5ufsZ8MEH=YtdBgm1=TDKn3f8fJxXY4YKh9A@mail.gmail.com>
- <CAMpxmJXmY8oBpPue5v0wBvmjHkFGaUmzHScHoV-1pNEQ59am4w@mail.gmail.com> <20200907114551.GV1891694@smile.fi.intel.com>
-In-Reply-To: <20200907114551.GV1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 7 Sep 2020 13:57:48 +0200
-Message-ID: <CAMpxmJWOSvCr8XthVn46qw=dqwG4cSS00z05XXbTYMOJBnjkkQ@mail.gmail.com>
-Subject: Re: [PATCH 03/23] lib: uaccess: provide getline_from_user()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        Mon, 7 Sep 2020 07:59:31 -0400
+Received: from localhost (gate.crashing.org [63.228.1.57])
+        (authenticated bits=0)
+        by kernel.crashing.org (8.14.7/8.14.7) with ESMTP id 087Bwjb2023420
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 7 Sep 2020 06:58:49 -0500
+Message-ID: <6161b96a30e51ff77a387a71eee6a46400530155.camel@kernel.crashing.org>
+Subject: Re: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade
+ and fix-ups.
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Date:   Mon, 07 Sep 2020 21:58:44 +1000
+In-Reply-To: <20200907075559.GN2352366@phenom.ffwll.local>
+References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+         <20200907075559.GN2352366@phenom.ffwll.local>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 1:45 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Sep 07, 2020 at 12:28:05PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 7, 2020 at 12:19 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Mon, Sep 7, 2020 at 1:05 PM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > > On Fri, Sep 4, 2020 at 6:35 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Fri, Sep 04, 2020 at 05:45:27PM +0200, Bartosz Golaszewski wrote:
-> > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > >
-> > > > > Doesn't mm/util.c provides us something like this?
-> > > > > strndup_user()?
-> > > > >
-> > > >
-> > > > Yes, there's both strndup_user() as well as strncpy_from_user(). The
-> > > > problem is that they rely on the strings being NULL-terminated. This
-> > > > is not guaranteed for debugfs file_operations write callbacks. We need
-> > > > some helper that takes the minimum of bytes provided by userspace and
-> > > > the buffer size and figure out how many bytes to actually copy IMO.
-> > >
-> > > Wouldn't this [1] approach work?
-> > >
-> > > [1]: https://elixir.bootlin.com/linux/v5.9-rc3/source/arch/x86/kernel/cpu/mtrr/if.c#L93
-> > >
-> >
-> > Sure, but this is pretty much what I do in getline_from_user(). If
-> > anything we should port mtrr_write() to using getline_from_user() once
-> > it's available upstream, no?
->
-> But you may provide getline_from_user() as inline in the same header where
-> strncpy_from_user() is declared. It will be like 3 LOCs?
->
+On Mon, 2020-09-07 at 09:55 +0200, Daniel Vetter wrote:
+> On Thu, Aug 06, 2020 at 12:52:54PM +0530, Vaibhav Gupta wrote:
+> > Linux Kernel Mentee: Remove Legacy Power Management. 
+> > 
+> > The original goal of the patch series is to upgrade the power
+> > management
+> > framework of radeonfb fbdev driver. This has been done by upgrading
+> > .suspend()
+> > and .resume() callbacks.
+> > 
+> > The upgrade makes sure that the involvement of PCI Core does not
+> > change the
+> > order of operations executed in a driver. Thus, does not change its
+> > behavior.
+> > 
+> > During this process, it was found that "#if defined(CONFIG_PM)" at
+> > line 1434 is
+> > redundant. This was introduced in the commit
+> > 42ddb453a0cd ("radeon: Conditionally compile PM code").
+> 
+> I do wonder whether it wouldn't be better to just outright delete
+> these,
+> we have the drm radeon driver for pretty much all the same hardware
+> ...
 
-May be more than that. I'll see what I can do.
+The only thing is, afaik, the DRM drivers never got the D2/D3 code that
+I wrote for radeonfb to get old powerbooks to suspend/resume.
 
-Bart
+Cheers,
+Ben.
+
+> -Daniel
+> 
+> > 
+> > ------------
+> > 
+> > Before 42ddb453a0cd:
+> > $ git show 65122f7e80b5:drivers/video/aty/radeon_pm.c | grep -n
+> > "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+> > 
+> > Based on output in terminal:
+> > 
+> > 547:#ifdef CONFIG_PM
+> >        |-- 959:#ifdef CONFIG_PPC_PMAC
+> >        |-- 972:#endif
+> >        |-- 1291:#ifdef CONFIG_PPC_OF
+> >        |-- 1301:#endif /* CONFIG_PPC_OF */
+> >        |-- 1943:#ifdef CONFIG_PPC_OF
+> >                    |-- 2206:#if 0 /* Not ready yet */
+> >                    |-- 2508:#endif /* 0 */
+> >        |-- 2510:#endif /* CONFIG_PPC_OF */
+> >        |-- 2648:#ifdef CONFIG_PPC_PMAC
+> >        |-- 2654:#endif /* CONFIG_PPC_PMAC */
+> >        |-- 2768:#ifdef CONFIG_PPC_PMAC
+> >        |-- 2774:#endif /* CONFIG_PPC_PMAC */
+> >        |-- 2791:#ifdef CONFIG_PPC_OF__disabled
+> >        |-- 2801:#endif /* CONFIG_PPC_OF */
+> > 2803:#endif /* CONFIG_PM */
+> > 
+> > ------------
+> > 
+> > After 42ddb453a0cd:
+> > $ git show 42ddb453a0cd:drivers/video/aty/radeon_pm.c | grep -n
+> > "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+> > 
+> > Based on output in terminal:
+> > 
+> > 547:#ifdef CONFIG_PM
+> >        |-- 959:#ifdef CONFIG_PPC_PMAC
+> >        |-- 972:#endif
+> >        |-- 1291:#ifdef CONFIG_PPC_OF
+> >        |-- 1301:#endif /* CONFIG_PPC_OF */
+> >        |-- 1430:#if defined(CONFIG_PM)
+> >                    |-- 1431:#if defined(CONFIG_X86) ||
+> > defined(CONFIG_PPC_PMAC)
+> >                    |-- 1944:#endif
+> >                    |-- 1946:#ifdef CONFIG_PPC_OF
+> >                                |-- 1947:#ifdef CONFIG_PPC_PMAC
+> >                                |-- 2208:#endif
+> >                    |-- 2209:#endif
+> >                    |-- 2211:#if 0 /* Not ready yet */
+> >                    |-- 2513:#endif /* 0 */
+> >        |-- 2515:#endif /* CONFIG_PPC_OF */
+> >        |-- 2653:#ifdef CONFIG_PPC_PMAC
+> >        |-- 2659:#endif /* CONFIG_PPC_PMAC */
+> >        |-- 2773:#ifdef CONFIG_PPC_PMAC
+> >        |-- 2779:#endif /* CONFIG_PPC_PMAC */
+> >        |-- 2796:#ifdef CONFIG_PPC_OF__disabled
+> >        |-- 2806:#endif /* CONFIG_PPC_OF */
+> > 2808:#endif /* CONFIG_PM */
+> > 
+> > ------------
+> > 
+> > This also affected the CONFIG_PPC_OF container (line 1943 at commit
+> > 65122f7e80b5)
+> > 
+> > The patch-series fixes it along with PM upgrade.
+> > 
+> > All patches are compile-tested only.
+> > 
+> > Test tools:
+> >     - Compiler: gcc (GCC) 10.1.0
+> >     - allmodconfig build: make -j$(nproc) W=1 all
+> > 
+> > Vaibhav Gupta (2):
+> >   video: fbdev: aty: radeon_pm: remove redundant CONFIG_PM
+> > container
+> >   fbdev: radeonfb:use generic power management
+> > 
+> >  drivers/video/fbdev/aty/radeon_base.c | 10 ++++---
+> >  drivers/video/fbdev/aty/radeon_pm.c   | 38 ++++++++++++++++++++---
+> > ----
+> >  drivers/video/fbdev/aty/radeonfb.h    |  3 +--
+> >  3 files changed, 35 insertions(+), 16 deletions(-)
+> > 
+> > -- 
+> > 2.27.0
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> 
+
