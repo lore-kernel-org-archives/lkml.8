@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A55FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB780C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31169208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7806E2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497319;
-	bh=Y7DfL2QIoK+7AlOig5I7K0jPWLIoatifmL4WfTHq3TM=;
+	s=default; t=1599497321;
+	bh=TYi4kWw7AUWwK2bR6sXAbhGmQqnAW9uobvtqfk7wdEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KItE1fS0ip18IJrCD/w9lP0MiIBi7XXx/HIejabojKJVj0gmkTqgFLhHRvyXaEZLy
-	 qYOkG/6jBjQU2HDSooaWKy2Tzn3Pn9K3vC2iFOkRkvwfRciahL43J4aARl6/3hEruC
-	 WqN6IV4b+GC5x2/8sA6/kjFVifCsQcPl7HJht/rg=
+	b=sIUn4N0a/0e+p7SSbE6woV/8BGZjG7F957E5u4YY+RKFVD8G3dSo5hl96rUXTHv8J
+	 4GRDen+Hs0qOytdN0xETgTxMX1IMU/HsJgl1LOKaUU169A0HDvqf7EBEOHlsFz2tde
+	 1pwq5PgKAnmi5HUNwkG6VHTsOERZygfM7yjSheNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgIGQr6 (ORCPT
+        id S1730939AbgIGQsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:47:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49170 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730820AbgIGQfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:16 -0400
+        id S1730350AbgIGQfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8F7621927;
-        Mon,  7 Sep 2020 16:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6098221E7;
+        Mon,  7 Sep 2020 16:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496515;
-        bh=Y7DfL2QIoK+7AlOig5I7K0jPWLIoatifmL4WfTHq3TM=;
+        s=default; t=1599496511;
+        bh=TYi4kWw7AUWwK2bR6sXAbhGmQqnAW9uobvtqfk7wdEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Go/rIFwGEny1ceyX7/Dgv2e8x5WMjmQVldY7RmpN1Poj5NlFjA/0FJjctVQRsIgwn
-         ImIE4cQ7X6hePwoE8wP+1euK7TEuNaYVb7iDU8VIOb+Bz0aS7BbJi5jSNzSy7yiiVp
-         EwM1kpijUrxCxWqaNs/0GlesuWpI4TTHUaBrNOIw=
+        b=htTUbge9HPMwxJsWhW9zLUTW1g0sb9hZfPPtXOunfiGrP2kjtrV6I3Ms6HOGeGYOF
+         tNVDGLcJ31gpUvqX1yatW3qqL+cfBSEB/mC+6YrYb+RsbHlLoKjW2Iq+uivUHBp/Su
+         WO3myUq9+wNGbKWEpjhrUCkNRLnRgDvgQUx0qUHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        kernel test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 11/17] irqchip/eznps: Fix build error for !ARC700 builds
-Date:   Mon,  7 Sep 2020 12:34:54 -0400
-Message-Id: <20200907163500.1281543-11-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/17] cfg80211: regulatory: reject invalid hints
+Date:   Mon,  7 Sep 2020 12:34:51 -0400
+Message-Id: <20200907163500.1281543-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
 References: <20200907163500.1281543-1-sashal@kernel.org>
@@ -61,58 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 89d29997f103d08264b0685796b420d911658b96 ]
+[ Upstream commit 47caf685a6854593348f216e0b489b71c10cbe03 ]
 
-eznps driver is supposed to be platform independent however it ends up
-including stuff from inside arch/arc headers leading to rand config
-build errors.
+Reject invalid hints early in order to not cause a kernel
+WARN later if they're restored to or similar.
 
-The quick hack to fix this (proper fix is too much chrun for non active
-user-base) is to add following to nps platform agnostic header.
- - copy AUX_IENABLE from arch/arc header
- - move CTOP_AUX_IACK from arch/arc/plat-eznps/*/**
-
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lkml.kernel.org/r/20200824095831.5lpkmkafelnvlpi2@linutronix.de
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Reported-by: syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=d451401ffd00a60677ee
+Link: https://lore.kernel.org/r/20200819084648.13956-1-johannes@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/plat-eznps/include/plat/ctop.h | 1 -
- include/soc/nps/common.h                | 6 ++++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ net/wireless/reg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
-index 4f6a1673b3a6e..ddfca2c3357a0 100644
---- a/arch/arc/plat-eznps/include/plat/ctop.h
-+++ b/arch/arc/plat-eznps/include/plat/ctop.h
-@@ -43,7 +43,6 @@
- #define CTOP_AUX_DPC				(CTOP_AUX_BASE + 0x02C)
- #define CTOP_AUX_LPC				(CTOP_AUX_BASE + 0x030)
- #define CTOP_AUX_EFLAGS				(CTOP_AUX_BASE + 0x080)
--#define CTOP_AUX_IACK				(CTOP_AUX_BASE + 0x088)
- #define CTOP_AUX_GPA1				(CTOP_AUX_BASE + 0x08C)
- #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index b95d1c2bdef7e..9eb9d34cef7b1 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2408,6 +2408,9 @@ int regulatory_hint_user(const char *alpha2,
+ 	if (WARN_ON(!alpha2))
+ 		return -EINVAL;
  
-diff --git a/include/soc/nps/common.h b/include/soc/nps/common.h
-index 9b1d43d671a3f..8c18dc6d3fde5 100644
---- a/include/soc/nps/common.h
-+++ b/include/soc/nps/common.h
-@@ -45,6 +45,12 @@
- #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_INST	0x5B60
- #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_LIMM	0x00010422
- 
-+#ifndef AUX_IENABLE
-+#define AUX_IENABLE				0x40c
-+#endif
++	if (!is_world_regdom(alpha2) && !is_an_alpha2(alpha2))
++		return -EINVAL;
 +
-+#define CTOP_AUX_IACK				(0xFFFFF800 + 0x088)
-+
- #ifndef __ASSEMBLY__
- 
- /* In order to increase compilation test coverage */
+ 	request = kzalloc(sizeof(struct regulatory_request), GFP_KERNEL);
+ 	if (!request)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
