@@ -2,155 +2,130 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B0C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4714C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11AE8208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FBE1208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2syiUkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgIGH4Q (ORCPT
+        id S1727939AbgIGH4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:56:16 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45072 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727847AbgIGHz7 (ORCPT
+        Mon, 7 Sep 2020 03:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgIGH4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:55:59 -0400
-Received: by mail-oi1-f195.google.com with SMTP id d189so12821566oig.12;
-        Mon, 07 Sep 2020 00:55:58 -0700 (PDT)
+        Mon, 7 Sep 2020 03:56:07 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2376BC061573;
+        Mon,  7 Sep 2020 00:56:07 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id v196so8231922pfc.1;
+        Mon, 07 Sep 2020 00:56:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=798Cw8bFLQAbARh4SPwYPWqLwJW0cQuU04Rn0/q3c9A=;
+        b=D2syiUkxxm48DVBgqZ9pRsJgTZ4P2VL456g/UUyDu03Z6lvECVbPnlGRW7o9HkIQrt
+         a/dQK7AYRa/SaHh6NJ2L+mkreCLN7uUKv1A9cLhtRPHvfTGLVpWSKTG+dGYM31WjrKfN
+         LRTb+k3QyGqnT21RMEi7KR2dKe6lXu4BaH8pWTRdc9QSo5CMPmFtdxjwS9cAL3htnz5w
+         DDJVRTMM8FczmKzaytrgIbb8dBcVeoue1pYYrbDSj6FPsMWM7joEsfy05zAYcSfjsBgy
+         jaydvQyKIjopRs+Np53TjqgY8okvTZ3FMe5g38QMjmUF7jZx/T5od72wLd27w7nHeS9t
+         BqSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uuBwypJmHWQd5+fhA+Qi5ygJwZd3WxmHZlgvS26xGCM=;
-        b=GtOSW2MJgduv5NPEDLskPJLOojRpBiRg3hHAx5UNhBY8LlJ6aKraRwa1+s/vMj7xZF
-         etwr8rUWgVySyHcNTzD6seOgivEmMWPRaobsPpAnrJK/fU7eQAefoTZU1KP6IyuIMJxh
-         FRCSEF85pvpMvMfrLKt/ohLojmPph3+T6obI40Qod5NYHBwqdPA8vNVv6xUXWdUYpByw
-         zJr+m8IXEqAeptEMmLgXx33H/ERFocolgAG8uAuz+MeUW25kDQc299VI8AG41S1OykwV
-         TtDMq4RAcWqQtrVC0qc+1/E50u+sZIXhZPbMYbN2Bm6XhOBSqFtBdjtrSfaseFSgfUxK
-         1qmw==
-X-Gm-Message-State: AOAM5334dcRNXxsfmCCWQhh+9zZiGg4u0z3FBRlBWq9TRXYxpUDYzlDP
-        e+4Hgc6WCKSq5amCKXgS8EdaLAc0QK2J3Tov0rs=
-X-Google-Smtp-Source: ABdhPJw7BBFktIEQUB+STV6VUKMgajK/DnzWMIBlXP6kmOSIVV2532SU9YvqzAL5tzHBtDMz4jSG1EpLv2CV/1B5P6o=
-X-Received: by 2002:aca:52d6:: with SMTP id g205mr11714334oib.54.1599465358239;
- Mon, 07 Sep 2020 00:55:58 -0700 (PDT)
+        bh=798Cw8bFLQAbARh4SPwYPWqLwJW0cQuU04Rn0/q3c9A=;
+        b=G+35RQavc6KfDrZIXFpa2EDIJUG3QVZizmvvE2/hhp7a8mzlakgDSkliE8L8gKYkXt
+         dWbsCkDeOrIug8WuCEQgJjeO4M4SJIGj0H5UqFfjux4Fjm9J9S3ehKoaFK3MARN+AyUr
+         v6nPa2MOQtc8rewJncoFaYi55O7A68v2hx+lQTqnedYn9qiJjJbZHdi8mOVwzjTtaYzz
+         1xhr8lDd/9YCiXctN1QiZEHUzr2ejh6ZzapqXbfrEfqj5OApijyj8cFobnfZvESIZtPp
+         vdZ7oTXMJQeOfB9u02mkbPbhyHyggbNfCHqfUGc5qLKY7oW+7+XMc10Hn7QnRyNYd+/y
+         tn5g==
+X-Gm-Message-State: AOAM530akgDsNwWbsTByu7Z8Z5gZYm/zQQvIChQNeMAwcNIa5BXYaEpc
+        bTnTjlhyl+teZHJ7RdL9n/KIjNCgXQZaPNPo4ws=
+X-Google-Smtp-Source: ABdhPJzDRd8WxipLju4i1VmdhYX0UHgzaJ6qaFId8ULsyfjyQJ9kWpk5S6bel4uhAwW3V/2UMye8lXCS+m5p7ZaKlUc=
+X-Received: by 2002:a63:ec4c:: with SMTP id r12mr15445185pgj.74.1599465366622;
+ Mon, 07 Sep 2020 00:56:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825162718.5838-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXkGBfwNOwd5-=U3wg6U0O+3BErbXuybbuytgzsCmZqRQ@mail.gmail.com> <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com>
-In-Reply-To: <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Sep 2020 09:55:46 +0200
-Message-ID: <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: r8a7742-iwg21d-q7: Enable SD2 LED indication
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200904165222.18444-1-vadym.kochan@plvision.eu>
+ <20200904165222.18444-2-vadym.kochan@plvision.eu> <CAHp75Vc_MN-tD+iQNbUcB6fbYizyfKJSJnm1W7uXCT6JAvPauA@mail.gmail.com>
+ <20200907073040.GA3562@plvision.eu>
+In-Reply-To: <20200907073040.GA3562@plvision.eu>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Sep 2020 10:55:49 +0300
+Message-ID: <CAHp75Ve_YJneS7qOY-CXtjB0QJKUBPMUi6nMkp93YMXkuYOfkw@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+To:     Vadym Kochan <vadym.kochan@plvision.eu>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mickey Rachamim <mickeyr@marvell.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
+On Mon, Sep 7, 2020 at 10:30 AM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
+> On Fri, Sep 04, 2020 at 10:12:07PM +0300, Andy Shevchenko wrote:
+> > On Fri, Sep 4, 2020 at 7:52 PM Vadym Kochan <vadym.kochan@plvision.eu> wrote:
 
-On Fri, Sep 4, 2020 at 7:15 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Thu, Sep 3, 2020 at 1:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > Add support for LED trigger on SD2 interface.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+I'm assuming that you agree on all non-commented.
+
+...
+
+> > > +#define prestera_dev(sw)               ((sw)->dev->dev)
 > >
-> > > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > > @@ -63,6 +63,16 @@
-> > >                 enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
-> > >         };
-> > >
-> > > +       leds {
-> > > +               compatible = "gpio-leds";
-> > > +
-> > > +               sdhi2_led {
-> > > +                       label = "sdio-led";
-> > > +                       gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
+> > The point of this is...? (What I see it's 2 characters longer)
 > >
-> > GPIO_ACTIVE_HIGH?
+> > ...
+> It is not about the length but rather about easier semantics, so
+> the prestera_dev() is more easier to remember than sw->dev->dev.
+
+It actually makes it opposite, now I have to go somewhere in the file,
+quite far from the place where it is used, and check what it is. Then
+I return to the code I'm reading and after a few more lines of code I
+will forget what that macro means.
+
+...
+
+> > > +       /* firmware requires that port's mac address consist of the first
+> > > +        * 5 bytes of base mac address
+> > > +        */
 > >
-> > The LED is driven by an NPN transistor, with the LED between 3.3V and
-> > the transistor's collector.
-
-Oops, 3.3V is not VCC_3V3, but SD_3V3, so it is not always-on, but
-controlled by SDIO_PWR.
-
-> I did try with GPIO_ACTIVE_HIGH and it didn't work as expected. To
-> make sure I can control the LED through sysfs I deleted the node from
-> DTS and exported the pin GP5_22 (858) and writing the value "out"
-> direction and setting the values 0/1 to value did not toggle the SDIO
-> LED as expected and it stayed OFF all the time.
-
-Hence when SDIO_PWR is turned off, you cannot control the LED just by
-toggling GP5_22.
-
-> Looks like there is some information missing in the schematics.
+> >
+> > > +       memcpy(dev->dev_addr, sw->base_mac, dev->addr_len - 1);
+> >
+> > Can't you call above helper for that?
 >
-> I did some experiments. I completely removed the SDHI, LED and
-> regulator  nodes and  booted the system and exported GP1_27 (989) and
-> wrote values 0/1  and this toggled the SDIO_LED.
->
-> U-boot sets the below, so in u-boot the SDIO_LED is ON:
->     gpio_direction_output(GPIO_GP_1_27, 0); /* power on */
->     gpio_set_value(GPIO_GP_1_27, 0);
->     gpio_direction_output(GPIO_GP_5_22, 0); /* LED  */
->     gpio_set_value(GPIO_GP_5_22, 1);
->     gpio_direction_output(GPIO_GP_1_8, 0); /* 1: 3.3V, 0: 1.8V*/
->     gpio_set_value(GPIO_GP_1_8, 1);
->
-> So in comparison we would need a hog node as below (and with this the
-> LED triggers correctly as expected),
->
-> &gpio5 {
->     sdio-led-gpio {
->         gpio-hog;
->         gpios = <22 GPIO_ACTIVE_HIGH>;
->         output-high;
->         line-name = "sdio-led-gpio";
->     };
-> };
->
-> Let me know if you are OK with the above.
+> Not sure if I got this right, but I assume that may be just use
+> ether_addr_copy() and then just perform the below assignment on the
+> last byte ?
 
-The above means the LED is always lit when SDIO_PWR is enabled.
-While I agree that's some kind of SD activity indicator, probably it's less
-fine-grained than using the mmc1 trigger?
-I assume the mmc1 trigger is only activated when SDIO_PWR is enabled.
-Are you sure this doesn't work?
-Perhaps your kernel was missing SD trigger support, or "mmc1" is the
-wrong SD instance?
-
-> Looks like the SDIO_PWR is tied up with an SDIO_LED pin and the
-> information is missing from schematics.
-
-No, I think we just misread the schematics.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+No, I mean the function where you have the same comment and something
+else. I'm wondering if you may call it from here. Or refactor code to
+make it possible to call from here.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+With Best Regards,
+Andy Shevchenko
