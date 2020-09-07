@@ -2,128 +2,112 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C80CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB48C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8F8205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119972067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="L+LfQRYZ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="QDdavu3Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgIGKQU (ORCPT
+        id S1728726AbgIGK1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:16:20 -0400
-Received: from mail-eopbgr770058.outbound.protection.outlook.com ([40.107.77.58]:18596
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728632AbgIGKP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:15:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RYu1s9j5YSqKyuGghTgdV8kaOmw1cjlozgoChDbkOIt+1m+b4rwWZAPsTt8hyOoB2RHCFNjrLqoI8JpO4oUnTgmwdFxjxVhP9Zh+1Px6s/jJN3oIPdSflhhkWEb118HHpgPoPe/X1QKGUawldY4ujHnPcraKPzPMsGhgvgC5PUV3ABON1862tvfFIWD8FO1z+hZJEnWl1UUSCAr6p4rOjNnv3RILCjuUhsBzlyI5nK1JIbfAuxn4PisfLSwmhOf/pl9L9J/t+AdMyuMxyuSFomZCDDHsc4g84UA+SnvCoir/KJvrIBZgFFIEANamGe2cqypQYD1W80umf2IyCjWpJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3G1qs8X9ThRzfl04Z5X/p574+vMrzA+ay+RNKLM/kPg=;
- b=Gi2KJF6S1E8i44h3YKUV9E8UZgqZc1+rp9yoYw8xB9Y1qchdfdHq+5EFjDyekEcxVR5hR0QbFmPlVTrPIh6lbGeiSNYfUZOFuC25L7R0g1NYzQ1DWGdg8hxRfNkSzfjg3aC+eBYEd6r+OhPJlrebGG2vnV8cZ2lX8Ljc4WPkgTwaEUSEIth9BOuxwYi+NKT0Qt1las0WMLmYa+Vk2KnL1ags7Fr2nCh1enDfI04ASax8uLogmh26QZLjvsSCJvcbSeNPKpMKvP0nJXeoi66aiB3C6fuaRrQfbR1BZrq9J1imHDR814swR0e5Os3KyaaKdKMTgggle8UHA8c+Ud6k+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Mon, 7 Sep 2020 06:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728913AbgIGK0r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:26:47 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34145C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:26:47 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id i22so17543569eja.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:26:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3G1qs8X9ThRzfl04Z5X/p574+vMrzA+ay+RNKLM/kPg=;
- b=L+LfQRYZAi2Xl0priuEQXT3Y4E1ncK2VZkVmmBQuPf8y628KcmoBE86sFlmWD1Q66njpecBSMQg2Vu23NycrkrQShbuuXLWG2PsEUP1nrqaBzVoTqZ2SUwrMGQ0Dt1c/ou9IASq+ghD2SJleZs3ycHzQiawrTEamyKtAL5WrrH8=
-Authentication-Results: driverdev.osuosl.org; dkim=none (message not signed)
- header.d=none;driverdev.osuosl.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SN6PR11MB2606.namprd11.prod.outlook.com (2603:10b6:805:55::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Mon, 7 Sep
- 2020 10:15:50 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6%4]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 10:15:50 +0000
-From:   Jerome Pouiller <Jerome.Pouiller@silabs.com>
-To:     devel@driverdev.osuosl.org, linux-wireless@vger.kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Pouiller?= 
-        <jerome.pouiller@silabs.com>
-Subject: [PATCH 04/31] staging: wfx: keep API error list up-to-date
-Date:   Mon,  7 Sep 2020 12:14:54 +0200
-Message-Id: <20200907101521.66082-5-Jerome.Pouiller@silabs.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907101521.66082-1-Jerome.Pouiller@silabs.com>
-References: <20200907101521.66082-1-Jerome.Pouiller@silabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-ClientProxiedBy: PR0P264CA0109.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:19::25) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HmvvDOBbOI3Ap25LolJkNiUzAqYW/BkylmIeV4YjRD8=;
+        b=QDdavu3QQmHCnnU4KwLOJr5Oqa+V9NiMQ1XwjqwN4Vf2/Yl3FamhFwkRnK9uYu0WMM
+         PSIo98ml3rL98H/MFyPHXu20UitXy3KZs6DuWoJyxF5RrbDa1aPfsa1zk2tKopjDf92t
+         oxo871xKdzsVRbGhOSWrfmLzWXP1g3/zK22U4SR+waK/pY8uV+I18/6oBOqI7kXsfGG+
+         lRPUidIYCyv/fl7hMJdze89IE3yiK8vG8YSPcuMTCt3puxMTRgbzm+XlUiKl6PSZAZFB
+         UrTltAyeJJ/5hiL9WET3bwgBk0tFhMnH+r3fxLY6lbC1V0A6JzZcriwY/wtmltFYV3GN
+         TqjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HmvvDOBbOI3Ap25LolJkNiUzAqYW/BkylmIeV4YjRD8=;
+        b=QSNvlsoSgSVYNyj39agkBbNTmSfQ+GNOzr+LPxv1gs3zkV//UjuwAWb2ygpa9eXIkP
+         zrmU0L+g+oONmMJRKe+xVLzIR2dZ9/K5z6JkvkKYOb20MgcJPj09F0DuTl20T4nFehA4
+         sMuzEjxJNXe2ODGyxNpo38bJvw+j7d09bYkaUL1u4ur3Ew0E70eyS9ZPU7DyU5tD3dWN
+         9Dm6QQJVHWV0sraatkGLJ3kTaAsaGDi8w5Y1kqUtUgDsd6lSokUes3z7pjIScLN8OnLH
+         3eHB8bZvdpKEG5UZrDa0XDOk5vi444GWrQqfqj0W+l8HiavWthF7ue7aqLMIDuaQuDXX
+         99WQ==
+X-Gm-Message-State: AOAM530lBOnMxuGim+93aAzWUrRMeev9q1XhMLgqAf/WPSC2tIFfAarc
+        gKnXCyvS9nwaw6CLItkwquVNeV55RvE2O0ZKwTtUUg==
+X-Google-Smtp-Source: ABdhPJzU3TRrxz7IZqvY6j9hu2ty43AjKwNnl8X1LKDXaPDRCwBiEKtxjLALYuvJMHAGMXF/jF07pg9xrPNCh4fKRnk=
+X-Received: by 2002:a17:907:20d9:: with SMTP id qq25mr15792481ejb.382.1599474405853;
+ Mon, 07 Sep 2020 03:26:45 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc-42.silabs.com (37.71.187.125) by PR0P264CA0109.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:19::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Mon, 7 Sep 2020 10:15:49 +0000
-X-Mailer: git-send-email 2.28.0
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c38a19b2-e95c-4271-79a7-08d85316fefa
-X-MS-TrafficTypeDiagnostic: SN6PR11MB2606:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR11MB26062991B1F6F55BADDE606193280@SN6PR11MB2606.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ugy5JBhDZc9uy3zlYkrZwNvsZPJFLPqv0+y3MySstnYmQ9VEOxlB5yQ0R3DMwlCKG3THeUdGwAPVBeRSJGUJFFgGhAvoSTdiVg59FCBhrQXrgoJve5as/atE50dG2prqmRAHLqlraUjJ/dx5LhmY1bo7W5c4ZCoPXCssHvJIM4lzK3ltXyEylHjmb2RkPwlgp8k6T6KWIPlR/QXAdLG/meQy/Itl7y/Dnx2VZO+2Da9BaAHDaEMN7uhrhALOD9Ec585Ybk5sURjPnIOM9S7fcgM0diIvasWMQyNwvCRGcqvG3ujZAOCf4inSkwNvxq8VosIJE/MlX6qR5qE2voeHEg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(376002)(346002)(366004)(136003)(39850400004)(66946007)(4326008)(5660300002)(2616005)(66476007)(316002)(956004)(478600001)(6666004)(54906003)(52116002)(2906002)(66556008)(1076003)(36756003)(8676002)(86362001)(6486002)(8936002)(7696005)(83380400001)(26005)(107886003)(16526019)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: UuFZUpMXv5qu3+jwGT+Hp/gCfGuDCOQbOGfiiZP2gdAJ4Fbmvrzre0w+Glv5Y2OXC8j9towF3YsuWr2p7YE8o1/yJi4XVkF4ZoAUPMTuMkPqbPmMcZTan5KoHozqvHUV0zyVeT2xeKhjRipOwE8XRpPGZqWnyyHeL5IzECnb59/maYzbTIxwtZyq7J6ws2Dh6swwFWG2KwQrBh/lw+050XU43DI5iA9LgeCL1rhNBZoUj00EeQkogjvPTYFetUcQ+K2phzWwbwvaPP4UWckGsWiCUZTJWrJeNVGHRWkxi5CwdzK3V1FrcK2C0faVJ1yR/ilTujY/eatxCh41HFJNwqK6liTUznBv31eNSyYirE39JrR8ENjMx6KjN3S1ZZI8n/Z5ib43rspVE/Fxse8vsoFfyB+Ab+YieRgmC0gkNU6NxC4juQUMwmFWmvDtidXIlBdiP9A++rGhnuQXGZjqo6+2pE3DywSKc5/Y1g2pqH4JK3mlQEOG1xxiNRXB/ALp4CrnPl6hDX0vrzGoLZMIvf9xJ328bKeZLSoP96hnXVCyNY9CdGJv6T4XNyeAd2oFe/U8qIOYsPOYTPAicRnkH+Kps8vKHGy/wGXVFBVK+zbe0xcxjMuTQ3x/xtc/MwldvfpOp8ps7YDWU1PKRTmKQQ==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c38a19b2-e95c-4271-79a7-08d85316fefa
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 10:15:50.6918
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3EppnKB+hsL0TlwSgOCjNLB3t6iZ9bFxMlr9eSxW0LLDVTSFIthiOH6B+XwE9QETNv2YvxTLlvbHrzpkBJedEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2606
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
+In-Reply-To: <20200907095932.GU1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 7 Sep 2020 12:26:34 +0200
+Message-ID: <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSsOpcsO0bWUgUG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgoKQSBu
-ZXcga2luZCBvZiBlcnJvciBoYXMgYXBwZWFyZWQgaW4gQVBJIDMuNC4KClRoZSBMaW51eCBkcml2
-ZXIgaXMgbm90IGNvbmNlcm5lZCBieSB0aGlzIG5ldyBlcnJvciwgYnV0IGxldCdzIGtlZXAgdGhl
-CkFQSSBpbiBzeW5jIHdpdGggdGhlIGZpcm13YXJlLgoKU2lnbmVkLW9mZi1ieTogSsOpcsO0bWUg
-UG91aWxsZXIgPGplcm9tZS5wb3VpbGxlckBzaWxhYnMuY29tPgotLS0KIGRyaXZlcnMvc3RhZ2lu
-Zy93ZngvaGlmX2FwaV9nZW5lcmFsLmggfCAxICsKIGRyaXZlcnMvc3RhZ2luZy93ZngvaGlmX3J4
-LmMgICAgICAgICAgfCAyICsrCiAyIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX2FwaV9nZW5lcmFsLmggYi9kcml2ZXJz
-L3N0YWdpbmcvd2Z4L2hpZl9hcGlfZ2VuZXJhbC5oCmluZGV4IGRiYTE4YTdhZTkxOS4uNzkxZDcz
-NzViZDdmIDEwMDY0NAotLS0gYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl9hcGlfZ2VuZXJhbC5o
-CisrKyBiL2RyaXZlcnMvc3RhZ2luZy93ZngvaGlmX2FwaV9nZW5lcmFsLmgKQEAgLTI2Miw2ICsy
-NjIsNyBAQCBlbnVtIGhpZl9lcnJvciB7CiAJSElGX0VSUk9SX0hJRl9UWF9RVUVVRV9GVUxMICAg
-ICAgICAgICA9IDB4MGQsCiAJSElGX0VSUk9SX0hJRl9CVVMgICAgICAgICAgICAgICAgICAgICA9
-IDB4MGYsCiAJSElGX0VSUk9SX1BEU19URVNURkVBVFVSRSAgICAgICAgICAgICA9IDB4MTAsCisJ
-SElGX0VSUk9SX1NMS19VTkNPTkZJR1VSRUQgICAgICAgICAgICA9IDB4MTEsCiB9OwogCiBzdHJ1
-Y3QgaGlmX2luZF9lcnJvciB7CmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl9y
-eC5jIGIvZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfcnguYwppbmRleCAxZDMyOTczZDhlYzEuLjM2
-YjM5M2I5MjkzNiAxMDA2NDQKLS0tIGEvZHJpdmVycy9zdGFnaW5nL3dmeC9oaWZfcnguYworKysg
-Yi9kcml2ZXJzL3N0YWdpbmcvd2Z4L2hpZl9yeC5jCkBAIC0zMDEsNiArMzAxLDggQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCB7CiAJCSJzZWN1cmUgbGluayBvdmVyZmxvdyIgfSwKIAl7IEhJRl9FUlJP
-Ul9TTEtfV1JPTkdfRU5DUllQVElPTl9TVEFURSwKIAkJInNlY3VyZSBsaW5rIG1lc3NhZ2VzIGxp
-c3QgZG9lcyBub3QgbWF0Y2ggbWVzc2FnZSBlbmNyeXB0aW9uIiB9LAorCXsgSElGX0VSUk9SX1NM
-S19VTkNPTkZJR1VSRUQsCisJCSJzZWN1cmUgbGluayBub3QgeWV0IGNvbmZpZ3VyZWQiIH0sCiAJ
-eyBISUZfRVJST1JfSElGX0JVU19GUkVRVUVOQ1lfVE9PX0xPVywKIAkJImJ1cyBjbG9jayBpcyB0
-b28gc2xvdyAoPDFrSHopIiB9LAogCXsgSElGX0VSUk9SX0hJRl9SWF9EQVRBX1RPT19MQVJHRSwK
-LS0gCjIuMjguMAoK
+On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+>
+> ...
+>
+> > > +GPIO Testing Driver
+> > > +===================
+> > > +
+> > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > +by the module. The lines can be accessed using the standard GPIO character
+> > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > +structure.
+> >
+> > Could configfs be used for this instead of debugfs?
+> > debugfs is ad hoc.
+>
+> Actually sounds like a good idea.
+>
+
+Well, then we can go on and write an entirely new mockup driver
+(ditching module params and dropping any backwards compatibility)
+because we're already using debugfs for line values.
+
+How would we pass the device properties to configfs created GPIO chips
+anyway? Devices seem to only be created using mkdir. Am I missing
+something?
+
+Bart
