@@ -2,62 +2,61 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93ADC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F801C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C9D207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE872075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:29:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgIGH3Q (ORCPT
+        id S1727769AbgIGH3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:29:16 -0400
-Received: from verein.lst.de ([213.95.11.211]:47986 "EHLO verein.lst.de"
+        Mon, 7 Sep 2020 03:29:22 -0400
+Received: from verein.lst.de ([213.95.11.211]:47990 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726741AbgIGH3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:29:15 -0400
+        id S1726741AbgIGH3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 03:29:18 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id A348F68BEB; Mon,  7 Sep 2020 09:29:12 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 09:29:12 +0200
+        id CB3DE68BFE; Mon,  7 Sep 2020 09:29:16 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 09:29:16 +0200
 From:   Christoph Hellwig <hch@lst.de>
 To:     Leon Romanovsky <leon@kernel.org>
 Cc:     Christoph Hellwig <hch@lst.de>, Doug Ledford <dledford@redhat.com>,
         Jason Gunthorpe <jgg@nvidia.com>,
         Maor Gottlieb <maorg@nvidia.com>, linux-kernel@vger.kernel.org,
         linux-rdma@vger.kernel.org
-Subject: Re: [PATCH rdma-next 1/4] lib/scatterlist: Refactor
- sg_alloc_table_from_pages
-Message-ID: <20200907072912.GA19875@lst.de>
-References: <20200903121853.1145976-1-leon@kernel.org> <20200903155434.1153934-1-leon@kernel.org>
+Subject: Re: [PATCH rdma-next 2/4] lib/scatterlist: Add support in
+ dynamically allocation of SG entries
+Message-ID: <20200907072916.GB19875@lst.de>
+References: <20200903121853.1145976-1-leon@kernel.org> <20200903121853.1145976-3-leon@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903155434.1153934-1-leon@kernel.org>
+In-Reply-To: <20200903121853.1145976-3-leon@kernel.org>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 06:54:34PM +0300, Leon Romanovsky wrote:
-> From: Maor Gottlieb <maorg@nvidia.com>
-> 
-> Currently, sg_alloc_table_from_pages doesn't support dynamic chaining of
-> SG entries. Therefore it requires from user to allocate all the pages in
-> advance and hold them in a large buffer. Such a buffer consumes a lot of
-> temporary memory in HPC systems which do a very large memory registration.
-> 
-> The next patches introduce API for dynamically allocation from pages and
-> it requires us to do the following:
->  * Extract the code to alloc_from_pages_common.
->  * Change the build of the table to iterate on the chunks and not on the
->    SGEs. It will allow dynamic allocation of more SGEs.
-> 
-> Since sg_alloc_table_from_pages allocate exactly the number of chunks,
-> therefore chunks are equal to the number of SG entries.
+> +static inline void _sg_chain(struct scatterlist *chain_sg,
+> +			     struct scatterlist *sgl)
+> +{
+> +	/*
+> +	 * offset and length are unused for chain entry. Clear them.
+> +	 */
+> +	chain_sg->offset = 0;
+> +	chain_sg->length = 0;
+> +
+> +	/*
+> +	 * Set lowest bit to indicate a link pointer, and make sure to clear
+> +	 * the termination bit if it happens to be set.
+> +	 */
+> +	chain_sg->page_link = ((unsigned long) sgl | SG_CHAIN) & ~SG_END;
+> +}
 
-Given how few users __sg_alloc_table_from_pages has, what about just
-switching it to your desired calling conventions without another helper?
+Please call this __sg_chain to stick with our normal kernel naming
+convention.
