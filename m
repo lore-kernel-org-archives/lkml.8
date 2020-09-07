@@ -2,258 +2,193 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7940C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9404F2193E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:51:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYEF+MeN"
+	by mail.kernel.org (Postfix) with ESMTP id 591802192A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgIGXvn (ORCPT
+        id S1728053AbgIGXzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:51:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49435 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbgIGXvj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599522695;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=110Unz5qrB7/Ny3qdZoUTzTeS4D4CUQMCdJdAAxtNLA=;
-        b=gYEF+MeNGCctuIQ6DyNQpP0xJPUfZmruee1zHZLR1JBiWJcbxrU4nGlY5tdlPel9T59lKS
-        sVMdbzGM96vLCN1pCnVX8itJEDFUDyBfGRMeM/Zq1pdwakGo0Md1b6ZskV63I4JQM+Tgyh
-        gFwj9+rnPg/S+kiL6zMulfneThpqQnQ=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-wWIR-XU2PtWY9RSa0UyW8A-1; Mon, 07 Sep 2020 19:51:31 -0400
-X-MC-Unique: wWIR-XU2PtWY9RSa0UyW8A-1
-Received: by mail-qk1-f200.google.com with SMTP id v16so8169959qka.18
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 16:51:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=110Unz5qrB7/Ny3qdZoUTzTeS4D4CUQMCdJdAAxtNLA=;
-        b=r3epofOu67T7avanmh6U/V20DSt7XvFsTu3J83Tcsogcnc73Uu0WHXQqWCpsXsTP+N
-         ZJ1ik3EmT+kxvDGRCkBa6rEz/wyawTAXJM1AXx/PcY4Fsmy1CRRinuc7uq42lo/zuorA
-         IvUHXeaJebxo4usqb9f6lJQuxcUd3h2IVhPANBwcjuQeewF6Pqcvkm8yeBmYf87UV41G
-         htLsQJwwGbOJpiP4o3CLn/b6KpIrfcX/ekrlvoYkEAyN36c3FjTtLlYH+UcOSnWnHxQQ
-         uZULQbGwOmzvyjuA28WV/wspixtUCcSMyPCoXQHpYKdoXEg0bOvQZriO22F1q7hi4NaK
-         KTwg==
-X-Gm-Message-State: AOAM530CIh/JkkD3vlzu50HcEWJbtTZ/SCXyAT/PqtjzUI0r5FOht4BD
-        DfDR2EcZv0ea59vHsyjOKaeemq9xZyUnt3UqM957kGzXCuWbBCOKkEvHjqAyJOes0rSY0WB2Jpx
-        TgszVULsMABm/VHcyZYMDFuurgg7yWobsmuPX151s
-X-Received: by 2002:a37:7946:: with SMTP id u67mr7195212qkc.381.1599522690935;
-        Mon, 07 Sep 2020 16:51:30 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwNp1vyx+UMls6RiqiVtY6OLWMPv0NBi3aWK5APkBWIwEoNwsPUDgrDTzN69CNanyWRznVbS/r4JAoisbk4Dog=
-X-Received: by 2002:a37:7946:: with SMTP id u67mr7195180qkc.381.1599522690419;
- Mon, 07 Sep 2020 16:51:30 -0700 (PDT)
+        Mon, 7 Sep 2020 19:55:46 -0400
+Received: from mail-bn7nam10olkn2011.outbound.protection.outlook.com ([40.92.40.11]:9344
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727058AbgIGXzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 19:55:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G6RZ0iJvg6CRQ3je10GVhx0kQVwC9QnSVtOLDt46QvL2wf8yHDAz2+1N5/vaZiu7IqgFgfxM0xCX2byBW40H22pUr+64JDKkpVSvlr2KcdPM9/R4/AnegpNHbR4Nd2ccdQk+UmASsOTkln9NedWEtpvvNF3CzoEJno1UE5/WGlmizSkwh/hKUMkDxrZXcOgtNvsfexniHJYEGXZ5VftAV7VUX7Tya6AAsdd3btiLzmVembjtWyvgQAuhA4aDfSLBpq/GjjC2KbTzigpWZSNZvfn7WlpLguHK6yp3rPyzDGKvzJNA4w/YfvqeeD2K4hQYffpKwZIxnYHfJDU6jCa1Qg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yhp5kpm+xJHMQu6zDkcK7rgQ/52TPIfbtiJo9pP4fuE=;
+ b=PmJc6ZKrVlSwwwMB+Wp905I+/tM3QADKVFXtQhKw+bT5N5Q2y6QYJhTNSOFM+8DiQGmN7tvzoY/J8r2lVNkx800B7usSOzqw0gHZauDICNxsP+PUHR4xGdMkuXm6J0vrI2a88M1B1oGYIbHglFAqUZs8srfh4F7vCz6BTvdmzqslrL/8uqCxrnE76cYzBNNsD9xKJF1XqkjsuGUw/FY8gTe4mjfe5eYYFYanwxwrvttaUodeYLA+5h4Tae6R1F61/jRHnpF3fpLMgf25K7j8oQtlfaov54HNcsj7H/FeHBSaz+uUZW+LGcb8XfXILsqBT0LwKvtSRDXdc0K4UlR6DQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from BN7NAM10FT047.eop-nam10.prod.protection.outlook.com
+ (2a01:111:e400:7e8f::40) by
+ BN7NAM10HT080.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e8f::108)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
+ 2020 23:55:42 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e8f::50) by BN7NAM10FT047.mail.protection.outlook.com
+ (2a01:111:e400:7e8f::126) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
+ Transport; Mon, 7 Sep 2020 23:55:42 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:0614694EEEB9EEFAC7799501BF9DF3CEAC7E4D039BC2D5F554942613E41C340D;UpperCasedChecksum:8D13EE74243F57BEBE248144F76506505741DE9B57F485FDD1A5207AC64B4CEA;SizeAsReceived:9289;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 23:55:31 +0000
+Subject: Re: [RFT 09/25] ARM: dts: s5pv210: fix number of I2S DAI cells
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-10-krzk@kernel.org>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660D9B0D0B5FB4F40CF2769CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Mon, 7 Sep 2020 16:55:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200907161141.31034-10-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CO1PR15CA0047.namprd15.prod.outlook.com
+ (2603:10b6:101:1f::15) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <b3120e9e-c16a-7fc0-1a61-58463210ee8e@live.ca>
 MIME-Version: 1.0
-References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
- <20191004123947.11087-2-mika.westerberg@linux.intel.com> <20200808202202.GA12007@merlins.org>
- <20200906181852.GC13955@merlins.org> <CACO55tsodfUGVUjFw9=smFOhp_oXP8zWY_9+vL+iiPZhKJdtyg@mail.gmail.com>
- <20200907205825.GB20064@merlins.org>
-In-Reply-To: <20200907205825.GB20064@merlins.org>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 8 Sep 2020 01:51:19 +0200
-Message-ID: <CACO55ttBXKWTbxERK-aHsYQe_4=eK_WVc2+ebmCbCJJcQpFZrQ@mail.gmail.com>
-Subject: Re: [Nouveau] pcieport 0000:00:01.0: PME: Spurious native interrupt
- (nvidia with nouveau and thunderbolt on thinkpad P73)
-To:     Marc MERLIN <marc_nouveau@merlins.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>, Lyude Paul <lyude@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO1PR15CA0047.namprd15.prod.outlook.com (2603:10b6:101:1f::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 23:55:28 +0000
+X-Microsoft-Original-Message-ID: <b3120e9e-c16a-7fc0-1a61-58463210ee8e@live.ca>
+X-TMN:  [/GJJJ0TDLeNVslWPYdc+YyZHrn2aQ5+Q+VyUnIFd9X7i3j11xOYL9RYXJ7cvP1ZY]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: bcfbf58f-a31c-4904-ddde-08d8538980bd
+X-MS-TrafficTypeDiagnostic: BN7NAM10HT080:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ztdrQdlJQKL1UXQnGMLcFlcBApkGOhpeNml0PKBGzmnitpKG9zGN3F5UnoULtrYaV4ABNctjXHNS1SZsP+8Z2wegVjTr+56x/j2ppfufjrbL6KNNZvX4bbwjdzzHczZbmLdTDzbd+2lEOkyyV8w1nIZrnXxRNjcMnvQre8BraD/vBu0TVBBEON37QSvb3pzIo9kjvPXTAYpYj44xIAuXaA==
+X-MS-Exchange-AntiSpam-MessageData: 1a7k1vPztP0sjQ46N9+A2p+DXlz8r1tfjy9tWfutZCMqf8FfkwA7C+5sxgXWHXoi+G/wLViswcY4eePATQX95mXcrKtFNlYYxxKGRHsQJDvR7H7c8cCvLZJKrpOPpGFgT2leRFRbBJLhPrTLeyo1h9Wn2a4++Ua76e4mPVuAtt8+ihIepmxUVl/xYYsABN/5X+BnvNthGc28WEUN/kqXxg==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcfbf58f-a31c-4904-ddde-08d8538980bd
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 23:55:31.1615
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT047.eop-nam10.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7NAM10HT080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 10:58 PM Marc MERLIN <marc_nouveau@merlins.org> wrote:
->
-> On Mon, Sep 07, 2020 at 09:14:03PM +0200, Karol Herbst wrote:
-> > > - changes in the nouveau driver. Mika told me the PCIe regression
-> > >   "pcieport 0000:00:01.0: PME: Spurious native interrupt!" is supposed
-> > >   to be fixed in 5.8, but I still get a 4mn hang or so during boot and
-> > >   with 5.8, removing the USB key, didn't help make the boot faster
-> >
-> > that's the root port the GPU is attached to, no? I saw that message on
-> > the Thinkpad P1G2 when runtime resuming the Nvidia GPU, but it does
-> > seem to come from the root port.
->
-> Hi Karol, thanks for your answer.
->
-> 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) (rev 0d)
-> 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
->
-> > Well, you'd also need it when attaching external displays.
->
-> Indeed. I just don't need that on this laptop, but familiar with the not
-> so seemless procedure to turn on both GPUs, and mirror the intel one into
-> the nvidia one for external output.
->
-> > > [   11.262985] nvidia-gpu 0000:01:00.3: PME# enabled
-> > > [   11.303060] nvidia-gpu 0000:01:00.3: PME# disabled
-> >
-> > mhh, interesting. I heard some random comments that the Nvidia
-> > USB-C/UCSI driver is a bit broken and can cause various issues. Mind
-> > blacklisting i2c-nvidia-gpu and typec_nvidia (and verify they don't
-> > get loaded) and see if that helps?
->
-> Right, this one:
-> 01:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU104 USB Type-C UCSI Controller (rev a1)
-> Sure, I'll blacklist it. Ok, just did that, removed from initrd,
-> rebooted, and it was no better.
->
-> From initrd (before root gets mounted), I have this:
-> nouveau              1961984  0
-> mxm_wmi                16384  1 nouveau
-> hwmon                  32768  1 nouveau
-> ttm                   102400  1 nouveau
-> wmi                    32768  2 nouveau,mxm_wmi
->
-> I still got a 2mn hang. and a nouveau probe error
-> [  189.124530] nouveau: probe of 0000:01:00.0 failed with error -12
->
->
-> Here's what it looks like:
-> [    9.693230] hid: raw HID events driver (C) Jiri Kosina
-> [    9.694988] usbcore: registered new interface driver usbhid
-> [    9.694989] usbhid: USB HID core driver
-> [    9.696700] hid-generic 0003:1050:0200.0001: hiddev0,hidraw0: USB HID v1.00 Device [Yubico Yubico Gnubby (gnubby1)] on usb-0000:00:14.0-2/input0
-> [    9.784456] Console: switching to colour frame buffer device 240x67
-> [    9.816297] i915 0000:00:02.0: fb0: i915drmfb frame buffer device
-> [   25.087400] thunderbolt 0000:06:00.0: saving config space at offset 0x0 (reading 0x15eb8086)
-> [   25.087414] thunderbolt 0000:06:00.0: saving config space at offset 0x4 (reading 0x100406)
-> [   25.087419] thunderbolt 0000:06:00.0: saving config space at offset 0x8 (reading 0x8800006)
-> [   25.087424] thunderbolt 0000:06:00.0: saving config space at offset 0xc (reading 0x20)
-> [   25.087430] thunderbolt 0000:06:00.0: saving config space at offset 0x10 (reading 0xcc100000)
-> [   25.087435] thunderbolt 0000:06:00.0: saving config space at offset 0x14 (reading 0xcc140000)
-> [   25.087440] thunderbolt 0000:06:00.0: saving config space at offset 0x18 (reading 0x0)
-> [   25.087445] thunderbolt 0000:06:00.0: saving config space at offset 0x1c (reading 0x0)
-> [   25.087450] thunderbolt 0000:06:00.0: saving config space at offset 0x20 (reading 0x0)
-> [   25.087455] thunderbolt 0000:06:00.0: saving config space at offset 0x24 (reading 0x0)
-> [   25.087460] thunderbolt 0000:06:00.0: saving config space at offset 0x28 (reading 0x0)
-> [   25.087466] thunderbolt 0000:06:00.0: saving config space at offset 0x2c (reading 0x229b17aa)
-> [   25.087471] thunderbolt 0000:06:00.0: saving config space at offset 0x30 (reading 0x0)
-> [   25.087476] thunderbolt 0000:06:00.0: saving config space at offset 0x34 (reading 0x80)
-> [   25.087481] thunderbolt 0000:06:00.0: saving config space at offset 0x38 (reading 0x0)
-> [   25.087486] thunderbolt 0000:06:00.0: saving config space at offset 0x3c (reading 0x1ff)
-> [   25.087571] thunderbolt 0000:06:00.0: PME# enabled
-> [   25.105353] pcieport 0000:05:00.0: saving config space at offset 0x0 (reading 0x15ea8086)
-> [   25.105364] pcieport 0000:05:00.0: saving config space at offset 0x4 (reading 0x100407)
-> [   25.105370] pcieport 0000:05:00.0: saving config space at offset 0x8 (reading 0x6040006)
-> [   25.105375] pcieport 0000:05:00.0: saving config space at offset 0xc (reading 0x10020)
-> [   25.105380] pcieport 0000:05:00.0: saving config space at offset 0x10 (reading 0x0)
-> [   25.105384] pcieport 0000:05:00.0: saving config space at offset 0x14 (reading 0x0)
-> [   25.105389] pcieport 0000:05:00.0: saving config space at offset 0x18 (reading 0x60605)
-> [   25.105394] pcieport 0000:05:00.0: saving config space at offset 0x1c (reading 0x1f1)
-> [   25.105399] pcieport 0000:05:00.0: saving config space at offset 0x20 (reading 0xcc10cc10)
-> [   25.105404] pcieport 0000:05:00.0: saving config space at offset 0x24 (reading 0x1fff1)
-> [   25.105409] pcieport 0000:05:00.0: saving config space at offset 0x28 (reading 0x0)
-> [   25.105413] pcieport 0000:05:00.0: saving config space at offset 0x2c (reading 0x0)
-> [   25.105418] pcieport 0000:05:00.0: saving config space at offset 0x30 (reading 0x0)
-> [   25.105423] pcieport 0000:05:00.0: saving config space at offset 0x34 (reading 0x80)
-> [   25.105428] pcieport 0000:05:00.0: saving config space at offset 0x38 (reading 0x0)
-> [   25.105432] pcieport 0000:05:00.0: saving config space at offset 0x3c (reading 0x201ff)
-> [   25.105517] pcieport 0000:05:00.0: PME# enabled
-> [   25.125367] pcieport 0000:04:00.0: saving config space at offset 0x0 (reading 0x15ea8086)
-> [   25.125378] pcieport 0000:04:00.0: saving config space at offset 0x4 (reading 0x100007)
-> [   25.125383] pcieport 0000:04:00.0: saving config space at offset 0x8 (reading 0x6040006)
-> [   25.125388] pcieport 0000:04:00.0: saving config space at offset 0xc (reading 0x10020)
-> [   25.125393] pcieport 0000:04:00.0: saving config space at offset 0x10 (reading 0x0)
-> [   25.125398] pcieport 0000:04:00.0: saving config space at offset 0x14 (reading 0x0)
-> [   25.125403] pcieport 0000:04:00.0: saving config space at offset 0x18 (reading 0x510504)
-> [   25.125407] pcieport 0000:04:00.0: saving config space at offset 0x1c (reading 0x5141)
-> [   25.125412] pcieport 0000:04:00.0: saving config space at offset 0x20 (reading 0xcc10b400)
-> [   25.125417] pcieport 0000:04:00.0: saving config space at offset 0x24 (reading 0x3ff10001)
-> [   25.125422] pcieport 0000:04:00.0: saving config space at offset 0x28 (reading 0x60)
-> [   25.125427] pcieport 0000:04:00.0: saving config space at offset 0x2c (reading 0x60)
-> [   25.125431] pcieport 0000:04:00.0: saving config space at offset 0x30 (reading 0x0)
-> [   25.125436] pcieport 0000:04:00.0: saving config space at offset 0x34 (reading 0x80)
-> [   25.125441] pcieport 0000:04:00.0: saving config space at offset 0x38 (reading 0x0)
-> [   25.125446] pcieport 0000:04:00.0: saving config space at offset 0x3c (reading 0x201ff)
-> [   25.125528] pcieport 0000:04:00.0: PME# enabled
-> [   25.145423] pcieport 0000:00:1c.0: saving config space at offset 0x0 (reading 0xa3388086)
-> [   25.145437] pcieport 0000:00:1c.0: saving config space at offset 0x4 (reading 0x100407)
-> [   25.145445] pcieport 0000:00:1c.0: saving config space at offset 0x8 (reading 0x60400f0)
-> [   25.145453] pcieport 0000:00:1c.0: saving config space at offset 0xc (reading 0x810000)
-> [   25.145460] pcieport 0000:00:1c.0: saving config space at offset 0x10 (reading 0x0)
-> [   25.145464] pcieport 0000:00:1c.0: saving config space at offset 0x14 (reading 0x0)
-> [   25.145469] pcieport 0000:00:1c.0: saving config space at offset 0x18 (reading 0x510400)
-> [   25.145476] pcieport 0000:00:1c.0: saving config space at offset 0x1c (reading 0x20006040)
-> [   25.145484] pcieport 0000:00:1c.0: saving config space at offset 0x20 (reading 0xcc10b400)
-> [   25.145488] pcieport 0000:00:1c.0: saving config space at offset 0x24 (reading 0x3ff10001)
-> [   25.145493] pcieport 0000:00:1c.0: saving config space at offset 0x28 (reading 0x60)
-> [   25.145497] pcieport 0000:00:1c.0: saving config space at offset 0x2c (reading 0x60)
-> [   25.145502] pcieport 0000:00:1c.0: saving config space at offset 0x30 (reading 0x0)
-> [   25.145506] pcieport 0000:00:1c.0: saving config space at offset 0x34 (reading 0x40)
-> [   25.145510] pcieport 0000:00:1c.0: saving config space at offset 0x38 (reading 0x0)
-> [   25.145515] pcieport 0000:00:1c.0: saving config space at offset 0x3c (reading 0x201ff)
-> [   25.145604] pcieport 0000:00:1c.0: PME# enabled
-> [   26.265697] pcieport 0000:00:1c.0: power state changed by ACPI to D3cold
-> [   45.468365] random: crng init done
-> [  105.032727] usb 1-2: USB disconnect, device number 2  <= I removed a usb key, didn't help
-> [  128.495144] async_tx: api initialized (async)
-> [  128.514820] device-mapper: uevent: version 1.0.3
-> [  128.518186] device-mapper: ioctl: 4.42.0-ioctl (2020-02-27) initialised: dm-devel@redhat.com
-> [  144.869445] e1000e 0000:00:1f.6 eth0: NIC Link is Down
-> [  172.851384] BTRFS: device label btrfs_pool4 devid 1 transid 78270 /dev/sdb4 scanned by btrfs (1293)
-> [  172.851648] BTRFS: device label btrfs_pool3 devid 1 transid 27410 /dev/sda5 scanned by btrfs (1293)
-> [  172.852030] BTRFS: device fsid de9694f8-9c0d-4e9d-bd12-57adc4381cd7 devid 1 transid 41 /dev/sda3 scanned by btrfs (1293)
-> [  172.852224] BTRFS: device fsid 23e1398d-e462-41aa-b85e-f574906ddc03 devid 1 transid 585 /dev/nvme0n1p4 scanned by btrfs (1293)
-> [  189.124291] nouveau 0000:01:00.0: disp ctor failed, -12
-> [  189.124530] nouveau: probe of 0000:01:00.0 failed with error -12
->
-> The next boot looks similar:
-> [   25.161759] pcieport 0000:00:1c.0: PME# enabled
-> [   26.297810] pcieport 0000:00:1c.0: power state changed by ACPI to D3cold
-> [  128.427270] async_tx: api initialized (async)
-> [  128.446525] device-mapper: uevent: version 1.0.3
-> [  128.446691] device-mapper: ioctl: 4.42.0-ioctl (2020-02-27) initialised: dm-devel@redhat.com
-> [  128.458120] random: cryptsetup: uninitialized urandom read (4 bytes read)
-> [  138.507373] random: cryptsetup: uninitialized urandom read (4 bytes read)
-> [  144.793573] e1000e 0000:00:1f.6 eth0: NIC Link is Down
-> [  159.627780] random: crng init done
-> [  171.814064] process '/usr/bin/fstype' started with executable stack
-> [  181.949989] BTRFS: device label btrfs_boot devid 1 transid 394687 /dev/mapper/cryptroot scanned by btrfs (1063)
-> [  181.953437] BTRFS: device label btrfs_pool4 devid 1 transid 78270 /dev/sdb4 scanned by btrfs (1063)
-> [  181.956989] BTRFS: device label btrfs_pool3 devid 1 transid 27410 /dev/sda5 scanned by btrfs (1063)
-> [  181.960473] BTRFS: device fsid de9694f8-9c0d-4e9d-bd12-57adc4381cd7 devid 1 transid 41 /dev/sda3 scanned by btrfs (1063)
-> [  181.964097] BTRFS: device fsid 23e1398d-e462-41aa-b85e-f574906ddc03 devid 1 transid 585 /dev/nvme0n1p4 scanned by btrfs (1063)
-> [  188.733645] nouveau 0000:01:00.0: disp ctor failed, -12
-> [  188.740653] nouveau: probe of 0000:01:00.0 failed with error -12
+Sadly, this is causing issues for me.  The machine driver is no longer probing correctly
+on the Galaxy S.
 
-oh, I somehow missed that "disp ctor failed" message. I think that
-might explain why things are a bit hanging. From the top of my head I
-am not sure if that's something known or something new. But just in
-case I CCed Lyude and Ben. And I think booting with
-nouveau.debug=disp=trace could already show something relevant.
+The failing call in sound/soc/samsung/aries_wm8994.c is
 
-> [  188.901070] PM: Image not found (code -22)
->
-> Does that help?
->
-> Thanks,
-> Marc
-> --
-> "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
->
-> Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
->
+	/* Set CPU of_node for BT DAI */
+	aries_dai[2].cpus->of_node = of_parse_phandle(cpu,
+			"sound-dai", 1);
 
+where cpus->of_node is not set properly.  Which is definitely weird because it doesn't
+look like this should affect that.
+
+Let me know if there's any specific test that you want me to do.
+
+Thanks,
+Jonathan
+
+
+On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
+> The bindings describe I2S DAI has 1 cells.  This makes especially sense
+> for i2s0 which registers two DAIs.  Adjust the cells to fix dtbs_check
+> warnings like:
+> 
+>   i2s@e2100000: #sound-dai-cells:0:0: 1 was expected
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/s5pv210-fascinate4g.dts | 2 +-
+>  arch/arm/boot/dts/s5pv210-galaxys.dts     | 2 +-
+>  arch/arm/boot/dts/s5pv210.dtsi            | 6 +++---
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/s5pv210-fascinate4g.dts b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> index ca064359dd30..a6dc8a173af1 100644
+> --- a/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> +++ b/arch/arm/boot/dts/s5pv210-fascinate4g.dts
+> @@ -102,7 +102,7 @@
+>  		pinctrl-0 = <&headset_det &earpath_sel>;
+>  
+>  		cpu {
+> -			sound-dai = <&i2s0>, <&bt_codec>;
+> +			sound-dai = <&i2s0 0>, <&bt_codec>;
+>  		};
+>  
+>  		codec {
+> diff --git a/arch/arm/boot/dts/s5pv210-galaxys.dts b/arch/arm/boot/dts/s5pv210-galaxys.dts
+> index 560f830b6f6b..0eba06f56ac7 100644
+> --- a/arch/arm/boot/dts/s5pv210-galaxys.dts
+> +++ b/arch/arm/boot/dts/s5pv210-galaxys.dts
+> @@ -132,7 +132,7 @@
+>  		pinctrl-0 = <&headset_det &earpath_sel>;
+>  
+>  		cpu {
+> -			sound-dai = <&i2s0>, <&bt_codec>;
+> +			sound-dai = <&i2s0 0>, <&bt_codec>;
+>  		};
+>  
+>  		codec {
+> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
+> index 2871351ab907..96e667ba1c3f 100644
+> --- a/arch/arm/boot/dts/s5pv210.dtsi
+> +++ b/arch/arm/boot/dts/s5pv210.dtsi
+> @@ -251,7 +251,7 @@
+>  			samsung,idma-addr = <0xc0010000>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&i2s0_bus>;
+> -			#sound-dai-cells = <0>;
+> +			#sound-dai-cells = <1>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -266,7 +266,7 @@
+>  			clocks = <&clocks CLK_I2S1>, <&clocks SCLK_AUDIO1>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&i2s1_bus>;
+> -			#sound-dai-cells = <0>;
+> +			#sound-dai-cells = <1>;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -281,7 +281,7 @@
+>  			clocks = <&clocks CLK_I2S2>, <&clocks SCLK_AUDIO2>;
+>  			pinctrl-names = "default";
+>  			pinctrl-0 = <&i2s2_bus>;
+> -			#sound-dai-cells = <0>;
+> +			#sound-dai-cells = <1>;
+>  			status = "disabled";
+>  		};
+>  
+> 
