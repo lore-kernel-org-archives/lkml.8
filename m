@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D20BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D0CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA2802080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D65207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497677;
-	bh=wOb0MOvzDb/ZrwrJ3pg48ni2ycaY2oXkvvjZPPz+c+Y=;
+	s=default; t=1599497689;
+	bh=c9OGuA9iQBB1RfYnYn4jTEzeb8UzGNCSGSp+JSD1aWo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tFg/GfoHlL7IN98SlCYiJkUSU9xf87AU3yBDddwx9hYYTCtviSWMdh5iJQdoUV4CB
-	 jFShgP5W4JijpbcjS7F3+xLrFfLb094Twx9RLFh0FqYI88lHOApPlLHh6ODgc8NuuJ
-	 mYEw033c9TCC1LyLI59wW3fZX0zJdSEsNgbIYBWU=
+	b=KbLIgiBb8bYoa74fOrtu5cBVdBp6Uvu+TLRqYl8JgmDrEBQF0lkeNv2Sa2uBFXlL2
+	 TChuVRQtwV7yap+w4MN7XRX1IjXxllZdxoOghq834iDiyXGVOp9fu5RG5JxeD+gZdG
+	 BEiwxwIYrCVPQSC9SfQY4XrpXn5rMLpuSjzigT1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730380AbgIGQe1 (ORCPT
+        id S1731040AbgIGQyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:34:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:54:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730632AbgIGQcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:33 -0400
+        id S1729281AbgIGQeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C1E207DE;
-        Mon,  7 Sep 2020 16:32:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FFB121D1A;
+        Mon,  7 Sep 2020 16:34:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496351;
-        bh=wOb0MOvzDb/ZrwrJ3pg48ni2ycaY2oXkvvjZPPz+c+Y=;
+        s=default; t=1599496461;
+        bh=c9OGuA9iQBB1RfYnYn4jTEzeb8UzGNCSGSp+JSD1aWo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/XDQhQdTpl4VVJ3vhgHR9D0GwHMRfNkKm5ziRoVlBrW44uiYhxJmvb//PM8a81vJ
-         rnYPfvGAD8oALyzx00qw92DhSBdXu5sjMZo+2nrfmwoUiZCe8kztmft1St7COqCFpK
-         F5t+SoB3LmBwzHlORspZy2BU8YqNBjbpsJnOYf4Y=
+        b=x53AamPtSZxEMitwJc9P81+tcb9hKZChKud67cO8ntf/PbVkcZTmCH1kGZVqDFim6
+         6WZmpJyPo9N5Y80yKnsOu5P7FHD0G7vDLX01BAWdbycQUI423TI/rZP2hTDi4qSuXQ
+         T36ZOaUXT7WbQgQVW/gFPM0/dzJ16fJzDDeUvPBs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 08/53] NFC: st95hf: Fix memleak in st95hf_in_send_cmd
-Date:   Mon,  7 Sep 2020 12:31:34 -0400
-Message-Id: <20200907163220.1280412-8-sashal@kernel.org>
+Cc:     Rander Wang <rander.wang@intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 40/43] ALSA: hda: fix a runtime pm issue in SOF when integrated GPU is disabled
+Date:   Mon,  7 Sep 2020 12:33:26 -0400
+Message-Id: <20200907163329.1280888-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,33 +64,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Rander Wang <rander.wang@intel.com>
 
-[ Upstream commit f97c04c316d8fea16dca449fdfbe101fbdfee6a2 ]
+[ Upstream commit 13774d81f38538c5fa2924bdcdfa509155480fa6 ]
 
-When down_killable() fails, skb_resp should be freed
-just like when st95hf_spi_send() fails.
+In snd_hdac_device_init pm_runtime_set_active is called to
+increase child_count in parent device. But when it is failed
+to build connection with GPU for one case that integrated
+graphic gpu is disabled, snd_hdac_ext_bus_device_exit will be
+invoked to clean up a HD-audio extended codec base device. At
+this time the child_count of parent is not decreased, which
+makes parent device can't get suspended.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch calls pm_runtime_set_suspended to decrease child_count
+in parent device in snd_hdac_device_exit to match with
+snd_hdac_device_init. pm_runtime_set_suspended can make sure that
+it will not decrease child_count if the device is already suspended.
+
+Signed-off-by: Rander Wang <rander.wang@intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200902154218.1440441-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st95hf/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/hda/hdac_device.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
-index 9642971e89cea..4578547659839 100644
---- a/drivers/nfc/st95hf/core.c
-+++ b/drivers/nfc/st95hf/core.c
-@@ -966,7 +966,7 @@ static int st95hf_in_send_cmd(struct nfc_digital_dev *ddev,
- 	rc = down_killable(&stcontext->exchange_lock);
- 	if (rc) {
- 		WARN(1, "Semaphore is not found up in st95hf_in_send_cmd\n");
--		return rc;
-+		goto free_skb_resp;
- 	}
- 
- 	rc = st95hf_spi_send(&stcontext->spicontext, skb->data,
+diff --git a/sound/hda/hdac_device.c b/sound/hda/hdac_device.c
+index c946fd8beebca..b84e12f4f8046 100644
+--- a/sound/hda/hdac_device.c
++++ b/sound/hda/hdac_device.c
+@@ -127,6 +127,8 @@ EXPORT_SYMBOL_GPL(snd_hdac_device_init);
+ void snd_hdac_device_exit(struct hdac_device *codec)
+ {
+ 	pm_runtime_put_noidle(&codec->dev);
++	/* keep balance of runtime PM child_count in parent device */
++	pm_runtime_set_suspended(&codec->dev);
+ 	snd_hdac_bus_remove_device(codec->bus, codec);
+ 	kfree(codec->vendor_name);
+ 	kfree(codec->chip_name);
 -- 
 2.25.1
 
