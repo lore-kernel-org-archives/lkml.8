@@ -2,130 +2,161 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED8BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A589C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613682078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XQhMAxv5"
+	by mail.kernel.org (Postfix) with ESMTP id D29132078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599492475;
+	bh=GjaTLL9mqYgM0KFLEDVd8XJPVrWeuEDerRZq8QEoeCA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bWlf8kGsEz7ir/c5LpHFllRtgDINw4nKO8zkapNn4BGjC58EF0VLZyqBIoQfJJjjG
+	 5aDXvX0gnrQfPR4OnFY1jIKxcd5u1Yktsg+y2K4Tg0FpNykCREeo1G7MrfemSuunhv
+	 XIneQGTHp2V2lqdQIZc3Nk1pkX8Hx7ypqp0hnA00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbgIGP1l (ORCPT
+        id S1730177AbgIGP1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51912 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730163AbgIGP01 (ORCPT
+        Mon, 7 Sep 2020 11:27:50 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:22974 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730072AbgIGP1G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:26:27 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2567C061573;
-        Mon,  7 Sep 2020 08:25:49 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so16587234ljc.3;
-        Mon, 07 Sep 2020 08:25:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vxm2Igun/q6T7+g3CyW4TzjR0caFh2BccAiRyp7KFRc=;
-        b=XQhMAxv5UsGUTaP2gmJE18daXqUxUWTx2Ljtg8zGmSkHctgKcSN68V1y/EygGunyym
-         gKF4d3Rya/8NfaXPXpDOMeW8So24G35TLf46QaibDfcj2qDulM9B3FfL7WTv5QwL7/k3
-         4/6/8eacW42A74NZX1FYbAJ0B37aZrW2SqitpKsiOvUdEKxmFrGoCPp+HnR2+EfXQVyF
-         Nwbb4P/ZFcj71iYr41v7z4AunCZkuH0mhk2ZLL9yjnxqgxStDRNncccchlKFL+CnRWfa
-         wHLnyklBYHXxYBEhro3Mv81hQvr2ArNt2Jx8uS+jmb7xLvT1REOoXsi+G9B1UHRV8iPa
-         P8CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vxm2Igun/q6T7+g3CyW4TzjR0caFh2BccAiRyp7KFRc=;
-        b=jGLHRR8N5MYe2k2myM4Qzpicz3ukWOx7t46iETPfwxhD1cDQq12FOeAT9B+XbN6kVt
-         x/MtyvJrCCfiTkM8tefPaXUESDtiYwz1QrPw3dBeiVJ5IhKwECjv1Kk//QwZc7XR27Cd
-         5/2Xb9kUeuEcbNNydywvYnsuIf8Qzsd0Iic2gpNibJsWEBOhgQoe0m+iYs+pDQ0RiM7S
-         wXpv5HmFcXwsMSvpudKs7/mAB7yQz00JCNBw6YKxboTc58HWTySPfEZM8NBkXJcLt2bG
-         FErLtdIxeeG+v4Zba9mwHQVamEQZg5os6fSeHdt45kG1YvHugTF5/ncbmLqct6pi3wNz
-         3wgQ==
-X-Gm-Message-State: AOAM53341QDDjBKwjHGElsXaLVZ/569yIC4TByZnAE4fGf37sp7aBwvN
-        MqN2H0me1na6Q8K9TPKhJOxKxUuJLnY=
-X-Google-Smtp-Source: ABdhPJz0H0iTo6lShlk9NFmHJSQJCBX4QEcBRHy/X8PPCY4GZ5/vdmdtv+ropjfF4ZPboEYRwdCS5A==
-X-Received: by 2002:a2e:3013:: with SMTP id w19mr2709739ljw.339.1599492348213;
-        Mon, 07 Sep 2020 08:25:48 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id x17sm7267990lja.10.2020.09.07.08.25.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 08:25:47 -0700 (PDT)
-Subject: Re: [PATCH v5 06/36] i2c: tegra: Runtime PM always available on Tegra
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200906185039.22700-1-digetx@gmail.com>
- <20200906185039.22700-7-digetx@gmail.com>
- <CAHp75VevXe3c2LGF3jZyDfvPpRAz+-GQKvXEO4OKvuur=RgXCQ@mail.gmail.com>
- <f9ec5178-e38e-ed9a-25f8-21e53ccd31d1@gmail.com>
- <CAHp75Vdj7HYN0SWt9StqB8K6JrUCk7dtDhAUwYDkkBXc1R8ueg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c76f64c8-bd46-36f0-edb4-3ddca281a72b@gmail.com>
-Date:   Mon, 7 Sep 2020 18:25:46 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 7 Sep 2020 11:27:06 -0400
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 087FQVpa001816;
+        Tue, 8 Sep 2020 00:26:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 087FQVpa001816
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599492392;
+        bh=IR6uGigyFtGDGIA+2OM5ZSYgDCjCsPA/08OP3wwPpmI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HF6kxwrZWb/RyvWw0lecR13yfGnI7g+SVYuZ3GDrpLhjeQQBDFe3oweHMbptemm66
+         SshCNN/29Q2UvC9TLvqIwjxGc087kf+LNwwYemZ9X8N179UEkHP+whZYbBQFKBslQI
+         QLRVSs1kmDEgwP5nA60GQLqD2M/mdvIvnBM0aTB/FKDPseKBNZcIq2a2D/0zPSmgKn
+         AEmqSmPA7h2X4LFcI6QPvPonC70Ag3cB7mKCBtL8/C97R4MKbM4UHwkDKT0yrD5ghL
+         Zfzv833opPYiVtdnMgBuia+Ds748+7ZOS+r2vFL3fF0+vwlBvikfS9mHMkE8AAJya3
+         YQxpECBRYEZSg==
+X-Nifty-SrcIP: [209.85.210.173]
+Received: by mail-pf1-f173.google.com with SMTP id c196so3310350pfc.0;
+        Mon, 07 Sep 2020 08:26:32 -0700 (PDT)
+X-Gm-Message-State: AOAM531MQ94vq0bcadHaJu4h2pPF2hphNSNWiiobu5yZjv8EZaE3aG5O
+        IChk22lQWldIeRKUdl3bBFeMVCfULHqrTixZCzY=
+X-Google-Smtp-Source: ABdhPJzWMpKJKkob3tKKbsRMggvPdqUmZIz53kyp4B311hdgI26YjoFRx5atEqEpQRhRX5rjh34sk2xeMQI+Eblelz8=
+X-Received: by 2002:a62:e116:: with SMTP id q22mr9587524pfh.179.1599492391141;
+ Mon, 07 Sep 2020 08:26:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vdj7HYN0SWt9StqB8K6JrUCk7dtDhAUwYDkkBXc1R8ueg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com> <20200903203053.3411268-14-samitolvanen@google.com>
+In-Reply-To: <20200903203053.3411268-14-samitolvanen@google.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 8 Sep 2020 00:25:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
+Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
+Subject: Re: [PATCH v2 13/28] kbuild: lto: merge module sections
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.09.2020 18:05, Andy Shevchenko пишет:
-> On Mon, Sep 7, 2020 at 5:32 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->> 07.09.2020 11:10, Andy Shevchenko пишет:
->>> On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>>>
->>>> The runtime PM is guaranteed to be always available on Tegra after commit
->>>> 40b2bb1b132a ("ARM: tegra: enforce PM requirement"). Hence let's remove
->>>> all the RPM-availability checking and handling from the code.
->>>
->>>> +       ret = pm_runtime_get_sync(i2c_dev->dev);
->>>> +       if (ret < 0) {
->>>> +               dev_err(dev, "runtime resume failed\n");
->>>> +               goto disable_rpm;
->>>
->>> As in the original code here is a refcount leak.
->>> Should call pm_runtime_put_noidle(). (Possible to use goto put_rpm;
->>> but in that case the code a bit confusing to the reader)
->>
->> Good point! I already forgot about this RPM API problem! I'll add a
->> patch to address this.
->>
->> Would be great if anyone could put effort into changing the default
->> get_sync() behaviour and add get_sync_nofail(). Otherwise this will be a
->> never ending problem.
-> 
-> I didn't get this. For time being the API (yes, with its all cons) has
-> the clear usage:
-> a) don't check for errors -- you are fine
-> b) if you start checking errors, keep in mind refcounting.
-> 
-> So, I don't see how nofail() can fix b) case.
-> 
+On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
+>
+> LLD always splits sections with LTO, which increases module sizes. This
+> change adds a linker script that merges the split sections in the final
+> module.
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  Makefile               |  2 ++
+>  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100644 scripts/module-lto.lds
+>
+> diff --git a/Makefile b/Makefile
+> index c69e07bd506a..bb82a4323f1d 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -921,6 +921,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
+>  # Limit inlining across translation units to reduce binary size
+>  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
+>  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
+> +
+> +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
+>  endif
+>
+>  ifdef CONFIG_LTO
+> diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
+> new file mode 100644
+> index 000000000000..cbb11dc3639a
+> --- /dev/null
+> +++ b/scripts/module-lto.lds
+> @@ -0,0 +1,26 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
+> + * -ffunction-sections, which increases the size of the final module.
+> + * Merge the split sections in the final binary.
+> + */
+> +SECTIONS {
+> +       __patchable_function_entries : { *(__patchable_function_entries) }
+> +
+> +       .bss : {
+> +               *(.bss .bss.[0-9a-zA-Z_]*)
+> +               *(.bss..L*)
+> +       }
+> +
+> +       .data : {
+> +               *(.data .data.[0-9a-zA-Z_]*)
+> +               *(.data..L*)
+> +       }
+> +
+> +       .rodata : {
+> +               *(.rodata .rodata.[0-9a-zA-Z_]*)
+> +               *(.rodata..L*)
+> +       }
+> +
+> +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
+> +}
+> --
+> 2.28.0.402.g5ffc5be6b7-goog
+>
 
-It's a very unintuitive behaviour which none of other APIs have. I would
-never expect the refcount to be bumped in a case of error, this is a
-clear drawback of the API, IMO. Perhaps this is not seen as a problem by
-people who have excellent memory and can easily remember about existence
-of such non-standard quirks, or by people who're touching the RPM code
-frequently.
+
+After I apply https://patchwork.kernel.org/patch/11757323/,
+is it possible to do like this ?
+
+
+#ifdef CONFIG_LTO
+SECTIONS {
+     ...
+};
+#endif
+
+in scripts/module.lds.S
+
+
+-- 
+Best Regards
+Masahiro Yamada
