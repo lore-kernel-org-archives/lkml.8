@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14117C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAAEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBBDE2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411A72080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbgIGRgx (ORCPT
+        id S1731231AbgIGRg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:36:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:43622 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:36:57 -0400
+Received: from 8bytes.org ([81.169.241.247]:43626 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729471AbgIGNSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:05 -0400
+        id S1729472AbgIGNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:04 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 077E11CA;
-        Mon,  7 Sep 2020 15:16:58 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 7E97AFD7;
+        Mon,  7 Sep 2020 15:16:56 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 31/72] x86/head/64: Load segment registers earlier
-Date:   Mon,  7 Sep 2020 15:15:32 +0200
-Message-Id: <20200907131613.12703-32-joro@8bytes.org>
+Subject: [PATCH v7 28/72] x86/idt: Split idt_data setup out of set_intr_gate()
+Date:   Mon,  7 Sep 2020 15:15:29 +0200
+Message-Id: <20200907131613.12703-29-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,86 +60,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Make sure segments are properly set up before setting up an IDT and
-doing anything that might cause a #VC exception. This is later needed
-for early exception handling.
+The code to setup idt_data is needed for early exception handling, but
+set_intr_gate() can't be used that early because it has pv-ops in its
+code path, which don't work that early.
+
+Split out the idt_data initialization part from set_intr_gate() so
+that it can be used separately.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/kernel/head_64.S | 52 +++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 26 deletions(-)
+ arch/x86/kernel/idt.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 03b03f266dc1..f402087a02ac 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -166,6 +166,32 @@ SYM_CODE_START(secondary_startup_64)
- 	 */
- 	lgdt	early_gdt_descr(%rip)
+diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+index 7ecf9babf0cb..53946c104fa0 100644
+--- a/arch/x86/kernel/idt.c
++++ b/arch/x86/kernel/idt.c
+@@ -205,18 +205,24 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
+ 	}
+ }
  
-+	/* set up data segments */
-+	xorl %eax,%eax
-+	movl %eax,%ds
-+	movl %eax,%ss
-+	movl %eax,%es
++static void init_idt_data(struct idt_data *data, unsigned int n,
++			  const void *addr)
++{
++	BUG_ON(n > 0xFF);
 +
-+	/*
-+	 * We don't really need to load %fs or %gs, but load them anyway
-+	 * to kill any stale realmode selectors.  This allows execution
-+	 * under VT hardware.
-+	 */
-+	movl %eax,%fs
-+	movl %eax,%gs
++	memset(data, 0, sizeof(*data));
++	data->vector	= n;
++	data->addr	= addr;
++	data->segment	= __KERNEL_CS;
++	data->bits.type	= GATE_INTERRUPT;
++	data->bits.p	= 1;
++}
 +
-+	/* Set up %gs.
-+	 *
-+	 * The base of %gs always points to fixed_percpu_data. If the
-+	 * stack protector canary is enabled, it is located at %gs:40.
-+	 * Note that, on SMP, the boot cpu uses init data section until
-+	 * the per cpu areas are set up.
-+	 */
-+	movl	$MSR_GS_BASE,%ecx
-+	movl	initial_gs(%rip),%eax
-+	movl	initial_gs+4(%rip),%edx
-+	wrmsr
-+
- 	/* Check if nx is implemented */
- 	movl	$0x80000001, %eax
- 	cpuid
-@@ -193,32 +219,6 @@ SYM_CODE_START(secondary_startup_64)
- 	pushq $0
- 	popfq
+ static __init void set_intr_gate(unsigned int n, const void *addr)
+ {
+ 	struct idt_data data;
  
--	/* set up data segments */
--	xorl %eax,%eax
--	movl %eax,%ds
--	movl %eax,%ss
--	movl %eax,%es
+-	BUG_ON(n > 0xFF);
 -
--	/*
--	 * We don't really need to load %fs or %gs, but load them anyway
--	 * to kill any stale realmode selectors.  This allows execution
--	 * under VT hardware.
--	 */
--	movl %eax,%fs
--	movl %eax,%gs
--
--	/* Set up %gs.
--	 *
--	 * The base of %gs always points to fixed_percpu_data. If the
--	 * stack protector canary is enabled, it is located at %gs:40.
--	 * Note that, on SMP, the boot cpu uses init data section until
--	 * the per cpu areas are set up.
--	 */
--	movl	$MSR_GS_BASE,%ecx
--	movl	initial_gs(%rip),%eax
--	movl	initial_gs+4(%rip),%edx
--	wrmsr
--
- 	/* rsi is pointer to real mode structure with interesting info.
- 	   pass it to C */
- 	movq	%rsi, %rdi
+-	memset(&data, 0, sizeof(data));
+-	data.vector	= n;
+-	data.addr	= addr;
+-	data.segment	= __KERNEL_CS;
+-	data.bits.type	= GATE_INTERRUPT;
+-	data.bits.p	= 1;
++	init_idt_data(&data, n, addr);
+ 
+ 	idt_setup_from_table(idt_table, &data, 1, false);
+ }
 -- 
 2.28.0
 
