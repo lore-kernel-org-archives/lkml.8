@@ -2,149 +2,144 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D32C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20553C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371D320738
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D760E20732
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:17:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K4nkmgZM"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gI316Jq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgIGSQc (ORCPT
+        id S1729633AbgIGSRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50184 "EHLO
+        Mon, 7 Sep 2020 14:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgIGSQ0 (ORCPT
+        with ESMTP id S1726458AbgIGSRH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:16:26 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4E2C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 11:16:25 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id g26so402319ooa.9
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 11:16:25 -0700 (PDT)
+        Mon, 7 Sep 2020 14:17:07 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336BEC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 11:17:07 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so16653303wrx.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 11:17:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R5wKHqfwSX4tMBwD67UcVJ4BSt4O+DvIHtBQvGXOV+4=;
-        b=K4nkmgZMU1BL8hol3wBtjK0bL6d36hR7CBWsM+3EgMDiiO0PBpF7JHwRYDUmwUPg4h
-         1VP8mrfm0Zlp7D5JlqFqXYERaQenl7jM/yjbcMYdxU9HSL6OAJI0DdvYZZ40BLHDbNjf
-         dwy4NZUDXO/663GUjnvP/MfzrQRQYarLEiUC7NP8ih8TL3tQ18xEmCiJ98A+YqBOaM+U
-         jYxUtc8GanrjiDuP0syRYpXV+b32IGS4EPIf30MZ5u4647BXbRocBScurypnJuEEwJwt
-         9YBgAOWBClGCz7tWtWYjp92GK4+pfzHsuCuY3pqK9m/AFlrXpb/U4wpN/1eNzJoOHmn2
-         7TEw==
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QAr1+0ipkVpkx5YO9BIZ97gdBS2//wH3zq/vWYPLIrs=;
+        b=gI316Jq405Je2kwl9Dqk5oa+2uA8CtINsqRrQuzjeGDqNKqWJDnhaYrBjv04KRh5+r
+         xzDWk/7Jj7r5+ew40cblbmARBwPs/aiUBtea76zjl1e5UEXCJJvLaq/grvlq7zijQiwW
+         r8bHEPmG1AIVOklW4efeRnB9Ft1R9JZAinI2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R5wKHqfwSX4tMBwD67UcVJ4BSt4O+DvIHtBQvGXOV+4=;
-        b=GRFq4aZL1iMumMNyVRrj95UNCTuhDhLmx4OUIKjr4WpbgCuBS/C2v0DLhjwLjMpZTJ
-         b6UlWYHAEDBbyVNhsWPK76kv+7re4xXoloQ03lF/fNU8C1A9C0Eua87LsFC43zZJOL5j
-         olG0I4CNnJhrJ7HsUvo3wii9wvY7trTtHx3QuvYmNg3BV4eWym1eX20kIQQD2vvwYjFX
-         kBxsSe+3K2qwBN72/+AY/R4xUZL8CNa7QExoOXxb/X3rQkh032YAOsX0xTL/DzRVn9UQ
-         3/FxDIsarJTuC5WH4UJznw8qBNuWk00LlbcFavbZlOKUP2BpfGhSAR9Xv06o+pPquDYi
-         sITw==
-X-Gm-Message-State: AOAM53097I5xZMUqKgZ9fvXjgjhe+bWPeuW3AgtHrlmqM9NM6T7spRRE
-        sNZb5FzsjRbOwUgLYaLRseazXCIb8k7qqVvJHoXy8A==
-X-Google-Smtp-Source: ABdhPJzAEWw7U1yg3vx4wRYG07d5NYt11k3IChID/WYGphofmGzgUHpslTr9pCxK3O5lHYRzrb3fnqposjMk5wp8nSU=
-X-Received: by 2002:a4a:4fd0:: with SMTP id c199mr15788309oob.54.1599502584851;
- Mon, 07 Sep 2020 11:16:24 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=QAr1+0ipkVpkx5YO9BIZ97gdBS2//wH3zq/vWYPLIrs=;
+        b=Ac72dijI588Cx2Ya/Q6jUAysKbPN1FviB0pwjxOPpwBu/X33bvaYMy5IhZAjUHVy0r
+         rcuB+55cBy011sCpWW9baP9C8J6yg/Q6d5EpiN6JMcV9G6lhgJuFYSvUBhNl71HfeSjH
+         dHGx0YVIAsWgSQ5CSwQVLUn6yD9zCS9KmExASpKensX+LAAay6FOcOYbmrBHGYJsaXN7
+         PJmNT0WUR7ba0e24scF++32OBSQMH8fblkF9BnjyOWZf1CcPs6C3XsRCwq9wZ1+Zv6gb
+         Y9IIHO49FU0S/oWTffJUjJ3+IL5iElTUfjozWuv027lwRzEQO3eNZ7sXsBU51FGxrAAH
+         nSJg==
+X-Gm-Message-State: AOAM533Qxco94yeK/bqs7cFwHIav2wzF6wrY6xfPHh8j25MlN5cZWRgt
+        jBXyWRF2SMe0EZMLGW6rpz7+dA==
+X-Google-Smtp-Source: ABdhPJwuITBLa7qo+WjXsX4qXTW2jiGBgHyMLzP5pTEfDes/HppbxX0Ga3nG3TPBjexQB4gCUQb0tQ==
+X-Received: by 2002:adf:fa0c:: with SMTP id m12mr22363209wrr.406.1599502625885;
+        Mon, 07 Sep 2020 11:17:05 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id c145sm26200523wmd.7.2020.09.07.11.17.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 11:17:05 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 20:17:03 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Bernard Zhao <bernard@vivo.com>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        opensource.kernel@vivo.com
+Subject: Re: [PATCH] gpu/drm: cleanup coding style a bit
+Message-ID: <20200907181703.GD2352366@phenom.ffwll.local>
+Mail-Followup-To: Bernard Zhao <bernard@vivo.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+References: <20200907123129.27905-1-bernard@vivo.com>
 MIME-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-10-elver@google.com>
- <CAAeHK+zGpJd6szPounYz6wogO9TMT18TmQu_mfXUWQd65QTf0w@mail.gmail.com>
- <CANpmjNM14iW8vDuLANrCGBds930r2bZ=gwkoqORpuLa5-8gW6g@mail.gmail.com> <CAAeHK+w35Aqt8csAvBHg5rcKHm4cL0rPCM4VupfyG-58eMK-UQ@mail.gmail.com>
-In-Reply-To: <CAAeHK+w35Aqt8csAvBHg5rcKHm4cL0rPCM4VupfyG-58eMK-UQ@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 7 Sep 2020 20:16:13 +0200
-Message-ID: <CANpmjNP9DPMdKqYGT-1gpc8Vhca3LoB2s+fbiL_2LvcSdozRTw@mail.gmail.com>
-Subject: Re: [PATCH RFC 09/10] kfence, Documentation: add KFENCE documentation
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907123129.27905-1-bernard@vivo.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Sep 2020 at 19:55, Andrey Konovalov <andreyknvl@google.com> wrote:
-> On Mon, Sep 7, 2020 at 6:33 PM Marco Elver <elver@google.com> wrote:
-[...]
-> > > > +Guarded allocations are set up based on the sample interval. After expiration
-> > > > +of the sample interval, a guarded allocation from the KFENCE object pool is
-> > > > +returned to the main allocator (SLAB or SLUB).
-> > >
-> > > Only for freed allocations, right?
-> >
-> > Which "freed allocation"? What this paragraph says is that after the
-> > sample interval elapsed, we'll return a KFENCE allocation on kmalloc.
-> > It doesn't yet talk about freeing.
->
-> It says that an allocation is returned to the main allocator, and this
-> is what is usually described with the word "freed". Do you mean
-> something else here?
+On Mon, Sep 07, 2020 at 05:31:29AM -0700, Bernard Zhao wrote:
+> Remove first assignment to info which is meaningless.
+> Put the width and higth check first.
+> This change is to make the code a bit readable.
+> 
+> Signed-off-by: Bernard Zhao <bernard@vivo.com>
 
-Ah, I see what's goin on. So the "returned to the main allocator" is
-ambiguous here. I meant to say "returned" as in kfence gives sl[au]b a
-kfence object to return for the next kmalloc. I'll reword this as it
-seems the phrase is overloaded in this context already.
+Looks reasonable, thanks for your patch. Applied to drm-misc-next for
+5.10.
+-Daniel
 
-[...]
-> > > > +Upon deallocation of a KFENCE object, the object's page is again protected and
-> > > > +the object is marked as freed. Any further access to the object causes a fault
-> > > > +and KFENCE reports a use-after-free access. Freed objects are inserted at the
-> > > > +tail of KFENCE's freelist, so that the least recently freed objects are reused
-> > > > +first, and the chances of detecting use-after-frees of recently freed objects
-> > > > +is increased.
-> > >
-> > > Seems really similar to KASAN's quarantine? Is the implementation much
-> > > different?
-> >
-> > It's a list, and we just insert at the tail. Why does it matter?
->
-> If the implementation is similar, we can then reuse quarantine. But I
-> guess it's not.
+> ---
+>  drivers/gpu/drm/drm_framebuffer.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+> index df656366a530..2f5b0c2bb0fe 100644
+> --- a/drivers/gpu/drm/drm_framebuffer.c
+> +++ b/drivers/gpu/drm/drm_framebuffer.c
+> @@ -176,8 +176,7 @@ static int framebuffer_check(struct drm_device *dev,
+>  	int i;
+>  
+>  	/* check if the format is supported at all */
+> -	info = __drm_format_info(r->pixel_format);
+> -	if (!info) {
+> +	if (!__drm_format_info(r->pixel_format)) {
+>  		struct drm_format_name_buf format_name;
+>  
+>  		DRM_DEBUG_KMS("bad framebuffer format %s\n",
+> @@ -186,9 +185,6 @@ static int framebuffer_check(struct drm_device *dev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	/* now let the driver pick its own format info */
+> -	info = drm_get_format_info(dev, r);
+> -
+>  	if (r->width == 0) {
+>  		DRM_DEBUG_KMS("bad framebuffer width %u\n", r->width);
+>  		return -EINVAL;
+> @@ -199,6 +195,9 @@ static int framebuffer_check(struct drm_device *dev,
+>  		return -EINVAL;
+>  	}
+>  
+> +	/* now let the driver pick its own format info */
+> +	info = drm_get_format_info(dev, r);
+> +
+>  	for (i = 0; i < info->num_planes; i++) {
+>  		unsigned int width = fb_plane_width(r->width, info, i);
+>  		unsigned int height = fb_plane_height(r->height, info, i);
+> -- 
+> 2.28.0
+> 
 
-The concept is similar, but the implementations are very different.
-Both use a list (although KASAN quarantine seems to reimplement its
-own singly-linked list). We just rely on a standard doubly-linked
-list, without any of the delayed freeing logic of the KASAN quarantine
-as KFENCE objects just change state to "freed" until they're reused
-(freed kfence objects are just inserted at the tail, and the next
-object to be used for an allocation is at the head).
-
-Thanks,
--- Marco
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
