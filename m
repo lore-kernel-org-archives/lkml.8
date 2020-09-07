@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C76C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A16C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A99F5208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B80B21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgIGIYs (ORCPT
+        id S1728138AbgIGIYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:24:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10780 "EHLO huawei.com"
+        Mon, 7 Sep 2020 04:24:52 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10778 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727952AbgIGIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727970AbgIGIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 04:24:39 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C57BA7D37C42C6534C9F;
+        by Forcepoint Email with ESMTP id DAD722C7C1FDC1E444CD;
         Mon,  7 Sep 2020 16:24:34 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 16:24:26 +0800
+ 14.3.487.0; Mon, 7 Sep 2020 16:24:23 +0800
 From:   Yang Shen <shenyang39@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 09/10] crypto: hisilicon/zip - supplement some comments
-Date:   Mon, 7 Sep 2020 16:22:01 +0800
-Message-ID: <1599466922-10323-10-git-send-email-shenyang39@huawei.com>
+Subject: [PATCH v2 01/10] crypto: hisilicon/zip - remove some useless parameters
+Date:   Mon, 7 Sep 2020 16:21:53 +0800
+Message-ID: <1599466922-10323-2-git-send-email-shenyang39@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
 References: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
@@ -45,36 +45,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Supplement some comments.
+1.Remove the macro 'HZIP_VF_NUM'.
+2.Remove 'list' of the struct 'hisi_zip'
 
 Signed-off-by: Yang Shen <shenyang39@huawei.com>
 Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
 ---
- drivers/crypto/hisilicon/zip/zip_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/crypto/hisilicon/zip/zip.h      | 1 -
+ drivers/crypto/hisilicon/zip/zip_main.c | 1 -
+ 2 files changed, 2 deletions(-)
 
+diff --git a/drivers/crypto/hisilicon/zip/zip.h b/drivers/crypto/hisilicon/zip/zip.h
+index 4484be1..4b3aae8 100644
+--- a/drivers/crypto/hisilicon/zip/zip.h
++++ b/drivers/crypto/hisilicon/zip/zip.h
+@@ -39,7 +39,6 @@ struct hisi_zip_ctrl;
+ 
+ struct hisi_zip {
+ 	struct hisi_qm qm;
+-	struct list_head list;
+ 	struct hisi_zip_ctrl *ctrl;
+ 	struct hisi_zip_dfx dfx;
+ };
 diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index dddb51d..d077cc4 100644
+index 7e86b0f..445db04 100644
 --- a/drivers/crypto/hisilicon/zip/zip_main.c
 +++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -285,7 +285,7 @@ static int hisi_zip_set_user_domain_and_cache(struct hisi_qm *qm)
- 	writel(HZIP_DECOMP_CHECK_ENABLE | HZIP_ALL_COMP_DECOMP_EN,
- 	       base + HZIP_CLOCK_GATE_CTRL);
+@@ -17,7 +17,6 @@
+ #define PCI_DEVICE_ID_ZIP_PF		0xa250
+ #define PCI_DEVICE_ID_ZIP_VF		0xa251
  
--	/* enable sqc writeback */
-+	/* enable sqc,cqc writeback */
- 	writel(SQC_CACHE_ENABLE | CQC_CACHE_ENABLE | SQC_CACHE_WB_ENABLE |
- 	       CQC_CACHE_WB_ENABLE | FIELD_PREP(SQC_CACHE_WB_THRD, 1) |
- 	       FIELD_PREP(CQC_CACHE_WB_THRD, 1), base + QM_CACHE_CTL);
-@@ -358,7 +358,7 @@ static int current_qm_write(struct ctrl_debug_file *file, u32 val)
- 	if (val > qm->vfs_num)
- 		return -EINVAL;
+-#define HZIP_VF_NUM			63
+ #define HZIP_QUEUE_NUM_V1		4096
+ #define HZIP_QUEUE_NUM_V2		1024
  
--	/* Calculate curr_qm_qp_num and store */
-+	/* According PF or VF Dev ID to calculation curr_qm_qp_num and store */
- 	if (val == 0) {
- 		qm->debug.curr_qm_qp_num = qm->qp_num;
- 	} else {
 -- 
 2.7.4
 
