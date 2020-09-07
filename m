@@ -2,91 +2,132 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270BAC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1F2C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E47C6215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7737D208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="t0md+sgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731032AbgIGQl0 (ORCPT
+        id S1730912AbgIGQlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:41:26 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2779 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730672AbgIGQlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:41:17 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id AF5932BF7D43679AE781;
-        Mon,  7 Sep 2020 17:41:15 +0100 (IST)
-Received: from localhost (10.52.124.38) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 7 Sep 2020
- 17:41:15 +0100
-Date:   Mon, 7 Sep 2020 17:39:41 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 03/25] dt-bindings: iio: adc: exynos-adc: do not require
- syscon on S5Pv210
-Message-ID: <20200907173941.000054ed@Huawei.com>
-In-Reply-To: <20200907161141.31034-4-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
-        <20200907161141.31034-4-krzk@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 7 Sep 2020 12:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35324 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730923AbgIGQlS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:41:18 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 786A7C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:41:18 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so2722245plk.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=QI9owJq1qeNIbL5MGRj7H9ZbeWy3uMtOambIfQ05240=;
+        b=t0md+sgRR59HAfNxNXQLb4d8jUGYK95h+b8RqrM3hkSN7fTSAyBDOpGa1vmbd0iKfM
+         T4gFOAu/DuXESBPEiXk4p1IslX8AN2ySHrVut9XG7e359FtcveW84NdBYkOv8cBnhqWX
+         n6Fh/5lJE65g9dwmUzzdWUbU+59YufFdlSEUVS7Tew1s0zHxsfCsBiI9MSMPC7/IJ3E8
+         GDjEuqXJkX7zf3XqnaEhB/yZTMOl9b7L1RFN8r5H+dNs+Fz2Vx5pEKEvt8e/8Ll1vEeX
+         lRsgbhP9G8BlrrHwMRX2UzjBty/etaulP1dKLCDBZwbKWKR0qtD4UsduAdYW7+YKW60M
+         eVKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=QI9owJq1qeNIbL5MGRj7H9ZbeWy3uMtOambIfQ05240=;
+        b=HuWAPGdduCQXF7aanGvdqN0XMY+UMMyC2bMR8jDVTt7UUDGltPO6muf/NEKTkqcjpx
+         OHIWX3X/fzbgClWksGNy15wyClwCvHBxmpu9w/gJG+/QI0CjfcJI9/d+JBWxtZfY2B0y
+         Vnv2LDYHEDOtCJ7PRSTY/jfGZBw9ZMqC48vbjzZRBngQK6pU98//BtLbZkXdNY16Lf3C
+         iWXdxtfFM2/VcDyTAoWBpJMu+yCA5i4Xqr2k26Uz5ij5j2s1xh/gYmsqb3k+v7CAHscD
+         vFtwlSPV7qoMLEx5KUuAa/kBFLKXC6hzpvVdiheGKfQJFwvopoIWvEj/Bkazq74DdsNa
+         XAtA==
+X-Gm-Message-State: AOAM532ehlp7Q49dQwMBqLq9oZ6gYq65xG1YhQl9+rAHTrGfxoQye9mz
+        Ev4LLG2zfbfSiliA6HejvI8vyQ==
+X-Google-Smtp-Source: ABdhPJxjMIPuK22ccwbpfS5Lc4urY7i8nlaAUy+/DPrUiHo0eKcYTMJtQ9YP2xudp317L+vQNfW2pA==
+X-Received: by 2002:a17:90b:117:: with SMTP id p23mr149298pjz.67.1599496877962;
+        Mon, 07 Sep 2020 09:41:17 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id 142sm12521645pgf.68.2020.09.07.09.41.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 09:41:17 -0700 (PDT)
+Subject: Re: [PATCH] kyber: Fix crash in kyber_finish_request()
+To:     Yang Yang <yang.yang@vivo.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     onlyfever@icloud.com, Omar Sandoval <osandov@osandov.com>
+References: <20200907074346.5383-1-yang.yang@vivo.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8b714da7-97b2-f8d2-4be7-c192130c33af@kernel.dk>
+Date:   Mon, 7 Sep 2020 10:41:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+In-Reply-To: <20200907074346.5383-1-yang.yang@vivo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.38]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 18:11:19 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+CC Omar
 
-> The ADC in S5Pv210 does not have ADC phy registers in separate block for
-> which syscon would be needed.  Remove this requirement to fix dtbs_check
-> warnings like:
+On 9/7/20 1:43 AM, Yang Yang wrote:
+> Kernel crash when requeue flush request.
+> It can be reproduced as below:
 > 
->   arch/arm/boot/dts/s5pv210-fascinate4g.dt.yaml: adc@e1700000: 'samsung,syscon-phandle' is a required property
+> [    2.517297] Unable to handle kernel paging request at virtual address ffffffd8071c0b00
+> ...
+> [    2.517468] pc : clear_bit+0x18/0x2c
+> [    2.517502] lr : sbitmap_queue_clear+0x40/0x228
+> [    2.517503] sp : ffffff800832bc60 pstate : 00c00145
+> ...
+> [    2.517599] Process ksoftirqd/5 (pid: 51, stack limit = 0xffffff8008328000)
+> [    2.517602] Call trace:
+> [    2.517606]  clear_bit+0x18/0x2c
+> [    2.517619]  kyber_finish_request+0x74/0x80
+> [    2.517627]  blk_mq_requeue_request+0x3c/0xc0
+> [    2.517637]  __scsi_queue_insert+0x11c/0x148
+> [    2.517640]  scsi_softirq_done+0x114/0x130
+> [    2.517643]  blk_done_softirq+0x7c/0xb0
+> [    2.517651]  __do_softirq+0x208/0x3bc
+> [    2.517657]  run_ksoftirqd+0x34/0x60
+> [    2.517663]  smpboot_thread_fn+0x1c4/0x2c0
+> [    2.517667]  kthread+0x110/0x120
+> [    2.517669]  ret_from_fork+0x10/0x18
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> Signed-off-by: Yang Yang <yang.yang@vivo.com>
 > ---
->  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml          | 1 -
->  1 file changed, 1 deletion(-)
+>  block/kyber-iosched.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> index 89b4f9c252a6..75174af72288 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> @@ -81,7 +81,6 @@ allOf:
->                - samsung,exynos-adc-v2
->                - samsung,exynos3250-adc
->                - samsung,exynos4212-adc
-> -              - samsung,s5pv210-adc
->      then:
->        required:
->          - samsung,syscon-phandle
+> diff --git a/block/kyber-iosched.c b/block/kyber-iosched.c
+> index a38c5ab103d1..af73afe7a05c 100644
+> --- a/block/kyber-iosched.c
+> +++ b/block/kyber-iosched.c
+> @@ -611,6 +611,9 @@ static void kyber_finish_request(struct request *rq)
+>  {
+>  	struct kyber_queue_data *kqd = rq->q->elevator->elevator_data;
+>  
+> +	if (unlikely(!(rq->rq_flags & RQF_ELVPRIV)))
+> +		return;
+> +
+>  	rq_clear_domain_token(kqd, rq);
+>  }
+>  
+> 
 
+
+-- 
+Jens Axboe
 
