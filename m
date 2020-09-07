@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D686FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE660C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA12208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3BD208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbgIGRnj (ORCPT
+        id S1731420AbgIGRnq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:43:39 -0400
-Received: from 8bytes.org ([81.169.241.247]:41840 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:43:46 -0400
+Received: from 8bytes.org ([81.169.241.247]:41500 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbgIGNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729368AbgIGNRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:17:47 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id D4D1DE46;
-        Mon,  7 Sep 2020 15:16:48 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id AF0E334A;
+        Mon,  7 Sep 2020 15:16:42 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 13/72] x86/boot/compressed/64: Add IDT Infrastructure
-Date:   Mon,  7 Sep 2020 15:15:14 +0200
-Message-Id: <20200907131613.12703-14-joro@8bytes.org>
+Subject: [PATCH v7 01/72] KVM: SVM: nested: Don't allocate VMCB structures on stack
+Date:   Mon,  7 Sep 2020 15:15:02 +0200
+Message-Id: <20200907131613.12703-2-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,259 +60,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add code needed to setup an IDT in the early pre-decompression
-boot-code. The IDT is loaded first in startup_64, which is after
-EfiExitBootServices() has been called, and later reloaded when the
-kernel image has been relocated to the end of the decompression area.
-
-This allows to setup different IDT handlers before and after the
-relocation.
+Do not allocate a vmcb_control_area and a vmcb_save_area on the stack,
+as these structures will become larger with future extenstions of
+SVM and thus the svm_set_nested_state() function will become a too large
+stack frame.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/boot/compressed/Makefile          |  1 +
- arch/x86/boot/compressed/head_64.S         | 25 +++++++-
- arch/x86/boot/compressed/idt_64.c          | 44 ++++++++++++++
- arch/x86/boot/compressed/idt_handlers_64.S | 70 ++++++++++++++++++++++
- arch/x86/boot/compressed/misc.h            |  5 ++
- arch/x86/include/asm/desc_defs.h           |  3 +
- 6 files changed, 147 insertions(+), 1 deletion(-)
- create mode 100644 arch/x86/boot/compressed/idt_64.c
- create mode 100644 arch/x86/boot/compressed/idt_handlers_64.S
+ arch/x86/kvm/svm/nested.c | 47 +++++++++++++++++++++++++++------------
+ 1 file changed, 33 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 258a2fca6659..b378fb14d87c 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -80,6 +80,7 @@ vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
- ifdef CONFIG_X86_64
- 	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
-+	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
- endif
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 9e46729cf162..1fffaec1c069 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -33,6 +33,7 @@
- #include <asm/processor-flags.h>
- #include <asm/asm-offsets.h>
- #include <asm/bootparam.h>
-+#include <asm/desc_defs.h>
- #include "pgtable.h"
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index fb68467e6049..28036629abf8 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -1060,10 +1060,14 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	struct vmcb *hsave = svm->nested.hsave;
+ 	struct vmcb __user *user_vmcb = (struct vmcb __user *)
+ 		&user_kvm_nested_state->data.svm[0];
+-	struct vmcb_control_area ctl;
+-	struct vmcb_save_area save;
++	struct vmcb_control_area *ctl;
++	struct vmcb_save_area *save;
++	int ret;
+ 	u32 cr0;
  
- /*
-@@ -415,6 +416,10 @@ SYM_CODE_START(startup_64)
- 
- .Lon_kernel_cs:
- 
-+	pushq	%rsi
-+	call	load_stage1_idt
-+	popq	%rsi
++	BUILD_BUG_ON(sizeof(struct vmcb_control_area) + sizeof(struct vmcb_save_area) >
++		     KVM_STATE_NESTED_SVM_VMCB_SIZE);
 +
+ 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_SVM)
+ 		return -EINVAL;
+ 
+@@ -1095,13 +1099,22 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 	if (kvm_state->size < sizeof(*kvm_state) + KVM_STATE_NESTED_SVM_VMCB_SIZE)
+ 		return -EINVAL;
+-	if (copy_from_user(&ctl, &user_vmcb->control, sizeof(ctl)))
+-		return -EFAULT;
+-	if (copy_from_user(&save, &user_vmcb->save, sizeof(save)))
+-		return -EFAULT;
+ 
+-	if (!nested_vmcb_check_controls(&ctl))
+-		return -EINVAL;
++	ret  = -ENOMEM;
++	ctl  = kzalloc(sizeof(*ctl),  GFP_KERNEL);
++	save = kzalloc(sizeof(*save), GFP_KERNEL);
++	if (!ctl || !save)
++		goto out_free;
++
++	ret = -EFAULT;
++	if (copy_from_user(ctl, &user_vmcb->control, sizeof(*ctl)))
++		goto out_free;
++	if (copy_from_user(save, &user_vmcb->save, sizeof(*save)))
++		goto out_free;
++
++	ret = -EINVAL;
++	if (!nested_vmcb_check_controls(ctl))
++		goto out_free;
+ 
  	/*
- 	 * paging_prepare() sets up the trampoline and checks if we need to
- 	 * enable 5-level paging.
-@@ -527,6 +532,13 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	shrq	$3, %rcx
- 	rep	stosq
+ 	 * Processor state contains L2 state.  Check that it is
+@@ -1109,15 +1122,15 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 */
+ 	cr0 = kvm_read_cr0(vcpu);
+         if (((cr0 & X86_CR0_CD) == 0) && (cr0 & X86_CR0_NW))
+-                return -EINVAL;
++		goto out_free;
  
-+/*
-+ * Load stage2 IDT
-+ */
-+	pushq	%rsi
-+	call	load_stage2_idt
-+	popq	%rsi
-+
- /*
-  * Do the extraction, and jump to the new kernel..
-  */
-@@ -659,10 +671,21 @@ SYM_DATA_START_LOCAL(gdt)
- 	.quad   0x0000000000000000	/* TS continued */
- SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
+ 	/*
+ 	 * Validate host state saved from before VMRUN (see
+ 	 * nested_svm_check_permissions).
+ 	 * TODO: validate reserved bits for all saved state.
+ 	 */
+-	if (!(save.cr0 & X86_CR0_PG))
+-		return -EINVAL;
++	if (!(save->cr0 & X86_CR0_PG))
++		goto out_free;
  
-+SYM_DATA_START(boot_idt_desc)
-+	.word	boot_idt_end - boot_idt - 1
-+	.quad	0
-+SYM_DATA_END(boot_idt_desc)
-+	.balign 8
-+SYM_DATA_START(boot_idt)
-+	.rept	BOOT_IDT_ENTRIES
-+	.quad	0
-+	.quad	0
-+	.endr
-+SYM_DATA_END_LABEL(boot_idt, SYM_L_GLOBAL, boot_idt_end)
-+
- #ifdef CONFIG_EFI_STUB
- SYM_DATA(image_offset, .long 0)
- #endif
--
- #ifdef CONFIG_EFI_MIXED
- SYM_DATA_LOCAL(efi32_boot_args, .long 0, 0, 0)
- SYM_DATA(efi_is64, .byte 1)
-diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
-new file mode 100644
-index 000000000000..082cd6bca033
---- /dev/null
-+++ b/arch/x86/boot/compressed/idt_64.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+#include <asm/trap_pf.h>
-+#include <asm/segment.h>
-+#include <asm/trapnr.h>
-+#include "misc.h"
-+
-+static void set_idt_entry(int vector, void (*handler)(void))
-+{
-+	unsigned long address = (unsigned long)handler;
-+	gate_desc entry;
-+
-+	memset(&entry, 0, sizeof(entry));
-+
-+	entry.offset_low    = (u16)(address & 0xffff);
-+	entry.segment       = __KERNEL_CS;
-+	entry.bits.type     = GATE_TRAP;
-+	entry.bits.p        = 1;
-+	entry.offset_middle = (u16)((address >> 16) & 0xffff);
-+	entry.offset_high   = (u32)(address >> 32);
-+
-+	memcpy(&boot_idt[vector], &entry, sizeof(entry));
-+}
-+
-+/* Have this here so we don't need to include <asm/desc.h> */
-+static void load_boot_idt(const struct desc_ptr *dtr)
-+{
-+	asm volatile("lidt %0"::"m" (*dtr));
-+}
-+
-+/* Setup IDT before kernel jumping to  .Lrelocated */
-+void load_stage1_idt(void)
-+{
-+	boot_idt_desc.address = (unsigned long)boot_idt;
-+
-+	load_boot_idt(&boot_idt_desc);
-+}
-+
-+/* Setup IDT after kernel jumping to  .Lrelocated */
-+void load_stage2_idt(void)
-+{
-+	boot_idt_desc.address = (unsigned long)boot_idt;
-+
-+	load_boot_idt(&boot_idt_desc);
-+}
-diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
-new file mode 100644
-index 000000000000..36dee2f40a8b
---- /dev/null
-+++ b/arch/x86/boot/compressed/idt_handlers_64.S
-@@ -0,0 +1,70 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Early IDT handler entry points
-+ *
-+ * Copyright (C) 2019 SUSE
-+ *
-+ * Author: Joerg Roedel <jroedel@suse.de>
-+ */
-+
-+#include <asm/segment.h>
-+
-+/* For ORIG_RAX */
-+#include "../../entry/calling.h"
-+
-+.macro EXCEPTION_HANDLER name function error_code=0
-+SYM_FUNC_START(\name)
-+
-+	/* Build pt_regs */
-+	.if \error_code == 0
-+	pushq   $0
-+	.endif
-+
-+	pushq   %rdi
-+	pushq   %rsi
-+	pushq   %rdx
-+	pushq   %rcx
-+	pushq   %rax
-+	pushq   %r8
-+	pushq   %r9
-+	pushq   %r10
-+	pushq   %r11
-+	pushq   %rbx
-+	pushq   %rbp
-+	pushq   %r12
-+	pushq   %r13
-+	pushq   %r14
-+	pushq   %r15
-+
-+	/* Call handler with pt_regs */
-+	movq    %rsp, %rdi
-+	/* Error code is second parameter */
-+	movq	ORIG_RAX(%rsp), %rsi
-+	call    \function
-+
-+	/* Restore regs */
-+	popq    %r15
-+	popq    %r14
-+	popq    %r13
-+	popq    %r12
-+	popq    %rbp
-+	popq    %rbx
-+	popq    %r11
-+	popq    %r10
-+	popq    %r9
-+	popq    %r8
-+	popq    %rax
-+	popq    %rcx
-+	popq    %rdx
-+	popq    %rsi
-+	popq    %rdi
-+
-+	/* Remove error code and return */
-+	addq    $8, %rsp
-+
-+	iretq
-+SYM_FUNC_END(\name)
-+	.endm
-+
-+	.text
-+	.code64
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 3efce27ba35c..8feb5f6f329e 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -23,6 +23,7 @@
- #include <asm/page.h>
- #include <asm/boot.h>
- #include <asm/bootparam.h>
-+#include <asm/desc_defs.h>
+ 	/*
+ 	 * All checks done, we can enter guest mode.  L1 control fields
+@@ -1126,15 +1139,21 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
+ 	 * contains saved L1 state.
+ 	 */
+ 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
+-	hsave->save = save;
++	hsave->save = *save;
  
- #define BOOT_CTYPE_H
- #include <linux/acpi.h>
-@@ -133,4 +134,8 @@ int count_immovable_mem_regions(void);
- static inline int count_immovable_mem_regions(void) { return 0; }
- #endif
+ 	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
+-	load_nested_vmcb_control(svm, &ctl);
++	load_nested_vmcb_control(svm, ctl);
+ 	nested_prepare_vmcb_control(svm);
  
-+/* idt_64.c */
-+extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
-+extern struct desc_ptr boot_idt_desc;
+ out_set_gif:
+ 	svm_set_gif(svm, !!(kvm_state->flags & KVM_STATE_NESTED_GIF_SET));
+-	return 0;
 +
- #endif /* BOOT_COMPRESSED_MISC_H */
-diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
-index a91f3b6e4f2a..5621fb3f2d1a 100644
---- a/arch/x86/include/asm/desc_defs.h
-+++ b/arch/x86/include/asm/desc_defs.h
-@@ -109,6 +109,9 @@ struct desc_ptr {
- 
- #endif /* !__ASSEMBLY__ */
- 
-+/* Boot IDT definitions */
-+#define	BOOT_IDT_ENTRIES	32
++	ret = 0;
++out_free:
++	kfree(save);
++	kfree(ctl);
 +
- /* Access rights as returned by LAR */
- #define AR_TYPE_RODATA		(0 * (1 << 9))
- #define AR_TYPE_RWDATA		(1 * (1 << 9))
++	return ret;
+ }
+ 
+ struct kvm_x86_nested_ops svm_nested_ops = {
 -- 
 2.28.0
 
