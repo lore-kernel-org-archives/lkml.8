@@ -2,125 +2,224 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1161BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48931C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C47CA20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qCxcvXcS"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC23214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgIGEBN (ORCPT
+        id S1725952AbgIGEQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 00:01:13 -0400
-Received: from mail-mw2nam10on2056.outbound.protection.outlook.com ([40.107.94.56]:51904
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbgIGEBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 00:01:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MccTc8G+dMd1pGAyEvXl8yuhFqWAr31RT6Mml2l4jDNa4jgsRL4BoVYzBPYJFTGgis4GT0d6y0NQ9qfie2P0mux3YvS9/geODmAeMhc+TBehlMjHGhOjLQnxYNc/BKA9ciCe8GkiXlatHTlh/Rco0y7u4S7gB+6+Hdt88GW8m0oNDqzieu6JhG9drCu2l0uZXtVLz2f8iDVRDeQAR1X4P7eS+znYNTg3bie5vz8ulN/UpEc5I5ZsMfE1WTRbUs9KXVB7U3aZnkA1L5LiGJjS0vtCAHT76n9cNiF3wT5d4+OvvWrW4Hw7zlXvnZOxnSBPUlFhGnQ0qfJi4iAdsxu0xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u3FU48ufH16I77XoY5GAJToYJfa8nkyqW+DjLFkNqcQ=;
- b=b1MmiPsD7m0JHqQ66MVhd8SIndIT/Aaln6XNspPEnBGctXGdvPErMqIxvlXPpNnmCqu0LpnIjS1XGrRkc1HPfRD6A531aF5M0VwYsY5nBLKZz2dYCmqO5x+H8CO5f32yx6KjMs2Gv7+Rt/fWATJyLjusL+zYGDfCt3sedjntMHj0dK+NEcChONJruSPkLd72gKZlP+lCYJwfx+VE9uNusg9MQw1hKXZS8CpRLsRMlTHdHhOW7zHUJGEyDvrsbRhG5EfZ0TXG/yXZSy9AtKVXQwfBY6gzd6VsJoDexUSjkgEtAmDMapTrXiSI83/nXP5x1yhOMdexiQLxrEkExYCkEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u3FU48ufH16I77XoY5GAJToYJfa8nkyqW+DjLFkNqcQ=;
- b=qCxcvXcSd5A6guSuUjgASpLkhhSDWpcB8dy8tBxpifgp0KFdyQe/qofzmGzXHlJA0PGvFZ04JvCBFjKit382Yj6XxA0MxbrhPc0Tc8wbZ9tT+JE1U94xON91AbRTVQfK/LldESxrvqfmIMlBfBVd0sRBhYwVjNBPysOOmzo213I=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
- by DM6PR12MB4315.namprd12.prod.outlook.com (2603:10b6:5:223::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
- 2020 04:01:08 +0000
-Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
- ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3348.017; Mon, 7 Sep 2020
- 04:01:08 +0000
-From:   Akshu Agrawal <akshu.agrawal@amd.com>
-Cc:     akshu.agrawal@amd.com, derek.fang@realtek.com,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
-        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ASoC: rt5682: Have global name clock option for parent clk
-Date:   Mon,  7 Sep 2020 09:30:37 +0530
-Message-Id: <20200907040038.3124-1-akshu.agrawal@amd.com>
-X-Mailer: git-send-email 2.20.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:22::24) To DM5PR1201MB0188.namprd12.prod.outlook.com
- (2603:10b6:4:56::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from local.dlink.router (122.179.60.60) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 04:01:04 +0000
-X-Mailer: git-send-email 2.20.1
-X-Originating-IP: [122.179.60.60]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 449fc26f-1ac2-46ca-2263-08d852e2a5e9
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4315:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4315919BE701B0A6367F3E74F8280@DM6PR12MB4315.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tNHBQeA60/9bXHOjOqjNJqvFh1BQ+VrQgiHzJMu7sLm/6tHENAVUYhEdWd2OS6upJlkz/kPGPoEID0TdBrLKm42caYT1Zin4zxbGLyONcdz/CWWYusGIzm3oB56kuftY1K0wO9n+XR5fpS+dGDccsI/yojpuZoSWyv+Qyykqm41x8cSlzQLlUvJ9BM96LNy60DvFrnoCLbVdTvCZXZJq3JcLbjFaoQylHKT9ncCpDDwrfLYOfZ3kw2dWBhUj9m/Tx7qcbLGUL2fe/6fmi5/XlDzn+QQSS87QpfRqYCH760O/MsyvfAQSJk3wr/XjMVIxm8ydOPayPpB6+Jve90eWqvJP8ca4AqWVhamYO/R7K+FW/OeyVvkZTzWsxfR2HQSZ
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(366004)(396003)(39860400002)(376002)(66556008)(66476007)(1076003)(6506007)(6486002)(36756003)(956004)(6512007)(8676002)(316002)(8936002)(2616005)(4744005)(52116002)(16526019)(6666004)(66946007)(109986005)(86362001)(478600001)(44832011)(4326008)(26005)(5660300002)(54906003)(2906002)(186003)(266003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: xvlOFXqli+k2YwP7vAyjj9RcilRJ+t0aOZMxdTNw/5F5rfTWGKw1iMttLKNH6jyUfLMmSEbtvhGu93wsUqAMd/rAqnJlS1IYi0z3XgjUjcfr/S7hZa+bk4dM6tWIwiGF8xoxTGqNAaLfQ2hBqB9nh3T8czgbhE3GDrdG50csbWlDZ+wgZeYGOmelinJS5Fr8tBeka2uD4HqBqJdfVF/czXv+caRMyFGB9YG9BNTu95Z/MQJdvXVLPX+UDbZTJ3QF9Lt2JJuEPFDe1hnNM7+PbNeq6BLYIog2Rl1GuQINQmkl9YTPnq2otSe8OJsQoC31lWLJGhq9XkskuVEVnL/Ej1E1XveeIvoYMFIH1gI/sbPqGh9felKfuCWhqhN5oZrAZGIboFFm3Ua+ne7Ju7FKluhRLeNgVulkbMQuSLszFKI89tGDelNsV6IOKqsLDmDM4z5AEiF78Qz2pM2pgmZvVTytjgpbhfUxi9SyDOlYL8VL2pBB+nOHNfHqQu1mI35xMnQ8JFZR8ImW/fg+cT31TdXMiB+na8eaCu2U9YzIn4mwLgF9WZFz/83uEcxFA7Tg6jdoulxCINA6Qc3CgncJ1y76dgo3HPuy0dhHhoaTLxz1iQqg/JOU95wG93Kw492TyoowLXqRc70V9cxs/QF1+A==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 449fc26f-1ac2-46ca-2263-08d852e2a5e9
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 04:01:07.7638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KjvgCi3q4cBqA70z17v9kZQyzgcFlYjcEPht1gu0mHIEBIe1jgB2pbPjwIKx8MpPWx1+/WCiKJ90YOmdR1M2jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4315
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 7 Sep 2020 00:16:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:58703 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725290AbgIGEQn (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 00:16:43 -0400
+IronPort-SDR: vprzxsMGtkzqdZXqSDoLzRibNzJrbMFc/oAGEbqIZXBEGnrbKTiWLgBkqK1jencUYeIayFn51+
+ 2TGqWqknG5Eg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="157215542"
+X-IronPort-AV: E=Sophos;i="5.76,400,1592895600"; 
+   d="scan'208";a="157215542"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2020 21:16:43 -0700
+IronPort-SDR: 9r/VohMXlKyC6id03redCzvjQ3nRcVdaNC/e/rpClweElny6hsyLGZ+W4+7ci7vu5R/vcuLIfl
+ /JF4ztFroEJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,400,1592895600"; 
+   d="scan'208";a="406709911"
+Received: from kbl-ppc.sh.intel.com ([10.239.159.55])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Sep 2020 21:16:40 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v5 0/7] perf: Stream comparison
+Date:   Mon,  7 Sep 2020 12:15:59 +0800
+Message-Id: <20200907041606.14500-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When adding parent clk(mclk) to wclk, this adds fallback option
-for the case where global clk name is used.
+Sometimes, a small change in a hot function reducing the cycles of
+this function, but the overall workload doesn't get faster. It is
+interesting where the cycles are moved to.
 
-Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
----
- sound/soc/codecs/rt5682.c | 1 +
- 1 file changed, 1 insertion(+)
+What it would like is to diff before/after streams. The stream is the
+branch history which is aggregated by the branch records from perf
+samples. For example, the callchains aggregated from the branch records.
+By browsing the hot stream, we can understand the hot code path.
 
-diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
-index 93ebf0279b62..26928bc49bcb 100644
---- a/sound/soc/codecs/rt5682.c
-+++ b/sound/soc/codecs/rt5682.c
-@@ -2780,6 +2780,7 @@ static int rt5682_register_dai_clks(struct snd_soc_component *component)
- 			if (rt5682->mclk) {
- 				init.parent_data = &(struct clk_parent_data){
- 					.fw_name = "mclk",
-+					.name = __clk_get_name(rt5682->mclk),
- 				};
- 				init.num_parents = 1;
- 			}
+By browsing the hot streams, we can understand the hot code path.
+By comparing the cycles variation of same streams between old perf
+data and new perf data, we can understand if the cycles are moved
+to other codes.
+
+The before stream is the stream in perf.data.old. The after stream
+is the stream in perf.data.
+
+Diffing before/after streams compares top N hottest streams between
+two perf data files.
+
+If all entries of one stream in perf.data.old are fully matched with
+all entries of another stream in perf.data, we think two streams
+are matched, otherwise the streams are not matched.
+
+For example,
+
+   cycles: 1, hits: 26.80%                 cycles: 1, hits: 27.30%
+--------------------------              --------------------------
+             main div.c:39                           main div.c:39
+             main div.c:44                           main div.c:44
+
+The above streams are matched and we can see for the same streams the
+cycles (1) are equal and the callchain hit percents are slightly changed
+(26.80% vs. 27.30%). That's expected.
+
+Now let's see examples.
+
+perf record -b ...      Generate perf.data.old with branch data
+perf record -b ...      Generate perf.data with branch data
+perf diff --stream
+
+[ Matched hot streams ]
+
+hot chain pair 1:
+            cycles: 1, hits: 27.77%                  cycles: 1, hits: 9.24%
+        ---------------------------              --------------------------
+                      main div.c:39                           main div.c:39
+                      main div.c:44                           main div.c:44
+
+hot chain pair 2:
+           cycles: 34, hits: 20.06%                cycles: 27, hits: 16.98%
+        ---------------------------              --------------------------
+          __random_r random_r.c:360               __random_r random_r.c:360
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:380               __random_r random_r.c:380
+          __random_r random_r.c:357               __random_r random_r.c:357
+              __random random.c:293                   __random random.c:293
+              __random random.c:293                   __random random.c:293
+              __random random.c:291                   __random random.c:291
+              __random random.c:291                   __random random.c:291
+              __random random.c:291                   __random random.c:291
+              __random random.c:288                   __random random.c:288
+                     rand rand.c:27                          rand rand.c:27
+                     rand rand.c:26                          rand rand.c:26
+                           rand@plt                                rand@plt
+                           rand@plt                                rand@plt
+              compute_flag div.c:25                   compute_flag div.c:25
+              compute_flag div.c:22                   compute_flag div.c:22
+                      main div.c:40                           main div.c:40
+                      main div.c:40                           main div.c:40
+                      main div.c:39                           main div.c:39
+
+hot chain pair 3:
+             cycles: 9, hits: 4.48%                  cycles: 6, hits: 4.51%
+        ---------------------------              --------------------------
+          __random_r random_r.c:360               __random_r random_r.c:360
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:388               __random_r random_r.c:388
+          __random_r random_r.c:380               __random_r random_r.c:380
+
+[ Hot streams in old perf data only ]
+
+hot chain 1:
+            cycles: 18, hits: 6.75%
+         --------------------------
+          __random_r random_r.c:360
+          __random_r random_r.c:388
+          __random_r random_r.c:388
+          __random_r random_r.c:380
+          __random_r random_r.c:357
+              __random random.c:293
+              __random random.c:293
+              __random random.c:291
+              __random random.c:291
+              __random random.c:291
+              __random random.c:288
+                     rand rand.c:27
+                     rand rand.c:26
+                           rand@plt
+                           rand@plt
+              compute_flag div.c:25
+              compute_flag div.c:22
+                      main div.c:40
+
+hot chain 2:
+            cycles: 29, hits: 2.78%
+         --------------------------
+              compute_flag div.c:22
+                      main div.c:40
+                      main div.c:40
+                      main div.c:39
+
+[ Hot streams in new perf data only ]
+
+hot chain 1:
+                                                     cycles: 4, hits: 4.54%
+                                                 --------------------------
+                                                              main div.c:42
+                                                      compute_flag div.c:28
+
+hot chain 2:
+                                                     cycles: 5, hits: 3.51%
+                                                 --------------------------
+                                                              main div.c:39
+                                                              main div.c:44
+                                                              main div.c:42
+                                                      compute_flag div.c:28
+
+ v5:
+ ---
+ 1. Remove enum stream_type
+ 2. Rebase to perf/core
+
+ v4:
+ ---
+ The previous version is too big and very hard for review.
+
+ 1. v4 removes the code which supports the source line mapping
+    table and remove the source line based comparison. Now we
+    only supports the basic functionality of stream comparison.
+
+ 2. Refactor the code in a generic way.
+
+ v3:
+ ---
+ v2 has 14 patches, it's hard to review.
+ v3 is only 7 patches for basic stream comparison.
+
+
+Jin Yao (7):
+  perf util: Create streams
+  perf util: Get the evsel_streams by evsel_idx
+  perf util: Compare two streams
+  perf util: Link stream pair
+  perf util: Calculate the sum of total streams hits
+  perf util: Report hot streams
+  perf diff: Support hot streams comparison
+
+ tools/perf/Documentation/perf-diff.txt |   4 +
+ tools/perf/builtin-diff.c              | 133 +++++++++-
+ tools/perf/util/Build                  |   1 +
+ tools/perf/util/callchain.c            |  99 ++++++++
+ tools/perf/util/callchain.h            |   8 +
+ tools/perf/util/stream.c               | 324 +++++++++++++++++++++++++
+ tools/perf/util/stream.h               |  34 +++
+ 7 files changed, 590 insertions(+), 13 deletions(-)
+ create mode 100644 tools/perf/util/stream.c
+ create mode 100644 tools/perf/util/stream.h
+
 -- 
-2.20.1
+2.17.1
 
