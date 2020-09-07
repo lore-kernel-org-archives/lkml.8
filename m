@@ -2,111 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA59C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C34C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85084206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8391C206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:19:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GxCG1050"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DwP8otAS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgIGRS4 (ORCPT
+        id S1730770AbgIGRTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:18:56 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26222 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729734AbgIGOBE (ORCPT
+        Mon, 7 Sep 2020 13:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729732AbgIGN6x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:01:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599487262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=UMW53qYbnEJqvbLmiW8HSZb8Nx6gj/HTuK4M4tdTyjM=;
-        b=GxCG1050S9fwcces6OIt5u64NZyRC+daXITYsgcztWUrgLCn6S/yBS2GnBXZAmgrfeAEE+
-        Vyrlttfxge9XXz989eGKYsc/pBRrpyRHYug6pa1sxTM/5I0b/1Hot5y2GvAs5RX1TbRKXc
-        vVojQDHwfE2Ev6C+3aGueJMnXKoOoqs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-577-0oBmeZYIPBO6--lwr0lw_w-1; Mon, 07 Sep 2020 09:58:56 -0400
-X-MC-Unique: 0oBmeZYIPBO6--lwr0lw_w-1
-Received: by mail-qt1-f198.google.com with SMTP id e14so8986162qtm.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:58:56 -0700 (PDT)
+        Mon, 7 Sep 2020 09:58:53 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04923C061757
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:58:06 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a9so14325744wmm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:58:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KSoj6sKRWwSf9PriSO+wN8e6qNhuzgGj+fP6vt6TsCI=;
+        b=DwP8otAS0fcugQQgYAWDkANCxP0JcAwtKGF2dn0yUwAGnhGaaq3zEs9RzmpIavjPdg
+         HidmYtxqR1IFP/lpxnVQEHEw4kpZYuCqg/xq2Pmozm59zYdHM61GwwW3u3uc5c27oeT+
+         0kOWZOwR7H+ZMJManpi8o/v0Iv3ztE51PH96Nzv3sapCoesJvnfuMVYgCtwT3KFyvuYz
+         tP+NxwzIk+sOO0Wgg+PtCKRHMa96pixRgQDkfapy1hE0rXQGlUSF584of52GSG0s46JX
+         qwnzmeCpxizGyaS+jia1nCnX8GIJg3LBKuQwWLkU9GK6btKvCKUA/Qum8u9vJNsQ1Xri
+         trwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=UMW53qYbnEJqvbLmiW8HSZb8Nx6gj/HTuK4M4tdTyjM=;
-        b=VKhBgbsoGFWCh6NeNjdWAhp84u2Lz0AuRjwJIpkG/CmQZDioj7MtrxhPsU4LIHchcY
-         wVoaFxUYt452jvamCYEaqugaf34Wc97l8Pv6ChBRQlKc9ei4bTblSv1YG1tp1qwrejqt
-         6SQWMhe07+58+DaQVyhwKDnHAkQ23RPx6HsDKznEMa1//MW0CHPV3J0psdlvhvzJuBL8
-         EG3PiL8tRqg2zwOf6fPyPI7oug9Lr+OBNcReBXRM7vRqJLMJq7iUC0JvMrzNx1V7cvtj
-         AyzRhLQr7Wn6qwFaUqBp/mWke28e4EK7MtzSIf0xFDabWE8qvwR1tAALiPXmiwuyR6nP
-         ouKw==
-X-Gm-Message-State: AOAM5331Wow/KnGGAdyA187NXyL5UDBI2zmt+fSqY0ogLaIGbhzSgUDK
-        dpujvkNST5/aHpmIRcEMmy/UOjUHiqROiyoCwXgixhqB1RF70yIZZSpMRh6nKiaD/exZEGv3sRf
-        dfODO470fPSY3RcDzNiQIhE9a
-X-Received: by 2002:a05:620a:145:: with SMTP id e5mr19039828qkn.479.1599487135859;
-        Mon, 07 Sep 2020 06:58:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzDWKcmMr1vFt4Rnb+glrvluCclhHn5iCtXltaQd+0gOGxpwp5oE+wuLyMiSrfYmeKBPhBnEw==
-X-Received: by 2002:a05:620a:145:: with SMTP id e5mr19039810qkn.479.1599487135622;
-        Mon, 07 Sep 2020 06:58:55 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id r11sm11659852qtt.2.2020.09.07.06.58.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 06:58:55 -0700 (PDT)
-From:   trix@redhat.com
-To:     rostedt@goodmis.org, mingo@redhat.com, natechancellor@gmail.com,
-        ndesaulniers@google.com, tom.zanussi@linux.intel.com,
-        baohong.liu@intel.com
-Cc:     linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] tracing: fix double free
-Date:   Mon,  7 Sep 2020 06:58:45 -0700
-Message-Id: <20200907135845.15804-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KSoj6sKRWwSf9PriSO+wN8e6qNhuzgGj+fP6vt6TsCI=;
+        b=RViLF0PpepZozWMpQMXvOGrXRgghfyDH8PFb1ZGu4iAerVvEONnaPNQ10xgWt/cfDN
+         IZauTWzF44M6s9etznxHfHtqqTj0A+H5BiwzDdTOlU/6J1VuL45TDr6cA0mctZNrdWMB
+         qlqMF1BF00F9Ty+ZFCTkSbVDIducFJCYDTz4zwjfqf6GLqq602kMGsJ2mAsjTJ/yOm9K
+         aeO2gidUqGEUVbiQPMGd8IUOh2EgEdChecQ+ODEUumG5oBfpKwdRau4Y2NghY2s7Up8v
+         Z6YOOkKkGsIWGIk393JG8jMNiSZLlS2Yp6mHnlJynuHhikWB78lu2RJjl+FdTs1UN9Xh
+         1qyw==
+X-Gm-Message-State: AOAM533ihJJa/h7G/uIlJXs5noAR4T+ABuyGTrhwGBH7DSUA39r0kPjS
+        cmChngXaeDo0lgdv0eYrSoqzHBKrWG+gQg==
+X-Google-Smtp-Source: ABdhPJy5VU1DOVDqVdHvBGvU+6zu9otJ00OEZVZ67AfNGf7jmEo1JrN3hn4hNW11pU2KZKRJanq3qg==
+X-Received: by 2002:a1c:67d4:: with SMTP id b203mr8910409wmc.120.1599487085253;
+        Mon, 07 Sep 2020 06:58:05 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id 11sm26388804wmi.14.2020.09.07.06.58.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Sep 2020 06:58:04 -0700 (PDT)
+Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+To:     Jonathan Marek <jonathan@marek.ca>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901003300.11985-1-jonathan@marek.ca>
+ <20200907123344.GA2371705@kroah.com>
+ <a9d142c9-8a61-ee59-d849-393af1b3eaec@marek.ca>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <e0db9beb-bbd2-8f20-d7f4-675b62acf782@linaro.org>
+Date:   Mon, 7 Sep 2020 14:58:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <a9d142c9-8a61-ee59-d849-393af1b3eaec@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
 
-clang static analyzer reports this problem
 
-trace_events_hist.c:3824:3: warning: Attempt to free
-  released memory
-    kfree(hist_data->attrs->var_defs.name[i]);
+On 07/09/2020 14:51, Jonathan Marek wrote:
+>>> @@ -1477,7 +1477,10 @@ static long fastrpc_device_ioctl(struct file 
+>>> *file, unsigned int cmd,
+>>>           err = fastrpc_invoke(fl, argp);
+>>>           break;
+>>>       case FASTRPC_IOCTL_INIT_ATTACH:
+>>> -        err = fastrpc_init_attach(fl);
+>>> +        err = fastrpc_init_attach(fl, 0);
+>>> +        break;
+>>> +    case FASTRPC_IOCTL_INIT_ATTACH_SNS:
+>>> +        err = fastrpc_init_attach(fl, 2);
+>>
+>> Shouldn't you have #defines for those magic numbers somewhere?  What
+>> does 0 and 2 mean?
+>>
+> 
+> This is based off a downstream driver which also uses magic numbers, 
+> although I can make an educated guess about the meaning.
+> 
+> Srini do you have any suggestions for how to name these values?
 
-In parse_var_defs() if there is a problem allocating
-var_defs.expr, the earlier var_defs.name is freed.
-This free is duplicated by free_var_defs() which frees
-the rest of the list.
+These are domain id corresponding to each core.
+you can use SDSP_DOMAIN_ID in here!
+these are already defined in the file as:
 
-Because free_var_defs() has to run anyway, remove the
-second free fom parse_var_defs().
+#define ADSP_DOMAIN_ID (0)
+#define MDSP_DOMAIN_ID (1)
+#define SDSP_DOMAIN_ID (2)
+#define CDSP_DOMAIN_ID (3)
 
-Fixes: 30350d65ac56 ("tracing: Add variable support to hist triggers")
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- kernel/trace/trace_events_hist.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 0b933546142e..1b2ef6490229 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -3865,7 +3865,6 @@ static int parse_var_defs(struct hist_trigger_data *hist_data)
- 
- 			s = kstrdup(field_str, GFP_KERNEL);
- 			if (!s) {
--				kfree(hist_data->attrs->var_defs.name[n_vars]);
- 				ret = -ENOMEM;
- 				goto free;
- 			}
--- 
-2.18.1
-
+--srini
