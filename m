@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E76C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C14021534
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52EE220757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599450331;
-	bh=3CHEAULpEl18v1s7DBrp5+ak8lApO0Ih7M6GZchdIOo=;
+	s=default; t=1599450342;
+	bh=0+0Vvbj81Gp70nb3wYVTNi4iarmSiC3AiyE1uqXE1dA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I3lm97BIRpay3rB663vbq71K9TuIBCieZTvSUxbfuVR6HPlWLU1hJjIvgxseg05lx
-	 EZGXgxPNDgGIHJMUX6284UIpWeG3N6gHhGTpqRGfQrN+HKVrCUSfqat4lUmQ5MjRTj
-	 +XkC4nAcB/cW3YkfMg8cO2Uur5ZVuOE+znBYBBEw=
+	b=HgR0EKSgzP7KoQIOkEn3S9Cp9bwcMEUxEH4xa5ecw2vtDD1EnDIyu3Y3eES8Mqt1k
+	 f62KGf6eWj7yYF3lDc67MUicljIGCxBYKx7FazuMq2Ta/lxL4NSfATPBjqzS0XUVhr
+	 lp+/Hu7lS7g1K2Cr60adxm498SMtnjw4H03vvcMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726620AbgIGDpa (ORCPT
+        id S1726721AbgIGDpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 23:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56928 "EHLO
+        Sun, 6 Sep 2020 23:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbgIGDpY (ORCPT
+        with ESMTP id S1726328AbgIGDpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 23:45:24 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B012C061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 20:45:22 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id w7so7921898pfi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:45:22 -0700 (PDT)
+        Sun, 6 Sep 2020 23:45:32 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77D6FC061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 20:45:30 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d9so1636071pfd.3
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:45:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aCKz8nVuklulWh7GFYMhEjxq6Ekku02F9Z+kP7jt6fk=;
-        b=EyVQaIXUO2fxakmEH2ScvEf6gpwcdL7D352Zs2su5yOvIUb0BZJwPbPtMYXm+KM+1K
-         zRMgZzL1jmJvOXwmXqX2Zv/eVFXqkVv2ZbD0iIxZ98EQSyuKunJIqm3Yolhzq4ifXg8j
-         XxOk7nnf5Np6IeDFS/p9jXJMPagj2UO1j66/NhtazJGvYA8dCPbepFr2XgmO1tG4ZhvM
-         h0Tvr/DIL404IG9aw3mZdByhLhD+dTv3L4dxIsKLYrsJqNnbd+Uf/V2IalI3CiY/09Qe
-         KPmOzC3PaEBSOROOvWyqYtaqADJ6De7Z89Z1lgm+gAtw1X/aTZghCJaxe7SVg9qswVoy
-         9i7w==
+        bh=sZ4LiZcr/xMAl+g7xoKICV2ZxATqOC5KJ/neXJrOlzE=;
+        b=Q2K36ugy8neaa61UIr4Krp2NwsfQlOkmnL3yr43cvh8ommaxVexBwwimFRQF9A9RBt
+         +auDmE9sD+BQeZTDBuHM5BvEpxhLDw1AxIlS1P3LzbMKxvA4IaxrTnuqMD++Q3Kutl/g
+         /DfP5tkB81KEkcPJAs+cmGidJ280upAH1FEORh6ROCAkhruHOUcuWMstDpdlKAbQkuMH
+         APN7hw+ugY+ghsgFXFmOb9ZY0CQzEbonH7JqQKPmOIUGFd17td6fyxiMDd8fJMT1rc2X
+         1iSB/bgx7MI49C/BRGsTaHMALUVTXxLmNIZCeQyg2GJEodbummcnDTrqU6x/wY9U10Te
+         SZ0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=aCKz8nVuklulWh7GFYMhEjxq6Ekku02F9Z+kP7jt6fk=;
-        b=kT2QMIExp6VFdSjP/iAXYFuavrmtugr9/uMJXQXVAptUNdrzCqWnI651icPNYiaEpg
-         8D0uznPQ0nWfwJOfsEn5oD6R5CQITILlMnG+/DZyyWOZwBAC0jprOsxc10bM+h0pbQk6
-         3bs0n28dG7b6z3pwnHPjwe5cfyploJUNob4i11aHAe2FaanRAt7h+vTrvJVMvHRwmb0h
-         x780EE+qhs/wjhUgOG6sFWJEfuLAJ+PHhla8hBEXDi3+OGJpy9olKXUKln8oZ1+oCKGr
-         b2jYHCsILdZ9bgXbJDWfo0VzlkPhFEj7Zl3rTyivjEJ74Rk0x2pU9OPmK6VlTiEWMPzK
-         nH9g==
-X-Gm-Message-State: AOAM530rJUNd7lvnG9GYZvs78caB8IZvlzAIgc7zPIdZCogjoyh8loB0
-        pWL24c11sC0hNs1iJ31hpBc=
-X-Google-Smtp-Source: ABdhPJxZUNiVslsQGKD0o0lt7KHS6pGZRXlokcsbuMlXGon7WbSg9bE1S0ORtmSY53iH6qk6CbWlUw==
-X-Received: by 2002:aa7:8285:: with SMTP id s5mr19185495pfm.226.1599450321772;
-        Sun, 06 Sep 2020 20:45:21 -0700 (PDT)
+        bh=sZ4LiZcr/xMAl+g7xoKICV2ZxATqOC5KJ/neXJrOlzE=;
+        b=milOm6aEeJ7y1Z3oSR9BNYz3uUHB0TQh8EURqm+x0ui+z91MT/IGShO7l0mhTwOUg8
+         nGjri0lvnH1cgxNXAW/TFcZwdHCI1D4oynHkb/c/6+K/v+msSP53acrnvx67TcN1czfV
+         6YEPvr8UAFGOzXRszY1ULY5CFRQQorlq/XpuQhpzMVDiao4lcjQJH98E591R2GhQTPCj
+         YUqwJUxIyT4K1EzLhGRZiULsUyp9IRC69rSdAddMqf9hIERPJpGL0MXSQh6kK2RLr55o
+         OyRSbWkyxrl2RUtSDXZBuqtRcyCqRKrfkMDFuFnKcEDGgXmYQ4/LUavOj/Pwy8U8e70E
+         EycQ==
+X-Gm-Message-State: AOAM532DQWgvAHuPTynflzH32aqPBiq1j70SGRx7/sjlz36GFBR4EDwH
+        QxpEUxjJKdw6Fm4Wye0mV/k=
+X-Google-Smtp-Source: ABdhPJzmIYC0lAm7XOwUj90g6nHUo5Gvh036BzXK9IAHfbnthXsD/3bcactiBx/hnPIHjLtIuREbeQ==
+X-Received: by 2002:a63:146:: with SMTP id 67mr1963678pgb.331.1599450330054;
+        Sun, 06 Sep 2020 20:45:30 -0700 (PDT)
 Received: from balhae.roam.corp.google.com ([101.235.31.111])
-        by smtp.gmail.com with ESMTPSA id l123sm11099672pgl.24.2020.09.06.20.45.17
+        by smtp.gmail.com with ESMTPSA id l123sm11099672pgl.24.2020.09.06.20.45.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 20:45:21 -0700 (PDT)
+        Sun, 06 Sep 2020 20:45:29 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -75,9 +75,9 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <andi@firstfloor.org>,
         Ian Rogers <irogers@google.com>
-Subject: [PATCH 2/9] perf parse-event: Fix cpu map leaks
-Date:   Mon,  7 Sep 2020 12:44:55 +0900
-Message-Id: <20200907034502.753230-3-namhyung@kernel.org>
+Subject: [PATCH 4/9] perf test: Fix memory leaks in parse-metric test
+Date:   Mon,  7 Sep 2020 12:44:57 +0900
+Message-Id: <20200907034502.753230-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200907034502.753230-1-namhyung@kernel.org>
 References: <20200907034502.753230-1-namhyung@kernel.org>
@@ -88,71 +88,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like evlist cpu map, evsel's cpu map should have proper refcount by
-releasing the original count after creation.
+It didn't release resources when there's an error so the
+test_recursion_fail() will leak some memory.
 
-This fixes the following ASAN report:
-
-  Direct leak of 840 byte(s) in 70 object(s) allocated from:
-    #0 0x7fe36703f628 in malloc (/lib/x86_64-linux-gnu/libasan.so.5+0x107628)
-    #1 0x559fbbf611ca in cpu_map__trim_new /home/namhyung/project/linux/tools/lib/perf/cpumap.c:79
-    #2 0x559fbbf6229c in perf_cpu_map__new /home/namhyung/project/linux/tools/lib/perf/cpumap.c:237
-    #3 0x559fbbcc6c6d in __add_event util/parse-events.c:357
-    #4 0x559fbbcc6c6d in add_event_tool util/parse-events.c:408
-    #5 0x559fbbcc6c6d in parse_events_add_tool util/parse-events.c:1414
-    #6 0x559fbbd8474d in parse_events_parse util/parse-events.y:439
-    #7 0x559fbbcc95da in parse_events__scanner util/parse-events.c:2096
-    #8 0x559fbbcc95da in __parse_events util/parse-events.c:2141
-    #9 0x559fbbc2788b in check_parse_id tests/pmu-events.c:406
-    #10 0x559fbbc2788b in check_parse_id tests/pmu-events.c:393
-    #11 0x559fbbc2788b in check_parse_fake tests/pmu-events.c:436
-    #12 0x559fbbc2788b in metric_parse_fake tests/pmu-events.c:553
-    #13 0x559fbbc27e2d in test_parsing_fake tests/pmu-events.c:599
-    #14 0x559fbbc27e2d in test_parsing_fake tests/pmu-events.c:574
-    #15 0x559fbbc0109b in run_test tests/builtin-test.c:410
-    #16 0x559fbbc0109b in test_and_print tests/builtin-test.c:440
-    #17 0x559fbbc03e69 in __cmd_test tests/builtin-test.c:695
-    #18 0x559fbbc03e69 in cmd_test tests/builtin-test.c:807
-    #19 0x559fbbc691f4 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:312
-    #20 0x559fbbb071a8 in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:364
-    #21 0x559fbbb071a8 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:408
-    #22 0x559fbbb071a8 in main /home/namhyung/project/linux/tools/perf/perf.c:538
-    #23 0x7fe366b68cc9 in __libc_start_main ../csu/libc-start.c:308
-
-And I've failed which commit introduced this bug as the code was
-heavily changed since then. ;-/
-
+Fixes: 0a507af9c681a ("perf tests: Add parse metric test for ipc metric")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/parse-events.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/tests/parse-metric.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index c4d2394e2b2d..b35e4bb1cecb 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -360,8 +360,11 @@ __add_event(struct list_head *list, int *idx,
- 		event_attr_init(attr);
+diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
+index 23db8acc492d..cd7331aac3bd 100644
+--- a/tools/perf/tests/parse-metric.c
++++ b/tools/perf/tests/parse-metric.c
+@@ -153,8 +153,10 @@ static int __compute_metric(const char *name, struct value *vals,
+ 		return -ENOMEM;
  
- 	evsel = evsel__new_idx(attr, *idx);
--	if (!evsel)
-+	if (!evsel) {
-+		if (!pmu)
-+			perf_cpu_map__put(cpus);
- 		return NULL;
+ 	cpus = perf_cpu_map__new("0");
+-	if (!cpus)
++	if (!cpus) {
++		evlist__delete(evlist);
+ 		return -ENOMEM;
 +	}
  
- 	(*idx)++;
- 	evsel->core.cpus   = perf_cpu_map__get(cpus);
-@@ -369,6 +372,8 @@ __add_event(struct list_head *list, int *idx,
- 	evsel->core.system_wide = pmu ? pmu->is_uncore : false;
- 	evsel->auto_merge_stats = auto_merge_stats;
+ 	perf_evlist__set_maps(&evlist->core, cpus, NULL);
  
-+	if (!pmu)
-+		perf_cpu_map__put(cpus);
- 	if (name)
- 		evsel->name = strdup(name);
+@@ -163,10 +165,11 @@ static int __compute_metric(const char *name, struct value *vals,
+ 					     false, false,
+ 					     &metric_events);
+ 	if (err)
+-		return err;
++		goto out;
  
+-	if (perf_evlist__alloc_stats(evlist, false))
+-		return -1;
++	err = perf_evlist__alloc_stats(evlist, false);
++	if (err)
++		goto out;
+ 
+ 	/* Load the runtime stats with given numbers for events. */
+ 	runtime_stat__init(&st);
+@@ -178,13 +181,14 @@ static int __compute_metric(const char *name, struct value *vals,
+ 	if (name2 && ratio2)
+ 		*ratio2 = compute_single(&metric_events, evlist, &st, name2);
+ 
++out:
+ 	/* ... clenup. */
+ 	metricgroup__rblist_exit(&metric_events);
+ 	runtime_stat__exit(&st);
+ 	perf_evlist__free_stats(evlist);
+ 	perf_cpu_map__put(cpus);
+ 	evlist__delete(evlist);
+-	return 0;
++	return err;
+ }
+ 
+ static int compute_metric(const char *name, struct value *vals, double *ratio)
 -- 
 2.28.0.526.ge36021eeef-goog
 
