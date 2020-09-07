@@ -2,277 +2,708 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B707FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38500C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CC821582
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C879D208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:27:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ADEQ6mmV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C8WTNzki"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbgIGI1d (ORCPT
+        id S1728241AbgIGI1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 7 Sep 2020 04:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728231AbgIGI1d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 04:27:33 -0400
-Received: from mail-eopbgr50064.outbound.protection.outlook.com ([40.107.5.64]:4871
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727807AbgIGI13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:27:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oILsGHpdQ1dzf2r5omP4c9BdSjP9To3IRDEFsNUVMbzb5rE4DSps9g2XrrlcdFIUJ9jxELrvmQvj0ZCA6InlWQhTvRyKe6CpiwBjInqzzrC57hH5NYM0eiDlYw7opIuPM7J7JQ00BCOneB32A2er/TCQw3GzxWn0txX42j27dK1H4gq0FH75WIUiNdATpeBcBeXBfWnP/HA4/PtxEnHVF/cXT0BVWtjpjh8tOorfWXOOdT2dZtVsg3YAbfGz5JZDHiwj7pnZ5LdY+r+bh2v2VR0LZHBC92uLG9ulInPpf/JvGUC2TJ99K6Z6fdTVW4PwqQ9H/soQvhSJNY/aP55gmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TB8kOdOSjiAVlNKxbmUy6tRq+Ki8u/HvlySC7+HxIck=;
- b=hlz/d1jfQpFmvAPcLrQrOQh7G+uLOHho5nLOMT1DMtVIGWtro3ne/dy4EGIYYxSY7qdOia84FVPfKpc4ldSNzLfgMqQqtkTQ5gYIPk2V04Mt741gorFIXIh244Q+cvqjlykwOLK9wvWM71+IdFEeuO2/7AWid6Q2DoOyJlY5Rki+Du3BsVwiqU9b9n92jZWgcdwAN+ac1cgXHWu7QwxWsgYT+nofgWGYp1GpZMeao1YHG2AV4yQXLVhSKIS9AD18vcTRrob+1N4l4N0jP6zWDWX/O7/HzGzgTYvgH7o8weoY5lffzxigSI1v6zc0/HyP4O/AS2hkE9Wb3HSP7mtczQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TB8kOdOSjiAVlNKxbmUy6tRq+Ki8u/HvlySC7+HxIck=;
- b=ADEQ6mmV8k3tpQH4jRBQNEaB2PbVvBdcVJ+xFhp9gitlQL7KCqL5vPEEAbdTIeX3w1jizKjlT/VpCNHf8Ofu379ENDsq4gtFqWb+0doM18bSFXQZYZk9w3IysJSa2YTMz0qEqDcHgT8SGfE2E8/CPJLRbfpvZuXyyhERt9jmeck=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4744.eurprd04.prod.outlook.com (2603:10a6:20b:5::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 08:27:22 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 08:27:22 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Topic: [PATCH 1/2] pinctrl: imx: Support building SCU pinctrl driver as
- module
-Thread-Index: AQHWW4NG7QhYBuGT3kq7iNp/SHXl7aldJ8Rg
-Date:   Mon, 7 Sep 2020 08:27:22 +0000
-Message-ID: <AM6PR04MB49669174B941A7A133469CFE80280@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fa86e64f-b854-430f-f883-08d85307d7ae
-x-ms-traffictypediagnostic: AM6PR04MB4744:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB4744CC3EF251CC42D6C827BF80280@AM6PR04MB4744.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RVpvynQS2byc6ZslyZ5DBhDJ4FR3wQQeGJwNJ+E9fUMASCIwcN0oiIKxbjl5VZNajPQhtUx5UrbcmA6pLJ79ic9+j+gf5fSixohDk8TnwV/aOlfKFLFmbYs5+AQKLzKgY/j8Xd72BMzKmm/01atReFFH9F3c/AFWx3ydkdSQF0e6qpdar3HhN1hg9O6SPSY+yCvC4AruJnJJ+exCv5x7I6+06TuZ5Vc0HVHADvsaIyrtBSIxHpEfKSBLZj/g8XO09EXP0bHEuYnYrGerIrw/JVhPAiGdLViomv9E/4jsQHjoWDcgRuFlNNDuTozhuYHsN94CLoXMLxZujZ0KUxq4upJm62igOpOHFfRKSmsVMgusvptpaApakQgUs6vQzBpw
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(136003)(366004)(396003)(9686003)(4326008)(26005)(44832011)(110136005)(2906002)(316002)(83380400001)(8936002)(8676002)(186003)(55016002)(86362001)(478600001)(71200400001)(33656002)(52536014)(66476007)(5660300002)(7696005)(64756008)(66446008)(66556008)(66946007)(6506007)(53546011)(76116006)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 82psVl/zHIfXAeVsAqSSgcpa3Aw+cxOvzkLB7W7D0nuLomcMUz9Gl//DbbYX1tIAohQBkxNzEshoB1NUa2BzPkjlaQrryqWOsI8O3PwzLynlN2ZBb+8qby8sIwmXsks4qA8dDCUbyXew1ZTgZ96QpJbmdnefbU0ciMrdmQ2CWO2HhRANVY/CW7YvyExIphYPGy106B86XN2fTkrMH8dH62WjjXxi4N9ztVlNtdpgMw0WjHVhhjUjNVPui6dMJlIhYvaxWhHu/Mj+j51nPxs7G4N1oLq5tvIWHWUJNPFJHnqnxuV0IJdI474FWZyDE83muAcUxh4qdBcEE26Zr+XuAmGfYa2nhFBwClfW8OgLKCs2plpEnGhFJCaZjCoM4cyzDQyEsuqoGjW3iAsXNFU95WZooF060vq9Ghu7Qy0lxDB16FBd/XVcD/fDnLnEOL/HCTgHZL+xc0g9Ge/UZtj9xT3+ti2byhtXuKVZjUvr951V3FrQkWAKPXWU0uwyZl3d7Yb3+2Kal6pRdN4G0Uq8l1V/80bXcu32sfOcNM6m2T5B/eErJEjCBmJnELfvOXQvLSukvEQWLNjkAjPrHP+zROEVOysR1QgpeNsIHtxN3xcJeSGzilisvcOVi8bwJb4nIz8340VvrjEVyfew3eg9/A==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93C2C061573;
+        Mon,  7 Sep 2020 01:27:31 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id v15so7698164pgh.6;
+        Mon, 07 Sep 2020 01:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DdOoYM6OPY1RbgCyxU17hdFmsegbNnICI2T/FOECueg=;
+        b=C8WTNzki3V34f340ur6v+mfqk1HdsIUBhe4SLq6wseCBVq5eWi6kXnWkWjJQGKeGu0
+         ZDfjYUqghD6mAgjv2K5akIyhnznHiUZETH7KDr5oq/HkorP2x3W87QIOTcmhNPxGdqFl
+         vd+qEeuSz4eXzwRH/PbRtYEGoQXCnLOzRkngcMYJDSOheLRbCCBu1R9mJCccLm1v1Qza
+         T/TAjh267bje1QsT0mZhFHeU6EwwR+YlVCRmGhzEa7vFlM2SHeGcOeh+n3u6t2fuOIL5
+         pv2gWdQZ2SgQq/K1jaOeKnhv8EBw++eZT5jcQtyx7NdAWrycftpsXltwhrafTUbUaGDA
+         /4OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DdOoYM6OPY1RbgCyxU17hdFmsegbNnICI2T/FOECueg=;
+        b=MTWO+nf7IsS5wxqEzK1Py3X+T1761eGJ/jQQ7va9MwkfiG6kVCbFuASFJ5ga4txrSV
+         p76Nf8W1aCrDrVikpD5MzgzHf4UgjVZG8aTGm8PVvSAbw/vdCQH4IXHYM6lezzcPip8+
+         m5fF534AxPyL06XctIVzfKQNEOSNT0lq3/Q1YR9u+VfoZs3Uk+jBMboOEhV3FUO8XG0O
+         dNwQuJWpbbMTacwjw5UVvkbHddock9sSiSSVtnPGC+O6CAuuhsiJxXYh4dAXSMdJEgqO
+         tVvdRhG8hpmK//A/uMjI1bQrok1S8cKNZkffQPM3QYjGzgSX8fmXNkcS3qnxH0U2kZJV
+         6hIg==
+X-Gm-Message-State: AOAM5329cPoSP45OXlkzcjas/RDTWri6uH6/XtiYxot97/7QrhehPADx
+        DEDY7ngG4uF8sC3LD1y/ObkJULkksGJXCGnrbmU=
+X-Google-Smtp-Source: ABdhPJxe0GQ5R+4iAvm4uidWTnFHE95BD5nj8jwhvyuugBKlENArPk3NQ66FM7jDp9iXRFZwYqyyt0gKOHYqMhyukgM=
+X-Received: by 2002:a63:ec4c:: with SMTP id r12mr15515102pgj.74.1599467251182;
+ Mon, 07 Sep 2020 01:27:31 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa86e64f-b854-430f-f883-08d85307d7ae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 08:27:22.0550
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MqeZG+4G6I/MOABSXja7pwJTIpkJbB/SRewv8oEj5lE5FK9TEBDCNDdUfvYzSKsXNJnneuUXTtvOpGyfjdhlog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4744
+References: <20200906185039.22700-1-digetx@gmail.com> <20200906185039.22700-28-digetx@gmail.com>
+In-Reply-To: <20200906185039.22700-28-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Sep 2020 11:27:13 +0300
+Message-ID: <CAHp75VfSyfJoEbFGEH32=841_2h4_8r+vVYO2BPHgSVvuatOag@mail.gmail.com>
+Subject: Re: [PATCH v5 27/36] i2c: tegra: Reorder location of functions in the code
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIEp1bHkgMTYsIDIwMjAgMTE6MDcgUE0NCj4gU3ViamVjdDogW1BBVENIIDEvMl0gcGluY3Ry
-bDogaW14OiBTdXBwb3J0IGJ1aWxkaW5nIFNDVSBwaW5jdHJsIGRyaXZlciBhcyBtb2R1bGUNCj4g
-DQo+IFRvIHN1cHBvcnQgYnVpbGRpbmcgaS5NWCBTQ1UgcGluY3RybCBkcml2ZXIgYXMgbW9kdWxl
-LCBiZWxvdyB0aGluZ3MgbmVlZCB0byBiZQ0KPiBjaGFuZ2VkOg0KPiANCj4gICAgIC0gRXhwb3J0
-IFNDVSByZWxhdGVkIGZ1bmN0aW9ucyANCg0KVGhpcyBsaW5lIHNlZW1zIG5vdCBjb21wbHkgd2l0
-aCB0aGUgcGF0Y2ggYW55bW9yZQ0KDQo+IGFuZCB1c2UgIklTX0VOQUJMRUQiIGluc3RlYWQgb2YN
-Cj4gICAgICAgImlmZGVmIiB0byBzdXBwb3J0IFNDVSBwaW5jdHJsIGRyaXZlciB1c2VyIGFuZCBp
-dHNlbGYgdG8gYmUNCj4gICAgICAgYnVpbHQgYXMgbW9kdWxlOw0KPiAgICAgLSBVc2UgZnVuY3Rp
-b24gY2FsbGJhY2tzIGZvciBTQ1UgcmVsYXRlZCBmdW5jdGlvbnMgaW4gcGluY3RybC1pbXguYw0K
-PiAgICAgICBpbiBvcmRlciB0byBzdXBwb3J0IHRoZSBzY2VuYXJpbyBvZiBQSU5DVFJMX0lNWCBp
-cyBidWlsdCBpbg0KPiAgICAgICB3aGlsZSBQSU5DVFJMX0lNWF9TQ1UgaXMgYnVpbHQgYXMgbW9k
-dWxlOw0KPiAgICAgLSBBbGwgZHJpdmVycyB1c2luZyBTQ1UgcGluY3RybCBkcml2ZXIgbmVlZCB0
-byBpbml0aWFsaXplIHRoZQ0KPiAgICAgICBTQ1UgcmVsYXRlZCBmdW5jdGlvbiBjYWxsYmFjazsN
-Cj4gICAgIC0gQ2hhbmdlIFBJTkNUUl9JTVhfU0NVIHRvIHRyaXN0YXRlOw0KPiAgICAgLSBBZGQg
-bW9kdWxlIGF1dGhvciwgZGVzY3JpcHRpb24gYW5kIGxpY2Vuc2UuDQo+IA0KPiBXaXRoIGFib3Zl
-IGNoYW5nZXMsIGkuTVggU0NVIHBpbmN0cmwgZHJpdmVyIGNhbiBiZSBidWlsdCBhcyBtb2R1bGUu
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4N
-Cj4gLS0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL0tjb25maWcgICAgICAgICAgIHwg
-IDIgKy0NCj4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguYyAgICAgfCAg
-OCArKy0tDQo+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmggICAgIHwg
-NTcgKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0NCj4gIGRyaXZlcnMvcGluY3RybC9mcmVl
-c2NhbGUvcGluY3RybC1pbXg4ZHhsLmMgfCAgMyArKw0KPiBkcml2ZXJzL3BpbmN0cmwvZnJlZXNj
-YWxlL3BpbmN0cmwtaW14OHFtLmMgIHwgIDMgKysNCj4gZHJpdmVycy9waW5jdHJsL2ZyZWVzY2Fs
-ZS9waW5jdHJsLWlteDhxeHAuYyB8ICAzICsrDQo+ICBkcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
-L3BpbmN0cmwtc2N1LmMgICAgIHwgIDUgKysrDQo+ICA3IGZpbGVzIGNoYW5nZWQsIDQyIGluc2Vy
-dGlvbnMoKyksIDM5IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGlu
-Y3RybC9mcmVlc2NhbGUvS2NvbmZpZyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZp
-Zw0KPiBpbmRleCAwOGZjZjVjLi41NzAzNTVjIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0
-cmwvZnJlZXNjYWxlL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9L
-Y29uZmlnDQo+IEBAIC03LDcgKzcsNyBAQCBjb25maWcgUElOQ1RSTF9JTVgNCj4gIAlzZWxlY3Qg
-UkVHTUFQDQo+IA0KPiAgY29uZmlnIFBJTkNUUkxfSU1YX1NDVQ0KPiAtCWJvb2wNCj4gKwl0cmlz
-dGF0ZSAiSU1YIFNDVSBwaW5jdHJsIGRyaXZlciINCg0KSU1YIFNDVSBwaW5jdHJsIGNvcmUgZHJp
-dmVyDQoNCj4gIAlkZXBlbmRzIG9uIElNWF9TQ1UNCj4gIAlzZWxlY3QgUElOQ1RSTF9JTVgNCj4g
-DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMN
-Cj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMNCj4gaW5kZXggNTA3
-ZTRhZi4uYjgwYzQ1MCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9w
-aW5jdHJsLWlteC5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1p
-bXguYw0KPiBAQCAtMzczLDcgKzM3Myw3IEBAIHN0YXRpYyBpbnQgaW14X3BpbmNvbmZfZ2V0KHN0
-cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCj4gIAljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxf
-c29jX2luZm8gKmluZm8gPSBpcGN0bC0+aW5mbzsNCj4gDQo+ICAJaWYgKGluZm8tPmZsYWdzICYg
-SU1YX1VTRV9TQ1UpDQo+IC0JCXJldHVybiBpbXhfcGluY29uZl9nZXRfc2N1KHBjdGxkZXYsIHBp
-bl9pZCwgY29uZmlnKTsNCj4gKwkJcmV0dXJuIGluZm8tPmlteF9waW5jb25mX2dldChwY3RsZGV2
-LCBwaW5faWQsIGNvbmZpZyk7DQo+ICAJZWxzZQ0KPiAgCQlyZXR1cm4gaW14X3BpbmNvbmZfZ2V0
-X21taW8ocGN0bGRldiwgcGluX2lkLCBjb25maWcpOyAgfSBAQCAtNDIzLDcNCj4gKzQyMyw3IEBA
-IHN0YXRpYyBpbnQgaW14X3BpbmNvbmZfc2V0KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwN
-Cj4gIAljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmluZm8gPSBpcGN0bC0+aW5m
-bzsNCj4gDQo+ICAJaWYgKGluZm8tPmZsYWdzICYgSU1YX1VTRV9TQ1UpDQo+IC0JCXJldHVybiBp
-bXhfcGluY29uZl9zZXRfc2N1KHBjdGxkZXYsIHBpbl9pZCwNCj4gKwkJcmV0dXJuIGluZm8tPmlt
-eF9waW5jb25mX3NldChwY3RsZGV2LCBwaW5faWQsDQo+ICAJCQkJCSAgIGNvbmZpZ3MsIG51bV9j
-b25maWdzKTsNCj4gIAllbHNlDQo+ICAJCXJldHVybiBpbXhfcGluY29uZl9zZXRfbW1pbyhwY3Rs
-ZGV2LCBwaW5faWQsIEBAIC00NDAsNyArNDQwLDcNCj4gQEAgc3RhdGljIHZvaWQgaW14X3BpbmNv
-bmZfZGJnX3Nob3coc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiAgCWludCByZXQ7DQo+
-IA0KPiAgCWlmIChpbmZvLT5mbGFncyAmIElNWF9VU0VfU0NVKSB7DQo+IC0JCXJldCA9IGlteF9w
-aW5jb25mX2dldF9zY3UocGN0bGRldiwgcGluX2lkLCAmY29uZmlnKTsNCj4gKwkJcmV0ID0gaW5m
-by0+aW14X3BpbmNvbmZfZ2V0KHBjdGxkZXYsIHBpbl9pZCwgJmNvbmZpZyk7DQo+ICAJCWlmIChy
-ZXQpIHsNCj4gIAkJCWRldl9lcnIoaXBjdGwtPmRldiwgImZhaWxlZCB0byBnZXQgJXMgcGluY29u
-ZlxuIiwNCj4gIAkJCQlwaW5fZ2V0X25hbWUocGN0bGRldiwgcGluX2lkKSk7DQo+IEBAIC02Mjks
-NyArNjI5LDcgQEAgc3RhdGljIGludCBpbXhfcGluY3RybF9wYXJzZV9ncm91cHMoc3RydWN0IGRl
-dmljZV9ub2RlDQo+ICpucCwNCj4gIAlmb3IgKGkgPSAwOyBpIDwgZ3JwLT5udW1fcGluczsgaSsr
-KSB7DQo+ICAJCXBpbiA9ICYoKHN0cnVjdCBpbXhfcGluICopKGdycC0+ZGF0YSkpW2ldOw0KPiAg
-CQlpZiAoaW5mby0+ZmxhZ3MgJiBJTVhfVVNFX1NDVSkNCj4gLQkJCWlteF9waW5jdHJsX3BhcnNl
-X3Bpbl9zY3UoaXBjdGwsICZncnAtPnBpbnNbaV0sDQo+ICsJCQlpbmZvLT5pbXhfcGluY3RybF9w
-YXJzZV9waW4oaXBjdGwsICZncnAtPnBpbnNbaV0sDQo+ICAJCQkJCQkgIHBpbiwgJmxpc3QpOw0K
-PiAgCQllbHNlDQo+ICAJCQlpbXhfcGluY3RybF9wYXJzZV9waW5fbW1pbyhpcGN0bCwgJmdycC0+
-cGluc1tpXSwgZGlmZiAtLWdpdA0KPiBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3Ry
-bC1pbXguaCBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiBpbmRl
-eCAzMzNkMzJiLi5iZGI4NmMyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNj
-YWxlL3BpbmN0cmwtaW14LmgNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5j
-dHJsLWlteC5oDQo+IEBAIC03NSw2ICs3NSwyMSBAQCBzdHJ1Y3QgaW14X2NmZ19wYXJhbXNfZGVj
-b2RlIHsNCj4gIAlib29sIGludmVydDsNCj4gIH07DQo+IA0KPiArLyoqDQo+ICsgKiBAZGV2OiBh
-IHBvaW50ZXIgYmFjayB0byBjb250YWluaW5nIGRldmljZQ0KPiArICogQGJhc2U6IHRoZSBvZmZz
-ZXQgdG8gdGhlIGNvbnRyb2xsZXIgaW4gdmlydHVhbCBtZW1vcnkgICovIHN0cnVjdA0KPiAraW14
-X3BpbmN0cmwgew0KPiArCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gKwlzdHJ1Y3QgcGluY3RybF9k
-ZXYgKnBjdGw7DQo+ICsJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiArCXZvaWQgX19pb21lbSAqaW5w
-dXRfc2VsX2Jhc2U7DQo+ICsJY29uc3Qgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvICppbmZv
-Ow0KPiArCXN0cnVjdCBpbXhfcGluX3JlZyAqcGluX3JlZ3M7DQo+ICsJdW5zaWduZWQgaW50IGdy
-b3VwX2luZGV4Ow0KPiArCXN0cnVjdCBtdXRleCBtdXRleDsNCj4gK307DQoNCkFueSByZWFzb24g
-dG8gbW92ZSB0aGlzIHBhcnQgb2YgY29kZT8NCg0KUmVnYXJkcw0KQWlzaGVuZw0KDQo+ICsNCj4g
-IHN0cnVjdCBpbXhfcGluY3RybF9zb2NfaW5mbyB7DQo+ICAJY29uc3Qgc3RydWN0IHBpbmN0cmxf
-cGluX2Rlc2MgKnBpbnM7DQo+ICAJdW5zaWduZWQgaW50IG5waW5zOw0KPiBAQCAtOTgsMjEgKzEx
-MywxMyBAQCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gew0KPiAgCQkJCSAgc3RydWN0IHBp
-bmN0cmxfZ3Bpb19yYW5nZSAqcmFuZ2UsDQo+ICAJCQkJICB1bnNpZ25lZCBvZmZzZXQsDQo+ICAJ
-CQkJICBib29sIGlucHV0KTsNCj4gLX07DQo+IC0NCj4gLS8qKg0KPiAtICogQGRldjogYSBwb2lu
-dGVyIGJhY2sgdG8gY29udGFpbmluZyBkZXZpY2UNCj4gLSAqIEBiYXNlOiB0aGUgb2Zmc2V0IHRv
-IHRoZSBjb250cm9sbGVyIGluIHZpcnR1YWwgbWVtb3J5DQo+IC0gKi8NCj4gLXN0cnVjdCBpbXhf
-cGluY3RybCB7DQo+IC0Jc3RydWN0IGRldmljZSAqZGV2Ow0KPiAtCXN0cnVjdCBwaW5jdHJsX2Rl
-diAqcGN0bDsNCj4gLQl2b2lkIF9faW9tZW0gKmJhc2U7DQo+IC0Jdm9pZCBfX2lvbWVtICppbnB1
-dF9zZWxfYmFzZTsNCj4gLQljb25zdCBzdHJ1Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gKmluZm87
-DQo+IC0Jc3RydWN0IGlteF9waW5fcmVnICpwaW5fcmVnczsNCj4gLQl1bnNpZ25lZCBpbnQgZ3Jv
-dXBfaW5kZXg7DQo+IC0Jc3RydWN0IG11dGV4IG11dGV4Ow0KPiArCWludCAoKmlteF9waW5jb25m
-X2dldCkoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LCB1bnNpZ25lZCBpbnQgcGluX2lkLA0K
-PiArCQkJICAgICAgIHVuc2lnbmVkIGxvbmcgKmNvbmZpZyk7DQo+ICsJaW50ICgqaW14X3BpbmNv
-bmZfc2V0KShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsIHVuc2lnbmVkIGludCBwaW5faWQs
-DQo+ICsJCQkgICAgICAgdW5zaWduZWQgbG9uZyAqY29uZmlncywgdW5zaWduZWQgaW50IG51bV9j
-b25maWdzKTsNCj4gKwl2b2lkICgqaW14X3BpbmN0cmxfcGFyc2VfcGluKShzdHJ1Y3QgaW14X3Bp
-bmN0cmwgKmlwY3RsLA0KPiArCQkJCSAgICAgIHVuc2lnbmVkIGludCAqcGluX2lkLCBzdHJ1Y3Qg
-aW14X3BpbiAqcGluLA0KPiArCQkJCSAgICAgIGNvbnN0IF9fYmUzMiAqKmxpc3RfcCk7DQo+ICB9
-Ow0KPiANCj4gICNkZWZpbmUgSU1YX0NGR19QQVJBTVNfREVDT0RFKHAsIG0sIG8pIFwgQEAgLTEz
-Nyw3ICsxNDQsNyBAQCBzdHJ1Y3QNCj4gaW14X3BpbmN0cmwgeyAgaW50IGlteF9waW5jdHJsX3By
-b2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ICAJCQljb25zdCBzdHJ1Y3QgaW14
-X3BpbmN0cmxfc29jX2luZm8gKmluZm8pOw0KPiANCj4gLSNpZmRlZiBDT05GSUdfUElOQ1RSTF9J
-TVhfU0NVDQo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUElOQ1RSTF9JTVhfU0NVKQ0KPiAgI2Rl
-ZmluZSBCTV9QQURfQ1RMX0dQX0VOQUJMRQkJQklUKDMwKQ0KPiAgI2RlZmluZSBCTV9QQURfQ1RM
-X0lGTVVYX0VOQUJMRQkJQklUKDMxKQ0KPiAgI2RlZmluZSBCUF9QQURfQ1RMX0lGTVVYCQkyNw0K
-PiBAQCAtMTUwLDIzICsxNTcsNSBAQCBpbnQgaW14X3BpbmNvbmZfc2V0X3NjdShzdHJ1Y3QgcGlu
-Y3RybF9kZXYgKnBjdGxkZXYsDQo+IHVuc2lnbmVkIHBpbl9pZCwgIHZvaWQgaW14X3BpbmN0cmxf
-cGFyc2VfcGluX3NjdShzdHJ1Y3QgaW14X3BpbmN0cmwgKmlwY3RsLA0KPiAgCQkJICAgICAgIHVu
-c2lnbmVkIGludCAqcGluX2lkLCBzdHJ1Y3QgaW14X3BpbiAqcGluLA0KPiAgCQkJICAgICAgIGNv
-bnN0IF9fYmUzMiAqKmxpc3RfcCk7DQo+IC0jZWxzZQ0KPiAtc3RhdGljIGlubGluZSBpbnQgaW14
-X3BpbmNvbmZfZ2V0X3NjdShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQo+IC0JCQkJICAg
-ICAgdW5zaWduZWQgcGluX2lkLCB1bnNpZ25lZCBsb25nICpjb25maWcpDQo+IC17DQo+IC0JcmV0
-dXJuIC1FSU5WQUw7DQo+IC19DQo+IC1zdGF0aWMgaW5saW5lIGludCBpbXhfcGluY29uZl9zZXRf
-c2N1KHN0cnVjdCBwaW5jdHJsX2RldiAqcGN0bGRldiwNCj4gLQkJCQkgICAgICB1bnNpZ25lZCBw
-aW5faWQsIHVuc2lnbmVkIGxvbmcgKmNvbmZpZ3MsDQo+IC0JCQkJICAgICAgdW5zaWduZWQgbnVt
-X2NvbmZpZ3MpDQo+IC17DQo+IC0JcmV0dXJuIC1FSU5WQUw7DQo+IC19DQo+IC1zdGF0aWMgaW5s
-aW5lIHZvaWQgaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdShzdHJ1Y3QgaW14X3BpbmN0cmwgKmlw
-Y3RsLA0KPiAtCQkJCQkgICAgdW5zaWduZWQgaW50ICpwaW5faWQsDQo+IC0JCQkJCSAgICBzdHJ1
-Y3QgaW14X3BpbiAqcGluLA0KPiAtCQkJCQkgICAgY29uc3QgX19iZTMyICoqbGlzdF9wKQ0KPiAt
-ew0KPiAtfQ0KPiAgI2VuZGlmDQo+ICAjZW5kaWYgLyogX19EUklWRVJTX1BJTkNUUkxfSU1YX0gg
-Ki8NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4
-ZHhsLmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OGR4bC5jDQo+
-IGluZGV4IDEyYjk3ZGEuLmQzMDIwYzAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9m
-cmVlc2NhbGUvcGluY3RybC1pbXg4ZHhsLmMNCj4gKysrIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVz
-Y2FsZS9waW5jdHJsLWlteDhkeGwuYw0KPiBAQCAtMTU5LDYgKzE1OSw5IEBAIHN0YXRpYyBzdHJ1
-Y3QgaW14X3BpbmN0cmxfc29jX2luZm8gaW14OGR4bF9waW5jdHJsX2luZm8NCj4gPSB7DQo+ICAJ
-LnBpbnMgPSBpbXg4ZHhsX3BpbmN0cmxfcGFkcywNCj4gIAkubnBpbnMgPSBBUlJBWV9TSVpFKGlt
-eDhkeGxfcGluY3RybF9wYWRzKSwNCj4gIAkuZmxhZ3MgPSBJTVhfVVNFX1NDVSwNCj4gKwkuaW14
-X3BpbmNvbmZfZ2V0ID0gaW14X3BpbmNvbmZfZ2V0X3NjdSwNCj4gKwkuaW14X3BpbmNvbmZfc2V0
-ID0gaW14X3BpbmNvbmZfc2V0X3NjdSwNCj4gKwkuaW14X3BpbmN0cmxfcGFyc2VfcGluID0gaW14
-X3BpbmN0cmxfcGFyc2VfcGluX3NjdSwNCj4gIH07DQo+IA0KPiAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgaW14OGR4bF9waW5jdHJsX29mX21hdGNoW10gPSB7IGRpZmYgLS1naXQN
-Cj4gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHFtLmMNCj4gYi9kcml2
-ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHFtLmMNCj4gaW5kZXggMDk1YWNmNC4u
-OGY0NmI5NDAgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3Ry
-bC1pbXg4cW0uYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14
-OHFtLmMNCj4gQEAgLTI5Miw2ICsyOTIsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGlteF9waW5j
-dHJsX3NvY19pbmZvDQo+IGlteDhxbV9waW5jdHJsX2luZm8gPSB7DQo+ICAJLnBpbnMgPSBpbXg4
-cW1fcGluY3RybF9wYWRzLA0KPiAgCS5ucGlucyA9IEFSUkFZX1NJWkUoaW14OHFtX3BpbmN0cmxf
-cGFkcyksDQo+ICAJLmZsYWdzID0gSU1YX1VTRV9TQ1UsDQo+ICsJLmlteF9waW5jb25mX2dldCA9
-IGlteF9waW5jb25mX2dldF9zY3UsDQo+ICsJLmlteF9waW5jb25mX3NldCA9IGlteF9waW5jb25m
-X3NldF9zY3UsDQo+ICsJLmlteF9waW5jdHJsX3BhcnNlX3BpbiA9IGlteF9waW5jdHJsX3BhcnNl
-X3Bpbl9zY3UsDQo+ICB9Ow0KPiANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
-IGlteDhxbV9waW5jdHJsX29mX21hdGNoW10gPSB7IGRpZmYgLS1naXQNCj4gYS9kcml2ZXJzL3Bp
-bmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHF4cC5jDQo+IGIvZHJpdmVycy9waW5jdHJsL2Zy
-ZWVzY2FsZS9waW5jdHJsLWlteDhxeHAuYw0KPiBpbmRleCA4MWViZDRjLi42Nzc2YWQ2IDEwMDY0
-NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14OHF4cC5jDQo+
-ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXg4cXhwLmMNCj4gQEAg
-LTE5OCw2ICsxOTgsOSBAQCBzdGF0aWMgc3RydWN0IGlteF9waW5jdHJsX3NvY19pbmZvIGlteDhx
-eHBfcGluY3RybF9pbmZvDQo+ID0gew0KPiAgCS5waW5zID0gaW14OHF4cF9waW5jdHJsX3BhZHMs
-DQo+ICAJLm5waW5zID0gQVJSQVlfU0laRShpbXg4cXhwX3BpbmN0cmxfcGFkcyksDQo+ICAJLmZs
-YWdzID0gSU1YX1VTRV9TQ1UsDQo+ICsJLmlteF9waW5jb25mX2dldCA9IGlteF9waW5jb25mX2dl
-dF9zY3UsDQo+ICsJLmlteF9waW5jb25mX3NldCA9IGlteF9waW5jb25mX3NldF9zY3UsDQo+ICsJ
-LmlteF9waW5jdHJsX3BhcnNlX3BpbiA9IGlteF9waW5jdHJsX3BhcnNlX3Bpbl9zY3UsDQo+ICB9
-Ow0KPiANCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGlteDhxeHBfcGluY3Ry
-bF9vZl9tYXRjaFtdID0geyBkaWZmIC0tZ2l0DQo+IGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2Fs
-ZS9waW5jdHJsLXNjdS5jIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLXNjdS5j
-DQo+IGluZGV4IDlkZjQ1ZDMuLjU5YjVmOGEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3Ry
-bC9mcmVlc2NhbGUvcGluY3RybC1zY3UuYw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNj
-YWxlL3BpbmN0cmwtc2N1LmMNCj4gQEAgLTcsNiArNyw3IEBADQo+IA0KPiAgI2luY2x1ZGUgPGxp
-bnV4L2Vyci5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L2Zpcm13YXJlL2lteC9zY2kuaD4NCj4gKyNp
-bmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+
-DQo+ICAjaW5jbHVkZSA8bGludXgvcGluY3RybC9waW5jdHJsLmg+DQo+ICAjaW5jbHVkZSA8bGlu
-dXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+IEBAIC0xMjMsMyArMTI0LDcgQEAgdm9pZCBpbXhfcGlu
-Y3RybF9wYXJzZV9waW5fc2N1KHN0cnVjdCBpbXhfcGluY3RybA0KPiAqaXBjdGwsDQo+ICAJCXBp
-bl9zY3UtPm11eF9tb2RlLCBwaW5fc2N1LT5jb25maWcpOw0KPiAgfQ0KPiAgRVhQT1JUX1NZTUJP
-TF9HUEwoaW14X3BpbmN0cmxfcGFyc2VfcGluX3NjdSk7DQo+ICsNCj4gK01PRFVMRV9BVVRIT1Io
-IkRvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+Iik7DQo+ICtNT0RVTEVfREVTQ1JJ
-UFRJT04oIk5YUCBpLk1YIFNDVSBjb21tb24gcGluY3RybCBkcml2ZXIiKTsNCj4gK01PRFVMRV9M
-SUNFTlNFKCJHUEwgdjIiKTsNCj4gLS0NCj4gMi43LjQNCg0K
+On Sun, Sep 6, 2020 at 9:52 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Reorder location of functions in the code in order to have definition
+> of functions closer to the place of the invocation. This change makes
+> easier to navigate around the code and removes the need to have a
+> prototype for tegra_i2c_init().
+>
+
+This patch as 25th and one I commented before have a ping-pong style
+of programming (you touch a lot of LOCs which you introduced in
+previous patches). Please try to reorder series in a way that you
+minimize the churn of shuffling the code.
+
+> Reviewed-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 482 ++++++++++++++++-----------------
+>  1 file changed, 240 insertions(+), 242 deletions(-)
+>
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegr=
+a.c
+> index 5fe138ead45e..d34b6bb295b9 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -288,8 +288,6 @@ struct tegra_i2c_dev {
+>         bool is_curr_atomic_xfer;
+>  };
+>
+> -static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev);
+> -
+>  static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val, u32 reg)
+>  {
+>         writel_relaxed(val, i2c_dev->base + reg);
+> @@ -463,174 +461,6 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev =
+*i2c_dev)
+>         return err;
+>  }
+>
+> -static int tegra_i2c_poll_register(struct tegra_i2c_dev *i2c_dev,
+> -                                  u32 reg, u32 mask, u32 delay_us,
+> -                                  u32 timeout_us)
+> -{
+> -       void __iomem *addr =3D i2c_dev->base + tegra_i2c_reg_addr(i2c_dev=
+, reg);
+> -       u32 val;
+> -
+> -       if (!i2c_dev->is_curr_atomic_xfer)
+> -               return readl_relaxed_poll_timeout(addr, val, !(val & mask=
+),
+> -                                                 delay_us, timeout_us);
+> -
+> -       return readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask)=
+,
+> -                                                delay_us, timeout_us);
+> -}
+> -
+> -static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+> -{
+> -       u32 mask, val, offset;
+> -       int err;
+> -
+> -       if (i2c_dev->hw->has_mst_fifo) {
+> -               mask =3D I2C_MST_FIFO_CONTROL_TX_FLUSH |
+> -                      I2C_MST_FIFO_CONTROL_RX_FLUSH;
+> -               offset =3D I2C_MST_FIFO_CONTROL;
+> -       } else {
+> -               mask =3D I2C_FIFO_CONTROL_TX_FLUSH |
+> -                      I2C_FIFO_CONTROL_RX_FLUSH;
+> -               offset =3D I2C_FIFO_CONTROL;
+> -       }
+> -
+> -       val =3D i2c_readl(i2c_dev, offset);
+> -       val |=3D mask;
+> -       i2c_writel(i2c_dev, val, offset);
+> -
+> -       err =3D tegra_i2c_poll_register(i2c_dev, offset, mask, 1000, 1000=
+000);
+> -       if (err) {
+> -               dev_err(i2c_dev->dev, "failed to flush FIFO\n");
+> -               return err;
+> -       }
+> -       return 0;
+> -}
+> -
+> -static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+> -{
+> -       size_t buf_remaining =3D i2c_dev->msg_buf_remaining;
+> -       u8 *buf =3D i2c_dev->msg_buf;
+> -       int words_to_transfer;
+> -       int rx_fifo_avail;
+> -       u32 val;
+> -
+> -       /*
+> -        * Catch overflow due to message fully sent
+> -        * before the check for RX FIFO availability.
+> -        */
+> -       if (WARN_ON_ONCE(!(i2c_dev->msg_buf_remaining)))
+> -               return -EINVAL;
+> -
+> -       if (i2c_dev->hw->has_mst_fifo) {
+> -               val =3D i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
+> -               rx_fifo_avail =3D FIELD_GET(I2C_MST_FIFO_STATUS_RX, val);
+> -       } else {
+> -               val =3D i2c_readl(i2c_dev, I2C_FIFO_STATUS);
+> -               rx_fifo_avail =3D FIELD_GET(I2C_FIFO_STATUS_RX, val);
+> -       }
+> -
+> -       /* Rounds down to not include partial word at the end of buf */
+> -       words_to_transfer =3D buf_remaining / BYTES_PER_FIFO_WORD;
+> -       if (words_to_transfer > rx_fifo_avail)
+> -               words_to_transfer =3D rx_fifo_avail;
+> -
+> -       i2c_readsl(i2c_dev, buf, I2C_RX_FIFO, words_to_transfer);
+> -
+> -       buf +=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> -       buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> -       rx_fifo_avail -=3D words_to_transfer;
+> -
+> -       /*
+> -        * If there is a partial word at the end of buf, handle it manual=
+ly to
+> -        * prevent overwriting past the end of buf
+> -        */
+> -       if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> -               /*
+> -                * buf_remaining > 3 check not needed as rx_fifo_avail =
+=3D=3D 0
+> -                * when (words_to_transfer was > rx_fifo_avail) earlier
+> -                * in this function.
+> -                */
+> -               val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
+> -               val =3D cpu_to_le32(val);
+> -               memcpy(buf, &val, buf_remaining);
+> -               buf_remaining =3D 0;
+> -               rx_fifo_avail--;
+> -       }
+> -
+> -       /* RX FIFO must be drained, otherwise it's an Overflow case. */
+> -       if (WARN_ON_ONCE(rx_fifo_avail))
+> -               return -EINVAL;
+> -
+> -       i2c_dev->msg_buf_remaining =3D buf_remaining;
+> -       i2c_dev->msg_buf =3D buf;
+> -
+> -       return 0;
+> -}
+> -
+> -static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+> -{
+> -       size_t buf_remaining =3D i2c_dev->msg_buf_remaining;
+> -       u8 *buf =3D i2c_dev->msg_buf;
+> -       int words_to_transfer;
+> -       int tx_fifo_avail;
+> -       u32 val;
+> -
+> -       if (i2c_dev->hw->has_mst_fifo) {
+> -               val =3D i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
+> -               tx_fifo_avail =3D FIELD_GET(I2C_MST_FIFO_STATUS_TX, val);
+> -       } else {
+> -               val =3D i2c_readl(i2c_dev, I2C_FIFO_STATUS);
+> -               tx_fifo_avail =3D FIELD_GET(I2C_FIFO_STATUS_TX, val);
+> -       }
+> -
+> -       /* Rounds down to not include partial word at the end of buf */
+> -       words_to_transfer =3D buf_remaining / BYTES_PER_FIFO_WORD;
+> -
+> -       /* It's very common to have < 4 bytes, so optimize that case. */
+> -       if (words_to_transfer) {
+> -               if (words_to_transfer > tx_fifo_avail)
+> -                       words_to_transfer =3D tx_fifo_avail;
+> -
+> -               /*
+> -                * Update state before writing to FIFO.  Note that this m=
+ay
+> -                * cause us to finish writing all bytes (AKA buf_remainin=
+g
+> -                * goes to 0), hence we have a potential for an interrupt
+> -                * (PACKET_XFER_COMPLETE is not maskable), but GIC interr=
+upt
+> -                * is disabled at this point.
+> -                */
+> -               buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WOR=
+D;
+> -               tx_fifo_avail -=3D words_to_transfer;
+> -               i2c_dev->msg_buf_remaining =3D buf_remaining;
+> -               i2c_dev->msg_buf =3D buf +
+> -                       words_to_transfer * BYTES_PER_FIFO_WORD;
+> -
+> -               i2c_writesl(i2c_dev, buf, I2C_TX_FIFO, words_to_transfer)=
+;
+> -
+> -               buf +=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> -       }
+> -
+> -       /*
+> -        * If there is a partial word at the end of buf, handle it manual=
+ly to
+> -        * prevent reading past the end of buf, which could cross a page
+> -        * boundary and fault.
+> -        */
+> -       if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> -               /*
+> -                * buf_remaining > 3 check not needed as tx_fifo_avail =
+=3D=3D 0
+> -                * when (words_to_transfer was > tx_fifo_avail) earlier
+> -                * in this function for non-zero words_to_transfer.
+> -                */
+> -               memcpy(&val, buf, buf_remaining);
+> -               val =3D le32_to_cpu(val);
+> -
+> -               i2c_dev->msg_buf_remaining =3D 0;
+> -               i2c_dev->msg_buf =3D NULL;
+> -
+> -               i2c_writel(i2c_dev, val, I2C_TX_FIFO);
+> -       }
+> -
+> -       return 0;
+> -}
+> -
+>  /*
+>   * One of the Tegra I2C blocks is inside the DVC (Digital Voltage Contro=
+ller)
+>   * block.  This block is identical to the rest of the I2C blocks, except=
+ that
+> @@ -652,46 +482,48 @@ static void tegra_dvc_init(struct tegra_i2c_dev *i2=
+c_dev)
+>         dvc_writel(i2c_dev, val, DVC_CTRL_REG1);
+>  }
+>
+> -static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+> +static void tegra_i2c_vi_init(struct tegra_i2c_dev *i2c_dev)
+>  {
+> -       struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+> -       int ret;
+> +       u32 value;
+>
+> -       ret =3D pinctrl_pm_select_default_state(i2c_dev->dev);
+> -       if (ret)
+> -               return ret;
+> +       value =3D FIELD_PREP(I2C_INTERFACE_TIMING_THIGH, 2) |
+> +               FIELD_PREP(I2C_INTERFACE_TIMING_TLOW, 4);
+> +       i2c_writel(i2c_dev, value, I2C_INTERFACE_TIMING_0);
+>
+> -       ret =3D clk_bulk_enable(i2c_dev->nclocks, i2c_dev->clocks);
+> -       if (ret)
+> -               return ret;
+> +       value =3D FIELD_PREP(I2C_INTERFACE_TIMING_TBUF, 4) |
+> +               FIELD_PREP(I2C_INTERFACE_TIMING_TSU_STO, 7) |
+> +               FIELD_PREP(I2C_INTERFACE_TIMING_THD_STA, 4) |
+> +               FIELD_PREP(I2C_INTERFACE_TIMING_TSU_STA, 4);
+> +       i2c_writel(i2c_dev, value, I2C_INTERFACE_TIMING_1);
+>
+> -       /*
+> -        * VI I2C device is attached to VE power domain which goes throug=
+h
+> -        * power ON/OFF during PM runtime resume/suspend. So, controller
+> -        * should go through reset and need to re-initialize after power
+> -        * domain ON.
+> -        */
+> -       if (i2c_dev->is_vi) {
+> -               ret =3D tegra_i2c_init(i2c_dev);
+> -               if (ret)
+> -                       goto disable_clocks;
+> -       }
+> +       value =3D FIELD_PREP(I2C_HS_INTERFACE_TIMING_THIGH, 3) |
+> +               FIELD_PREP(I2C_HS_INTERFACE_TIMING_TLOW, 8);
+> +       i2c_writel(i2c_dev, value, I2C_HS_INTERFACE_TIMING_0);
+>
+> -       return 0;
+> +       value =3D FIELD_PREP(I2C_HS_INTERFACE_TIMING_TSU_STO, 11) |
+> +               FIELD_PREP(I2C_HS_INTERFACE_TIMING_THD_STA, 11) |
+> +               FIELD_PREP(I2C_HS_INTERFACE_TIMING_TSU_STA, 11);
+> +       i2c_writel(i2c_dev, value, I2C_HS_INTERFACE_TIMING_1);
+>
+> -disable_clocks:
+> -       clk_bulk_disable(i2c_dev->nclocks, i2c_dev->clocks);
+> +       value =3D FIELD_PREP(I2C_BC_SCLK_THRESHOLD, 9) | I2C_BC_STOP_COND=
+;
+> +       i2c_writel(i2c_dev, value, I2C_BUS_CLEAR_CNFG);
+>
+> -       return ret;
+> +       i2c_writel(i2c_dev, 0x0, I2C_TLOW_SEXT);
+>  }
+>
+> -static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+> +static int tegra_i2c_poll_register(struct tegra_i2c_dev *i2c_dev,
+> +                                  u32 reg, u32 mask, u32 delay_us,
+> +                                  u32 timeout_us)
+>  {
+> -       struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+> +       void __iomem *addr =3D i2c_dev->base + tegra_i2c_reg_addr(i2c_dev=
+, reg);
+> +       u32 val;
+>
+> -       clk_bulk_disable(i2c_dev->nclocks, i2c_dev->clocks);
+> +       if (!i2c_dev->is_curr_atomic_xfer)
+> +               return readl_relaxed_poll_timeout(addr, val, !(val & mask=
+),
+> +                                                 delay_us, timeout_us);
+>
+> -       return pinctrl_pm_select_idle_state(i2c_dev->dev);
+> +       return readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask)=
+,
+> +                                                delay_us, timeout_us);
+>  }
+>
+>  static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+> @@ -713,33 +545,31 @@ static int tegra_i2c_wait_for_config_load(struct te=
+gra_i2c_dev *i2c_dev)
+>         return 0;
+>  }
+>
+> -static void tegra_i2c_vi_init(struct tegra_i2c_dev *i2c_dev)
+> +static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+>  {
+> -       u32 value;
+> -
+> -       value =3D FIELD_PREP(I2C_INTERFACE_TIMING_THIGH, 2) |
+> -               FIELD_PREP(I2C_INTERFACE_TIMING_TLOW, 4);
+> -       i2c_writel(i2c_dev, value, I2C_INTERFACE_TIMING_0);
+> -
+> -       value =3D FIELD_PREP(I2C_INTERFACE_TIMING_TBUF, 4) |
+> -               FIELD_PREP(I2C_INTERFACE_TIMING_TSU_STO, 7) |
+> -               FIELD_PREP(I2C_INTERFACE_TIMING_THD_STA, 4) |
+> -               FIELD_PREP(I2C_INTERFACE_TIMING_TSU_STA, 4);
+> -       i2c_writel(i2c_dev, value, I2C_INTERFACE_TIMING_1);
+> -
+> -       value =3D FIELD_PREP(I2C_HS_INTERFACE_TIMING_THIGH, 3) |
+> -               FIELD_PREP(I2C_HS_INTERFACE_TIMING_TLOW, 8);
+> -       i2c_writel(i2c_dev, value, I2C_HS_INTERFACE_TIMING_0);
+> +       u32 mask, val, offset;
+> +       int err;
+>
+> -       value =3D FIELD_PREP(I2C_HS_INTERFACE_TIMING_TSU_STO, 11) |
+> -               FIELD_PREP(I2C_HS_INTERFACE_TIMING_THD_STA, 11) |
+> -               FIELD_PREP(I2C_HS_INTERFACE_TIMING_TSU_STA, 11);
+> -       i2c_writel(i2c_dev, value, I2C_HS_INTERFACE_TIMING_1);
+> +       if (i2c_dev->hw->has_mst_fifo) {
+> +               mask =3D I2C_MST_FIFO_CONTROL_TX_FLUSH |
+> +                      I2C_MST_FIFO_CONTROL_RX_FLUSH;
+> +               offset =3D I2C_MST_FIFO_CONTROL;
+> +       } else {
+> +               mask =3D I2C_FIFO_CONTROL_TX_FLUSH |
+> +                      I2C_FIFO_CONTROL_RX_FLUSH;
+> +               offset =3D I2C_FIFO_CONTROL;
+> +       }
+>
+> -       value =3D FIELD_PREP(I2C_BC_SCLK_THRESHOLD, 9) | I2C_BC_STOP_COND=
+;
+> -       i2c_writel(i2c_dev, value, I2C_BUS_CLEAR_CNFG);
+> +       val =3D i2c_readl(i2c_dev, offset);
+> +       val |=3D mask;
+> +       i2c_writel(i2c_dev, val, offset);
+>
+> -       i2c_writel(i2c_dev, 0x0, I2C_TLOW_SEXT);
+> +       err =3D tegra_i2c_poll_register(i2c_dev, offset, mask, 1000, 1000=
+000);
+> +       if (err) {
+> +               dev_err(i2c_dev->dev, "failed to flush FIFO\n");
+> +               return err;
+> +       }
+> +       return 0;
+>  }
+>
+>  static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev)
+> @@ -856,6 +686,132 @@ static int tegra_i2c_disable_packet_mode(struct teg=
+ra_i2c_dev *i2c_dev)
+>         return tegra_i2c_wait_for_config_load(i2c_dev);
+>  }
+>
+> +static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +       size_t buf_remaining =3D i2c_dev->msg_buf_remaining;
+> +       u8 *buf =3D i2c_dev->msg_buf;
+> +       int words_to_transfer;
+> +       int rx_fifo_avail;
+> +       u32 val;
+> +
+> +       /*
+> +        * Catch overflow due to message fully sent
+> +        * before the check for RX FIFO availability.
+> +        */
+> +       if (WARN_ON_ONCE(!(i2c_dev->msg_buf_remaining)))
+> +               return -EINVAL;
+> +
+> +       if (i2c_dev->hw->has_mst_fifo) {
+> +               val =3D i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
+> +               rx_fifo_avail =3D FIELD_GET(I2C_MST_FIFO_STATUS_RX, val);
+> +       } else {
+> +               val =3D i2c_readl(i2c_dev, I2C_FIFO_STATUS);
+> +               rx_fifo_avail =3D FIELD_GET(I2C_FIFO_STATUS_RX, val);
+> +       }
+> +
+> +       /* Rounds down to not include partial word at the end of buf */
+> +       words_to_transfer =3D buf_remaining / BYTES_PER_FIFO_WORD;
+> +       if (words_to_transfer > rx_fifo_avail)
+> +               words_to_transfer =3D rx_fifo_avail;
+> +
+> +       i2c_readsl(i2c_dev, buf, I2C_RX_FIFO, words_to_transfer);
+> +
+> +       buf +=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> +       buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> +       rx_fifo_avail -=3D words_to_transfer;
+> +
+> +       /*
+> +        * If there is a partial word at the end of buf, handle it manual=
+ly to
+> +        * prevent overwriting past the end of buf
+> +        */
+> +       if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> +               /*
+> +                * buf_remaining > 3 check not needed as rx_fifo_avail =
+=3D=3D 0
+> +                * when (words_to_transfer was > rx_fifo_avail) earlier
+> +                * in this function.
+> +                */
+> +               val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
+> +               val =3D cpu_to_le32(val);
+> +               memcpy(buf, &val, buf_remaining);
+> +               buf_remaining =3D 0;
+> +               rx_fifo_avail--;
+> +       }
+> +
+> +       /* RX FIFO must be drained, otherwise it's an Overflow case. */
+> +       if (WARN_ON_ONCE(rx_fifo_avail))
+> +               return -EINVAL;
+> +
+> +       i2c_dev->msg_buf_remaining =3D buf_remaining;
+> +       i2c_dev->msg_buf =3D buf;
+> +
+> +       return 0;
+> +}
+> +
+> +static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +       size_t buf_remaining =3D i2c_dev->msg_buf_remaining;
+> +       u8 *buf =3D i2c_dev->msg_buf;
+> +       int words_to_transfer;
+> +       int tx_fifo_avail;
+> +       u32 val;
+> +
+> +       if (i2c_dev->hw->has_mst_fifo) {
+> +               val =3D i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
+> +               tx_fifo_avail =3D FIELD_GET(I2C_MST_FIFO_STATUS_TX, val);
+> +       } else {
+> +               val =3D i2c_readl(i2c_dev, I2C_FIFO_STATUS);
+> +               tx_fifo_avail =3D FIELD_GET(I2C_FIFO_STATUS_TX, val);
+> +       }
+> +
+> +       /* Rounds down to not include partial word at the end of buf */
+> +       words_to_transfer =3D buf_remaining / BYTES_PER_FIFO_WORD;
+> +
+> +       /* It's very common to have < 4 bytes, so optimize that case. */
+> +       if (words_to_transfer) {
+> +               if (words_to_transfer > tx_fifo_avail)
+> +                       words_to_transfer =3D tx_fifo_avail;
+> +
+> +               /*
+> +                * Update state before writing to FIFO.  Note that this m=
+ay
+> +                * cause us to finish writing all bytes (AKA buf_remainin=
+g
+> +                * goes to 0), hence we have a potential for an interrupt
+> +                * (PACKET_XFER_COMPLETE is not maskable), but GIC interr=
+upt
+> +                * is disabled at this point.
+> +                */
+> +               buf_remaining -=3D words_to_transfer * BYTES_PER_FIFO_WOR=
+D;
+> +               tx_fifo_avail -=3D words_to_transfer;
+> +               i2c_dev->msg_buf_remaining =3D buf_remaining;
+> +               i2c_dev->msg_buf =3D buf +
+> +                       words_to_transfer * BYTES_PER_FIFO_WORD;
+> +
+> +               i2c_writesl(i2c_dev, buf, I2C_TX_FIFO, words_to_transfer)=
+;
+> +
+> +               buf +=3D words_to_transfer * BYTES_PER_FIFO_WORD;
+> +       }
+> +
+> +       /*
+> +        * If there is a partial word at the end of buf, handle it manual=
+ly to
+> +        * prevent reading past the end of buf, which could cross a page
+> +        * boundary and fault.
+> +        */
+> +       if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> +               /*
+> +                * buf_remaining > 3 check not needed as tx_fifo_avail =
+=3D=3D 0
+> +                * when (words_to_transfer was > tx_fifo_avail) earlier
+> +                * in this function for non-zero words_to_transfer.
+> +                */
+> +               memcpy(&val, buf, buf_remaining);
+> +               val =3D le32_to_cpu(val);
+> +
+> +               i2c_dev->msg_buf_remaining =3D 0;
+> +               i2c_dev->msg_buf =3D NULL;
+> +
+> +               i2c_writel(i2c_dev, val, I2C_TX_FIFO);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  {
+>         const u32 status_err =3D I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOS=
+T;
+> @@ -1411,27 +1367,6 @@ static u32 tegra_i2c_func(struct i2c_adapter *adap=
+)
+>         return ret;
+>  }
+>
+> -static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+> -{
+> -       struct device_node *np =3D i2c_dev->dev->of_node;
+> -       bool multi_mode;
+> -       int ret;
+> -
+> -       ret =3D of_property_read_u32(np, "clock-frequency",
+> -                                  &i2c_dev->bus_clk_rate);
+> -       if (ret)
+> -               i2c_dev->bus_clk_rate =3D I2C_MAX_STANDARD_MODE_FREQ; /* =
+default clock rate */
+> -
+> -       multi_mode =3D of_property_read_bool(np, "multi-master");
+> -       i2c_dev->is_multimaster_mode =3D multi_mode;
+> -
+> -       if (of_device_is_compatible(np, "nvidia,tegra20-i2c-dvc"))
+> -               i2c_dev->is_dvc =3D true;
+> -
+> -       if (of_device_is_compatible(np, "nvidia,tegra210-i2c-vi"))
+> -               i2c_dev->is_vi =3D true;
+> -}
+> -
+>  static const struct i2c_algorithm tegra_i2c_algo =3D {
+>         .master_xfer            =3D tegra_i2c_xfer,
+>         .master_xfer_atomic     =3D tegra_i2c_xfer_atomic,
+> @@ -1637,6 +1572,27 @@ static const struct of_device_id tegra_i2c_of_matc=
+h[] =3D {
+>  };
+>  MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
+>
+> +static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
+> +{
+> +       struct device_node *np =3D i2c_dev->dev->of_node;
+> +       bool multi_mode;
+> +       int ret;
+> +
+> +       ret =3D of_property_read_u32(np, "clock-frequency",
+> +                                  &i2c_dev->bus_clk_rate);
+> +       if (ret)
+> +               i2c_dev->bus_clk_rate =3D I2C_MAX_STANDARD_MODE_FREQ; /* =
+default clock rate */
+> +
+> +       multi_mode =3D of_property_read_bool(np, "multi-master");
+> +       i2c_dev->is_multimaster_mode =3D multi_mode;
+> +
+> +       if (of_device_is_compatible(np, "nvidia,tegra20-i2c-dvc"))
+> +               i2c_dev->is_dvc =3D true;
+> +
+> +       if (of_device_is_compatible(np, "nvidia,tegra210-i2c-vi"))
+> +               i2c_dev->is_vi =3D true;
+> +}
+> +
+>  static int tegra_i2c_init_clocks(struct tegra_i2c_dev *i2c_dev)
+>  {
+>         unsigned int i;
+> @@ -1821,6 +1777,48 @@ static int tegra_i2c_remove(struct platform_device=
+ *pdev)
+>         return 0;
+>  }
+>
+> +static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
+> +{
+> +       struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       ret =3D pinctrl_pm_select_default_state(i2c_dev->dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret =3D clk_bulk_enable(i2c_dev->nclocks, i2c_dev->clocks);
+> +       if (ret)
+> +               return ret;
+> +
+> +       /*
+> +        * VI I2C device is attached to VE power domain which goes throug=
+h
+> +        * power ON/OFF during PM runtime resume/suspend. So, controller
+> +        * should go through reset and need to re-initialize after power
+> +        * domain ON.
+> +        */
+> +       if (i2c_dev->is_vi) {
+> +               ret =3D tegra_i2c_init(i2c_dev);
+> +               if (ret)
+> +                       goto disable_clocks;
+> +       }
+> +
+> +       return 0;
+> +
+> +disable_clocks:
+> +       clk_bulk_disable(i2c_dev->nclocks, i2c_dev->clocks);
+> +
+> +       return ret;
+> +}
+> +
+> +static int __maybe_unused tegra_i2c_runtime_suspend(struct device *dev)
+> +{
+> +       struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+> +
+> +       clk_bulk_disable(i2c_dev->nclocks, i2c_dev->clocks);
+> +
+> +       return pinctrl_pm_select_idle_state(i2c_dev->dev);
+> +}
+> +
+>  static int __maybe_unused tegra_i2c_suspend(struct device *dev)
+>  {
+>         struct tegra_i2c_dev *i2c_dev =3D dev_get_drvdata(dev);
+> --
+> 2.27.0
+>
+
+
+--=20
+With Best Regards,
+Andy Shevchenko
