@@ -2,148 +2,134 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 026A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2637C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1F82137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4730215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:17:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SsHDLSmt"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="vXqecv/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIGMO5 (ORCPT
+        id S1729295AbgIGMR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:14:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:7994 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729202AbgIGMEq (ORCPT
+        Mon, 7 Sep 2020 08:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729198AbgIGMGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:04:46 -0400
-X-UUID: 529d1217da3e4244981d96877a43f4e6-20200907
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=jhDPNB9+vtJ6LoKzs9IKtElOMJeIUaNjylq+XlEhZ+Y=;
-        b=SsHDLSmtBQFCII6+YWeebGl1wA3dIO//9d1WdWhowduk46i4H2AOpHuZ3v/og5vgpqc0HbZBR4CNTwPyrSOQ+bfr4J7mEMRHCtjfZf6CudQz7EU6sJmROttxYKHXyMbfVV6R9mAJLNGtCnCACyed0KYTR7QgPsAZBJuWVpGIm1Q=;
-X-UUID: 529d1217da3e4244981d96877a43f4e6-20200907
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <jianjun.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1742256838; Mon, 07 Sep 2020 20:04:26 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 7 Sep 2020 20:04:22 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 7 Sep 2020 20:04:23 +0800
-From:   Jianjun Wang <jianjun.wang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        <davem@davemloft.net>, <linux-pci@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Sj Huang <sj.huang@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: [PATCH 1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
-Date:   Mon, 7 Sep 2020 20:01:16 +0800
-Message-ID: <20200907120118.11667-1-jianjun.wang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Mon, 7 Sep 2020 08:06:40 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F772C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:06:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id z22so17893302ejl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tw4f2wX8YqmmfCG4fLEsa1aDy9xcwa2clW6NhysDtyc=;
+        b=vXqecv/JD1j08x2l2xv8uMY2f5Yrx4K3HukAwUizDgeJSij+T75ajGmL1q9blQ9UrJ
+         qCvwj8FsbXkYLIOkfpnIyoCMd0YWDwu7jzDwuPBz5d/I0pvFV2rv2MaIlzwpB+L6BBvL
+         KLuAAE/uYoT21Qcb0Ek9uNjNv+Tc1kJZB6gBNZEqfR4K8F3owTI8UDBaBNdeerEXBRQf
+         svknQedIT00FvncGNd3SMt5eJGRvr9n1qI1k7jYBXFJTuIChik7GAJQR8GK7RuqOeYDV
+         6OpI9z0F1CVv5xPg/cyAf/YafdgiGJcwRMOp33wT+hcztaMEzFbH2LHAvgY5FPcU8BxK
+         qNyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Tw4f2wX8YqmmfCG4fLEsa1aDy9xcwa2clW6NhysDtyc=;
+        b=OT1xUqQyeCML9glgJ5RU5hI5nuV8qvJRSBSn0cYvIzT2/v13GyFlmeBjBVZ8O7XCHk
+         sbHmqUoolpH4z5d5VzSCKcKNvhYn0rhbkvGdUKh7/04Ri1JbLNSFPWyTHWyS2clUKaWO
+         IG7EmIOxJ0SPASJhHCI/XUfDxTUFNoA/+7PDHsngWCnGue4X9VL+lTWxxno/9A2zQ2fE
+         vRlM5i4qrtI3JFELGpPGzevycgbqf4hDe/hRj/s2IIYlznyY4Ui1OtYDZKAkMzhsZtDi
+         dkFJmql8JvGqWZizEB3Iuh2W292Mncp5hAh5i4S0ddQbcgllbBYGydEOJkQrIbCCFRTP
+         gD8w==
+X-Gm-Message-State: AOAM532TuAUjwwpxGQCXWeF7exgB0zIumjtIFcAMmMKZLu5AsAuvNr1/
+        J/WoHBtlhcSQP3p6fTDUL4DPgpdVIu+ClOri7Z/I5w==
+X-Google-Smtp-Source: ABdhPJw+GbBoK76Yk9oXUxiHnhTP8BrVOQx6dDXADdyKLjOSvFHDs9IyPG0ZhERjAUhRxXRKmTxwpbMibpY7sdicuFI=
+X-Received: by 2002:a17:906:f11:: with SMTP id z17mr2135074eji.88.1599480386425;
+ Mon, 07 Sep 2020 05:06:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com> <20200907115310.GA1891694@smile.fi.intel.com>
+In-Reply-To: <20200907115310.GA1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 7 Sep 2020 14:06:15 +0200
+Message-ID: <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIFlBTUwgc2NoZW1hcyBkb2N1bWVudGF0aW9uIGZvciBHZW4zIFBDSWUgY29udHJvbGxlciBv
-bg0KTWVkaWFUZWsgU29Dcy4NCg0KQ2hhbmdlLUlkOiBJMmEwMjJjNzI5MWM3ZTdlMTYxYjNhN2U4
-YmNlMjg3ODFlMGYwOWI5MA0KU2lnbmVkLW9mZi1ieTogSmlhbmp1biBXYW5nIDxqaWFuanVuLndh
-bmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogLi4uL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdl
-bjMueWFtbCAgICAgIHwgMTU4ICsrKysrKysrKysrKysrKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCAx
-NTggaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sDQoNCmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2Vu
-My55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1w
-Y2llLWdlbjMueWFtbA0KbmV3IGZpbGUgbW9kZSAxMDA2NDQNCmluZGV4IDAwMDAwMDAwMDAwMC4u
-MTA4ZDI5MjU5YzA1DQotLS0gL2Rldi9udWxsDQorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcGNpL21lZGlhdGVrLXBjaWUtZ2VuMy55YW1sDQpAQCAtMCwwICsxLDE1OCBA
-QA0KKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wIE9SIEJTRC0yLUNsYXVzZSkN
-CislWUFNTCAxLjINCistLS0NCiskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hlbWFzL3Bj
-aS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCMNCiskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJlZS5v
-cmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCisNCit0aXRsZTogR2VuMyBQQ0llIGNvbnRyb2xs
-ZXIgb24gTWVkaWFUZWsgU29Dcw0KKw0KK21haW50YWluZXJzOg0KKyAgLSBKaWFuanVuIFdhbmcg
-PGppYW5qdW4ud2FuZ0BtZWRpYXRlay5jb20+DQorDQorYWxsT2Y6DQorICAtICRyZWY6IC9zY2hl
-bWFzL3BjaS9wY2ktYnVzLnlhbWwjDQorDQorcHJvcGVydGllczoNCisgIGNvbXBhdGlibGU6DQor
-ICAgIG9uZU9mOg0KKyAgICAgIC0gY29uc3Q6IG1lZGlhdGVrLGdlbjMtcGNpZQ0KKyAgICAgIC0g
-Y29uc3Q6IG1lZGlhdGVrLG10ODE5Mi1wY2llDQorDQorICBkZXZpY2VfdHlwZToNCisgICAgY29u
-c3Q6IHBjaQ0KKw0KKyAgIiNhZGRyZXNzLWNlbGxzIjoNCisgICAgY29uc3Q6IDMNCisNCisgICIj
-c2l6ZS1jZWxscyI6DQorICAgIGNvbnN0OiAyDQorDQorICByZWc6DQorICAgIGl0ZW1zOg0KKyAg
-ICAgIC0gZGVzY3JpcHRpb246IENvbnRyb2xsZXIgY29udHJvbCBhbmQgc3RhdHVzIHJlZ2lzdGVy
-cy4NCisNCisgIHJlZy1uYW1lczoNCisgICAgaXRlbXM6DQorICAgICAgLSBjb25zdDogcGNpZS1t
-YWMNCisNCisgIGludGVycnVwdHM6DQorICAgIG1heEl0ZW1zOiAxDQorDQorICBidXMtcmFuZ2U6
-DQorICAgIGRlc2NyaXB0aW9uOiBSYW5nZSBvZiBidXMgbnVtYmVycyBhc3NvY2lhdGVkIHdpdGgg
-dGhpcyBjb250cm9sbGVyLg0KKw0KKyAgcmFuZ2VzOg0KKyAgICBtaW5JdGVtczogMQ0KKyAgICBt
-YXhJdGVtczogOA0KKw0KKyAgcmVzZXRzOg0KKyAgICBtaW5JdGVtczogMQ0KKyAgICBtYXhJdGVt
-czogMg0KKw0KKyAgcmVzZXQtbmFtZXM6DQorICAgIGFueU9mOg0KKyAgICAgIC0gY29uc3Q6IG1h
-Yy1yc3QNCisgICAgICAtIGNvbnN0OiBwaHktcnN0DQorDQorICBjbG9ja3M6DQorICAgIG1heEl0
-ZW1zOiA1DQorDQorICBhc3NpZ25lZC1jbG9ja3M6DQorICAgIG1heEl0ZW1zOiAxDQorDQorICBh
-c3NpZ25lZC1jbG9jay1wYXJlbnRzOg0KKyAgICBtYXhJdGVtczogMQ0KKw0KKyAgcGh5czoNCisg
-ICAgbWF4SXRlbXM6IDENCisNCisgIHBoeS1uYW1lczoNCisgICAgY29uc3Q6IHBjaWUtcGh5DQor
-DQorICAnI2ludGVycnVwdC1jZWxscyc6DQorICAgIGNvbnN0OiAxDQorDQorICBpbnRlcnJ1cHQt
-bWFwLW1hc2s6DQorICAgIGRlc2NyaXB0aW9uOiBTdGFuZGFyZCBQQ0kgSVJRIG1hcHBpbmcgcHJv
-cGVydGllcy4NCisNCisgIGludGVycnVwdC1tYXA6DQorICAgIGRlc2NyaXB0aW9uOiBTdGFuZGFy
-ZCBQQ0kgSVJRIG1hcHBpbmcgcHJvcGVydGllcy4NCisNCisgIGxlZ2FjeS1pbnRlcnJ1cHQtY29u
-dHJvbGxlcjoNCisgICAgZGVzY3JpcHRpb246IEludGVycnVwdCBjb250cm9sbGVyIG5vZGUgZm9y
-IGhhbmRsaW5nIGxlZ2FjeSBQQ0kgaW50ZXJydXB0cy4NCisgICAgdHlwZTogb2JqZWN0DQorICAg
-IHByb3BlcnRpZXM6DQorICAgICAgIiNhZGRyZXNzLWNlbGxzIjoNCisgICAgICAgIGNvbnN0OiAw
-DQorICAgICAgIiNpbnRlcnJ1cHQtY2VsbHMiOg0KKyAgICAgICAgY29uc3Q6IDENCisgICAgICBp
-bnRlcnJ1cHQtY29udHJvbGxlcjogdHJ1ZQ0KKw0KKyAgICByZXF1aXJlZDoNCisgICAgICAtICIj
-YWRkcmVzcy1jZWxscyINCisgICAgICAtICIjaW50ZXJydXB0LWNlbGxzIg0KKyAgICAgIC0gaW50
-ZXJydXB0LWNvbnRyb2xsZXINCisNCityZXF1aXJlZDoNCisgIC0gY29tcGF0aWJsZQ0KKyAgLSBk
-ZXZpY2VfdHlwZQ0KKyAgLSAiI2FkZHJlc3MtY2VsbHMiDQorICAtICIjc2l6ZS1jZWxscyINCisg
-IC0gcmVnDQorICAtIHJlZy1uYW1lcw0KKyAgLSBidXMtcmFuZ2UNCisgIC0gaW50ZXJydXB0cw0K
-KyAgLSByYW5nZXMNCisgIC0gY2xvY2tzDQorICAtICcjaW50ZXJydXB0LWNlbGxzJw0KKyAgLSBp
-bnRlcnJ1cHQtbWFwDQorICAtIGludGVycnVwdC1tYXAtbWFzaw0KKyAgLSBsZWdhY3ktaW50ZXJy
-dXB0LWNvbnRyb2xsZXINCisNCithZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UNCisNCitleGFt
-cGxlczoNCisgIC0gfA0KKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRy
-b2xsZXIvYXJtLWdpYy5oPg0KKyAgICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW50ZXJydXB0LWNv
-bnRyb2xsZXIvaXJxLmg+DQorDQorICAgIGJ1cyB7DQorICAgICAgICAjYWRkcmVzcy1jZWxscyA9
-IDwyPjsNCisgICAgICAgICNzaXplLWNlbGxzID0gPDI+Ow0KKw0KKyAgICAgICAgcGNpZTogcGNp
-ZUAxMTIzMDAwMCB7DQorICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxOTIt
-cGNpZSI7DQorICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAicGNpIjsNCisgICAgICAgICAgICAj
-YWRkcmVzcy1jZWxscyA9IDwzPjsNCisgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsNCisg
-ICAgICAgICAgICByZWcgPSA8MHgwMCAweDExMjMwMDAwIDB4MDAgMHg0MDAwPjsNCisgICAgICAg
-ICAgICByZWctbmFtZXMgPSAicGNpZS1tYWMiOw0KKyAgICAgICAgICAgIGludGVycnVwdHMgPSA8
-R0lDX1NQSSAyNTEgSVJRX1RZUEVfTEVWRUxfSElHSCAwPjsNCisgICAgICAgICAgICBidXMtcmFu
-Z2UgPSA8MHgwMCAweGZmPjsNCisgICAgICAgICAgICByYW5nZXMgPSA8MHg4MjAwMDAwMCAweDAw
-IDB4MTIwMDAwMDAgMHgwMCAweDEyMDAwMDAwIDB4MDAgMHgxMDAwMDAwPjsNCisgICAgICAgICAg
-ICBjbG9ja3MgPSA8JmluZnJhY2ZnIDQwPiwNCisgICAgICAgICAgICAgICAgICAgICA8JmluZnJh
-Y2ZnIDQzPiwNCisgICAgICAgICAgICAgICAgICAgICA8JmluZnJhY2ZnIDk3PiwNCisgICAgICAg
-ICAgICAgICAgICAgICA8JmluZnJhY2ZnIDk5PiwNCisgICAgICAgICAgICAgICAgICAgICA8Jmlu
-ZnJhY2ZnIDExMT47DQorICAgICAgICAgICAgYXNzaWduZWQtY2xvY2tzID0gPCZ0b3Bja2dlbiA1
-MD47DQorICAgICAgICAgICAgYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmdG9wY2tnZW4gOTE+
-Ow0KKw0KKyAgICAgICAgICAgIHBoeXMgPSA8JnBjaWVwaHk+Ow0KKyAgICAgICAgICAgIHBoeS1u
-YW1lcyA9ICJwY2llLXBoeSI7DQorICAgICAgICAgICAgcmVzZXRzID0gPCZpbmZyYWNmZ19yc3Qg
-MD47DQorICAgICAgICAgICAgcmVzZXQtbmFtZXMgPSAicGh5LXJzdCI7DQorDQorICAgICAgICAg
-ICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsNCisgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwLW1h
-c2sgPSA8MCAwIDAgMHg3PjsNCisgICAgICAgICAgICBpbnRlcnJ1cHQtbWFwID0gPDAgMCAwIDEg
-JnBjaWVfaW50YyAwPiwNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAgMCAwIDIgJnBj
-aWVfaW50YyAxPiwNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAgMCAwIDMgJnBjaWVf
-aW50YyAyPiwNCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgPDAgMCAwIDQgJnBjaWVfaW50
-YyAzPjsNCisgICAgICAgICAgICBwY2llX2ludGM6IGxlZ2FjeS1pbnRlcnJ1cHQtY29udHJvbGxl
-ciB7DQorICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDA+Ow0KKyAgICAg
-ICAgICAgICAgICAgICAgICAjaW50ZXJydXB0LWNlbGxzID0gPDE+Ow0KKyAgICAgICAgICAgICAg
-ICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCisgICAgICAgICAgICB9Ow0KKyAgICAgICAg
-fTsNCisgICAgfTsNCi0tIA0KMi4xOC4wDQo=
+On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+> > >
+> > > ...
+> > >
+> > > > > +GPIO Testing Driver
+> > > > > +===================
+> > > > > +
+> > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > > > +by the module. The lines can be accessed using the standard GPIO character
+> > > > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > > > +structure.
+> > > >
+> > > > Could configfs be used for this instead of debugfs?
+> > > > debugfs is ad hoc.
+> > >
+> > > Actually sounds like a good idea.
+> > >
+> >
+> > Well, then we can go on and write an entirely new mockup driver
+> > (ditching module params and dropping any backwards compatibility)
+> > because we're already using debugfs for line values.
+> >
+> > How would we pass the device properties to configfs created GPIO chips
+> > anyway? Devices seem to only be created using mkdir. Am I missing
+> > something?
+>
+> Same way how USB composite works, no?
+>
 
+OK, so create a new chip directory in configfs, configure it using
+some defined configfs attributes and then finally instantiate it from
+sysfs?
+
+Makes sense and is probably the right way to go. Now the question is:
+is it fine to just entirely remove the previous gpio-mockup? Should we
+keep some backwards compatibility? Should we introduce an entirely new
+module and have a transition period before removing previous
+gpio-mockup?
+
+Also: this is a testing module so to me debugfs is just fine. Is
+configfs considered stable ABI like sysfs?
+
+Bart
