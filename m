@@ -2,103 +2,90 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D59C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9531C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 254B6208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FD3208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lV2RQWaI";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="Dr8GOjQ/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3xD9cbZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgIGI3i (ORCPT
+        id S1728185AbgIGI3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:29:38 -0400
-Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:47292
-        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbgIGI3f (ORCPT
+        Mon, 7 Sep 2020 04:29:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbgIGI3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:29:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599467374;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
-        bh=9xmQDpOP5iANBlM3ftlWzlsH00WaOADPBTmWJq3fQoQ=;
-        b=lV2RQWaISNpmNCgbvYVawVCIrDbsFkie0ZCARMNf0MCeHUjJDlEK+nlMGUYVmqzf
-        +EEAE2qiS3MwBYPEBF002O0DavKsF/8qWybZEFiWp6+Sv6TEykRhKoiIMffscwONE+z
-        G5Yc1g0+QWLhS6QzadBt2guLKCgGJUqKn1oKztiU=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599467374;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
-        bh=9xmQDpOP5iANBlM3ftlWzlsH00WaOADPBTmWJq3fQoQ=;
-        b=Dr8GOjQ/BWGI+PQlcK9vrwCtRSv8Hsn64jt0g2QQIPp/iFjvL5WzS6w6gajqzMWG
-        kqWf/7ZhXFWcOs05Ak6ajqF/wMUnCngxjtjziBpyUyaVdXgJBC7Pt1wMc2a9mRM0iny
-        ZP8ADKjHGSahgB8MWG/8YNYk7k2t9iLHClOoIkHo=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AA80DC4345B
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 7 Sep 2020 04:29:50 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEE3C061573;
+        Mon,  7 Sep 2020 01:29:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d9so1984974pfd.3;
+        Mon, 07 Sep 2020 01:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0f1kClEfUN9vOMlaH0+x51cMOCCsINHwvvJvVM37cBM=;
+        b=P3xD9cbZfHZPtFtsysOPCyYyp8eidyu8mE2PKXvWYD2Dx5cgoftG089JPc3WJvKwo1
+         BjDXq4oQ62sY1jw3s1MVG7mlP7MGZ2X+YziudfaGhrHssu6gPvRVg1Iy+sZ8jHcZscG+
+         DsfOtYCFwmS18hkue7qbT3yGsKSbsq0KRUj/qpjLCcKNOZErl3jxFyJ1ktZCtaJhx8uR
+         Tfl3gkyy/LS++V09WkXlnntxn4MFs2/3Aov9fMgEOjWXvQEbVya8XdfDEJHdlguHzQGt
+         +2dptrG4NRzK6QnNbJnivWYWynO8rU6mMBFHtZn6cqs72hpsjvQjGUTS5ThfigNZTvdK
+         3JoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0f1kClEfUN9vOMlaH0+x51cMOCCsINHwvvJvVM37cBM=;
+        b=coemdqqi1+ycZJpq4fNVw5WtZ+1SHFaZuOhjW6vkiRaWeRogoXohk/3QXrJ6gq/x9a
+         rhry8nU4p+NCwyz5KzOw6RPwlJAixNrlBHAv4cM2bLed4S7HUTpfl7PHFBbDPvPn6s7i
+         Qaay9ttDwPzP+33wnp/T/6bQL3BLsqFSo0J2DMZAh4k856HJaFumKx7Qx4gc4H4sa/cf
+         3NvQTOB1BrLww5XCTLz2G3CaWl4b5mW93vLOdF1gRazwnf67pQzW65prR7trbeFOFWEx
+         I81KcC/myz/FK6UofIEBYjfqgLCHlaB3vmD61I5uQCWnHWV59G0DJYn9f67iUXtaAZQ4
+         lW/w==
+X-Gm-Message-State: AOAM533EuoMVUa3xRkFaclXDMQfAE+s1GGmXcrc7jHLu1fZ64po1Mttk
+        QOAvBCML8WGiu6+9LilpJk/ql1doA2g+hULg1nF4oRp54l7Q6Q==
+X-Google-Smtp-Source: ABdhPJx+Joq+lJwsQ/veCATMRnu5nL+AvjOdE8iA0uIwKffjNG4yvO72nW1QcKUc12qAEjy3g1J6sjcwwT5+JRjBuDs=
+X-Received: by 2002:a63:d648:: with SMTP id d8mr15984014pgj.4.1599467389957;
+ Mon, 07 Sep 2020 01:29:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] mwifiex: Remove unnecessary braces from
- HostCmd_SET_SEQ_NO_BSS_INFO
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200901070834.1015754-1-natechancellor@gmail.com>
-References: <20200901070834.1015754-1-natechancellor@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Andy Lavr <andy.lavr@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-ID: <0101017467af484e-3cb25a00-4120-4134-a519-be68ab3a49ca-000000@us-west-2.amazonses.com>
-Date:   Mon, 7 Sep 2020 08:29:34 +0000
-X-SES-Outgoing: 2020.09.07-54.240.27.18
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+References: <20200906185039.22700-1-digetx@gmail.com> <20200906185039.22700-33-digetx@gmail.com>
+In-Reply-To: <20200906185039.22700-33-digetx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Sep 2020 11:29:32 +0300
+Message-ID: <CAHp75VdMus_jZqb4d3t6qXcRzwfO7Ldz7W+pnaCS-7B+ys7WRA@mail.gmail.com>
+Subject: Re: [PATCH v5 32/36] i2c: tegra: Clean up and improve comments
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Chancellor <natechancellor@gmail.com> wrote:
+On Sun, Sep 6, 2020 at 9:52 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> Make all comments to be consistent in regards to capitalization and
+> punctuation, correct spelling and grammar errors, improve wording.
 
-> A new warning in clang points out when macro expansion might result in a
-> GNU C statement expression. There is an instance of this in the mwifiex
-> driver:
-> 
-> drivers/net/wireless/marvell/mwifiex/cmdevt.c:217:34: warning: '}' and
-> ')' tokens terminating statement expression appear in different macro
-> expansion contexts [-Wcompound-token-split-by-macro]
->         host_cmd->seq_num = cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
->                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/marvell/mwifiex/fw.h:519:46: note: expanded from
-> macro 'HostCmd_SET_SEQ_NO_BSS_INFO'
->         (((type) & 0x000f) << 12);                  }
->                                                     ^
-> 
-> This does not appear to be a real issue. Removing the braces and
-> replacing them with parentheses will fix the warning and not change the
-> meaning of the code.
-> 
-> Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1146
-> Reported-by: Andy Lavr <andy.lavr@gmail.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Patch applied to wireless-drivers-next.git, thanks.
-
-6a953dc4dbd1 mwifiex: Remove unnecessary braces from HostCmd_SET_SEQ_NO_BSS_INFO
+I consider this a bit more important than the previous one. It has an
+affection on kernel doc output. Thus, I would recommend moving it in
+the series early.
 
 -- 
-https://patchwork.kernel.org/patch/11747495/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+With Best Regards,
+Andy Shevchenko
