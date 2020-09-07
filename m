@@ -2,78 +2,199 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E90C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D43C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A099206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3F8206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599494013;
+	bh=bOtNvPKd1buomuDeBpZzqGRO3R6GMfbAEg8/sDVnLbg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JgQZK05ZE/SbOIPaKEf7AXOUZD6S62eFmw0FyqlmoJVWQBpJYSlv+ZsGjmSMmoYfw
+	 B92erl49W6u93ti4/ughTXcgc68e1nKftcZ9kmfSjRS96KnhJKlxoLbTukmu/U4Vod
+	 slGSm+lGZBFcHcoFFozpWL2BmmO2s+ES8TtoNpfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730279AbgIGPxW (ORCPT
+        id S1730206AbgIGPxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:53:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:37668 "EHLO foss.arm.com"
+        Mon, 7 Sep 2020 11:53:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730033AbgIGOvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730015AbgIGOvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 10:51:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84D5D31B;
-        Mon,  7 Sep 2020 07:51:22 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D55E53F73C;
-        Mon,  7 Sep 2020 07:51:20 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 15:51:15 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: Re: [PATCH 0/2] r8a7742 add PCIe node
-Message-ID: <20200907145115.GA10138@e121166-lin.cambridge.arm.com>
-References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02F9621924;
+        Mon,  7 Sep 2020 14:51:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599490279;
+        bh=bOtNvPKd1buomuDeBpZzqGRO3R6GMfbAEg8/sDVnLbg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1MHmCQfOr4X3wWjX6IQ3rwja05HHJTOw+UvuGXj0aN6axRPVil/jBk5r/UJEAR4aO
+         Ssbim/0ObmcFTIK+FT6ffbI0q1Xr0aQYGv6PpRiWAJcwz7wCDbppmvBgjycqVqWR4J
+         V5iFfXj0xM9h7kuUXf4PoM2CFpwjAufNO9gR0z9k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     himadrispandya@gmail.com, dvyukov@google.com,
+        linux-usb@vger.kernel.org
+Cc:     perex@perex.cz, tiwai@suse.com, stern@rowland.harvard.ed,
+        linux-kernel@vger.kernel.org, marcel@holtmann.org,
+        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
+        alsa-devel@alsa-project.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Juergen Stuber <starblue@users.sourceforge.net>,
+        legousb-devel@lists.sourceforge.net
+Subject: [PATCH v2 05/11] USB: legousbtower: use usb_control_msg_recv()
+Date:   Mon,  7 Sep 2020 16:51:02 +0200
+Message-Id: <20200907145108.3766613-6-gregkh@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
+References: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 06:41:54PM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch set adds PCIe instance to r8a7742 Soc dtsi.
-> patches apply on-top of [1] + [2]
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
->     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-> [2] https://patchwork.kernel.org/project/linux-renesas-soc/
->     list/?series=330277
-> 
-> Cheers,
-> Prabhakar
-> 
-> Lad Prabhakar (2):
->   dt-bindings: PCI: rcar: Add device tree support for r8a7742
->   ARM: dts: r8a7742: Add PCIe Controller device node
-> 
->  .../devicetree/bindings/pci/rcar-pci.txt      |  3 +-
->  arch/arm/boot/dts/r8a7742.dtsi                | 35 +++++++++++++++++++
->  2 files changed, 37 insertions(+), 1 deletion(-)
+The usb_control_msg_recv() function can handle data on the stack, as
+well as properly detecting short reads, so move to use that function
+instead of the older usb_control_msg() call.  This ends up removing a
+lot of extra lines in the driver.
 
-I took patch (1) in pci/rcar, thanks.
+Cc: Juergen Stuber <starblue@users.sourceforge.net>
+Cc: legousb-devel@lists.sourceforge.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+v2:
+ - no change from v1
 
-Lorenzo
+ drivers/usb/misc/legousbtower.c | 60 +++++++++++----------------------
+ 1 file changed, 19 insertions(+), 41 deletions(-)
+
+diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
+index f922544056de..c3583df4c324 100644
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -308,15 +308,9 @@ static int tower_open(struct inode *inode, struct file *file)
+ 	int subminor;
+ 	int retval = 0;
+ 	struct usb_interface *interface;
+-	struct tower_reset_reply *reset_reply;
++	struct tower_reset_reply reset_reply;
+ 	int result;
+ 
+-	reset_reply = kmalloc(sizeof(*reset_reply), GFP_KERNEL);
+-	if (!reset_reply) {
+-		retval = -ENOMEM;
+-		goto exit;
+-	}
+-
+ 	nonseekable_open(inode, file);
+ 	subminor = iminor(inode);
+ 
+@@ -347,15 +341,11 @@ static int tower_open(struct inode *inode, struct file *file)
+ 	}
+ 
+ 	/* reset the tower */
+-	result = usb_control_msg(dev->udev,
+-				 usb_rcvctrlpipe(dev->udev, 0),
+-				 LEGO_USB_TOWER_REQUEST_RESET,
+-				 USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
+-				 0,
+-				 0,
+-				 reset_reply,
+-				 sizeof(*reset_reply),
+-				 1000);
++	result = usb_control_msg_recv(dev->udev, 0,
++				      LEGO_USB_TOWER_REQUEST_RESET,
++				      USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
++				      0, 0,
++				      &reset_reply, sizeof(reset_reply), 1000);
+ 	if (result < 0) {
+ 		dev_err(&dev->udev->dev,
+ 			"LEGO USB Tower reset control request failed\n");
+@@ -394,7 +384,6 @@ static int tower_open(struct inode *inode, struct file *file)
+ 	mutex_unlock(&dev->lock);
+ 
+ exit:
+-	kfree(reset_reply);
+ 	return retval;
+ }
+ 
+@@ -753,7 +742,7 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
+ 	struct device *idev = &interface->dev;
+ 	struct usb_device *udev = interface_to_usbdev(interface);
+ 	struct lego_usb_tower *dev;
+-	struct tower_get_version_reply *get_version_reply = NULL;
++	struct tower_get_version_reply get_version_reply;
+ 	int retval = -ENOMEM;
+ 	int result;
+ 
+@@ -798,34 +787,25 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
+ 	dev->interrupt_in_interval = interrupt_in_interval ? interrupt_in_interval : dev->interrupt_in_endpoint->bInterval;
+ 	dev->interrupt_out_interval = interrupt_out_interval ? interrupt_out_interval : dev->interrupt_out_endpoint->bInterval;
+ 
+-	get_version_reply = kmalloc(sizeof(*get_version_reply), GFP_KERNEL);
+-	if (!get_version_reply) {
+-		retval = -ENOMEM;
+-		goto error;
+-	}
+-
+ 	/* get the firmware version and log it */
+-	result = usb_control_msg(udev,
+-				 usb_rcvctrlpipe(udev, 0),
+-				 LEGO_USB_TOWER_REQUEST_GET_VERSION,
+-				 USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
+-				 0,
+-				 0,
+-				 get_version_reply,
+-				 sizeof(*get_version_reply),
+-				 1000);
+-	if (result != sizeof(*get_version_reply)) {
+-		if (result >= 0)
+-			result = -EIO;
++	result = usb_control_msg_recv(udev, 0,
++				      LEGO_USB_TOWER_REQUEST_GET_VERSION,
++				      USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
++				      0,
++				      0,
++				      &get_version_reply,
++				      sizeof(get_version_reply),
++				      1000);
++	if (!result) {
+ 		dev_err(idev, "get version request failed: %d\n", result);
+ 		retval = result;
+ 		goto error;
+ 	}
+ 	dev_info(&interface->dev,
+ 		 "LEGO USB Tower firmware version is %d.%d build %d\n",
+-		 get_version_reply->major,
+-		 get_version_reply->minor,
+-		 le16_to_cpu(get_version_reply->build_no));
++		 get_version_reply.major,
++		 get_version_reply.minor,
++		 le16_to_cpu(get_version_reply.build_no));
+ 
+ 	/* we can register the device now, as it is ready */
+ 	usb_set_intfdata(interface, dev);
+@@ -844,11 +824,9 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
+ 		 USB_MAJOR, dev->minor);
+ 
+ exit:
+-	kfree(get_version_reply);
+ 	return retval;
+ 
+ error:
+-	kfree(get_version_reply);
+ 	tower_delete(dev);
+ 	return retval;
+ }
+-- 
+2.28.0
+
