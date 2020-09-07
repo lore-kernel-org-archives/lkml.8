@@ -2,73 +2,92 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ADDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 102C9C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41B6A20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F6F20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599495463;
+	bh=jWL3HWcEEiNy/8rVC7of/uRNx5Tnyo1FPmlxmXCKRBs=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=g8qay/hVMNZBQvlQrwviTzwUWoQZrs8Nng8c3F+G2mREEdNWfK2AQc8e/e64jG654
+	 ud0vz4LiILw+Mo4cJzAeZ/F6UokpfekjEgqOF3HJyuSnXIIq7yVvN5VaqYlDxjWKwc
+	 TIw4+ziGP1b2DP1pMmoc3nP+seXahU3G9H+r4WWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbgIGQRX (ORCPT
+        id S1729941AbgIGQOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730517AbgIGQQ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:16:58 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2861C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:16:57 -0700 (PDT)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kFJp7-0002Ke-ID; Mon, 07 Sep 2020 18:16:53 +0200
-Message-ID: <68d7b3327052757d0cd6359a6c9015a85b437232.camel@pengutronix.de>
-Subject: tracer_init_tracefs really slow
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Date:   Mon, 07 Sep 2020 18:16:52 +0200
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 7 Sep 2020 12:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729893AbgIGQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:13:59 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1641D2177B;
+        Mon,  7 Sep 2020 16:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599495238;
+        bh=jWL3HWcEEiNy/8rVC7of/uRNx5Tnyo1FPmlxmXCKRBs=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=iKLcR5zfkqvnazuCXr9yn7VqbcERxdWOIZBqIz9YdCR//HQh5G4biLwQe9jpFkztW
+         jMEzjpnJlJ09LOpX92V8MZ6uxOQ7HXBuNvSglz/haWLZZiiesc1yIr5eUFpWP9ChEc
+         Fi6sj66RzV9aDkequXlALLdESWA+dvlG3DOOZrKs=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: [RFT 23/25] ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in Goni
+Date:   Mon,  7 Sep 2020 18:11:39 +0200
+Message-Id: <20200907161141.31034-24-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
+References: <20200907161141.31034-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+"gpios" property is deprecated.  Update the Goni DTS to fix
+dtbs_checks warnings like:
 
-one of my colleagues has taken a look at device boot times and stumbled
-across a pretty big amount of kernel boot time being spent in
-tracer_init_tracefs(). On this particular i.MX6Q based device the
-kernel spends more than 1 second in this function, which is a
-significant amount of the overall kernel inititalization time. While
-this machine is no rocket with its Cortex A9 @ 800MHz, the amount of
-CPU time being used there is pretty irritating.
+  i2c-pmic: 'sda-gpios' is a required property
+  i2c-pmic: 'scl-gpios' is a required property
 
-Specifically the issue lies within trace_event_eval_update where ~1100
-trace_event_calls get updated with ~500 trace_eval_maps. I haven't had
-a chance yet to dig any deeper or try to understand more of what's
-going on there, but I wanted to get the issue out there in case anyone
-has some cycles to spare to help us along.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/s5pv210-goni.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The obvious questions for now are:
-1. Why is this function so damn expensive (at least on this whimpy ARM
-machine)? and
-2. Could any of this be done asynchronously, to not block the kernel in
-early init?
-
-Regards,
-Lucas
+diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
+index eec6531e6ef8..ad8d5d2fa32d 100644
+--- a/arch/arm/boot/dts/s5pv210-goni.dts
++++ b/arch/arm/boot/dts/s5pv210-goni.dts
+@@ -76,8 +76,8 @@
+ 
+ 	i2c_pmic: i2c-pmic {
+ 		compatible = "i2c-gpio";
+-		gpios = <&gpj4 0 GPIO_ACTIVE_HIGH>, /* sda */
+-			<&gpj4 3 GPIO_ACTIVE_HIGH>; /* scl */
++		sda-gpios = <&gpj4 0 GPIO_ACTIVE_HIGH>;
++		scl-gpios = <&gpj4 3 GPIO_ACTIVE_HIGH>;
+ 		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+-- 
+2.17.1
 
