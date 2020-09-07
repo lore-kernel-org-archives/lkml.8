@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F941C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD9CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E8532067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECAB20C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="Ryqzg1KH"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="mLP1WYoe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729789AbgIGSzr (ORCPT
+        id S1729811AbgIGS4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:55:47 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:48352 "EHLO
+        Mon, 7 Sep 2020 14:56:02 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:7142 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729448AbgIGSzM (ORCPT
+        by vger.kernel.org with ESMTP id S1729463AbgIGSzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:55:12 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087Imnev005031;
+        Mon, 7 Sep 2020 14:55:40 -0400
+Received: from pps.filterd (m0150242.ppops.net [127.0.0.1])
+        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087ImoRM026308;
         Mon, 7 Sep 2020 18:54:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=message-id : date : from
  : to : cc : subject : references : mime-version : content-type; s=pps0720;
- bh=K0D6ru0LnNvvF4KgYb5NA+052i8BZjIdhyx56/YHDwI=;
- b=Ryqzg1KHUEVxFYxy1NO2rf/5ZyUEwVNXSGkgAhhYFCs+71IEyiPgs5A0dBTHnQxN4R7S
- 6rs0e54IX33Ii3m3fP0HrGxOs/DsXJXkYa9Od7GWKgjSH6QiPRk6zF0RIo5wV74AYPej
- Bmnl34y1u42S2HZc00/CImytasoklv3lbqqoBQVpIi5rY0s//jCq9DzVfM9XOQHsdr86
- Y6KHwUwNPJBTjvjPl2OlW6oeqYvqnR3J0clpkfFk8+/WMPbSuBSA4d+usDR2o19VMXdu
- 4Va8yhFafrPw9onNjWO2f5H6E+TUc1GALIZrGELVf9sHxwq2ayniE9HwKO7DUWBEtnby OA== 
-Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
-        by mx0b-002e3701.pphosted.com with ESMTP id 33c02224pd-1
+ bh=XesigQ9r56GZBBIC9bZUYBuHGSq6Ft++APwB3GRnt2Q=;
+ b=mLP1WYoeI1G8UDg4RurhmFfYP4QE5lH8EiHWiBzGSGeLPFa1NY1/OWpLiXcZc6hH02Vo
+ tGeolNxqe6HD1LDlNAlNyVXct1pxRvMV8nIGCyBE7xEWJNHeZnr8j9Qydv80T5GKMes4
+ F/XDgYELo4GJpXXMAWkKj4so1oKNvxJuCTj7G/eOq1I1ZDWOrMmHqTh+WrEK/gMaEspy
+ pPcR2+0BfqiBy/fFL2LCEMv/+l9+VnU0A4WftW/D5YqTVE0XNaRQvNuRKrkClHs8j9Fi
+ kNEXdtUtEnp6MINXhIrFK4C+faMyL9qO1dRwa6L6GyL7/yOWwYaPyT77FwjRiCgmS12w IQ== 
+Received: from g9t5008.houston.hpe.com (g9t5008.houston.hpe.com [15.241.48.72])
+        by mx0a-002e3701.pphosted.com with ESMTP id 33cmremq9b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:54:34 +0000
+        Mon, 07 Sep 2020 18:54:33 +0000
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 4F2BAAE;
+        by g9t5008.houston.hpe.com (Postfix) with ESMTP id 42E5059;
         Mon,  7 Sep 2020 18:54:31 +0000 (UTC)
 Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id 8E25630000A0A; Mon,  7 Sep 2020 13:54:30 -0500 (CDT)
-Message-ID: <20200907185430.495115782@hpe.com>
+        id D62B730060F0C; Mon,  7 Sep 2020 13:54:30 -0500 (CDT)
+Message-ID: <20200907185430.782245884@hpe.com>
 User-Agent: quilt/0.66
-Date:   Mon, 07 Sep 2020 13:54:31 -0500
+Date:   Mon, 07 Sep 2020 13:54:34 -0500
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -64,2982 +64,8812 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Jian Cai <caij2003@gmail.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 01/12] x86/platform/uv: Remove UV BAU TLB Shootdown Handler
+Subject: [PATCH 04/12] x86/platform/uv: Update UV MMRs for UV5
 References: <20200907185430.363197758@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 adultscore=0 phishscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 suspectscore=2 clxscore=1015 spamscore=0
- mlxscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1015 lowpriorityscore=0 suspectscore=0 priorityscore=1501
+ mlxscore=0 bulkscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2009070181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Broadcast Assist Unit (BAU) TLB shootdown handler is being rewritten
-to become the UV BAU APIC driver.  It is designed to speed up sending
-IPI's to selective CPUs within the system.  Remove the current TLB
-shutdown handler (tlb_uv.c) file and a couple of kernel hooks in the
-interim.
+Update UV MMRs for UV5 based on Verilog output from the UV Hub H/W design.
+This is the next generation of UV architecture with a new class (UVY)
+being defined for 52 bit physical address masks.  Use a bitmask for UV
+arch identification so a single test can cover multiple versions that
+have the same resulting value.  This patch also repairs any damage caused
+by the updates so it will still compile cleanly.  New UV5 functionality
+is added in the patches that follow.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
-Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/include/asm/idtentry.h  |    4 
- arch/x86/include/asm/uv/uv.h     |    4 
- arch/x86/include/asm/uv/uv_bau.h |  755 --------------
- arch/x86/kernel/idt.c            |    3 
- arch/x86/mm/tlb.c                |   24 
- arch/x86/platform/uv/Makefile    |    2 
- arch/x86/platform/uv/tlb_uv.c    | 2097 ---------------------------------------
- 7 files changed, 2 insertions(+), 2887 deletions(-)
+ arch/x86/include/asm/uv/uv_mmrs.h |10049 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10047 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10065 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10087 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10114 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10114 +++++++++++++++++++++++---------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10143 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10174 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10004 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10169 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10169 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10276 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10272 ++++++++++++++++++++++++--------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10320 +++++++++++++++++++++++++-------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10320 +++++++++++++++++++++++++-------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10691 ++++++++++++++++++++++++++------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10691 ++++++++++++++++++++++++++------------
+ arch/x86/include/asm/uv/uv_mmrs.h |10409 +++++++++++++++++++++++++-------------
+ arch/x86/include/asm/uv/uv_hub.h   |   58 
+ arch/x86/include/asm/uv/uv_mmrs.h  |11302 +++++++++++++++++++++++++------------
+ arch/x86/include/asm/uv/uv_hub.h   |   61 
+ arch/x86/include/asm/uv/uv_mmrs.h  | 7616 +++++++++++++++++++------------------
+ arch/x86/kernel/apic/x2apic_uv_x.c |  260 -
+ arch/x86/platform/uv/uv_time.c     |   11 
+ drivers/misc/sgi-gru/grufile.c     |    5 
+ 5 files changed, 4266 insertions(+), 3687 deletions(-)
 
---- linux.orig/arch/x86/include/asm/idtentry.h
-+++ linux/arch/x86/include/asm/idtentry.h
-@@ -595,10 +595,6 @@ DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VE
- #endif
+--- linux.orig/arch/x86/include/asm/uv/uv_hub.h
++++ linux/arch/x86/include/asm/uv/uv_hub.h
+@@ -145,6 +145,8 @@ struct uv_gam_range_s {
+  * available in the L3 cache on the cpu socket for the node.
+  */
+ struct uv_hub_info_s {
++	unsigned int		hub_type;
++	unsigned char		hub_revision;
+ 	unsigned long		global_mmr_base;
+ 	unsigned long		global_mmr_shift;
+ 	unsigned long		gpa_mask;
+@@ -157,7 +159,6 @@ struct uv_hub_info_s {
+ 	unsigned char		m_val;
+ 	unsigned char		n_val;
+ 	unsigned char		gr_table_len;
+-	unsigned char		hub_revision;
+ 	unsigned char		apic_pnode_shift;
+ 	unsigned char		gpa_shift;
+ 	unsigned char		m_shift;
+@@ -206,6 +207,17 @@ static inline struct uv_hub_info_s *uv_c
+ 	return (struct uv_hub_info_s *)uv_cpu_info_per(cpu)->p_uv_hub_info;
+ }
  
- #ifdef CONFIG_X86_LOCAL_APIC
--# ifdef CONFIG_X86_UV
--DECLARE_IDTENTRY_SYSVEC(UV_BAU_MESSAGE,			sysvec_uv_bau_message);
--# endif
--
- # ifdef CONFIG_X86_MCE_THRESHOLD
- DECLARE_IDTENTRY_SYSVEC(THRESHOLD_APIC_VECTOR,		sysvec_threshold);
- # endif
---- linux.orig/arch/x86/include/asm/uv/uv.h
-+++ linux/arch/x86/include/asm/uv/uv.h
-@@ -35,10 +35,8 @@ extern int is_uv_hubbed(int uvtype);
- extern void uv_cpu_init(void);
- extern void uv_nmi_init(void);
- extern void uv_system_init(void);
--extern const struct cpumask *uv_flush_tlb_others(const struct cpumask *cpumask,
--						 const struct flush_tlb_info *info);
++static inline int uv_hub_type(void)
++{
++	return uv_hub_info->hub_type;
++}
++
++static inline __init void uv_hub_type_set(int uvmask)
++{
++	uv_hub_info->hub_type = uvmask;
++}
++
++
+ /*
+  * HUB revision ranges for each UV HUB architecture.
+  * This is a software convention - NOT the hardware revision numbers in
+@@ -216,38 +228,29 @@ static inline struct uv_hub_info_s *uv_c
+ #define UV4_HUB_REVISION_BASE		7
+ #define UV4A_HUB_REVISION_BASE		8	/* UV4 (fixed) rev 2 */
  
--#else	/* X86_UV */
-+#else	/* !X86_UV */
+-static inline int is_uv2_hub(void)
+-{
+-	return is_uv_hubbed(uv(2));
+-}
+-
+-static inline int is_uv3_hub(void)
+-{
+-	return is_uv_hubbed(uv(3));
+-}
++static inline int is_uv(int uvmask) { return uv_hub_type() & uvmask; }
++static inline int is_uv1_hub(void) { return 0; }
++static inline int is_uv2_hub(void) { return is_uv(UV2); }
++static inline int is_uv3_hub(void) { return is_uv(UV3); }
++static inline int is_uv4a_hub(void) { return is_uv(UV4A); }
++static inline int is_uv4_hub(void) { return is_uv(UV4); }
++static inline int is_uv5_hub(void) { return 0; }
  
- static inline enum uv_system_type get_uv_system_type(void) { return UV_NONE; }
- static inline bool is_early_uv_system(void)	{ return 0; }
---- linux.orig/arch/x86/include/asm/uv/uv_bau.h
-+++ /dev/null
-@@ -1,755 +0,0 @@
--/*
-- * This file is subject to the terms and conditions of the GNU General Public
-- * License.  See the file "COPYING" in the main directory of this archive
-- * for more details.
-- *
-- * SGI UV Broadcast Assist Unit definitions
-- *
-- * Copyright (C) 2008-2011 Silicon Graphics, Inc. All rights reserved.
-- */
--
--#ifndef _ASM_X86_UV_UV_BAU_H
--#define _ASM_X86_UV_UV_BAU_H
--
--#include <linux/bitmap.h>
--#include <asm/idtentry.h>
--
--#define BITSPERBYTE 8
--
--/*
-- * Broadcast Assist Unit messaging structures
-- *
-- * Selective Broadcast activations are induced by software action
-- * specifying a particular 8-descriptor "set" via a 6-bit index written
-- * to an MMR.
-- * Thus there are 64 unique 512-byte sets of SB descriptors - one set for
-- * each 6-bit index value. These descriptor sets are mapped in sequence
-- * starting with set 0 located at the address specified in the
-- * BAU_SB_DESCRIPTOR_BASE register, set 1 is located at BASE + 512,
-- * set 2 is at BASE + 2*512, set 3 at BASE + 3*512, and so on.
-- *
-- * We will use one set for sending BAU messages from each of the
-- * cpu's on the uvhub.
-- *
-- * TLB shootdown will use the first of the 8 descriptors of each set.
-- * Each of the descriptors is 64 bytes in size (8*64 = 512 bytes in a set).
-- */
--
--#define MAX_CPUS_PER_UVHUB		128
--#define MAX_CPUS_PER_SOCKET		64
--#define ADP_SZ				64 /* hardware-provided max. */
--#define UV_CPUS_PER_AS			32 /* hardware-provided max. */
--#define ITEMS_PER_DESC			8
--/* the 'throttle' to prevent the hardware stay-busy bug */
--#define MAX_BAU_CONCURRENT		3
--#define UV_ACT_STATUS_MASK		0x3
--#define UV_ACT_STATUS_SIZE		2
--#define UV_DISTRIBUTION_SIZE		256
--#define UV_SW_ACK_NPENDING		8
--#define UV_NET_ENDPOINT_INTD		0x28
--#define UV_PAYLOADQ_GNODE_SHIFT		49
--#define UV_PTC_BASENAME			"sgi_uv/ptc_statistics"
--#define UV_BAU_BASENAME			"sgi_uv/bau_tunables"
--#define UV_BAU_TUNABLES_DIR		"sgi_uv"
--#define UV_BAU_TUNABLES_FILE		"bau_tunables"
--#define WHITESPACE			" \t\n"
--#define cpubit_isset(cpu, bau_local_cpumask) \
--	test_bit((cpu), (bau_local_cpumask).bits)
--
--/* [19:16] SOFT_ACK timeout period  19: 1 is urgency 7  17:16 1 is multiplier */
--/*
-- * UV2: Bit 19 selects between
-- *  (0): 10 microsecond timebase and
-- *  (1): 80 microseconds
-- *  we're using 560us
-- */
--#define UV_INTD_SOFT_ACK_TIMEOUT_PERIOD	(15UL)
--/* assuming UV3 is the same */
--
--#define BAU_MISC_CONTROL_MULT_MASK	3
--
--#define UVH_AGING_PRESCALE_SEL		0x000000b000UL
--/* [30:28] URGENCY_7  an index into a table of times */
--#define BAU_URGENCY_7_SHIFT		28
--#define BAU_URGENCY_7_MASK		7
--
--#define UVH_TRANSACTION_TIMEOUT		0x000000b200UL
--/* [45:40] BAU - BAU transaction timeout select - a multiplier */
--#define BAU_TRANS_SHIFT			40
--#define BAU_TRANS_MASK			0x3f
--
--/*
-- * shorten some awkward names
-- */
--#define AS_PUSH_SHIFT UVH_LB_BAU_SB_ACTIVATION_CONTROL_PUSH_SHFT
--#define SOFTACK_MSHIFT UVH_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT
--#define SOFTACK_PSHIFT UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT
--#define SOFTACK_TIMEOUT_PERIOD UV_INTD_SOFT_ACK_TIMEOUT_PERIOD
--#define PREFETCH_HINT_SHFT UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_PREFETCH_HINT_SHFT
--#define SB_STATUS_SHFT UV3H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT
--#define write_gmmr	uv_write_global_mmr64
--#define write_lmmr	uv_write_local_mmr
--#define read_lmmr	uv_read_local_mmr
--#define read_gmmr	uv_read_global_mmr64
--
--/*
-- * bits in UVH_LB_BAU_SB_ACTIVATION_STATUS_0/1
-- */
--#define DS_IDLE				0
--#define DS_ACTIVE			1
--#define DS_DESTINATION_TIMEOUT		2
--#define DS_SOURCE_TIMEOUT		3
--/*
-- * bits put together from HRP_LB_BAU_SB_ACTIVATION_STATUS_0/1/2
-- * values 1 and 3 will not occur
-- *        Decoded meaning              ERROR  BUSY    AUX ERR
-- * -------------------------------     ----   -----   -------
-- * IDLE                                 0       0        0
-- * BUSY (active)                        0       1        0
-- * SW Ack Timeout (destination)         1       0        0
-- * SW Ack INTD rejected (strong NACK)   1       0        1
-- * Source Side Time Out Detected        1       1        0
-- * Destination Side PUT Failed          1       1        1
-- */
--#define UV2H_DESC_IDLE			0
--#define UV2H_DESC_BUSY			2
--#define UV2H_DESC_DEST_TIMEOUT		4
--#define UV2H_DESC_DEST_STRONG_NACK	5
--#define UV2H_DESC_SOURCE_TIMEOUT	6
--#define UV2H_DESC_DEST_PUT_ERR		7
--
--/*
-- * delay for 'plugged' timeout retries, in microseconds
-- */
--#define PLUGGED_DELAY			10
--
--/*
-- * threshholds at which to use IPI to free resources
-- */
--/* after this # consecutive 'plugged' timeouts, use IPI to release resources */
--#define PLUGSB4RESET			100
--/* after this many consecutive timeouts, use IPI to release resources */
--#define TIMEOUTSB4RESET			1
--/* at this number uses of IPI to release resources, giveup the request */
--#define IPI_RESET_LIMIT			1
--/* after this # consecutive successes, bump up the throttle if it was lowered */
--#define COMPLETE_THRESHOLD		5
--/* after this # of giveups (fall back to kernel IPI's) disable the use of
--   the BAU for a period of time */
--#define GIVEUP_LIMIT			100
--
--#define UV_LB_SUBNODEID			0x10
--
--#define UV_SA_SHFT UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT
--#define UV_SA_MASK UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK
--/* 4 bits of software ack period */
--#define UV2_ACK_MASK			0x7UL
--#define UV2_ACK_UNITS_SHFT		3
--#define UV2_EXT_SHFT UV2H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT
--
--/*
-- * number of entries in the destination side payload queue
-- */
--#define DEST_Q_SIZE			20
--/*
-- * number of destination side software ack resources
-- */
--#define DEST_NUM_RESOURCES		8
--/*
-- * completion statuses for sending a TLB flush message
-- */
--#define FLUSH_RETRY_PLUGGED		1
--#define FLUSH_RETRY_TIMEOUT		2
--#define FLUSH_GIVEUP			3
--#define FLUSH_COMPLETE			4
--
--/*
-- * tuning the action when the numalink network is extremely delayed
-- */
--#define CONGESTED_RESPONSE_US		1000	/* 'long' response time, in
--						   microseconds */
--#define CONGESTED_REPS			10	/* long delays averaged over
--						   this many broadcasts */
--#define DISABLED_PERIOD			10	/* time for the bau to be
--						   disabled, in seconds */
--/* see msg_type: */
--#define MSG_NOOP			0
--#define MSG_REGULAR			1
--#define MSG_RETRY			2
--
--#define BAU_DESC_QUALIFIER		0x534749
--
--enum uv_bau_version {
--	UV_BAU_V2 = 2,
--	UV_BAU_V3,
--	UV_BAU_V4,
--};
--
--/*
-- * Distribution: 32 bytes (256 bits) (bytes 0-0x1f of descriptor)
-- * If the 'multilevel' flag in the header portion of the descriptor
-- * has been set to 0, then endpoint multi-unicast mode is selected.
-- * The distribution specification (32 bytes) is interpreted as a 256-bit
-- * distribution vector. Adjacent bits correspond to consecutive even numbered
-- * nodeIDs. The result of adding the index of a given bit to the 15-bit
-- * 'base_dest_nasid' field of the header corresponds to the
-- * destination nodeID associated with that specified bit.
-- */
--struct pnmask {
--	unsigned long		bits[BITS_TO_LONGS(UV_DISTRIBUTION_SIZE)];
--};
--
--/*
-- * mask of cpu's on a uvhub
-- * (during initialization we need to check that unsigned long has
-- *  enough bits for max. cpu's per uvhub)
-- */
--struct bau_local_cpumask {
--	unsigned long		bits;
--};
--
--/*
-- * Payload: 16 bytes (128 bits) (bytes 0x20-0x2f of descriptor)
-- * only 12 bytes (96 bits) of the payload area are usable.
-- * An additional 3 bytes (bits 27:4) of the header address are carried
-- * to the next bytes of the destination payload queue.
-- * And an additional 2 bytes of the header Suppl_A field are also
-- * carried to the destination payload queue.
-- * But the first byte of the Suppl_A becomes bits 127:120 (the 16th byte)
-- * of the destination payload queue, which is written by the hardware
-- * with the s/w ack resource bit vector.
-- * [ effective message contents (16 bytes (128 bits) maximum), not counting
-- *   the s/w ack bit vector  ]
-- */
--
--/**
-- * struct uv2_3_bau_msg_payload - defines payload for INTD transactions
-- * @address:		Signifies a page or all TLB's of the cpu
-- * @sending_cpu:	CPU from which the message originates
-- * @acknowledge_count:	CPUs on the destination Hub that received the interrupt
-- */
--struct uv2_3_bau_msg_payload {
--	u64 address;
--	u16 sending_cpu;
--	u16 acknowledge_count;
--};
--
--/**
-- * struct uv4_bau_msg_payload - defines payload for INTD transactions
-- * @address:		Signifies a page or all TLB's of the cpu
-- * @sending_cpu:	CPU from which the message originates
-- * @acknowledge_count:	CPUs on the destination Hub that received the interrupt
-- * @qualifier:		Set by source to verify origin of INTD broadcast
-- */
--struct uv4_bau_msg_payload {
--	u64 address;
--	u16 sending_cpu;
--	u16 acknowledge_count;
--	u32 reserved:8;
--	u32 qualifier:24;
--};
--
--/*
-- * UV2 Message header:  16 bytes (128 bits) (bytes 0x30-0x3f of descriptor)
-- * see figure 9-2 of harp_sys.pdf
-- * assuming UV3 is the same
-- */
--struct uv2_3_bau_msg_header {
--	unsigned int	base_dest_nasid:15;	/* nasid of the first bit */
--	/* bits 14:0 */				/* in uvhub map */
--	unsigned int	dest_subnodeid:5;	/* must be 0x10, for the LB */
--	/* bits 19:15 */
--	unsigned int	rsvd_1:1;		/* must be zero */
--	/* bit 20 */
--	/* Address bits 59:21 */
--	/* bits 25:2 of address (44:21) are payload */
--	/* these next 24 bits become bytes 12-14 of msg */
--	/* bits 28:21 land in byte 12 */
--	unsigned int	replied_to:1;		/* sent as 0 by the source to
--						   byte 12 */
--	/* bit 21 */
--	unsigned int	msg_type:3;		/* software type of the
--						   message */
--	/* bits 24:22 */
--	unsigned int	canceled:1;		/* message canceled, resource
--						   is to be freed*/
--	/* bit 25 */
--	unsigned int	payload_1:3;		/* not currently used */
--	/* bits 28:26 */
--
--	/* bits 36:29 land in byte 13 */
--	unsigned int	payload_2a:3;		/* not currently used */
--	unsigned int	payload_2b:5;		/* not currently used */
--	/* bits 36:29 */
--
--	/* bits 44:37 land in byte 14 */
--	unsigned int	payload_3:8;		/* not currently used */
--	/* bits 44:37 */
--
--	unsigned int	rsvd_2:7;		/* reserved */
--	/* bits 51:45 */
--	unsigned int	swack_flag:1;		/* software acknowledge flag */
--	/* bit 52 */
--	unsigned int	rsvd_3a:3;		/* must be zero */
--	unsigned int	rsvd_3b:8;		/* must be zero */
--	unsigned int	rsvd_3c:8;		/* must be zero */
--	unsigned int	rsvd_3d:3;		/* must be zero */
--	/* bits 74:53 */
--	unsigned int	fairness:3;		/* usually zero */
--	/* bits 77:75 */
--
--	unsigned int	sequence:16;		/* message sequence number */
--	/* bits 93:78  Suppl_A  */
--	unsigned int	chaining:1;		/* next descriptor is part of
--						   this activation*/
--	/* bit 94 */
--	unsigned int	multilevel:1;		/* multi-level multicast
--						   format */
--	/* bit 95 */
--	unsigned int	rsvd_4:24;		/* ordered / source node /
--						   source subnode / aging
--						   must be zero */
--	/* bits 119:96 */
--	unsigned int	command:8;		/* message type */
--	/* bits 127:120 */
--};
--
--/*
-- * The activation descriptor:
-- * The format of the message to send, plus all accompanying control
-- * Should be 64 bytes
-- */
--struct bau_desc {
--	struct pnmask				distribution;
--	/*
--	 * message template, consisting of header and payload:
--	 */
--	union bau_msg_header {
--		struct uv2_3_bau_msg_header	uv2_3_hdr;
--	} header;
--
--	union bau_payload_header {
--		struct uv2_3_bau_msg_payload	uv2_3;
--		struct uv4_bau_msg_payload	uv4;
--	} payload;
--};
--/* UV2:
-- *   -payload--    ---------header------
-- *   bytes 0-11    bits 70-78  bits 21-44
-- *       A           B  (2)      C (3)
-- *
-- *            A/B/C are moved to:
-- *       A            C          B
-- *   bytes 0-11  bytes 12-14  bytes 16-17  (byte 15 filled in by hw as vector)
-- *   ------------payload queue-----------
-- */
--
--/*
-- * The payload queue on the destination side is an array of these.
-- * With BAU_MISC_CONTROL set for software acknowledge mode, the messages
-- * are 32 bytes (2 micropackets) (256 bits) in length, but contain only 17
-- * bytes of usable data, including the sw ack vector in byte 15 (bits 127:120)
-- * (12 bytes come from bau_msg_payload, 3 from payload_1, 2 from
-- *  swack_vec and payload_2)
-- * "Enabling Software Acknowledgment mode (see Section 4.3.3 Software
-- *  Acknowledge Processing) also selects 32 byte (17 bytes usable) payload
-- *  operation."
-- */
--struct bau_pq_entry {
--	unsigned long	address;	/* signifies a page or all TLB's
--					   of the cpu */
--	/* 64 bits, bytes 0-7 */
--	unsigned short	sending_cpu;	/* cpu that sent the message */
--	/* 16 bits, bytes 8-9 */
--	unsigned short	acknowledge_count; /* filled in by destination */
--	/* 16 bits, bytes 10-11 */
--	/* these next 3 bytes come from bits 58-81 of the message header */
--	unsigned short	replied_to:1;	/* sent as 0 by the source */
--	unsigned short	msg_type:3;	/* software message type */
--	unsigned short	canceled:1;	/* sent as 0 by the source */
--	unsigned short	unused1:3;	/* not currently using */
--	/* byte 12 */
--	unsigned char	unused2a;	/* not currently using */
--	/* byte 13 */
--	unsigned char	unused2;	/* not currently using */
--	/* byte 14 */
--	unsigned char	swack_vec;	/* filled in by the hardware */
--	/* byte 15 (bits 127:120) */
--	unsigned short	sequence;	/* message sequence number */
--	/* bytes 16-17 */
--	unsigned char	unused4[2];	/* not currently using bytes 18-19 */
--	/* bytes 18-19 */
--	int		number_of_cpus;	/* filled in at destination */
--	/* 32 bits, bytes 20-23 (aligned) */
--	unsigned char	unused5[8];	/* not using */
--	/* bytes 24-31 */
--};
--
--struct msg_desc {
--	struct bau_pq_entry	*msg;
--	int			msg_slot;
--	struct bau_pq_entry	*queue_first;
--	struct bau_pq_entry	*queue_last;
--};
--
--struct reset_args {
--	int			sender;
--};
--
--/*
-- * This structure is allocated per_cpu for UV TLB shootdown statistics.
-- */
--struct ptc_stats {
--	/* sender statistics */
--	unsigned long	s_giveup;		/* number of fall backs to
--						   IPI-style flushes */
--	unsigned long	s_requestor;		/* number of shootdown
--						   requests */
--	unsigned long	s_stimeout;		/* source side timeouts */
--	unsigned long	s_dtimeout;		/* destination side timeouts */
--	unsigned long	s_strongnacks;		/* number of strong nack's */
--	unsigned long	s_time;			/* time spent in sending side */
--	unsigned long	s_retriesok;		/* successful retries */
--	unsigned long	s_ntargcpu;		/* total number of cpu's
--						   targeted */
--	unsigned long	s_ntargself;		/* times the sending cpu was
--						   targeted */
--	unsigned long	s_ntarglocals;		/* targets of cpus on the local
--						   blade */
--	unsigned long	s_ntargremotes;		/* targets of cpus on remote
--						   blades */
--	unsigned long	s_ntarglocaluvhub;	/* targets of the local hub */
--	unsigned long	s_ntargremoteuvhub;	/* remotes hubs targeted */
--	unsigned long	s_ntarguvhub;		/* total number of uvhubs
--						   targeted */
--	unsigned long	s_ntarguvhub16;		/* number of times target
--						   hubs >= 16*/
--	unsigned long	s_ntarguvhub8;		/* number of times target
--						   hubs >= 8 */
--	unsigned long	s_ntarguvhub4;		/* number of times target
--						   hubs >= 4 */
--	unsigned long	s_ntarguvhub2;		/* number of times target
--						   hubs >= 2 */
--	unsigned long	s_ntarguvhub1;		/* number of times target
--						   hubs == 1 */
--	unsigned long	s_resets_plug;		/* ipi-style resets from plug
--						   state */
--	unsigned long	s_resets_timeout;	/* ipi-style resets from
--						   timeouts */
--	unsigned long	s_busy;			/* status stayed busy past
--						   s/w timer */
--	unsigned long	s_throttles;		/* waits in throttle */
--	unsigned long	s_retry_messages;	/* retry broadcasts */
--	unsigned long	s_bau_reenabled;	/* for bau enable/disable */
--	unsigned long	s_bau_disabled;		/* for bau enable/disable */
--	unsigned long	s_uv2_wars;		/* uv2 workaround, perm. busy */
--	unsigned long	s_uv2_wars_hw;		/* uv2 workaround, hiwater */
--	unsigned long	s_uv2_war_waits;	/* uv2 workaround, long waits */
--	unsigned long	s_overipilimit;		/* over the ipi reset limit */
--	unsigned long	s_giveuplimit;		/* disables, over giveup limit*/
--	unsigned long	s_enters;		/* entries to the driver */
--	unsigned long	s_ipifordisabled;	/* fall back to IPI; disabled */
--	unsigned long	s_plugged;		/* plugged by h/w bug*/
--	unsigned long	s_congested;		/* giveup on long wait */
--	/* destination statistics */
--	unsigned long	d_alltlb;		/* times all tlb's on this
--						   cpu were flushed */
--	unsigned long	d_onetlb;		/* times just one tlb on this
--						   cpu was flushed */
--	unsigned long	d_multmsg;		/* interrupts with multiple
--						   messages */
--	unsigned long	d_nomsg;		/* interrupts with no message */
--	unsigned long	d_time;			/* time spent on destination
--						   side */
--	unsigned long	d_requestee;		/* number of messages
--						   processed */
--	unsigned long	d_retries;		/* number of retry messages
--						   processed */
--	unsigned long	d_canceled;		/* number of messages canceled
--						   by retries */
--	unsigned long	d_nocanceled;		/* retries that found nothing
--						   to cancel */
--	unsigned long	d_resets;		/* number of ipi-style requests
--						   processed */
--	unsigned long	d_rcanceled;		/* number of messages canceled
--						   by resets */
--};
--
--struct tunables {
--	int			*tunp;
--	int			deflt;
--};
--
--struct hub_and_pnode {
--	short			uvhub;
--	short			pnode;
--};
--
--struct socket_desc {
--	short			num_cpus;
--	short			cpu_number[MAX_CPUS_PER_SOCKET];
--};
--
--struct uvhub_desc {
--	unsigned short		socket_mask;
--	short			num_cpus;
--	short			uvhub;
--	short			pnode;
--	struct socket_desc	socket[2];
--};
--
--/**
-- * struct bau_control
-- * @status_mmr: location of status mmr, determined by uvhub_cpu
-- * @status_index: index of ERR|BUSY bits in status mmr, determined by uvhub_cpu
-- *
-- * Per-cpu control struct containing CPU topology information and BAU tuneables.
-- */
--struct bau_control {
--	struct bau_desc		*descriptor_base;
--	struct bau_pq_entry	*queue_first;
--	struct bau_pq_entry	*queue_last;
--	struct bau_pq_entry	*bau_msg_head;
--	struct bau_control	*uvhub_master;
--	struct bau_control	*socket_master;
--	struct ptc_stats	*statp;
--	cpumask_t		*cpumask;
--	unsigned long		timeout_interval;
--	unsigned long		set_bau_on_time;
--	atomic_t		active_descriptor_count;
--	int			plugged_tries;
--	int			timeout_tries;
--	int			ipi_attempts;
--	int			conseccompletes;
--	u64			status_mmr;
--	int			status_index;
--	bool			nobau;
--	short			baudisabled;
--	short			cpu;
--	short			osnode;
--	short			uvhub_cpu;
--	short			uvhub;
--	short			uvhub_version;
--	short			cpus_in_socket;
--	short			cpus_in_uvhub;
--	short			partition_base_pnode;
--	short			busy;       /* all were busy (war) */
--	unsigned short		message_number;
--	unsigned short		uvhub_quiesce;
--	short			socket_acknowledge_count[DEST_Q_SIZE];
--	cycles_t		send_message;
--	cycles_t		period_end;
--	cycles_t		period_time;
--	spinlock_t		uvhub_lock;
--	spinlock_t		queue_lock;
--	spinlock_t		disable_lock;
--	/* tunables */
--	int			max_concurr;
--	int			max_concurr_const;
--	int			plugged_delay;
--	int			plugsb4reset;
--	int			timeoutsb4reset;
--	int			ipi_reset_limit;
--	int			complete_threshold;
--	int			cong_response_us;
--	int			cong_reps;
--	cycles_t		disabled_period;
--	int			period_giveups;
--	int			giveup_limit;
--	long			period_requests;
--	struct hub_and_pnode	*thp;
--};
--
--/* Abstracted BAU functions */
--struct bau_operations {
--	unsigned long	(*read_l_sw_ack)(void);
--	unsigned long	(*read_g_sw_ack)(int pnode);
--	unsigned long	(*bau_gpa_to_offset)(unsigned long vaddr);
--	void		(*write_l_sw_ack)(unsigned long mmr);
--	void		(*write_g_sw_ack)(int pnode, unsigned long mmr);
--	void		(*write_payload_first)(int pnode, unsigned long mmr);
--	void		(*write_payload_last)(int pnode, unsigned long mmr);
--	int		(*wait_completion)(struct bau_desc*,
--				struct bau_control*, long try);
--};
--
--static inline void write_mmr_data_broadcast(int pnode, unsigned long mmr_image)
+-/* First test "is UV4A", then "is UV4" */
+-static inline int is_uv4a_hub(void)
 -{
--	write_gmmr(pnode, UVH_BAU_DATA_BROADCAST, mmr_image);
--}
--
--static inline void write_mmr_descriptor_base(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_SB_DESCRIPTOR_BASE, mmr_image);
--}
--
--static inline void write_mmr_activation(unsigned long index)
--{
--	write_lmmr(UVH_LB_BAU_SB_ACTIVATION_CONTROL, index);
--}
--
--static inline void write_gmmr_activation(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_SB_ACTIVATION_CONTROL, mmr_image);
--}
--
--static inline void write_mmr_proc_payload_first(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UV4H_LB_PROC_INTD_QUEUE_FIRST, mmr_image);
--}
--
--static inline void write_mmr_proc_payload_last(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UV4H_LB_PROC_INTD_QUEUE_LAST, mmr_image);
--}
--
--static inline void write_mmr_payload_first(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST, mmr_image);
--}
--
--static inline void write_mmr_payload_tail(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL, mmr_image);
--}
--
--static inline void write_mmr_payload_last(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_INTD_PAYLOAD_QUEUE_LAST, mmr_image);
--}
--
--static inline void write_mmr_misc_control(int pnode, unsigned long mmr_image)
--{
--	write_gmmr(pnode, UVH_LB_BAU_MISC_CONTROL, mmr_image);
--}
--
--static inline unsigned long read_mmr_misc_control(int pnode)
--{
--	return read_gmmr(pnode, UVH_LB_BAU_MISC_CONTROL);
--}
--
--static inline void write_mmr_sw_ack(unsigned long mr)
--{
--	uv_write_local_mmr(UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS, mr);
--}
--
--static inline void write_gmmr_sw_ack(int pnode, unsigned long mr)
--{
--	write_gmmr(pnode, UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS, mr);
--}
--
--static inline unsigned long read_mmr_sw_ack(void)
--{
--	return read_lmmr(UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE);
--}
--
--static inline unsigned long read_gmmr_sw_ack(int pnode)
--{
--	return read_gmmr(pnode, UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE);
--}
--
--static inline void write_mmr_proc_sw_ack(unsigned long mr)
--{
--	uv_write_local_mmr(UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR, mr);
--}
--
--static inline void write_gmmr_proc_sw_ack(int pnode, unsigned long mr)
--{
--	write_gmmr(pnode, UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR, mr);
--}
--
--static inline unsigned long read_mmr_proc_sw_ack(void)
--{
--	return read_lmmr(UV4H_LB_PROC_INTD_SOFT_ACK_PENDING);
--}
--
--static inline unsigned long read_gmmr_proc_sw_ack(int pnode)
--{
--	return read_gmmr(pnode, UV4H_LB_PROC_INTD_SOFT_ACK_PENDING);
--}
--
--static inline void write_mmr_data_config(int pnode, unsigned long mr)
--{
--	uv_write_global_mmr64(pnode, UVH_BAU_DATA_CONFIG, mr);
--}
--
--static inline int bau_uvhub_isset(int uvhub, struct pnmask *dstp)
--{
--	return constant_test_bit(uvhub, &dstp->bits[0]);
--}
--static inline void bau_uvhub_set(int pnode, struct pnmask *dstp)
--{
--	__set_bit(pnode, &dstp->bits[0]);
--}
--static inline void bau_uvhubs_clear(struct pnmask *dstp,
--				    int nbits)
--{
--	bitmap_zero(&dstp->bits[0], nbits);
--}
--static inline int bau_uvhub_weight(struct pnmask *dstp)
--{
--	return bitmap_weight((unsigned long *)&dstp->bits[0],
--				UV_DISTRIBUTION_SIZE);
--}
--
--static inline void bau_cpubits_clear(struct bau_local_cpumask *dstp, int nbits)
--{
--	bitmap_zero(&dstp->bits, nbits);
--}
--
--struct atomic_short {
--	short counter;
--};
--
--/*
-- * atomic_read_short - read a short atomic variable
-- * @v: pointer of type atomic_short
-- *
-- * Atomically reads the value of @v.
-- */
--static inline int atomic_read_short(const struct atomic_short *v)
--{
--	return v->counter;
--}
--
--/*
-- * atom_asr - add and return a short int
-- * @i: short value to add
-- * @v: pointer of type atomic_short
-- *
-- * Atomically adds @i to @v and returns @i + @v
-- */
--static inline int atom_asr(short i, struct atomic_short *v)
--{
--	short __i = i;
--	asm volatile(LOCK_PREFIX "xaddw %0, %1"
--			: "+r" (i), "+m" (v->counter)
--			: : "memory");
--	return i + __i;
--}
--
--/*
-- * conditionally add 1 to *v, unless *v is >= u
-- * return 0 if we cannot add 1 to *v because it is >= u
-- * return 1 if we can add 1 to *v because it is < u
-- * the add is atomic
-- *
-- * This is close to atomic_add_unless(), but this allows the 'u' value
-- * to be lowered below the current 'v'.  atomic_add_unless can only stop
-- * on equal.
-- */
--static inline int atomic_inc_unless_ge(spinlock_t *lock, atomic_t *v, int u)
--{
--	spin_lock(lock);
--	if (atomic_read(v) >= u) {
--		spin_unlock(lock);
--		return 0;
--	}
--	atomic_inc(v);
--	spin_unlock(lock);
--	return 1;
--}
--
--void uv_bau_message_interrupt(struct pt_regs *regs);
--
--#endif /* _ASM_X86_UV_UV_BAU_H */
---- linux.orig/arch/x86/kernel/idt.c
-+++ linux/arch/x86/kernel/idt.c
-@@ -149,9 +149,6 @@ static const __initconst struct idt_data
- # ifdef CONFIG_IRQ_WORK
- 	INTG(IRQ_WORK_VECTOR,			asm_sysvec_irq_work),
- # endif
--# ifdef CONFIG_X86_UV
--	INTG(UV_BAU_MESSAGE,			asm_sysvec_uv_bau_message),
--# endif
- 	INTG(SPURIOUS_APIC_VECTOR,		asm_sysvec_spurious_apic_interrupt),
- 	INTG(ERROR_APIC_VECTOR,			asm_sysvec_error_interrupt),
- #endif
---- linux.orig/arch/x86/mm/tlb.c
-+++ linux/arch/x86/mm/tlb.c
-@@ -14,7 +14,6 @@
- #include <asm/nospec-branch.h>
- #include <asm/cache.h>
- #include <asm/apic.h>
--#include <asm/uv/uv.h>
- 
- #include "mm_internal.h"
- 
-@@ -809,29 +808,6 @@ STATIC_NOPV void native_flush_tlb_others
- 		trace_tlb_flush(TLB_REMOTE_SEND_IPI,
- 				(info->end - info->start) >> PAGE_SHIFT);
- 
--	if (is_uv_system()) {
--		/*
--		 * This whole special case is confused.  UV has a "Broadcast
--		 * Assist Unit", which seems to be a fancy way to send IPIs.
--		 * Back when x86 used an explicit TLB flush IPI, UV was
--		 * optimized to use its own mechanism.  These days, x86 uses
--		 * smp_call_function_many(), but UV still uses a manual IPI,
--		 * and that IPI's action is out of date -- it does a manual
--		 * flush instead of calling flush_tlb_func_remote().  This
--		 * means that the percpu tlb_gen variables won't be updated
--		 * and we'll do pointless flushes on future context switches.
--		 *
--		 * Rather than hooking native_flush_tlb_others() here, I think
--		 * that UV should be updated so that smp_call_function_many(),
--		 * etc, are optimal on UV.
--		 */
--		cpumask = uv_flush_tlb_others(cpumask, info);
--		if (cpumask)
--			smp_call_function_many(cpumask, flush_tlb_func_remote,
--					       (void *)info, 1);
--		return;
--	}
--
- 	/*
- 	 * If no page tables were freed, we can skip sending IPIs to
- 	 * CPUs in lazy TLB mode. They will flush the CPU themselves
---- linux.orig/arch/x86/platform/uv/Makefile
-+++ linux/arch/x86/platform/uv/Makefile
-@@ -1,2 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_X86_UV)		+= tlb_uv.o bios_uv.o uv_irq.o uv_sysfs.o uv_time.o uv_nmi.o
-+obj-$(CONFIG_X86_UV)		+= bios_uv.o uv_irq.o uv_sysfs.o uv_time.o uv_nmi.o
---- linux.orig/arch/x86/platform/uv/tlb_uv.c
-+++ /dev/null
-@@ -1,2097 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- *	SGI UltraViolet TLB flush routines.
-- *
-- *	(c) 2008-2014 Cliff Wickman <cpw@sgi.com>, SGI.
-- */
--#include <linux/seq_file.h>
--#include <linux/proc_fs.h>
--#include <linux/debugfs.h>
--#include <linux/kernel.h>
--#include <linux/slab.h>
--#include <linux/delay.h>
--
--#include <asm/mmu_context.h>
--#include <asm/uv/uv.h>
--#include <asm/uv/uv_mmrs.h>
--#include <asm/uv/uv_hub.h>
--#include <asm/uv/uv_bau.h>
--#include <asm/apic.h>
--#include <asm/tsc.h>
--#include <asm/irq_vectors.h>
--#include <asm/timer.h>
--
--static struct bau_operations ops __ro_after_init;
--
--static int timeout_us;
--static bool nobau = true;
--static int nobau_perm;
--
--/* tunables: */
--static int max_concurr		= MAX_BAU_CONCURRENT;
--static int max_concurr_const	= MAX_BAU_CONCURRENT;
--static int plugged_delay	= PLUGGED_DELAY;
--static int plugsb4reset		= PLUGSB4RESET;
--static int giveup_limit		= GIVEUP_LIMIT;
--static int timeoutsb4reset	= TIMEOUTSB4RESET;
--static int ipi_reset_limit	= IPI_RESET_LIMIT;
--static int complete_threshold	= COMPLETE_THRESHOLD;
--static int congested_respns_us	= CONGESTED_RESPONSE_US;
--static int congested_reps	= CONGESTED_REPS;
--static int disabled_period	= DISABLED_PERIOD;
--
--static struct tunables tunables[] = {
--	{&max_concurr,           MAX_BAU_CONCURRENT}, /* must be [0] */
--	{&plugged_delay,         PLUGGED_DELAY},
--	{&plugsb4reset,          PLUGSB4RESET},
--	{&timeoutsb4reset,       TIMEOUTSB4RESET},
--	{&ipi_reset_limit,       IPI_RESET_LIMIT},
--	{&complete_threshold,    COMPLETE_THRESHOLD},
--	{&congested_respns_us,   CONGESTED_RESPONSE_US},
--	{&congested_reps,        CONGESTED_REPS},
--	{&disabled_period,       DISABLED_PERIOD},
--	{&giveup_limit,          GIVEUP_LIMIT}
--};
--
--static struct dentry *tunables_dir;
--
--/* these correspond to the statistics printed by ptc_seq_show() */
--static char *stat_description[] = {
--	"sent:     number of shootdown messages sent",
--	"stime:    time spent sending messages",
--	"numuvhubs: number of hubs targeted with shootdown",
--	"numuvhubs16: number times 16 or more hubs targeted",
--	"numuvhubs8: number times 8 or more hubs targeted",
--	"numuvhubs4: number times 4 or more hubs targeted",
--	"numuvhubs2: number times 2 or more hubs targeted",
--	"numuvhubs1: number times 1 hub targeted",
--	"numcpus:  number of cpus targeted with shootdown",
--	"dto:      number of destination timeouts",
--	"retries:  destination timeout retries sent",
--	"rok:   :  destination timeouts successfully retried",
--	"resetp:   ipi-style resource resets for plugs",
--	"resett:   ipi-style resource resets for timeouts",
--	"giveup:   fall-backs to ipi-style shootdowns",
--	"sto:      number of source timeouts",
--	"bz:       number of stay-busy's",
--	"throt:    number times spun in throttle",
--	"swack:   image of UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE",
--	"recv:     shootdown messages received",
--	"rtime:    time spent processing messages",
--	"all:      shootdown all-tlb messages",
--	"one:      shootdown one-tlb messages",
--	"mult:     interrupts that found multiple messages",
--	"none:     interrupts that found no messages",
--	"retry:    number of retry messages processed",
--	"canc:     number messages canceled by retries",
--	"nocan:    number retries that found nothing to cancel",
--	"reset:    number of ipi-style reset requests processed",
--	"rcan:     number messages canceled by reset requests",
--	"disable:  number times use of the BAU was disabled",
--	"enable:   number times use of the BAU was re-enabled"
--};
--
--static int __init setup_bau(char *arg)
--{
--	int result;
--
--	if (!arg)
--		return -EINVAL;
--
--	result = strtobool(arg, &nobau);
--	if (result)
--		return result;
--
--	/* we need to flip the logic here, so that bau=y sets nobau to false */
--	nobau = !nobau;
--
--	if (!nobau)
--		pr_info("UV BAU Enabled\n");
--	else
--		pr_info("UV BAU Disabled\n");
--
+-	if (is_uv_hubbed(uv(4)))
+-		return (uv_hub_info->hub_revision == UV4A_HUB_REVISION_BASE);
 -	return 0;
 -}
--early_param("bau", setup_bau);
--
--/* base pnode in this partition */
--static int uv_base_pnode __read_mostly;
--
--static DEFINE_PER_CPU(struct ptc_stats, ptcstats);
--static DEFINE_PER_CPU(struct bau_control, bau_control);
--static DEFINE_PER_CPU(cpumask_var_t, uv_flush_tlb_mask);
--
--static void
--set_bau_on(void)
++/*
++ * UV4A is a revision of UV4.  So on UV4A, both is_uv4_hub() and
++ * is_uv4a_hub() return true, While on UV4, only is_uv4_hub()
++ * returns true.  So to get true results, first test if is UV4A,
++ * then test if is UV4.
++ */
+ 
+-static inline int is_uv4_hub(void)
 -{
--	int cpu;
--	struct bau_control *bcp;
--
--	if (nobau_perm) {
--		pr_info("BAU not initialized; cannot be turned on\n");
--		return;
--	}
--	nobau = false;
--	for_each_present_cpu(cpu) {
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->nobau = false;
--	}
--	pr_info("BAU turned on\n");
--	return;
+-	return is_uv_hubbed(uv(4));
 -}
--
--static void
--set_bau_off(void)
++/* UVX class: UV2,3,4 */
++static inline int is_uvx_hub(void) { return is_uv(UVX); }
+ 
+-static inline int is_uvx_hub(void)
 -{
--	int cpu;
--	struct bau_control *bcp;
--
--	nobau = true;
--	for_each_present_cpu(cpu) {
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->nobau = true;
--	}
--	pr_info("BAU turned off\n");
--	return;
+-	return (is_uv_hubbed(-2) >= uv(2));
 -}
--
--/*
-- * Determine the first node on a uvhub. 'Nodes' are used for kernel
-- * memory allocation.
-- */
--static int __init uvhub_to_first_node(int uvhub)
++/* UVY class: UV5,..? */
++static inline int is_uvy_hub(void) { return 0; }
+ 
+-static inline int is_uv_hub(void)
 -{
--	int node, b;
--
--	for_each_online_node(node) {
--		b = uv_node_to_blade_id(node);
--		if (uvhub == b)
--			return node;
--	}
--	return -1;
+-	return is_uvx_hub();
 -}
++/* Any UV Hubbed System */
++static inline int is_uv_hub(void) { return is_uv(UV_ANY); }
+ 
+ union uvh_apicid {
+     unsigned long       v;
+--- linux.orig/arch/x86/include/asm/uv/uv_mmrs.h
++++ linux/arch/x86/include/asm/uv/uv_mmrs.h
+@@ -3,9 +3,10 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * SGI UV MMR definitions
++ * HPE UV MMR definitions
+  *
+- * Copyright (C) 2007-2016 Silicon Graphics, Inc. All rights reserved.
++ * Copyright (C) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (C) 2007-2017 Silicon Graphics, Inc. All rights reserved.
+  */
+ 
+ #ifndef _ASM_X86_UV_UV_MMRS_H
+@@ -18,42 +19,43 @@
+  * grouped by architecture types.
+  *
+  * UVH  - definitions common to all UV hub types.
+- * UVXH - definitions common to all UV eXtended hub types (currently 2, 3, 4).
+- * UV2H - definitions specific to UV type 2 hub.
+- * UV3H - definitions specific to UV type 3 hub.
++ * UVXH - definitions common to UVX class (2, 3, 4).
++ * UVYH - definitions common to UVY class (5).
++ * UV5H - definitions specific to UV type 5 hub.
++ * UV4AH - definitions specific to UV type 4A hub.
+  * UV4H - definitions specific to UV type 4 hub.
+- *
+- * So in general, MMR addresses and structures are identical on all hubs types.
+- * These MMRs are identified as:
+- *	#define UVH_xxx		<address>
+- *	union uvh_xxx {
+- *		unsigned long       v;
+- *		struct uvh_int_cmpd_s {
+- *		} s;
+- *	};
++ * UV3H - definitions specific to UV type 3 hub.
++ * UV2H - definitions specific to UV type 2 hub.
+  *
+  * If the MMR exists on all hub types but have different addresses,
+- * use a conditional operator to define the value at runtime.
+- *	#define UV2Hxxx	b
+- *	#define UV3Hxxx	c
+- *	#define UV4Hxxx	d
+- *	#define UV4AHxxx e
+- *	#define UVHxxx	(is_uv2_hub() ? UV2Hxxx :
+- *			(is_uv3_hub() ? UV3Hxxx :
+- *			(is_uv4a_hub() ? UV4AHxxx :
+- *					UV4Hxxx))
++ * use a conditional operator to define the value at runtime.  Any
++ * that are not defined are blank.
++ *	(UV4A variations only generated if different from uv4)
++ *	#define UVHxxx (
++ *		is_uv(UV5) ? UV5Hxxx value :
++ *		is_uv(UV4A) ? UV4AHxxx value :
++ *		is_uv(UV4) ? UV4Hxxx value :
++ *		is_uv(UV3) ? UV3Hxxx value :
++ *		is_uv(UV2) ? UV2Hxxx value :
++ *		<ucv> or <undef value>)
++ *
++ * Class UVX has UVs (2|3|4|4A).
++ * Class UVY has UVs (5).
+  *
+  *	union uvh_xxx {
+  *		unsigned long       v;
+  *		struct uvh_xxx_s {	 # Common fields only
+  *		} s;
+- *		struct uv2h_xxx_s {	 # Full UV2 definition (*)
+- *		} s2;
+- *		struct uv3h_xxx_s {	 # Full UV3 definition (*)
+- *		} s3;
+- *		(NOTE: No struct uv4ah_xxx_s members exist)
++ *		struct uv5h_xxx_s {	 # Full UV5 definition (*)
++ *		} s5;
++ *		struct uv4ah_xxx_s {	 # Full UV4A definition (*)
++ *		} s4a;
+  *		struct uv4h_xxx_s {	 # Full UV4 definition (*)
+  *		} s4;
++ *		struct uv3h_xxx_s {	 # Full UV3 definition (*)
++ *		} s3;
++ *		struct uv2h_xxx_s {	 # Full UV2 definition (*)
++ *		} s2;
+  *	};
+  *		(* - if present and different than the common struct)
+  *
+@@ -62,494 +64,700 @@
+  * if the contents is the same for all hubs, only the "s" structure is
+  * generated.
+  *
+- * If the MMR exists on ONLY 1 type of hub, no generic definition is
+- * generated:
+- *	#define UVnH_xxx	<uvn address>
+- *	union uvnh_xxx {
+- *		unsigned long       v;
+- *		struct uvh_int_cmpd_s {
+- *		} sn;
+- *	};
+- *
+- * (GEN Flags: mflags_opt= undefs=function UV234=UVXH)
++ * (GEN Flags: undefs=function)
+  */
+ 
++ /* UV bit masks */
++#define	UV2	(1 << 0)
++#define	UV3	(1 << 1)
++#define	UV4	(1 << 2)
++#define	UV4A	(1 << 3)
++#define	UV5	(1 << 4)
++#define	UVX	(UV2|UV3|UV4)
++#define	UVY	(UV5)
++#define	UV_ANY	(~0)
++
++
++
++
+ #define UV_MMR_ENABLE		(1UL << 63)
+ 
++#define UV1_HUB_PART_NUMBER	0x88a5
+ #define UV2_HUB_PART_NUMBER	0x8eb8
+ #define UV2_HUB_PART_NUMBER_X	0x1111
+ #define UV3_HUB_PART_NUMBER	0x9578
+ #define UV3_HUB_PART_NUMBER_X	0x4321
+ #define UV4_HUB_PART_NUMBER	0x99a1
++#define UV5_HUB_PART_NUMBER	0xa171
+ 
+ /* Error function to catch undefined references */
+ extern unsigned long uv_undefined(char *str);
+ 
+ /* ========================================================================= */
+-/*                          UVH_BAU_DATA_BROADCAST                           */
+-/* ========================================================================= */
+-#define UVH_BAU_DATA_BROADCAST 0x61688UL
 -
--/*
-- * Determine the apicid of the first cpu on a uvhub.
-- */
--static int __init uvhub_to_first_apicid(int uvhub)
--{
--	int cpu;
+-#define UV2H_BAU_DATA_BROADCAST_32 0x440
+-#define UV3H_BAU_DATA_BROADCAST_32 0x440
+-#define UV4H_BAU_DATA_BROADCAST_32 0x360
+-#define UVH_BAU_DATA_BROADCAST_32 (					\
+-	is_uv2_hub() ? UV2H_BAU_DATA_BROADCAST_32 :			\
+-	is_uv3_hub() ? UV3H_BAU_DATA_BROADCAST_32 :			\
+-	/*is_uv4_hub*/ UV4H_BAU_DATA_BROADCAST_32)
 -
--	for_each_present_cpu(cpu)
--		if (uvhub == uv_cpu_to_blade_id(cpu))
--			return per_cpu(x86_cpu_to_apicid, cpu);
--	return -1;
--}
+-#define UVH_BAU_DATA_BROADCAST_ENABLE_SHFT		0
+-#define UVH_BAU_DATA_BROADCAST_ENABLE_MASK		0x0000000000000001UL
 -
--/*
-- * Free a software acknowledge hardware resource by clearing its Pending
-- * bit. This will return a reply to the sender.
-- * If the message has timed out, a reply has already been sent by the
-- * hardware but the resource has not been released. In that case our
-- * clear of the Timeout bit (as well) will free the resource. No reply will
-- * be sent (the hardware will only do one reply per message).
-- */
--static void reply_to_message(struct msg_desc *mdp, struct bau_control *bcp,
--						int do_acknowledge)
--{
--	unsigned long dw;
--	struct bau_pq_entry *msg;
 -
--	msg = mdp->msg;
--	if (!msg->canceled && do_acknowledge) {
--		dw = (msg->swack_vec << UV_SW_ACK_NPENDING) | msg->swack_vec;
--		ops.write_l_sw_ack(dw);
--	}
--	msg->replied_to = 1;
--	msg->swack_vec = 0;
--}
+-union uvh_bau_data_broadcast_u {
+-	unsigned long	v;
+-	struct uvh_bau_data_broadcast_s {
+-		unsigned long	enable:1;			/* RW */
+-		unsigned long	rsvd_1_63:63;
+-	} s;
+-};
 -
--/*
-- * Process the receipt of a RETRY message
-- */
--static void bau_process_retry_msg(struct msg_desc *mdp,
--					struct bau_control *bcp)
--{
--	int i;
--	int cancel_count = 0;
--	unsigned long msg_res;
--	unsigned long mmr = 0;
--	struct bau_pq_entry *msg = mdp->msg;
--	struct bau_pq_entry *msg2;
--	struct ptc_stats *stat = bcp->statp;
+-/* ========================================================================= */
+-/*                           UVH_BAU_DATA_CONFIG                             */
+-/* ========================================================================= */
+-#define UVH_BAU_DATA_CONFIG 0x61680UL
 -
--	stat->d_retries++;
+-#define UV2H_BAU_DATA_CONFIG_32 0x438
+-#define UV3H_BAU_DATA_CONFIG_32 0x438
+-#define UV4H_BAU_DATA_CONFIG_32 0x358
+-#define UVH_BAU_DATA_CONFIG_32 (					\
+-	is_uv2_hub() ? UV2H_BAU_DATA_CONFIG_32 :			\
+-	is_uv3_hub() ? UV3H_BAU_DATA_CONFIG_32 :			\
+-	/*is_uv4_hub*/ UV4H_BAU_DATA_CONFIG_32)
+-
+-#define UVH_BAU_DATA_CONFIG_VECTOR_SHFT			0
+-#define UVH_BAU_DATA_CONFIG_DM_SHFT			8
+-#define UVH_BAU_DATA_CONFIG_DESTMODE_SHFT		11
+-#define UVH_BAU_DATA_CONFIG_STATUS_SHFT			12
+-#define UVH_BAU_DATA_CONFIG_P_SHFT			13
+-#define UVH_BAU_DATA_CONFIG_T_SHFT			15
+-#define UVH_BAU_DATA_CONFIG_M_SHFT			16
+-#define UVH_BAU_DATA_CONFIG_APIC_ID_SHFT		32
+-#define UVH_BAU_DATA_CONFIG_VECTOR_MASK			0x00000000000000ffUL
+-#define UVH_BAU_DATA_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_BAU_DATA_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_BAU_DATA_CONFIG_STATUS_MASK			0x0000000000001000UL
+-#define UVH_BAU_DATA_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_BAU_DATA_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_BAU_DATA_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_BAU_DATA_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+-
+-
+-union uvh_bau_data_config_u {
+-	unsigned long	v;
+-	struct uvh_bau_data_config_s {
+-		unsigned long	vector_:8;			/* RW */
+-		unsigned long	dm:3;				/* RW */
+-		unsigned long	destmode:1;			/* RW */
+-		unsigned long	status:1;			/* RO */
+-		unsigned long	p:1;				/* RO */
+-		unsigned long	rsvd_14:1;
+-		unsigned long	t:1;				/* RO */
+-		unsigned long	m:1;				/* RW */
+-		unsigned long	rsvd_17_31:15;
+-		unsigned long	apic_id:32;			/* RW */
+-	} s;
+-};
+-
+-/* ========================================================================= */
+ /*                           UVH_EVENT_OCCURRED0                             */
+ /* ========================================================================= */
+ #define UVH_EVENT_OCCURRED0 0x70000UL
+-#define UVH_EVENT_OCCURRED0_32 0x5e8
+ 
++/* UVH common defines*/
+ #define UVH_EVENT_OCCURRED0_LB_HCERR_SHFT		0
+-#define UVH_EVENT_OCCURRED0_RH_AOERR0_SHFT		11
+ #define UVH_EVENT_OCCURRED0_LB_HCERR_MASK		0x0000000000000001UL
+-#define UVH_EVENT_OCCURRED0_RH_AOERR0_MASK		0x0000000000000800UL
+ 
++/* UVXH common defines */
+ #define UVXH_EVENT_OCCURRED0_RH_HCERR_SHFT		2
+-#define UVXH_EVENT_OCCURRED0_LH0_HCERR_SHFT		3
+-#define UVXH_EVENT_OCCURRED0_LH1_HCERR_SHFT		4
+-#define UVXH_EVENT_OCCURRED0_GR0_HCERR_SHFT		5
+-#define UVXH_EVENT_OCCURRED0_GR1_HCERR_SHFT		6
+-#define UVXH_EVENT_OCCURRED0_NI0_HCERR_SHFT		7
+-#define UVXH_EVENT_OCCURRED0_NI1_HCERR_SHFT		8
+-#define UVXH_EVENT_OCCURRED0_LB_AOERR0_SHFT		9
+-#define UVXH_EVENT_OCCURRED0_LH0_AOERR0_SHFT		12
+-#define UVXH_EVENT_OCCURRED0_LH1_AOERR0_SHFT		13
+-#define UVXH_EVENT_OCCURRED0_GR0_AOERR0_SHFT		14
+-#define UVXH_EVENT_OCCURRED0_GR1_AOERR0_SHFT		15
+-#define UVXH_EVENT_OCCURRED0_XB_AOERR0_SHFT		16
+ #define UVXH_EVENT_OCCURRED0_RH_HCERR_MASK		0x0000000000000004UL
++#define UVXH_EVENT_OCCURRED0_LH0_HCERR_SHFT		3
+ #define UVXH_EVENT_OCCURRED0_LH0_HCERR_MASK		0x0000000000000008UL
++#define UVXH_EVENT_OCCURRED0_LH1_HCERR_SHFT		4
+ #define UVXH_EVENT_OCCURRED0_LH1_HCERR_MASK		0x0000000000000010UL
++#define UVXH_EVENT_OCCURRED0_GR0_HCERR_SHFT		5
+ #define UVXH_EVENT_OCCURRED0_GR0_HCERR_MASK		0x0000000000000020UL
++#define UVXH_EVENT_OCCURRED0_GR1_HCERR_SHFT		6
+ #define UVXH_EVENT_OCCURRED0_GR1_HCERR_MASK		0x0000000000000040UL
++#define UVXH_EVENT_OCCURRED0_NI0_HCERR_SHFT		7
+ #define UVXH_EVENT_OCCURRED0_NI0_HCERR_MASK		0x0000000000000080UL
++#define UVXH_EVENT_OCCURRED0_NI1_HCERR_SHFT		8
+ #define UVXH_EVENT_OCCURRED0_NI1_HCERR_MASK		0x0000000000000100UL
++#define UVXH_EVENT_OCCURRED0_LB_AOERR0_SHFT		9
+ #define UVXH_EVENT_OCCURRED0_LB_AOERR0_MASK		0x0000000000000200UL
++#define UVXH_EVENT_OCCURRED0_RH_AOERR0_SHFT		11
++#define UVXH_EVENT_OCCURRED0_RH_AOERR0_MASK		0x0000000000000800UL
++#define UVXH_EVENT_OCCURRED0_LH0_AOERR0_SHFT		12
+ #define UVXH_EVENT_OCCURRED0_LH0_AOERR0_MASK		0x0000000000001000UL
++#define UVXH_EVENT_OCCURRED0_LH1_AOERR0_SHFT		13
+ #define UVXH_EVENT_OCCURRED0_LH1_AOERR0_MASK		0x0000000000002000UL
++#define UVXH_EVENT_OCCURRED0_GR0_AOERR0_SHFT		14
+ #define UVXH_EVENT_OCCURRED0_GR0_AOERR0_MASK		0x0000000000004000UL
++#define UVXH_EVENT_OCCURRED0_GR1_AOERR0_SHFT		15
+ #define UVXH_EVENT_OCCURRED0_GR1_AOERR0_MASK		0x0000000000008000UL
++#define UVXH_EVENT_OCCURRED0_XB_AOERR0_SHFT		16
+ #define UVXH_EVENT_OCCURRED0_XB_AOERR0_MASK		0x0000000000010000UL
+ 
+-#define UV2H_EVENT_OCCURRED0_QP_HCERR_SHFT		1
+-#define UV2H_EVENT_OCCURRED0_QP_AOERR0_SHFT		10
+-#define UV2H_EVENT_OCCURRED0_RT_AOERR0_SHFT		17
+-#define UV2H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		18
+-#define UV2H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		19
+-#define UV2H_EVENT_OCCURRED0_LB_AOERR1_SHFT		20
+-#define UV2H_EVENT_OCCURRED0_QP_AOERR1_SHFT		21
+-#define UV2H_EVENT_OCCURRED0_RH_AOERR1_SHFT		22
+-#define UV2H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		23
+-#define UV2H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		24
+-#define UV2H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		25
+-#define UV2H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		26
+-#define UV2H_EVENT_OCCURRED0_XB_AOERR1_SHFT		27
+-#define UV2H_EVENT_OCCURRED0_RT_AOERR1_SHFT		28
+-#define UV2H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		29
+-#define UV2H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		30
+-#define UV2H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	31
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		32
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		33
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		34
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		35
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		36
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		37
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		38
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		39
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		40
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		41
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		42
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		43
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		44
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		45
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		46
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		47
+-#define UV2H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		48
+-#define UV2H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		49
+-#define UV2H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		50
+-#define UV2H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		51
+-#define UV2H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	52
+-#define UV2H_EVENT_OCCURRED0_IPI_INT_SHFT		53
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		54
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		55
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		56
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		57
+-#define UV2H_EVENT_OCCURRED0_PROFILE_INT_SHFT		58
+-#define UV2H_EVENT_OCCURRED0_QP_HCERR_MASK		0x0000000000000002UL
+-#define UV2H_EVENT_OCCURRED0_QP_AOERR0_MASK		0x0000000000000400UL
+-#define UV2H_EVENT_OCCURRED0_RT_AOERR0_MASK		0x0000000000020000UL
+-#define UV2H_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000000040000UL
+-#define UV2H_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000000080000UL
+-#define UV2H_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000000100000UL
+-#define UV2H_EVENT_OCCURRED0_QP_AOERR1_MASK		0x0000000000200000UL
+-#define UV2H_EVENT_OCCURRED0_RH_AOERR1_MASK		0x0000000000400000UL
+-#define UV2H_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000000800000UL
+-#define UV2H_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000001000000UL
+-#define UV2H_EVENT_OCCURRED0_GR0_AOERR1_MASK		0x0000000002000000UL
+-#define UV2H_EVENT_OCCURRED0_GR1_AOERR1_MASK		0x0000000004000000UL
+-#define UV2H_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000008000000UL
+-#define UV2H_EVENT_OCCURRED0_RT_AOERR1_MASK		0x0000000010000000UL
+-#define UV2H_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000000020000000UL
+-#define UV2H_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000000040000000UL
+-#define UV2H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000000080000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000000100000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000000200000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000000400000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000000800000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000001000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000002000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000004000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0000008000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0000010000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0000020000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0000040000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0000080000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0000100000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0000200000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0000400000000000UL
+-#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0000800000000000UL
+-#define UV2H_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0001000000000000UL
+-#define UV2H_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0002000000000000UL
+-#define UV2H_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0004000000000000UL
+-#define UV2H_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x0008000000000000UL
+-#define UV2H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x0010000000000000UL
+-#define UV2H_EVENT_OCCURRED0_IPI_INT_MASK		0x0020000000000000UL
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT0_MASK		0x0040000000000000UL
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT1_MASK		0x0080000000000000UL
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT2_MASK		0x0100000000000000UL
+-#define UV2H_EVENT_OCCURRED0_EXTIO_INT3_MASK		0x0200000000000000UL
+-#define UV2H_EVENT_OCCURRED0_PROFILE_INT_MASK		0x0400000000000000UL
+-
+-#define UV3H_EVENT_OCCURRED0_QP_HCERR_SHFT		1
+-#define UV3H_EVENT_OCCURRED0_QP_AOERR0_SHFT		10
+-#define UV3H_EVENT_OCCURRED0_RT_AOERR0_SHFT		17
+-#define UV3H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		18
+-#define UV3H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		19
+-#define UV3H_EVENT_OCCURRED0_LB_AOERR1_SHFT		20
+-#define UV3H_EVENT_OCCURRED0_QP_AOERR1_SHFT		21
+-#define UV3H_EVENT_OCCURRED0_RH_AOERR1_SHFT		22
+-#define UV3H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		23
+-#define UV3H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		24
+-#define UV3H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		25
+-#define UV3H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		26
+-#define UV3H_EVENT_OCCURRED0_XB_AOERR1_SHFT		27
+-#define UV3H_EVENT_OCCURRED0_RT_AOERR1_SHFT		28
+-#define UV3H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		29
+-#define UV3H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		30
+-#define UV3H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	31
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		32
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		33
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		34
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		35
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		36
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		37
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		38
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		39
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		40
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		41
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		42
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		43
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		44
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		45
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		46
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		47
+-#define UV3H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		48
+-#define UV3H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		49
+-#define UV3H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		50
+-#define UV3H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		51
+-#define UV3H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	52
+-#define UV3H_EVENT_OCCURRED0_IPI_INT_SHFT		53
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		54
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		55
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		56
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		57
+-#define UV3H_EVENT_OCCURRED0_PROFILE_INT_SHFT		58
+-#define UV3H_EVENT_OCCURRED0_QP_HCERR_MASK		0x0000000000000002UL
+-#define UV3H_EVENT_OCCURRED0_QP_AOERR0_MASK		0x0000000000000400UL
+-#define UV3H_EVENT_OCCURRED0_RT_AOERR0_MASK		0x0000000000020000UL
+-#define UV3H_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000000040000UL
+-#define UV3H_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000000080000UL
+-#define UV3H_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000000100000UL
+-#define UV3H_EVENT_OCCURRED0_QP_AOERR1_MASK		0x0000000000200000UL
+-#define UV3H_EVENT_OCCURRED0_RH_AOERR1_MASK		0x0000000000400000UL
+-#define UV3H_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000000800000UL
+-#define UV3H_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000001000000UL
+-#define UV3H_EVENT_OCCURRED0_GR0_AOERR1_MASK		0x0000000002000000UL
+-#define UV3H_EVENT_OCCURRED0_GR1_AOERR1_MASK		0x0000000004000000UL
+-#define UV3H_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000008000000UL
+-#define UV3H_EVENT_OCCURRED0_RT_AOERR1_MASK		0x0000000010000000UL
+-#define UV3H_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000000020000000UL
+-#define UV3H_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000000040000000UL
+-#define UV3H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000000080000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000000100000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000000200000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000000400000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000000800000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000001000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000002000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000004000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0000008000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0000010000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0000020000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0000040000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0000080000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0000100000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0000200000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0000400000000000UL
+-#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0000800000000000UL
+-#define UV3H_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0001000000000000UL
+-#define UV3H_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0002000000000000UL
+-#define UV3H_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0004000000000000UL
+-#define UV3H_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x0008000000000000UL
+-#define UV3H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x0010000000000000UL
+-#define UV3H_EVENT_OCCURRED0_IPI_INT_MASK		0x0020000000000000UL
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT0_MASK		0x0040000000000000UL
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT1_MASK		0x0080000000000000UL
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT2_MASK		0x0100000000000000UL
+-#define UV3H_EVENT_OCCURRED0_EXTIO_INT3_MASK		0x0200000000000000UL
+-#define UV3H_EVENT_OCCURRED0_PROFILE_INT_MASK		0x0400000000000000UL
++/* UVYH common defines */
++#define UVYH_EVENT_OCCURRED0_KT_HCERR_SHFT		1
++#define UVYH_EVENT_OCCURRED0_KT_HCERR_MASK		0x0000000000000002UL
++#define UVYH_EVENT_OCCURRED0_RH0_HCERR_SHFT		2
++#define UVYH_EVENT_OCCURRED0_RH0_HCERR_MASK		0x0000000000000004UL
++#define UVYH_EVENT_OCCURRED0_RH1_HCERR_SHFT		3
++#define UVYH_EVENT_OCCURRED0_RH1_HCERR_MASK		0x0000000000000008UL
++#define UVYH_EVENT_OCCURRED0_LH0_HCERR_SHFT		4
++#define UVYH_EVENT_OCCURRED0_LH0_HCERR_MASK		0x0000000000000010UL
++#define UVYH_EVENT_OCCURRED0_LH1_HCERR_SHFT		5
++#define UVYH_EVENT_OCCURRED0_LH1_HCERR_MASK		0x0000000000000020UL
++#define UVYH_EVENT_OCCURRED0_LH2_HCERR_SHFT		6
++#define UVYH_EVENT_OCCURRED0_LH2_HCERR_MASK		0x0000000000000040UL
++#define UVYH_EVENT_OCCURRED0_LH3_HCERR_SHFT		7
++#define UVYH_EVENT_OCCURRED0_LH3_HCERR_MASK		0x0000000000000080UL
++#define UVYH_EVENT_OCCURRED0_XB_HCERR_SHFT		8
++#define UVYH_EVENT_OCCURRED0_XB_HCERR_MASK		0x0000000000000100UL
++#define UVYH_EVENT_OCCURRED0_RDM_HCERR_SHFT		9
++#define UVYH_EVENT_OCCURRED0_RDM_HCERR_MASK		0x0000000000000200UL
++#define UVYH_EVENT_OCCURRED0_NI0_HCERR_SHFT		10
++#define UVYH_EVENT_OCCURRED0_NI0_HCERR_MASK		0x0000000000000400UL
++#define UVYH_EVENT_OCCURRED0_NI1_HCERR_SHFT		11
++#define UVYH_EVENT_OCCURRED0_NI1_HCERR_MASK		0x0000000000000800UL
++#define UVYH_EVENT_OCCURRED0_LB_AOERR0_SHFT		12
++#define UVYH_EVENT_OCCURRED0_LB_AOERR0_MASK		0x0000000000001000UL
++#define UVYH_EVENT_OCCURRED0_KT_AOERR0_SHFT		13
++#define UVYH_EVENT_OCCURRED0_KT_AOERR0_MASK		0x0000000000002000UL
++#define UVYH_EVENT_OCCURRED0_RH0_AOERR0_SHFT		14
++#define UVYH_EVENT_OCCURRED0_RH0_AOERR0_MASK		0x0000000000004000UL
++#define UVYH_EVENT_OCCURRED0_RH1_AOERR0_SHFT		15
++#define UVYH_EVENT_OCCURRED0_RH1_AOERR0_MASK		0x0000000000008000UL
++#define UVYH_EVENT_OCCURRED0_LH0_AOERR0_SHFT		16
++#define UVYH_EVENT_OCCURRED0_LH0_AOERR0_MASK		0x0000000000010000UL
++#define UVYH_EVENT_OCCURRED0_LH1_AOERR0_SHFT		17
++#define UVYH_EVENT_OCCURRED0_LH1_AOERR0_MASK		0x0000000000020000UL
++#define UVYH_EVENT_OCCURRED0_LH2_AOERR0_SHFT		18
++#define UVYH_EVENT_OCCURRED0_LH2_AOERR0_MASK		0x0000000000040000UL
++#define UVYH_EVENT_OCCURRED0_LH3_AOERR0_SHFT		19
++#define UVYH_EVENT_OCCURRED0_LH3_AOERR0_MASK		0x0000000000080000UL
++#define UVYH_EVENT_OCCURRED0_XB_AOERR0_SHFT		20
++#define UVYH_EVENT_OCCURRED0_XB_AOERR0_MASK		0x0000000000100000UL
++#define UVYH_EVENT_OCCURRED0_RDM_AOERR0_SHFT		21
++#define UVYH_EVENT_OCCURRED0_RDM_AOERR0_MASK		0x0000000000200000UL
++#define UVYH_EVENT_OCCURRED0_RT0_AOERR0_SHFT		22
++#define UVYH_EVENT_OCCURRED0_RT0_AOERR0_MASK		0x0000000000400000UL
++#define UVYH_EVENT_OCCURRED0_RT1_AOERR0_SHFT		23
++#define UVYH_EVENT_OCCURRED0_RT1_AOERR0_MASK		0x0000000000800000UL
++#define UVYH_EVENT_OCCURRED0_NI0_AOERR0_SHFT		24
++#define UVYH_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000001000000UL
++#define UVYH_EVENT_OCCURRED0_NI1_AOERR0_SHFT		25
++#define UVYH_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000002000000UL
++#define UVYH_EVENT_OCCURRED0_LB_AOERR1_SHFT		26
++#define UVYH_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000004000000UL
++#define UVYH_EVENT_OCCURRED0_KT_AOERR1_SHFT		27
++#define UVYH_EVENT_OCCURRED0_KT_AOERR1_MASK		0x0000000008000000UL
++#define UVYH_EVENT_OCCURRED0_RH0_AOERR1_SHFT		28
++#define UVYH_EVENT_OCCURRED0_RH0_AOERR1_MASK		0x0000000010000000UL
++#define UVYH_EVENT_OCCURRED0_RH1_AOERR1_SHFT		29
++#define UVYH_EVENT_OCCURRED0_RH1_AOERR1_MASK		0x0000000020000000UL
++#define UVYH_EVENT_OCCURRED0_LH0_AOERR1_SHFT		30
++#define UVYH_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000040000000UL
++#define UVYH_EVENT_OCCURRED0_LH1_AOERR1_SHFT		31
++#define UVYH_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000080000000UL
++#define UVYH_EVENT_OCCURRED0_LH2_AOERR1_SHFT		32
++#define UVYH_EVENT_OCCURRED0_LH2_AOERR1_MASK		0x0000000100000000UL
++#define UVYH_EVENT_OCCURRED0_LH3_AOERR1_SHFT		33
++#define UVYH_EVENT_OCCURRED0_LH3_AOERR1_MASK		0x0000000200000000UL
++#define UVYH_EVENT_OCCURRED0_XB_AOERR1_SHFT		34
++#define UVYH_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000400000000UL
++#define UVYH_EVENT_OCCURRED0_RDM_AOERR1_SHFT		35
++#define UVYH_EVENT_OCCURRED0_RDM_AOERR1_MASK		0x0000000800000000UL
++#define UVYH_EVENT_OCCURRED0_RT0_AOERR1_SHFT		36
++#define UVYH_EVENT_OCCURRED0_RT0_AOERR1_MASK		0x0000001000000000UL
++#define UVYH_EVENT_OCCURRED0_RT1_AOERR1_SHFT		37
++#define UVYH_EVENT_OCCURRED0_RT1_AOERR1_MASK		0x0000002000000000UL
++#define UVYH_EVENT_OCCURRED0_NI0_AOERR1_SHFT		38
++#define UVYH_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000004000000000UL
++#define UVYH_EVENT_OCCURRED0_NI1_AOERR1_SHFT		39
++#define UVYH_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000008000000000UL
++#define UVYH_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	40
++#define UVYH_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000010000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		41
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000020000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		42
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000040000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		43
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000080000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		44
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000100000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		45
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000200000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		46
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000400000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		47
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000800000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		48
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0001000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		49
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0002000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		50
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0004000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		51
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0008000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		52
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0010000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		53
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0020000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		54
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0040000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		55
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0080000000000000UL
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		56
++#define UVYH_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0100000000000000UL
++#define UVYH_EVENT_OCCURRED0_L1_NMI_INT_SHFT		57
++#define UVYH_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0200000000000000UL
++#define UVYH_EVENT_OCCURRED0_STOP_CLOCK_SHFT		58
++#define UVYH_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0400000000000000UL
++#define UVYH_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		59
++#define UVYH_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0800000000000000UL
++#define UVYH_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		60
++#define UVYH_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x1000000000000000UL
++#define UVYH_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	61
++#define UVYH_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x2000000000000000UL
+ 
++/* UV4 unique defines */
+ #define UV4H_EVENT_OCCURRED0_KT_HCERR_SHFT		1
+-#define UV4H_EVENT_OCCURRED0_KT_AOERR0_SHFT		10
+-#define UV4H_EVENT_OCCURRED0_RTQ0_AOERR0_SHFT		17
+-#define UV4H_EVENT_OCCURRED0_RTQ1_AOERR0_SHFT		18
+-#define UV4H_EVENT_OCCURRED0_RTQ2_AOERR0_SHFT		19
+-#define UV4H_EVENT_OCCURRED0_RTQ3_AOERR0_SHFT		20
+-#define UV4H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		21
+-#define UV4H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		22
+-#define UV4H_EVENT_OCCURRED0_LB_AOERR1_SHFT		23
+-#define UV4H_EVENT_OCCURRED0_KT_AOERR1_SHFT		24
+-#define UV4H_EVENT_OCCURRED0_RH_AOERR1_SHFT		25
+-#define UV4H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		26
+-#define UV4H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		27
+-#define UV4H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		28
+-#define UV4H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		29
+-#define UV4H_EVENT_OCCURRED0_XB_AOERR1_SHFT		30
+-#define UV4H_EVENT_OCCURRED0_RTQ0_AOERR1_SHFT		31
+-#define UV4H_EVENT_OCCURRED0_RTQ1_AOERR1_SHFT		32
+-#define UV4H_EVENT_OCCURRED0_RTQ2_AOERR1_SHFT		33
+-#define UV4H_EVENT_OCCURRED0_RTQ3_AOERR1_SHFT		34
+-#define UV4H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		35
+-#define UV4H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		36
+-#define UV4H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	37
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		38
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		39
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		40
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		41
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		42
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		43
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		44
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		45
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		46
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		47
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		48
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		49
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		50
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		51
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		52
+-#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		53
+-#define UV4H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		54
+-#define UV4H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		55
+-#define UV4H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		56
+-#define UV4H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		57
+-#define UV4H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	58
+-#define UV4H_EVENT_OCCURRED0_IPI_INT_SHFT		59
+-#define UV4H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		60
+-#define UV4H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		61
+-#define UV4H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		62
+-#define UV4H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		63
+ #define UV4H_EVENT_OCCURRED0_KT_HCERR_MASK		0x0000000000000002UL
++#define UV4H_EVENT_OCCURRED0_KT_AOERR0_SHFT		10
+ #define UV4H_EVENT_OCCURRED0_KT_AOERR0_MASK		0x0000000000000400UL
++#define UV4H_EVENT_OCCURRED0_RTQ0_AOERR0_SHFT		17
+ #define UV4H_EVENT_OCCURRED0_RTQ0_AOERR0_MASK		0x0000000000020000UL
++#define UV4H_EVENT_OCCURRED0_RTQ1_AOERR0_SHFT		18
+ #define UV4H_EVENT_OCCURRED0_RTQ1_AOERR0_MASK		0x0000000000040000UL
++#define UV4H_EVENT_OCCURRED0_RTQ2_AOERR0_SHFT		19
+ #define UV4H_EVENT_OCCURRED0_RTQ2_AOERR0_MASK		0x0000000000080000UL
++#define UV4H_EVENT_OCCURRED0_RTQ3_AOERR0_SHFT		20
+ #define UV4H_EVENT_OCCURRED0_RTQ3_AOERR0_MASK		0x0000000000100000UL
++#define UV4H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		21
+ #define UV4H_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000000200000UL
++#define UV4H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		22
+ #define UV4H_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000000400000UL
++#define UV4H_EVENT_OCCURRED0_LB_AOERR1_SHFT		23
+ #define UV4H_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000000800000UL
++#define UV4H_EVENT_OCCURRED0_KT_AOERR1_SHFT		24
+ #define UV4H_EVENT_OCCURRED0_KT_AOERR1_MASK		0x0000000001000000UL
++#define UV4H_EVENT_OCCURRED0_RH_AOERR1_SHFT		25
+ #define UV4H_EVENT_OCCURRED0_RH_AOERR1_MASK		0x0000000002000000UL
++#define UV4H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		26
+ #define UV4H_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000004000000UL
++#define UV4H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		27
+ #define UV4H_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000008000000UL
++#define UV4H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		28
+ #define UV4H_EVENT_OCCURRED0_GR0_AOERR1_MASK		0x0000000010000000UL
++#define UV4H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		29
+ #define UV4H_EVENT_OCCURRED0_GR1_AOERR1_MASK		0x0000000020000000UL
++#define UV4H_EVENT_OCCURRED0_XB_AOERR1_SHFT		30
+ #define UV4H_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000040000000UL
++#define UV4H_EVENT_OCCURRED0_RTQ0_AOERR1_SHFT		31
+ #define UV4H_EVENT_OCCURRED0_RTQ0_AOERR1_MASK		0x0000000080000000UL
++#define UV4H_EVENT_OCCURRED0_RTQ1_AOERR1_SHFT		32
+ #define UV4H_EVENT_OCCURRED0_RTQ1_AOERR1_MASK		0x0000000100000000UL
++#define UV4H_EVENT_OCCURRED0_RTQ2_AOERR1_SHFT		33
+ #define UV4H_EVENT_OCCURRED0_RTQ2_AOERR1_MASK		0x0000000200000000UL
++#define UV4H_EVENT_OCCURRED0_RTQ3_AOERR1_SHFT		34
+ #define UV4H_EVENT_OCCURRED0_RTQ3_AOERR1_MASK		0x0000000400000000UL
++#define UV4H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		35
+ #define UV4H_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000000800000000UL
++#define UV4H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		36
+ #define UV4H_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000001000000000UL
++#define UV4H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	37
+ #define UV4H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000002000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		38
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000004000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		39
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000008000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		40
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000010000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		41
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000020000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		42
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000040000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		43
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000080000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		44
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000100000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		45
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0000200000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		46
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0000400000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		47
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0000800000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		48
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0001000000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		49
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0002000000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		50
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0004000000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		51
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0008000000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		52
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0010000000000000UL
++#define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		53
+ #define UV4H_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0020000000000000UL
++#define UV4H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		54
+ #define UV4H_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0040000000000000UL
++#define UV4H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		55
+ #define UV4H_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0080000000000000UL
++#define UV4H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		56
+ #define UV4H_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0100000000000000UL
++#define UV4H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		57
+ #define UV4H_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x0200000000000000UL
++#define UV4H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	58
+ #define UV4H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x0400000000000000UL
++#define UV4H_EVENT_OCCURRED0_IPI_INT_SHFT		59
+ #define UV4H_EVENT_OCCURRED0_IPI_INT_MASK		0x0800000000000000UL
++#define UV4H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		60
+ #define UV4H_EVENT_OCCURRED0_EXTIO_INT0_MASK		0x1000000000000000UL
++#define UV4H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		61
+ #define UV4H_EVENT_OCCURRED0_EXTIO_INT1_MASK		0x2000000000000000UL
++#define UV4H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		62
+ #define UV4H_EVENT_OCCURRED0_EXTIO_INT2_MASK		0x4000000000000000UL
++#define UV4H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		63
+ #define UV4H_EVENT_OCCURRED0_EXTIO_INT3_MASK		0x8000000000000000UL
+ 
+-#define UVH_EVENT_OCCURRED0_EXTIO_INT0_SHFT (				\
+-	is_uv2_hub() ? UV2H_EVENT_OCCURRED0_EXTIO_INT0_SHFT :		\
+-	is_uv3_hub() ? UV3H_EVENT_OCCURRED0_EXTIO_INT0_SHFT :		\
+-	/*is_uv4_hub*/ UV4H_EVENT_OCCURRED0_EXTIO_INT0_SHFT)
++/* UV3 unique defines */
++#define UV3H_EVENT_OCCURRED0_QP_HCERR_SHFT		1
++#define UV3H_EVENT_OCCURRED0_QP_HCERR_MASK		0x0000000000000002UL
++#define UV3H_EVENT_OCCURRED0_QP_AOERR0_SHFT		10
++#define UV3H_EVENT_OCCURRED0_QP_AOERR0_MASK		0x0000000000000400UL
++#define UV3H_EVENT_OCCURRED0_RT_AOERR0_SHFT		17
++#define UV3H_EVENT_OCCURRED0_RT_AOERR0_MASK		0x0000000000020000UL
++#define UV3H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		18
++#define UV3H_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000000040000UL
++#define UV3H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		19
++#define UV3H_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000000080000UL
++#define UV3H_EVENT_OCCURRED0_LB_AOERR1_SHFT		20
++#define UV3H_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000000100000UL
++#define UV3H_EVENT_OCCURRED0_QP_AOERR1_SHFT		21
++#define UV3H_EVENT_OCCURRED0_QP_AOERR1_MASK		0x0000000000200000UL
++#define UV3H_EVENT_OCCURRED0_RH_AOERR1_SHFT		22
++#define UV3H_EVENT_OCCURRED0_RH_AOERR1_MASK		0x0000000000400000UL
++#define UV3H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		23
++#define UV3H_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000000800000UL
++#define UV3H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		24
++#define UV3H_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000001000000UL
++#define UV3H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		25
++#define UV3H_EVENT_OCCURRED0_GR0_AOERR1_MASK		0x0000000002000000UL
++#define UV3H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		26
++#define UV3H_EVENT_OCCURRED0_GR1_AOERR1_MASK		0x0000000004000000UL
++#define UV3H_EVENT_OCCURRED0_XB_AOERR1_SHFT		27
++#define UV3H_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000008000000UL
++#define UV3H_EVENT_OCCURRED0_RT_AOERR1_SHFT		28
++#define UV3H_EVENT_OCCURRED0_RT_AOERR1_MASK		0x0000000010000000UL
++#define UV3H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		29
++#define UV3H_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000000020000000UL
++#define UV3H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		30
++#define UV3H_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000000040000000UL
++#define UV3H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	31
++#define UV3H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000000080000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		32
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000000100000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		33
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000000200000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		34
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000000400000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		35
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000000800000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		36
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000001000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		37
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000002000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		38
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000004000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		39
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0000008000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		40
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0000010000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		41
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0000020000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		42
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0000040000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		43
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0000080000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		44
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0000100000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		45
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0000200000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		46
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0000400000000000UL
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		47
++#define UV3H_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0000800000000000UL
++#define UV3H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		48
++#define UV3H_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0001000000000000UL
++#define UV3H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		49
++#define UV3H_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0002000000000000UL
++#define UV3H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		50
++#define UV3H_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0004000000000000UL
++#define UV3H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		51
++#define UV3H_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x0008000000000000UL
++#define UV3H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	52
++#define UV3H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x0010000000000000UL
++#define UV3H_EVENT_OCCURRED0_IPI_INT_SHFT		53
++#define UV3H_EVENT_OCCURRED0_IPI_INT_MASK		0x0020000000000000UL
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		54
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT0_MASK		0x0040000000000000UL
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		55
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT1_MASK		0x0080000000000000UL
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		56
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT2_MASK		0x0100000000000000UL
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		57
++#define UV3H_EVENT_OCCURRED0_EXTIO_INT3_MASK		0x0200000000000000UL
++#define UV3H_EVENT_OCCURRED0_PROFILE_INT_SHFT		58
++#define UV3H_EVENT_OCCURRED0_PROFILE_INT_MASK		0x0400000000000000UL
+ 
+-union uvh_event_occurred0_u {
+-	unsigned long	v;
+-	struct uvh_event_occurred0_s {
+-		unsigned long	lb_hcerr:1;			/* RW, W1C */
+-		unsigned long	rsvd_1_10:10;
+-		unsigned long	rh_aoerr0:1;			/* RW, W1C */
+-		unsigned long	rsvd_12_63:52;
+-	} s;
+-	struct uvxh_event_occurred0_s {
+-		unsigned long	lb_hcerr:1;			/* RW */
+-		unsigned long	rsvd_1:1;
+-		unsigned long	rh_hcerr:1;			/* RW */
+-		unsigned long	lh0_hcerr:1;			/* RW */
+-		unsigned long	lh1_hcerr:1;			/* RW */
+-		unsigned long	gr0_hcerr:1;			/* RW */
+-		unsigned long	gr1_hcerr:1;			/* RW */
+-		unsigned long	ni0_hcerr:1;			/* RW */
+-		unsigned long	ni1_hcerr:1;			/* RW */
+-		unsigned long	lb_aoerr0:1;			/* RW */
+-		unsigned long	rsvd_10:1;
+-		unsigned long	rh_aoerr0:1;			/* RW */
+-		unsigned long	lh0_aoerr0:1;			/* RW */
+-		unsigned long	lh1_aoerr0:1;			/* RW */
+-		unsigned long	gr0_aoerr0:1;			/* RW */
+-		unsigned long	gr1_aoerr0:1;			/* RW */
+-		unsigned long	xb_aoerr0:1;			/* RW */
+-		unsigned long	rsvd_17_63:47;
+-	} sx;
+-	struct uv4h_event_occurred0_s {
+-		unsigned long	lb_hcerr:1;			/* RW */
+-		unsigned long	kt_hcerr:1;			/* RW */
+-		unsigned long	rh_hcerr:1;			/* RW */
+-		unsigned long	lh0_hcerr:1;			/* RW */
+-		unsigned long	lh1_hcerr:1;			/* RW */
+-		unsigned long	gr0_hcerr:1;			/* RW */
+-		unsigned long	gr1_hcerr:1;			/* RW */
+-		unsigned long	ni0_hcerr:1;			/* RW */
+-		unsigned long	ni1_hcerr:1;			/* RW */
+-		unsigned long	lb_aoerr0:1;			/* RW */
+-		unsigned long	kt_aoerr0:1;			/* RW */
+-		unsigned long	rh_aoerr0:1;			/* RW */
+-		unsigned long	lh0_aoerr0:1;			/* RW */
+-		unsigned long	lh1_aoerr0:1;			/* RW */
+-		unsigned long	gr0_aoerr0:1;			/* RW */
+-		unsigned long	gr1_aoerr0:1;			/* RW */
+-		unsigned long	xb_aoerr0:1;			/* RW */
+-		unsigned long	rtq0_aoerr0:1;			/* RW */
+-		unsigned long	rtq1_aoerr0:1;			/* RW */
+-		unsigned long	rtq2_aoerr0:1;			/* RW */
+-		unsigned long	rtq3_aoerr0:1;			/* RW */
+-		unsigned long	ni0_aoerr0:1;			/* RW */
+-		unsigned long	ni1_aoerr0:1;			/* RW */
+-		unsigned long	lb_aoerr1:1;			/* RW */
+-		unsigned long	kt_aoerr1:1;			/* RW */
+-		unsigned long	rh_aoerr1:1;			/* RW */
+-		unsigned long	lh0_aoerr1:1;			/* RW */
+-		unsigned long	lh1_aoerr1:1;			/* RW */
+-		unsigned long	gr0_aoerr1:1;			/* RW */
+-		unsigned long	gr1_aoerr1:1;			/* RW */
+-		unsigned long	xb_aoerr1:1;			/* RW */
+-		unsigned long	rtq0_aoerr1:1;			/* RW */
+-		unsigned long	rtq1_aoerr1:1;			/* RW */
+-		unsigned long	rtq2_aoerr1:1;			/* RW */
+-		unsigned long	rtq3_aoerr1:1;			/* RW */
+-		unsigned long	ni0_aoerr1:1;			/* RW */
+-		unsigned long	ni1_aoerr1:1;			/* RW */
+-		unsigned long	system_shutdown_int:1;		/* RW */
+-		unsigned long	lb_irq_int_0:1;			/* RW */
+-		unsigned long	lb_irq_int_1:1;			/* RW */
+-		unsigned long	lb_irq_int_2:1;			/* RW */
+-		unsigned long	lb_irq_int_3:1;			/* RW */
+-		unsigned long	lb_irq_int_4:1;			/* RW */
+-		unsigned long	lb_irq_int_5:1;			/* RW */
++/* UV2 unique defines */
++#define UV2H_EVENT_OCCURRED0_QP_HCERR_SHFT		1
++#define UV2H_EVENT_OCCURRED0_QP_HCERR_MASK		0x0000000000000002UL
++#define UV2H_EVENT_OCCURRED0_QP_AOERR0_SHFT		10
++#define UV2H_EVENT_OCCURRED0_QP_AOERR0_MASK		0x0000000000000400UL
++#define UV2H_EVENT_OCCURRED0_RT_AOERR0_SHFT		17
++#define UV2H_EVENT_OCCURRED0_RT_AOERR0_MASK		0x0000000000020000UL
++#define UV2H_EVENT_OCCURRED0_NI0_AOERR0_SHFT		18
++#define UV2H_EVENT_OCCURRED0_NI0_AOERR0_MASK		0x0000000000040000UL
++#define UV2H_EVENT_OCCURRED0_NI1_AOERR0_SHFT		19
++#define UV2H_EVENT_OCCURRED0_NI1_AOERR0_MASK		0x0000000000080000UL
++#define UV2H_EVENT_OCCURRED0_LB_AOERR1_SHFT		20
++#define UV2H_EVENT_OCCURRED0_LB_AOERR1_MASK		0x0000000000100000UL
++#define UV2H_EVENT_OCCURRED0_QP_AOERR1_SHFT		21
++#define UV2H_EVENT_OCCURRED0_QP_AOERR1_MASK		0x0000000000200000UL
++#define UV2H_EVENT_OCCURRED0_RH_AOERR1_SHFT		22
++#define UV2H_EVENT_OCCURRED0_RH_AOERR1_MASK		0x0000000000400000UL
++#define UV2H_EVENT_OCCURRED0_LH0_AOERR1_SHFT		23
++#define UV2H_EVENT_OCCURRED0_LH0_AOERR1_MASK		0x0000000000800000UL
++#define UV2H_EVENT_OCCURRED0_LH1_AOERR1_SHFT		24
++#define UV2H_EVENT_OCCURRED0_LH1_AOERR1_MASK		0x0000000001000000UL
++#define UV2H_EVENT_OCCURRED0_GR0_AOERR1_SHFT		25
++#define UV2H_EVENT_OCCURRED0_GR0_AOERR1_MASK		0x0000000002000000UL
++#define UV2H_EVENT_OCCURRED0_GR1_AOERR1_SHFT		26
++#define UV2H_EVENT_OCCURRED0_GR1_AOERR1_MASK		0x0000000004000000UL
++#define UV2H_EVENT_OCCURRED0_XB_AOERR1_SHFT		27
++#define UV2H_EVENT_OCCURRED0_XB_AOERR1_MASK		0x0000000008000000UL
++#define UV2H_EVENT_OCCURRED0_RT_AOERR1_SHFT		28
++#define UV2H_EVENT_OCCURRED0_RT_AOERR1_MASK		0x0000000010000000UL
++#define UV2H_EVENT_OCCURRED0_NI0_AOERR1_SHFT		29
++#define UV2H_EVENT_OCCURRED0_NI0_AOERR1_MASK		0x0000000020000000UL
++#define UV2H_EVENT_OCCURRED0_NI1_AOERR1_SHFT		30
++#define UV2H_EVENT_OCCURRED0_NI1_AOERR1_MASK		0x0000000040000000UL
++#define UV2H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_SHFT	31
++#define UV2H_EVENT_OCCURRED0_SYSTEM_SHUTDOWN_INT_MASK	0x0000000080000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_0_SHFT		32
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_0_MASK		0x0000000100000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_1_SHFT		33
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_1_MASK		0x0000000200000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_2_SHFT		34
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_2_MASK		0x0000000400000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_3_SHFT		35
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_3_MASK		0x0000000800000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_4_SHFT		36
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_4_MASK		0x0000001000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_5_SHFT		37
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_5_MASK		0x0000002000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_6_SHFT		38
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_6_MASK		0x0000004000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_7_SHFT		39
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_7_MASK		0x0000008000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_8_SHFT		40
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_8_MASK		0x0000010000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_9_SHFT		41
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_9_MASK		0x0000020000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_10_SHFT		42
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_10_MASK		0x0000040000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_11_SHFT		43
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_11_MASK		0x0000080000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_12_SHFT		44
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_12_MASK		0x0000100000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_13_SHFT		45
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_13_MASK		0x0000200000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_14_SHFT		46
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_14_MASK		0x0000400000000000UL
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_15_SHFT		47
++#define UV2H_EVENT_OCCURRED0_LB_IRQ_INT_15_MASK		0x0000800000000000UL
++#define UV2H_EVENT_OCCURRED0_L1_NMI_INT_SHFT		48
++#define UV2H_EVENT_OCCURRED0_L1_NMI_INT_MASK		0x0001000000000000UL
++#define UV2H_EVENT_OCCURRED0_STOP_CLOCK_SHFT		49
++#define UV2H_EVENT_OCCURRED0_STOP_CLOCK_MASK		0x0002000000000000UL
++#define UV2H_EVENT_OCCURRED0_ASIC_TO_L1_SHFT		50
++#define UV2H_EVENT_OCCURRED0_ASIC_TO_L1_MASK		0x0004000000000000UL
++#define UV2H_EVENT_OCCURRED0_L1_TO_ASIC_SHFT		51
++#define UV2H_EVENT_OCCURRED0_L1_TO_ASIC_MASK		0x0008000000000000UL
++#define UV2H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_SHFT	52
++#define UV2H_EVENT_OCCURRED0_LA_SEQ_TRIGGER_MASK	0x0010000000000000UL
++#define UV2H_EVENT_OCCURRED0_IPI_INT_SHFT		53
++#define UV2H_EVENT_OCCURRED0_IPI_INT_MASK		0x0020000000000000UL
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT0_SHFT		54
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT0_MASK		0x0040000000000000UL
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT1_SHFT		55
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT1_MASK		0x0080000000000000UL
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT2_SHFT		56
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT2_MASK		0x0100000000000000UL
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT3_SHFT		57
++#define UV2H_EVENT_OCCURRED0_EXTIO_INT3_MASK		0x0200000000000000UL
++#define UV2H_EVENT_OCCURRED0_PROFILE_INT_SHFT		58
++#define UV2H_EVENT_OCCURRED0_PROFILE_INT_MASK		0x0400000000000000UL
++
++#define UVH_EVENT_OCCURRED0_EXTIO_INT0_MASK (				\
++	is_uv(UV4) ? 0x1000000000000000UL :				\
++	is_uv(UV3) ? 0x0040000000000000UL :				\
++	is_uv(UV2) ? 0x0040000000000000UL :				\
++	0)
++#define UVH_EVENT_OCCURRED0_EXTIO_INT0_SHFT (				\
++	is_uv(UV4) ? 60 :						\
++	is_uv(UV3) ? 54 :						\
++	is_uv(UV2) ? 54 :						\
++	-1)
++
++union uvh_event_occurred0_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	rsvd_1:1;
++		unsigned long	rh_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	gr0_hcerr:1;			/* RW */
++		unsigned long	gr1_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	rsvd_10:1;
++		unsigned long	rh_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	gr0_aoerr0:1;			/* RW */
++		unsigned long	gr1_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rsvd_17_63:47;
++	} sx;
++
++	/* UVYH common struct */
++	struct uvyh_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	kt_hcerr:1;			/* RW */
++		unsigned long	rh0_hcerr:1;			/* RW */
++		unsigned long	rh1_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	lh2_hcerr:1;			/* RW */
++		unsigned long	lh3_hcerr:1;			/* RW */
++		unsigned long	xb_hcerr:1;			/* RW */
++		unsigned long	rdm_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	kt_aoerr0:1;			/* RW */
++		unsigned long	rh0_aoerr0:1;			/* RW */
++		unsigned long	rh1_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	lh2_aoerr0:1;			/* RW */
++		unsigned long	lh3_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rdm_aoerr0:1;			/* RW */
++		unsigned long	rt0_aoerr0:1;			/* RW */
++		unsigned long	rt1_aoerr0:1;			/* RW */
++		unsigned long	ni0_aoerr0:1;			/* RW */
++		unsigned long	ni1_aoerr0:1;			/* RW */
++		unsigned long	lb_aoerr1:1;			/* RW */
++		unsigned long	kt_aoerr1:1;			/* RW */
++		unsigned long	rh0_aoerr1:1;			/* RW */
++		unsigned long	rh1_aoerr1:1;			/* RW */
++		unsigned long	lh0_aoerr1:1;			/* RW */
++		unsigned long	lh1_aoerr1:1;			/* RW */
++		unsigned long	lh2_aoerr1:1;			/* RW */
++		unsigned long	lh3_aoerr1:1;			/* RW */
++		unsigned long	xb_aoerr1:1;			/* RW */
++		unsigned long	rdm_aoerr1:1;			/* RW */
++		unsigned long	rt0_aoerr1:1;			/* RW */
++		unsigned long	rt1_aoerr1:1;			/* RW */
++		unsigned long	ni0_aoerr1:1;			/* RW */
++		unsigned long	ni1_aoerr1:1;			/* RW */
++		unsigned long	system_shutdown_int:1;		/* RW */
++		unsigned long	lb_irq_int_0:1;			/* RW */
++		unsigned long	lb_irq_int_1:1;			/* RW */
++		unsigned long	lb_irq_int_2:1;			/* RW */
++		unsigned long	lb_irq_int_3:1;			/* RW */
++		unsigned long	lb_irq_int_4:1;			/* RW */
++		unsigned long	lb_irq_int_5:1;			/* RW */
++		unsigned long	lb_irq_int_6:1;			/* RW */
++		unsigned long	lb_irq_int_7:1;			/* RW */
++		unsigned long	lb_irq_int_8:1;			/* RW */
++		unsigned long	lb_irq_int_9:1;			/* RW */
++		unsigned long	lb_irq_int_10:1;		/* RW */
++		unsigned long	lb_irq_int_11:1;		/* RW */
++		unsigned long	lb_irq_int_12:1;		/* RW */
++		unsigned long	lb_irq_int_13:1;		/* RW */
++		unsigned long	lb_irq_int_14:1;		/* RW */
++		unsigned long	lb_irq_int_15:1;		/* RW */
++		unsigned long	l1_nmi_int:1;			/* RW */
++		unsigned long	stop_clock:1;			/* RW */
++		unsigned long	asic_to_l1:1;			/* RW */
++		unsigned long	l1_to_asic:1;			/* RW */
++		unsigned long	la_seq_trigger:1;		/* RW */
++		unsigned long	rsvd_62_63:2;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	kt_hcerr:1;			/* RW */
++		unsigned long	rh0_hcerr:1;			/* RW */
++		unsigned long	rh1_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	lh2_hcerr:1;			/* RW */
++		unsigned long	lh3_hcerr:1;			/* RW */
++		unsigned long	xb_hcerr:1;			/* RW */
++		unsigned long	rdm_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	kt_aoerr0:1;			/* RW */
++		unsigned long	rh0_aoerr0:1;			/* RW */
++		unsigned long	rh1_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	lh2_aoerr0:1;			/* RW */
++		unsigned long	lh3_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rdm_aoerr0:1;			/* RW */
++		unsigned long	rt0_aoerr0:1;			/* RW */
++		unsigned long	rt1_aoerr0:1;			/* RW */
++		unsigned long	ni0_aoerr0:1;			/* RW */
++		unsigned long	ni1_aoerr0:1;			/* RW */
++		unsigned long	lb_aoerr1:1;			/* RW */
++		unsigned long	kt_aoerr1:1;			/* RW */
++		unsigned long	rh0_aoerr1:1;			/* RW */
++		unsigned long	rh1_aoerr1:1;			/* RW */
++		unsigned long	lh0_aoerr1:1;			/* RW */
++		unsigned long	lh1_aoerr1:1;			/* RW */
++		unsigned long	lh2_aoerr1:1;			/* RW */
++		unsigned long	lh3_aoerr1:1;			/* RW */
++		unsigned long	xb_aoerr1:1;			/* RW */
++		unsigned long	rdm_aoerr1:1;			/* RW */
++		unsigned long	rt0_aoerr1:1;			/* RW */
++		unsigned long	rt1_aoerr1:1;			/* RW */
++		unsigned long	ni0_aoerr1:1;			/* RW */
++		unsigned long	ni1_aoerr1:1;			/* RW */
++		unsigned long	system_shutdown_int:1;		/* RW */
++		unsigned long	lb_irq_int_0:1;			/* RW */
++		unsigned long	lb_irq_int_1:1;			/* RW */
++		unsigned long	lb_irq_int_2:1;			/* RW */
++		unsigned long	lb_irq_int_3:1;			/* RW */
++		unsigned long	lb_irq_int_4:1;			/* RW */
++		unsigned long	lb_irq_int_5:1;			/* RW */
++		unsigned long	lb_irq_int_6:1;			/* RW */
++		unsigned long	lb_irq_int_7:1;			/* RW */
++		unsigned long	lb_irq_int_8:1;			/* RW */
++		unsigned long	lb_irq_int_9:1;			/* RW */
++		unsigned long	lb_irq_int_10:1;		/* RW */
++		unsigned long	lb_irq_int_11:1;		/* RW */
++		unsigned long	lb_irq_int_12:1;		/* RW */
++		unsigned long	lb_irq_int_13:1;		/* RW */
++		unsigned long	lb_irq_int_14:1;		/* RW */
++		unsigned long	lb_irq_int_15:1;		/* RW */
++		unsigned long	l1_nmi_int:1;			/* RW */
++		unsigned long	stop_clock:1;			/* RW */
++		unsigned long	asic_to_l1:1;			/* RW */
++		unsigned long	l1_to_asic:1;			/* RW */
++		unsigned long	la_seq_trigger:1;		/* RW */
++		unsigned long	rsvd_62_63:2;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	kt_hcerr:1;			/* RW */
++		unsigned long	rh_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	gr0_hcerr:1;			/* RW */
++		unsigned long	gr1_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	kt_aoerr0:1;			/* RW */
++		unsigned long	rh_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	gr0_aoerr0:1;			/* RW */
++		unsigned long	gr1_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rtq0_aoerr0:1;			/* RW */
++		unsigned long	rtq1_aoerr0:1;			/* RW */
++		unsigned long	rtq2_aoerr0:1;			/* RW */
++		unsigned long	rtq3_aoerr0:1;			/* RW */
++		unsigned long	ni0_aoerr0:1;			/* RW */
++		unsigned long	ni1_aoerr0:1;			/* RW */
++		unsigned long	lb_aoerr1:1;			/* RW */
++		unsigned long	kt_aoerr1:1;			/* RW */
++		unsigned long	rh_aoerr1:1;			/* RW */
++		unsigned long	lh0_aoerr1:1;			/* RW */
++		unsigned long	lh1_aoerr1:1;			/* RW */
++		unsigned long	gr0_aoerr1:1;			/* RW */
++		unsigned long	gr1_aoerr1:1;			/* RW */
++		unsigned long	xb_aoerr1:1;			/* RW */
++		unsigned long	rtq0_aoerr1:1;			/* RW */
++		unsigned long	rtq1_aoerr1:1;			/* RW */
++		unsigned long	rtq2_aoerr1:1;			/* RW */
++		unsigned long	rtq3_aoerr1:1;			/* RW */
++		unsigned long	ni0_aoerr1:1;			/* RW */
++		unsigned long	ni1_aoerr1:1;			/* RW */
++		unsigned long	system_shutdown_int:1;		/* RW */
++		unsigned long	lb_irq_int_0:1;			/* RW */
++		unsigned long	lb_irq_int_1:1;			/* RW */
++		unsigned long	lb_irq_int_2:1;			/* RW */
++		unsigned long	lb_irq_int_3:1;			/* RW */
++		unsigned long	lb_irq_int_4:1;			/* RW */
++		unsigned long	lb_irq_int_5:1;			/* RW */
+ 		unsigned long	lb_irq_int_6:1;			/* RW */
+ 		unsigned long	lb_irq_int_7:1;			/* RW */
+ 		unsigned long	lb_irq_int_8:1;			/* RW */
+@@ -571,538 +779,1650 @@ union uvh_event_occurred0_u {
+ 		unsigned long	extio_int2:1;			/* RW */
+ 		unsigned long	extio_int3:1;			/* RW */
+ 	} s4;
+-};
+-
+-/* ========================================================================= */
+-/*                        UVH_EVENT_OCCURRED0_ALIAS                          */
+-/* ========================================================================= */
+-#define UVH_EVENT_OCCURRED0_ALIAS 0x70008UL
+-#define UVH_EVENT_OCCURRED0_ALIAS_32 0x5f0
+-
+-
+-/* ========================================================================= */
+-/*                         UVH_EXTIO_INT0_BROADCAST                          */
+-/* ========================================================================= */
+-#define UVH_EXTIO_INT0_BROADCAST 0x61448UL
+-
+-#define UV2H_EXTIO_INT0_BROADCAST_32 0x3f0
+-#define UV3H_EXTIO_INT0_BROADCAST_32 0x3f0
+-#define UV4H_EXTIO_INT0_BROADCAST_32 0x310
+-#define UVH_EXTIO_INT0_BROADCAST_32 (					\
+-	is_uv2_hub() ? UV2H_EXTIO_INT0_BROADCAST_32 :			\
+-	is_uv3_hub() ? UV3H_EXTIO_INT0_BROADCAST_32 :			\
+-	/*is_uv4_hub*/ UV4H_EXTIO_INT0_BROADCAST_32)
+-
+-#define UVH_EXTIO_INT0_BROADCAST_ENABLE_SHFT		0
+-#define UVH_EXTIO_INT0_BROADCAST_ENABLE_MASK		0x0000000000000001UL
+ 
++	/* UV3 unique struct */
++	struct uv3h_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	qp_hcerr:1;			/* RW */
++		unsigned long	rh_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	gr0_hcerr:1;			/* RW */
++		unsigned long	gr1_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	qp_aoerr0:1;			/* RW */
++		unsigned long	rh_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	gr0_aoerr0:1;			/* RW */
++		unsigned long	gr1_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rt_aoerr0:1;			/* RW */
++		unsigned long	ni0_aoerr0:1;			/* RW */
++		unsigned long	ni1_aoerr0:1;			/* RW */
++		unsigned long	lb_aoerr1:1;			/* RW */
++		unsigned long	qp_aoerr1:1;			/* RW */
++		unsigned long	rh_aoerr1:1;			/* RW */
++		unsigned long	lh0_aoerr1:1;			/* RW */
++		unsigned long	lh1_aoerr1:1;			/* RW */
++		unsigned long	gr0_aoerr1:1;			/* RW */
++		unsigned long	gr1_aoerr1:1;			/* RW */
++		unsigned long	xb_aoerr1:1;			/* RW */
++		unsigned long	rt_aoerr1:1;			/* RW */
++		unsigned long	ni0_aoerr1:1;			/* RW */
++		unsigned long	ni1_aoerr1:1;			/* RW */
++		unsigned long	system_shutdown_int:1;		/* RW */
++		unsigned long	lb_irq_int_0:1;			/* RW */
++		unsigned long	lb_irq_int_1:1;			/* RW */
++		unsigned long	lb_irq_int_2:1;			/* RW */
++		unsigned long	lb_irq_int_3:1;			/* RW */
++		unsigned long	lb_irq_int_4:1;			/* RW */
++		unsigned long	lb_irq_int_5:1;			/* RW */
++		unsigned long	lb_irq_int_6:1;			/* RW */
++		unsigned long	lb_irq_int_7:1;			/* RW */
++		unsigned long	lb_irq_int_8:1;			/* RW */
++		unsigned long	lb_irq_int_9:1;			/* RW */
++		unsigned long	lb_irq_int_10:1;		/* RW */
++		unsigned long	lb_irq_int_11:1;		/* RW */
++		unsigned long	lb_irq_int_12:1;		/* RW */
++		unsigned long	lb_irq_int_13:1;		/* RW */
++		unsigned long	lb_irq_int_14:1;		/* RW */
++		unsigned long	lb_irq_int_15:1;		/* RW */
++		unsigned long	l1_nmi_int:1;			/* RW */
++		unsigned long	stop_clock:1;			/* RW */
++		unsigned long	asic_to_l1:1;			/* RW */
++		unsigned long	l1_to_asic:1;			/* RW */
++		unsigned long	la_seq_trigger:1;		/* RW */
++		unsigned long	ipi_int:1;			/* RW */
++		unsigned long	extio_int0:1;			/* RW */
++		unsigned long	extio_int1:1;			/* RW */
++		unsigned long	extio_int2:1;			/* RW */
++		unsigned long	extio_int3:1;			/* RW */
++		unsigned long	profile_int:1;			/* RW */
++		unsigned long	rsvd_59_63:5;
++	} s3;
+ 
+-union uvh_extio_int0_broadcast_u {
+-	unsigned long	v;
+-	struct uvh_extio_int0_broadcast_s {
+-		unsigned long	enable:1;			/* RW */
+-		unsigned long	rsvd_1_63:63;
+-	} s;
++	/* UV2 unique struct */
++	struct uv2h_event_occurred0_s {
++		unsigned long	lb_hcerr:1;			/* RW */
++		unsigned long	qp_hcerr:1;			/* RW */
++		unsigned long	rh_hcerr:1;			/* RW */
++		unsigned long	lh0_hcerr:1;			/* RW */
++		unsigned long	lh1_hcerr:1;			/* RW */
++		unsigned long	gr0_hcerr:1;			/* RW */
++		unsigned long	gr1_hcerr:1;			/* RW */
++		unsigned long	ni0_hcerr:1;			/* RW */
++		unsigned long	ni1_hcerr:1;			/* RW */
++		unsigned long	lb_aoerr0:1;			/* RW */
++		unsigned long	qp_aoerr0:1;			/* RW */
++		unsigned long	rh_aoerr0:1;			/* RW */
++		unsigned long	lh0_aoerr0:1;			/* RW */
++		unsigned long	lh1_aoerr0:1;			/* RW */
++		unsigned long	gr0_aoerr0:1;			/* RW */
++		unsigned long	gr1_aoerr0:1;			/* RW */
++		unsigned long	xb_aoerr0:1;			/* RW */
++		unsigned long	rt_aoerr0:1;			/* RW */
++		unsigned long	ni0_aoerr0:1;			/* RW */
++		unsigned long	ni1_aoerr0:1;			/* RW */
++		unsigned long	lb_aoerr1:1;			/* RW */
++		unsigned long	qp_aoerr1:1;			/* RW */
++		unsigned long	rh_aoerr1:1;			/* RW */
++		unsigned long	lh0_aoerr1:1;			/* RW */
++		unsigned long	lh1_aoerr1:1;			/* RW */
++		unsigned long	gr0_aoerr1:1;			/* RW */
++		unsigned long	gr1_aoerr1:1;			/* RW */
++		unsigned long	xb_aoerr1:1;			/* RW */
++		unsigned long	rt_aoerr1:1;			/* RW */
++		unsigned long	ni0_aoerr1:1;			/* RW */
++		unsigned long	ni1_aoerr1:1;			/* RW */
++		unsigned long	system_shutdown_int:1;		/* RW */
++		unsigned long	lb_irq_int_0:1;			/* RW */
++		unsigned long	lb_irq_int_1:1;			/* RW */
++		unsigned long	lb_irq_int_2:1;			/* RW */
++		unsigned long	lb_irq_int_3:1;			/* RW */
++		unsigned long	lb_irq_int_4:1;			/* RW */
++		unsigned long	lb_irq_int_5:1;			/* RW */
++		unsigned long	lb_irq_int_6:1;			/* RW */
++		unsigned long	lb_irq_int_7:1;			/* RW */
++		unsigned long	lb_irq_int_8:1;			/* RW */
++		unsigned long	lb_irq_int_9:1;			/* RW */
++		unsigned long	lb_irq_int_10:1;		/* RW */
++		unsigned long	lb_irq_int_11:1;		/* RW */
++		unsigned long	lb_irq_int_12:1;		/* RW */
++		unsigned long	lb_irq_int_13:1;		/* RW */
++		unsigned long	lb_irq_int_14:1;		/* RW */
++		unsigned long	lb_irq_int_15:1;		/* RW */
++		unsigned long	l1_nmi_int:1;			/* RW */
++		unsigned long	stop_clock:1;			/* RW */
++		unsigned long	asic_to_l1:1;			/* RW */
++		unsigned long	l1_to_asic:1;			/* RW */
++		unsigned long	la_seq_trigger:1;		/* RW */
++		unsigned long	ipi_int:1;			/* RW */
++		unsigned long	extio_int0:1;			/* RW */
++		unsigned long	extio_int1:1;			/* RW */
++		unsigned long	extio_int2:1;			/* RW */
++		unsigned long	extio_int3:1;			/* RW */
++		unsigned long	profile_int:1;			/* RW */
++		unsigned long	rsvd_59_63:5;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                         UVH_GR0_TLB_INT0_CONFIG                           */
++/*                        UVH_EVENT_OCCURRED0_ALIAS                          */
+ /* ========================================================================= */
+-#define UVH_GR0_TLB_INT0_CONFIG 0x61b00UL
+-
+-#define UVH_GR0_TLB_INT0_CONFIG_VECTOR_SHFT		0
+-#define UVH_GR0_TLB_INT0_CONFIG_DM_SHFT			8
+-#define UVH_GR0_TLB_INT0_CONFIG_DESTMODE_SHFT		11
+-#define UVH_GR0_TLB_INT0_CONFIG_STATUS_SHFT		12
+-#define UVH_GR0_TLB_INT0_CONFIG_P_SHFT			13
+-#define UVH_GR0_TLB_INT0_CONFIG_T_SHFT			15
+-#define UVH_GR0_TLB_INT0_CONFIG_M_SHFT			16
+-#define UVH_GR0_TLB_INT0_CONFIG_APIC_ID_SHFT		32
+-#define UVH_GR0_TLB_INT0_CONFIG_VECTOR_MASK		0x00000000000000ffUL
+-#define UVH_GR0_TLB_INT0_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_GR0_TLB_INT0_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_GR0_TLB_INT0_CONFIG_STATUS_MASK		0x0000000000001000UL
+-#define UVH_GR0_TLB_INT0_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_GR0_TLB_INT0_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_GR0_TLB_INT0_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_GR0_TLB_INT0_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+-
++#define UVH_EVENT_OCCURRED0_ALIAS 0x70008UL
+ 
+-union uvh_gr0_tlb_int0_config_u {
+-	unsigned long	v;
+-	struct uvh_gr0_tlb_int0_config_s {
+-		unsigned long	vector_:8;			/* RW */
+-		unsigned long	dm:3;				/* RW */
+-		unsigned long	destmode:1;			/* RW */
+-		unsigned long	status:1;			/* RO */
+-		unsigned long	p:1;				/* RO */
+-		unsigned long	rsvd_14:1;
+-		unsigned long	t:1;				/* RO */
+-		unsigned long	m:1;				/* RW */
+-		unsigned long	rsvd_17_31:15;
+-		unsigned long	apic_id:32;			/* RW */
+-	} s;
+-};
+ 
+ /* ========================================================================= */
+-/*                         UVH_GR0_TLB_INT1_CONFIG                           */
++/*                           UVH_EVENT_OCCURRED1                             */
+ /* ========================================================================= */
+-#define UVH_GR0_TLB_INT1_CONFIG 0x61b40UL
++#define UVH_EVENT_OCCURRED1 0x70080UL
+ 
+-#define UVH_GR0_TLB_INT1_CONFIG_VECTOR_SHFT		0
+-#define UVH_GR0_TLB_INT1_CONFIG_DM_SHFT			8
+-#define UVH_GR0_TLB_INT1_CONFIG_DESTMODE_SHFT		11
+-#define UVH_GR0_TLB_INT1_CONFIG_STATUS_SHFT		12
+-#define UVH_GR0_TLB_INT1_CONFIG_P_SHFT			13
+-#define UVH_GR0_TLB_INT1_CONFIG_T_SHFT			15
+-#define UVH_GR0_TLB_INT1_CONFIG_M_SHFT			16
+-#define UVH_GR0_TLB_INT1_CONFIG_APIC_ID_SHFT		32
+-#define UVH_GR0_TLB_INT1_CONFIG_VECTOR_MASK		0x00000000000000ffUL
+-#define UVH_GR0_TLB_INT1_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_GR0_TLB_INT1_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_GR0_TLB_INT1_CONFIG_STATUS_MASK		0x0000000000001000UL
+-#define UVH_GR0_TLB_INT1_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_GR0_TLB_INT1_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_GR0_TLB_INT1_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_GR0_TLB_INT1_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+ 
+ 
+-union uvh_gr0_tlb_int1_config_u {
++/* UVYH common defines */
++#define UVYH_EVENT_OCCURRED1_IPI_INT_SHFT		0
++#define UVYH_EVENT_OCCURRED1_IPI_INT_MASK		0x0000000000000001UL
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT0_SHFT		1
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT0_MASK		0x0000000000000002UL
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT1_SHFT		2
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT1_MASK		0x0000000000000004UL
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT2_SHFT		3
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT2_MASK		0x0000000000000008UL
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT3_SHFT		4
++#define UVYH_EVENT_OCCURRED1_EXTIO_INT3_MASK		0x0000000000000010UL
++#define UVYH_EVENT_OCCURRED1_PROFILE_INT_SHFT		5
++#define UVYH_EVENT_OCCURRED1_PROFILE_INT_MASK		0x0000000000000020UL
++#define UVYH_EVENT_OCCURRED1_BAU_DATA_SHFT		6
++#define UVYH_EVENT_OCCURRED1_BAU_DATA_MASK		0x0000000000000040UL
++#define UVYH_EVENT_OCCURRED1_PROC_GENERAL_SHFT		7
++#define UVYH_EVENT_OCCURRED1_PROC_GENERAL_MASK		0x0000000000000080UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT0_SHFT		8
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT0_MASK		0x0000000000000100UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT1_SHFT		9
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT1_MASK		0x0000000000000200UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT2_SHFT		10
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT2_MASK		0x0000000000000400UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT3_SHFT		11
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT3_MASK		0x0000000000000800UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT4_SHFT		12
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT4_MASK		0x0000000000001000UL
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT5_SHFT		13
++#define UVYH_EVENT_OCCURRED1_XH_TLB_INT5_MASK		0x0000000000002000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT0_SHFT		14
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT0_MASK		0x0000000000004000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT1_SHFT		15
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT1_MASK		0x0000000000008000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT2_SHFT		16
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT2_MASK		0x0000000000010000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT3_SHFT		17
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT3_MASK		0x0000000000020000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT4_SHFT		18
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT4_MASK		0x0000000000040000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT5_SHFT		19
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT5_MASK		0x0000000000080000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT6_SHFT		20
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT6_MASK		0x0000000000100000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT7_SHFT		21
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT7_MASK		0x0000000000200000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT8_SHFT		22
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT8_MASK		0x0000000000400000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT9_SHFT		23
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT9_MASK		0x0000000000800000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT10_SHFT		24
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT10_MASK		0x0000000001000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT11_SHFT		25
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT11_MASK		0x0000000002000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT12_SHFT		26
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT12_MASK		0x0000000004000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT13_SHFT		27
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT13_MASK		0x0000000008000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT14_SHFT		28
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT14_MASK		0x0000000010000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT15_SHFT		29
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT15_MASK		0x0000000020000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT16_SHFT		30
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT16_MASK		0x0000000040000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT17_SHFT		31
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT17_MASK		0x0000000080000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT18_SHFT		32
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT18_MASK		0x0000000100000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT19_SHFT		33
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT19_MASK		0x0000000200000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT20_SHFT		34
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT20_MASK		0x0000000400000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT21_SHFT		35
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT21_MASK		0x0000000800000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT22_SHFT		36
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT22_MASK		0x0000001000000000UL
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT23_SHFT		37
++#define UVYH_EVENT_OCCURRED1_RDM_TLB_INT23_MASK		0x0000002000000000UL
++
++/* UV4 unique defines */
++#define UV4H_EVENT_OCCURRED1_PROFILE_INT_SHFT		0
++#define UV4H_EVENT_OCCURRED1_PROFILE_INT_MASK		0x0000000000000001UL
++#define UV4H_EVENT_OCCURRED1_BAU_DATA_SHFT		1
++#define UV4H_EVENT_OCCURRED1_BAU_DATA_MASK		0x0000000000000002UL
++#define UV4H_EVENT_OCCURRED1_PROC_GENERAL_SHFT		2
++#define UV4H_EVENT_OCCURRED1_PROC_GENERAL_MASK		0x0000000000000004UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT0_SHFT		3
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT0_MASK		0x0000000000000008UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT1_SHFT		4
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT1_MASK		0x0000000000000010UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT2_SHFT		5
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT2_MASK		0x0000000000000020UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT3_SHFT		6
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT3_MASK		0x0000000000000040UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT4_SHFT		7
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT4_MASK		0x0000000000000080UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT5_SHFT		8
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT5_MASK		0x0000000000000100UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT6_SHFT		9
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT6_MASK		0x0000000000000200UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT7_SHFT		10
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT7_MASK		0x0000000000000400UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT8_SHFT		11
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT8_MASK		0x0000000000000800UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT9_SHFT		12
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT9_MASK		0x0000000000001000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT10_SHFT		13
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT10_MASK		0x0000000000002000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT11_SHFT		14
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT11_MASK		0x0000000000004000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT12_SHFT		15
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT12_MASK		0x0000000000008000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT13_SHFT		16
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT13_MASK		0x0000000000010000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT14_SHFT		17
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT14_MASK		0x0000000000020000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT15_SHFT		18
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT15_MASK		0x0000000000040000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT16_SHFT		19
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT16_MASK		0x0000000000080000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT17_SHFT		20
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT17_MASK		0x0000000000100000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT18_SHFT		21
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT18_MASK		0x0000000000200000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT19_SHFT		22
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT19_MASK		0x0000000000400000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT20_SHFT		23
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT20_MASK		0x0000000000800000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT21_SHFT		24
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT21_MASK		0x0000000001000000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT22_SHFT		25
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT22_MASK		0x0000000002000000UL
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT23_SHFT		26
++#define UV4H_EVENT_OCCURRED1_GR0_TLB_INT23_MASK		0x0000000004000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT0_SHFT		27
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT0_MASK		0x0000000008000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT1_SHFT		28
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT1_MASK		0x0000000010000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT2_SHFT		29
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT2_MASK		0x0000000020000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT3_SHFT		30
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT3_MASK		0x0000000040000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT4_SHFT		31
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT4_MASK		0x0000000080000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT5_SHFT		32
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT5_MASK		0x0000000100000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT6_SHFT		33
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT6_MASK		0x0000000200000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT7_SHFT		34
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT7_MASK		0x0000000400000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT8_SHFT		35
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT8_MASK		0x0000000800000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT9_SHFT		36
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT9_MASK		0x0000001000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT10_SHFT		37
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT10_MASK		0x0000002000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT11_SHFT		38
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT11_MASK		0x0000004000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT12_SHFT		39
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT12_MASK		0x0000008000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT13_SHFT		40
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT13_MASK		0x0000010000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT14_SHFT		41
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT14_MASK		0x0000020000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT15_SHFT		42
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT15_MASK		0x0000040000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT16_SHFT		43
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT16_MASK		0x0000080000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT17_SHFT		44
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT17_MASK		0x0000100000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT18_SHFT		45
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT18_MASK		0x0000200000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT19_SHFT		46
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT19_MASK		0x0000400000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT20_SHFT		47
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT20_MASK		0x0000800000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT21_SHFT		48
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT21_MASK		0x0001000000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT22_SHFT		49
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT22_MASK		0x0002000000000000UL
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT23_SHFT		50
++#define UV4H_EVENT_OCCURRED1_GR1_TLB_INT23_MASK		0x0004000000000000UL
++
++/* UV3 unique defines */
++#define UV3H_EVENT_OCCURRED1_BAU_DATA_SHFT		0
++#define UV3H_EVENT_OCCURRED1_BAU_DATA_MASK		0x0000000000000001UL
++#define UV3H_EVENT_OCCURRED1_POWER_MANAGEMENT_REQ_SHFT	1
++#define UV3H_EVENT_OCCURRED1_POWER_MANAGEMENT_REQ_MASK	0x0000000000000002UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT0_SHFT 2
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT0_MASK 0x0000000000000004UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT1_SHFT 3
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT1_MASK 0x0000000000000008UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT2_SHFT 4
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT2_MASK 0x0000000000000010UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT3_SHFT 5
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT3_MASK 0x0000000000000020UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT4_SHFT 6
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT4_MASK 0x0000000000000040UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT5_SHFT 7
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT5_MASK 0x0000000000000080UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT6_SHFT 8
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT6_MASK 0x0000000000000100UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT7_SHFT 9
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT7_MASK 0x0000000000000200UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT8_SHFT 10
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT8_MASK 0x0000000000000400UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT9_SHFT 11
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT9_MASK 0x0000000000000800UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT10_SHFT 12
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT10_MASK 0x0000000000001000UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT11_SHFT 13
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT11_MASK 0x0000000000002000UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT12_SHFT 14
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT12_MASK 0x0000000000004000UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT13_SHFT 15
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT13_MASK 0x0000000000008000UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT14_SHFT 16
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT14_MASK 0x0000000000010000UL
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT15_SHFT 17
++#define UV3H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT15_MASK 0x0000000000020000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT0_SHFT		18
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT0_MASK		0x0000000000040000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT1_SHFT		19
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT1_MASK		0x0000000000080000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT2_SHFT		20
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT2_MASK		0x0000000000100000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT3_SHFT		21
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT3_MASK		0x0000000000200000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT4_SHFT		22
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT4_MASK		0x0000000000400000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT5_SHFT		23
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT5_MASK		0x0000000000800000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT6_SHFT		24
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT6_MASK		0x0000000001000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT7_SHFT		25
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT7_MASK		0x0000000002000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT8_SHFT		26
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT8_MASK		0x0000000004000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT9_SHFT		27
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT9_MASK		0x0000000008000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT10_SHFT		28
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT10_MASK		0x0000000010000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT11_SHFT		29
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT11_MASK		0x0000000020000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT12_SHFT		30
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT12_MASK		0x0000000040000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT13_SHFT		31
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT13_MASK		0x0000000080000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT14_SHFT		32
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT14_MASK		0x0000000100000000UL
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT15_SHFT		33
++#define UV3H_EVENT_OCCURRED1_GR0_TLB_INT15_MASK		0x0000000200000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT0_SHFT		34
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT0_MASK		0x0000000400000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT1_SHFT		35
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT1_MASK		0x0000000800000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT2_SHFT		36
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT2_MASK		0x0000001000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT3_SHFT		37
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT3_MASK		0x0000002000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT4_SHFT		38
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT4_MASK		0x0000004000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT5_SHFT		39
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT5_MASK		0x0000008000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT6_SHFT		40
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT6_MASK		0x0000010000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT7_SHFT		41
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT7_MASK		0x0000020000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT8_SHFT		42
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT8_MASK		0x0000040000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT9_SHFT		43
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT9_MASK		0x0000080000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT10_SHFT		44
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT10_MASK		0x0000100000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT11_SHFT		45
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT11_MASK		0x0000200000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT12_SHFT		46
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT12_MASK		0x0000400000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT13_SHFT		47
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT13_MASK		0x0000800000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT14_SHFT		48
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT14_MASK		0x0001000000000000UL
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT15_SHFT		49
++#define UV3H_EVENT_OCCURRED1_GR1_TLB_INT15_MASK		0x0002000000000000UL
++#define UV3H_EVENT_OCCURRED1_RTC_INTERVAL_INT_SHFT	50
++#define UV3H_EVENT_OCCURRED1_RTC_INTERVAL_INT_MASK	0x0004000000000000UL
++#define UV3H_EVENT_OCCURRED1_BAU_DASHBOARD_INT_SHFT	51
++#define UV3H_EVENT_OCCURRED1_BAU_DASHBOARD_INT_MASK	0x0008000000000000UL
++
++/* UV2 unique defines */
++#define UV2H_EVENT_OCCURRED1_BAU_DATA_SHFT		0
++#define UV2H_EVENT_OCCURRED1_BAU_DATA_MASK		0x0000000000000001UL
++#define UV2H_EVENT_OCCURRED1_POWER_MANAGEMENT_REQ_SHFT	1
++#define UV2H_EVENT_OCCURRED1_POWER_MANAGEMENT_REQ_MASK	0x0000000000000002UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT0_SHFT 2
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT0_MASK 0x0000000000000004UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT1_SHFT 3
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT1_MASK 0x0000000000000008UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT2_SHFT 4
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT2_MASK 0x0000000000000010UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT3_SHFT 5
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT3_MASK 0x0000000000000020UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT4_SHFT 6
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT4_MASK 0x0000000000000040UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT5_SHFT 7
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT5_MASK 0x0000000000000080UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT6_SHFT 8
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT6_MASK 0x0000000000000100UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT7_SHFT 9
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT7_MASK 0x0000000000000200UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT8_SHFT 10
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT8_MASK 0x0000000000000400UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT9_SHFT 11
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT9_MASK 0x0000000000000800UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT10_SHFT 12
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT10_MASK 0x0000000000001000UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT11_SHFT 13
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT11_MASK 0x0000000000002000UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT12_SHFT 14
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT12_MASK 0x0000000000004000UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT13_SHFT 15
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT13_MASK 0x0000000000008000UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT14_SHFT 16
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT14_MASK 0x0000000000010000UL
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT15_SHFT 17
++#define UV2H_EVENT_OCCURRED1_MESSAGE_ACCELERATOR_INT15_MASK 0x0000000000020000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT0_SHFT		18
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT0_MASK		0x0000000000040000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT1_SHFT		19
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT1_MASK		0x0000000000080000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT2_SHFT		20
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT2_MASK		0x0000000000100000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT3_SHFT		21
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT3_MASK		0x0000000000200000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT4_SHFT		22
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT4_MASK		0x0000000000400000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT5_SHFT		23
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT5_MASK		0x0000000000800000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT6_SHFT		24
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT6_MASK		0x0000000001000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT7_SHFT		25
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT7_MASK		0x0000000002000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT8_SHFT		26
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT8_MASK		0x0000000004000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT9_SHFT		27
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT9_MASK		0x0000000008000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT10_SHFT		28
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT10_MASK		0x0000000010000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT11_SHFT		29
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT11_MASK		0x0000000020000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT12_SHFT		30
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT12_MASK		0x0000000040000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT13_SHFT		31
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT13_MASK		0x0000000080000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT14_SHFT		32
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT14_MASK		0x0000000100000000UL
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT15_SHFT		33
++#define UV2H_EVENT_OCCURRED1_GR0_TLB_INT15_MASK		0x0000000200000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT0_SHFT		34
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT0_MASK		0x0000000400000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT1_SHFT		35
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT1_MASK		0x0000000800000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT2_SHFT		36
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT2_MASK		0x0000001000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT3_SHFT		37
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT3_MASK		0x0000002000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT4_SHFT		38
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT4_MASK		0x0000004000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT5_SHFT		39
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT5_MASK		0x0000008000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT6_SHFT		40
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT6_MASK		0x0000010000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT7_SHFT		41
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT7_MASK		0x0000020000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT8_SHFT		42
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT8_MASK		0x0000040000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT9_SHFT		43
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT9_MASK		0x0000080000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT10_SHFT		44
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT10_MASK		0x0000100000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT11_SHFT		45
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT11_MASK		0x0000200000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT12_SHFT		46
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT12_MASK		0x0000400000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT13_SHFT		47
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT13_MASK		0x0000800000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT14_SHFT		48
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT14_MASK		0x0001000000000000UL
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT15_SHFT		49
++#define UV2H_EVENT_OCCURRED1_GR1_TLB_INT15_MASK		0x0002000000000000UL
++#define UV2H_EVENT_OCCURRED1_RTC_INTERVAL_INT_SHFT	50
++#define UV2H_EVENT_OCCURRED1_RTC_INTERVAL_INT_MASK	0x0004000000000000UL
++#define UV2H_EVENT_OCCURRED1_BAU_DASHBOARD_INT_SHFT	51
++#define UV2H_EVENT_OCCURRED1_BAU_DASHBOARD_INT_MASK	0x0008000000000000UL
++
++#define UVH_EVENT_OCCURRED1_EXTIO_INT0_MASK (				\
++	is_uv(UV5) ? 0x0000000000000002UL :				\
++	0)
++#define UVH_EVENT_OCCURRED1_EXTIO_INT0_SHFT (				\
++	is_uv(UV5) ? 1 :						\
++	-1)
++
++union uvyh_event_occurred1_u {
+ 	unsigned long	v;
+-	struct uvh_gr0_tlb_int1_config_s {
+-		unsigned long	vector_:8;			/* RW */
+-		unsigned long	dm:3;				/* RW */
+-		unsigned long	destmode:1;			/* RW */
+-		unsigned long	status:1;			/* RO */
+-		unsigned long	p:1;				/* RO */
+-		unsigned long	rsvd_14:1;
+-		unsigned long	t:1;				/* RO */
+-		unsigned long	m:1;				/* RW */
+-		unsigned long	rsvd_17_31:15;
+-		unsigned long	apic_id:32;			/* RW */
+-	} s;
+-};
+ 
+-/* ========================================================================= */
+-/*                         UVH_GR0_TLB_MMR_CONTROL                           */
+-/* ========================================================================= */
+-#define UV2H_GR0_TLB_MMR_CONTROL 0xc01080UL
+-#define UV3H_GR0_TLB_MMR_CONTROL 0xc01080UL
+-#define UV4H_GR0_TLB_MMR_CONTROL 0x601080UL
+-#define UVH_GR0_TLB_MMR_CONTROL (					\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_CONTROL :			\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_CONTROL :			\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_CONTROL)
+-
+-#define UVH_GR0_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UVH_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UVH_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UVH_GR0_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-
+-#define UVXH_GR0_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UVXH_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UVXH_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UVXH_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-
+-#define UV2H_GR0_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV2H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT		12
+-#define UV2H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_INJ_CON_SHFT	48
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_INJ_TLBRAM_SHFT	52
+-#define UV2H_GR0_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000000fffUL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000003000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_INJ_CON_MASK	0x0001000000000000UL
+-#define UV2H_GR0_TLB_MMR_CONTROL_MMR_INJ_TLBRAM_MASK	0x0010000000000000UL
+-
+-#define UV3H_GR0_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV3H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT		12
+-#define UV3H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV3H_GR0_TLB_MMR_CONTROL_ECC_SEL_SHFT		21
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV3H_GR0_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000000fffUL
+-#define UV3H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000003000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_ECC_SEL_MASK		0x0000000000200000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV3H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-
+-#define UV4H_GR0_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV4H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT		13
+-#define UV4H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV4H_GR0_TLB_MMR_CONTROL_ECC_SEL_SHFT		21
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV4H_GR0_TLB_MMR_CONTROL_PAGE_SIZE_SHFT		59
+-#define UV4H_GR0_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000001fffUL
+-#define UV4H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000006000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_ECC_SEL_MASK		0x0000000000200000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-#define UV4H_GR0_TLB_MMR_CONTROL_PAGE_SIZE_MASK		0xf800000000000000UL
+-
+-#define UVH_GR0_TLB_MMR_CONTROL_INDEX_MASK (				\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_CONTROL_INDEX_MASK :		\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_CONTROL_INDEX_MASK :		\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_CONTROL_INDEX_MASK)
+-#define UVH_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK (				\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK :		\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK :		\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_CONTROL_MEM_SEL_MASK)
+-#define UVH_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT (				\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT :		\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT :		\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_CONTROL_MEM_SEL_SHFT)
++	/* UVYH common struct */
++	struct uvyh_event_occurred1_s {
++		unsigned long	ipi_int:1;			/* RW */
++		unsigned long	extio_int0:1;			/* RW */
++		unsigned long	extio_int1:1;			/* RW */
++		unsigned long	extio_int2:1;			/* RW */
++		unsigned long	extio_int3:1;			/* RW */
++		unsigned long	profile_int:1;			/* RW */
++		unsigned long	bau_data:1;			/* RW */
++		unsigned long	proc_general:1;			/* RW */
++		unsigned long	xh_tlb_int0:1;			/* RW */
++		unsigned long	xh_tlb_int1:1;			/* RW */
++		unsigned long	xh_tlb_int2:1;			/* RW */
++		unsigned long	xh_tlb_int3:1;			/* RW */
++		unsigned long	xh_tlb_int4:1;			/* RW */
++		unsigned long	xh_tlb_int5:1;			/* RW */
++		unsigned long	rdm_tlb_int0:1;			/* RW */
++		unsigned long	rdm_tlb_int1:1;			/* RW */
++		unsigned long	rdm_tlb_int2:1;			/* RW */
++		unsigned long	rdm_tlb_int3:1;			/* RW */
++		unsigned long	rdm_tlb_int4:1;			/* RW */
++		unsigned long	rdm_tlb_int5:1;			/* RW */
++		unsigned long	rdm_tlb_int6:1;			/* RW */
++		unsigned long	rdm_tlb_int7:1;			/* RW */
++		unsigned long	rdm_tlb_int8:1;			/* RW */
++		unsigned long	rdm_tlb_int9:1;			/* RW */
++		unsigned long	rdm_tlb_int10:1;		/* RW */
++		unsigned long	rdm_tlb_int11:1;		/* RW */
++		unsigned long	rdm_tlb_int12:1;		/* RW */
++		unsigned long	rdm_tlb_int13:1;		/* RW */
++		unsigned long	rdm_tlb_int14:1;		/* RW */
++		unsigned long	rdm_tlb_int15:1;		/* RW */
++		unsigned long	rdm_tlb_int16:1;		/* RW */
++		unsigned long	rdm_tlb_int17:1;		/* RW */
++		unsigned long	rdm_tlb_int18:1;		/* RW */
++		unsigned long	rdm_tlb_int19:1;		/* RW */
++		unsigned long	rdm_tlb_int20:1;		/* RW */
++		unsigned long	rdm_tlb_int21:1;		/* RW */
++		unsigned long	rdm_tlb_int22:1;		/* RW */
++		unsigned long	rdm_tlb_int23:1;		/* RW */
++		unsigned long	rsvd_38_63:26;
++	} sy;
+ 
+-union uvh_gr0_tlb_mmr_control_u {
+-	unsigned long	v;
+-	struct uvh_gr0_tlb_mmr_control_s {
+-		unsigned long	rsvd_0_15:16;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	rsvd_32_48:17;
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_63:12;
+-	} s;
+-	struct uvxh_gr0_tlb_mmr_control_s {
+-		unsigned long	rsvd_0_15:16;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	rsvd_48:1;
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_63:12;
+-	} sx;
+-	struct uv2h_gr0_tlb_mmr_control_s {
+-		unsigned long	index:12;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_14_15:2;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	mmr_inj_con:1;			/* RW */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	mmr_inj_tlbram:1;		/* RW */
+-		unsigned long	rsvd_53_63:11;
+-	} s2;
+-	struct uv3h_gr0_tlb_mmr_control_s {
+-		unsigned long	index:12;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_14_15:2;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	ecc_sel:1;			/* RW */
+-		unsigned long	rsvd_22_29:8;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	undef_48:1;			/* Undefined */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	undef_52:1;			/* Undefined */
+-		unsigned long	rsvd_53_63:11;
+-	} s3;
+-	struct uv4h_gr0_tlb_mmr_control_s {
+-		unsigned long	index:13;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_15:1;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	ecc_sel:1;			/* RW */
+-		unsigned long	rsvd_22_29:8;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	undef_48:1;			/* Undefined */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_58:7;
+-		unsigned long	page_size:5;			/* RW */
++	/* UV5 unique struct */
++	struct uv5h_event_occurred1_s {
++		unsigned long	ipi_int:1;			/* RW */
++		unsigned long	extio_int0:1;			/* RW */
++		unsigned long	extio_int1:1;			/* RW */
++		unsigned long	extio_int2:1;			/* RW */
++		unsigned long	extio_int3:1;			/* RW */
++		unsigned long	profile_int:1;			/* RW */
++		unsigned long	bau_data:1;			/* RW */
++		unsigned long	proc_general:1;			/* RW */
++		unsigned long	xh_tlb_int0:1;			/* RW */
++		unsigned long	xh_tlb_int1:1;			/* RW */
++		unsigned long	xh_tlb_int2:1;			/* RW */
++		unsigned long	xh_tlb_int3:1;			/* RW */
++		unsigned long	xh_tlb_int4:1;			/* RW */
++		unsigned long	xh_tlb_int5:1;			/* RW */
++		unsigned long	rdm_tlb_int0:1;			/* RW */
++		unsigned long	rdm_tlb_int1:1;			/* RW */
++		unsigned long	rdm_tlb_int2:1;			/* RW */
++		unsigned long	rdm_tlb_int3:1;			/* RW */
++		unsigned long	rdm_tlb_int4:1;			/* RW */
++		unsigned long	rdm_tlb_int5:1;			/* RW */
++		unsigned long	rdm_tlb_int6:1;			/* RW */
++		unsigned long	rdm_tlb_int7:1;			/* RW */
++		unsigned long	rdm_tlb_int8:1;			/* RW */
++		unsigned long	rdm_tlb_int9:1;			/* RW */
++		unsigned long	rdm_tlb_int10:1;		/* RW */
++		unsigned long	rdm_tlb_int11:1;		/* RW */
++		unsigned long	rdm_tlb_int12:1;		/* RW */
++		unsigned long	rdm_tlb_int13:1;		/* RW */
++		unsigned long	rdm_tlb_int14:1;		/* RW */
++		unsigned long	rdm_tlb_int15:1;		/* RW */
++		unsigned long	rdm_tlb_int16:1;		/* RW */
++		unsigned long	rdm_tlb_int17:1;		/* RW */
++		unsigned long	rdm_tlb_int18:1;		/* RW */
++		unsigned long	rdm_tlb_int19:1;		/* RW */
++		unsigned long	rdm_tlb_int20:1;		/* RW */
++		unsigned long	rdm_tlb_int21:1;		/* RW */
++		unsigned long	rdm_tlb_int22:1;		/* RW */
++		unsigned long	rdm_tlb_int23:1;		/* RW */
++		unsigned long	rsvd_38_63:26;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_event_occurred1_s {
++		unsigned long	profile_int:1;			/* RW */
++		unsigned long	bau_data:1;			/* RW */
++		unsigned long	proc_general:1;			/* RW */
++		unsigned long	gr0_tlb_int0:1;			/* RW */
++		unsigned long	gr0_tlb_int1:1;			/* RW */
++		unsigned long	gr0_tlb_int2:1;			/* RW */
++		unsigned long	gr0_tlb_int3:1;			/* RW */
++		unsigned long	gr0_tlb_int4:1;			/* RW */
++		unsigned long	gr0_tlb_int5:1;			/* RW */
++		unsigned long	gr0_tlb_int6:1;			/* RW */
++		unsigned long	gr0_tlb_int7:1;			/* RW */
++		unsigned long	gr0_tlb_int8:1;			/* RW */
++		unsigned long	gr0_tlb_int9:1;			/* RW */
++		unsigned long	gr0_tlb_int10:1;		/* RW */
++		unsigned long	gr0_tlb_int11:1;		/* RW */
++		unsigned long	gr0_tlb_int12:1;		/* RW */
++		unsigned long	gr0_tlb_int13:1;		/* RW */
++		unsigned long	gr0_tlb_int14:1;		/* RW */
++		unsigned long	gr0_tlb_int15:1;		/* RW */
++		unsigned long	gr0_tlb_int16:1;		/* RW */
++		unsigned long	gr0_tlb_int17:1;		/* RW */
++		unsigned long	gr0_tlb_int18:1;		/* RW */
++		unsigned long	gr0_tlb_int19:1;		/* RW */
++		unsigned long	gr0_tlb_int20:1;		/* RW */
++		unsigned long	gr0_tlb_int21:1;		/* RW */
++		unsigned long	gr0_tlb_int22:1;		/* RW */
++		unsigned long	gr0_tlb_int23:1;		/* RW */
++		unsigned long	gr1_tlb_int0:1;			/* RW */
++		unsigned long	gr1_tlb_int1:1;			/* RW */
++		unsigned long	gr1_tlb_int2:1;			/* RW */
++		unsigned long	gr1_tlb_int3:1;			/* RW */
++		unsigned long	gr1_tlb_int4:1;			/* RW */
++		unsigned long	gr1_tlb_int5:1;			/* RW */
++		unsigned long	gr1_tlb_int6:1;			/* RW */
++		unsigned long	gr1_tlb_int7:1;			/* RW */
++		unsigned long	gr1_tlb_int8:1;			/* RW */
++		unsigned long	gr1_tlb_int9:1;			/* RW */
++		unsigned long	gr1_tlb_int10:1;		/* RW */
++		unsigned long	gr1_tlb_int11:1;		/* RW */
++		unsigned long	gr1_tlb_int12:1;		/* RW */
++		unsigned long	gr1_tlb_int13:1;		/* RW */
++		unsigned long	gr1_tlb_int14:1;		/* RW */
++		unsigned long	gr1_tlb_int15:1;		/* RW */
++		unsigned long	gr1_tlb_int16:1;		/* RW */
++		unsigned long	gr1_tlb_int17:1;		/* RW */
++		unsigned long	gr1_tlb_int18:1;		/* RW */
++		unsigned long	gr1_tlb_int19:1;		/* RW */
++		unsigned long	gr1_tlb_int20:1;		/* RW */
++		unsigned long	gr1_tlb_int21:1;		/* RW */
++		unsigned long	gr1_tlb_int22:1;		/* RW */
++		unsigned long	gr1_tlb_int23:1;		/* RW */
++		unsigned long	rsvd_51_63:13;
+ 	} s4;
+-};
+-
+-/* ========================================================================= */
+-/*                       UVH_GR0_TLB_MMR_READ_DATA_HI                        */
+-/* ========================================================================= */
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI 0xc010a0UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI 0xc010a0UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI 0x6010a0UL
+-#define UVH_GR0_TLB_MMR_READ_DATA_HI (					\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_READ_DATA_HI :			\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_READ_DATA_HI :			\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_READ_DATA_HI)
+-
+-#define UVH_GR0_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-
+-#define UVXH_GR0_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_GAA_SHFT		41
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	43
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_LARGER_SHFT	44
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_PFN_MASK		0x000001ffffffffffUL
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0000060000000000UL
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0000080000000000UL
+-#define UV2H_GR0_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0000100000000000UL
+-
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_GAA_SHFT		41
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	43
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_LARGER_SHFT	44
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_AA_EXT_SHFT	45
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_WAY_ECC_SHFT	55
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_PFN_MASK		0x000001ffffffffffUL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0000060000000000UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0000080000000000UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0000100000000000UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_AA_EXT_MASK	0x0000200000000000UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_HI_WAY_ECC_MASK	0xff80000000000000UL
+-
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_PNID_SHFT		34
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_GAA_SHFT		49
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	51
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_LARGER_SHFT	52
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_AA_EXT_SHFT	53
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_WAY_ECC_SHFT	55
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_PFN_MASK		0x00000003ffffffffUL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_PNID_MASK		0x0001fffc00000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0006000000000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0008000000000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0010000000000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_AA_EXT_MASK	0x0020000000000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_HI_WAY_ECC_MASK	0xff80000000000000UL
+ 
++	/* UV3 unique struct */
++	struct uv3h_event_occurred1_s {
++		unsigned long	bau_data:1;			/* RW */
++		unsigned long	power_management_req:1;		/* RW */
++		unsigned long	message_accelerator_int0:1;	/* RW */
++		unsigned long	message_accelerator_int1:1;	/* RW */
++		unsigned long	message_accelerator_int2:1;	/* RW */
++		unsigned long	message_accelerator_int3:1;	/* RW */
++		unsigned long	message_accelerator_int4:1;	/* RW */
++		unsigned long	message_accelerator_int5:1;	/* RW */
++		unsigned long	message_accelerator_int6:1;	/* RW */
++		unsigned long	message_accelerator_int7:1;	/* RW */
++		unsigned long	message_accelerator_int8:1;	/* RW */
++		unsigned long	message_accelerator_int9:1;	/* RW */
++		unsigned long	message_accelerator_int10:1;	/* RW */
++		unsigned long	message_accelerator_int11:1;	/* RW */
++		unsigned long	message_accelerator_int12:1;	/* RW */
++		unsigned long	message_accelerator_int13:1;	/* RW */
++		unsigned long	message_accelerator_int14:1;	/* RW */
++		unsigned long	message_accelerator_int15:1;	/* RW */
++		unsigned long	gr0_tlb_int0:1;			/* RW */
++		unsigned long	gr0_tlb_int1:1;			/* RW */
++		unsigned long	gr0_tlb_int2:1;			/* RW */
++		unsigned long	gr0_tlb_int3:1;			/* RW */
++		unsigned long	gr0_tlb_int4:1;			/* RW */
++		unsigned long	gr0_tlb_int5:1;			/* RW */
++		unsigned long	gr0_tlb_int6:1;			/* RW */
++		unsigned long	gr0_tlb_int7:1;			/* RW */
++		unsigned long	gr0_tlb_int8:1;			/* RW */
++		unsigned long	gr0_tlb_int9:1;			/* RW */
++		unsigned long	gr0_tlb_int10:1;		/* RW */
++		unsigned long	gr0_tlb_int11:1;		/* RW */
++		unsigned long	gr0_tlb_int12:1;		/* RW */
++		unsigned long	gr0_tlb_int13:1;		/* RW */
++		unsigned long	gr0_tlb_int14:1;		/* RW */
++		unsigned long	gr0_tlb_int15:1;		/* RW */
++		unsigned long	gr1_tlb_int0:1;			/* RW */
++		unsigned long	gr1_tlb_int1:1;			/* RW */
++		unsigned long	gr1_tlb_int2:1;			/* RW */
++		unsigned long	gr1_tlb_int3:1;			/* RW */
++		unsigned long	gr1_tlb_int4:1;			/* RW */
++		unsigned long	gr1_tlb_int5:1;			/* RW */
++		unsigned long	gr1_tlb_int6:1;			/* RW */
++		unsigned long	gr1_tlb_int7:1;			/* RW */
++		unsigned long	gr1_tlb_int8:1;			/* RW */
++		unsigned long	gr1_tlb_int9:1;			/* RW */
++		unsigned long	gr1_tlb_int10:1;		/* RW */
++		unsigned long	gr1_tlb_int11:1;		/* RW */
++		unsigned long	gr1_tlb_int12:1;		/* RW */
++		unsigned long	gr1_tlb_int13:1;		/* RW */
++		unsigned long	gr1_tlb_int14:1;		/* RW */
++		unsigned long	gr1_tlb_int15:1;		/* RW */
++		unsigned long	rtc_interval_int:1;		/* RW */
++		unsigned long	bau_dashboard_int:1;		/* RW */
++		unsigned long	rsvd_52_63:12;
++	} s3;
+ 
+-union uvh_gr0_tlb_mmr_read_data_hi_u {
+-	unsigned long	v;
+-	struct uv2h_gr0_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:41;				/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	rsvd_45_63:19;
++	/* UV2 unique struct */
++	struct uv2h_event_occurred1_s {
++		unsigned long	bau_data:1;			/* RW */
++		unsigned long	power_management_req:1;		/* RW */
++		unsigned long	message_accelerator_int0:1;	/* RW */
++		unsigned long	message_accelerator_int1:1;	/* RW */
++		unsigned long	message_accelerator_int2:1;	/* RW */
++		unsigned long	message_accelerator_int3:1;	/* RW */
++		unsigned long	message_accelerator_int4:1;	/* RW */
++		unsigned long	message_accelerator_int5:1;	/* RW */
++		unsigned long	message_accelerator_int6:1;	/* RW */
++		unsigned long	message_accelerator_int7:1;	/* RW */
++		unsigned long	message_accelerator_int8:1;	/* RW */
++		unsigned long	message_accelerator_int9:1;	/* RW */
++		unsigned long	message_accelerator_int10:1;	/* RW */
++		unsigned long	message_accelerator_int11:1;	/* RW */
++		unsigned long	message_accelerator_int12:1;	/* RW */
++		unsigned long	message_accelerator_int13:1;	/* RW */
++		unsigned long	message_accelerator_int14:1;	/* RW */
++		unsigned long	message_accelerator_int15:1;	/* RW */
++		unsigned long	gr0_tlb_int0:1;			/* RW */
++		unsigned long	gr0_tlb_int1:1;			/* RW */
++		unsigned long	gr0_tlb_int2:1;			/* RW */
++		unsigned long	gr0_tlb_int3:1;			/* RW */
++		unsigned long	gr0_tlb_int4:1;			/* RW */
++		unsigned long	gr0_tlb_int5:1;			/* RW */
++		unsigned long	gr0_tlb_int6:1;			/* RW */
++		unsigned long	gr0_tlb_int7:1;			/* RW */
++		unsigned long	gr0_tlb_int8:1;			/* RW */
++		unsigned long	gr0_tlb_int9:1;			/* RW */
++		unsigned long	gr0_tlb_int10:1;		/* RW */
++		unsigned long	gr0_tlb_int11:1;		/* RW */
++		unsigned long	gr0_tlb_int12:1;		/* RW */
++		unsigned long	gr0_tlb_int13:1;		/* RW */
++		unsigned long	gr0_tlb_int14:1;		/* RW */
++		unsigned long	gr0_tlb_int15:1;		/* RW */
++		unsigned long	gr1_tlb_int0:1;			/* RW */
++		unsigned long	gr1_tlb_int1:1;			/* RW */
++		unsigned long	gr1_tlb_int2:1;			/* RW */
++		unsigned long	gr1_tlb_int3:1;			/* RW */
++		unsigned long	gr1_tlb_int4:1;			/* RW */
++		unsigned long	gr1_tlb_int5:1;			/* RW */
++		unsigned long	gr1_tlb_int6:1;			/* RW */
++		unsigned long	gr1_tlb_int7:1;			/* RW */
++		unsigned long	gr1_tlb_int8:1;			/* RW */
++		unsigned long	gr1_tlb_int9:1;			/* RW */
++		unsigned long	gr1_tlb_int10:1;		/* RW */
++		unsigned long	gr1_tlb_int11:1;		/* RW */
++		unsigned long	gr1_tlb_int12:1;		/* RW */
++		unsigned long	gr1_tlb_int13:1;		/* RW */
++		unsigned long	gr1_tlb_int14:1;		/* RW */
++		unsigned long	gr1_tlb_int15:1;		/* RW */
++		unsigned long	rtc_interval_int:1;		/* RW */
++		unsigned long	bau_dashboard_int:1;		/* RW */
++		unsigned long	rsvd_52_63:12;
+ 	} s2;
+-	struct uv3h_gr0_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:41;				/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	aa_ext:1;			/* RO */
+-		unsigned long	undef_46_54:9;			/* Undefined */
+-		unsigned long	way_ecc:9;			/* RO */
+-	} s3;
+-	struct uv4h_gr0_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:34;				/* RO */
+-		unsigned long	pnid:15;			/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	aa_ext:1;			/* RO */
+-		unsigned long	undef_54:1;			/* Undefined */
+-		unsigned long	way_ecc:9;			/* RO */
+-	} s4;
+ };
+ 
+ /* ========================================================================= */
+-/*                       UVH_GR0_TLB_MMR_READ_DATA_LO                        */
++/*                        UVH_EVENT_OCCURRED1_ALIAS                          */
+ /* ========================================================================= */
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO 0xc010a8UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO 0xc010a8UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO 0x6010a8UL
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO (					\
+-	is_uv2_hub() ? UV2H_GR0_TLB_MMR_READ_DATA_LO :			\
+-	is_uv3_hub() ? UV3H_GR0_TLB_MMR_READ_DATA_LO :			\
+-	/*is_uv4_hub*/ UV4H_GR0_TLB_MMR_READ_DATA_LO)
+-
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_VALID_SHFT		63
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UVH_GR0_TLB_MMR_READ_DATA_LO_VALID_MASK		0x8000000000000000UL
+-
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UVXH_GR0_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV2H_GR0_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV3H_GR0_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV4H_GR0_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
++#define UVH_EVENT_OCCURRED1_ALIAS 0x70088UL
+ 
+ 
+-union uvh_gr0_tlb_mmr_read_data_lo_u {
+-	unsigned long	v;
+-	struct uvh_gr0_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s;
+-	struct uvxh_gr0_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} sx;
+-	struct uv2h_gr0_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s2;
+-	struct uv3h_gr0_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s3;
+-	struct uv4h_gr0_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s4;
+-};
+-
+ /* ========================================================================= */
+-/*                         UVH_GR1_TLB_INT0_CONFIG                           */
++/*                           UVH_EVENT_OCCURRED2                             */
+ /* ========================================================================= */
+-#define UV2H_GR1_TLB_INT0_CONFIG 0x61f00UL
+-#define UV3H_GR1_TLB_INT0_CONFIG 0x61f00UL
+-#define UV4H_GR1_TLB_INT0_CONFIG 0x62100UL
+-#define UVH_GR1_TLB_INT0_CONFIG (					\
+-	is_uv2_hub() ? UV2H_GR1_TLB_INT0_CONFIG :			\
+-	is_uv3_hub() ? UV3H_GR1_TLB_INT0_CONFIG :			\
+-	/*is_uv4_hub*/ UV4H_GR1_TLB_INT0_CONFIG)
+-
+-#define UVH_GR1_TLB_INT0_CONFIG_VECTOR_SHFT		0
+-#define UVH_GR1_TLB_INT0_CONFIG_DM_SHFT			8
+-#define UVH_GR1_TLB_INT0_CONFIG_DESTMODE_SHFT		11
+-#define UVH_GR1_TLB_INT0_CONFIG_STATUS_SHFT		12
+-#define UVH_GR1_TLB_INT0_CONFIG_P_SHFT			13
+-#define UVH_GR1_TLB_INT0_CONFIG_T_SHFT			15
+-#define UVH_GR1_TLB_INT0_CONFIG_M_SHFT			16
+-#define UVH_GR1_TLB_INT0_CONFIG_APIC_ID_SHFT		32
+-#define UVH_GR1_TLB_INT0_CONFIG_VECTOR_MASK		0x00000000000000ffUL
+-#define UVH_GR1_TLB_INT0_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_GR1_TLB_INT0_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_GR1_TLB_INT0_CONFIG_STATUS_MASK		0x0000000000001000UL
+-#define UVH_GR1_TLB_INT0_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_GR1_TLB_INT0_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_GR1_TLB_INT0_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_GR1_TLB_INT0_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+-
+-
+-union uvh_gr1_tlb_int0_config_u {
+-	unsigned long	v;
+-	struct uvh_gr1_tlb_int0_config_s {
+-		unsigned long	vector_:8;			/* RW */
+-		unsigned long	dm:3;				/* RW */
+-		unsigned long	destmode:1;			/* RW */
+-		unsigned long	status:1;			/* RO */
+-		unsigned long	p:1;				/* RO */
+-		unsigned long	rsvd_14:1;
+-		unsigned long	t:1;				/* RO */
+-		unsigned long	m:1;				/* RW */
+-		unsigned long	rsvd_17_31:15;
+-		unsigned long	apic_id:32;			/* RW */
+-	} s;
+-};
++#define UVH_EVENT_OCCURRED2 0x70100UL
++
++
++
++/* UVYH common defines */
++#define UVYH_EVENT_OCCURRED2_RTC_INTERVAL_INT_SHFT	0
++#define UVYH_EVENT_OCCURRED2_RTC_INTERVAL_INT_MASK	0x0000000000000001UL
++#define UVYH_EVENT_OCCURRED2_BAU_DASHBOARD_INT_SHFT	1
++#define UVYH_EVENT_OCCURRED2_BAU_DASHBOARD_INT_MASK	0x0000000000000002UL
++#define UVYH_EVENT_OCCURRED2_RTC_0_SHFT			2
++#define UVYH_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000000004UL
++#define UVYH_EVENT_OCCURRED2_RTC_1_SHFT			3
++#define UVYH_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000000008UL
++#define UVYH_EVENT_OCCURRED2_RTC_2_SHFT			4
++#define UVYH_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000000010UL
++#define UVYH_EVENT_OCCURRED2_RTC_3_SHFT			5
++#define UVYH_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000000020UL
++#define UVYH_EVENT_OCCURRED2_RTC_4_SHFT			6
++#define UVYH_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000000040UL
++#define UVYH_EVENT_OCCURRED2_RTC_5_SHFT			7
++#define UVYH_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000000080UL
++#define UVYH_EVENT_OCCURRED2_RTC_6_SHFT			8
++#define UVYH_EVENT_OCCURRED2_RTC_6_MASK			0x0000000000000100UL
++#define UVYH_EVENT_OCCURRED2_RTC_7_SHFT			9
++#define UVYH_EVENT_OCCURRED2_RTC_7_MASK			0x0000000000000200UL
++#define UVYH_EVENT_OCCURRED2_RTC_8_SHFT			10
++#define UVYH_EVENT_OCCURRED2_RTC_8_MASK			0x0000000000000400UL
++#define UVYH_EVENT_OCCURRED2_RTC_9_SHFT			11
++#define UVYH_EVENT_OCCURRED2_RTC_9_MASK			0x0000000000000800UL
++#define UVYH_EVENT_OCCURRED2_RTC_10_SHFT		12
++#define UVYH_EVENT_OCCURRED2_RTC_10_MASK		0x0000000000001000UL
++#define UVYH_EVENT_OCCURRED2_RTC_11_SHFT		13
++#define UVYH_EVENT_OCCURRED2_RTC_11_MASK		0x0000000000002000UL
++#define UVYH_EVENT_OCCURRED2_RTC_12_SHFT		14
++#define UVYH_EVENT_OCCURRED2_RTC_12_MASK		0x0000000000004000UL
++#define UVYH_EVENT_OCCURRED2_RTC_13_SHFT		15
++#define UVYH_EVENT_OCCURRED2_RTC_13_MASK		0x0000000000008000UL
++#define UVYH_EVENT_OCCURRED2_RTC_14_SHFT		16
++#define UVYH_EVENT_OCCURRED2_RTC_14_MASK		0x0000000000010000UL
++#define UVYH_EVENT_OCCURRED2_RTC_15_SHFT		17
++#define UVYH_EVENT_OCCURRED2_RTC_15_MASK		0x0000000000020000UL
++#define UVYH_EVENT_OCCURRED2_RTC_16_SHFT		18
++#define UVYH_EVENT_OCCURRED2_RTC_16_MASK		0x0000000000040000UL
++#define UVYH_EVENT_OCCURRED2_RTC_17_SHFT		19
++#define UVYH_EVENT_OCCURRED2_RTC_17_MASK		0x0000000000080000UL
++#define UVYH_EVENT_OCCURRED2_RTC_18_SHFT		20
++#define UVYH_EVENT_OCCURRED2_RTC_18_MASK		0x0000000000100000UL
++#define UVYH_EVENT_OCCURRED2_RTC_19_SHFT		21
++#define UVYH_EVENT_OCCURRED2_RTC_19_MASK		0x0000000000200000UL
++#define UVYH_EVENT_OCCURRED2_RTC_20_SHFT		22
++#define UVYH_EVENT_OCCURRED2_RTC_20_MASK		0x0000000000400000UL
++#define UVYH_EVENT_OCCURRED2_RTC_21_SHFT		23
++#define UVYH_EVENT_OCCURRED2_RTC_21_MASK		0x0000000000800000UL
++#define UVYH_EVENT_OCCURRED2_RTC_22_SHFT		24
++#define UVYH_EVENT_OCCURRED2_RTC_22_MASK		0x0000000001000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_23_SHFT		25
++#define UVYH_EVENT_OCCURRED2_RTC_23_MASK		0x0000000002000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_24_SHFT		26
++#define UVYH_EVENT_OCCURRED2_RTC_24_MASK		0x0000000004000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_25_SHFT		27
++#define UVYH_EVENT_OCCURRED2_RTC_25_MASK		0x0000000008000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_26_SHFT		28
++#define UVYH_EVENT_OCCURRED2_RTC_26_MASK		0x0000000010000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_27_SHFT		29
++#define UVYH_EVENT_OCCURRED2_RTC_27_MASK		0x0000000020000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_28_SHFT		30
++#define UVYH_EVENT_OCCURRED2_RTC_28_MASK		0x0000000040000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_29_SHFT		31
++#define UVYH_EVENT_OCCURRED2_RTC_29_MASK		0x0000000080000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_30_SHFT		32
++#define UVYH_EVENT_OCCURRED2_RTC_30_MASK		0x0000000100000000UL
++#define UVYH_EVENT_OCCURRED2_RTC_31_SHFT		33
++#define UVYH_EVENT_OCCURRED2_RTC_31_MASK		0x0000000200000000UL
++
++/* UV4 unique defines */
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT0_SHFT 0
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT0_MASK 0x0000000000000001UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT1_SHFT 1
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT1_MASK 0x0000000000000002UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT2_SHFT 2
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT2_MASK 0x0000000000000004UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT3_SHFT 3
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT3_MASK 0x0000000000000008UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT4_SHFT 4
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT4_MASK 0x0000000000000010UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT5_SHFT 5
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT5_MASK 0x0000000000000020UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT6_SHFT 6
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT6_MASK 0x0000000000000040UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT7_SHFT 7
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT7_MASK 0x0000000000000080UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT8_SHFT 8
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT8_MASK 0x0000000000000100UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT9_SHFT 9
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT9_MASK 0x0000000000000200UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT10_SHFT 10
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT10_MASK 0x0000000000000400UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT11_SHFT 11
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT11_MASK 0x0000000000000800UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT12_SHFT 12
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT12_MASK 0x0000000000001000UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT13_SHFT 13
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT13_MASK 0x0000000000002000UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT14_SHFT 14
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT14_MASK 0x0000000000004000UL
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT15_SHFT 15
++#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT15_MASK 0x0000000000008000UL
++#define UV4H_EVENT_OCCURRED2_RTC_INTERVAL_INT_SHFT	16
++#define UV4H_EVENT_OCCURRED2_RTC_INTERVAL_INT_MASK	0x0000000000010000UL
++#define UV4H_EVENT_OCCURRED2_BAU_DASHBOARD_INT_SHFT	17
++#define UV4H_EVENT_OCCURRED2_BAU_DASHBOARD_INT_MASK	0x0000000000020000UL
++#define UV4H_EVENT_OCCURRED2_RTC_0_SHFT			18
++#define UV4H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000040000UL
++#define UV4H_EVENT_OCCURRED2_RTC_1_SHFT			19
++#define UV4H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000080000UL
++#define UV4H_EVENT_OCCURRED2_RTC_2_SHFT			20
++#define UV4H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000100000UL
++#define UV4H_EVENT_OCCURRED2_RTC_3_SHFT			21
++#define UV4H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000200000UL
++#define UV4H_EVENT_OCCURRED2_RTC_4_SHFT			22
++#define UV4H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000400000UL
++#define UV4H_EVENT_OCCURRED2_RTC_5_SHFT			23
++#define UV4H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000800000UL
++#define UV4H_EVENT_OCCURRED2_RTC_6_SHFT			24
++#define UV4H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000001000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_7_SHFT			25
++#define UV4H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000002000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_8_SHFT			26
++#define UV4H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000004000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_9_SHFT			27
++#define UV4H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000008000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_10_SHFT		28
++#define UV4H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000010000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_11_SHFT		29
++#define UV4H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000020000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_12_SHFT		30
++#define UV4H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000040000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_13_SHFT		31
++#define UV4H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000080000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_14_SHFT		32
++#define UV4H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000100000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_15_SHFT		33
++#define UV4H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000200000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_16_SHFT		34
++#define UV4H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000400000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_17_SHFT		35
++#define UV4H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000800000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_18_SHFT		36
++#define UV4H_EVENT_OCCURRED2_RTC_18_MASK		0x0000001000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_19_SHFT		37
++#define UV4H_EVENT_OCCURRED2_RTC_19_MASK		0x0000002000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_20_SHFT		38
++#define UV4H_EVENT_OCCURRED2_RTC_20_MASK		0x0000004000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_21_SHFT		39
++#define UV4H_EVENT_OCCURRED2_RTC_21_MASK		0x0000008000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_22_SHFT		40
++#define UV4H_EVENT_OCCURRED2_RTC_22_MASK		0x0000010000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_23_SHFT		41
++#define UV4H_EVENT_OCCURRED2_RTC_23_MASK		0x0000020000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_24_SHFT		42
++#define UV4H_EVENT_OCCURRED2_RTC_24_MASK		0x0000040000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_25_SHFT		43
++#define UV4H_EVENT_OCCURRED2_RTC_25_MASK		0x0000080000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_26_SHFT		44
++#define UV4H_EVENT_OCCURRED2_RTC_26_MASK		0x0000100000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_27_SHFT		45
++#define UV4H_EVENT_OCCURRED2_RTC_27_MASK		0x0000200000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_28_SHFT		46
++#define UV4H_EVENT_OCCURRED2_RTC_28_MASK		0x0000400000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_29_SHFT		47
++#define UV4H_EVENT_OCCURRED2_RTC_29_MASK		0x0000800000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_30_SHFT		48
++#define UV4H_EVENT_OCCURRED2_RTC_30_MASK		0x0001000000000000UL
++#define UV4H_EVENT_OCCURRED2_RTC_31_SHFT		49
++#define UV4H_EVENT_OCCURRED2_RTC_31_MASK		0x0002000000000000UL
++
++/* UV3 unique defines */
++#define UV3H_EVENT_OCCURRED2_RTC_0_SHFT			0
++#define UV3H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000000001UL
++#define UV3H_EVENT_OCCURRED2_RTC_1_SHFT			1
++#define UV3H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000000002UL
++#define UV3H_EVENT_OCCURRED2_RTC_2_SHFT			2
++#define UV3H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000000004UL
++#define UV3H_EVENT_OCCURRED2_RTC_3_SHFT			3
++#define UV3H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000000008UL
++#define UV3H_EVENT_OCCURRED2_RTC_4_SHFT			4
++#define UV3H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000000010UL
++#define UV3H_EVENT_OCCURRED2_RTC_5_SHFT			5
++#define UV3H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000000020UL
++#define UV3H_EVENT_OCCURRED2_RTC_6_SHFT			6
++#define UV3H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000000000040UL
++#define UV3H_EVENT_OCCURRED2_RTC_7_SHFT			7
++#define UV3H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000000000080UL
++#define UV3H_EVENT_OCCURRED2_RTC_8_SHFT			8
++#define UV3H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000000000100UL
++#define UV3H_EVENT_OCCURRED2_RTC_9_SHFT			9
++#define UV3H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000000000200UL
++#define UV3H_EVENT_OCCURRED2_RTC_10_SHFT		10
++#define UV3H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000000000400UL
++#define UV3H_EVENT_OCCURRED2_RTC_11_SHFT		11
++#define UV3H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000000000800UL
++#define UV3H_EVENT_OCCURRED2_RTC_12_SHFT		12
++#define UV3H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000000001000UL
++#define UV3H_EVENT_OCCURRED2_RTC_13_SHFT		13
++#define UV3H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000000002000UL
++#define UV3H_EVENT_OCCURRED2_RTC_14_SHFT		14
++#define UV3H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000000004000UL
++#define UV3H_EVENT_OCCURRED2_RTC_15_SHFT		15
++#define UV3H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000000008000UL
++#define UV3H_EVENT_OCCURRED2_RTC_16_SHFT		16
++#define UV3H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000000010000UL
++#define UV3H_EVENT_OCCURRED2_RTC_17_SHFT		17
++#define UV3H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000000020000UL
++#define UV3H_EVENT_OCCURRED2_RTC_18_SHFT		18
++#define UV3H_EVENT_OCCURRED2_RTC_18_MASK		0x0000000000040000UL
++#define UV3H_EVENT_OCCURRED2_RTC_19_SHFT		19
++#define UV3H_EVENT_OCCURRED2_RTC_19_MASK		0x0000000000080000UL
++#define UV3H_EVENT_OCCURRED2_RTC_20_SHFT		20
++#define UV3H_EVENT_OCCURRED2_RTC_20_MASK		0x0000000000100000UL
++#define UV3H_EVENT_OCCURRED2_RTC_21_SHFT		21
++#define UV3H_EVENT_OCCURRED2_RTC_21_MASK		0x0000000000200000UL
++#define UV3H_EVENT_OCCURRED2_RTC_22_SHFT		22
++#define UV3H_EVENT_OCCURRED2_RTC_22_MASK		0x0000000000400000UL
++#define UV3H_EVENT_OCCURRED2_RTC_23_SHFT		23
++#define UV3H_EVENT_OCCURRED2_RTC_23_MASK		0x0000000000800000UL
++#define UV3H_EVENT_OCCURRED2_RTC_24_SHFT		24
++#define UV3H_EVENT_OCCURRED2_RTC_24_MASK		0x0000000001000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_25_SHFT		25
++#define UV3H_EVENT_OCCURRED2_RTC_25_MASK		0x0000000002000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_26_SHFT		26
++#define UV3H_EVENT_OCCURRED2_RTC_26_MASK		0x0000000004000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_27_SHFT		27
++#define UV3H_EVENT_OCCURRED2_RTC_27_MASK		0x0000000008000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_28_SHFT		28
++#define UV3H_EVENT_OCCURRED2_RTC_28_MASK		0x0000000010000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_29_SHFT		29
++#define UV3H_EVENT_OCCURRED2_RTC_29_MASK		0x0000000020000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_30_SHFT		30
++#define UV3H_EVENT_OCCURRED2_RTC_30_MASK		0x0000000040000000UL
++#define UV3H_EVENT_OCCURRED2_RTC_31_SHFT		31
++#define UV3H_EVENT_OCCURRED2_RTC_31_MASK		0x0000000080000000UL
++
++/* UV2 unique defines */
++#define UV2H_EVENT_OCCURRED2_RTC_0_SHFT			0
++#define UV2H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000000001UL
++#define UV2H_EVENT_OCCURRED2_RTC_1_SHFT			1
++#define UV2H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000000002UL
++#define UV2H_EVENT_OCCURRED2_RTC_2_SHFT			2
++#define UV2H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000000004UL
++#define UV2H_EVENT_OCCURRED2_RTC_3_SHFT			3
++#define UV2H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000000008UL
++#define UV2H_EVENT_OCCURRED2_RTC_4_SHFT			4
++#define UV2H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000000010UL
++#define UV2H_EVENT_OCCURRED2_RTC_5_SHFT			5
++#define UV2H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000000020UL
++#define UV2H_EVENT_OCCURRED2_RTC_6_SHFT			6
++#define UV2H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000000000040UL
++#define UV2H_EVENT_OCCURRED2_RTC_7_SHFT			7
++#define UV2H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000000000080UL
++#define UV2H_EVENT_OCCURRED2_RTC_8_SHFT			8
++#define UV2H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000000000100UL
++#define UV2H_EVENT_OCCURRED2_RTC_9_SHFT			9
++#define UV2H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000000000200UL
++#define UV2H_EVENT_OCCURRED2_RTC_10_SHFT		10
++#define UV2H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000000000400UL
++#define UV2H_EVENT_OCCURRED2_RTC_11_SHFT		11
++#define UV2H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000000000800UL
++#define UV2H_EVENT_OCCURRED2_RTC_12_SHFT		12
++#define UV2H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000000001000UL
++#define UV2H_EVENT_OCCURRED2_RTC_13_SHFT		13
++#define UV2H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000000002000UL
++#define UV2H_EVENT_OCCURRED2_RTC_14_SHFT		14
++#define UV2H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000000004000UL
++#define UV2H_EVENT_OCCURRED2_RTC_15_SHFT		15
++#define UV2H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000000008000UL
++#define UV2H_EVENT_OCCURRED2_RTC_16_SHFT		16
++#define UV2H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000000010000UL
++#define UV2H_EVENT_OCCURRED2_RTC_17_SHFT		17
++#define UV2H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000000020000UL
++#define UV2H_EVENT_OCCURRED2_RTC_18_SHFT		18
++#define UV2H_EVENT_OCCURRED2_RTC_18_MASK		0x0000000000040000UL
++#define UV2H_EVENT_OCCURRED2_RTC_19_SHFT		19
++#define UV2H_EVENT_OCCURRED2_RTC_19_MASK		0x0000000000080000UL
++#define UV2H_EVENT_OCCURRED2_RTC_20_SHFT		20
++#define UV2H_EVENT_OCCURRED2_RTC_20_MASK		0x0000000000100000UL
++#define UV2H_EVENT_OCCURRED2_RTC_21_SHFT		21
++#define UV2H_EVENT_OCCURRED2_RTC_21_MASK		0x0000000000200000UL
++#define UV2H_EVENT_OCCURRED2_RTC_22_SHFT		22
++#define UV2H_EVENT_OCCURRED2_RTC_22_MASK		0x0000000000400000UL
++#define UV2H_EVENT_OCCURRED2_RTC_23_SHFT		23
++#define UV2H_EVENT_OCCURRED2_RTC_23_MASK		0x0000000000800000UL
++#define UV2H_EVENT_OCCURRED2_RTC_24_SHFT		24
++#define UV2H_EVENT_OCCURRED2_RTC_24_MASK		0x0000000001000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_25_SHFT		25
++#define UV2H_EVENT_OCCURRED2_RTC_25_MASK		0x0000000002000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_26_SHFT		26
++#define UV2H_EVENT_OCCURRED2_RTC_26_MASK		0x0000000004000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_27_SHFT		27
++#define UV2H_EVENT_OCCURRED2_RTC_27_MASK		0x0000000008000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_28_SHFT		28
++#define UV2H_EVENT_OCCURRED2_RTC_28_MASK		0x0000000010000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_29_SHFT		29
++#define UV2H_EVENT_OCCURRED2_RTC_29_MASK		0x0000000020000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_30_SHFT		30
++#define UV2H_EVENT_OCCURRED2_RTC_30_MASK		0x0000000040000000UL
++#define UV2H_EVENT_OCCURRED2_RTC_31_SHFT		31
++#define UV2H_EVENT_OCCURRED2_RTC_31_MASK		0x0000000080000000UL
++
++#define UVH_EVENT_OCCURRED2_RTC_1_MASK (				\
++	is_uv(UV5) ? 0x0000000000000008UL :				\
++	is_uv(UV4) ? 0x0000000000080000UL :				\
++	is_uv(UV3) ? 0x0000000000000002UL :				\
++	is_uv(UV2) ? 0x0000000000000002UL :				\
++	0)
++#define UVH_EVENT_OCCURRED2_RTC_1_SHFT (				\
++	is_uv(UV5) ? 3 :						\
++	is_uv(UV4) ? 19 :						\
++	is_uv(UV3) ? 1 :						\
++	is_uv(UV2) ? 1 :						\
++	-1)
++
++union uvyh_event_occurred2_u {
++	unsigned long	v;
++
++	/* UVYH common struct */
++	struct uvyh_event_occurred2_s {
++		unsigned long	rtc_interval_int:1;		/* RW */
++		unsigned long	bau_dashboard_int:1;		/* RW */
++		unsigned long	rtc_0:1;			/* RW */
++		unsigned long	rtc_1:1;			/* RW */
++		unsigned long	rtc_2:1;			/* RW */
++		unsigned long	rtc_3:1;			/* RW */
++		unsigned long	rtc_4:1;			/* RW */
++		unsigned long	rtc_5:1;			/* RW */
++		unsigned long	rtc_6:1;			/* RW */
++		unsigned long	rtc_7:1;			/* RW */
++		unsigned long	rtc_8:1;			/* RW */
++		unsigned long	rtc_9:1;			/* RW */
++		unsigned long	rtc_10:1;			/* RW */
++		unsigned long	rtc_11:1;			/* RW */
++		unsigned long	rtc_12:1;			/* RW */
++		unsigned long	rtc_13:1;			/* RW */
++		unsigned long	rtc_14:1;			/* RW */
++		unsigned long	rtc_15:1;			/* RW */
++		unsigned long	rtc_16:1;			/* RW */
++		unsigned long	rtc_17:1;			/* RW */
++		unsigned long	rtc_18:1;			/* RW */
++		unsigned long	rtc_19:1;			/* RW */
++		unsigned long	rtc_20:1;			/* RW */
++		unsigned long	rtc_21:1;			/* RW */
++		unsigned long	rtc_22:1;			/* RW */
++		unsigned long	rtc_23:1;			/* RW */
++		unsigned long	rtc_24:1;			/* RW */
++		unsigned long	rtc_25:1;			/* RW */
++		unsigned long	rtc_26:1;			/* RW */
++		unsigned long	rtc_27:1;			/* RW */
++		unsigned long	rtc_28:1;			/* RW */
++		unsigned long	rtc_29:1;			/* RW */
++		unsigned long	rtc_30:1;			/* RW */
++		unsigned long	rtc_31:1;			/* RW */
++		unsigned long	rsvd_34_63:30;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_event_occurred2_s {
++		unsigned long	rtc_interval_int:1;		/* RW */
++		unsigned long	bau_dashboard_int:1;		/* RW */
++		unsigned long	rtc_0:1;			/* RW */
++		unsigned long	rtc_1:1;			/* RW */
++		unsigned long	rtc_2:1;			/* RW */
++		unsigned long	rtc_3:1;			/* RW */
++		unsigned long	rtc_4:1;			/* RW */
++		unsigned long	rtc_5:1;			/* RW */
++		unsigned long	rtc_6:1;			/* RW */
++		unsigned long	rtc_7:1;			/* RW */
++		unsigned long	rtc_8:1;			/* RW */
++		unsigned long	rtc_9:1;			/* RW */
++		unsigned long	rtc_10:1;			/* RW */
++		unsigned long	rtc_11:1;			/* RW */
++		unsigned long	rtc_12:1;			/* RW */
++		unsigned long	rtc_13:1;			/* RW */
++		unsigned long	rtc_14:1;			/* RW */
++		unsigned long	rtc_15:1;			/* RW */
++		unsigned long	rtc_16:1;			/* RW */
++		unsigned long	rtc_17:1;			/* RW */
++		unsigned long	rtc_18:1;			/* RW */
++		unsigned long	rtc_19:1;			/* RW */
++		unsigned long	rtc_20:1;			/* RW */
++		unsigned long	rtc_21:1;			/* RW */
++		unsigned long	rtc_22:1;			/* RW */
++		unsigned long	rtc_23:1;			/* RW */
++		unsigned long	rtc_24:1;			/* RW */
++		unsigned long	rtc_25:1;			/* RW */
++		unsigned long	rtc_26:1;			/* RW */
++		unsigned long	rtc_27:1;			/* RW */
++		unsigned long	rtc_28:1;			/* RW */
++		unsigned long	rtc_29:1;			/* RW */
++		unsigned long	rtc_30:1;			/* RW */
++		unsigned long	rtc_31:1;			/* RW */
++		unsigned long	rsvd_34_63:30;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_event_occurred2_s {
++		unsigned long	message_accelerator_int0:1;	/* RW */
++		unsigned long	message_accelerator_int1:1;	/* RW */
++		unsigned long	message_accelerator_int2:1;	/* RW */
++		unsigned long	message_accelerator_int3:1;	/* RW */
++		unsigned long	message_accelerator_int4:1;	/* RW */
++		unsigned long	message_accelerator_int5:1;	/* RW */
++		unsigned long	message_accelerator_int6:1;	/* RW */
++		unsigned long	message_accelerator_int7:1;	/* RW */
++		unsigned long	message_accelerator_int8:1;	/* RW */
++		unsigned long	message_accelerator_int9:1;	/* RW */
++		unsigned long	message_accelerator_int10:1;	/* RW */
++		unsigned long	message_accelerator_int11:1;	/* RW */
++		unsigned long	message_accelerator_int12:1;	/* RW */
++		unsigned long	message_accelerator_int13:1;	/* RW */
++		unsigned long	message_accelerator_int14:1;	/* RW */
++		unsigned long	message_accelerator_int15:1;	/* RW */
++		unsigned long	rtc_interval_int:1;		/* RW */
++		unsigned long	bau_dashboard_int:1;		/* RW */
++		unsigned long	rtc_0:1;			/* RW */
++		unsigned long	rtc_1:1;			/* RW */
++		unsigned long	rtc_2:1;			/* RW */
++		unsigned long	rtc_3:1;			/* RW */
++		unsigned long	rtc_4:1;			/* RW */
++		unsigned long	rtc_5:1;			/* RW */
++		unsigned long	rtc_6:1;			/* RW */
++		unsigned long	rtc_7:1;			/* RW */
++		unsigned long	rtc_8:1;			/* RW */
++		unsigned long	rtc_9:1;			/* RW */
++		unsigned long	rtc_10:1;			/* RW */
++		unsigned long	rtc_11:1;			/* RW */
++		unsigned long	rtc_12:1;			/* RW */
++		unsigned long	rtc_13:1;			/* RW */
++		unsigned long	rtc_14:1;			/* RW */
++		unsigned long	rtc_15:1;			/* RW */
++		unsigned long	rtc_16:1;			/* RW */
++		unsigned long	rtc_17:1;			/* RW */
++		unsigned long	rtc_18:1;			/* RW */
++		unsigned long	rtc_19:1;			/* RW */
++		unsigned long	rtc_20:1;			/* RW */
++		unsigned long	rtc_21:1;			/* RW */
++		unsigned long	rtc_22:1;			/* RW */
++		unsigned long	rtc_23:1;			/* RW */
++		unsigned long	rtc_24:1;			/* RW */
++		unsigned long	rtc_25:1;			/* RW */
++		unsigned long	rtc_26:1;			/* RW */
++		unsigned long	rtc_27:1;			/* RW */
++		unsigned long	rtc_28:1;			/* RW */
++		unsigned long	rtc_29:1;			/* RW */
++		unsigned long	rtc_30:1;			/* RW */
++		unsigned long	rtc_31:1;			/* RW */
++		unsigned long	rsvd_50_63:14;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_event_occurred2_s {
++		unsigned long	rtc_0:1;			/* RW */
++		unsigned long	rtc_1:1;			/* RW */
++		unsigned long	rtc_2:1;			/* RW */
++		unsigned long	rtc_3:1;			/* RW */
++		unsigned long	rtc_4:1;			/* RW */
++		unsigned long	rtc_5:1;			/* RW */
++		unsigned long	rtc_6:1;			/* RW */
++		unsigned long	rtc_7:1;			/* RW */
++		unsigned long	rtc_8:1;			/* RW */
++		unsigned long	rtc_9:1;			/* RW */
++		unsigned long	rtc_10:1;			/* RW */
++		unsigned long	rtc_11:1;			/* RW */
++		unsigned long	rtc_12:1;			/* RW */
++		unsigned long	rtc_13:1;			/* RW */
++		unsigned long	rtc_14:1;			/* RW */
++		unsigned long	rtc_15:1;			/* RW */
++		unsigned long	rtc_16:1;			/* RW */
++		unsigned long	rtc_17:1;			/* RW */
++		unsigned long	rtc_18:1;			/* RW */
++		unsigned long	rtc_19:1;			/* RW */
++		unsigned long	rtc_20:1;			/* RW */
++		unsigned long	rtc_21:1;			/* RW */
++		unsigned long	rtc_22:1;			/* RW */
++		unsigned long	rtc_23:1;			/* RW */
++		unsigned long	rtc_24:1;			/* RW */
++		unsigned long	rtc_25:1;			/* RW */
++		unsigned long	rtc_26:1;			/* RW */
++		unsigned long	rtc_27:1;			/* RW */
++		unsigned long	rtc_28:1;			/* RW */
++		unsigned long	rtc_29:1;			/* RW */
++		unsigned long	rtc_30:1;			/* RW */
++		unsigned long	rtc_31:1;			/* RW */
++		unsigned long	rsvd_32_63:32;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_event_occurred2_s {
++		unsigned long	rtc_0:1;			/* RW */
++		unsigned long	rtc_1:1;			/* RW */
++		unsigned long	rtc_2:1;			/* RW */
++		unsigned long	rtc_3:1;			/* RW */
++		unsigned long	rtc_4:1;			/* RW */
++		unsigned long	rtc_5:1;			/* RW */
++		unsigned long	rtc_6:1;			/* RW */
++		unsigned long	rtc_7:1;			/* RW */
++		unsigned long	rtc_8:1;			/* RW */
++		unsigned long	rtc_9:1;			/* RW */
++		unsigned long	rtc_10:1;			/* RW */
++		unsigned long	rtc_11:1;			/* RW */
++		unsigned long	rtc_12:1;			/* RW */
++		unsigned long	rtc_13:1;			/* RW */
++		unsigned long	rtc_14:1;			/* RW */
++		unsigned long	rtc_15:1;			/* RW */
++		unsigned long	rtc_16:1;			/* RW */
++		unsigned long	rtc_17:1;			/* RW */
++		unsigned long	rtc_18:1;			/* RW */
++		unsigned long	rtc_19:1;			/* RW */
++		unsigned long	rtc_20:1;			/* RW */
++		unsigned long	rtc_21:1;			/* RW */
++		unsigned long	rtc_22:1;			/* RW */
++		unsigned long	rtc_23:1;			/* RW */
++		unsigned long	rtc_24:1;			/* RW */
++		unsigned long	rtc_25:1;			/* RW */
++		unsigned long	rtc_26:1;			/* RW */
++		unsigned long	rtc_27:1;			/* RW */
++		unsigned long	rtc_28:1;			/* RW */
++		unsigned long	rtc_29:1;			/* RW */
++		unsigned long	rtc_30:1;			/* RW */
++		unsigned long	rtc_31:1;			/* RW */
++		unsigned long	rsvd_32_63:32;
++	} s2;
++};
+ 
+ /* ========================================================================= */
+-/*                         UVH_GR1_TLB_INT1_CONFIG                           */
+-/* ========================================================================= */
+-#define UV2H_GR1_TLB_INT1_CONFIG 0x61f40UL
+-#define UV3H_GR1_TLB_INT1_CONFIG 0x61f40UL
+-#define UV4H_GR1_TLB_INT1_CONFIG 0x62140UL
+-#define UVH_GR1_TLB_INT1_CONFIG (					\
+-	is_uv2_hub() ? UV2H_GR1_TLB_INT1_CONFIG :			\
+-	is_uv3_hub() ? UV3H_GR1_TLB_INT1_CONFIG :			\
+-	/*is_uv4_hub*/ UV4H_GR1_TLB_INT1_CONFIG)
+-
+-#define UVH_GR1_TLB_INT1_CONFIG_VECTOR_SHFT		0
+-#define UVH_GR1_TLB_INT1_CONFIG_DM_SHFT			8
+-#define UVH_GR1_TLB_INT1_CONFIG_DESTMODE_SHFT		11
+-#define UVH_GR1_TLB_INT1_CONFIG_STATUS_SHFT		12
+-#define UVH_GR1_TLB_INT1_CONFIG_P_SHFT			13
+-#define UVH_GR1_TLB_INT1_CONFIG_T_SHFT			15
+-#define UVH_GR1_TLB_INT1_CONFIG_M_SHFT			16
+-#define UVH_GR1_TLB_INT1_CONFIG_APIC_ID_SHFT		32
+-#define UVH_GR1_TLB_INT1_CONFIG_VECTOR_MASK		0x00000000000000ffUL
+-#define UVH_GR1_TLB_INT1_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_GR1_TLB_INT1_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_GR1_TLB_INT1_CONFIG_STATUS_MASK		0x0000000000001000UL
+-#define UVH_GR1_TLB_INT1_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_GR1_TLB_INT1_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_GR1_TLB_INT1_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_GR1_TLB_INT1_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
++/*                        UVH_EVENT_OCCURRED2_ALIAS                          */
++/* ========================================================================= */
++#define UVH_EVENT_OCCURRED2_ALIAS 0x70108UL
++
++
++/* ========================================================================= */
++/*                         UVH_EXTIO_INT0_BROADCAST                          */
++/* ========================================================================= */
++#define UVH_EXTIO_INT0_BROADCAST 0x61448UL
++
++/* UVH common defines*/
++#define UVH_EXTIO_INT0_BROADCAST_ENABLE_SHFT		0
++#define UVH_EXTIO_INT0_BROADCAST_ENABLE_MASK		0x0000000000000001UL
++
++
++union uvh_extio_int0_broadcast_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_extio_int0_broadcast_s {
++		unsigned long	enable:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s;
++
++	/* UV5 unique struct */
++	struct uv5h_extio_int0_broadcast_s {
++		unsigned long	enable:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_extio_int0_broadcast_s {
++		unsigned long	enable:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_extio_int0_broadcast_s {
++		unsigned long	enable:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_extio_int0_broadcast_s {
++		unsigned long	enable:1;			/* RW */
++		unsigned long	rsvd_1_63:63;
++	} s2;
++};
++
++/* ========================================================================= */
++/*                          UVH_GR0_GAM_GR_CONFIG                            */
++/* ========================================================================= */
++#define UVH_GR0_GAM_GR_CONFIG (						\
++	is_uv(UV5) ? 0x600028UL :					\
++	is_uv(UV4) ? 0x600028UL :					\
++	is_uv(UV3) ? 0xc00028UL :					\
++	is_uv(UV2) ? 0xc00028UL :					\
++	0)
++
++
++
++/* UVYH common defines */
++#define UVYH_GR0_GAM_GR_CONFIG_SUBSPACE_SHFT		10
++#define UVYH_GR0_GAM_GR_CONFIG_SUBSPACE_MASK		0x0000000000000400UL
++
++/* UV4 unique defines */
++#define UV4H_GR0_GAM_GR_CONFIG_SUBSPACE_SHFT		10
++#define UV4H_GR0_GAM_GR_CONFIG_SUBSPACE_MASK		0x0000000000000400UL
++
++/* UV3 unique defines */
++#define UV3H_GR0_GAM_GR_CONFIG_M_SKT_SHFT		0
++#define UV3H_GR0_GAM_GR_CONFIG_M_SKT_MASK		0x000000000000003fUL
++#define UV3H_GR0_GAM_GR_CONFIG_SUBSPACE_SHFT		10
++#define UV3H_GR0_GAM_GR_CONFIG_SUBSPACE_MASK		0x0000000000000400UL
++
++/* UV2 unique defines */
++#define UV2H_GR0_GAM_GR_CONFIG_N_GR_SHFT		0
++#define UV2H_GR0_GAM_GR_CONFIG_N_GR_MASK		0x000000000000000fUL
++
++
++union uvyh_gr0_gam_gr_config_u {
++	unsigned long	v;
++
++	/* UVYH common struct */
++	struct uvyh_gr0_gam_gr_config_s {
++		unsigned long	rsvd_0_9:10;
++		unsigned long	subspace:1;			/* RW */
++		unsigned long	rsvd_11_63:53;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_gr0_gam_gr_config_s {
++		unsigned long	rsvd_0_9:10;
++		unsigned long	subspace:1;			/* RW */
++		unsigned long	rsvd_11_63:53;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_gr0_gam_gr_config_s {
++		unsigned long	rsvd_0_9:10;
++		unsigned long	subspace:1;			/* RW */
++		unsigned long	rsvd_11_63:53;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_gr0_gam_gr_config_s {
++		unsigned long	m_skt:6;			/* RW */
++		unsigned long	undef_6_9:4;			/* Undefined */
++		unsigned long	subspace:1;			/* RW */
++		unsigned long	reserved:53;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_gr0_gam_gr_config_s {
++		unsigned long	n_gr:4;				/* RW */
++		unsigned long	reserved:60;
++	} s2;
++};
++
++/* ========================================================================= */
++/*                         UVH_GR0_TLB_INT0_CONFIG                           */
++/* ========================================================================= */
++#define UVH_GR0_TLB_INT0_CONFIG (					\
++	is_uv(UV4) ? 0x61b00UL :					\
++	is_uv(UV3) ? 0x61b00UL :					\
++	is_uv(UV2) ? 0x61b00UL :					\
++	uv_undefined("UVH_GR0_TLB_INT0_CONFIG"))
++
++
++/* UVXH common defines */
++#define UVXH_GR0_TLB_INT0_CONFIG_VECTOR_SHFT		0
++#define UVXH_GR0_TLB_INT0_CONFIG_VECTOR_MASK		0x00000000000000ffUL
++#define UVXH_GR0_TLB_INT0_CONFIG_DM_SHFT		8
++#define UVXH_GR0_TLB_INT0_CONFIG_DM_MASK		0x0000000000000700UL
++#define UVXH_GR0_TLB_INT0_CONFIG_DESTMODE_SHFT		11
++#define UVXH_GR0_TLB_INT0_CONFIG_DESTMODE_MASK		0x0000000000000800UL
++#define UVXH_GR0_TLB_INT0_CONFIG_STATUS_SHFT		12
++#define UVXH_GR0_TLB_INT0_CONFIG_STATUS_MASK		0x0000000000001000UL
++#define UVXH_GR0_TLB_INT0_CONFIG_P_SHFT			13
++#define UVXH_GR0_TLB_INT0_CONFIG_P_MASK			0x0000000000002000UL
++#define UVXH_GR0_TLB_INT0_CONFIG_T_SHFT			15
++#define UVXH_GR0_TLB_INT0_CONFIG_T_MASK			0x0000000000008000UL
++#define UVXH_GR0_TLB_INT0_CONFIG_M_SHFT			16
++#define UVXH_GR0_TLB_INT0_CONFIG_M_MASK			0x0000000000010000UL
++#define UVXH_GR0_TLB_INT0_CONFIG_APIC_ID_SHFT		32
++#define UVXH_GR0_TLB_INT0_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
++
++
++union uvh_gr0_tlb_int0_config_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_gr0_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_gr0_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_gr0_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_gr0_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_gr0_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s2;
++};
++
++/* ========================================================================= */
++/*                         UVH_GR0_TLB_INT1_CONFIG                           */
++/* ========================================================================= */
++#define UVH_GR0_TLB_INT1_CONFIG (					\
++	is_uv(UV4) ? 0x61b40UL :					\
++	is_uv(UV3) ? 0x61b40UL :					\
++	is_uv(UV2) ? 0x61b40UL :					\
++	uv_undefined("UVH_GR0_TLB_INT1_CONFIG"))
++
++
++/* UVXH common defines */
++#define UVXH_GR0_TLB_INT1_CONFIG_VECTOR_SHFT		0
++#define UVXH_GR0_TLB_INT1_CONFIG_VECTOR_MASK		0x00000000000000ffUL
++#define UVXH_GR0_TLB_INT1_CONFIG_DM_SHFT		8
++#define UVXH_GR0_TLB_INT1_CONFIG_DM_MASK		0x0000000000000700UL
++#define UVXH_GR0_TLB_INT1_CONFIG_DESTMODE_SHFT		11
++#define UVXH_GR0_TLB_INT1_CONFIG_DESTMODE_MASK		0x0000000000000800UL
++#define UVXH_GR0_TLB_INT1_CONFIG_STATUS_SHFT		12
++#define UVXH_GR0_TLB_INT1_CONFIG_STATUS_MASK		0x0000000000001000UL
++#define UVXH_GR0_TLB_INT1_CONFIG_P_SHFT			13
++#define UVXH_GR0_TLB_INT1_CONFIG_P_MASK			0x0000000000002000UL
++#define UVXH_GR0_TLB_INT1_CONFIG_T_SHFT			15
++#define UVXH_GR0_TLB_INT1_CONFIG_T_MASK			0x0000000000008000UL
++#define UVXH_GR0_TLB_INT1_CONFIG_M_SHFT			16
++#define UVXH_GR0_TLB_INT1_CONFIG_M_MASK			0x0000000000010000UL
++#define UVXH_GR0_TLB_INT1_CONFIG_APIC_ID_SHFT		32
++#define UVXH_GR0_TLB_INT1_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
++
++
++union uvh_gr0_tlb_int1_config_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_gr0_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_gr0_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} sx;
+ 
++	/* UV4 unique struct */
++	struct uv4h_gr0_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s4;
+ 
+-union uvh_gr1_tlb_int1_config_u {
+-	unsigned long	v;
+-	struct uvh_gr1_tlb_int1_config_s {
++	/* UV3 unique struct */
++	struct uv3h_gr0_tlb_int1_config_s {
+ 		unsigned long	vector_:8;			/* RW */
+ 		unsigned long	dm:3;				/* RW */
+ 		unsigned long	destmode:1;			/* RW */
+@@ -1113,1326 +2433,403 @@ union uvh_gr1_tlb_int1_config_u {
+ 		unsigned long	m:1;				/* RW */
+ 		unsigned long	rsvd_17_31:15;
+ 		unsigned long	apic_id:32;			/* RW */
+-	} s;
+-};
+-
+-/* ========================================================================= */
+-/*                         UVH_GR1_TLB_MMR_CONTROL                           */
+-/* ========================================================================= */
+-#define UV2H_GR1_TLB_MMR_CONTROL 0x1001080UL
+-#define UV3H_GR1_TLB_MMR_CONTROL 0x1001080UL
+-#define UV4H_GR1_TLB_MMR_CONTROL 0x701080UL
+-#define UVH_GR1_TLB_MMR_CONTROL (					\
+-	is_uv2_hub() ? UV2H_GR1_TLB_MMR_CONTROL :			\
+-	is_uv3_hub() ? UV3H_GR1_TLB_MMR_CONTROL :			\
+-	/*is_uv4_hub*/ UV4H_GR1_TLB_MMR_CONTROL)
+-
+-#define UVH_GR1_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UVH_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UVH_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UVH_GR1_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-
+-#define UVXH_GR1_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UVXH_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UVXH_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UVXH_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-
+-#define UV2H_GR1_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV2H_GR1_TLB_MMR_CONTROL_MEM_SEL_SHFT		12
+-#define UV2H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_INJ_CON_SHFT	48
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_INJ_TLBRAM_SHFT	52
+-#define UV2H_GR1_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000000fffUL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000003000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_INJ_CON_MASK	0x0001000000000000UL
+-#define UV2H_GR1_TLB_MMR_CONTROL_MMR_INJ_TLBRAM_MASK	0x0010000000000000UL
+-
+-#define UV3H_GR1_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV3H_GR1_TLB_MMR_CONTROL_MEM_SEL_SHFT		12
+-#define UV3H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV3H_GR1_TLB_MMR_CONTROL_ECC_SEL_SHFT		21
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV3H_GR1_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000000fffUL
+-#define UV3H_GR1_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000003000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_ECC_SEL_MASK		0x0000000000200000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV3H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-
+-#define UV4H_GR1_TLB_MMR_CONTROL_INDEX_SHFT		0
+-#define UV4H_GR1_TLB_MMR_CONTROL_MEM_SEL_SHFT		13
+-#define UV4H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_SHFT	16
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_SHFT	20
+-#define UV4H_GR1_TLB_MMR_CONTROL_ECC_SEL_SHFT		21
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_WRITE_SHFT		30
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_READ_SHFT		31
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_SHFT	32
+-#define UV4H_GR1_TLB_MMR_CONTROL_PAGE_SIZE_SHFT		59
+-#define UV4H_GR1_TLB_MMR_CONTROL_INDEX_MASK		0x0000000000001fffUL
+-#define UV4H_GR1_TLB_MMR_CONTROL_MEM_SEL_MASK		0x0000000000006000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_AUTO_VALID_EN_MASK	0x0000000000010000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_HASH_INDEX_EN_MASK	0x0000000000100000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_ECC_SEL_MASK		0x0000000000200000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_WRITE_MASK		0x0000000040000000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_READ_MASK		0x0000000080000000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_MMR_OP_DONE_MASK	0x0000000100000000UL
+-#define UV4H_GR1_TLB_MMR_CONTROL_PAGE_SIZE_MASK		0xf800000000000000UL
+-
+-
+-union uvh_gr1_tlb_mmr_control_u {
+-	unsigned long	v;
+-	struct uvh_gr1_tlb_mmr_control_s {
+-		unsigned long	rsvd_0_15:16;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	rsvd_32_48:17;
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_63:12;
+-	} s;
+-	struct uvxh_gr1_tlb_mmr_control_s {
+-		unsigned long	rsvd_0_15:16;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	rsvd_48:1;
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_63:12;
+-	} sx;
+-	struct uv2h_gr1_tlb_mmr_control_s {
+-		unsigned long	index:12;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_14_15:2;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	rsvd_21_29:9;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	mmr_inj_con:1;			/* RW */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	mmr_inj_tlbram:1;		/* RW */
+-		unsigned long	rsvd_53_63:11;
+-	} s2;
+-	struct uv3h_gr1_tlb_mmr_control_s {
+-		unsigned long	index:12;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_14_15:2;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	ecc_sel:1;			/* RW */
+-		unsigned long	rsvd_22_29:8;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	undef_48:1;			/* Undefined */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	undef_52:1;			/* Undefined */
+-		unsigned long	rsvd_53_63:11;
+ 	} s3;
+-	struct uv4h_gr1_tlb_mmr_control_s {
+-		unsigned long	index:13;			/* RW */
+-		unsigned long	mem_sel:2;			/* RW */
+-		unsigned long	rsvd_15:1;
+-		unsigned long	auto_valid_en:1;		/* RW */
+-		unsigned long	rsvd_17_19:3;
+-		unsigned long	mmr_hash_index_en:1;		/* RW */
+-		unsigned long	ecc_sel:1;			/* RW */
+-		unsigned long	rsvd_22_29:8;
+-		unsigned long	mmr_write:1;			/* WP */
+-		unsigned long	mmr_read:1;			/* WP */
+-		unsigned long	mmr_op_done:1;			/* RW */
+-		unsigned long	rsvd_33_47:15;
+-		unsigned long	undef_48:1;			/* Undefined */
+-		unsigned long	rsvd_49_51:3;
+-		unsigned long	rsvd_52_58:7;
+-		unsigned long	page_size:5;			/* RW */
+-	} s4;
+-};
+-
+-/* ========================================================================= */
+-/*                       UVH_GR1_TLB_MMR_READ_DATA_HI                        */
+-/* ========================================================================= */
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI 0x10010a0UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI 0x10010a0UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI 0x7010a0UL
+-#define UVH_GR1_TLB_MMR_READ_DATA_HI (					\
+-	is_uv2_hub() ? UV2H_GR1_TLB_MMR_READ_DATA_HI :			\
+-	is_uv3_hub() ? UV3H_GR1_TLB_MMR_READ_DATA_HI :			\
+-	/*is_uv4_hub*/ UV4H_GR1_TLB_MMR_READ_DATA_HI)
+-
+-#define UVH_GR1_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-
+-#define UVXH_GR1_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_GAA_SHFT		41
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	43
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_LARGER_SHFT	44
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_PFN_MASK		0x000001ffffffffffUL
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0000060000000000UL
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0000080000000000UL
+-#define UV2H_GR1_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0000100000000000UL
+-
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_GAA_SHFT		41
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	43
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_LARGER_SHFT	44
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_AA_EXT_SHFT	45
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_WAY_ECC_SHFT	55
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_PFN_MASK		0x000001ffffffffffUL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0000060000000000UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0000080000000000UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0000100000000000UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_AA_EXT_MASK	0x0000200000000000UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_HI_WAY_ECC_MASK	0xff80000000000000UL
+-
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_PFN_SHFT		0
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_PNID_SHFT		34
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_GAA_SHFT		49
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_SHFT	51
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_LARGER_SHFT	52
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_AA_EXT_SHFT	53
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_WAY_ECC_SHFT	55
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_PFN_MASK		0x00000003ffffffffUL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_PNID_MASK		0x0001fffc00000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_GAA_MASK		0x0006000000000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_DIRTY_MASK	0x0008000000000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_LARGER_MASK	0x0010000000000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_AA_EXT_MASK	0x0020000000000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_HI_WAY_ECC_MASK	0xff80000000000000UL
+-
+ 
+-union uvh_gr1_tlb_mmr_read_data_hi_u {
+-	unsigned long	v;
+-	struct uv2h_gr1_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:41;				/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	rsvd_45_63:19;
++	/* UV2 unique struct */
++	struct uv2h_gr0_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
+ 	} s2;
+-	struct uv3h_gr1_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:41;				/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	aa_ext:1;			/* RO */
+-		unsigned long	undef_46_54:9;			/* Undefined */
+-		unsigned long	way_ecc:9;			/* RO */
+-	} s3;
+-	struct uv4h_gr1_tlb_mmr_read_data_hi_s {
+-		unsigned long	pfn:34;				/* RO */
+-		unsigned long	pnid:15;			/* RO */
+-		unsigned long	gaa:2;				/* RO */
+-		unsigned long	dirty:1;			/* RO */
+-		unsigned long	larger:1;			/* RO */
+-		unsigned long	aa_ext:1;			/* RO */
+-		unsigned long	undef_54:1;			/* Undefined */
+-		unsigned long	way_ecc:9;			/* RO */
+-	} s4;
+ };
+ 
+ /* ========================================================================= */
+-/*                       UVH_GR1_TLB_MMR_READ_DATA_LO                        */
++/*                         UVH_GR1_TLB_INT0_CONFIG                           */
+ /* ========================================================================= */
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO 0x10010a8UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO 0x10010a8UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO 0x7010a8UL
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO (					\
+-	is_uv2_hub() ? UV2H_GR1_TLB_MMR_READ_DATA_LO :			\
+-	is_uv3_hub() ? UV3H_GR1_TLB_MMR_READ_DATA_LO :			\
+-	/*is_uv4_hub*/ UV4H_GR1_TLB_MMR_READ_DATA_LO)
+-
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_VALID_SHFT		63
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UVH_GR1_TLB_MMR_READ_DATA_LO_VALID_MASK		0x8000000000000000UL
+-
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UVXH_GR1_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV2H_GR1_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV3H_GR1_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
+-
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_VPN_SHFT		0
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_ASID_SHFT		39
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_VALID_SHFT	63
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_VPN_MASK		0x0000007fffffffffUL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_ASID_MASK		0x7fffff8000000000UL
+-#define UV4H_GR1_TLB_MMR_READ_DATA_LO_VALID_MASK	0x8000000000000000UL
++#define UVH_GR1_TLB_INT0_CONFIG (					\
++	is_uv(UV4) ? 0x62100UL :					\
++	is_uv(UV3) ? 0x61f00UL :					\
++	is_uv(UV2) ? 0x61f00UL :					\
++	uv_undefined("UVH_GR1_TLB_INT0_CONFIG"))
++
++
++/* UVXH common defines */
++#define UVXH_GR1_TLB_INT0_CONFIG_VECTOR_SHFT		0
++#define UVXH_GR1_TLB_INT0_CONFIG_VECTOR_MASK		0x00000000000000ffUL
++#define UVXH_GR1_TLB_INT0_CONFIG_DM_SHFT		8
++#define UVXH_GR1_TLB_INT0_CONFIG_DM_MASK		0x0000000000000700UL
++#define UVXH_GR1_TLB_INT0_CONFIG_DESTMODE_SHFT		11
++#define UVXH_GR1_TLB_INT0_CONFIG_DESTMODE_MASK		0x0000000000000800UL
++#define UVXH_GR1_TLB_INT0_CONFIG_STATUS_SHFT		12
++#define UVXH_GR1_TLB_INT0_CONFIG_STATUS_MASK		0x0000000000001000UL
++#define UVXH_GR1_TLB_INT0_CONFIG_P_SHFT			13
++#define UVXH_GR1_TLB_INT0_CONFIG_P_MASK			0x0000000000002000UL
++#define UVXH_GR1_TLB_INT0_CONFIG_T_SHFT			15
++#define UVXH_GR1_TLB_INT0_CONFIG_T_MASK			0x0000000000008000UL
++#define UVXH_GR1_TLB_INT0_CONFIG_M_SHFT			16
++#define UVXH_GR1_TLB_INT0_CONFIG_M_MASK			0x0000000000010000UL
++#define UVXH_GR1_TLB_INT0_CONFIG_APIC_ID_SHFT		32
++#define UVXH_GR1_TLB_INT0_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+ 
+ 
+-union uvh_gr1_tlb_mmr_read_data_lo_u {
++union uvh_gr1_tlb_int0_config_u {
+ 	unsigned long	v;
+-	struct uvh_gr1_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s;
+-	struct uvxh_gr1_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} sx;
+-	struct uv2h_gr1_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s2;
+-	struct uv3h_gr1_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s3;
+-	struct uv4h_gr1_tlb_mmr_read_data_lo_s {
+-		unsigned long	vpn:39;				/* RO */
+-		unsigned long	asid:24;			/* RO */
+-		unsigned long	valid:1;			/* RO */
+-	} s4;
+-};
+-
+-/* ========================================================================= */
+-/*                               UVH_INT_CMPB                                */
+-/* ========================================================================= */
+-#define UVH_INT_CMPB 0x22080UL
+-
+-#define UVH_INT_CMPB_REAL_TIME_CMPB_SHFT		0
+-#define UVH_INT_CMPB_REAL_TIME_CMPB_MASK		0x00ffffffffffffffUL
+ 
+-
+-union uvh_int_cmpb_u {
+-	unsigned long	v;
+-	struct uvh_int_cmpb_s {
+-		unsigned long	real_time_cmpb:56;		/* RW */
+-		unsigned long	rsvd_56_63:8;
++	/* UVH common struct */
++	struct uvh_gr1_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
+ 	} s;
+-};
+-
+-/* ========================================================================= */
+-/*                               UVH_INT_CMPC                                */
+-/* ========================================================================= */
+-#define UVH_INT_CMPC 0x22100UL
+ 
++	/* UVXH common struct */
++	struct uvxh_gr1_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} sx;
+ 
+-#define UVXH_INT_CMPC_REAL_TIME_CMP_2_SHFT		0
+-#define UVXH_INT_CMPC_REAL_TIME_CMP_2_MASK		0x00ffffffffffffffUL
++	/* UV4 unique struct */
++	struct uv4h_gr1_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s4;
+ 
++	/* UV3 unique struct */
++	struct uv3h_gr1_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s3;
+ 
+-union uvh_int_cmpc_u {
+-	unsigned long	v;
+-	struct uvh_int_cmpc_s {
+-		unsigned long	real_time_cmpc:56;		/* RW */
+-		unsigned long	rsvd_56_63:8;
+-	} s;
++	/* UV2 unique struct */
++	struct uv2h_gr1_tlb_int0_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                               UVH_INT_CMPD                                */
++/*                         UVH_GR1_TLB_INT1_CONFIG                           */
+ /* ========================================================================= */
+-#define UVH_INT_CMPD 0x22180UL
+-
+-
+-#define UVXH_INT_CMPD_REAL_TIME_CMP_3_SHFT		0
+-#define UVXH_INT_CMPD_REAL_TIME_CMP_3_MASK		0x00ffffffffffffffUL
++#define UVH_GR1_TLB_INT1_CONFIG (					\
++	is_uv(UV4) ? 0x62140UL :					\
++	is_uv(UV3) ? 0x61f40UL :					\
++	is_uv(UV2) ? 0x61f40UL :					\
++	uv_undefined("UVH_GR1_TLB_INT1_CONFIG"))
++
++
++/* UVXH common defines */
++#define UVXH_GR1_TLB_INT1_CONFIG_VECTOR_SHFT		0
++#define UVXH_GR1_TLB_INT1_CONFIG_VECTOR_MASK		0x00000000000000ffUL
++#define UVXH_GR1_TLB_INT1_CONFIG_DM_SHFT		8
++#define UVXH_GR1_TLB_INT1_CONFIG_DM_MASK		0x0000000000000700UL
++#define UVXH_GR1_TLB_INT1_CONFIG_DESTMODE_SHFT		11
++#define UVXH_GR1_TLB_INT1_CONFIG_DESTMODE_MASK		0x0000000000000800UL
++#define UVXH_GR1_TLB_INT1_CONFIG_STATUS_SHFT		12
++#define UVXH_GR1_TLB_INT1_CONFIG_STATUS_MASK		0x0000000000001000UL
++#define UVXH_GR1_TLB_INT1_CONFIG_P_SHFT			13
++#define UVXH_GR1_TLB_INT1_CONFIG_P_MASK			0x0000000000002000UL
++#define UVXH_GR1_TLB_INT1_CONFIG_T_SHFT			15
++#define UVXH_GR1_TLB_INT1_CONFIG_T_MASK			0x0000000000008000UL
++#define UVXH_GR1_TLB_INT1_CONFIG_M_SHFT			16
++#define UVXH_GR1_TLB_INT1_CONFIG_M_MASK			0x0000000000010000UL
++#define UVXH_GR1_TLB_INT1_CONFIG_APIC_ID_SHFT		32
++#define UVXH_GR1_TLB_INT1_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+ 
+ 
+-union uvh_int_cmpd_u {
++union uvh_gr1_tlb_int1_config_u {
+ 	unsigned long	v;
+-	struct uvh_int_cmpd_s {
+-		unsigned long	real_time_cmpd:56;		/* RW */
+-		unsigned long	rsvd_56_63:8;
+-	} s;
+-};
+-
+-/* ========================================================================= */
+-/*                               UVH_IPI_INT                                 */
+-/* ========================================================================= */
+-#define UVH_IPI_INT 0x60500UL
+-
+-#define UV2H_IPI_INT_32 0x348
+-#define UV3H_IPI_INT_32 0x348
+-#define UV4H_IPI_INT_32 0x268
+-#define UVH_IPI_INT_32 (						\
+-	is_uv2_hub() ? UV2H_IPI_INT_32 :				\
+-	is_uv3_hub() ? UV3H_IPI_INT_32 :				\
+-	/*is_uv4_hub*/ UV4H_IPI_INT_32)
+-
+-#define UVH_IPI_INT_VECTOR_SHFT				0
+-#define UVH_IPI_INT_DELIVERY_MODE_SHFT			8
+-#define UVH_IPI_INT_DESTMODE_SHFT			11
+-#define UVH_IPI_INT_APIC_ID_SHFT			16
+-#define UVH_IPI_INT_SEND_SHFT				63
+-#define UVH_IPI_INT_VECTOR_MASK				0x00000000000000ffUL
+-#define UVH_IPI_INT_DELIVERY_MODE_MASK			0x0000000000000700UL
+-#define UVH_IPI_INT_DESTMODE_MASK			0x0000000000000800UL
+-#define UVH_IPI_INT_APIC_ID_MASK			0x0000ffffffff0000UL
+-#define UVH_IPI_INT_SEND_MASK				0x8000000000000000UL
+-
+ 
+-union uvh_ipi_int_u {
+-	unsigned long	v;
+-	struct uvh_ipi_int_s {
++	/* UVH common struct */
++	struct uvh_gr1_tlb_int1_config_s {
+ 		unsigned long	vector_:8;			/* RW */
+-		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	dm:3;				/* RW */
+ 		unsigned long	destmode:1;			/* RW */
+-		unsigned long	rsvd_12_15:4;
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
+ 		unsigned long	apic_id:32;			/* RW */
+-		unsigned long	rsvd_48_62:15;
+-		unsigned long	send:1;				/* WP */
+ 	} s;
+-};
+ 
+-/* ========================================================================= */
+-/*                   UVH_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST                     */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST 0x320050UL
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST 0x320050UL
+-#define UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST uv_undefined("UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST")
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST)
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_32 0x9c0
+-
+-
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_ADDRESS_SHFT 4
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_NODE_ID_SHFT 49
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_ADDRESS_MASK 0x000007fffffffff0UL
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_NODE_ID_MASK 0x7ffe000000000000UL
+-
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_ADDRESS_SHFT 4
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_NODE_ID_SHFT 49
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_ADDRESS_MASK 0x000007fffffffff0UL
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_FIRST_NODE_ID_MASK 0x7ffe000000000000UL
++	/* UVXH common struct */
++	struct uvxh_gr1_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} sx;
+ 
++	/* UV4 unique struct */
++	struct uv4h_gr1_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s4;
+ 
+-union uvh_lb_bau_intd_payload_queue_first_u {
+-	unsigned long	v;
+-	struct uv2h_lb_bau_intd_payload_queue_first_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_48:6;
+-		unsigned long	node_id:14;			/* RW */
+-		unsigned long	rsvd_63:1;
+-	} s2;
+-	struct uv3h_lb_bau_intd_payload_queue_first_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_48:6;
+-		unsigned long	node_id:14;			/* RW */
+-		unsigned long	rsvd_63:1;
++	/* UV3 unique struct */
++	struct uv3h_gr1_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
+ 	} s3;
+-};
+-
+-/* ========================================================================= */
+-/*                    UVH_LB_BAU_INTD_PAYLOAD_QUEUE_LAST                     */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST 0x320060UL
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST 0x320060UL
+-#define UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST uv_undefined("UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST")
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_LAST (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST)
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_LAST_32 0x9c8
+-
+-
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST_ADDRESS_SHFT 4
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST_ADDRESS_MASK 0x000007fffffffff0UL
+ 
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST_ADDRESS_SHFT 4
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_LAST_ADDRESS_MASK 0x000007fffffffff0UL
+-
+-
+-union uvh_lb_bau_intd_payload_queue_last_u {
+-	unsigned long	v;
+-	struct uv2h_lb_bau_intd_payload_queue_last_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_63:21;
++	/* UV2 unique struct */
++	struct uv2h_gr1_tlb_int1_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
+ 	} s2;
+-	struct uv3h_lb_bau_intd_payload_queue_last_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_63:21;
+-	} s3;
+ };
+ 
+ /* ========================================================================= */
+-/*                    UVH_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL                     */
++/*                               UVH_INT_CMPB                                */
+ /* ========================================================================= */
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL 0x320070UL
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL 0x320070UL
+-#define UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL uv_undefined("UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL")
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL)
+-#define UVH_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL_32 0x9d0
+-
+-
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL_ADDRESS_SHFT 4
+-#define UV2H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL_ADDRESS_MASK 0x000007fffffffff0UL
+-
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL_ADDRESS_SHFT 4
+-#define UV3H_LB_BAU_INTD_PAYLOAD_QUEUE_TAIL_ADDRESS_MASK 0x000007fffffffff0UL
+-
+-
+-union uvh_lb_bau_intd_payload_queue_tail_u {
+-	unsigned long	v;
+-	struct uv2h_lb_bau_intd_payload_queue_tail_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_63:21;
+-	} s2;
+-	struct uv3h_lb_bau_intd_payload_queue_tail_s {
+-		unsigned long	rsvd_0_3:4;
+-		unsigned long	address:39;			/* RW */
+-		unsigned long	rsvd_43_63:21;
+-	} s3;
+-};
++#define UVH_INT_CMPB 0x22080UL
+ 
+-/* ========================================================================= */
+-/*                   UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE                    */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE 0x320080UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE 0x320080UL
+-#define UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE uv_undefined("UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE")
+-#define UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE)
+-#define UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_32 0xa68
+-
+-
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_0_SHFT 0
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_1_SHFT 1
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_2_SHFT 2
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_3_SHFT 3
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_4_SHFT 4
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_5_SHFT 5
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_6_SHFT 6
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_7_SHFT 7
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_0_SHFT 8
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_1_SHFT 9
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_2_SHFT 10
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_3_SHFT 11
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_4_SHFT 12
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_5_SHFT 13
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_6_SHFT 14
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_7_SHFT 15
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_0_MASK 0x0000000000000001UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_1_MASK 0x0000000000000002UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_2_MASK 0x0000000000000004UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_3_MASK 0x0000000000000008UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_4_MASK 0x0000000000000010UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_5_MASK 0x0000000000000020UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_6_MASK 0x0000000000000040UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_7_MASK 0x0000000000000080UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_0_MASK 0x0000000000000100UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_1_MASK 0x0000000000000200UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_2_MASK 0x0000000000000400UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_3_MASK 0x0000000000000800UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_4_MASK 0x0000000000001000UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_5_MASK 0x0000000000002000UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_6_MASK 0x0000000000004000UL
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_7_MASK 0x0000000000008000UL
+-
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_0_SHFT 0
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_1_SHFT 1
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_2_SHFT 2
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_3_SHFT 3
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_4_SHFT 4
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_5_SHFT 5
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_6_SHFT 6
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_7_SHFT 7
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_0_SHFT 8
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_1_SHFT 9
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_2_SHFT 10
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_3_SHFT 11
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_4_SHFT 12
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_5_SHFT 13
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_6_SHFT 14
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_7_SHFT 15
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_0_MASK 0x0000000000000001UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_1_MASK 0x0000000000000002UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_2_MASK 0x0000000000000004UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_3_MASK 0x0000000000000008UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_4_MASK 0x0000000000000010UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_5_MASK 0x0000000000000020UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_6_MASK 0x0000000000000040UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_PENDING_7_MASK 0x0000000000000080UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_0_MASK 0x0000000000000100UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_1_MASK 0x0000000000000200UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_2_MASK 0x0000000000000400UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_3_MASK 0x0000000000000800UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_4_MASK 0x0000000000001000UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_5_MASK 0x0000000000002000UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_6_MASK 0x0000000000004000UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_TIMEOUT_7_MASK 0x0000000000008000UL
++/* UVH common defines*/
++#define UVH_INT_CMPB_REAL_TIME_CMPB_SHFT		0
++#define UVH_INT_CMPB_REAL_TIME_CMPB_MASK		0x00ffffffffffffffUL
+ 
+ 
+-union uvh_lb_bau_intd_software_acknowledge_u {
++union uvh_int_cmpb_u {
+ 	unsigned long	v;
+-	struct uv2h_lb_bau_intd_software_acknowledge_s {
+-		unsigned long	pending_0:1;			/* RW */
+-		unsigned long	pending_1:1;			/* RW */
+-		unsigned long	pending_2:1;			/* RW */
+-		unsigned long	pending_3:1;			/* RW */
+-		unsigned long	pending_4:1;			/* RW */
+-		unsigned long	pending_5:1;			/* RW */
+-		unsigned long	pending_6:1;			/* RW */
+-		unsigned long	pending_7:1;			/* RW */
+-		unsigned long	timeout_0:1;			/* RW */
+-		unsigned long	timeout_1:1;			/* RW */
+-		unsigned long	timeout_2:1;			/* RW */
+-		unsigned long	timeout_3:1;			/* RW */
+-		unsigned long	timeout_4:1;			/* RW */
+-		unsigned long	timeout_5:1;			/* RW */
+-		unsigned long	timeout_6:1;			/* RW */
+-		unsigned long	timeout_7:1;			/* RW */
+-		unsigned long	rsvd_16_63:48;
+-	} s2;
+-	struct uv3h_lb_bau_intd_software_acknowledge_s {
+-		unsigned long	pending_0:1;			/* RW */
+-		unsigned long	pending_1:1;			/* RW */
+-		unsigned long	pending_2:1;			/* RW */
+-		unsigned long	pending_3:1;			/* RW */
+-		unsigned long	pending_4:1;			/* RW */
+-		unsigned long	pending_5:1;			/* RW */
+-		unsigned long	pending_6:1;			/* RW */
+-		unsigned long	pending_7:1;			/* RW */
+-		unsigned long	timeout_0:1;			/* RW */
+-		unsigned long	timeout_1:1;			/* RW */
+-		unsigned long	timeout_2:1;			/* RW */
+-		unsigned long	timeout_3:1;			/* RW */
+-		unsigned long	timeout_4:1;			/* RW */
+-		unsigned long	timeout_5:1;			/* RW */
+-		unsigned long	timeout_6:1;			/* RW */
+-		unsigned long	timeout_7:1;			/* RW */
+-		unsigned long	rsvd_16_63:48;
+-	} s3;
+-};
+-
+-/* ========================================================================= */
+-/*                UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS                 */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS 0x320088UL
+-#define UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS 0x320088UL
+-#define UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS uv_undefined("UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS")
+-#define UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS (			\
+-	is_uv2_hub() ? UV2H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS :	\
+-	is_uv3_hub() ? UV3H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS :	\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS)
+-#define UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE_ALIAS_32 0xa70
+-
+-
+-/* ========================================================================= */
+-/*                         UVH_LB_BAU_MISC_CONTROL                           */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_MISC_CONTROL 0x320170UL
+-#define UV3H_LB_BAU_MISC_CONTROL 0x320170UL
+-#define UV4H_LB_BAU_MISC_CONTROL 0xc8170UL
+-#define UVH_LB_BAU_MISC_CONTROL (					\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL :			\
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL :			\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL)
+-
+-#define UV2H_LB_BAU_MISC_CONTROL_32 0xa10
+-#define UV3H_LB_BAU_MISC_CONTROL_32 0xa10
+-#define UV4H_LB_BAU_MISC_CONTROL_32 0xa18
+-#define UVH_LB_BAU_MISC_CONTROL_32 (					\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL_32 :			\
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL_32 :			\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL_32)
+-
+-#define UVH_LB_BAU_MISC_CONTROL_REJECTION_DELAY_SHFT	0
+-#define UVH_LB_BAU_MISC_CONTROL_APIC_MODE_SHFT		8
+-#define UVH_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_SHFT	9
+-#define UVH_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_SHFT	10
+-#define UVH_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_SHFT 11
+-#define UVH_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_SHFT 14
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_SHFT 20
+-#define UVH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_SHFT 21
+-#define UVH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_SHFT 22
+-#define UVH_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_SHFT 23
+-#define UVH_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_SHFT 24
+-#define UVH_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_SHFT 27
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_SHFT 28
+-#define UVH_LB_BAU_MISC_CONTROL_FUN_SHFT		48
+-#define UVH_LB_BAU_MISC_CONTROL_REJECTION_DELAY_MASK	0x00000000000000ffUL
+-#define UVH_LB_BAU_MISC_CONTROL_APIC_MODE_MASK		0x0000000000000100UL
+-#define UVH_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_MASK	0x0000000000000200UL
+-#define UVH_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_MASK	0x0000000000000400UL
+-#define UVH_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_MASK 0x0000000000003800UL
+-#define UVH_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_MASK 0x0000000000004000UL
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_MASK 0x0000000000100000UL
+-#define UVH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_MASK 0x0000000000200000UL
+-#define UVH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_MASK 0x0000000000400000UL
+-#define UVH_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_MASK 0x0000000000800000UL
+-#define UVH_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000007000000UL
+-#define UVH_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_MASK 0x0000000008000000UL
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000010000000UL
+-#define UVH_LB_BAU_MISC_CONTROL_FUN_MASK		0xffff000000000000UL
+-
+-#define UVXH_LB_BAU_MISC_CONTROL_REJECTION_DELAY_SHFT	0
+-#define UVXH_LB_BAU_MISC_CONTROL_APIC_MODE_SHFT		8
+-#define UVXH_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_SHFT	9
+-#define UVXH_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_SHFT	10
+-#define UVXH_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_SHFT 11
+-#define UVXH_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_SHFT 14
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_SHFT 20
+-#define UVXH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_SHFT 21
+-#define UVXH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_SHFT 22
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_SHFT 23
+-#define UVXH_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_SHFT 24
+-#define UVXH_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_SHFT 27
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_SHFT 28
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_SHFT 29
+-#define UVXH_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_SHFT	30
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_SHFT 31
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_SHFT 32
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT 33
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_SHFT 34
+-#define UVXH_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_SHFT 35
+-#define UVXH_LB_BAU_MISC_CONTROL_FUN_SHFT		48
+-#define UVXH_LB_BAU_MISC_CONTROL_REJECTION_DELAY_MASK	0x00000000000000ffUL
+-#define UVXH_LB_BAU_MISC_CONTROL_APIC_MODE_MASK		0x0000000000000100UL
+-#define UVXH_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_MASK	0x0000000000000200UL
+-#define UVXH_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_MASK	0x0000000000000400UL
+-#define UVXH_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_MASK 0x0000000000003800UL
+-#define UVXH_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_MASK 0x0000000000004000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_MASK 0x0000000000100000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_MASK 0x0000000000200000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_MASK 0x0000000000400000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_MASK 0x0000000000800000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000007000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_MASK 0x0000000008000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000010000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_MASK 0x0000000020000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_MASK	0x0000000040000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_MASK 0x0000000080000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_MASK 0x0000000100000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_MASK 0x0000000200000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_MASK 0x0000000400000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_MASK 0x0000000800000000UL
+-#define UVXH_LB_BAU_MISC_CONTROL_FUN_MASK		0xffff000000000000UL
+-
+-#define UV2H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_SHFT	0
+-#define UV2H_LB_BAU_MISC_CONTROL_APIC_MODE_SHFT		8
+-#define UV2H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_SHFT	9
+-#define UV2H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_SHFT	10
+-#define UV2H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_SHFT 11
+-#define UV2H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_SHFT 14
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT 15
+-#define UV2H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT 16
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_SHFT 20
+-#define UV2H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_SHFT 21
+-#define UV2H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_SHFT 22
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_SHFT 23
+-#define UV2H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_SHFT 24
+-#define UV2H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_SHFT 27
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_SHFT 28
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_SHFT 29
+-#define UV2H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_SHFT	30
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_SHFT 31
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_SHFT 32
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT 33
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_SHFT 34
+-#define UV2H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_SHFT 35
+-#define UV2H_LB_BAU_MISC_CONTROL_FUN_SHFT		48
+-#define UV2H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_MASK	0x00000000000000ffUL
+-#define UV2H_LB_BAU_MISC_CONTROL_APIC_MODE_MASK		0x0000000000000100UL
+-#define UV2H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_MASK	0x0000000000000200UL
+-#define UV2H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_MASK	0x0000000000000400UL
+-#define UV2H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_MASK 0x0000000000003800UL
+-#define UV2H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_MASK 0x0000000000004000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK 0x0000000000008000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK 0x00000000000f0000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_MASK 0x0000000000100000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_MASK 0x0000000000200000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_MASK 0x0000000000400000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_MASK 0x0000000000800000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000007000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_MASK 0x0000000008000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000010000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_MASK 0x0000000020000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_MASK	0x0000000040000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_MASK 0x0000000080000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_MASK 0x0000000100000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_MASK 0x0000000200000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_MASK 0x0000000400000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_MASK 0x0000000800000000UL
+-#define UV2H_LB_BAU_MISC_CONTROL_FUN_MASK		0xffff000000000000UL
+-
+-#define UV3H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_SHFT	0
+-#define UV3H_LB_BAU_MISC_CONTROL_APIC_MODE_SHFT		8
+-#define UV3H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_SHFT	9
+-#define UV3H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_SHFT	10
+-#define UV3H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_SHFT 11
+-#define UV3H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_SHFT 14
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT 15
+-#define UV3H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT 16
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_SHFT 20
+-#define UV3H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_SHFT 21
+-#define UV3H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_SHFT 22
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_SHFT 23
+-#define UV3H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_SHFT 24
+-#define UV3H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_SHFT 27
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_SHFT 28
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_SHFT 29
+-#define UV3H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_SHFT	30
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_SHFT 31
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_SHFT 32
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT 33
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_SHFT 34
+-#define UV3H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_SHFT 35
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_QUIESCE_MSGS_TO_QPI_SHFT 36
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_PREFETCH_HINT_SHFT 37
+-#define UV3H_LB_BAU_MISC_CONTROL_THREAD_KILL_TIMEBASE_SHFT 38
+-#define UV3H_LB_BAU_MISC_CONTROL_FUN_SHFT		48
+-#define UV3H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_MASK	0x00000000000000ffUL
+-#define UV3H_LB_BAU_MISC_CONTROL_APIC_MODE_MASK		0x0000000000000100UL
+-#define UV3H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_MASK	0x0000000000000200UL
+-#define UV3H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_MASK	0x0000000000000400UL
+-#define UV3H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_MASK 0x0000000000003800UL
+-#define UV3H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_MASK 0x0000000000004000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK 0x0000000000008000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK 0x00000000000f0000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_MASK 0x0000000000100000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_MASK 0x0000000000200000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_MASK 0x0000000000400000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_MASK 0x0000000000800000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000007000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_MASK 0x0000000008000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000010000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_MASK 0x0000000020000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_MASK	0x0000000040000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_MASK 0x0000000080000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_MASK 0x0000000100000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_MASK 0x0000000200000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_MASK 0x0000000400000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_MASK 0x0000000800000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_SUPPRESS_QUIESCE_MSGS_TO_QPI_MASK 0x0000001000000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_PREFETCH_HINT_MASK 0x0000002000000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_THREAD_KILL_TIMEBASE_MASK 0x00003fc000000000UL
+-#define UV3H_LB_BAU_MISC_CONTROL_FUN_MASK		0xffff000000000000UL
+-
+-#define UV4H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_SHFT	0
+-#define UV4H_LB_BAU_MISC_CONTROL_APIC_MODE_SHFT		8
+-#define UV4H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_SHFT	9
+-#define UV4H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_SHFT	10
+-#define UV4H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_SHFT 11
+-#define UV4H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_SHFT 14
+-#define UV4H_LB_BAU_MISC_CONTROL_RESERVED_15_19_SHFT	15
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_SHFT 20
+-#define UV4H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_SHFT 21
+-#define UV4H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_SHFT 22
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_SHFT 23
+-#define UV4H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_SHFT 24
+-#define UV4H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_SHFT 27
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_SHFT 28
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_SHFT 29
+-#define UV4H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_SHFT	30
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_SHFT 31
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_SHFT 32
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_SHFT 33
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_SHFT 34
+-#define UV4H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_SHFT 35
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_QUIESCE_MSGS_TO_QPI_SHFT 36
+-#define UV4H_LB_BAU_MISC_CONTROL_RESERVED_37_SHFT	37
+-#define UV4H_LB_BAU_MISC_CONTROL_THREAD_KILL_TIMEBASE_SHFT 38
+-#define UV4H_LB_BAU_MISC_CONTROL_ADDRESS_INTERLEAVE_SELECT_SHFT 46
+-#define UV4H_LB_BAU_MISC_CONTROL_FUN_SHFT		48
+-#define UV4H_LB_BAU_MISC_CONTROL_REJECTION_DELAY_MASK	0x00000000000000ffUL
+-#define UV4H_LB_BAU_MISC_CONTROL_APIC_MODE_MASK		0x0000000000000100UL
+-#define UV4H_LB_BAU_MISC_CONTROL_FORCE_BROADCAST_MASK	0x0000000000000200UL
+-#define UV4H_LB_BAU_MISC_CONTROL_FORCE_LOCK_NOP_MASK	0x0000000000000400UL
+-#define UV4H_LB_BAU_MISC_CONTROL_QPI_AGENT_PRESENCE_VECTOR_MASK 0x0000000000003800UL
+-#define UV4H_LB_BAU_MISC_CONTROL_DESCRIPTOR_FETCH_MODE_MASK 0x0000000000004000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_RESERVED_15_19_MASK	0x00000000000f8000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_DUAL_MAPPING_MODE_MASK 0x0000000000100000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_DECODE_ENABLE_MASK 0x0000000000200000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_VGA_IO_PORT_16_BIT_DECODE_MASK 0x0000000000400000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_DEST_REGISTRATION_MASK 0x0000000000800000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000007000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_USE_INCOMING_PRIORITY_MASK 0x0000000008000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_PROGRAMMED_INITIAL_PRIORITY_MASK 0x0000000010000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_AUTOMATIC_APIC_MODE_SELECTION_MASK 0x0000000020000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_APIC_MODE_STATUS_MASK	0x0000000040000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_INTERRUPTS_TO_SELF_MASK 0x0000000080000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_LOCK_BASED_SYSTEM_FLUSH_MASK 0x0000000100000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_EXTENDED_SB_STATUS_MASK 0x0000000200000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_INT_PRIO_UDT_TO_SELF_MASK 0x0000000400000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_USE_LEGACY_DESCRIPTOR_FORMATS_MASK 0x0000000800000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_SUPPRESS_QUIESCE_MSGS_TO_QPI_MASK 0x0000001000000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_RESERVED_37_MASK	0x0000002000000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_THREAD_KILL_TIMEBASE_MASK 0x00003fc000000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_ADDRESS_INTERLEAVE_SELECT_MASK 0x0000400000000000UL
+-#define UV4H_LB_BAU_MISC_CONTROL_FUN_MASK		0xffff000000000000UL
+-
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK	\
+-	uv_undefined("UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK")
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK (	\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK : \
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK : \
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_MASK)
+-#define UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT	\
+-	uv_undefined("UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT")
+-#define UVH_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT (	\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT : \
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT : \
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL_ENABLE_INTD_SOFT_ACK_MODE_SHFT)
+-#define UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK	\
+-	uv_undefined("UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK")
+-#define UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK (	\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK : \
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK : \
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_MASK)
+-#define UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT	\
+-	uv_undefined("UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT")
+-#define UVH_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT (	\
+-	is_uv2_hub() ? UV2H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT : \
+-	is_uv3_hub() ? UV3H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT : \
+-	/*is_uv4_hub*/ UV4H_LB_BAU_MISC_CONTROL_INTD_SOFT_ACK_TIMEOUT_PERIOD_SHFT)
+ 
+-union uvh_lb_bau_misc_control_u {
+-	unsigned long	v;
+-	struct uvh_lb_bau_misc_control_s {
+-		unsigned long	rejection_delay:8;		/* RW */
+-		unsigned long	apic_mode:1;			/* RW */
+-		unsigned long	force_broadcast:1;		/* RW */
+-		unsigned long	force_lock_nop:1;		/* RW */
+-		unsigned long	qpi_agent_presence_vector:3;	/* RW */
+-		unsigned long	descriptor_fetch_mode:1;	/* RW */
+-		unsigned long	rsvd_15_19:5;
+-		unsigned long	enable_dual_mapping_mode:1;	/* RW */
+-		unsigned long	vga_io_port_decode_enable:1;	/* RW */
+-		unsigned long	vga_io_port_16_bit_decode:1;	/* RW */
+-		unsigned long	suppress_dest_registration:1;	/* RW */
+-		unsigned long	programmed_initial_priority:3;	/* RW */
+-		unsigned long	use_incoming_priority:1;	/* RW */
+-		unsigned long	enable_programmed_initial_priority:1;/* RW */
+-		unsigned long	rsvd_29_47:19;
+-		unsigned long	fun:16;				/* RW */
++	/* UVH common struct */
++	struct uvh_int_cmpb_s {
++		unsigned long	real_time_cmpb:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
+ 	} s;
+-	struct uvxh_lb_bau_misc_control_s {
+-		unsigned long	rejection_delay:8;		/* RW */
+-		unsigned long	apic_mode:1;			/* RW */
+-		unsigned long	force_broadcast:1;		/* RW */
+-		unsigned long	force_lock_nop:1;		/* RW */
+-		unsigned long	qpi_agent_presence_vector:3;	/* RW */
+-		unsigned long	descriptor_fetch_mode:1;	/* RW */
+-		unsigned long	rsvd_15_19:5;
+-		unsigned long	enable_dual_mapping_mode:1;	/* RW */
+-		unsigned long	vga_io_port_decode_enable:1;	/* RW */
+-		unsigned long	vga_io_port_16_bit_decode:1;	/* RW */
+-		unsigned long	suppress_dest_registration:1;	/* RW */
+-		unsigned long	programmed_initial_priority:3;	/* RW */
+-		unsigned long	use_incoming_priority:1;	/* RW */
+-		unsigned long	enable_programmed_initial_priority:1;/* RW */
+-		unsigned long	enable_automatic_apic_mode_selection:1;/* RW */
+-		unsigned long	apic_mode_status:1;		/* RO */
+-		unsigned long	suppress_interrupts_to_self:1;	/* RW */
+-		unsigned long	enable_lock_based_system_flush:1;/* RW */
+-		unsigned long	enable_extended_sb_status:1;	/* RW */
+-		unsigned long	suppress_int_prio_udt_to_self:1;/* RW */
+-		unsigned long	use_legacy_descriptor_formats:1;/* RW */
+-		unsigned long	rsvd_36_47:12;
+-		unsigned long	fun:16;				/* RW */
+-	} sx;
+-	struct uv2h_lb_bau_misc_control_s {
+-		unsigned long	rejection_delay:8;		/* RW */
+-		unsigned long	apic_mode:1;			/* RW */
+-		unsigned long	force_broadcast:1;		/* RW */
+-		unsigned long	force_lock_nop:1;		/* RW */
+-		unsigned long	qpi_agent_presence_vector:3;	/* RW */
+-		unsigned long	descriptor_fetch_mode:1;	/* RW */
+-		unsigned long	enable_intd_soft_ack_mode:1;	/* RW */
+-		unsigned long	intd_soft_ack_timeout_period:4;	/* RW */
+-		unsigned long	enable_dual_mapping_mode:1;	/* RW */
+-		unsigned long	vga_io_port_decode_enable:1;	/* RW */
+-		unsigned long	vga_io_port_16_bit_decode:1;	/* RW */
+-		unsigned long	suppress_dest_registration:1;	/* RW */
+-		unsigned long	programmed_initial_priority:3;	/* RW */
+-		unsigned long	use_incoming_priority:1;	/* RW */
+-		unsigned long	enable_programmed_initial_priority:1;/* RW */
+-		unsigned long	enable_automatic_apic_mode_selection:1;/* RW */
+-		unsigned long	apic_mode_status:1;		/* RO */
+-		unsigned long	suppress_interrupts_to_self:1;	/* RW */
+-		unsigned long	enable_lock_based_system_flush:1;/* RW */
+-		unsigned long	enable_extended_sb_status:1;	/* RW */
+-		unsigned long	suppress_int_prio_udt_to_self:1;/* RW */
+-		unsigned long	use_legacy_descriptor_formats:1;/* RW */
+-		unsigned long	rsvd_36_47:12;
+-		unsigned long	fun:16;				/* RW */
+-	} s2;
+-	struct uv3h_lb_bau_misc_control_s {
+-		unsigned long	rejection_delay:8;		/* RW */
+-		unsigned long	apic_mode:1;			/* RW */
+-		unsigned long	force_broadcast:1;		/* RW */
+-		unsigned long	force_lock_nop:1;		/* RW */
+-		unsigned long	qpi_agent_presence_vector:3;	/* RW */
+-		unsigned long	descriptor_fetch_mode:1;	/* RW */
+-		unsigned long	enable_intd_soft_ack_mode:1;	/* RW */
+-		unsigned long	intd_soft_ack_timeout_period:4;	/* RW */
+-		unsigned long	enable_dual_mapping_mode:1;	/* RW */
+-		unsigned long	vga_io_port_decode_enable:1;	/* RW */
+-		unsigned long	vga_io_port_16_bit_decode:1;	/* RW */
+-		unsigned long	suppress_dest_registration:1;	/* RW */
+-		unsigned long	programmed_initial_priority:3;	/* RW */
+-		unsigned long	use_incoming_priority:1;	/* RW */
+-		unsigned long	enable_programmed_initial_priority:1;/* RW */
+-		unsigned long	enable_automatic_apic_mode_selection:1;/* RW */
+-		unsigned long	apic_mode_status:1;		/* RO */
+-		unsigned long	suppress_interrupts_to_self:1;	/* RW */
+-		unsigned long	enable_lock_based_system_flush:1;/* RW */
+-		unsigned long	enable_extended_sb_status:1;	/* RW */
+-		unsigned long	suppress_int_prio_udt_to_self:1;/* RW */
+-		unsigned long	use_legacy_descriptor_formats:1;/* RW */
+-		unsigned long	suppress_quiesce_msgs_to_qpi:1;	/* RW */
+-		unsigned long	enable_intd_prefetch_hint:1;	/* RW */
+-		unsigned long	thread_kill_timebase:8;		/* RW */
+-		unsigned long	rsvd_46_47:2;
+-		unsigned long	fun:16;				/* RW */
+-	} s3;
+-	struct uv4h_lb_bau_misc_control_s {
+-		unsigned long	rejection_delay:8;		/* RW */
+-		unsigned long	apic_mode:1;			/* RW */
+-		unsigned long	force_broadcast:1;		/* RW */
+-		unsigned long	force_lock_nop:1;		/* RW */
+-		unsigned long	qpi_agent_presence_vector:3;	/* RW */
+-		unsigned long	descriptor_fetch_mode:1;	/* RW */
+-		unsigned long	rsvd_15_19:5;
+-		unsigned long	enable_dual_mapping_mode:1;	/* RW */
+-		unsigned long	vga_io_port_decode_enable:1;	/* RW */
+-		unsigned long	vga_io_port_16_bit_decode:1;	/* RW */
+-		unsigned long	suppress_dest_registration:1;	/* RW */
+-		unsigned long	programmed_initial_priority:3;	/* RW */
+-		unsigned long	use_incoming_priority:1;	/* RW */
+-		unsigned long	enable_programmed_initial_priority:1;/* RW */
+-		unsigned long	enable_automatic_apic_mode_selection:1;/* RW */
+-		unsigned long	apic_mode_status:1;		/* RO */
+-		unsigned long	suppress_interrupts_to_self:1;	/* RW */
+-		unsigned long	enable_lock_based_system_flush:1;/* RW */
+-		unsigned long	enable_extended_sb_status:1;	/* RW */
+-		unsigned long	suppress_int_prio_udt_to_self:1;/* RW */
+-		unsigned long	use_legacy_descriptor_formats:1;/* RW */
+-		unsigned long	suppress_quiesce_msgs_to_qpi:1;	/* RW */
+-		unsigned long	rsvd_37:1;
+-		unsigned long	thread_kill_timebase:8;		/* RW */
+-		unsigned long	address_interleave_select:1;	/* RW */
+-		unsigned long	rsvd_47:1;
+-		unsigned long	fun:16;				/* RW */
+-	} s4;
+-};
+ 
+-/* ========================================================================= */
+-/*                     UVH_LB_BAU_SB_ACTIVATION_CONTROL                      */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_SB_ACTIVATION_CONTROL 0x320020UL
+-#define UV3H_LB_BAU_SB_ACTIVATION_CONTROL 0x320020UL
+-#define UV4H_LB_BAU_SB_ACTIVATION_CONTROL 0xc8020UL
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_CONTROL :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_CONTROL :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_CONTROL)
+-
+-#define UV2H_LB_BAU_SB_ACTIVATION_CONTROL_32 0x9a8
+-#define UV3H_LB_BAU_SB_ACTIVATION_CONTROL_32 0x9a8
+-#define UV4H_LB_BAU_SB_ACTIVATION_CONTROL_32 0x9c8
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_32 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_CONTROL_32 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_CONTROL_32 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_CONTROL_32)
+-
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_INDEX_SHFT	0
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_PUSH_SHFT	62
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_INIT_SHFT	63
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_INDEX_MASK	0x000000000000003fUL
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_PUSH_MASK	0x4000000000000000UL
+-#define UVH_LB_BAU_SB_ACTIVATION_CONTROL_INIT_MASK	0x8000000000000000UL
++	/* UV5 unique struct */
++	struct uv5h_int_cmpb_s {
++		unsigned long	real_time_cmpb:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_int_cmpb_s {
++		unsigned long	real_time_cmpb:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s4;
+ 
++	/* UV3 unique struct */
++	struct uv3h_int_cmpb_s {
++		unsigned long	real_time_cmpb:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s3;
+ 
+-union uvh_lb_bau_sb_activation_control_u {
+-	unsigned long	v;
+-	struct uvh_lb_bau_sb_activation_control_s {
+-		unsigned long	index:6;			/* RW */
+-		unsigned long	rsvd_6_61:56;
+-		unsigned long	push:1;				/* WP */
+-		unsigned long	init:1;				/* WP */
+-	} s;
++	/* UV2 unique struct */
++	struct uv2h_int_cmpb_s {
++		unsigned long	real_time_cmpb:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                    UVH_LB_BAU_SB_ACTIVATION_STATUS_0                      */
++/*                               UVH_IPI_INT                                 */
+ /* ========================================================================= */
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_0 0x320030UL
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_0 0x320030UL
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_0 0xc8030UL
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_0 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_0 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_0 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_0)
+-
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_0_32 0x9b0
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_0_32 0x9b0
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_0_32 0x9d0
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_0_32 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_0_32 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_0_32 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_0_32)
++#define UVH_IPI_INT 0x60500UL
+ 
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_0_STATUS_SHFT	0
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_0_STATUS_MASK	0xffffffffffffffffUL
++/* UVH common defines*/
++#define UVH_IPI_INT_VECTOR_SHFT				0
++#define UVH_IPI_INT_VECTOR_MASK				0x00000000000000ffUL
++#define UVH_IPI_INT_DELIVERY_MODE_SHFT			8
++#define UVH_IPI_INT_DELIVERY_MODE_MASK			0x0000000000000700UL
++#define UVH_IPI_INT_DESTMODE_SHFT			11
++#define UVH_IPI_INT_DESTMODE_MASK			0x0000000000000800UL
++#define UVH_IPI_INT_APIC_ID_SHFT			16
++#define UVH_IPI_INT_APIC_ID_MASK			0x0000ffffffff0000UL
++#define UVH_IPI_INT_SEND_SHFT				63
++#define UVH_IPI_INT_SEND_MASK				0x8000000000000000UL
+ 
+ 
+-union uvh_lb_bau_sb_activation_status_0_u {
++union uvh_ipi_int_u {
+ 	unsigned long	v;
+-	struct uvh_lb_bau_sb_activation_status_0_s {
+-		unsigned long	status:64;			/* RW */
++
++	/* UVH common struct */
++	struct uvh_ipi_int_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	rsvd_12_15:4;
++		unsigned long	apic_id:32;			/* RW */
++		unsigned long	rsvd_48_62:15;
++		unsigned long	send:1;				/* WP */
+ 	} s;
+-};
+ 
+-/* ========================================================================= */
+-/*                    UVH_LB_BAU_SB_ACTIVATION_STATUS_1                      */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_1 0x320040UL
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_1 0x320040UL
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_1 0xc8040UL
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_1 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_1 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_1 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_1)
+-
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_1_32 0x9b8
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_1_32 0x9b8
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_1_32 0x9d8
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_1_32 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_1_32 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_1_32 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_1_32)
++	/* UV5 unique struct */
++	struct uv5h_ipi_int_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	rsvd_12_15:4;
++		unsigned long	apic_id:32;			/* RW */
++		unsigned long	rsvd_48_62:15;
++		unsigned long	send:1;				/* WP */
++	} s5;
+ 
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_1_STATUS_SHFT	0
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_1_STATUS_MASK	0xffffffffffffffffUL
++	/* UV4 unique struct */
++	struct uv4h_ipi_int_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	rsvd_12_15:4;
++		unsigned long	apic_id:32;			/* RW */
++		unsigned long	rsvd_48_62:15;
++		unsigned long	send:1;				/* WP */
++	} s4;
+ 
++	/* UV3 unique struct */
++	struct uv3h_ipi_int_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	rsvd_12_15:4;
++		unsigned long	apic_id:32;			/* RW */
++		unsigned long	rsvd_48_62:15;
++		unsigned long	send:1;				/* WP */
++	} s3;
+ 
+-union uvh_lb_bau_sb_activation_status_1_u {
+-	unsigned long	v;
+-	struct uvh_lb_bau_sb_activation_status_1_s {
+-		unsigned long	status:64;			/* RW */
+-	} s;
++	/* UV2 unique struct */
++	struct uv2h_ipi_int_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	delivery_mode:3;		/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	rsvd_12_15:4;
++		unsigned long	apic_id:32;			/* RW */
++		unsigned long	rsvd_48_62:15;
++		unsigned long	send:1;				/* WP */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                      UVH_LB_BAU_SB_DESCRIPTOR_BASE                        */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_SB_DESCRIPTOR_BASE 0x320010UL
+-#define UV3H_LB_BAU_SB_DESCRIPTOR_BASE 0x320010UL
+-#define UV4H_LB_BAU_SB_DESCRIPTOR_BASE 0xc8010UL
+-#define UVH_LB_BAU_SB_DESCRIPTOR_BASE (					\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_DESCRIPTOR_BASE :			\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_DESCRIPTOR_BASE :			\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_DESCRIPTOR_BASE)
+-
+-#define UV2H_LB_BAU_SB_DESCRIPTOR_BASE_32 0x9a0
+-#define UV3H_LB_BAU_SB_DESCRIPTOR_BASE_32 0x9a0
+-#define UV4H_LB_BAU_SB_DESCRIPTOR_BASE_32 0x9c0
+-#define UVH_LB_BAU_SB_DESCRIPTOR_BASE_32 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_DESCRIPTOR_BASE_32 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_DESCRIPTOR_BASE_32 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_DESCRIPTOR_BASE_32)
+-
+-#define UVH_LB_BAU_SB_DESCRIPTOR_BASE_PAGE_ADDRESS_SHFT	12
+-
+-#define UV2H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT	49
+-#define UV2H_LB_BAU_SB_DESCRIPTOR_BASE_PAGE_ADDRESS_MASK 0x000007fffffff000UL
+-#define UV2H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK	0x7ffe000000000000UL
+-
+-#define UV3H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT	49
+-#define UV3H_LB_BAU_SB_DESCRIPTOR_BASE_PAGE_ADDRESS_MASK 0x000007fffffff000UL
+-#define UV3H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK	0x7ffe000000000000UL
+-
+-#define UV4H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT	49
+-#define UV4H_LB_BAU_SB_DESCRIPTOR_BASE_PAGE_ADDRESS_MASK 0x00003ffffffff000UL
+-#define UV4H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK	0x7ffe000000000000UL
+-
+-#define UV4AH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT	53
+-#define UV4AH_LB_BAU_SB_DESCRIPTOR_BASE_PAGE_ADDRESS_MASK 0x000ffffffffff000UL
+-#define UV4AH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK	0xffe0000000000000UL
+-
+-#define UVH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT (			\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT :	\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT :	\
+-	is_uv4a_hub() ? UV4AH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT :	\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT)
+-
+-#define UVH_LB_BAU_SB_DESCRIPTOR_PAGE_ADDRESS_MASK (			\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_DESCRIPTOR_PAGE_ADDRESS_MASK :	\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_DESCRIPTOR_PAGE_ADDRESS_MASK :	\
+-	is_uv4a_hub() ? UV4AH_LB_BAU_SB_DESCRIPTOR_PAGE_ADDRESS_MASK :	\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_DESCRIPTOR_PAGE_ADDRESS_MASK)
+-
+-#define UVH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK (			\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK :	\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK :	\
+-	is_uv4a_hub() ? UV4AH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK :	\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_MASK)
+-
+-/* ========================================================================= */
+ /*                               UVH_NODE_ID                                 */
+ /* ========================================================================= */
+ #define UVH_NODE_ID 0x0UL
+-#define UV2H_NODE_ID 0x0UL
+-#define UV3H_NODE_ID 0x0UL
+-#define UV4H_NODE_ID 0x0UL
+ 
++/* UVH common defines*/
+ #define UVH_NODE_ID_FORCE1_SHFT				0
+-#define UVH_NODE_ID_MANUFACTURER_SHFT			1
+-#define UVH_NODE_ID_PART_NUMBER_SHFT			12
+-#define UVH_NODE_ID_REVISION_SHFT			28
+-#define UVH_NODE_ID_NODE_ID_SHFT			32
+ #define UVH_NODE_ID_FORCE1_MASK				0x0000000000000001UL
++#define UVH_NODE_ID_MANUFACTURER_SHFT			1
+ #define UVH_NODE_ID_MANUFACTURER_MASK			0x0000000000000ffeUL
++#define UVH_NODE_ID_PART_NUMBER_SHFT			12
+ #define UVH_NODE_ID_PART_NUMBER_MASK			0x000000000ffff000UL
++#define UVH_NODE_ID_REVISION_SHFT			28
+ #define UVH_NODE_ID_REVISION_MASK			0x00000000f0000000UL
+-#define UVH_NODE_ID_NODE_ID_MASK			0x00007fff00000000UL
++#define UVH_NODE_ID_NODE_ID_SHFT			32
++#define UVH_NODE_ID_NI_PORT_SHFT			57
+ 
+-#define UVXH_NODE_ID_FORCE1_SHFT			0
+-#define UVXH_NODE_ID_MANUFACTURER_SHFT			1
+-#define UVXH_NODE_ID_PART_NUMBER_SHFT			12
+-#define UVXH_NODE_ID_REVISION_SHFT			28
+-#define UVXH_NODE_ID_NODE_ID_SHFT			32
+-#define UVXH_NODE_ID_NODES_PER_BIT_SHFT			50
+-#define UVXH_NODE_ID_NI_PORT_SHFT			57
+-#define UVXH_NODE_ID_FORCE1_MASK			0x0000000000000001UL
+-#define UVXH_NODE_ID_MANUFACTURER_MASK			0x0000000000000ffeUL
+-#define UVXH_NODE_ID_PART_NUMBER_MASK			0x000000000ffff000UL
+-#define UVXH_NODE_ID_REVISION_MASK			0x00000000f0000000UL
++/* UVXH common defines */
+ #define UVXH_NODE_ID_NODE_ID_MASK			0x00007fff00000000UL
++#define UVXH_NODE_ID_NODES_PER_BIT_SHFT			50
+ #define UVXH_NODE_ID_NODES_PER_BIT_MASK			0x01fc000000000000UL
+ #define UVXH_NODE_ID_NI_PORT_MASK			0x3e00000000000000UL
+ 
+-#define UV2H_NODE_ID_FORCE1_SHFT			0
+-#define UV2H_NODE_ID_MANUFACTURER_SHFT			1
+-#define UV2H_NODE_ID_PART_NUMBER_SHFT			12
+-#define UV2H_NODE_ID_REVISION_SHFT			28
+-#define UV2H_NODE_ID_NODE_ID_SHFT			32
+-#define UV2H_NODE_ID_NODES_PER_BIT_SHFT			50
+-#define UV2H_NODE_ID_NI_PORT_SHFT			57
+-#define UV2H_NODE_ID_FORCE1_MASK			0x0000000000000001UL
+-#define UV2H_NODE_ID_MANUFACTURER_MASK			0x0000000000000ffeUL
+-#define UV2H_NODE_ID_PART_NUMBER_MASK			0x000000000ffff000UL
+-#define UV2H_NODE_ID_REVISION_MASK			0x00000000f0000000UL
+-#define UV2H_NODE_ID_NODE_ID_MASK			0x00007fff00000000UL
+-#define UV2H_NODE_ID_NODES_PER_BIT_MASK			0x01fc000000000000UL
+-#define UV2H_NODE_ID_NI_PORT_MASK			0x3e00000000000000UL
+-
+-#define UV3H_NODE_ID_FORCE1_SHFT			0
+-#define UV3H_NODE_ID_MANUFACTURER_SHFT			1
+-#define UV3H_NODE_ID_PART_NUMBER_SHFT			12
+-#define UV3H_NODE_ID_REVISION_SHFT			28
+-#define UV3H_NODE_ID_NODE_ID_SHFT			32
+-#define UV3H_NODE_ID_ROUTER_SELECT_SHFT			48
+-#define UV3H_NODE_ID_RESERVED_2_SHFT			49
+-#define UV3H_NODE_ID_NODES_PER_BIT_SHFT			50
+-#define UV3H_NODE_ID_NI_PORT_SHFT			57
+-#define UV3H_NODE_ID_FORCE1_MASK			0x0000000000000001UL
+-#define UV3H_NODE_ID_MANUFACTURER_MASK			0x0000000000000ffeUL
+-#define UV3H_NODE_ID_PART_NUMBER_MASK			0x000000000ffff000UL
+-#define UV3H_NODE_ID_REVISION_MASK			0x00000000f0000000UL
+-#define UV3H_NODE_ID_NODE_ID_MASK			0x00007fff00000000UL
+-#define UV3H_NODE_ID_ROUTER_SELECT_MASK			0x0001000000000000UL
+-#define UV3H_NODE_ID_RESERVED_2_MASK			0x0002000000000000UL
+-#define UV3H_NODE_ID_NODES_PER_BIT_MASK			0x01fc000000000000UL
+-#define UV3H_NODE_ID_NI_PORT_MASK			0x3e00000000000000UL
++/* UVYH common defines */
++#define UVYH_NODE_ID_NODE_ID_MASK			0x0000007f00000000UL
++#define UVYH_NODE_ID_NI_PORT_MASK			0x7e00000000000000UL
+ 
+-#define UV4H_NODE_ID_FORCE1_SHFT			0
+-#define UV4H_NODE_ID_MANUFACTURER_SHFT			1
+-#define UV4H_NODE_ID_PART_NUMBER_SHFT			12
+-#define UV4H_NODE_ID_REVISION_SHFT			28
+-#define UV4H_NODE_ID_NODE_ID_SHFT			32
++/* UV4 unique defines */
+ #define UV4H_NODE_ID_ROUTER_SELECT_SHFT			48
+-#define UV4H_NODE_ID_RESERVED_2_SHFT			49
+-#define UV4H_NODE_ID_NODES_PER_BIT_SHFT			50
+-#define UV4H_NODE_ID_NI_PORT_SHFT			57
+-#define UV4H_NODE_ID_FORCE1_MASK			0x0000000000000001UL
+-#define UV4H_NODE_ID_MANUFACTURER_MASK			0x0000000000000ffeUL
+-#define UV4H_NODE_ID_PART_NUMBER_MASK			0x000000000ffff000UL
+-#define UV4H_NODE_ID_REVISION_MASK			0x00000000f0000000UL
+-#define UV4H_NODE_ID_NODE_ID_MASK			0x00007fff00000000UL
+ #define UV4H_NODE_ID_ROUTER_SELECT_MASK			0x0001000000000000UL
++#define UV4H_NODE_ID_RESERVED_2_SHFT			49
+ #define UV4H_NODE_ID_RESERVED_2_MASK			0x0002000000000000UL
+-#define UV4H_NODE_ID_NODES_PER_BIT_MASK			0x01fc000000000000UL
+-#define UV4H_NODE_ID_NI_PORT_MASK			0x3e00000000000000UL
++
++/* UV3 unique defines */
++#define UV3H_NODE_ID_ROUTER_SELECT_SHFT			48
++#define UV3H_NODE_ID_ROUTER_SELECT_MASK			0x0001000000000000UL
++#define UV3H_NODE_ID_RESERVED_2_SHFT			49
++#define UV3H_NODE_ID_RESERVED_2_MASK			0x0002000000000000UL
+ 
+ 
+ union uvh_node_id_u {
+ 	unsigned long	v;
++
++	/* UVH common struct */
+ 	struct uvh_node_id_s {
+ 		unsigned long	force1:1;			/* RO */
+ 		unsigned long	manufacturer:11;		/* RO */
+ 		unsigned long	part_number:16;			/* RO */
+ 		unsigned long	revision:4;			/* RO */
+-		unsigned long	node_id:15;			/* RW */
+-		unsigned long	rsvd_47_63:17;
++		unsigned long	rsvd_32_63:32;
+ 	} s;
++
++	/* UVXH common struct */
+ 	struct uvxh_node_id_s {
+ 		unsigned long	force1:1;			/* RO */
+ 		unsigned long	manufacturer:11;		/* RO */
+@@ -2444,17 +2841,47 @@ union uvh_node_id_u {
+ 		unsigned long	ni_port:5;			/* RO */
+ 		unsigned long	rsvd_62_63:2;
+ 	} sx;
+-	struct uv2h_node_id_s {
++
++	/* UVYH common struct */
++	struct uvyh_node_id_s {
++		unsigned long	force1:1;			/* RO */
++		unsigned long	manufacturer:11;		/* RO */
++		unsigned long	part_number:16;			/* RO */
++		unsigned long	revision:4;			/* RO */
++		unsigned long	node_id:7;			/* RW */
++		unsigned long	rsvd_39_56:18;
++		unsigned long	ni_port:6;			/* RO */
++		unsigned long	rsvd_63:1;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_node_id_s {
++		unsigned long	force1:1;			/* RO */
++		unsigned long	manufacturer:11;		/* RO */
++		unsigned long	part_number:16;			/* RO */
++		unsigned long	revision:4;			/* RO */
++		unsigned long	node_id:7;			/* RW */
++		unsigned long	rsvd_39_56:18;
++		unsigned long	ni_port:6;			/* RO */
++		unsigned long	rsvd_63:1;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_node_id_s {
+ 		unsigned long	force1:1;			/* RO */
+ 		unsigned long	manufacturer:11;		/* RO */
+ 		unsigned long	part_number:16;			/* RO */
+ 		unsigned long	revision:4;			/* RO */
+ 		unsigned long	node_id:15;			/* RW */
+-		unsigned long	rsvd_47_49:3;
++		unsigned long	rsvd_47:1;
++		unsigned long	router_select:1;		/* RO */
++		unsigned long	rsvd_49:1;
+ 		unsigned long	nodes_per_bit:7;		/* RO */
+ 		unsigned long	ni_port:5;			/* RO */
+ 		unsigned long	rsvd_62_63:2;
+-	} s2;
++	} s4;
++
++	/* UV3 unique struct */
+ 	struct uv3h_node_id_s {
+ 		unsigned long	force1:1;			/* RO */
+ 		unsigned long	manufacturer:11;		/* RO */
+@@ -2468,1642 +2895,1743 @@ union uvh_node_id_u {
+ 		unsigned long	ni_port:5;			/* RO */
+ 		unsigned long	rsvd_62_63:2;
+ 	} s3;
+-	struct uv4h_node_id_s {
++
++	/* UV2 unique struct */
++	struct uv2h_node_id_s {
+ 		unsigned long	force1:1;			/* RO */
+ 		unsigned long	manufacturer:11;		/* RO */
+ 		unsigned long	part_number:16;			/* RO */
+ 		unsigned long	revision:4;			/* RO */
+ 		unsigned long	node_id:15;			/* RW */
+-		unsigned long	rsvd_47:1;
+-		unsigned long	router_select:1;		/* RO */
+-		unsigned long	rsvd_49:1;
++		unsigned long	rsvd_47_49:3;
+ 		unsigned long	nodes_per_bit:7;		/* RO */
+ 		unsigned long	ni_port:5;			/* RO */
+ 		unsigned long	rsvd_62_63:2;
+-	} s4;
++	} s2;
++};
++
++/* ========================================================================= */
++/*                            UVH_NODE_PRESENT_0                             */
++/* ========================================================================= */
++#define UVH_NODE_PRESENT_0 (						\
++	is_uv(UV5) ? 0x1400UL :						\
++	0)
++
++
++/* UVYH common defines */
++#define UVYH_NODE_PRESENT_0_NODES_SHFT			0
++#define UVYH_NODE_PRESENT_0_NODES_MASK			0xffffffffffffffffUL
++
++
++union uvh_node_present_0_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_node_present_0_s {
++		unsigned long	nodes:64;			/* RW */
++	} s;
++
++	/* UVYH common struct */
++	struct uvyh_node_present_0_s {
++		unsigned long	nodes:64;			/* RW */
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_node_present_0_s {
++		unsigned long	nodes:64;			/* RW */
++	} s5;
++};
++
++/* ========================================================================= */
++/*                            UVH_NODE_PRESENT_1                             */
++/* ========================================================================= */
++#define UVH_NODE_PRESENT_1 (						\
++	is_uv(UV5) ? 0x1408UL :						\
++	0)
++
++
++/* UVYH common defines */
++#define UVYH_NODE_PRESENT_1_NODES_SHFT			0
++#define UVYH_NODE_PRESENT_1_NODES_MASK			0xffffffffffffffffUL
++
++
++union uvh_node_present_1_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_node_present_1_s {
++		unsigned long	nodes:64;			/* RW */
++	} s;
++
++	/* UVYH common struct */
++	struct uvyh_node_present_1_s {
++		unsigned long	nodes:64;			/* RW */
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_node_present_1_s {
++		unsigned long	nodes:64;			/* RW */
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+ /*                          UVH_NODE_PRESENT_TABLE                           */
+ /* ========================================================================= */
+-#define UVH_NODE_PRESENT_TABLE 0x1400UL
++#define UVH_NODE_PRESENT_TABLE (					\
++	is_uv(UV4) ? 0x1400UL :						\
++	is_uv(UV3) ? 0x1400UL :						\
++	is_uv(UV2) ? 0x1400UL :						\
++	0)
+ 
+-#define UV2H_NODE_PRESENT_TABLE_DEPTH 16
+-#define UV3H_NODE_PRESENT_TABLE_DEPTH 16
+-#define UV4H_NODE_PRESENT_TABLE_DEPTH 4
+ #define UVH_NODE_PRESENT_TABLE_DEPTH (					\
+-	is_uv2_hub() ? UV2H_NODE_PRESENT_TABLE_DEPTH :			\
+-	is_uv3_hub() ? UV3H_NODE_PRESENT_TABLE_DEPTH :			\
+-	/*is_uv4_hub*/ UV4H_NODE_PRESENT_TABLE_DEPTH)
++	is_uv(UV4) ? 4 :						\
++	is_uv(UV3) ? 16 :						\
++	is_uv(UV2) ? 16 :						\
++	0)
++
+ 
+-#define UVH_NODE_PRESENT_TABLE_NODES_SHFT		0
+-#define UVH_NODE_PRESENT_TABLE_NODES_MASK		0xffffffffffffffffUL
++/* UVXH common defines */
++#define UVXH_NODE_PRESENT_TABLE_NODES_SHFT		0
++#define UVXH_NODE_PRESENT_TABLE_NODES_MASK		0xffffffffffffffffUL
+ 
+ 
+ union uvh_node_present_table_u {
+ 	unsigned long	v;
++
++	/* UVH common struct */
+ 	struct uvh_node_present_table_s {
+ 		unsigned long	nodes:64;			/* RW */
+ 	} s;
++
++	/* UVXH common struct */
++	struct uvxh_node_present_table_s {
++		unsigned long	nodes:64;			/* RW */
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_node_present_table_s {
++		unsigned long	nodes:64;			/* RW */
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_node_present_table_s {
++		unsigned long	nodes:64;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_node_present_table_s {
++		unsigned long	nodes:64;			/* RW */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                 UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR                  */
++/*                       UVH_RH10_GAM_ADDR_MAP_CONFIG                        */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR 0x16000c8UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR 0x16000c8UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR 0x4800c8UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR)
+-
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_SHFT 48
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_SHFT 63
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_SHFT 48
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_SHFT 63
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_SHFT 48
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_SHFT 63
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_SHFT 48
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_SHFT 63
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_SHFT 48
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_SHFT 63
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR_ENABLE_MASK 0x8000000000000000UL
++#define UVH_RH10_GAM_ADDR_MAP_CONFIG (					\
++	is_uv(UV5) ? 0x470000UL :					\
++	0)
++
+ 
++/* UVYH common defines */
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_N_SKT_SHFT	6
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_N_SKT_MASK	0x00000000000001c0UL
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_LS_ENABLE_SHFT	12
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_LS_ENABLE_MASK	0x0000000000001000UL
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_MK_TME_KEYID_BITS_SHFT 16
++#define UVYH_RH10_GAM_ADDR_MAP_CONFIG_MK_TME_KEYID_BITS_MASK 0x00000000000f0000UL
+ 
+-union uvh_rh_gam_alias210_overlay_config_0_mmr_u {
++
++union uvh_rh10_gam_addr_map_config_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_alias210_overlay_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_addr_map_config_s {
++		unsigned long	undef_0_5:6;			/* Undefined */
++		unsigned long	n_skt:3;			/* RW */
++		unsigned long	undef_9_11:3;			/* Undefined */
++		unsigned long	ls_enable:1;			/* RW */
++		unsigned long	undef_13_15:3;			/* Undefined */
++		unsigned long	mk_tme_keyid_bits:4;		/* RW */
++		unsigned long	rsvd_20_63:44;
+ 	} s;
+-	struct uvxh_rh_gam_alias210_overlay_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} sx;
+-	struct uv2h_rh_gam_alias210_overlay_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_addr_map_config_s {
++		unsigned long	undef_0_5:6;			/* Undefined */
++		unsigned long	n_skt:3;			/* RW */
++		unsigned long	undef_9_11:3;			/* Undefined */
++		unsigned long	ls_enable:1;			/* RW */
++		unsigned long	undef_13_15:3;			/* Undefined */
++		unsigned long	mk_tme_keyid_bits:4;		/* RW */
++		unsigned long	rsvd_20_63:44;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_addr_map_config_s {
++		unsigned long	undef_0_5:6;			/* Undefined */
++		unsigned long	n_skt:3;			/* RW */
++		unsigned long	undef_9_11:3;			/* Undefined */
++		unsigned long	ls_enable:1;			/* RW */
++		unsigned long	undef_13_15:3;			/* Undefined */
++		unsigned long	mk_tme_keyid_bits:4;		/* RW */
++	} s5;
++};
++
++/* ========================================================================= */
++/*                     UVH_RH10_GAM_GRU_OVERLAY_CONFIG                       */
++/* ========================================================================= */
++#define UVH_RH10_GAM_GRU_OVERLAY_CONFIG (				\
++	is_uv(UV5) ? 0x4700b0UL :					\
++	0)
++
++
++/* UVYH common defines */
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	25
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x000ffffffe000000UL
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_N_GRU_SHFT	52
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_N_GRU_MASK	0x0070000000000000UL
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVYH_RH10_GAM_GRU_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
++#define UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_MASK (			\
++	is_uv(UV5) ? 0x000ffffffe000000UL :				\
++	0)
++#define UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT (			\
++	is_uv(UV5) ? 25 :						\
++	-1)
++
++union uvh_rh10_gam_gru_overlay_config_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_gru_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	n_gru:3;			/* RW */
++		unsigned long	undef_55_62:8;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s2;
+-	struct uv3h_rh_gam_alias210_overlay_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++	} s;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_gru_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	n_gru:3;			/* RW */
++		unsigned long	undef_55_62:8;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_alias210_overlay_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_gru_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	n_gru:3;			/* RW */
++		unsigned long	undef_55_62:8;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s4;
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                 UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR                  */
++/*                    UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG0                     */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR 0x16000d8UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR 0x16000d8UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR 0x4800d8UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR)
+-
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_SHFT 48
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_SHFT 63
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_SHFT 48
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_SHFT 63
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_SHFT 48
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_SHFT 63
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_SHFT 48
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_SHFT 63
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_SHFT 48
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_SHFT 63
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR_ENABLE_MASK 0x8000000000000000UL
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG0 (				\
++	is_uv(UV5) ? 0x473000UL :					\
++	0)
++
++
++/* UVYH common defines */
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT	26
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK	0x000ffffffc000000UL
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT	52
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_MASK	0x03f0000000000000UL
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_SHFT	63
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_MASK	0x8000000000000000UL
+ 
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK (			\
++	is_uv(UV5) ? 0x000ffffffc000000UL :				\
++	0)
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT (			\
++	is_uv(UV5) ? 26 :						\
++	-1)
+ 
+-union uvh_rh_gam_alias210_overlay_config_1_mmr_u {
++union uvh_rh10_gam_mmioh_overlay_config0_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_alias210_overlay_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} s;
+-	struct uvxh_rh_gam_alias210_overlay_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} sx;
+-	struct uv2h_rh_gam_alias210_overlay_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} s2;
+-	struct uv3h_rh_gam_alias210_overlay_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_alias210_overlay_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++	} s;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s4;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                 UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR                  */
++/*                    UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG1                     */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR 0x16000e8UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR 0x16000e8UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR 0x4800e8UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR)
+-
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_SHFT 48
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_SHFT 63
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_SHFT 48
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_SHFT 63
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UVXH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_SHFT 48
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_SHFT 63
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV2H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_SHFT 48
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_SHFT 63
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV3H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_SHFT 48
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_SHFT 63
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_BASE_MASK 0x00000000ff000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_M_ALIAS_MASK 0x001f000000000000UL
+-#define UV4H_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR_ENABLE_MASK 0x8000000000000000UL
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG1 (				\
++	is_uv(UV5) ? 0x474000UL :					\
++	0)
++
+ 
++/* UVYH common defines */
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT	26
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK	0x000ffffffc000000UL
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT	52
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_MASK	0x03f0000000000000UL
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_SHFT	63
++#define UVYH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_MASK	0x8000000000000000UL
+ 
+-union uvh_rh_gam_alias210_overlay_config_2_mmr_u {
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK (			\
++	is_uv(UV5) ? 0x000ffffffc000000UL :				\
++	0)
++#define UVH_RH10_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT (			\
++	is_uv(UV5) ? 26 :						\
++	-1)
++
++union uvh_rh10_gam_mmioh_overlay_config1_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_alias210_overlay_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+ 	} s;
+-	struct uvxh_rh_gam_alias210_overlay_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} sx;
+-	struct uv2h_rh_gam_alias210_overlay_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
+-		unsigned long	enable:1;			/* RW */
+-	} s2;
+-	struct uv3h_rh_gam_alias210_overlay_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_alias210_overlay_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	base:8;				/* RW */
+-		unsigned long	rsvd_32_47:16;
+-		unsigned long	m_alias:5;			/* RW */
+-		unsigned long	rsvd_53_62:10;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
+ 		unsigned long	enable:1;			/* RW */
+-	} s4;
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR                  */
++/*                   UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG0                     */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR 0x16000d0UL
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR 0x16000d0UL
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR 0x4800d0UL
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR)
++#define UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG0 (				\
++	is_uv(UV5) ? 0x473800UL :					\
++	0)
+ 
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++#define UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG0_DEPTH (			\
++	is_uv(UV5) ? 128 :						\
++	0)
+ 
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++/* UVYH common defines */
++#define UVYH_RH10_GAM_MMIOH_REDIRECT_CONFIG0_NASID_SHFT	0
++#define UVYH_RH10_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK	0x000000000000007fUL
+ 
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+-
+-
+-union uvh_rh_gam_alias210_redirect_config_0_mmr_u {
++union uvh_rh10_gam_mmioh_redirect_config0_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_alias210_redirect_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
+ 	} s;
+-	struct uvxh_rh_gam_alias210_redirect_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} sx;
+-	struct uv2h_rh_gam_alias210_redirect_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s2;
+-	struct uv3h_rh_gam_alias210_redirect_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s3;
+-	struct uv4h_rh_gam_alias210_redirect_config_0_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s4;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR                  */
++/*                   UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG1                     */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR 0x16000e0UL
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR 0x16000e0UL
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR 0x4800e0UL
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR)
++#define UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG1 (				\
++	is_uv(UV5) ? 0x474800UL :					\
++	0)
+ 
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++#define UVH_RH10_GAM_MMIOH_REDIRECT_CONFIG1_DEPTH (			\
++	is_uv(UV5) ? 128 :						\
++	0)
+ 
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++/* UVYH common defines */
++#define UVYH_RH10_GAM_MMIOH_REDIRECT_CONFIG1_NASID_SHFT	0
++#define UVYH_RH10_GAM_MMIOH_REDIRECT_CONFIG1_NASID_MASK	0x000000000000007fUL
+ 
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+-
+-
+-union uvh_rh_gam_alias210_redirect_config_1_mmr_u {
++union uvh_rh10_gam_mmioh_redirect_config1_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_alias210_redirect_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
++
++	/* UVH common struct */
++	struct uvh_rh10_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
+ 	} s;
+-	struct uvxh_rh_gam_alias210_redirect_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} sx;
+-	struct uv2h_rh_gam_alias210_redirect_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s2;
+-	struct uv3h_rh_gam_alias210_redirect_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s3;
+-	struct uv4h_rh_gam_alias210_redirect_config_1_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s4;
++
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:7;			/* RW */
++		unsigned long	rsvd_7_63:57;
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR                  */
++/*                     UVH_RH10_GAM_MMR_OVERLAY_CONFIG                       */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR 0x16000f0UL
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR 0x16000f0UL
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR 0x4800f0UL
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR)
++#define UVH_RH10_GAM_MMR_OVERLAY_CONFIG (				\
++	is_uv(UV5) ? 0x470090UL :					\
++	0)
+ 
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_SHFT 24
+-#define UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_SHFT 24
+-#define UVXH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++/* UVYH common defines */
++#define UVYH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT	25
++#define UVYH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_MASK	0x000ffffffe000000UL
++#define UVYH_RH10_GAM_MMR_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVYH_RH10_GAM_MMR_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
+ 
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_SHFT 24
+-#define UV2H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++#define UVH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_MASK (			\
++	is_uv(UV5) ? 0x000ffffffe000000UL :				\
++	0)
++#define UVH_RH10_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT (			\
++	is_uv(UV5) ? 25 :						\
++	-1)
+ 
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_SHFT 24
+-#define UV3H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++union uvh_rh10_gam_mmr_overlay_config_u {
++	unsigned long	v;
+ 
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_SHFT 24
+-#define UV4H_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR_DEST_BASE_MASK 0x00003fffff000000UL
++	/* UVH common struct */
++	struct uvh_rh10_gam_mmr_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	undef_52_62:11;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} s;
+ 
++	/* UVYH common struct */
++	struct uvyh_rh10_gam_mmr_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	undef_52_62:11;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} sy;
+ 
+-union uvh_rh_gam_alias210_redirect_config_2_mmr_u {
+-	unsigned long	v;
+-	struct uvh_rh_gam_alias210_redirect_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s;
+-	struct uvxh_rh_gam_alias210_redirect_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} sx;
+-	struct uv2h_rh_gam_alias210_redirect_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s2;
+-	struct uv3h_rh_gam_alias210_redirect_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s3;
+-	struct uv4h_rh_gam_alias210_redirect_config_2_mmr_s {
+-		unsigned long	rsvd_0_23:24;
+-		unsigned long	dest_base:22;			/* RW */
+-		unsigned long	rsvd_46_63:18;
+-	} s4;
++	/* UV5 unique struct */
++	struct uv5h_rh10_gam_mmr_overlay_config_s {
++		unsigned long	undef_0_24:25;			/* Undefined */
++		unsigned long	base:27;			/* RW */
++		unsigned long	undef_52_62:11;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} s5;
+ };
+ 
+ /* ========================================================================= */
+-/*                          UVH_RH_GAM_CONFIG_MMR                            */
++/*                        UVH_RH_GAM_ADDR_MAP_CONFIG                         */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_CONFIG_MMR 0x1600000UL
+-#define UV3H_RH_GAM_CONFIG_MMR 0x1600000UL
+-#define UV4H_RH_GAM_CONFIG_MMR 0x480000UL
+-#define UVH_RH_GAM_CONFIG_MMR (						\
+-	is_uv2_hub() ? UV2H_RH_GAM_CONFIG_MMR :				\
+-	is_uv3_hub() ? UV3H_RH_GAM_CONFIG_MMR :				\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_CONFIG_MMR)
++#define UVH_RH_GAM_ADDR_MAP_CONFIG (					\
++	is_uv(UV4) ? 0x480000UL :					\
++	is_uv(UV3) ? 0x1600000UL :					\
++	is_uv(UV2) ? 0x1600000UL :					\
++	0)
+ 
+-#define UVH_RH_GAM_CONFIG_MMR_N_SKT_SHFT		6
+-#define UVH_RH_GAM_CONFIG_MMR_N_SKT_MASK		0x00000000000003c0UL
+ 
+-#define UVXH_RH_GAM_CONFIG_MMR_N_SKT_SHFT		6
+-#define UVXH_RH_GAM_CONFIG_MMR_N_SKT_MASK		0x00000000000003c0UL
++/* UVXH common defines */
++#define UVXH_RH_GAM_ADDR_MAP_CONFIG_N_SKT_SHFT		6
++#define UVXH_RH_GAM_ADDR_MAP_CONFIG_N_SKT_MASK		0x00000000000003c0UL
+ 
+-#define UV2H_RH_GAM_CONFIG_MMR_M_SKT_SHFT		0
+-#define UV2H_RH_GAM_CONFIG_MMR_N_SKT_SHFT		6
+-#define UV2H_RH_GAM_CONFIG_MMR_M_SKT_MASK		0x000000000000003fUL
+-#define UV2H_RH_GAM_CONFIG_MMR_N_SKT_MASK		0x00000000000003c0UL
++/* UV3 unique defines */
++#define UV3H_RH_GAM_ADDR_MAP_CONFIG_M_SKT_SHFT		0
++#define UV3H_RH_GAM_ADDR_MAP_CONFIG_M_SKT_MASK		0x000000000000003fUL
+ 
+-#define UV3H_RH_GAM_CONFIG_MMR_M_SKT_SHFT		0
+-#define UV3H_RH_GAM_CONFIG_MMR_N_SKT_SHFT		6
+-#define UV3H_RH_GAM_CONFIG_MMR_M_SKT_MASK		0x000000000000003fUL
+-#define UV3H_RH_GAM_CONFIG_MMR_N_SKT_MASK		0x00000000000003c0UL
++/* UV2 unique defines */
++#define UV2H_RH_GAM_ADDR_MAP_CONFIG_M_SKT_SHFT		0
++#define UV2H_RH_GAM_ADDR_MAP_CONFIG_M_SKT_MASK		0x000000000000003fUL
+ 
+-#define UV4H_RH_GAM_CONFIG_MMR_N_SKT_SHFT		6
+-#define UV4H_RH_GAM_CONFIG_MMR_N_SKT_MASK		0x00000000000003c0UL
+ 
+-
+-union uvh_rh_gam_config_mmr_u {
++union uvh_rh_gam_addr_map_config_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_config_mmr_s {
++
++	/* UVH common struct */
++	struct uvh_rh_gam_addr_map_config_s {
+ 		unsigned long	rsvd_0_5:6;
+ 		unsigned long	n_skt:4;			/* RW */
+ 		unsigned long	rsvd_10_63:54;
+ 	} s;
+-	struct uvxh_rh_gam_config_mmr_s {
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_addr_map_config_s {
+ 		unsigned long	rsvd_0_5:6;
+ 		unsigned long	n_skt:4;			/* RW */
+ 		unsigned long	rsvd_10_63:54;
+ 	} sx;
+-	struct uv2h_rh_gam_config_mmr_s {
+-		unsigned long	m_skt:6;			/* RW */
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_addr_map_config_s {
++		unsigned long	rsvd_0_5:6;
+ 		unsigned long	n_skt:4;			/* RW */
+ 		unsigned long	rsvd_10_63:54;
+-	} s2;
+-	struct uv3h_rh_gam_config_mmr_s {
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_addr_map_config_s {
+ 		unsigned long	m_skt:6;			/* RW */
+ 		unsigned long	n_skt:4;			/* RW */
+ 		unsigned long	rsvd_10_63:54;
+ 	} s3;
+-	struct uv4h_rh_gam_config_mmr_s {
+-		unsigned long	rsvd_0_5:6;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_addr_map_config_s {
++		unsigned long	m_skt:6;			/* RW */
+ 		unsigned long	n_skt:4;			/* RW */
+ 		unsigned long	rsvd_10_63:54;
+-	} s4;
+-};
+-
+-/* ========================================================================= */
+-/*                    UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR                      */
+-/* ========================================================================= */
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR 0x1600010UL
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR 0x1600010UL
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR 0x480010UL
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR)
+-
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_SHFT	52
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_MASK	0x00f0000000000000UL
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_SHFT	52
+-#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_MASK	0x00f0000000000000UL
+-#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT	28
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_SHFT	52
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffff0000000UL
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_MASK	0x00f0000000000000UL
+-#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT	28
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_SHFT	52
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_MODE_SHFT	62
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffff0000000UL
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_MASK	0x00f0000000000000UL
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_MODE_MASK	0x4000000000000000UL
+-#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_SHFT	52
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_N_GRU_MASK	0x00f0000000000000UL
+-#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK)
+-#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT)
+-
+-union uvh_rh_gam_gru_overlay_config_mmr_u {
+-	unsigned long	v;
+-	struct uvh_rh_gam_gru_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_51:52;
+-		unsigned long	n_gru:4;			/* RW */
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} s;
+-	struct uvxh_rh_gam_gru_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_45:46;
+-		unsigned long	rsvd_46_51:6;
+-		unsigned long	n_gru:4;			/* RW */
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} sx;
+-	struct uv2h_rh_gam_gru_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_27:28;
+-		unsigned long	base:18;			/* RW */
+-		unsigned long	rsvd_46_51:6;
+-		unsigned long	n_gru:4;			/* RW */
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+ 	} s2;
+-	struct uv3h_rh_gam_gru_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_27:28;
+-		unsigned long	base:18;			/* RW */
+-		unsigned long	rsvd_46_51:6;
+-		unsigned long	n_gru:4;			/* RW */
+-		unsigned long	rsvd_56_61:6;
+-		unsigned long	mode:1;				/* RW */
+-		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_gru_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_24:25;
+-		unsigned long	undef_25:1;			/* Undefined */
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_51:6;
+-		unsigned long	n_gru:4;			/* RW */
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} s4;
+ };
+ 
+ /* ========================================================================= */
+-/*                   UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR                    */
++/*                    UVH_RH_GAM_ALIAS_0_OVERLAY_CONFIG                      */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR uv_undefined("UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR")
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR 0x1603000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR 0x483000UL
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR)
+-
+-
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_SHFT	26
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT	46
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_SHFT 63
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK	0x000fc00000000000UL
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_SHFT	26
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT	46
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_SHFT 63
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK	0x000fc00000000000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT 52
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK 0x000ffffffc000000UL
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK 0x03f0000000000000UL
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT)
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK)
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK)
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK)
++#define UVH_RH_GAM_ALIAS_0_OVERLAY_CONFIG (				\
++	is_uv(UV4) ? 0x4800c8UL :					\
++	is_uv(UV3) ? 0x16000c8UL :					\
++	is_uv(UV2) ? 0x16000c8UL :					\
++	0)
+ 
+-union uvh_rh_gam_mmioh_overlay_config0_mmr_u {
+-	unsigned long	v;
+-	struct uv3h_rh_gam_mmioh_overlay_config0_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_mmioh_overlay_config0_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} s4;
+-	struct uv4ah_rh_gam_mmioh_overlay_config0_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:26;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	undef_62:1;			/* Undefined */
+-		unsigned long	enable:1;			/* RW */
+-	} s4a;
+-};
+ 
+-/* ========================================================================= */
+-/*                   UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR                    */
+-/* ========================================================================= */
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR uv_undefined("UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR")
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR 0x1603000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR 0x484000UL
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR)
+-
+-
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_SHFT	26
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT	46
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_ENABLE_SHFT 63
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK	0x000fc00000000000UL
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_SHFT	26
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT	46
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_ENABLE_SHFT 63
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK	0x000fc00000000000UL
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_ENABLE_MASK 0x8000000000000000UL
+-
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT 52
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK 0x000ffffffc000000UL
+-#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK 0x03f0000000000000UL
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT)
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK)
+-
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK)
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_BASE_SHFT	24
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_BASE_MASK	0x00000000ff000000UL
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_M_ALIAS_SHFT	48
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_M_ALIAS_MASK	0x001f000000000000UL
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVXH_RH_GAM_ALIAS_0_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
+ 
+-union uvh_rh_gam_mmioh_overlay_config1_mmr_u {
++union uvh_rh_gam_alias_0_overlay_config_u {
+ 	unsigned long	v;
+-	struct uv3h_rh_gam_mmioh_overlay_config1_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	rsvd_56_62:7;
+-		unsigned long	enable:1;			/* RW */
+-	} s3;
+-	struct uv4h_rh_gam_mmioh_overlay_config1_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	rsvd_56_62:7;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_0_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+-	} s4;
+-	struct uv4ah_rh_gam_mmioh_overlay_config1_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:26;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;
+-		unsigned long	undef_62:1;			/* Undefined */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_0_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+-	} s4a;
+-};
++	} sx;
+ 
+-/* ========================================================================= */
+-/*                   UVH_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR                     */
+-/* ========================================================================= */
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR 0x1600030UL
+-#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR uv_undefined("UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR")
+-#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR uv_undefined("UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR")
+-#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR)
+-
+-
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT	27
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_M_IO_SHFT	46
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_N_IO_SHFT	52
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_ENABLE_SHFT 63
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffff8000000UL
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_M_IO_MASK	0x000fc00000000000UL
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_N_IO_MASK	0x00f0000000000000UL
+-#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_ENABLE_MASK 0x8000000000000000UL
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_0_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} s4;
+ 
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_0_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} s3;
+ 
+-union uvh_rh_gam_mmioh_overlay_config_mmr_u {
+-	unsigned long	v;
+-	struct uv2h_rh_gam_mmioh_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_26:27;
+-		unsigned long	base:19;			/* RW */
+-		unsigned long	m_io:6;				/* RW */
+-		unsigned long	n_io:4;				/* RW */
+-		unsigned long	rsvd_56_62:7;
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_0_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+ 	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                  UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR                    */
++/*                    UVH_RH_GAM_ALIAS_0_REDIRECT_CONFIG                     */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR uv_undefined("UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR")
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR 0x1603800UL
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR 0x483800UL
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR)
+-
+-#define UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH uv_undefined("UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH")
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH 128
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH 128
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH)
+-
+-
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_SHFT 0
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK 0x0000000000007fffUL
+-
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_SHFT 0
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK 0x0000000000007fffUL
+-
+-#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK 0x0000000000000fffUL
+-
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK)
++#define UVH_RH_GAM_ALIAS_0_REDIRECT_CONFIG (				\
++	is_uv(UV4) ? 0x4800d0UL :					\
++	is_uv(UV3) ? 0x16000d0UL :					\
++	is_uv(UV2) ? 0x16000d0UL :					\
++	0)
+ 
+-union uvh_rh_gam_mmioh_redirect_config0_mmr_u {
+-	unsigned long	v;
+-	struct uv3h_rh_gam_mmioh_redirect_config0_mmr_s {
+-		unsigned long	nasid:15;			/* RW */
+-		unsigned long	rsvd_15_63:49;
+-	} s3;
+-	struct uv4h_rh_gam_mmioh_redirect_config0_mmr_s {
+-		unsigned long	nasid:15;			/* RW */
+-		unsigned long	rsvd_15_63:49;
+-	} s4;
+-	struct uv4ah_rh_gam_mmioh_redirect_config0_mmr_s {
+-		unsigned long	nasid:12;			/* RW */
+-		unsigned long	rsvd_12_63:52;
+-	} s4a;
+-};
+ 
+-/* ========================================================================= */
+-/*                  UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR                    */
+-/* ========================================================================= */
+-#define UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR uv_undefined("UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR")
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR 0x1604800UL
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR 0x484800UL
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR)
+-
+-#define UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH uv_undefined("UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH")
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH 128
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH 128
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH (			\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH :	\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH :	\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH)
+-
+-
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_SHFT 0
+-#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK 0x0000000000007fffUL
+-
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_SHFT 0
+-#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK 0x0000000000007fffUL
+-
+-#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK 0x0000000000000fffUL
+-
+-#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK (		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK : \
+-	is_uv4a_hub() ? UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK : \
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK)
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_0_REDIRECT_CONFIG_DEST_BASE_SHFT 24
++#define UVXH_RH_GAM_ALIAS_0_REDIRECT_CONFIG_DEST_BASE_MASK 0x00003fffff000000UL
++
+ 
+-union uvh_rh_gam_mmioh_redirect_config1_mmr_u {
++union uvh_rh_gam_alias_0_redirect_config_u {
+ 	unsigned long	v;
+-	struct uv3h_rh_gam_mmioh_redirect_config1_mmr_s {
+-		unsigned long	nasid:15;			/* RW */
+-		unsigned long	rsvd_15_63:49;
+-	} s3;
+-	struct uv4h_rh_gam_mmioh_redirect_config1_mmr_s {
+-		unsigned long	nasid:15;			/* RW */
+-		unsigned long	rsvd_15_63:49;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_0_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_0_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_0_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
+ 	} s4;
+-	struct uv4ah_rh_gam_mmioh_redirect_config1_mmr_s {
+-		unsigned long	nasid:12;			/* RW */
+-		unsigned long	rsvd_12_63:52;
+-	} s4a;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_0_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_0_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                    UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR                      */
++/*                    UVH_RH_GAM_ALIAS_1_OVERLAY_CONFIG                      */
+ /* ========================================================================= */
+-#define UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR 0x1600028UL
+-#define UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR 0x1600028UL
+-#define UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR 0x480028UL
+-#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR (				\
+-	is_uv2_hub() ? UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR :		\
+-	is_uv3_hub() ? UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR :		\
+-	/*is_uv4_hub*/ UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR)
+-
+-#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV2H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV3H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
+-
+-#define UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT	26
+-#define UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_SHFT	63
+-#define UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_MASK	0x00003ffffc000000UL
+-#define UV4H_RH_GAM_MMR_OVERLAY_CONFIG_MMR_ENABLE_MASK	0x8000000000000000UL
++#define UVH_RH_GAM_ALIAS_1_OVERLAY_CONFIG (				\
++	is_uv(UV4) ? 0x4800d8UL :					\
++	is_uv(UV3) ? 0x16000d8UL :					\
++	is_uv(UV2) ? 0x16000d8UL :					\
++	0)
+ 
+ 
+-union uvh_rh_gam_mmr_overlay_config_mmr_u {
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_BASE_SHFT	24
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_BASE_MASK	0x00000000ff000000UL
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_M_ALIAS_SHFT	48
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_M_ALIAS_MASK	0x001f000000000000UL
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVXH_RH_GAM_ALIAS_1_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
++
++union uvh_rh_gam_alias_1_overlay_config_u {
+ 	unsigned long	v;
+-	struct uvh_rh_gam_mmr_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_62:17;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_1_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+ 	} s;
+-	struct uvxh_rh_gam_mmr_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_62:17;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_1_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+ 	} sx;
+-	struct uv2h_rh_gam_mmr_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_62:17;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_1_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+-	} s2;
+-	struct uv3h_rh_gam_mmr_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_62:17;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_1_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+ 	} s3;
+-	struct uv4h_rh_gam_mmr_overlay_config_mmr_s {
+-		unsigned long	rsvd_0_25:26;
+-		unsigned long	base:20;			/* RW */
+-		unsigned long	rsvd_46_62:17;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_1_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
+ 		unsigned long	enable:1;			/* RW */
+-	} s4;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                                 UVH_RTC                                   */
++/*                    UVH_RH_GAM_ALIAS_1_REDIRECT_CONFIG                     */
+ /* ========================================================================= */
+-#define UV2H_RTC 0x340000UL
+-#define UV3H_RTC 0x340000UL
+-#define UV4H_RTC 0xe0000UL
+-#define UVH_RTC (							\
+-	is_uv2_hub() ? UV2H_RTC :					\
+-	is_uv3_hub() ? UV3H_RTC :					\
+-	/*is_uv4_hub*/ UV4H_RTC)
++#define UVH_RH_GAM_ALIAS_1_REDIRECT_CONFIG (				\
++	is_uv(UV4) ? 0x4800e0UL :					\
++	is_uv(UV3) ? 0x16000e0UL :					\
++	is_uv(UV2) ? 0x16000e0UL :					\
++	0)
+ 
+-#define UVH_RTC_REAL_TIME_CLOCK_SHFT			0
+-#define UVH_RTC_REAL_TIME_CLOCK_MASK			0x00ffffffffffffffUL
+ 
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_1_REDIRECT_CONFIG_DEST_BASE_SHFT 24
++#define UVXH_RH_GAM_ALIAS_1_REDIRECT_CONFIG_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-union uvh_rtc_u {
++
++union uvh_rh_gam_alias_1_redirect_config_u {
+ 	unsigned long	v;
+-	struct uvh_rtc_s {
+-		unsigned long	real_time_clock:56;		/* RW */
+-		unsigned long	rsvd_56_63:8;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_1_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
+ 	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_1_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_1_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_1_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_1_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                           UVH_RTC1_INT_CONFIG                             */
++/*                    UVH_RH_GAM_ALIAS_2_OVERLAY_CONFIG                      */
+ /* ========================================================================= */
+-#define UVH_RTC1_INT_CONFIG 0x615c0UL
++#define UVH_RH_GAM_ALIAS_2_OVERLAY_CONFIG (				\
++	is_uv(UV4) ? 0x4800e8UL :					\
++	is_uv(UV3) ? 0x16000e8UL :					\
++	is_uv(UV2) ? 0x16000e8UL :					\
++	0)
+ 
+-#define UVH_RTC1_INT_CONFIG_VECTOR_SHFT			0
+-#define UVH_RTC1_INT_CONFIG_DM_SHFT			8
+-#define UVH_RTC1_INT_CONFIG_DESTMODE_SHFT		11
+-#define UVH_RTC1_INT_CONFIG_STATUS_SHFT			12
+-#define UVH_RTC1_INT_CONFIG_P_SHFT			13
+-#define UVH_RTC1_INT_CONFIG_T_SHFT			15
+-#define UVH_RTC1_INT_CONFIG_M_SHFT			16
+-#define UVH_RTC1_INT_CONFIG_APIC_ID_SHFT		32
+-#define UVH_RTC1_INT_CONFIG_VECTOR_MASK			0x00000000000000ffUL
+-#define UVH_RTC1_INT_CONFIG_DM_MASK			0x0000000000000700UL
+-#define UVH_RTC1_INT_CONFIG_DESTMODE_MASK		0x0000000000000800UL
+-#define UVH_RTC1_INT_CONFIG_STATUS_MASK			0x0000000000001000UL
+-#define UVH_RTC1_INT_CONFIG_P_MASK			0x0000000000002000UL
+-#define UVH_RTC1_INT_CONFIG_T_MASK			0x0000000000008000UL
+-#define UVH_RTC1_INT_CONFIG_M_MASK			0x0000000000010000UL
+-#define UVH_RTC1_INT_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+ 
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_BASE_SHFT	24
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_BASE_MASK	0x00000000ff000000UL
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_M_ALIAS_SHFT	48
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_M_ALIAS_MASK	0x001f000000000000UL
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVXH_RH_GAM_ALIAS_2_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
+ 
+-union uvh_rtc1_int_config_u {
++
++union uvh_rh_gam_alias_2_overlay_config_u {
+ 	unsigned long	v;
+-	struct uvh_rtc1_int_config_s {
+-		unsigned long	vector_:8;			/* RW */
+-		unsigned long	dm:3;				/* RW */
+-		unsigned long	destmode:1;			/* RW */
+-		unsigned long	status:1;			/* RO */
+-		unsigned long	p:1;				/* RO */
+-		unsigned long	rsvd_14:1;
+-		unsigned long	t:1;				/* RO */
+-		unsigned long	m:1;				/* RW */
+-		unsigned long	rsvd_17_31:15;
+-		unsigned long	apic_id:32;			/* RW */
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_2_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
+ 	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_2_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_2_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_2_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_2_overlay_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	base:8;				/* RW */
++		unsigned long	rsvd_32_47:16;
++		unsigned long	m_alias:5;			/* RW */
++		unsigned long	rsvd_53_62:10;
++		unsigned long	enable:1;			/* RW */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                               UVH_SCRATCH5                                */
++/*                    UVH_RH_GAM_ALIAS_2_REDIRECT_CONFIG                     */
+ /* ========================================================================= */
+-#define UV2H_SCRATCH5 0x2d0200UL
+-#define UV3H_SCRATCH5 0x2d0200UL
+-#define UV4H_SCRATCH5 0xb0200UL
+-#define UVH_SCRATCH5 (							\
+-	is_uv2_hub() ? UV2H_SCRATCH5 :					\
+-	is_uv3_hub() ? UV3H_SCRATCH5 :					\
+-	/*is_uv4_hub*/ UV4H_SCRATCH5)
+-
+-#define UV2H_SCRATCH5_32 0x778
+-#define UV3H_SCRATCH5_32 0x778
+-#define UV4H_SCRATCH5_32 0x798
+-#define UVH_SCRATCH5_32 (						\
+-	is_uv2_hub() ? UV2H_SCRATCH5_32 :				\
+-	is_uv3_hub() ? UV3H_SCRATCH5_32 :				\
+-	/*is_uv4_hub*/ UV4H_SCRATCH5_32)
++#define UVH_RH_GAM_ALIAS_2_REDIRECT_CONFIG (				\
++	is_uv(UV4) ? 0x4800f0UL :					\
++	is_uv(UV3) ? 0x16000f0UL :					\
++	is_uv(UV2) ? 0x16000f0UL :					\
++	0)
+ 
+-#define UVH_SCRATCH5_SCRATCH5_SHFT			0
+-#define UVH_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
+ 
++/* UVXH common defines */
++#define UVXH_RH_GAM_ALIAS_2_REDIRECT_CONFIG_DEST_BASE_SHFT 24
++#define UVXH_RH_GAM_ALIAS_2_REDIRECT_CONFIG_DEST_BASE_MASK 0x00003fffff000000UL
+ 
+-union uvh_scratch5_u {
++
++union uvh_rh_gam_alias_2_redirect_config_u {
+ 	unsigned long	v;
+-	struct uvh_scratch5_s {
+-		unsigned long	scratch5:64;			/* RW, W1CS */
++
++	/* UVH common struct */
++	struct uvh_rh_gam_alias_2_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
+ 	} s;
+-};
+ 
+-/* ========================================================================= */
+-/*                            UVH_SCRATCH5_ALIAS                             */
+-/* ========================================================================= */
+-#define UV2H_SCRATCH5_ALIAS 0x2d0208UL
+-#define UV3H_SCRATCH5_ALIAS 0x2d0208UL
+-#define UV4H_SCRATCH5_ALIAS 0xb0208UL
+-#define UVH_SCRATCH5_ALIAS (						\
+-	is_uv2_hub() ? UV2H_SCRATCH5_ALIAS :				\
+-	is_uv3_hub() ? UV3H_SCRATCH5_ALIAS :				\
+-	/*is_uv4_hub*/ UV4H_SCRATCH5_ALIAS)
+-
+-#define UV2H_SCRATCH5_ALIAS_32 0x780
+-#define UV3H_SCRATCH5_ALIAS_32 0x780
+-#define UV4H_SCRATCH5_ALIAS_32 0x7a0
+-#define UVH_SCRATCH5_ALIAS_32 (						\
+-	is_uv2_hub() ? UV2H_SCRATCH5_ALIAS_32 :				\
+-	is_uv3_hub() ? UV3H_SCRATCH5_ALIAS_32 :				\
+-	/*is_uv4_hub*/ UV4H_SCRATCH5_ALIAS_32)
++	/* UVXH common struct */
++	struct uvxh_rh_gam_alias_2_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} sx;
+ 
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_alias_2_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s4;
+ 
+-/* ========================================================================= */
+-/*                           UVH_SCRATCH5_ALIAS_2                            */
+-/* ========================================================================= */
+-#define UV2H_SCRATCH5_ALIAS_2 0x2d0210UL
+-#define UV3H_SCRATCH5_ALIAS_2 0x2d0210UL
+-#define UV4H_SCRATCH5_ALIAS_2 0xb0210UL
+-#define UVH_SCRATCH5_ALIAS_2 (						\
+-	is_uv2_hub() ? UV2H_SCRATCH5_ALIAS_2 :				\
+-	is_uv3_hub() ? UV3H_SCRATCH5_ALIAS_2 :				\
+-	/*is_uv4_hub*/ UV4H_SCRATCH5_ALIAS_2)
+-#define UVH_SCRATCH5_ALIAS_2_32 0x788
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_alias_2_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s3;
+ 
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_alias_2_redirect_config_s {
++		unsigned long	rsvd_0_23:24;
++		unsigned long	dest_base:22;			/* RW */
++		unsigned long	rsvd_46_63:18;
++	} s2;
++};
+ 
+ /* ========================================================================= */
+-/*                          UVXH_EVENT_OCCURRED2                             */
++/*                      UVH_RH_GAM_GRU_OVERLAY_CONFIG                        */
+ /* ========================================================================= */
+-#define UVXH_EVENT_OCCURRED2 0x70100UL
+-
+-#define UV2H_EVENT_OCCURRED2_32 0xb68
+-#define UV3H_EVENT_OCCURRED2_32 0xb68
+-#define UV4H_EVENT_OCCURRED2_32 0x608
+-#define UVH_EVENT_OCCURRED2_32 (					\
+-	is_uv2_hub() ? UV2H_EVENT_OCCURRED2_32 :			\
+-	is_uv3_hub() ? UV3H_EVENT_OCCURRED2_32 :			\
+-	/*is_uv4_hub*/ UV4H_EVENT_OCCURRED2_32)
+-
+-
+-#define UV2H_EVENT_OCCURRED2_RTC_0_SHFT			0
+-#define UV2H_EVENT_OCCURRED2_RTC_1_SHFT			1
+-#define UV2H_EVENT_OCCURRED2_RTC_2_SHFT			2
+-#define UV2H_EVENT_OCCURRED2_RTC_3_SHFT			3
+-#define UV2H_EVENT_OCCURRED2_RTC_4_SHFT			4
+-#define UV2H_EVENT_OCCURRED2_RTC_5_SHFT			5
+-#define UV2H_EVENT_OCCURRED2_RTC_6_SHFT			6
+-#define UV2H_EVENT_OCCURRED2_RTC_7_SHFT			7
+-#define UV2H_EVENT_OCCURRED2_RTC_8_SHFT			8
+-#define UV2H_EVENT_OCCURRED2_RTC_9_SHFT			9
+-#define UV2H_EVENT_OCCURRED2_RTC_10_SHFT		10
+-#define UV2H_EVENT_OCCURRED2_RTC_11_SHFT		11
+-#define UV2H_EVENT_OCCURRED2_RTC_12_SHFT		12
+-#define UV2H_EVENT_OCCURRED2_RTC_13_SHFT		13
+-#define UV2H_EVENT_OCCURRED2_RTC_14_SHFT		14
+-#define UV2H_EVENT_OCCURRED2_RTC_15_SHFT		15
+-#define UV2H_EVENT_OCCURRED2_RTC_16_SHFT		16
+-#define UV2H_EVENT_OCCURRED2_RTC_17_SHFT		17
+-#define UV2H_EVENT_OCCURRED2_RTC_18_SHFT		18
+-#define UV2H_EVENT_OCCURRED2_RTC_19_SHFT		19
+-#define UV2H_EVENT_OCCURRED2_RTC_20_SHFT		20
+-#define UV2H_EVENT_OCCURRED2_RTC_21_SHFT		21
+-#define UV2H_EVENT_OCCURRED2_RTC_22_SHFT		22
+-#define UV2H_EVENT_OCCURRED2_RTC_23_SHFT		23
+-#define UV2H_EVENT_OCCURRED2_RTC_24_SHFT		24
+-#define UV2H_EVENT_OCCURRED2_RTC_25_SHFT		25
+-#define UV2H_EVENT_OCCURRED2_RTC_26_SHFT		26
+-#define UV2H_EVENT_OCCURRED2_RTC_27_SHFT		27
+-#define UV2H_EVENT_OCCURRED2_RTC_28_SHFT		28
+-#define UV2H_EVENT_OCCURRED2_RTC_29_SHFT		29
+-#define UV2H_EVENT_OCCURRED2_RTC_30_SHFT		30
+-#define UV2H_EVENT_OCCURRED2_RTC_31_SHFT		31
+-#define UV2H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000000001UL
+-#define UV2H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000000002UL
+-#define UV2H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000000004UL
+-#define UV2H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000000008UL
+-#define UV2H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000000010UL
+-#define UV2H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000000020UL
+-#define UV2H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000000000040UL
+-#define UV2H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000000000080UL
+-#define UV2H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000000000100UL
+-#define UV2H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000000000200UL
+-#define UV2H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000000000400UL
+-#define UV2H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000000000800UL
+-#define UV2H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000000001000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000000002000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000000004000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000000008000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000000010000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000000020000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_18_MASK		0x0000000000040000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_19_MASK		0x0000000000080000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_20_MASK		0x0000000000100000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_21_MASK		0x0000000000200000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_22_MASK		0x0000000000400000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_23_MASK		0x0000000000800000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_24_MASK		0x0000000001000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_25_MASK		0x0000000002000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_26_MASK		0x0000000004000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_27_MASK		0x0000000008000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_28_MASK		0x0000000010000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_29_MASK		0x0000000020000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_30_MASK		0x0000000040000000UL
+-#define UV2H_EVENT_OCCURRED2_RTC_31_MASK		0x0000000080000000UL
++#define UVH_RH_GAM_GRU_OVERLAY_CONFIG (					\
++	is_uv(UV4) ? 0x480010UL :					\
++	is_uv(UV3) ? 0x1600010UL :					\
++	is_uv(UV2) ? 0x1600010UL :					\
++	0)
++
++
++/* UVXH common defines */
++#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_N_GRU_SHFT	52
++#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_N_GRU_MASK	0x00f0000000000000UL
++#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVXH_RH_GAM_GRU_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	26
++#define UV4AH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x000ffffffc000000UL
++
++/* UV4 unique defines */
++#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	26
++#define UV4H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x00003ffffc000000UL
++
++/* UV3 unique defines */
++#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	28
++#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x00003ffff0000000UL
++#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MODE_SHFT	62
++#define UV3H_RH_GAM_GRU_OVERLAY_CONFIG_MODE_MASK	0x4000000000000000UL
++
++/* UV2 unique defines */
++#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	28
++#define UV2H_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x00003ffff0000000UL
++
++#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK (			\
++	is_uv(UV4A) ? 0x000ffffffc000000UL :				\
++	is_uv(UV4) ? 0x00003ffffc000000UL :				\
++	is_uv(UV3) ? 0x00003ffff0000000UL :				\
++	is_uv(UV2) ? 0x00003ffff0000000UL :				\
++	0)
++#define UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT (			\
++	is_uv(UV4) ? 26 :						\
++	is_uv(UV3) ? 28 :						\
++	is_uv(UV2) ? 28 :						\
++	-1)
+ 
+-#define UV3H_EVENT_OCCURRED2_RTC_0_SHFT			0
+-#define UV3H_EVENT_OCCURRED2_RTC_1_SHFT			1
+-#define UV3H_EVENT_OCCURRED2_RTC_2_SHFT			2
+-#define UV3H_EVENT_OCCURRED2_RTC_3_SHFT			3
+-#define UV3H_EVENT_OCCURRED2_RTC_4_SHFT			4
+-#define UV3H_EVENT_OCCURRED2_RTC_5_SHFT			5
+-#define UV3H_EVENT_OCCURRED2_RTC_6_SHFT			6
+-#define UV3H_EVENT_OCCURRED2_RTC_7_SHFT			7
+-#define UV3H_EVENT_OCCURRED2_RTC_8_SHFT			8
+-#define UV3H_EVENT_OCCURRED2_RTC_9_SHFT			9
+-#define UV3H_EVENT_OCCURRED2_RTC_10_SHFT		10
+-#define UV3H_EVENT_OCCURRED2_RTC_11_SHFT		11
+-#define UV3H_EVENT_OCCURRED2_RTC_12_SHFT		12
+-#define UV3H_EVENT_OCCURRED2_RTC_13_SHFT		13
+-#define UV3H_EVENT_OCCURRED2_RTC_14_SHFT		14
+-#define UV3H_EVENT_OCCURRED2_RTC_15_SHFT		15
+-#define UV3H_EVENT_OCCURRED2_RTC_16_SHFT		16
+-#define UV3H_EVENT_OCCURRED2_RTC_17_SHFT		17
+-#define UV3H_EVENT_OCCURRED2_RTC_18_SHFT		18
+-#define UV3H_EVENT_OCCURRED2_RTC_19_SHFT		19
+-#define UV3H_EVENT_OCCURRED2_RTC_20_SHFT		20
+-#define UV3H_EVENT_OCCURRED2_RTC_21_SHFT		21
+-#define UV3H_EVENT_OCCURRED2_RTC_22_SHFT		22
+-#define UV3H_EVENT_OCCURRED2_RTC_23_SHFT		23
+-#define UV3H_EVENT_OCCURRED2_RTC_24_SHFT		24
+-#define UV3H_EVENT_OCCURRED2_RTC_25_SHFT		25
+-#define UV3H_EVENT_OCCURRED2_RTC_26_SHFT		26
+-#define UV3H_EVENT_OCCURRED2_RTC_27_SHFT		27
+-#define UV3H_EVENT_OCCURRED2_RTC_28_SHFT		28
+-#define UV3H_EVENT_OCCURRED2_RTC_29_SHFT		29
+-#define UV3H_EVENT_OCCURRED2_RTC_30_SHFT		30
+-#define UV3H_EVENT_OCCURRED2_RTC_31_SHFT		31
+-#define UV3H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000000001UL
+-#define UV3H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000000002UL
+-#define UV3H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000000004UL
+-#define UV3H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000000008UL
+-#define UV3H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000000010UL
+-#define UV3H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000000020UL
+-#define UV3H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000000000040UL
+-#define UV3H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000000000080UL
+-#define UV3H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000000000100UL
+-#define UV3H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000000000200UL
+-#define UV3H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000000000400UL
+-#define UV3H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000000000800UL
+-#define UV3H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000000001000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000000002000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000000004000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000000008000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000000010000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000000020000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_18_MASK		0x0000000000040000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_19_MASK		0x0000000000080000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_20_MASK		0x0000000000100000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_21_MASK		0x0000000000200000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_22_MASK		0x0000000000400000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_23_MASK		0x0000000000800000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_24_MASK		0x0000000001000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_25_MASK		0x0000000002000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_26_MASK		0x0000000004000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_27_MASK		0x0000000008000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_28_MASK		0x0000000010000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_29_MASK		0x0000000020000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_30_MASK		0x0000000040000000UL
+-#define UV3H_EVENT_OCCURRED2_RTC_31_MASK		0x0000000080000000UL
++union uvh_rh_gam_gru_overlay_config_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_45:46;
++		unsigned long	rsvd_46_51:6;
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_45:46;
++		unsigned long	rsvd_46_51:6;
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV4A unique struct */
++	struct uv4ah_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_24:25;
++		unsigned long	undef_25:1;			/* Undefined */
++		unsigned long	base:26;			/* RW */
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s4a;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_24:25;
++		unsigned long	undef_25:1;			/* Undefined */
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_51:6;
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_27:28;
++		unsigned long	base:18;			/* RW */
++		unsigned long	rsvd_46_51:6;
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_61:6;
++		unsigned long	mode:1;				/* RW */
++		unsigned long	enable:1;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_gru_overlay_config_s {
++		unsigned long	rsvd_0_27:28;
++		unsigned long	base:18;			/* RW */
++		unsigned long	rsvd_46_51:6;
++		unsigned long	n_gru:4;			/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s2;
++};
++
++/* ========================================================================= */
++/*                     UVH_RH_GAM_MMIOH_OVERLAY_CONFIG                       */
++/* ========================================================================= */
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG (				\
++	is_uv(UV2) ? 0x1600030UL :					\
++	0)
+ 
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT0_SHFT 0
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT1_SHFT 1
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT2_SHFT 2
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT3_SHFT 3
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT4_SHFT 4
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT5_SHFT 5
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT6_SHFT 6
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT7_SHFT 7
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT8_SHFT 8
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT9_SHFT 9
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT10_SHFT 10
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT11_SHFT 11
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT12_SHFT 12
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT13_SHFT 13
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT14_SHFT 14
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT15_SHFT 15
+-#define UV4H_EVENT_OCCURRED2_RTC_INTERVAL_INT_SHFT	16
+-#define UV4H_EVENT_OCCURRED2_BAU_DASHBOARD_INT_SHFT	17
+-#define UV4H_EVENT_OCCURRED2_RTC_0_SHFT			18
+-#define UV4H_EVENT_OCCURRED2_RTC_1_SHFT			19
+-#define UV4H_EVENT_OCCURRED2_RTC_2_SHFT			20
+-#define UV4H_EVENT_OCCURRED2_RTC_3_SHFT			21
+-#define UV4H_EVENT_OCCURRED2_RTC_4_SHFT			22
+-#define UV4H_EVENT_OCCURRED2_RTC_5_SHFT			23
+-#define UV4H_EVENT_OCCURRED2_RTC_6_SHFT			24
+-#define UV4H_EVENT_OCCURRED2_RTC_7_SHFT			25
+-#define UV4H_EVENT_OCCURRED2_RTC_8_SHFT			26
+-#define UV4H_EVENT_OCCURRED2_RTC_9_SHFT			27
+-#define UV4H_EVENT_OCCURRED2_RTC_10_SHFT		28
+-#define UV4H_EVENT_OCCURRED2_RTC_11_SHFT		29
+-#define UV4H_EVENT_OCCURRED2_RTC_12_SHFT		30
+-#define UV4H_EVENT_OCCURRED2_RTC_13_SHFT		31
+-#define UV4H_EVENT_OCCURRED2_RTC_14_SHFT		32
+-#define UV4H_EVENT_OCCURRED2_RTC_15_SHFT		33
+-#define UV4H_EVENT_OCCURRED2_RTC_16_SHFT		34
+-#define UV4H_EVENT_OCCURRED2_RTC_17_SHFT		35
+-#define UV4H_EVENT_OCCURRED2_RTC_18_SHFT		36
+-#define UV4H_EVENT_OCCURRED2_RTC_19_SHFT		37
+-#define UV4H_EVENT_OCCURRED2_RTC_20_SHFT		38
+-#define UV4H_EVENT_OCCURRED2_RTC_21_SHFT		39
+-#define UV4H_EVENT_OCCURRED2_RTC_22_SHFT		40
+-#define UV4H_EVENT_OCCURRED2_RTC_23_SHFT		41
+-#define UV4H_EVENT_OCCURRED2_RTC_24_SHFT		42
+-#define UV4H_EVENT_OCCURRED2_RTC_25_SHFT		43
+-#define UV4H_EVENT_OCCURRED2_RTC_26_SHFT		44
+-#define UV4H_EVENT_OCCURRED2_RTC_27_SHFT		45
+-#define UV4H_EVENT_OCCURRED2_RTC_28_SHFT		46
+-#define UV4H_EVENT_OCCURRED2_RTC_29_SHFT		47
+-#define UV4H_EVENT_OCCURRED2_RTC_30_SHFT		48
+-#define UV4H_EVENT_OCCURRED2_RTC_31_SHFT		49
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT0_MASK 0x0000000000000001UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT1_MASK 0x0000000000000002UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT2_MASK 0x0000000000000004UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT3_MASK 0x0000000000000008UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT4_MASK 0x0000000000000010UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT5_MASK 0x0000000000000020UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT6_MASK 0x0000000000000040UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT7_MASK 0x0000000000000080UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT8_MASK 0x0000000000000100UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT9_MASK 0x0000000000000200UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT10_MASK 0x0000000000000400UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT11_MASK 0x0000000000000800UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT12_MASK 0x0000000000001000UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT13_MASK 0x0000000000002000UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT14_MASK 0x0000000000004000UL
+-#define UV4H_EVENT_OCCURRED2_MESSAGE_ACCELERATOR_INT15_MASK 0x0000000000008000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_INTERVAL_INT_MASK	0x0000000000010000UL
+-#define UV4H_EVENT_OCCURRED2_BAU_DASHBOARD_INT_MASK	0x0000000000020000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_0_MASK			0x0000000000040000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_1_MASK			0x0000000000080000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_2_MASK			0x0000000000100000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_3_MASK			0x0000000000200000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_4_MASK			0x0000000000400000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_5_MASK			0x0000000000800000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_6_MASK			0x0000000001000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_7_MASK			0x0000000002000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_8_MASK			0x0000000004000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_9_MASK			0x0000000008000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_10_MASK		0x0000000010000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_11_MASK		0x0000000020000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_12_MASK		0x0000000040000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_13_MASK		0x0000000080000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_14_MASK		0x0000000100000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_15_MASK		0x0000000200000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_16_MASK		0x0000000400000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_17_MASK		0x0000000800000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_18_MASK		0x0000001000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_19_MASK		0x0000002000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_20_MASK		0x0000004000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_21_MASK		0x0000008000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_22_MASK		0x0000010000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_23_MASK		0x0000020000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_24_MASK		0x0000040000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_25_MASK		0x0000080000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_26_MASK		0x0000100000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_27_MASK		0x0000200000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_28_MASK		0x0000400000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_29_MASK		0x0000800000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_30_MASK		0x0001000000000000UL
+-#define UV4H_EVENT_OCCURRED2_RTC_31_MASK		0x0002000000000000UL
+ 
+-#define UVXH_EVENT_OCCURRED2_RTC_1_MASK (				\
+-	is_uv2_hub() ? UV2H_EVENT_OCCURRED2_RTC_1_MASK :		\
+-	is_uv3_hub() ? UV3H_EVENT_OCCURRED2_RTC_1_MASK :		\
+-	/*is_uv4_hub*/ UV4H_EVENT_OCCURRED2_RTC_1_MASK)
+ 
+-union uvh_event_occurred2_u {
++/* UV2 unique defines */
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_BASE_SHFT	27
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_BASE_MASK	0x00003ffff8000000UL
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_M_IO_SHFT	46
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_M_IO_MASK	0x000fc00000000000UL
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_N_IO_SHFT	52
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_N_IO_MASK	0x00f0000000000000UL
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG_BASE_SHFT (			\
++	is_uv(UV2) ? 27 :						\
++	uv_undefined("UVH_RH_GAM_MMIOH_OVERLAY_CONFIG_BASE_SHFT"))
++
++union uvh_rh_gam_mmioh_overlay_config_u {
+ 	unsigned long	v;
+-	struct uv2h_event_occurred2_s {
+-		unsigned long	rtc_0:1;			/* RW */
+-		unsigned long	rtc_1:1;			/* RW */
+-		unsigned long	rtc_2:1;			/* RW */
+-		unsigned long	rtc_3:1;			/* RW */
+-		unsigned long	rtc_4:1;			/* RW */
+-		unsigned long	rtc_5:1;			/* RW */
+-		unsigned long	rtc_6:1;			/* RW */
+-		unsigned long	rtc_7:1;			/* RW */
+-		unsigned long	rtc_8:1;			/* RW */
+-		unsigned long	rtc_9:1;			/* RW */
+-		unsigned long	rtc_10:1;			/* RW */
+-		unsigned long	rtc_11:1;			/* RW */
+-		unsigned long	rtc_12:1;			/* RW */
+-		unsigned long	rtc_13:1;			/* RW */
+-		unsigned long	rtc_14:1;			/* RW */
+-		unsigned long	rtc_15:1;			/* RW */
+-		unsigned long	rtc_16:1;			/* RW */
+-		unsigned long	rtc_17:1;			/* RW */
+-		unsigned long	rtc_18:1;			/* RW */
+-		unsigned long	rtc_19:1;			/* RW */
+-		unsigned long	rtc_20:1;			/* RW */
+-		unsigned long	rtc_21:1;			/* RW */
+-		unsigned long	rtc_22:1;			/* RW */
+-		unsigned long	rtc_23:1;			/* RW */
+-		unsigned long	rtc_24:1;			/* RW */
+-		unsigned long	rtc_25:1;			/* RW */
+-		unsigned long	rtc_26:1;			/* RW */
+-		unsigned long	rtc_27:1;			/* RW */
+-		unsigned long	rtc_28:1;			/* RW */
+-		unsigned long	rtc_29:1;			/* RW */
+-		unsigned long	rtc_30:1;			/* RW */
+-		unsigned long	rtc_31:1;			/* RW */
+-		unsigned long	rsvd_32_63:32;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_mmioh_overlay_config_s {
++		unsigned long	rsvd_0_26:27;
++		unsigned long	base:19;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;				/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmioh_overlay_config_s {
++		unsigned long	rsvd_0_26:27;
++		unsigned long	base:19;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;				/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_mmioh_overlay_config_s {
++		unsigned long	rsvd_0_26:27;
++		unsigned long	base:19;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;				/* RW */
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
+ 	} s2;
+-	struct uv3h_event_occurred2_s {
+-		unsigned long	rtc_0:1;			/* RW */
+-		unsigned long	rtc_1:1;			/* RW */
+-		unsigned long	rtc_2:1;			/* RW */
+-		unsigned long	rtc_3:1;			/* RW */
+-		unsigned long	rtc_4:1;			/* RW */
+-		unsigned long	rtc_5:1;			/* RW */
+-		unsigned long	rtc_6:1;			/* RW */
+-		unsigned long	rtc_7:1;			/* RW */
+-		unsigned long	rtc_8:1;			/* RW */
+-		unsigned long	rtc_9:1;			/* RW */
+-		unsigned long	rtc_10:1;			/* RW */
+-		unsigned long	rtc_11:1;			/* RW */
+-		unsigned long	rtc_12:1;			/* RW */
+-		unsigned long	rtc_13:1;			/* RW */
+-		unsigned long	rtc_14:1;			/* RW */
+-		unsigned long	rtc_15:1;			/* RW */
+-		unsigned long	rtc_16:1;			/* RW */
+-		unsigned long	rtc_17:1;			/* RW */
+-		unsigned long	rtc_18:1;			/* RW */
+-		unsigned long	rtc_19:1;			/* RW */
+-		unsigned long	rtc_20:1;			/* RW */
+-		unsigned long	rtc_21:1;			/* RW */
+-		unsigned long	rtc_22:1;			/* RW */
+-		unsigned long	rtc_23:1;			/* RW */
+-		unsigned long	rtc_24:1;			/* RW */
+-		unsigned long	rtc_25:1;			/* RW */
+-		unsigned long	rtc_26:1;			/* RW */
+-		unsigned long	rtc_27:1;			/* RW */
+-		unsigned long	rtc_28:1;			/* RW */
+-		unsigned long	rtc_29:1;			/* RW */
+-		unsigned long	rtc_30:1;			/* RW */
+-		unsigned long	rtc_31:1;			/* RW */
+-		unsigned long	rsvd_32_63:32;
++};
++
++/* ========================================================================= */
++/*                     UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0                      */
++/* ========================================================================= */
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0 (				\
++	is_uv(UV4) ? 0x483000UL :					\
++	is_uv(UV3) ? 0x1603000UL :					\
++	0)
++
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT	26
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK	0x000ffffffc000000UL
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT	52
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_MASK	0x03f0000000000000UL
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_SHFT	63
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_MASK	0x8000000000000000UL
++
++/* UV4 unique defines */
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT	26
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK	0x00003ffffc000000UL
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT	46
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_MASK	0x000fc00000000000UL
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_SHFT	63
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_MASK	0x8000000000000000UL
++
++/* UV3 unique defines */
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT	26
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK	0x00003ffffc000000UL
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT	46
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_MASK	0x000fc00000000000UL
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_SHFT	63
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_MASK	0x8000000000000000UL
++
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK (			\
++	is_uv(UV4A) ? 0x000ffffffc000000UL :				\
++	is_uv(UV4) ? 0x00003ffffc000000UL :				\
++	is_uv(UV3) ? 0x00003ffffc000000UL :				\
++	0)
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_SHFT (			\
++	is_uv(UV4) ? 26 :						\
++	is_uv(UV3) ? 26 :						\
++	-1)
++
++union uvh_rh_gam_mmioh_overlay_config0_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV4A unique struct */
++	struct uv4ah_rh_gam_mmioh_overlay_config0_mmr_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} s4a;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_mmioh_overlay_config0_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
+ 	} s3;
+-	struct uv4h_event_occurred2_s {
+-		unsigned long	message_accelerator_int0:1;	/* RW */
+-		unsigned long	message_accelerator_int1:1;	/* RW */
+-		unsigned long	message_accelerator_int2:1;	/* RW */
+-		unsigned long	message_accelerator_int3:1;	/* RW */
+-		unsigned long	message_accelerator_int4:1;	/* RW */
+-		unsigned long	message_accelerator_int5:1;	/* RW */
+-		unsigned long	message_accelerator_int6:1;	/* RW */
+-		unsigned long	message_accelerator_int7:1;	/* RW */
+-		unsigned long	message_accelerator_int8:1;	/* RW */
+-		unsigned long	message_accelerator_int9:1;	/* RW */
+-		unsigned long	message_accelerator_int10:1;	/* RW */
+-		unsigned long	message_accelerator_int11:1;	/* RW */
+-		unsigned long	message_accelerator_int12:1;	/* RW */
+-		unsigned long	message_accelerator_int13:1;	/* RW */
+-		unsigned long	message_accelerator_int14:1;	/* RW */
+-		unsigned long	message_accelerator_int15:1;	/* RW */
+-		unsigned long	rtc_interval_int:1;		/* RW */
+-		unsigned long	bau_dashboard_int:1;		/* RW */
+-		unsigned long	rtc_0:1;			/* RW */
+-		unsigned long	rtc_1:1;			/* RW */
+-		unsigned long	rtc_2:1;			/* RW */
+-		unsigned long	rtc_3:1;			/* RW */
+-		unsigned long	rtc_4:1;			/* RW */
+-		unsigned long	rtc_5:1;			/* RW */
+-		unsigned long	rtc_6:1;			/* RW */
+-		unsigned long	rtc_7:1;			/* RW */
+-		unsigned long	rtc_8:1;			/* RW */
+-		unsigned long	rtc_9:1;			/* RW */
+-		unsigned long	rtc_10:1;			/* RW */
+-		unsigned long	rtc_11:1;			/* RW */
+-		unsigned long	rtc_12:1;			/* RW */
+-		unsigned long	rtc_13:1;			/* RW */
+-		unsigned long	rtc_14:1;			/* RW */
+-		unsigned long	rtc_15:1;			/* RW */
+-		unsigned long	rtc_16:1;			/* RW */
+-		unsigned long	rtc_17:1;			/* RW */
+-		unsigned long	rtc_18:1;			/* RW */
+-		unsigned long	rtc_19:1;			/* RW */
+-		unsigned long	rtc_20:1;			/* RW */
+-		unsigned long	rtc_21:1;			/* RW */
+-		unsigned long	rtc_22:1;			/* RW */
+-		unsigned long	rtc_23:1;			/* RW */
+-		unsigned long	rtc_24:1;			/* RW */
+-		unsigned long	rtc_25:1;			/* RW */
+-		unsigned long	rtc_26:1;			/* RW */
+-		unsigned long	rtc_27:1;			/* RW */
+-		unsigned long	rtc_28:1;			/* RW */
+-		unsigned long	rtc_29:1;			/* RW */
+-		unsigned long	rtc_30:1;			/* RW */
+-		unsigned long	rtc_31:1;			/* RW */
+-		unsigned long	rsvd_50_63:14;
++};
++
++/* ========================================================================= */
++/*                     UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1                      */
++/* ========================================================================= */
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1 (				\
++	is_uv(UV4) ? 0x484000UL :					\
++	is_uv(UV3) ? 0x1604000UL :					\
++	0)
++
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT	26
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK	0x000ffffffc000000UL
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT	52
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_MASK	0x03f0000000000000UL
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_SHFT	63
++#define UV4AH_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_MASK	0x8000000000000000UL
++
++/* UV4 unique defines */
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT	26
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK	0x00003ffffc000000UL
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT	46
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_MASK	0x000fc00000000000UL
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_SHFT	63
++#define UV4H_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_MASK	0x8000000000000000UL
++
++/* UV3 unique defines */
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT	26
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK	0x00003ffffc000000UL
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT	46
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_MASK	0x000fc00000000000UL
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_SHFT	63
++#define UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_ENABLE_MASK	0x8000000000000000UL
++
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK (			\
++	is_uv(UV4A) ? 0x000ffffffc000000UL : \
++	is_uv(UV4) ? 0x00003ffffc000000UL :				\
++	is_uv(UV3) ? 0x00003ffffc000000UL :				\
++	0)
++#define UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_SHFT (			\
++	is_uv(UV4) ? 26 :						\
++	is_uv(UV3) ? 26 :						\
++	-1)
++
++union uvh_rh_gam_mmioh_overlay_config1_u {
++	unsigned long	v;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV4A unique struct */
++	struct uv4ah_rh_gam_mmioh_overlay_config1_mmr_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:26;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	undef_62:1;			/* Undefined */
++		unsigned long	enable:1;			/* RW */
++	} s4a;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
+ 	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_mmioh_overlay_config1_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	m_io:6;				/* RW */
++		unsigned long	n_io:4;
++		unsigned long	rsvd_56_62:7;
++		unsigned long	enable:1;			/* RW */
++	} s3;
+ };
+ 
+ /* ========================================================================= */
+-/*                       UVXH_EVENT_OCCURRED2_ALIAS                          */
++/*                    UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0                      */
+ /* ========================================================================= */
+-#define UVXH_EVENT_OCCURRED2_ALIAS 0x70108UL
++#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0 (				\
++	is_uv(UV4) ? 0x483800UL :					\
++	is_uv(UV3) ? 0x1603800UL :					\
++	0)
+ 
+-#define UV2H_EVENT_OCCURRED2_ALIAS_32 0xb70
+-#define UV3H_EVENT_OCCURRED2_ALIAS_32 0xb70
+-#define UV4H_EVENT_OCCURRED2_ALIAS_32 0x610
+-#define UVH_EVENT_OCCURRED2_ALIAS_32 (					\
+-	is_uv2_hub() ? UV2H_EVENT_OCCURRED2_ALIAS_32 :			\
+-	is_uv3_hub() ? UV3H_EVENT_OCCURRED2_ALIAS_32 :			\
+-	/*is_uv4_hub*/ UV4H_EVENT_OCCURRED2_ALIAS_32)
++#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_DEPTH (			\
++	is_uv(UV4) ? 128 :						\
++	is_uv(UV3) ? 128 :						\
++	0)
+ 
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_SHFT	0
++#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK	0x0000000000000fffUL
+ 
+-/* ========================================================================= */
+-/*                   UVXH_LB_BAU_SB_ACTIVATION_STATUS_2                      */
+-/* ========================================================================= */
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_2 0x320130UL
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_2 0x320130UL
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_2 0xc8130UL
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_2 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_2 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_2 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_2)
++/* UV4 unique defines */
++#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_SHFT	0
++#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK	0x0000000000007fffUL
++
++/* UV3 unique defines */
++#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_SHFT	0
++#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK	0x0000000000007fffUL
+ 
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_2_32 0x9f0
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_2_32 0x9f0
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_2_32 0xa10
+-#define UVH_LB_BAU_SB_ACTIVATION_STATUS_2_32 (				\
+-	is_uv2_hub() ? UV2H_LB_BAU_SB_ACTIVATION_STATUS_2_32 :		\
+-	is_uv3_hub() ? UV3H_LB_BAU_SB_ACTIVATION_STATUS_2_32 :		\
+-	/*is_uv4_hub*/ UV4H_LB_BAU_SB_ACTIVATION_STATUS_2_32)
+ 
+-#define UVXH_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_SHFT 0
+-#define UVXH_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_MASK 0xffffffffffffffffUL
++union uvh_rh_gam_mmioh_redirect_config0_u {
++	unsigned long	v;
+ 
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_SHFT 0
+-#define UV2H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_MASK 0xffffffffffffffffUL
++	/* UVH common struct */
++	struct uvh_rh_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} s;
+ 
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_SHFT 0
+-#define UV3H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_MASK 0xffffffffffffffffUL
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} sx;
+ 
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_SHFT 0
+-#define UV4H_LB_BAU_SB_ACTIVATION_STATUS_2_AUX_ERROR_MASK 0xffffffffffffffffUL
++	struct uv4ah_rh_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:12;			/* RW */
++		unsigned long	rsvd_12_63:52;
++	} s4a;
+ 
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} s4;
+ 
+-union uvxh_lb_bau_sb_activation_status_2_u {
+-	unsigned long	v;
+-	struct uvxh_lb_bau_sb_activation_status_2_s {
+-		unsigned long	aux_error:64;			/* RW */
+-	} sx;
+-	struct uv2h_lb_bau_sb_activation_status_2_s {
+-		unsigned long	aux_error:64;			/* RW */
+-	} s2;
+-	struct uv3h_lb_bau_sb_activation_status_2_s {
+-		unsigned long	aux_error:64;			/* RW */
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_mmioh_redirect_config0_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
+ 	} s3;
+-	struct uv4h_lb_bau_sb_activation_status_2_s {
+-		unsigned long	aux_error:64;			/* RW */
+-	} s4;
+ };
+ 
+ /* ========================================================================= */
+-/*                          UV3H_GR0_GAM_GR_CONFIG                           */
++/*                    UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1                      */
+ /* ========================================================================= */
+-#define UV3H_GR0_GAM_GR_CONFIG				0xc00028UL
++#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1 (				\
++	is_uv(UV4) ? 0x484800UL :					\
++	is_uv(UV3) ? 0x1604800UL :					\
++	0)
+ 
+-#define UV3H_GR0_GAM_GR_CONFIG_M_SKT_SHFT		0
+-#define UV3H_GR0_GAM_GR_CONFIG_SUBSPACE_SHFT		10
+-#define UV3H_GR0_GAM_GR_CONFIG_M_SKT_MASK		0x000000000000003fUL
+-#define UV3H_GR0_GAM_GR_CONFIG_SUBSPACE_MASK		0x0000000000000400UL
++#define UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_DEPTH (			\
++	is_uv(UV4) ? 128 :						\
++	is_uv(UV3) ? 128 :						\
++	0)
++
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_SHFT	0
++#define UV4AH_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK	0x0000000000000fffUL
+ 
+-union uv3h_gr0_gam_gr_config_u {
++/* UV4 unique defines */
++#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_NASID_SHFT	0
++#define UV4H_RH_GAM_MMIOH_REDIRECT_CONFIG1_NASID_MASK	0x0000000000007fffUL
++
++/* UV3 unique defines */
++#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_NASID_SHFT	0
++#define UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_NASID_MASK	0x0000000000007fffUL
++
++
++union uvh_rh_gam_mmioh_redirect_config1_u {
+ 	unsigned long	v;
+-	struct uv3h_gr0_gam_gr_config_s {
+-		unsigned long	m_skt:6;			/* RW */
+-		unsigned long	undef_6_9:4;			/* Undefined */
+-		unsigned long	subspace:1;			/* RW */
+-		unsigned long	reserved:53;
++
++	/* UVH common struct */
++	struct uvh_rh_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} sx;
++
++	struct uv4ah_rh_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:12;			/* RW */
++		unsigned long	rsvd_12_63:52;
++	} s4a;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
++	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_mmioh_redirect_config1_s {
++		unsigned long	nasid:15;			/* RW */
++		unsigned long	rsvd_15_63:49;
+ 	} s3;
+ };
+ 
+ /* ========================================================================= */
+-/*                       UV4H_LB_PROC_INTD_QUEUE_FIRST                       */
++/*                      UVH_RH_GAM_MMR_OVERLAY_CONFIG                        */
+ /* ========================================================================= */
+-#define UV4H_LB_PROC_INTD_QUEUE_FIRST			0xa4100UL
+-
+-#define UV4H_LB_PROC_INTD_QUEUE_FIRST_FIRST_PAYLOAD_ADDRESS_SHFT 6
+-#define UV4H_LB_PROC_INTD_QUEUE_FIRST_FIRST_PAYLOAD_ADDRESS_MASK 0x00003fffffffffc0UL
++#define UVH_RH_GAM_MMR_OVERLAY_CONFIG (					\
++	is_uv(UV4) ? 0x480028UL :					\
++	is_uv(UV3) ? 0x1600028UL :					\
++	is_uv(UV2) ? 0x1600028UL :					\
++	0)
++
++
++/* UVXH common defines */
++#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT	26
++#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_MASK (			\
++	is_uv(UV4A) ? 0x000ffffffc000000UL :				\
++	is_uv(UV4) ? 0x00003ffffc000000UL :				\
++	is_uv(UV3) ? 0x00003ffffc000000UL :				\
++	is_uv(UV2) ? 0x00003ffffc000000UL :				\
++	0)
++#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_ENABLE_SHFT	63
++#define UVXH_RH_GAM_MMR_OVERLAY_CONFIG_ENABLE_MASK	0x8000000000000000UL
++
++/* UV4A unique defines */
++#define UV4AH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT	26
++#define UV4AH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK	0x000ffffffc000000UL
++
++#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_MASK (			\
++	is_uv(UV4A) ? 0x000ffffffc000000UL :				\
++	is_uv(UV4) ? 0x00003ffffc000000UL :				\
++	is_uv(UV3) ? 0x00003ffffc000000UL :				\
++	is_uv(UV2) ? 0x00003ffffc000000UL :				\
++	0)
++
++#define UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT (			\
++	is_uv(UV4) ? 26 :						\
++	is_uv(UV3) ? 26 :						\
++	is_uv(UV2) ? 26 :						\
++	-1)
+ 
+-union uv4h_lb_proc_intd_queue_first_u {
++union uvh_rh_gam_mmr_overlay_config_u {
+ 	unsigned long	v;
+-	struct uv4h_lb_proc_intd_queue_first_s {
+-		unsigned long	undef_0_5:6;			/* Undefined */
+-		unsigned long	first_payload_address:40;	/* RW */
++
++	/* UVH common struct */
++	struct uvh_rh_gam_mmr_overlay_config_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_62:17;
++		unsigned long	enable:1;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_rh_gam_mmr_overlay_config_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_62:17;
++		unsigned long	enable:1;			/* RW */
++	} sx;
++
++	/* UV4 unique struct */
++	struct uv4h_rh_gam_mmr_overlay_config_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_62:17;
++		unsigned long	enable:1;			/* RW */
+ 	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rh_gam_mmr_overlay_config_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_62:17;
++		unsigned long	enable:1;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rh_gam_mmr_overlay_config_s {
++		unsigned long	rsvd_0_25:26;
++		unsigned long	base:20;			/* RW */
++		unsigned long	rsvd_46_62:17;
++		unsigned long	enable:1;			/* RW */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                       UV4H_LB_PROC_INTD_QUEUE_LAST                        */
++/*                                 UVH_RTC                                   */
+ /* ========================================================================= */
+-#define UV4H_LB_PROC_INTD_QUEUE_LAST			0xa4108UL
++#define UVH_RTC (							\
++	is_uv(UV5) ? 0xe0000UL :					\
++	is_uv(UV4) ? 0xe0000UL :					\
++	is_uv(UV3) ? 0x340000UL :					\
++	is_uv(UV2) ? 0x340000UL :					\
++	0)
+ 
+-#define UV4H_LB_PROC_INTD_QUEUE_LAST_LAST_PAYLOAD_ADDRESS_SHFT 5
+-#define UV4H_LB_PROC_INTD_QUEUE_LAST_LAST_PAYLOAD_ADDRESS_MASK 0x00003fffffffffe0UL
++/* UVH common defines*/
++#define UVH_RTC_REAL_TIME_CLOCK_SHFT			0
++#define UVH_RTC_REAL_TIME_CLOCK_MASK			0x00ffffffffffffffUL
+ 
+-union uv4h_lb_proc_intd_queue_last_u {
++
++union uvh_rtc_u {
+ 	unsigned long	v;
+-	struct uv4h_lb_proc_intd_queue_last_s {
+-		unsigned long	undef_0_4:5;			/* Undefined */
+-		unsigned long	last_payload_address:41;	/* RW */
++
++	/* UVH common struct */
++	struct uvh_rtc_s {
++		unsigned long	real_time_clock:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s;
++
++	/* UV5 unique struct */
++	struct uv5h_rtc_s {
++		unsigned long	real_time_clock:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_rtc_s {
++		unsigned long	real_time_clock:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
+ 	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rtc_s {
++		unsigned long	real_time_clock:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rtc_s {
++		unsigned long	real_time_clock:56;		/* RW */
++		unsigned long	rsvd_56_63:8;
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                     UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR                      */
++/*                           UVH_RTC1_INT_CONFIG                             */
+ /* ========================================================================= */
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR		0xa4118UL
++#define UVH_RTC1_INT_CONFIG 0x615c0UL
++
++/* UVH common defines*/
++#define UVH_RTC1_INT_CONFIG_VECTOR_SHFT			0
++#define UVH_RTC1_INT_CONFIG_VECTOR_MASK			0x00000000000000ffUL
++#define UVH_RTC1_INT_CONFIG_DM_SHFT			8
++#define UVH_RTC1_INT_CONFIG_DM_MASK			0x0000000000000700UL
++#define UVH_RTC1_INT_CONFIG_DESTMODE_SHFT		11
++#define UVH_RTC1_INT_CONFIG_DESTMODE_MASK		0x0000000000000800UL
++#define UVH_RTC1_INT_CONFIG_STATUS_SHFT			12
++#define UVH_RTC1_INT_CONFIG_STATUS_MASK			0x0000000000001000UL
++#define UVH_RTC1_INT_CONFIG_P_SHFT			13
++#define UVH_RTC1_INT_CONFIG_P_MASK			0x0000000000002000UL
++#define UVH_RTC1_INT_CONFIG_T_SHFT			15
++#define UVH_RTC1_INT_CONFIG_T_MASK			0x0000000000008000UL
++#define UVH_RTC1_INT_CONFIG_M_SHFT			16
++#define UVH_RTC1_INT_CONFIG_M_MASK			0x0000000000010000UL
++#define UVH_RTC1_INT_CONFIG_APIC_ID_SHFT		32
++#define UVH_RTC1_INT_CONFIG_APIC_ID_MASK		0xffffffff00000000UL
+ 
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR_SOFT_ACK_PENDING_FLAGS_SHFT 0
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_CLEAR_SOFT_ACK_PENDING_FLAGS_MASK 0x00000000000000ffUL
+ 
+-union uv4h_lb_proc_intd_soft_ack_clear_u {
++union uvh_rtc1_int_config_u {
+ 	unsigned long	v;
+-	struct uv4h_lb_proc_intd_soft_ack_clear_s {
+-		unsigned long	soft_ack_pending_flags:8;	/* WP */
++
++	/* UVH common struct */
++	struct uvh_rtc1_int_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s;
++
++	/* UV5 unique struct */
++	struct uv5h_rtc1_int_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_rtc1_int_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
+ 	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_rtc1_int_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_rtc1_int_config_s {
++		unsigned long	vector_:8;			/* RW */
++		unsigned long	dm:3;				/* RW */
++		unsigned long	destmode:1;			/* RW */
++		unsigned long	status:1;			/* RO */
++		unsigned long	p:1;				/* RO */
++		unsigned long	rsvd_14:1;
++		unsigned long	t:1;				/* RO */
++		unsigned long	m:1;				/* RW */
++		unsigned long	rsvd_17_31:15;
++		unsigned long	apic_id:32;			/* RW */
++	} s2;
+ };
+ 
+ /* ========================================================================= */
+-/*                    UV4H_LB_PROC_INTD_SOFT_ACK_PENDING                     */
++/*                               UVH_SCRATCH5                                */
+ /* ========================================================================= */
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_PENDING		0xa4110UL
++#define UVH_SCRATCH5 (							\
++	is_uv(UV5) ? 0xb0200UL :					\
++	is_uv(UV4) ? 0xb0200UL :					\
++	is_uv(UV3) ? 0x2d0200UL :					\
++	is_uv(UV2) ? 0x2d0200UL :					\
++	0)
++#define UV5H_SCRATCH5 0xb0200UL
++#define UV4H_SCRATCH5 0xb0200UL
++#define UV3H_SCRATCH5 0x2d0200UL
++#define UV2H_SCRATCH5 0x2d0200UL
++
++/* UVH common defines*/
++#define UVH_SCRATCH5_SCRATCH5_SHFT			0
++#define UVH_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
+ 
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_PENDING_SOFT_ACK_FLAGS_SHFT 0
+-#define UV4H_LB_PROC_INTD_SOFT_ACK_PENDING_SOFT_ACK_FLAGS_MASK 0x00000000000000ffUL
++/* UVXH common defines */
++#define UVXH_SCRATCH5_SCRATCH5_SHFT			0
++#define UVXH_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
++
++/* UVYH common defines */
++#define UVYH_SCRATCH5_SCRATCH5_SHFT			0
++#define UVYH_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
++
++/* UV5 unique defines */
++#define UV5H_SCRATCH5_SCRATCH5_SHFT			0
++#define UV5H_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
++
++/* UV4 unique defines */
++#define UV4H_SCRATCH5_SCRATCH5_SHFT			0
++#define UV4H_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
++
++/* UV3 unique defines */
++#define UV3H_SCRATCH5_SCRATCH5_SHFT			0
++#define UV3H_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
++
++/* UV2 unique defines */
++#define UV2H_SCRATCH5_SCRATCH5_SHFT			0
++#define UV2H_SCRATCH5_SCRATCH5_MASK			0xffffffffffffffffUL
+ 
+-union uv4h_lb_proc_intd_soft_ack_pending_u {
++
++union uvh_scratch5_u {
+ 	unsigned long	v;
+-	struct uv4h_lb_proc_intd_soft_ack_pending_s {
+-		unsigned long	soft_ack_flags:8;		/* RW */
++
++	/* UVH common struct */
++	struct uvh_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} s;
++
++	/* UVXH common struct */
++	struct uvxh_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} sx;
++
++	/* UVYH common struct */
++	struct uvyh_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} sy;
++
++	/* UV5 unique struct */
++	struct uv5h_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} s5;
++
++	/* UV4 unique struct */
++	struct uv4h_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
+ 	} s4;
++
++	/* UV3 unique struct */
++	struct uv3h_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} s3;
++
++	/* UV2 unique struct */
++	struct uv2h_scratch5_s {
++		unsigned long	scratch5:64;			/* RW */
++	} s2;
+ };
+ 
++/* ========================================================================= */
++/*                            UVH_SCRATCH5_ALIAS                             */
++/* ========================================================================= */
++#define UVH_SCRATCH5_ALIAS (						\
++	is_uv(UV5) ? 0xb0208UL :					\
++	is_uv(UV4) ? 0xb0208UL :					\
++	is_uv(UV3) ? 0x2d0208UL :					\
++	is_uv(UV2) ? 0x2d0208UL :					\
++	0)
++#define UV5H_SCRATCH5_ALIAS 0xb0208UL
++#define UV4H_SCRATCH5_ALIAS 0xb0208UL
++#define UV3H_SCRATCH5_ALIAS 0x2d0208UL
++#define UV2H_SCRATCH5_ALIAS 0x2d0208UL
++
++
++/* ========================================================================= */
++/*                           UVH_SCRATCH5_ALIAS_2                            */
++/* ========================================================================= */
++#define UVH_SCRATCH5_ALIAS_2 (						\
++	is_uv(UV5) ? 0xb0210UL :					\
++	is_uv(UV4) ? 0xb0210UL :					\
++	is_uv(UV3) ? 0x2d0210UL :					\
++	is_uv(UV2) ? 0x2d0210UL :					\
++	0)
++#define UV5H_SCRATCH5_ALIAS_2 0xb0210UL
++#define UV4H_SCRATCH5_ALIAS_2 0xb0210UL
++#define UV3H_SCRATCH5_ALIAS_2 0x2d0210UL
++#define UV2H_SCRATCH5_ALIAS_2 0x2d0210UL
++
++
+ 
+ #endif /* _ASM_X86_UV_UV_MMRS_H */
+--- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
++++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -30,6 +30,7 @@ static int			uv_hubbed_system;
+ static int			uv_hubless_system;
+ static u64			gru_start_paddr, gru_end_paddr;
+ static union uvh_apicid		uvh_apicid;
++static int			uv_node_id;
+ 
+ /* Unpack OEM/TABLE ID's to be NULL terminated strings */
+ static u8 oem_id[ACPI_OEM_ID_SIZE + 1];
+@@ -88,41 +89,72 @@ static bool uv_is_untracked_pat_range(u6
+ 
+ static int __init early_get_pnodeid(void)
+ {
+-	union uvh_node_id_u node_id;
+-	union uvh_rh_gam_config_mmr_u  m_n_config;
++	union uvh_rh_gam_addr_map_config_u  m_n_config;
+ 	int pnode;
+ 
+-	/* Currently, all blades have same revision number */
++	m_n_config.v = uv_early_read_mmr(UVH_RH_GAM_ADDR_MAP_CONFIG);
++
++	if (is_uv4_hub())
++		uv_cpuid.gnode_shift = 2; /* min partition is 4 sockets */
++
++	uv_cpuid.pnode_mask = (1 << m_n_config.s.n_skt) - 1;
++	pnode = (uv_node_id >> 1) & uv_cpuid.pnode_mask;
++	uv_cpuid.gpa_shift = 46;	/* Default unless changed */
++
++	pr_info("UV: n_skt:%d pnmsk:%x pn:%x\n",
++		m_n_config.s.n_skt, uv_cpuid.pnode_mask, pnode);
++	return pnode;
++}
++
++/* Running on a UV Hubbed system, determine which UV Hub Type it is */
++static int __init early_set_hub_type(void)
++{
++	union uvh_node_id_u node_id;
++
++	/*
++	 * The NODE_ID MMR is always at offset 0.
++	 * Contains the chip part # + revision.
++	 * Node_id field started with 15 bits,
++	 * ... now 7 but upper 8 are masked to 0.
++	 * All blades/nodes have the same part # and hub revision.
++	 */
+ 	node_id.v = uv_early_read_mmr(UVH_NODE_ID);
+-	m_n_config.v = uv_early_read_mmr(UVH_RH_GAM_CONFIG_MMR);
+-	uv_min_hub_revision_id = node_id.s.revision;
++	uv_node_id = node_id.sx.node_id;
+ 
+ 	switch (node_id.s.part_number) {
+-	case UV2_HUB_PART_NUMBER:
+-	case UV2_HUB_PART_NUMBER_X:
+-		uv_min_hub_revision_id += UV2_HUB_REVISION_BASE - 1;
++
++	/* UV4/4A only have a revision difference */
++	case UV4_HUB_PART_NUMBER:
++		uv_min_hub_revision_id = node_id.s.revision
++					 + UV4_HUB_REVISION_BASE;
++		uv_hub_type_set(UV4);
++		if (uv_min_hub_revision_id == UV4A_HUB_REVISION_BASE)
++			uv_hub_type_set(UV4|UV4A);
+ 		break;
++
+ 	case UV3_HUB_PART_NUMBER:
+ 	case UV3_HUB_PART_NUMBER_X:
+-		uv_min_hub_revision_id += UV3_HUB_REVISION_BASE;
++		uv_min_hub_revision_id = node_id.s.revision
++					 + UV3_HUB_REVISION_BASE;
++		uv_hub_type_set(UV3);
+ 		break;
+ 
+-	/* Update: UV4A has only a modified revision to indicate HUB fixes */
+-	case UV4_HUB_PART_NUMBER:
+-		uv_min_hub_revision_id += UV4_HUB_REVISION_BASE - 1;
+-		uv_cpuid.gnode_shift = 2; /* min partition is 4 sockets */
++	case UV2_HUB_PART_NUMBER:
++	case UV2_HUB_PART_NUMBER_X:
++		uv_min_hub_revision_id = node_id.s.revision
++					 + UV2_HUB_REVISION_BASE - 1;
++		uv_hub_type_set(UV2);
+ 		break;
++
++	default:
++		return 0;
+ 	}
+ 
+-	uv_hub_info->hub_revision = uv_min_hub_revision_id;
+-	uv_cpuid.pnode_mask = (1 << m_n_config.s.n_skt) - 1;
+-	pnode = (node_id.s.node_id >> 1) & uv_cpuid.pnode_mask;
+-	uv_cpuid.gpa_shift = 46;	/* Default unless changed */
++	pr_info("UV: part#:%x rev:%d rev_id:%d UVtype:0x%x\n",
++		node_id.s.part_number, node_id.s.revision,
++		uv_min_hub_revision_id, is_uv(~0));
+ 
+-	pr_info("UV: rev:%d part#:%x nodeid:%04x n_skt:%d pnmsk:%x pn:%x\n",
+-		node_id.s.revision, node_id.s.part_number, node_id.s.node_id,
+-		m_n_config.s.n_skt, uv_cpuid.pnode_mask, pnode);
+-	return pnode;
++	return 1;
+ }
+ 
+ static void __init uv_tsc_check_sync(void)
+@@ -222,29 +254,28 @@ static void __init uv_stringify(int len,
+ 	strncpy(to, from, len-1);
+ }
+ 
+-static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
++static int __init uv_set_system_type(char *_oem_id)
+ {
+ 	int pnodeid;
+-	int uv_apic;
+ 
++	/* Save OEM ID */
+ 	uv_stringify(sizeof(oem_id), oem_id, _oem_id);
+-	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
+ 
++	/* Set hubless type if true */
+ 	if (strncmp(oem_id, "SGI", 3) != 0) {
+ 		if (strncmp(oem_id, "NSGI", 4) != 0)
+ 			return 0;
+ 
+-		/* UV4 Hubless, CH, (0x11:UV4+Any) */
++		/* UV4 Hubless: CH */
+ 		if (strncmp(oem_id, "NSGI4", 5) == 0)
+ 			uv_hubless_system = 0x11;
+ 
+-		/* UV3 Hubless, UV300/MC990X w/o hub (0x9:UV3+Any) */
++		/* UV3 Hubless: UV300/MC990X w/o hub */
+ 		else
+ 			uv_hubless_system = 0x9;
+ 
+-		pr_info("UV: OEM IDs %s/%s, HUBLESS(0x%x)\n",
+-			oem_id, oem_table_id, uv_hubless_system);
+-
++		pr_info("UV: OEM IDs %s/%s, SystemType %d, HUBLESS ID %x\n",
++			oem_id, oem_table_id, uv_system_type, uv_hubless_system);
+ 		return 0;
+ 	}
+ 
+@@ -253,60 +284,78 @@ static int __init uv_acpi_madt_oem_check
+ 		return 0;
+ 	}
+ 
+-	/* Set up early hub type field in uv_hub_info for Node 0 */
+-	uv_cpu_info->p_uv_hub_info = &uv_hub_info_node0;
++	/* Set hubbed type if true */
++	uv_hub_info->hub_revision =
++		!strncmp(oem_id, "SGI4", 4) ? UV4_HUB_REVISION_BASE :
++		!strncmp(oem_id, "SGI3", 4) ? UV3_HUB_REVISION_BASE :
++		!strcmp(oem_id, "SGI2") ? UV2_HUB_REVISION_BASE : 0;
+ 
 -	/*
--	 * cancel any message from msg+1 to the retry itself
+-	 * Determine UV arch type.
+-	 *   SGI2: UV2000/3000
+-	 *   SGI3: UV300 (truncated to 4 chars because of different varieties)
+-	 *   SGI4: UV400 (truncated to 4 chars because of different varieties)
 -	 */
--	for (msg2 = msg+1, i = 0; i < DEST_Q_SIZE; msg2++, i++) {
--		if (msg2 > mdp->queue_last)
--			msg2 = mdp->queue_first;
--		if (msg2 == msg)
--			break;
--
--		/* same conditions for cancellation as do_reset */
--		if ((msg2->replied_to == 0) && (msg2->canceled == 0) &&
--		    (msg2->swack_vec) && ((msg2->swack_vec &
--			msg->swack_vec) == 0) &&
--		    (msg2->sending_cpu == msg->sending_cpu) &&
--		    (msg2->msg_type != MSG_NOOP)) {
--			mmr = ops.read_l_sw_ack();
--			msg_res = msg2->swack_vec;
--			/*
--			 * This is a message retry; clear the resources held
--			 * by the previous message only if they timed out.
--			 * If it has not timed out we have an unexpected
--			 * situation to report.
--			 */
--			if (mmr & (msg_res << UV_SW_ACK_NPENDING)) {
--				unsigned long mr;
--				/*
--				 * Is the resource timed out?
--				 * Make everyone ignore the cancelled message.
--				 */
--				msg2->canceled = 1;
--				stat->d_canceled++;
--				cancel_count++;
--				mr = (msg_res << UV_SW_ACK_NPENDING) | msg_res;
--				ops.write_l_sw_ack(mr);
--			}
--		}
--	}
--	if (!cancel_count)
--		stat->d_nocanceled++;
--}
--
--/*
-- * Do all the things a cpu should do for a TLB shootdown message.
-- * Other cpu's may come here at the same time for this message.
-- */
--static void bau_process_message(struct msg_desc *mdp, struct bau_control *bcp,
--						int do_acknowledge)
--{
--	short socket_ack_count = 0;
--	short *sp;
--	struct atomic_short *asp;
--	struct ptc_stats *stat = bcp->statp;
--	struct bau_pq_entry *msg = mdp->msg;
--	struct bau_control *smaster = bcp->socket_master;
--
--	/*
--	 * This must be a normal message, or retry of a normal message
--	 */
--	if (msg->address == TLB_FLUSH_ALL) {
--		flush_tlb_local();
--		stat->d_alltlb++;
+-	if (!strncmp(oem_id, "SGI4", 4)) {
+-		uv_hub_info->hub_revision = UV4_HUB_REVISION_BASE;
++	switch (uv_hub_info->hub_revision) {
++	case UV4_HUB_REVISION_BASE:
+ 		uv_hubbed_system = 0x11;
++		uv_hub_type_set(UV4);
++		break;
+ 
+-	} else if (!strncmp(oem_id, "SGI3", 4)) {
+-		uv_hub_info->hub_revision = UV3_HUB_REVISION_BASE;
++	case UV3_HUB_REVISION_BASE:
+ 		uv_hubbed_system = 0x9;
++		uv_hub_type_set(UV3);
++		break;
+ 
+-	} else if (!strcmp(oem_id, "SGI2")) {
+-		uv_hub_info->hub_revision = UV2_HUB_REVISION_BASE;
++	case UV2_HUB_REVISION_BASE:
+ 		uv_hubbed_system = 0x5;
++		uv_hub_type_set(UV2);
++		break;
+ 
 -	} else {
--		flush_tlb_one_user(msg->address);
--		stat->d_onetlb++;
+-		uv_hub_info->hub_revision = 0;
+-		goto badbios;
++	default:
++		return 0;
+ 	}
+ 
++	/* Get UV hub chip part number & revision */
++	early_set_hub_type();
++
++	/* Other UV setup functions */
+ 	pnodeid = early_get_pnodeid();
+ 	early_get_apic_socketid_shift();
+-
+ 	x86_platform.is_untracked_pat_range = uv_is_untracked_pat_range;
+ 	x86_platform.nmi_init = uv_nmi_init;
++	uv_tsc_check_sync();
+ 
+-	if (!strcmp(oem_table_id, "UVX")) {
+-		/* This is the most common hardware variant: */
++	return 1;
++}
++
++/* Called early to probe for the correct APIC driver */
++static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
++{
++	/* Set up early hub info fields for Node 0 */
++	uv_cpu_info->p_uv_hub_info = &uv_hub_info_node0;
++
++	/* If not UV, return. */
++	if (likely(uv_set_system_type(_oem_id) == 0))
++		return 0;
++
++	/* Save and Decode OEM Table ID */
++	uv_stringify(sizeof(oem_table_id), oem_table_id, _oem_table_id);
++
++	/* This is the most common hardware variant, x2apic mode */
++	if (!strcmp(oem_table_id, "UVX"))
+ 		uv_system_type = UV_X2APIC;
+-		uv_apic = 0;
+ 
+-	} else if (!strcmp(oem_table_id, "UVL")) {
+-		/* Only used for very small systems:  */
++	/* Only used for very small systems, usually 1 chassis, legacy mode  */
++	else if (!strcmp(oem_table_id, "UVL"))
+ 		uv_system_type = UV_LEGACY_APIC;
+-		uv_apic = 0;
+ 
+-	} else {
++	else
+ 		goto badbios;
 -	}
--	stat->d_requestee++;
--
--	/*
--	 * One cpu on each uvhub has the additional job on a RETRY
--	 * of releasing the resource held by the message that is
--	 * being retried.  That message is identified by sending
--	 * cpu number.
--	 */
--	if (msg->msg_type == MSG_RETRY && bcp == bcp->uvhub_master)
--		bau_process_retry_msg(mdp, bcp);
--
--	/*
--	 * This is a swack message, so we have to reply to it.
--	 * Count each responding cpu on the socket. This avoids
--	 * pinging the count's cache line back and forth between
--	 * the sockets.
--	 */
--	sp = &smaster->socket_acknowledge_count[mdp->msg_slot];
--	asp = (struct atomic_short *)sp;
--	socket_ack_count = atom_asr(1, asp);
--	if (socket_ack_count == bcp->cpus_in_socket) {
--		int msg_ack_count;
--		/*
--		 * Both sockets dump their completed count total into
--		 * the message's count.
--		 */
--		*sp = 0;
--		asp = (struct atomic_short *)&msg->acknowledge_count;
--		msg_ack_count = atom_asr(socket_ack_count, asp);
--
--		if (msg_ack_count == bcp->cpus_in_uvhub) {
--			/*
--			 * All cpus in uvhub saw it; reply
--			 * (unless we are in the UV2 workaround)
--			 */
--			reply_to_message(mdp, bcp, do_acknowledge);
--		}
--	}
--
--	return;
--}
--
+ 
+-	pr_info("UV: OEM IDs %s/%s, System/HUB Types %d/%d, uv_apic %d\n", oem_id, oem_table_id, uv_system_type, uv_min_hub_revision_id, uv_apic);
+-	uv_tsc_check_sync();
++	pr_info("UV: OEM IDs %s/%s, System/UVType %d/0x%x, HUB RevID %d\n",
++		oem_id, oem_table_id, uv_system_type, is_uv(UV_ANY),
++		uv_min_hub_revision_id);
+ 
+-	return uv_apic;
++	return 0;
+ 
+ badbios:
+ 	pr_err("UV: OEM_ID:%s OEM_TABLE_ID:%s\n", oem_id, oem_table_id);
+-	pr_err("Current UV Type or BIOS not supported\n");
++	pr_err("UV: Current UV Type or BIOS not supported\n");
+ 	BUG();
+ }
+ 
+@@ -674,12 +723,12 @@ static struct apic apic_x2apic_uv_x __ro
+ };
+ 
+ #define	UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_LENGTH	3
+-#define DEST_SHIFT UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR_DEST_BASE_SHFT
++#define DEST_SHIFT UVXH_RH_GAM_ALIAS_0_REDIRECT_CONFIG_DEST_BASE_SHFT
+ 
+ static __init void get_lowmem_redirect(unsigned long *base, unsigned long *size)
+ {
+-	union uvh_rh_gam_alias210_overlay_config_2_mmr_u alias;
+-	union uvh_rh_gam_alias210_redirect_config_2_mmr_u redirect;
++	union uvh_rh_gam_alias_2_overlay_config_u alias;
++	union uvh_rh_gam_alias_2_redirect_config_u redirect;
+ 	unsigned long m_redirect;
+ 	unsigned long m_overlay;
+ 	int i;
+@@ -687,16 +736,16 @@ static __init void get_lowmem_redirect(u
+ 	for (i = 0; i < UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_LENGTH; i++) {
+ 		switch (i) {
+ 		case 0:
+-			m_redirect = UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_0_MMR;
+-			m_overlay  = UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_0_MMR;
++			m_redirect = UVH_RH_GAM_ALIAS_0_REDIRECT_CONFIG;
++			m_overlay  = UVH_RH_GAM_ALIAS_0_OVERLAY_CONFIG;
+ 			break;
+ 		case 1:
+-			m_redirect = UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_1_MMR;
+-			m_overlay  = UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_1_MMR;
++			m_redirect = UVH_RH_GAM_ALIAS_1_REDIRECT_CONFIG;
++			m_overlay  = UVH_RH_GAM_ALIAS_1_OVERLAY_CONFIG;
+ 			break;
+ 		case 2:
+-			m_redirect = UVH_RH_GAM_ALIAS210_REDIRECT_CONFIG_2_MMR;
+-			m_overlay  = UVH_RH_GAM_ALIAS210_OVERLAY_CONFIG_2_MMR;
++			m_redirect = UVH_RH_GAM_ALIAS_2_REDIRECT_CONFIG;
++			m_overlay  = UVH_RH_GAM_ALIAS_2_OVERLAY_CONFIG;
+ 			break;
+ 		}
+ 		alias.v = uv_read_local_mmr(m_overlay);
+@@ -731,12 +780,12 @@ static __init void map_high(char *id, un
+ 
+ static __init void map_gru_high(int max_pnode)
+ {
+-	union uvh_rh_gam_gru_overlay_config_mmr_u gru;
+-	int shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_SHFT;
+-	unsigned long mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR_BASE_MASK;
++	union uvh_rh_gam_gru_overlay_config_u gru;
++	int shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
++	unsigned long mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
+ 	unsigned long base;
+ 
+-	gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR);
++	gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG);
+ 	if (!gru.s.enable) {
+ 		pr_info("UV: GRU disabled\n");
+ 		return;
+@@ -750,10 +799,10 @@ static __init void map_gru_high(int max_
+ 
+ static __init void map_mmr_high(int max_pnode)
+ {
+-	union uvh_rh_gam_mmr_overlay_config_mmr_u mmr;
+-	int shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR_BASE_SHFT;
++	union uvh_rh_gam_mmr_overlay_config_u mmr;
++	int shift = UVH_RH_GAM_MMR_OVERLAY_CONFIG_BASE_SHFT;
+ 
+-	mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR);
++	mmr.v = uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG);
+ 	if (mmr.s.enable)
+ 		map_high("MMR", mmr.s.base, shift, shift, max_pnode, map_uc);
+ 	else
+@@ -774,29 +823,29 @@ static __init void map_mmioh_high_uv34(i
+ 
+ 	if (index == 0) {
+ 		id = "MMIOH0";
+-		m_overlay = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR;
++		m_overlay = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0;
+ 		overlay = uv_read_local_mmr(m_overlay);
+-		base = overlay & UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_BASE_MASK;
+-		mmr = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR;
+-		m_io = (overlay & UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_MASK)
+-			>> UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT;
+-		shift = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_M_IO_SHFT;
+-		n = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_DEPTH;
+-		nasid_mask = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_MMR_NASID_MASK;
++		base = overlay & UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_BASE_MASK;
++		mmr = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0;
++		m_io = (overlay & UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_MASK)
++			>> UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT;
++		shift = UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_M_IO_SHFT;
++		n = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG0_DEPTH;
++		nasid_mask = UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG0_NASID_MASK;
+ 	} else {
+ 		id = "MMIOH1";
+-		m_overlay = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR;
++		m_overlay = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1;
+ 		overlay = uv_read_local_mmr(m_overlay);
+-		base = overlay & UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_BASE_MASK;
+-		mmr = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR;
+-		m_io = (overlay & UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_MASK)
+-			>> UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT;
+-		shift = UVH_RH_GAM_MMIOH_OVERLAY_CONFIG1_MMR_M_IO_SHFT;
+-		n = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_DEPTH;
+-		nasid_mask = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_MMR_NASID_MASK;
++		base = overlay & UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_BASE_MASK;
++		mmr = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1;
++		m_io = (overlay & UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_MASK)
++			>> UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT;
++		shift = UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG1_M_IO_SHFT;
++		n = UVH_RH_GAM_MMIOH_REDIRECT_CONFIG1_DEPTH;
++		nasid_mask = UV3H_RH_GAM_MMIOH_REDIRECT_CONFIG1_NASID_MASK;
+ 	}
+ 	pr_info("UV: %s overlay 0x%lx base:0x%lx m_io:%d\n", id, overlay, base, m_io);
+-	if (!(overlay & UVH_RH_GAM_MMIOH_OVERLAY_CONFIG0_MMR_ENABLE_MASK)) {
++	if (!(overlay & UV3H_RH_GAM_MMIOH_OVERLAY_CONFIG0_ENABLE_MASK)) {
+ 		pr_info("UV: %s disabled\n", id);
+ 		return;
+ 	}
+@@ -856,7 +905,7 @@ static __init void map_mmioh_high_uv34(i
+ 
+ static __init void map_mmioh_high(int min_pnode, int max_pnode)
+ {
+-	union uvh_rh_gam_mmioh_overlay_config_mmr_u mmioh;
++	union uvh_rh_gam_mmioh_overlay_config_u mmioh;
+ 	unsigned long mmr, base;
+ 	int shift, enable, m_io, n_io;
+ 
+@@ -868,8 +917,8 @@ static __init void map_mmioh_high(int mi
+ 	}
+ 
+ 	if (is_uv2_hub()) {
+-		mmr	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR;
+-		shift	= UV2H_RH_GAM_MMIOH_OVERLAY_CONFIG_MMR_BASE_SHFT;
++		mmr	= UVH_RH_GAM_MMIOH_OVERLAY_CONFIG;
++		shift	= UVH_RH_GAM_MMIOH_OVERLAY_CONFIG_BASE_SHFT;
+ 		mmioh.v	= uv_read_local_mmr(mmr);
+ 		enable	= !!mmioh.s2.enable;
+ 		base	= mmioh.s2.base;
+@@ -951,13 +1000,13 @@ struct mn {
+ 
+ static void get_mn(struct mn *mnp)
+ {
+-	union uvh_rh_gam_config_mmr_u m_n_config;
+-	union uv3h_gr0_gam_gr_config_u m_gr_config;
++	union uvh_rh_gam_addr_map_config_u m_n_config;
++	union uvyh_gr0_gam_gr_config_u m_gr_config;
+ 
+ 	/* Make sure the whole structure is well initialized: */
+ 	memset(mnp, 0, sizeof(*mnp));
+ 
+-	m_n_config.v	= uv_read_local_mmr(UVH_RH_GAM_CONFIG_MMR);
++	m_n_config.v	= uv_read_local_mmr(UVH_RH_GAM_ADDR_MAP_CONFIG);
+ 	mnp->n_val	= m_n_config.s.n_skt;
+ 
+ 	if (is_uv4_hub()) {
+@@ -965,7 +1014,7 @@ static void get_mn(struct mn *mnp)
+ 		mnp->n_lshift	= 0;
+ 	} else if (is_uv3_hub()) {
+ 		mnp->m_val	= m_n_config.s3.m_skt;
+-		m_gr_config.v	= uv_read_local_mmr(UV3H_GR0_GAM_GR_CONFIG);
++		m_gr_config.v	= uv_read_local_mmr(UVH_GR0_GAM_GR_CONFIG);
+ 		mnp->n_lshift	= m_gr_config.s3.m_skt;
+ 	} else if (is_uv2_hub()) {
+ 		mnp->m_val	= m_n_config.s2.m_skt;
+@@ -989,6 +1038,7 @@ static void __init uv_init_hub_info(stru
+ 	hi->m_shift		= mn.m_shift;
+ 	hi->n_lshift		= mn.n_lshift ? mn.n_lshift : 0;
+ 	hi->hub_revision	= uv_hub_info->hub_revision;
++	hi->hub_type		= uv_hub_info->hub_type;
+ 	hi->pnode_mask		= uv_cpuid.pnode_mask;
+ 	hi->min_pnode		= _min_pnode;
+ 	hi->min_socket		= _min_socket;
+@@ -1000,7 +1050,7 @@ static void __init uv_init_hub_info(stru
+ 
+ 	node_id.v		= uv_read_local_mmr(UVH_NODE_ID);
+ 	uv_cpuid.gnode_shift	= max_t(unsigned int, uv_cpuid.gnode_shift, mn.n_val);
+-	hi->gnode_extra		= (node_id.s.node_id & ~((1 << uv_cpuid.gnode_shift) - 1)) >> 1;
++	hi->gnode_extra		= (uv_node_id & ~((1 << uv_cpuid.gnode_shift) - 1)) >> 1;
+ 	if (mn.m_val)
+ 		hi->gnode_upper	= (u64)hi->gnode_extra << mn.m_val;
+ 
+@@ -1012,7 +1062,9 @@ static void __init uv_init_hub_info(stru
+ 		hi->gpa_shift		= uv_gp_table->gpa_shift;
+ 		hi->gpa_mask		= (1UL << hi->gpa_shift) - 1;
+ 	} else {
+-		hi->global_mmr_base	= uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG_MMR) & ~UV_MMR_ENABLE;
++		hi->global_mmr_base	=
++			uv_read_local_mmr(UVH_RH_GAM_MMR_OVERLAY_CONFIG) &
++			~UV_MMR_ENABLE;
+ 		hi->global_mmr_shift	= _UV_GLOBAL_MMR64_PNODE_SHIFT;
+ 	}
+ 
+@@ -1136,11 +1188,7 @@ static int __init decode_uv_systab(void)
+ 	return 0;
+ }
+ 
 -/*
-- * Determine the first cpu on a pnode.
+- * Set up physical blade translations from UVH_NODE_PRESENT_TABLE
+- * .. NB: UVH_NODE_PRESENT_TABLE is going away,
+- * .. being replaced by GAM Range Table
 - */
--static int pnode_to_first_cpu(int pnode, struct bau_control *smaster)
--{
--	int cpu;
--	struct hub_and_pnode *hpp;
--
--	for_each_present_cpu(cpu) {
--		hpp = &smaster->thp[cpu];
--		if (pnode == hpp->pnode)
--			return cpu;
--	}
--	return -1;
--}
--
--/*
-- * Last resort when we get a large number of destination timeouts is
-- * to clear resources held by a given cpu.
-- * Do this with IPI so that all messages in the BAU message queue
-- * can be identified by their nonzero swack_vec field.
-- *
-- * This is entered for a single cpu on the uvhub.
-- * The sender want's this uvhub to free a specific message's
-- * swack resources.
-- */
--static void do_reset(void *ptr)
--{
--	int i;
--	struct bau_control *bcp = &per_cpu(bau_control, smp_processor_id());
--	struct reset_args *rap = (struct reset_args *)ptr;
--	struct bau_pq_entry *msg;
--	struct ptc_stats *stat = bcp->statp;
--
--	stat->d_resets++;
--	/*
--	 * We're looking for the given sender, and
--	 * will free its swack resource.
--	 * If all cpu's finally responded after the timeout, its
--	 * message 'replied_to' was set.
--	 */
--	for (msg = bcp->queue_first, i = 0; i < DEST_Q_SIZE; msg++, i++) {
--		unsigned long msg_res;
--		/* do_reset: same conditions for cancellation as
--		   bau_process_retry_msg() */
--		if ((msg->replied_to == 0) &&
--		    (msg->canceled == 0) &&
--		    (msg->sending_cpu == rap->sender) &&
--		    (msg->swack_vec) &&
--		    (msg->msg_type != MSG_NOOP)) {
--			unsigned long mmr;
--			unsigned long mr;
--			/*
--			 * make everyone else ignore this message
--			 */
--			msg->canceled = 1;
--			/*
--			 * only reset the resource if it is still pending
--			 */
--			mmr = ops.read_l_sw_ack();
--			msg_res = msg->swack_vec;
--			mr = (msg_res << UV_SW_ACK_NPENDING) | msg_res;
--			if (mmr & msg_res) {
--				stat->d_rcanceled++;
--				ops.write_l_sw_ack(mr);
--			}
--		}
--	}
--	return;
--}
--
--/*
-- * Use IPI to get all target uvhubs to release resources held by
-- * a given sending cpu number.
-- */
--static void reset_with_ipi(struct pnmask *distribution, struct bau_control *bcp)
--{
--	int pnode;
--	int apnode;
--	int maskbits;
--	int sender = bcp->cpu;
--	cpumask_t *mask = bcp->uvhub_master->cpumask;
--	struct bau_control *smaster = bcp->socket_master;
--	struct reset_args reset_args;
--
--	reset_args.sender = sender;
--	cpumask_clear(mask);
--	/* find a single cpu for each uvhub in this distribution mask */
--	maskbits = sizeof(struct pnmask) * BITSPERBYTE;
--	/* each bit is a pnode relative to the partition base pnode */
--	for (pnode = 0; pnode < maskbits; pnode++) {
--		int cpu;
--		if (!bau_uvhub_isset(pnode, distribution))
--			continue;
--		apnode = pnode + bcp->partition_base_pnode;
--		cpu = pnode_to_first_cpu(apnode, smaster);
--		cpumask_set_cpu(cpu, mask);
--	}
--
--	/* IPI all cpus; preemption is already disabled */
--	smp_call_function_many(mask, do_reset, (void *)&reset_args, 1);
--	return;
--}
--
--/*
-- * Not to be confused with cycles_2_ns() from tsc.c; this gives a relative
-- * number, not an absolute. It converts a duration in cycles to a duration in
-- * ns.
-- */
--static inline unsigned long long cycles_2_ns(unsigned long long cyc)
--{
--	struct cyc2ns_data data;
--	unsigned long long ns;
--
--	cyc2ns_read_begin(&data);
--	ns = mul_u64_u32_shr(cyc, data.cyc2ns_mul, data.cyc2ns_shift);
--	cyc2ns_read_end();
--
--	return ns;
--}
--
--/*
-- * The reverse of the above; converts a duration in ns to a duration in cycles.
-- */
--static inline unsigned long long ns_2_cycles(unsigned long long ns)
--{
--	struct cyc2ns_data data;
--	unsigned long long cyc;
--
--	cyc2ns_read_begin(&data);
--	cyc = (ns << data.cyc2ns_shift) / data.cyc2ns_mul;
--	cyc2ns_read_end();
--
--	return cyc;
--}
--
--static inline unsigned long cycles_2_us(unsigned long long cyc)
--{
--	return cycles_2_ns(cyc) / NSEC_PER_USEC;
--}
--
--static inline cycles_t sec_2_cycles(unsigned long sec)
--{
--	return ns_2_cycles(sec * NSEC_PER_SEC);
--}
--
--static inline unsigned long long usec_2_cycles(unsigned long usec)
--{
--	return ns_2_cycles(usec * NSEC_PER_USEC);
--}
--
--/*
-- * wait for all cpus on this hub to finish their sends and go quiet
-- * leaves uvhub_quiesce set so that no new broadcasts are started by
-- * bau_flush_send_and_wait()
-- */
--static inline void quiesce_local_uvhub(struct bau_control *hmaster)
--{
--	atom_asr(1, (struct atomic_short *)&hmaster->uvhub_quiesce);
--}
--
--/*
-- * mark this quiet-requestor as done
-- */
--static inline void end_uvhub_quiesce(struct bau_control *hmaster)
--{
--	atom_asr(-1, (struct atomic_short *)&hmaster->uvhub_quiesce);
--}
--
--/*
-- * UV2 could have an extra bit of status in the ACTIVATION_STATUS_2 register.
-- * But not currently used.
-- */
--static unsigned long uv2_3_read_status(unsigned long offset, int rshft, int desc)
--{
--	return ((read_lmmr(offset) >> rshft) & UV_ACT_STATUS_MASK) << 1;
--}
--
--/*
-- * Entered when a bau descriptor has gone into a permanent busy wait because
-- * of a hardware bug.
-- * Workaround the bug.
-- */
--static int handle_uv2_busy(struct bau_control *bcp)
--{
--	struct ptc_stats *stat = bcp->statp;
--
--	stat->s_uv2_wars++;
--	bcp->busy = 1;
--	return FLUSH_GIVEUP;
--}
--
--static int uv2_3_wait_completion(struct bau_desc *bau_desc,
--				struct bau_control *bcp, long try)
--{
--	unsigned long descriptor_stat;
--	cycles_t ttm;
--	u64 mmr_offset = bcp->status_mmr;
--	int right_shift = bcp->status_index;
--	int desc = bcp->uvhub_cpu;
--	long busy_reps = 0;
--	struct ptc_stats *stat = bcp->statp;
--
--	descriptor_stat = uv2_3_read_status(mmr_offset, right_shift, desc);
--
--	/* spin on the status MMR, waiting for it to go idle */
--	while (descriptor_stat != UV2H_DESC_IDLE) {
--		if (descriptor_stat == UV2H_DESC_SOURCE_TIMEOUT) {
--			/*
--			 * A h/w bug on the destination side may
--			 * have prevented the message being marked
--			 * pending, thus it doesn't get replied to
--			 * and gets continually nacked until it times
--			 * out with a SOURCE_TIMEOUT.
--			 */
--			stat->s_stimeout++;
--			return FLUSH_GIVEUP;
--		} else if (descriptor_stat == UV2H_DESC_DEST_TIMEOUT) {
--			ttm = get_cycles();
--
--			/*
--			 * Our retries may be blocked by all destination
--			 * swack resources being consumed, and a timeout
--			 * pending.  In that case hardware returns the
--			 * ERROR that looks like a destination timeout.
--			 * Without using the extended status we have to
--			 * deduce from the short time that this was a
--			 * strong nack.
--			 */
--			if (cycles_2_us(ttm - bcp->send_message) < timeout_us) {
--				bcp->conseccompletes = 0;
--				stat->s_plugged++;
--				/* FLUSH_RETRY_PLUGGED causes hang on boot */
--				return FLUSH_GIVEUP;
--			}
--			stat->s_dtimeout++;
--			bcp->conseccompletes = 0;
--			/* FLUSH_RETRY_TIMEOUT causes hang on boot */
--			return FLUSH_GIVEUP;
--		} else {
--			busy_reps++;
--			if (busy_reps > 1000000) {
--				/* not to hammer on the clock */
--				busy_reps = 0;
--				ttm = get_cycles();
--				if ((ttm - bcp->send_message) > bcp->timeout_interval)
--					return handle_uv2_busy(bcp);
--			}
--			/*
--			 * descriptor_stat is still BUSY
--			 */
--			cpu_relax();
--		}
--		descriptor_stat = uv2_3_read_status(mmr_offset, right_shift, desc);
--	}
--	bcp->conseccompletes++;
--	return FLUSH_COMPLETE;
--}
--
--/*
-- * Returns the status of current BAU message for cpu desc as a bit field
-- * [Error][Busy][Aux]
-- */
--static u64 read_status(u64 status_mmr, int index, int desc)
--{
--	u64 stat;
--
--	stat = ((read_lmmr(status_mmr) >> index) & UV_ACT_STATUS_MASK) << 1;
--	stat |= (read_lmmr(UVH_LB_BAU_SB_ACTIVATION_STATUS_2) >> desc) & 0x1;
--
--	return stat;
--}
--
--static int uv4_wait_completion(struct bau_desc *bau_desc,
--				struct bau_control *bcp, long try)
--{
--	struct ptc_stats *stat = bcp->statp;
--	u64 descriptor_stat;
--	u64 mmr = bcp->status_mmr;
--	int index = bcp->status_index;
--	int desc = bcp->uvhub_cpu;
--
--	descriptor_stat = read_status(mmr, index, desc);
--
--	/* spin on the status MMR, waiting for it to go idle */
--	while (descriptor_stat != UV2H_DESC_IDLE) {
--		switch (descriptor_stat) {
--		case UV2H_DESC_SOURCE_TIMEOUT:
--			stat->s_stimeout++;
--			return FLUSH_GIVEUP;
--
--		case UV2H_DESC_DEST_TIMEOUT:
--			stat->s_dtimeout++;
--			bcp->conseccompletes = 0;
--			return FLUSH_RETRY_TIMEOUT;
--
--		case UV2H_DESC_DEST_STRONG_NACK:
--			stat->s_plugged++;
--			bcp->conseccompletes = 0;
--			return FLUSH_RETRY_PLUGGED;
--
--		case UV2H_DESC_DEST_PUT_ERR:
--			bcp->conseccompletes = 0;
--			return FLUSH_GIVEUP;
--
--		default:
--			/* descriptor_stat is still BUSY */
--			cpu_relax();
--		}
--		descriptor_stat = read_status(mmr, index, desc);
--	}
--	bcp->conseccompletes++;
--	return FLUSH_COMPLETE;
--}
--
--/*
-- * Our retries are blocked by all destination sw ack resources being
-- * in use, and a timeout is pending. In that case hardware immediately
-- * returns the ERROR that looks like a destination timeout.
-- */
--static void destination_plugged(struct bau_desc *bau_desc,
--			struct bau_control *bcp,
--			struct bau_control *hmaster, struct ptc_stats *stat)
--{
--	udelay(bcp->plugged_delay);
--	bcp->plugged_tries++;
--
--	if (bcp->plugged_tries >= bcp->plugsb4reset) {
--		bcp->plugged_tries = 0;
--
--		quiesce_local_uvhub(hmaster);
--
--		spin_lock(&hmaster->queue_lock);
--		reset_with_ipi(&bau_desc->distribution, bcp);
--		spin_unlock(&hmaster->queue_lock);
--
--		end_uvhub_quiesce(hmaster);
--
--		bcp->ipi_attempts++;
--		stat->s_resets_plug++;
--	}
--}
--
--static void destination_timeout(struct bau_desc *bau_desc,
--			struct bau_control *bcp, struct bau_control *hmaster,
--			struct ptc_stats *stat)
--{
--	hmaster->max_concurr = 1;
--	bcp->timeout_tries++;
--	if (bcp->timeout_tries >= bcp->timeoutsb4reset) {
--		bcp->timeout_tries = 0;
--
--		quiesce_local_uvhub(hmaster);
--
--		spin_lock(&hmaster->queue_lock);
--		reset_with_ipi(&bau_desc->distribution, bcp);
--		spin_unlock(&hmaster->queue_lock);
--
--		end_uvhub_quiesce(hmaster);
--
--		bcp->ipi_attempts++;
--		stat->s_resets_timeout++;
--	}
--}
--
--/*
-- * Stop all cpus on a uvhub from using the BAU for a period of time.
-- * This is reversed by check_enable.
-- */
--static void disable_for_period(struct bau_control *bcp, struct ptc_stats *stat)
--{
--	int tcpu;
--	struct bau_control *tbcp;
--	struct bau_control *hmaster;
--	cycles_t tm1;
--
--	hmaster = bcp->uvhub_master;
--	spin_lock(&hmaster->disable_lock);
--	if (!bcp->baudisabled) {
--		stat->s_bau_disabled++;
--		tm1 = get_cycles();
--		for_each_present_cpu(tcpu) {
--			tbcp = &per_cpu(bau_control, tcpu);
--			if (tbcp->uvhub_master == hmaster) {
--				tbcp->baudisabled = 1;
--				tbcp->set_bau_on_time =
--					tm1 + bcp->disabled_period;
--			}
--		}
--	}
--	spin_unlock(&hmaster->disable_lock);
--}
--
--static void count_max_concurr(int stat, struct bau_control *bcp,
--				struct bau_control *hmaster)
--{
--	bcp->plugged_tries = 0;
--	bcp->timeout_tries = 0;
--	if (stat != FLUSH_COMPLETE)
--		return;
--	if (bcp->conseccompletes <= bcp->complete_threshold)
--		return;
--	if (hmaster->max_concurr >= hmaster->max_concurr_const)
--		return;
--	hmaster->max_concurr++;
--}
--
--static void record_send_stats(cycles_t time1, cycles_t time2,
--		struct bau_control *bcp, struct ptc_stats *stat,
--		int completion_status, int try)
--{
--	cycles_t elapsed;
--
--	if (time2 > time1) {
--		elapsed = time2 - time1;
--		stat->s_time += elapsed;
--
--		if ((completion_status == FLUSH_COMPLETE) && (try == 1)) {
--			bcp->period_requests++;
--			bcp->period_time += elapsed;
--			if ((elapsed > usec_2_cycles(bcp->cong_response_us)) &&
--			    (bcp->period_requests > bcp->cong_reps) &&
--			    ((bcp->period_time / bcp->period_requests) >
--					usec_2_cycles(bcp->cong_response_us))) {
--				stat->s_congested++;
--				disable_for_period(bcp, stat);
--			}
--		}
--	} else
--		stat->s_requestor--;
--
--	if (completion_status == FLUSH_COMPLETE && try > 1)
--		stat->s_retriesok++;
--	else if (completion_status == FLUSH_GIVEUP) {
--		stat->s_giveup++;
--		if (get_cycles() > bcp->period_end)
--			bcp->period_giveups = 0;
--		bcp->period_giveups++;
--		if (bcp->period_giveups == 1)
--			bcp->period_end = get_cycles() + bcp->disabled_period;
--		if (bcp->period_giveups > bcp->giveup_limit) {
--			disable_for_period(bcp, stat);
--			stat->s_giveuplimit++;
--		}
--	}
--}
--
--/*
-- * Handle the completion status of a message send.
-- */
--static void handle_cmplt(int completion_status, struct bau_desc *bau_desc,
--			struct bau_control *bcp, struct bau_control *hmaster,
--			struct ptc_stats *stat)
--{
--	if (completion_status == FLUSH_RETRY_PLUGGED)
--		destination_plugged(bau_desc, bcp, hmaster, stat);
--	else if (completion_status == FLUSH_RETRY_TIMEOUT)
--		destination_timeout(bau_desc, bcp, hmaster, stat);
--}
--
--/*
-- * Send a broadcast and wait for it to complete.
-- *
-- * The flush_mask contains the cpus the broadcast is to be sent to including
-- * cpus that are on the local uvhub.
-- *
-- * Returns 0 if all flushing represented in the mask was done.
-- * Returns 1 if it gives up entirely and the original cpu mask is to be
-- * returned to the kernel.
-- */
--static int uv_flush_send_and_wait(struct cpumask *flush_mask,
--				  struct bau_control *bcp,
--				  struct bau_desc *bau_desc)
--{
--	int seq_number = 0;
--	int completion_stat = 0;
--	long try = 0;
--	unsigned long index;
--	cycles_t time1;
--	cycles_t time2;
--	struct ptc_stats *stat = bcp->statp;
--	struct bau_control *hmaster = bcp->uvhub_master;
--	struct uv2_3_bau_msg_header *uv2_3_hdr = NULL;
--
--	while (hmaster->uvhub_quiesce)
--		cpu_relax();
--
--	time1 = get_cycles();
--	uv2_3_hdr = &bau_desc->header.uv2_3_hdr;
--
--	do {
--		if (try == 0) {
--			uv2_3_hdr->msg_type = MSG_REGULAR;
--			seq_number = bcp->message_number++;
--		} else {
--			uv2_3_hdr->msg_type = MSG_RETRY;
--			stat->s_retry_messages++;
--		}
--
--		uv2_3_hdr->sequence = seq_number;
--		index = (1UL << AS_PUSH_SHIFT) | bcp->uvhub_cpu;
--		bcp->send_message = get_cycles();
--
--		write_mmr_activation(index);
--
--		try++;
--		completion_stat = ops.wait_completion(bau_desc, bcp, try);
--
--		handle_cmplt(completion_stat, bau_desc, bcp, hmaster, stat);
--
--		if (bcp->ipi_attempts >= bcp->ipi_reset_limit) {
--			bcp->ipi_attempts = 0;
--			stat->s_overipilimit++;
--			completion_stat = FLUSH_GIVEUP;
--			break;
--		}
--		cpu_relax();
--	} while ((completion_stat == FLUSH_RETRY_PLUGGED) ||
--		 (completion_stat == FLUSH_RETRY_TIMEOUT));
--
--	time2 = get_cycles();
--
--	count_max_concurr(completion_stat, bcp, hmaster);
--
--	while (hmaster->uvhub_quiesce)
--		cpu_relax();
--
--	atomic_dec(&hmaster->active_descriptor_count);
--
--	record_send_stats(time1, time2, bcp, stat, completion_stat, try);
--
--	if (completion_stat == FLUSH_GIVEUP)
--		/* FLUSH_GIVEUP will fall back to using IPI's for tlb flush */
--		return 1;
++/* Set up physical blade translations from UVH_NODE_PRESENT_TABLE */
+ static __init void boot_init_possible_blades(struct uv_hub_info_s *hub_info)
+ {
+ 	int i, uv_pb = 0;
+--- linux.orig/arch/x86/platform/uv/uv_time.c
++++ linux/arch/x86/platform/uv/uv_time.c
+@@ -2,6 +2,7 @@
+ /*
+  * SGI RTC clock/timer routines.
+  *
++ *  Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
+  *  Copyright (c) 2009-2013 Silicon Graphics, Inc.  All Rights Reserved.
+  *  Copyright (c) Dimitri Sivanich
+  */
+@@ -84,10 +85,8 @@ static void uv_rtc_send_IPI(int cpu)
+ /* Check for an RTC interrupt pending */
+ static int uv_intr_pending(int pnode)
+ {
+-	if (is_uvx_hub())
+-		return uv_read_global_mmr64(pnode, UVXH_EVENT_OCCURRED2) &
+-			UVXH_EVENT_OCCURRED2_RTC_1_MASK;
 -	return 0;
--}
--
--/*
-- * The BAU is disabled for this uvhub. When the disabled time period has
-- * expired re-enable it.
-- * Return 0 if it is re-enabled for all cpus on this uvhub.
-- */
--static int check_enable(struct bau_control *bcp, struct ptc_stats *stat)
--{
--	int tcpu;
--	struct bau_control *tbcp;
--	struct bau_control *hmaster;
--
--	hmaster = bcp->uvhub_master;
--	spin_lock(&hmaster->disable_lock);
--	if (bcp->baudisabled && (get_cycles() >= bcp->set_bau_on_time)) {
--		stat->s_bau_reenabled++;
--		for_each_present_cpu(tcpu) {
--			tbcp = &per_cpu(bau_control, tcpu);
--			if (tbcp->uvhub_master == hmaster) {
--				tbcp->baudisabled = 0;
--				tbcp->period_requests = 0;
--				tbcp->period_time = 0;
--				tbcp->period_giveups = 0;
--			}
--		}
--		spin_unlock(&hmaster->disable_lock);
--		return 0;
--	}
--	spin_unlock(&hmaster->disable_lock);
--	return -1;
--}
--
--static void record_send_statistics(struct ptc_stats *stat, int locals, int hubs,
--				int remotes, struct bau_desc *bau_desc)
--{
--	stat->s_requestor++;
--	stat->s_ntargcpu += remotes + locals;
--	stat->s_ntargremotes += remotes;
--	stat->s_ntarglocals += locals;
--
--	/* uvhub statistics */
--	hubs = bau_uvhub_weight(&bau_desc->distribution);
--	if (locals) {
--		stat->s_ntarglocaluvhub++;
--		stat->s_ntargremoteuvhub += (hubs - 1);
--	} else
--		stat->s_ntargremoteuvhub += hubs;
--
--	stat->s_ntarguvhub += hubs;
--
--	if (hubs >= 16)
--		stat->s_ntarguvhub16++;
--	else if (hubs >= 8)
--		stat->s_ntarguvhub8++;
--	else if (hubs >= 4)
--		stat->s_ntarguvhub4++;
--	else if (hubs >= 2)
--		stat->s_ntarguvhub2++;
--	else
--		stat->s_ntarguvhub1++;
--}
--
--/*
-- * Translate a cpu mask to the uvhub distribution mask in the BAU
-- * activation descriptor.
-- */
--static int set_distrib_bits(struct cpumask *flush_mask, struct bau_control *bcp,
--			struct bau_desc *bau_desc, int *localsp, int *remotesp)
--{
--	int cpu;
--	int pnode;
--	int cnt = 0;
--	struct hub_and_pnode *hpp;
--
--	for_each_cpu(cpu, flush_mask) {
--		/*
--		 * The distribution vector is a bit map of pnodes, relative
--		 * to the partition base pnode (and the partition base nasid
--		 * in the header).
--		 * Translate cpu to pnode and hub using a local memory array.
--		 */
--		hpp = &bcp->socket_master->thp[cpu];
--		pnode = hpp->pnode - bcp->partition_base_pnode;
--		bau_uvhub_set(pnode, &bau_desc->distribution);
--		cnt++;
--		if (hpp->uvhub == bcp->uvhub)
--			(*localsp)++;
--		else
--			(*remotesp)++;
--	}
--	if (!cnt)
--		return 1;
--	return 0;
--}
--
--/*
-- * globally purge translation cache of a virtual address or all TLB's
-- * @cpumask: mask of all cpu's in which the address is to be removed
-- * @mm: mm_struct containing virtual address range
-- * @start: start virtual address to be removed from TLB
-- * @end: end virtual address to be remove from TLB
-- * @cpu: the current cpu
-- *
-- * This is the entry point for initiating any UV global TLB shootdown.
-- *
-- * Purges the translation caches of all specified processors of the given
-- * virtual address, or purges all TLB's on specified processors.
-- *
-- * The caller has derived the cpumask from the mm_struct.  This function
-- * is called only if there are bits set in the mask. (e.g. flush_tlb_page())
-- *
-- * The cpumask is converted into a uvhubmask of the uvhubs containing
-- * those cpus.
-- *
-- * Note that this function should be called with preemption disabled.
-- *
-- * Returns NULL if all remote flushing was done.
-- * Returns pointer to cpumask if some remote flushing remains to be
-- * done.  The returned pointer is valid till preemption is re-enabled.
-- */
--const struct cpumask *uv_flush_tlb_others(const struct cpumask *cpumask,
--					  const struct flush_tlb_info *info)
--{
--	unsigned int cpu = smp_processor_id();
--	int locals = 0, remotes = 0, hubs = 0;
--	struct bau_desc *bau_desc;
--	struct cpumask *flush_mask;
--	struct ptc_stats *stat;
--	struct bau_control *bcp;
--	unsigned long descriptor_status, status, address;
--
--	bcp = &per_cpu(bau_control, cpu);
--
--	if (bcp->nobau)
--		return cpumask;
--
--	stat = bcp->statp;
--	stat->s_enters++;
--
--	if (bcp->busy) {
--		descriptor_status =
--			read_lmmr(UVH_LB_BAU_SB_ACTIVATION_STATUS_0);
--		status = ((descriptor_status >> (bcp->uvhub_cpu *
--			UV_ACT_STATUS_SIZE)) & UV_ACT_STATUS_MASK) << 1;
--		if (status == UV2H_DESC_BUSY)
--			return cpumask;
--		bcp->busy = 0;
--	}
--
--	/* bau was disabled due to slow response */
--	if (bcp->baudisabled) {
--		if (check_enable(bcp, stat)) {
--			stat->s_ipifordisabled++;
--			return cpumask;
--		}
--	}
--
--	/*
--	 * Each sending cpu has a per-cpu mask which it fills from the caller's
--	 * cpu mask.  All cpus are converted to uvhubs and copied to the
--	 * activation descriptor.
--	 */
--	flush_mask = (struct cpumask *)per_cpu(uv_flush_tlb_mask, cpu);
--	/* don't actually do a shootdown of the local cpu */
--	cpumask_andnot(flush_mask, cpumask, cpumask_of(cpu));
--
--	if (cpumask_test_cpu(cpu, cpumask))
--		stat->s_ntargself++;
--
--	bau_desc = bcp->descriptor_base;
--	bau_desc += (ITEMS_PER_DESC * bcp->uvhub_cpu);
--	bau_uvhubs_clear(&bau_desc->distribution, UV_DISTRIBUTION_SIZE);
--	if (set_distrib_bits(flush_mask, bcp, bau_desc, &locals, &remotes))
--		return NULL;
--
--	record_send_statistics(stat, locals, hubs, remotes, bau_desc);
--
--	if (!info->end || (info->end - info->start) <= PAGE_SIZE)
--		address = info->start;
--	else
--		address = TLB_FLUSH_ALL;
--
--	switch (bcp->uvhub_version) {
--	case UV_BAU_V2:
--	case UV_BAU_V3:
--		bau_desc->payload.uv2_3.address = address;
--		bau_desc->payload.uv2_3.sending_cpu = cpu;
--		break;
--	case UV_BAU_V4:
--		bau_desc->payload.uv4.address = address;
--		bau_desc->payload.uv4.sending_cpu = cpu;
--		bau_desc->payload.uv4.qualifier = BAU_DESC_QUALIFIER;
--		break;
--	}
--
--	/*
--	 * uv_flush_send_and_wait returns 0 if all cpu's were messaged,
--	 * or 1 if it gave up and the original cpumask should be returned.
--	 */
--	if (!uv_flush_send_and_wait(flush_mask, bcp, bau_desc))
--		return NULL;
--	else
--		return cpumask;
--}
--
--/*
-- * Search the message queue for any 'other' unprocessed message with the
-- * same software acknowledge resource bit vector as the 'msg' message.
-- */
--static struct bau_pq_entry *find_another_by_swack(struct bau_pq_entry *msg,
--						  struct bau_control *bcp)
--{
--	struct bau_pq_entry *msg_next = msg + 1;
--	unsigned char swack_vec = msg->swack_vec;
--
--	if (msg_next > bcp->queue_last)
--		msg_next = bcp->queue_first;
--	while (msg_next != msg) {
--		if ((msg_next->canceled == 0) && (msg_next->replied_to == 0) &&
--				(msg_next->swack_vec == swack_vec))
--			return msg_next;
--		msg_next++;
--		if (msg_next > bcp->queue_last)
--			msg_next = bcp->queue_first;
--	}
--	return NULL;
--}
--
--/*
-- * UV2 needs to work around a bug in which an arriving message has not
-- * set a bit in the UVH_LB_BAU_INTD_SOFTWARE_ACKNOWLEDGE register.
-- * Such a message must be ignored.
-- */
--static void process_uv2_message(struct msg_desc *mdp, struct bau_control *bcp)
--{
--	unsigned long mmr_image;
--	unsigned char swack_vec;
--	struct bau_pq_entry *msg = mdp->msg;
--	struct bau_pq_entry *other_msg;
--
--	mmr_image = ops.read_l_sw_ack();
--	swack_vec = msg->swack_vec;
--
--	if ((swack_vec & mmr_image) == 0) {
--		/*
--		 * This message was assigned a swack resource, but no
--		 * reserved acknowlegment is pending.
--		 * The bug has prevented this message from setting the MMR.
--		 */
--		/*
--		 * Some message has set the MMR 'pending' bit; it might have
--		 * been another message.  Look for that message.
--		 */
--		other_msg = find_another_by_swack(msg, bcp);
--		if (other_msg) {
--			/*
--			 * There is another. Process this one but do not
--			 * ack it.
--			 */
--			bau_process_message(mdp, bcp, 0);
--			/*
--			 * Let the natural processing of that other message
--			 * acknowledge it. Don't get the processing of sw_ack's
--			 * out of order.
--			 */
--			return;
--		}
--	}
--
--	/*
--	 * Either the MMR shows this one pending a reply or there is no
--	 * other message using this sw_ack, so it is safe to acknowledge it.
--	 */
--	bau_process_message(mdp, bcp, 1);
--
--	return;
--}
--
--/*
-- * The BAU message interrupt comes here. (registered by set_intr_gate)
-- * See entry_64.S
-- *
-- * We received a broadcast assist message.
-- *
-- * Interrupts are disabled; this interrupt could represent
-- * the receipt of several messages.
-- *
-- * All cores/threads on this hub get this interrupt.
-- * The last one to see it does the software ack.
-- * (the resource will not be freed until noninterruptable cpus see this
-- *  interrupt; hardware may timeout the s/w ack and reply ERROR)
-- */
--DEFINE_IDTENTRY_SYSVEC(sysvec_uv_bau_message)
--{
--	int count = 0;
--	cycles_t time_start;
--	struct bau_pq_entry *msg;
--	struct bau_control *bcp;
--	struct ptc_stats *stat;
--	struct msg_desc msgdesc;
--
--	ack_APIC_irq();
--	kvm_set_cpu_l1tf_flush_l1d();
--	time_start = get_cycles();
--
--	bcp = &per_cpu(bau_control, smp_processor_id());
--	stat = bcp->statp;
--
--	msgdesc.queue_first = bcp->queue_first;
--	msgdesc.queue_last = bcp->queue_last;
--
--	msg = bcp->bau_msg_head;
--	while (msg->swack_vec) {
--		count++;
--
--		msgdesc.msg_slot = msg - msgdesc.queue_first;
--		msgdesc.msg = msg;
--		if (bcp->uvhub_version == UV_BAU_V2)
--			process_uv2_message(&msgdesc, bcp);
--		else
--			/* no error workaround for uv3 */
--			bau_process_message(&msgdesc, bcp, 1);
--
--		msg++;
--		if (msg > msgdesc.queue_last)
--			msg = msgdesc.queue_first;
--		bcp->bau_msg_head = msg;
--	}
--	stat->d_time += (get_cycles() - time_start);
--	if (!count)
--		stat->d_nomsg++;
--	else if (count > 1)
--		stat->d_multmsg++;
--}
--
--/*
-- * Each target uvhub (i.e. a uvhub that has cpu's) needs to have
-- * shootdown message timeouts enabled.  The timeout does not cause
-- * an interrupt, but causes an error message to be returned to
-- * the sender.
-- */
--static void __init enable_timeouts(void)
--{
--	int uvhub;
--	int nuvhubs;
--	int pnode;
--	unsigned long mmr_image;
--
--	nuvhubs = uv_num_possible_blades();
--
--	for (uvhub = 0; uvhub < nuvhubs; uvhub++) {
--		if (!uv_blade_nr_possible_cpus(uvhub))
--			continue;
--
--		pnode = uv_blade_to_pnode(uvhub);
--		mmr_image = read_mmr_misc_control(pnode);
--		/*
--		 * Set the timeout period and then lock it in, in three
--		 * steps; captures and locks in the period.
--		 *
--		 * To program the period, the SOFT_ACK_MODE must be off.
--		 */
--		mmr_image &= ~(1L << SOFTACK_MSHIFT);
--		write_mmr_misc_control(pnode, mmr_image);
--		/*
--		 * Set the 4-bit period.
--		 */
--		mmr_image &= ~((unsigned long)0xf << SOFTACK_PSHIFT);
--		mmr_image |= (SOFTACK_TIMEOUT_PERIOD << SOFTACK_PSHIFT);
--		write_mmr_misc_control(pnode, mmr_image);
--
--		mmr_image |= (1L << SOFTACK_MSHIFT);
--		if (is_uv2_hub()) {
--			/* do not touch the legacy mode bit */
--			/* hw bug workaround; do not use extended status */
--			mmr_image &= ~(1L << UV2_EXT_SHFT);
--		} else if (is_uv3_hub()) {
--			mmr_image &= ~(1L << PREFETCH_HINT_SHFT);
--			mmr_image |= (1L << SB_STATUS_SHFT);
--		}
--		write_mmr_misc_control(pnode, mmr_image);
--	}
--}
--
--static void *ptc_seq_start(struct seq_file *file, loff_t *offset)
--{
--	if (*offset < num_possible_cpus())
--		return offset;
--	return NULL;
--}
--
--static void *ptc_seq_next(struct seq_file *file, void *data, loff_t *offset)
--{
--	(*offset)++;
--	if (*offset < num_possible_cpus())
--		return offset;
--	return NULL;
--}
--
--static void ptc_seq_stop(struct seq_file *file, void *data)
--{
--}
--
--/*
-- * Display the statistics thru /proc/sgi_uv/ptc_statistics
-- * 'data' points to the cpu number
-- * Note: see the descriptions in stat_description[].
-- */
--static int ptc_seq_show(struct seq_file *file, void *data)
--{
--	struct ptc_stats *stat;
--	struct bau_control *bcp;
--	int cpu;
--
--	cpu = *(loff_t *)data;
--	if (!cpu) {
--		seq_puts(file,
--			 "# cpu bauoff sent stime self locals remotes ncpus localhub ");
--		seq_puts(file, "remotehub numuvhubs numuvhubs16 numuvhubs8 ");
--		seq_puts(file,
--			 "numuvhubs4 numuvhubs2 numuvhubs1 dto snacks retries ");
--		seq_puts(file,
--			 "rok resetp resett giveup sto bz throt disable ");
--		seq_puts(file,
--			 "enable wars warshw warwaits enters ipidis plugged ");
--		seq_puts(file,
--			 "ipiover glim cong swack recv rtime all one mult ");
--		seq_puts(file, "none retry canc nocan reset rcan\n");
--	}
--	if (cpu < num_possible_cpus() && cpu_online(cpu)) {
--		bcp = &per_cpu(bau_control, cpu);
--		if (bcp->nobau) {
--			seq_printf(file, "cpu %d bau disabled\n", cpu);
--			return 0;
--		}
--		stat = bcp->statp;
--		/* source side statistics */
--		seq_printf(file,
--			"cpu %d %d %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld ",
--			   cpu, bcp->nobau, stat->s_requestor,
--			   cycles_2_us(stat->s_time),
--			   stat->s_ntargself, stat->s_ntarglocals,
--			   stat->s_ntargremotes, stat->s_ntargcpu,
--			   stat->s_ntarglocaluvhub, stat->s_ntargremoteuvhub,
--			   stat->s_ntarguvhub, stat->s_ntarguvhub16);
--		seq_printf(file, "%ld %ld %ld %ld %ld %ld ",
--			   stat->s_ntarguvhub8, stat->s_ntarguvhub4,
--			   stat->s_ntarguvhub2, stat->s_ntarguvhub1,
--			   stat->s_dtimeout, stat->s_strongnacks);
--		seq_printf(file, "%ld %ld %ld %ld %ld %ld %ld %ld ",
--			   stat->s_retry_messages, stat->s_retriesok,
--			   stat->s_resets_plug, stat->s_resets_timeout,
--			   stat->s_giveup, stat->s_stimeout,
--			   stat->s_busy, stat->s_throttles);
--		seq_printf(file, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld ",
--			   stat->s_bau_disabled, stat->s_bau_reenabled,
--			   stat->s_uv2_wars, stat->s_uv2_wars_hw,
--			   stat->s_uv2_war_waits, stat->s_enters,
--			   stat->s_ipifordisabled, stat->s_plugged,
--			   stat->s_overipilimit, stat->s_giveuplimit,
--			   stat->s_congested);
--
--		/* destination side statistics */
--		seq_printf(file,
--			"%lx %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
--			   ops.read_g_sw_ack(uv_cpu_to_pnode(cpu)),
--			   stat->d_requestee, cycles_2_us(stat->d_time),
--			   stat->d_alltlb, stat->d_onetlb, stat->d_multmsg,
--			   stat->d_nomsg, stat->d_retries, stat->d_canceled,
--			   stat->d_nocanceled, stat->d_resets,
--			   stat->d_rcanceled);
--	}
--	return 0;
--}
--
--/*
-- * Display the tunables thru debugfs
-- */
--static ssize_t tunables_read(struct file *file, char __user *userbuf,
--				size_t count, loff_t *ppos)
--{
--	char *buf;
--	int ret;
--
--	buf = kasprintf(GFP_KERNEL, "%s %s %s\n%d %d %d %d %d %d %d %d %d %d\n",
--		"max_concur plugged_delay plugsb4reset timeoutsb4reset",
--		"ipi_reset_limit complete_threshold congested_response_us",
--		"congested_reps disabled_period giveup_limit",
--		max_concurr, plugged_delay, plugsb4reset,
--		timeoutsb4reset, ipi_reset_limit, complete_threshold,
--		congested_respns_us, congested_reps, disabled_period,
--		giveup_limit);
--
--	if (!buf)
--		return -ENOMEM;
--
--	ret = simple_read_from_buffer(userbuf, count, ppos, buf, strlen(buf));
--	kfree(buf);
--	return ret;
--}
--
--/*
-- * handle a write to /proc/sgi_uv/ptc_statistics
-- * -1: reset the statistics
-- *  0: display meaning of the statistics
-- */
--static ssize_t ptc_proc_write(struct file *file, const char __user *user,
--				size_t count, loff_t *data)
--{
--	int cpu;
--	int i;
--	int elements;
--	long input_arg;
--	char optstr[64];
--	struct ptc_stats *stat;
--
--	if (count == 0 || count > sizeof(optstr))
--		return -EINVAL;
--	if (copy_from_user(optstr, user, count))
--		return -EFAULT;
--	optstr[count - 1] = '\0';
--
--	if (!strcmp(optstr, "on")) {
--		set_bau_on();
--		return count;
--	} else if (!strcmp(optstr, "off")) {
--		set_bau_off();
--		return count;
--	}
--
--	if (kstrtol(optstr, 10, &input_arg) < 0) {
--		pr_debug("%s is invalid\n", optstr);
--		return -EINVAL;
--	}
--
--	if (input_arg == 0) {
--		elements = ARRAY_SIZE(stat_description);
--		pr_debug("# cpu:      cpu number\n");
--		pr_debug("Sender statistics:\n");
--		for (i = 0; i < elements; i++)
--			pr_debug("%s\n", stat_description[i]);
--	} else if (input_arg == -1) {
--		for_each_present_cpu(cpu) {
--			stat = &per_cpu(ptcstats, cpu);
--			memset(stat, 0, sizeof(struct ptc_stats));
--		}
--	}
--
--	return count;
--}
--
--static int local_atoi(const char *name)
--{
--	int val = 0;
--
--	for (;; name++) {
--		switch (*name) {
--		case '0' ... '9':
--			val = 10*val+(*name-'0');
--			break;
--		default:
--			return val;
--		}
--	}
--}
--
--/*
-- * Parse the values written to /sys/kernel/debug/sgi_uv/bau_tunables.
-- * Zero values reset them to defaults.
-- */
--static int parse_tunables_write(struct bau_control *bcp, char *instr,
--				int count)
--{
--	char *p;
--	char *q;
--	int cnt = 0;
--	int val;
--	int e = ARRAY_SIZE(tunables);
--
--	p = instr + strspn(instr, WHITESPACE);
--	q = p;
--	for (; *p; p = q + strspn(q, WHITESPACE)) {
--		q = p + strcspn(p, WHITESPACE);
--		cnt++;
--		if (q == p)
--			break;
--	}
--	if (cnt != e) {
--		pr_info("bau tunable error: should be %d values\n", e);
--		return -EINVAL;
--	}
--
--	p = instr + strspn(instr, WHITESPACE);
--	q = p;
--	for (cnt = 0; *p; p = q + strspn(q, WHITESPACE), cnt++) {
--		q = p + strcspn(p, WHITESPACE);
--		val = local_atoi(p);
--		switch (cnt) {
--		case 0:
--			if (val == 0) {
--				max_concurr = MAX_BAU_CONCURRENT;
--				max_concurr_const = MAX_BAU_CONCURRENT;
--				continue;
--			}
--			if (val < 1 || val > bcp->cpus_in_uvhub) {
--				pr_debug(
--				"Error: BAU max concurrent %d is invalid\n",
--				val);
--				return -EINVAL;
--			}
--			max_concurr = val;
--			max_concurr_const = val;
--			continue;
--		default:
--			if (val == 0)
--				*tunables[cnt].tunp = tunables[cnt].deflt;
--			else
--				*tunables[cnt].tunp = val;
--			continue;
--		}
--	}
--	return 0;
--}
--
--/*
-- * Handle a write to debugfs. (/sys/kernel/debug/sgi_uv/bau_tunables)
-- */
--static ssize_t tunables_write(struct file *file, const char __user *user,
--				size_t count, loff_t *data)
--{
--	int cpu;
--	int ret;
--	char instr[100];
--	struct bau_control *bcp;
--
--	if (count == 0 || count > sizeof(instr)-1)
--		return -EINVAL;
--	if (copy_from_user(instr, user, count))
--		return -EFAULT;
--
--	instr[count] = '\0';
--
--	cpu = get_cpu();
--	bcp = &per_cpu(bau_control, cpu);
--	ret = parse_tunables_write(bcp, instr, count);
--	put_cpu();
--	if (ret)
--		return ret;
--
--	for_each_present_cpu(cpu) {
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->max_concurr         = max_concurr;
--		bcp->max_concurr_const   = max_concurr;
--		bcp->plugged_delay       = plugged_delay;
--		bcp->plugsb4reset        = plugsb4reset;
--		bcp->timeoutsb4reset     = timeoutsb4reset;
--		bcp->ipi_reset_limit     = ipi_reset_limit;
--		bcp->complete_threshold  = complete_threshold;
--		bcp->cong_response_us    = congested_respns_us;
--		bcp->cong_reps           = congested_reps;
--		bcp->disabled_period     = sec_2_cycles(disabled_period);
--		bcp->giveup_limit        = giveup_limit;
--	}
--	return count;
--}
--
--static const struct seq_operations uv_ptc_seq_ops = {
--	.start		= ptc_seq_start,
--	.next		= ptc_seq_next,
--	.stop		= ptc_seq_stop,
--	.show		= ptc_seq_show
--};
--
--static int ptc_proc_open(struct inode *inode, struct file *file)
--{
--	return seq_open(file, &uv_ptc_seq_ops);
--}
--
--static int tunables_open(struct inode *inode, struct file *file)
--{
--	return 0;
--}
--
--static const struct proc_ops uv_ptc_proc_ops = {
--	.proc_open	= ptc_proc_open,
--	.proc_read	= seq_read,
--	.proc_write	= ptc_proc_write,
--	.proc_lseek	= seq_lseek,
--	.proc_release	= seq_release,
--};
--
--static const struct file_operations tunables_fops = {
--	.open		= tunables_open,
--	.read		= tunables_read,
--	.write		= tunables_write,
--	.llseek		= default_llseek,
--};
--
--static int __init uv_ptc_init(void)
--{
--	struct proc_dir_entry *proc_uv_ptc;
--
--	if (!is_uv_system())
--		return 0;
--
--	proc_uv_ptc = proc_create(UV_PTC_BASENAME, 0444, NULL,
--				  &uv_ptc_proc_ops);
--	if (!proc_uv_ptc) {
--		pr_err("unable to create %s proc entry\n",
--		       UV_PTC_BASENAME);
--		return -EINVAL;
--	}
--
--	tunables_dir = debugfs_create_dir(UV_BAU_TUNABLES_DIR, NULL);
--	debugfs_create_file(UV_BAU_TUNABLES_FILE, 0600, tunables_dir, NULL,
--			    &tunables_fops);
--	return 0;
--}
--
--/*
-- * Initialize the sending side's sending buffers.
-- */
--static void activation_descriptor_init(int node, int pnode, int base_pnode)
--{
--	int i;
--	int cpu;
--	unsigned long gpa;
--	unsigned long m;
--	unsigned long n;
--	size_t dsize;
--	struct bau_desc *bau_desc;
--	struct bau_desc *bd2;
--	struct uv2_3_bau_msg_header *uv2_3_hdr;
--	struct bau_control *bcp;
--
--	/*
--	 * each bau_desc is 64 bytes; there are 8 (ITEMS_PER_DESC)
--	 * per cpu; and one per cpu on the uvhub (ADP_SZ)
--	 */
--	dsize = sizeof(struct bau_desc) * ADP_SZ * ITEMS_PER_DESC;
--	bau_desc = kmalloc_node(dsize, GFP_KERNEL, node);
--	BUG_ON(!bau_desc);
--
--	gpa = uv_gpa(bau_desc);
--	n = uv_gpa_to_gnode(gpa);
--	m = ops.bau_gpa_to_offset(gpa);
--
--	/* the 14-bit pnode */
--	write_mmr_descriptor_base(pnode,
--		(n << UVH_LB_BAU_SB_DESCRIPTOR_BASE_NODE_ID_SHFT | m));
--	/*
--	 * Initializing all 8 (ITEMS_PER_DESC) descriptors for each
--	 * cpu even though we only use the first one; one descriptor can
--	 * describe a broadcast to 256 uv hubs.
--	 */
--	for (i = 0, bd2 = bau_desc; i < (ADP_SZ * ITEMS_PER_DESC); i++, bd2++) {
--		memset(bd2, 0, sizeof(struct bau_desc));
--		/*
--		 * BIOS uses legacy mode, but uv2 and uv3 hardware always
--		 * uses native mode for selective broadcasts.
--		 */
--		uv2_3_hdr = &bd2->header.uv2_3_hdr;
--		uv2_3_hdr->swack_flag      = 1;
--		uv2_3_hdr->base_dest_nasid = UV_PNODE_TO_NASID(base_pnode);
--		uv2_3_hdr->dest_subnodeid  = UV_LB_SUBNODEID;
--		uv2_3_hdr->command         = UV_NET_ENDPOINT_INTD;
--	}
--	for_each_present_cpu(cpu) {
--		if (pnode != uv_blade_to_pnode(uv_cpu_to_blade_id(cpu)))
--			continue;
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->descriptor_base = bau_desc;
--	}
--}
--
--/*
-- * initialize the destination side's receiving buffers
-- * entered for each uvhub in the partition
-- * - node is first node (kernel memory notion) on the uvhub
-- * - pnode is the uvhub's physical identifier
-- */
--static void pq_init(int node, int pnode)
--{
--	int cpu;
--	size_t plsize;
--	char *cp;
--	void *vp;
--	unsigned long gnode, first, last, tail;
--	struct bau_pq_entry *pqp;
--	struct bau_control *bcp;
--
--	plsize = (DEST_Q_SIZE + 1) * sizeof(struct bau_pq_entry);
--	vp = kmalloc_node(plsize, GFP_KERNEL, node);
--	BUG_ON(!vp);
--
--	pqp = (struct bau_pq_entry *)vp;
--	cp = (char *)pqp + 31;
--	pqp = (struct bau_pq_entry *)(((unsigned long)cp >> 5) << 5);
--
--	for_each_present_cpu(cpu) {
--		if (pnode != uv_cpu_to_pnode(cpu))
--			continue;
--		/* for every cpu on this pnode: */
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->queue_first	= pqp;
--		bcp->bau_msg_head	= pqp;
--		bcp->queue_last		= pqp + (DEST_Q_SIZE - 1);
--	}
--
--	first = ops.bau_gpa_to_offset(uv_gpa(pqp));
--	last = ops.bau_gpa_to_offset(uv_gpa(pqp + (DEST_Q_SIZE - 1)));
--
--	/*
--	 * Pre UV4, the gnode is required to locate the payload queue
--	 * and the payload queue tail must be maintained by the kernel.
--	 */
--	bcp = &per_cpu(bau_control, smp_processor_id());
--	if (bcp->uvhub_version <= UV_BAU_V3) {
--		tail = first;
--		gnode = uv_gpa_to_gnode(uv_gpa(pqp));
--		first = (gnode << UV_PAYLOADQ_GNODE_SHIFT) | tail;
--		write_mmr_payload_tail(pnode, tail);
--	}
--
--	ops.write_payload_first(pnode, first);
--	ops.write_payload_last(pnode, last);
--
--	/* in effect, all msg_type's are set to MSG_NOOP */
--	memset(pqp, 0, sizeof(struct bau_pq_entry) * DEST_Q_SIZE);
--}
--
--/*
-- * Initialization of each UV hub's structures
-- */
--static void __init init_uvhub(int uvhub, int vector, int base_pnode)
--{
--	int node;
--	int pnode;
--	unsigned long apicid;
--
--	node = uvhub_to_first_node(uvhub);
--	pnode = uv_blade_to_pnode(uvhub);
--
--	activation_descriptor_init(node, pnode, base_pnode);
--
--	pq_init(node, pnode);
--	/*
--	 * The below initialization can't be in firmware because the
--	 * messaging IRQ will be determined by the OS.
--	 */
--	apicid = uvhub_to_first_apicid(uvhub);
--	write_mmr_data_config(pnode, ((apicid << 32) | vector));
--}
--
--/*
-- * We will set BAU_MISC_CONTROL with a timeout period.
-- * But the BIOS has set UVH_AGING_PRESCALE_SEL and UVH_TRANSACTION_TIMEOUT.
-- * So the destination timeout period has to be calculated from them.
-- */
--static int calculate_destination_timeout(void)
--{
--	unsigned long mmr_image;
--	int mult1;
--	int base;
--	int ret;
--
--	/* same destination timeout for uv2 and uv3 */
--	/* 4 bits  0/1 for 10/80us base, 3 bits of multiplier */
--	mmr_image = uv_read_local_mmr(UVH_LB_BAU_MISC_CONTROL);
--	mmr_image = (mmr_image & UV_SA_MASK) >> UV_SA_SHFT;
--	if (mmr_image & (1L << UV2_ACK_UNITS_SHFT))
--		base = 80;
--	else
--		base = 10;
--	mult1 = mmr_image & UV2_ACK_MASK;
--	ret = mult1 * base;
--
--	return ret;
--}
--
--static void __init init_per_cpu_tunables(void)
--{
--	int cpu;
--	struct bau_control *bcp;
--
--	for_each_present_cpu(cpu) {
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->baudisabled		= 0;
--		if (nobau)
--			bcp->nobau		= true;
--		bcp->statp			= &per_cpu(ptcstats, cpu);
--		/* time interval to catch a hardware stay-busy bug */
--		bcp->timeout_interval		= usec_2_cycles(2*timeout_us);
--		bcp->max_concurr		= max_concurr;
--		bcp->max_concurr_const		= max_concurr;
--		bcp->plugged_delay		= plugged_delay;
--		bcp->plugsb4reset		= plugsb4reset;
--		bcp->timeoutsb4reset		= timeoutsb4reset;
--		bcp->ipi_reset_limit		= ipi_reset_limit;
--		bcp->complete_threshold		= complete_threshold;
--		bcp->cong_response_us		= congested_respns_us;
--		bcp->cong_reps			= congested_reps;
--		bcp->disabled_period		= sec_2_cycles(disabled_period);
--		bcp->giveup_limit		= giveup_limit;
--		spin_lock_init(&bcp->queue_lock);
--		spin_lock_init(&bcp->uvhub_lock);
--		spin_lock_init(&bcp->disable_lock);
--	}
--}
--
--/*
-- * Scan all cpus to collect blade and socket summaries.
-- */
--static int __init get_cpu_topology(int base_pnode,
--					struct uvhub_desc *uvhub_descs,
--					unsigned char *uvhub_mask)
--{
--	int cpu;
--	int pnode;
--	int uvhub;
--	int socket;
--	struct bau_control *bcp;
--	struct uvhub_desc *bdp;
--	struct socket_desc *sdp;
--
--	for_each_present_cpu(cpu) {
--		bcp = &per_cpu(bau_control, cpu);
--
--		memset(bcp, 0, sizeof(struct bau_control));
--
--		pnode = uv_cpu_hub_info(cpu)->pnode;
--		if ((pnode - base_pnode) >= UV_DISTRIBUTION_SIZE) {
--			pr_emerg(
--				"cpu %d pnode %d-%d beyond %d; BAU disabled\n",
--				cpu, pnode, base_pnode, UV_DISTRIBUTION_SIZE);
--			return 1;
--		}
--
--		bcp->osnode = cpu_to_node(cpu);
--		bcp->partition_base_pnode = base_pnode;
--
--		uvhub = uv_cpu_hub_info(cpu)->numa_blade_id;
--		*(uvhub_mask + (uvhub/8)) |= (1 << (uvhub%8));
--		bdp = &uvhub_descs[uvhub];
--
--		bdp->num_cpus++;
--		bdp->uvhub = uvhub;
--		bdp->pnode = pnode;
--
--		/* kludge: 'assuming' one node per socket, and assuming that
--		   disabling a socket just leaves a gap in node numbers */
--		socket = bcp->osnode & 1;
--		bdp->socket_mask |= (1 << socket);
--		sdp = &bdp->socket[socket];
--		sdp->cpu_number[sdp->num_cpus] = cpu;
--		sdp->num_cpus++;
--		if (sdp->num_cpus > MAX_CPUS_PER_SOCKET) {
--			pr_emerg("%d cpus per socket invalid\n",
--				sdp->num_cpus);
--			return 1;
--		}
--	}
--	return 0;
--}
--
--/*
-- * Each socket is to get a local array of pnodes/hubs.
-- */
--static void make_per_cpu_thp(struct bau_control *smaster)
--{
--	int cpu;
--	size_t hpsz = sizeof(struct hub_and_pnode) * num_possible_cpus();
--
--	smaster->thp = kzalloc_node(hpsz, GFP_KERNEL, smaster->osnode);
--	for_each_present_cpu(cpu) {
--		smaster->thp[cpu].pnode = uv_cpu_hub_info(cpu)->pnode;
--		smaster->thp[cpu].uvhub = uv_cpu_hub_info(cpu)->numa_blade_id;
--	}
--}
--
--/*
-- * Each uvhub is to get a local cpumask.
-- */
--static void make_per_hub_cpumask(struct bau_control *hmaster)
--{
--	int sz = sizeof(cpumask_t);
--
--	hmaster->cpumask = kzalloc_node(sz, GFP_KERNEL, hmaster->osnode);
--}
--
--/*
-- * Initialize all the per_cpu information for the cpu's on a given socket,
-- * given what has been gathered into the socket_desc struct.
-- * And reports the chosen hub and socket masters back to the caller.
-- */
--static int scan_sock(struct socket_desc *sdp, struct uvhub_desc *bdp,
--			struct bau_control **smasterp,
--			struct bau_control **hmasterp)
--{
--	int i, cpu, uvhub_cpu;
--	struct bau_control *bcp;
--
--	for (i = 0; i < sdp->num_cpus; i++) {
--		cpu = sdp->cpu_number[i];
--		bcp = &per_cpu(bau_control, cpu);
--		bcp->cpu = cpu;
--		if (i == 0) {
--			*smasterp = bcp;
--			if (!(*hmasterp))
--				*hmasterp = bcp;
--		}
--		bcp->cpus_in_uvhub = bdp->num_cpus;
--		bcp->cpus_in_socket = sdp->num_cpus;
--		bcp->socket_master = *smasterp;
--		bcp->uvhub = bdp->uvhub;
--		if (is_uv2_hub())
--			bcp->uvhub_version = UV_BAU_V2;
--		else if (is_uv3_hub())
--			bcp->uvhub_version = UV_BAU_V3;
--		else if (is_uv4_hub())
--			bcp->uvhub_version = UV_BAU_V4;
--		else {
--			pr_emerg("uvhub version not 1, 2, 3, or 4\n");
--			return 1;
--		}
--		bcp->uvhub_master = *hmasterp;
--		uvhub_cpu = uv_cpu_blade_processor_id(cpu);
--		bcp->uvhub_cpu = uvhub_cpu;
--
--		/*
--		 * The ERROR and BUSY status registers are located pairwise over
--		 * the STATUS_0 and STATUS_1 mmrs; each an array[32] of 2 bits.
--		 */
--		if (uvhub_cpu < UV_CPUS_PER_AS) {
--			bcp->status_mmr = UVH_LB_BAU_SB_ACTIVATION_STATUS_0;
--			bcp->status_index = uvhub_cpu * UV_ACT_STATUS_SIZE;
--		} else {
--			bcp->status_mmr = UVH_LB_BAU_SB_ACTIVATION_STATUS_1;
--			bcp->status_index = (uvhub_cpu - UV_CPUS_PER_AS)
--						* UV_ACT_STATUS_SIZE;
--		}
--
--		if (bcp->uvhub_cpu >= MAX_CPUS_PER_UVHUB) {
--			pr_emerg("%d cpus per uvhub invalid\n",
--				bcp->uvhub_cpu);
--			return 1;
--		}
--	}
--	return 0;
--}
--
--/*
-- * Summarize the blade and socket topology into the per_cpu structures.
-- */
--static int __init summarize_uvhub_sockets(int nuvhubs,
--			struct uvhub_desc *uvhub_descs,
--			unsigned char *uvhub_mask)
--{
--	int socket;
--	int uvhub;
--	unsigned short socket_mask;
--
--	for (uvhub = 0; uvhub < nuvhubs; uvhub++) {
--		struct uvhub_desc *bdp;
--		struct bau_control *smaster = NULL;
--		struct bau_control *hmaster = NULL;
--
--		if (!(*(uvhub_mask + (uvhub/8)) & (1 << (uvhub%8))))
--			continue;
--
--		bdp = &uvhub_descs[uvhub];
--		socket_mask = bdp->socket_mask;
--		socket = 0;
--		while (socket_mask) {
--			struct socket_desc *sdp;
--			if ((socket_mask & 1)) {
--				sdp = &bdp->socket[socket];
--				if (scan_sock(sdp, bdp, &smaster, &hmaster))
--					return 1;
--				make_per_cpu_thp(smaster);
--			}
--			socket++;
--			socket_mask = (socket_mask >> 1);
--		}
--		make_per_hub_cpumask(hmaster);
--	}
--	return 0;
--}
--
--/*
-- * initialize the bau_control structure for each cpu
-- */
--static int __init init_per_cpu(int nuvhubs, int base_part_pnode)
--{
--	struct uvhub_desc *uvhub_descs;
--	unsigned char *uvhub_mask = NULL;
--
--	if (is_uv3_hub() || is_uv2_hub())
--		timeout_us = calculate_destination_timeout();
--
--	uvhub_descs = kcalloc(nuvhubs, sizeof(struct uvhub_desc), GFP_KERNEL);
--	if (!uvhub_descs)
--		goto fail;
--
--	uvhub_mask = kzalloc((nuvhubs+7)/8, GFP_KERNEL);
--	if (!uvhub_mask)
--		goto fail;
--
--	if (get_cpu_topology(base_part_pnode, uvhub_descs, uvhub_mask))
--		goto fail;
--
--	if (summarize_uvhub_sockets(nuvhubs, uvhub_descs, uvhub_mask))
--		goto fail;
--
--	kfree(uvhub_descs);
--	kfree(uvhub_mask);
--	init_per_cpu_tunables();
--	return 0;
--
--fail:
--	kfree(uvhub_descs);
--	kfree(uvhub_mask);
--	return 1;
--}
--
--static const struct bau_operations uv2_3_bau_ops __initconst = {
--	.bau_gpa_to_offset       = uv_gpa_to_offset,
--	.read_l_sw_ack           = read_mmr_sw_ack,
--	.read_g_sw_ack           = read_gmmr_sw_ack,
--	.write_l_sw_ack          = write_mmr_sw_ack,
--	.write_g_sw_ack          = write_gmmr_sw_ack,
--	.write_payload_first     = write_mmr_payload_first,
--	.write_payload_last      = write_mmr_payload_last,
--	.wait_completion	 = uv2_3_wait_completion,
--};
--
--static const struct bau_operations uv4_bau_ops __initconst = {
--	.bau_gpa_to_offset       = uv_gpa_to_soc_phys_ram,
--	.read_l_sw_ack           = read_mmr_proc_sw_ack,
--	.read_g_sw_ack           = read_gmmr_proc_sw_ack,
--	.write_l_sw_ack          = write_mmr_proc_sw_ack,
--	.write_g_sw_ack          = write_gmmr_proc_sw_ack,
--	.write_payload_first     = write_mmr_proc_payload_first,
--	.write_payload_last      = write_mmr_proc_payload_last,
--	.wait_completion         = uv4_wait_completion,
--};
--
--/*
-- * Initialization of BAU-related structures
-- */
--static int __init uv_bau_init(void)
--{
--	int uvhub;
--	int pnode;
--	int nuvhubs;
--	int cur_cpu;
--	int cpus;
--	int vector;
--	cpumask_var_t *mask;
--
--	if (!is_uv_system())
--		return 0;
--
--	if (is_uv4_hub())
--		ops = uv4_bau_ops;
--	else if (is_uv3_hub())
--		ops = uv2_3_bau_ops;
--	else if (is_uv2_hub())
--		ops = uv2_3_bau_ops;
--
--	nuvhubs = uv_num_possible_blades();
--	if (nuvhubs < 2) {
--		pr_crit("UV: BAU disabled - insufficient hub count\n");
--		goto err_bau_disable;
--	}
--
--	for_each_possible_cpu(cur_cpu) {
--		mask = &per_cpu(uv_flush_tlb_mask, cur_cpu);
--		zalloc_cpumask_var_node(mask, GFP_KERNEL, cpu_to_node(cur_cpu));
--	}
--
--	uv_base_pnode = 0x7fffffff;
--	for (uvhub = 0; uvhub < nuvhubs; uvhub++) {
--		cpus = uv_blade_nr_possible_cpus(uvhub);
--		if (cpus && (uv_blade_to_pnode(uvhub) < uv_base_pnode))
--			uv_base_pnode = uv_blade_to_pnode(uvhub);
--	}
--
--	/* software timeouts are not supported on UV4 */
--	if (is_uv3_hub() || is_uv2_hub())
--		enable_timeouts();
--
--	if (init_per_cpu(nuvhubs, uv_base_pnode)) {
--		pr_crit("UV: BAU disabled - per CPU init failed\n");
--		goto err_bau_disable;
--	}
--
--	vector = UV_BAU_MESSAGE;
--	for_each_possible_blade(uvhub) {
--		if (uv_blade_nr_possible_cpus(uvhub))
--			init_uvhub(uvhub, vector, uv_base_pnode);
--	}
--
--	for_each_possible_blade(uvhub) {
--		if (uv_blade_nr_possible_cpus(uvhub)) {
--			unsigned long val;
--			unsigned long mmr;
--			pnode = uv_blade_to_pnode(uvhub);
--			/* INIT the bau */
--			val = 1L << 63;
--			write_gmmr_activation(pnode, val);
--			mmr = 1; /* should be 1 to broadcast to both sockets */
--			write_mmr_data_broadcast(pnode, mmr);
--		}
--	}
--
--	return 0;
--
--err_bau_disable:
--
--	for_each_possible_cpu(cur_cpu)
--		free_cpumask_var(per_cpu(uv_flush_tlb_mask, cur_cpu));
--
--	set_bau_off();
--	nobau_perm = 1;
--
--	return -EINVAL;
--}
--core_initcall(uv_bau_init);
--fs_initcall(uv_ptc_init);
++	return uv_read_global_mmr64(pnode, UVH_EVENT_OCCURRED2) &
++		UVH_EVENT_OCCURRED2_RTC_1_MASK;
+ }
+ 
+ /* Setup interrupt and return non-zero if early expiration occurred. */
+@@ -101,8 +100,8 @@ static int uv_setup_intr(int cpu, u64 ex
+ 		UVH_RTC1_INT_CONFIG_M_MASK);
+ 	uv_write_global_mmr64(pnode, UVH_INT_CMPB, -1L);
+ 
+-	uv_write_global_mmr64(pnode, UVXH_EVENT_OCCURRED2_ALIAS,
+-			      UVXH_EVENT_OCCURRED2_RTC_1_MASK);
++	uv_write_global_mmr64(pnode, UVH_EVENT_OCCURRED2_ALIAS,
++			      UVH_EVENT_OCCURRED2_RTC_1_MASK);
+ 
+ 	val = (X86_PLATFORM_IPI_VECTOR << UVH_RTC1_INT_CONFIG_VECTOR_SHFT) |
+ 		((u64)apicid << UVH_RTC1_INT_CONFIG_APIC_ID_SHFT);
+--- linux.orig/drivers/misc/sgi-gru/grufile.c
++++ linux/drivers/misc/sgi-gru/grufile.c
+@@ -7,7 +7,8 @@
+  * This file supports the user system call for file open, close, mmap, etc.
+  * This also incudes the driver initialization code.
+  *
+- *  Copyright (c) 2008-2014 Silicon Graphics, Inc.  All Rights Reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
+ 
+ #include <linux/module.h>
+@@ -516,7 +517,7 @@ static int __init gru_init(void)
+ #if defined CONFIG_IA64
+ 	gru_start_paddr = 0xd000000000UL; /* ZZZZZZZZZZZZZZZZZZZ fixme */
+ #else
+-	gru_start_paddr = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG_MMR) &
++	gru_start_paddr = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG) &
+ 				0x7fffffffffffUL;
+ #endif
+ 	gru_start_vaddr = __va(gru_start_paddr);
 
