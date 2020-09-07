@@ -2,147 +2,388 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081E0C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7409C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A029921741
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:43:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=infinera.com header.i=@infinera.com header.b="HX7J/T2b"
+	by mail.kernel.org (Postfix) with ESMTP id 71F062078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgIGPnu (ORCPT
+        id S1730212AbgIGPpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:43:50 -0400
-Received: from mail-bn8nam12on2047.outbound.protection.outlook.com ([40.107.237.47]:61537
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730186AbgIGPim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:38:42 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OC2ACyp6bHZx0kxfNaheYqipZ2m08f3fiSGvX9PqAG+/V1pt74fk/70SBPITQ1Oluna6KJSZqXaZ73Har3FbzD1MY7jkKpCZ9nFhx50B3Yy4LYtDhNUhSTwLDc6U7ysGd5kVYG0gk1H33MzrYXEtFMPlONaRyc3k8IAVoIdWSPZd9ALioM6b8M8xlVIPkNhnVUjr5iyUKxiX0XTugoSHhI0WWFpSV4EtbyH/xGdyhil/QCMOS9VsMF14EuXFqYfzT6Dp3Eqvpc8dIAkOI6m/pwHntMCXZ0FiFrGJVLsA712jOAXPV34q5POEpWRvur1VOCBGSQiGgF1mjFiRSC4Tfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ihe6/PY8x7jgMUtSRi9RjGktMK+6ZT5krQXAd6IahAc=;
- b=eQWdmuj6u+FdtE/ol2TRp7HxmBVss9rGemyAkVQPCiKTpB/RapzEbmYzKUwKYZBpzF7tC06CEPPsMQMpRI/1Siz2JVx6eQyjJU7kIFU5K+NiFDxbUPkLqEkLGRbeejLaZeSLLQTF2zaY+B63pP2ReNLefEwfwr5QhFl2MO5tmMygclTadPtduWwYD8g6fUBj5ttjFLmgYKdvDrsy6lpP/JVirJIiiQhyUkMUB0Gtpm/KIvitm+SgSWYctsrL83bDYp0QESq+xAI9JBqV0VMSCXfHFtkuRk/KfaBUInnM7tXT5nK/gR2PdJBgigEmtSorwHWrpHtn0YyI637d+lT1Kg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=infinera.com; dmarc=pass action=none header.from=infinera.com;
- dkim=pass header.d=infinera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=infinera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ihe6/PY8x7jgMUtSRi9RjGktMK+6ZT5krQXAd6IahAc=;
- b=HX7J/T2btCfxbGzmy0IOgn9qacGA4Rq6BIZvr+XQewx8AAindcNCNXZTnaiEc6y+IO29d0ssSZ/0ewjWPJTZPtUy4WtuUyP+K+kQ6+p0VWaeOW27Zjq2N7PWWpUUtQsVJVlFsDWXwssJyn7TjDwcsRFOnQvZVZrKk2yjtUj5yEw=
-Received: from CY4PR1001MB2389.namprd10.prod.outlook.com
- (2603:10b6:910:45::21) by CY4PR1001MB2312.namprd10.prod.outlook.com
- (2603:10b6:910:49::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.19; Mon, 7 Sep
- 2020 15:38:37 +0000
-Received: from CY4PR1001MB2389.namprd10.prod.outlook.com
- ([fe80::7c3b:e8e3:3d1b:284d]) by CY4PR1001MB2389.namprd10.prod.outlook.com
- ([fe80::7c3b:e8e3:3d1b:284d%7]) with mapi id 15.20.3326.026; Mon, 7 Sep 2020
- 15:38:37 +0000
-From:   Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
-To:     "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "Chris.Packham@alliedtelesis.co.nz" 
-        <Chris.Packham@alliedtelesis.co.nz>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: fsl_espi errors on v5.7.15
-Thread-Topic: fsl_espi errors on v5.7.15
-Thread-Index: AQHWceVnik7XsBYbp0S+yHVGh1hdQak2WMaAgAQdSwCAAz9MAIAAfdcAgAD5u4CAB+sMAIAAYfwAgAEDTwCAAPtVgIAAOXwAgABIbACAAAjQgIABm7wAgAD5+gCABBXPAIAAjqOAgAALRACAAAUXgIAA9CsAgADXoQCAAFDQAIAETfoAgAVdPQCAAGBxgA==
-Date:   Mon, 7 Sep 2020 15:38:37 +0000
-Message-ID: <a6bae2a775c3e6b9115a1371157404c4e0f8a73a.camel@infinera.com>
-References: <1598940515.6e06nwgi0c.astroid@bobo.none>
-         <6054f0ec-d994-105b-6399-6cdb65ddd1b6@alliedtelesis.co.nz>
-         <23d13439e4cc1872c29db2f93e715a61f4843943.camel@infinera.com>
-In-Reply-To: <23d13439e4cc1872c29db2f93e715a61f4843943.camel@infinera.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.37.92 
-authentication-results: ellerman.id.au; dkim=none (message not signed)
- header.d=none;ellerman.id.au; dmarc=none action=none
- header.from=infinera.com;
-x-originating-ip: [88.131.87.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 92efe64c-e5cf-4452-de44-08d85344167d
-x-ms-traffictypediagnostic: CY4PR1001MB2312:
-x-microsoft-antispam-prvs: <CY4PR1001MB231272194898BAB67411D6ABF4280@CY4PR1001MB2312.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lxiyakzUWYe5hL06403QHbO5tSVKvCYHMowuV5Fcfg0vbtfY+7V6gxX3v0SZ8Q4ddZh032iR9AoUy3KmE7ByUPp5P0T7ZGsvcw5dWJYb7zBWTgdMuDHWr7Bh+Yl9ltW4ZbVhpmaKsCLoBLFKn4PuUnvPdH3cxgUJx9+BdTKx7SkdkktSFlf4PY+c76czI8WDVHkzrs6ADcvZxYo3iaHYsKG8AZSVHN6mojBFD/pK4dgaXrBH954apyPvu7arJGeMAUV+daxEwG4Cm/bm1MEVGcMgoCyqg9K/f1cI6ryFJdTb3TJGM0u1HfBLC/aUD/uuQAnstzBdUcBSfJOVtEJwJA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR1001MB2389.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(136003)(376002)(366004)(346002)(6486002)(8936002)(5660300002)(4326008)(8676002)(186003)(54906003)(2616005)(316002)(86362001)(6506007)(110136005)(478600001)(66946007)(64756008)(66446008)(36756003)(66556008)(66476007)(91956017)(76116006)(2906002)(7416002)(6512007)(71200400001)(26005)(83380400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: L/AECQQhP2PIio0kWOwUiBwz9BLQcunhjmFRvorQA9cmyu9EkXHuFSy66Vg2petGZhwKL0h0ExGAcWNYfyZHHU+pU1JSuAJUvKvgEWJpPQPI99mHiOuJHuC8O7H3sa86rZOkYxaTRzHgV5MzSyJrs2KsQxBTlM0GYvs84Km3WAOho2Z0WOu4XJz1pnJ7Hx1QVIjuAd+CfcN6kfm8XSoMnniBjdunAAuutmL3MxvObVpWq+hkmdoAo49v11CeG1lkzuwEdAJr/mBJ96xpoVPP21NusZUMucMAElm1XsyvQ4SBRmg6Ro4kIFmGwXzzCOHB7fDlpos4GzgFPIwn4Y1JbdNBO/TcEZZ2b3TbHDpcx5XW7IvyFbiMej0PkKl+Mn96GBgGpHnh9wOtSAsoaacn9PMooMSheC9nl60WkHayIQL9SV9LNDXUAiHFNYpW5s/Wp6mMR6VT1ontaIb8hX2h/PVJBa8/GCFjo7yABN1mAwy6KlU6BUWT/TW0b5GnqOlWMJKfvrBz72V+Tu4IwSl71V2ahdWXfPt9tCvcrt+b8f7Z7/LO6+KwzVP1WTu8CmP3oLT4kdPOeKdMVq27OvYlyHsFvXnSZxJ1zIvQt1tEyKAuIeq3npqAfQtLwBMk7fDWjmHCs25IGP8U0tQPib93Pw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <806B7407E014DA4A9B4348B2D1F8516F@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 7 Sep 2020 11:45:20 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:38271 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730198AbgIGPjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:39:49 -0400
+Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N8onQ-1kZk5z39j4-015qTH; Mon, 07 Sep 2020 17:39:17 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        Russell King <rmk@arm.linux.org.uk>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linus.walleij@linaro.org, Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH 6/9] ARM: oabi-compat: rework sys_semtimedop emulation
+Date:   Mon,  7 Sep 2020 17:36:47 +0200
+Message-Id: <20200907153701.2981205-7-arnd@arndb.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200907153701.2981205-1-arnd@arndb.de>
+References: <20200907153701.2981205-1-arnd@arndb.de>
 MIME-Version: 1.0
-X-OriginatorOrg: infinera.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR1001MB2389.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92efe64c-e5cf-4452-de44-08d85344167d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 15:38:37.1515
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 285643de-5f5b-4b03-a153-0ae2dc8aaf77
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9Se9W/nknR1rFsXGgkMNmjO5Tnm5nGWCdNm8jVqSYINkXvgPoVTDIvvYLQYkFV4npHufv10ngzQnRnHZ97fYCg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1001MB2312
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xJULoYTBL7IEDFaiLfzlEQM1Nn0bBNPGtoKwl3dTiNpPJChDYf7
+ HjQuRLOi09dJKLXTCL7IlVnsnyVGS2k6JhKIbc+XXnGwHss9qNQ8zzy+B432muK/Wgv9buQ
+ vHVzWggvnayHyVzcZvn1/K140MAMQk1gKEOgEAMSerVtVpXeCivJAf32eCkHicO1Yp/c92Q
+ 4Cg++cukhWIRkx1nLQKDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IztGozrAq6g=:weTfevA4N3i1Z8UQAnIPZe
+ 6oQ1npzbKSV+BmV0mQeHpDPXavft3VFEubKuPkJi+QHVXeMF/xpj69lhBporemMvX4P3UoTUB
+ XsmhmWIxUVcCIbj2Pv3f7NaeE5BJWzzsLrFnCO6MU1xcc6qipTfJtU9oe5O46gEIc/ZqrjlIE
+ Jgytoiq0kBrkXjzJbJOkb56OPi1at3IVJlQwSjqAZc33SKzS7FzsoKc2CJgMloiphKsTNM9xo
+ xHRuPrFvQ8HfpSK4ci1tcNNUS3kl6Z1RU4uw60MVclFPDPLRhA7dfWTbvUxwqX8fdAIpyqT+3
+ Ep7CJIC26HG+OwnhBCoF8E3UJBYK0qv34Za4KCaUqAlpDdiP7xWaHqhuarBeznVKcJaKv+VVO
+ S0ea/MsRg1r4FGfsQmicAzFKOTv711UMJzpU7NguY+b1mHBUQiRn17HtCKsU4CYHCESY2uGIh
+ IxLqEWFKF2zkw4rAaJoF8UjWLNuMQ3AOpI+D0MSomChMfbSSXsl6b4DpiOvOsqfeWtq7WV3mp
+ 4x8eVSnsyOIKdS1ScuscfV1fHgYUC6r7sejV+YKeK3FW4sYezAG/EyF2Xkg9TKfw7oW2uzshj
+ ge/ettlqZf0aYQxf0O1DsUs0L938btWyDsgz5MPbFit5DDkicCebtqseMLhkenIAtxurDHxSK
+ DPI4HmCfLTQKwMga70lCy+DsmwgFLVhne1K6i8dk/jCmYSgsFqSBBJt5/96pISCj9Q+9zOUfI
+ /iDlEuK5OWnB1Z/M3/QUKSsyIwsYP5pXQCwNgnPeoY+JYIbKl3G/XQM+EukOq2OkpKgXmvaHz
+ s0zDKBUyfNbH1w1+rzSO0D4Fu7M0Ztvyf10a67YcB+QyYCTvS/N5Aoo1zHM4DRInvIHcEaX
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W1NOSVBdDQo+ID4gDQoNCj4gPiA+IFdvdWxkIHlvdSBiZSBhYmxlIHRvIGZ0cmFjZSB0aGUgaW50
-ZXJydXB0IGhhbmRsZXIgZnVuY3Rpb24gYW5kIHNlZSBpZiB5b3UNCj4gPiA+IGNhbiBzZWUgYSBk
-aWZmZXJlbmNlIGluIG51bWJlciBvciB0aW1pbmcgb2YgaW50ZXJydXB0cz8gSSdtIGF0IGEgYml0
-IG9mDQo+ID4gPiBhIGxvc3MuDQo+ID4gDQo+ID4gSSB0cmllZCBmdHJhY2UgYnV0IEkgcmVhbGx5
-IHdhc24ndCBzdXJlIHdoYXQgSSB3YXMgbG9va2luZyBmb3IuDQo+ID4gQ2FwdHVyaW5nIGEgImJh
-ZCIgY2FzZSB3YXMgcHJldHR5IHRyaWNreS4gQnV0IEkgdGhpbmsgSSd2ZSBpZGVudGlmaWVkIGEN
-Cj4gPiBmaXggKEknbGwgc2VuZCBpdCBhcyBhIHByb3BlciBwYXRjaCBzaG9ydGx5KS4gVGhlIGdp
-c3QgaXMNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMg
-Yi9kcml2ZXJzL3NwaS9zcGktZnNsLWVzcGkuYw0KPiA+IGluZGV4IDdlN2M5MmNhZmRiYi4uY2Ix
-MjBiNjhjMGUyIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvc3BpL3NwaS1mc2wtZXNwaS5jDQo+
-ID4gKysrIGIvZHJpdmVycy9zcGkvc3BpLWZzbC1lc3BpLmMNCj4gPiBAQCAtNTc0LDEzICs1NzQs
-MTQgQEAgc3RhdGljIHZvaWQgZnNsX2VzcGlfY3B1X2lycShzdHJ1Y3QgZnNsX2VzcGkNCj4gPiAq
-ZXNwaSwgdTMyIGV2ZW50cykNCj4gPiDCoMKgc3RhdGljIGlycXJldHVybl90IGZzbF9lc3BpX2ly
-cShzMzIgaXJxLCB2b2lkICpjb250ZXh0X2RhdGEpDQo+ID4gwqDCoHsNCj4gPiDCoMKgwqDCoMKg
-wqDCoMKgwqBzdHJ1Y3QgZnNsX2VzcGkgKmVzcGkgPSBjb250ZXh0X2RhdGE7DQo+ID4gLSAgICAg
-ICB1MzIgZXZlbnRzOw0KPiA+ICsgICAgICAgdTMyIGV2ZW50cywgbWFzazsNCj4gPiANCj4gPiDC
-oMKgwqDCoMKgwqDCoMKgwqBzcGluX2xvY2soJmVzcGktPmxvY2spOw0KPiA+IA0KPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoC8qIEdldCBpbnRlcnJ1cHQgZXZlbnRzKHR4L3J4KSAqLw0KPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoGV2ZW50cyA9IGZzbF9lc3BpX3JlYWRfcmVnKGVzcGksIEVTUElfU1BJRSk7
-DQo+ID4gLSAgICAgICBpZiAoIWV2ZW50cykgew0KPiA+ICsgICAgICAgbWFzayA9IGZzbF9lc3Bp
-X3JlYWRfcmVnKGVzcGksIEVTUElfU1BJTSk7DQo+ID4gKyAgICAgICBpZiAoIShldmVudHMgJiBt
-YXNrKSkgew0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzcGluX3VubG9j
-aygmZXNwaS0+bG9jayk7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJl
-dHVybiBJUlFfTk9ORTsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqB9DQo+ID4gDQo+ID4gVGhlIFNQ
-SUUgcmVnaXN0ZXIgY29udGFpbnMgdGhlIFRYQ05UIHNvIGV2ZW50cyBpcyBwcmV0dHkgbXVjaCBh
-bHdheXMNCj4gPiBnb2luZyB0byBoYXZlIHNvbWV0aGluZyBzZXQuIEJ5IGNoZWNraW5nIGV2ZW50
-cyBhZ2FpbnN0IHdoYXQgd2UndmUNCj4gPiBhY3R1YWxseSByZXF1ZXN0ZWQgaW50ZXJydXB0cyBm
-b3Igd2UgZG9uJ3Qgc2VlIGFueSBzcHVyaW91cyBldmVudHMuDQo+ID4gDQo+ID4gSSd2ZSB0ZXN0
-ZWQgdGhpcyBvbiB0aGUgVDIwODBSREIgYW5kIG9uIG91ciBjdXN0b20gaGFyZHdhcmUgYW5kIGl0
-IHNlZW1zDQo+ID4gdG8gcmVzb2x2ZSB0aGUgcHJvYmxlbS4NCj4gPiANCj4gDQo+IEkgbG9va2Vk
-IGF0IHRoZSBmc2xfZXNwaV9pcnEoKSB0b28gYW5kIG5vdGljZWQgdGhhdCBjbGVhcmluZyBvZiB0
-aGUgSVJRIGV2ZW50cw0KPiBhcmUgYWZ0ZXIgcHJvY2Vzc2luZyBUWC9SWC4gVGhhdCBsb29rcyBh
-IGJpdCBvZGQgdG8gbWUuDQoNCkkgc2hvdWxkIGhhdmUgYmVlbiBtb3JlIHNwZWNpZmljLiBJIHRo
-aW5rIHlvdSBjYW4gbG9vc2UgSVJRcyBhcyBmc2xfZXNwaV9pcnEoKSB3b3JrcyBub3cuDQpDb25z
-aWRlciB0aGlzOg0KMSkgWW91IGdldCBUWCBJUlEgYW5kIGVudGVyIGZzbF9lc3BpX2lycSgpDQoy
-KSBFbnRlciBmc2xfZXNwaV9maWxsX3R4X2ZpZm8oKSB0byBwcm9jZXNzIGFueSBjaGFycyB1bnRp
-bCBkb25lLg0KMykgTm93IHlvdSBnZXQgb25lIG1vcmUgVFggSVJRDQo0KSBmc2xfZXNwaV9pcnEo
-KSBjbGVhciBldmVudHMgLT4gSVJRIGZyb20gMykgaXMgbG9zdC4NCg0KIEpvY2tlDQo=
+sys_oabi_semtimedop() is one of the last users of set_fs() on Arm. To
+remove this one, expose the internal code of the actual implementation
+that operates on a kernel pointer and call it directly after copying.
+
+There should be no measurable impact on the normal execution of this
+function, and it makes the overly long function a little shorter, which
+may help readability.
+
+While reworking the oabi version, make it behave a little more like
+the native one, using kvmalloc_array() and restructure the code
+flow in a similar way.
+
+The naming of __do_semtimedop() is not very good, I hope someone can
+come up with a better name.
+
+One regression was spotted by kernel test robot <rong.a.chen@intel.com>
+and fixed before the first mailing list submission.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/kernel/sys_oabi-compat.c | 38 ++++++++------
+ include/linux/syscalls.h          |  2 +
+ ipc/sem.c                         | 84 +++++++++++++++++++------------
+ 3 files changed, 76 insertions(+), 48 deletions(-)
+
+diff --git a/arch/arm/kernel/sys_oabi-compat.c b/arch/arm/kernel/sys_oabi-compat.c
+index abf1153c5315..d3c6460d13ca 100644
+--- a/arch/arm/kernel/sys_oabi-compat.c
++++ b/arch/arm/kernel/sys_oabi-compat.c
+@@ -80,6 +80,7 @@
+ #include <linux/socket.h>
+ #include <linux/net.h>
+ #include <linux/ipc.h>
++#include <linux/ipc_namespace.h>
+ #include <linux/uaccess.h>
+ #include <linux/slab.h>
+ 
+@@ -293,46 +294,51 @@ struct oabi_sembuf {
+ 	unsigned short	__pad;
+ };
+ 
++#define sc_semopm     sem_ctls[2]
++
+ asmlinkage long sys_oabi_semtimedop(int semid,
+ 				    struct oabi_sembuf __user *tsops,
+ 				    unsigned nsops,
+ 				    const struct old_timespec32 __user *timeout)
+ {
++	struct ipc_namespace *ns;
+ 	struct sembuf *sops;
+-	struct old_timespec32 local_timeout;
+ 	long err;
+ 	int i;
+ 
++	ns = current->nsproxy->ipc_ns;
++	if (nsops > ns->sc_semopm)
++		return -E2BIG;
+ 	if (nsops < 1 || nsops > SEMOPM)
+ 		return -EINVAL;
+-	if (!access_ok(tsops, sizeof(*tsops) * nsops))
+-		return -EFAULT;
+-	sops = kmalloc_array(nsops, sizeof(*sops), GFP_KERNEL);
++	sops = kvmalloc_array(nsops, sizeof(*sops), GFP_KERNEL);
+ 	if (!sops)
+ 		return -ENOMEM;
+ 	err = 0;
+ 	for (i = 0; i < nsops; i++) {
+ 		struct oabi_sembuf osb;
+-		err |= __copy_from_user(&osb, tsops, sizeof(osb));
++		err |= copy_from_user(&osb, tsops, sizeof(osb));
+ 		sops[i].sem_num = osb.sem_num;
+ 		sops[i].sem_op = osb.sem_op;
+ 		sops[i].sem_flg = osb.sem_flg;
+ 		tsops++;
+ 	}
+-	if (timeout) {
+-		/* copy this as well before changing domain protection */
+-		err |= copy_from_user(&local_timeout, timeout, sizeof(*timeout));
+-		timeout = &local_timeout;
+-	}
+ 	if (err) {
+ 		err = -EFAULT;
+-	} else {
+-		mm_segment_t fs = get_fs();
+-		set_fs(KERNEL_DS);
+-		err = sys_semtimedop_time32(semid, sops, nsops, timeout);
+-		set_fs(fs);
++		goto out;
++	}
++
++	if (timeout) {
++		struct timespec64 ts;
++		err = get_old_timespec32(&ts, timeout);
++		if (err)
++			goto out;
++		err = __do_semtimedop(semid, sops, nsops, &ts, ns);
++		goto out;
+ 	}
+-	kfree(sops);
++	err = __do_semtimedop(semid, sops, nsops, NULL, ns);
++out:
++	kvfree(sops);
+ 	return err;
+ }
+ 
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 75ac7f8ae93c..c77bd4cce536 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1340,6 +1340,8 @@ long ksys_old_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
+ long compat_ksys_semtimedop(int semid, struct sembuf __user *tsems,
+ 			    unsigned int nsops,
+ 			    const struct old_timespec32 __user *timeout);
++long __do_semtimedop(int semid, struct sembuf *tsems, unsigned int nsops,
++		     const struct timespec64 *timeout, struct ipc_namespace *ns);
+ 
+ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
+ 		int __user *optlen);
+diff --git a/ipc/sem.c b/ipc/sem.c
+index 8c0244e0365e..515a39a67534 100644
+--- a/ipc/sem.c
++++ b/ipc/sem.c
+@@ -1978,46 +1978,34 @@ static struct sem_undo *find_alloc_undo(struct ipc_namespace *ns, int semid)
+ 	return un;
+ }
+ 
+-static long do_semtimedop(int semid, struct sembuf __user *tsops,
+-		unsigned nsops, const struct timespec64 *timeout)
++long __do_semtimedop(int semid, struct sembuf *sops,
++		unsigned nsops, const struct timespec64 *timeout,
++		struct ipc_namespace *ns)
+ {
+ 	int error = -EINVAL;
+ 	struct sem_array *sma;
+-	struct sembuf fast_sops[SEMOPM_FAST];
+-	struct sembuf *sops = fast_sops, *sop;
++	struct sembuf *sop;
+ 	struct sem_undo *un;
+ 	int max, locknum;
+ 	bool undos = false, alter = false, dupsop = false;
+ 	struct sem_queue queue;
+ 	unsigned long dup = 0, jiffies_left = 0;
+-	struct ipc_namespace *ns;
+-
+-	ns = current->nsproxy->ipc_ns;
+ 
+ 	if (nsops < 1 || semid < 0)
+ 		return -EINVAL;
+ 	if (nsops > ns->sc_semopm)
+ 		return -E2BIG;
+-	if (nsops > SEMOPM_FAST) {
+-		sops = kvmalloc_array(nsops, sizeof(*sops), GFP_KERNEL);
+-		if (sops == NULL)
+-			return -ENOMEM;
+-	}
+-
+-	if (copy_from_user(sops, tsops, nsops * sizeof(*tsops))) {
+-		error =  -EFAULT;
+-		goto out_free;
+-	}
+ 
+ 	if (timeout) {
+ 		if (timeout->tv_sec < 0 || timeout->tv_nsec < 0 ||
+ 			timeout->tv_nsec >= 1000000000L) {
+ 			error = -EINVAL;
+-			goto out_free;
++			goto out;
+ 		}
+ 		jiffies_left = timespec64_to_jiffies(timeout);
+ 	}
+ 
++
+ 	max = 0;
+ 	for (sop = sops; sop < sops + nsops; sop++) {
+ 		unsigned long mask = 1ULL << ((sop->sem_num) % BITS_PER_LONG);
+@@ -2046,7 +2034,7 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 		un = find_alloc_undo(ns, semid);
+ 		if (IS_ERR(un)) {
+ 			error = PTR_ERR(un);
+-			goto out_free;
++			goto out;
+ 		}
+ 	} else {
+ 		un = NULL;
+@@ -2057,25 +2045,25 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 	if (IS_ERR(sma)) {
+ 		rcu_read_unlock();
+ 		error = PTR_ERR(sma);
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	error = -EFBIG;
+ 	if (max >= sma->sem_nsems) {
+ 		rcu_read_unlock();
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	error = -EACCES;
+ 	if (ipcperms(ns, &sma->sem_perm, alter ? S_IWUGO : S_IRUGO)) {
+ 		rcu_read_unlock();
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	error = security_sem_semop(&sma->sem_perm, sops, nsops, alter);
+ 	if (error) {
+ 		rcu_read_unlock();
+-		goto out_free;
++		goto out;
+ 	}
+ 
+ 	error = -EIDRM;
+@@ -2089,7 +2077,7 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 	 * entangled here and why it's RMID race safe on comments at sem_lock()
+ 	 */
+ 	if (!ipc_valid_object(&sma->sem_perm))
+-		goto out_unlock_free;
++		goto out_unlock;
+ 	/*
+ 	 * semid identifiers are not unique - find_alloc_undo may have
+ 	 * allocated an undo structure, it was invalidated by an RMID
+@@ -2098,7 +2086,7 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 	 * "un" itself is guaranteed by rcu.
+ 	 */
+ 	if (un && un->semid == -1)
+-		goto out_unlock_free;
++		goto out_unlock;
+ 
+ 	queue.sops = sops;
+ 	queue.nsops = nsops;
+@@ -2124,10 +2112,10 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 		rcu_read_unlock();
+ 		wake_up_q(&wake_q);
+ 
+-		goto out_free;
++		goto out;
+ 	}
+ 	if (error < 0) /* non-blocking error path */
+-		goto out_unlock_free;
++		goto out_unlock;
+ 
+ 	/*
+ 	 * We need to sleep on this operation, so we put the current
+@@ -2192,14 +2180,14 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 		if (error != -EINTR) {
+ 			/* see SEM_BARRIER_2 for purpose/pairing */
+ 			smp_acquire__after_ctrl_dep();
+-			goto out_free;
++			goto out;
+ 		}
+ 
+ 		rcu_read_lock();
+ 		locknum = sem_lock(sma, sops, nsops);
+ 
+ 		if (!ipc_valid_object(&sma->sem_perm))
+-			goto out_unlock_free;
++			goto out_unlock;
+ 
+ 		/*
+ 		 * No necessity for any barrier: We are protect by sem_lock()
+@@ -2211,7 +2199,7 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 		 * Leave without unlink_queue(), but with sem_unlock().
+ 		 */
+ 		if (error != -EINTR)
+-			goto out_unlock_free;
++			goto out_unlock;
+ 
+ 		/*
+ 		 * If an interrupt occurred we have to clean up the queue.
+@@ -2222,13 +2210,45 @@ static long do_semtimedop(int semid, struct sembuf __user *tsops,
+ 
+ 	unlink_queue(sma, &queue);
+ 
+-out_unlock_free:
++out_unlock:
+ 	sem_unlock(sma, locknum);
+ 	rcu_read_unlock();
++out:
++	return error;
++}
++
++static long do_semtimedop(int semid, struct sembuf __user *tsops,
++		unsigned nsops, const struct timespec64 *timeout)
++{
++	struct sembuf fast_sops[SEMOPM_FAST];
++	struct sembuf *sops = fast_sops;
++	struct ipc_namespace *ns;
++	int ret;
++
++	ns = current->nsproxy->ipc_ns;
++	if (nsops > ns->sc_semopm)
++		return -E2BIG;
++	if (nsops < 1)
++		return -EINVAL;
++
++	if (nsops > SEMOPM_FAST) {
++		sops = kvmalloc_array(nsops, sizeof(*sops), GFP_KERNEL);
++		if (sops == NULL)
++			return -ENOMEM;
++	}
++
++	if (copy_from_user(sops, tsops, nsops * sizeof(*tsops))) {
++		ret =  -EFAULT;
++		goto out_free;
++	}
++
++	ret = __do_semtimedop(semid, sops, nsops, timeout, ns);
++
+ out_free:
+ 	if (sops != fast_sops)
+ 		kvfree(sops);
+-	return error;
++
++	return ret;
+ }
+ 
+ long ksys_semtimedop(int semid, struct sembuf __user *tsops,
+-- 
+2.27.0
+
