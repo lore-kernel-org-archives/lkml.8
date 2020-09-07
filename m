@@ -2,76 +2,218 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46713C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E737C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F54F2177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4916221556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:45:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="raI55Rxq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbgIGUky (ORCPT
+        id S1726895AbgIGUpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:40:54 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43996 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbgIGUkv (ORCPT
+        Mon, 7 Sep 2020 16:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbgIGUpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:40:51 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id 7784A290B21
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 0B999480117; Mon,  7 Sep 2020 22:40:47 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
-        <mylene.josserand@collabora.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 3/4] Input: rotary-encoder - Use dev_err_probe
-Date:   Mon,  7 Sep 2020 22:40:44 +0200
-Message-Id: <20200907204045.95530-4-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907204045.95530-1-sebastian.reichel@collabora.com>
-References: <20200907204045.95530-1-sebastian.reichel@collabora.com>
+        Mon, 7 Sep 2020 16:45:22 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89846C061573;
+        Mon,  7 Sep 2020 13:45:22 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id k13so3512647oor.2;
+        Mon, 07 Sep 2020 13:45:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:from:to:cc:references:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C6Dh5WnmaEu3Cq7lugf69DqugYHTlbRff+CCBEqtxhk=;
+        b=raI55RxqPEw8HJzhdujXIJDNZb5V35Bj4u6WMIHSntVu1Ph7EwrkyShPVlOxnfXliC
+         RH8otTU9EnOWxvmt3zHeHaXG3PaGplu59D9JIP1NsgQeuXWZ/vsef+vk6jARMLakRupG
+         HtzvIw+LiopMlZcRjSGGo8baj51/MJJTkZwH5Qs+wiVZfK/EEguSTJteSyU7t7O27tHZ
+         1OBB50etVFrIhy3ekU+a0sVCC0rN7GKZGaCiR0uD3a6r2KchXQWfePuxafwkbPaYVyIK
+         2r/diDi7DbAkJiCH7i+HRrupdVmQ9vkdS+3wZemg/jjPR1kzvAXG3aI+Z3M5TWjUy6qD
+         rY6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:from:to:cc:references:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=C6Dh5WnmaEu3Cq7lugf69DqugYHTlbRff+CCBEqtxhk=;
+        b=QljT83l7Jsf5mX/GplRKbCqFaWWk6Hm+AfoTH/1IvxOM8oCXG7nToNXqeiPNOiRssx
+         2OcmnTrkZPIojFqZfQabvAXtADPQpa1SI1X6kQ6pbQee1AH9rTlyKfACqjRlNZ/sXgBC
+         r2qTZwOmHugvBzKxeyjzLW3x+F93w2BuaTFt5tLmXjqvdExYaQukn9vNHRsh5AEwHFYL
+         Csxqk4hs7m/5Vxb3KE9bDyAVnxA6ivfmk9qIn8diN5YOZTD3VIw6wi70t+7+CMS3vf63
+         /RDeQgNWtVjVDRb6Eg8t05ML25a+pUsjLxwd6AJ9zcB/084LW4Ng0ByIrcP80I4lLFBS
+         m7Jg==
+X-Gm-Message-State: AOAM531gJVU4k9DljOrWLcU37K4bdRPdwN47E4IWVk9wAXgikTivJ1jY
+        MK+cfEsAOasFRpoOXSGGhCoFlzTkHSw=
+X-Google-Smtp-Source: ABdhPJzuRJAfoSchtkBbVzCOzb6eGEp5lBLr0HasviOq2XcXMPDT4d9+bcdQib1t9KwCJLCYROA5JA==
+X-Received: by 2002:a4a:3e13:: with SMTP id t19mr16040242oot.49.1599511520466;
+        Mon, 07 Sep 2020 13:45:20 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id k18sm3151654otj.55.2020.09.07.13.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 13:45:20 -0700 (PDT)
+Subject: Re: watchdog: sp5100_tco support for AMD V/R/E series
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jan Kiszka <jan.kiszka@siemens.com>, linux-watchdog@vger.kernel.org
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org,
+        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
+        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
+        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
+References: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
+ <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
+ <9e270546-7962-932b-2e4c-3c833b7d4b30@siemens.com>
+ <a70578a9-4e55-602b-68fe-56a01805965e@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <39327ba6-0eff-3555-124c-64f3f105c9fe@roeck-us.net>
+Date:   Mon, 7 Sep 2020 13:45:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <a70578a9-4e55-602b-68fe-56a01805965e@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify driver a bit by making use of dev_err_probe.
+On 9/7/20 12:18 PM, Guenter Roeck wrote:
+> On 9/7/20 8:46 AM, Jan Kiszka wrote:
+>> On 07.09.20 17:31, Guenter Roeck wrote:
+>>> On 9/7/20 4:20 AM, Jan Kiszka wrote:
+>>>> Hi all,
+>>>>
+>>>> Arsalan reported that the upstream driver for sp5100_tco does not work
+>>>> for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
+>>>>
+>>>> [   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
+>>>> [   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
+>>>> [   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
+>>>>
+>>>> ..and fix it:
+>>>>
+>>>> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+>>>> index 85e9664318c9..5482154fde42 100644
+>>>> --- a/drivers/watchdog/sp5100_tco.c
+>>>> +++ b/drivers/watchdog/sp5100_tco.c
+>>>> @@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
+>>>>  		/* Set the Watchdog timer resolution to 1 sec and enable */
+>>>>  		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
+>>>>  					  ~EFCH_PM_WATCHDOG_DISABLE,
+>>>> -					  EFCH_PM_DECODEEN_SECOND_RES);
+>>>> +					  EFCH_PM_DECODEEN_SECOND_RES |
+>>>> +					  EFCH_PM_DECODEEN_WDT_TMREN);
+>>>
+>>> Confusing. The register in question is a 32-bit register, but only a byte
+>>> is written into it. Bit 24-25 are supposed to be the resolution, bit 25-26
+>>> set to 0 enable the watchdog. Bit 7 is supposed to enable MMIO decoding.
+>>> This is from AMD Publication 52740. So something in the existing code
+>>> is (or seems to be) wrong, but either case I don't see how setting bit 7
+>>> (or 31 ?) would enable the watchdog hardware.
+>>>
+>>> Hmm, I wrote that code. Guess I'll need to to spend some time figuring out
+>>> what is going on.
+>>
+>> The logic came from [1] which inspired [2] - that's where I pointed out
+>> the large overlap with the existing upstream driver. I would love to see
+>> all that consolidated.
+>>
+>> BTW, the R1505G is family 0x17. Maybe something changed there, and that
+>> bit 7 was just reserved/ignored so far. ENOSPECS
+>>
+> 
+> Thanks for the pointers.
+> 
+> I think you are talking about bit 31. Bit 7 is and was WatchdogTmrEn, but that
+> supposedly only enables watchdog timer memory access at 0xfeb00000. From what
+> I glance from the other drivers, the existing code is wrong. It should set
+> the disable and resolution bits in register offset 3 (bit 24..27), not 0.
+> In other words, EFCH_PM_DECODEEN3 should be defined as 0x03, not as 0x00.
+> Which actually makes sense from the name.
+> 
+> Playing with my hardware, turns out that setting bit 7 in EFCH_PM_DECODEEN
+> (register offset 0) does indeed enable the watchdog. I'll need to check
+> if it actually works. Either case, -ENOSPECS is really a problem here.
+> 
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- drivers/input/misc/rotary_encoder.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+... and it does work. After playing with it, it seems that on Family 17h
+CPUs EFCH_PM_DECODEEN_WDT_TMREN not only enables watchdog timer memory
+access at 0xfeb0000, but also enables the watchdog itself.
 
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-index e9a5dbb10513..16ad86fad7cb 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -241,12 +241,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
- 
- 	encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
--	if (IS_ERR(encoder->gpios)) {
--		err = PTR_ERR(encoder->gpios);
--		if (err != -EPROBE_DEFER)
--			dev_err(dev, "unable to get gpios: %d\n", err);
--		return err;
--	}
-+	if (IS_ERR(encoder->gpios))
-+		return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
- 	if (encoder->gpios->ndescs < 2) {
- 		dev_err(dev, "not enough gpios found\n");
- 		return -EINVAL;
--- 
-2.28.0
+Also, turns out the documentation is now public, at least for some of the
+Family 17h CPUs (though oddly enough not for all of them). See processor
+reference manuals at https://www.amd.com/en/support/tech-docs. The documents
+for model 18h and model 20h include a note stating that bit 7 of
+EFCH_PM_DECODEEN enables both memory access and the watchdog hardware.
+
+So we'll need two patches - one to fix the value of EFCH_PM_DECODEEN3,
+and one to enable the watchdog bit setting bit 7 of EFCH_PM_DECODEEN
+for Family 17h CPUs.
+
+Thanks,
+Guenter
+
+> Guenter
+> 
+>> Jan
+>>
+>> [1]
+>> https://git.yoctoproject.org/cgit/cgit.cgi/meta-amd/commit/meta-amd-bsp/recipes-kernel/amd-wdt/files/amd_wdt.c?id=cd760c9f04d276382a0f5156dabdb766594ace56
+>> [2]
+>> https://github.com/siemens/efibootguard/commit/3a702aa96d193f26571ea4e70db29ef01a0d4d5f
+>>
+> 
 
