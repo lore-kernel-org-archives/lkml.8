@@ -2,111 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A140C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA315C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2067721741
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599485961;
-	bh=F+vehrrDrAfIV9i6ID63zh7sEgGFkW6eFJYW5E8YQHQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tVhhjP2y/wYRbARAknjmlrkjAiTNegkReq9siQxzRp5drLBOa6MYRcew1jm/LI/B9
-	 ysmQ5VlETxhCybFAlqBsUyoF7JAyZ5/GjpRN1q8ACXQJB05jpSgS0xodXTvwh8RZkg
-	 2oQP5qZdqzbyjwOAx5R+aVvtmEEkKNHNortKwJAg=
+	by mail.kernel.org (Postfix) with ESMTP id A55CD215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbgIGNiZ (ORCPT
+        id S1729622AbgIGNju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:38:25 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36143 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729401AbgIGNXD (ORCPT
+        Mon, 7 Sep 2020 09:39:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729590AbgIGNZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:23:03 -0400
-Received: by mail-wr1-f66.google.com with SMTP id z1so15843751wrt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:22:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jw3ZabYmqpCSQDTYowWmd33rXHnppYFQbMxFutigDOU=;
-        b=kxsPUFaELtJLHPWAoYt1fnYie4NDdmSyfj2XTuHHRtmyelUxLgrfy+MYiiVluR1YnF
-         ch8+T1egldCGhUF5iq5hw7LlxVJwXufICiA5JmXfsW7kL+QDwJdy4S3rq1FNuXDOFdsl
-         0AZuHXvgTwMsURx8WvZ1enLbMM+F7hgKaJtRUkl9bc/E3qfBOVGLmzjgzfVC0cncj6Io
-         VpHkSdXx75Qlh/HTOmroZnT+Ld+q/K4CERVU7tENr7utne38Tcs2LfevyX9fscFe8YV3
-         u41utouiZv6IpasPplIRQkg1B6QxghVwbUNpNgA87PnXO8yVTbOPxpRGRtfUUpPl/lYr
-         3Akg==
-X-Gm-Message-State: AOAM532pvbK8twtCucbiwnXV2bnLFNkbm1a1yWzA9NtflKBNrwzKjLOY
-        qkr7sypIj4O6B2DA0zjY++ejhTNjjd0H+Lmyazs=
-X-Google-Smtp-Source: ABdhPJy+SlaAJQL068e7tf1CGc3id41YdCtykVF6ENJPsogzaYmryxf4shlGtuSlnL+c2XDjfu8nrWoFf6HdOXbZVKs=
-X-Received: by 2002:adf:82d5:: with SMTP id 79mr17700246wrc.60.1599484956845;
- Mon, 07 Sep 2020 06:22:36 -0700 (PDT)
+        Mon, 7 Sep 2020 09:25:26 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BF8C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:25:24 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 841552922B6
+Subject: Re: [PATCH] platform/chrome: Kconfig: Remove the transitional
+ MFD_CROS_EC config
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org
+References: <20200903141746.996974-1-enric.balletbo@collabora.com>
+Message-ID: <5b2a2b4e-0b5e-7087-4e4d-d07058ee8d04@collabora.com>
+Date:   Mon, 7 Sep 2020 15:25:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200907034502.753230-1-namhyung@kernel.org> <20200907034502.753230-2-namhyung@kernel.org>
- <20200907112925.GJ1199773@krava> <20200907113201.GK1199773@krava>
-In-Reply-To: <20200907113201.GK1199773@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 7 Sep 2020 22:22:25 +0900
-Message-ID: <CAM9d7cisp7QQJF8RT7fPW4rQ4tTrZtK8PM61fKGFKGE-xHqevw@mail.gmail.com>
-Subject: Re: [PATCH 1/9] perf evlist: Fix cpu/thread map leak
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200903141746.996974-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiri,
+Hi Gwendal and Guenter,
 
-On Mon, Sep 7, 2020 at 8:32 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Mon, Sep 07, 2020 at 01:29:29PM +0200, Jiri Olsa wrote:
-> > On Mon, Sep 07, 2020 at 12:44:54PM +0900, Namhyung Kim wrote:
-> > > Asan reported leak of cpu and thread maps as they have one more
-> > > refcount than released.  I found that after setting evlist maps it
-> > > should release it's refcount.
-> > >
-> > > It seems to be broken from the beginning so I chose the original
-> > > commit as the culprit.  But not sure how it's applied to stable trees
-> > > since there are many changes in the code after that.
-> > >
-> > > Fixes: 7e2ed097538c5 ("perf evlist: Store pointer to the cpu and thread maps")
-> > > Fixes: 4112eb1899c0e ("perf evlist: Default to syswide target when no thread/cpu maps set")
-> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > ---
-> > >  tools/perf/util/evlist.c | 11 ++++++++---
-> > >  1 file changed, 8 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > > index e3fa3bf7498a..c0768c61eb43 100644
-> > > --- a/tools/perf/util/evlist.c
-> > > +++ b/tools/perf/util/evlist.c
-> > > @@ -946,6 +946,10 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
-> > >
-> > >     perf_evlist__set_maps(&evlist->core, cpus, threads);
-> > >
-> > > +   /* as evlist now has references, put count here */
-> > > +   perf_cpu_map__put(cpus);
-> > > +   perf_thread_map__put(threads);
-> >
-> > nice catch, I checked perf_evlist__create_syswide_maps is doing this
->
-> because you fixed that :))) missed the rest of the patch.. sry
+Thank you for the review and tested tags.
 
-No worries and thanks for the review! :)
+On 3/9/20 16:17, Enric Balletbo i Serra wrote:
+> The MFD_CROS_EC config was a transitional Kconfig option to not break
+> current defconfigs in the kernel. Now, this is not required anymore
+> because all the defconfigs have been removed this option and migrated to
+> enable the CrOS EC parts individually.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Namhyung
+Applied for 5.10
+
+Thanks,
+ Enric
+
+> ---
+> 
+>  drivers/platform/chrome/Kconfig | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+> index a056031dee81..ccc23d8686e8 100644
+> --- a/drivers/platform/chrome/Kconfig
+> +++ b/drivers/platform/chrome/Kconfig
+> @@ -3,16 +3,6 @@
+>  # Platform support for Chrome OS hardware (Chromebooks and Chromeboxes)
+>  #
+>  
+> -config MFD_CROS_EC
+> -	tristate "Platform support for Chrome hardware (transitional)"
+> -	select CHROME_PLATFORMS
+> -	select CROS_EC
+> -	select MFD_CROS_EC_DEV
+> -	depends on X86 || ARM || ARM64 || COMPILE_TEST
+> -	help
+> -	  This is a transitional Kconfig option and will be removed after
+> -	  everyone enables the parts individually.
+> -
+>  menuconfig CHROME_PLATFORMS
+>  	bool "Platform support for Chrome hardware"
+>  	depends on X86 || ARM || ARM64 || COMPILE_TEST
+> 
