@@ -2,100 +2,107 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91876C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F68C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EFB92080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498752;
-	bh=DPat3ZlRzIlx3pGvdlS9ov4+JwXoTqRT6aH65lpZpUw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kfgTMehwAzYKlQmxQJlPc1LCdRW+SYTkp/3u2Z0n6u5XkaEKbeLo4O1EA+tOKvNDv
-	 df2Dolu/q4rEcBpOe8pIzLkoSEIaJz/zYVDAw4SJOCe0F3rxWYffxotXbGCpWrPBqi
-	 felytCTwEm3KV1T/wvlPX7yawEhZNiPPhTA3uQI4=
+	by mail.kernel.org (Postfix) with ESMTP id 65EE1215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oWMY50Au";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UQTtLpmF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbgIGRMb (ORCPT
+        id S1730321AbgIGQck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbgIGRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:12:12 -0400
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DA43217A0;
-        Mon,  7 Sep 2020 17:12:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599498731;
-        bh=DPat3ZlRzIlx3pGvdlS9ov4+JwXoTqRT6aH65lpZpUw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hDIxuj2XhhhEEqVgjAA3HcCmq5ToR/R66AcQtmotmjrIDZak1xnhMwZhFXqG9mJVl
-         7gx4HAq0nxoE/XiAVFScPLr9HnUwWyEzmXGrGcVisKN4f76KZkCiy8vk4j7HSLwCIM
-         zLC88dGIlGzNeTM4sDs8L5lj74Oyn5DD+fXSDc78=
-Received: by mail-ed1-f46.google.com with SMTP id c10so13404467edk.6;
-        Mon, 07 Sep 2020 10:12:11 -0700 (PDT)
-X-Gm-Message-State: AOAM5305R91HP1SniJPOH1bTem9grAExEjciNUjX+7V/6HqighDmuHdT
-        PdUIZMn73wB0QGOc2EIEL6LBB88HMaZwNRGeh9Y=
-X-Google-Smtp-Source: ABdhPJzMyTdkAJy73PxNoZs+gNdlcqSGeh07/2bjshW3rB0M3t0yIQeyrq5QnkZWdasM4Y6BXvKIZqTmLZdf4IZC5FI=
-X-Received: by 2002:aa7:da16:: with SMTP id r22mr23231660eds.132.1599498730074;
- Mon, 07 Sep 2020 10:12:10 -0700 (PDT)
+        Mon, 7 Sep 2020 12:32:40 -0400
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:33858
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729912AbgIGQcX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599496342;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=ie/UW1q7qYJ7A4l1wEZedjb4fjgyJgYXxjxBmypAwX8=;
+        b=oWMY50Auq9LvOD4CpwfSjzCuNKaCr+YMQZrnir40m3uVqfq/O004FAQrzUOnztcR
+        2sVdVrja2EkpdesG3/FwPFsi0w9AnStxjbl+aniyT9ZGCaiQBMYOxQoHDsR5PW+U9h6
+        EimUfz7yy55SqW5EqPkC338KJQFE5CFVIx+GZPus=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599496342;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=ie/UW1q7qYJ7A4l1wEZedjb4fjgyJgYXxjxBmypAwX8=;
+        b=UQTtLpmFEEBiai2avOiuWb51RIbjT799Ld09K/lG0gzgSs2bK50b2qceOIB6U4Hc
+        VfjONddx7DT76kkYznZbTy8xkUsDjp9/8Y6110pSQZyB/x0erK429gbPy5hYu7/vSlY
+        gnxcOlrVqtgBT22AV6amiBbekwEC7IFQz6U3Mr74=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3B4B3C560F9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Allen Pais <allen.cryptic@gmail.com>
+Cc:     Allen Pais <allen.lkml@gmail.com>, chunkeey@googlemail.com,
+        jirislaby@kernel.org, brcm80211-dev-list@cypress.com,
+        pkshih@realtek.com, b43-dev@lists.infradead.org, dsd@gentoo.org,
+        ath11k@lists.infradead.org, kune@deine-taler.de,
+        mickflemm@gmail.com, Kees Cook <keescook@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        brcm80211-dev-list.pdl@broadcom.com, yhchuang@realtek.com,
+        netdev@vger.kernel.org, helmut.schaa@googlemail.com,
+        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mcgrof@kernel.org, stas.yakovlev@gmail.com,
+        Romain Perier <romain.perier@gmail.com>,
+        Larry.Finger@lwfinger.net
+Subject: Re: [PATCH 01/16] wireless: ath5k: convert tasklets to use new tasklet_setup() API
+References: <20200817090637.26887-2-allen.cryptic@gmail.com>
+        <20200827101540.6589BC433CB@smtp.codeaurora.org>
+        <CAEogwTB=S6M6Xp4w5dd_W3b6Depmn6Gmu3RmAf96pRankoJQqg@mail.gmail.com>
+Date:   Mon, 7 Sep 2020 16:32:22 +0000
+In-Reply-To: <CAEogwTB=S6M6Xp4w5dd_W3b6Depmn6Gmu3RmAf96pRankoJQqg@mail.gmail.com>
+        (Allen Pais's message of "Thu, 27 Aug 2020 16:14:45 +0530")
+Message-ID: <0101017469694cc1-f6a00b6e-46ef-44be-b476-3aabf0fb4a55-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-References: <20200907161141.31034-1-krzk@kernel.org> <20200907161141.31034-3-krzk@kernel.org>
- <20200907173819.00005a48@Huawei.com>
-In-Reply-To: <20200907173819.00005a48@Huawei.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 7 Sep 2020 19:11:57 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPe0W_+hN=pk9F5O61w7riYuBhmK3=JvrYzDY8LU7xvH4A@mail.gmail.com>
-Message-ID: <CAJKOXPe0W_+hN=pk9F5O61w7riYuBhmK3=JvrYzDY8LU7xvH4A@mail.gmail.com>
-Subject: Re: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second
- interrupt with touch screen
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-SES-Outgoing: 2020.09.07-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Sep 2020 at 18:39, Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> On Mon,  7 Sep 2020 18:11:18 +0200
-> Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> > The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
-> > screen.  In such case the second interrupt is required.  This second
-> > interrupt can be anyway provided, even without touch screens.  This
-> > fixes dtbs_check warnings like:
-> >
-> >   arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> Acked-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
->
-> Or I can pick this up through the IIO tree if that makes sense.
-> I doubt anything else will touch this binding this cycle, so either
-> way works for me.
+Allen Pais <allen.cryptic@gmail.com> writes:
 
-Let's wait for Rob's review and then if you could, please pick it up.
+> Hi,
+>>
+>> Allen Pais <allen.cryptic@gmail.com> wrote:
+>>
+>> > In preparation for unconditionally passing the
+>> > struct tasklet_struct pointer to all tasklet
+>> > callbacks, switch to using the new tasklet_setup()
+>> > and from_tasklet() to pass the tasklet pointer explicitly.
+>> >
+>> > Signed-off-by: Romain Perier <romain.perier@gmail.com>
+>> > Signed-off-by: Allen Pais <allen.lkml@gmail.com>
+>> > Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+>>
+>> Patch applied to ath-next branch of ath.git, thanks.
+>>
+>> c068a9ec3c94 ath5k: convert tasklets to use new tasklet_setup() API
+>>
+>> --
+>> https://patchwork.kernel.org/patch/11717393/
+>>
+>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>
+> Could you please drop these and wait for V2. A change was proposed
+> for from_tasklet() api. The new API should be picked shortly. I will send out
+> the updated version early next week.
 
-Best regards,
-Krzysztof
+Too late, I don't normally rebase my trees as it's just too much of a
+hassle. Please don't submit patches which are not ready to be applied!
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
