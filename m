@@ -2,103 +2,154 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F822C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C112C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA49A207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="TgUoCjHN"
+	by mail.kernel.org (Postfix) with ESMTP id 3A310207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599498135;
+	bh=lixp8BxmKE9x3A7XjRdy/g2rDI2HUaEJA24QkMcIIMs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MdyVci50dg9ubT5fCvH258+KHTn/XYt20gjQWlb67k2+CwqkqzSXHKX9wE6/wmvWG
+	 ePAaL4hk196vUx9xblwCqN8Ox2hL0CZVHFL8JpAQCBVf4RfzVsvp+1zfLAgaehzpF3
+	 UJSjKipBKzNIpZ61bwvjTysVvjE3oAppIUZRBgio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730730AbgIGRBy (ORCPT
+        id S1730887AbgIGRCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730685AbgIGRBq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:01:46 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58286C061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 10:01:45 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id a17so16454944wrn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 10:01:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MRcq04UOJn8K0NnxNF75RCJpBDeKXA2i3d34tYFG4E8=;
-        b=TgUoCjHN4oaBnmsxs801CkJCQDsWF2s6qajW+F5ShhU8pWxBMI2wWkl+FdZ7cdfbzh
-         +SATGdOFxEMIMX6p02p/h2IPZPqme5O/9RSTKfbRfy0UYoJx23eEX/fK1bjzvZ3/teNW
-         q07YeJKxsAK1ekPlsToVqHtYX33B0q4ZaI5hh6T5kzdH7XkNBa6VQeAonw7mmcUEvLLT
-         Ccc/VS2YRz7dhhK8OQo0vnX49RFPeKEsSFpvSUfzBggkr3483D0w9hPjWUG2WvLEJr2A
-         Aoefr2ZPGX1VZFlVIdwQXjtG+avIoy9lu8347R/B+LjcvnzmKkmkOw2AMUlN+oZD5Spc
-         dFvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MRcq04UOJn8K0NnxNF75RCJpBDeKXA2i3d34tYFG4E8=;
-        b=W5lOWIjNmq+98TrGiSJO2U8rLO27u6p8Gxq6z2JODb1R8KJHRCXXDROkqaVhqncoXh
-         VR4H4oPRzIqv1V2cGjzsVJRkwZt3qxEOkwBntlP8hwxNbujUlkLDPa++SkGNCmcBtLE9
-         uhq6wr+TSCENGfA6Cf0Lw3yruG2UGvcbFoOFWCjgWwT6i3mtJCXUnC4zhAdesNz2/ACG
-         w/2QskHF6RBxwkQiMpIQgmKJwsCoJ/iSIAEokRbveJM1R6yqPnSDR+8LkGPfS5wbwGRL
-         8z1QLxx0kNNrCxJD/wSKJ7aNdweVsluuNS8G4m5WyYhFKSxq5in9zo/pZODVGgeGgS2P
-         2+7A==
-X-Gm-Message-State: AOAM532GG/z1Bpgi3zJDoJ2Lx6E7nbCBab+XZCsfLetexTs0kcZcMs7S
-        t3fpG5qi6v6RYGxcb9eY+FUvkg==
-X-Google-Smtp-Source: ABdhPJxXhv6ruRhbqy3IpPxbzNKQKsFV0+qsm/yVhoZ/DUmCzf+zTePlfY5dJFLHNAyI5JYQf/5jCg==
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr23393083wrw.426.1599498103769;
-        Mon, 07 Sep 2020 10:01:43 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id x10sm29060894wmi.37.2020.09.07.10.01.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 10:01:42 -0700 (PDT)
-Subject: Re: [PATCH v2 1/6] xfrm/compat: Add 64=>32-bit messages translator
-To:     Steffen Klassert <steffen.klassert@secunet.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        Mon, 7 Sep 2020 13:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730636AbgIGQdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:37 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4502121775;
+        Mon,  7 Sep 2020 16:33:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599496415;
+        bh=lixp8BxmKE9x3A7XjRdy/g2rDI2HUaEJA24QkMcIIMs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pw+eNtBLBg5aM/VA2AjnAMd+hh6Hlz7/iwMVIoAGQ2wKcNrwbZuBi7OReIj58EsGC
+         sJB5M01vKRYLn1dpBtyAKXGbwQ0f5FwrOlnN6jxfVBxD0ASL5qqRgIQics5xqgPrJ7
+         XQojVSwPQuF096XvxGO7bAI3nJXn9Gkro7EPSzN8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
         netdev@vger.kernel.org
-References: <20200826014949.644441-1-dima@arista.com>
- <20200826014949.644441-2-dima@arista.com>
- <20200907112411.GK20687@gauss3.secunet.de>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <32b89fd5-2809-ba15-9be4-f30e59decba2@arista.com>
-Date:   Mon, 7 Sep 2020 18:01:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+Subject: [PATCH AUTOSEL 5.4 04/43] rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
+Date:   Mon,  7 Sep 2020 12:32:50 -0400
+Message-Id: <20200907163329.1280888-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200907112411.GK20687@gauss3.secunet.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/7/20 12:24 PM, Steffen Klassert wrote:
-[..]
-> One comment on this. Looks like the above is the same in all
-> commit messages. Please provide that generic information
-> with the patch 0/n and remove it from the other patches.
+From: David Howells <dhowells@redhat.com>
 
-Yeah, I think I've used to that from x86/core submissions - they prefer
-having general information copied from cover-letter to every patch, that
-way commits in `git log` or `git show` preserve it.
-Probably, one of small differences in style between contributions to
-different subsystems. Will do, no problem.
+[ Upstream commit 68528d937dcd675e79973061c1a314db598162d1 ]
 
-Thanks,
-          Dmitry
+Keep the ACK serial number in a variable in rxrpc_input_ack() as it's used
+frequently.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/rxrpc/input.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 22dec6049e1bb..6cace43b217ee 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -844,7 +844,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 		struct rxrpc_ackinfo info;
+ 		u8 acks[RXRPC_MAXACKS];
+ 	} buf;
+-	rxrpc_serial_t acked_serial;
++	rxrpc_serial_t ack_serial, acked_serial;
+ 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
+ 	int nr_acks, offset, ioffset;
+ 
+@@ -857,6 +857,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	}
+ 	offset += sizeof(buf.ack);
+ 
++	ack_serial = sp->hdr.serial;
+ 	acked_serial = ntohl(buf.ack.serial);
+ 	first_soft_ack = ntohl(buf.ack.firstPacket);
+ 	prev_pkt = ntohl(buf.ack.previousPacket);
+@@ -865,31 +866,31 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
+ 			      buf.ack.reason : RXRPC_ACK__INVALID);
+ 
+-	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
++	trace_rxrpc_rx_ack(call, ack_serial, acked_serial,
+ 			   first_soft_ack, prev_pkt,
+ 			   summary.ack_reason, nr_acks);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
+ 		rxrpc_input_ping_response(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 	if (buf.ack.reason == RXRPC_ACK_REQUESTED)
+ 		rxrpc_input_requested_ack(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING) {
+-		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
++		_proto("Rx ACK %%%u PING Request", ack_serial);
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ping);
+ 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ack);
+ 	}
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		return;
+@@ -905,7 +906,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		goto out;
+@@ -965,7 +966,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	    RXRPC_TX_ANNO_LAST &&
+ 	    summary.nr_acks == call->tx_top - hard_ack &&
+ 	    rxrpc_is_client_call(call))
+-		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
++		rxrpc_propose_ACK(call, RXRPC_ACK_PING, ack_serial,
+ 				  false, true,
+ 				  rxrpc_propose_ack_ping_for_lost_reply);
+ 
+-- 
+2.25.1
+
