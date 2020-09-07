@@ -2,119 +2,83 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1B9C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCDAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13C9C206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:20:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FGln6H5K"
+	by mail.kernel.org (Postfix) with ESMTP id EEBFD20732
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgIGHUG (ORCPT
+        id S1726962AbgIGHUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:20:06 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:22261 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726410AbgIGHUB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:20:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599463199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZeNko4pESS3Q5hreBnvD+2G1nQFuRZeaG+6VRmgcaOc=;
-        b=FGln6H5KVmuuDoHMuHC6oCMl5vYVzShI7AEO29GJRRbvaJDrGNa6VjJAs0P8bgOFQG21fw
-        vF82rsnaUzZcXMDJRbyDEdFPJ0gGtarMM2pV8WJvyvcmEJCHhAolBvvbOfxTWs9270dc0R
-        MPSDPHhZEszOr+CDNBKUCmY8W65zL6s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-rwpon1HINYiDXr0VSSIdVw-1; Mon, 07 Sep 2020 03:19:58 -0400
-X-MC-Unique: rwpon1HINYiDXr0VSSIdVw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F876107465A;
-        Mon,  7 Sep 2020 07:19:57 +0000 (UTC)
-Received: from T590 (ovpn-13-4.pek2.redhat.com [10.72.13.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4CBE778B29;
-        Mon,  7 Sep 2020 07:19:50 +0000 (UTC)
-Date:   Mon, 7 Sep 2020 15:19:46 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] blk-mq: Fix refcounting leak in __blk_mq_register_dev()
-Message-ID: <20200907071946.GA1058569@T590>
-References: <20200905125206.GE183976@mwanda>
+        Mon, 7 Sep 2020 03:20:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38944 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726410AbgIGHUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 03:20:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id D30E9AD49;
+        Mon,  7 Sep 2020 07:20:16 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 09:20:14 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+Message-ID: <20200907072014.GD30144@dhcp22.suse.cz>
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200903073254.GP4617@dhcp22.suse.cz>
+ <20200903162527.GF60440@carbon.dhcp.thefacebook.com>
+ <20200904074207.GC15277@dhcp22.suse.cz>
+ <20200904211045.GA567128@carbon.DHCP.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200905125206.GE183976@mwanda>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200904211045.GA567128@carbon.DHCP.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 03:52:06PM +0300, Dan Carpenter wrote:
-> There is a kobject_add() hidden in the call to kobject_add().
+On Fri 04-09-20 14:10:45, Roman Gushchin wrote:
+> On Fri, Sep 04, 2020 at 09:42:07AM +0200, Michal Hocko wrote:
+[...]
+> > An explicit opt-in sounds much more appropriate to me as well. If we go
+> > with a specific API then I would not make it 1GB pages specific. Why
+> > cannot we have an explicit interface to "defragment" address space
+> > range into large pages and the kernel would use large pages where
+> > appropriate? Or is the additional copying prohibitively expensive?
 > 
-> 	ret = kobject_add(q->mq_kobj, kobject_get(&dev->kobj), "%s", "mq");
->                                       ^^^^^^^^^^^^^^^^^^^^^^^
-> 
-> It needs to be release on the error path.
-> 
-> Fixes: 320ae51feed5 ("blk-mq: new multi-queue block IO queueing mechanism")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  block/blk-mq-sysfs.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/block/blk-mq-sysfs.c b/block/blk-mq-sysfs.c
-> index 062229395a50..5a63659163c1 100644
-> --- a/block/blk-mq-sysfs.c
-> +++ b/block/blk-mq-sysfs.c
-> @@ -321,7 +321,7 @@ int __blk_mq_register_dev(struct device *dev, struct request_queue *q)
->  
->  	ret = kobject_add(q->mq_kobj, kobject_get(&dev->kobj), "%s", "mq");
->  	if (ret < 0)
-> -		goto out;
-> +		goto out_kobj;
->  
->  	kobject_uevent(q->mq_kobj, KOBJ_ADD);
->  
-> @@ -333,8 +333,7 @@ int __blk_mq_register_dev(struct device *dev, struct request_queue *q)
->  
->  	q->mq_sysfs_init_done = true;
->  
-> -out:
-> -	return ret;
-> +	return 0;
->  
->  unreg:
->  	while (--i >= 0)
-> @@ -342,6 +341,7 @@ int __blk_mq_register_dev(struct device *dev, struct request_queue *q)
->  
->  	kobject_uevent(q->mq_kobj, KOBJ_REMOVE);
->  	kobject_del(q->mq_kobj);
-> +out_kobj:
->  	kobject_put(&dev->kobj);
->  	return ret;
->  }
-> -- 
-> 2.28.0
-> 
+> Can you, please, elaborate a bit more here? It seems like madvise(MADV_HUGEPAGE)
+> provides something similar to what you're describing, but there are lot
+> of details here, so I'm probably missing something.
 
-Looks good fix:
+MADV_HUGEPAGE is controlling a preference for THP to be used for a
+particular address range. So it looks similar but the historical
+behavior is to control page faults as well and the behavior depends on
+the global setup.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+I've had in mind something much simpler. Effectively an API to invoke
+khugepaged (like) functionality synchronously from the calling context
+on the specific address range. It could be more aggressive than the
+regular khugepaged and create even 1G pages (or as large THPs as page
+tables can handle on the particular arch for that matter).
 
+As this would be an explicit call we do not have to be worried about
+the resulting latency because it would be an explicit call by the
+userspace.  The default khugepaged has a harder position there because
+has no understanding of the target address space and cannot make any
+cost/benefit evaluation so it has to be more conservative.
 -- 
-Ming
-
+Michal Hocko
+SUSE Labs
