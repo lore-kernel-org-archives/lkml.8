@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89332C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DD5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD8120757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF86F20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495899;
-	bh=GtKhtYeqhoFhkk4l+56UWm2i17dljFhd74agdK6C2Ew=;
+	s=default; t=1599495911;
+	bh=kA8UYqwwvl1jhQhlspmrYdcfKcMzh6l6VSdMPGeBWuE=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IU+rSinZx2YF2shyaw0Fyd9x9GRU433xfadtpyzsTd6FozlOREM1YUodW29806X5b
-	 K237kDn7X1iBRK2qgm3U4wYwXDBlZpVS8jMlmsyOdP9g4C/dmGUJYRHbcXJeHPQ+Vf
-	 FV68mfTSGaINi6otGpmDab4+FJIo0ecE18DL9mQA=
+	b=iv/6mbRU4Z8q5p1WsLDI1LsGYCnxvBpd0E7AF9WHoTQXEm7jd3W/2aubbk93IjNTQ
+	 9n+GODFmHSD0oBDG73rRd5S34sbgBHOk7dRMtW8n/tfBcBpUZI2VrI7hj8cszPpIzj
+	 MzzQhQ/T3JlSA/3f/cXk2Ahz3zaXQT2eF7A20EwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbgIGQY5 (ORCPT
+        id S1730304AbgIGQMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33062 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgIGQNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:13:00 -0400
+        id S1730259AbgIGQMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:12:20 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A91021789;
-        Mon,  7 Sep 2020 16:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C751820757;
+        Mon,  7 Sep 2020 16:12:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495180;
-        bh=GtKhtYeqhoFhkk4l+56UWm2i17dljFhd74agdK6C2Ew=;
+        s=default; t=1599495140;
+        bh=kA8UYqwwvl1jhQhlspmrYdcfKcMzh6l6VSdMPGeBWuE=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=1HtKxRs+iHnNOY6R6jfZ5BjznDhzhDljRmRFsaA+oDVT7biI+paXbhSVSYefBbH5c
-         RWilAlgGup9PDTDvQF4NK/kbiRwvTiMby/9/r43rcNd/ygb08hYwoCtEZwqCxI73ZM
-         qiX3bUrZveJfPjCkY/XQ3Q39CjSsqM1f0oCdurnI=
+        b=ZHzrPDfLcGKn97n0Gxq++gyxmTSFHfBIT21e2wfJZGkv3gY+Rj/jixhYdec2zzumj
+         s0n9f4k8HFlLPZbhMIw5WfXBsnuDsDBJwdUGmLI6SDCyNrwZsYWgOlRz/n+sGIg9VB
+         gazM7/e3slTF9HAs7T63IAcFbWvHNakMc958tqgs=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -51,9 +51,9 @@ To:     Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [RFT 07/25] ARM: dts: s5pv210: move PMU node out of clock controller
-Date:   Mon,  7 Sep 2020 18:11:23 +0200
-Message-Id: <20200907161141.31034-8-krzk@kernel.org>
+Subject: [PATCH 01/25] dt-bindings: samsung: pmu: document S5Pv210
+Date:   Mon,  7 Sep 2020 18:11:17 +0200
+Message-Id: <20200907161141.31034-2-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
 References: <20200907161141.31034-1-krzk@kernel.org>
@@ -62,48 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Power Management Unit (PMU) is a separate device which has little
-common with clock controller.  Moving it to one level up (from clock
-controller child to SoC) allows to remove fake simple-bus compatible and
-dtbs_check warnings like:
-
-  clock-controller@e0100000: $nodename:0:
-    'clock-controller@e0100000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+Add compatible for the Samsung S5Pv210 SoC PMU.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/s5pv210.dtsi | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/arm/samsung/pmu.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index 5c760a6d7955..46221a5c8ce5 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -92,19 +92,16 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+index edbe8c69387b..17678d9686c1 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+@@ -24,6 +24,7 @@ select:
+           - samsung,exynos5420-pmu
+           - samsung,exynos5433-pmu
+           - samsung,exynos7-pmu
++          - samsung-s5pv210-pmu
+   required:
+     - compatible
  
- 		clocks: clock-controller@e0100000 {
--			compatible = "samsung,s5pv210-clock", "simple-bus";
-+			compatible = "samsung,s5pv210-clock";
- 			reg = <0xe0100000 0x10000>;
- 			clock-names = "xxti", "xusbxti";
- 			clocks = <&xxti>, <&xusbxti>;
- 			#clock-cells = <1>;
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
-+		};
+@@ -40,6 +41,7 @@ properties:
+           - samsung,exynos5420-pmu
+           - samsung,exynos5433-pmu
+           - samsung,exynos7-pmu
++          - samsung-s5pv210-pmu
+       - const: syscon
  
--			pmu_syscon: syscon@e0108000 {
--				compatible = "samsung-s5pv210-pmu", "syscon";
--				reg = <0xe0108000 0x8000>;
--			};
-+		pmu_syscon: syscon@e0108000 {
-+			compatible = "samsung-s5pv210-pmu", "syscon";
-+			reg = <0xe0108000 0x8000>;
- 		};
- 
- 		pinctrl0: pinctrl@e0200000 {
+   reg:
 -- 
 2.17.1
 
