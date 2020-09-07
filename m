@@ -2,88 +2,84 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86A6C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEF74C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91467206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E6B207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729913AbgIGOdL (ORCPT
+        id S1730625AbgIGQ0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:33:11 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38051 "EHLO mga12.intel.com"
+        Mon, 7 Sep 2020 12:26:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:37268 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgIGO2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:28:25 -0400
-IronPort-SDR: 9i4PpFstBA+GSZ3Ig6HjujZGulonX8u5sZEPYgskb6ZOEZ3/umJRV1e9zyf86eQjFomFKVOoFH
- KwnIGwbsmNlQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="137525039"
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="137525039"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 07:27:17 -0700
-IronPort-SDR: dBeBuHtNm44/5v8V1yPwJtYmTovXJotpsKTASoxtPFzjjIOwL6pD4ik6nwK5BbBR4pM7PhxK7Z
- QHbdP6wx3zXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="299459691"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by orsmga003.jf.intel.com with ESMTP; 07 Sep 2020 07:27:15 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com, Xu Yilun <yilun.xu@intel.com>
-Subject: [PATCH v8 0/2] Modularization of DFL private feature drivers
-Date:   Mon,  7 Sep 2020 22:23:01 +0800
-Message-Id: <1599488581-16386-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        id S1729910AbgIGOcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:32:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DE7A31B;
+        Mon,  7 Sep 2020 07:32:11 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0901D3F73C;
+        Mon,  7 Sep 2020 07:32:09 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:32:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrzej Jakowski <andrzej.jakowski@linux.intel.com>,
+        Sushma Kalakota <sushmax.kalakota@intel.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@intel.com>
+Subject: Re: [PATCH 5/6] x86/apic/msi: Use Real PCI DMA device when
+ configuring IRTE
+Message-ID: <20200907143207.GC9474@e121166-lin.cambridge.arm.com>
+References: <20200728194945.14126-1-jonathan.derrick@intel.com>
+ <20200728194945.14126-6-jonathan.derrick@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728194945.14126-6-jonathan.derrick@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset makes it possible to develop independent driver modules
-for DFL private features. It also helps to leverage existing kernel
-drivers to enable some IP blocks in DFL.
+On Tue, Jul 28, 2020 at 01:49:44PM -0600, Jon Derrick wrote:
+> VMD retransmits child device MSI/X with the VMD endpoint's requester-id.
+> In order to support direct interrupt remapping of VMD child devices,
+> ensure that the IRTE is programmed with the VMD endpoint's requester-id
+> using pci_real_dma_dev().
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> ---
+>  arch/x86/kernel/apic/msi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
+I'd need an x86 maintainer ACK on this patch.
 
-Patch #1: Introduce the dfl bus, then dfl devices could be supported by
-          independent dfl drivers.
-Patch #2: An example of the dfl driver for N3000 nios private feature.
+Thanks,
+Lorenzo
 
-
-Main changes from v7:
-- remove the dfl_info_attr macro in dfl framework.
-- add sysfs interfaces for retimer mode in dfl-n3000-nios, also doc update.
-- delete duplicated sysfs interfaces description in dfl-n3000-nios doc.
-- minor fixes.
-
-
-Xu Yilun (2):
-  fpga: dfl: create a dfl bus type to support DFL devices
-  fpga: dfl: add support for N3000 Nios private feature
-
- Documentation/ABI/testing/sysfs-bus-dfl            |  15 +
- .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  49 ++
- Documentation/fpga/dfl-n3000-nios.rst              |  73 +++
- Documentation/fpga/index.rst                       |   1 +
- drivers/fpga/Kconfig                               |  11 +
- drivers/fpga/Makefile                              |   2 +
- drivers/fpga/dfl-n3000-nios.c                      | 574 +++++++++++++++++++++
- drivers/fpga/dfl.c                                 | 265 +++++++++-
- drivers/fpga/dfl.h                                 |  86 +++
- 9 files changed, 1068 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
- create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
- create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
- create mode 100644 drivers/fpga/dfl-n3000-nios.c
-
--- 
-2.7.4
-
+> diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+> index c2b2911feeef..7ca271b8d891 100644
+> --- a/arch/x86/kernel/apic/msi.c
+> +++ b/arch/x86/kernel/apic/msi.c
+> @@ -189,7 +189,7 @@ int native_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
+>  
+>  	init_irq_alloc_info(&info, NULL);
+>  	info.type = X86_IRQ_ALLOC_TYPE_MSI;
+> -	info.msi_dev = dev;
+> +	info.msi_dev = pci_real_dma_dev(dev);
+>  
+>  	domain = irq_remapping_get_irq_domain(&info);
+>  	if (domain == NULL)
+> -- 
+> 2.27.0
+> 
