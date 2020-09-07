@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B1AC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F0D207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668732080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497444;
-	bh=pWPCQxYkwcrRSwkB1/hw9MYm8NdGPFIuQ7QBFDTRK/A=;
+	s=default; t=1599497451;
+	bh=DB22npBu2O2pKFMcZz+E5GS8OgI6vRWAiz5SdllNUYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNKw7mpNvF4R+7wdCwLgXiLH1zIn+Iu9xomT6u2gJ5Sik1ieICNXutQawCBP7h+i4
-	 Pi5zQdiPfuU+W1wLA1R6jnoHMImFO6GtFdyamDXZPfl0ZvZ61Mwg+o9A3lGUBNIzkk
-	 OwNkjXZfUbGawSO+H+v7en/rJUqozfWbnZamdGRQ=
+	b=siwJvPJGbPyVc86Wu0JUvSJ+PJ5Am/JoJtqOiV/fA2CXBUxkA6fJgE6pJk3PFAMpt
+	 CGNhw9CiPADFas9rEs4LghymP6kJ4roioGBn+fSRMhAqr4H9/WBKPi+H544b5XWBeI
+	 tWbs7o/KoalA0Chjlmmm4twsYaSYgrQ/abUi2QVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbgIGQul (ORCPT
+        id S1731115AbgIGQuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48734 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:50:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbgIGQe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:59 -0400
+        id S1730800AbgIGQfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8B5221D80;
-        Mon,  7 Sep 2020 16:34:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5564821D90;
+        Mon,  7 Sep 2020 16:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496494;
-        bh=pWPCQxYkwcrRSwkB1/hw9MYm8NdGPFIuQ7QBFDTRK/A=;
+        s=default; t=1599496500;
+        bh=DB22npBu2O2pKFMcZz+E5GS8OgI6vRWAiz5SdllNUYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=COJvUydhjBSkaTAy/BeEiNOGiC5XdWFjkECczjddh51FeQf4wMTksQTRxeUMoW2ga
-         UPzqTq4/AbtAzH3Z1D2kBcStGPCEZ62hjLIrIkm1uZqfrJGRZIyQ524qzpRgp4puhn
-         8T3RI+6NJca75Ku/+hEBWthifXfPmOfc73Pl5fzw=
+        b=rxUwaNv5TZUfTB3hZe+pfK27HqJvJqz7SlxlSjr7pOQ+rPT+DUak+rLsCj9W1wirv
+         fNJJCD0NV+E5kbleNT6Duo+eEf4Fx5BuS96SceU3vX680yyR62sYGXfsWrZW0nv1y9
+         mLrW0VwcUBgZBJNVrzvYB4LzsGKqKxpCU/o2C7A8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamil Lorenc <kamil@re-ws.pl>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/26] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
-Date:   Mon,  7 Sep 2020 12:34:22 -0400
-Message-Id: <20200907163426.1281284-22-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 26/26] gcov: Disable gcov build with GCC 10
+Date:   Mon,  7 Sep 2020 12:34:26 -0400
+Message-Id: <20200907163426.1281284-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
 References: <20200907163426.1281284-1-sashal@kernel.org>
@@ -60,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamil Lorenc <kamil@re-ws.pl>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
+[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
 
-Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
+GCOV built with GCC 10 doesn't initialize n_function variable.  This
+produces different kernel panics as was seen by Colin in Ubuntu and me
+in FC 32.
 
-Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+As a workaround, let's disable GCOV build for broken GCC 10 version.
+
+Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
+Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
+Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
+Cc: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/dm9601.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/gcov/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/dm9601.c b/drivers/net/usb/dm9601.c
-index b91f92e4e5f22..915ac75b55fc7 100644
---- a/drivers/net/usb/dm9601.c
-+++ b/drivers/net/usb/dm9601.c
-@@ -625,6 +625,10 @@ static const struct usb_device_id products[] = {
- 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
- 	 .driver_info = (unsigned long)&dm9601_info,
- 	},
-+	{
-+	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
-+	 .driver_info = (unsigned long)&dm9601_info,
-+	},
- 	{},			// END
- };
- 
+diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+index 1e3823fa799b2..bfb6579a19d07 100644
+--- a/kernel/gcov/Kconfig
++++ b/kernel/gcov/Kconfig
+@@ -3,6 +3,7 @@ menu "GCOV-based kernel profiling"
+ config GCOV_KERNEL
+ 	bool "Enable gcov-based kernel profiling"
+ 	depends on DEBUG_FS
++	depends on !CC_IS_GCC || GCC_VERSION < 100000
+ 	select CONSTRUCTORS if !UML
+ 	default n
+ 	---help---
 -- 
 2.25.1
 
