@@ -2,142 +2,197 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF11C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F36E1C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08BAC20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:21:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495714;
-	bh=7bTN0f0lE7QfBgCe+mOlPQ+E9zInglLyP5r7Xld6UhA=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DOhz95pH5zeckDBqQP3Msd01DcXrWaSFn/0FHb4zQDigBYS+ZpZjeM+fa+3qJ3CKf
-	 RK0b/KMxeugryEAOua97YD3ci+29gwJY7JNWFClGc60RE4nZYCnTo7ka/BoJGhfq72
-	 UHB8ByPkE1AlQIWIMxw8aqzuzG7Xk5NZgUpoKPgM=
+	by mail.kernel.org (Postfix) with ESMTP id B5CEA2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbgIGQVu (ORCPT
+        id S1730550AbgIGQWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgIGQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:13:38 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A057207DE;
-        Mon,  7 Sep 2020 16:13:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495218;
-        bh=7bTN0f0lE7QfBgCe+mOlPQ+E9zInglLyP5r7Xld6UhA=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=JClYdcgN2y22FrpuQHSvBdXx3L0S6mI2Dz0D9YkIrYvStx0Yv9gP5p7yurTP2Xzkd
-         uOfAC6yQ5TIQz3hBBKnTVtzx2sbIIfwiaNlhB4dpFH1+PJQO1kmb3zGgaXuNv/hGu4
-         ilhvHA6Zm1yGB+Cq/OhHSiTxdXdPsjzMcS4uye3U=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Mon, 7 Sep 2020 12:22:43 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:42023 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730400AbgIGQVy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:21:54 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id AA314A63;
+        Mon,  7 Sep 2020 12:21:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 07 Sep 2020 12:21:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=A60HhPZ+gFJdxyk3h9bO7xfmZgf
+        j0/CfuVUABAVyKqk=; b=njTXFrhJ893ktCHqZwlnD9epwuVBir0+SQdGyc92uWd
+        ehRimf4IYPny7j7IfUcCFSy91p8q70n0r6jxgv9RRpn269QKkoRfcp5Bayj9Lswz
+        dU+WA1Je+uhhuUZKnJc/mJWpFWgPgGHBY8HMyNApcK2MGhs94lYDNA7ef/BpJBD4
+        T/OOFRwEYHgCQtpx17eZaTXLlTamgrgqw0RnCjHo2t7juQfvAqdMjRdXhpehpMRk
+        fs9Tqbq0HU2V/vfcI3wMRe+Dh4bA1hMlabk2rBNuiX7hc/4siKpR/howoEK+BJAq
+        8f3jHrcsV1NF/lAnog7juTU6YTVWUombXOBTfYyw1Og==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=A60HhP
+        Z+gFJdxyk3h9bO7xfmZgfj0/CfuVUABAVyKqk=; b=T6DtmFr8ugFHH4Ey2ZjBlA
+        vF7lEB9jKd5f1JBLmhfwr/maDyUGQ/0ldFe49ra9Nx7KCaAMN7j0ZTioGPjVnRjB
+        tX2Jhx5INOA6Akc/7HY/atSuynvUMwY70HUZM/SpZIk5DnuJJypA7UbRyYmLoalz
+        hmvfI6D/tt/zWJ/eh5kRNyoITL/uKGBikfYPP5d94L+cupJXBsSCRCgmtWbJUs1Z
+        g551gjKX9OfncasOsnZ3SzL4pD/m0dOaALHTt44ir9n2+Q4PmteEb+E3Z1bXmNii
+        DrMtc6kYizRvIJagTwx/Cglrq+RYNngIFKhgJyXhS8P+U+PZ7rpG2mHuCvLT4Hzg
+        ==
+X-ME-Sender: <xms:H15WX_MtvtjiqLoO2UxQMqOnjXTZdJVzXNuKHTl6ZiSI-hY4LrjSDw>
+    <xme:H15WX5_-O4TFaN8m5B5x1TQqdkoZ_37WrUPEEEu_dG8EcUKWIRv2etEIziUnYCjgV
+    fisAOT9u_o4q4L0b4M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehtddguddtudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeevveefffduveeitdegtefhhfetueffteefffdvheevvdehteethedvleff
+    gfejvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppeeltddrkeelrdeike
+    drjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
+    mhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:H15WX-SbQsh5RU1jYM9yn5HAQXmNedU8qhFsODr4KVJuUjIKFMYPww>
+    <xmx:H15WXzukfs-iEOqn1TdZuzhNuiCem1ZNGICN8ZfknIadiUIjKwPQNg>
+    <xmx:H15WX3ezIO29bCzWx0QD0DjgABJEHJWhySgg2JMnMFCNvrH8w5VuDA>
+    <xmx:IF5WX2xFILkOcuf1Ky8UGmNFLe08GYiMTj4nyDAwV23drChQQKdyQ7KnUbQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EE49F328005D;
+        Mon,  7 Sep 2020 12:21:50 -0400 (EDT)
+Date:   Mon, 7 Sep 2020 18:21:49 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [PATCH 17/25] ARM: dts: s5pv210: use defines for GPIO flags in Goni
-Date:   Mon,  7 Sep 2020 18:11:33 +0200
-Message-Id: <20200907161141.31034-18-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v5 75/80] drm/vc4: hdmi: Add pixel BVB clock control
+Message-ID: <20200907162149.plabkjrgajjqbtiu@gilmour.lan>
+References: <cover.dddc064d8bb83e46744336af67dcb13139e5747d.1599120059.git-series.maxime@cerno.tech>
+ <d757ddd6549da140f178563e5fd2bf1d129913fd.1599120059.git-series.maxime@cerno.tech>
+ <CAPY8ntC_Tobv+4TtgtYhvAst00_zsfxZdZd=torcb57SQ0CMQA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rvxp5il2lqnzas2n"
+Content-Disposition: inline
+In-Reply-To: <CAPY8ntC_Tobv+4TtgtYhvAst00_zsfxZdZd=torcb57SQ0CMQA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace hard-coded flags with defines for readability.  No functional
-change.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s5pv210-goni.dts | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+--rvxp5il2lqnzas2n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
-index c8714bf0b6e4..77d1c5144afd 100644
---- a/arch/arm/boot/dts/s5pv210-goni.dts
-+++ b/arch/arm/boot/dts/s5pv210-goni.dts
-@@ -11,6 +11,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include "s5pv210.dtsi"
- 
-@@ -51,7 +52,7 @@
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <2800000>;
- 			reg = <0>;
--			gpio = <&mp05 4 0>;
-+			gpio = <&mp05 4 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
- 
-@@ -77,15 +78,15 @@
- 			regulator-min-microvolt = <2800000>;
- 			regulator-max-microvolt = <2800000>;
- 			reg = <3>;
--			gpio = <&gpj1 3 0>;
-+			gpio = <&gpj1 3 GPIO_ACTIVE_HIGH>;
- 			enable-active-high;
- 		};
- 	};
- 
- 	i2c_pmic: i2c-pmic {
- 		compatible = "i2c-gpio";
--		gpios = <&gpj4 0 0>, /* sda */
--			<&gpj4 3 0>; /* scl */
-+		gpios = <&gpj4 0 GPIO_ACTIVE_HIGH>, /* sda */
-+			<&gpj4 3 GPIO_ACTIVE_HIGH>; /* scl */
- 		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -95,13 +96,13 @@
- 			reg = <0x66>;
- 
- 			max8998,pmic-buck1-default-dvs-idx = <0>;
--			max8998,pmic-buck1-dvs-gpios = <&gph0 3 0>,
--							<&gph0 4 0>;
-+			max8998,pmic-buck1-dvs-gpios = <&gph0 3 GPIO_ACTIVE_HIGH>,
-+							<&gph0 4 GPIO_ACTIVE_HIGH>;
- 			max8998,pmic-buck1-dvs-voltage = <1200000>, <1200000>,
- 							<1200000>, <1200000>;
- 
- 			max8998,pmic-buck2-default-dvs-idx = <0>;
--			max8998,pmic-buck2-dvs-gpio = <&gph0 5 0>;
-+			max8998,pmic-buck2-dvs-gpio = <&gph0 5 GPIO_ACTIVE_HIGH>;
- 			max8998,pmic-buck2-dvs-voltage = <1200000>, <1200000>;
- 
- 			regulators {
-@@ -395,8 +396,8 @@
- 		clock-frequency = <16000000>;
- 		clocks = <&camera 0>;
- 		clock-names = "mclk";
--		nreset-gpios = <&gpb 2 0>;
--		nstby-gpios = <&gpb 0 0>;
-+		nreset-gpios = <&gpb 2 GPIO_ACTIVE_HIGH>;
-+		nstby-gpios = <&gpb 0 GPIO_ACTIVE_HIGH>;
- 
- 		port {
- 			noon010pc30_ep: endpoint {
--- 
-2.17.1
+Hi,
 
+On Fri, Sep 04, 2020 at 10:46:26AM +0100, Dave Stevenson wrote:
+> On Thu, 3 Sep 2020 at 09:03, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> >
+> > The BCM2711 has another clock that needs to be ramped up depending on t=
+he
+> > pixel rate: the pixel BVB clock. Add the code to adjust that clock when
+> > changing the mode.
+> >
+> > Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> > [Maxime: Changed the commit log, used clk_set_min_rate]
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > Link: https://lore.kernel.org/r/20200901040759.29992-3-hoegeun.kwon@sam=
+sung.com
+> > ---
+> >  drivers/gpu/drm/vc4/vc4_hdmi.c | 23 +++++++++++++++++++++++
+> >  drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
+> >  2 files changed, 24 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_h=
+dmi.c
+> > index ab7abb409de2..39508107dafd 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > @@ -54,6 +54,7 @@
+> >  #include "vc4_regs.h"
+> >
+> >  #define CEC_CLOCK_FREQ 40000
+> > +#define VC4_HSM_MID_CLOCK 149985000
+>=20
+> I didn't flag it earlier, but this is a bit of a weird name for the
+> define. I know it wants to be concise, but it made me do a double take
+> as to what it is for.
+> I'm currently applying all these patches to our Raspberry Pi tree and
+> actually CEC needs a fixed HSM on Pi0-3 to avoid recomputing all the
+> timings. So I have a VC4_HSM_CLOCK define which is the fixed clock
+> rate for Pi 0-3.
+> This one is more a threshold for HSM to control BVB, and my brain
+> starts to hurt over what it should be called.
+>=20
+> Unless there are other comments around this patchset (and I hope to
+> read through the remaining ones today), then I don't consider it a
+> blocker, but we can probably do better as and when we add the next
+> threshold for 4k60.
+> My current understanding is that the clock has to be an integer divide
+> of 600MHz, and at least the pixel rate / 2, so the only link to HSM is
+> due to HSM being 101% of pixel rate, but I will try to find
+> confirmation of that.
+
+I'm currently working on the 4k60 support, so it will go away soon
+(using your suggestion) so there's no need to overthink it :)
+
+> >  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+> >  {
+> > @@ -344,6 +345,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(st=
+ruct drm_encoder *encoder)
+> >         HDMI_WRITE(HDMI_VID_CTL,
+> >                    HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+> >
+> > +       clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
+> >         clk_disable_unprepare(vc4_hdmi->hsm_clock);
+> >         clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> >
+> > @@ -516,6 +518,27 @@ static void vc4_hdmi_encoder_pre_crtc_configure(st=
+ruct drm_encoder *encoder)
+> >                 return;
+> >         }
+> >
+> > +       /*
+> > +        * FIXME: When the pixel freq is 594MHz (4k60), this needs to b=
+e setup
+> > +        * at 150MHz.
+> > +        */
+>=20
+> Typo here. For 4k60 we need 300MHz (pixel clock / 2)
+>=20
+> Otherwise
+> Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+
+I've fixed it, thanks!
+Maxime
+
+--rvxp5il2lqnzas2n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX1ZeHQAKCRDj7w1vZxhR
+xe1NAQDBoDF7y+tHlr5DcJFlIwZ3QQRh7Hc5OIfBiA9mYLIdkwD/fneGxtomigY5
+/txCXfqzYna4dCVjluu3UqPV14GrHwg=
+=gt4+
+-----END PGP SIGNATURE-----
+
+--rvxp5il2lqnzas2n--
