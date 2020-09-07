@@ -2,98 +2,97 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCF6C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A952C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B5321473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:36:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HwvTIjsP"
+	by mail.kernel.org (Postfix) with ESMTP id EBFFA206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbgIGMgl (ORCPT
+        id S1729246AbgIGMjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:36:41 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2294 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729174AbgIGMcp (ORCPT
+        Mon, 7 Sep 2020 08:39:08 -0400
+Received: from mail-m17613.qiye.163.com ([59.111.176.13]:22820 "EHLO
+        mail-m17613.qiye.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729155AbgIGMcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:32:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5627e70000>; Mon, 07 Sep 2020 05:30:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 05:32:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 05:32:45 -0700
-Received: from [172.27.12.170] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
- 2020 12:32:39 +0000
-Subject: Re: [PATCH rdma-next 1/4] lib/scatterlist: Refactor
- sg_alloc_table_from_pages
-To:     Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <20200903121853.1145976-1-leon@kernel.org>
- <20200903155434.1153934-1-leon@kernel.org> <20200907072912.GA19875@lst.de>
-From:   Maor Gottlieb <maorg@nvidia.com>
-Message-ID: <2a4b0211-c7a0-2a82-1335-7ed935b92aa2@nvidia.com>
-Date:   Mon, 7 Sep 2020 15:32:31 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
+        Mon, 7 Sep 2020 08:32:25 -0400
+Received: from ubuntu.localdomain (unknown [157.0.31.125])
+        by mail-m17613.qiye.163.com (Hmail) with ESMTPA id 8CED0482A30;
+        Mon,  7 Sep 2020 20:31:37 +0800 (CST)
+From:   Bernard Zhao <bernard@vivo.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Cc:     opensource.kernel@vivo.com, Bernard Zhao <bernard@vivo.com>
+Subject: [PATCH] gpu/drm: cleanup coding style a bit
+Date:   Mon,  7 Sep 2020 05:31:29 -0700
+Message-Id: <20200907123129.27905-1-bernard@vivo.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <20200907072912.GA19875@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599481832; bh=vB36ZS5TzpC7eMfT9U7YXNMKeTt+DU0w5HUuBJIhjA4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=HwvTIjsPofXA543PAtAD1r3ScN+KadLzOwar93ZxiWVjM8VyccMcIar+1DOnCCcai
-         uhFBsFPWKk7jKIACRKr8HrkT/t9uazUFSTwobWPM3lIjyJ1fcojYgpMAqLj+T87rDZ
-         kRTscExWfk0xbDVojnXFZEZ0BZ5O4rsf1080PS/pyHDPX0ZqIPezBRtwC1Y83EtO6H
-         9jvovM47QjLjFYlB72OLAJnEl8wosASxncaRATb9mquJYrVGmNTqAOlwJm6MmYyB9i
-         3BpcYM6PgceiapPcWZ5H4vB/aDB37RcBrlADijfA38zGcZnMTTjeZnqsQWbLCeh8ng
-         3ysl5fd3FtOuw==
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgYFAkeWUFZS1VLWVdZKFlBSE83V1ktWUFJV1kPCR
+        oVCBIfWUFZT0xMQkkfGBhJThpPVkpOQkJPQ0pDQkxMSU1VEwETFhoSFyQUDg9ZV1kWGg8SFR0UWU
+        FZT0tIVUpKS0hKQ1VKS0tZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K1E6Fio4Ij8tGhgpMjwyVjUt
+        DUoKFD1VSlVKTkJCT0NKQ0JDSk1NVTMWGhIXVRkeCRUaCR87DRINFFUYFBZFWVdZEgtZQVlKTkxV
+        S1VISlVKSU5ZV1kIAVlBSU1ITjcG
+X-HM-Tid: 0a74688ce2f893bakuws8ced0482a30
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove first assignment to info which is meaningless.
+Put the width and higth check first.
+This change is to make the code a bit readable.
 
-On 9/7/2020 10:29 AM, Christoph Hellwig wrote:
-> On Thu, Sep 03, 2020 at 06:54:34PM +0300, Leon Romanovsky wrote:
->> From: Maor Gottlieb <maorg@nvidia.com>
->>
->> Currently, sg_alloc_table_from_pages doesn't support dynamic chaining of
->> SG entries. Therefore it requires from user to allocate all the pages in
->> advance and hold them in a large buffer. Such a buffer consumes a lot of
->> temporary memory in HPC systems which do a very large memory registratio=
-n.
->>
->> The next patches introduce API for dynamically allocation from pages and
->> it requires us to do the following:
->>   * Extract the code to alloc_from_pages_common.
->>   * Change the build of the table to iterate on the chunks and not on th=
-e
->>     SGEs. It will allow dynamic allocation of more SGEs.
->>
->> Since sg_alloc_table_from_pages allocate exactly the number of chunks,
->> therefore chunks are equal to the number of SG entries.
-> Given how few users __sg_alloc_table_from_pages has, what about just
-> switching it to your desired calling conventions without another helper?
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+---
+ drivers/gpu/drm/drm_framebuffer.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-I tried it now. It didn't save a lot.=C2=A0 Please give me your decision an=
-d=20
-if needed I will update accordingly.
+diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+index df656366a530..2f5b0c2bb0fe 100644
+--- a/drivers/gpu/drm/drm_framebuffer.c
++++ b/drivers/gpu/drm/drm_framebuffer.c
+@@ -176,8 +176,7 @@ static int framebuffer_check(struct drm_device *dev,
+ 	int i;
+ 
+ 	/* check if the format is supported at all */
+-	info = __drm_format_info(r->pixel_format);
+-	if (!info) {
++	if (!__drm_format_info(r->pixel_format)) {
+ 		struct drm_format_name_buf format_name;
+ 
+ 		DRM_DEBUG_KMS("bad framebuffer format %s\n",
+@@ -186,9 +185,6 @@ static int framebuffer_check(struct drm_device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	/* now let the driver pick its own format info */
+-	info = drm_get_format_info(dev, r);
+-
+ 	if (r->width == 0) {
+ 		DRM_DEBUG_KMS("bad framebuffer width %u\n", r->width);
+ 		return -EINVAL;
+@@ -199,6 +195,9 @@ static int framebuffer_check(struct drm_device *dev,
+ 		return -EINVAL;
+ 	}
+ 
++	/* now let the driver pick its own format info */
++	info = drm_get_format_info(dev, r);
++
+ 	for (i = 0; i < info->num_planes; i++) {
+ 		unsigned int width = fb_plane_width(r->width, info, i);
+ 		unsigned int height = fb_plane_height(r->height, info, i);
+-- 
+2.28.0
+
