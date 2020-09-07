@@ -2,106 +2,124 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CA4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78200C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1689221473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA3621481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:40:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M9mgpPIK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NqFgAkPo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgIGWkK (ORCPT
+        id S1728225AbgIGWkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:40:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727771AbgIGWkH (ORCPT
+        Mon, 7 Sep 2020 18:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36168 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbgIGWkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:40:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087MWdTM103088;
-        Mon, 7 Sep 2020 18:39:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=s3ToOn8Ca1MnXNW3hVaRvT7mu1YPbHGaIjqEqF+KQzs=;
- b=M9mgpPIK68ryG245V05SNN2vW7ed7kKb6ctcZnU8hQyQnvyVWgwyOkSzyzDWFggvuJkP
- oYfQv9AMfj+cWqq1eLz5FrurYX7mCuw4GWKgb1K/zk9awqsGsIXD5LkXjxywImYeIbn4
- TbvwRKtavwYEWAojDirGZWLTu9/EdLco+SxGPf4Sldh3BmxudtX8AhMrfCS9ZxJulVb4
- YEmn7Rvz7lr6k3jKqa2Sxw8ndTfHoKkmbVAu7xjAWXyw2ukS9mTqo+VbzrLaKv4x1uya
- AA7gnQVizoEBsx/FiX6AsaXNgZWbBpFaRdliUaApsuUrpcBB/ak0f0lU9v/jjlJX5pHh ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33dwgrraws-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:39:58 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 087MccZZ115767;
-        Mon, 7 Sep 2020 18:39:58 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33dwgrrawh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:39:58 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 087McB78008597;
-        Mon, 7 Sep 2020 22:39:56 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8at43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 22:39:56 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 087MdsXE27787736
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 22:39:54 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0358FA4075;
-        Mon,  7 Sep 2020 22:39:54 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B570A4071;
-        Mon,  7 Sep 2020 22:39:53 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.173.93])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Sep 2020 22:39:53 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 00:39:51 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
-Message-ID: <20200908003951.233e47f3.pasic@linux.ibm.com>
-In-Reply-To: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 7 Sep 2020 18:40:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA28C061575
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 15:40:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=N4/b9pqCDjgvuQCDbaJFfoH9fBkuhVGaRtyVqnDnAKc=; b=NqFgAkPoi6TBBRzxOs5y4VvJes
+        SjSGdEbir8t5QnN7h2hjZ9rW1VW9QyKGLP68LcCBMrQIFQnZD8xh94TanG0Pn2+ECnzBQJcnUrbGo
+        e0S+MBKsnm35eX3Xg27H00W/F9M+ppWmBj4tR6incLVhvqxvkS6qBWNouEReyarbMI2VQdpmX6K7S
+        240eyDYg7K58XEjK6BjDZzgOmb1QbZ1JWdvqb7HljGXTb/W1uadr87NKLSvXwNKJGDwpDGrE7q4Cd
+        QrUCMw7+ez5mgyRMtm80bkmvQeVJaNcW1EOrpDCJ+kpl+2u9O5E+ei/7tFar9ySLysNy+ieHKbk1C
+        5T4ijtOw==;
+Received: from [2601:1c0:6280:3f0::1fce]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFPo3-0007Q4-7T; Mon, 07 Sep 2020 22:40:12 +0000
+Subject: Re: undefined reference to `start_isolate_page_range'
+To:     kernel test robot <lkp@intel.com>, Michal Simek <monstr@monstr.eu>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, Mike Rapoport <rppt@kernel.org>
+References: <202009070030.oNDEAZTG%lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ef63d7a3-4793-6b1d-3dc5-229589abc56c@infradead.org>
+Date:   Mon, 7 Sep 2020 15:40:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 phishscore=0 spamscore=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 suspectscore=0 mlxlogscore=664 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009070213
+In-Reply-To: <202009070030.oNDEAZTG%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 11:39:05 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Hi lkp, (or is it ktr?)
 
-> Hi all,
+This is sort of a shame-on-you post. As a robot, I hope that you
+don't have any hard feelings about it.  :)
+
+
+On 9/6/20 9:17 AM, kernel test robot wrote:
+> Hi Michal,
 > 
-> The goal of the series is to give a chance to the architecture
-> to validate VIRTIO device features.
+> FYI, the error/warning still remains.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   dd9fb9bb3340c791a2be106fdc895db75f177343
+> commit: 2602276d3d3811b1a48c48113042cd75fcbfc27d microblaze: Wire CMA allocator
+> date:   7 months ago
+> config: microblaze-randconfig-r021-20200906 (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 2602276d3d3811b1a48c48113042cd75fcbfc27d
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=microblaze 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    microblaze-linux-ld: mm/page_alloc.o: in function `alloc_contig_range':
+>>> (.text+0x10c8c): undefined reference to `start_isolate_page_range'
+>>> microblaze-linux-ld: (.text+0x10f14): undefined reference to `test_pages_isolated'
+>>> microblaze-linux-ld: (.text+0x10fd0): undefined reference to `undo_isolate_page_range'
 
-Michael, is this going in via your tree?
+When I (easily) reproduce this build error, I also see a Kconfig warning:
+(or the same warning repeated 3 times)
+
+WARNING: unmet direct dependencies detected for CMA
+  Depends on [n]: MMU [=n]
+  Selected by [m]:
+  - DRM_ASPEED_GFX [=m] && HAS_IOMEM [=y] && DRM [=m] && OF [=y] && (COMPILE_TEST [=y] || ARCH_ASPEED) && HAVE_DMA_CONTIGUOUS [=y]
+
+WARNING: unmet direct dependencies detected for CMA
+  Depends on [n]: MMU [=n]
+  Selected by [m]:
+  - DRM_ASPEED_GFX [=m] && HAS_IOMEM [=y] && DRM [=m] && OF [=y] && (COMPILE_TEST [=y] || ARCH_ASPEED) && HAVE_DMA_CONTIGUOUS [=y]
+
+WARNING: unmet direct dependencies detected for CMA
+  Depends on [n]: MMU [=n]
+  Selected by [m]:
+  - DRM_ASPEED_GFX [=m] && HAS_IOMEM [=y] && DRM [=m] && OF [=y] && (COMPILE_TEST [=y] || ARCH_ASPEED) && HAVE_DMA_CONTIGUOUS [=y]
+
+
+This is the cause of the build errors.
+You shouldn't omit Kconfig warnings from your reports.
+
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+
+cheers.
+-- 
+~Randy
