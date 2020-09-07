@@ -2,102 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3201FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A439C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0594B21481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258F62067C
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgIGK3e (ORCPT
+        id S1728873AbgIGK35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:29:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:60142 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728739AbgIGK3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:29:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3606106F;
-        Mon,  7 Sep 2020 03:29:03 -0700 (PDT)
-Received: from arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3B2A3F66E;
-        Mon,  7 Sep 2020 03:29:02 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 11:29:00 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Boyan Karatotev <boyan.karatotev@arm.com>
-Cc:     Shuah Khan <shuah@kernel.org>, boian4o1@gmail.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        amit.kachhap@arm.com, vincenzo.frascino@arm.com,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/4] kselftests/arm64: add PAuth tests
-Message-ID: <20200907102900.GN6642@arm.com>
-References: <20200828131606.7946-1-boyan.karatotev@arm.com>
- <20200902164825.GH6642@arm.com>
- <7ed52c37-a448-55c9-4ec8-b803ec62ecf6@arm.com>
+        Mon, 7 Sep 2020 06:29:57 -0400
+Received: from mail.netline.ch ([148.251.143.178]:60670 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728751AbgIGK33 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:29:29 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 0C0B02A6042;
+        Mon,  7 Sep 2020 12:29:25 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id qXTjMtX9lbI6; Mon,  7 Sep 2020 12:29:24 +0200 (CEST)
+Received: from thor (212.174.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.174.212])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id CE6672A6016;
+        Mon,  7 Sep 2020 12:29:23 +0200 (CEST)
+Received: from [::1]
+        by thor with esmtp (Exim 4.94)
+        (envelope-from <michel@daenzer.net>)
+        id 1kFEOw-000Lc5-KY; Mon, 07 Sep 2020 12:29:22 +0200
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+ <20200907075559.GN2352366@phenom.ffwll.local>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade
+ and fix-ups.
+Message-ID: <5ea9e575-e2ba-1f12-4894-3c0d271ea294@daenzer.net>
+Date:   Mon, 7 Sep 2020 12:29:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7ed52c37-a448-55c9-4ec8-b803ec62ecf6@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200907075559.GN2352366@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 10:46:33AM +0100, Boyan Karatotev wrote:
-> On 02/09/2020 17:48, Dave Martin wrote:
-> > On Fri, Aug 28, 2020 at 02:16:02PM +0100, Boyan Karatotev wrote:
-> >> Pointer Authentication (PAuth) is a security feature introduced in ARMv8.3.
-> >> It introduces instructions to sign addresses and later check for potential
-> >> corruption using a second modifier value and one of a set of keys. The
-> >> signature, in the form of the Pointer Authentication Code (PAC), is stored
-> >> in some of the top unused bits of the virtual address (e.g. [54: 49] if
-> >> TBID0 is enabled and TnSZ is set to use a 48 bit VA space). A set of
-> >> controls are present to enable/disable groups of instructions (which use
-> >> certain keys) for compatibility with libraries that do not utilize the
-> >> feature. PAuth is used to verify the integrity of return addresses on the
-> >> stack with less memory than the stack canary.
-> >>
-> >> This patchset adds kselftests to verify the kernel's configuration of the
-> >> feature and its runtime behaviour. There are 7 tests which verify that:
-> >> 	* an authentication failure leads to a SIGSEGV
-> >> 	* the data/instruction instruction groups are enabled
-> >> 	* the generic instructions are enabled
-> >> 	* all 5 keys are unique for a single thread
-> >> 	* exec() changes all keys to new unique ones
-> >> 	* context switching preserves the 4 data/instruction keys
-> >> 	* context switching preserves the generic keys
-> >>
-> >> The tests have been verified to work on qemu without a working PAUTH
-> >> Implementation and on ARM's FVP with a full or partial PAuth
-> >> implementation.
-> >>
-> >> Note: This patchset is only verified for ARMv8.3 and there will be some
-> >> changes required for ARMv8.6. More details can be found here [1]. Once
-> >> ARMv8.6 PAuth is merged the first test in this series will required to be
-> >> updated.
-> > 
-> > Nit: is it worth running checkpatch over this series?
-> > 
-> > Although this is not kernel code, there are a number of formatting
-> > weirdnesses and surplus blank lines etc. that checkpatch would probably
-> > warn about.
-> > 
-> I ran it through checkpatch and it came out clean except for some
-> MAINTAINERS warnings. I see that when I add --strict it does complain
-> about multiple blank lines which I can fix for the next version. Are
-> there any other flags I should be running checkpatch with?
+On 2020-09-07 9:55 a.m., Daniel Vetter wrote:
+> On Thu, Aug 06, 2020 at 12:52:54PM +0530, Vaibhav Gupta wrote:
+>> Linux Kernel Mentee: Remove Legacy Power Management.
+>>
+>> The original goal of the patch series is to upgrade the power management
+>> framework of radeonfb fbdev driver. This has been done by upgrading .suspend()
+>> and .resume() callbacks.
+>>
+>> The upgrade makes sure that the involvement of PCI Core does not change the
+>> order of operations executed in a driver. Thus, does not change its behavior.
+>>
+>> During this process, it was found that "#if defined(CONFIG_PM)" at line 1434 is
+>> redundant. This was introduced in the commit
+>> 42ddb453a0cd ("radeon: Conditionally compile PM code").
+> 
+> I do wonder whether it wouldn't be better to just outright delete these,
+> we have the drm radeon driver for pretty much all the same hardware ...
 
-Hmmm, probably not.  I had thought checkpatch was generally noisier
-about that kind of thing.
+In contrast to radeonfb, the radeon driver doesn't support 
+suspend-to-RAM on Apple PowerPC notebooks.
 
-Since the issues were all minor and nobody else objected, I would
-suggest not to worry about them.
 
-Cheers
----Dave
+-- 
+Earthling Michel Dänzer               |               https://redhat.com
+Libre software enthusiast             |             Mesa and X developer
