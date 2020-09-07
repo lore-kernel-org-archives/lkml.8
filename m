@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEEADC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F54BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDD22080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A6821532
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498659;
-	bh=0Szs6Xbj6uEv6yMuq/ROsBND+F0HzpKX80tnhTB6vNI=;
+	s=default; t=1599498669;
+	bh=jFs0Sz+sEpFY5xXgoP8wsxu+kifj4dt4TaFrRZotE2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGyyYlGfXQyPTSUqimsmfSnbZNIlwVQ3Jyolpd4wTjJdElFxtPs9mnpuT9Xg+Dmcz
-	 ckJFNAZRkPftZkpq0+WlTYgB8GPR3ZBbYwCYkb3dhW6O6RQA/v4G833Iu5luoO++Y1
-	 ykzwgtb19rHi5gOWmzM3ZIq/iNg0DECn/iiDCb0w=
+	b=AK6DKrC6G2CzJKMJwSlNMGpTcf717X4bUbjd08K8xdpQFAZfixojh+vDX9gac8zLW
+	 A+y54R4fFl0+//nBxUBr98wjijMuuhUMR4L/I2XgJ34+sAP+YD1Gjt8RA10p99mIGW
+	 qHI3lLoDoIjw1Jrz5tTuOzjGKFuGNEybvdm4SgU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgIGRK6 (ORCPT
+        id S1731104AbgIGRLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbgIGQcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:45 -0400
+        id S1730648AbgIGQcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2B6B2177B;
-        Mon,  7 Sep 2020 16:32:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65F5420757;
+        Mon,  7 Sep 2020 16:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496364;
-        bh=0Szs6Xbj6uEv6yMuq/ROsBND+F0HzpKX80tnhTB6vNI=;
+        s=default; t=1599496362;
+        bh=jFs0Sz+sEpFY5xXgoP8wsxu+kifj4dt4TaFrRZotE2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fNtWZDZny9+93MIRQSnqfurOQAW/qjwyEGsELOoB5lXq3zBu1/pjKrG0oOXFUuu0K
-         kZrbgbp1mEnvNFVmO/3G8fhMaiSzWFB5mY/+KX6ZF5QJkul3J9JOZi7/yW5MGF1HbK
-         li9OwwGSPrRxywmwuRgVds1TWlv34C5CgCKmZTbE=
+        b=184lH6oShkwTMZZ469s+AeANSWEMQEpW/pBwpE4+17E8K3HHlTQ/LDjmtDisGB+o2
+         42JIfmnggbCRrUvOCFFrcrEYCFfKnvcH+CryoLCt/y/4hB1gRyikH1KQKbkj2IOdli
+         Hwc+IWQdeLwE5kX7KevomDffKZneZLecQDCJL50Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shay Bar <shay.bar@celeno.com>,
-        Aviad Brikman <aviad.brikman@celeno.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 18/53] wireless: fix wrong 160/80+80 MHz setting
-Date:   Mon,  7 Sep 2020 12:31:44 -0400
-Message-Id: <20200907163220.1280412-18-sashal@kernel.org>
+Cc:     Brian Foster <bfoster@redhat.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 16/53] xfs: fix off-by-one in inode alloc block reservation calculation
+Date:   Mon,  7 Sep 2020 12:31:42 -0400
+Message-Id: <20200907163220.1280412-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,75 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shay Bar <shay.bar@celeno.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit 3579994476b65cb5e272ff0f720a1fd31322e53f ]
+[ Upstream commit 657f101930bc6c5b41bd7d6c22565c4302a80d33 ]
 
-Fix cfg80211_chandef_usable():
-consider IEEE80211_VHT_CAP_EXT_NSS_BW when verifying 160/80+80 MHz.
+The inode chunk allocation transaction reserves inobt_maxlevels-1
+blocks to accommodate a full split of the inode btree. A full split
+requires an allocation for every existing level and a new root
+block, which means inobt_maxlevels is the worst case block
+requirement for a transaction that inserts to the inobt. This can
+lead to a transaction block reservation overrun when tmpfile
+creation allocates an inode chunk and expands the inobt to its
+maximum depth. This problem has been observed in conjunction with
+overlayfs, which makes frequent use of tmpfiles internally.
 
-Based on:
-"Table 9-272 — Setting of the Supported Channel Width Set subfield and Extended NSS BW
-Support subfield at a STA transmitting the VHT Capabilities Information field"
-From "Draft P802.11REVmd_D3.0.pdf"
+The existing reservation code goes back as far as the Linux git repo
+history (v2.6.12). It was likely never observed as a problem because
+the traditional file/directory creation transactions also include
+worst case block reservation for directory modifications, which most
+likely is able to make up for a single block deficiency in the inode
+allocation portion of the calculation. tmpfile support is relatively
+more recent (v3.15), less heavily used, and only includes the inode
+allocation block reservation as tmpfiles aren't linked into the
+directory tree on creation.
 
-Signed-off-by: Aviad Brikman <aviad.brikman@celeno.com>
-Signed-off-by: Shay Bar <shay.bar@celeno.com>
-Link: https://lore.kernel.org/r/20200826143139.25976-1-shay.bar@celeno.com
-[reformat the code a bit and use u32_get_bits()]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fix up the inode alloc block reservation macro and a couple of the
+block allocator minleft parameters that enforce an allocation to
+leave enough free blocks in the AG for a full inobt split.
+
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/chan.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/xfs/libxfs/xfs_ialloc.c      | 4 ++--
+ fs/xfs/libxfs/xfs_trans_space.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/wireless/chan.c b/net/wireless/chan.c
-index cddf92c5d09ef..7a7cc4ade2b36 100644
---- a/net/wireless/chan.c
-+++ b/net/wireless/chan.c
-@@ -10,6 +10,7 @@
-  */
+diff --git a/fs/xfs/libxfs/xfs_ialloc.c b/fs/xfs/libxfs/xfs_ialloc.c
+index 7fcf62b324b0d..8c1a7cc484b65 100644
+--- a/fs/xfs/libxfs/xfs_ialloc.c
++++ b/fs/xfs/libxfs/xfs_ialloc.c
+@@ -688,7 +688,7 @@ xfs_ialloc_ag_alloc(
+ 		args.minalignslop = igeo->cluster_align - 1;
  
- #include <linux/export.h>
-+#include <linux/bitfield.h>
- #include <net/cfg80211.h>
- #include "core.h"
- #include "rdev-ops.h"
-@@ -892,6 +893,7 @@ bool cfg80211_chandef_usable(struct wiphy *wiphy,
- 	struct ieee80211_sta_vht_cap *vht_cap;
- 	struct ieee80211_edmg *edmg_cap;
- 	u32 width, control_freq, cap;
-+	bool support_80_80 = false;
+ 		/* Allow space for the inode btree to split. */
+-		args.minleft = igeo->inobt_maxlevels - 1;
++		args.minleft = igeo->inobt_maxlevels;
+ 		if ((error = xfs_alloc_vextent(&args)))
+ 			return error;
  
- 	if (WARN_ON(!cfg80211_chandef_valid(chandef)))
- 		return false;
-@@ -944,9 +946,13 @@ bool cfg80211_chandef_usable(struct wiphy *wiphy,
- 			return false;
- 		break;
- 	case NL80211_CHAN_WIDTH_80P80:
--		cap = vht_cap->cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK;
--		if (chandef->chan->band != NL80211_BAND_6GHZ &&
--		    cap != IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ)
-+		cap = vht_cap->cap;
-+		support_80_80 =
-+			(cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ) ||
-+			(cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
-+			 cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) ||
-+			u32_get_bits(cap, IEEE80211_VHT_CAP_EXT_NSS_BW_MASK) > 1;
-+		if (chandef->chan->band != NL80211_BAND_6GHZ && !support_80_80)
- 			return false;
- 		/* fall through */
- 	case NL80211_CHAN_WIDTH_80:
-@@ -966,7 +972,8 @@ bool cfg80211_chandef_usable(struct wiphy *wiphy,
- 			return false;
- 		cap = vht_cap->cap & IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_MASK;
- 		if (cap != IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160MHZ &&
--		    cap != IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ)
-+		    cap != IEEE80211_VHT_CAP_SUPP_CHAN_WIDTH_160_80PLUS80MHZ &&
-+		    !(vht_cap->cap & IEEE80211_VHT_CAP_EXT_NSS_BW_MASK))
- 			return false;
- 		break;
- 	default:
+@@ -736,7 +736,7 @@ xfs_ialloc_ag_alloc(
+ 		/*
+ 		 * Allow space for the inode btree to split.
+ 		 */
+-		args.minleft = igeo->inobt_maxlevels - 1;
++		args.minleft = igeo->inobt_maxlevels;
+ 		if ((error = xfs_alloc_vextent(&args)))
+ 			return error;
+ 	}
+diff --git a/fs/xfs/libxfs/xfs_trans_space.h b/fs/xfs/libxfs/xfs_trans_space.h
+index c6df01a2a1585..7ad3659c5d2a9 100644
+--- a/fs/xfs/libxfs/xfs_trans_space.h
++++ b/fs/xfs/libxfs/xfs_trans_space.h
+@@ -58,7 +58,7 @@
+ #define	XFS_IALLOC_SPACE_RES(mp)	\
+ 	(M_IGEO(mp)->ialloc_blks + \
+ 	 ((xfs_sb_version_hasfinobt(&mp->m_sb) ? 2 : 1) * \
+-	  (M_IGEO(mp)->inobt_maxlevels - 1)))
++	  M_IGEO(mp)->inobt_maxlevels))
+ 
+ /*
+  * Space reservation values for various transactions.
 -- 
 2.25.1
 
