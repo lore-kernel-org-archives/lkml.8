@@ -2,146 +2,143 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09D3C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898292137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:41:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uPshtjo/"
+	by mail.kernel.org (Postfix) with ESMTP id CF9C520768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:49:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbgIGVlG (ORCPT
+        id S1727103AbgIGVt6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:41:06 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:36959 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgIGViT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:38:19 -0400
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 1C85A23E3F;
-        Mon,  7 Sep 2020 23:38:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1599514696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9oaXYuQdxPh9VlCvAjj3novCGW4IyL0WbQroKGqFxtM=;
-        b=uPshtjo/GA3gIz12NiyRGmPuMj2pN9fkgbi5nT7kk76Gslx1bNwISSzsOWAvcGAzrtu5zz
-        4MwZAx3TVvnl61m/TYtvD/7l1WYfufRa0v/SRUUcLL8AfHkPm0/LBluD1PcCd5y2bB8AD3
-        GvcMnXw21iEl4wW5pilTN65oNaaKo0c=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mon, 7 Sep 2020 17:49:58 -0400
+Received: from mail-mw2nam10olkn2041.outbound.protection.outlook.com ([40.92.42.41]:10622
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726446AbgIGVt4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 17:49:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ABrXVH5I9P62oHstqonXwX9oD6vqc9wBHMudxgb8C/nRQ66LHuz4rDG7dZ+9fChoECMlrDPQPdb6d2AMEp0REgix/AN8d7zzH52+5hiaRNLMHU4IPC+SdzlV2T02PNqo1RJevt1MQKL2pi87S+EKIiK57DQI/C0RMuDnnmGZzrWYmJTzUq/O9Hg1+6Oq7iKlsAi9XOU5ArDCq+ITuv5R2wjLctO2ITYxUYQaP9EcgpFKjZ4toQQH1LNJdyAJ9drCQR4bGg/AWz0zXG0mnjgLshbiFpewUVOUU7Nu/AzQLmWNQJI5UrD2TWJase4rYZybFfzEJlrRkcSWeJk/+Qow/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mZ/1QbGbVZigfYaiWJt2CRjoEpyBFGYrxNoTpUvzQ+k=;
+ b=TQ19nnDwmqvEjwniN9+yq2SX5os/pZho+chXZ/++QVn9eF3qk6ZXDm06R+Mf+kIujWr2CwNypLSpY0vdwFG7evlurAldytssktS56eIwpPkwSjS2pkRmRI5XYgCVBfse4MxVT65vhdeWLHDck/oRO5SRF08KF8RlAqYbfutSkJ6MjL5awzWE8nkzm6Rrsm2yd3Pb/cxdfQhoXIQdUuVjMmT3Mu76D0hYqOBR5nHBa2OMrGAFhSYgjdMEGR3Z/UN7K1kibcX9XkGuIrN38QoVmETVA8JXFO04WHUgLLidiO4MRAT7U7wvRIOrnGceDQhrAAZwPzlemhGNFuwsanZMSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from MWHPR01CA0030.prod.exchangelabs.com (2603:10b6:300:101::16) by
+ BY5PR21MB1425.namprd21.prod.outlook.com (2603:10b6:a03:237::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.0; Mon, 7 Sep
+ 2020 21:49:54 +0000
+Received: from MW2NAM10FT031.eop-nam10.prod.protection.outlook.com
+ (2603:10b6:300:101:cafe::11) by MWHPR01CA0030.outlook.office365.com
+ (2603:10b6:300:101::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
+ Transport; Mon, 7 Sep 2020 21:49:53 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e87::50) by MW2NAM10FT031.mail.protection.outlook.com
+ (2a01:111:e400:7e87::488) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend
+ Transport; Mon, 7 Sep 2020 21:49:53 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:F7C54E0B108E22D99F8E46A580DB0C50820B95670B5C450E06D8951D68A0F50C;UpperCasedChecksum:B253B91B88A502047AFC803EC6F3018FDB5134B72BA3DA1FF65DDE0FBA60562E;SizeAsReceived:9313;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 21:49:53 +0000
+Subject: Re: [PATCH 03/25] dt-bindings: iio: adc: exynos-adc: do not require
+ syscon on S5Pv210
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v9 03/13] mfd: simple-mfd-i2c: add sl28cpld support
-Date:   Mon,  7 Sep 2020 23:37:52 +0200
-Message-Id: <20200907213802.26745-4-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907213802.26745-1-michael@walle.cc>
-References: <20200907213802.26745-1-michael@walle.cc>
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-4-krzk@kernel.org>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB06601B8D0B7F1E51953024E6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Mon, 7 Sep 2020 14:49:49 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200907161141.31034-4-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR19CA0080.namprd19.prod.outlook.com
+ (2603:10b6:320:1f::18) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <9b86ea56-6afe-cbcc-52a3-c75d23e1a62b@live.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR19CA0080.namprd19.prod.outlook.com (2603:10b6:320:1f::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 21:49:51 +0000
+X-Microsoft-Original-Message-ID: <9b86ea56-6afe-cbcc-52a3-c75d23e1a62b@live.ca>
+X-TMN:  [JiSKL8DRPDgGXdBt/+WDUrQFhwTmujX7oj3voAQmvt6O/7c6QorpjXIzJy99aXK4]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: e9a8be77-b337-4d60-ff26-08d85377f3fe
+X-MS-TrafficTypeDiagnostic: BY5PR21MB1425:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: RZBATa1ANBuEEWeAOgHwvgXo1rkandmR8L9qf2nVmlCDvlPqgBdjOH3mSwlkjyJlgo8QjMvd9EM4Z6J+wBmA6G8lW/24PDRdg1dTgduBpPrpbo4uOpDpxEFXHyAN/+SgQAseLtKFryq5qfO1WeV0I1OLfUzC4hPf8icxmekt4XZOiZyjbHkiG4i0komPs2l6RWYbocg0mC/POOxll1FBOsxBPAx1RugCZqeRtk8DVizJUhNXxXSmjQmbjYey+jQ8
+X-MS-Exchange-AntiSpam-MessageData: s4E5NVFRl+DuTndJRm2WiohbiCEGNorz0s6efxlXn9uKz4j51wgC92SqoyQ6lSTManYtXdAQdgjbUwv1IButgRAIyTOd/RdX2NSlj2XE7BMjGuQtnF9EQDOqRdvTYDybqeMWK1A3sUki8c9qBEJdpTpHOW8IrZuoqy8ZAsZbbrH9WN1Yyma0PwKMMHeyRZzCs+uJePKTV9pW+QzSuFzQ9w==
+X-OriginatorOrg: sct-15-20-3174-0-msonline-outlook-fb0b2.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9a8be77-b337-4d60-ff26-08d85377f3fe
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 21:49:53.7011
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: MW2NAM10FT031.eop-nam10.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1425
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the core support for the board management controller found on the
-SMARC-sAL28 board.
+Looking at this again, it appears that there is actually control for
+it at offset 0x6818 of pmu_syscon (0xe0108000) [1].  However, it defaults to
+enabled so it's not required for proper use of the block.  Whether it should
+be present in the schema/DTS is up to you.
 
-Also add a virtual symbol which pulls in the simple-mfd-i2c driver and
-provide a common symbol on which the subdevice drivers can depend on.
+Thanks,
+Jonathan
 
-At the moment, this controller is used on the Kontron SMARC-sAL28 board.
+[1] https://android.googlesource.com/kernel/samsung/+/refs/heads/android-samsung-3.0-jb-mr0/arch/arm/mach-s5pv210/include/mach/regs-clock.h#325
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
-Changes since v8:
- - none
-
-Changes since v7:
- - added MFD_SL28CPLD virtual Kconfig symbol
- - Please note, that I intentionally removed the Acked-for-MFD-by
-   because of this change.
-
-Changes since v6:
- - renamed "sl28cpld-r1" to "sl28cpld"
-
-Changes since v5:
- - none
-
-Changes since v4:
- - new patch
-
- drivers/mfd/Kconfig          | 10 ++++++++++
- drivers/mfd/simple-mfd-i2c.c |  1 +
- 2 files changed, 11 insertions(+)
-
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 62f2838da66c..4b918fdcc7c7 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1174,6 +1174,16 @@ config MFD_SIMPLE_MFD_I2C
- 	  sub-devices represented by child nodes in Device Tree will be
- 	  subsequently registered.
- 
-+config MFD_SL28CPLD
-+	tristate "Kontron sl28cpld Board Management Controller"
-+	select MFD_SIMPLE_MFD_I2C
-+	help
-+	  Say yes here to enable support for the Kontron sl28cpld board
-+	  management controller.
-+
-+	  It can be found on the following boards:
-+		* SMARC-sAL28
-+
- config MFD_SM501
- 	tristate "Silicon Motion SM501"
- 	depends on HAS_DMA
-diff --git a/drivers/mfd/simple-mfd-i2c.c b/drivers/mfd/simple-mfd-i2c.c
-index 28e96a246be1..87f684cff9a1 100644
---- a/drivers/mfd/simple-mfd-i2c.c
-+++ b/drivers/mfd/simple-mfd-i2c.c
-@@ -38,6 +38,7 @@ static int simple_mfd_i2c_probe(struct i2c_client *i2c)
- }
- 
- static const struct of_device_id simple_mfd_i2c_of_match[] = {
-+	{ .compatible = "kontron,sl28cpld" },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, simple_mfd_i2c_of_match);
--- 
-2.20.1
-
+On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
+> The ADC in S5Pv210 does not have ADC phy registers in separate block for
+> which syscon would be needed.  Remove this requirement to fix dtbs_check
+> warnings like:
+> 
+>   arch/arm/boot/dts/s5pv210-fascinate4g.dt.yaml: adc@e1700000: 'samsung,syscon-phandle' is a required property
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml          | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index 89b4f9c252a6..75174af72288 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -81,7 +81,6 @@ allOf:
+>                - samsung,exynos-adc-v2
+>                - samsung,exynos3250-adc
+>                - samsung,exynos4212-adc
+> -              - samsung,s5pv210-adc
+>      then:
+>        required:
+>          - samsung,syscon-phandle
+> 
