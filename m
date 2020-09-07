@@ -2,253 +2,113 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8774BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46146C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42E7F21532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA6E21532
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QbABM8cR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btvDDsrd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgIGOpx (ORCPT
+        id S1729935AbgIGOrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:45:53 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:58960 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbgIGOcy (ORCPT
+        Mon, 7 Sep 2020 10:47:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729918AbgIGOdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:32:54 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EVvim057833;
-        Mon, 7 Sep 2020 09:31:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599489118;
-        bh=HrZ4Mx/oHWVRRLQAVP1FDSf+iiLcOYDsomSCa4jZahw=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QbABM8cROcn773eu8TUcXC5IF1fjXWQ8a3xr7D5zW2TKj4dpWJqFvOI3LTW2mJQb8
-         Kpn+dN8B9EHQP5pCJEWf0mYyfYiZ1zAUYhJdJMfRXcjQoNLeoqlxpaDQ3rOnplcFRg
-         K7H9+FdqkZFgv36AoB7IWKVmAy7ke/f3GEa3byEI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVvPp001448;
-        Mon, 7 Sep 2020 09:31:57 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
- 2020 09:31:57 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 7 Sep 2020 09:31:57 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVu2I048692;
-        Mon, 7 Sep 2020 09:31:57 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 7/9] net: ethernet: ti: am65-cpsw: enable hw auto ageing
-Date:   Mon, 7 Sep 2020 17:31:41 +0300
-Message-ID: <20200907143143.13735-8-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907143143.13735-1-grygorii.strashko@ti.com>
-References: <20200907143143.13735-1-grygorii.strashko@ti.com>
+        Mon, 7 Sep 2020 10:33:14 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5694C061573;
+        Mon,  7 Sep 2020 07:33:09 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s205so16400419lja.7;
+        Mon, 07 Sep 2020 07:33:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=lUQpXpLMt/FfIsve0Z/AjL25/ErGBH8a8QJCnz6gjNc=;
+        b=btvDDsrdmdXdBWVnmAhgIwtbV6pyKmlyLgK2DtORZFq0suuB+M76jw58SA4eET14vH
+         QaB7NmCFWUSFc1Biei4XkUWl4a9F4OrQPjf54iGJBQnyCpaOosQUPlAaxagKv33Iucok
+         ppeDAVYZqoAzdgm4Ht4AKa0n6X41yzmR+0hXXlEsKeTkzLgKdzrXbBI3NEA+cHAyLAKE
+         /IvNIdw2a7wbjpVdOSCMFrDYMdbGGz5u/oijbxVFf3GxIWPRVXBGCMbwOu2Tfi1NaS0n
+         SiBHcGxjThJtsMLwSdcTZNu5CNfsxUL1sZQXbNonBGtPly+RYriIzaDwVYEG49eTOWpT
+         v/RA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lUQpXpLMt/FfIsve0Z/AjL25/ErGBH8a8QJCnz6gjNc=;
+        b=DY3Gv4bwLYpDTjZiCsXwLH2SI8TpgcVZySdRvH8+iQ2OZaKNjK/SIreAerVs4mbx9Y
+         tYJj/ZeDJ4qVAbXQ4sCNgt69SCIQMSmf6lYfEfuOLH3f38YhO4a8Uo05LA3QHhc7cmWH
+         bmg7ZwVyS9VUuTiTw1PpWlqZAODcCYiNqW2qTqLQgi7Digmfy9fwfZVMbnuL1g1wNzxY
+         bJVNL7Pp5NRCwUMLi3WSdElZjymJy8vhvogdFuj6Uq5Opht2Z/Aq6LEnbsoAE+5l6GNC
+         tBzKY7uyS6CHrd3ef5mydKklor+gVdgCkRy8z2/PbK0ZGaw1w2z/NRrCBeyWDTmWR2TW
+         JG4w==
+X-Gm-Message-State: AOAM5334QQjk+Uoh2Tc/N3tYi30iSltjn+/Z6hg8sJsd+GT47O5ggoAh
+        6DUAzPq1W2G2PANWStPgGHAdaY24JkE=
+X-Google-Smtp-Source: ABdhPJy6Er6ce5XMN3wq8bqyhUi+n3uMvyXIhzCQSp+ZIJ6L/bAgmvBLN+6ZCdtec6FkjwhZGSh6Jw==
+X-Received: by 2002:a2e:b008:: with SMTP id y8mr9423150ljk.421.1599489186582;
+        Mon, 07 Sep 2020 07:33:06 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id r4sm6285876ljg.123.2020.09.07.07.33.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 07:33:06 -0700 (PDT)
+Subject: Re: [PATCH v5 08/36] i2c: tegra: Use reset_control_reset()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200906185039.22700-1-digetx@gmail.com>
+ <20200906185039.22700-9-digetx@gmail.com>
+ <CAHp75VfeXqmc-YVk1tTHEPPXBPOZfDy9pKvW9QXom50dibkg8g@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <302ef1e3-30c3-68f8-7957-90c68be9d343@gmail.com>
+Date:   Mon, 7 Sep 2020 17:33:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAHp75VfeXqmc-YVk1tTHEPPXBPOZfDy9pKvW9QXom50dibkg8g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AM65x ALE supports HW auto-ageing which can be enabled by programming
-ageing interval in ALE_AGING_TIMER register. For this CPSW fck_clk
-frequency has to be know by ALE.
+07.09.2020 11:13, Andy Shevchenko пишет:
+> On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Use a single reset_control_reset() instead of assert/deasset couple in
+>> order to make code cleaner a tad. Note that the reset_control_reset()
+>> uses 1 microsecond delay instead of 2 that was used previously, but this
+>> shouldn't matter. In addition don't ignore potential error of the reset
+>> control by emitting a noisy warning if it fails, which shouldn't ever
+>> happen in practice.
+> 
+> Still it's not clear if you check the datasheet or not. Some
+> elaboration would be good to have.
 
-This patch extends cpsw_ale_params with bus_freq field and enables ALE HW
-auto ageing for AM65x CPSW2G ALE version.
+I'll update the commit message with more details. Thanks!
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 13 +++++
- drivers/net/ethernet/ti/am65-cpsw-nuss.h |  1 +
- drivers/net/ethernet/ti/cpsw_ale.c       | 61 +++++++++++++++++++++---
- drivers/net/ethernet/ti/cpsw_ale.h       |  1 +
- 4 files changed, 70 insertions(+), 6 deletions(-)
+> ...
+> 
+>> +       WARN_ON_ONCE(err);
+> 
+> Why screaming here? Wouldn't be dev_warn() enough?
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index bec47e794359..501d676fd88b 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -5,6 +5,7 @@
-  *
-  */
- 
-+#include <linux/clk.h>
- #include <linux/etherdevice.h>
- #include <linux/if_vlan.h>
- #include <linux/interrupt.h>
-@@ -2038,6 +2039,7 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
- 	struct am65_cpsw_common *common;
- 	struct device_node *node;
- 	struct resource *res;
-+	struct clk *clk;
- 	int ret, i;
- 
- 	common = devm_kzalloc(dev, sizeof(struct am65_cpsw_common), GFP_KERNEL);
-@@ -2086,6 +2088,16 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
- 	if (!common->ports)
- 		return -ENOMEM;
- 
-+	clk = devm_clk_get(dev, "fck");
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "error getting fck clock %d\n", ret);
-+		return ret;
-+	}
-+	common->bus_freq = clk_get_rate(clk);
-+
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
-@@ -2134,6 +2146,7 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
- 	ale_params.ale_ports = common->port_num + 1;
- 	ale_params.ale_regs = common->cpsw_base + AM65_CPSW_NU_ALE_BASE;
- 	ale_params.dev_id = "am65x-cpsw2g";
-+	ale_params.bus_freq = common->bus_freq;
- 
- 	common->ale = cpsw_ale_create(&ale_params);
- 	if (IS_ERR(common->ale)) {
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.h b/drivers/net/ethernet/ti/am65-cpsw-nuss.h
-index 94f666ea0e53..993e1d4d3222 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.h
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.h
-@@ -106,6 +106,7 @@ struct am65_cpsw_common {
- 
- 	u32			nuss_ver;
- 	u32			cpsw_ver;
-+	unsigned long		bus_freq;
- 	bool			pf_p0_rx_ptype_rrobin;
- 	struct am65_cpts	*cpts;
- 	int			est_enabled;
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 524920a4bff0..7b54e9911b1e 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -32,6 +32,7 @@
- #define ALE_STATUS		0x04
- #define ALE_CONTROL		0x08
- #define ALE_PRESCALE		0x10
-+#define ALE_AGING_TIMER		0x14
- #define ALE_UNKNOWNVLAN		0x18
- #define ALE_TABLE_CONTROL	0x20
- #define ALE_TABLE		0x34
-@@ -46,6 +47,9 @@
- 
- #define AM65_CPSW_ALE_THREAD_DEF_REG 0x134
- 
-+/* ALE_AGING_TIMER */
-+#define ALE_AGING_TIMER_MASK	GENMASK(23, 0)
-+
- enum {
- 	CPSW_ALE_F_STATUS_REG = BIT(0), /* Status register present */
- 	CPSW_ALE_F_HW_AUTOAGING = BIT(1), /* HW auto aging */
-@@ -982,21 +986,66 @@ static void cpsw_ale_timer(struct timer_list *t)
- 	}
- }
- 
-+static void cpsw_ale_hw_aging_timer_start(struct cpsw_ale *ale)
-+{
-+	u32 aging_timer;
-+
-+	aging_timer = ale->params.bus_freq / 1000000;
-+	aging_timer *= ale->params.ale_ageout;
-+
-+	if (aging_timer & ~ALE_AGING_TIMER_MASK) {
-+		aging_timer = ALE_AGING_TIMER_MASK;
-+		dev_warn(ale->params.dev,
-+			 "ALE aging timer overflow, set to max\n");
-+	}
-+
-+	writel(aging_timer, ale->params.ale_regs + ALE_AGING_TIMER);
-+}
-+
-+static void cpsw_ale_hw_aging_timer_stop(struct cpsw_ale *ale)
-+{
-+	writel(0, ale->params.ale_regs + ALE_AGING_TIMER);
-+}
-+
-+static void cpsw_ale_aging_start(struct cpsw_ale *ale)
-+{
-+	if (!ale->params.ale_ageout)
-+		return;
-+
-+	if (ale->features & CPSW_ALE_F_HW_AUTOAGING) {
-+		cpsw_ale_hw_aging_timer_start(ale);
-+		return;
-+	}
-+
-+	timer_setup(&ale->timer, cpsw_ale_timer, 0);
-+	ale->timer.expires = jiffies + ale->ageout;
-+	add_timer(&ale->timer);
-+}
-+
-+static void cpsw_ale_aging_stop(struct cpsw_ale *ale)
-+{
-+	if (!ale->params.ale_ageout)
-+		return;
-+
-+	if (ale->features & CPSW_ALE_F_HW_AUTOAGING) {
-+		cpsw_ale_hw_aging_timer_stop(ale);
-+		return;
-+	}
-+
-+	del_timer_sync(&ale->timer);
-+}
-+
- void cpsw_ale_start(struct cpsw_ale *ale)
- {
- 	cpsw_ale_control_set(ale, 0, ALE_ENABLE, 1);
- 	cpsw_ale_control_set(ale, 0, ALE_CLEAR, 1);
- 
--	timer_setup(&ale->timer, cpsw_ale_timer, 0);
--	if (ale->ageout) {
--		ale->timer.expires = jiffies + ale->ageout;
--		add_timer(&ale->timer);
--	}
-+	cpsw_ale_aging_start(ale);
- }
- 
- void cpsw_ale_stop(struct cpsw_ale *ale)
- {
--	del_timer_sync(&ale->timer);
-+	cpsw_ale_aging_stop(ale);
- 	cpsw_ale_control_set(ale, 0, ALE_CLEAR, 1);
- 	cpsw_ale_control_set(ale, 0, ALE_ENABLE, 0);
- }
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 27b30802b384..9c6da58183c9 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -25,6 +25,7 @@ struct cpsw_ale_params {
- 	 */
- 	u32			major_ver_mask;
- 	const char		*dev_id;
-+	unsigned long		bus_freq;
- };
- 
- struct cpsw_ale {
--- 
-2.17.1
-
+The error condition is an indicator of a severe problem because the
+reset shouldn't ever fail in practice, hence screaming is a preferred
+behavour. I'll a add a comment to the code, telling this.
