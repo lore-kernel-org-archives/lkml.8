@@ -2,157 +2,82 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9CEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBDEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD2182168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:59:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1DzPBq8Q"
+	by mail.kernel.org (Postfix) with ESMTP id 391582168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729358AbgIGM7N (ORCPT
+        id S1729345AbgIGM7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729368AbgIGM5m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:57:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F926C061755
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:57:42 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id a26so18147829ejc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:57:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YucY+gKGhRi1ywbzRpYu6vJHZlJfD5eC4RFNZlM+vEU=;
-        b=1DzPBq8QjNiAQmlUVLnJE9yHuQ5x3n8G/vy0ZHLOXkG6W/kp2qThs+PrIcQgSO+DLl
-         Mtr+mRX9iTNI1t3koKVQTf3UTcrsvsBk9AQUu3frC/lANh5EF5ujvpUOLRLLLbN02Fv/
-         Ejg2Mv8zLuigka+OAZV8Em2LcGiq60oOD0K3R9TgkVbTkWwRtngnyPew7C504FOK/kxt
-         a0SLzOflYvfHL/WwdZELsw3cyyzQudmNHsXJhRnvJ4MUojJze58ec0y4c3+/cLTceGGq
-         AU2p5RCEC7tkzqvI4yVyeEh229yaW3rpoEmpZeqzfMcDpv7V3rMCkYHNJJJvwbEMmkwA
-         foZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YucY+gKGhRi1ywbzRpYu6vJHZlJfD5eC4RFNZlM+vEU=;
-        b=Ok5IryuW+Iq8dO+NPAuwveTgrjSVV/Lk0A2U1R5kIB0zueyOsl4sLOH3KxeC+cihfN
-         6ZkcUtWFY/YRh++mCFYzhLmaH/EDG8pCK+jWVpu7g2VLFORqkTbW39TC59JjpGFkohPx
-         rpgsULWQxWSX2CbA94+VqIdA5LzoE+5AxROf1vJTwrhMK0IegG1GGvpYrL3ysxA4FAl8
-         83+uA22Uky9+Npm0JWmtiSab38hcfSVRKzFdt0cu+Nph7TOO6wQI7k2xW8Tp55lAnKhv
-         qWnpMZoVhAuEHV5ArOJVR7uYN19Sy7RGu5oUeOaBDtWNgdevbFEVT/4DqCA0PNAQIAcA
-         Xmgw==
-X-Gm-Message-State: AOAM533MfecMmjtG7UXdKylLLngt/BWZBY+dvLxQsweahf2OfVW2WZT7
-        qFa/l+S/tMRtnDs1FvQMUvkagLO+oJoOYCU4/7Rfew==
-X-Google-Smtp-Source: ABdhPJzUQafzXEGFCABczGMzi5b/L3y2GqxJ0LOSr4ft7RzvZoPkp2ieYMUtiQRIu+JpJvYoyuFNg39EZzYaGsKijH4=
-X-Received: by 2002:a17:906:19db:: with SMTP id h27mr19207447ejd.154.1599483460603;
- Mon, 07 Sep 2020 05:57:40 -0700 (PDT)
+        Mon, 7 Sep 2020 08:59:54 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37172 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729344AbgIGM65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:58:57 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3ACA2A99BE5BDE1BFBE0;
+        Mon,  7 Sep 2020 20:58:26 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 7 Sep 2020 20:58:22 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <mcoquelin.stm32@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: stmmac: remove redundant null check before clk_disable_unprepare()
+Date:   Mon, 7 Sep 2020 20:57:24 +0800
+Message-ID: <1599483444-43331-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907123837.GG1891694@smile.fi.intel.com>
-In-Reply-To: <20200907123837.GG1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 7 Sep 2020 14:57:29 +0200
-Message-ID: <CAMpxmJXNYZb66SPuzR_3CEVwD=PQ6z6Ew3ia7ZL=wSU0QGhjEA@mail.gmail.com>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 2:38 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
->
-> ...
->
-> > > > > > > +GPIO Testing Driver
-> > > > > > > +===================
-> > > > > > > +
-> > > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > > +structure.
-> > > > > >
-> > > > > > Could configfs be used for this instead of debugfs?
-> > > > > > debugfs is ad hoc.
-> > > > >
-> > > > > Actually sounds like a good idea.
-> > > > >
-> > > >
-> > > > Well, then we can go on and write an entirely new mockup driver
-> > > > (ditching module params and dropping any backwards compatibility)
-> > > > because we're already using debugfs for line values.
-> > > >
-> > > > How would we pass the device properties to configfs created GPIO chips
-> > > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > > something?
-> > >
-> > > Same way how USB composite works, no?
-> > >
-> >
-> > OK, so create a new chip directory in configfs, configure it using
-> > some defined configfs attributes and then finally instantiate it from
-> > sysfs?
-> >
-> > Makes sense and is probably the right way to go. Now the question is:
-> > is it fine to just entirely remove the previous gpio-mockup?
->
-> Since, for example, I never saw device property bindings for that driver I
-> assume that it was never considered as an ABI, so feel free to hack it in
-> either direction.
->
-> > Should we
-> > keep some backwards compatibility?
->
-> I wouldn't probably spend time on this.
->
-> > Should we introduce an entirely new
-> > module and have a transition period before removing previous
-> > gpio-mockup?
->
-> Neither transition period.
->
+Because clk_prepare_enable() and clk_disable_unprepare() already checked
+NULL clock parameter, so the additional checks are unnecessary, just
+remove them.
 
-I wouldn't rush this actually. gpio-mockup is used a lot by libgpiod
-and probably by Kent's Go library. My main goal with this series is to
-extend it to allow for more advanced testing like simulating spurious
-irqs to test the software debouncer or custom line name formats to
-test name lookups.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-I need to think about it some more. An entirely new configfs interface
-would take time too.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 89b2b34..c553047 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -788,8 +788,7 @@ static int stmmac_init_ptp(struct stmmac_priv *priv)
+ 
+ static void stmmac_release_ptp(struct stmmac_priv *priv)
+ {
+-	if (priv->plat->clk_ptp_ref)
+-		clk_disable_unprepare(priv->plat->clk_ptp_ref);
++	clk_disable_unprepare(priv->plat->clk_ptp_ref);
+ 	stmmac_ptp_unregister(priv);
+ }
+ 
+@@ -5108,8 +5107,7 @@ int stmmac_suspend(struct device *dev)
+ 		stmmac_mac_set(priv, priv->ioaddr, false);
+ 		pinctrl_pm_select_sleep_state(priv->device);
+ 		/* Disable clock in case of PWM is off */
+-		if (priv->plat->clk_ptp_ref)
+-			clk_disable_unprepare(priv->plat->clk_ptp_ref);
++		clk_disable_unprepare(priv->plat->clk_ptp_ref);
+ 		clk_disable_unprepare(priv->plat->pclk);
+ 		clk_disable_unprepare(priv->plat->stmmac_clk);
+ 	}
+-- 
+2.9.5
 
-Bart
