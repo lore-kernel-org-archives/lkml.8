@@ -2,106 +2,241 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7BCC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 19:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D266C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 19:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6117206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 19:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F9A20C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 19:02:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e6MazpFS"
+	dkim=pass (1024-bit key) header.d=connolly.tech header.i=@connolly.tech header.b="S6lWI4z5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgIGTAq (ORCPT
+        id S1729503AbgIGTCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 15:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56982 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728872AbgIGTAo (ORCPT
+        Mon, 7 Sep 2020 15:02:35 -0400
+Received: from mail-40133.protonmail.ch ([185.70.40.133]:21590 "EHLO
+        mail-40133.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729188AbgIGTCd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 15:00:44 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5CDFC061573;
-        Mon,  7 Sep 2020 12:00:43 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id f142so13277003qke.13;
-        Mon, 07 Sep 2020 12:00:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ultTVCKnbL0cIumvbgd7ADKxSHF2oA5ehprjQ5o8rqk=;
-        b=e6MazpFS87eyfhsvP5SIHx/6VfEUnHBrUiLWp3wdL+HWhcFkHJDxPDKteAK3DlZp1E
-         Rgynh8mtC+gLFAQZA0nd7WsZtgIS4HCIqn27Gv2voq5mATpxxsKkka83COdKlwz992F4
-         WjyvlzlxZOFeOCWgCKjhXsHk8TP0BoaNSc4+qCbZPaf3bX0wCE5438H7dpr6m8FCfPtp
-         8ahuPEj4Zxk3wHsV8xt+g/b+DLmEUAu7bO6qTNB15+yt5aoO35aHaNcejkllEtqPw+H0
-         BeqMkLB0H2yNnKZKbB9WdUJicI9PW44BizacEaib2rHnYmWHtDAS9HUQ3HaL02E1jhyO
-         62+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ultTVCKnbL0cIumvbgd7ADKxSHF2oA5ehprjQ5o8rqk=;
-        b=pUnSmxz1HG+wOIsN57fW2rKkYvp4lTwXD7iAdaVOENWq6C2DyZ+a6A1lDw16t/0V2n
-         HrBZKge16OG7WrgBLmigd8ladSVNLr5LpF/XRvMwcvwvNuHvDJ98x4p1rK5w+Z+SuJWL
-         wUNlMSCMdT0raQAEbVss0y9E6wRcLLEYkv0KCvy3pT8vba9nqnEhsfEnN878Url4gUKF
-         0m6otz5Zlg1ail1X6Qq771cQLdx31cHjy2hMM7LZIgbbYMw7twBavXehh7u1PT2Sdqvs
-         L5FDwr9lZleoJHeQXngxmmUAQ/Rm327K6P6U+64k92FVKLxzFnVzLfiaIE7CTaWV8GBc
-         gq3Q==
-X-Gm-Message-State: AOAM530+l8W3ygimjX1qk4JgTyjRY+/ND8+tvEuk/2OO4qmrRg917d/a
-        fdaFGsWXzSW6kD5qQ/dJqzBnZOEE1bRvpUXb
-X-Google-Smtp-Source: ABdhPJxeXvjlSJQKbLzEVALgc3IMCWp4kC/aFtw+p3ZZy/g6vq86BDAIZ6YYdN+LTmjXG+xAdFUzCw==
-X-Received: by 2002:a37:b942:: with SMTP id j63mr21001589qkf.138.1599505242410;
-        Mon, 07 Sep 2020 12:00:42 -0700 (PDT)
-Received: from [192.168.1.201] (pool-108-51-35-162.washdc.fios.verizon.net. [108.51.35.162])
-        by smtp.googlemail.com with ESMTPSA id x126sm10429098qka.91.2020.09.07.12.00.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 12:00:41 -0700 (PDT)
-Subject: Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in
- raw_copy_{from, to}_user
-To:     Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-arch@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200904165216.1799796-1-hch@lst.de>
- <20200904165216.1799796-4-hch@lst.de>
-From:   Sean Anderson <seanga2@gmail.com>
-Autocrypt: addr=seanga2@gmail.com; prefer-encrypt=mutual; keydata=
- mQENBFe74PkBCACoLC5Zq2gwrDcCkr+EPGsT14bsxrW07GiYzQhLCgwnPdEpgU95pXltbFhw
- 46GfyffABWxHKO2x+3L1S6ZxC5AiKbYXo7lpnTBYjamPWYouz+VJEVjUx9aaSEByBah5kX6a
- lKFZWNbXLAJh+dE1HFaMi3TQXXaInaREc+aO1F7fCa2zNE75ja+6ah8L4TPRFZ2HKQzve0/Y
- GXtoRw97qmnm3U36vKWT/m2AiLF619F4T1mHvlfjyd9hrVwjH5h/2rFyroXVXBZHGA9Aj8eN
- F2si35dWSZlIwXkNu9bXp0/pIu6FD0bI+BEkD5S7aH1G1iAcMFi5Qq2RNa041DfQSDDHABEB
- AAG0K1NlYW4gR2FsbGFnaGVyIEFuZGVyc29uIDxzZWFuZ2EyQGdtYWlsLmNvbT6JAVcEEwEK
- AEECGwMFCwkIBwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQYR1bzo1I0gPoYCg+6I/stKEQ
- bgUCXT+S2AUJB2TlXwAKCRA+6I/stKEQbhNOB/9ooea0hU9Sgh7PBloU6CgaC5mlqPLB7NTp
- +JkB+nh3Fqhk+qLZwzEynnuDLl6ESpVHIc0Ym1lyF4gT3DsrlGT1h0Gzw7vUwd1+ZfN0CuIx
- Rn861U/dAUjvbtN5kMBqOI4/5ea+0r7MACcIVnKF/wMXBD8eypHsorT2sJTzwZ6DRCNP70C5
- N1ahpqqNmXe0uLdP0pu55JCqhrGw2SinkRMdWyhSxT56uNwIVHGhLTqH7Q4t1N6G1EH626qa
- SvIJsWlNpll6Y3AYLDw2/Spw/hqieS2PQ/Ky3rPZnvJt7/aSNYsKoFGX0yjkH67Uq8Lx0k1L
- w8jpXnbEPQN3A2ZJCbeM
-Message-ID: <86bb5644-fd97-8e54-9e5e-aa961680afd3@gmail.com>
-Date:   Mon, 7 Sep 2020 15:00:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 7 Sep 2020 15:02:33 -0400
+Date:   Mon, 07 Sep 2020 19:02:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=connolly.tech;
+        s=protonmail; t=1599505349;
+        bh=VU8upJbsXlgcVevXq9bJo+njrd1Ivb0QGIDsJacy9fk=;
+        h=Date:To:From:Cc:Reply-To:Subject:From;
+        b=S6lWI4z5rnbnO5rtJNxtHiUAw1N9MAxzKxS62lde4X96nwNKMnkixLJhDo/YVKLKN
+         +inrUYy0Us/T98bwXhE5l56c9x2RR3M5FFF4xog5v5XNGJcDjG9jS72nLiw+z9v9ot
+         EizvaiiPRnmFv00BpQvQF/zm3KQI4uB+Tla2m0hM=
+To:     Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+From:   Caleb Connolly <caleb@connolly.tech>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Brian Masney <masneyb@onstation.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Eric Anholt <eric@anholt.net>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hanna Hawa <hannah@marvell.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "moderated list:ARM SMMU DRIVERS" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Wambui Karuga <wambui.karugax@gmail.com>
+Reply-To: Caleb Connolly <caleb@connolly.tech>
+Subject: Re: [PATCH v16 00/20] iommu/arm-smmu + drm/msm: per-process GPU pgtables
+Message-ID: <1eb7f10c-1504-158c-d25c-18a73b9a1607@connolly.tech>
 MIME-Version: 1.0
-In-Reply-To: <20200904165216.1799796-4-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in raw_copy_{from, to}_user
+On 2020-09-01 17:46, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+>
+> NOTE: I have re-ordered the series, and propose that we could merge this
+>        series in the following order:
+>
+>         1) 01-11 - merge via drm / msm-next
+>         2) 12-15 - merge via iommu, no dependency on msm-next pull req
+>         3) 16-18 - patch 16 has a dependency on 02 and 04, so it would
+>                    need to come post -rc1 or on following cycle, but I
+>                    think it would be unlikely to conflict with other
+>                    arm-smmu patches (other than Bjorn's smmu handover
+>                    series?)
+>         4) 19-20 - dt bits should be safe to land in any order without
+>                    breaking anything
+>
+> ----
+>
+> This series adds an Adreno SMMU implementation to arm-smmu to allow GPU h=
+ardware
+> pagetable switching.
+>
+> The Adreno GPU has built in capabilities to switch the TTBR0 pagetable du=
+ring
+> runtime to allow each individual instance or application to have its own
+> pagetable.  In order to take advantage of the HW capabilities there are c=
+ertain
+> requirements needed of the SMMU hardware.
+>
+> This series adds support for an Adreno specific arm-smmu implementation. =
+The new
+> implementation 1) ensures that the GPU domain is always assigned context =
+bank 0,
+> 2) enables split pagetable support (TTBR1) so that the instance specific
+> pagetable can be swapped while the global memory remains in place and 3) =
+shares
+> the current pagetable configuration with the GPU driver to allow it to cr=
+eate
+> its own io-pgtable instances.
+>
+> The series then adds the drm/msm code to enable these features. For targe=
+ts that
+> support it allocate new pagetables using the io-pgtable configuration sha=
+red by
+> the arm-smmu driver and swap them in during runtime.
+>
+> This version of the series merges the previous patchset(s) [1] and [2]
+> with the following improvements:
+>
+> v16: (Respin by Rob)
+>    - Fix indentation
+>    - Re-order series to split drm and iommu parts
+> v15: (Respin by Rob)
+>    - Adjust dt bindings to keep SoC specific compatible (Doug)
+>    - Add dts workaround for cheza fw limitation
+>    - Add missing 'select IOMMU_IO_PGTABLE' (Guenter)
+> v14: (Respin by Rob)
+>    - Minor update to 16/20 (only force ASID to zero in one place)
+>    - Addition of sc7180 dtsi patch.
+> v13: (Respin by Rob)
+>    - Switch to a private interface between adreno-smmu and GPU driver,
+>      dropping the custom domain attr (Will Deacon)
+>    - Rework the SCTLR.HUPCF patch to add new fields in smmu_domain->cfg
+>      rather than adding new impl hook (Will Deacon)
+>    - Drop for_each_cfg_sme() in favor of plain for() loop (Will Deacon)
+>    - Fix context refcnt'ing issue which was causing problems with GPU
+>      crash recover stress testing.
+>    - Spiff up $debugfs/gem to show process information associated with
+>      VMAs
+> v12:
+>    - Nitpick cleanups in gpu/drm/msm/msm_iommu.c (Rob Clark)
+>    - Reorg in gpu/drm/msm/msm_gpu.c (Rob Clark)
+>    - Use the default asid for the context bank so that iommu_tlb_flush_al=
+l works
+>    - Flush the UCHE after a page switch
+>    - Add the SCTLR.HUPCF patch at the end of the series
+> v11:
+>    - Add implementation specific get_attr/set_attr functions (per Rob Cla=
+rk)
+>    - Fix context bank allocation (per Bjorn Andersson)
+> v10:
+>    - arm-smmu: add implementation hook to allocate context banks
+>    - arm-smmu: Match the GPU domain by stream ID instead of compatible st=
+ring
+>    - arm-smmu: Make DOMAIN_ATTR_PGTABLE_CFG bi-directional. The leaf driv=
+er
+>      queries the configuration to create a pagetable and then sends the n=
+ewly
+>      created configuration back to the smmu-driver to enable TTBR0
+>    - drm/msm: Add context reference counting for submissions
+>    - drm/msm: Use dummy functions to skip TLB operations on per-instance
+>      pagetables
+>
+> [1] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045653.ht=
+ml
+> [2] https://lists.linuxfoundation.org/pipermail/iommu/2020-June/045659.ht=
+ml
+>
+> Jordan Crouse (12):
+>    drm/msm: Add a context pointer to the submitqueue
+>    drm/msm: Drop context arg to gpu->submit()
+>    drm/msm: Set the global virtual address range from the IOMMU domain
+>    drm/msm: Add support to create a local pagetable
+>    drm/msm: Add support for private address space instances
+>    drm/msm/a6xx: Add support for per-instance pagetables
+>    iommu/arm-smmu: Pass io-pgtable config to implementation specific
+>      function
+>    iommu/arm-smmu: Add support for split pagetables
+>    iommu/arm-smmu: Prepare for the adreno-smmu implementation
+>    iommu/arm-smmu-qcom: Add implementation for the adreno GPU SMMU
+>    dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+>    arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+>
+> Rob Clark (8):
+>    drm/msm: Remove dangling submitqueue references
+>    drm/msm: Add private interface for adreno-smmu
+>    drm/msm/gpu: Add dev_to_gpu() helper
+>    drm/msm: Set adreno_smmu as gpu's drvdata
+>    drm/msm: Show process names in gem_describe
+>    iommu/arm-smmu: Constify some helpers
+>    iommu/arm-smmu: Add a way for implementations to influence SCTLR
+>    arm: dts: qcom: sc7180: Set the compatible string for the GPU SMMU
+>
+>   .../devicetree/bindings/iommu/arm,smmu.yaml   |   9 +-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi          |   2 +-
+>   arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    |   9 +
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +-
+>   drivers/gpu/drm/msm/Kconfig                   |   1 +
+>   drivers/gpu/drm/msm/adreno/a5xx_gpu.c         |  12 +-
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c         |  68 +++++-
+>   drivers/gpu/drm/msm/adreno/a6xx_gpu.h         |   1 +
+>   drivers/gpu/drm/msm/adreno/adreno_device.c    |  12 +-
+>   drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  18 +-
+>   drivers/gpu/drm/msm/adreno/adreno_gpu.h       |   3 +-
+>   drivers/gpu/drm/msm/msm_drv.c                 |  16 +-
+>   drivers/gpu/drm/msm/msm_drv.h                 |  25 +++
+>   drivers/gpu/drm/msm/msm_gem.c                 |  25 ++-
+>   drivers/gpu/drm/msm/msm_gem.h                 |   6 +
+>   drivers/gpu/drm/msm/msm_gem_submit.c          |   8 +-
+>   drivers/gpu/drm/msm/msm_gem_vma.c             |  10 +
+>   drivers/gpu/drm/msm/msm_gpu.c                 |  41 +++-
+>   drivers/gpu/drm/msm/msm_gpu.h                 |  21 +-
+>   drivers/gpu/drm/msm/msm_gpummu.c              |   2 +-
+>   drivers/gpu/drm/msm/msm_iommu.c               | 206 +++++++++++++++++-
+>   drivers/gpu/drm/msm/msm_mmu.h                 |  16 +-
+>   drivers/gpu/drm/msm/msm_ringbuffer.h          |   1 +
+>   drivers/gpu/drm/msm/msm_submitqueue.c         |   7 +-
+>   drivers/iommu/arm/arm-smmu/arm-smmu-impl.c    |   6 +-
+>   drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c    | 155 ++++++++++++-
+>   drivers/iommu/arm/arm-smmu/arm-smmu.c         | 100 ++++-----
+>   drivers/iommu/arm/arm-smmu/arm-smmu.h         |  87 +++++++-
+>   include/linux/adreno-smmu-priv.h              |  36 +++
+>   29 files changed, 771 insertions(+), 134 deletions(-)
+>   create mode 100644 include/linux/adreno-smmu-priv.h
+>
+Tested in combination with=20
+https://lore.kernel.org/linux-arm-msm/20200904155513.282067-1-bjorn.anderss=
+on@linaro.org/
 
-nit: handling
+Fixes booting on the OnePlus 6 (SDM845) with the display enabled.
 
---Sean
+
