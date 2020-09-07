@@ -2,95 +2,138 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217E6C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D78C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA33D2067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F03E207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgIGLpk (ORCPT
+        id S1729123AbgIGLqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:45:40 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:38180 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbgIGLYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:24:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 01FBD2019C;
-        Mon,  7 Sep 2020 13:24:13 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CLT690AUOpRN; Mon,  7 Sep 2020 13:24:12 +0200 (CEST)
-Received: from cas-essen-01.secunet.de (201.40.53.10.in-addr.arpa [10.53.40.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 7 Sep 2020 07:46:52 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:42196 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728973AbgIGLp5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:45:57 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 8AE202008D;
-        Mon,  7 Sep 2020 13:24:12 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 7 Sep 2020 13:24:12 +0200
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
- (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Mon, 7 Sep 2020
- 13:24:12 +0200
-Received: by gauss2.secunet.de (Postfix, from userid 1000)
-        id E2400318450A; Mon,  7 Sep 2020 13:24:11 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 13:24:11 +0200
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     Dmitry Safonov <dima@arista.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
-        <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] xfrm/compat: Add 64=>32-bit messages translator
-Message-ID: <20200907112411.GK20687@gauss3.secunet.de>
-References: <20200826014949.644441-1-dima@arista.com>
- <20200826014949.644441-2-dima@arista.com>
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 184F420024;
+        Mon,  7 Sep 2020 13:45:54 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 13:45:52 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     thierry.reding@gmail.com, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: add TDO tl070wsh30
+ DSI panel bindings
+Message-ID: <20200907114552.GA526406@ravnborg.org>
+References: <20200907111027.21933-1-narmstrong@baylibre.com>
+ <20200907111027.21933-3-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200826014949.644441-2-dima@arista.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
- mbx-essen-01.secunet.de (10.53.40.197)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+In-Reply-To: <20200907111027.21933-3-narmstrong@baylibre.com>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=CaYmGojl c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=IpJZQVW2AAAA:8 a=gEfo2CItAAAA:8
+        a=3nj7rlk6SGwJzBwD0W8A:9 a=CjuIK1q_8ugA:10 a=IawgGOuG5U0WyFbmm1f5:22
+        a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 02:49:44AM +0100, Dmitry Safonov wrote:
-> XFRM is disabled for compatible users because of the UABI difference.
-> The difference is in structures paddings and in the result the size
-> of netlink messages differ.
-> 
-> Possibility for compatible application to manage xfrm tunnels was
-> disabled by: the commmit 19d7df69fdb2 ("xfrm: Refuse to insert 32 bit
-> userspace socket policies on 64 bit systems") and the commit 74005991b78a
-> ("xfrm: Do not parse 32bits compiled xfrm netlink msg on 64bits host").
-> 
-> This is my second attempt to resolve the xfrm/compat problem by adding
-> the 64=>32 and 32=>64 bit translators those non-visibly to a user
-> provide translation between compatible user and kernel.
-> Previous attempt was to interrupt the message ABI according to a syscall
-> by xfrm_user, which resulted in over-complicated code [1].
-> 
-> Florian Westphal provided the idea of translator and some draft patches
-> in the discussion. In these patches, his idea is reused and some of his
-> initial code is also present.
+Hi Neil.
 
-One comment on this. Looks like the above is the same in all
-commit messages. Please provide that generic information
-with the patch 0/n and remove it from the other patches.
+On Mon, Sep 07, 2020 at 01:10:26PM +0200, Neil Armstrong wrote:
+> This add the bindings for the 1024*600 tl070wsh30 DSI panel.
 
+The binding looks like a panel-simple-dsi.yaml candidate.
+Only differen is enable-gpios versus reset-gpios
 
+Could you check if we can use panel-simple-dsi-yaml.
+
+	Sam
+
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../display/panel/tdo,tl070wsh30.yaml         | 58 +++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/tdo,tl070wsh30.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/panel/tdo,tl070wsh30.yaml b/Documentation/devicetree/bindings/display/panel/tdo,tl070wsh30.yaml
+> new file mode 100644
+> index 000000000000..20f4fdedfcb0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/tdo,tl070wsh30.yaml
+> @@ -0,0 +1,58 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
+> +# Copyright 2020 BayLibre, SAS
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/panel/tdo,tl070wsh30.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TDO TL070WSH30 DSI panel
+> +
+> +maintainers:
+> +  - Neil Armstrong <narmstrong@baylibre.com>
+> +
+> +allOf:
+> +  - $ref: panel-common.yaml#
+> +
+> +properties:
+> +
+> +  compatible:
+> +    enum:
+> +      - tdo,tl070wsh30
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: DSI virtual channel
+> +
+> +  backlight: true
+> +  reset-gpios: true
+> +  port: true
+> +  power-supply: true
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - power-supply
+> +  - reset-gpios
+> +  - port
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    dsi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +      panel@0 {
+> +        compatible = "tdo,tl070wsh30";
+> +        reg = <0>;
+> +        power-supply = <&vcc_lcd_reg>;
+> +        backlight = <&panel_backlight>;
+> +        reset-gpios = <&gpio_reset>;
+> +
+> +        port {
+> +          panel: endpoint {
+> +            remote-endpoint = <&mipi_dsi_out>;
+> +          };
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.22.0
