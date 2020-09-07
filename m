@@ -2,89 +2,123 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A236C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFF1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CE7A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE96721532
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YTUoJOoO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fDz8Wphj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgIGRy4 (ORCPT
+        id S1729291AbgIGRzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42554 "EHLO
+        Mon, 7 Sep 2020 13:55:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728868AbgIGLWb (ORCPT
+        with ESMTP id S1729184AbgIGRyu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:22:31 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDABC061383
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:13:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=t6L7mc8LY6HcIK4hTeMOoR+t0IgXAjOkRlYlITQe43E=; b=YTUoJOoOvspRe3TUUiTUlvfdsr
-        FgQbqoTaKbARdHlULynxlhFtt0g40eGclv8PCYn3kNsvM4aZ7Z8L509+iH3WpUmj+FIP0ts4KlWkh
-        mk4KCWTv5noK1r2Y9NQWECqD60MbVBY+Pqon3SXww2yVuVzsOj3Hb1FvU/A9TJB54JditSJyeRvGp
-        kzjD/lBp3G2IHA90Msnd3EWv8ySa33V2k2HBbJXlE6757gxqlejjpZarqYmuIIRBC/9yWmypbMG7n
-        RS5ieIEnUsZcnJ/fsWgLo0QZATtTdWpQNbEGZGFJ1wdSuW50XnbQo6bCbPr0yIRxGO1WaJ2WUWI0q
-        lVSGRgXQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFF5O-0004ov-Sy; Mon, 07 Sep 2020 11:13:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6151E301179;
-        Mon,  7 Sep 2020 13:13:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 438FC20177D0A; Mon,  7 Sep 2020 13:13:20 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 13:13:20 +0200
-From:   peterz@infradead.org
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        vincent.donnefort@arm.com, mingo@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        valentin.schneider@arm.com, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
-Message-ID: <20200907111320.GP2674@hirez.programming.kicks-ass.net>
-References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
- <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
- <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
- <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
- <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
- <20200907104845.6rust2lf2o3d5gmq@e107158-lin.cambridge.arm.com>
+        Mon, 7 Sep 2020 13:54:50 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1D47C061573;
+        Mon,  7 Sep 2020 10:54:47 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z4so16616432wrr.4;
+        Mon, 07 Sep 2020 10:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FbRc5khqS8fj5sPJsPlmiUlETyEoMORWYslwTB7qr70=;
+        b=fDz8WphjtGoceLUkrGnnfBAOwDy5R8rTqCFJt4PTP+rBKl/C5XoRukYIkF3G2w9elx
+         PUVLJejK4SzQ1ZTR2pTmWD5lXLdGtREDcihYsHauYv5JcWGJVGgsm5R1GYZzAcqiyIDY
+         3Q0NdERNA8RYIyQOUcJgMPbzEL0UY5iYojbeYCK0cxWshQbnGuYTE3N1bT6dviE2kz5Z
+         zTHwoeoMIgvH7wk25c8sP2Mvqn9yz9F0nPn8jjADAbpHgcKEiF3qH/dKpN0xhcKwYKVa
+         CcUSK8s8myoplLJskSpusJcfIODFVnjlx7CAZPakyHWbCVmCt1dXr1HtLDUDpB82i7q+
+         TMEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FbRc5khqS8fj5sPJsPlmiUlETyEoMORWYslwTB7qr70=;
+        b=VExl44I8++okZ87a7TkqakrZWyoPKvIzVe4qzbQM6KOVNaWytbw4DbvYxGJENa69+C
+         FNltfkaehuxWlZIv6DFZztDRPuvibWBniAW0eeizg1ktQHQom5g/UXx+2vdGb/22XfFt
+         +bWz2iSprLVFch4Fo7ZnyvqNGWIWLR251BFt7QjYuVCE4u+nSaumQQOegGkkStxObENU
+         ROFSVAV7Lh14kFQiXJUsBiZSlHlFDf/BMsUdko1bum8Vt0ARY5gMuuM9JK0N0Ymg7RYe
+         i06g/SxFRUZn6fUIq5xcoPEKdJA8obSLTa4swH/sO9rh0bpawx7ho9rizxLCbMOhwwwt
+         6jQA==
+X-Gm-Message-State: AOAM533hB8OHNElj3wx2K5Y4Vz6BtToSDekSVJJ6hJTho6ediKJO2E3J
+        sHEOgTeh4dvj3aE5Z7maHiU=
+X-Google-Smtp-Source: ABdhPJyJbIrC0i02kkLyImI7fa2gKNv0JlxUJcUkpnOxEI7wSgKZ5W7ljdSo3sEUeo0nn22qV5Ktcg==
+X-Received: by 2002:a5d:4645:: with SMTP id j5mr22359726wrs.230.1599501286489;
+        Mon, 07 Sep 2020 10:54:46 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id f6sm29049995wro.5.2020.09.07.10.54.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 10:54:45 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, robh+dt@kernel.org, wens@csie.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, m.cerveny@computer.org,
+        Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v3] dt-bindings: crypto: Specify that allwinner,sun8i-a33-crypto needs reset
+Date:   Mon,  7 Sep 2020 19:54:37 +0200
+Message-Id: <20200907175437.4464-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907104845.6rust2lf2o3d5gmq@e107158-lin.cambridge.arm.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:48:45AM +0100, Qais Yousef wrote:
-> IMHO the above is a hack. Out-of-tree modules should rely on public headers and
-> exported functions only. What you propose means that people who want to use
-> these tracepoints in meaningful way must have a prebuilt kernel handy. Which is
-> maybe true for us who work in the embedded world. But users who run normal
-> distro kernels (desktop/servers) will fail to build against
+When adding allwinner,sun8i-a33-crypto, I forgot to add that it needs reset.
+Furthermore, there are no need to use items to list only one compatible
+in compatible list.
 
-But this isn't really aimed at regular users. We're aiming this at
-developers (IIUC) so I dont really see this as a problem.
+Fixes: f81547ba7a98 ("dt-bindings: crypto: add new compatible for A33 SS")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+Change since v2:
+- fixed enum syntax
 
-> FWIW, I did raise this concern with Peter in 2019 OSPM and he was okay with the
-> exports as it's still not a contract and they can disappear anytime we want.
-> Migrating to using BTF is the right way forward IMO. I don't think what we have
-> here is out-of-control yet. Though I agree they're annoying.
+Change since v1:
+- use an enum for adding allwinner,sun8i-a33-crypto to "reset list"
 
-Right, we're hiding behind the explicit lack of ABI for modules.
+ .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml        | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Anyway, CTF/BTF/random other crap that isn't DWARFs should work fine to
-replace all this muck. Just no idea what the state of any of that is.
+diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+index fc823572bcff..90c6d039b91b 100644
+--- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
++++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+@@ -23,8 +23,7 @@ properties:
+       - items:
+           - const: allwinner,sun7i-a20-crypto
+           - const: allwinner,sun4i-a10-crypto
+-      - items:
+-          - const: allwinner,sun8i-a33-crypto
++      - const: allwinner,sun8i-a33-crypto
+ 
+   reg:
+     maxItems: 1
+@@ -59,7 +58,9 @@ if:
+   properties:
+     compatible:
+       contains:
+-        const: allwinner,sun6i-a31-crypto
++        enum:
++          - allwinner,sun6i-a31-crypto
++          - allwinner,sun8i-a33-crypto
+ 
+ then:
+   required:
+-- 
+2.26.2
+
