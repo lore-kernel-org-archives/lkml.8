@@ -2,55 +2,55 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9857C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DFE8208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599500554;
-	bh=iQ6qU+p1kul7XA65aVrIsOjiv+KvNamQwNm54D34ArA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+wa7msgZ4eyNOZ64HJ61YlwGWaC2sBp1WZqDhZS6RWGb19lsUyIyeMygVv8aXr6I
-	 PuBEOlxMJREt83aUA8kSiwKi3LY93Efn7yjTyVgX4oBQ0g4OD/SmGcufdiT2IZFtd6
-	 MBJB44i+kE1zrn4nFxrymoWwhn3Wrc7gaeCSAH0Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1E164206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgIGRmd (ORCPT
+        id S1729322AbgIGRl4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:42:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:41:56 -0400
+Received: from 8bytes.org ([81.169.241.247]:43572 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731452AbgIGRmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:42:06 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1729422AbgIGNR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:17:56 -0400
+Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8967721532;
-        Mon,  7 Sep 2020 17:42:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599500526;
-        bh=iQ6qU+p1kul7XA65aVrIsOjiv+KvNamQwNm54D34ArA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMKtX/2/EqCq/p/njnJ73yIEEOQ7MEdyZmvdFZH5ep1GSIAHSgsu64t57C/B3qODX
-         1DKPapYGG2UdYIrpfmObw+l61KKE3oE8WnoVCh+HaAEK2HRWAkzF0xTSPFfM8C9SGN
-         CUxe+3kTLc+35y48s7kdTDv9VQjGuE/0EvInL80c=
-From:   Will Deacon <will@kernel.org>
-To:     Qi Liu <liuqi115@huawei.com>, zhangshaokun@hisilicon.com,
-        mark.rutland@arm.com
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm64: perf: Remove unnecessary event_idx check
-Date:   Mon,  7 Sep 2020 18:42:00 +0100
-Message-Id: <159950013966.2897464.5010503730019666369.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1599213458-28394-1-git-send-email-liuqi115@huawei.com>
-References: <1599213458-28394-1-git-send-email-liuqi115@huawei.com>
+        by theia.8bytes.org (Postfix) with ESMTPSA id E514012D3;
+        Mon,  7 Sep 2020 15:17:07 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v7 50/72] x86/sev-es: Handle MMIO String Instructions
+Date:   Mon,  7 Sep 2020 15:15:51 +0200
+Message-Id: <20200907131613.12703-51-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
+References: <20200907131613.12703-1-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,20 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 17:57:38 +0800, Qi Liu wrote:
-> event_idx is obtained from armv8pmu_get_event_idx(), and this idx must be
-> between ARMV8_IDX_CYCLE_COUNTER and cpu_pmu->num_events. So it's unnecessary
-> to do this check. Let's remove it.
+From: Joerg Roedel <jroedel@suse.de>
 
-Applied to will (for-next/perf), thanks!
+Add handling for emulation the MOVS instruction on MMIO regions, as done
+by the memcpy_toio() and memcpy_fromio() functions.
 
-[1/1] arm64: perf: Remove unnecessary event_idx check
-      https://git.kernel.org/will/c/44fdf4ed2693
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/kernel/sev-es.c | 77 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
-Cheers,
+diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
+index 62fd0ebf2a67..a79c7fc32bc6 100644
+--- a/arch/x86/kernel/sev-es.c
++++ b/arch/x86/kernel/sev-es.c
+@@ -594,6 +594,73 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
+ 	return ret;
+ }
+ 
++/*
++ * The MOVS instruction has two memory operands, which raises the
++ * problem that it is not known whether the access to the source or the
++ * destination caused the #VC exception (and hence whether an MMIO read
++ * or write operation needs to be emulated).
++ *
++ * Instead of playing games with walking page-tables and trying to guess
++ * whether the source or destination is an MMIO range, split the move
++ * into two operations, a read and a write with only one memory operand.
++ * This will cause a nested #VC exception on the MMIO address which can
++ * then be handled.
++ *
++ * This implementation has the benefit that it also supports MOVS where
++ * source _and_ destination are MMIO regions.
++ *
++ * It will slow MOVS on MMIO down a lot, but in SEV-ES guests it is a
++ * rare operation. If it turns out to be a performance problem the split
++ * operations can be moved to memcpy_fromio() and memcpy_toio().
++ */
++static enum es_result vc_handle_mmio_movs(struct es_em_ctxt *ctxt,
++					  unsigned int bytes)
++{
++	unsigned long ds_base, es_base;
++	unsigned char *src, *dst;
++	unsigned char buffer[8];
++	enum es_result ret;
++	bool rep;
++	int off;
++
++	ds_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_DS);
++	es_base = insn_get_seg_base(ctxt->regs, INAT_SEG_REG_ES);
++
++	if (ds_base == -1L || es_base == -1L) {
++		ctxt->fi.vector = X86_TRAP_GP;
++		ctxt->fi.error_code = 0;
++		return ES_EXCEPTION;
++	}
++
++	src = ds_base + (unsigned char *)ctxt->regs->si;
++	dst = es_base + (unsigned char *)ctxt->regs->di;
++
++	ret = vc_read_mem(ctxt, src, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	ret = vc_write_mem(ctxt, dst, buffer, bytes);
++	if (ret != ES_OK)
++		return ret;
++
++	if (ctxt->regs->flags & X86_EFLAGS_DF)
++		off = -bytes;
++	else
++		off =  bytes;
++
++	ctxt->regs->si += off;
++	ctxt->regs->di += off;
++
++	rep = insn_has_rep_prefix(&ctxt->insn);
++	if (rep)
++		ctxt->regs->cx -= 1;
++
++	if (!rep || ctxt->regs->cx == 0)
++		return ES_OK;
++	else
++		return ES_RETRY;
++}
++
+ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 				     struct es_em_ctxt *ctxt)
+ {
+@@ -655,6 +722,16 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
+ 		memcpy(reg_data, ghcb->shared_buffer, bytes);
+ 		break;
+ 
++		/* MOVS instruction */
++	case 0xa4:
++		bytes = 1;
++		fallthrough;
++	case 0xa5:
++		if (!bytes)
++			bytes = insn->opnd_bytes;
++
++		ret = vc_handle_mmio_movs(ctxt, bytes);
++		break;
+ 		/* Two-Byte Opcodes */
+ 	case 0x0f:
+ 		ret = vc_handle_mmio_twobyte_ops(ghcb, ctxt);
 -- 
-Will
+2.28.0
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
