@@ -2,93 +2,139 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E8CAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE692078B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dXshJYHJ"
+	by mail.kernel.org (Postfix) with ESMTP id 483942078B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:44:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599482682;
+	bh=i45Q5Y7+UcDsp9NgOV3maOrvpDqRRVJRZKVEtzcg+3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GceiRpS9Lpt472+VdIstKImmujCR9y54SRpux5L63KtTafPFYHAxikGIlK+cTx9js
+	 uF37GJRh+7TIwkDK5UMQsdyLC5DI4nqqvJEYBTEt9w1krUQxqB6vMGKStWh3/hnTv0
+	 zG3if3TF1KIrmAwzHJjgZC/JBSl8Y4zj/yEzDB0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729251AbgIGMmV (ORCPT
+        id S1729265AbgIGMoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:42:21 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11108 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729191AbgIGMew (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:34:52 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5628d50003>; Mon, 07 Sep 2020 05:34:29 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 05:34:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 05:34:43 -0700
-Received: from [172.27.12.170] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
- 2020 12:34:36 +0000
-Subject: Re: [PATCH rdma-next 2/4] lib/scatterlist: Add support in dynamically
- allocation of SG entries
-To:     Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <20200903121853.1145976-1-leon@kernel.org>
- <20200903121853.1145976-3-leon@kernel.org> <20200907072916.GB19875@lst.de>
-From:   Maor Gottlieb <maorg@nvidia.com>
-Message-ID: <5fe4d1ce-2c08-ebc1-5b05-3bb051b35069@nvidia.com>
-Date:   Mon, 7 Sep 2020 15:34:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
+        Mon, 7 Sep 2020 08:44:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729183AbgIGMfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:35:32 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A796206E6;
+        Mon,  7 Sep 2020 12:35:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599482131;
+        bh=i45Q5Y7+UcDsp9NgOV3maOrvpDqRRVJRZKVEtzcg+3c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MGLJO6yS5MeiLg9qHAMBDR4xg9ulG8Rc4cQz94VRQflH1iulltX+by7nLGRVy+ZeO
+         j/iG3sJFj6V3cNe1YufvOB9++O6Ri2wiW7kF8GwHjCaEJ+vT8wpAQPuf+JWl4rqJ1D
+         CUiI//HVxqlXtCpNUTyGdNG0puVFA8u4LlmlzVgI=
+Date:   Mon, 7 Sep 2020 14:35:46 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v3 1/3] bcm-vk: add bcm_vk UAPI
+Message-ID: <20200907123546.GB2371705@kroah.com>
+References: <20200825194400.28960-1-scott.branden@broadcom.com>
+ <20200825194400.28960-2-scott.branden@broadcom.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907072916.GB19875@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599482069; bh=Y6PLUbvnGcn7GIGt3cB8hv9M8p6UYp7BGJJ6Xjw8nng=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=dXshJYHJlOZVDbwSKUA8+3fll3gCNyYlc1xSj1YvQDSXSQenMB0ATYEJ9/ZvFREg1
-         QuWZiM89ncBvT/7FV0y5/tj1CmxUW9+hGVnbrsKXeQ8ZyCbajnzqFazRnTNSN8Ik+5
-         HRtnbUrN09kpcKNZETKjBRQEpmGC2N8xQUhkhLIp9pinryslBbPmus9YnUoYReB3zS
-         p8D70vixF9Nvkj1IIbcSRAHkRLlUT68DzXBkc8eAcleChpMPx/rLdCiPMUKA8407QN
-         BRZeA/LLxfwYe5pYS7QcDkjBVwmU3sRB2oKdZoo5Iyxz5wWMx31f1Rt+PfPgWamvvP
-         2DiGBL4KHW39A==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825194400.28960-2-scott.branden@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 12:43:58PM -0700, Scott Branden wrote:
+> Add user space api for bcm-vk driver.
+> 
+> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
+> 
+> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
+> new file mode 100644
+> index 000000000000..da7848e7c438
+> --- /dev/null
+> +++ b/include/uapi/linux/misc/bcm_vk.h
+> @@ -0,0 +1,99 @@
+> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
+> +/*
+> + * Copyright 2018-2020 Broadcom.
+> + */
+> +
+> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
+> +#define __UAPI_LINUX_MISC_BCM_VK_H
+> +
+> +#include <linux/ioctl.h>
+> +#include <linux/types.h>
+> +
+> +#define BCM_VK_MAX_FILENAME 64
+> +
+> +struct vk_image {
+> +	__u32 type; /* Type of image */
+> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
+> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
+> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
 
-On 9/7/2020 10:29 AM, Christoph Hellwig wrote:
->> +static inline void _sg_chain(struct scatterlist *chain_sg,
->> +			     struct scatterlist *sgl)
->> +{
->> +	/*
->> +	 * offset and length are unused for chain entry. Clear them.
->> +	 */
->> +	chain_sg->offset = 0;
->> +	chain_sg->length = 0;
->> +
->> +	/*
->> +	 * Set lowest bit to indicate a link pointer, and make sure to clear
->> +	 * the termination bit if it happens to be set.
->> +	 */
->> +	chain_sg->page_link = ((unsigned long) sgl | SG_CHAIN) & ~SG_END;
->> +}
-> Please call this __sg_chain to stick with our normal kernel naming
-> convention.
+nit, but this should really be __u8 filename[...
+right?
 
-Will do.
+
+
+> +};
+> +
+> +struct vk_reset {
+> +	__u32 arg1;
+> +	__u32 arg2;
+> +};
+> +
+> +#define VK_MAGIC		0x5e
+> +
+> +/* Load image to Valkyrie */
+> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
+> +
+> +/* Send Reset to Valkyrie */
+> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
+> +
+> +/*
+> + * message block - basic unit in the message where a message's size is always
+> + *		   N x sizeof(basic_block)
+> + */
+> +struct vk_msg_blk {
+> +	__u8 function_id;
+> +#define VK_FID_TRANS_BUF	5
+> +#define VK_FID_SHUTDOWN		8
+> +	__u8 size;
+
+Size of what?
+
+> +	__u16 trans_id; /* transport id, queue & msg_id */
+> +	__u32 context_id;
+> +	__u32 args[2];
+> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
+> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
+> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
+> +#define VK_CMD_MASK		0x0f00 /* command mask */
+> +};
+
+What are these defines for?  The args?  Something else?  It's not really
+obvious here...
+
+thanks,
+
+greg k-h
