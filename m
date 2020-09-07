@@ -2,96 +2,142 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45EBAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C56CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02CD921D80
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496805;
-	bh=toxpiCs541mFXqnbYYRXvxXpCq2dj5tqD33uJsEyZ7g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2SeoZ9GZW4DeAYBvqHNFkQzOlPyOA87d9cCFIKZ5F/c8yH14uq41I+3+c2EuIM1kN
-	 DpDMQGf2a07pKBIEBtEizUlkH2yMfnHQks2BLDtZ51eSBB5FkTsIhiHfAKLVymtxnW
-	 jU+gqLiSvT6gDATMpMnLRCetFg1M8kIHDJrAcKIk=
+	by mail.kernel.org (Postfix) with ESMTP id CDA6A21D1A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgIGQkC (ORCPT
+        id S1731014AbgIGQkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:40:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49826 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:40:07 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41636 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729828AbgIGQfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:54 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89E1421D94;
-        Mon,  7 Sep 2020 16:35:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496553;
-        bh=toxpiCs541mFXqnbYYRXvxXpCq2dj5tqD33uJsEyZ7g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVGnBRm71CboSjUWysyvzTkGSLjn9VnmMX1UHhnzuOnGylabl66xIMfFlRKccWZGP
-         DErNxuBEOTerX8BxW+sADINbrf4fgT3tiQY/XUN9bkP9Hbdoe/fRpDnbMSj40Ja3a6
-         2wyIByLo9UtayWOvTD6eShfZ2S2IvT2WwT9+qi3o=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
-        Krzysztof Halasa <khc@pm.waw.pl>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/10] drivers/net/wan/hdlc_cisco: Add hard_header_len
-Date:   Mon,  7 Sep 2020 12:35:40 -0400
-Message-Id: <20200907163543.1281889-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
-References: <20200907163543.1281889-1-sashal@kernel.org>
+        id S1730906AbgIGQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:36:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3C425ACB5;
+        Mon,  7 Sep 2020 16:36:43 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [RFC 4/5] mm, page_alloc: cache pageset high and batch in struct zone
+Date:   Mon,  7 Sep 2020 18:36:27 +0200
+Message-Id: <20200907163628.26495-5-vbabka@suse.cz>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907163628.26495-1-vbabka@suse.cz>
+References: <20200907163628.26495-1-vbabka@suse.cz>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+All per-cpu pagesets for a zone use the same high and batch values, that are
+duplicated there just for performance (locality) reasons. This patch adds the
+same variables also to struct zone as 'central' ones.
 
-[ Upstream commit 1a545ebe380bf4c1433e3c136e35a77764fda5ad ]
+This will be useful later for making possible to disable pcplists temporarily
+by setting high value to 0, while remembering the values for restoring them
+later. But we can also immediately benefit from not updating pagesets of all
+possible cpus in case the newly recalculated values (after sysctl change or
+memory online/offline) are actually unchanged from the previous ones.
 
-This driver didn't set hard_header_len. This patch sets hard_header_len
-for it according to its header_ops->create function.
-
-This driver's header_ops->create function (cisco_hard_header) creates
-a header of (struct hdlc_header), so hard_header_len should be set to
-sizeof(struct hdlc_header).
-
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- drivers/net/wan/hdlc_cisco.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/mmzone.h |  2 ++
+ mm/page_alloc.c        | 18 +++++++++++++-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
-index 3f20808b5ff82..f8ed079d8bc3e 100644
---- a/drivers/net/wan/hdlc_cisco.c
-+++ b/drivers/net/wan/hdlc_cisco.c
-@@ -377,6 +377,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
- 		memcpy(&state(hdlc)->settings, &new_settings, size);
- 		spin_lock_init(&state(hdlc)->lock);
- 		dev->header_ops = &cisco_header_ops;
-+		dev->hard_header_len = sizeof(struct hdlc_header);
- 		dev->type = ARPHRD_CISCO;
- 		netif_dormant_on(dev);
- 		return 0;
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 8379432f4f2f..15582ca368b9 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -431,6 +431,8 @@ struct zone {
+ #endif
+ 	struct pglist_data	*zone_pgdat;
+ 	struct per_cpu_pageset __percpu *pageset;
++	int pageset_high;
++	int pageset_batch;
+ 
+ #ifndef CONFIG_SPARSEMEM
+ 	/*
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index a0cab2c6055e..004350a2b6ca 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5834,7 +5834,7 @@ static void build_zonelists(pg_data_t *pgdat)
+  * not check if the processor is online before following the pageset pointer.
+  * Other parts of the kernel may not check if the zone is available.
+  */
+-static void setup_pageset(struct per_cpu_pageset *p);
++static void pageset_init(struct per_cpu_pageset *p);
+ static DEFINE_PER_CPU(struct per_cpu_pageset, boot_pageset);
+ static DEFINE_PER_CPU(struct per_cpu_nodestat, boot_nodestats);
+ 
+@@ -6237,7 +6237,7 @@ static void pageset_init(struct per_cpu_pageset *p)
+ 	pcp->batch  = 1;
+ }
+ 
+-static void zone_set_pageset_high_and_batch(struct zone *zone)
++static void zone_set_pageset_high_and_batch(struct zone *zone, bool force_update)
+ {
+ 	unsigned long new_high;
+ 	unsigned long new_batch;
+@@ -6256,6 +6256,14 @@ static void zone_set_pageset_high_and_batch(struct zone *zone)
+ 		new_batch = max(1UL, 1 * new_batch);
+ 	}
+ 
++	if (zone->pageset_high != new_high ||
++	    zone->pageset_batch != new_batch) {
++		zone->pageset_high = new_high;
++		zone->pageset_batch = new_batch;
++	} else if (!force_update) {
++		return;
++	}
++
+ 	for_each_possible_cpu(cpu) {
+ 		p = per_cpu_ptr(zone->pageset, cpu);
+ 		pageset_update(&p->pcp, new_high, new_batch);
+@@ -6273,7 +6281,7 @@ void __meminit setup_zone_pageset(struct zone *zone)
+ 		pageset_init(p);
+ 	}
+ 
+-	zone_set_pageset_high_and_batch(zone);
++	zone_set_pageset_high_and_batch(zone, true);
+ }
+ 
+ /*
+@@ -8038,7 +8046,7 @@ int percpu_pagelist_fraction_sysctl_handler(struct ctl_table *table, int write,
+ 		goto out;
+ 
+ 	for_each_populated_zone(zone)
+-		zone_set_pageset_high_and_batch(zone);
++		zone_set_pageset_high_and_batch(zone, false);
+ out:
+ 	mutex_unlock(&pcp_batch_high_lock);
+ 	return ret;
+@@ -8654,7 +8662,7 @@ EXPORT_SYMBOL(free_contig_range);
+ void __meminit zone_pcp_update(struct zone *zone)
+ {
+ 	mutex_lock(&pcp_batch_high_lock);
+-	zone_set_pageset_high_and_batch(zone);
++	zone_set_pageset_high_and_batch(zone, false);
+ 	mutex_unlock(&pcp_batch_high_lock);
+ }
+ 
 -- 
-2.25.1
+2.28.0
 
