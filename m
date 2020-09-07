@@ -2,110 +2,128 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40365C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA96AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 079D7217BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ECC6217BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729922AbgIGPJC (ORCPT
+        id S1730124AbgIGPJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:09:02 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:52217 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730066AbgIGO7a (ORCPT
+        Mon, 7 Sep 2020 11:09:41 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:58485 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1730114AbgIGO7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:59:30 -0400
-Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MvbJw-1kVJnJ0F6M-00sd6v; Mon, 07 Sep 2020 16:59:15 +0200
-Received: by mail-qv1-f41.google.com with SMTP id cv8so6437570qvb.12;
-        Mon, 07 Sep 2020 07:59:14 -0700 (PDT)
-X-Gm-Message-State: AOAM5303Aw8zwrEiN6wbMgq60Z+UeFPpXVnEnxjwC3H+IYLa0laaBb4l
-        lGnj8zQ9Yq0PhnZzsiUnN3iL7bfE6j3nEbI0mEQ=
-X-Google-Smtp-Source: ABdhPJxK1PtMWzEME0I00NTfpJLnk7HuwRPMEDH7xtuIg967ceNyZJazvdlwZ8DAo/8dECMPk3V86IWyRilTpXPzPg8=
-X-Received: by 2002:a0c:e892:: with SMTP id b18mr18804075qvo.4.1599490753860;
- Mon, 07 Sep 2020 07:59:13 -0700 (PDT)
+        Mon, 7 Sep 2020 10:59:01 -0400
+Received: (qmail 763064 invoked by uid 1000); 7 Sep 2020 10:59:00 -0400
+Date:   Mon, 7 Sep 2020 10:59:00 -0400
+From:   "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>
+To:     Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/2] usb: ohci: Add per-port overcurrent quirk
+Message-ID: <20200907145900.GC762136@rowland.harvard.edu>
+References: <20200904032247.11345-1-hamish.martin@alliedtelesis.co.nz>
+ <20200904032247.11345-2-hamish.martin@alliedtelesis.co.nz>
+ <20200904154517.GB694058@rowland.harvard.edu>
+ <9ba7b4dda9ef40e3c4c9b3f1c33075e04601ef61.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20200904165216.1799796-1-hch@lst.de> <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com>
- <20200905071735.GB13228@lst.de> <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
- <20200907060356.GA18655@lst.de>
-In-Reply-To: <20200907060356.GA18655@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 7 Sep 2020 16:58:57 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a22X84VVX=WwrQoqgThuhs55P9z+rYoG=kzbJCmJLJb8Q@mail.gmail.com>
-Message-ID: <CAK8P3a22X84VVX=WwrQoqgThuhs55P9z+rYoG=kzbJCmJLJb8Q@mail.gmail.com>
-Subject: Re: remove set_fs for riscv
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Russell King <rmk@arm.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:MpHuRRnIlDGyisIWkrrnggB7EpmlguB++P2XWvEgZlq2hPXhw6x
- 09V150d9+qUN0RxMK9BSU+WHRO7+lqM5tfYBCPlpk2GrJANFlWkmgCnqmukvdshsd6mov0O
- Rv6/wAXn5FspfePeEBrFP0x0j0skVvsKJ7sLQlUN6flhNaVEpwr0OV7HTiNS2uj1AF1dXSc
- zK4/yUJH1SXunzztqKK7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jHRPJ+HvdNs=:7ERbVbdo3nq5sJDNMrnkOi
- JLgHJzh2QwS4SeejvpFJr3ItdRGmsG60XtoybqFMiLtPsHpL+IeTHA1A0tbUEDKjbO4LdeFOe
- MBHgKFSokPxUzTcS3YZYE1eOslPU/v3Rwf/SqvV86LQHZvr8pGgQtkQOabjujrTnAppaP9vc+
- 6Mjx5FnMjkikknIRtNe1G/B//pq+or1G114RGm27YAbxd5PM71UZtV5hbRCp7+Hp5PtZD39vg
- RTws6TNEgdQEVQnaJRtpsQoxQ6kQ5ild4sEradrBbD/kzsdXqpqUss9sqfaeqFFfFlYHlkwmU
- cTITBo861lojJ/Xfa6rGBwnkj2mQR3EmIs42Bf16o+yG4OwQzQdHqs8b44bsmbztKhOS80AET
- q3HRoGJT8irpx+sDQer+OjtN8/ZkuD8Ve8q/v8DWDauwuBMwWuYkzyn9XV4WPqk+/sEPEW0fK
- NM81snU9zIWM5z6L5Aj0YEOs1SNedrNFEB2LaBbuREyJkuIR1SEZHenRkUk6PgbCx9bnplEih
- ofct3xo8jEvN/e7kLClBLcTdqHIQNSlKCvaXcZ7sCgh9H4UnyQlC4inPoWLFm8+AtohtSw3i1
- rsrHhwahOrJd0RlJ0F70z0GQyn+iwX0sjSPEGKpBXF/z1Qzcuk4Xbo1IzKVZGjqSplZ4t5o80
- CaGPAph8hTL6tGiCIJWjqSr9yuvgbQjChAUct0Dtjso52NfVGLE7/S1r9Jt1nUeggpywh6+qk
- LoM9hmSUnLn72ILAiV/uTCvUx293ypmiUxG0v40IlvaYrpVECa+5OBOzv1ORgAvLpbCGjXYxS
- FHmINsXUChXOO9HxZ0jcI28RNPgt5OAr9x79th5uzMZOSi/zWzb76eRFXpkJ7zBtAM1zm4pU5
- jFItJnY+cVzkT3U5pcZakjOA1owQ/D6yvNQWxIoDwH/wWcBw5NdtXLBmpklQo3bvExvqXG8oq
- ckmpoo70uZnUv7BZMoIp+eAPO76+0pm4yNXQlijssXYfdBq0Z+kaN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ba7b4dda9ef40e3c4c9b3f1c33075e04601ef61.camel@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 8:03 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Sep 07, 2020 at 12:14:59AM +0200, Arnd Bergmann wrote:
-> > I've had a first pass at this now, see
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=arm-kill-set_fs
-> >
-> > There are a couple of things in there that ended up uglier than I was
-> > hoping for, and it's completely untested beyond compilation. Is this
-> > roughly what you had in mind? I can do some testing then and post
-> > it to the Arm mailing list.
->
-> Looks sensible.  The OABI hacks a are a little ugly, but so would be
-> every other alternative.
+On Mon, Sep 07, 2020 at 01:50:10AM +0000, Hamish Martin wrote:
+> Hi Alan,
+> 
+> Thanks for your quick feedback. My replies are inline below.
+> 
+> On Fri, 2020-09-04 at 11:45 -0400, Alan Stern wrote:
+> > On Fri, Sep 04, 2020 at 03:22:46PM +1200, Hamish Martin wrote:
+> > > Some integrated OHCI controller hubs do not expose all ports of the
+> > > hub
+> > > to pins on the SoC. In some cases the unconnected ports generate
+> > > spurious overcurrent events. For example the Broadcom 56060/Ranger
+> > > 2 SoC
+> > > contains a nominally 3 port hub but only the first port is wired.
+> > > 
+> > > Default behaviour for ohci-platform driver is to use "ganged"
+> > > overcurrent protection mode. This leads to the spurious overcurrent
+> > > events affecting all ports in the hub.
+> > > 
+> > > Allow this to be rectified by specifying per-port overcurrent
+> > > protection
+> > > mode via the device tree.
+> > > 
+> > > Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+> > > ---
+> > >  drivers/usb/host/ohci-hcd.c      | 4 ++++
+> > >  drivers/usb/host/ohci-platform.c | 3 +++
+> > >  drivers/usb/host/ohci.h          | 1 +
+> > >  3 files changed, 8 insertions(+)
+> > > 
+> > > diff --git a/drivers/usb/host/ohci-hcd.c b/drivers/usb/host/ohci-
+> > > hcd.c
+> > > index dd37e77dae00..01e3d75e29d9 100644
+> > > --- a/drivers/usb/host/ohci-hcd.c
+> > > +++ b/drivers/usb/host/ohci-hcd.c
+> > > @@ -687,6 +687,10 @@ static int ohci_run (struct ohci_hcd *ohci)
+> > >  		val |= RH_A_NPS;
+> > >  		ohci_writel (ohci, val, &ohci->regs->roothub.a);
+> > >  	}
+> > > +	if (ohci->flags & OHCI_QUIRK_PER_PORT_OC) {
+> > > +		val |= RH_A_OCPM;
+> > > +		ohci_writel(ohci, val, &ohci->regs->roothub.a);
+> > > +	}
+> > 
+> > I don't think this is right, for two reasons.  First, isn't per-port 
+> > overcurrent protection the default?
+> 
+> Not as far as I understand the current code. Just above where my patch
+> applies, the RH_A_OCPM (and RH_A_PSM) bits are explicitly cleared in
+> 'val' with:
+>     val &= ~(RH_A_PSM | RH_A_OCPM);
+> 
+> This, coupled with the OHCI_QUIRK_HUB_POWER being set by virtue of the
+> 'distrust_firmware' module param defaulting true, reads to me like the
+> default is for ganged over-current protection. And that is my
+> experience in this case. 
 
-Ok, thanks for taking a look. I've now managed to run the patched
-kernel with OABI user space and tested the modified syscalls with
-LTP. The 0-day bot found a regression that I have fixed.
+You're right about that.  I hadn't noticed before; it makes little sense 
+to have a quirk that defaults to true.
 
-I'll send out the series for review next.
+It's not easy to tell the full story from the kernel history; that 
+module parameter predates the Git era.  I did learn that it was modified 
+in 2.6.3-rc3 and goes back even farther: see
 
-> Note that you don't need to add a TASK_SIZE_MAX definition to arm if you
-> base it on my series as that provides a default one.
+	https://marc.info/?l=linux-usb-devel&m=110628457424684&w=2
 
-I've rebased on that patch now and taken out those definitions.
+> If none of the quirks are selected then all of the fiddling with 'val'
+> never gets written to 'ohci->regs->roothub.a'
+> 
+> I'd appreciate your reading of that analysis because I'm by no means
+> sure of it.
+> 
+> > 
+> > Second, RH_A_OCPM doesn't do anything unless RH_A_NOCP is clear.
+> 
+> Correct, and that is my mistake. If I progress to a v2 of this patch I
+> will update accordingly.
 
-> I also think with these changes arm/nommu should be able to use
-> UACCESS_MEMCPY.
+Shall we try changing the parameter's default value?  The USB subsystem 
+is a lot more mature and reliable now than it was back in 2004.
 
-Probably yes, but I'd leave the current version for now. The Arm
-implementation already supports combinations of range check
-and domain settings, with the NOMMU targets using neither, but
-sharing the same implementation as the others.
-
-      Arnd
+Alan Stern
