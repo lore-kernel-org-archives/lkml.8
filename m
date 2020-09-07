@@ -4,38 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B955C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0389206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620B5206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731070AbgIGRh7 (ORCPT
+        id S1731337AbgIGRiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:37:59 -0400
-Received: from 8bytes.org ([81.169.241.247]:43606 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:38:01 -0400
+Received: from 8bytes.org ([81.169.241.247]:41692 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729466AbgIGNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729470AbgIGNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:18:04 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 276A31008;
-        Mon,  7 Sep 2020 15:17:02 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 7EE22FDC;
+        Mon,  7 Sep 2020 15:16:57 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 39/72] x86/sev-es: Setup early #VC handler
-Date:   Mon,  7 Sep 2020 15:15:40 +0200
-Message-Id: <20200907131613.12703-40-joro@8bytes.org>
+Subject: [PATCH v7 30/72] x86/head/64: Load GDT after switch to virtual addresses
+Date:   Mon,  7 Sep 2020 15:15:31 +0200
+Message-Id: <20200907131613.12703-31-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,110 +60,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Setup an early handler for #VC exceptions. There is no GHCB mapped
-yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
-exit-codes, but that should be enough to get the kernel through
-verify_cpu() and __startup_64() until it runs on virtual addresses.
+Load the GDT right after switching to virtual addresses to make sure
+there is a defined GDT for exception handling.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/sev-es.h |  3 +++
- arch/x86/kernel/head64.c      | 20 ++++++++++++++++++++
- arch/x86/kernel/head_64.S     | 27 +++++++++++++++++++++++++++
- 3 files changed, 50 insertions(+)
+ arch/x86/kernel/head_64.S | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index 6dc52440c4b4..7175d432ebfe 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -73,4 +73,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- 	return (val & mask);
- }
- 
-+/* Early IDT entry points for #VC handler */
-+extern void vc_no_ghcb(void);
-+
- #endif
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 4282dac694c3..621b5e8aef4c 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -40,6 +40,7 @@
- #include <asm/desc.h>
- #include <asm/extable.h>
- #include <asm/trapnr.h>
-+#include <asm/sev-es.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -540,10 +541,29 @@ static struct desc_ptr bringup_idt_descr = {
- 	.address	= 0, /* Set at runtime */
- };
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+static void set_bringup_idt_handler(int n, void *handler)
-+{
-+	struct idt_data data;
-+	gate_desc desc;
-+
-+	init_idt_data(&data, n, handler);
-+	idt_init_desc(&desc, &data);
-+	native_write_idt_entry(bringup_idt_table, n, &desc);
-+}
-+#endif
-+
- /* This runs while still in the direct mapping */
- static void startup_64_load_idt(unsigned long physbase)
- {
- 	struct desc_ptr *desc = fixup_pointer(&bringup_idt_descr, physbase);
-+	void __maybe_unused *handler;
-+
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	/* VMM Communication Exception */
-+	handler = fixup_pointer(vc_no_ghcb, physbase);
-+	set_bringup_idt_handler(X86_TRAP_VC, handler);
-+#endif
- 
- 	desc->address = (unsigned long)fixup_pointer(bringup_idt_table, physbase);
- 	native_load_idt(desc);
 diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 3b40ec44a67d..2e5aa03b4321 100644
+index 2b2e91627221..03b03f266dc1 100644
 --- a/arch/x86/kernel/head_64.S
 +++ b/arch/x86/kernel/head_64.S
-@@ -348,6 +348,33 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
- 	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(early_idt_handler_common)
+@@ -158,6 +158,14 @@ SYM_CODE_START(secondary_startup_64)
+ 1:
+ 	UNWIND_HINT_EMPTY
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/*
-+ * VC Exception handler used during very early boot. The
-+ * early_idt_handler_array can't be used because it returns via the
-+ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
-+ */
-+SYM_CODE_START_NOALIGN(vc_no_ghcb)
-+	UNWIND_HINT_IRET_REGS offset=8
++	/*
++	 * We must switch to a new descriptor in kernel space for the GDT
++	 * because soon the kernel won't have access anymore to the userspace
++	 * addresses where we're currently running on. We have to do that here
++	 * because in 32bit we couldn't load a 64bit linear address.
++	 */
++	lgdt	early_gdt_descr(%rip)
 +
-+	/* Build pt_regs */
-+	PUSH_AND_CLEAR_REGS
-+
-+	/* Call C handler */
-+	movq    %rsp, %rdi
-+	movq	ORIG_RAX(%rsp), %rsi
-+	call    do_vc_no_ghcb
-+
-+	/* Unwind pt_regs */
-+	POP_REGS
-+
-+	/* Remove Error Code */
-+	addq    $8, %rsp
-+
-+	/* Pure iret required here - don't use INTERRUPT_RETURN */
-+	iretq
-+SYM_CODE_END(vc_no_ghcb)
-+#endif
+ 	/* Check if nx is implemented */
+ 	movl	$0x80000001, %eax
+ 	cpuid
+@@ -185,14 +193,6 @@ SYM_CODE_START(secondary_startup_64)
+ 	pushq $0
+ 	popfq
  
- #define SYM_DATA_START_PAGE_ALIGNED(name)			\
- 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+-	/*
+-	 * We must switch to a new descriptor in kernel space for the GDT
+-	 * because soon the kernel won't have access anymore to the userspace
+-	 * addresses where we're currently running on. We have to do that here
+-	 * because in 32bit we couldn't load a 64bit linear address.
+-	 */
+-	lgdt	early_gdt_descr(%rip)
+-
+ 	/* set up data segments */
+ 	xorl %eax,%eax
+ 	movl %eax,%ds
 -- 
 2.28.0
 
