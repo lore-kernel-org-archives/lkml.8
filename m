@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2B4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1302207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC19207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497541;
-	bh=/RTeKqlM4eEKvHgTozSYnhVsgFdlsZhU8zbzBPsVOYU=;
+	s=default; t=1599497557;
+	bh=jSNM2WKR7IWt6Rx42MjBo7X4DHyVpDHdJKnjxra5w/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J+teFDafjANVQknBBJoGpfOrNRGJOR7V5U/z0YDe8MhTnVltAmeBVLGuGMVN1suX0
-	 gpNtO/6AyucUmQbfYYxfYyzIz9K97sjE1Wq/wCeBnxX/m5f9eoFAYGEgfcJTjYR3+q
-	 GMpZI96+LYH3Fr+v0o4v6Ie+3kRiEOuV519R/7CY=
+	b=jxUsrztz+aBzl/O/MXiwIU6WErGBehheIEw/kP/lurOHa9RK+7g0f9B8a8ZoBgEiW
+	 0cfd5YY6yMome5Gl1F4dnn89CrxRAhZFkXtu7FC7/1yulOzYAEXCY+ZME3s6Ceohol
+	 Bs14qeBpBLBR39dmgANc9jYYapj2u+mQx/b2s89A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgIGQwT (ORCPT
+        id S1731156AbgIGQwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:52:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48602 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730455AbgIGQen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:43 -0400
+        id S1730548AbgIGQel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE0B21D93;
-        Mon,  7 Sep 2020 16:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF6E621927;
+        Mon,  7 Sep 2020 16:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496483;
-        bh=/RTeKqlM4eEKvHgTozSYnhVsgFdlsZhU8zbzBPsVOYU=;
+        s=default; t=1599496480;
+        bh=jSNM2WKR7IWt6Rx42MjBo7X4DHyVpDHdJKnjxra5w/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I02caxbVshSITtQIylVPUDtBcGjsviHBGY08YQRtqqRRLs3n9sov7J2c4jyusYIF7
-         QJNuAzHYZffpCYQp2LRBcyV97y/8mOJhR9h+ncKyxPJ4Ic9ojSrlj7n/QJYVGu4pm4
-         FwPdRHHaPRNoDoUM6ugR1gkCs8A5RbtTTb5nCl8g=
+        b=P84HHb07Mgkeb5zfnHM3M94uTurXBLlttD7Ogst0hFnD2aqy2HxmX1VLu7/deLQpy
+         p/ZN9j8/x0D9Ok5OiBjKtzetr0EEmMBMVobVbuTbY+H+3jTiUzTwhBZYMuraSJRB9i
+         UvuxP5PoBiMKflwqtayiOmHwmDeZ5e++APuIRl5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 13/26] nvme-fabrics: don't check state NVME_CTRL_NEW for request acceptance
-Date:   Mon,  7 Sep 2020 12:34:13 -0400
-Message-Id: <20200907163426.1281284-13-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@redhat.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 11/26] xfs: initialize the shortform attr header padding entry
+Date:   Mon,  7 Sep 2020 12:34:11 -0400
+Message-Id: <20200907163426.1281284-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
 References: <20200907163426.1281284-1-sashal@kernel.org>
@@ -58,33 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit d7144f5c4cf4de95fdc3422943cf51c06aeaf7a7 ]
+[ Upstream commit 125eac243806e021f33a1fdea3687eccbb9f7636 ]
 
-NVME_CTRL_NEW should never see any I/O, because in order to start
-initialization it has to transition to NVME_CTRL_CONNECTING and from
-there it will never return to this state.
+Don't leak kernel memory contents into the shortform attr fork.
 
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/fabrics.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/xfs/libxfs/xfs_attr_leaf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
-index bcd09d3a44dad..05dd46f984414 100644
---- a/drivers/nvme/host/fabrics.c
-+++ b/drivers/nvme/host/fabrics.c
-@@ -577,7 +577,6 @@ bool __nvmf_check_ready(struct nvme_ctrl *ctrl, struct request *rq,
- 	 * which is require to set the queue live in the appropinquate states.
- 	 */
- 	switch (ctrl->state) {
--	case NVME_CTRL_NEW:
- 	case NVME_CTRL_CONNECTING:
- 		if (req->cmd->common.opcode == nvme_fabrics_command &&
- 		    req->cmd->fabrics.fctype == nvme_fabrics_type_connect)
+diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
+index 2652d00842d6b..c7025e759bf2e 100644
+--- a/fs/xfs/libxfs/xfs_attr_leaf.c
++++ b/fs/xfs/libxfs/xfs_attr_leaf.c
+@@ -551,8 +551,8 @@ xfs_attr_shortform_create(xfs_da_args_t *args)
+ 		ASSERT(ifp->if_flags & XFS_IFINLINE);
+ 	}
+ 	xfs_idata_realloc(dp, sizeof(*hdr), XFS_ATTR_FORK);
+-	hdr = (xfs_attr_sf_hdr_t *)ifp->if_u1.if_data;
+-	hdr->count = 0;
++	hdr = (struct xfs_attr_sf_hdr *)ifp->if_u1.if_data;
++	memset(hdr, 0, sizeof(*hdr));
+ 	hdr->totsize = cpu_to_be16(sizeof(*hdr));
+ 	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
+ }
 -- 
 2.25.1
 
