@@ -2,104 +2,131 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D48C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63D3DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 95EF52075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:29:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Gt2BfRBe"
+	by mail.kernel.org (Postfix) with ESMTP id 2E333206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599481813;
+	bh=hO9ipewOxdkfWfb7kBKgMdC6UCFJZgkb2q8sjiDbxKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0QQ4aP2SckTP8UfONLbd0PwYItBOhPPMegTO5fBHjcjuOQ2CyVHKSafHs3bL2npg6
+	 Qq5ZDlOpOFXFbgww3CIa+wQRv0y3ysQFcXWfPyK85iudo/vML+tu34FsXPYRr+vtkA
+	 oIV2e0ochogYR/8Jjd2J9Wvlicphysma5ls9NKds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgIGM26 (ORCPT
+        id S1728948AbgIGMaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51778 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729326AbgIGMW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:22:29 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32507C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:22:28 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a15so15978952ljk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OeimeRwYw15Dm5RC3eo69tmFfj1HBBCH+Ah5VSbh/Ao=;
-        b=Gt2BfRBeLNDr0PblRAOYsE4HNTz4wKvTVDu7qg36r+FUseQBeVGogfyt7JJY3STT4j
-         Fzy2fYx8DDhHvCXTmvsX7sj4xfCcgI+PcjmlG7+o/24nsuKPssEmxA5bWZw54Tp7mMA4
-         8TIyDN8lzrlk7WAwLmenIFX0LPFQPe39Ymg3eEAcnZlmRSVQ3Ks1S8ZTGKDiZgkptQLn
-         LwpMRMVFFfFD5T1kqMWPqtQf2gPCzYEQcMCkFzdZVao9BqqmBpz0JMA6CXHYgX+4lIT6
-         NhgiUqjW9sCi5VH7Zw+xyKCHSs3ptiCTXv0qrdaz52vPmEubrEkjzqaDfxugUYBHfWbs
-         s6gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OeimeRwYw15Dm5RC3eo69tmFfj1HBBCH+Ah5VSbh/Ao=;
-        b=GFoM3pG9IF+f8pJq/ND2woJmztN1Zuv5geek6cLTHOMNiT74WkQ+XQUy476KiWoDm1
-         3tfTw5i7x13N++7Z2wuSC0syRZeDTFM77kPKzdoKvJBA6NX2bBhXozvZ/yS75clX32H1
-         H8FGHDYxuYzt8Ke8Ta6knobZJJFJLsDsy5xrjqHW/CmnzMxB2dE8W3fyoOmYVU/LEYfd
-         aV48MHMIPVw7g4JLwP/VfoFTsxTbnnMqHDYKzVB3cfCMIJPSk+wbKCRBmLZviNnALwEh
-         Y5PANFxihwKtRWqFfAlrdIQQF8cr0CW4xF/R/T4+URShx4V7CqAYtNx4GpC+SrkZGG9a
-         shNA==
-X-Gm-Message-State: AOAM533MAqzk7GkgvoJhwpp3b4DGdDQPY1lt0azXdnfY5ao46kKBUIbC
-        QuxjMg1U7pTxruEH5mfBA3JfwP7RnvyZjA==
-X-Google-Smtp-Source: ABdhPJzW0Pifwd6OEvOK71T48MQ3RPn7hLBhLx6SaBRHMIDZiRcdsyi7AiYq1feoD31R1T10xCd43A==
-X-Received: by 2002:a2e:7215:: with SMTP id n21mr10330338ljc.438.1599481344757;
-        Mon, 07 Sep 2020 05:22:24 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id p4sm7235316lfr.68.2020.09.07.05.22.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 05:22:24 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 109A51034AA; Mon,  7 Sep 2020 15:22:28 +0300 (+03)
-Date:   Mon, 7 Sep 2020 15:22:28 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Zi Yan <ziy@nvidia.com>
-Cc:     linux-mm@kvack.org, Roman Gushchin <guro@fb.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 01/16] mm: add pagechain container for storing
- multiple pages.
-Message-ID: <20200907122228.4zlyfysdul3s62me@box>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200902180628.4052244-2-zi.yan@sent.com>
+        Mon, 7 Sep 2020 08:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729242AbgIGMWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:22:30 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B031021707;
+        Mon,  7 Sep 2020 12:22:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599481344;
+        bh=hO9ipewOxdkfWfb7kBKgMdC6UCFJZgkb2q8sjiDbxKs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l/hORE3XgUiGv7oUQ/2rhFBTipX8xL/hiFkh+K4uXwDOgiroiPLlfnOeZmJSKYBd3
+         il7GsuOBmOQ9DpO5j+Qx/Js4rtSWIisIORjqkNhjxRSiBRZsKkOqOqEl1h2lyPtb8l
+         3q0RePLQmgUeG0HyXdgOrYFisTVJC5qD1y+h1Syc=
+Date:   Mon, 7 Sep 2020 14:22:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
+ gpio-mockup
+Message-ID: <20200907122238.GA1849893@kroah.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
+ <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+ <20200907115310.GA1891694@smile.fi.intel.com>
+ <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902180628.4052244-2-zi.yan@sent.com>
+In-Reply-To: <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 02:06:13PM -0400, Zi Yan wrote:
-> From: Zi Yan <ziy@nvidia.com>
+On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+> On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
+> > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
+> > > >
+> > > > ...
+> > > >
+> > > > > > +GPIO Testing Driver
+> > > > > > +===================
+> > > > > > +
+> > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
+> > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
+> > > > > > +by the module. The lines can be accessed using the standard GPIO character
+> > > > > > +device interface as well as manipulated using the dedicated debugfs directory
+> > > > > > +structure.
+> > > > >
+> > > > > Could configfs be used for this instead of debugfs?
+> > > > > debugfs is ad hoc.
+> > > >
+> > > > Actually sounds like a good idea.
+> > > >
+> > >
+> > > Well, then we can go on and write an entirely new mockup driver
+> > > (ditching module params and dropping any backwards compatibility)
+> > > because we're already using debugfs for line values.
+> > >
+> > > How would we pass the device properties to configfs created GPIO chips
+> > > anyway? Devices seem to only be created using mkdir. Am I missing
+> > > something?
+> >
+> > Same way how USB composite works, no?
+> >
 > 
-> When depositing page table pages for 1GB THPs, we need 512 PTE pages +
-> 1 PMD page. Instead of counting and depositing 513 pages, we can use the
-> PMD page as a leader page and chain the rest 512 PTE pages with ->lru.
-> This, however, prevents us depositing PMD pages with ->lru, which is
-> currently used by depositing PTE pages for 2MB THPs. So add a new
-> pagechain container for PMD pages.
+> OK, so create a new chip directory in configfs, configure it using
+> some defined configfs attributes and then finally instantiate it from
+> sysfs?
 > 
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> Makes sense and is probably the right way to go. Now the question is:
+> is it fine to just entirely remove the previous gpio-mockup? Should we
+> keep some backwards compatibility? Should we introduce an entirely new
+> module and have a transition period before removing previous
+> gpio-mockup?
+> 
+> Also: this is a testing module so to me debugfs is just fine. Is
+> configfs considered stable ABI like sysfs?
 
-Just deposit it to a linked list in the mm_struct as we do for PMD if
-split ptl disabled.
+Yes it is.  Or at least until you fix all existing users so that if you
+do change it, no one notices it happening :)
 
--- 
- Kirill A. Shutemov
+thanks,
+
+greg k-h
