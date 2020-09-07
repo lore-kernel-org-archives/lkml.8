@@ -2,161 +2,58 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A589C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4539C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D29132078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599492475;
-	bh=GjaTLL9mqYgM0KFLEDVd8XJPVrWeuEDerRZq8QEoeCA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bWlf8kGsEz7ir/c5LpHFllRtgDINw4nKO8zkapNn4BGjC58EF0VLZyqBIoQfJJjjG
-	 5aDXvX0gnrQfPR4OnFY1jIKxcd5u1Yktsg+y2K4Tg0FpNykCREeo1G7MrfemSuunhv
-	 XIneQGTHp2V2lqdQIZc3Nk1pkX8Hx7ypqp0hnA00=
+	by mail.kernel.org (Postfix) with ESMTP id 8725E2078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:28:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730177AbgIGP1u (ORCPT
+        id S1730117AbgIGPQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:27:50 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:22974 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730072AbgIGP1G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:27:06 -0400
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 087FQVpa001816;
-        Tue, 8 Sep 2020 00:26:32 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 087FQVpa001816
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599492392;
-        bh=IR6uGigyFtGDGIA+2OM5ZSYgDCjCsPA/08OP3wwPpmI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HF6kxwrZWb/RyvWw0lecR13yfGnI7g+SVYuZ3GDrpLhjeQQBDFe3oweHMbptemm66
-         SshCNN/29Q2UvC9TLvqIwjxGc087kf+LNwwYemZ9X8N179UEkHP+whZYbBQFKBslQI
-         QLRVSs1kmDEgwP5nA60GQLqD2M/mdvIvnBM0aTB/FKDPseKBNZcIq2a2D/0zPSmgKn
-         AEmqSmPA7h2X4LFcI6QPvPonC70Ag3cB7mKCBtL8/C97R4MKbM4UHwkDKT0yrD5ghL
-         Zfzv833opPYiVtdnMgBuia+Ds748+7ZOS+r2vFL3fF0+vwlBvikfS9mHMkE8AAJya3
-         YQxpECBRYEZSg==
-X-Nifty-SrcIP: [209.85.210.173]
-Received: by mail-pf1-f173.google.com with SMTP id c196so3310350pfc.0;
-        Mon, 07 Sep 2020 08:26:32 -0700 (PDT)
-X-Gm-Message-State: AOAM531MQ94vq0bcadHaJu4h2pPF2hphNSNWiiobu5yZjv8EZaE3aG5O
-        IChk22lQWldIeRKUdl3bBFeMVCfULHqrTixZCzY=
-X-Google-Smtp-Source: ABdhPJzWMpKJKkob3tKKbsRMggvPdqUmZIz53kyp4B311hdgI26YjoFRx5atEqEpQRhRX5rjh34sk2xeMQI+Eblelz8=
-X-Received: by 2002:a62:e116:: with SMTP id q22mr9587524pfh.179.1599492391141;
- Mon, 07 Sep 2020 08:26:31 -0700 (PDT)
+        Mon, 7 Sep 2020 11:16:42 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47336 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730108AbgIGPNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:13:46 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kFII4-00Dcq2-Ff; Mon, 07 Sep 2020 16:38:40 +0200
+Date:   Mon, 7 Sep 2020 16:38:40 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     Jason Cooper <jason@lakedaemon.net>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: armada-37xx: Add missing MODULE_DEVICE_TABLE
+Message-ID: <20200907143840.GU3112546@lunn.ch>
+References: <20200907132716.6379-1-pali@kernel.org>
 MIME-Version: 1.0
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com> <20200903203053.3411268-14-samitolvanen@google.com>
-In-Reply-To: <20200903203053.3411268-14-samitolvanen@google.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 8 Sep 2020 00:25:54 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
-Message-ID: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
-Subject: Re: [PATCH v2 13/28] kbuild: lto: merge module sections
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907132716.6379-1-pali@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> LLD always splits sections with LTO, which increases module sizes. This
-> change adds a linker script that merges the split sections in the final
-> module.
->
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> ---
->  Makefile               |  2 ++
->  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644 scripts/module-lto.lds
->
-> diff --git a/Makefile b/Makefile
-> index c69e07bd506a..bb82a4323f1d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -921,6 +921,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
->  # Limit inlining across translation units to reduce binary size
->  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
->  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
-> +
-> +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
->  endif
->
->  ifdef CONFIG_LTO
-> diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
-> new file mode 100644
-> index 000000000000..cbb11dc3639a
-> --- /dev/null
-> +++ b/scripts/module-lto.lds
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
-> + * -ffunction-sections, which increases the size of the final module.
-> + * Merge the split sections in the final binary.
-> + */
-> +SECTIONS {
-> +       __patchable_function_entries : { *(__patchable_function_entries) }
-> +
-> +       .bss : {
-> +               *(.bss .bss.[0-9a-zA-Z_]*)
-> +               *(.bss..L*)
-> +       }
-> +
-> +       .data : {
-> +               *(.data .data.[0-9a-zA-Z_]*)
-> +               *(.data..L*)
-> +       }
-> +
-> +       .rodata : {
-> +               *(.rodata .rodata.[0-9a-zA-Z_]*)
-> +               *(.rodata..L*)
-> +       }
-> +
-> +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
-> +}
-> --
-> 2.28.0.402.g5ffc5be6b7-goog
->
+On Mon, Sep 07, 2020 at 03:27:16PM +0200, Pali Rohár wrote:
+> CONFIG_ARM_ARMADA_37XX_CPUFREQ is tristate option and therefore this
+> cpufreq driver can be compiled as a module. This patch adds missing
+> MODULE_DEVICE_TABLE which generates correct modalias for automatic
+> loading of this cpufreq driver when is compiled as an external module.
+> 
+> Signed-off-by: Pali Rohár <pali@kernel.org>
+> Fixes: 92ce45fb875d7 ("cpufreq: Add DVFS support for Armada 37xx")
 
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-After I apply https://patchwork.kernel.org/patch/11757323/,
-is it possible to do like this ?
-
-
-#ifdef CONFIG_LTO
-SECTIONS {
-     ...
-};
-#endif
-
-in scripts/module.lds.S
-
-
--- 
-Best Regards
-Masahiro Yamada
+    Andrew
