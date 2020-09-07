@@ -2,94 +2,169 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4163BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BBDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFB0121473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAF82064B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:11:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599487905;
+	bh=booZ9KCft0J1xaFhwDEBtifCIVwXTkQmEWPw53bkz+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nHxqUC2v+n4cn57hrBGOCh7/t2II428JSlTied9uvHDvi4Mu/PiTTTgEfR5cpfdbi
+	 HL0D4hSnmOy2hfMhE9Js8vLvp417ntNKJOEaUKAMtHRLr7kls8EfBZZMx+MO6XoMTe
+	 EmQ7YenNf/9hPQLo76Oul8F6Rw+7eoCQPpy2s8hQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbgIGOKt (ORCPT
+        id S1729779AbgIGOLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:10:49 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11248 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729727AbgIGOIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:08:00 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 20EE5185D0A4C595AE8E;
-        Mon,  7 Sep 2020 22:07:58 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 22:07:51 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <rafael@kernel.org>, Ingo Molnar <mingo@redhat.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        "Sean V Kelley" <sean.v.kelley@linux.intel.com>,
-        <linux-api@vger.kernel.org>, "Hanjun Guo" <guohanjun@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v10 6/6] docs: mm: numaperf.rst Add brief description for access class 1.
-Date:   Mon, 7 Sep 2020 22:03:07 +0800
-Message-ID: <20200907140307.571932-7-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
-References: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
+        Mon, 7 Sep 2020 10:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729756AbgIGOI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:08:58 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03EEB20714;
+        Mon,  7 Sep 2020 14:08:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599487707;
+        bh=booZ9KCft0J1xaFhwDEBtifCIVwXTkQmEWPw53bkz+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FsjiRmJ1BhfkekpBQhB2EZ6JM4FTiz6TnaaFeFlmecBdtKJM63KTRCQRCfEDMBD9A
+         XuujBW2FlMZte4GeRNxvgBTQDmM5qmQnC0FiRBFQ/7gDSWMKAnIP6Qkym6jLnaN6H7
+         666rCp5hnoFF+hGOZ119OnP6bGYvP2mJ4GFiQRNs=
+Date:   Mon, 7 Sep 2020 16:08:41 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>, Karen Noel <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        Uwe Dannowski <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+Subject: Re: [PATCH v8 15/18] nitro_enclaves: Add Makefile for the Nitro
+ Enclaves driver
+Message-ID: <20200907140841.GB3719869@kroah.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
+ <20200904173718.64857-16-andraprs@amazon.com>
+ <20200907090011.GC1101646@kroah.com>
+ <f5c0f79c-f581-fab5-9a3b-97380ef7fc2a@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5c0f79c-f581-fab5-9a3b-97380ef7fc2a@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Try to make minimal changes to the document which already describes
-access class 0 in a generic fashion (including IO initiatiors that
-are not CPUs).
+On Mon, Sep 07, 2020 at 04:35:23PM +0300, Paraschiv, Andra-Irina wrote:
+> 
+> 
+> On 07/09/2020 12:00, Greg KH wrote:
+> > 
+> > 
+> > On Fri, Sep 04, 2020 at 08:37:15PM +0300, Andra Paraschiv wrote:
+> > > Signed-off-by: Andra Paraschiv <andraprs@amazon.com>
+> > > Reviewed-by: Alexander Graf <graf@amazon.com>
+> > > ---
+> > > Changelog
+> > > 
+> > > v7 -> v8
+> > > 
+> > > * No changes.
+> > > 
+> > > v6 -> v7
+> > > 
+> > > * No changes.
+> > > 
+> > > v5 -> v6
+> > > 
+> > > * No changes.
+> > > 
+> > > v4 -> v5
+> > > 
+> > > * No changes.
+> > > 
+> > > v3 -> v4
+> > > 
+> > > * No changes.
+> > > 
+> > > v2 -> v3
+> > > 
+> > > * Remove the GPL additional wording as SPDX-License-Identifier is
+> > >    already in place.
+> > > 
+> > > v1 -> v2
+> > > 
+> > > * Update path to Makefile to match the drivers/virt/nitro_enclaves
+> > >    directory.
+> > > ---
+> > >   drivers/virt/Makefile                |  2 ++
+> > >   drivers/virt/nitro_enclaves/Makefile | 11 +++++++++++
+> > >   2 files changed, 13 insertions(+)
+> > >   create mode 100644 drivers/virt/nitro_enclaves/Makefile
+> > > 
+> > > diff --git a/drivers/virt/Makefile b/drivers/virt/Makefile
+> > > index fd331247c27a..f28425ce4b39 100644
+> > > --- a/drivers/virt/Makefile
+> > > +++ b/drivers/virt/Makefile
+> > > @@ -5,3 +5,5 @@
+> > > 
+> > >   obj-$(CONFIG_FSL_HV_MANAGER) += fsl_hypervisor.o
+> > >   obj-y                                += vboxguest/
+> > > +
+> > > +obj-$(CONFIG_NITRO_ENCLAVES) += nitro_enclaves/
+> > > diff --git a/drivers/virt/nitro_enclaves/Makefile b/drivers/virt/nitro_enclaves/Makefile
+> > > new file mode 100644
+> > > index 000000000000..e9f4fcd1591e
+> > > --- /dev/null
+> > > +++ b/drivers/virt/nitro_enclaves/Makefile
+> > > @@ -0,0 +1,11 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +#
+> > > +# Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+> > > +
+> > > +# Enclave lifetime management support for Nitro Enclaves (NE).
+> > > +
+> > > +obj-$(CONFIG_NITRO_ENCLAVES) += nitro_enclaves.o
+> > > +
+> > > +nitro_enclaves-y := ne_pci_dev.o ne_misc_dev.o
+> > > +
+> > > +ccflags-y += -Wall
+> > That flag is _really_ risky over time, are you _SURE_ that all new
+> > versions of clang and gcc will never produce any warnings?  People work
+> > to fix up build warnings quite quickly for new compilers, you shouldn't
+> > prevent the code from being built at all just for that, right?
+> > 
+> 
+> That would also need Werror, to have warnings treated as errors and prevent
+> building the codebase. If it's about something more, just let me know.
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- Documentation/admin-guide/mm/numaperf.rst | 8 ++++++++
- 1 file changed, 8 insertions(+)
+No, you are right, Werror would be needed here too.
 
-diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
-index 4d69ef1de830..b89bb85eac75 100644
---- a/Documentation/admin-guide/mm/numaperf.rst
-+++ b/Documentation/admin-guide/mm/numaperf.rst
-@@ -56,6 +56,11 @@ nodes' access characteristics share the same performance relative to other
- linked initiator nodes. Each target within an initiator's access class,
- though, do not necessarily perform the same as each other.
- 
-+The access class "1" is used to allow differentiation between initiators
-+that are CPUs and hence suitable for generic task scheduling, and
-+IO initiators such as GPUs and NICs.  Unlike access class 0, only
-+nodes containing CPUs are considered.
-+
- ================
- NUMA Performance
- ================
-@@ -88,6 +93,9 @@ The latency attributes are provided in nanoseconds.
- The values reported here correspond to the rated latency and bandwidth
- for the platform.
- 
-+Access class 1, takes the same form, but only includes values for CPU to
-+memory activity.
-+
- ==========
- NUMA Cache
- ==========
--- 
-2.19.1
+W=1 gives you -Wall if you really want that, no need to add it by hand.
 
+thanks,
+
+greg k-h
