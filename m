@@ -2,31 +2,30 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E117C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C6EC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34DA21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C2121582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbgIGUjg (ORCPT
+        id S1727955AbgIGUjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:39:36 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:9196 "EHLO
+        Mon, 7 Sep 2020 16:39:55 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:52489 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726446AbgIGUjc (ORCPT
+        by vger.kernel.org with ESMTP id S1726810AbgIGUjp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:39:32 -0400
+        Mon, 7 Sep 2020 16:39:45 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 7 Sep 2020 13:39:30 -0700
+ 15.0.1156.6; Mon, 7 Sep 2020 13:39:42 -0700
 Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 2FF7B40385;
-        Mon,  7 Sep 2020 13:39:31 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id BC1FA40735;
+        Mon,  7 Sep 2020 13:39:42 -0700 (PDT)
 From:   Ajay Kaher <akaher@vmware.com>
 To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
 CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
@@ -34,9 +33,9 @@ CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
         <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
         <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
         <vsirnapalli@vmware.com>, <akaher@vmware.com>
-Subject: [PATCH v4.9.y 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Date:   Tue, 8 Sep 2020 02:05:15 +0530
-Message-ID: <1599510917-23734-2-git-send-email-akaher@vmware.com>
+Subject: [PATCH v4.9.y 0/3] vfio: Fix for CVE-2020-12888
+Date:   Tue, 8 Sep 2020 02:05:17 +0530
+Message-ID: <1599510917-23734-4-git-send-email-akaher@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599510917-23734-1-git-send-email-akaher@vmware.com>
 References: <1599510917-23734-1-git-send-email-akaher@vmware.com>
@@ -49,151 +48,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
-
-commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
-
-Rather than calling remap_pfn_range() when a region is mmap'd, setup
-a vm_ops handler to support dynamic faulting of the range on access.
-This allows us to manage a list of vmas actively mapping the area that
-we can later use to invalidate those mappings.  The open callback
-invalidates the vma range so that all tracking is inserted in the
-fault handler and removed in the close handler.
-
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[Ajay: Regenerated the patch for v4.9]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
----
- drivers/vfio/pci/vfio_pci.c         | 75 ++++++++++++++++++++++++++++++++++++-
- drivers/vfio/pci/vfio_pci_private.h |  7 ++++
- 2 files changed, 80 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index c94167d..c97cf6c 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1144,6 +1144,69 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
- 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
- }
- 
-+static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-+			    struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
-+	if (!mmap_vma)
-+		return -ENOMEM;
-+
-+	mmap_vma->vma = vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_add(&mmap_vma->vma_next, &vdev->vma_list);
-+	mutex_unlock(&vdev->vma_lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Zap mmaps on open so that we can fault them in on access and therefore
-+ * our vma_list only tracks mappings accessed since last zap.
-+ */
-+static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-+{
-+	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
-+}
-+
-+static void vfio_pci_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
-+		if (mmap_vma->vma == vma) {
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&vdev->vma_lock);
-+}
-+
-+static int vfio_pci_mmap_fault(struct vm_area_struct *vma, struct vm_fault *vmf)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+
-+	if (vfio_pci_add_vma(vdev, vma))
-+		return VM_FAULT_OOM;
-+
-+	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-+			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-+		return VM_FAULT_SIGBUS;
-+
-+	return VM_FAULT_NOPAGE;
-+}
-+
-+static const struct vm_operations_struct vfio_pci_mmap_ops = {
-+	.open = vfio_pci_mmap_open,
-+	.close = vfio_pci_mmap_close,
-+	.fault = vfio_pci_mmap_fault,
-+};
-+
- static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- {
- 	struct vfio_pci_device *vdev = device_data;
-@@ -1209,8 +1272,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
- 
--	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
--			       req_len, vma->vm_page_prot);
-+	/*
-+	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-+	 * change vm_flags within the fault handler.  Set them now.
-+	 */
-+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-+	vma->vm_ops = &vfio_pci_mmap_ops;
-+
-+	return 0;
- }
- 
- static void vfio_pci_request(void *device_data, unsigned int count)
-@@ -1268,6 +1337,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	mutex_init(&vdev->igate);
- 	spin_lock_init(&vdev->irqlock);
- 
-+	mutex_init(&vdev->vma_lock);
-+	INIT_LIST_HEAD(&vdev->vma_list);
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
- 		vfio_iommu_group_put(group, &pdev->dev);
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index f561ac1..4b78f12 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -63,6 +63,11 @@ struct vfio_pci_dummy_resource {
- 	struct list_head	res_next;
- };
- 
-+struct vfio_pci_mmap_vma {
-+	struct vm_area_struct	*vma;
-+	struct list_head	vma_next;
-+};
-+
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
- 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-@@ -95,6 +100,8 @@ struct vfio_pci_device {
- 	struct eventfd_ctx	*err_trigger;
- 	struct eventfd_ctx	*req_trigger;
- 	struct list_head	dummy_resources_list;
-+	struct mutex		vma_lock;
-+	struct list_head	vma_list;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
--- 
-2.7.4
-
+CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
+devices may lead to DoS scenario
+    
+The VFIO modules allow users (guest VMs) to enable or disable access to the
+devices' MMIO memory address spaces. If a user attempts to access (read/write)
+the devices' MMIO address space when it is disabled, some h/w devices issue an
+interrupt to the CPU to indicate a fatal error condition, crashing the system.
+This flaw allows a guest user or process to crash the host system resulting in
+a denial of service.
+    
+Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
+before user access.
+    
+Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
+remap_pfn_range(). Also provides a list of vmas actively mapping the area which
+can later use to invalidate those mappings.
+    
+Patch 3/ block the user from accessing memory spaces which is disabled by using
+new vma list support to zap, or invalidate, those memory mappings in order to
+force them to be faulted back in on access.
+    
+Upstreamed patches link:
+https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+        
+[PATCH v4.9.y 1/3]:
+Backporting of upsream commit 41311242221e:
+vfio/type1: Support faulting PFNMAP vmas
+        
+[PATCH v4.9.y 2/3]:
+Backporting of upsream commit 11c4cd07ba11:
+vfio-pci: Fault mmaps to enable vma tracking
+        
+[PATCH v4.9.y 3/3]:
+Backporting of upsream commit abafbc551fdd:
+vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
