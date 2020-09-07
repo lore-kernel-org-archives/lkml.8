@@ -2,60 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE96C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3C8C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C897207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553B82166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:25:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z42ZVKOO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgIGHWh (ORCPT
+        id S1726882AbgIGHZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:22:37 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56075 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgIGHWe (ORCPT
+        Mon, 7 Sep 2020 03:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34068 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbgIGHZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:22:34 -0400
-X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 8F0596000B;
-        Mon,  7 Sep 2020 07:22:31 +0000 (UTC)
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Christophe Kerello <christophe.kerello@st.com>,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH] mtd: rawnand: stm32_fmc2: fix a buffer overflow
-Date:   Mon,  7 Sep 2020 09:22:30 +0200
-Message-Id: <20200907072230.3755-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1595325127-32693-1-git-send-email-christophe.kerello@st.com>
-References: 
+        Mon, 7 Sep 2020 03:25:29 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF86DC061573;
+        Mon,  7 Sep 2020 00:25:28 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id m25so3070163oou.0;
+        Mon, 07 Sep 2020 00:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0sX5bNM/24WCOxdYSOyqch71tSRBdpno9T3ncrkQ/ko=;
+        b=Z42ZVKOOLfOE8Va3wz/e4gboJ88nf9y4NGykHEz45qW/LLDgjzeMKRT9OFQF9/BQGK
+         TCw260rtUq/Q2TPxQ9fth/0+FI4+SjhMIr2Lbmxl5eNhMoFVTrVq07Zu7uQ4iz1mzu5c
+         O+SMCRZJmcuEYi5sPz+ey2Xu4Pqc37p1gPNANqq6h7ayA8eS0Hx7gO+Q+Bxk0VApfTaX
+         0ox1G41cAODEqSTE61cxwjS46t43JizZhczo5BgrPbPXivAgCyLlZTSnTebfP/Gk2os6
+         wDc4c/nJAhVAhVdyRVJf7HsfAKW0u2Y8vYbuKr7zhkZ7zEOj2E+u7qEyKNf2Xraagpgi
+         nn+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0sX5bNM/24WCOxdYSOyqch71tSRBdpno9T3ncrkQ/ko=;
+        b=Vqv6uRt2jvGFx9s7pIvyn+G8fRLQ7MZLfvAuUgX1S6TJCEKeEMW9BjRIgYS9Ix7ekv
+         r4LZ51AM47PHUCOBvqPiwmVkZiKVVa12uNcgVDB3oCKaAImTkKwpw0l494R4s2ML1tK6
+         cUNkzMnSF8MbUT9J6kp8JHvqpEcg/4xCQT+X4Dftzpadkgur9Pu6Q95pQilLQNiAbk3O
+         isquKM7tbhZ1BYG1rpey0ZI1BFVZQV7lqO/GC8i0XXv9OTj2K5x6hKmIU3Qj8zxLX6ET
+         t5WcSsZQUnxZUy6Siac5YvL4JI4hajr0+7Hgv8y3vruA4WMlDeW8aKKiuePk7vmuoH37
+         aGIg==
+X-Gm-Message-State: AOAM530fSRk0A0Ltx6zpEiJhLWGXWEc1wc0TsZf8YW530ZR53Dl/1Zsy
+        ULDjkv68eKYDqCa46DTBW6oqQ7Gx0EJI/l6qcV8=
+X-Google-Smtp-Source: ABdhPJy85C5az9Gk1RUoPQIwF9SEuU4wysu+Y3VQVJf7gLMKz3wpudOQxDMONDgc+iJ6YDGeOQse2cX1kla8KwKpWzI=
+X-Received: by 2002:a4a:3516:: with SMTP id l22mr14053251ooa.6.1599463527878;
+ Mon, 07 Sep 2020 00:25:27 -0700 (PDT)
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 1151667d17038c4c498ac75e13813a53a5166806
-Content-Transfer-Encoding: 8bit
+References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
+ <87wo7una02.fsf@miraculix.mork.no> <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
+In-Reply-To: <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
+From:   Kristian Evensen <kristian.evensen@gmail.com>
+Date:   Mon, 7 Sep 2020 09:25:16 +0200
+Message-ID: <CAKfDRXg2xRbLu=ZcQYdJUuYbfMQbav9pUDwcVMc-S+hwV3Johw@mail.gmail.com>
+Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the
+ ring buffer used by the xHCI controller.
+To:     Daniele Palmas <dnlplm@gmail.com>
+Cc:     =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>,
+        Paul Gildea <paul.gildea@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-07-21 at 09:52:07 UTC, Christophe Kerello wrote:
-> This patch solves following static checker warning:
-> drivers/mtd/nand/raw/stm32_fmc2_nand.c:350 stm32_fmc2_nfc_select_chip()
-> error: buffer overflow 'nfc->data_phys_addr' 2 <= 2
-> 
-> The CS value can only be 0 or 1.
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> Fixes: 2cd457f328c1 ("mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver")
+Hi all,
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+I was able to trigger the same issue as reported by Paul, and came
+across this patch (+ Daniele's other patch and thread on the libqmi
+mailing list). Applying Paul's fix solved the problem for me, changing
+the MTU of the QMI interface now works fine. Thanks a lot to everyone
+involved!
 
-Miquel
+I just have one question, is there a specific reason for the patch not
+being resubmitted or Daniele's work not resumed? I do not use any of
+the aggregation-stuff, so I don't know how that is affected by for
+example Paul's change. If there is anything I can do to help, please
+let me know.
+
+BR,
+Kristian
