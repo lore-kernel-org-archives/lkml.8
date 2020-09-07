@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974AAC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B026EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 539122080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707EE206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498445;
-	bh=BeoEQcWSG5XxXhCKTAJJ4E5k4Xx+lpPZfUpkNuKgCPQ=;
+	s=default; t=1599498473;
+	bh=mmh0CepIcG1mpL1AKzdAl1yZDSGrYI73gdVhh+oTT+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GdIPQOxagIoKD7iDySC9ApeeeZG67tu115tHxhCVCZIXChHsqqfph2jDwzng2K5Fj
-	 9nZRE56ThX9nsic+Bc/gZzG+f/WvyQGeXuw/0jwDbN6TeqF93p3jW6LYOpsuNGM76r
-	 atNzH6LSEcHAEjYnPLNIXq9IXdWy71c3VKnceMmU=
+	b=yXRAiNK5mHGX1urT+lo75rerOvQHzDhYK1wEnHuz7a0I45UhIosokIobtOW1FNtPL
+	 hOPuHEVEkTddI2ff+IlbIWgl4mCs8kSXhwoPFHrAKIEZvLdRuPaYONuGPTTNlT+DBq
+	 cv3KyNcN+MyPxB0WxOOqyeTcncflVO6HZ9wB/CnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbgIGRHV (ORCPT
+        id S1730839AbgIGRHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730493AbgIGQcv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:51 -0400
+        id S1729838AbgIGQcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C19E207DE;
-        Mon,  7 Sep 2020 16:32:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9795A217A0;
+        Mon,  7 Sep 2020 16:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496371;
-        bh=BeoEQcWSG5XxXhCKTAJJ4E5k4Xx+lpPZfUpkNuKgCPQ=;
+        s=default; t=1599496368;
+        bh=mmh0CepIcG1mpL1AKzdAl1yZDSGrYI73gdVhh+oTT+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L17vctTCdsgWIKA6ZZjOHq22eEujksUoHZJWCa4Fvf3ovYEto4fIpjWG3m7jpozJ5
-         Wt/Mz3Z/LhhNLX+obo5PV9eCHFaVEX8AM7oDZ2Y5OEdBx6spXZa3PnJaQEbh1lXsjS
-         R4HXE6eNUNjeigZiu9qFO1Hj3ms0GT/Jip4vGPOc=
+        b=XVNM0NrGrkHncyEKIrsQtYF2jJ9FpCkEJd4C+i5fYbfUieTYtoXbcuduY9fUULBfP
+         fNgHHXtHC1NQDtrQ1SyFHvke065Jor/NR/Zfm37omejgHNVg4BaatGSH/OZKUYjo06
+         o7ITT34d7Ox+rBRgagLE0H0tyquZkonuAhr69EbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 23/53] xfs: initialize the shortform attr header padding entry
-Date:   Mon,  7 Sep 2020 12:31:49 -0400
-Message-Id: <20200907163220.1280412-23-sashal@kernel.org>
+Cc:     Amar Singhal <asinghal@codeaurora.org>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 21/53] cfg80211: Adjust 6 GHz frequency to channel conversion
+Date:   Mon,  7 Sep 2020 12:31:47 -0400
+Message-Id: <20200907163220.1280412-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -61,36 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Amar Singhal <asinghal@codeaurora.org>
 
-[ Upstream commit 125eac243806e021f33a1fdea3687eccbb9f7636 ]
+[ Upstream commit 2d9b55508556ccee6410310fb9ea2482fd3328eb ]
 
-Don't leak kernel memory contents into the shortform attr fork.
+Adjust the 6 GHz frequency to channel conversion function,
+the other way around was previously handled.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Amar Singhal <asinghal@codeaurora.org>
+Link: https://lore.kernel.org/r/1592599921-10607-1-git-send-email-asinghal@codeaurora.org
+[rewrite commit message, hard-code channel 2]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr_leaf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/wireless/util.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 2f7e89e4be3e3..0ab307bebedee 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -653,8 +653,8 @@ xfs_attr_shortform_create(
- 		ASSERT(ifp->if_flags & XFS_IFINLINE);
- 	}
- 	xfs_idata_realloc(dp, sizeof(*hdr), XFS_ATTR_FORK);
--	hdr = (xfs_attr_sf_hdr_t *)ifp->if_u1.if_data;
--	hdr->count = 0;
-+	hdr = (struct xfs_attr_sf_hdr *)ifp->if_u1.if_data;
-+	memset(hdr, 0, sizeof(*hdr));
- 	hdr->totsize = cpu_to_be16(sizeof(*hdr));
- 	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
- }
+diff --git a/net/wireless/util.c b/net/wireless/util.c
+index 4d3b76f94f55e..a72d2ad6ade8b 100644
+--- a/net/wireless/util.c
++++ b/net/wireless/util.c
+@@ -121,11 +121,13 @@ int ieee80211_freq_khz_to_channel(u32 freq)
+ 		return (freq - 2407) / 5;
+ 	else if (freq >= 4910 && freq <= 4980)
+ 		return (freq - 4000) / 5;
+-	else if (freq < 5945)
++	else if (freq < 5925)
+ 		return (freq - 5000) / 5;
++	else if (freq == 5935)
++		return 2;
+ 	else if (freq <= 45000) /* DMG band lower limit */
+-		/* see 802.11ax D4.1 27.3.22.2 */
+-		return (freq - 5940) / 5;
++		/* see 802.11ax D6.1 27.3.22.2 */
++		return (freq - 5950) / 5;
+ 	else if (freq >= 58320 && freq <= 70200)
+ 		return (freq - 56160) / 2160;
+ 	else
 -- 
 2.25.1
 
