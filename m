@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1133C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715F0C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D9A21532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B422080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498680;
-	bh=gUUgEPZqAoLipWidzmgdXudjOM+qFVqVAfA4HqFwDbs=;
+	s=default; t=1599498723;
+	bh=FHTcrPnwNgdAZABEN21HVNkT3V+T3gP6yMDMA/0pYuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lgReCBIe8iFbkaNHHsQOmeV3WMqCyH4PiU94K0PRTLeIbmx6lL7XK49LbVdnSqbjF
-	 QsSJqj+m7kHrYQSfeJDPL4cxZPklBSigzD2f60Ji4L/vaoRUi9UdC0oVk9Tub4w8Fx
-	 gZwgkL8vKS2BmE6iwK/OaQOCQ6FS8OXOA4klxSrI=
+	b=zHflwgv7OgjITO9V4V1goyODbgrxvCkyig9zCzQr5bjOmd841M0y03cbtd0oRQM/N
+	 fnzM4pKlrQgZg9RG763g9YWlJjciZf/DDAJ7uSrPjWxV2K5xKqVZbz8wElxpB5DmLG
+	 S+pS9J6HGqnJgCV5K/omkiBP9MrIA3Ca77tVAxaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731179AbgIGRLP (ORCPT
+        id S1730981AbgIGRMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46544 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:12:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730643AbgIGQcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:41 -0400
+        id S1729847AbgIGQck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F526207DE;
-        Mon,  7 Sep 2020 16:32:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE56821556;
+        Mon,  7 Sep 2020 16:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496360;
-        bh=gUUgEPZqAoLipWidzmgdXudjOM+qFVqVAfA4HqFwDbs=;
+        s=default; t=1599496357;
+        bh=FHTcrPnwNgdAZABEN21HVNkT3V+T3gP6yMDMA/0pYuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Gvrs9sH5tjpwrkuaiQoPS4Q3OxdEj2h/MHANLrRHkPtDW90uRFjnlrBdHl55976W
-         RcPuoP7B7yB1Gn1H38ST5rIz0F6VxGmA4VlB7MDRCbmrF41lzIWZcZuB6nGeijLW4p
-         az+3g357MgizT7YFBGRZPvJdPXEkohUJLKaG1mZs=
+        b=HHoci7QySEdpYa8Ne/qnSi9sXQGRcqWhh5Sl40UWOnwW3mafxZFfy9TwzCGk1zha5
+         /VsrhAnm0exAESggc98MVokTQoWZigsGdbXZ1rs5P530/EaXFwUZUYamw7o2vQfGip
+         /tGRtAX7mDqGU7J2sYxNQ0uWdYaMLaySsDU4zDMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yi Li <yili@winhong.com>, Li Bing <libing@winhong.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 15/53] net: hns3: Fix for geneve tx checksum bug
-Date:   Mon,  7 Sep 2020 12:31:41 -0400
-Message-Id: <20200907163220.1280412-15-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 13/53] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
+Date:   Mon,  7 Sep 2020 12:31:39 -0400
+Message-Id: <20200907163220.1280412-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -59,57 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yi Li <yili@winhong.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit a156998fc92d3859c8e820f1583f6d0541d643c3 ]
+[ Upstream commit 6d6018fc30bee67290dbed2fa51123f7c6f3d691 ]
 
-when skb->encapsulation is 0, skb->ip_summed is CHECKSUM_PARTIAL
-and it is udp packet, which has a dest port as the IANA assigned.
-the hardware is expected to do the checksum offload, but the
-hardware will not do the checksum offload when udp dest port is
-6081.
+In probe, IRQ is requested before zchan->id is initialized which can be
+read in the irq handler. Hence, shift request irq after other initializations
+complete.
 
-This patch fixes it by doing the checksum in software.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Reported-by: Li Bing <libing@winhong.com>
-Signed-off-by: Yi Li <yili@winhong.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lore.kernel.org/r/20200821034423.12713-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 71ed4c54f6d5d..eaadcc7043349 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -20,6 +20,7 @@
- #include <net/pkt_cls.h>
- #include <net/tcp.h>
- #include <net/vxlan.h>
-+#include <net/geneve.h>
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index 448f663da89c6..8beed91428bd6 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -879,24 +879,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- #include "hnae3.h"
- #include "hns3_enet.h"
-@@ -780,7 +781,7 @@ static int hns3_get_l4_protocol(struct sk_buff *skb, u8 *ol4_proto,
-  * and it is udp packet, which has a dest port as the IANA assigned.
-  * the hardware is expected to do the checksum offload, but the
-  * hardware will not do the checksum offload when udp dest port is
-- * 4789.
-+ * 4789 or 6081.
-  */
- static bool hns3_tunnel_csum_bug(struct sk_buff *skb)
- {
-@@ -789,7 +790,8 @@ static bool hns3_tunnel_csum_bug(struct sk_buff *skb)
- 	l4.hdr = skb_transport_header(skb);
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	jzdma->irq = ret;
+-
+-	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
+-			  jzdma);
+-	if (ret) {
+-		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+-		return ret;
+-	}
+-
+ 	jzdma->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(jzdma->clk)) {
+ 		dev_err(dev, "failed to get clock\n");
+ 		ret = PTR_ERR(jzdma->clk);
+-		goto err_free_irq;
++		return ret;
+ 	}
  
- 	if (!(!skb->encapsulation &&
--	      l4.udp->dest == htons(IANA_VXLAN_UDP_PORT)))
-+	      (l4.udp->dest == htons(IANA_VXLAN_UDP_PORT) ||
-+	      l4.udp->dest == htons(GENEVE_UDP_PORT))))
- 		return false;
+ 	clk_prepare_enable(jzdma->clk);
+@@ -949,10 +936,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
+ 	}
  
- 	skb_checksum_help(skb);
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		goto err_disable_clk;
++
++	jzdma->irq = ret;
++
++	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
++			  jzdma);
++	if (ret) {
++		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
++		goto err_disable_clk;
++	}
++
+ 	ret = dmaenginem_async_device_register(dd);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register device\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
+ 
+ 	/* Register with OF DMA helpers. */
+@@ -960,17 +960,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 					 jzdma);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register OF DMA controller\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
+ 
+ 	dev_info(dev, "JZ4780 DMA controller initialised\n");
+ 	return 0;
+ 
+-err_disable_clk:
+-	clk_disable_unprepare(jzdma->clk);
+-
+ err_free_irq:
+ 	free_irq(jzdma->irq, jzdma);
++
++err_disable_clk:
++	clk_disable_unprepare(jzdma->clk);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
