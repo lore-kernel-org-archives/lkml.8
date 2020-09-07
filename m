@@ -2,116 +2,258 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBCE9C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7940C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F54421927
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9404F2193E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:51:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CiMaDb29"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYEF+MeN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgIGXnc (ORCPT
+        id S1728088AbgIGXvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbgIGXn3 (ORCPT
+        Mon, 7 Sep 2020 19:51:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49435 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727058AbgIGXvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:43:29 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60090C061573;
-        Mon,  7 Sep 2020 16:43:28 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BllGG03QVz9sR4;
-        Tue,  8 Sep 2020 09:43:17 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599522198;
-        bh=BIr9aLATK/fIc7nAGDKco1dJkX6S6hj+9Uc6Rg3zqqw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=CiMaDb290e08zfSq/pwXQ0rfOOR9C8SJO3kONZVzZLd2fNDTXDORrT4ntTUkujees
-         8sAXsi6KZK7CFxPCMAesuJX4pJnqfOTS1O2r9NezV6sHE+J1OJkUCwb1EEGFSi+U87
-         nzix3hMSUIHg285xb7fiaSn7lMLOpSAyB3UWELiX96uWogN/epEEtACRbwnm5o54lS
-         NSkQTEjRhZCdSpO4tAfyhe3D/F/mEfXgjHor3+h4+PXrFBziJOG7cuJBea+UqCwSBu
-         UCH6Y4oqhXCPY63wP+b8fvNVfJT42yChylFSIlX1WPuNeJuNrfDCFcbb019IMR4bP7
-         WPzPmhwhIo4Iw==
-Date:   Tue, 8 Sep 2020 09:43:17 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     Jim Cromie <jim.cromie@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warning after merge of the char-misc.current tree
-Message-ID: <20200908094317.6dc1cb2a@canb.auug.org.au>
+        Mon, 7 Sep 2020 19:51:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599522695;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=110Unz5qrB7/Ny3qdZoUTzTeS4D4CUQMCdJdAAxtNLA=;
+        b=gYEF+MeNGCctuIQ6DyNQpP0xJPUfZmruee1zHZLR1JBiWJcbxrU4nGlY5tdlPel9T59lKS
+        sVMdbzGM96vLCN1pCnVX8itJEDFUDyBfGRMeM/Zq1pdwakGo0Md1b6ZskV63I4JQM+Tgyh
+        gFwj9+rnPg/S+kiL6zMulfneThpqQnQ=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-48-wWIR-XU2PtWY9RSa0UyW8A-1; Mon, 07 Sep 2020 19:51:31 -0400
+X-MC-Unique: wWIR-XU2PtWY9RSa0UyW8A-1
+Received: by mail-qk1-f200.google.com with SMTP id v16so8169959qka.18
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 16:51:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=110Unz5qrB7/Ny3qdZoUTzTeS4D4CUQMCdJdAAxtNLA=;
+        b=r3epofOu67T7avanmh6U/V20DSt7XvFsTu3J83Tcsogcnc73Uu0WHXQqWCpsXsTP+N
+         ZJ1ik3EmT+kxvDGRCkBa6rEz/wyawTAXJM1AXx/PcY4Fsmy1CRRinuc7uq42lo/zuorA
+         IvUHXeaJebxo4usqb9f6lJQuxcUd3h2IVhPANBwcjuQeewF6Pqcvkm8yeBmYf87UV41G
+         htLsQJwwGbOJpiP4o3CLn/b6KpIrfcX/ekrlvoYkEAyN36c3FjTtLlYH+UcOSnWnHxQQ
+         uZULQbGwOmzvyjuA28WV/wspixtUCcSMyPCoXQHpYKdoXEg0bOvQZriO22F1q7hi4NaK
+         KTwg==
+X-Gm-Message-State: AOAM530CIh/JkkD3vlzu50HcEWJbtTZ/SCXyAT/PqtjzUI0r5FOht4BD
+        DfDR2EcZv0ea59vHsyjOKaeemq9xZyUnt3UqM957kGzXCuWbBCOKkEvHjqAyJOes0rSY0WB2Jpx
+        TgszVULsMABm/VHcyZYMDFuurgg7yWobsmuPX151s
+X-Received: by 2002:a37:7946:: with SMTP id u67mr7195212qkc.381.1599522690935;
+        Mon, 07 Sep 2020 16:51:30 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwNp1vyx+UMls6RiqiVtY6OLWMPv0NBi3aWK5APkBWIwEoNwsPUDgrDTzN69CNanyWRznVbS/r4JAoisbk4Dog=
+X-Received: by 2002:a37:7946:: with SMTP id u67mr7195180qkc.381.1599522690419;
+ Mon, 07 Sep 2020 16:51:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/E8tCM5jXcPbyFzTFOo73b6d";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20191004123947.11087-1-mika.westerberg@linux.intel.com>
+ <20191004123947.11087-2-mika.westerberg@linux.intel.com> <20200808202202.GA12007@merlins.org>
+ <20200906181852.GC13955@merlins.org> <CACO55tsodfUGVUjFw9=smFOhp_oXP8zWY_9+vL+iiPZhKJdtyg@mail.gmail.com>
+ <20200907205825.GB20064@merlins.org>
+In-Reply-To: <20200907205825.GB20064@merlins.org>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Tue, 8 Sep 2020 01:51:19 +0200
+Message-ID: <CACO55ttBXKWTbxERK-aHsYQe_4=eK_WVc2+ebmCbCJJcQpFZrQ@mail.gmail.com>
+Subject: Re: [Nouveau] pcieport 0000:00:01.0: PME: Spurious native interrupt
+ (nvidia with nouveau and thunderbolt on thinkpad P73)
+To:     Marc MERLIN <marc_nouveau@merlins.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Len Brown <lenb@kernel.org>, Lyude Paul <lyude@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/E8tCM5jXcPbyFzTFOo73b6d
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 7, 2020 at 10:58 PM Marc MERLIN <marc_nouveau@merlins.org> wrote:
+>
+> On Mon, Sep 07, 2020 at 09:14:03PM +0200, Karol Herbst wrote:
+> > > - changes in the nouveau driver. Mika told me the PCIe regression
+> > >   "pcieport 0000:00:01.0: PME: Spurious native interrupt!" is supposed
+> > >   to be fixed in 5.8, but I still get a 4mn hang or so during boot and
+> > >   with 5.8, removing the USB key, didn't help make the boot faster
+> >
+> > that's the root port the GPU is attached to, no? I saw that message on
+> > the Thinkpad P1G2 when runtime resuming the Nvidia GPU, but it does
+> > seem to come from the root port.
+>
+> Hi Karol, thanks for your answer.
+>
+> 00:01.0 PCI bridge: Intel Corporation Xeon E3-1200 v5/E3-1500 v5/6th Gen Core Processor PCIe Controller (x16) (rev 0d)
+> 01:00.0 VGA compatible controller: NVIDIA Corporation TU104GLM [Quadro RTX 4000 Mobile / Max-Q] (rev a1)
+>
+> > Well, you'd also need it when attaching external displays.
+>
+> Indeed. I just don't need that on this laptop, but familiar with the not
+> so seemless procedure to turn on both GPUs, and mirror the intel one into
+> the nvidia one for external output.
+>
+> > > [   11.262985] nvidia-gpu 0000:01:00.3: PME# enabled
+> > > [   11.303060] nvidia-gpu 0000:01:00.3: PME# disabled
+> >
+> > mhh, interesting. I heard some random comments that the Nvidia
+> > USB-C/UCSI driver is a bit broken and can cause various issues. Mind
+> > blacklisting i2c-nvidia-gpu and typec_nvidia (and verify they don't
+> > get loaded) and see if that helps?
+>
+> Right, this one:
+> 01:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU104 USB Type-C UCSI Controller (rev a1)
+> Sure, I'll blacklist it. Ok, just did that, removed from initrd,
+> rebooted, and it was no better.
+>
+> From initrd (before root gets mounted), I have this:
+> nouveau              1961984  0
+> mxm_wmi                16384  1 nouveau
+> hwmon                  32768  1 nouveau
+> ttm                   102400  1 nouveau
+> wmi                    32768  2 nouveau,mxm_wmi
+>
+> I still got a 2mn hang. and a nouveau probe error
+> [  189.124530] nouveau: probe of 0000:01:00.0 failed with error -12
+>
+>
+> Here's what it looks like:
+> [    9.693230] hid: raw HID events driver (C) Jiri Kosina
+> [    9.694988] usbcore: registered new interface driver usbhid
+> [    9.694989] usbhid: USB HID core driver
+> [    9.696700] hid-generic 0003:1050:0200.0001: hiddev0,hidraw0: USB HID v1.00 Device [Yubico Yubico Gnubby (gnubby1)] on usb-0000:00:14.0-2/input0
+> [    9.784456] Console: switching to colour frame buffer device 240x67
+> [    9.816297] i915 0000:00:02.0: fb0: i915drmfb frame buffer device
+> [   25.087400] thunderbolt 0000:06:00.0: saving config space at offset 0x0 (reading 0x15eb8086)
+> [   25.087414] thunderbolt 0000:06:00.0: saving config space at offset 0x4 (reading 0x100406)
+> [   25.087419] thunderbolt 0000:06:00.0: saving config space at offset 0x8 (reading 0x8800006)
+> [   25.087424] thunderbolt 0000:06:00.0: saving config space at offset 0xc (reading 0x20)
+> [   25.087430] thunderbolt 0000:06:00.0: saving config space at offset 0x10 (reading 0xcc100000)
+> [   25.087435] thunderbolt 0000:06:00.0: saving config space at offset 0x14 (reading 0xcc140000)
+> [   25.087440] thunderbolt 0000:06:00.0: saving config space at offset 0x18 (reading 0x0)
+> [   25.087445] thunderbolt 0000:06:00.0: saving config space at offset 0x1c (reading 0x0)
+> [   25.087450] thunderbolt 0000:06:00.0: saving config space at offset 0x20 (reading 0x0)
+> [   25.087455] thunderbolt 0000:06:00.0: saving config space at offset 0x24 (reading 0x0)
+> [   25.087460] thunderbolt 0000:06:00.0: saving config space at offset 0x28 (reading 0x0)
+> [   25.087466] thunderbolt 0000:06:00.0: saving config space at offset 0x2c (reading 0x229b17aa)
+> [   25.087471] thunderbolt 0000:06:00.0: saving config space at offset 0x30 (reading 0x0)
+> [   25.087476] thunderbolt 0000:06:00.0: saving config space at offset 0x34 (reading 0x80)
+> [   25.087481] thunderbolt 0000:06:00.0: saving config space at offset 0x38 (reading 0x0)
+> [   25.087486] thunderbolt 0000:06:00.0: saving config space at offset 0x3c (reading 0x1ff)
+> [   25.087571] thunderbolt 0000:06:00.0: PME# enabled
+> [   25.105353] pcieport 0000:05:00.0: saving config space at offset 0x0 (reading 0x15ea8086)
+> [   25.105364] pcieport 0000:05:00.0: saving config space at offset 0x4 (reading 0x100407)
+> [   25.105370] pcieport 0000:05:00.0: saving config space at offset 0x8 (reading 0x6040006)
+> [   25.105375] pcieport 0000:05:00.0: saving config space at offset 0xc (reading 0x10020)
+> [   25.105380] pcieport 0000:05:00.0: saving config space at offset 0x10 (reading 0x0)
+> [   25.105384] pcieport 0000:05:00.0: saving config space at offset 0x14 (reading 0x0)
+> [   25.105389] pcieport 0000:05:00.0: saving config space at offset 0x18 (reading 0x60605)
+> [   25.105394] pcieport 0000:05:00.0: saving config space at offset 0x1c (reading 0x1f1)
+> [   25.105399] pcieport 0000:05:00.0: saving config space at offset 0x20 (reading 0xcc10cc10)
+> [   25.105404] pcieport 0000:05:00.0: saving config space at offset 0x24 (reading 0x1fff1)
+> [   25.105409] pcieport 0000:05:00.0: saving config space at offset 0x28 (reading 0x0)
+> [   25.105413] pcieport 0000:05:00.0: saving config space at offset 0x2c (reading 0x0)
+> [   25.105418] pcieport 0000:05:00.0: saving config space at offset 0x30 (reading 0x0)
+> [   25.105423] pcieport 0000:05:00.0: saving config space at offset 0x34 (reading 0x80)
+> [   25.105428] pcieport 0000:05:00.0: saving config space at offset 0x38 (reading 0x0)
+> [   25.105432] pcieport 0000:05:00.0: saving config space at offset 0x3c (reading 0x201ff)
+> [   25.105517] pcieport 0000:05:00.0: PME# enabled
+> [   25.125367] pcieport 0000:04:00.0: saving config space at offset 0x0 (reading 0x15ea8086)
+> [   25.125378] pcieport 0000:04:00.0: saving config space at offset 0x4 (reading 0x100007)
+> [   25.125383] pcieport 0000:04:00.0: saving config space at offset 0x8 (reading 0x6040006)
+> [   25.125388] pcieport 0000:04:00.0: saving config space at offset 0xc (reading 0x10020)
+> [   25.125393] pcieport 0000:04:00.0: saving config space at offset 0x10 (reading 0x0)
+> [   25.125398] pcieport 0000:04:00.0: saving config space at offset 0x14 (reading 0x0)
+> [   25.125403] pcieport 0000:04:00.0: saving config space at offset 0x18 (reading 0x510504)
+> [   25.125407] pcieport 0000:04:00.0: saving config space at offset 0x1c (reading 0x5141)
+> [   25.125412] pcieport 0000:04:00.0: saving config space at offset 0x20 (reading 0xcc10b400)
+> [   25.125417] pcieport 0000:04:00.0: saving config space at offset 0x24 (reading 0x3ff10001)
+> [   25.125422] pcieport 0000:04:00.0: saving config space at offset 0x28 (reading 0x60)
+> [   25.125427] pcieport 0000:04:00.0: saving config space at offset 0x2c (reading 0x60)
+> [   25.125431] pcieport 0000:04:00.0: saving config space at offset 0x30 (reading 0x0)
+> [   25.125436] pcieport 0000:04:00.0: saving config space at offset 0x34 (reading 0x80)
+> [   25.125441] pcieport 0000:04:00.0: saving config space at offset 0x38 (reading 0x0)
+> [   25.125446] pcieport 0000:04:00.0: saving config space at offset 0x3c (reading 0x201ff)
+> [   25.125528] pcieport 0000:04:00.0: PME# enabled
+> [   25.145423] pcieport 0000:00:1c.0: saving config space at offset 0x0 (reading 0xa3388086)
+> [   25.145437] pcieport 0000:00:1c.0: saving config space at offset 0x4 (reading 0x100407)
+> [   25.145445] pcieport 0000:00:1c.0: saving config space at offset 0x8 (reading 0x60400f0)
+> [   25.145453] pcieport 0000:00:1c.0: saving config space at offset 0xc (reading 0x810000)
+> [   25.145460] pcieport 0000:00:1c.0: saving config space at offset 0x10 (reading 0x0)
+> [   25.145464] pcieport 0000:00:1c.0: saving config space at offset 0x14 (reading 0x0)
+> [   25.145469] pcieport 0000:00:1c.0: saving config space at offset 0x18 (reading 0x510400)
+> [   25.145476] pcieport 0000:00:1c.0: saving config space at offset 0x1c (reading 0x20006040)
+> [   25.145484] pcieport 0000:00:1c.0: saving config space at offset 0x20 (reading 0xcc10b400)
+> [   25.145488] pcieport 0000:00:1c.0: saving config space at offset 0x24 (reading 0x3ff10001)
+> [   25.145493] pcieport 0000:00:1c.0: saving config space at offset 0x28 (reading 0x60)
+> [   25.145497] pcieport 0000:00:1c.0: saving config space at offset 0x2c (reading 0x60)
+> [   25.145502] pcieport 0000:00:1c.0: saving config space at offset 0x30 (reading 0x0)
+> [   25.145506] pcieport 0000:00:1c.0: saving config space at offset 0x34 (reading 0x40)
+> [   25.145510] pcieport 0000:00:1c.0: saving config space at offset 0x38 (reading 0x0)
+> [   25.145515] pcieport 0000:00:1c.0: saving config space at offset 0x3c (reading 0x201ff)
+> [   25.145604] pcieport 0000:00:1c.0: PME# enabled
+> [   26.265697] pcieport 0000:00:1c.0: power state changed by ACPI to D3cold
+> [   45.468365] random: crng init done
+> [  105.032727] usb 1-2: USB disconnect, device number 2  <= I removed a usb key, didn't help
+> [  128.495144] async_tx: api initialized (async)
+> [  128.514820] device-mapper: uevent: version 1.0.3
+> [  128.518186] device-mapper: ioctl: 4.42.0-ioctl (2020-02-27) initialised: dm-devel@redhat.com
+> [  144.869445] e1000e 0000:00:1f.6 eth0: NIC Link is Down
+> [  172.851384] BTRFS: device label btrfs_pool4 devid 1 transid 78270 /dev/sdb4 scanned by btrfs (1293)
+> [  172.851648] BTRFS: device label btrfs_pool3 devid 1 transid 27410 /dev/sda5 scanned by btrfs (1293)
+> [  172.852030] BTRFS: device fsid de9694f8-9c0d-4e9d-bd12-57adc4381cd7 devid 1 transid 41 /dev/sda3 scanned by btrfs (1293)
+> [  172.852224] BTRFS: device fsid 23e1398d-e462-41aa-b85e-f574906ddc03 devid 1 transid 585 /dev/nvme0n1p4 scanned by btrfs (1293)
+> [  189.124291] nouveau 0000:01:00.0: disp ctor failed, -12
+> [  189.124530] nouveau: probe of 0000:01:00.0 failed with error -12
+>
+> The next boot looks similar:
+> [   25.161759] pcieport 0000:00:1c.0: PME# enabled
+> [   26.297810] pcieport 0000:00:1c.0: power state changed by ACPI to D3cold
+> [  128.427270] async_tx: api initialized (async)
+> [  128.446525] device-mapper: uevent: version 1.0.3
+> [  128.446691] device-mapper: ioctl: 4.42.0-ioctl (2020-02-27) initialised: dm-devel@redhat.com
+> [  128.458120] random: cryptsetup: uninitialized urandom read (4 bytes read)
+> [  138.507373] random: cryptsetup: uninitialized urandom read (4 bytes read)
+> [  144.793573] e1000e 0000:00:1f.6 eth0: NIC Link is Down
+> [  159.627780] random: crng init done
+> [  171.814064] process '/usr/bin/fstype' started with executable stack
+> [  181.949989] BTRFS: device label btrfs_boot devid 1 transid 394687 /dev/mapper/cryptroot scanned by btrfs (1063)
+> [  181.953437] BTRFS: device label btrfs_pool4 devid 1 transid 78270 /dev/sdb4 scanned by btrfs (1063)
+> [  181.956989] BTRFS: device label btrfs_pool3 devid 1 transid 27410 /dev/sda5 scanned by btrfs (1063)
+> [  181.960473] BTRFS: device fsid de9694f8-9c0d-4e9d-bd12-57adc4381cd7 devid 1 transid 41 /dev/sda3 scanned by btrfs (1063)
+> [  181.964097] BTRFS: device fsid 23e1398d-e462-41aa-b85e-f574906ddc03 devid 1 transid 585 /dev/nvme0n1p4 scanned by btrfs (1063)
+> [  188.733645] nouveau 0000:01:00.0: disp ctor failed, -12
+> [  188.740653] nouveau: probe of 0000:01:00.0 failed with error -12
 
-Hi all,
+oh, I somehow missed that "disp ctor failed" message. I think that
+might explain why things are a bit hanging. From the top of my head I
+am not sure if that's something known or something new. But just in
+case I CCed Lyude and Ben. And I think booting with
+nouveau.debug=disp=trace could already show something relevant.
 
-After merging the char-misc.current tree, today's linux-next build
-(x86_64 allmodconfig) produced this warning:
+> [  188.901070] PM: Image not found (code -22)
+>
+> Does that help?
+>
+> Thanks,
+> Marc
+> --
+> "A mouse is a device used to point at the xterm you want to type in" - A.S.R.
+>
+> Home page: http://marc.merlins.org/                       | PGP 7F55D5F27AAF9D08
+>
 
-In file included from include/linux/printk.h:7,
-                 from include/linux/kernel.h:15,
-                 from lib/dynamic_debug.c:16:
-lib/dynamic_debug.c: In function 'ddebug_parse_query':
-include/linux/kern_levels.h:5:18: warning: format '%s' expects a matching '=
-char *' argument [-Wformat=3D]
-    5 | #define KERN_SOH "\001"  /* ASCII Start Of Header */
-      |                  ^~~~~~
-include/linux/kern_levels.h:14:19: note: in expansion of macro 'KERN_SOH'
-   14 | #define KERN_INFO KERN_SOH "6" /* informational */
-      |                   ^~~~~~~~
-include/linux/printk.h:369:9: note: in expansion of macro 'KERN_INFO'
-  369 |  printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
-      |         ^~~~~~~~~
-lib/dynamic_debug.c:116:3: note: in expansion of macro 'pr_info'
-  116 |   pr_info(fmt, ##__VA_ARGS__);   \
-      |   ^~~~~~~
-lib/dynamic_debug.c:119:28: note: in expansion of macro 'vnpr_info'
-  119 | #define vpr_info(fmt, ...) vnpr_info(1, fmt, ##__VA_ARGS__)
-      |                            ^~~~~~~~~
-lib/dynamic_debug.c:388:3: note: in expansion of macro 'vpr_info'
-  388 |   vpr_info("module:%s queries:'%s'\n", modname);
-      |   ^~~~~~~~
-
-Introduced by commit
-
-  42f07816ac0c ("dyndbg: fix problem parsing format=3D"foo bar"")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/E8tCM5jXcPbyFzTFOo73b6d
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9WxZUACgkQAVBC80lX
-0Gy1rwf/RG91RZh3+yPekVSQyWNs7+7KWRNHPCiEKCfAiyaayRlXOdXLhOurMyzb
-9/CpeJdGbufexKXXEJuUTYkkmG3Ixia2bsbR/3HZmBRh9FCwwQH1CprONMupts4y
-q56+UPQexveVTzeleuWTtCqDFslnuiFmqpokW7lmDKx52R3dNLDLI0YGM2SUCVwQ
-afFRweBZtMcVyjKM7lCObEorQWZJH0zWZY5IH6A34rwv5aml1D3S7zbR1B4JOzky
-GVjGlIlz44PDWXJS2g38E+SgBJZTcAUs44LCWM0ztgMZj1YaiO8iOgnZ2MT7QNtX
-zuOp2GU5MlU0Vnbqy916oU1TuaR0ag==
-=LNS3
------END PGP SIGNATURE-----
-
---Sig_/E8tCM5jXcPbyFzTFOo73b6d--
