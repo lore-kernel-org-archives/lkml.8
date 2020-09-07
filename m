@@ -2,108 +2,177 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8958FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CFAC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 613F521927
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFFCE207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:32:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbgIGQbj (ORCPT
+        id S1730470AbgIGQb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:31:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:37068 "EHLO foss.arm.com"
+        Mon, 7 Sep 2020 12:31:58 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:5069 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729831AbgIGOYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:24:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B64751045;
-        Mon,  7 Sep 2020 07:24:17 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F00903F73C;
-        Mon,  7 Sep 2020 07:24:15 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 15:24:13 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v2][next] PCI: imx6: Use fallthrough pseudo-keyword
-Message-ID: <20200907142413.GB9474@e121166-lin.cambridge.arm.com>
-References: <20200722031903.GA3711@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722031903.GA3711@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1729798AbgIGOWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:22:05 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BlTwX6SJcz9tyLp;
+        Mon,  7 Sep 2020 15:42:04 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Zudc7esuDMm9; Mon,  7 Sep 2020 15:42:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BlTwX5d1sz9tyLn;
+        Mon,  7 Sep 2020 15:42:04 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 50BDB8B79F;
+        Mon,  7 Sep 2020 15:42:10 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id B_Ys49AQDKLV; Mon,  7 Sep 2020 15:42:10 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 05BA48B77F;
+        Mon,  7 Sep 2020 15:42:10 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id CE0C6656F8; Mon,  7 Sep 2020 13:42:09 +0000 (UTC)
+Message-Id: <a027d447022a006c9c4958ac734128e577a3c5c1.1599486108.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH 1/2] powerpc/32: Fix vmap stack - Do not activate MMU before
+ reading task struct
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon,  7 Sep 2020 13:42:09 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:19:03PM -0500, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
-> fall-through markings when it is the case.
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  - Update URL. Use proper URL to Linux v5.7 documentation.
-> 
->  drivers/pci/controller/dwc/pci-imx6.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+We need r1 to be properly set before activating MMU, so
+reading task_struct->stack must be done with MMU off.
 
-Applied to pci/imx6, thanks.
+This means we need an additional register to play with MSR
+bits while r11 now points to the stack. For that, move r10
+back to CR (As is already done for hash MMU) and use r10.
 
-Lorenzo
+We still don't have r1 correct yet when we activate MMU.
+It is done in following patch.
 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 8f08ae53f53e..6c78903b49be 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -439,7 +439,7 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN, 0);
->  		break;
-> -	case IMX6QP:		/* FALLTHROUGH */
-> +	case IMX6QP:
->  	case IMX6Q:
->  		/* power up core phy and enable ref clock */
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
-> @@ -642,7 +642,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_2);
-> -		/* FALLTHROUGH */
-> +		fallthrough;
->  	default:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
-> @@ -1107,7 +1107,7 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  			dev_err(dev, "pcie_aux clock source missing or invalid\n");
->  			return PTR_ERR(imx6_pcie->pcie_aux);
->  		}
-> -		/* fall through */
-> +		fallthrough;
->  	case IMX7D:
->  		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
->  			imx6_pcie->controller_id = 1;
-> -- 
-> 2.27.0
-> 
+Fixes: 028474876f47 ("powerpc/32: prepare for CONFIG_VMAP_STACK")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/kernel/head_32.S |  6 ------
+ arch/powerpc/kernel/head_32.h | 31 ++++++-------------------------
+ 2 files changed, 6 insertions(+), 31 deletions(-)
+
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index f3ab94d73936..d967266d62e8 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -274,14 +274,8 @@ __secondary_hold_acknowledge:
+ 	DO_KVM  0x200
+ MachineCheck:
+ 	EXCEPTION_PROLOG_0
+-#ifdef CONFIG_VMAP_STACK
+-	li	r11, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
+-	mtmsr	r11
+-	isync
+-#endif
+ #ifdef CONFIG_PPC_CHRP
+ 	mfspr	r11, SPRN_SPRG_THREAD
+-	tovirt_vmstack r11, r11
+ 	lwz	r11, RTAS_SP(r11)
+ 	cmpwi	cr1, r11, 0
+ 	bne	cr1, 7f
+diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+index 9abec6cd099c..21effebb9277 100644
+--- a/arch/powerpc/kernel/head_32.h
++++ b/arch/powerpc/kernel/head_32.h
+@@ -39,24 +39,13 @@
+ .endm
+ 
+ .macro EXCEPTION_PROLOG_1 for_rtas=0
+-#ifdef CONFIG_VMAP_STACK
+-	.ifeq	\for_rtas
+-	li	r11, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
+-	mtmsr	r11
+-	isync
+-	.endif
+ 	subi	r11, r1, INT_FRAME_SIZE		/* use r1 if kernel */
+-#else
+-	tophys(r11,r1)			/* use tophys(r1) if kernel */
+-	subi	r11, r11, INT_FRAME_SIZE	/* alloc exc. frame */
+-#endif
+ 	beq	1f
+ 	mfspr	r11,SPRN_SPRG_THREAD
+-	tovirt_vmstack r11, r11
+ 	lwz	r11,TASK_STACK-THREAD(r11)
+ 	addi	r11, r11, THREAD_SIZE - INT_FRAME_SIZE
+-	tophys_novmstack r11, r11
+ 1:
++	tophys_novmstack r11, r11
+ #ifdef CONFIG_VMAP_STACK
+ 	mtcrf	0x7f, r11
+ 	bt	32 - THREAD_ALIGN_SHIFT, stack_overflow
+@@ -64,12 +53,11 @@
+ .endm
+ 
+ .macro EXCEPTION_PROLOG_2 handle_dar_dsisr=0
+-#if defined(CONFIG_VMAP_STACK) && defined(CONFIG_PPC_BOOK3S)
+-BEGIN_MMU_FTR_SECTION
++#ifdef CONFIG_VMAP_STACK
+ 	mtcr	r10
+-FTR_SECTION_ELSE
+-	stw	r10, _CCR(r11)
+-ALT_MMU_FTR_SECTION_END_IFSET(MMU_FTR_HPTE_TABLE)
++	li	r10, MSR_KERNEL & ~(MSR_IR | MSR_RI) /* can take DTLB miss */
++	mtmsr	r10
++	isync
+ #else
+ 	stw	r10,_CCR(r11)		/* save registers */
+ #endif
+@@ -77,11 +65,9 @@ ALT_MMU_FTR_SECTION_END_IFSET(MMU_FTR_HPTE_TABLE)
+ 	stw	r12,GPR12(r11)
+ 	stw	r9,GPR9(r11)
+ 	stw	r10,GPR10(r11)
+-#if defined(CONFIG_VMAP_STACK) && defined(CONFIG_PPC_BOOK3S)
+-BEGIN_MMU_FTR_SECTION
++#ifdef CONFIG_VMAP_STACK
+ 	mfcr	r10
+ 	stw	r10, _CCR(r11)
+-END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ #endif
+ 	mfspr	r12,SPRN_SPRG_SCRATCH1
+ 	stw	r12,GPR11(r11)
+@@ -97,11 +83,7 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ 	stw	r10, _DSISR(r11)
+ 	.endif
+ 	lwz	r9, SRR1(r12)
+-#if defined(CONFIG_VMAP_STACK) && defined(CONFIG_PPC_BOOK3S)
+-BEGIN_MMU_FTR_SECTION
+ 	andi.	r10, r9, MSR_PR
+-END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+-#endif
+ 	lwz	r12, SRR0(r12)
+ #else
+ 	mfspr	r12,SPRN_SRR0
+@@ -328,7 +310,6 @@ END_MMU_FTR_SECTION_IFSET(MMU_FTR_HPTE_TABLE)
+ #ifdef CONFIG_VMAP_STACK
+ #ifdef CONFIG_SMP
+ 	mfspr	r11, SPRN_SPRG_THREAD
+-	tovirt(r11, r11)
+ 	lwz	r11, TASK_CPU - THREAD(r11)
+ 	slwi	r11, r11, 3
+ 	addis	r11, r11, emergency_ctx@ha
+-- 
+2.25.0
+
