@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E815C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBCECC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D0521D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D5421927
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496600;
-	bh=R1DlbR4hqNKkIN0iCJx6S2toPcEtswptm9ebDwIlBXw=;
+	s=default; t=1599496615;
+	bh=b8RGyXcP6g9WqOwCH5gMQQmDdR7oyUfGaniALTLI0+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkQTTsUD9WvMFmJPpNFW9JqCKl3y9SgDKfQpwFNyvB1EtnMMcBvlqeGYiaxDfPZo4
-	 TinvcAjlDSMpTBFxS2mydBKHUbyTyhaKyfyArUmANnrv9hs62+sCjBGf1txxsWsjII
-	 SE1sPmXJPXJYnireyD636ngIfeDw51rfrDknCi1I=
+	b=n1dJT+QV4P9tBI9b8CtRxHMNLdY7BoWzx5fsMIXOvnZJkrb0G/7Q8Kep7NJzSkEXp
+	 4boJkZOE+IhjL0QqZMNgv1CUUaCNaVY3OvHh32bUNj/BN43BGcjW1aqgvpJvpSanGm
+	 +1fEZUsD1FXRBMoXxhPT+o2Ez2jsT4tDV/43+Z7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgIGQgi (ORCPT
+        id S1730501AbgIGQgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:36:38 -0400
+        Mon, 7 Sep 2020 12:36:47 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729833AbgIGQdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:41 -0400
+        id S1730473AbgIGQdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6662321789;
-        Mon,  7 Sep 2020 16:33:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551BF21974;
+        Mon,  7 Sep 2020 16:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496420;
-        bh=R1DlbR4hqNKkIN0iCJx6S2toPcEtswptm9ebDwIlBXw=;
+        s=default; t=1599496423;
+        bh=b8RGyXcP6g9WqOwCH5gMQQmDdR7oyUfGaniALTLI0+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IlJlcl0KBCY5e99VdWRp3wktJpARrHex1PqH7V5i4U+1LMqNzgfB5J4h48uAQ40Gy
-         ociVQykhp1S19GFBrERuVJQVbjF3ooKWMol6cORRouMi5AAfY1K/LXN9lKIABoZ93F
-         silPbYipzFz+4aoGRSo4XcTbfdFE+KjeKug9DBkY=
+        b=MFVHHJRGHPbs94InQYz+yvj16Xih48GqhLRibkDFd4T1O2N/chDEwR426szcpbTZt
+         hXFTtwwNJwW639qW1eC6/C3bfecRojKBHp/1grHbPHbM9TywLuEcPPCgh9pR3mcI7L
+         rGV8TL1z5S/DOQnHuIYhZEtZExkqKdKf/YHMxG7I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 08/43] ALSA: hda: Fix 2 channel swapping for Tegra
-Date:   Mon,  7 Sep 2020 12:32:54 -0400
-Message-Id: <20200907163329.1280888-8-sashal@kernel.org>
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 10/43] drivers/dma/dma-jz4780: Fix race condition between probe and irq handler
+Date:   Mon,  7 Sep 2020 12:32:56 -0400
+Message-Id: <20200907163329.1280888-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -59,48 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohan Kumar <mkumard@nvidia.com>
+From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-[ Upstream commit 216116eae43963c662eb84729507bad95214ca6b ]
+[ Upstream commit 6d6018fc30bee67290dbed2fa51123f7c6f3d691 ]
 
-The Tegra HDA codec HW implementation has an issue related to not
-swapping the 2 channel Audio Sample Packet(ASP) channel mapping.
-Whatever the FL and FR mapping specified the left channel always
-comes out of left speaker and right channel on right speaker. So
-add condition to disallow the swapping of FL,FR during the playback.
+In probe, IRQ is requested before zchan->id is initialized which can be
+read in the irq handler. Hence, shift request irq after other initializations
+complete.
 
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-Acked-by: Sameer Pujar <spujar@nvidia.com>
-Link: https://lore.kernel.org/r/20200825052415.20626-2-mkumard@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
+Link: https://lore.kernel.org/r/20200821034423.12713-1-madhuparnabhowmik10@gmail.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/dma/dma-jz4780.c | 38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index ec9460f3a288e..330fb7656c636 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -3677,6 +3677,7 @@ static int tegra_hdmi_build_pcms(struct hda_codec *codec)
+diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
+index bf95f1d551c51..0ecb724b394f5 100644
+--- a/drivers/dma/dma-jz4780.c
++++ b/drivers/dma/dma-jz4780.c
+@@ -885,24 +885,11 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- static int patch_tegra_hdmi(struct hda_codec *codec)
- {
-+	struct hdmi_spec *spec;
- 	int err;
+-	ret = platform_get_irq(pdev, 0);
+-	if (ret < 0)
+-		return ret;
+-
+-	jzdma->irq = ret;
+-
+-	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
+-			  jzdma);
+-	if (ret) {
+-		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
+-		return ret;
+-	}
+-
+ 	jzdma->clk = devm_clk_get(dev, NULL);
+ 	if (IS_ERR(jzdma->clk)) {
+ 		dev_err(dev, "failed to get clock\n");
+ 		ret = PTR_ERR(jzdma->clk);
+-		goto err_free_irq;
++		return ret;
+ 	}
  
- 	err = patch_generic_hdmi(codec);
-@@ -3684,6 +3685,10 @@ static int patch_tegra_hdmi(struct hda_codec *codec)
- 		return err;
+ 	clk_prepare_enable(jzdma->clk);
+@@ -955,10 +942,23 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 		jzchan->vchan.desc_free = jz4780_dma_desc_free;
+ 	}
  
- 	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
-+	spec = codec->spec;
-+	spec->chmap.ops.chmap_cea_alloc_validate_get_type =
-+		nvhdmi_chmap_cea_alloc_validate_get_type;
-+	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
++	ret = platform_get_irq(pdev, 0);
++	if (ret < 0)
++		goto err_disable_clk;
++
++	jzdma->irq = ret;
++
++	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0, dev_name(dev),
++			  jzdma);
++	if (ret) {
++		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
++		goto err_disable_clk;
++	}
++
+ 	ret = dmaenginem_async_device_register(dd);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register device\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
  
+ 	/* Register with OF DMA helpers. */
+@@ -966,17 +966,17 @@ static int jz4780_dma_probe(struct platform_device *pdev)
+ 					 jzdma);
+ 	if (ret) {
+ 		dev_err(dev, "failed to register OF DMA controller\n");
+-		goto err_disable_clk;
++		goto err_free_irq;
+ 	}
+ 
+ 	dev_info(dev, "JZ4780 DMA controller initialised\n");
  	return 0;
+ 
+-err_disable_clk:
+-	clk_disable_unprepare(jzdma->clk);
+-
+ err_free_irq:
+ 	free_irq(jzdma->irq, jzdma);
++
++err_disable_clk:
++	clk_disable_unprepare(jzdma->clk);
+ 	return ret;
  }
+ 
 -- 
 2.25.1
 
