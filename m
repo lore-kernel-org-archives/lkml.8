@@ -2,237 +2,155 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459F4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1B0C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5058208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="NR497dey";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="NR497dey"
+	by mail.kernel.org (Postfix) with ESMTP id 11AE8208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgIGHz7 (ORCPT
+        id S1727919AbgIGH4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 7 Sep 2020 03:56:16 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45072 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727847AbgIGHz7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 03:55:59 -0400
-Received: from mail-vi1eur05on2074.outbound.protection.outlook.com ([40.107.21.74]:58112
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726833AbgIGHzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:55:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUCzExZOuDqEhfwVv9mY9si80E7JvV5ev8EqUlNFfjY=;
- b=NR497deyRY2dykWbJtwGH2zU3VeSvY+QQkC2yjS7QYQIdTskBl3vsjvOwHl9yvzlU1ka1LapbkYXe9p2PrIyBItxf3mH3KNPS8IXHXjViPLLToDNWUtRcWRkzEeFtCHI9oU1GIx6scLcZ/CIdJSKx+ekVgxIe3MOUB6TKGle2dM=
-Received: from MR2P264CA0086.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:32::26)
- by DB6PR0802MB2150.eurprd08.prod.outlook.com (2603:10a6:4:85::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
- 2020 07:55:50 +0000
-Received: from VE1EUR03FT047.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:32:cafe::51) by MR2P264CA0086.outlook.office365.com
- (2603:10a6:500:32::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
- Transport; Mon, 7 Sep 2020 07:55:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT047.mail.protection.outlook.com (10.152.19.218) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.16 via Frontend Transport; Mon, 7 Sep 2020 07:55:49 +0000
-Received: ("Tessian outbound e8cdb8c6f386:v64"); Mon, 07 Sep 2020 07:55:49 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 2583122da173.1
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 04AA52B7-C53F-485E-81E3-13540371B59B.1;
-        Mon, 07 Sep 2020 07:55:43 +0000
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2583122da173.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 07 Sep 2020 07:55:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=grFZ3E145prYxByKA28F0NcW9pNE1ezVlwCtqLie8jZt9xaSYbHW0R1KIdLHqCMdvzFTq8U+zsvyo2ujUhoP0JKMs7ImdIuxS9V04+QjgwnkBilDwNp/dXOZ7lEsOcDgCDgYw/4X6lofABwyfsSzno4V9aAvWSdycUkFboBzO8yK39yaV0cO2vnR3zIHzyGovQ888CrO+ihl9pbtmWiqHYj2ueA/FFSDJj52QgkJj5ZSbOM0k6enLZfjfC/vAgWK/j/3PmChwGMacNtXqARHW6rP0z1Me3j46DXaGJK+6t80zkm3B3RMnbfVQ/xU8qZpdg6upP/ZwC4mHoqunbDV3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUCzExZOuDqEhfwVv9mY9si80E7JvV5ev8EqUlNFfjY=;
- b=I2LROZdsMBvlJ8H2+jv67o+bmv1pU7/rxitqpm2AGLBEChp3/GblB2Sb6JiQcsVM/RuiyHWQKpvvDIL/ee2+Pa8RQ25x4PFoi2NTJETQGebCG+bOwQpJSu1ZOtPHZK5Z+NtHVt+8S47rga7iXXWPn+kI5GDNoPq9iNz0kTxQ1iY07BBkHjcyT5YqbfNf0SaFxcyhiU5Hti1qxmsr1iRWlFxdFyRkne3Jh0sJs5lW4LTorWAcnIt1NkREWy04GBKhEbN/SbZC482QTkQw0kMzKJo+4xUAOac4x6dQcshVwkh6nhdo6xHWw2HcmuT2zWfZL3FyptuCI+/nMMuMtQZ6Ng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUCzExZOuDqEhfwVv9mY9si80E7JvV5ev8EqUlNFfjY=;
- b=NR497deyRY2dykWbJtwGH2zU3VeSvY+QQkC2yjS7QYQIdTskBl3vsjvOwHl9yvzlU1ka1LapbkYXe9p2PrIyBItxf3mH3KNPS8IXHXjViPLLToDNWUtRcWRkzEeFtCHI9oU1GIx6scLcZ/CIdJSKx+ekVgxIe3MOUB6TKGle2dM=
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7)
- by HE1PR0802MB2249.eurprd08.prod.outlook.com (2603:10a6:3:c2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 07:55:39 +0000
-Received: from HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::74f7:5759:4e9e:6e00]) by HE1PR0802MB2555.eurprd08.prod.outlook.com
- ([fe80::74f7:5759:4e9e:6e00%5]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 07:55:39 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Justin He <Justin.He@arm.com>, nd <nd@arm.com>
-Subject: RE: [PATCH v14 09/10] doc: add ptp_kvm introduction for arm64 support
-Thread-Topic: [PATCH v14 09/10] doc: add ptp_kvm introduction for arm64
- support
-Thread-Index: AQHWgp36kP2WPVfAh0y+53P6AOHZGalYqNOAgAQpW/A=
-Date:   Mon, 7 Sep 2020 07:55:38 +0000
-Message-ID: <HE1PR0802MB2555849BDD0F9185ED3CF5F7F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200904092744.167655-1-jianyong.wu@arm.com>
-        <20200904092744.167655-10-jianyong.wu@arm.com> <87d031qzvs.wl-maz@kernel.org>
-In-Reply-To: <87d031qzvs.wl-maz@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 1C61F0A72C975544853C80C6917AE5D5.0
-x-checkrecipientchecked: true
-Authentication-Results-Original: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [203.126.0.111]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: dd990820-90c4-4883-0f52-08d853036fc5
-x-ms-traffictypediagnostic: HE1PR0802MB2249:|DB6PR0802MB2150:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DB6PR0802MB2150296B3314C7CE69E187C8F4280@DB6PR0802MB2150.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 9OSiapGiGdMJnEyCd+EOHTsj0k4vLOh4NEzbZOp7dCzXkjaVtGm5FqLIOjke7D8hTfOyxieyTNOfP4mGHo0xjtgz+xHpTwrP0jxP4+B9qNjQxy/SUxhVWV93r5S9NDN7wMzjlmh4KhFydNp0qy4ZbaxgdN/36NclFK23YNk3fEaeMOmLvraPWA5SmP7XnrlImLXmOjUYFbdK44MZuCNtI6a5WGshcVkgrBuw9pHy6HCoZ/gVtvB9hZbuWkfc9qFAr/3SuB5kxbqVlP29PkERnMVc2NunOnZYFNmuQQCqa/RsWK2KG+BDwYmFVq/9fXd5nANrv/AO3GmVF90ErAv6MQ==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0802MB2555.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(478600001)(6916009)(54906003)(71200400001)(8676002)(26005)(83380400001)(8936002)(186003)(53546011)(6506007)(33656002)(55016002)(2906002)(7416002)(7696005)(5660300002)(52536014)(86362001)(4326008)(9686003)(66446008)(66556008)(66476007)(66946007)(76116006)(316002)(64756008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: GIY+7SUU+IRkRKY8lmvsdBIP0W7pA/phTk4OcMFaaXFVEidjtVhxebfB8qsPWmbu3bF6nnp8tcBXG6BY2Z+f1R/NYeCFiRxoKTNtfVckFUfNCkS+tHC4YsdhQCLXkAyloh0ADJUFJ3Kn63bANSSzRGOQBVlCusL0GjfN0tgLhsFEV+S+HT8NkOTJyYYCZQFnCnCNh3o3Lyg0iUSYNjo90pXcIHVgf57cDSZvxwTe8piQ8dlJgnjPzLAFjdYyKFAfByLkqJonRCTfDVpvBb4fsaaypMAIKppg704VBp0ZvpOd2cn/0FL/YOOlA5u8GURF9UvQacuXFMrJHnhsZ6jkqh3vMRkzSfC7lpPCS7F0VSgBfmOLnh1DM5CGqb0wX8tFjh7RjtbVbWRTkX8bb58kY8YgaWDqtnkm/UaO+32mou7b2koytOiFrSl4k51lAxopdpcfHr7d4FTAKOIWvDDUJ90S9RhP7y3duNRc5q6z8HUjOicY0PCIo77nJE0FnbO7isqwhaY6DP4cVVMiLwn4F7ugXywXeafx6bXgFo+20uWEM8y8L2zQZRJX3MXnafanhbDVTgZJTS0ouPcrGWOLNoh/o41DoxuV6/JyPNa30NfDHwWgH85DGs82xiMUrt5od6Vs73hjhZDuxnz36pqMqQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: by mail-oi1-f195.google.com with SMTP id d189so12821566oig.12;
+        Mon, 07 Sep 2020 00:55:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uuBwypJmHWQd5+fhA+Qi5ygJwZd3WxmHZlgvS26xGCM=;
+        b=GtOSW2MJgduv5NPEDLskPJLOojRpBiRg3hHAx5UNhBY8LlJ6aKraRwa1+s/vMj7xZF
+         etwr8rUWgVySyHcNTzD6seOgivEmMWPRaobsPpAnrJK/fU7eQAefoTZU1KP6IyuIMJxh
+         FRCSEF85pvpMvMfrLKt/ohLojmPph3+T6obI40Qod5NYHBwqdPA8vNVv6xUXWdUYpByw
+         zJr+m8IXEqAeptEMmLgXx33H/ERFocolgAG8uAuz+MeUW25kDQc299VI8AG41S1OykwV
+         TtDMq4RAcWqQtrVC0qc+1/E50u+sZIXhZPbMYbN2Bm6XhOBSqFtBdjtrSfaseFSgfUxK
+         1qmw==
+X-Gm-Message-State: AOAM5334dcRNXxsfmCCWQhh+9zZiGg4u0z3FBRlBWq9TRXYxpUDYzlDP
+        e+4Hgc6WCKSq5amCKXgS8EdaLAc0QK2J3Tov0rs=
+X-Google-Smtp-Source: ABdhPJw7BBFktIEQUB+STV6VUKMgajK/DnzWMIBlXP6kmOSIVV2532SU9YvqzAL5tzHBtDMz4jSG1EpLv2CV/1B5P6o=
+X-Received: by 2002:aca:52d6:: with SMTP id g205mr11714334oib.54.1599465358239;
+ Mon, 07 Sep 2020 00:55:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2249
-Original-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT047.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 171f5ed5-4f6d-485e-956a-08d853036967
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xk5goaMF681OO+x4uLKe8y7dVMM2J3F63oyWTiR3ng+Q4e5PLcaBogCisYw9Ho8ez7Q7sq8wBaZD5ZAb1KGMuLtn+K5vZHkc2GY+IJy+jfOw5fEEzZglNRjtJctbVb2s+PdHDmbhdMHypETbLVZcFGJrmhfq/3z7I9bLcrAb+SxaIeDvDHU6CZhmlyJN2JpL+bA5bgQFooVUEE56g4JogRj1hB8JcOOXaLxJEbDvAgMDDdN+xG5W0ixmgE32CfgFSZvIcxOmHwX4hmWzC06Ahxli6k5Durk/swBP9LdaXBFQdgYDjG0jOp7sUn4XmSzRrGFY9pandflNInN/szyqrhyrXMdhCTlvv1Mkgb6mnxxnYvEkCYY6EMTKZUld7quTmuubWVep2+fOrxjt5kOVUw==
-X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(46966005)(82310400003)(53546011)(70206006)(186003)(6506007)(336012)(6862004)(81166007)(33656002)(356005)(70586007)(86362001)(52536014)(5660300002)(82740400003)(478600001)(450100002)(4326008)(54906003)(2906002)(316002)(8936002)(7696005)(9686003)(8676002)(83380400001)(55016002)(36906005)(26005)(47076004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 07:55:49.6206
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd990820-90c4-4883-0f52-08d853036fc5
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: VE1EUR03FT047.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2150
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825162718.5838-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXkGBfwNOwd5-=U3wg6U0O+3BErbXuybbuytgzsCmZqRQ@mail.gmail.com> <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com>
+In-Reply-To: <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 7 Sep 2020 09:55:46 +0200
+Message-ID: <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: r8a7742-iwg21d-q7: Enable SD2 LED indication
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Prabhakar,
 
-> -----Original Message-----
-> From: Marc Zyngier <maz@kernel.org>
-> Sent: Saturday, September 5, 2020 12:19 AM
-> To: Jianyong Wu <Jianyong.Wu@arm.com>
-> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
-> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
-> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
-> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
-> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
-> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Justin He
-> <Justin.He@arm.com>; nd <nd@arm.com>
-> Subject: Re: [PATCH v14 09/10] doc: add ptp_kvm introduction for arm64
-> support
->=20
-> On Fri, 04 Sep 2020 10:27:43 +0100,
-> Jianyong Wu <jianyong.wu@arm.com> wrote:
+On Fri, Sep 4, 2020 at 7:15 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Thu, Sep 3, 2020 at 1:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+> > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > Add support for LED trigger on SD2 interface.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > >
-> > ptp_kvm implementation depends on hypercall using SMCCC. So we
-> > introduce a new SMCCC service ID. This doc explain how we define and
-> > use this new ID.
+> > > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > @@ -63,6 +63,16 @@
+> > >                 enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
+> > >         };
+> > >
+> > > +       leds {
+> > > +               compatible = "gpio-leds";
+> > > +
+> > > +               sdhi2_led {
+> > > +                       label = "sdio-led";
+> > > +                       gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
 > >
-> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> > ---
-> >  Documentation/virt/kvm/arm/ptp_kvm.rst | 72
-> > ++++++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >  create mode 100644 Documentation/virt/kvm/arm/ptp_kvm.rst
+> > GPIO_ACTIVE_HIGH?
 > >
-> > diff --git a/Documentation/virt/kvm/arm/ptp_kvm.rst
-> > b/Documentation/virt/kvm/arm/ptp_kvm.rst
-> > new file mode 100644
-> > index 000000000000..455591e2587a
-> > --- /dev/null
-> > +++ b/Documentation/virt/kvm/arm/ptp_kvm.rst
-> > @@ -0,0 +1,72 @@
-> > +.. SPDX-License-Identifier: GPL-2.0
-> > +
-> > +PTP_KVM support for arm64
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> > +
-> > +PTP_KVM is used for time sync between guest and host in a high preciso=
-n.
-> > +It needs get wall time and counter value from host and transfer these
-> > +data to guest via hypercall service. So one more hypercall service
-> > +should be added.
-> > +
-> > +This new SMCCC hypercall will be defined as:
-> > +
-> > +* ARM_SMCCC_HYP_KVM_PTP_FUNC_ID: 0xC6000001
-> > +
-> > +As we only support 64-bits ptp_kvm client, so we choose SMC64/HVC64
-> > +calling convention.
->=20
-> This isn't what the code does, as it is explicitly set as an SMC32 servic=
-e...
-> Furthermore, we still run 32bit guests, and will do for the foreseeable f=
-uture.
-> Having removed KVM support for 32bit doesn't mean 32bits are gone.
+> > The LED is driven by an NPN transistor, with the LED between 3.3V and
+> > the transistor's collector.
 
-Sorry to have removed arm32 support. It's worthy to add arm32 support in.
-I will add it next time.
+Oops, 3.3V is not VCC_3V3, but SD_3V3, so it is not always-on, but
+controlled by SDIO_PWR.
 
-Thanks
-Jianyong=20
+> I did try with GPIO_ACTIVE_HIGH and it didn't work as expected. To
+> make sure I can control the LED through sysfs I deleted the node from
+> DTS and exported the pin GP5_22 (858) and writing the value "out"
+> direction and setting the values 0/1 to value did not toggle the SDIO
+> LED as expected and it stayed OFF all the time.
 
->=20
-> 	M.
->=20
-> --
-> Without deviation from the norm, progress is not possible.
+Hence when SDIO_PWR is turned off, you cannot control the LED just by
+toggling GP5_22.
+
+> Looks like there is some information missing in the schematics.
+>
+> I did some experiments. I completely removed the SDHI, LED and
+> regulator  nodes and  booted the system and exported GP1_27 (989) and
+> wrote values 0/1  and this toggled the SDIO_LED.
+>
+> U-boot sets the below, so in u-boot the SDIO_LED is ON:
+>     gpio_direction_output(GPIO_GP_1_27, 0); /* power on */
+>     gpio_set_value(GPIO_GP_1_27, 0);
+>     gpio_direction_output(GPIO_GP_5_22, 0); /* LED  */
+>     gpio_set_value(GPIO_GP_5_22, 1);
+>     gpio_direction_output(GPIO_GP_1_8, 0); /* 1: 3.3V, 0: 1.8V*/
+>     gpio_set_value(GPIO_GP_1_8, 1);
+>
+> So in comparison we would need a hog node as below (and with this the
+> LED triggers correctly as expected),
+>
+> &gpio5 {
+>     sdio-led-gpio {
+>         gpio-hog;
+>         gpios = <22 GPIO_ACTIVE_HIGH>;
+>         output-high;
+>         line-name = "sdio-led-gpio";
+>     };
+> };
+>
+> Let me know if you are OK with the above.
+
+The above means the LED is always lit when SDIO_PWR is enabled.
+While I agree that's some kind of SD activity indicator, probably it's less
+fine-grained than using the mmc1 trigger?
+I assume the mmc1 trigger is only activated when SDIO_PWR is enabled.
+Are you sure this doesn't work?
+Perhaps your kernel was missing SD trigger support, or "mmc1" is the
+wrong SD instance?
+
+> Looks like the SDIO_PWR is tied up with an SDIO_LED pin and the
+> information is missing from schematics.
+
+No, I think we just misread the schematics.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
