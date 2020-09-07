@@ -2,86 +2,102 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C0EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7E76207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB8120C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:33:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMvw2vfI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728586AbgIGLcV (ORCPT
+        id S1729080AbgIGLcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:32:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:33210 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbgIGLZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:25:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81E7B11D4;
-        Mon,  7 Sep 2020 04:25:23 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86AD33F66E;
-        Mon,  7 Sep 2020 04:25:21 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 12:25:19 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 0/3] Add PCIe EP to RZ/G2H
-Message-ID: <20200907112519.GB7573@e121166-lin.cambridge.arm.com>
-References: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200904103851.3946-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 7 Sep 2020 07:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbgIGL3B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:29:01 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96021C061575;
+        Mon,  7 Sep 2020 04:29:01 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o8so4577236ejb.10;
+        Mon, 07 Sep 2020 04:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=kQGNEdq+cDwHylTqbs6BpkRXROVfkl3/tiDlpY9PKjg=;
+        b=LMvw2vfIFlo+Cv7Q+U1LP91HBerow08Yy9+2U7FUmVxuEwMXRjAGo/vrnHyCRYJSEe
+         RfG3x+kOxP9GaXo+av8MSARiQ1s1RaNCmzlQzDyKaKPTz/3VniGXgFJFec15gPuGso1o
+         8sGOMcizLzmoGh9heEaK+9G+eJ5kvvF/FMrLcyHiuhInZb1pyHro+8tsbTtEy5toqh5d
+         oWK4GKkN9VFdgCSYgWQOhI7y9qSHDvhnMnqJzMJfGm2RBTfXTo14qHPAlKJFSo+VnUes
+         lx6s8xNDFCLGLHqSeYbalJWr3XOEDq0Q3/64gtQir5rSlj34T2peipvjfSB59gmSTtvh
+         dgZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=kQGNEdq+cDwHylTqbs6BpkRXROVfkl3/tiDlpY9PKjg=;
+        b=D2TyFBJCIX3D1JwjEqlxyrK4T2HcysshP6fNeuhPGJXVPJn22iZ85ybpsfonTIqV1j
+         T9YUuK7M7F89JwbO1a9iGe1P2J7f35P0Lqsz02aZ4uUnHYnX708dLnIEf+WAt0/wN1Sf
+         OfT90HLzN1oj6kbfptXFakmgSeG2hXmI6EeqfwVtTlqTnLp5lKBSMaw8eJcdbACOUwsP
+         UqHg45zWrFW1Now7BjZhQ1F6wAFCtQaOdriVtGGrLEPCCM9LxRVUbFuTxab1H4ryOZaL
+         u1aokKFMSxBo2oNEogeKQ7wis7EAivL6FdV/dtOXFumiljTGK4SHp84EHHcsZVaIZHNi
+         vSow==
+X-Gm-Message-State: AOAM533r/n9AQAkNlaq8YY2l3I6iARVcuWTwFiw+IT+nWvVxh8kho9Q5
+        w8g28m1jZKgZk9oqhNiO8/w=
+X-Google-Smtp-Source: ABdhPJyJxk/i2Mt+3kd2Kcc6jyfxcUA8iEeifyT1g06whWiFnZyRns2udxwRseJhkD5B+60VxISReg==
+X-Received: by 2002:a17:906:3bca:: with SMTP id v10mr19919515ejf.57.1599478140293;
+        Mon, 07 Sep 2020 04:29:00 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:598:b902:e05f:7139:914b:4eed:99b3])
+        by smtp.gmail.com with ESMTPSA id k6sm13826528edj.93.2020.09.07.04.28.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 04:28:59 -0700 (PDT)
+From:   Bean Huo <huobean@gmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     beanhuo@micron.com
+Subject: [PATCH v2 2/2] fs: isofs: fix incorrect comment in zisofs_readpage()
+Date:   Mon,  7 Sep 2020 13:28:45 +0200
+Message-Id: <20200907112845.3420-3-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907112845.3420-1-huobean@gmail.com>
+References: <20200907112845.3420-1-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 11:38:48AM +0100, Lad Prabhakar wrote:
-> Hi All,
-> 
-> This patch series adds PCIe EP support to R8A774E1 SoC.
-> 
-> patch 2/3 applies on top of [1] and patch 3/3 is dependent
-> on series [2].
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
->     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
-> [2] https://patchwork.kernel.org/project/linux-pci/list/
->     ?series=332849&submitter=&state=&q=&archive=&delegate=
-> 
-> Cheers,
-> Prabhakar
-> 
-> 
-> Lad Prabhakar (3):
->   dt-bindings: pci: rcar-pci-ep: Document r8a774e1
->   arm64: dts: renesas: r8a774e1: Add PCIe EP nodes
->   misc: pci_endpoint_test: Add Device ID for RZ/G2H PCIe controller
-> 
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  |  1 +
->  arch/arm64/boot/dts/renesas/r8a774e1.dtsi     | 38 +++++++++++++++++++
->  drivers/misc/pci_endpoint_test.c              |  2 +
->  3 files changed, 41 insertions(+)
+From: Bean Huo <beanhuo@micron.com>
 
-Took patches (1) and (3) in pci/rcar, thanks.
+do_generic_file_read() has been renamed to eneric_file_buffered_read()
+since commit 47c27bc46946 ("fs: pass iocb to do_generic_file_read"), so
+relpace it with generic_file_buffered_read() in the comment.
 
-Lorenzo
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+---
+ fs/isofs/compress.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/isofs/compress.c b/fs/isofs/compress.c
+index bc12ac7e2312..7541581c1064 100644
+--- a/fs/isofs/compress.c
++++ b/fs/isofs/compress.c
+@@ -312,7 +312,7 @@ static int zisofs_readpage(struct file *file, struct page *page)
+ 	end_index = (inode->i_size + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ 	/*
+ 	 * If this page is wholly outside i_size we just return zero;
+-	 * do_generic_file_read() will handle this for us
++	 * generic_file_buffered_read() will handle this for us
+ 	 */
+ 	if (index >= end_index) {
+ 		SetPageUptodate(page);
+-- 
+2.17.1
+
