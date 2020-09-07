@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E772C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC3EFC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 044AE2067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFF7E2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730901AbgIGR1z (ORCPT
+        id S1729583AbgIGR2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:27:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:41838 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:28:11 -0400
+Received: from 8bytes.org ([81.169.241.247]:43636 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729522AbgIGNTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:19:37 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 775FD3AAF;
-        Mon,  7 Sep 2020 15:17:19 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 708EA3AA3;
+        Mon,  7 Sep 2020 15:17:15 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 70/72] x86/sev-es: Handle NMI State
-Date:   Mon,  7 Sep 2020 15:16:11 +0200
-Message-Id: <20200907131613.12703-71-joro@8bytes.org>
+Subject: [PATCH v7 63/72] x86/kvm: Add KVM specific VMMCALL handling under SEV-ES
+Date:   Mon,  7 Sep 2020 15:16:04 +0200
+Message-Id: <20200907131613.12703-64-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -58,103 +58,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-When running under SEV-ES the kernel has to tell the hypervisor when to
-open the NMI window again after an NMI was injected. This is done with
-an NMI-complete message to the hypervisor.
+Implement the callbacks to copy the processor state required by KVM to
+the GHCB.
 
-Add code to the kernels NMI handler to send this message right at the
-beginning of do_nmi(). This always allows nesting NMIs.
-
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+[ jroedel@suse.de: - Split out of a larger patch
+                   - Adapt to different callback functions ]
+Co-developed-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/sev-es.h   |  7 +++++++
- arch/x86/include/uapi/asm/svm.h |  1 +
- arch/x86/kernel/nmi.c           |  6 ++++++
- arch/x86/kernel/sev-es.c        | 18 ++++++++++++++++++
- 4 files changed, 32 insertions(+)
+ arch/x86/kernel/kvm.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index db88e1c3442d..e919f09ae33c 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -96,10 +96,17 @@ static __always_inline void sev_es_ist_exit(void)
- 		__sev_es_ist_exit();
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 08320b0b2b27..0f9597275e9c 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -36,6 +36,8 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/ptrace.h>
++#include <asm/svm.h>
+ 
+ DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
+ 
+@@ -746,13 +748,34 @@ static void __init kvm_init_platform(void)
+ 	x86_platform.apic_post_init = kvm_apic_init;
  }
- extern int sev_es_setup_ap_jump_table(struct real_mode_header *rmh);
-+extern void __sev_es_nmi_complete(void);
-+static __always_inline void sev_es_nmi_complete(void)
+ 
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++static void kvm_sev_es_hcall_prepare(struct ghcb *ghcb, struct pt_regs *regs)
 +{
-+	if (static_branch_unlikely(&sev_es_enable_key))
-+		__sev_es_nmi_complete();
-+}
- #else
- static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
- static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
-+static inline void sev_es_nmi_complete(void) { }
- #endif
- 
- #endif
-diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
-index c1dcf3e114e4..a7a3403645e5 100644
---- a/arch/x86/include/uapi/asm/svm.h
-+++ b/arch/x86/include/uapi/asm/svm.h
-@@ -84,6 +84,7 @@
- /* SEV-ES software-defined VMGEXIT events */
- #define SVM_VMGEXIT_MMIO_READ			0x80000001
- #define SVM_VMGEXIT_MMIO_WRITE			0x80000002
-+#define SVM_VMGEXIT_NMI_COMPLETE		0x80000003
- #define SVM_VMGEXIT_AP_HLT_LOOP			0x80000004
- #define SVM_VMGEXIT_AP_JUMP_TABLE		0x80000005
- #define SVM_VMGEXIT_SET_AP_JUMP_TABLE		0
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index 5859cec774a4..d961f1b3e251 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -478,6 +478,12 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
- {
- 	bool irq_state;
- 
-+	/*
-+	 * Re-enable NMIs right here when running as an SEV-ES guest. This might
-+	 * cause nested NMIs, but those can be handled safely.
-+	 */
-+	sev_es_nmi_complete();
-+
- 	if (IS_ENABLED(CONFIG_SMP) && arch_cpu_is_offline(smp_processor_id()))
- 		return;
- 
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 0b6c4f46ddfc..9ab3a4dfecd8 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -408,6 +408,24 @@ static bool vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- /* Include code shared with pre-decompression boot stage */
- #include "sev-es-shared.c"
- 
-+void __sev_es_nmi_complete(void)
-+{
-+	struct ghcb_state state;
-+	struct ghcb *ghcb;
-+
-+	ghcb = sev_es_get_ghcb(&state);
-+
-+	vc_ghcb_invalidate(ghcb);
-+	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_NMI_COMPLETE);
-+	ghcb_set_sw_exit_info_1(ghcb, 0);
-+	ghcb_set_sw_exit_info_2(ghcb, 0);
-+
-+	sev_es_wr_ghcb_msr(__pa(ghcb));
-+	VMGEXIT();
-+
-+	sev_es_put_ghcb(&state);
++	/* RAX and CPL are already in the GHCB */
++	ghcb_set_rbx(ghcb, regs->bx);
++	ghcb_set_rcx(ghcb, regs->cx);
++	ghcb_set_rdx(ghcb, regs->dx);
++	ghcb_set_rsi(ghcb, regs->si);
 +}
 +
- static u64 get_jump_table_addr(void)
- {
- 	struct ghcb_state state;
++static bool kvm_sev_es_hcall_finish(struct ghcb *ghcb, struct pt_regs *regs)
++{
++	/* No checking of the return state needed */
++	return true;
++}
++#endif
++
+ const __initconst struct hypervisor_x86 x86_hyper_kvm = {
+-	.name			= "KVM",
+-	.detect			= kvm_detect,
+-	.type			= X86_HYPER_KVM,
+-	.init.guest_late_init	= kvm_guest_init,
+-	.init.x2apic_available	= kvm_para_available,
+-	.init.init_platform	= kvm_init_platform,
++	.name				= "KVM",
++	.detect				= kvm_detect,
++	.type				= X86_HYPER_KVM,
++	.init.guest_late_init		= kvm_guest_init,
++	.init.x2apic_available		= kvm_para_available,
++	.init.init_platform		= kvm_init_platform,
++#if defined(CONFIG_AMD_MEM_ENCRYPT)
++	.runtime.sev_es_hcall_prepare	= kvm_sev_es_hcall_prepare,
++	.runtime.sev_es_hcall_finish	= kvm_sev_es_hcall_finish,
++#endif
+ };
+ 
+ static __init int activate_jump_labels(void)
 -- 
 2.28.0
 
