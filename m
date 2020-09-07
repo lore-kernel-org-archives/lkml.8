@@ -2,91 +2,99 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCFEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71596C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92D8820757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495921;
-	bh=oQutU7eoT4DFfkecRuD/WmWdYMLZJlQ9/R4YqBUhAgU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCheIw1bb3hCjUIeu7BogtBSEbXt6FIpKxNjaAUakNWpqjjeYBe8Hi9UsbA7MOOjo
-	 ZtvQHey1cpWcTSzRQLAlaRCS5AkWjKlW/BVb5TSWb1ZGzDvqFtHqaT7jsRVTcycxKA
-	 bt0XDPfrLJDUerBc3thQuvPGJEZM3f7z9MHxsxH4=
+	by mail.kernel.org (Postfix) with ESMTP id 35740206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g49FogxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbgIGQZU (ORCPT
+        id S1730588AbgIGQZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:25:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32814 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgIGQMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:12:43 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18BEF207DE;
-        Mon,  7 Sep 2020 16:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495163;
-        bh=oQutU7eoT4DFfkecRuD/WmWdYMLZJlQ9/R4YqBUhAgU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SHYWhNyqz/iY+3timtuojVIEZ3CNEAJ+Fr/n8RMz5apc1CZua9Lz/KBPEpWoebFc+
-         wqfw7dVGNSrjBREcVT7le9oozJm/yf9NOkC3Q8aCVrwq2/zxX2eXAqymf4ddfPDUAY
-         49a7cLoKYppZ3Wm0viNQsmDEMfAN10/9l+TW4jjw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: [PATCH 04/25] ARM: dts: s5pv210: fix pinctrl property of "vibrator-en" regulator in Aries
-Date:   Mon,  7 Sep 2020 18:11:20 +0200
-Message-Id: <20200907161141.31034-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
+        Mon, 7 Sep 2020 12:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729826AbgIGQMf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:12:35 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73993C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:12:35 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id v123so1555947qkd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WvmZn600MofrCps3XWIGrVo6oOPy1OACJfE+3g8CYWg=;
+        b=g49FogxWmUoGS9sBt6thrTNC76RLZknMUchZEhicseMdH8sp5fLU1fc5/SWbvAvnu+
+         mGiZPetkwTvzp3trEJrX110uD+CQB4WBgVeWwnHtPiBFYSmPdJcaYiO/zA95WvmqUsx9
+         EA/N9R/ftI8txfo7ENaXiTPdFTaedsxAabM58QWGpRUILOHofbgySEDoFpU04o8YNhgR
+         74M76gUEePsmMhIVZoZ2LQhxfk4KUq2GiI2XKdqx4t9OVwTiRwqcgg6a8h/VcJnhInut
+         L15+/ztJ2is8/XtEmp/7QcZys8IiXhh9JZ5zADiQvStOy6EScWqr1tp9ILktfnMwhuy7
+         cEXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=WvmZn600MofrCps3XWIGrVo6oOPy1OACJfE+3g8CYWg=;
+        b=JhM46uu99GDHfHfNgTUoplNeZh+N0EREHVqB3u7HGg1S9Zf6vD6Li7fPyZ/zqpKUVw
+         rvD/DhSkDcr5qPaJ8h6kJxS1o2f+KtTgegNNmafQcIQdnsUSkNxPjZUAMXFocn4eQcDV
+         tvrqMFcf9EKKXBpwrRLltJa+EOUwW7bv6+ZerFxZtPM3SvZYXtzX71VLrsl0x0F17u6I
+         QLNxau1T80c19OkvJWtAVcVurjc7u8O74xU5H2G0uCPkXwwA8D9JL5EujrtghfNmsREo
+         q4NbS2OdeUP3KKQjgSiwovKqD+nQPWZOuY6tYW8XF3wT8SmIBVIPSh7DmH2ecqoWX8qq
+         M91w==
+X-Gm-Message-State: AOAM530wvlDRAcXZBjnBuOmmvekYrrAEBwZVwbJYet2HPLs9Cb1t4MbQ
+        NRkdfD+2zSuRRPjejQI6JYc=
+X-Google-Smtp-Source: ABdhPJz86B9wIpFcAHJgj4+FBLduLncRx9Ylwf5JMcQJDvZyvyaA5eMhnRgju1FCv/rZaFAAQUKJUw==
+X-Received: by 2002:a37:6f41:: with SMTP id k62mr18933946qkc.241.1599495152873;
+        Mon, 07 Sep 2020 09:12:32 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o13sm10277412qtq.41.2020.09.07.09.12.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 09:12:32 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 7 Sep 2020 12:12:30 -0400
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/7] set clang minimum version to 10.0.1
+Message-ID: <20200907161230.GA2149325@rani.riverdale.lan>
+References: <20200902225911.209899-1-ndesaulniers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200902225911.209899-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix typo in pinctrl property of "vibrator-en" fixed regulator in Aries
-family of boards.  The error caused lack of pin configuration for the
-GPIO used in vibrator.
+On Wed, Sep 02, 2020 at 03:59:04PM -0700, Nick Desaulniers wrote:
+> Adds a compile time #error to compiler-clang.h setting the effective
+> minimum supported version to clang 10.0.1. A separate patch has already
+> been picked up into the Documentation/ tree also confirming the version.
+> 
 
-Fixes: 04568cb58a43 ("ARM: dts: s5pv210: Disable pull for vibrator enable GPIO on Aries boards")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s5pv210-aries.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Is 10.0.1 actually required or could it just check major version? I have
+10.0.0 currently and at least x86 seems to be building fine.
 
-diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-index a3f83f668ce1..6ba23562da46 100644
---- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-+++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-@@ -59,7 +59,7 @@
- 		gpio = <&gpj1 1 GPIO_ACTIVE_HIGH>;
- 
- 		pinctrl-names = "default";
--		pinctr-0 = <&vibrator_ena>;
-+		pinctrl-0 = <&vibrator_ena>;
- 	};
- 
- 	touchkey_vdd: regulator-fixed-1 {
--- 
-2.17.1
-
+Thanks.
