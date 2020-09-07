@@ -2,130 +2,113 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F448C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEEEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3F32145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 222432054F
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VocdMNhT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgIGQJw (ORCPT
+        id S1730357AbgIGQKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:09:52 -0400
-Received: from mx.socionext.com ([202.248.49.38]:4572 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbgIGQJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:09:18 -0400
-Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 08 Sep 2020 01:09:14 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 4D7AD1800E0;
-        Tue,  8 Sep 2020 01:09:14 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 8 Sep 2020 01:09:14 +0900
-Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
-        by iyokan.css.socionext.com (Postfix) with ESMTP id 2AC7340374;
-        Tue,  8 Sep 2020 01:09:14 +0900 (JST)
-Received: from [10.212.1.10] (unknown [10.212.1.10])
-        by yuzu.css.socionext.com (Postfix) with ESMTP id C8270120131;
-        Tue,  8 Sep 2020 01:09:12 +0900 (JST)
-Subject: Re: [PATCH v6 6/6] PCI: uniphier: Add error message when failed to
- get phy
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Marc Zyngier <maz@kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-References: <1596795922-705-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1596795922-705-7-git-send-email-hayashi.kunihiko@socionext.com>
- <CAL_JsqJhvpiAWfa7w4-85-GObkW+pq6PUpZUGg8Sc5p4+qsuQA@mail.gmail.com>
- <aadb805d-e5fb-438a-d7e1-4e1ad31ddbac@socionext.com>
- <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <a2d7953e-6434-bdb1-34bd-779a3fb11f58@socionext.com>
-Date:   Tue, 8 Sep 2020 01:09:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 7 Sep 2020 12:10:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729932AbgIGOdi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:33:38 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5055DC061573;
+        Mon,  7 Sep 2020 07:33:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id t23so16407734ljc.3;
+        Mon, 07 Sep 2020 07:33:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=62zNFkwm//4ntRqXyoEhNkr7gnf03DDFz7QWu/35PZQ=;
+        b=VocdMNhTjr1eQ4qg1fl2wRIHbb+HZvmt4o+WUEpVvs7y6bpPKjoa+HsJYFjpX0hSNH
+         hWqcUmXVgsFDbDOXLvQROEHE5nMX1iiaYDd6I4uVBj2xycK9KqqfOm++ygAmY9CYhpIt
+         T771ZjzgJtVyJ82GR+Ny0mULHLBstcRFrQWnLY+unp671gfIgtalUupR3U42juLLtP6h
+         2oE7Fh49ujqezOWYGqsCUNXvS7AYTMbdskXCWOFbFnKScOI+LxfV/w5HWoemgPB8fv+X
+         EUebjBQotKv3mkSLsiTGWeEiLqzHG/les2EHHR6wDI1/duG7A15HEtjoKQoIWPKaVsf0
+         f3ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=62zNFkwm//4ntRqXyoEhNkr7gnf03DDFz7QWu/35PZQ=;
+        b=gIvVq7VXpyIv+OF8BtYDOzSJplEUytPX7fuQ9DTdN/tBthD2lJ7HzZK0g7CcOhvhlk
+         G5aodTrRDAo4QiXERgmwDHslBb6uWq2gK4ChGocyesS95CaZEnLeVsdydQFM/intM4m5
+         wU5KfOQsZEkXxLPHx/pAuzWshFj68GvD9bWQhhq4+iNhHYeXWMe9E3SUixEiRhKfPVqk
+         gyvM33ty0LLCnNBI7hTJhWBt6D020bA5geKTJCvxm9uzQiadXpkeNDL6TOZcJw4FgFVq
+         BXoN5mH4rBgaBZmNwZHuEa4N6tkxhkOpsgavEJLgqQ090nfRJQK6GYTfwCcx3RFyexv4
+         MTow==
+X-Gm-Message-State: AOAM531+NWXOfiu1E/nCa7CgaYWMFdG5AIZ6mcQnMpxbmiMhx5ZmE4t7
+        cr7jCQMEws0ggj+gt+hSHMytAd3gC3g=
+X-Google-Smtp-Source: ABdhPJwC6KBpcYD8vM0x+aa2VAoR2OO3AIuOQ1WyISe8il59xTaXwK4vUu8B20fNP6s1lWCFHHeO1A==
+X-Received: by 2002:a2e:911:: with SMTP id 17mr11317863ljj.207.1599489209563;
+        Mon, 07 Sep 2020 07:33:29 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id n2sm6243490lji.97.2020.09.07.07.33.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 07:33:29 -0700 (PDT)
+Subject: Re: [PATCH v5 13/36] i2c: tegra: Clean up probe function
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200906185039.22700-1-digetx@gmail.com>
+ <20200906185039.22700-14-digetx@gmail.com>
+ <CAHp75Vfm24pNS_OR5m4DSuxLfH_XA+uzGhC_egk+41gCPchNjg@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <1477bf0e-5723-8781-05bd-0f30c0b9c3a7@gmail.com>
+Date:   Mon, 7 Sep 2020 17:33:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqKQ-jwgUst1PLM1jnoo8hiAap=D2jhKP-Z9YktiUgrU_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAHp75Vfm24pNS_OR5m4DSuxLfH_XA+uzGhC_egk+41gCPchNjg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 2020/09/04 7:25, Rob Herring wrote:
-> On Fri, Aug 21, 2020 at 1:05 AM Kunihiko Hayashi
-> <hayashi.kunihiko@socionext.com> wrote:
+07.09.2020 11:20, Andy Shevchenko пишет:
+> On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
 >>
->> On 2020/08/18 1:39, Rob Herring wrote:
->>> On Fri, Aug 7, 2020 at 4:25 AM Kunihiko Hayashi
->>> <hayashi.kunihiko@socionext.com> wrote:
->>>>
->>>> Even if phy driver doesn't probe, the error message can't be distinguished
->>>> from other errors. This displays error message caused by the phy driver
->>>> explicitly.
->>>>
->>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->>>> ---
->>>>    drivers/pci/controller/dwc/pcie-uniphier.c | 8 ++++++--
->>>>    1 file changed, 6 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> index 93ef608..7c8721e 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
->>>> @@ -489,8 +489,12 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
->>>>                   return PTR_ERR(priv->rst);
->>>>
->>>>           priv->phy = devm_phy_optional_get(dev, "pcie-phy");
->>>
->>> The point of the optional variant vs. devm_phy_get() is whether or not
->>> you get an error message. So shouldn't you switch to devm_phy_get
->>> instead?
->>>
->>>> -       if (IS_ERR(priv->phy))
->>>> -               return PTR_ERR(priv->phy);
->>>> +       if (IS_ERR(priv->phy)) {
->>>> +               ret = PTR_ERR(priv->phy);
->>>> +               if (ret != -EPROBE_DEFER)
->>>> +                       dev_err(dev, "Failed to get phy (%d)\n", ret);
->>>> +               return ret;
->>>> +       }
->>
->> The 'phys' property is optional, so if there isn't 'phys' in the PCIe node,
->> devm_phy_get() returns -ENODEV, and devm_phy_optional_get() returns NULL.
->>
->> When devm_phy_optional_get() replaces devm_phy_get(),
->> condition for displaying an error message changes to:
->>
->>      (ret != -EPROBE_DEFER && ret != -ENODEV)
->>
->> This won't be simple, but should it be replaced?
+>> The driver's probe function code is a bit difficult to read. This patch
+>> reorders code of the probe function, forming groups of code that are easy
+>> to work with. The reset_control_get() now may return -EPROBE_DEFER on
+>> newer Tegra SoCs because they use BPMP driver that provides reset controls
+>> and BPMP doesn't come up early during boot, previously rst was protected
+>> by other checks error checks in the code, hence dev_err_probe() is used
+>> now for the rst. The probe tear-down order now matches the driver-removal
+>> order.
 > 
-> Nevermind. I was thinking we had some error prints for the optional
-> vs. non-optional variants.
-I understand.
-As long as this phy is "optional", this doesn't need to print error message.
-Once I cancel this patch, and leave the phy as "optional".
+> Seems that partially this can be done in the patches that converted to
+> new/better APIs.
 
-Thank you,
+Okay, I'll split this patch a bit more.
 
----
-Best Regards
-Kunihiko Hayashi
+> Also consider the use of a temporary variable for struct device
+> pointer. It might make your life easier.
+
+Whole driver now uses i2c_dev->dev pattern and the "dev" variable
+originally was used for improving indentation of the error messages that
+are now gone. Hence there is no real need to keep the temporal variable,
+IMO.
