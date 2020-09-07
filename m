@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9FBC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7A8C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4B0217A0
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7D821897
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgIGVSU (ORCPT
+        id S1728130AbgIGVTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:18:20 -0400
-Received: from mail-il1-f208.google.com ([209.85.166.208]:33106 "EHLO
-        mail-il1-f208.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgIGVSQ (ORCPT
+        Mon, 7 Sep 2020 17:19:20 -0400
+Received: from mail-io1-f78.google.com ([209.85.166.78]:38525 "EHLO
+        mail-io1-f78.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726871AbgIGVTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:18:16 -0400
-Received: by mail-il1-f208.google.com with SMTP id c11so10616651ilm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 14:18:15 -0700 (PDT)
+        Mon, 7 Sep 2020 17:19:16 -0400
+Received: by mail-io1-f78.google.com with SMTP id e21so8564433iod.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 14:19:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=09pWBT/PP+tztnjAD+rcykPn+dW1XyQ4e9UmJXFSZJU=;
-        b=uVWEY929iYQPMX1To3i5V1c3ID++XticZkF1z/aX1NnJippIRrLtQAGw1kps8y2Jya
-         JCtBM0oz+JBJRKRHcK5hNj6bCvg1QN8B0iCjP/EE7cjBuYMfXRKHKajj3tkvyl6qpeEH
-         OVtUH5GuAaIZv2Qx6+on7dYFtWUq/BzBaEx7j22D8HaJApp1/f8yJsfkmGySN+IgjMgk
-         1AbkwWYghB7Drka3N9Zy2sYuQ+R3uxOl+ldzo9kv+k2XYG3s0v9toSRrTR7eBCiGQb0L
-         c7ZxOzVnmWYTcchxhzZLFxTcfTGTHm36b0vs6jFKYZlIyjhLwf9HQqO/OFWmn0NX5X82
-         PonQ==
-X-Gm-Message-State: AOAM532XuOWiVL1NQjujykcgdETW7BZ4pSRGA51FG3hAHe3jQ2R5/avG
-        BOGISy7g6rgMUyh4KHYhhfYXUx+EC3ttbjNcyXvIF2HfZs33
-X-Google-Smtp-Source: ABdhPJw8/0Pk2iEx+xwz3nBHrOjYz4yIcwj+fAcYO2wE+/5Rg3d3o/Pg2uCDoC+2doHombq06RVxXggAHy5inF/t7jmVaV0UqC8o
+        bh=PFTIS3gFr82ETlwYgwe1VRJ6YkDRdoRxI2tj6LLCPgo=;
+        b=iU8D+g7nVGfMfXa+RPXh/B/lWPkMX+SOZacRLnL/prnxBtSsZJk5wAlQFiUG/N1GHq
+         gNUxK15wREPzsUf9r/2imv7xCfQK1Rb4udLeu3YMeR1yzPjXIfcvF9MS2qLmPnPW0XVv
+         gHVUe3Dx116swwJZz+w5Nmf03JJ9eCiJUqD/3Oygdl/isac0P4sXsyMQduNLlOWb6uvH
+         vvvfkScocYSPRK0K23yys4svL8WIQ+FAyI/zmc6BFfY5cdvhokML3RDpkugTbKTYD9y8
+         PYJZRo35La5ObNkdNLneG9T9ifrd49xIgz0gQk97TyEiO2ALnPXtp5l2cMK0dRLiLU1c
+         WuTw==
+X-Gm-Message-State: AOAM5307FrrReeFVOFKAvqKMmncFqJz7MXnYPb4NKXjoQsBSkLJvtXKW
+        G30ToCFSPTJwnNtYXOnH2kIaXS22TNTSMQEo+Zg2cZzbYFUP
+X-Google-Smtp-Source: ABdhPJzptOXBHLwhGfFOSxFTtsWYVyJSiXHkMhLKYHZxhmxB51hK+7wGP5yMlnSDPzgICWv9Si2kcVXscSLWnpxxI2G8+jWU9jgJ
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8e14:: with SMTP id e20mr18339861iod.119.1599513495433;
- Mon, 07 Sep 2020 14:18:15 -0700 (PDT)
-Date:   Mon, 07 Sep 2020 14:18:15 -0700
+X-Received: by 2002:a92:d601:: with SMTP id w1mr20668148ilm.251.1599513555227;
+ Mon, 07 Sep 2020 14:19:15 -0700 (PDT)
+Date:   Mon, 07 Sep 2020 14:19:15 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b575ab05aebfc192@google.com>
-Subject: WARNING: refcount bug in qrtr_node_lookup
-From:   syzbot <syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com>
-To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000045d89d05aebfc579@google.com>
+Subject: WARNING: locking bug in __atomic_notifier_call_chain
+From:   syzbot <syzbot+ff42f38fc7fac3423b16@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, jroedel@suse.de,
+        linux-kernel@vger.kernel.org, luto@kernel.org,
+        nixiaoming@huawei.com, peterz@infradead.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,68 +59,84 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    9322c47b Merge tag 'xfs-5.9-fixes-2' of git://git.kernel.o..
+HEAD commit:    a8205e31 Merge tag 'io_uring-5.9-2020-09-06' of git://git...
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16cf729e900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e1c560d0f4e121c9
-dashboard link: https://syzkaller.appspot.com/bug?extid=c613e88b3093ebf3686e
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170c51a5900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=151a4245900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16f5880d900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9b0e48dac62b2233
+dashboard link: https://syzkaller.appspot.com/bug?extid=ff42f38fc7fac3423b16
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17734d95900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=167c90dd900000
 
-The issue was bisected to:
+Bisection is inconclusive: the issue happens on the oldest tested release.
 
-commit e42671084361302141a09284fde9bbc14fdd16bf
-Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Date:   Thu May 7 12:53:06 2020 +0000
-
-    net: qrtr: Do not depend on ARCH_QCOM
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10fd1a9e900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12fd1a9e900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14fd1a9e900000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13982159900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10582159900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17982159900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com
-Fixes: e42671084361 ("net: qrtr: Do not depend on ARCH_QCOM")
+Reported-by: syzbot+ff42f38fc7fac3423b16@syzkaller.appspotmail.com
 
 ------------[ cut here ]------------
-refcount_t: addition on 0; use-after-free.
-WARNING: CPU: 1 PID: 21 at lib/refcount.c:25 refcount_warn_saturate+0x13d/0x1a0 lib/refcount.c:25
+DEBUG_LOCKS_WARN_ON(chain_key != INITIAL_CHAIN_KEY)
+WARNING: CPU: 0 PID: 10424 at kernel/locking/lockdep.c:4404 __lock_acquire+0x1a0f/0x5570 kernel/locking/lockdep.c:4404
 Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 21 Comm: kworker/u4:1 Not tainted 5.9.0-rc3-syzkaller #0
+CPU: 0 PID: 10424 Comm:  Not tainted 5.9.0-rc3-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: qrtr_ns_handler qrtr_ns_worker
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1d6/0x29e lib/dump_stack.c:118
- panic+0x2c0/0x800 kernel/panic.c:231
- __warn+0x227/0x250 kernel/panic.c:600
- report_bug+0x1b1/0x2e0 lib/bug.c:198
- handle_bug+0x42/0x80 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x16/0x40 arch/x86/kernel/traps.c:254
+ dump_stack+0x198/0x1fd lib/dump_stack.c:118
+ panic+0x347/0x7c0 kernel/panic.c:231
+ __warn.cold+0x20/0x46 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:refcount_warn_saturate+0x13d/0x1a0 lib/refcount.c:25
-Code: c7 83 96 15 89 31 c0 e8 b1 34 a6 fd 0f 0b eb a3 e8 a8 94 d4 fd c6 05 04 8e ea 05 01 48 c7 c7 ba 96 15 89 31 c0 e8 93 34 a6 fd <0f> 0b eb 85 e8 8a 94 d4 fd c6 05 e7 8d ea 05 01 48 c7 c7 e6 96 15
-RSP: 0018:ffffc90000dd79c0 EFLAGS: 00010046
-RAX: eb7b51afe96d3100 RBX: 0000000000000002 RCX: ffff8880a9bf6580
-RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
-RBP: 0000000000000002 R08: ffffffff815e27d0 R09: ffffed1015d241c3
-R10: ffffed1015d241c3 R11: 0000000000000000 R12: ffff8880a761a898
-R13: 1ffff1101517fa56 R14: 0000000000000286 R15: ffff8880a761a800
- refcount_add include/linux/refcount.h:206 [inline]
- refcount_inc include/linux/refcount.h:241 [inline]
- kref_get include/linux/kref.h:45 [inline]
- qrtr_node_acquire net/qrtr/qrtr.c:196 [inline]
- qrtr_node_lookup+0xc0/0xd0 net/qrtr/qrtr.c:388
- qrtr_send_resume_tx net/qrtr/qrtr.c:980 [inline]
- qrtr_recvmsg+0x429/0xa80 net/qrtr/qrtr.c:1043
- qrtr_ns_worker+0x176/0x45f0 net/qrtr/ns.c:624
- process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
- worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
- kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Shutting down cpus with NMI
+RIP: 0010:__lock_acquire+0x1a0f/0x5570 kernel/locking/lockdep.c:4404
+Code: d2 0f 85 d1 2f 00 00 44 8b 3d d5 81 58 09 45 85 ff 0f 85 73 f3 ff ff 48 c7 c6 00 d4 4b 88 48 c7 c7 20 a8 4b 88 e8 43 32 eb ff <0f> 0b e9 5c f3 ff ff 48 c7 c2 60 31 97 8c 48 b8 00 00 00 00 00 fc
+RSP: 0018:ffffc900055472e0 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000007000000 RCX: 0000000000000000
+RDX: ffff888000132000 RSI: ffffffff815db9a7 RDI: fffff52000aa8e4e
+RBP: ffff8880001328e8 R08: 0000000000000000 R09: ffffffff89bcb4a3
+R10: 00000000000005a3 R11: 0000000000000001 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff888000132000 R15: 0000000000000000
+ lock_acquire+0x1f3/0xae0 kernel/locking/lockdep.c:5006
+ rcu_lock_acquire include/linux/rcupdate.h:241 [inline]
+ rcu_read_lock include/linux/rcupdate.h:634 [inline]
+ __atomic_notifier_call_chain+0x48/0x180 kernel/notifier.c:172
+ notify_write drivers/tty/vt/vt.c:264 [inline]
+ cr drivers/tty/vt/vt.c:1517 [inline]
+ vc_con_write_normal drivers/tty/vt/vt.c:2805 [inline]
+ do_con_write+0xed5/0x1d70 drivers/tty/vt/vt.c:2910
+ con_write+0x22/0xb0 drivers/tty/vt/vt.c:3250
+ process_output_block drivers/tty/n_tty.c:595 [inline]
+ n_tty_write+0x3ce/0xf80 drivers/tty/n_tty.c:2333
+ do_tty_write drivers/tty/tty_io.c:962 [inline]
+ tty_write+0x4d9/0x870 drivers/tty/tty_io.c:1046
+ __kernel_write+0x199/0x570 fs/read_write.c:528
+ write_pipe_buf+0x153/0x1f0 fs/splice.c:799
+ splice_from_pipe_feed fs/splice.c:502 [inline]
+ __splice_from_pipe+0x3dc/0x830 fs/splice.c:626
+ splice_from_pipe fs/splice.c:661 [inline]
+ default_file_splice_write fs/splice.c:811 [inline]
+ do_splice_from fs/splice.c:847 [inline]
+ direct_splice_actor+0x228/0x2f0 fs/splice.c:1016
+ splice_direct_to_actor+0x38c/0x980 fs/splice.c:971
+ do_splice_direct+0x1b3/0x280 fs/splice.c:1059
+ do_sendfile+0x55f/0xd40 fs/read_write.c:1540
+ __do_sys_sendfile64 fs/read_write.c:1601 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1587 [inline]
+ __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1587
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446ac9
+Code: Bad RIP value.
+RSP: 002b:00007f7bb7b3cd18 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 0000000000446ac9
+RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
+RBP: 00000000006dbc50 R08: 65732f636f72702f R09: 65732f636f72702f
+R10: 0800000080004103 R11: 0000000000000246 R12: 00000000006dbc5c
+R13: 00007f7bb7b3cd20 R14: 00007f7bb7b3cd20 R15: 20c49ba5e353f7cf
 Kernel Offset: disabled
 Rebooting in 86400 seconds..
 
