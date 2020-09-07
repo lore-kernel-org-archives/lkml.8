@@ -2,92 +2,126 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414A2C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3400C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0081D207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2B10215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="DJz1EeaE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rfNv3rGN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgIGWEZ (ORCPT
+        id S1727861AbgIGWQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:04:25 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45401 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727771AbgIGWEU (ORCPT
+        Mon, 7 Sep 2020 18:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgIGWQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:04:20 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DBF1A84487;
-        Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1599516254;
-        bh=7JNB/ELAvKPdDOSBGNHPPqtpnOjczRJOS+hfHYsRwmQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=DJz1EeaEyq9ne4h7WBSgn4dvh6B4K9N9mozgld+pnJFExoMHenZNO0lz6TSr8+71h
-         3Lngoamx7HLmX6dAIxb5V+ErlFdJTpsJrii19W+GmerlfY5Rpr51MPkPtZ+HMW9+tg
-         Kh+JxCxMS+8+1x+Hr0sBaFAeJy6lnJwBiS20DpyYKHE6WKdsWl9MTMIoBpjXREiQBL
-         v1GhXCaC0PXhZxfhEQJvDKb0HbMyjulT+fR0GYdEA2RNWJbAevd7upcetDaK42xoXB
-         KHeZP9d2lAaxDdz6D8oG8otkPjEPFv6JqWQ3nEHE8WsiK33I/qGQssh95SVIATD1vj
-         nC6vAr0xhSxGg==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f56ae5e0003>; Tue, 08 Sep 2020 10:04:14 +1200
-Received: from pauld-dl.ws.atlnz.lc (pauld-dl.ws.atlnz.lc [10.33.23.16])
-        by smtp (Postfix) with ESMTP id CD77913EF9B;
-        Tue,  8 Sep 2020 10:04:13 +1200 (NZST)
-Received: by pauld-dl.ws.atlnz.lc (Postfix, from userid 1684)
-        id 82EF91E0978; Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
-From:   Paul Davey <paul.davey@alliedtelesis.co.nz>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Davey <paul.davey@alliedtelesis.co.nz>
-Subject: [PATCH net-next v2 3/3] ipmr: Use full VIF ID in netlink cache reports
-Date:   Tue,  8 Sep 2020 10:04:08 +1200
-Message-Id: <20200907220408.32385-4-paul.davey@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
-References: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
+        Mon, 7 Sep 2020 18:16:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04605C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 15:16:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=y+jndXsSFHSqkdem4tICzGKtUuWGOW1XPa7G3+KJdlo=; b=rfNv3rGN+fxmp1UzL9RAptIeKY
+        H8JJ+Aq2w9k4kpGmAAi0ZBdPgm4sZ6r/aCJzWtz5bG4AYpNDBiznLIqWgt0Y3RuZY/T0F//bbA1iX
+        nY42XhJoLePtzqeCA+Pu0PE22oXzgKyj2Nk8uwf7ZT+gfQlzmGyjx7Zxbn0xiUv6QyIr4L0jNzF3R
+        Odp7tj2lWjJI+zGQpipKqjtCRfs7zpAfcggfaG4IQgex8Rb5YxWdA2XcixynkdsAzm9xoBYbGE2dQ
+        tSxQXNpJCQSZoHw8IDAyXMALKjRUDIosTTymQRi1aaaPyp0pKdmAL3+SWWXmz714iIWvPPFlf3uif
+        jYBIqbHw==;
+Received: from [2601:1c0:6280:3f0::1fce]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFPQh-0006JG-7l; Mon, 07 Sep 2020 22:16:03 +0000
+Subject: Re: [PATCH] <linux/page-isolation.h>: provide stubs for
+ MEMORY_ISOLATION not set (for Microblaze)
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Nazarewicz <mina86@mina86.com>,
+        Wen Congyang <wency@cn.fujitsu.com>,
+        Michal Simek <monstr@monstr.eu>,
+        Christoph Hellwig <hch@lst.de>,
+        kernel test robot <lkp@intel.com>
+References: <1f6b42e6-b6b5-40e3-92b4-77bd610d3e49@infradead.org>
+ <20200907070511.GN424181@linux.ibm.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8a1a155a-50ac-170f-13b2-01123bfc396f@infradead.org>
+Date:   Mon, 7 Sep 2020 15:15:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <20200907070511.GN424181@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Insert the full 16 bit VIF ID into ipmr Netlink cache reports.
+On 9/7/20 12:05 AM, Mike Rapoport wrote:
+> Hi Randy,
+> 
+> On Sun, Sep 06, 2020 at 12:33:08PM -0700, Randy Dunlap wrote:
+>> From: Randy Dunlap <rdunlap@infradead.org>
+>>
+>> Fix build errors in Microblaze when CONFIG_MEMORY_ISOLATION is not
+>> set/enabled by adding stubs for 3 missing functions.
+> 
+> I've tried to follow Kconfig dependencies to see how could we have both
+> CONTIG_ALLOC=y and CONFIG_MEMORY_ISOLATION=n and I could not find how
+> was this possible.
+> 
+> We have 
+> 
+> config CONTIG_ALLOC
+> 	def_bool (MEMORY_ISOLATION && COMPACTION) || CMA
+> 
+> and
+> 
+> config CMA
+> 	bool "Contiguous Memory Allocator"
+> 	depends on MMU
+> 	select MIGRATION
+> 	select MEMORY_ISOLATION
+> 
+> and alloc_contig_range() is hidden behind '#ifdef CONFIG_CONTIG_ALLOC'
+> 
+> In any rate, I think the better fix would be to update Kconfig
+> dependencies rather than add stubs for these functions.
 
-The VIF_ID attribute has 32 bits of space so can store the full VIF ID
-extracted from the high and low byte fields in the igmpmsg.
+OK, working on that. Should have something soon.
 
-Signed-off-by: Paul Davey <paul.davey@alliedtelesis.co.nz>
----
- net/ipv4/ipmr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
-index 4809318f591b..939792a38814 100644
---- a/net/ipv4/ipmr.c
-+++ b/net/ipv4/ipmr.c
-@@ -2432,7 +2432,7 @@ static void igmpmsg_netlink_event(struct mr_table *=
-mrt, struct sk_buff *pkt)
- 	rtgenm =3D nlmsg_data(nlh);
- 	rtgenm->rtgen_family =3D RTNL_FAMILY_IPMR;
- 	if (nla_put_u8(skb, IPMRA_CREPORT_MSGTYPE, msg->im_msgtype) ||
--	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, msg->im_vif) ||
-+	    nla_put_u32(skb, IPMRA_CREPORT_VIF_ID, msg->im_vif | (msg->im_vif_h=
-i << 8)) ||
- 	    nla_put_in_addr(skb, IPMRA_CREPORT_SRC_ADDR,
- 			    msg->im_src.s_addr) ||
- 	    nla_put_in_addr(skb, IPMRA_CREPORT_DST_ADDR,
---=20
-2.28.0
+>> Fixes these build errors:
+>>
+>> gcc-9.3.0-nolibc/microblaze-linux/bin/microblaze-linux-ld: mm/page_alloc.o: in function `alloc_contig_range':
+>> (.text+0xa0c0): undefined reference to `start_isolate_page_range'
+>> gcc-9.3.0-nolibc/microblaze-linux/bin/microblaze-linux-ld: (.text+0xa2bc): undefined reference to `test_pages_isolated'
+>> gcc-9.3.0-nolibc/microblaze-linux/bin/microblaze-linux-ld: (.text+0xa378): undefined reference to `undo_isolate_page_range'
+>>
+>> Fixes: 0815f3d81d76 ("mm: page_isolation: MIGRATE_CMA isolation functions added") # v3.10
+>> Fixes: b023f46813cd ("memory-hotplug: skip HWPoisoned page when offlining pages") # v3.10
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Michal Nazarewicz <mina86@mina86.com>
+>> Cc: Wen Congyang <wency@cn.fujitsu.com>
+>> Cc: Michal Simek <monstr@monstr.eu>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: linux-mm@kvack.org
+>> ---
+>>  include/linux/page-isolation.h |   16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
 
+
+-- 
+~Randy
