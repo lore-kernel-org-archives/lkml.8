@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29ACFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E35C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1782080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4DB208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497251;
-	bh=Cez5YrJMd+kRD6GKDOhBagZay32pDINJhG2yn//Ywjs=;
+	s=default; t=1599497256;
+	bh=Wvu8NGaWM525ZYiB8wDCt6ajdHm2w09PCo61MkOKhLI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WDTxZh1Xz8sFjDaQCxzsn2Q6eCHYLtAs/RkbDr3A69t6G0jGySlWY8vVMG9lLSZl7
-	 HNf7a+BpUq9hl0iskYA5myzTV4EouYv8A+hx6hc/pdUmz7I42zrgdzXoirWKZ3iSXj
-	 6f4BgXFt1i7ZmHx5wVwbuybe+He8WOe0FOTdgAMQ=
+	b=V8dr66IxOcd73p90+1AecUikOtfvHfncV7lifO7eLr5iCSG2y8ySkJjBG6N6Onp4x
+	 Efuuz+BIF5fW8L8MtzcZx4kuJW+4PdZQrx2R2AH4qqhN3oXMVZeAat/oYVdfR+C13Q
+	 Zh6VWGBlMQSH6qCsx1a5GnupLPOjQnYDSDC/ml4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbgIGQfU (ORCPT
+        id S1730917AbgIGQrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:35:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46948 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730372AbgIGQdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:11 -0400
+        id S1730815AbgIGQfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CBE21789;
-        Mon,  7 Sep 2020 16:33:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6D8721D94;
+        Mon,  7 Sep 2020 16:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496391;
-        bh=Cez5YrJMd+kRD6GKDOhBagZay32pDINJhG2yn//Ywjs=;
+        s=default; t=1599496519;
+        bh=Wvu8NGaWM525ZYiB8wDCt6ajdHm2w09PCo61MkOKhLI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZr+XwSSAKRIy8uDQkeQIwr5YI2rihR70lNYJD9PKtNHnTtLV2zfkwS1RNadGGUjK
-         6J/u9XIx5YIqx8AhGJFE+2KTcCwwWAZTW3UaA8prXdTVVaCrmM4odlweP6+mINp5CB
-         ekS3I8imtG7V8JaEpI6diayOgZUccY9OkpbEXmvk=
+        b=aSX6PHErAvmcusnqoaeg2dmdxVuqJYswp8tETIme3Wckk6Kgm8W8ywYkxV6exgKq8
+         yOFH6TfpNb8UR2dyJovoY2WSIG73Z2BMq4X0bFbR6LhCSyyYEigxzECDWETuUsFra9
+         VDZCJbkrpNeikmVM29eMKDaVbldQo7yx7veZSJFI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 40/53] HID: elan: Fix memleak in elan_input_configured
-Date:   Mon,  7 Sep 2020 12:32:06 -0400
-Message-Id: <20200907163220.1280412-40-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 14/17] cpufreq: intel_pstate: Refuse to turn off with HWP enabled
+Date:   Mon,  7 Sep 2020 12:34:57 -0400
+Message-Id: <20200907163500.1281543-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
+In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
+References: <20200907163500.1281543-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,42 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit b7429ea53d6c0936a0f10a5d64164f0aea440143 ]
+[ Upstream commit 43298db3009f06fe5c69e1ca8b6cfc2565772fa1 ]
 
-When input_mt_init_slots() fails, input should be freed
-to prevent memleak. When input_register_device() fails,
-we should call input_mt_destroy_slots() to free memory
-allocated by input_mt_init_slots().
+After commit f6ebbcf08f37 ("cpufreq: intel_pstate: Implement passive
+mode with HWP enabled") it is possible to change the driver status
+to "off" via sysfs with HWP enabled, which effectively causes the
+driver to unregister itself, but HWP remains active and it forces the
+minimum performance, so even if another cpufreq driver is loaded,
+it will not be able to control the CPU frequency.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+For this reason, make the driver refuse to change the status to
+"off" with HWP enabled.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-elan.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/cpufreq/intel_pstate.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
-index 45c4f888b7c4e..dae193749d443 100644
---- a/drivers/hid/hid-elan.c
-+++ b/drivers/hid/hid-elan.c
-@@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
- 	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
- 	if (ret) {
- 		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
-+		input_free_device(input);
- 		return ret;
- 	}
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 5c41dc9aaa46d..be1a7bb0b4011 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2098,9 +2098,15 @@ static int intel_pstate_update_status(const char *buf, size_t size)
+ {
+ 	int ret;
  
-@@ -198,6 +199,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
- 	if (ret) {
- 		hid_err(hdev, "Failed to register elan input device: %d\n",
- 			ret);
-+		input_mt_destroy_slots(input);
- 		input_free_device(input);
- 		return ret;
- 	}
+-	if (size == 3 && !strncmp(buf, "off", size))
+-		return intel_pstate_driver ?
+-			intel_pstate_unregister_driver() : -EINVAL;
++	if (size == 3 && !strncmp(buf, "off", size)) {
++		if (!intel_pstate_driver)
++			return -EINVAL;
++
++		if (hwp_active)
++			return -EBUSY;
++
++		return intel_pstate_unregister_driver();
++	}
+ 
+ 	if (size == 6 && !strncmp(buf, "active", size)) {
+ 		if (intel_pstate_driver) {
 -- 
 2.25.1
 
