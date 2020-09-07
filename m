@@ -2,92 +2,117 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E56BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F94C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03F2E206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J1vbJMbE";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VAeAUM/n"
+	by mail.kernel.org (Postfix) with ESMTP id CD83B21775
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:12:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599495128;
+	bh=EgcGYI2rVd7bR3g7yzbftA3wisdwdNpGYVOuaoZF1uw=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=TjxVB9urbVt825AJmJTEz7t4eI5GCQQTseo1jUAhK4ADnXmtHy4NU9jda0Sjt728X
+	 lLgI4tNFUpU4no/bqx+tPUAh+5n27X1ZxK3TqojH5IGpZi6gyPu5FePk8Gsqo9mfG8
+	 dDIAPyNjqh3PE+DFk3SJztdUSKgbsMgI4CJcp4WA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbgIGQLk (ORCPT
+        id S1730104AbgIGQMI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:11:40 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:51662
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730325AbgIGQKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:10:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599495022;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
-        bh=tmKlaoTHXAk+QasQrFJv6v7Tfa9NDk4PE0MTUqA22Ts=;
-        b=J1vbJMbENH6Bs+sgVFa8EpoQ9cXJ8vsDymjVzW9/qqV6GhDKfX8DsEFKYaNXON+h
-        qop0aTnVrt+TWIa8MKFxsZNxHbMPbsRn6VyLGAruK4UdnWRy6E54PFrkA5ph7kyJKUS
-        voPlLT6ZpXqtR6UXx30PMs0ybprlNaaGp/4NjU9o=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599495022;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
-        bh=tmKlaoTHXAk+QasQrFJv6v7Tfa9NDk4PE0MTUqA22Ts=;
-        b=VAeAUM/nm2zdP40yAwS9Zyv98nRBD9g1LS8XatLy9ilYu5Lk31ieVHr1H+YO/Bi5
-        R898j+V/Jj/Yz8ao3ESXR1hscwJ2cBkwjsGtPDvZVfsftMnB4qXM4Be6zmVDFL/DkXE
-        uH2VDDOYKmolhnZecK/npOB1YqLn7O1ZAbsrHj2w=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF339C3275D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rakesh Pillai <pillair@codeaurora.org>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ath10k <ath10k@lists.infradead.org>
-Subject: Re: [PATCH 0/2] ath10k: Add chain-1 voltage regulator voting
-References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
-        <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
-Date:   Mon, 7 Sep 2020 16:10:22 +0000
-In-Reply-To: <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
-        (Doug Anderson's message of "Mon, 24 Aug 2020 16:50:33 -0700")
-Message-ID: <01010174695526dd-c9cd10ce-a33e-438b-810d-df486ba002fb-000000@us-west-2.amazonses.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-SES-Outgoing: 2020.09.07-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Mon, 7 Sep 2020 12:12:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729821AbgIGQME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:12:04 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0689C206E6;
+        Mon,  7 Sep 2020 16:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599495124;
+        bh=EgcGYI2rVd7bR3g7yzbftA3wisdwdNpGYVOuaoZF1uw=;
+        h=From:To:Subject:Date:From;
+        b=pxiV/AJBlGNy8ZHR6Z8x38a0poEEfzUKVHS7Cb32JKvz1ZgEt5gBx7TC3Q7J3BN8N
+         rXRiyTmTsFpe9mITp5oU0WNAHgxcrxI+NUd2HmwG3HZtIt1Ahwp0Jc2Ii0nYuvRoJ/
+         Pa7gelW4fJ1U+9Az06VsxsOKUk2phXa5amm7OPC0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: [PATCH 00/25] ARM: dts: s5pv210: Cleanup - dtschema warnings
+Date:   Mon,  7 Sep 2020 18:11:16 +0200
+Message-Id: <20200907161141.31034-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doug Anderson <dianders@chromium.org> writes:
+Hi
 
-> Hi,
->
-> On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
->>
->> Add the support to vote for the chain-1
->> voltage regulator for WCN3990. This is
->> added as an optional property.
->>
->> Rakesh Pillai (2):
->>   dt: bindings: Add new regulator as optional property for WCN3990
->>   ath10k: Add support for chain1 regulator supply voting
->>
->>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
->>  drivers/net/wireless/ath/ath10k/snoc.c                         | 1 +
->>  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> This series is marked as "Awaiting Upstream" in patchwork.  I don't
-> see anything blocking it landing now.
+The patchset tries to remove most of the dtschema warnings.  Due to lack
+of hardware it was not tested.
 
-Thanks, moved it to New state now.
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (25):
+  dt-bindings: samsung: pmu: document S5Pv210
+  dt-bindings: iio: adc: exynos-adc: require second interrupt with touch
+    screen
+  dt-bindings: iio: adc: exynos-adc: do not require syscon on S5Pv210
+  ARM: dts: s5pv210: fix pinctrl property of "vibrator-en" regulator in
+    Aries
+  ARM: dts: s5pv210: remove DMA controller bus node name to fix dtschema
+    warnings
+  ARM: dts: s5pv210: move fixed clocks under root node
+  ARM: dts: s5pv210: move PMU node out of clock controller
+  ARM: dts: s5pv210: remove dedicated 'audio-subsystem' node
+  ARM: dts: s5pv210: fix number of I2S DAI cells
+  ARM: dts: s5pv210: add RTC 32 KHz clock in Aquilla
+  ARM: dts: s5pv210: add RTC 32 KHz clock in Aries family
+  ARM: dts: s5pv210: add RTC 32 KHz clock in Goni
+  ARM: dts: s5pv210: add RTC 32 KHz clock in SMDKC110
+  ARM: dts: s5pv210: add RTC 32 KHz clock in SMDKV210
+  ARM: dts: s5pv210: add RTC 32 KHz clock in Torbreck
+  ARM: dts: s5pv210: use defines for GPIO flags in Aquila
+  ARM: dts: s5pv210: use defines for GPIO flags in Goni
+  ARM: dts: s5pv210: use defines for IRQ flags in SMDKV210
+  ARM: dts: s5pv210: use defines for IRQ flags in Goni
+  ARM: dts: s5pv210: move fixed regulators under root node in Aquila
+  ARM: dts: s5pv210: move fixed regulators under root node in Goni
+  ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in
+    Aquila
+  ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in
+    Goni
+  ARM: dts: s5pv210: align SPI GPIO node name with dtschema in Aries
+  ARM: dts: s5pv210: align DMA channels with dtschema
+
+ .../devicetree/bindings/arm/samsung/pmu.yaml  |   2 +
+ .../bindings/iio/adc/samsung,exynos-adc.yaml  |  16 +-
+ arch/arm/boot/dts/s5pv210-aquila.dts          |  73 ++++----
+ arch/arm/boot/dts/s5pv210-aries.dtsi          |  16 +-
+ arch/arm/boot/dts/s5pv210-fascinate4g.dts     |   2 +-
+ arch/arm/boot/dts/s5pv210-galaxys.dts         |   2 +-
+ arch/arm/boot/dts/s5pv210-goni.dts            |  97 +++++-----
+ arch/arm/boot/dts/s5pv210-smdkc110.dts        |   9 +
+ arch/arm/boot/dts/s5pv210-smdkv210.dts        |  12 +-
+ arch/arm/boot/dts/s5pv210-torbreck.dts        |   9 +
+ arch/arm/boot/dts/s5pv210.dtsi                | 175 ++++++++----------
+ 11 files changed, 230 insertions(+), 183 deletions(-)
 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
+
