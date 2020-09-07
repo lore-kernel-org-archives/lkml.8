@@ -2,144 +2,100 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C57A8C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 099C4C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCD4208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E4E2137B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ytdkogj/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbgIGRtJ (ORCPT
+        id S1731319AbgIGRtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:49:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42086 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbgIGMj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:39:27 -0400
-IronPort-SDR: WBEeyuFP8hGcnGsYKszVJMrEVm9/hhP4MDtGgH+RcJ3+i9c6cGVDKB5VispU5Masx/ZkLI2FqZ
- iizPQrDHofpg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="242811803"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="242811803"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 05:38:43 -0700
-IronPort-SDR: b9BfZlr40QZ2qISx/JXwCtkBAzS5PgLGV5xflcnOM8vMWXear5QSlnH4ccfPIOpexgx7jr18OP
- bYmVrfDS4+yA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="333151425"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 05:38:40 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFGPt-00Ewye-H3; Mon, 07 Sep 2020 15:38:37 +0300
-Date:   Mon, 7 Sep 2020 15:38:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for
- gpio-mockup
-Message-ID: <20200907123837.GG1891694@smile.fi.intel.com>
-References: <20200904154547.3836-1-brgl@bgdev.pl>
- <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org>
- <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com>
- <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+        Mon, 7 Sep 2020 13:49:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729212AbgIGMgx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:36:53 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A143C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:36:53 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o5so15607244wrn.13
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:36:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cqFMV15+ncKbqbkS4rVaONwxjHJHpxU0h6ADgIa+Z0A=;
+        b=Ytdkogj/FxZPspswI944ZPcLbsutNDXJrlYzv30IZRXro+wphhZ7PvwcYfnJRJzjIx
+         s75ETcQTuUJ8NNe2sic0iOG3MMMnBSqgF13pBu4txpvZFjikm6UA5tLJLLk+Y8svAkjK
+         Z4X/f15mhhpq+73D3DFlce9xxFWpwjW4n7yRPEY3bwEEZeUzDpkPbO4kFFXx0SNzouLC
+         kjFo1P0XR8lmeCJnUGGu9Z6Vy5eZl4Mdl6ErHR2gA0m9LDTSuU1zVTowmjnTp8MnJ8vA
+         Gg5xzBuDnxiDAPSSl28ZKMla3iXO+DznonLNjF9EF7pCJsG9fh2w9zcNUGySnCHQzMY7
+         LtqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cqFMV15+ncKbqbkS4rVaONwxjHJHpxU0h6ADgIa+Z0A=;
+        b=goVmkMUBu1PAaI0ViKBHLMQJZCIwDaQhv6t2KqZVW3W78E+AaTduPWxL7QgcFwefvm
+         PR4RqQHXnz78B75ji0WtZXUF2k7J5bM5zeettu3ox3kfduZcyCaY/+Bj9gw8z3m4qnQO
+         mrpkjQT6u8kX6oNfIfMuxvHCg8Ru+eU/TLDVPvt9EW3sc7GxaaXHSUBm1XLHfHsSVt4Q
+         V93dqfC5OvG8L0mlM+g3x7VBacM12MYD2IJI3aAXM4zjux7AFnYkiCh934fPwEooTuSJ
+         Zss21OLScF6zpHrATXrom6zC58esk7FYToG2UVr+v0eB8gm+oe16YVppfVLSXh/EzCAC
+         e6Fg==
+X-Gm-Message-State: AOAM531+q+KF02H4V7XKXkWXKM8DjQvnTY4HnF+nerw5vXSZ3S+QSsod
+        pvC63awRhexi713qS7EQ8o6h2hCXqx3XjQ==
+X-Google-Smtp-Source: ABdhPJzQe5EfAU2q9xGZLtiNTjwaCpqPJTnKV5+qPIuoluAHp8SC/Sa/9E3K2d5sr2tXrTy0rFiyKA==
+X-Received: by 2002:adf:e583:: with SMTP id l3mr21112729wrm.72.1599482211454;
+        Mon, 07 Sep 2020 05:36:51 -0700 (PDT)
+Received: from [192.168.86.34] (cpc86377-aztw32-2-0-cust226.18-1.cable.virginm.net. [92.233.226.227])
+        by smtp.googlemail.com with ESMTPSA id z13sm28535545wro.97.2020.09.07.05.36.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Sep 2020 05:36:50 -0700 (PDT)
+Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901003300.11985-1-jonathan@marek.ca>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <fa436d55-b986-944f-e90f-b81cb32eeb0e@linaro.org>
+Date:   Mon, 7 Sep 2020 13:36:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200901003300.11985-1-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Sep 7, 2020 at 1:53 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Sep 07, 2020 at 12:26:34PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Sep 7, 2020 at 11:59 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, Sep 04, 2020 at 08:15:59PM -0700, Randy Dunlap wrote:
-> > > > > On 9/4/20 8:45 AM, Bartosz Golaszewski wrote:
-
-...
-
-> > > > > > +GPIO Testing Driver
-> > > > > > +===================
-> > > > > > +
-> > > > > > +The GPIO Testing Driver (gpio-mockup) provides a way to create simulated GPIO
-> > > > > > +chips for testing purposes. There are two ways of configuring the chips exposed
-> > > > > > +by the module. The lines can be accessed using the standard GPIO character
-> > > > > > +device interface as well as manipulated using the dedicated debugfs directory
-> > > > > > +structure.
-> > > > >
-> > > > > Could configfs be used for this instead of debugfs?
-> > > > > debugfs is ad hoc.
-> > > >
-> > > > Actually sounds like a good idea.
-> > > >
-> > >
-> > > Well, then we can go on and write an entirely new mockup driver
-> > > (ditching module params and dropping any backwards compatibility)
-> > > because we're already using debugfs for line values.
-> > >
-> > > How would we pass the device properties to configfs created GPIO chips
-> > > anyway? Devices seem to only be created using mkdir. Am I missing
-> > > something?
-> >
-> > Same way how USB composite works, no?
-> >
-> 
-> OK, so create a new chip directory in configfs, configure it using
-> some defined configfs attributes and then finally instantiate it from
-> sysfs?
-> 
-> Makes sense and is probably the right way to go. Now the question is:
-> is it fine to just entirely remove the previous gpio-mockup?
-
-Since, for example, I never saw device property bindings for that driver I
-assume that it was never considered as an ABI, so feel free to hack it in
-either direction.
-
-> Should we
-> keep some backwards compatibility?
-
-I wouldn't probably spend time on this.
-
-> Should we introduce an entirely new
-> module and have a transition period before removing previous
-> gpio-mockup?
-
-Neither transition period.
-
-> Also: this is a testing module so to me debugfs is just fine. Is
-> configfs considered stable ABI like sysfs?
-
-But this one is a good question. I think ConfigFS is stricter than DebugFS,
-up to being an ABI. But never did myself such a thing, so would like to hear
-experienced developers.
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
+On 01/09/2020 01:32, Jonathan Marek wrote:
+> -#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct fastrpc_req_mmap)
+> -#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct fastrpc_req_munmap)
+> +#define FASTRPC_IOCTL_MMAP		_IOWR('R', 6, struct fastrpc_req_mmap)
+> +#define FASTRPC_IOCTL_MUNMAP		_IOWR('R', 7, struct fastrpc_req_munmap)
+
+Looks like changes that do not belong to this patch!
+
+I wanted to try this patch on SM8250.
+How do you test attaching fastrpc to sensor core?, I mean which 
+userspace lib/tool do you use?
+
+--srini
+
+> +#define FASTRPC_IOCTL_INIT_ATTACH_SNS	_IO('R', 8)
