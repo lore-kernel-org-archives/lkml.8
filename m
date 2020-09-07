@@ -2,151 +2,138 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C42B5C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B02BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8007820757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 325A1207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:30:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cdboRjN+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uOj4oOeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgIGQaf (ORCPT
+        id S1730515AbgIGQaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:30:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:30117 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729848AbgIGO0R (ORCPT
+        Mon, 7 Sep 2020 12:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729812AbgIGOZu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:26:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599488764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zTmBPadsM0369P4dgmmlV6u5vQHhp1sa+9yqI7VZ1Zk=;
-        b=cdboRjN+jFkmDdy3Ss9SYupEsnkOd8kYKVAtUv3NAf0u2/OPLK9mR5WOoT4SCF+4q2xmE+
-        Me+C7zJ9aqUOFGEtBiq7hVMafl9cp7HMIJY9zRqPqNUzNQ8jU6rF1WYjMBSKdkNsfOAso9
-        I+wsQXhmbZNMI2n9rWDKvEQU2XLODug=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-60pEeXMKMmyWVfkLA9jJHg-1; Mon, 07 Sep 2020 10:26:02 -0400
-X-MC-Unique: 60pEeXMKMmyWVfkLA9jJHg-1
-Received: by mail-qv1-f71.google.com with SMTP id bo17so7694018qvb.2
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 07:26:02 -0700 (PDT)
+        Mon, 7 Sep 2020 10:25:50 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5273C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 07:25:49 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id u4so15463537ljd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 07:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hVM3Bwa+7CBJ1tm/Y8nBpr8saRwPz4svplyjBBrsC0U=;
+        b=uOj4oOeWuxxaOC3HiEmLRokBFD2dg7nD1Pl4YXtz7g4VAxKf1FMy8miJkKwkZe9LAT
+         xzxye6K/Bk5OHtZ98rqpxm/YaCQhrhfulRoJoealMpHCYsSDKPrIjL782JpI792BfNJH
+         Z1bxAJ9YP/+aZEbgwAV2/NM2D0sewEHFqEn1d5hL15DZyck5+AH5kuNPqDFtqobndW4q
+         kqcRMHkAMintNj6zTEb+qQKL1supzKdRvXIYPA64AJL+dKfCvgfdARuLodImftyU/JcB
+         d+u9lJqZiw8hXMILJNLkpJ/kAPeTFBR37LGdQA16PFdzc6KrD5Rft9Z6D8+Oj6Ja/5uS
+         TIgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=zTmBPadsM0369P4dgmmlV6u5vQHhp1sa+9yqI7VZ1Zk=;
-        b=soK4JKzoaYaJis5v/SMOP+LwRzNR814yFx72O3tmNrdTxjJaVFIoRS/W/lrPgrFHZ6
-         s6seUqEivSd/YJkW3dFC+tEegJLnuT0A95TC8DZoJoOVESQxQ9vanGwcyqXixaPk+VvB
-         tHvPIThr/7Qsd/X3+5U1rqEm0yeMbptXxRa+mJlww6UWiB59bi/X7Ago3LyW+n2UFgiE
-         Yxkb6rSaahuTjXOibrYwQk3HjKtYKAzRiCIDr7fP2Iw6oSaF9DMH8qaCT0DE4BoW2YJB
-         uD2qSE4lbQ7qnGBABVcsDEOJhRjdJkA3xiMOLYmE1bI8drPZQ2pm5TDLo8aP2OhOO42x
-         iYjQ==
-X-Gm-Message-State: AOAM532zC17SObsR4HwktQEZ+RxuL+YFcq+WU/wtKkZzDZulvSAv1kBL
-        YWPzHn1ExMCyDZiJGlPE0RZWj+OvXHjbZ4WyshvhX7qxjPmptDxSp1ZeQxCwR9xvu+2IpfjsKnU
-        WCSefkOVnoSbEVk3FgRrSJ5Zr
-X-Received: by 2002:ac8:501:: with SMTP id u1mr21438779qtg.261.1599488762420;
-        Mon, 07 Sep 2020 07:26:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhGRYnA5hTdPLhq0TFkWqjOkagkQnP39SW4Ctvj8U0kr+dtoORI0W4y5NuudcQmcnN+v9EwA==
-X-Received: by 2002:ac8:501:: with SMTP id u1mr21438763qtg.261.1599488762185;
-        Mon, 07 Sep 2020 07:26:02 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k48sm12271020qtk.44.2020.09.07.07.26.00
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hVM3Bwa+7CBJ1tm/Y8nBpr8saRwPz4svplyjBBrsC0U=;
+        b=Fy5po9oGwHOGzmMlgTW8aiQO5Qm1jgU/+9VGR4LItRsYkBDrUFmrQM6imsHk9pRMK4
+         hTSy2VevjoxTUXHHqKK/eIFyna/vGkOjh/GQ/FBsaKrXaH+ObISuC76hKKgSoPahonDG
+         7Rkx/RCkBelcK3R/FZHxOulgdkoicRJqir1YDPfM1seemY3EjTWD/xCjkw4R7z++idN5
+         LTUtKoyDrvH46vHmi+TJGIz8eRQkvcfJIyPsdShai++VstbBSDIrzI7x3zJepkdcXKry
+         WL0D2H6r+Bp1oHJEXA2GdWPnuP0u3YcprFjA8lHcikMc1h4job9bzJLZ9QhombCWb2jB
+         UYJQ==
+X-Gm-Message-State: AOAM532feprlO4pu9T5/GgV9l0oxIVfndbPHqsXAhhpvvpcK4K6cl6+P
+        p5woz9+3CB4xuijUHJNALqpO7A==
+X-Google-Smtp-Source: ABdhPJygP+SYAnnRaMnSoWu4qiJ84OSHZbWcft2WovB1SA5iKRJc85ubCtTQ2w1xI5K+uszGHMBeCg==
+X-Received: by 2002:a2e:7e12:: with SMTP id z18mr9706298ljc.388.1599488748047;
+        Mon, 07 Sep 2020 07:25:48 -0700 (PDT)
+Received: from [192.168.1.211] ([188.162.64.144])
+        by smtp.gmail.com with ESMTPSA id f25sm5577940ljn.29.2020.09.07.07.25.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 07:26:01 -0700 (PDT)
-Subject: Re: [PATCH] soundwire: stream: fix an invalid free
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     yung-chuan.liao@linux.intel.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        guennadi.liakhovetski@linux.intel.com,
-        kai.vehmanen@linux.intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200905192613.420-1-trix@redhat.com>
- <20200907141402.GC2639@vkoul-mobl>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <93b672ef-76c9-e87c-4526-897b0af01945@redhat.com>
-Date:   Mon, 7 Sep 2020 07:25:59 -0700
+        Mon, 07 Sep 2020 07:25:47 -0700 (PDT)
+Subject: Re: [PATCH v2 0/7] SM8150 and SM8250 dispcc drivers
+To:     Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Taniya Das <tdas@codeaurora.org>
+References: <20200903222620.27448-1-jonathan@marek.ca>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Message-ID: <fd5fbe73-e2a5-d877-743c-ad7cc6110483@linaro.org>
+Date:   Mon, 7 Sep 2020 17:25:45 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <20200907141402.GC2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200903222620.27448-1-jonathan@marek.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 04/09/2020 01:26, Jonathan Marek wrote:
+> Add display clock drivers required to get DSI and DP displays working on
+> SM8150 and SM8250 SoCs.
+> 
+> Derived from downstream drivers. Notable changes compared to downstream:
+>   - EDP clks removed (nothing uses these even in downstream it seems)
+>   - freq_tbl values for dp_link clk is in Hz and not kHz
 
-On 9/7/20 7:14 AM, Vinod Koul wrote:
-> Hello Tom,
->
-> On 05-09-20, 12:26, trix@redhat.com wrote:
->> From: Tom Rix <trix@redhat.com>
->>
->> clang static analyzer reports this problem
->>
->> stream.c:872:2: warning: Argument to kfree() is a constant
->>   address (18446744073709551092), which is not memory
->>   allocated by malloc()
->>         kfree(stream);
->>         ^~~~~~~~~~~~~
->>
->> In sdw_shutdown_stream() the stream to free is set by
->> a call to snd_soc_dai_get_sdw_stream().  The problem block
->> is the check if the call was successful.
->>
->> 	if (!sdw_stream) {
->> 		dev_err(rtd->dev, "no stream found...
->> 		return;
->> 	}
->>
->> When snd_soc_dai_get_sdw_stream() fails, it does not
->> always return null, sometimes it returns -ENOTSUPP.
->>
->> So also check for error codes.
->> Fixes: 4550569bd779 ("soundwire: stream: add helper to startup/shutdown streams")
->> Signed-off-by: Tom Rix <trix@redhat.com>
->> ---
->>  drivers/soundwire/stream.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
->> index 6e36deb505b1..950231d593c2 100644
->> --- a/drivers/soundwire/stream.c
->> +++ b/drivers/soundwire/stream.c
->> @@ -1913,7 +1913,7 @@ void sdw_shutdown_stream(void *sdw_substream)
->>  
->>  	sdw_stream = snd_soc_dai_get_sdw_stream(dai, substream->stream);
->>  
->> -	if (!sdw_stream) {
->> +	if (IS_ERR_OR_NULL(sdw_stream)) {
-> Thanks for the patch. Please see commit 3471d2a192ba ("soundwire:
-> stream: fix NULL/IS_ERR confusion") in soundwire-next. This has already
-> been updated to IS_ERR() and Bard has already sent patches for
-> snd_soc_dai_get_sdw_stream() to return proper values.
->
-> So I you can rerun this on next, you should see this fixed.
 
-I am working on linux-next, so I will see Bard's patch when it lands there.
+On SM8250:
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Sorry for not working on soundwire-next, but since i am fixing everywhere linux-next is easiest. 
+> 
+> v2:
+>   - updated dts example to reflect the change (first patch)
+>   - updated config_ctl_hi1_val in sm8250 dispcc to latest downstream
+> 
+> Jonathan Marek (7):
+>    dt-bindings: clock: sdm845-dispcc: same name for dp_phy clocks as
+>      sc7180
+>    arm64: dts: qcom: sdm845-dispcc: same name for dp_phy clocks as sc7180
+>    dt-bindings: clock: combine qcom,sdm845-dispcc and qcom,sc7180-dispcc
+>    dt-bindings: clock: Introduce QCOM SM8150 display clock bindings
+>    dt-bindings: clock: Introduce QCOM SM8250 display clock bindings
+>    clk: qcom: Add display clock controller driver for SM8150
+>    clk: qcom: Add display clock controller driver for SM8250
+> 
+>   ...om,sdm845-dispcc.yaml => qcom,dispcc.yaml} |   30 +-
+>   .../bindings/clock/qcom,sc7180-dispcc.yaml    |   86 --
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi          |    4 +-
+>   drivers/clk/qcom/Kconfig                      |   18 +
+>   drivers/clk/qcom/Makefile                     |    2 +
+>   drivers/clk/qcom/dispcc-sm8150.c              | 1152 +++++++++++++++++
+>   drivers/clk/qcom/dispcc-sm8250.c              | 1100 ++++++++++++++++
+>   .../dt-bindings/clock/qcom,dispcc-sm8150.h    |   69 +
+>   .../dt-bindings/clock/qcom,dispcc-sm8250.h    |   66 +
+>   9 files changed, 2428 insertions(+), 99 deletions(-)
+>   rename Documentation/devicetree/bindings/clock/{qcom,sdm845-dispcc.yaml => qcom,dispcc.yaml} (75%)
+>   delete mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-dispcc.yaml
+>   create mode 100644 drivers/clk/qcom/dispcc-sm8150.c
+>   create mode 100644 drivers/clk/qcom/dispcc-sm8250.c
+>   create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8150.h
+>   create mode 100644 include/dt-bindings/clock/qcom,dispcc-sm8250.h
+> 
 
-Thank you for the update.
 
-Tom
-
->
-
+-- 
+With best wishes
+Dmitry
