@@ -2,87 +2,121 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422DBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CFEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4FA21707
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B876B21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgIGOY0 (ORCPT
+        id S1729865AbgIGO3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:24:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:36936 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729764AbgIGOVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:21:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6125C31B;
-        Mon,  7 Sep 2020 07:18:30 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 11A973F73C;
-        Mon,  7 Sep 2020 07:18:28 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 15:18:21 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH v2][next] PCI: rcar-gen2: Use fallthrough pseudo-keyword
-Message-ID: <20200907141821.GA9474@e121166-lin.cambridge.arm.com>
-References: <20200722032851.GA4251@embeddedor>
+        Mon, 7 Sep 2020 10:29:51 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:46885
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729786AbgIGOWH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:22:07 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="358301232"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 16:18:57 +0200
+Date:   Mon, 7 Sep 2020 16:18:56 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Dejin Zheng <zhengdejin5@gmail.com>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        Denis Efremov <efremov@linux.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_Coccinelle=3A_api=3A_Add_SmPL_scr?=
+ =?UTF-8?Q?ipt_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget=5Fand=5Fioremap=5Fre?=
+ =?UTF-8?Q?source=2Ecocci=E2=80=9D?=
+In-Reply-To: <8aaa799f-0ec4-cfd0-854a-e1006d0d200a@web.de>
+Message-ID: <alpine.DEB.2.22.394.2009071618200.2476@hadrien>
+References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <alpine.DEB.2.22.394.2009071357140.2476@hadrien> <477abcea-e008-e509-d03f-f2753ebdfb20@web.de> <alpine.DEB.2.22.394.2009071506350.2476@hadrien>
+ <46d314d5-822e-3d73-2d70-015794556e56@web.de> <alpine.DEB.2.22.394.2009071544460.2476@hadrien> <8aaa799f-0ec4-cfd0-854a-e1006d0d200a@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722032851.GA4251@embeddedor>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/mixed; boundary="8323329-540454265-1599488337=:2476"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jul 21, 2020 at 10:28:51PM -0500, Gustavo A. R. Silva wrote:
-> Replace the existing /* fall through */ comments and its variants with
-> the new pseudo-keyword macro fallthrough[1].
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v2:
->  - Update URL. Use proper URL to Linux v5.7 documentation.
->  - Add Geert's Reviewed-by tag.
->  - Update changelog text.
-> 
->  drivers/pci/controller/pci-rcar-gen2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Applied to pci/rcar, thanks.
+--8323329-540454265-1599488337=:2476
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Lorenzo
 
-> diff --git a/drivers/pci/controller/pci-rcar-gen2.c b/drivers/pci/controller/pci-rcar-gen2.c
-> index 326171cb1a97..2ec7093a7588 100644
-> --- a/drivers/pci/controller/pci-rcar-gen2.c
-> +++ b/drivers/pci/controller/pci-rcar-gen2.c
-> @@ -228,7 +228,7 @@ static int rcar_pci_setup(int nr, struct pci_sys_data *sys)
->  		pr_warn("unknown window size %ld - defaulting to 256M\n",
->  			priv->window_size);
->  		priv->window_size = SZ_256M;
-> -		/* fall-through */
-> +		fallthrough;
->  	case SZ_256M:
->  		val |= RCAR_USBCTR_PCIAHB_WIN1_256M;
->  		break;
-> -- 
-> 2.27.0
-> 
+
+On Mon, 7 Sep 2020, Markus Elfring wrote:
+
+> >>>>>> +@replacement depends on patch@
+> >>>>>> +expression base, device1, device2, index, private, resource;
+> >>>>>> +@@
+> >>>>>> +(
+> >>>>>> +-resource = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >>>>>> + base =
+> >>>>>> +-       devm_ioremap_resource
+> >>>>>> ++       devm_platform_get_and_ioremap_resource
+> >>>>>> +                             (
+> >>>>>> +-                             &
+> >>>>>> +                               device1
+> >>>>>> +-                                     ->dev
+> >>>>>> +                              ,
+> >>>>>> +-                             resource
+> >>>>>> ++                             index, &resource
+> >>>>>> +                             );
+> >>>>>> +|
+> >>>>>> +-private->res = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >>>>>> + base =
+> >>>>>> +-       devm_ioremap_resource
+> >>>>>> ++       devm_platform_get_and_ioremap_resource
+> >>>>>> +                             (device2,
+> …
+> >> Both source code change patterns from these branches of a SmPL disjunction
+> >> work as I would expect it by the current Coccinelle software.
+> >> Would you like to clarify any remaining related open issues?
+> >
+> > In one case the first argument of devm_ioremap_resource has to be changed
+> > to produce the first argument of devm_platform_get_and_ioremap_resource
+> > and in the other case there is no such change.  "work as I would expect"
+> > is not a proper explanation of why this is correct.
+>
+> Would like to achieve that a SmPL script (like the one which I present here)
+> can help to adjust the implementation of the functions “mvebu_sei_probe”
+> and “hi655x_pmic_probe” (for example) for the desired reuse of the wrapper
+> function “devm_platform_get_and_ioremap_resource”?
+>
+>
+> > Maybe you can point to some previous commits that have made the change in this way.
+
+I looked at some of the provided examples, but none of them leaves the
+first argument of devm_ioremap_resource unchanged.
+
+julia
+
+>
+> Not yet for these source code examples.
+>
+> Some patches were contributed.
+> https://lore.kernel.org/patchwork/project/lkml/list/?q=devm_platform_get_and_ioremap_resource&archive=both&state=*
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=devm_platform_get_and_ioremap_resource
+>
+> Regards,
+> Markus
+>
+--8323329-540454265-1599488337=:2476--
