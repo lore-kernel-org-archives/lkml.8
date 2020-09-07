@@ -2,174 +2,165 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB66C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D52CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE11A207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA516207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:28:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="KuZEr/OK"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Dprr/Pdy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730435AbgIGQ1f (ORCPT
+        id S1730578AbgIGQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:27:35 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:63535 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729952AbgIGQ1F (ORCPT
+        Mon, 7 Sep 2020 12:28:06 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53916 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729905AbgIGOcx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:27:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599496025; x=1631032025;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=gaoG8GkE3nCA4mq3eby4DI5ttGvtMXjTHUELrf0upLM=;
-  b=KuZEr/OKVBYabHBEOvW6/MhQso5OuIgrpTp6HwZbcku4/3dVaWhwwEqP
-   9fPpRB7tsbrC5n+Y4ZNwT7km55Oc2yWqtoLxaF/jm2bVTXpmP60wgGRuL
-   v/wnydL0nVocX+DNXs4h1D7ANWv9NXYUwHEqhKJTSFSlT1ZyNT8lFQaNn
-   I=;
-X-IronPort-AV: E=Sophos;i="5.76,402,1592870400"; 
-   d="scan'208";a="73024410"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 07 Sep 2020 16:27:00 +0000
-Received: from uc85b769cb7f9591afac0.ant.amazon.com (iad7-ws-svc-lb50-vlan2.amazon.com [10.0.93.210])
-        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (Postfix) with ESMTPS id BC317A2086;
-        Mon,  7 Sep 2020 16:26:57 +0000 (UTC)
-Received: from uc85b769cb7f9591afac0.ant.amazon.com (uc85b769cb7f9591afac0 [127.0.0.1])
-        by uc85b769cb7f9591afac0.ant.amazon.com (8.15.2/8.15.2/Debian-3) with ESMTP id 087GQr5S011096;
-        Mon, 7 Sep 2020 18:26:53 +0200
-Received: (from markubo@localhost)
-        by uc85b769cb7f9591afac0.ant.amazon.com (8.15.2/8.15.2/Submit) id 087GQqSn011091;
-        Mon, 7 Sep 2020 18:26:52 +0200
-From:   Markus Boehme <markubo@amazon.com>
-To:     Corey Minyard <minyard@acm.org>,
-        openipmi-developer@lists.sourceforge.net
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Stefan Nuernberger <snu@amazon.com>,
-        SeongJae Park <sjpark@amazon.com>, Amit Shah <aams@amazon.com>,
-        Markus Boehme <markubo@amazon.com>
-Subject: [PATCH 3/3] ipmi: Add timeout waiting for channel information
-Date:   Mon,  7 Sep 2020 18:25:37 +0200
-Message-Id: <1599495937-10654-3-git-send-email-markubo@amazon.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599495937-10654-1-git-send-email-markubo@amazon.com>
-References: <1599495937-10654-1-git-send-email-markubo@amazon.com>
+        Mon, 7 Sep 2020 10:32:53 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EVujc015802;
+        Mon, 7 Sep 2020 09:31:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599489116;
+        bh=vSX2SLuTk0cAacN2wnopN/GO0s/2FaryB38zuY2OUQw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Dprr/PdyQCskZDYmd0/cJ+hbQ/mqcgP3JNL70Iq0CTl8DWVxjHXrTSYLOOGiLTzzK
+         h14eozt3QFZYAmDXWX+bBg5Ae6S0u0pVUf6TyezJ5CjiXxfk5ieQVcDRBAh6qEv88m
+         HpGboZJNYsXkQ72paQnm7T4N/gkEWz9C4m6Zwha8=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVuZh001425;
+        Mon, 7 Sep 2020 09:31:56 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
+ 2020 09:31:56 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 7 Sep 2020 09:31:56 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVtvu106496;
+        Mon, 7 Sep 2020 09:31:55 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 6/9] net: ethernet: ti: ale: make usage of ale dev_id mandatory
+Date:   Mon, 7 Sep 2020 17:31:40 +0300
+Message-ID: <20200907143143.13735-7-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907143143.13735-1-grygorii.strashko@ti.com>
+References: <20200907143143.13735-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have observed hosts with misbehaving BMCs that receive a Get Channel
-Info command but don't respond. This leads to an indefinite wait in the
-ipmi_msghandler's __scan_channels function, showing up as hung task
-messages for modprobe.
+Hence all existing driver updated to use ALE dev_id the usage of ale dev_id
+can be made mandatory and cpsw_ale_create() can be updated to use
+"features" property from ALE static configuration.
 
-Add a timeout waiting for the channel scan to complete. If the scan
-fails to complete within that time, treat that like IPMI 1.0 and only
-assume the presence of the primary IPMB channel at channel number 0.
-
-Signed-off-by: Stefan Nuernberger <snu@amazon.com>
-Signed-off-by: Markus Boehme <markubo@amazon.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 72 ++++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/ti/cpsw_ale.c | 28 +++++++++++++---------------
+ drivers/net/ethernet/ti/cpsw_ale.h |  1 +
+ 2 files changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 2a2e8b2..9de9ba6 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -3315,46 +3315,52 @@ channel_handler(struct ipmi_smi *intf, struct ipmi_recv_msg *msg)
-  */
- static int __scan_channels(struct ipmi_smi *intf, struct ipmi_device_id *id)
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 766197003971..524920a4bff0 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -83,7 +83,6 @@ struct cpsw_ale_dev_id {
+ 
+ #define ALE_TABLE_SIZE_MULTIPLIER	1024
+ #define ALE_STATUS_SIZE_MASK		0x1f
+-#define ALE_TABLE_SIZE_DEFAULT		64
+ 
+ static inline int cpsw_ale_get_field(u32 *ale_entry, u32 start, u32 bits)
  {
--	int rv;
-+	long rv;
-+	unsigned int set;
+@@ -1060,11 +1059,12 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ 	u32 rev, ale_entries;
  
--	if (ipmi_version_major(id) > 1
--			|| (ipmi_version_major(id) == 1
--			    && ipmi_version_minor(id) >= 5)) {
--		unsigned int set;
-+	if (ipmi_version_major(id) == 1 && ipmi_version_minor(id) < 5) {
-+		set = intf->curr_working_cset;
-+		goto single_ipmb_channel;
-+	}
+ 	ale_dev_id = cpsw_ale_match_id(cpsw_ale_id_match, params->dev_id);
+-	if (ale_dev_id) {
+-		params->ale_entries = ale_dev_id->tbl_entries;
+-		params->major_ver_mask = ale_dev_id->major_ver_mask;
+-		params->nu_switch_ale = ale_dev_id->nu_switch_ale;
+-	}
++	if (!ale_dev_id)
++		return ERR_PTR(-EINVAL);
++
++	params->ale_entries = ale_dev_id->tbl_entries;
++	params->major_ver_mask = ale_dev_id->major_ver_mask;
++	params->nu_switch_ale = ale_dev_id->nu_switch_ale;
  
--		/*
--		 * Start scanning the channels to see what is
--		 * available.
--		 */
--		set = !intf->curr_working_cset;
--		intf->curr_working_cset = set;
--		memset(&intf->wchannels[set], 0,
--		       sizeof(struct ipmi_channel_set));
--
--		intf->null_user_handler = channel_handler;
--		intf->curr_channel = 0;
--		rv = send_channel_info_cmd(intf, 0);
--		if (rv) {
--			dev_warn(intf->si_dev,
--				 "Error sending channel information for channel 0, %d\n",
--				 rv);
--			intf->null_user_handler = NULL;
--			return -EIO;
--		}
-+	/*
-+	 * Start scanning the channels to see what is
-+	 * available.
-+	 */
-+	set = !intf->curr_working_cset;
-+	intf->curr_working_cset = set;
-+	memset(&intf->wchannels[set], 0, sizeof(struct ipmi_channel_set));
+ 	ale = devm_kzalloc(params->dev, sizeof(*ale), GFP_KERNEL);
+ 	if (!ale)
+@@ -1079,6 +1079,7 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
  
--		/* Wait for the channel info to be read. */
--		wait_event(intf->waitq, intf->channels_ready);
-+	intf->null_user_handler = channel_handler;
-+	intf->curr_channel = 0;
-+	rv = send_channel_info_cmd(intf, 0);
-+	if (rv) {
-+		dev_warn(intf->si_dev,
-+			 "Error sending channel information for channel 0, %ld\n",
-+			 rv);
- 		intf->null_user_handler = NULL;
--	} else {
--		unsigned int set = intf->curr_working_cset;
-+		return -EIO;
-+	}
+ 	ale->params = *params;
+ 	ale->ageout = ale->params.ale_ageout * HZ;
++	ale->features = ale_dev_id->features;
  
--		/* Assume a single IPMB channel at zero. */
--		intf->wchannels[set].c[0].medium = IPMI_CHANNEL_MEDIUM_IPMB;
--		intf->wchannels[set].c[0].protocol = IPMI_CHANNEL_PROTOCOL_IPMB;
--		intf->channel_list = intf->wchannels + set;
--		intf->channels_ready = true;
-+	/* Wait for the channel info to be read. */
-+	rv = wait_event_timeout(intf->waitq, intf->channels_ready, 5 * HZ);
-+	if (rv == 0) {
-+		dev_warn(intf->si_dev,
-+			 "Timed out waiting for channel information. Assuming a single IPMB channel at 0.\n");
-+		goto single_ipmb_channel;
+ 	rev = readl_relaxed(ale->params.ale_regs + ALE_IDVER);
+ 	ale->version =
+@@ -1088,7 +1089,8 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ 		 ALE_VERSION_MAJOR(rev, ale->params.major_ver_mask),
+ 		 ALE_VERSION_MINOR(rev));
+ 
+-	if (!ale->params.ale_entries) {
++	if (ale->features & CPSW_ALE_F_STATUS_REG &&
++	    !ale->params.ale_entries) {
+ 		ale_entries =
+ 			readl_relaxed(ale->params.ale_regs + ALE_STATUS) &
+ 			ALE_STATUS_SIZE_MASK;
+@@ -1097,16 +1099,12 @@ struct cpsw_ale *cpsw_ale_create(struct cpsw_ale_params *params)
+ 		 * table which shows the size as a multiple of 1024 entries.
+ 		 * For these, params.ale_entries will be set to zero. So
+ 		 * read the register and update the value of ale_entries.
+-		 * ALE table on NetCP lite, is much smaller and is indicated
+-		 * by a value of zero in ALE_STATUS. So use a default value
+-		 * of ALE_TABLE_SIZE_DEFAULT for this. Caller is expected
+-		 * to set the value of ale_entries for all other versions
+-		 * of ALE.
++		 * return error if ale_entries is zero in ALE_STATUS.
+ 		 */
+ 		if (!ale_entries)
+-			ale_entries = ALE_TABLE_SIZE_DEFAULT;
+-		else
+-			ale_entries *= ALE_TABLE_SIZE_MULTIPLIER;
++			return ERR_PTR(-EINVAL);
++
++		ale_entries *= ALE_TABLE_SIZE_MULTIPLIER;
+ 		ale->params.ale_entries = ale_entries;
  	}
- 
-+	goto out;
-+
-+single_ipmb_channel:
-+	/* Assume a single IPMB channel at zero. */
-+	intf->wchannels[set].c[0].medium = IPMI_CHANNEL_MEDIUM_IPMB;
-+	intf->wchannels[set].c[0].protocol = IPMI_CHANNEL_PROTOCOL_IPMB;
-+	intf->channel_list = intf->wchannels + set;
-+	intf->channels_ready = true;
-+
-+out:
-+	intf->null_user_handler = NULL;
- 	return 0;
- }
- 
+ 	dev_info(ale->params.dev,
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index 53ad4246617e..27b30802b384 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -32,6 +32,7 @@ struct cpsw_ale {
+ 	struct timer_list	timer;
+ 	unsigned long		ageout;
+ 	u32			version;
++	u32			features;
+ 	/* These bits are different on NetCP NU Switch ALE */
+ 	u32			port_mask_bits;
+ 	u32			port_num_bits;
 -- 
-2.7.4
+2.17.1
 
