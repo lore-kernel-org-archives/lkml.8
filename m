@@ -2,160 +2,137 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37370C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBFEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0406C20768
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9105120768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599489261;
+	bh=RNbfAwKg808EmwHCSsYfFUQo6wpnABBo6mgSy7XA3/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GyZzd6xLUFlx1U6SPC9tfj6VgQRQIU8SHx+u2r0T4OjYakPUgpzk3LrWYz4hMQhhc
+	 Vk9/Sl1p9Lfr8LRBcX9XAB8wrt7W++BjmKf/Cb9TOsde9V2wotRhQoSwB+Ad/EIRpj
+	 Bwt+kHFnyDoIpTYTD33XzUKdUQ4+cs7q3pQ0rm9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgIGObU (ORCPT
+        id S1729940AbgIGOeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:31:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:32900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729707AbgIGOXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:23:52 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1AD2C804481131BD0AD1;
-        Mon,  7 Sep 2020 21:32:33 +0800 (CST)
-Received: from [127.0.0.1] (10.74.149.191) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
- 21:32:23 +0800
-Subject: Re: [PATCH net-next 0/2] net: two updates related to UDP GSO
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     David Miller <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>
-References: <1599286273-26553-1-git-send-email-tanhuazhong@huawei.com>
- <20200906114153.7dccce5d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
-From:   tanhuazhong <tanhuazhong@huawei.com>
-Message-ID: <126e5424-2453-eef4-d5b6-adeaedbb6eca@huawei.com>
-Date:   Mon, 7 Sep 2020 21:32:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
+        Mon, 7 Sep 2020 10:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729759AbgIGO2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:28:49 -0400
+Received: from localhost (p54b331dd.dip0.t-ipconnect.de [84.179.49.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D6662064B;
+        Mon,  7 Sep 2020 14:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599488928;
+        bh=RNbfAwKg808EmwHCSsYfFUQo6wpnABBo6mgSy7XA3/I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SP3rwR+E0gxpKOpgZb3C1djsmkGs9uGPktSrF5RNVaapzUEwkhEKqAQ0+TpgJY8Gg
+         viWpog1od5YDV0xoTD6OCoGMFCxrlueSyEytvm0LJzCV6NNfv/LceAnm1+V9AArfo+
+         +SVG4u+j/mkHlRvYQEAk/n4/LKUeEyBM5DG6xFGg=
+Date:   Mon, 7 Sep 2020 16:28:41 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     trix@redhat.com
+Cc:     syniurge@gmail.com, nehal-bakulchandra.shah@amd.com,
+        shyam-sundar.s-k@amd.com, natechancellor@gmail.com,
+        ndesaulniers@google.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] i2c: amd_mp2: handle num is 0 input for i2c_amd_xfer
+Message-ID: <20200907142841.GA3931@ninjato>
+References: <20200904180647.21080-1-trix@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.149.191]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+In-Reply-To: <20200904180647.21080-1-trix@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2020/9/7 17:22, Willem de Bruijn wrote:
-> On Sun, Sep 6, 2020 at 8:42 PM Jakub Kicinski <kuba@kernel.org> wrote:
->>
->> On Sat, 5 Sep 2020 14:11:11 +0800 Huazhong Tan wrote:
->>> There are two updates relates to UDP GSO.
->>> #1 adds a new GSO type for UDPv6
->>> #2 adds check for UDP GSO when csum is disable in netdev_fix_features().
->>>
->>> Changes since RFC V2:
->>> - modifies the timing of setting UDP GSO type when doing UDP GRO in #1.
->>>
->>> Changes since RFC V1:
->>> - updates NETIF_F_GSO_LAST suggested by Willem de Bruijn.
->>>    and add NETIF_F_GSO_UDPV6_L4 feature for each driver who support UDP GSO in #1.
->>>    - add #2 who needs #1.
->>
->> Please CC people who gave you feedback (Willem).
->>
->> I don't feel good about this series. IPv6 is not optional any more.
->> AFAIU you have some issues with csum support in your device? Can you
->> use .ndo_features_check() to handle this?
->>
->> The change in semantics of NETIF_F_GSO_UDP_L4 from "v4 and v6" to
->> "just v4" can trip people over; this is not a new feature people
->> may be depending on the current semantics.
->>
->> Willem, what are your thoughts on this?
-> 
-> If that is the only reason, +1 on fixing it up in the driver's
-> ndo_features_check.
-> 
+On Fri, Sep 04, 2020 at 11:06:47AM -0700, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
+>=20
+> clang static analyzer reports this problem
+>=20
+> i2c-amd-mp2-plat.c:174:9: warning: Branch condition evaluates
+>   to a garbage value
+>         return err ? err : num;
+>                ^~~
+>=20
+> err is not initialized, it depends on the being set in the
+> transfer loop which will not happen if num is 0.  Surveying
+> other master_xfer() implementations show all handle a 0 num.
+>=20
+> Because returning 0 is expected, initialize err to 0.
 
-Hi, Willem & Jakub.
+Well, it is not expected. The core does:
 
-This series mainly fixes the feature dependency between hardware 
-checksum and UDP GSO.
-When turn off hardware checksum offload, run 'ethtool -k [devname]'
-we can see TSO is off as well, but udp gso still is on.
+2019         if (WARN_ON(!msgs || num < 1))
+2020                 return -EINVAL;
 
-[root@localhost ~]# ethtool -K eth0 tx off
-Actual changes:
-tx-checksumming: off
-	tx-checksum-ipv4: off
-	tx-checksum-ipv6: off
-	tx-checksum-sctp: off
-tcp-segmentation-offload: off
-	tx-tcp-segmentation: off [requested on]
-	tx-tcp-ecn-segmentation: off [requested on]
-	tx-tcp6-segmentation: off [requested on]
-[root@localhost ~]# ethtool -k eth0
-Features for eth0:
-rx-checksumming: on
-tx-checksumming: off
-	tx-checksum-ipv4: off
-	tx-checksum-ip-generic: off [fixed]
-	tx-checksum-ipv6: off
-	tx-checksum-fcoe-crc: off [fixed]
-	tx-checksum-sctp: off
-...
-tcp-segmentation-offload: off
-	tx-tcp-segmentation: off [requested on]
-	tx-tcp-ecn-segmentation: off [requested on]
-	tx-tcp-mangleid-segmentation: off
-	tx-tcp6-segmentation: off [requested on]
-udp-fragmentation-offload: off
-generic-segmentation-offload: on
-generic-receive-offload: on
-...
-tx-udp-segmentation: on
-...
+Dunno if we should apply the patch nonetheless or add a comment that num
+is guaranteed to be at least 1.
 
-.ndo_feature_check seems unnecessary.
-Because the stack has already do this check.
-in __ip_append_data() below if branch will not run if hardware checksum 
-offload is off.
-         if (transhdrlen &&
-             length + fragheaderlen <= mtu &&
-             rt->dst.dev->features & (NETIF_F_HW_CSUM | NETIF_F_IP_CSUM) &&
-             (!(flags & MSG_MORE) || cork->gso_size) &&
-             (!exthdrlen || (rt->dst.dev->features & 
-NETIF_F_HW_ESP_TX_CSUM)))
-                 csummode = CHECKSUM_PARTIAL;
-...
-so skb->ip_summed set as CHECKSUM_NONE,
-then in udp_send_skb()
-         if (cork->gso_size) {
-		...
-                 if (skb->ip_summed != CHECKSUM_PARTIAL || is_udplite ||
-                     dst_xfrm(skb_dst(skb))) {
-                         kfree_skb(skb); 
- 
+>=20
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  drivers/i2c/busses/i2c-amd-mp2-plat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-amd-mp2-plat.c b/drivers/i2c/busses/i=
+2c-amd-mp2-plat.c
+> index 17df9e8845b6..506433bc0ff2 100644
+> --- a/drivers/i2c/busses/i2c-amd-mp2-plat.c
+> +++ b/drivers/i2c/busses/i2c-amd-mp2-plat.c
+> @@ -155,7 +155,7 @@ static int i2c_amd_xfer(struct i2c_adapter *adap, str=
+uct i2c_msg *msgs, int num)
+>  	struct amd_i2c_dev *i2c_dev =3D i2c_get_adapdata(adap);
+>  	int i;
+>  	struct i2c_msg *pmsg;
+> -	int err;
+> +	int err =3D 0;
+> =20
+>  	/* the adapter might have been deleted while waiting for the bus lock */
+>  	if (unlikely(!i2c_dev->common.mp2_dev))
+> --=20
+> 2.18.1
+>=20
 
-                         return -EIO;
-                 }
-the packet who needs udp gso will return ERROR.
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-For this kind of problem how could we fix it?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks.
-Huazhong.
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9WQ5UACgkQFA3kzBSg
+Kbb4lRAAqR+qYYGfBuYJNz9IlZD4fINTsBtP7KTjVgiMDIn11bUyT1xVHbld0Ut7
+Mj0juR4/0NVyWKL59HW/zU5qxcRs5q0VYK3VBfYlTYRaGMTrDkRjr6dK1s3TksFp
+3BF0nmwIL6H+UaBdWuh4nPuIJC8KOM6CpxfpukWoGlQlrgbDiDrnevA6QaA2i+br
+D+UynwNQ4naOYJ2JDzWeAZZ/ca5OTbezVhKWb5MqSIFzs188pSopFJlHAAjJsWhz
+2BBWibXh2syLzuTsFXgGaL0S5Bbs/reBG2Uit6H2kOSNp+EUZGWkE6ewAgV8Tm5d
+e4Jfww+NmrzWm28rPW4asVz6xI9BZm3kgWZS/BqZiahVu0cTFvgUtQntxRRNxg2U
+n3Xcxru2iMQn5/tE08Z6iKk8vsefAiC1MyoeRS4VqytAg8i/7Xjn61m/lC+X5XU0
+VkV/im6BfMFZ1s+N5R8gZ+nPcxkbvzw8ZA5hNJImbyu2F1rKwiipjtLtd/nMw12+
+C95ZqawbVsCKtYDPJFWYhyMeR0LpZd2gMskWzBHI6i5Um7Ba0lON4R9YbpAfc8X7
+8TYHB/xVnsIe+c1Sd857ZOOAm0otamj/i9FilxGQbgYVqRs83Z8dvRCc4+ikiQJR
++7MGAu1AJkKaxm2xNW6BW/3iS06vBFTreKuSkDxV+JRedsq8Gjc=
+=r3dn
+-----END PGP SIGNATURE-----
 
-> .
-> 
-
+--mP3DRpeJDSE+ciuQ--
