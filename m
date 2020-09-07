@@ -2,116 +2,204 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD58AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBF9C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99475206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84D3206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WBK3oy+T"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Euxtu+tr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbgIGHOn (ORCPT
+        id S1726965AbgIGHOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:14:43 -0400
-Received: from esa5.microchip.iphmx.com ([216.71.150.166]:20714 "EHLO
-        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726888AbgIGHOi (ORCPT
+        Mon, 7 Sep 2020 03:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbgIGHOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:14:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1599462878; x=1630998878;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Y7oDb5/FODXV7HHi1MpRdKuK+6Tp0mioP3P/5OGw8h4=;
-  b=WBK3oy+T8FUxuvhF1v+iTxhvcyx3UX3Zw+v0FHF0UcEIr2Q3UaOVisBV
-   /vn7gG2HGGNDA1BWXlQegyjj7/cIYpJKsGMzZxWKLQBXUTDFvvzH2m1cs
-   M8FrJrVOmcUCbi9bLjp5gU3uIiMDPF6rCb6qH57C/Eno7MYzDLx0BIvmZ
-   8vz7I/sYxDRSXucHNs+HAKxD9qciawivNvj16GLUTmLnkMhIAjmojEybs
-   Khz4110hQ5lpDf0fNHOzvmvqt4yx3c9K7P2rPDc54pyKZfZaoHJnW9z0p
-   wo9r7cPz5tUN/tgPobJrqgzWKYcAS7W1vUIE7TQ43GgT9hjPOOovL7d1y
-   A==;
-IronPort-SDR: z6t7A0mi6Bafol82XW8IuxqhJcFsNuIBKJe6uAoXwZpxlioNj+mUj8R5+BWt7DZChg5yaRcOw/
- 2nQAEIUhDaNMnz60xaEs9g2DnmCW5mjY5qFQNkprga0f5VjfTC6zafIGgcMbYtyKH5jj83OiHs
- spFGRCVnVUrn7fFekQXCOsR9EwtKfeQBOlAcSZFbUcolpXUEtJgAGjHE6aeJrGM8mB0u947fDs
- QWlEgBYyT48QOJO+qSAevz+8w9fDuJy1Mp1IyMGJAtIfMFlLdd1CGZqtSBr2rFlJknRzgyLarR
- EnM=
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="90045661"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Sep 2020 00:14:26 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 7 Sep 2020 00:14:15 -0700
-Received: from [10.171.246.27] (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Mon, 7 Sep 2020 00:14:13 -0700
-Subject: Re: [PATCH net] net: macb: fix for pause frame receive enable bit
-To:     Parshuram Thombare <pthombar@cadence.com>,
-        <alexandre.belloni@bootlin.com>
-CC:     <claudiu.beznea@microchip.com>, <antoine.tenart@bootlin.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <f.fainelli@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <mparab@cadence.com>
-References: <1599294093-30758-1-git-send-email-pthombar@cadence.com>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-Message-ID: <6069131d-118e-0387-f312-25449a545c2a@microchip.com>
-Date:   Mon, 7 Sep 2020 09:14:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 7 Sep 2020 03:14:12 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775CDC061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:14:11 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id g26so33385ooa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KVfAGFVhhH+3gKxWPx4EEt2i/99FDkLx011kDtsMF+I=;
+        b=Euxtu+trgjabIp7kfpqLzFQS+dE83z6NFR5B38p25hCsIskYQhJEXI8aDOFmjb9/rb
+         ajdQe4bmbBxWioDNhCAVb/QZqh3F00karTYzM2FazYTVvrVMLOroBXd2TBPPFA8thdy7
+         kAmoBHvDcK9wIivmZv2bC4v0rV5TvwkjuxeM4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KVfAGFVhhH+3gKxWPx4EEt2i/99FDkLx011kDtsMF+I=;
+        b=FVcNN5DZm9Q+c1C8R1Dm12dNczblYS95LlfujqRbOH8I70unhYpD30xwemoxp8I/qh
+         q+W0Ig/HpkgQaHe0ugHJ/3tBOMy/l0YQibf4IFAVtdNR4XvdYmg7gnlUK8ySWP7vijFB
+         kjz/giaK0dT30u3cfPuqKo9zqjx2rPCZmpz9anQg5SlnK4QxZM/RZsmicqrIGFlcdqF8
+         cc8iX3wULpWeSnG6TbYX5qzqg5VvsHcNk+5JKxEMM57Ro5tEi3DLT7PK8fUkkiLdvI6z
+         KoHrLQZikiRlwrj92QsggrIfszPC5Lpet5QiaKJUJnVovj2Oeu3M8sLMPFdx9Qti2+U/
+         5b+g==
+X-Gm-Message-State: AOAM533LA8hs3GvT3zoXiOU0NdyZ9jLXLsgME2ejYF6X6lo5KQfisxHr
+        pi33yCPXBDO7UvLm5x+iAycg24EP4Upg6U64I68SJQ==
+X-Google-Smtp-Source: ABdhPJyDsSLWPXy8R9Ce8HIpecD+QM6t0+0yQYpXyChVzKDiPvzj0GbvH4ZECIfVS8TxI8k421NQRVJ+suYIajAm3/8=
+X-Received: by 2002:a4a:e98e:: with SMTP id s14mr13829467ood.28.1599462848946;
+ Mon, 07 Sep 2020 00:14:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1599294093-30758-1-git-send-email-pthombar@cadence.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200818092017.26290-1-kraxel@redhat.com> <20200818092017.26290-2-kraxel@redhat.com>
+ <20200901074043.GT2352366@phenom.ffwll.local> <20200907063901.atwjdxz7iqyra22h@sirius.home.kraxel.org>
+In-Reply-To: <20200907063901.atwjdxz7iqyra22h@sirius.home.kraxel.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Mon, 7 Sep 2020 09:13:58 +0200
+Message-ID: <CAKMK7uFixrbxVoaF4-1hXvQcPySaaYRooQ=LKoivPALH-UCgbw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drm: allow limiting the scatter list size.
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        "open list:RADEON and AMDGPU DRM DRIVERS" 
+        <amd-gfx@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
+        <etnaviv@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <freedreno@lists.freedesktop.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <nouveau@lists.freedesktop.org>,
+        "moderated list:ARM/Rockchip SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC support" 
+        <linux-rockchip@lists.infradead.org>,
+        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
+        <linux-tegra@vger.kernel.org>,
+        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2020 at 10:21, Parshuram Thombare wrote:
-> PAE bit of NCFGR register, when set, pauses transmission
-> if a non-zero 802.3 classic pause frame is received.
-> 
-> Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+On Mon, Sep 7, 2020 at 8:39 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+>
+> > > +   /**
+> > > +    * @max_segment:
+> > > +    *
+> > > +    * Max size for scatter list segments.  When unset the default
+> > > +    * (SCATTERLIST_MAX_SEGMENT) is used.
+> > > +    */
+> > > +   size_t max_segment;
+> >
+> > Is there no better place for this then "at the bottom"? drm_device is a
+> > huge structure, piling stuff up randomly doesn't make it better :-)
+>
+> Moved next to the other gem fields for now (v3 posted).
+>
+> > I think ideally we'd have a gem substruct like we have on the modeset side
+> > at least.
+>
+> Phew, that'll be quite some churn in the tree.  And there aren't that many
+> gem-related fields in struct drm_device.
+>
+> So you are looking for something like below (header changes only)?
 
-For the record:
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Hm yeah it's a lot less than I thought. And yes I think that would be neat.
+-Daniel
 
-Thanks Parshuram for having found this issue.
-Best regards,
-   Nicolas
+>
+> take care,
+>   Gerd
+>
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index c455ef404ca6..950167ede98a 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -299,22 +299,8 @@ struct drm_device {
+>         /** @mode_config: Current mode config */
+>         struct drm_mode_config mode_config;
+>
+> -       /** @object_name_lock: GEM information */
+> -       struct mutex object_name_lock;
+> -
+> -       /** @object_name_idr: GEM information */
+> -       struct idr object_name_idr;
+> -
+> -       /** @vma_offset_manager: GEM information */
+> -       struct drm_vma_offset_manager *vma_offset_manager;
+> -
+> -       /**
+> -        * @max_segment:
+> -        *
+> -        * Max size for scatter list segments for GEM objects.  When
+> -        * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
+> -        */
+> -       size_t max_segment;
+> +       /** @gem_config: Current GEM config */
+> +       struct drm_gem_config gem_config;
+>
+>         /** @vram_mm: VRAM MM memory manager */
+>         struct drm_vram_mm *vram_mm;
+> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+> index 337a48321705..74129fb29fb8 100644
+> --- a/include/drm/drm_gem.h
+> +++ b/include/drm/drm_gem.h
+> @@ -39,6 +39,25 @@
+>
+>  #include <drm/drm_vma_manager.h>
+>
+> +struct drm_gem_config {
+> +       /** @object_name_lock: GEM information */
+> +       struct mutex object_name_lock;
+> +
+> +       /** @object_name_idr: GEM information */
+> +       struct idr object_name_idr;
+> +
+> +       /** @vma_offset_manager: GEM information */
+> +       struct drm_vma_offset_manager *vma_offset_manager;
+> +
+> +       /**
+> +        * @max_segment:
+> +        *
+> +        * Max size for scatter list segments for GEM objects.  When
+> +        * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
+> +        */
+> +       size_t max_segment;
+> +};
+> +
+>  struct drm_gem_object;
+>
+>  /**
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-> ---
->   drivers/net/ethernet/cadence/macb_main.c |    3 +--
->   1 files changed, 1 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index 6761f40..9179f7b 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -647,8 +647,7 @@ static void macb_mac_link_up(struct phylink_config *config,
->                                  ctrl |= GEM_BIT(GBE);
->                  }
-> 
-> -               /* We do not support MLO_PAUSE_RX yet */
-> -               if (tx_pause)
-> +               if (rx_pause)
->                          ctrl |= MACB_BIT(PAE);
-> 
->                  macb_set_tx_clk(bp->tx_clk, speed, ndev);
-> --
-> 1.7.1
-> 
 
 
 -- 
-Nicolas Ferre
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
