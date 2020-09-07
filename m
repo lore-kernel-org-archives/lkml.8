@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35009C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D044C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A1621556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FD821556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgIGHeq (ORCPT
+        id S1727937AbgIGHex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:34:46 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:5627 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727026AbgIGHek (ORCPT
+        Mon, 7 Sep 2020 03:34:53 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:56399 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbgIGHeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:34:40 -0400
+        Mon, 7 Sep 2020 03:34:50 -0400
 X-Originating-IP: 91.224.148.103
 Received: from localhost.localdomain (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 573F8240005;
-        Mon,  7 Sep 2020 07:34:35 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 4524D60014;
+        Mon,  7 Sep 2020 07:34:47 +0000 (UTC)
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
 To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         linux-kernel@vger.kernel.org
@@ -33,34 +33,45 @@ Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Richard Weinberger <richard@nod.at>,
         linux-mtd@lists.infradead.org, Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 3/3] mtd: lpddr: Move function print_drs_error to lpddr_cmds.c
-Date:   Mon,  7 Sep 2020 09:34:34 +0200
-Message-Id: <20200907073434.27599-1-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 1/3] mtd: lpddr: Fix bad logic in print_drs_error
+Date:   Mon,  7 Sep 2020 09:34:46 +0200
+Message-Id: <20200907073446.27727-1-miquel.raynal@bootlin.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <e0063cbd65f3b47be1db34efc494ea3047634d88.1588016644.git.gustavo@embeddedor.com>
+In-Reply-To: <3fb0e29f5b601db8be2938a01d974b00c8788501.1588016644.git.gustavo@embeddedor.com>
 References: 
 MIME-Version: 1.0
 X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: 1a64026eda1642c81425e48550fd4bd3f73d0ab5
+X-linux-mtd-patch-commit: 1c9c02bb22684f6949d2e7ddc0a3ff364fd5a6fc
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-04-27 at 19:56:08 UTC, "Gustavo A. R. Silva" wrote:
-> Function print_drs_error is only used in drivers/mtd/lpddr/lpddr_cmds.c
-> so, better to move it there.
+On Mon, 2020-04-27 at 19:50:37 UTC, "Gustavo A. R. Silva" wrote:
+> Update logic for broken test. Use a more common logging style.
 > 
-> Also, notice that there's no need for inline as the function is used
-> once.  Lastly, fix the following checkpatch warning:
+> It appears the logic in this function is broken for the
+> consecutive tests of
 > 
-> WARNING: Prefer 'unsigned int' to bare use of 'unsigned'
-> +static void print_drs_error(unsigned dsr)
+>         if (prog_status & 0x3)
+>                 ...
+>         else if (prog_status & 0x2)
+>                 ...
+>         else (prog_status & 0x1)
+>                 ...
 > 
-> Suggested-by: Joe Perches <joe@perches.com>
+> Likely the first test should be
+> 
+>         if ((prog_status & 0x3) == 0x3)
+> 
+> Found by inspection of include files using printk.
+> 
+> Fixes: eb3db27507f7 ("[MTD] LPDDR PFOW definition")
+> Cc: stable@vger.kernel.org
+> Reported-by: Joe Perches <joe@perches.com>
 > Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
 Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git mtd/next, thanks.
 
