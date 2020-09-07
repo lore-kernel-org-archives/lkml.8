@@ -2,208 +2,160 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C99C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBF6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9336A21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A044221473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgIGWlP (ORCPT
+        id S1728206AbgIGWpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:41:15 -0400
-Received: from mail-co1nam11olkn2090.outbound.protection.outlook.com ([40.92.18.90]:42881
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728009AbgIGWlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:41:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TFavTg1SCXuvzFROZ4cjcMUSeBQbw2VceugzXSe7eZFgyDDE5ALzkambhVovNJX7ivAbgNDzBZjS+hqHXsA7PB1yQSxCs9BAdWCUmZqeVMTQfBmQwD5bNfXDMjmnoLUuadkEa6VajhW1P2Vvs4iBvh8aIeOW2rNtoCEWVduu3BaRArI9cUxTMBc4sJJX9mTqU9rpzDgWzEm48p3vdF06g8gK7lQBhe+Cw7a+breY4wUYwFv3ramazlrvj4q/IvE8zccg2qQpnGxBXq0h3SSLsUc+OeQ1t0nrEAU6xo+bYhQxNlLmjBrtsOzoI8TkUU72tux8nHyQSPIKKnwonZmwXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GRExTv/r0jt75NUN4wLR0vmpEbWkfjPxOwls1eIkL8A=;
- b=NdJt1RLguoMUmhoxpc1RbgvxRAW3lnNlEM6EvMpLXMn19ia5nAwfOeMrPioyWFr9oYCXsQIF2A9WEj9faSalOY2dYXDWE2XCpxRPMDBCnlFGlOdKs1nrEmVac0uFn+0h2krah0K2b6Q+MNcfS3PuhLoaVcQgveiXSDRpogg0U7CDqOqvjw0pi1F/dZTEzYPIyXXWhz5efDfuOAB0Ewj2WpzGt/n4tfGk5e7e7QjI8Ni4tAVIQD0ibO55klCv3LkS/wuORLAS2QvBGT0+sHO4gxkit4eYI+E4pvMYT/onpu4vmVCCfsPMKSfvXXY9NuNZglMhHH+jyAcfRui6AUQXSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from BN4PR13CA0018.namprd13.prod.outlook.com (2603:10b6:403:3::28)
- by BYAPR21MB1304.namprd21.prod.outlook.com (2603:10b6:a03:106::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.8; Mon, 7 Sep
- 2020 22:41:09 +0000
-Received: from BN7NAM10FT057.eop-nam10.prod.protection.outlook.com
- (2603:10b6:403:3:cafe::b) by BN4PR13CA0018.outlook.office365.com
- (2603:10b6:403:3::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.9 via Frontend
- Transport; Mon, 7 Sep 2020 22:41:09 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e8f::4c) by BN7NAM10FT057.mail.protection.outlook.com
- (2a01:111:e400:7e8f::403) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend
- Transport; Mon, 7 Sep 2020 22:41:09 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:3D45B78D509E6EA68637F698206A0CA6FB000EF3A8AF48A802964261280DF684;UpperCasedChecksum:96F1B62A48ADCFCAF4B3F525C0EBAE4C7D6D9801C304B87C5293C21DA771C240;SizeAsReceived:9288;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 22:41:09 +0000
-Subject: Re: [RFT 08/25] ARM: dts: s5pv210: remove dedicated 'audio-subsystem'
- node
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-9-krzk@kernel.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660C8AFE24B3F2A35A63D09CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Mon, 7 Sep 2020 15:41:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200907161141.31034-9-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO1PR15CA0091.namprd15.prod.outlook.com
- (2603:10b6:101:21::11) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <b3e3b653-b321-e0a1-88bf-f1e5e53fa8bb@live.ca>
+        Mon, 7 Sep 2020 18:45:23 -0400
+Received: from mail-io1-f79.google.com ([209.85.166.79]:40870 "EHLO
+        mail-io1-f79.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbgIGWpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:45:22 -0400
+Received: by mail-io1-f79.google.com with SMTP id f8so8617069iow.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 15:45:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=9/Msx1lu/ps9Pxv5T2MGazTKEDnLytlEFHMtrHc6FM4=;
+        b=fH49FzICmo8mgYPkHOrDItN2hWaSnWBxSlwK5WBtdXUBfKiG652G8ccxYw55l3h8vE
+         AxwoAH+HCu4rw1wdWoSLfGlCGgNDRTTeUqZpfennLzZMvxjRgGm3UEe7dgVnpvr85bCu
+         SXluQs4qZHgBbrOZBaJ8T2F4PYSjL6QbYIcMAmfN7WV4wUXw1cJ80flu+IDqKRHfa4Jp
+         br2CJvE0Dnod59f7sinoexqjMlJw62nOmBP/1zYxj+cv4hfaAVKI1aWUxLwtfxEJoFHK
+         Ouo2HIs8orhHZegnOLOt2X/k6NVIzaDarQCmiZlmNq+gGLYkFsn9Nwm3srTXfdp285EA
+         L7Cg==
+X-Gm-Message-State: AOAM530oEvx6U6xEJR2A192HqITuPgqv7wWZ5twIXNtwkOAz3D9U5mte
+        bLBAoKSdwpveQ5SEmQOHmfckBYUeItUaLOg3UaKok6IFnsQ0
+X-Google-Smtp-Source: ABdhPJyiuinB4wyaiShTTyihly6OUsctSCZFeyepxrgMG/hoVffSUbfQSkrVVb+IxmJCzZB6b64e0ZyxU5h/sEzCAVBx5DS/D5+6
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO1PR15CA0091.namprd15.prod.outlook.com (2603:10b6:101:21::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 22:41:06 +0000
-X-Microsoft-Original-Message-ID: <b3e3b653-b321-e0a1-88bf-f1e5e53fa8bb@live.ca>
-X-TMN:  [EBm6ODzve/MpF4k2M9ZDgIJAU2LpnNWk6dgBSUFuJIMqnUrurQRro6tIbdbMqeMj]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 5f6b10da-f27c-4bd2-11e4-08d8537f1d36
-X-MS-TrafficTypeDiagnostic: BYAPR21MB1304:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sowg6x0/31ecKhXX4YATkn2c0lEB7do/J7DSYfLDeouf0gDqBdw208lo1BlxixlNDb1ZfFN/mlm1L5YfeECqL0GISfSeQauWPfKaA9Y/jVXGSt/TUDTJb6ZS6Ffr5V3uYxgvkYMqyAYkC665BZciAAe51q/wK39n9DLQtlEBPenbDnfJ7lWehLj11pBf5iJw4Kf/glVN+E4KjLzGXY13jA==
-X-MS-Exchange-AntiSpam-MessageData: veWzlhB1n69xrFCf4O+bzgm3k9izoJ81iraDzJGI88bedsdQol24/yp8+8v7z2xj4TkuATVc9DgHKjUlyucxTYNHFcXCgkB8KvQ3QskV552LfMN1cTPDjAdhfq7wuLFe0aGGHg/CXphp/6qFxpvpZzL/fYHPeHOarD5a+9K92TgiaFLSfva9bzE27PmZIC0iM7MYo6iSR7vIH/FEPr515w==
-X-OriginatorOrg: sct-15-20-3174-0-msonline-outlook-fb0b2.templateTenant
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f6b10da-f27c-4bd2-11e4-08d8537f1d36
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 22:41:09.2168
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT057.eop-nam10.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR21MB1304
+X-Received: by 2002:a92:d188:: with SMTP id z8mr12890802ilz.292.1599518720879;
+ Mon, 07 Sep 2020 15:45:20 -0700 (PDT)
+Date:   Mon, 07 Sep 2020 15:45:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002b721a05aec0f937@google.com>
+Subject: KASAN: use-after-free Write in io_wq_worker_running
+From:   syzbot <syzbot+45fa0a195b941764e0f0@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Audio still works for me on the Galaxy S.
+Hello,
 
-Tested-by: Jonathan Bakker <xc-racer2@live.ca>
+syzbot found the following issue on:
 
-Thanks,
-Jonathan
+HEAD commit:    f4d51dff Linux 5.9-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13686dcd900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8f5c353182ed6199
+dashboard link: https://syzkaller.appspot.com/bug?extid=45fa0a195b941764e0f0
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1378ceed900000
 
-On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> The 'audio-subsystem' node is an artificial creation, not representing
-> real hardware.  The hardware is described by its nodes - AUDSS clock
-> controller and I2S0.
-> 
-> Remove the 'audio-subsystem' node along with its undocumented compatible
-> to fix dtbs_check warnings like:
-> 
->   audio-subsystem: $nodename:0: 'audio-subsystem' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/s5pv210.dtsi | 65 +++++++++++++++-------------------
->  1 file changed, 29 insertions(+), 36 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index 46221a5c8ce5..2871351ab907 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -223,43 +223,36 @@
->  			status = "disabled";
->  		};
->  
-> -		audio-subsystem {
-> -			compatible = "samsung,s5pv210-audss", "simple-bus";
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			ranges;
-> -
-> -			clk_audss: clock-controller@eee10000 {
-> -				compatible = "samsung,s5pv210-audss-clock";
-> -				reg = <0xeee10000 0x1000>;
-> -				clock-names = "hclk", "xxti",
-> -						"fout_epll",
-> -						"sclk_audio0";
-> -				clocks = <&clocks DOUT_HCLKP>, <&xxti>,
-> -						<&clocks FOUT_EPLL>,
-> -						<&clocks SCLK_AUDIO0>;
-> -				#clock-cells = <1>;
-> -			};
-> +		clk_audss: clock-controller@eee10000 {
-> +			compatible = "samsung,s5pv210-audss-clock";
-> +			reg = <0xeee10000 0x1000>;
-> +			clock-names = "hclk", "xxti",
-> +				      "fout_epll",
-> +				      "sclk_audio0";
-> +			clocks = <&clocks DOUT_HCLKP>, <&xxti>,
-> +				 <&clocks FOUT_EPLL>,
-> +				 <&clocks SCLK_AUDIO0>;
-> +			#clock-cells = <1>;
-> +		};
->  
-> -			i2s0: i2s@eee30000 {
-> -				compatible = "samsung,s5pv210-i2s";
-> -				reg = <0xeee30000 0x1000>;
-> -				interrupt-parent = <&vic2>;
-> -				interrupts = <16>;
-> -				dma-names = "rx", "tx", "tx-sec";
-> -				dmas = <&pdma1 9>, <&pdma1 10>, <&pdma1 11>;
-> -				clock-names = "iis",
-> -						"i2s_opclk0",
-> -						"i2s_opclk1";
-> -				clocks = <&clk_audss CLK_I2S>,
-> -						<&clk_audss CLK_I2S>,
-> -						<&clk_audss CLK_DOUT_AUD_BUS>;
-> -				samsung,idma-addr = <0xc0010000>;
-> -				pinctrl-names = "default";
-> -				pinctrl-0 = <&i2s0_bus>;
-> -				#sound-dai-cells = <0>;
-> -				status = "disabled";
-> -			};
-> +		i2s0: i2s@eee30000 {
-> +			compatible = "samsung,s5pv210-i2s";
-> +			reg = <0xeee30000 0x1000>;
-> +			interrupt-parent = <&vic2>;
-> +			interrupts = <16>;
-> +			dma-names = "rx", "tx", "tx-sec";
-> +			dmas = <&pdma1 9>, <&pdma1 10>, <&pdma1 11>;
-> +			clock-names = "iis",
-> +				      "i2s_opclk0",
-> +				      "i2s_opclk1";
-> +			clocks = <&clk_audss CLK_I2S>,
-> +				 <&clk_audss CLK_I2S>,
-> +				 <&clk_audss CLK_DOUT_AUD_BUS>;
-> +			samsung,idma-addr = <0xc0010000>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2s0_bus>;
-> +			#sound-dai-cells = <0>;
-> +			status = "disabled";
->  		};
->  
->  		i2s1: i2s@e2100000 {
-> 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+45fa0a195b941764e0f0@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in instrument_atomic_write include/linux/instrumented.h:71 [inline]
+BUG: KASAN: use-after-free in atomic_inc include/asm-generic/atomic-instrumented.h:240 [inline]
+BUG: KASAN: use-after-free in io_wqe_inc_running fs/io-wq.c:301 [inline]
+BUG: KASAN: use-after-free in io_wq_worker_running+0xb4/0x100 fs/io-wq.c:613
+Write of size 4 at addr ffff88821aaa388c by task io_wqe_worker-0/8276
+
+CPU: 0 PID: 8276 Comm: io_wqe_worker-0 Not tainted 5.9.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1d6/0x29e lib/dump_stack.c:118
+ print_address_description+0x66/0x620 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ check_memory_region_inline mm/kasan/generic.c:183 [inline]
+ check_memory_region+0x2b5/0x2f0 mm/kasan/generic.c:192
+ instrument_atomic_write include/linux/instrumented.h:71 [inline]
+ atomic_inc include/asm-generic/atomic-instrumented.h:240 [inline]
+ io_wqe_inc_running fs/io-wq.c:301 [inline]
+ io_wq_worker_running+0xb4/0x100 fs/io-wq.c:613
+ schedule_timeout+0x15c/0x250 kernel/time/timer.c:1879
+ io_wqe_worker+0x60b/0x810 fs/io-wq.c:580
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+Allocated by task 8273:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
+ kmem_cache_alloc_node_trace+0x1f7/0x2a0 mm/slab.c:3594
+ kmalloc_node include/linux/slab.h:572 [inline]
+ kzalloc_node include/linux/slab.h:677 [inline]
+ io_wq_create+0x295/0x880 fs/io-wq.c:1064
+ io_init_wq_offload fs/io_uring.c:7432 [inline]
+ io_sq_offload_start fs/io_uring.c:7504 [inline]
+ io_uring_create fs/io_uring.c:8625 [inline]
+ io_uring_setup fs/io_uring.c:8694 [inline]
+ __do_sys_io_uring_setup fs/io_uring.c:8700 [inline]
+ __se_sys_io_uring_setup+0x18ed/0x2a00 fs/io_uring.c:8697
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 8175:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
+ kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x113/0x200 mm/slab.c:3756
+ __io_wq_destroy fs/io-wq.c:1138 [inline]
+ io_wq_destroy+0x470/0x510 fs/io-wq.c:1146
+ io_finish_async fs/io_uring.c:6836 [inline]
+ io_ring_ctx_free fs/io_uring.c:7870 [inline]
+ io_ring_exit_work+0x195/0x520 fs/io_uring.c:7954
+ process_one_work+0x789/0xfc0 kernel/workqueue.c:2269
+ worker_thread+0xaa4/0x1460 kernel/workqueue.c:2415
+ kthread+0x37e/0x3a0 drivers/block/aoe/aoecmd.c:1234
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+The buggy address belongs to the object at ffff88821aaa3800
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 140 bytes inside of
+ 1024-byte region [ffff88821aaa3800, ffff88821aaa3c00)
+The buggy address belongs to the page:
+page:00000000be451134 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x21aaa3
+flags: 0x57ffe0000000200(slab)
+raw: 057ffe0000000200 ffffea00086a2148 ffffea0008536b08 ffff8880aa440700
+raw: 0000000000000000 ffff88821aaa3000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88821aaa3780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88821aaa3800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88821aaa3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff88821aaa3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88821aaa3980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
