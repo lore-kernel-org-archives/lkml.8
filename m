@@ -2,204 +2,111 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDF1C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DC0205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7290621531
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A1OBEVDY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="YKpxYuJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgIGK3M (ORCPT
+        id S1728799AbgIGK31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34150 "EHLO
+        Mon, 7 Sep 2020 06:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728723AbgIGK2X (ORCPT
+        with ESMTP id S1728951AbgIGK2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:28:23 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AE5C061574;
-        Mon,  7 Sep 2020 03:28:22 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b17so4153747pji.1;
-        Mon, 07 Sep 2020 03:28:22 -0700 (PDT)
+        Mon, 7 Sep 2020 06:28:19 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B0CC061757
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:28:17 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id lo4so17551726ejb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:28:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ITcGcXtzItjOscmK8N5fYW//0H9STvyX68vCXrrZF4w=;
-        b=A1OBEVDY4me2Wvsvyy2MUi/A8XkKv6ZdMG8s6KSj7lXomVYrF0aPZnCWGOfomJgwn/
-         ymT0CzWAuEP4wsFsOOm/VJ75BKHE0FJD5avQGluDjO0d6q/fxlhHKgvGJhRzIcF06X2a
-         lpwHBzJbUmfDHK0XWbYIM8yQZu+8MtML6lz6L4buDz0iJkV8BASxBkVE0EQzm1c8ULT6
-         88ZWckezYoRCBGPHL5a5RrS8KZGC6Q2wFuzD0J4vXfhdyAauqtvsCr1GZQPPSuFVL1gV
-         akwocGz2xp3FUrfLCOqDziTMJrVZwYZYnOfey2tzzVS/atgebz5zcgb+UHwxx8c3CMee
-         Ffsg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E+6kvSO+kGtFqzwSOsHYLQdHmE8ihK39UIVQKLTGAlE=;
+        b=YKpxYuJtNjDEcMyhlLGRj0HX0hQkUXEqPjKuUoBXv/e3UDUS4Hln7rKvyvdJTkScwl
+         k1rXYkIZAbO2UsMaPTxTaUrbbBWUu4R8sdHC0L1BG0mGaX4xk380OjSevy0ECUxykK/F
+         W0r2qxkPzqjPoDdZ8gzABSBUnDIUQFXvKxYS4mab97WFlQCFfhbvkd4IVjnPhoWyKel2
+         XD9I7vu5rWTXsRIKY4qpSRmj1lEfs+bqL5eIbLSlZkr5OCsU1EbDHMwj00krDCJyqj4O
+         gmJBrn/Lyg7t/40d/iHFqrkkALM3z3AbVL2yVDPRt/STFncNY1w/mvM9VKLyly28uSNr
+         Y8vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ITcGcXtzItjOscmK8N5fYW//0H9STvyX68vCXrrZF4w=;
-        b=UeQlrc36hgCIR+sisFjNy0BYvY1PVTv/AuhZi+Wk2oz81c+tRlZ5f7ZCqL2lRNOh3t
-         t0z1+39fYziZI3/DdZN3H1gAK3oTBKZh3OBiP5p2/ltnYyKoj08Op83C8t0jnKz07Ip8
-         zeomU2AMi5LhYhp1doE/IvUXzLn/ltMRmnxh/MfVcPxKmfB4FdGKZCiNzWxPG3/m8de3
-         NJuPIblCeeY96T9DKTrsY1tL1wGbFH8YDzW1V4NwPpUa2BqPQQf5KHycA8Uz6gSFI8Cq
-         hllOX71q+UliMvFyfA/5mOHpQc0IZtYfnpML/4B+aARXa2BG4R+vYnGJ4ITntEISWg2q
-         2hOg==
-X-Gm-Message-State: AOAM532wreHw99stbZCxjuoAVwwWUgwfd0WtwjU4GXDdbe/Bhxos6ws7
-        YWFeKf4YkPBUO3armOCGBAU=
-X-Google-Smtp-Source: ABdhPJzh/5Ux08+E14zJum33L6vE0PTkNwSCLe9N4YM97WfgrNu5gy8gxWZNLimdh6e9D2KnG+RpYw==
-X-Received: by 2002:a17:90a:f198:: with SMTP id bv24mr20983093pjb.117.1599474502574;
-        Mon, 07 Sep 2020 03:28:22 -0700 (PDT)
-Received: from localhost.localdomain ([2402:7500:568:81bf:545f:f984:753e:4bcc])
-        by smtp.gmail.com with ESMTPSA id q193sm15009717pfq.127.2020.09.07.03.28.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 07 Sep 2020 03:28:22 -0700 (PDT)
-From:   Gene Chen <gene.chen.richtek@gmail.com>
-To:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        matthias.bgg@gmail.com
-Cc:     dmurphy@ti.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com,
-        benjamin.chao@mediatek.com
-Subject: [PATCH v3 2/2] dt-bindings: leds: Add bindings for MT6360 LED
-Date:   Mon,  7 Sep 2020 18:27:39 +0800
-Message-Id: <1599474459-20853-3-git-send-email-gene.chen.richtek@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
-References: <1599474459-20853-1-git-send-email-gene.chen.richtek@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E+6kvSO+kGtFqzwSOsHYLQdHmE8ihK39UIVQKLTGAlE=;
+        b=UkO9KUqjtW2HKhJhXA/KuZwuBlObVgwZXgjCQOvf9o6141YhKdLosiF1olu40uc907
+         QCGmNPNjezJODKFAoB2470I1RAcwXYQWIOx7gz5UEtaEQ9vwCcxAW3eGSPqAB42swp8O
+         cSCY6BH5owtRehmzMTE4PHhYZ1jKcfWabKdgaES/3M/HTYq+0ZkVt3VXcH34RarKyMWr
+         mYAoUAfyjuvYb2GbExD6pFvrwb/fTt+iNUj4lSZEOLZf845NVa1T559BFQDiszi/XruE
+         Qt2YJuKeG0K/zrgN1uwqqtBXv1RlRXwkQytRAVZcr2fotN0fh6rRw3qoBHxyChhKGyol
+         G14g==
+X-Gm-Message-State: AOAM531oV1lGCIUusQAvrTFErhQ5Htt8KHGTkerk6JeA35iA6XiPnzsR
+        DxuiyiwoKrM6wEzLCZuBbVJsZG+u/zlrz7s5K6snRYjMrF8=
+X-Google-Smtp-Source: ABdhPJwP4J3kM7zvzHGchdWRMUs1XHCPsNoozGebnZDrc/LmkHpUC8eNrTX90FFgDqlq6JBHy5dgtK4984ghibSDrvg=
+X-Received: by 2002:a17:906:941a:: with SMTP id q26mr20103973ejx.496.1599474496010;
+ Mon, 07 Sep 2020 03:28:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-4-brgl@bgdev.pl>
+ <20200904163517.GW1891694@smile.fi.intel.com> <CAMpxmJWQsgV5WZrdPW3UUOVTEy1L6Y_rb7ThQK1QTRinmHSqWA@mail.gmail.com>
+ <CAHp75VdOWdwT-e5ufsZ8MEH=YtdBgm1=TDKn3f8fJxXY4YKh9A@mail.gmail.com>
+In-Reply-To: <CAHp75VdOWdwT-e5ufsZ8MEH=YtdBgm1=TDKn3f8fJxXY4YKh9A@mail.gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 7 Sep 2020 12:28:05 +0200
+Message-ID: <CAMpxmJXmY8oBpPue5v0wBvmjHkFGaUmzHScHoV-1pNEQ59am4w@mail.gmail.com>
+Subject: Re: [PATCH 03/23] lib: uaccess: provide getline_from_user()
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gene Chen <gene_chen@richtek.com>
+On Mon, Sep 7, 2020 at 12:19 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Mon, Sep 7, 2020 at 1:05 PM Bartosz Golaszewski
+> <bgolaszewski@baylibre.com> wrote:
+> > On Fri, Sep 4, 2020 at 6:35 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Fri, Sep 04, 2020 at 05:45:27PM +0200, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> > > Doesn't mm/util.c provides us something like this?
+> > > strndup_user()?
+> > >
+> >
+> > Yes, there's both strndup_user() as well as strncpy_from_user(). The
+> > problem is that they rely on the strings being NULL-terminated. This
+> > is not guaranteed for debugfs file_operations write callbacks. We need
+> > some helper that takes the minimum of bytes provided by userspace and
+> > the buffer size and figure out how many bytes to actually copy IMO.
+>
+> Wouldn't this [1] approach work?
+>
+> [1]: https://elixir.bootlin.com/linux/v5.9-rc3/source/arch/x86/kernel/cpu/mtrr/if.c#L93
+>
 
-Add bindings document for LED support on MT6360 PMIC
+Sure, but this is pretty much what I do in getline_from_user(). If
+anything we should port mtrr_write() to using getline_from_user() once
+it's available upstream, no?
 
-Signed-off-by: Gene Chen <gene_chen@richtek.com>
----
- .../devicetree/bindings/leds/leds-mt6360.yaml      | 105 +++++++++++++++++++++
- 1 file changed, 105 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6360.yaml
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-mt6360.yaml b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
-new file mode 100644
-index 0000000..72914c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
-@@ -0,0 +1,105 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-mt6360.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LED driver for MT6360 PMIC from MediaTek Integrated.
-+
-+maintainers:
-+  - Gene Chen <gene_chen@richtek.com>
-+
-+description: |
-+  This module is part of the MT6360 MFD device.
-+  The LED controller is represented as a sub-node of the PMIC node on
-+  the device tree.
-+  This device has six current sinks.
-+
-+properties:
-+  compatible:
-+    const: mediatek,mt6360-led
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^led@[0-5]$":
-+    type: object
-+    description: |
-+      Properties for a single LED.
-+
-+    properties:
-+      reg:
-+        description: Index of the LED.
-+        enum:
-+          - 0 # LED output INDICATOR1
-+          - 1 # LED output INDICATOR2
-+          - 2 # LED output INDICATOR3
-+          - 3 # LED output INDICATOR4
-+          - 4 # LED output FLED1
-+          - 5 # LED output FLED2
-+
-+required:
-+  - compatible
-+  - "#address-cells"
-+  - "#size-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+ - |
-+   #include <dt-bindings/leds/common.h>
-+   led-controller {
-+     compatible = "mediatek,mt6360-led";
-+     #address-cells = <1>;
-+     #size-cells = <0>;
-+
-+     led@0 {
-+       reg = <0>;
-+       function = LED_FUNCTION_INDICATOR;
-+       color = <LED_COLOR_ID_RED>;
-+       default-state = "off";
-+     };
-+     led@1 {
-+       reg = <1>;
-+       function = LED_FUNCTION_INDICATOR;
-+       color = <LED_COLOR_ID_GREEN>;
-+       default-state = "off";
-+     };
-+     led@2 {
-+       reg = <2>;
-+       function = LED_FUNCTION_INDICATOR;
-+       color = <LED_COLOR_ID_BLUE>;
-+       default-state = "off";
-+     };
-+     led@3 {
-+       reg = <3>;
-+       function = LED_FUNCTION_INDICATOR;
-+       color = <LED_COLOR_ID_AMBER>;
-+       default-state = "off";
-+     };
-+     led@4 {
-+       reg = <4>;
-+       function = LED_FUNCTION_FLASH;
-+       color = <LED_COLOR_ID_WHITE>;
-+       function-enumerator = <1>;
-+       default-state = "off";
-+       led-max-microamp = <200000>;
-+       flash-max-microamp = <500000>;
-+       flash-max-timeout-us = <1024000>;
-+     };
-+     led@5 {
-+       reg = <5>;
-+       function = LED_FUNCTION_FLASH;
-+       color = <LED_COLOR_ID_WHITE>;
-+       function-enumerator = <2>;
-+       default-state = "off";
-+       led-max-microamp = <200000>;
-+       flash-max-microamp = <500000>;
-+       flash-max-timeout-us = <1024000>;
-+     };
-+   };
-+...
--- 
-2.7.4
-
+Bart
