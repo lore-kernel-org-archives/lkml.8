@@ -2,90 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B44C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16390C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4FD92080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:06:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599494779;
-	bh=Ld3Q0P90SqT/fcv53r3iy8A/rntUfRRJtF4KdDBpBWg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Eqys+X+5Xar+oZkvZtIn5OaXGx1xmrVDic8duJ/621Usn/ynDr40H8i2Tv27r5op
-	 tVYoH+5MyCQmDuflvRmAIIZXimSrW8z8zwgbfrZGLsx7G/1QBKvX6Ub69l6wRqVStd
-	 jIItniL2+e2OCL1O18DqGEJjX8BEiGe0fouweXGc=
+	by mail.kernel.org (Postfix) with ESMTP id BA2FE21927
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:06:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="V+/+cxJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730252AbgIGQGP (ORCPT
+        id S1730349AbgIGQGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:06:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730005AbgIGQFx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:05:53 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32488208C7;
-        Mon,  7 Sep 2020 16:05:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599494753;
-        bh=Ld3Q0P90SqT/fcv53r3iy8A/rntUfRRJtF4KdDBpBWg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oPIHeo2fT5hs6wPbs+wpdFd3N+U1GDB1JVqha3q5rL9Hi4OAHIek4a1DqAcc6+Bcz
-         aCsmL5J1DIr5MMFZBnAmexIWYhz38LmksYFK0fnWzL6UxCAslMyufb9yx6KZ7srjXZ
-         jW/LzLS+Q+rIdDU0rz7KRtGYgCGDStQjZNRmb4ZQ=
-From:   Will Deacon <will@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] arm64: perf: Add general hardware LLC events for PMUv3
-Date:   Mon,  7 Sep 2020 17:05:34 +0100
-Message-Id: <159947535838.560920.6785898612227287683.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200811053505.21223-1-leo.yan@linaro.org>
-References: <20200811053505.21223-1-leo.yan@linaro.org>
+        Mon, 7 Sep 2020 12:06:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729882AbgIGQFt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:05:49 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A07C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:05:48 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id q6so12846864ild.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:05:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2YNH7orOHt08+yKQJLjaMtOTfyyp0xF6Fs1etZL+bHo=;
+        b=V+/+cxJ23jlTHZSidq42rKHPp74ha5NEqxBN/sAaIX0NzKXxvRR3DCaTk2LL6w69vX
+         hp5dk3EcV6CyVydHsSCgL9GkxgMgaKzHVf8naeiZiz/RkVdtAW7CS/EzUO5rYvpKTQ7d
+         Iq/n3cjiz8XIiwEAmilNEQzhUGBq/TScPvJ2cScLfCMtY1PoIhpgOEyO3/OP9f5mqNhY
+         gjp08yumv3i0LiNqXGmmzfqRvFdbRiRm3Wfpgn9cgn4XBkeIGKM5pYLbGLTSawomKagx
+         QKQAZQduXFR9PMaAnPFn1qFTOp/KeSZYOHwK6RIqyNIqXXREmFTFsnmioNSiz/JFtWKM
+         r6Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2YNH7orOHt08+yKQJLjaMtOTfyyp0xF6Fs1etZL+bHo=;
+        b=FCfqBbxs53duleGK/Yqob5TbOXqXu+3WUMwgKljUN4JnMfDfQfthJnfNBvNDsAuBq+
+         OimLFWD4TRofuDHI/1W4yn8oLbJq+ZGm/VqOFVrvcyh/Sxx3G85y8Loa0GCRoGz51RWW
+         E5VgVRqhGtrQRX5muB/r8EcpJ0dQsW0Qaq2p7VMgnCf4bY+Z0GLIguICsSjLai6CWSm5
+         qF0a00KQ6Xay2NMfVO0RENMbA9PZ9dsF0Ia3RIOYt4hZeuwfrSwgd9FlRQP/pO6ES/06
+         5RV60QE7CPP1gzXrqkhHrZ7OPonv5sb9DVC3oPrt1N/xPShvkfrbQdLpw+CwFX5kb/4W
+         eGeA==
+X-Gm-Message-State: AOAM533MiKoKY/Haa/kRoTjfUKewVIaxInrt9+xAkAw4IaILUxFkVqWy
+        Jgw/edu3urKx8uQCcl3Di5dCyGwmL/PfFiA/mZR1iA==
+X-Google-Smtp-Source: ABdhPJy1SJ48pTuQ4hoOcMXqVi7KI0IYuGLLgOn6zubuNITr+5WPd1s2pbjpICAVAqJk1uA+zLCZu2U0jMg9eNYqPDM=
+X-Received: by 2002:a92:d144:: with SMTP id t4mr8930571ilg.88.1599494747757;
+ Mon, 07 Sep 2020 09:05:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200907125646.1946282-1-fparent@baylibre.com> <CAAOTY_9HYvxEygv-oz9wf+JjiSfp+Zn1u5okMftz3SncfK0G5A@mail.gmail.com>
+In-Reply-To: <CAAOTY_9HYvxEygv-oz9wf+JjiSfp+Zn1u5okMftz3SncfK0G5A@mail.gmail.com>
+From:   Fabien Parent <fparent@baylibre.com>
+Date:   Mon, 7 Sep 2020 18:05:35 +0200
+Message-ID: <CAOwMV_xEEt+m+LuL_3dF2J8rp4m4gn2T8AR5nGLi0sDoiOC=RQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: clock: mediatek: add bindings for MT8167 clocks
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-clk@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, masahiroy@kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        CK Hu <ck.hu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        mars.cheng@mediatek.com, macpaul.lin@mediatek.com,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        mtk01761 <wendell.lin@mediatek.com>,
+        Owen Chen <owen.chen@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Aug 2020 13:35:05 +0800, Leo Yan wrote:
-> This patch is to add the general hardware last level cache (LLC) events
-> for PMUv3: one event is for LLC access and another is for LLC miss.
-> 
-> With this change, perf tool can support last level cache profiling,
-> below is an example to demonstrate the usage on Arm64:
-> 
->   $ perf stat -e LLC-load-misses -e LLC-loads -- \
-> 	  perf bench mem memcpy -s 1024MB -l 100 -f default
-> 
-> [...]
+Hi Chun-Kuang,
 
-Applied to will (for-next/perf), thanks!
+> Why don't you add compatible of "mediatek,mt8167-mmsys"?
 
-[1/1] arm64: perf: Add general hardware LLC events for PMUv3
-      https://git.kernel.org/will/c/ffdbd3d83553
+I forgot to remove 'mmsys' from the commit message. I decided to add
+the documentation as part of the series that add support for MT8167 to
+drivers/soc/mediatek/mtk-mmsys.c.
 
-Cheers,
--- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+If you think it would be better to document it here I can add the
+bindings in the V2.
