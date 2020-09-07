@@ -2,151 +2,117 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 727D5C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A63C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451022137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CC1F20DD4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726499AbgIGDsb (ORCPT
+        id S1726596AbgIGDuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 23:48:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:50798 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726318AbgIGDsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 23:48:31 -0400
-IronPort-SDR: 89/j3eGLihNz5b/dITDGkQrkbhmGTszcQBOniSBYIw0LM5EBqWldQhtd3s0qdCaIlYxJSHwnBL
- dROukhcPZhNg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="158932740"
-X-IronPort-AV: E=Sophos;i="5.76,400,1592895600"; 
-   d="scan'208";a="158932740"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2020 20:48:29 -0700
-IronPort-SDR: 2p1st/nZI1B7u5B+v36cxaiKIgpbX0ySNt4CUN6qG9TZZMMQ4L6Drf2FfAZN6yvpTnirN6RQ0K
- N+jkVQzaberA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,400,1592895600"; 
-   d="scan'208";a="377086248"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 06 Sep 2020 20:48:29 -0700
-Received: from [10.255.167.17] (vramuthx-MOBL1.gar.corp.intel.com [10.255.167.17])
-        by linux.intel.com (Postfix) with ESMTP id 5589E58077A;
-        Sun,  6 Sep 2020 20:48:25 -0700 (PDT)
-Reply-To: vadivel.muruganx.ramuthevar@linux.intel.com
-Subject: Re: [PATCH v9 0/2] phy: Add USB PHY support on Intel LGM SoC
-To:     linux-kernel@vger.kernel.org, kishon@ti.com, vkoul@kernel.org
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        gregkh@linuxfoundation.org, p.zabel@pengutronix.de,
-        balbi@kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com, yin1.li@intel.com
-References: <20200828022312.52724-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <e61406f7-8198-29c7-3dd4-c7960d19d3ce@linux.intel.com>
-Date:   Mon, 7 Sep 2020 11:48:23 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-MIME-Version: 1.0
-In-Reply-To: <20200828022312.52724-1-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 6 Sep 2020 23:50:25 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49301 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726286AbgIGDuX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 6 Sep 2020 23:50:23 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1kF8Ae-0005v6-ED
+        for linux-kernel@vger.kernel.org; Mon, 07 Sep 2020 03:50:20 +0000
+Received: by mail-pg1-f200.google.com with SMTP id 184so5372570pgg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:50:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3g3V+QNt3GCtg2Hc+UJaZtxoWISK1rJHJzXJXHO3wbk=;
+        b=nlHyLmmBGSb0SAk+2GvAWTEE+364wfBZawdoDCthZeC7xyo96PdiwtNyEgv7nrq9Gf
+         JHMjRnIHoR9xT0+2cynTyRDwY386YbxufdX+PWeJyLEkO4yjrke/4EeV+D5ZGp8jE7kl
+         ceKs2TsiTfcLMEikV5g5PG6T1smIqgVlQIfKeFztxWYz/MMb96YMx+GQyciibX1IzZ9f
+         5y9WoqutVYkfG/XSTUu2rOqqAqSFsTixRpAFjPs6niwdUXx8Qx4Y9uDQmv5LZUvWHZaL
+         H1kjM9cC4oTtTwBHjuEcjiOXCW5yGnFp3CiYicFsB2wS/2j4W4b7bodbT0mncY6jkHXd
+         qyRQ==
+X-Gm-Message-State: AOAM532FJSCjkkm2N0XmvDEIBzOj2MIwRzx3aJGVKSUvoGV9QHQgWNCl
+        KXT/e6ICGd/QHqNrKyqfnmW0qp5qAEkRgNyxJc0hUlbq4GCwGy07enw0ShYw7OYvZmjMsKWv602
+        rrZ9sQTtqTmDNsVtgBcpNVq9ypAmJ20StC+luKY9T
+X-Received: by 2002:aa7:8b02:: with SMTP id f2mr17326308pfd.59.1599450618942;
+        Sun, 06 Sep 2020 20:50:18 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwiw6zva7WG2JalWfZO5CnnUA49jrjPIHrcrSaL3UTwr1qmqpBYYx79C1OGaVQ4e1GVoN+a1g==
+X-Received: by 2002:aa7:8b02:: with SMTP id f2mr17326293pfd.59.1599450618608;
+        Sun, 06 Sep 2020 20:50:18 -0700 (PDT)
+Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id e1sm10828706pjv.17.2020.09.06.20.50.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 20:50:17 -0700 (PDT)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     davem@davemloft.net, kuba@kernel.org, skhan@linuxfoundation.org
+Cc:     po-hsu.lin@canonical.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCHv3] selftests: rtnetlink: load fou module for kci_test_encap_fou() test
+Date:   Mon,  7 Sep 2020 11:50:10 +0800
+Message-Id: <20200907035010.9154-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon, Vinod,
+The kci_test_encap_fou() test from kci_test_encap() in rtnetlink.sh
+needs the fou module to work. Otherwise it will fail with:
 
-   Kindly, can you please merge it if there's no further comments.
-   Rob given Reviewed-by tag to USB-PHY  dt_schema YAML patch.
-   Philipp Zabel given Reviewed-by tag to USB-PHY driver patch.
-   Please consider and do the needful.
+  $ ip netns exec "$testns" ip fou add port 7777 ipproto 47
+  RTNETLINK answers: No such file or directory
+  Error talking to the kernel
 
-Regards
-Vadivel
+Add the CONFIG_NET_FOU into the config file as well. Which needs at
+least to be set as a loadable module.
 
-On 28/8/2020 10:23 am, Ramuthevar,Vadivel MuruganX wrote:
-> The USB PHY provides the optimized for low power dissipation while active, idle, or on standby.
-> Requires minimal external components, a single resistor, for best operation.
-> Supports 10/5-Gbps high-speed data transmission rates through 3-m USB 3.x cable
-> ---
-> v9:
->    - Vinod review comments update
->    - remove depends on USB_SUPPORT
->    - replace ret variable by 0 in return statement
->    - replace dev_info by dev_dbg
->    - handle ret and extcon_get_state separately
-> v8-resend:
->    - Correct the typo error in my previous patch
-> v8:
->    - Rebase to V5.9-rc1
-> v7:
->    - No Change
-> v6:
->    - No Change
-> v5:
->    - As per Felipe and Greg's suggestion usb phy driver reviewed patches
->      changed the folder from drivers/usb/phy to drivers/phy
->    - Reviewed-By tag added in commit message
-> v4:
->    - Andy's review comments addressed
->    - drop the excess error debug prints
->    - error check optimized
->    - merge the split line to one line
-> v3:
->    - Andy's review comments update
->    - hardcode return value changed to actual return value from the callee
->    - add error check is fixed according to the above
->    - correct the assignment in redundant
->    - combine the split line into one line
-> v2:
->    - Address Phillip's review comments
->    - replace devm_reset_control_get() by devm_reset_control_get_exclusive()
->    - re-design the assert and deassert fucntion calls as per review comments
->    - address kbuild bot warnings
->    - add the comments
-> v1:
->    - initial version
-> ---
-> dt-bindings: usb: Add USB PHY support for Intel LGM SoC
-> v9:
->    - No Change
-> v8-resend:
->    - No change
-> v8:
->    - No Change
-> v7:
->    - Fixed the bot issue: usb-phy@e7e00000: '#phy-cells' is a required property
-> v6:
->    - Fixed the bot issue.
->    - replace node-name by usb-phy@ in example
-> v5:
->    - Reviewed-By tag added
-> v4:
->    - No Change
-> v3:
->    - No Change
-> v2:
->    - No Change
-> v1:
->    - initial version
->   
-> Ramuthevar Vadivel Murugan (2):
->    dt-bindings: phy: Add USB PHY support for Intel LGM SoC
->    phy: Add USB3 PHY support for Intel LGM SoC
-> 
->   .../devicetree/bindings/phy/intel,lgm-usb-phy.yaml |  58 +++++
->   drivers/phy/Kconfig                                |  10 +
->   drivers/phy/Makefile                               |   1 +
->   drivers/phy/phy-lgm-usb.c                          | 281 +++++++++++++++++++++
->   4 files changed, 350 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-usb-phy.yaml
->   create mode 100644 drivers/phy/phy-lgm-usb.c
-> 
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+---
+ tools/testing/selftests/net/config       | 1 +
+ tools/testing/selftests/net/rtnetlink.sh | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/tools/testing/selftests/net/config b/tools/testing/selftests/net/config
+index 3b42c06b..c5e50ab 100644
+--- a/tools/testing/selftests/net/config
++++ b/tools/testing/selftests/net/config
+@@ -31,3 +31,4 @@ CONFIG_NET_SCH_ETF=m
+ CONFIG_NET_SCH_NETEM=y
+ CONFIG_TEST_BLACKHOLE_DEV=m
+ CONFIG_KALLSYMS=y
++CONFIG_NET_FOU=m
+diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selftests/net/rtnetlink.sh
+index 7c38a90..a711b3e 100755
+--- a/tools/testing/selftests/net/rtnetlink.sh
++++ b/tools/testing/selftests/net/rtnetlink.sh
+@@ -520,6 +520,11 @@ kci_test_encap_fou()
+ 		return $ksft_skip
+ 	fi
+ 
++	if ! /sbin/modprobe -q -n fou; then
++		echo "SKIP: module fou is not found"
++		return $ksft_skip
++	fi
++	/sbin/modprobe -q fou
+ 	ip -netns "$testns" fou add port 7777 ipproto 47 2>/dev/null
+ 	if [ $? -ne 0 ];then
+ 		echo "FAIL: can't add fou port 7777, skipping test"
+@@ -540,6 +545,7 @@ kci_test_encap_fou()
+ 		return 1
+ 	fi
+ 
++	/sbin/modprobe -q -r fou
+ 	echo "PASS: fou"
+ }
+ 
+-- 
+2.7.4
+
