@@ -2,108 +2,98 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B04C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCF6C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93AF421481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599482084;
-	bh=kDHQv3XCIPb67Uc5kjThYASF43s8jQiU+rU4a6we73I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HEZJItLKxqqXTWxRjDv6KNr7NYMU+3P4taZhxI+b+e2v00dDuFc57ZnSTUdfKzTMs
-	 c+/St/FvEo5PpPsYF6HJDHlsFvQolEcAf0EUHnZkdYjliTIO2LGc8oTXjjTgdyI/Dq
-	 lWx+dJByZJXzPD5Mhj+ne/1MfX6FhSfHiXDkw1hQ=
+	by mail.kernel.org (Postfix) with ESMTP id 84B5321473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HwvTIjsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgIGMek (ORCPT
+        id S1729159AbgIGMgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728792AbgIGMdb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:33:31 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFD56206E6;
-        Mon,  7 Sep 2020 12:33:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599482010;
-        bh=kDHQv3XCIPb67Uc5kjThYASF43s8jQiU+rU4a6we73I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vutxjeTK+c84QOcfrmiQZoAi3MNhUbkZMzAVZmEnKl5xXrZQEmSlf1zS7Xgi3ZePG
-         Kq2LM/1sU1DPH/RLJRbJoSq+gDNSSX/2E59CxSiQy0JhaWF2Ume6S88ru0CV/ry47x
-         bcA5p9/yYPLlnsQpMe147ImA3SQHie1kywQFTOTs=
-Date:   Mon, 7 Sep 2020 14:33:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jonathan Marek <jonathan@marek.ca>
-Cc:     linux-arm-msm@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
-Message-ID: <20200907123344.GA2371705@kroah.com>
-References: <20200901003300.11985-1-jonathan@marek.ca>
+        Mon, 7 Sep 2020 08:36:41 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2294 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729174AbgIGMcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:32:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5627e70000>; Mon, 07 Sep 2020 05:30:32 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 07 Sep 2020 05:32:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 05:32:45 -0700
+Received: from [172.27.12.170] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
+ 2020 12:32:39 +0000
+Subject: Re: [PATCH rdma-next 1/4] lib/scatterlist: Refactor
+ sg_alloc_table_from_pages
+To:     Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
+CC:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+References: <20200903121853.1145976-1-leon@kernel.org>
+ <20200903155434.1153934-1-leon@kernel.org> <20200907072912.GA19875@lst.de>
+From:   Maor Gottlieb <maorg@nvidia.com>
+Message-ID: <2a4b0211-c7a0-2a82-1335-7ed935b92aa2@nvidia.com>
+Date:   Mon, 7 Sep 2020 15:32:31 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901003300.11985-1-jonathan@marek.ca>
+In-Reply-To: <20200907072912.GA19875@lst.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599481832; bh=vB36ZS5TzpC7eMfT9U7YXNMKeTt+DU0w5HUuBJIhjA4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:Content-Type:
+         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
+         X-ClientProxiedBy;
+        b=HwvTIjsPofXA543PAtAD1r3ScN+KadLzOwar93ZxiWVjM8VyccMcIar+1DOnCCcai
+         uhFBsFPWKk7jKIACRKr8HrkT/t9uazUFSTwobWPM3lIjyJ1fcojYgpMAqLj+T87rDZ
+         kRTscExWfk0xbDVojnXFZEZ0BZ5O4rsf1080PS/pyHDPX0ZqIPezBRtwC1Y83EtO6H
+         9jvovM47QjLjFYlB72OLAJnEl8wosASxncaRATb9mquJYrVGmNTqAOlwJm6MmYyB9i
+         3BpcYM6PgceiapPcWZ5H4vB/aDB37RcBrlADijfA38zGcZnMTTjeZnqsQWbLCeh8ng
+         3ysl5fd3FtOuw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 08:32:59PM -0400, Jonathan Marek wrote:
-> Initializing sensors requires attaching to pd 2. Add an ioctl for that.
-> 
-> This corresponds to FASTRPC_INIT_ATTACH_SENSORS in the downstream driver.
-> 
-> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-> ---
->  drivers/misc/fastrpc.c      | 9 ++++++---
->  include/uapi/misc/fastrpc.h | 5 +++--
->  2 files changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-> index 7939c55daceb..ea5e9ca0d705 100644
-> --- a/drivers/misc/fastrpc.c
-> +++ b/drivers/misc/fastrpc.c
-> @@ -1276,7 +1276,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
->  	return 0;
->  }
->  
-> -static int fastrpc_init_attach(struct fastrpc_user *fl)
-> +static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
->  {
->  	struct fastrpc_invoke_args args[1];
->  	int tgid = fl->tgid;
-> @@ -1287,7 +1287,7 @@ static int fastrpc_init_attach(struct fastrpc_user *fl)
->  	args[0].fd = -1;
->  	args[0].reserved = 0;
->  	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
-> -	fl->pd = 0;
-> +	fl->pd = pd;
->  
->  	return fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
->  				       sc, &args[0]);
-> @@ -1477,7 +1477,10 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
->  		err = fastrpc_invoke(fl, argp);
->  		break;
->  	case FASTRPC_IOCTL_INIT_ATTACH:
-> -		err = fastrpc_init_attach(fl);
-> +		err = fastrpc_init_attach(fl, 0);
-> +		break;
-> +	case FASTRPC_IOCTL_INIT_ATTACH_SNS:
-> +		err = fastrpc_init_attach(fl, 2);
 
-Shouldn't you have #defines for those magic numbers somewhere?  What
-does 0 and 2 mean?
+On 9/7/2020 10:29 AM, Christoph Hellwig wrote:
+> On Thu, Sep 03, 2020 at 06:54:34PM +0300, Leon Romanovsky wrote:
+>> From: Maor Gottlieb <maorg@nvidia.com>
+>>
+>> Currently, sg_alloc_table_from_pages doesn't support dynamic chaining of
+>> SG entries. Therefore it requires from user to allocate all the pages in
+>> advance and hold them in a large buffer. Such a buffer consumes a lot of
+>> temporary memory in HPC systems which do a very large memory registratio=
+n.
+>>
+>> The next patches introduce API for dynamically allocation from pages and
+>> it requires us to do the following:
+>>   * Extract the code to alloc_from_pages_common.
+>>   * Change the build of the table to iterate on the chunks and not on th=
+e
+>>     SGEs. It will allow dynamic allocation of more SGEs.
+>>
+>> Since sg_alloc_table_from_pages allocate exactly the number of chunks,
+>> therefore chunks are equal to the number of SG entries.
+> Given how few users __sg_alloc_table_from_pages has, what about just
+> switching it to your desired calling conventions without another helper?
 
-thanks,
-
-greg k-h
+I tried it now. It didn't save a lot.=C2=A0 Please give me your decision an=
+d=20
+if needed I will update accordingly.
