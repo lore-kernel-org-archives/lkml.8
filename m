@@ -4,32 +4,35 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B089C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C840C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2382206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E1A2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbgIGRct (ORCPT
+        id S1731348AbgIGRcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:32:49 -0400
-Received: from 8bytes.org ([81.169.241.247]:43570 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729480AbgIGNS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60410 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729495AbgIGNS0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:18:26 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A0BC0617A2;
+        Mon,  7 Sep 2020 06:18:10 -0700 (PDT)
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id CE991D77;
-        Mon,  7 Sep 2020 15:16:47 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 5A0B0FC7;
+        Mon,  7 Sep 2020 15:16:52 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -40,14 +43,15 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 11/72] x86/insn: Add insn_has_rep_prefix() helper
-Date:   Mon,  7 Sep 2020 15:15:12 +0200
-Message-Id: <20200907131613.12703-12-joro@8bytes.org>
+Subject: [PATCH v7 20/72] x86/boot/compressed/64: Call set_sev_encryption_mask() earlier
+Date:   Mon,  7 Sep 2020 15:15:21 +0200
+Message-Id: <20200907131613.12703-21-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,62 +64,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add a function to check whether an instruction has a REP prefix.
+Call set_sev_encryption_mask() while still on the stage 1 #VC-handler,
+because the stage 2 handler needs the kernel's own page-tables to be
+set up, to which calling set_sev_encryption_mask() is a prerequisite.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/include/asm/insn-eval.h |  1 +
- arch/x86/lib/insn-eval.c         | 24 ++++++++++++++++++++++++
- 2 files changed, 25 insertions(+)
+ arch/x86/boot/compressed/head_64.S      | 9 ++++++++-
+ arch/x86/boot/compressed/ident_map_64.c | 3 ---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index f748f57f1491..a0f839aa144d 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -15,6 +15,7 @@
- #define INSN_CODE_SEG_OPND_SZ(params) (params & 0xf)
- #define INSN_CODE_SEG_PARAMS(oper_sz, addr_sz) (oper_sz | (addr_sz << 4))
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 37c8c2c8f8b6..1c80f1738fd9 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -533,9 +533,16 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	rep	stosq
  
-+bool insn_has_rep_prefix(struct insn *insn);
- void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index f20942ce76c6..58f7fb95c7f4 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -53,6 +53,30 @@ static bool is_string_insn(struct insn *insn)
- 	}
- }
+ /*
+- * Load stage2 IDT and switch to our own page-table
++ * If running as an SEV guest, the encryption mask is required in the
++ * page-table setup code below. When the guest also has SEV-ES enabled
++ * set_sev_encryption_mask() will cause #VC exceptions, but the stage2
++ * handler can't map its GHCB because the page-table is not set up yet.
++ * So set up the encryption mask here while still on the stage1 #VC
++ * handler. Then load stage2 IDT and switch to the kernel's own
++ * page-table.
+  */
+ 	pushq	%rsi
++	call	set_sev_encryption_mask
+ 	call	load_stage2_idt
+ 	call	initialize_identity_maps
+ 	popq	%rsi
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index 62e42c11a336..b4f2a5f503cd 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -105,9 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
+-	/* If running as an SEV guest, the encryption mask is required. */
+-	set_sev_encryption_mask();
+-
+ 	/* Exclude the encryption mask from __PHYSICAL_MASK */
+ 	physical_mask &= ~sme_me_mask;
  
-+/**
-+ * insn_has_rep_prefix() - Determine if instruction has a REP prefix
-+ * @insn:	Instruction containing the prefix to inspect
-+ *
-+ * Returns:
-+ *
-+ * true if the instruction has a REP prefix, false if not.
-+ */
-+bool insn_has_rep_prefix(struct insn *insn)
-+{
-+	int i;
-+
-+	insn_get_prefixes(insn);
-+
-+	for (i = 0; i < insn->prefixes.nbytes; i++) {
-+		insn_byte_t p = insn->prefixes.bytes[i];
-+
-+		if (p == 0xf2 || p == 0xf3)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- /**
-  * get_seg_reg_override_idx() - obtain segment register override index
-  * @insn:	Valid instruction with segment override prefixes
 -- 
 2.28.0
 
