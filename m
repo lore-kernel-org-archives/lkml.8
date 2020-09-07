@@ -2,206 +2,185 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37827C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D43C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E443E206B5
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:07:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jWpGnNXe"
+	by mail.kernel.org (Postfix) with ESMTP id 3DCB6206B5
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:09:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbgIGSHe (ORCPT
+        id S1729422AbgIGSJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:07:34 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58764 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728421AbgIGSHS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:07:18 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200907180716euoutp0174eb10b253a3c460e8311e64a5fd3f9e~ykqC6nTPG1643416434euoutp01a;
-        Mon,  7 Sep 2020 18:07:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200907180716euoutp0174eb10b253a3c460e8311e64a5fd3f9e~ykqC6nTPG1643416434euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1599502036;
-        bh=9Ov1IwgdblahQ1lnpPYahXN/H6AgUfE+QnPNwnweqZw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWpGnNXeM2sOwVjlU76n6o/dgwIKCvpzpTDZzn9kS0XdHu1VEKG4N5ZrYY8cZwPMP
-         hxZI+GMAOldQSVf0b3zCpVcsb8Bx5LlZborBUGJ2mGK1XJJxKNyxFRfbAlD61R9I/c
-         0mhVsltxLLM0etSEUYJNrUuHsGkSomgJ8q5iO+OY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200907180716eucas1p20a614580eaa2b31e3d99363c794e84d6~ykqCfIW8o3155731557eucas1p2P;
-        Mon,  7 Sep 2020 18:07:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5C.27.06456.4D6765F5; Mon,  7
-        Sep 2020 19:07:16 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200907180715eucas1p1c1e41bb1ddb5a401a4d9c8cb6117e1f6~ykqB3Wzxx0579005790eucas1p18;
-        Mon,  7 Sep 2020 18:07:15 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200907180715eusmtrp28dad76c94961905038faa5884ba07596~ykqB2izpA0235102351eusmtrp2T;
-        Mon,  7 Sep 2020 18:07:15 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-10-5f5676d4e5df
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id E6.D4.06017.3D6765F5; Mon,  7
-        Sep 2020 19:07:15 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200907180715eusmtip2eb502591ea7603adc67594d5c9abe1ea~ykqBthZor0136101361eusmtip2m;
-        Mon,  7 Sep 2020 18:07:15 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc\@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "m.szyprowski\@samsung.com" <m.szyprowski@samsung.com>,
-        "b.zolnierkie\@samsung.com" <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH 1/3] net: ax88796c: ASIX AX88796C SPI Ethernet Adapter
- Driver
-Date:   Mon, 07 Sep 2020 20:06:56 +0200
-In-Reply-To: <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com> (David
-        Laight's message of "Wed, 26 Aug 2020 15:06:51 +0000")
-Message-ID: <dleftjk0x5qx4v.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 7 Sep 2020 14:09:11 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51253 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728421AbgIGSJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:09:10 -0400
+IronPort-SDR: f9dHDpnSJga581iLrCVxttjQZ2od9HJEWIg7orYtMtr/4kka2GZX+zYTzkJ1dVwiW5dlbH8LW/
+ AI43fujFQH8A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="158048842"
+X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
+   d="scan'208";a="158048842"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 11:09:09 -0700
+IronPort-SDR: KvkpwFbtIMlj4iw2hYC2NDrBxIZxdBYQTGOgbGig2Vvn1PmHSEzvjxRaUEj3uaRqc/kutdCXCN
+ dxtpZCTkYttw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
+   d="scan'208";a="406898153"
+Received: from lkp-server02.sh.intel.com (HELO a98deea729ba) ([10.239.97.151])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2020 11:09:07 -0700
+Received: from kbuild by a98deea729ba with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kFLZj-0000DB-6B; Mon, 07 Sep 2020 18:09:07 +0000
+Date:   Tue, 08 Sep 2020 02:08:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 7f6aae3e054f8d36ac90812db4ffd78796a487d1
+Message-ID: <5f56770d.l++AabzgdalBXghz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SeUhUURTGve+9efMcGruNWqcpRKaCFnJpsRtZaRg8/KOiRSIwG+tlojMT
-        M2kb1LRig2muqQlNWWaGZjoOZmU1qJOYjtlCgmVkUW4VldlCi6+b0H/f/c7vu+ecyxVYzaBC
-        KyQad0lmoz5Zx6s4Z/M3z9xHqTFxIR/yBHKt4KqCFHuOcqTuYg1Dzja2K0hm7wBLPJ4qJelw
-        ZihIde8TBXlYX8yTAk8DQ1x5txCpaHymJM32ieTYrUZlhI+YeSaXFx8+ecCKjstdjFhdfoIX
-        ay4cFDMc5Uj8VB2wRrlJFb5NSk5MlczBy7aodjS9mrzzht8e250hpRV1YxvyFgAvAHfVEGdD
-        KkGDyxB8aT3M0sNnBH0jTl6mNPgTAkdL4Fgif8TGUf8SAs+7cBp4g6C/3z0aEAQeB0FFxUaZ
-        8cOzIedzNyMzLK5VQHmLDckFX7wOSh7fZ2XN4RnwM/8OL0Pe2IqgtKnrb2c1XgTXSkoZWfvj
-        xeB426Ok/gRoKXz1dwoWG6DQM4jkMOAsAX73tijpqFFQas9mqPaFfrfjnz8Vfl8/y8iTAj4I
-        OdlhNJuOwFn8laPMEuhu/85THQk9zi885X3g6dAE2tcHsp2nWWqrIe24htLToTLz5r9btHCy
-        vwxRRIRsm4m+VQ4C97NvzCkUWPTfNkX/bVM0GmHxLLhaH0ztOVB6boCleilUVr7n7EhRjiZJ
-        KRZDgmQJNUq7gyx6gyXFmBC01WSoRqP/rvWX+2MdGu6MdyEsIN049YfomDiNQp9q2Wtwoemj
-        N72sutKBtJzRZJR0fuoVba2bNept+r37JLMpzpySLFlcaIrA6Sap55/vi9XgBP0uKUmSdkrm
-        sSojeGutyFA7MnMdMS3/8XRVc7wua3xkpf0ut6EtTSDdIcmqZbFF/kcONWDrgqT4qLqjphOr
-        azoTp21VR/uHHQhcGR5hf/5CFxP8vmnNsGuKuNa+/VB6W4JVe4Oo7mX2VLxOK5lbHPs6ZsC3
-        YFzQsFdVx6L2EK/bnQvjX+b2JPrNawjYv15zX8dZduhDZ7Nmi/4PjNCQA38DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrKIsWRmVeSWpSXmKPExsVy+t/xe7qXy8LiDeZPU7DYOGM9q8Wc8y0s
-        FjuWbmaymH/kHKtF/+PXzBbnz29gt7iwrY/VYtPja6wWl3fNYbOYcX4fk8WhqXsZLdYeuctu
-        cWyBmEXr3iPsDnwe/bOnsHlcvnaR2WPLyptMHptWdbJ5bF5S79G3ZRWjx+dNcgHsUXo2Rfml
-        JakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZR59IFuwWqeg6
-        8Ja9gfGOQBcjJ4eEgInEtO9dLF2MXBxCAksZJY68O8TaxcgBlJCSWDk3HaJGWOLPtS42iJqn
-        jBKPTm1lBKlhE9CTWLs2AqRGREBLYvKXO0wgNcwCC1klJu9/ygySEBYIlHgw7xQ7SL2QgL3E
-        5/lKIGEWAVWJv9MOgM3kFGhglFh29CYbSIJXwFxi4+JlTCC2qIClxJYX99kh4oISJ2c+YQGx
-        mQWyJb6ufs48gVFgFpLULCSpWUDrmAU0Jdbv0ocIa0ssW/iaGcK2lVi37j3LAkbWVYwiqaXF
-        uem5xUZ6xYm5xaV56XrJ+bmbGIHRuu3Yzy07GLveBR9iFOBgVOLh/eAVFi/EmlhWXJl7iFEF
-        aMyjDasvMEqx5OXnpSqJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6NGJzFKiyfnABJNXEm9o
-        amhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRqXH2Vu1s5qJZ9wINXTZs
-        OrdVNkUzrrr7ZkfP7s5goQXnZWbn/jDj28BtJRLJeWaB/9zu2U5NihEKL64oh1bKb05Y6Z7s
-        nVa6412tcMbz7HW6t3ZVJp3XEb4adv1oRHvyyU03FDdtPhvC6lgjEnTjT6Tf3JCmTL+nv0y5
-        O04r1rE6+bd/lVdiKc5INNRiLipOBABgnstS+AIAAA==
-X-CMS-MailID: 20200907180715eucas1p1c1e41bb1ddb5a401a4d9c8cb6117e1f6
-X-Msg-Generator: CA
-X-RootMTR: 20200907180715eucas1p1c1e41bb1ddb5a401a4d9c8cb6117e1f6
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200907180715eucas1p1c1e41bb1ddb5a401a4d9c8cb6117e1f6
-References: <1efebb42c30a4c40bf91649d83d60e1c@AcuMS.aculab.com>
-        <CGME20200907180715eucas1p1c1e41bb1ddb5a401a4d9c8cb6117e1f6@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
+branch HEAD: 7f6aae3e054f8d36ac90812db4ffd78796a487d1  Merge branch 'core/build'
 
-It was <2020-08-26 =C5=9Bro 15:06>, when David Laight wrote:
-> From: Lukasz Stelmach
->> Sent: 26 August 2020 15:59
->>=20
->> It was <2020-08-25 wto 20:44>, when Krzysztof Kozlowski wrote:
->> > On Tue, Aug 25, 2020 at 07:03:09PM +0200, =C5=81ukasz Stelmach wrote:
->> >> ASIX AX88796[1] is a versatile ethernet adapter chip, that can be
->> >> connected to a CPU with a 8/16-bit bus or with an SPI. This driver
->> >> supports SPI connection.
-> ...
->> >> +++ b/drivers/net/ethernet/asix/Kconfig
->> >> @@ -0,0 +1,20 @@
->> >> +#
->> >> +# Asix network device configuration
->> >> +#
->> >> +
->> >> +config NET_VENDOR_ASIX
->> >> +	bool "Asix devices"
->> >> +	depends on SPI
->> >> +	help
->> >> +	  If you have a network (Ethernet) interface based on a chip from A=
-SIX, say Y
->> >
->> > Looks like too long, did it pass checkpatch?
->>=20
->> Yes? Let me try again. Yes, this one passed, but I missed a few other
->> problems. Thank you.
->>=20
->> >> +
->> >> +if NET_VENDOR_ASIX
->> >> +
->> >> +config SPI_AX88796C
->> >> +	tristate "Asix AX88796C-SPI support"
->> >> +	depends on SPI
->> >> +	depends on GPIOLIB
->> >> +	help
->> >> +	  Say Y here if you intend to attach a Asix AX88796C as SPI mode
->> >> +
->> >> +endif # NET_VENDOR_ASIX
->
-> There are plenty of other ethernet devices made by ASIX (eg USB ones)
-> that have nothing at all to do with this driver.
-> So those questions are too broad.
->
-> The first one should probable be for ASIX SPI network devices.
->
+elapsed time: 721m
 
-On the other hand there is only one ASIX SPI network device and there
-are four other Non-PCI AX88* chips (and that is all I know about them).
+configs tested: 111
+configs skipped: 3
 
-> (I can't imagine SPI being fast enough to be useful for ethernet...)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Not for a file server, sure. It handles clock up to 40MHz and it's meant
-for systems that cannot handle more than a few MB/s anyway.
+gcc tested configs:
+arm                                 defconfig
+arm64                               defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                              allmodconfig
+nds32                            alldefconfig
+mips                        workpad_defconfig
+mips                     cu1000-neo_defconfig
+powerpc                          g5_defconfig
+mips                          ath25_defconfig
+sh                      rts7751r2d1_defconfig
+ia64                             allmodconfig
+sh                        edosk7760_defconfig
+arm                          collie_defconfig
+mips                   sb1250_swarm_defconfig
+arm                       omap2plus_defconfig
+nios2                         3c120_defconfig
+sh                         apsh4a3a_defconfig
+m68k                          atari_defconfig
+powerpc                     pseries_defconfig
+arc                        nsimosci_defconfig
+sh                          landisk_defconfig
+powerpc                         wii_defconfig
+h8300                    h8300h-sim_defconfig
+xtensa                              defconfig
+h8300                               defconfig
+arm                        neponset_defconfig
+powerpc                  mpc885_ads_defconfig
+mips                           ip28_defconfig
+mips                        omega2p_defconfig
+mips                 pnx8335_stb225_defconfig
+mips                         bigsur_defconfig
+m68k                           sun3_defconfig
+arm                         socfpga_defconfig
+openrisc                            defconfig
+alpha                            allyesconfig
+sh                           se7343_defconfig
+arm                          pxa168_defconfig
+sh                         ecovec24_defconfig
+mips                           ip27_defconfig
+powerpc                      pasemi_defconfig
+mips                          ath79_defconfig
+arm                     eseries_pxa_defconfig
+arm                            mmp2_defconfig
+arm                        mini2440_defconfig
+ia64                             alldefconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                                defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200907
+x86_64               randconfig-a004-20200907
+x86_64               randconfig-a003-20200907
+x86_64               randconfig-a005-20200907
+x86_64               randconfig-a001-20200907
+x86_64               randconfig-a002-20200907
+i386                 randconfig-a004-20200907
+i386                 randconfig-a005-20200907
+i386                 randconfig-a006-20200907
+i386                 randconfig-a003-20200907
+i386                 randconfig-a001-20200907
+i386                 randconfig-a002-20200907
+i386                 randconfig-a016-20200907
+i386                 randconfig-a015-20200907
+i386                 randconfig-a011-20200907
+i386                 randconfig-a013-20200907
+i386                 randconfig-a014-20200907
+i386                 randconfig-a012-20200907
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
 
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
+clang tested configs:
+x86_64               randconfig-a013-20200907
+x86_64               randconfig-a011-20200907
+x86_64               randconfig-a016-20200907
+x86_64               randconfig-a012-20200907
+x86_64               randconfig-a015-20200907
+x86_64               randconfig-a014-20200907
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl9WdsEACgkQsK4enJil
-gBCEDwf/ZAzzxZQsYFkciKV12hSut3cBhW9zfz+Zbxu1YFnFrPRfBmdwn7vmP8vb
-uJTacwtFJ3OAJiWhQIt7r4tb/Uh1lK9S/kjVDABUtssuGj8YDgbBKUVdeA1ESPy9
-u3wl2aId3k9NPp6sshwqb9Wmigqh6SjsA9hLvxQEBgfOrjvh95JA0TYqrmRijyn2
-k1YitbAzKa5uIh1GziCGwehfvOxALSg09uCkA7mr/yRpjbmvrlitNlfQA+at0XWy
-d+f0T474TbGCVDIxIV2f8+HFe3iOPeZJxFOkjiEi9PclaB/arQvbhT6IxJd3mIei
-g/+F/BYB/aiBxxSLgg3Q3XL7YY6ecA==
-=/xTC
------END PGP SIGNATURE-----
---=-=-=--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
