@@ -2,108 +2,112 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA76C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A50C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB9B21481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:08:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="ZyYM17G8"
+	by mail.kernel.org (Postfix) with ESMTP id 403272145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgIGIHw (ORCPT
+        id S1727842AbgIGIJz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:07:52 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:43205 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727004AbgIGIFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:05:43 -0400
-IronPort-SDR: u+T+QGwwWyG+BrlmfThsZjXBa77iQ383OzimWtt5FvUDvqRSJcR6sF2ssX2I6WBxyggATIcvVo
- aim6v9Z+iodBcJMEtj7VnSCbOgjpbinc+Cwtk6S+fSg+8XGjL4O3hPtzlsJ5g4hkml8sL1sXZZ
- LxKB/xWJYrWLIzUM1JA0Jax7PAiXMVHZoRNIhvRNs+FW/eXIi053htRyNGJvLxreYRdM0UmMtQ
- 4LY0wi65OI/cnjEFbbhAjJJE3djMi+3ctfVPj2bepIGq2JG/0c48sInT2TbsPuwElDjwO614Wc
- DCY=
-X-IronPort-AV: E=Sophos;i="5.76,401,1592863200"; 
-   d="scan'208";a="13750638"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 07 Sep 2020 10:04:50 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 07 Sep 2020 10:04:50 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 07 Sep 2020 10:04:50 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1599465890; x=1631001890;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=UU4gx9FJhlA+He8aLQ485OrFfVM+zBRiE+ae1YhHj1A=;
-  b=ZyYM17G8XuwrsH4A6Ya17tIqL5xFoHGHBU7L/G3iI2t906oikWjp4LmQ
-   GqCuJVpn3T3lawRPY2rl75NRxdrGJgws5pWL4rD1r1DaLoDvMA6bsZokm
-   LeJ/czdYO6e5X90624l8rvfr3g49pOK74fHF3Vpsmvs8rLve+SBnelznJ
-   0w3+FAWvvJyYuC/Qzc+V4hgf9NmoitpwkzA21ua4Pd+G5tAJZav76bVKn
-   haCLJoPIph2JzKqeaYuWXiEEekDo0MjKhz4Wkh/J4rYFF+xtvlTYUn28m
-   0z6x6f7Q3DPOxiq826Q0z6AHLFyJ+5GfYvcC6WhjrWP5IYQTQsQhu9s+q
-   g==;
-IronPort-SDR: vF5dzN6hNPyGujtXtLGYOF+jHxKv4rm0C2ebxGkJc/8R9wHzTkNaO1hd9Od6oStlpaMqrS9FcB
- HE17a5IQaAJqjF92luxive6wUmquIstRLVJUyDC+18+5mKQ8C1wJJeCqBAADtbWu1ZqHkVAfFh
- b/LoX4xSqFRKQVGdzvffWNv1+G0UKUcSunB3OPrUmodpRrEzJkNxdgHy+9ErIooOlBLSJ+2Hq/
- 5oNa9X0IJarsql1DrB3lMrk7RwQYiXcYtciJPzBdBUgyqui6OgM9+Sfa+sQxHd+0QZbNKoG64g
- Zpg=
-X-IronPort-AV: E=Sophos;i="5.76,401,1592863200"; 
-   d="scan'208";a="13750637"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 07 Sep 2020 10:04:50 +0200
-Received: from schifferm-ubuntu4.tq-net.de (unknown [10.117.49.134])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 76014280075;
-        Mon,  7 Sep 2020 10:04:50 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH v3 2/3] ARM: dts: imx6qdl: tqma6: remove obsolete fsl,spi-num-chipselects
-Date:   Mon,  7 Sep 2020 10:04:28 +0200
-Message-Id: <20200907080429.12496-2-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907080429.12496-1-matthias.schiffer@ew.tq-group.com>
-References: <20200907080429.12496-1-matthias.schiffer@ew.tq-group.com>
+        Mon, 7 Sep 2020 04:09:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:54229 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbgIGIIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:08:10 -0400
+Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MCKSA-1kOVaG32kE-009TDD; Mon, 07 Sep 2020 10:08:06 +0200
+Received: by mail-qk1-f178.google.com with SMTP id w12so12034242qki.6;
+        Mon, 07 Sep 2020 01:08:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530Lt7Ge8htALiNSodmS8PmTmh+BjoiE+8cA1UYLOrBOl8V5RJDV
+        IeC1Y6UTU5iN0SxqcKFYEYToMMuuMzbI4QV+hPo=
+X-Google-Smtp-Source: ABdhPJyqFRCsrEeyEM7bZdvSSTo4jU+m6vlP8peN5tbIXRsYf0JCy1F91ON0vW5MemSI01VaMJ40x2L3jNNufU0/pXE=
+X-Received: by 2002:a05:620a:15a7:: with SMTP id f7mr11286689qkk.3.1599466085512;
+ Mon, 07 Sep 2020 01:08:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200904165216.1799796-1-hch@lst.de> <20200904165216.1799796-4-hch@lst.de>
+ <20200904180617.GQ1236603@ZenIV.linux.org.uk> <20200904223518.GR1236603@ZenIV.linux.org.uk>
+In-Reply-To: <20200904223518.GR1236603@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 7 Sep 2020 10:07:49 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1doHskr=8uPrGetCAtD7QTRS5r=cfy6VJSoDsnE0=Aaw@mail.gmail.com>
+Message-ID: <CAK8P3a1doHskr=8uPrGetCAtD7QTRS5r=cfy6VJSoDsnE0=Aaw@mail.gmail.com>
+Subject: Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in raw_copy_{from,to}_user
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:Ik2qRdFlVdhAn6JlAoBbd2pfoR4wBUPqIA0T58RvXJbcT3gJL0+
+ hEP0ai5JoiDyDAneCWS5Wcpic55XLbv81dv/XriuW8y9Xqz7991iEBQfpj854vci6JeFoO5
+ vgrdMPMfvqsVIZfZqiD7ogeFAuaD8di4aqRPCXiEdd6f1u9oCxB9rU0c1suNZn4gcXav2Xx
+ whITIG/sSh8P4PMRti/aw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SG9aYn68QoU=:/KyAVZouWZ2+3T5gAQXNRv
+ gQNtxkxQ2YXy1Cdo5nSPRo8RslAqziUMSvKIGqBzIZb7vPWSZRx2i5v6Pa3ln87Ujyx9+k8rz
+ YA4m9O76XmjPRAq7GLBHGshuWEEj062safYzLeIvu4/StAUQX19jSlghhMXf515cVzjhQcg1a
+ f8Oe+4Jcq4SxLpoUAHT3YIlgwXCxk/G3LB//UOsS8D2KfbUXdvI32UUB2FU7SWy8yaS2UGEsZ
+ n5gR9SakYDn8D1Pi3CDiNjWrZsebRxZH2P8auLne+Wt+lNdJD3v8jL/YJUN0scCituqGoPG/H
+ LWfPeYxLcNVOGfE800WgA7qXVrwDskgEW0GuM9hP2PagRtbxtdI38HcclKiwuFQWX/5dOV1r6
+ V+lIaazes8oPupL+VI8JMuHDgkJZC509ISun8nOcv7ShDnUYqHX5leXxh2u+NLcyA4Ljhb/1Y
+ vP1pqGoj1ePAoTIvg4By2m2TGNR/GMCfUyEqkou9ehT/TDyvZd9w9GXdCiaBcSLpn1sexbIyB
+ l0sIxn1qr7igUjRzj4r85sIMcJFjl7nRgOUpCEp2SjckG64BqWepef8hGv7W4/i+HYGqnkWtn
+ rFRMnosE11RGe9Vxq4Q5pbAL1b423CTnKq7GkC/lqzx/+muDHwmcJpZ6+NvvNk9oYPFq7d8RE
+ s4cUcTm4AdqXkHmTeucYc6xKehXzBjQix22I9i9mhFiJrGhl7+IFfhP1PHuZgry+FIlz/wSwD
+ ex3JVwJOpxp1lReUjw5GudvQf56UG+xRo5Yk0G7WTTIpdZyCPZV+2ZoWgdjs50jojjNWvw+v7
+ MSRnc7Gd+zD8IYOPRgxS1wIVVSZ3SxpIa6GsqDcwZqsp/WQJK45TZ0CuEZ63wYFWI0F6geQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This property is unneeded and not supported by the spi-imx driver.
+On Sat, Sep 5, 2020 at 12:35 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Fri, Sep 04, 2020 at 07:06:17PM +0100, Al Viro wrote:
+> > On Fri, Sep 04, 2020 at 06:52:11PM +0200, Christoph Hellwig wrote:
+> > > Use get_unaligned and put_unaligned for the small constant size cases
+> > > in the generic uaccess routines.  This ensures they can be used for
+> > > architectures that do not support unaligned loads and stores, while
+> > > being a no-op for those that do.
+> >
+> > Frankly, I would rather get rid of those constant-sized cases entirely;
+> > sure, we'd need to adjust asm-generic/uaccess.h defaults for __get_user(),
+> > but there that kind of stuff would make sense; in raw_copy_from_user()
+> > it really doesn't.
 
-Fixes: cac849e9bbc8 ("ARM: dts: imx6qdl: add TQMa6{S,Q,QP} SoM")
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
+Right. When I originally wrote that part of asm-generic/uaccess.h, the
+idea was that its __get_user()/__put_user() would end up being used
+across most architectures, which then would only have to implement
+custom __copy_from_user()/__copy_to_user() with those special cases
+to get the optimum behavior. It didn't work out in the end, since
+copy_from_user() also has to deal with unaligned or partial copies
+that prevent it from degrading into a single instruction on anything
+other than the simplest NOMMU architectures.
 
-v3: split patch
-v2: drop fsl,spi-num-chipselects instead of replacing with num-cs
+I'd still hope we can eventually come up with a generic
+__get_user()/__put_user() helper that avoids all the common
+architecture specific bugs in them, with a simpler way for
+an architecture to hook into with a set of inline functions
+while leaving the macros to common code, but that can be
+done another time.
 
- arch/arm/boot/dts/imx6qdl-tqma6.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+> IOW, there's a scattering of potentially valid uses that might be better
+> off with get_user().  And there's generic non-MMU variant that gets
+> used in get_user()/__get_user() on h8300 and riscv.  This one *is*
+> valid, but I don't think that raw_copy_from_user() is the right layer
+> for that.
+>
+> For raw_copy_to_user() the picture is similar.  And I'd like to get
+> rid of that magical crap.  Let's not make it harder...
 
-diff --git a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-index 9513020ddd1a..b18b83ac6aee 100644
---- a/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-tqma6.dtsi
-@@ -20,7 +20,6 @@
- &ecspi1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_ecspi1>;
--	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
- 
--- 
-2.17.1
+Agreed
 
+         Arnd
