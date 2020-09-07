@@ -2,229 +2,105 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0AFC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A606CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2B12080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599494709;
-	bh=Yw08YHmku4/vzFPd7/maIhyRgwd1kmnlbBptyUii8dE=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=ML5iXPF4uqQLbp/JJLXWha29kvbPp9ovnkYxKiWGRcPvzUmacvoUZYurTmiCaPgqT
-	 3xv1juOIEPXARWHcY3+ON8JmMTwY4EwM31sUP6u5OmUKwojq9VWyzLgYqfHgEgo4e2
-	 WoXrpFndOSaRJX2tB1fpL+3KYTcRjpHIt8MkEPVE=
+	by mail.kernel.org (Postfix) with ESMTP id 6411B2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:05:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpZGZSLN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbgIGQFH (ORCPT
+        id S1730328AbgIGQFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730225AbgIGP7u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:59:50 -0400
-Received: from mail.kernel.org (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 497092087D;
-        Mon,  7 Sep 2020 15:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599494379;
-        bh=Yw08YHmku4/vzFPd7/maIhyRgwd1kmnlbBptyUii8dE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cdGENI6sW8RKVjIF03eWY7C00erl/Uzsx2SEIepNgVlpvJnKgSQUmS0vK2clzSw72
-         vVXDqB8jYFq7ouQx6ZuZMrtxJieu/uiOL/M6bqv22tB4lC3agd5Ckmz7yOYTNgi62e
-         PkVmIQw64X5PclgLYL/mcVu1O05tJ9xHphvkiwxg=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kFJYP-00ATuj-5y; Mon, 07 Sep 2020 17:59:37 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Yu Chen <chenyu56@huawei.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 02/11] phy: hisilicon: phy-hi3670-usb3: fix some issues at the init code
-Date:   Mon,  7 Sep 2020 17:59:26 +0200
-Message-Id: <e77c29fd6830c849c64cf87de0cd6d23b6ac7755.1599493845.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599493845.git.mchehab+huawei@kernel.org>
-References: <cover.1599493845.git.mchehab+huawei@kernel.org>
+        Mon, 7 Sep 2020 12:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45892 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729976AbgIGOrM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:47:12 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E821FC061575;
+        Mon,  7 Sep 2020 07:36:33 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id z19so7611951lfr.4;
+        Mon, 07 Sep 2020 07:36:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LbYatuVWRGYewGcDmiye1sSegUENy4SIbsUeZ7U/qG4=;
+        b=JpZGZSLNqRaE0exdU8CU465eqriG0RqHm2s6LczbPE71uOTMNdEZz2JGG4y3tK/LN6
+         y9z23DLcygyjqprpVkOT06L6PCQk7ujXbG2vpwyayBtKAx6x4S/N9Fz8Fo+RkcgBOxew
+         SsIrCfAsYkObkThkDYUhnCHbE21CoRRqUfeqtmKedhHMwRNy+nkcdNnpJpEBxmD8wG95
+         o3WDxGmVPtu4+n7pi1LD0AS3B3M/MTOub3vyAsO2IUZrHXIgToj4MI3m9COtHplDVFtN
+         sqjJs1GtnnWxbyO0ZtijkeJRWgOt+OqHYwHKJcMtmbVvZTIUubGSiJv7Fw6urR21wEsb
+         cumQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LbYatuVWRGYewGcDmiye1sSegUENy4SIbsUeZ7U/qG4=;
+        b=G2zU1TzviXkEobesClo7cgXQjKm9EN7+foJrfYhkSlHrexEm9Ckc2N+Ld/5csytyiS
+         zD2LdINMHgAutuKR+DStS0vI2yB+VQGETxX06tWUoN8qDNNsdZkDynJfcBo72UPZQzq3
+         LWNqCaCL0Y/x74GhBdpb3HWKLccQDvt3s4Z6/3G/1PIzwe9N/xkhSioeQD7E8qQMbEgr
+         164TTwSktVAzXTBxrjfoXCLgzAmV5LTgkp8l76MZeiTc1mp8bp5HS98d4fFRTGJdBdqG
+         x4sN2NhxMGP5Zh3gnO0dgANenylkaPMp7oEt+34VBuy83SDDpnadaysQWYgAF6nAPppt
+         1z4g==
+X-Gm-Message-State: AOAM533DgXf7SpsdEQUNUWY56Hgxc3p5zprsbH3nmeXSmBmHF8JC1XkY
+        lmmtkF1RDiz8obN4PkhbkYQTAggXp50=
+X-Google-Smtp-Source: ABdhPJz9601EdKos+ms9H/SphtscTtUQmKponvS3+EYjzKvYmMOrE5RHyzgfpE/oiJUjRRrNVcr5nQ==
+X-Received: by 2002:a19:82c3:: with SMTP id e186mr10075422lfd.144.1599489391997;
+        Mon, 07 Sep 2020 07:36:31 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id t13sm7639481lfg.53.2020.09.07.07.36.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 07:36:31 -0700 (PDT)
+Subject: Re: [PATCH v5 27/36] i2c: tegra: Reorder location of functions in the
+ code
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200906185039.22700-1-digetx@gmail.com>
+ <20200906185039.22700-28-digetx@gmail.com>
+ <CAHp75VfSyfJoEbFGEH32=841_2h4_8r+vVYO2BPHgSVvuatOag@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <61845513-bf41-1c15-126d-8470a23b178e@gmail.com>
+Date:   Mon, 7 Sep 2020 17:36:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VfSyfJoEbFGEH32=841_2h4_8r+vVYO2BPHgSVvuatOag@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Chen <chenyu56@huawei.com>
+07.09.2020 11:27, Andy Shevchenko пишет:
+> On Sun, Sep 6, 2020 at 9:52 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Reorder location of functions in the code in order to have definition
+>> of functions closer to the place of the invocation. This change makes
+>> easier to navigate around the code and removes the need to have a
+>> prototype for tegra_i2c_init().
+>>
+> 
+> This patch as 25th and one I commented before have a ping-pong style
+> of programming (you touch a lot of LOCs which you introduced in
+> previous patches). Please try to reorder series in a way that you
+> minimize the churn of shuffling the code.
 
-There are some problems at the initialization part of this phy.
-Solve them.
-
-Signed-off-by: Yu Chen <chenyu56@huawei.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/phy/hisilicon/phy-hi3670-usb3.c | 70 +++++++++++--------------
- 1 file changed, 32 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/phy/hisilicon/phy-hi3670-usb3.c b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-index 4e04ac97728d..1d4caf7a2aaf 100644
---- a/drivers/phy/hisilicon/phy-hi3670-usb3.c
-+++ b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-@@ -63,6 +63,7 @@
- #define TCA_INTR_STS			(0x208)
- #define TCA_GCFG			(0x210)
- #define TCA_TCPC			(0x214)
-+#define TCA_SYSMODE_CFG			(0x218)
- #define TCA_VBUS_CTRL			(0x240)
- 
- #define CTRL0_USB3_VBUSVLD		BIT(7)
-@@ -109,12 +110,16 @@
- #define CLK_RST_SUSPEND_CLK_EN		BIT(0)
- 
- #define GCFG_ROLE_HSTDEV		BIT(4)
-+#define GCFG_OP_MODE			(3 << 0)
-+#define GCFG_OP_MODE_CTRL_SYNC_MODE	BIT(0)
- 
- #define TCPC_VALID			BIT(4)
- #define TCPC_LOW_POWER_EN		BIT(3)
- #define TCPC_MUX_CONTROL_MASK		(3 << 0)
- #define TCPC_MUX_CONTROL_USB31		(1 << 0)
- 
-+#define SYSMODE_CFG_TYPEC_DISABLE	BIT(3)
-+
- #define VBUS_CTRL_POWERPRESENT_OVERRD	(3 << 2)
- #define VBUS_CTRL_VBUSVALID_OVERRD	(3 << 0)
- 
-@@ -363,6 +368,11 @@ static int kirin970_config_phy_clock(struct kirin970_priv *priv)
- 		if (ret)
- 			goto out;
- 
-+		/* enable usb_tcxo_en */
-+		ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3,
-+				USB_TCXO_EN |
-+				(USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START));
-+
- 		/* select usbphy clk from abb */
- 		mask = SC_CLK_USB3PHY_3MUX1_SEL;
- 		ret = regmap_update_bits(priv->pctrl,
-@@ -437,7 +447,13 @@ static int kirin970_config_tca(struct kirin970_priv *priv)
- 		goto out;
- 
- 	ret = regmap_update_bits(priv->usb31misc, TCA_GCFG,
--			GCFG_ROLE_HSTDEV, GCFG_ROLE_HSTDEV);
-+			GCFG_ROLE_HSTDEV | GCFG_OP_MODE,
-+			GCFG_ROLE_HSTDEV | GCFG_OP_MODE_CTRL_SYNC_MODE);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_update_bits(priv->usb31misc, TCA_SYSMODE_CFG,
-+			SYSMODE_CFG_TYPEC_DISABLE, 0);
- 	if (ret)
- 		goto out;
- 
-@@ -461,18 +477,15 @@ static int kirin970_config_tca(struct kirin970_priv *priv)
- 	return ret;
- }
- 
--static int kirin970_phy_exit(struct phy *phy);
--
- static int kirin970_phy_init(struct phy *phy)
- {
- 	struct kirin970_priv *priv = phy_get_drvdata(phy);
- 	u32 val;
- 	int ret;
- 
--	kirin970_phy_exit(phy);
--	dev_info(priv->dev, "%s in\n", __func__);
- 	/* assert controller */
--	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET;
-+	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET |
-+		CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, 0);
- 	if (ret)
- 		goto out;
-@@ -493,6 +506,14 @@ static int kirin970_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
-+	/* Deassert phy */
-+	val = CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, val);
-+	if (ret)
-+		goto out;
-+
-+	udelay(100);
-+
- 	/* Tell the PHY power is stable */
- 	val = CFG54_USB3_PHY0_ANA_PWR_EN | CFG54_PHY0_PCS_PWR_STABLE |
- 		CFG54_PHY0_PMA_PWR_STABLE;
-@@ -512,14 +533,6 @@ static int kirin970_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	/* Deassert phy */
--	val = CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
--	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, val);
--	if (ret)
--		goto out;
--
--	udelay(100);
--
- 	/* Deassert controller */
- 	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET;
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, val);
-@@ -545,29 +558,6 @@ static int kirin970_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	{
--		ret = regmap_read(priv->peri_crg, 0x4c,
--				&val);
--		if (!ret)
--			dev_info(priv->dev, "peri_crg 0x4c %x\n", val);
--		ret = regmap_read(priv->peri_crg, 0x404,
--				&val);
--		if (!ret)
--			dev_info(priv->dev, "peri_crg 0x404 %x\n", val);
--		ret = regmap_read(priv->peri_crg, 0xc,
--				&val);
--		if (!ret)
--			dev_info(priv->dev, "peri_crg 0xc %x\n", val);
--		ret = regmap_read(priv->peri_crg, 0xac,
--				&val);
--		if (!ret)
--			dev_info(priv->dev, "peri_crg 0xac %x\n", val);
--		ret = regmap_read(priv->pctrl, 0x10,
--				&val);
--		if (!ret)
--			dev_info(priv->dev, "pctrl 0x10 %x\n", val);
--	}
--
- 	return 0;
- out:
- 	dev_err(priv->dev, "failed to init phy ret: %d\n", ret);
-@@ -586,7 +576,11 @@ static int kirin970_phy_exit(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	if (!kirin970_is_abbclk_seleted(priv)) {
-+	if (kirin970_is_abbclk_seleted(priv)) {
-+		/* disable usb_tcxo_en */
-+		ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3,
-+				USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
-+	} else {
- 		ret = regmap_write(priv->peri_crg, PERI_CRG_PERDIS6,
- 				GT_CLK_USB2PHY_REF);
- 		if (ret)
--- 
-2.26.2
-
+Okay, I'll improve the ordering in v6. Thanks!
