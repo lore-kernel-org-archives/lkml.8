@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,URIBL_BLOCKED,USER_AGENT_GIT
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24388C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C88C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E08FB206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3658206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498335;
-	bh=yMbMn15d5ZsiLdDFzu3UAxbc1BWdVwiu6fvD5PtYG3U=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YjP78OO3Bz6zOopPn8YBO08F5S/7anuTiWys8B5NyecwOpvPqexsF02/2eyKpbk94
-	 zRkkRYYWp0rRKIhiLE2b5cXWgjDiNVaGsD5RqxZW7uFHxhqCtUbYeXU4PODpp+Bpvv
-	 d1SA70oYyFgpDJM60dC36tfi1yhQAbP+Sk+iUUlA=
+	s=default; t=1599498341;
+	bh=d4MCGwCqQlcYJhFyTu2YWQpqUFTmOLbIk17fsT39at8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=02O+VGsS4jBifCyKsUSFxBcndmTMVFQBucaqy6w9F5RMMw8u7i8q3Zfhs1mtCmVAf
+	 xbqVf+0hYyZKTLNKb58lxrKF+cjWBGo1fXWKjAXpV2qu4LKmMZYHwpfyIzwyTzJHw9
+	 9q1OZCn4/squF7QlpHJbFkgGIesFl+mnQSy7Mxp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgIGQdH (ORCPT
+        id S1730890AbgIGRFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46218 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbgIGQcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:22 -0400
+        id S1730505AbgIGQdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D910207DE;
-        Mon,  7 Sep 2020 16:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C671F21927;
+        Mon,  7 Sep 2020 16:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496342;
-        bh=yMbMn15d5ZsiLdDFzu3UAxbc1BWdVwiu6fvD5PtYG3U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JOdAGy8l8uUcAxFkfU7N+my5e+yJCJi0F5UWgIe+1YHGwkoenVK4JHXFYuYEnqiFP
-         NvuPhQY97LZSUOKGNgFpaXYxkrE1tkJFCWqvuhZ1K9kEBSe4JPglNrhXHZzoO38Lkk
-         VNAkTdBXpnIIp6pzXTo9mM32L2HCuXijjlwDxyD8=
+        s=default; t=1599496387;
+        bh=d4MCGwCqQlcYJhFyTu2YWQpqUFTmOLbIk17fsT39at8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=quiC/+VjjcMIfECPZ9nTCToGFyOaw1B1x5u5gQZXHhhNHjHBIAfP7LPg1q2G0FE5G
+         8pRHRZPVFSnmlmyr8Q7CVgllKP7Bhw11Z94F3GEs9nZ/aI7CrQc2VGuk52tLkkYYAz
+         VgTAS8e+bmBC2rTEY1Mfb/kvVewPaM/U2OjHErlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 01/53] ARC: HSDK: wireup perf irq
-Date:   Mon,  7 Sep 2020 12:31:27 -0400
-Message-Id: <20200907163220.1280412-1-sashal@kernel.org>
+Cc:     Nirenjan Krishnan <nirenjan@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 37/53] HID: quirks: Set INCREMENT_USAGE_ON_DUPLICATE for all Saitek X52 devices
+Date:   Mon,  7 Sep 2020 12:32:03 -0400
+Message-Id: <20200907163220.1280412-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
+References: <20200907163220.1280412-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,34 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Nirenjan Krishnan <nirenjan@gmail.com>
 
-[ Upstream commit fe81d927b78c4f0557836661d32e41ebc957b024 ]
+[ Upstream commit 77df710ba633dfb6c65c65cf99ea9e084a1c9933 ]
 
-Newer version of HSDK aka HSDK-4xD (with dual issue HS48x4 CPU) wired up
-the perf interrupt, so enable that in DT.
-This is OK for old HSDK where this irq is ignored because pct irq is not
-wired up in hardware.
+The Saitek X52 family of joysticks has a pair of axes that were
+originally (by the Windows driver) used as mouse pointer controls. The
+corresponding usage page is the Game Controls page, which is not
+recognized by the generic HID driver, and therefore, both axes get
+mapped to ABS_MISC. The quirk makes the second axis get mapped to
+ABS_MISC+1, and therefore made available separately.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+One Saitek X52 device is already fixed. This patch fixes the other two
+known devices with VID/PID 06a3:0255 and 06a3:0762.
+
+Signed-off-by: Nirenjan Krishnan <nirenjan@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/hid-ids.h    | 2 ++
+ drivers/hid/hid-quirks.c | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 9acbeba832c0b..5d64a5a940ee6 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -88,6 +88,8 @@ idu_intc: idu-interrupt-controller {
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 7cfa9785bfbb0..476cb99bd61b7 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -1011,6 +1011,8 @@
+ #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
+ #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
+ #define USB_DEVICE_ID_SAITEK_X52	0x075c
++#define USB_DEVICE_ID_SAITEK_X52_2	0x0255
++#define USB_DEVICE_ID_SAITEK_X52_PRO	0x0762
  
- 	arcpct: pct {
- 		compatible = "snps,archs-pct";
-+		interrupt-parent = <&cpu_intc>;
-+		interrupts = <20>;
- 	};
- 
- 	/* TIMER0 with interrupt for clockevent */
+ #define USB_VENDOR_ID_SAMSUNG		0x0419
+ #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index c242150d35a3a..5247147f5cc7c 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -147,6 +147,8 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_2), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_PRO), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
 -- 
 2.25.1
 
