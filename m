@@ -2,130 +2,103 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B16C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2FAFC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14AB207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b/VlkQ7n"
+	by mail.kernel.org (Postfix) with ESMTP id 91DCE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599478476;
+	bh=ASDavNWFz3Ru48cBueNff8IUESkv+WSF8MU9lmTCDDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fIOrZghpIKlywKblMqMZHNsOU5KdKgZ7ckKB9npncT/qdAw9ijxcT/Y/9on0HGCWs
+	 zD9Qt2x6XjgQfLru7ga2K64Q5UJCTVlBCbC9mb5WiO1jPIanLgoUk84jaZHkGd3Tsx
+	 ekS+1XMcOyVjI7fXWflc4lJQqQzijzNsnj3gF+JI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbgIGLdx (ORCPT
+        id S1729104AbgIGLeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:33:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32018 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729042AbgIGL3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:29:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599478175;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sdatg3+EIvbmCx4rquRr8nF8KzhV+GhB+U/I/9Y53Ew=;
-        b=b/VlkQ7ngJ4c5ZYzgKhDuz5zElfmxJMm21XyoRRVhdVnFyKwPd3ckGdMGAaOTO0c3wFpwI
-        ZLioNQr86+uoEXlTm9y4LhPa8U2bwkenJ8V4dAHiYp5N3wtUw+TOLLnO8GqGsM+D0htBBq
-        qQ9a8Usf4N/jhJRZK2yEkQ6L36721NI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42--mIHqnlHMzq9MMno81SbDw-1; Mon, 07 Sep 2020 07:29:32 -0400
-X-MC-Unique: -mIHqnlHMzq9MMno81SbDw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 7 Sep 2020 07:34:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728807AbgIGLas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:30:48 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 307FA8015FD;
-        Mon,  7 Sep 2020 11:29:29 +0000 (UTC)
-Received: from krava (ovpn-112-180.ams2.redhat.com [10.36.112.180])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 7B72E5D9D2;
-        Mon,  7 Sep 2020 11:29:26 +0000 (UTC)
-Date:   Mon, 7 Sep 2020 13:29:25 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andi Kleen <andi@firstfloor.org>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 1/9] perf evlist: Fix cpu/thread map leak
-Message-ID: <20200907112925.GJ1199773@krava>
-References: <20200907034502.753230-1-namhyung@kernel.org>
- <20200907034502.753230-2-namhyung@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 27918215A4;
+        Mon,  7 Sep 2020 11:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599476805;
+        bh=ASDavNWFz3Ru48cBueNff8IUESkv+WSF8MU9lmTCDDM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uizH5gSgQY51RFhQPtobIYQvnQMwEBDfIS1Pk252+RUx7HShA+bOPvpLPoldlaj+n
+         rgmiUppSDhdoQrrkxSWP/uOUd1vp80WvfrYpIHJOrJtcyY/dyu7AZLzzkoeIJaoAIG
+         uTmLbQhAAMZTRBZJPLle4RUGpWBdWTqFSPtlnM5U=
+Date:   Mon, 7 Sep 2020 12:06:01 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     derek.fang@realtek.com, Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: rt5682: Have global name clock option for parent
+ clk
+Message-ID: <20200907110601.GC4907@sirena.org.uk>
+References: <20200907040038.3124-1-akshu.agrawal@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+nBD6E3TurpgldQp"
 Content-Disposition: inline
-In-Reply-To: <20200907034502.753230-2-namhyung@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200907040038.3124-1-akshu.agrawal@amd.com>
+X-Cookie: Elevators smell different to midgets.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 12:44:54PM +0900, Namhyung Kim wrote:
-> Asan reported leak of cpu and thread maps as they have one more
-> refcount than released.  I found that after setting evlist maps it
-> should release it's refcount.
-> 
-> It seems to be broken from the beginning so I chose the original
-> commit as the culprit.  But not sure how it's applied to stable trees
-> since there are many changes in the code after that.
-> 
-> Fixes: 7e2ed097538c5 ("perf evlist: Store pointer to the cpu and thread maps")
-> Fixes: 4112eb1899c0e ("perf evlist: Default to syswide target when no thread/cpu maps set")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/evlist.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index e3fa3bf7498a..c0768c61eb43 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -946,6 +946,10 @@ int perf_evlist__create_maps(struct evlist *evlist, struct target *target)
->  
->  	perf_evlist__set_maps(&evlist->core, cpus, threads);
->  
-> +	/* as evlist now has references, put count here */
-> +	perf_cpu_map__put(cpus);
-> +	perf_thread_map__put(threads);
 
-nice catch, I checked perf_evlist__create_syswide_maps is doing this
-correctly, but I think we might have the same issue in script's
-set_maps function
+--+nBD6E3TurpgldQp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-thanks,
-jirka
+On Mon, Sep 07, 2020 at 09:30:37AM +0530, Akshu Agrawal wrote:
+> When adding parent clk(mclk) to wclk, this adds fallback option
+> for the case where global clk name is used.
 
-> +
->  	return 0;
->  
->  out_delete_threads:
-> @@ -1273,11 +1277,12 @@ static int perf_evlist__create_syswide_maps(struct evlist *evlist)
->  		goto out_put;
->  
->  	perf_evlist__set_maps(&evlist->core, cpus, threads);
-> -out:
-> -	return err;
-> +
-> +	perf_thread_map__put(threads);
->  out_put:
->  	perf_cpu_map__put(cpus);
-> -	goto out;
-> +out:
-> +	return err;
->  }
->  
->  int evlist__open(struct evlist *evlist)
-> -- 
-> 2.28.0.526.ge36021eeef-goog
-> 
+> @@ -2780,6 +2780,7 @@ static int rt5682_register_dai_clks(struct snd_soc_component *component)
+>  			if (rt5682->mclk) {
+>  				init.parent_data = &(struct clk_parent_data){
+>  					.fw_name = "mclk",
+> +					.name = __clk_get_name(rt5682->mclk),
+>  				};
+>  				init.num_parents = 1;
+>  			}
 
+I don't understand this change - we clearly already have the clock so
+why can't we just use whatever we used when we originally looked it up
+here?
+
+--+nBD6E3TurpgldQp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9WFBkACgkQJNaLcl1U
+h9BDVgf/TzUykCu0F6H22up3PWm1DPnZbDx/M60THNm08kFwphVcM57B4Jls3/U1
+QLLodHKZreIHEu3+WcNDrZdWezwElxhBTfb3PL15lsJbsfQr7v0awbLUO7beDrpB
+tHznqF+INvVCU1xHDxUXIvmOp6ftsl+ltLw1I4Va3yIpkM3uFhwJMnZJAJkWj2+9
+RPnFT6Ru9Bb7r9F9QghpW4y5rf662w/ugJRNy+1dCGm91GfN0UbbnB7HKPIBXN+2
+qsWtFP8Tjk1HBcC+o4Bi9FqF7C0JVVrR0K1dxs2TQWkItdz56TP288gVpVtHDyAm
+v/zO5tqxlx4K6u1vbPUAdM3dlMoyjQ==
+=yIiR
+-----END PGP SIGNATURE-----
+
+--+nBD6E3TurpgldQp--
