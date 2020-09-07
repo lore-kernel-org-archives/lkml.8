@@ -2,155 +2,116 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92577C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDACC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 650E1207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A91B4207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="OCt8tCcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbgIGWC7 (ORCPT
+        id S1728242AbgIGWE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:02:59 -0400
-Received: from mail-bn7nam10olkn2067.outbound.protection.outlook.com ([40.92.40.67]:51660
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726446AbgIGWCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:02:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oJaiOc7DQxbDBJCouWcfoLbzqRn4UtYBiZMGNoI7aprDDVqqaCcQKueQRVfzdbeCndBCqVnsw+KdwG0+14h4OItx8gCi3N8BjJsd3Zlqa2iAeRo2/zaBFqfsRwFMYd6/f9TiPBtrzTWBfpt2wSAah/+TkJsKrevTr0CE5voc70nBfXGeafqYBQegNrlmn9s83bDRX/OKKAkwHy+Zx/G5kIX3q7/Mgl31QmwSHHe/CTpcsttvZjlzlW4u+6P6NYQSH+FOd7OuwYV1mSLFecN74tdvezEa4Zi/eQ7GB3VFStEkwzwhAHhIZ5ERpGt0kqUtm8Pv+fy2MfpVDZFF6nKUig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Aj3Bf8Td7rFVPDItt/LBjLSVbKjWQ3k265TWPYyekQE=;
- b=iaF0uCKuDCNTCpaa0ew1ybeXk5xpQpFLHVIGy+0u9OM1hrFsVgD9FqeIvhRj4kKlKNDoqlxlFM2aXrvAG2dC/uK7UoN0GjNSvxIkKYc2uo62t8aMN6fkWelY2VHiBFi/RmxYZYaLo4cqljIRU+S3iWmKQfUK0eW9FE4IGtwp7VX9k1ZOLY9Kd1RIK5VLF6mgBb/0KFdqTqxoLUaKIiDuiiaXXjj4HovjRMTVsjI7C+DSkiH10i4gN5BBwoDM36PfQ0pDV416CAaQTfyIKyXCWQ3LRoLZSswxsUgIsmDAl/XTHXr9zBwgsypqCISZ7xQHsTA6dp+Ek1Kv43T0e/mD8g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from BN7NAM10FT016.eop-nam10.prod.protection.outlook.com
- (2a01:111:e400:7e8f::45) by
- BN7NAM10HT027.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e8f::449)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 22:02:52 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e8f::4e) by BN7NAM10FT016.mail.protection.outlook.com
- (2a01:111:e400:7e8f::226) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23 via Frontend
- Transport; Mon, 7 Sep 2020 22:02:52 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:402BFDDAE15266B5623DA8A7B7CF6BF860F4AEDE0419CD077C8CBF5158F92DB6;UpperCasedChecksum:F072DA42B4375454A06BF772BA6EECC23C7B4DA82B863A67112869AFE2FEEA36;SizeAsReceived:9286;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 22:02:46 +0000
-Subject: Re: [RFT 07/25] ARM: dts: s5pv210: move PMU node out of clock
- controller
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-8-krzk@kernel.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660C619C9C4BB2B583F5BC8CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Mon, 7 Sep 2020 15:02:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200907161141.31034-8-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MWHPR17CA0082.namprd17.prod.outlook.com
- (2603:10b6:300:c2::20) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <db499891-c721-2c05-8474-2704a5e2601d@live.ca>
+        Mon, 7 Sep 2020 18:04:28 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45399 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727114AbgIGWEU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:04:20 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D73BD80719;
+        Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599516254;
+        bh=TIK2ZarG+pHpksoKlt2pxfkQdePFZ8pjCPM1KihJnMk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=OCt8tCcFNZ/559HZmJQ4bXOzTRltxwe+p8Btq9rskFxCTcyXVxt5iC3yAdzwkvNSH
+         x8zBp6DPdxx9kpZXMHQEih3CCjsp4Aj1hs99D4Tv6rMJCo5B+1OD7R17/T6dbPhe8V
+         f+CiVpF0nRP6vM12heh9b03bq6ljl7OiXOxnumdEDlKoiqulEuIqIXb2aSSltd6ki8
+         uEtlh7JMiKKdIUo1X/NCUQ3caqlLtyBKCszB83BGPXGTpdfzfKrivITEMVAWwam//8
+         Rh13iCNpmfnIrtCaWjB/ABsw0an18SYj96ykRJpGhkMULjKKw3+vNQkaRmK4dpH0uq
+         QV7ueBsoU5pDA==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f56ae5e0001>; Tue, 08 Sep 2020 10:04:14 +1200
+Received: from pauld-dl.ws.atlnz.lc (pauld-dl.ws.atlnz.lc [10.33.23.16])
+        by smtp (Postfix) with ESMTP id C5F8413EED0;
+        Tue,  8 Sep 2020 10:04:13 +1200 (NZST)
+Received: by pauld-dl.ws.atlnz.lc (Postfix, from userid 1684)
+        id 7B0201E0978; Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
+From:   Paul Davey <paul.davey@alliedtelesis.co.nz>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Davey <paul.davey@alliedtelesis.co.nz>
+Subject: [PATCH net-next v2 1/3] ipmr: Add route table ID to netlink cache reports
+Date:   Tue,  8 Sep 2020 10:04:06 +1200
+Message-Id: <20200907220408.32385-2-paul.davey@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
+References: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR17CA0082.namprd17.prod.outlook.com (2603:10b6:300:c2::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 22:02:43 +0000
-X-Microsoft-Original-Message-ID: <db499891-c721-2c05-8474-2704a5e2601d@live.ca>
-X-TMN:  [gFkUa/bI/KBUtRzSNTALzPm29qhHgzxvAJvOqZI4laV6W1B6y0jVh8vzwV+7zs+A]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 4fb5a74f-4f1d-4b1d-01d6-08d85379c065
-X-MS-TrafficTypeDiagnostic: BN7NAM10HT027:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uT2Ic+rehXHZhNiJB55B3NyAZcIVhuqGdGs4cFntUpqEbXSkCdokEfWIIJe/An7z5xrkG0x1/iiAeucPuQcwzex4WcnyroXvEirOFG5HAC7GrN7cPkPk7lPldc7qzWm+qSTXfMt34oV7V2SGDsODzJ+aLLmCyRndn+Ecd+xbgKzpZVWbkohojtOr38ozhO6K/gvrJoXeGYwcjb9uFpbHhg==
-X-MS-Exchange-AntiSpam-MessageData: k+Wl97Vp6KVLl7XBZ9lP3j1+jWkc4tr4EDTK3qAZOatA1PQ9uKI3wFkZqkB1rWWvqGYlDX3FVuxKIbSBNh3fl/hn4RbqbwlpSQKHmG0ybODKGsM1YKd1EaNU2Xib4NXqSVJpSDTNR0HU/L86AJwKxvh9G/ZwVf8cCn05lqrZChRA5oP1j/pUrIBg+WEQIAdSxrsWfayPAu/cZuElctsU9Q==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fb5a74f-4f1d-4b1d-01d6-08d85379c065
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 22:02:45.9727
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT016.eop-nam10.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7NAM10HT027
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Works for me on the Galaxy S.
+Insert the multicast route table ID as a Netlink attribute to Netlink
+cache report notifications.
 
-Tested-by: Jonathan Bakker <xc-racer2@live.ca>
+When multiple route tables are in use it is necessary to have a way to
+determine which route table a given cache report belongs to when
+receiving the cache report.
 
-Thanks,
-Jonathan
+Signed-off-by: Paul Davey <paul.davey@alliedtelesis.co.nz>
+---
+ include/uapi/linux/mroute.h | 1 +
+ net/ipv4/ipmr.c             | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> The Power Management Unit (PMU) is a separate device which has little
-> common with clock controller.  Moving it to one level up (from clock
-> controller child to SoC) allows to remove fake simple-bus compatible and
-> dtbs_check warnings like:
-> 
->   clock-controller@e0100000: $nodename:0:
->     'clock-controller@e0100000' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/s5pv210.dtsi | 13 +++++--------
->  1 file changed, 5 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index 5c760a6d7955..46221a5c8ce5 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -92,19 +92,16 @@
->  		};
->  
->  		clocks: clock-controller@e0100000 {
-> -			compatible = "samsung,s5pv210-clock", "simple-bus";
-> +			compatible = "samsung,s5pv210-clock";
->  			reg = <0xe0100000 0x10000>;
->  			clock-names = "xxti", "xusbxti";
->  			clocks = <&xxti>, <&xusbxti>;
->  			#clock-cells = <1>;
-> -			#address-cells = <1>;
-> -			#size-cells = <1>;
-> -			ranges;
-> +		};
->  
-> -			pmu_syscon: syscon@e0108000 {
-> -				compatible = "samsung-s5pv210-pmu", "syscon";
-> -				reg = <0xe0108000 0x8000>;
-> -			};
-> +		pmu_syscon: syscon@e0108000 {
-> +			compatible = "samsung-s5pv210-pmu", "syscon";
-> +			reg = <0xe0108000 0x8000>;
->  		};
->  
->  		pinctrl0: pinctrl@e0200000 {
-> 
+diff --git a/include/uapi/linux/mroute.h b/include/uapi/linux/mroute.h
+index 11c8c1fc1124..918f1ef32ffe 100644
+--- a/include/uapi/linux/mroute.h
++++ b/include/uapi/linux/mroute.h
+@@ -169,6 +169,7 @@ enum {
+ 	IPMRA_CREPORT_SRC_ADDR,
+ 	IPMRA_CREPORT_DST_ADDR,
+ 	IPMRA_CREPORT_PKT,
++	IPMRA_CREPORT_TABLE,
+ 	__IPMRA_CREPORT_MAX
+ };
+ #define IPMRA_CREPORT_MAX (__IPMRA_CREPORT_MAX - 1)
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index 876fd6ff1ff9..19b2f586319b 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -2396,6 +2396,7 @@ static size_t igmpmsg_netlink_msgsize(size_t payloa=
+dlen)
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_VIF_ID */
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_SRC_ADDR */
+ 		+ nla_total_size(4)	/* IPMRA_CREPORT_DST_ADDR */
++		+ nla_total_size(4)	/* IPMRA_CREPORT_TABLE */
+ 					/* IPMRA_CREPORT_PKT */
+ 		+ nla_total_size(payloadlen)
+ 		;
+@@ -2431,7 +2432,8 @@ static void igmpmsg_netlink_event(struct mr_table *=
+mrt, struct sk_buff *pkt)
+ 	    nla_put_in_addr(skb, IPMRA_CREPORT_SRC_ADDR,
+ 			    msg->im_src.s_addr) ||
+ 	    nla_put_in_addr(skb, IPMRA_CREPORT_DST_ADDR,
+-			    msg->im_dst.s_addr))
++			    msg->im_dst.s_addr) ||
++	    nla_put_u32(skb, IPMRA_CREPORT_TABLE, mrt->id))
+ 		goto nla_put_failure;
+=20
+ 	nla =3D nla_reserve(skb, IPMRA_CREPORT_PKT, payloadlen);
+--=20
+2.28.0
+
