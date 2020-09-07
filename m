@@ -2,89 +2,136 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11AFCC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA23C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1BEF206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04AE920C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgIGJko (ORCPT
+        id S1728513AbgIGJlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:40:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:58950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728141AbgIGJkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:40:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 40E6630E;
-        Mon,  7 Sep 2020 02:40:36 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B6583F66E;
-        Mon,  7 Sep 2020 02:40:34 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 10:40:32 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>, marek.behun@nic.cz
-Subject: Re: [PATCH v2 0/5] PCIe aardvark controller improvements
-Message-ID: <20200907094032.GD6428@e121166-lin.cambridge.arm.com>
-References: <20200804115747.7078-1-pali@kernel.org>
+        Mon, 7 Sep 2020 05:41:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10789 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728079AbgIGJlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:41:03 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 01C48D58268E14FF66DC;
+        Mon,  7 Sep 2020 17:41:01 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.108) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
+ 17:40:57 +0800
+Subject: Re: [PATCH] mwifiex: pcie: Fix -Wunused-const-variable warnings
+To:     Kalle Valo <kvalo@codeaurora.org>
+References: <20200902140933.25852-1-yuehaibing@huawei.com>
+ <0101017467b37012-2cad5962-8995-49d0-bf12-37c96107742a-000000@us-west-2.amazonses.com>
+CC:     <amitkarwar@gmail.com>, <ganapathi.bhat@nxp.com>,
+        <huxinming820@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <christophe.jaillet@wanadoo.fr>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <ae128bf3-fd9b-ee88-1c61-54a4a604a6cf@huawei.com>
+Date:   Mon, 7 Sep 2020 17:40:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200804115747.7078-1-pali@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <0101017467b37012-2cad5962-8995-49d0-bf12-37c96107742a-000000@us-west-2.amazonses.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 04, 2020 at 01:57:42PM +0200, Pali Rohár wrote:
-> Hi,
-> 
-> we have some more improvements for PCIe aardvark controller (Armada 3720
-> SOC - EspressoBIN and Turris MOX).
-> 
-> The main improvement is that with these patches the driver can be compiled
-> as a module, and can be reloaded at runtime.
-> 
-> This series applies on top of Linus' master branch.
 
-Hi,
+commit 77dacc8fc64c ("mwifiex: pcie: Move tables to the only place they're used")
 
-can you rebase it on top of v5.9-rc1 and resend, thanks.
+do the same things.
 
-Lorenzo
+On 2020/9/7 16:34, Kalle Valo wrote:
+> YueHaibing <yuehaibing@huawei.com> wrote:
+> 
+>> These variables only used in pcie.c, move them to .c file
+>> can silence these warnings:
+>>
+>> In file included from drivers/net/wireless/marvell/mwifiex/main.h:57:0,
+>>                  from drivers/net/wireless/marvell/mwifiex/init.c:24:
+>> drivers/net/wireless/marvell/mwifiex/pcie.h:310:41: warning: mwifiex_pcie8997 defined but not used [-Wunused-const-variable=]
+>>  static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+>>                                          ^~~~~~~~~~~~~~~~
+>> drivers/net/wireless/marvell/mwifiex/pcie.h:300:41: warning: mwifiex_pcie8897 defined but not used [-Wunused-const-variable=]
+>>  static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+>>                                          ^~~~~~~~~~~~~~~~
+>> drivers/net/wireless/marvell/mwifiex/pcie.h:292:41: warning: mwifiex_pcie8766 defined but not used [-Wunused-const-variable=]
+>>  static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+>>                                          ^~~~~~~~~~~~~~~~
+>>
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Failed to build:
+> 
+> drivers/net/wireless/marvell/mwifiex/pcie.c:191:43: error: redefinition of 'mwifiex_reg_8766'
+>   191 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8766 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:36:43: note: previous definition of 'mwifiex_reg_8766' was here
+>    36 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8766 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:223:43: error: redefinition of 'mwifiex_reg_8897'
+>   223 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8897 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:68:43: note: previous definition of 'mwifiex_reg_8897' was here
+>    68 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8897 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:260:43: error: redefinition of 'mwifiex_reg_8997'
+>   260 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8997 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:105:43: note: previous definition of 'mwifiex_reg_8997' was here
+>   105 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8997 = {
+>       |                                           ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:297:35: error: redefinition of 'mem_type_mapping_tbl_w8897'
+>   297 | static struct memory_type_mapping mem_type_mapping_tbl_w8897[] = {
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:142:35: note: previous definition of 'mem_type_mapping_tbl_w8897' was here
+>   142 | static struct memory_type_mapping mem_type_mapping_tbl_w8897[] = {
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:308:35: error: redefinition of 'mem_type_mapping_tbl_w8997'
+>   308 | static struct memory_type_mapping mem_type_mapping_tbl_w8997[] = {
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:153:35: note: previous definition of 'mem_type_mapping_tbl_w8997' was here
+>   153 | static struct memory_type_mapping mem_type_mapping_tbl_w8997[] = {
+>       |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:312:41: error: redefinition of 'mwifiex_pcie8766'
+>   312 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:157:41: note: previous definition of 'mwifiex_pcie8766' was here
+>   157 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:320:41: error: redefinition of 'mwifiex_pcie8897'
+>   320 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:165:41: note: previous definition of 'mwifiex_pcie8897' was here
+>   165 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:330:41: error: redefinition of 'mwifiex_pcie8997'
+>   330 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.c:175:41: note: previous definition of 'mwifiex_pcie8997' was here
+>   175 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+>       |                                         ^~~~~~~~~~~~~~~~
+> make[5]: *** [drivers/net/wireless/marvell/mwifiex/pcie.o] Error 1
+> make[4]: *** [drivers/net/wireless/marvell/mwifiex] Error 2
+> make[3]: *** [drivers/net/wireless/marvell] Error 2
+> make[2]: *** [drivers/net/wireless] Error 2
+> make[1]: *** [drivers/net] Error 2
+> make: *** [drivers] Error 2
+> 
+> Patch set to Changes Requested.
+> 
 
-> Marek & Pali
-> 
-> 
-> Changes in V2 for patch 4/5:
-> * Protect pci_stop_root_bus() and pci_remove_root_bus() function calls by
->   pci_lock_rescan_remove() and pci_unlock_rescan_remove()
-> 
-> 
-> Pali Rohár (5):
->   PCI: aardvark: Fix compilation on s390
->   PCI: aardvark: Check for errors from pci_bridge_emul_init() call
->   PCI: pci-bridge-emul: Export API functions
->   PCI: aardvark: Implement driver 'remove' function and allow to build
->     it as module
->   PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
-> 
->  drivers/pci/controller/Kconfig        |   2 +-
->  drivers/pci/controller/pci-aardvark.c | 104 ++++++++++++++++----------
->  drivers/pci/pci-bridge-emul.c         |   4 +
->  3 files changed, 71 insertions(+), 39 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
