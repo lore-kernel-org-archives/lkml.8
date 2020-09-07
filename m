@@ -2,146 +2,148 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F0EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B28FC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0961208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3274F2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:34:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Tu+wNJmq"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dvWLPHdh";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="nRho5tli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728250AbgIGIeF (ORCPT
+        id S1728302AbgIGIeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:34:05 -0400
-Received: from mail-eopbgr80079.outbound.protection.outlook.com ([40.107.8.79]:56295
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726978AbgIGIeB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:34:01 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rtc+yTzDjUvsyTLZ6iMLAHTxsp5nt7LUiVvbo0wK7HLgsWpqWW/lGHb4+S5NWcFAtwZX0UT5E25cH7rba0HleSVGlALhm5h4vTUqqWulyr4zOLMbl3T4VUYxy/MizXEu/lzvsLf3MhjjGK9GVF4JKbiNiJ5vmB+LWZ6yysozO0gwC3ioG/q6G9tXtfj7TEcLVHe2CvsRdv+kmFDQvhU91Bqo3vYfRC0HPajZElbHad+0940OXxjbzn3OnnInbjhJMuEhw0qlZSX6xWDr1tYkuo997TobSWHO8XQ3mmciRJ3gG+9gq6nok7CnRwS7uPkLQNaKhOBBlmrkvxtf2c664Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4nIMdWVzgGymajfyBHWxuXUKGU6+lPqF1E0UfeXuUSw=;
- b=LbYP3ATfDQP+FlQj8rFXrzUsoZHs8XrnWC6zSuqpqkL8I5q/lUA17Z454gC6BXC+V7gaRueKBDXnVGGZmML+ossAJS9sREkrQMy7Ni99ryLVKBZlMLjNUxKROe/WMaNpJ3hBzbpdj50C5zcv4ae0eiBlaRIr1YM/I9DLLgOJ6HUJrdvcfKuw/tGQRSBJUoTaHuo1bpKBHdpcT7UdoOyhdguy/30n2j7wbcbVfW6iR33xClrsegZV47nOGOWJ4nYSzJj72TWZ2l3Yax9KaHiEH27jApAIS5fEpiA6zylvlyE6OlrQ1tZ8QRD4LohIZpP9BR72EDptQYrqZgjhEr+hVQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4nIMdWVzgGymajfyBHWxuXUKGU6+lPqF1E0UfeXuUSw=;
- b=Tu+wNJmqRA+5P2Rn+JFQS22BZot1P+TLMHzg8LsItnVNajgvNjzV4VP8A7+I3nH7CMl094Ng5ImttnekkleLFLbD2IiX5/SuBhBdXw2S13inFGlPwxUqFZR9aywrPHxeRHx3Dz+irtt/LxVLOw8FGpfoRRwZUrbYCPt0mjG0BvI=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM7PR04MB7013.eurprd04.prod.outlook.com (2603:10a6:20b:116::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
- 2020 08:33:56 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 08:33:56 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/2] pinctrl: imx: Support building i.MX pinctrl driver as
- module
-Thread-Topic: [PATCH 2/2] pinctrl: imx: Support building i.MX pinctrl driver
- as module
-Thread-Index: AQHWW4NEW1H/YcaISUCXEXNdAqqKd6ldKqKg
-Date:   Mon, 7 Sep 2020 08:33:56 +0000
-Message-ID: <AM6PR04MB4966D073690BB9CD8CC434F480280@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1594912013-20859-1-git-send-email-Anson.Huang@nxp.com>
- <1594912013-20859-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1594912013-20859-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7a33caeb-db2a-473a-3aec-08d85308c2a1
-x-ms-traffictypediagnostic: AM7PR04MB7013:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB701388DB0063A680ED017ECC80280@AM7PR04MB7013.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:741;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tbdp/iqPdKPA6mICdYiihxtN5IB93RSldgZNvNPSeWA0gsl/zQKzJKUKULWnjngBHplK9jr1XMXm2nZPdqsPq7E42b1gxWvNvrxWV4szSdk70YO75EKxrSYVmB/zQm/Ey1aJxK83zru2hNvAhR+s2//a6zaGHbPIS3JPNUjbQUj8PI9mIVXfbv0sw7LSWGKn5bhr3/dEIMuS4o3Uic7agLk+B38DwMZ+usuN1ULmAqPBA+9791QPVuVQUuMeJg5Tt6kLRf6v4MiSamKX/RXafU/ZqM3Oj7PO2OU9nPkjCdZAcU39HOhhLgUB84blPXZCid4dbRoPfLlY1aFiSsrdtHvXrP6won5O3UY6UpnXoqBOeOmO4Sbas1qqx9QWMzJ/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(39860400002)(376002)(136003)(396003)(6506007)(44832011)(33656002)(2906002)(55016002)(66946007)(478600001)(66556008)(64756008)(71200400001)(66476007)(9686003)(76116006)(66446008)(7696005)(8676002)(8936002)(86362001)(316002)(110136005)(5660300002)(53546011)(186003)(4326008)(83380400001)(52536014)(26005)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 9RzAii6uQq14r72BkB+LS1RIMV5dp7f2+JlqYVthOqYtRZJvGzjz6KqfDN49f7ind8Qx71TOCWkLFaxxkTurkQPi/E8EvnfnF8Kh769ETWntW/0Cvl037p6X7I7LFErLffC4Iztu1nldQQd+PaGM1avhzKwQseBtHjjTNujebNNuz/tI8nFZC6FMBFOvjMLfFTfwBuUwULfiJEHIYBQmDnCVJPHPjX8blEs2x/nN6HzFaReH9RrNfyK3CdHmgfuZLMlNckIclKQfDK3L/kcqDDh5OSxD05KO0MMLpkg3WuhTqLobolt/by9mEYebA9pDea1drn6b/+VlEGLR4hOAy45APtMlk+SmLMVPCE/jR4kH4OTttSQ7ORRGdcccUU3VdKd0yzumgQJnqGNF7ER7ChCEriyeK+NdPfukgMXL6Ipi15LwCg3WX15uXp39d0rw+yzz3btVSmor0fV5LhcQ/0YfAISujOFWMTr8ioznkTM09KbWkedLSujZVa8CTXNZXLrpRM0tHRr/YAbSFt3C+AIjs3BDldP/lc1xiwFnjsdo3kEAU2V40X5aX5rvVlfVqUgJaz7Z6Fw7SngOmV6JAjGdQ+KgBXX7rSjM3o+NrJ3Ek1grWEDBcBDbxmH+8oDfRp2ylhfSdHM91yQH5a7LLw==
+        Mon, 7 Sep 2020 04:34:14 -0400
+Received: from a27-21.smtp-out.us-west-2.amazonses.com ([54.240.27.21]:43704
+        "EHLO a27-21.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726978AbgIGIeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:34:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599467646;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date;
+        bh=qjbQge4U6UB4BPyAJXyzWFTtAsRQDF/u2IRI9i22/84=;
+        b=dvWLPHdhLThXhx1jUbMJqvl+ACzbG5yTnwAwzSuqsQwtaFk7H0PBHYslw3UNwpd3
+        mIiuadK+4y/bY5s5+2rjmCTFuWgY5BEPfKSMDjnipCJl4NIkylBCw1TwGkBFp8BM3wb
+        ytt529JeCJ73/iLHIy6vvxVFO1PpzEoruoT9ONz0=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599467646;
+        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:From:In-Reply-To:References:To:Cc:Message-Id:Date:Feedback-ID;
+        bh=qjbQge4U6UB4BPyAJXyzWFTtAsRQDF/u2IRI9i22/84=;
+        b=nRho5tliqnZnyenfR4hEjLtAhU/c9r7C2fD/r1sWivepQRUAwGjQPKz0ymmYTxUd
+        kJk5cSGhC9Xko+9Vo41ti+3nOQGKIllcfzD3DX9cq/tVp8Jc3i/dMK9OT5rfq3C8CSs
+        lGf1xlPKsIWA9ShvhiX17RIMY+7tDvCgUluiGV3s=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C862BC3275F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a33caeb-db2a-473a-3aec-08d85308c2a1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 08:33:56.2355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ef0dLwO04GTvkD7X1um+9Wn/ov3ZNhZmBzfRYYtJmLeKDWKuVDtd+PvrhCL1fDCQD4SW4L9liy+6ZTBgAlMxQw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7013
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] mwifiex: pcie: Fix -Wunused-const-variable warnings
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200902140933.25852-1-yuehaibing@huawei.com>
+References: <20200902140933.25852-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <amitkarwar@gmail.com>, <ganapathi.bhat@nxp.com>,
+        <huxinming820@gmail.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <christophe.jaillet@wanadoo.fr>, <yuehaibing@huawei.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-ID: <0101017467b36bf5-f6201c38-cfe6-43d7-ac35-6d6dc2f33667-000000@us-west-2.amazonses.com>
+Date:   Mon, 7 Sep 2020 08:34:05 +0000
+X-SES-Outgoing: 2020.09.07-54.240.27.21
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogVGh1cnNk
-YXksIEp1bHkgMTYsIDIwMjAgMTE6MDcgUE0NCj4gU3ViamVjdDogW1BBVENIIDIvMl0gcGluY3Ry
-bDogaW14OiBTdXBwb3J0IGJ1aWxkaW5nIGkuTVggcGluY3RybCBkcml2ZXIgYXMgbW9kdWxlDQo+
-IA0KDQpTL3BpbmN0cmwgZHJpdmVyL3BpbmN0cmwgY29yZSBkcml2ZXINCg0KVGhpcyBhbHNvIGFw
-cGxpZXMgZm9yIFBhdGNoIDEvMi4NCg0KPiBDaGFuZ2UgUElOQ1RSTF9JTVggdG8gdHJpc3RhdGUg
-dG8gc3VwcG9ydCBsb2FkYWJsZSBtb2R1bGUgYnVpbGQuDQo+IA0KPiBBbmQgaS5NWCBjb21tb24g
-cGluY3RybCBkcml2ZXIgc2hvdWxkIGRlcGVuZCBvbiBDT05GSUdfT0YgdG8gbWFrZSBzdXJlIG5v
-DQo+IGJ1aWxkIGVycm9yIHdoZW4gaS5NWCBjb21tb24gcGluY3RybCBkcml2ZXIgaXMgZW5hYmxl
-ZCBmb3IgZGlmZmVyZW50DQo+IGFyY2hpdGVjdHVyZXMgd2l0aG91dCBDT05GSUdfT0YuDQo+IA0K
-PiBBbHNvIGFkZCBtb2R1bGUgYXV0aG9yLCBkZXNjcmlwdGlvbiBhbmQgbGljZW5zZS4NCj4gDQo+
-IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0N
-Cj4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZpZyAgICAgICB8IDMgKystDQo+ICBk
-cml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14LmMgfCA1ICsrKysrDQo+ICAyIGZp
-bGVzIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2NvbmZpZyBiL2RyaXZlcnMvcGluY3Ry
-bC9mcmVlc2NhbGUvS2NvbmZpZw0KPiBpbmRleCA1NzAzNTVjLi45MjJhZTRiIDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL0tjb25maWcNCj4gKysrIGIvZHJpdmVycy9w
-aW5jdHJsL2ZyZWVzY2FsZS9LY29uZmlnDQo+IEBAIC0xLDYgKzEsNyBAQA0KPiAgIyBTUERYLUxp
-Y2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICBjb25maWcgUElOQ1RSTF9JTVgNCj4gLQli
-b29sDQo+ICsJdHJpc3RhdGUgIklNWCBwaW5jdHJsIGRyaXZlciINCg0KSU1YIHBpbmN0cmwgY29y
-ZSBkcml2ZXINCg0KPiArCWRlcGVuZHMgb24gT0YNCj4gIAlzZWxlY3QgR0VORVJJQ19QSU5DVFJM
-X0dST1VQUw0KPiAgCXNlbGVjdCBHRU5FUklDX1BJTk1VWF9GVU5DVElPTlMNCj4gIAlzZWxlY3Qg
-R0VORVJJQ19QSU5DT05GDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxl
-L3BpbmN0cmwtaW14LmMNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtaW14
-LmMNCj4gaW5kZXggYjgwYzQ1MC4uM2VhYWZiNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5j
-dHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVl
-c2NhbGUvcGluY3RybC1pbXguYw0KPiBAQCAtMTEsNiArMTEsNyBAQA0KPiAgI2luY2x1ZGUgPGxp
-bnV4L2luaXQuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4
-L21mZC9zeXNjb24uaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gICNpbmNsdWRl
-IDxsaW51eC9vZi5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPg0KPiAgI2luY2x1
-ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCj4gQEAgLTg5OCwzICs4OTksNyBAQCBjb25zdCBzdHJ1
-Y3QgZGV2X3BtX29wcyBpbXhfcGluY3RybF9wbV9vcHMgPSB7DQo+ICAJCQkJCWlteF9waW5jdHJs
-X3Jlc3VtZSkNCj4gIH07DQo+ICBFWFBPUlRfU1lNQk9MX0dQTChpbXhfcGluY3RybF9wbV9vcHMp
-Ow0KPiArDQo+ICtNT0RVTEVfQVVUSE9SKCJMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxp
-bmFyby5vcmc+Iik7DQoNCk1PRFVMRV9BVVRIT1IoIkRvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25n
-QG54cC5jb20+Iik7DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0KPiArTU9EVUxFX0RFU0NSSVBUSU9O
-KCJOWFAgaS5NWCBjb21tb24gcGluY3RybCBkcml2ZXIiKTsNCj4gK01PRFVMRV9MSUNFTlNFKCJH
-UEwgdjIiKTsNCj4gLS0NCj4gMi43LjQNCg0K
+YueHaibing <yuehaibing@huawei.com> wrote:
+
+> These variables only used in pcie.c, move them to .c file
+> can silence these warnings:
+> 
+> In file included from drivers/net/wireless/marvell/mwifiex/main.h:57:0,
+>                  from drivers/net/wireless/marvell/mwifiex/init.c:24:
+> drivers/net/wireless/marvell/mwifiex/pcie.h:310:41: warning: mwifiex_pcie8997 defined but not used [-Wunused-const-variable=]
+>  static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+>                                          ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.h:300:41: warning: mwifiex_pcie8897 defined but not used [-Wunused-const-variable=]
+>  static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+>                                          ^~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/pcie.h:292:41: warning: mwifiex_pcie8766 defined but not used [-Wunused-const-variable=]
+>  static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+>                                          ^~~~~~~~~~~~~~~~
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Failed to build:
+
+drivers/net/wireless/marvell/mwifiex/pcie.c:191:43: error: redefinition of 'mwifiex_reg_8766'
+  191 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8766 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:36:43: note: previous definition of 'mwifiex_reg_8766' was here
+   36 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8766 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:223:43: error: redefinition of 'mwifiex_reg_8897'
+  223 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8897 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:68:43: note: previous definition of 'mwifiex_reg_8897' was here
+   68 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8897 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:260:43: error: redefinition of 'mwifiex_reg_8997'
+  260 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8997 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:105:43: note: previous definition of 'mwifiex_reg_8997' was here
+  105 | static const struct mwifiex_pcie_card_reg mwifiex_reg_8997 = {
+      |                                           ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:297:35: error: redefinition of 'mem_type_mapping_tbl_w8897'
+  297 | static struct memory_type_mapping mem_type_mapping_tbl_w8897[] = {
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:142:35: note: previous definition of 'mem_type_mapping_tbl_w8897' was here
+  142 | static struct memory_type_mapping mem_type_mapping_tbl_w8897[] = {
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:308:35: error: redefinition of 'mem_type_mapping_tbl_w8997'
+  308 | static struct memory_type_mapping mem_type_mapping_tbl_w8997[] = {
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:153:35: note: previous definition of 'mem_type_mapping_tbl_w8997' was here
+  153 | static struct memory_type_mapping mem_type_mapping_tbl_w8997[] = {
+      |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:312:41: error: redefinition of 'mwifiex_pcie8766'
+  312 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+      |                                         ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:157:41: note: previous definition of 'mwifiex_pcie8766' was here
+  157 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+      |                                         ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:320:41: error: redefinition of 'mwifiex_pcie8897'
+  320 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+      |                                         ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:165:41: note: previous definition of 'mwifiex_pcie8897' was here
+  165 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+      |                                         ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:330:41: error: redefinition of 'mwifiex_pcie8997'
+  330 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+      |                                         ^~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/pcie.c:175:41: note: previous definition of 'mwifiex_pcie8997' was here
+  175 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+      |                                         ^~~~~~~~~~~~~~~~
+make[5]: *** [drivers/net/wireless/marvell/mwifiex/pcie.o] Error 1
+make[4]: *** [drivers/net/wireless/marvell/mwifiex] Error 2
+make[3]: *** [drivers/net/wireless/marvell] Error 2
+make[2]: *** [drivers/net/wireless] Error 2
+make[1]: *** [drivers/net] Error 2
+make: *** [drivers] Error 2
+
+Patch set to Changes Requested.
+
+-- 
+https://patchwork.kernel.org/patch/11750661/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
