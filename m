@@ -2,182 +2,229 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820A4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69248C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439CC215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B089207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:01:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MBQfN5DO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgIGV7j (ORCPT
+        id S1727867AbgIGWBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:59:39 -0400
-Received: from mail-mw2nam10olkn2076.outbound.protection.outlook.com ([40.92.42.76]:24161
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        Mon, 7 Sep 2020 18:01:17 -0400
+Received: from mail-dm6nam12on2112.outbound.protection.outlook.com ([40.107.243.112]:34401
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726941AbgIGV7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:59:36 -0400
+        id S1726446AbgIGWBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:01:15 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ofs4DqrcGV6LCNF7NeTtTyP4rAl1klnY5W/TXYLaebEXlT/ozrwIThFxq5IGidFNGo1rU59B58ZLqCqi4Yx+2fHAbbUx6VQo0TvhFkbHc3HBlTXtuUu6H5bkmoPYi7qRDhY5RFYPlhOBnVgjmcnSdvEWYLGQ0rHn7C8FzcdeSsmV2wUexMqEpUgt7/LsaOpu//mOB5BUzvgUXakomhTB18yhaQc5R/N4ojJXLZToCOxxawfXARiBrmzn+KJVfs/ERmprlpWew9DHz+Itu4XtDPbmz23/iYp/4ZECctuTM4OacIlcWFeys9vzSPmiOWfWT33O9rD4kFVD/DivqBMPIw==
+ b=Dh5cx+SWFIYFHTbycjGOnS9vomv2H38AsX4FeIAs7NggCJXGBNiIIkX3EI0xTu6Ik5srLZoW2bOMqxKcN9vnOYDv5twy4rl3qp2a7ZogW2btv1f1NrfCN0bVnKmkRu5I+u41B53mfujLP/7Tzj33gSQG3oWSHNKSmMqH7+oWLE05OJAHNbB0zrORGBKZSiQg0HGtS2H6gWa5r2WpXM8BfaaEwNgYTbAehWk+Js1nPMudQWQWikzyC9QP+2NroNpzzjamJoCSF96s26g/BwF2aMiJ8E3aLYcF2l/b6RPJjS1pHg/T03nop0CKv707i0HRKrRb2goTm76Lj6cGAQoczg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3mMyIFLn7x13+26wfsZzZmU9kKND5Fz5URdzquQjUlg=;
- b=oA05g+7mEorQARYbynDEh+OaJriBeYHKiYz/ScXnPzVTLPW+MtvEcSlPypTEP+cp1y8P05tbNBweLmzofItugpF6qToH9n1Cqc39REHDvpT/QZ4Jb56PsmTobzCH/UYliS1lCH9E2YRMMjM5cBWjX/6q7aUd9KmSvvtyuhZAf+mNOJG+9NwgqG9Rmv3j9q9oi+OKV3Xf5oghbrc0fiRXx/ntaIatyMpkL3FB1MlfszudH+1UGRafbcxuB4riTnwQlcdsXwzu9p4vg0dnnQTSg7wh4QkFnaxWW/VOoTcpP6REqZtkc6q0+LUV8NNuOPQbUTxUOXVcwOrG3qp4cxCCQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from BN7NAM10FT016.eop-nam10.prod.protection.outlook.com
- (2a01:111:e400:7e8f::4c) by
- BN7NAM10HT177.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e8f::295)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 21:59:34 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e8f::4e) by BN7NAM10FT016.mail.protection.outlook.com
- (2a01:111:e400:7e8f::226) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23 via Frontend
- Transport; Mon, 7 Sep 2020 21:59:34 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:1AC2766FC08D98C8B0B437D50376D26C203F8DD870C1FDE5CE551708501B3778;UpperCasedChecksum:57B2A49983E1ABEDDB9A01E793BFF078E699D11AE9577201387F12BCC9FAFC0C;SizeAsReceived:9290;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 21:59:34 +0000
-Subject: Re: [RFT 06/25] ARM: dts: s5pv210: move fixed clocks under root node
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-7-krzk@kernel.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB06608B88962AD3D8BF5301D3CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Mon, 7 Sep 2020 14:59:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200907161141.31034-7-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
+ bh=2yH4Eiqev/PbIOUdJJrcdScNP5YV7cpMHDuku8d1qT0=;
+ b=d02ETUzTIWHueCJIs1f4hIvriPBoiEp97l6xcfcHJNOsW9iHLJsdeDP9Gi2xY/IMaKQzfTNr3bnkXc0rL1e9m74GduUI4Puye84hZ0gPNgFbgYwLQ8RbGITommEJB+rjVAZIpSxEfGSD6naTFc0CJPossHEKvCYlnKiEqIIzuUvovoeZ1Sgfgkk3J/svfCSNSc4v8+bcOBQ/5HNN2nLT2pxb0xtywBLXimqU0s/1lzroFfhWR7/yjOdBudCl4IgxHcvfykWDDMw/8aG+iDXaTHzSLqS5502QeIe5n6vg/iqx1JQ3y0Ev9LQaFzs4fVBnGZd612GtYUvAnzvycG2+XQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2yH4Eiqev/PbIOUdJJrcdScNP5YV7cpMHDuku8d1qT0=;
+ b=MBQfN5DOuooHlIJEOBWlKMSw05A/6NLy3xrKxsHbWW9qlUMWnlO2+coawRyz4qW5vymWt0g7IyspW1BB/MpzOCJYWm87uQRVPPhRIN75+X55XXwKr8MDLH/R6wduSmrcV0jp7Dc8C2Is0a0kMvvgC32Lax5wp1V81JmTtKtj4kc=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MWHPR21MB0190.namprd21.prod.outlook.com (2603:10b6:300:79::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.0; Mon, 7 Sep
+ 2020 22:01:11 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::d00b:3909:23b:83f1%5]) with mapi id 15.20.3370.015; Mon, 7 Sep 2020
+ 22:01:11 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>
+Subject: RE: [PATCH v7 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Topic: [PATCH v7 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+Thread-Index: AQHWhTK4CcuAC1huL0WTSe45bNSLyqldtpaQ
+Date:   Mon, 7 Sep 2020 22:01:11 +0000
+Message-ID: <MW2PR2101MB1052338B4D3B7020A2191EB7D7280@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200907161920.71460-1-parri.andrea@gmail.com>
+ <20200907161920.71460-2-parri.andrea@gmail.com>
+In-Reply-To: <20200907161920.71460-2-parri.andrea@gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CO2PR18CA0056.namprd18.prod.outlook.com
- (2603:10b6:104:2::24) To BN6PR04MB0660.namprd04.prod.outlook.com
- (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <d6d74e49-57f0-506e-289a-b6cc786cabe0@live.ca>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-07T22:01:10Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=b9f10162-f66b-40aa-88df-5c1411d05768;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a64c3a8a-93d3-490f-b90e-08d853798887
+x-ms-traffictypediagnostic: MWHPR21MB0190:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR21MB019084846E9D1E18B5459172D7280@MWHPR21MB0190.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +9sm57Cs2kYT8096PJU8HWKsH206Xy7KERewybQBFylz2vwEyIeKot8cyQM/YAnNouuqPjUIK0V19GqGWVT+udwm3+izl2jGMxQee15RUheEYqd1WIg9xYpHnrqsp69dxoc/kcZGMw2p7qezVIFOMFwyJ4eqjpNIJy4UXxuc/YbSfcfimEG00behh4/Enhe6p64yXnlDRQm4Pf0IFP30fxDmlEwUvViLzNICI8E9rYNsmKRKu87C75qOirRewcsvXSiumeAxKTgQCeDAICeulgb1gX4FIFsd4ezGlfT/cBqFQkuc7D7InFx4soQlytnNPCLceQvtE4+uKxEN4rd125RHd5AiYOB5fUYoptHauPIdFWJx+hwY4o2/IAfeyO2Z
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(66476007)(5660300002)(316002)(66946007)(64756008)(66446008)(82950400001)(76116006)(8990500004)(54906003)(52536014)(82960400001)(83380400001)(478600001)(10290500003)(9686003)(8676002)(6506007)(4326008)(66556008)(7696005)(8936002)(55016002)(2906002)(86362001)(186003)(110136005)(26005)(107886003)(71200400001)(33656002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: cDK7AsJgpDQrJUYiOK5qFD54nROuLypHVsVX+fNqcRl9ky2XYwDOTExD3T+Od5zrqoCxzgcvIIxiiv/fbFbxb2rF+ZabUOyDNpuTSuMMvGUrOFTlQArkKKc0/ptpJ0xz6/yEQKvzk8jaeYUNX8fGO5V4n52YmCAiOCRRgsQVV4aTp3GevnSGltrD2EUr9Ztys+smZLhqCnZ6Ssk8Y0/i9epo6SIDwR4VDmXLnHJ30CpuD9ss9yHLmI1K0BYmVhooVk50BQhhR/gl8mEMhF3bxyv1fQMXcRd8+WS4n6mUC8CULPtVKPwaZRNBxc3cvSwY+6IHdjhfqS4gj9cN7DsYROOKltIYT9TxDMBlipo1R9UhdJEoHGnasJsR9WzI+OgCkZY8Jz+GAkj7Q7jOD3sD3lvIf6bvz63BhwXrNHz0/WWc+0a9dfcNAhu+6eZOaA4s4SKYiU648BKuhoyVNI1Sm2O4gVH64PACT6M0Llpc/gIcIKJN0Ts6Bgy9J5UZLMzNrxiKvBHSs614ec00VAhAVah2uBWdkxfbtOCUc0kXuZlJDlWSroYgbzgTZ+eN5kD5xHkN2TMSpMVQYz3V1Wb9a1p/ks5mgPS5pUK9ndXoy8RxeBNkMFm+2/++vPOZI57PS+6OK0gqj6HIfoAxihaOzA==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by CO2PR18CA0056.namprd18.prod.outlook.com (2603:10b6:104:2::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Mon, 7 Sep 2020 21:59:31 +0000
-X-Microsoft-Original-Message-ID: <d6d74e49-57f0-506e-289a-b6cc786cabe0@live.ca>
-X-TMN:  [G6aTOyxuKOyt7jjK6HKCYUMiKhFeVfuFcb+vC0+Z1TT0ipj2LYdB/aXmC66kDrSu]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: c03078b4-7411-41d1-3092-08d853794df6
-X-MS-TrafficTypeDiagnostic: BN7NAM10HT177:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ftYHjl3RitJDUNld+16ZH5kVvuAyRhChR3oPbMONp6+A9wzbNLCE78J8+jxz2FvjB74XxSfvl6Ga7NmhQM8wBNsjDKJ/bemTdeTapMwlV7dKR0F9mhE91Upn0X5AzLud+w+HSxp93EsYQW9NGkjaNNrCbM5gfXJ+zBwR7QOO/OzdTqEPhUX7T57ziZ3oDehNPp3eXvFobGLY8W32QcwB1A==
-X-MS-Exchange-AntiSpam-MessageData: uKWby0FG/2bXOfx9WCUJnonk84yAgpFz03LYGbSFUMJ4ZCpoJLOGDbIo+VhV3AzLChgV6CVnKLnr3kLqQB6tFB1b5C0Z7PqF78JBPryR5oUz2dQMwhLeL9260/sxtJDtpWMi25avyUlieZxEtZgi8gZ1AL5Wi1enpjAKK9ozpVwrD7BFNY30ZLA56qAqv4gcsg3CFk9GWYxEKOWsFCimWQ==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c03078b4-7411-41d1-3092-08d853794df6
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 21:59:34.0332
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a64c3a8a-93d3-490f-b90e-08d853798887
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 22:01:11.8570
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT016.eop-nam10.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7NAM10HT177
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dhh9udsXdNjguEydVA2iER8xqdDBiu+OOfMg6eBSARSDdEd/rxCC80o90kAaadcOWeyeokngnsVSiONppFuKqBNrx6DU0iwCknvvw0DHQag=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR21MB0190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Works for me on the Galaxy S.
-
-Tested-by: Jonathan Bakker <xc-racer2@live.ca>
-
-Thanks,
-Jonathan
-
-On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> The fixed clocks are kept under dedicated 'external-clocks' node, thus a
-> fake 'reg' was added.  This is not correct with dtschema as fixed-clock
-> binding does not have a 'reg' property.  Moving fixed clocks out of
-> 'soc' to root node fixes multiple dtbs_check warnings:
-> 
->   external-clocks: $nodename:0: 'external-clocks' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
->   external-clocks: #size-cells:0:0: 0 is not one of [1, 2]
->   external-clocks: oscillator@0:reg:0: [0] is too short
->   external-clocks: oscillator@1:reg:0: [1] is too short
->   external-clocks: 'ranges' is a required property
->   oscillator@0: 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Andrea Parri (Microsoft) <parri.andrea@gmail.com> Sent: Monday, Septe=
+mber 7, 2020 9:19 AM
+>=20
+> From: Andres Beltran <lkmlabelt@gmail.com>
+>=20
+> Currently, VMbus drivers use pointers into guest memory as request IDs
+> for interactions with Hyper-V. To be more robust in the face of errors
+> or malicious behavior from a compromised Hyper-V, avoid exposing
+> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> bad request ID that is then treated as the address of a guest data
+> structure with no validation. Instead, encapsulate these memory
+> addresses and provide small integers as request IDs.
+>=20
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> Co-developed-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+> Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
 > ---
->  arch/arm/boot/dts/s5pv210.dtsi | 36 +++++++++++++---------------------
->  1 file changed, 14 insertions(+), 22 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-> index 84e4447931de..5c760a6d7955 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -52,34 +52,26 @@
->  		};
->  	};
->  
-> +	xxti: oscillator-0 {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <0>;
-> +		clock-output-names = "xxti";
-> +		#clock-cells = <0>;
-> +	};
+
+[snip]
+
+> --- a/drivers/hv/ring_buffer.c
+> +++ b/drivers/hv/ring_buffer.c
+> @@ -248,7 +248,8 @@ void hv_ringbuffer_cleanup(struct hv_ring_buffer_info=
+ *ring_info)
+>=20
+>  /* Write to the ring buffer. */
+>  int hv_ringbuffer_write(struct vmbus_channel *channel,
+> -			const struct kvec *kv_list, u32 kv_count)
+> +			const struct kvec *kv_list, u32 kv_count,
+> +			u64 requestid)
+>  {
+>  	int i;
+>  	u32 bytes_avail_towrite;
+> @@ -258,6 +259,8 @@ int hv_ringbuffer_write(struct vmbus_channel *channel=
+,
+>  	u64 prev_indices;
+>  	unsigned long flags;
+>  	struct hv_ring_buffer_info *outring_info =3D &channel->outbound;
+> +	struct vmpacket_descriptor *desc =3D kv_list[0].iov_base;
+> +	u64 rqst_id =3D VMBUS_NO_RQSTOR;
+>=20
+>  	if (channel->rescind)
+>  		return -ENODEV;
+> @@ -300,6 +303,22 @@ int hv_ringbuffer_write(struct vmbus_channel *channe=
+l,
+>  						     kv_list[i].iov_len);
+>  	}
+>=20
+> +	/*
+> +	 * Allocate the request ID after the data has been copied into the
+> +	 * ring buffer.  Once this request ID is allocated, the completion
+> +	 * path could find the data and free it.
+> +	 */
 > +
-> +	xusbxti: oscillator-1 {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <0>;
-> +		clock-output-names = "xusbxti";
-> +		#clock-cells = <0>;
-> +	};
+> +	if (desc->flags =3D=3D VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED) {
+> +		rqst_id =3D vmbus_next_request_id(&channel->requestor, requestid);
+> +		if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
+> +			pr_err("No request id available\n");
+> +			return -EAGAIN;
+> +		}
+> +	}
+> +	desc =3D hv_get_ring_buffer(outring_info) + old_write;
+> +	desc->trans_id =3D (rqst_id =3D=3D VMBUS_NO_RQSTOR) ? requestid : rqst_=
+id;
 > +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		ranges;
->  
-> -		external-clocks {
-> -			compatible = "simple-bus";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			xxti: oscillator@0 {
-> -				compatible = "fixed-clock";
-> -				reg = <0>;
-> -				clock-frequency = <0>;
-> -				clock-output-names = "xxti";
-> -				#clock-cells = <0>;
-> -			};
-> -
-> -			xusbxti: oscillator@1 {
-> -				compatible = "fixed-clock";
-> -				reg = <1>;
-> -				clock-frequency = <0>;
-> -				clock-output-names = "xusbxti";
-> -				#clock-cells = <0>;
-> -			};
-> -		};
-> -
->  		onenand: onenand@b0600000 {
->  			compatible = "samsung,s5pv210-onenand";
->  			reg = <0xb0600000 0x2000>,
-> 
+
+This is a nit, but the above would be clearer to me if written like this:
+
+	flags =3D desc->flags;
+	if (flags =3D=3D VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED) {
+		rqst_id =3D vmbus_next_request_id(&channel->requestor, requestid);
+		if (rqst_id =3D=3D VMBUS_RQST_ERROR) {
+			pr_err("No request id available\n");
+			return -EAGAIN;
+		}
+	} else {
+		rqst_id =3D requestid;
+	}
+	desc =3D hv_get_ring_buffer(outring_info) + old_write;
+	desc->trans_id =3D rqst_id;
+
+The value of the flags field controls what will be used as the value for th=
+e
+rqst_id.  Having another test to see which value will be used as the trans_=
+id
+somehow feels a bit redundant.  And then rqst_id doesn't have to be initial=
+ized.
+
+>  	/* Set previous packet start */
+>  	prev_indices =3D hv_get_ring_bufferindices(outring_info);
+>=20
+> @@ -319,8 +338,13 @@ int hv_ringbuffer_write(struct vmbus_channel *channe=
+l,
+>=20
+>  	hv_signal_on_write(old_write, channel);
+>=20
+> -	if (channel->rescind)
+> +	if (channel->rescind) {
+> +		if (rqst_id !=3D VMBUS_NO_RQSTOR) {
+
+Of course, with my proposed change, the above test would also have to be fo=
+r
+the value of the flags field, which actually makes the code a bit more cons=
+istent.
+
+Michael
+
+> +			/* Reclaim request ID to avoid leak of IDs */
+> +			vmbus_request_addr(&channel->requestor, rqst_id);
+> +		}
+>  		return -ENODEV;
+> +	}
+>=20
+>  	return 0;
+>  }
