@@ -2,162 +2,131 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED93C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA1FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17EAD2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512692087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:09:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="IPf14NJN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="t+zrA6Za"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgIGQIo (ORCPT
+        id S1730239AbgIGQJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:08:44 -0400
-Received: from mail-eopbgr10080.outbound.protection.outlook.com ([40.107.1.80]:39031
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729923AbgIGOiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:38:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nMFNHpB8/22+MZot45LzIyQPpIOnqiJ2WZT9MLcYG7eAgtH0e0HztMNiveK9kkH1JJY5vl70ITcRGMu7a0PGpwJC7xEOlX7QdvQeE4i5ADgpDzIQr1Mvk/7p3bEDLMEfZq5TcHwCZzYXNcFBHLk0sxzAT7JkAKbQMwufMEiz4wFzheducCVP07XzL9TO3QNdvZYQHgUZQv8I9zoIX6PZ7U8IJGyeJ3iX4JfUTBKtwWm8/PrT0zIGlW9Kz+QYM0vmSwID+6k5kGbrRT0znX//FbyZVbT7QSD7mC/pgDypUmczGOwCoqfOW8gyjeK/rlMYT5lCZ0tc4NDS+7272fQTkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toc77OndJ53Wm/RgRIJL4BDIR3hJH3aRcNaHQURk8XE=;
- b=YQzZWFQMlrjSNGZYRufwctR/OeVx2TJm+5UYiMZkbdgs5Ja1Bkf4VGdiBpuoZ4yOT8QytCa4p/rdHPfhAy30b7Bs3h8yXLWcxJjiQvOIEyu6/JhB4qxPK+Hqp78/GY8uezVViZw0xW5xqBsm3Z6PouP0QuV6alVJpLX+z9qcBm4cLW6cXyfiPMRinHuY9pqCbJIYDsF6pK8dNo9c/UFNgn/JNmqpq42Rw03xrIgrCpmvhZc2ilt2jLGv8AM8rs8qikUp2Sj+KRdB8KdvhspZuiS+Zg4m9Nqj6yp7XUBxZzz4w+snrppR59gn3i2Kl3gngMTC5g5xr955Eqlc+iByCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=toc77OndJ53Wm/RgRIJL4BDIR3hJH3aRcNaHQURk8XE=;
- b=IPf14NJNl1Wxt4tcd7Hx2oNKMk39JJzlAmrQVAhgeq1Ucg4FvzENEfvW9/biJc9428qLeudhHdgoQ5Bv4AR71O+lNTdwNWMAYH0gLBn96dYf/FtYK4ZskCg0+pKHJoWf7QXsL9slBYuIFhWztrzfvHDtD8fMuNGiyD98rJEKztU=
-Authentication-Results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=oss.nxp.com;
-Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
- (2603:10a6:800:ae::16) by VI1PR04MB5872.eurprd04.prod.outlook.com
- (2603:10a6:803:e2::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
- 2020 14:36:54 +0000
-Received: from VI1PR0402MB2815.eurprd04.prod.outlook.com
- ([fe80::a508:19fb:5b7e:5607]) by VI1PR0402MB2815.eurprd04.prod.outlook.com
- ([fe80::a508:19fb:5b7e:5607%9]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 14:36:54 +0000
-Subject: Re: [PATCH v4 10/10] vfio/fsl-mc: Add support for device reset
-To:     Auger Eric <eric.auger@redhat.com>, alex.williamson@redhat.com,
-        kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bharatb.linux@gmail.com,
-        laurentiu.tudor@nxp.com
-References: <20200826093315.5279-1-diana.craciun@oss.nxp.com>
- <20200826093315.5279-11-diana.craciun@oss.nxp.com>
- <629498a6-8329-1045-c1a4-ab334f3c8107@redhat.com>
-From:   Diana Craciun OSS <diana.craciun@oss.nxp.com>
-Message-ID: <665b9fbc-90f9-8a7c-4ea7-73583ae30d69@oss.nxp.com>
-Date:   Mon, 7 Sep 2020 17:36:50 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-In-Reply-To: <629498a6-8329-1045-c1a4-ab334f3c8107@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM0PR04CA0004.eurprd04.prod.outlook.com
- (2603:10a6:208:122::17) To VI1PR0402MB2815.eurprd04.prod.outlook.com
- (2603:10a6:800:ae::16)
+        Mon, 7 Sep 2020 12:09:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730284AbgIGQId (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:08:33 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD5A0C061755
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:08:26 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id a8so7176094ilk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:08:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JqN+Ld3wZPmbVgI62Wk3h0aeRwICf084UpC6lt1ISUQ=;
+        b=t+zrA6Zax5sYBKq6LQ+BBjT0mXvkgqo1EQagCOBiGh7Gw6vDfaDBc1h2BgAQD+5B5Z
+         O4l+DjThBvV07ZhnkrV+Pxdm+gJOJVQTbav12VmkxLaeitbWMcKHcgJ/L263Nz8rCg2P
+         NqYSoiyiMa85MFREwFmfpnKC/0OpLJaP/Ey8Fbd9bB9X2CtM5DjzcJTjUQbmbr01FHEW
+         gAGVicIGl4/5IlJ9zuw5P+XJiOtxfiHinQtO257YEewAFwyVzWUvD96X/KFHHHXscKNv
+         S82b21ElO1RRbvUyYFHUHv/2FKiWT8fwv79tt1LO4pk0JDOGn1lIB6JZaB5ZJTMVBN7P
+         FRGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JqN+Ld3wZPmbVgI62Wk3h0aeRwICf084UpC6lt1ISUQ=;
+        b=ddPLm2kSnTQpOMHhGuUMssmkYOEbbcweBRxolZPvChYANsgm1jeq6eadtfi3ZJxWKw
+         n/jHL3feroNOa0KFR1dLN3M2mYCgFVO+rThFyzzBdhn3PBaLhJpqTDBYvz0YpYz68K5z
+         WI7Pola7quG2gj7cY8sKhI+XzrbSE4J9NYkpvo+DzD8Y5u2bgUBFSXLaHJvMMgJLwKxY
+         PNJVvnAeki8vzV33lq0SMOgrPmsQko1rdlwI33G9Add9WwD2G28wDyE1VjXQXijjLhcC
+         /MlbMMqalh3t+bubDnexYkCDooOFIriko1xjZEFb4o7Ebo56ipOxCpgPLGhCIN94vhgp
+         ET3g==
+X-Gm-Message-State: AOAM532UZAV73JUtlO8KlkynJ0HDhTRs4U/4o0OZNF4iPqeKdkaMIaVv
+        b7o9nzwlQd7WaiifzXROQZsiK8W0SLQUJ9WM4sh+Pw==
+X-Google-Smtp-Source: ABdhPJygbGhzi1UjXL8W5ZYdCpkiPK64via60tqGaifPutE7y9g1OWG5mxVKMiZEo45zI0mgt2/Sl1DPIqvev7fxd84=
+X-Received: by 2002:a92:cb4d:: with SMTP id f13mr16653071ilq.189.1599494905629;
+ Mon, 07 Sep 2020 09:08:25 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.122] (188.27.189.94) by AM0PR04CA0004.eurprd04.prod.outlook.com (2603:10a6:208:122::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 14:36:53 +0000
-X-Originating-IP: [188.27.189.94]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 283f659c-cbcc-40d2-e056-08d8533b7752
-X-MS-TrafficTypeDiagnostic: VI1PR04MB5872:
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB58724C4ED2325F730C37DE74BE280@VI1PR04MB5872.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ORr5LMQASRhPhroi/LiY5AqNGJpMfEcezj3crRZgt1aKh/gSGD8nXjC+gqze0qX4IjpO+KJHEtOLeqm4uJ+9VrBQKpTYLhUGO7V2dEsJpViw48Os6vyvMy7VDyVLX2y8e2/EmSxgYN2wPkJVT8EOz/k7oGHNklIU+TsfqI2jvgRnH06/4QNvsX6/h4J/UfCIm/Nl+2qYoL9BBT/UZFB62DzmjPWUY8rT5QMG+tFymrryrkszYjt96dh7cVBwRsf2PjZLjPbhoNtXeX6R1d+wh2I3x0hE6zkj7loSI3rIg2Ew3dowFmiUhT2KN1Dq3gZITXWAFYTXE0Sy9l9nhyJMDf3SYDRHFLa+TC6/sDnmRVaxqjQFCSoqnYpfq6KQg3px
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0402MB2815.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(396003)(346002)(376002)(26005)(52116002)(186003)(16526019)(86362001)(66556008)(31696002)(5660300002)(66946007)(31686004)(66476007)(956004)(6486002)(4326008)(53546011)(2616005)(16576012)(83380400001)(478600001)(8936002)(316002)(8676002)(2906002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: lRFbFKflJ/t2xnKLvc/7w55UTPBhO9YkgvxJXYLFPsA/40UTDT6RS9oOt4RVn83JllvzkPrLK0w1qDDJsSN74PJRVJgk8DYiagrq9OGH/xb0IJphOgYJ+cTgl9ekhKtfpv/a8nzpOELTssHtKlGRJz+vf6Yw6e8apMTE0WF1IKxm1r1I6mDZM1+Ry/uYBj6NXBXMa/ZIT7rMRK43BboDcFQ0QDxB86JDFo73+VH/zwDuja3ANtWGGQOQwaHpVyy1j5mnrTizE5HW4/ZjCwmWKw3J233UsH1TSXPu/OsZztsylz3POabHZ8elBlaVYrWHafXzyg1FwGFo1BXPqMMGlohAelR+3q0dzS9xF8iBCF1ZjiancHdP7w6vJnAXaMaSYvYQv4uVZnfyF4B7aI8Vfw/NJIpuVsRlvJwzxZ6AYsIgpM0vsK25zVC+WSqPKIpWn58T0hbVlcFwPxRVtIUE4I4ghFrhKFcof9b7Vj1ZpHXhMF8SoQ0YakUZt/DCebMoavPVpwDPLkkbR53p+YuSCXUiqmA2OcDNS/zbtiURcnsBYFiYuy/qclLhafa4tkNj55+6vSOu5n/pEIPy1ucumgee7mmqRbLbkx2Pwc98KuaQaw/NeOC5t802wgdiLGWYBEnJZcrRg3gtlvCoxSYx3A==
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 283f659c-cbcc-40d2-e056-08d8533b7752
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0402MB2815.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 14:36:54.5600
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8mrMTBOr4ZnsCW803ptBdo0DLeOXcTKWg/jbw89LqOUMTLxJQySBQAYZpYRfnmMBWs1kOgVaflyXzaZ8yT0sHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5872
+References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
+ <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
+ <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
+ <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
+ <20200907122238.GA1849893@kroah.com> <CAMpxmJXM=8oGoPSGg8G8XJ4HXJFrAQ2-_EXrz3rf3+ZmCSWB7g@mail.gmail.com>
+ <20200907140829.GL1891694@smile.fi.intel.com> <CAMuHMdV42oUu=af_O=aUVED_Nxce0wnTKTMNNSskaSGT=p5ZMw@mail.gmail.com>
+In-Reply-To: <CAMuHMdV42oUu=af_O=aUVED_Nxce0wnTKTMNNSskaSGT=p5ZMw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 7 Sep 2020 18:08:14 +0200
+Message-ID: <CAMRc=MeBL7opS6wBO1nEesHJg8Yv_GR0xxRae3mtQ2xj=eBOGg@mail.gmail.com>
+Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On Mon, Sep 7, 2020 at 5:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Andy,
+>
+> On Mon, Sep 7, 2020 at 4:14 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Sep 07, 2020 at 03:49:23PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+> >
+> > ...
+> >
+> > > > Yes it is.  Or at least until you fix all existing users so that if you
+> > > > do change it, no one notices it happening :)
+> > > >
+> > >
+> > > Then another question is: do we really want to commit to a stable ABI
+> > > for a module we only use for testing purposes and which doesn't
+> > > interact with any real hardware.
+> > >
+> > > Rewriting this module without any legacy cruft is tempting though. :)
+> >
+> > Another thought spoken loudly: maybe it can be unified with GPIO aggregator
+> > code? In that case it makes sense.
+>
+> You want to aggregate GPIOs out of thin air?
+>
+> From DT, that would be something like
+>
+>     gpios = <&gpio1 2>, <0>, <0>, <&gpio2, 5>;
+>
+> ?
+>
+> For writing into ".../new_device", we could agree on something like "0"
+> means not backed by an existing GPIO?
+>
 
-On 9/4/2020 11:21 AM, Auger Eric wrote:
-> Hi Diana,
-> 
-> On 8/26/20 11:33 AM, Diana Craciun wrote:
->> Currently only resetting the DPRC container is supported which
->> will reset all the objects inside it. Resetting individual
->> objects is possible from the userspace by issueing commands
->> towards MC firmware.
->>
->> Signed-off-by: Diana Craciun <diana.craciun@oss.nxp.com>
->> ---
->>   drivers/vfio/fsl-mc/vfio_fsl_mc.c | 15 ++++++++++++++-
->>   1 file changed, 14 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/vfio/fsl-mc/vfio_fsl_mc.c b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->> index 27713aa86878..d17c5b3148ad 100644
->> --- a/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->> +++ b/drivers/vfio/fsl-mc/vfio_fsl_mc.c
->> @@ -310,7 +310,20 @@ static long vfio_fsl_mc_ioctl(void *device_data, unsigned int cmd,
->>   	}
->>   	case VFIO_DEVICE_RESET:
->>   	{
->> -		return -ENOTTY;
->> +		int ret = 0;
-> initialization not needed
->> +
-> spare empty line
->> +		struct fsl_mc_device *mc_dev = vdev->mc_dev;
->> +
->> +		/* reset is supported only for the DPRC */
->> +		if (!is_fsl_mc_bus_dprc(mc_dev))
->> +			return -ENOTTY;
-> it is an error case or do we just don't care?
+I'm really not sure this makes any sense. Why complicate an otherwise
+elegant module that is gpio-aggregator with functionalities that
+obviously don't belong here? I want to add various parameters that
+would affect the way the simulated chips work - this really doesn't
+need to go into the aggregator.
 
-
-I rather don't care, but shouldn't the userspace know that the reset for 
-that device failed?
-
->> +
->> +		ret = dprc_reset_container(mc_dev->mc_io, 0,
->> +					   mc_dev->mc_handle,
->> +					   mc_dev->obj_desc.id,
->> +					   DPRC_RESET_OPTION_NON_RECURSIVE);
->> +		return ret;
->> +
->>   	}
->>   	default:
->>   		return -ENOTTY;
->>
-> Thanks
-> 
-> Eric
-> 
-
-Thanks,
-Diana
+Bart
