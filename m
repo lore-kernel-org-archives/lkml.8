@@ -2,182 +2,87 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64103C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978D0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F0A72168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:24:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599477853;
-	bh=/0m+yigPqvGBsnUhvuXPpgA2r5m72bO/7HpKP+CczJg=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fxKKKKzeczWSk4jly1FmKEqjz6NF3vxe7B0fGeDkSO01jWjbGH8xVv3BwRMcRp0Jx
-	 ro+yn1ptnLaa3J150UELA4C+bzeX4Cu6K/S2fZ885UAgy+iNiLlBi6tAYA5f9fAqLH
-	 5gSHyRVqlzbF0b5wSV6GcoZKnK83j1X9BmwGPSWA=
+	by mail.kernel.org (Postfix) with ESMTP id 63E4D206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:25:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgIGLYK (ORCPT
+        id S1728632AbgIGLZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:24:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbgIGLUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:20:43 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E856121775;
-        Mon,  7 Sep 2020 11:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599477066;
-        bh=/0m+yigPqvGBsnUhvuXPpgA2r5m72bO/7HpKP+CczJg=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oP3DCsCnKF/LtRGoPO60QSlmAmXsPSQ5z+zvjfMHbTc5yEkelWrXsPc1i8nnCL1bP
-         npTMhl67IAQ4Ypfx2ByJhMjHUPtherL0oFEy+b1Bfwf2wVP00j2iith1837uOMedIY
-         qoCcAZhiyF4qOagX3ThK3QEcl+bR9OOTdSQ3aX9A=
-Received: by pali.im (Postfix)
-        id 373771248; Mon,  7 Sep 2020 13:11:04 +0200 (CEST)
-From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Xogium <contact@xogium.me>, marek.behun@nic.cz
-Subject: [PATCH v3 5/5] PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
-Date:   Mon,  7 Sep 2020 13:10:38 +0200
-Message-Id: <20200907111038.5811-6-pali@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907111038.5811-1-pali@kernel.org>
-References: <20200907111038.5811-1-pali@kernel.org>
+        Mon, 7 Sep 2020 07:25:27 -0400
+Received: from goliath.siemens.de ([192.35.17.28]:36358 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbgIGLWC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:22:02 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 087BL5vl002697
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Sep 2020 13:21:05 +0200
+Received: from [167.87.17.27] ([167.87.17.27])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 087BKxrG020843;
+        Mon, 7 Sep 2020 13:21:02 +0200
+To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org,
+        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
+        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
+        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Subject: watchdog: sp5100_tco support for AMD V/R/E series
+Message-ID: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
+Date:   Mon, 7 Sep 2020 13:20:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move code which belongs to link training (delays and resets) into
-advk_pcie_train_link() function, so everything related to link training,
-including timings is at one place.
+Hi all,
 
-After experiments it can be observed that link training in aardvark
-hardware is very sensitive to timings and delays, so it is a good idea to
-have this code at the same place as link training calls.
+Arsalan reported that the upstream driver for sp5100_tco does not work
+for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
 
-This patch does not change behavior of aardvark initialization.
+[   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
+[   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
+[   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
 
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Tested-by: Marek Behún <marek.behun@nic.cz>
----
- drivers/pci/controller/pci-aardvark.c | 64 ++++++++++++++-------------
- 1 file changed, 34 insertions(+), 30 deletions(-)
+..and fix it:
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index b16822e344ab..50ab6d7519ae 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -252,6 +252,25 @@ static void advk_pcie_wait_for_retrain(struct advk_pcie *pcie)
+diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+index 85e9664318c9..5482154fde42 100644
+--- a/drivers/watchdog/sp5100_tco.c
++++ b/drivers/watchdog/sp5100_tco.c
+@@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
+ 		/* Set the Watchdog timer resolution to 1 sec and enable */
+ 		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
+ 					  ~EFCH_PM_WATCHDOG_DISABLE,
+-					  EFCH_PM_DECODEEN_SECOND_RES);
++					  EFCH_PM_DECODEEN_SECOND_RES |
++					  EFCH_PM_DECODEEN_WDT_TMREN);
+ 		break;
  	}
  }
- 
-+static void advk_pcie_issue_perst(struct advk_pcie *pcie)
-+{
-+	u32 reg;
-+
-+	if (!pcie->reset_gpio)
-+		return;
-+
-+	/* PERST does not work for some cards when link training is enabled */
-+	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
-+	reg &= ~LINK_TRAINING_EN;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
-+
-+	/* 10ms delay is needed for some cards */
-+	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+	usleep_range(10000, 11000);
-+	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+}
-+
- static int advk_pcie_train_at_gen(struct advk_pcie *pcie, int gen)
- {
- 	int ret, neg_gen;
-@@ -299,6 +318,21 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
- 	struct device *dev = &pcie->pdev->dev;
- 	int neg_gen = -1, gen;
- 
-+	/*
-+	 * Reset PCIe card via PERST# signal. Some cards are not detected
-+	 * during link training when they are in some non-initial state.
-+	 */
-+	advk_pcie_issue_perst(pcie);
-+
-+	/*
-+	 * PERST# signal could have been asserted by pinctrl subsystem before
-+	 * probe() callback has been called or issued explicitly by reset gpio
-+	 * function advk_pcie_issue_perst(), making the endpoint going into
-+	 * fundamental reset. As required by PCI Express spec a delay for at
-+	 * least 100ms after such a reset before link training is needed.
-+	 */
-+	msleep(PCI_PM_D3COLD_WAIT);
-+
- 	/*
- 	 * Try link training at link gen specified by device tree property
- 	 * 'max-link-speed'. If this fails, iteratively train at lower gen.
-@@ -331,31 +365,10 @@ static void advk_pcie_train_link(struct advk_pcie *pcie)
- 	dev_err(dev, "link never came up\n");
- }
- 
--static void advk_pcie_issue_perst(struct advk_pcie *pcie)
--{
--	u32 reg;
--
--	if (!pcie->reset_gpio)
--		return;
--
--	/* PERST does not work for some cards when link training is enabled */
--	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
--	reg &= ~LINK_TRAINING_EN;
--	advk_writel(pcie, reg, PCIE_CORE_CTRL0_REG);
--
--	/* 10ms delay is needed for some cards */
--	dev_info(&pcie->pdev->dev, "issuing PERST via reset GPIO for 10ms\n");
--	gpiod_set_value_cansleep(pcie->reset_gpio, 1);
--	usleep_range(10000, 11000);
--	gpiod_set_value_cansleep(pcie->reset_gpio, 0);
--}
--
- static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
- 
--	advk_pcie_issue_perst(pcie);
--
- 	/* Enable TX */
- 	reg = advk_readl(pcie, PCIE_CORE_REF_CLK_REG);
- 	reg |= PCIE_CORE_REF_CLK_TX_ENABLE;
-@@ -432,15 +445,6 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
- 	advk_writel(pcie, reg, PIO_CTRL);
- 
--	/*
--	 * PERST# signal could have been asserted by pinctrl subsystem before
--	 * probe() callback has been called or issued explicitly by reset gpio
--	 * function advk_pcie_issue_perst(), making the endpoint going into
--	 * fundamental reset. As required by PCI Express spec a delay for at
--	 * least 100ms after such a reset before link training is needed.
--	 */
--	msleep(PCI_PM_D3COLD_WAIT);
--
- 	advk_pcie_train_link(pcie);
- 
- 	/*
--- 
-2.20.1
 
+Does anyone have an idea if such unconditional setting could be 
+problematic on older/different efch? We probe for that bit in
+sp5100_tco_setupdevice but we never set it so far.
+
+I'm missing specs...
+
+Thanks,
+Jan
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
