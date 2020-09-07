@@ -2,129 +2,106 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB80C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA46C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EA8D2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC6FF207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:56:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497742;
-	bh=RZjmdONo/8i3kJYH8JYLbprcFOu0SZPUSptiPG3+JEs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=whJ9NF9Jxbx2mwh2zZeDwToVmz/L/slci56k35I2plGBLMnv2U9f8YfPSZG2uzDPR
-	 zsF23WG7FrKQHRp6DyRBpYZsDwxc34BbqlUW36VfAoWawsGdMy/9X9aOaGhIw8/tHQ
-	 bn1Zps8mN5UfD4pdIXdCzlmYBPwp86naVvILPB7Q=
+	s=default; t=1599497760;
+	bh=fnPDZGazy7dePG1Y/RVbT2mn1L1k+YkslfriBNg8rmw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BZiLxpmqsCo9rlAcPliPZHqsjVM6wlsIwGjQDo8x1Og4VvjbqndKT2UqlvpyPixAS
+	 JD1J5CfyH3/Z1zYJFWE24ao7MN2mwFHelf2AHa/uWc3Gwvdg8rO3DSAM3PSZGdETE9
+	 PgpQJ3257FWkj3Ref5+GWWh+ZAKXZOO3SXakJPYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731206AbgIGQzh (ORCPT
+        id S1730849AbgIGQz6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32934 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:55:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730875AbgIGQzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:55:20 -0400
-Received: from localhost (unknown [122.167.151.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729962AbgIGQeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:11 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3A7208C7;
-        Mon,  7 Sep 2020 16:55:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C05E721D40;
+        Mon,  7 Sep 2020 16:34:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599497719;
-        bh=RZjmdONo/8i3kJYH8JYLbprcFOu0SZPUSptiPG3+JEs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QwRkdSlw5ifquH2bt94iscfeZG6J1FXzC4tRR6o8+GXw3c+zxXVee+dciGSpRatRD
-         FOe/cOXEOSxHizq4KgmRS3LDI/dSft/VsggBsFaslSg6ite+vI3pdsqNDKfLwA8KKN
-         ERkb/4eBAxxzkgyAIMy4+dkj34ZnikDrJjZPZvVc=
-Date:   Mon, 7 Sep 2020 22:25:11 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Tom Rix <trix@redhat.com>
-Cc:     yung-chuan.liao@linux.intel.com,
-        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
-        natechancellor@gmail.com, ndesaulniers@google.com,
-        guennadi.liakhovetski@linux.intel.com,
-        kai.vehmanen@linux.intel.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] soundwire: stream: fix an invalid free
-Message-ID: <20200907165511.GE2639@vkoul-mobl>
-References: <20200905192613.420-1-trix@redhat.com>
- <20200907141402.GC2639@vkoul-mobl>
- <93b672ef-76c9-e87c-4526-897b0af01945@redhat.com>
+        s=default; t=1599496449;
+        bh=fnPDZGazy7dePG1Y/RVbT2mn1L1k+YkslfriBNg8rmw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g8xj2DKTKwuAtyM5EWfllYM2itTLJ4lGiCnWZ47KvdtAo/KN0nw45zsqacaPUqzOf
+         mfzVJGmN4UZ19h1nB9TOdeyc+2ta8en8JfNvXqBtoBXO68gL8c7q3D6rTFM9HB32iy
+         m/C7LSLKeax1m3/DzWndl4Oaagxbf0ouNmtrwWlw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nicholas Miell <nmiell@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/43] HID: microsoft: Add rumble support for the 8bitdo SN30 Pro+ controller
+Date:   Mon,  7 Sep 2020 12:33:17 -0400
+Message-Id: <20200907163329.1280888-31-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <93b672ef-76c9-e87c-4526-897b0af01945@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07-09-20, 07:25, Tom Rix wrote:
-> 
-> On 9/7/20 7:14 AM, Vinod Koul wrote:
-> > Hello Tom,
-> >
-> > On 05-09-20, 12:26, trix@redhat.com wrote:
-> >> From: Tom Rix <trix@redhat.com>
-> >>
-> >> clang static analyzer reports this problem
-> >>
-> >> stream.c:872:2: warning: Argument to kfree() is a constant
-> >>   address (18446744073709551092), which is not memory
-> >>   allocated by malloc()
-> >>         kfree(stream);
-> >>         ^~~~~~~~~~~~~
-> >>
-> >> In sdw_shutdown_stream() the stream to free is set by
-> >> a call to snd_soc_dai_get_sdw_stream().  The problem block
-> >> is the check if the call was successful.
-> >>
-> >> 	if (!sdw_stream) {
-> >> 		dev_err(rtd->dev, "no stream found...
-> >> 		return;
-> >> 	}
-> >>
-> >> When snd_soc_dai_get_sdw_stream() fails, it does not
-> >> always return null, sometimes it returns -ENOTSUPP.
-> >>
-> >> So also check for error codes.
-> >> Fixes: 4550569bd779 ("soundwire: stream: add helper to startup/shutdown streams")
-> >> Signed-off-by: Tom Rix <trix@redhat.com>
-> >> ---
-> >>  drivers/soundwire/stream.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> >> index 6e36deb505b1..950231d593c2 100644
-> >> --- a/drivers/soundwire/stream.c
-> >> +++ b/drivers/soundwire/stream.c
-> >> @@ -1913,7 +1913,7 @@ void sdw_shutdown_stream(void *sdw_substream)
-> >>  
-> >>  	sdw_stream = snd_soc_dai_get_sdw_stream(dai, substream->stream);
-> >>  
-> >> -	if (!sdw_stream) {
-> >> +	if (IS_ERR_OR_NULL(sdw_stream)) {
-> > Thanks for the patch. Please see commit 3471d2a192ba ("soundwire:
-> > stream: fix NULL/IS_ERR confusion") in soundwire-next. This has already
-> > been updated to IS_ERR() and Bard has already sent patches for
-> > snd_soc_dai_get_sdw_stream() to return proper values.
-> >
-> > So I you can rerun this on next, you should see this fixed.
-> 
-> I am working on linux-next, so I will see Bard's patch when it lands there.
+From: Nicholas Miell <nmiell@gmail.com>
 
-It should be already there... And I checked, looks like there was no
-linux-next for last few days and it should be back tomorrow so should be
-there
+[ Upstream commit 724a419ea28f7514a391e80040230f69cf626707 ]
 
-> 
-> Sorry for not working on soundwire-next, but since i am fixing everywhere linux-next is easiest. 
+When operating in XInput mode, the 8bitdo SN30 Pro+ requires the same
+quirk as the official Xbox One Bluetooth controllers for rumble to
+function.
 
-Agree, timing this time around!
+Other controllers like the N30 Pro 2, SF30 Pro, SN30 Pro, etc. probably
+also need this quirk, but I do not have the hardware to test.
 
+Signed-off-by: Nicholas Miell <nmiell@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/hid/hid-ids.h       | 1 +
+ drivers/hid/hid-microsoft.c | 2 ++
+ 2 files changed, 3 insertions(+)
+
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index a9d59ac8d76f5..f3ba0b40c2d9b 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -843,6 +843,7 @@
+ #define USB_DEVICE_ID_MS_POWER_COVER     0x07da
+ #define USB_DEVICE_ID_MS_XBOX_ONE_S_CONTROLLER	0x02fd
+ #define USB_DEVICE_ID_MS_PIXART_MOUSE    0x00cb
++#define USB_DEVICE_ID_8BITDO_SN30_PRO_PLUS      0x02e0
+ 
+ #define USB_VENDOR_ID_MOJO		0x8282
+ #define USB_DEVICE_ID_RETRO_ADAPTER	0x3201
+diff --git a/drivers/hid/hid-microsoft.c b/drivers/hid/hid-microsoft.c
+index 2d8b589201a4e..8cb1ca1936e42 100644
+--- a/drivers/hid/hid-microsoft.c
++++ b/drivers/hid/hid-microsoft.c
+@@ -451,6 +451,8 @@ static const struct hid_device_id ms_devices[] = {
+ 		.driver_data = MS_SURFACE_DIAL },
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_XBOX_ONE_S_CONTROLLER),
+ 		.driver_data = MS_QUIRK_FF },
++	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_8BITDO_SN30_PRO_PLUS),
++		.driver_data = MS_QUIRK_FF },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, ms_devices);
 -- 
-~Vinod
+2.25.1
+
