@@ -2,143 +2,124 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53662C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA935C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12C0F21556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599510045;
-	bh=uluieRHjASDijcIFo7gCF077dVcN0frnZrCkAriLSJ8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=GGgHUzqQ9BPxoH7Cz+nFiu+ptvoIVTDDYxtS57DIe8SYKliKduefZ7LR1M9oyIsqU
-	 yHsCCngMveDL3argNQnAQ17tANew3ZVYMzqeFq708AdQhbL7JC36dzoYjlG3ZZoYW4
-	 7fllIcqTNOgyn2Kj1tHWVRG31OyYlYiP27HRCueQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9050121556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbgIGUUm (ORCPT
+        id S1729573AbgIGUVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:20:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729269AbgIGUUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:20:38 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC4FA2177B
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 20:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599510037;
-        bh=uluieRHjASDijcIFo7gCF077dVcN0frnZrCkAriLSJ8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GJi1QjE/YfZNlkfZqazyPBchYHM89L/Ib8IKW/Eia/680VU0lYlG8ekUz/yktHgPk
-         cu72Ky/O8tcJD9o6KawiqA0EVgH1KZECifj9Csvsh6KqFLhUTeo6fkIg7zyOIfxIhx
-         AbYxFH1xbqJFjwkQBHg2Go2Razg0mEfL5JgDn6dI=
-Received: by mail-wr1-f41.google.com with SMTP id z4so16911598wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 13:20:36 -0700 (PDT)
-X-Gm-Message-State: AOAM533IytxxoLeigIePvoswRsXQ6PkK5YeLJisohvfakz4FuLxHSIHp
-        C3u+DtgMx+zu151HrCmdfENXb3U7ti2Gd2LASZDApA==
-X-Google-Smtp-Source: ABdhPJzhGTkslezk1jKgM4Z8egHoJMRpDSYgL+Hvr6rrEgC/Tq2OEQ3SAkb2T4jpoLviDEx/3tlo2KLQdnQeaVjVbwA=
-X-Received: by 2002:adf:db88:: with SMTP id u8mr23050764wri.184.1599510035328;
- Mon, 07 Sep 2020 13:20:35 -0700 (PDT)
+        Mon, 7 Sep 2020 16:21:09 -0400
+Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:12698 "EHLO
+        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729184AbgIGUVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 16:21:08 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 7 Sep 2020 13:21:07 -0700
+Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id BDD3C4072D;
+        Mon,  7 Sep 2020 13:21:07 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
+CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <peterx@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <vsirnapalli@vmware.com>, <akaher@vmware.com>
+Subject: [PATCH v4.14.y 1/3] vfio/type1: Support faulting PFNMAP vmas
+Date:   Tue, 8 Sep 2020 01:47:05 +0530
+Message-ID: <1599509828-23596-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20200907101522.zo6qzgp4qfzkz7cs@wittgenstein> <0639209E-B6C6-4F86-84F4-04B91E1CC8AA@amacapital.net>
- <20200907142510.klojh2urwyui23ox@wittgenstein>
-In-Reply-To: <20200907142510.klojh2urwyui23ox@wittgenstein>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 7 Sep 2020 13:20:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrUaAy7uU9jjneC9+ft-TtS+SuyWXxMCCE5dmcth3N4rHw@mail.gmail.com>
-Message-ID: <CALCETrUaAy7uU9jjneC9+ft-TtS+SuyWXxMCCE5dmcth3N4rHw@mail.gmail.com>
-Subject: Re: [PATCH v6 6/9] kernel: entry: Support Syscall User Dispatch for
- common syscall entry
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        kernel@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 7:25 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
->
-> On Mon, Sep 07, 2020 at 07:15:52AM -0700, Andy Lutomirski wrote:
-> >
-> >
-> > > On Sep 7, 2020, at 3:15 AM, Christian Brauner <christian.brauner@ubun=
-tu.com> wrote:
-> > >
-> > > =EF=BB=BFOn Fri, Sep 04, 2020 at 04:31:44PM -0400, Gabriel Krisman Be=
-rtazi wrote:
-> > >> Syscall User Dispatch (SUD) must take precedence over seccomp, since=
- the
-> > >> use case is emulation (it can be invoked with a different ABI) such =
-that
-> > >> seccomp filtering by syscall number doesn't make sense in the first
-> > >> place.  In addition, either the syscall is dispatched back to usersp=
-ace,
-> > >> in which case there is no resource for seccomp to protect, or the
-> > >
-> > > Tbh, I'm torn here. I'm not a super clever attacker but it feels to m=
-e
-> > > that this is still at least a clever way to circumvent a seccomp
-> > > sandbox.
-> > > If I'd be confined by a seccomp profile that would cause me to be
-> > > SIGKILLed when I try do open() I could prctl() myself to do user
-> > > dispatch to prevent that from happening, no?
-> > >
-> >
-> > Not really, I think. The idea is that you didn=E2=80=99t actually do op=
-en().
-> > You did a SYSCALL instruction which meant something else, and the
-> > syscall dispatch correctly prevented the kernel from misinterpreting
-> > it as open().
->
-> Right, for the case where you're e.g. emulating windows syscalls that's
-> true. I was thinking when you're running natively on Linux: couldn't I
-> first load a seccomp profile "kill me if someone does an open()", then
-> I exec() the target binary and that binary is setup to do
-> prctl(USER_DISPATCH) first thing. I guess, it's ok because as far as I
-> had time to read it this is a nothing or all mechanism, i.e. _all_
-> system calls are re-routed in contrast to e.g. seccomp where I could do
-> this per-syscall. So for user-dispatch it wouldn't make sense to use it
-> on Linux per se. Still makes me a little uneasy. :)
+From: Alex Williamson <alex.williamson@redhat.com>
 
-There's an escape hatch, so processes using this can still make syscalls.
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-Maybe think about it another way: a process using user dispatch should
-definitely *not* trigger seccomp user notifiers, errno returns, or
-ptrace events, since they'll all do the wrong thing.  IMO RET_KILL is
-the same.
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
 
-Barring some very severe defect, there's no way a program can use user
-dispatch to escape seccomp -- a program could use user dispatch to
-allow them to do:
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.14]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-mov $__NR_open, %rax
-syscall
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 35a3750..150be10 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -336,6 +336,32 @@ static int put_pfn(unsigned long pfn, int prot)
+ 	return 0;
+ }
+ 
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 			 int prot, unsigned long *pfn)
+ {
+@@ -375,12 +401,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 
+ 	down_read(&mm->mmap_sem);
+ 
++retry:
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
+-- 
+2.7.4
 
-without dying despite the presence of a filter that would kill the
-process if it tried to do open(), but this doesn't bypass the filter
-at all.  The process could just as easily have done:
-
-mov $__NR_open
-jmp magic_stub(%rip)
-
-without tripping the filter, since no system call actually happens here.
-
---Andy
