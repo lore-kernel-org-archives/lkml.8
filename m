@@ -2,127 +2,143 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEE3C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2583EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBDB62080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C45206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbgIGRPo (ORCPT
+        id S1730626AbgIGRPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:15:44 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59240 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729763AbgIGOFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:05:46 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1646D9B65E56938C9A4D;
-        Mon,  7 Sep 2020 22:05:38 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 22:05:28 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <rafael@kernel.org>, Ingo Molnar <mingo@redhat.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        "Sean V Kelley" <sean.v.kelley@linux.intel.com>,
-        <linux-api@vger.kernel.org>, "Hanjun Guo" <guohanjun@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v10 2/6] x86: Support Generic Initiator only proximity domains
-Date:   Mon, 7 Sep 2020 22:03:03 +0800
-Message-ID: <20200907140307.571932-3-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
-References: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
+        Mon, 7 Sep 2020 13:15:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:41804 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729768AbgIGRPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:15:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F52431B;
+        Mon,  7 Sep 2020 10:15:39 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [10.57.49.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AACF3F66E;
+        Mon,  7 Sep 2020 10:15:38 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 18:16:34 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lukasz.luba@arm.com, Jonathan.Cameron@Huawei.com
+Subject: Re: [PATCH v5 2/3] firmware: arm_scmi: Add SCMI System Power Control
+ driver
+Message-ID: <20200907171634.GA19968@e119603-lin.cambridge.arm.com>
+References: <20200819161002.26637-1-cristian.marussi@arm.com>
+ <20200819161002.26637-3-cristian.marussi@arm.com>
+ <20200907164351.GB3656@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907164351.GB3656@bogus>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In common with memoryless domains we only register GI domains
-if the proximity node is not online. If a domain is already
-a memory containing domain, or a memoryless domain there is
-nothing to do just because it also contains a Generic Initiator.
+Hi Sudeep
 
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- arch/x86/include/asm/numa.h |  2 ++
- arch/x86/kernel/setup.c     |  1 +
- arch/x86/mm/numa.c          | 14 ++++++++++++++
- 3 files changed, 17 insertions(+)
+thanks for the review.
 
-diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
-index bbfde3d2662f..f631467272a3 100644
---- a/arch/x86/include/asm/numa.h
-+++ b/arch/x86/include/asm/numa.h
-@@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
- extern void __init init_cpu_to_node(void);
- extern void numa_add_cpu(int cpu);
- extern void numa_remove_cpu(int cpu);
-+extern void init_gi_nodes(void);
- #else	/* CONFIG_NUMA */
- static inline void numa_set_node(int cpu, int node)	{ }
- static inline void numa_clear_node(int cpu)		{ }
- static inline void init_cpu_to_node(void)		{ }
- static inline void numa_add_cpu(int cpu)		{ }
- static inline void numa_remove_cpu(int cpu)		{ }
-+static inline void init_gi_nodes(void)			{ }
- #endif	/* CONFIG_NUMA */
- 
- #ifdef CONFIG_DEBUG_PER_CPU_MAPS
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 3511736fbc74..9062c146f03a 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1218,6 +1218,7 @@ void __init setup_arch(char **cmdline_p)
- 	prefill_possible_map();
- 
- 	init_cpu_to_node();
-+	init_gi_nodes();
- 
- 	io_apic_init_mappings();
- 
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index aa76ec2d359b..fc630dc6764e 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
- 	 */
- }
- 
-+/*
-+ * Generic Initiator Nodes may have neither CPU nor Memory.
-+ * At this stage if either of the others were present we would
-+ * already be online.
-+ */
-+void __init init_gi_nodes(void)
-+{
-+	int nid;
-+
-+	for_each_node_state(nid, N_GENERIC_INITIATOR)
-+		if (!node_online(nid))
-+			init_memory_less_node(nid);
-+}
-+
- /*
-  * Setup early cpu_to_node.
-  *
--- 
-2.19.1
+On Mon, Sep 07, 2020 at 05:43:51PM +0100, Sudeep Holla wrote:
+> On Wed, Aug 19, 2020 at 05:10:01PM +0100, Cristian Marussi wrote:
+> > Add an SCMI System Power control driver to handle platform's requests
+> > carried by SYSTEM_POWER_STATE_NOTIFIER notifications: such platform
+> > requested system power state transitions are handled accordingly,
+> > gracefully or forcefully, depending on the notifications' message flags.
+> > 
+> > Graceful requests are by default relayed to userspace using the same
+> > Kernel API used to handle ACPI Shutdown bus events: alternatively, instead,
+> > a few available module parameters can be used to tunnel instead such
+> > requests to userspace via signals addressed to CAD pid.
+> > 
+> > When handling graceful requests, grant userspace processes a maximum
+> > (configurable) time to perform their duties and then revert to a forceful
+> > transition, so avoiding completely timing out platform's maximum grace time
+> > and hitting possible abrupt power-cuts.
+> > 
+> > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > ----
+> > V3 --> V4
+> > - fix alignment checkpatch issues
+> > V2 --> V3
+> > - changed Kconfig to fix naming and defaulting to n
+> > V1 --> V2
+> > - use common event enums
+> > - introduced optioanl alternative signal based comms 2 userspace
+> > ---
+> >  drivers/firmware/Kconfig                      |  12 +
+> >  drivers/firmware/arm_scmi/Makefile            |   1 +
+> >  drivers/firmware/arm_scmi/driver.c            |   1 +
+> >  .../firmware/arm_scmi/scmi_power_control.c    | 389 ++++++++++++++++++
+> >  4 files changed, 403 insertions(+)
+> >  create mode 100644 drivers/firmware/arm_scmi/scmi_power_control.c
+> > 
+> > diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> > index fbd785dd0513..a77545c08040 100644
+> > --- a/drivers/firmware/Kconfig
+> > +++ b/drivers/firmware/Kconfig
+> > @@ -40,6 +40,18 @@ config ARM_SCMI_POWER_DOMAIN
+> >  	  will be called scmi_pm_domain. Note this may needed early in boot
+> >  	  before rootfs may be available.
+> >  
+> > +config ARM_SCMI_POWER_CONTROL
+> > +	bool "SCMI system power control driver"
+> > +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> > +	default n
+> > +	help
+> > +	  This enables System Power control logic which binds system shutdown or
+> > +	  reboot actions to SCMI System Power notifications generated by SCP
+> > +	  firmware.
+> > +
+> > +	  Graceful requests' methods and timeout and can be configured using
+> > +	  a few available module parameters.
+> > +
+> >  config ARM_SCPI_PROTOCOL
+> >  	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+> >  	depends on ARM || ARM64 || COMPILE_TEST
+> > diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> > index 643f2320f976..6a0e24f9e0b1 100644
+> > --- a/drivers/firmware/arm_scmi/Makefile
+> > +++ b/drivers/firmware/arm_scmi/Makefile
+> > @@ -7,3 +7,4 @@ scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
+> >  scmi-transport-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY) += smc.o
+> >  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o
+> >  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> > +obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+> > diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> > index f749af6e79fc..484b3f7126b5 100644
+> > --- a/drivers/firmware/arm_scmi/driver.c
+> > +++ b/drivers/firmware/arm_scmi/driver.c
+> > @@ -732,6 +732,7 @@ struct scmi_prot_devnames {
+> >  
+> >  static struct scmi_prot_devnames devnames[] = {
+> >  	{ SCMI_PROTOCOL_POWER,  { "genpd" },},
+> > +	{ SCMI_PROTOCOL_SYSTEM, {"syspower" },},
+> 
+> 				^ missing space
+> 
+> Split the above into separate patch as it doesn't depend on new config
+> and can be added without it. I plan to merge the scmi system protocol
+> part for v5.10 and the above addition of device. We need to wait for more
+> feedback on the driver front especially user notification part.
+> 
 
+I'll do in v6.
+
+Cristian
+
+> -- 
+> Regards,
+> Sudeep
