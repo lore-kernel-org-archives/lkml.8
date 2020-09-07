@@ -2,140 +2,136 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BE1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8385C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A98C20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:19:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495584;
-	bh=2r+P12MEW4n8TZv7IWA3L/5cznKkKx6Gr9KtqUPmiEk=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKiPF7gtSEdecr6knxqrGKmr2x6RenQI93AfWDubL6f4Uv8/JZbLztmyBBIHCaU/+
-	 wHToqfGip0ub02+Is9pCQd4gym/p4IWi4YLmN1KIXLKYYiNo63QP5OFTSeROoBXcm9
-	 psaAJpaBKtxuC6u990U37sahZ0xgdPcWswQka/2A=
+	by mail.kernel.org (Postfix) with ESMTP id A30E820757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:20:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wc5H6/kI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbgIGQTm (ORCPT
+        id S1730402AbgIGQUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730427AbgIGQNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:13:49 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06086217A0;
-        Mon,  7 Sep 2020 16:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495228;
-        bh=2r+P12MEW4n8TZv7IWA3L/5cznKkKx6Gr9KtqUPmiEk=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=oK+cr7fTgwPkYOEdgPxZMBnyzsrKXWDjUZ2s2Gz8eAdyX3WDPRMxcdVXWbYU+Q5Ub
-         xNVqehm1Upzv5FOHtgfP4CcLU0xyB6DR/i/kDBUcLEc4IINL3a4zEDskzBiv2YFXhG
-         kXc4KolRxMTZTXsr2+Xi7R3dTGYUf0ePCs/2Bx1M=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [RFT 20/25] ARM: dts: s5pv210: move fixed regulators under root node in Aquila
-Date:   Mon,  7 Sep 2020 18:11:36 +0200
-Message-Id: <20200907161141.31034-21-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
+        Mon, 7 Sep 2020 12:20:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730448AbgIGQTi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:19:38 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2979AC061573;
+        Mon,  7 Sep 2020 09:19:38 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id x14so16324037wrl.12;
+        Mon, 07 Sep 2020 09:19:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VC4zobdVL9f1IObtPBVliyuUnIYG6v4DFmLKqvmd31Y=;
+        b=Wc5H6/kIDY5mWYMQpWS0wD+CvzuNF7AkUVpvj7AJb0jOcajSzpEVQ9nMTMLnXv/RCc
+         tjLp0vSmewbHQseS4GZNAL4H4+JI4Pau9HhLCo7qkzKytSIOhxjwj8uIiKKjo8ZrIAQ4
+         2pd6MH/Xp7JBOwmeZFv9+5k0PQ+BNKSLpuPCNmy8PN8OT1KEcZhasM2q0G2FV1DuAsk/
+         1tORDiLCqfkhkkV2OV1rW/Qvg1L5sm/hlgM6Y9wjY56DUhU+AlSJTChGoV53hDX98VeJ
+         hjp+4K7UEGIYDdVNSVNOGMhdReiOlAAS6TDbd/plwxcX57YnlFLd1xCUtdTzjXm+u65R
+         NdzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VC4zobdVL9f1IObtPBVliyuUnIYG6v4DFmLKqvmd31Y=;
+        b=NjtSZ89wQ68VGMX+0FFPMEynSMRb4fOV62meVHLcJXEOUQeU7js2Qk5CR8JMQLA00I
+         X7mEKFbe3LvJdqiKai6vEGiya1ZNO2CXTaJe7SaV7M8SXBJ8Or+0NF/n5ErS+mSSESRy
+         RrPzEndH/ioBP217Xgx5KB0Org5OXiJqsWXL6mzi6jMHlOaKPdJOTVAzUIzOLexlQCzc
+         c0E+tch3x31SJ3r7O+WSTa+gOLbC9MyOZ7baBkcimkcXmbywaw4tsdtXcWdifbtTMCbD
+         OCmns9FvDax4I2geKnJnTK1NwDy6UWBEnGPS/13aKKjo+E33p1zqQ5bMAvFckLUya2JW
+         vPlg==
+X-Gm-Message-State: AOAM5331nkpELu6NvcyuXDn74TkRgCV40A4PmypuLhX+nUPv84yNCQws
+        Qg5JKgeKUVYi9TS+KhYXMYhbTWWbmTR95qwJ
+X-Google-Smtp-Source: ABdhPJyXjjnMiookPIAqzFwNKnDH4WV+wwMJVUV2twhyKG44oA0tI09a3Amr04Bx3rbc06XU4oTGbg==
+X-Received: by 2002:a5d:40c7:: with SMTP id b7mr22488103wrq.300.1599495576113;
+        Mon, 07 Sep 2020 09:19:36 -0700 (PDT)
+Received: from localhost.localdomain (userh713.uk.uudial.com. [194.69.103.86])
+        by smtp.gmail.com with ESMTPSA id y5sm19313717wrh.6.2020.09.07.09.19.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 09:19:35 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Andres Beltran <lkmlabelt@gmail.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        Juan Vazquez <juvazq@microsoft.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-scsi@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v7 0/3] Drivers: hv: vmbus: vmbus_requestor data structure for VMBus hardening
+Date:   Mon,  7 Sep 2020 18:19:17 +0200
+Message-Id: <20200907161920.71460-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The fixed regulators are kept under dedicated "regulators" node but this
-causes multiple dtschema warnings:
+Currently, VMbus drivers use pointers into guest memory as request IDs
+for interactions with Hyper-V. To be more robust in the face of errors
+or malicious behavior from a compromised Hyper-V, avoid exposing
+guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+bad request ID that is then treated as the address of a guest data
+structure with no validation. Instead, encapsulate these memory
+addresses and provide small integers as request IDs.
 
-  regulators: $nodename:0: 'regulators' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-  regulators: #size-cells:0:0: 0 is not one of [1, 2]
-  regulators: fixed-regulator@0:reg:0: [0] is too short
-  regulators: fixed-regulator@1:reg:0: [1] is too short
-  regulators: fixed-regulator@2:reg:0: [2] is too short
+The first patch creates the definitions for the data structure, provides
+helper methods to generate new IDs and retrieve data, and
+allocates/frees the memory needed for vmbus_requestor.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s5pv210-aquila.dts | 47 +++++++++++-----------------
- 1 file changed, 19 insertions(+), 28 deletions(-)
+The second and third patches make use of vmbus_requestor to send request
+IDs to Hyper-V in storvsc and netvsc respectively.
 
-diff --git a/arch/arm/boot/dts/s5pv210-aquila.dts b/arch/arm/boot/dts/s5pv210-aquila.dts
-index 25d4ab4a52c5..28e9e81bb2d1 100644
---- a/arch/arm/boot/dts/s5pv210-aquila.dts
-+++ b/arch/arm/boot/dts/s5pv210-aquila.dts
-@@ -40,36 +40,27 @@
- 		clock-frequency = <32768>;
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		vtf_reg: fixed-regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "V_TF_2.8V";
--			regulator-min-microvolt = <2800000>;
--			regulator-max-microvolt = <2800000>;
--			gpio = <&mp05 4 GPIO_ACTIVE_HIGH>;
--			enable-active-high;
--		};
-+	vtf_reg: regulator-0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "V_TF_2.8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&mp05 4 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- 
--		pda_reg: fixed-regulator@1 {
--			compatible = "regulator-fixed";
--			regulator-name = "VCC_1.8V_PDA";
--			regulator-min-microvolt = <1800000>;
--			regulator-max-microvolt = <1800000>;
--			reg = <1>;
--		};
-+	pda_reg: regulator-1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_1.8V_PDA";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
- 
--		bat_reg: fixed-regulator@2 {
--			compatible = "regulator-fixed";
--			regulator-name = "V_BAT";
--			regulator-min-microvolt = <3700000>;
--			regulator-max-microvolt = <3700000>;
--			reg = <2>;
--		};
-+	bat_reg: regulator-2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "V_BAT";
-+		regulator-min-microvolt = <3700000>;
-+		regulator-max-microvolt = <3700000>;
- 	};
- 
- 	i2c_pmic: i2c-pmic {
+This version of the series moves the allocation of the requst ID after
+the data has been copied into the ring buffer in hv_ringbuffer_write()
+to address a race with the request completion path pointed out by Juan.
+
+  Andrea
+
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-scsi@vger.kernel.org
+Cc: netdev@vger.kernel.org
+
+Andres Beltran (3):
+  Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+    hardening
+  scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
+    VMBus hardening
+  hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
+    hardening
+
+ drivers/hv/channel.c              | 174 ++++++++++++++++++++++++++++--
+ drivers/hv/hyperv_vmbus.h         |   3 +-
+ drivers/hv/ring_buffer.c          |  28 ++++-
+ drivers/net/hyperv/hyperv_net.h   |  13 +++
+ drivers/net/hyperv/netvsc.c       |  22 ++--
+ drivers/net/hyperv/rndis_filter.c |   1 +
+ drivers/scsi/storvsc_drv.c        |  26 ++++-
+ include/linux/hyperv.h            |  23 ++++
+ 8 files changed, 272 insertions(+), 18 deletions(-)
+
 -- 
-2.17.1
+2.25.1
 
