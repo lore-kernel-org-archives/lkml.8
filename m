@@ -2,110 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B9AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD93BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6FD2145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pLu3QBBt";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d1L38T8S"
+	by mail.kernel.org (Postfix) with ESMTP id 7F5312145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599458857;
+	bh=42wmz1tNUoc8rMX4UkRPfnr1oWjTPa9W6uMU998imG4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=p9ND9rrrKcgQS11Nvl89WKHL/F5NMlyVddO/P03CMoRG8BpObDCGoxVEg4PHnVztf
+	 0Q7UWBI8dMWwz92KjRt8zIPFn1PiF9FhCKwUf1nMvDcYsrGNmchTO8JT3OUqZIosTl
+	 yZiDysATBFA93CiftX6zRDwODpAFYnFMD2p9rVek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgIGGGN (ORCPT
+        id S1726722AbgIGGHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:06:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgIGGGE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:06:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F151CC061573;
-        Sun,  6 Sep 2020 23:06:03 -0700 (PDT)
-Date:   Mon, 07 Sep 2020 06:05:51 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599458751;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qqxPCfBVsq4bjsOxWBa+uOdpA/zPBZj2JVst5UAJ/N4=;
-        b=pLu3QBBt7DQlMzAP41yUSGmYp5DVEzgaUgTjPfDr2N2u+LzkH5qy1WaEqHfsC6LF8Sg634
-        KHGPSdWii1xcZQh4hkaicxp+bDIgeBh1ywr+cpQ0nJCC0SUK+6xZTkPCt7L5U7L6XIv1Lt
-        7+qYspjYQNlDLVIVMMiOm+jWt3TGJmbc4BR91OR7YShwKxl0+Ebcys9BH/HSBLEFfHuj5e
-        LfvIWmp5JcZozJfeUOCYU8olXR+KwQoxooNod4nDpNyfp3vcDvNAAdYZb5Mt4LpnujlBaI
-        BgcWWYTQ0iZ1CXWQ+vdQz2ZeCTDl8ADm1A3J8PUfbXYx74gEnqU9m+arz5om+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599458751;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qqxPCfBVsq4bjsOxWBa+uOdpA/zPBZj2JVst5UAJ/N4=;
-        b=d1L38T8S+GTEEv7b7viRMJau1NswTmM5DfMf9Q/ivm2xU/0jTGu6hXg1Er4cBxNxlrSV6r
-        eYB68GrAhknql5Bg==
-From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/build] arm/boot: Warn on orphan section placement
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200902025347.2504702-4-keescook@chromium.org>
-References: <20200902025347.2504702-4-keescook@chromium.org>
+        Mon, 7 Sep 2020 02:07:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726341AbgIGGHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 02:07:35 -0400
+Received: from saruman (91-155-214-58.elisa-laajakaista.fi [91.155.214.58])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C429D20796;
+        Mon,  7 Sep 2020 06:07:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599458854;
+        bh=42wmz1tNUoc8rMX4UkRPfnr1oWjTPa9W6uMU998imG4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=L705h4JuI2ZUeoBIT8VwRj5QgJWuYDMrhAi5MzIn3x2cNLw+roON/1kqMeQHWbcz0
+         z/LqwBn77XIqTFmrYZYIYGugl5hBlTbHZdoycTvPY9Af6BovqpMaif4i+ZNKvsGo8z
+         rL4nM9UHlgs0z4yUVcUs5jHWO8m+ZHbWAHXPY6vc=
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Paul Cercueil <paul@crapouillou.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Chen <Peter.Chen@nxp.com>,
+        Cristian Birsan <cristian.birsan@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Tony Prisk <linux@prisktech.co.nz>, Bin Liu <b-liu@ti.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 14/20] usb/phy: mxs-usb: Use pm_ptr() macro
+In-Reply-To: <20200903112554.34263-15-paul@crapouillou.net>
+References: <20200903112554.34263-1-paul@crapouillou.net>
+ <20200903112554.34263-15-paul@crapouillou.net>
+Date:   Mon, 07 Sep 2020 09:07:24 +0300
+Message-ID: <87sgbu15nn.fsf@kernel.org>
 MIME-Version: 1.0
-Message-ID: <159945875109.20229.17726709562064025433.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/build branch of tip:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Commit-ID:     4409d2f8dfe7d5088567d4ba00133f876ee586c7
-Gitweb:        https://git.kernel.org/tip/4409d2f8dfe7d5088567d4ba00133f876ee586c7
-Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Tue, 01 Sep 2020 19:53:45 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 03 Sep 2020 10:28:35 +02:00
+Paul Cercueil <paul@crapouillou.net> writes:
 
-arm/boot: Warn on orphan section placement
+> Use the newly introduced pm_ptr() macro, and mark the suspend/resume
+> functions __maybe_unused. These functions can then be moved outside the
+> CONFIG_PM_SUSPEND block, and the compiler can then process them and
+> detect build failures independently of the config. If unused, they will
+> simply be discarded by the compiler.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly handled in the linker script.
+Acked-by: Felipe Balbi <balbi@kernel.org>
 
-With all sections now handled, enable orphan section warning.
+=2D-=20
+balbi
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Link: https://lore.kernel.org/r/20200902025347.2504702-4-keescook@chromium.org
----
- arch/arm/boot/compressed/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm/boot/compressed/Makefile b/arch/arm/boot/compressed/Makefile
-index b1147b7..58028ab 100644
---- a/arch/arm/boot/compressed/Makefile
-+++ b/arch/arm/boot/compressed/Makefile
-@@ -123,6 +123,8 @@ endif
- LDFLAGS_vmlinux += --no-undefined
- # Delete all temporary local symbols
- LDFLAGS_vmlinux += -X
-+# Report orphan sections
-+LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
- # Next argument is a linker script
- LDFLAGS_vmlinux += -T
- 
+-----BEGIN PGP SIGNATURE-----
+
+iQJFBAEBCAAvFiEElLzh7wn96CXwjh2IzL64meEamQYFAl9VzhwRHGJhbGJpQGtl
+cm5lbC5vcmcACgkQzL64meEamQa/Gg//bd3IcQSisxN9NwJ0buGWxN2zcQEzeylT
+kwICmOS/yflI8+18moVfFWWA0Xsofz67WiemzxLSWBCtZ7tlrtZQOK4YM64qTqLK
+fbbbUHwPxR0kwzLkJvXDohgFWMGuqf24ym6l6xCBAFh8AhNoR3ZtS9DNfz4tC3Po
+hJ+Th9JUQu9HOc4dfBt1ftdbZNafnb8Fhs5Rr+93foHUVQbnbYbsDoOr0kG7n47q
+oyUKuyf6lJjYFbverN6N86CkFenRAkIhERHY+FDmmjbnoVo8QbQiQ537+rHDrY6t
+qf5K6NuSZpVOylau8GLJiTJBqDQWYUJnRTgqD3Egdkp8wkygAZS+dP8Y+eAMKzKx
++kz/MS9v5t2Kf7FTRdGD1ylfd27Fx14NxNBp485018lup1y0tYsYTOeXshKl1x8j
+L5fs01r2IC9lB+WgRiL+8wRgyPOjNux28aklk+XiTIslaFHW66ShgW+41dvWo9ip
+62gdC8FAjjDxOVEBW3/OH0ukI/mPOstXUYXxJNdCcCS5RKBC7H654viXhPHLbXpk
+i3EOA2LLRipFSwnAbVZokJ9/7ga+4fLJ4LovreKb7VjBfSksaJRREVzNkpo/GAgN
+eKevHXu324UpIBWdo2uM1DO7wxsNVzIStWqZvL9wtFnycDfG1PQblP1zpzBBBR1h
+q8e02bA+PtY=
+=6T5m
+-----END PGP SIGNATURE-----
+--=-=-=--
