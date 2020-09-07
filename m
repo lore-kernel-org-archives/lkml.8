@@ -8,47 +8,47 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F0BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7AAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4B2121481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0905C2176B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lu0duZYy"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n/aJ0Ev9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgIGOlC (ORCPT
+        id S1729971AbgIGOnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:41:02 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:55816 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729896AbgIGObz (ORCPT
+        Mon, 7 Sep 2020 10:43:40 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53906 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbgIGOb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:31:55 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EVm53113911;
-        Mon, 7 Sep 2020 09:31:48 -0500
+        Mon, 7 Sep 2020 10:31:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EVph6015786;
+        Mon, 7 Sep 2020 09:31:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599489108;
-        bh=9zdhcOMR7Ccf+ysTWrNasl7P6ckqRz+nS1O8WjwH018=;
+        s=ti-com-17Q1; t=1599489111;
+        bh=zRevarR8bBHB46h6T67QBWgaS+xUykO9TW3TMcjN6qY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=lu0duZYyQh7/VdKn07lhW1meZp3a1NzzWpzFzfFAdotOzBNBvc11FBYaJhP9u0Wwf
-         TxR2bhxdmL7aikSAllJu2kS5ytyQL6OjTsY03da+0rubrnviM+aHAeyo8QUjYMH9sW
-         eBNFEL5mV0hrPU8IjJFcZxz2EPSua3dkUZun1FRM=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087EVmTe095335
+        b=n/aJ0Ev9k5KpVjrm1XYHHRkZjjThAGY1HI54EUx7sMTs6uztxiuwKE+A+NinfJwT1
+         kaMTT0Pb74dJQiDQJ99eSeXKDc/ilGxPQJFh4iFYJd5HGGEE0L6pZ1WaErJ/rs85Gv
+         9d8CsSw5ftKIsIde0kaeswuNV7crLXmT2TI/S4FU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087EVpA4066777
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Sep 2020 09:31:48 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+        Mon, 7 Sep 2020 09:31:51 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
- 2020 09:31:47 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 09:31:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 7 Sep 2020 09:31:47 -0500
+ Frontend Transport; Mon, 7 Sep 2020 09:31:51 -0500
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVkNt072909;
-        Mon, 7 Sep 2020 09:31:47 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVo5r072974;
+        Mon, 7 Sep 2020 09:31:50 -0500
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -57,9 +57,9 @@ To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
 CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
         <linux-omap@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH net-next v2 1/9] net: ethernet: ti: ale: add cpsw_ale_get_num_entries api
-Date:   Mon, 7 Sep 2020 17:31:35 +0300
-Message-ID: <20200907143143.13735-2-grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 3/9] net: ethernet: ti: cpsw: use dev_id for ale configuration
+Date:   Mon, 7 Sep 2020 17:31:37 +0300
+Message-ID: <20200907143143.13735-4-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907143143.13735-1-grygorii.strashko@ti.com>
 References: <20200907143143.13735-1-grygorii.strashko@ti.com>
@@ -71,99 +71,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cpsw_ale_get_num_entries() API to return number of ALE table entries
-and update existing drivers to use it.
+The previous patch has introduced possibility to select CPSW ALE by using
+ALE dev_id identifier. Switch TI cpsw driver to use dev_id="cpsw" and
+perform clean up by removing "ale_entries" configuration code.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- drivers/net/ethernet/ti/am65-cpsw-ethtool.c | 10 ++++++----
- drivers/net/ethernet/ti/cpsw_ale.c          |  5 +++++
- drivers/net/ethernet/ti/cpsw_ale.h          |  1 +
- drivers/net/ethernet/ti/cpsw_ethtool.c      |  3 ++-
- 4 files changed, 14 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/ti/cpsw.c      | 6 ------
+ drivers/net/ethernet/ti/cpsw_new.c  | 1 -
+ drivers/net/ethernet/ti/cpsw_priv.c | 2 +-
+ drivers/net/ethernet/ti/cpsw_priv.h | 2 --
+ 4 files changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
-index 496dafb25128..6e4d4f9e32e0 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
-@@ -572,13 +572,14 @@ static int am65_cpsw_nway_reset(struct net_device *ndev)
- static int am65_cpsw_get_regs_len(struct net_device *ndev)
- {
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
--	u32 i, regdump_len = 0;
-+	u32 ale_entries, i, regdump_len = 0;
- 
-+	ale_entries = cpsw_ale_get_num_entries(common->ale);
- 	for (i = 0; i < ARRAY_SIZE(am65_cpsw_regdump); i++) {
- 		if (am65_cpsw_regdump[i].hdr.module_id ==
- 		    AM65_CPSW_REGDUMP_MOD_CPSW_ALE_TBL) {
- 			regdump_len += sizeof(struct am65_cpsw_regdump_hdr);
--			regdump_len += common->ale->params.ale_entries *
-+			regdump_len += ale_entries *
- 				       ALE_ENTRY_WORDS * sizeof(u32);
- 			continue;
- 		}
-@@ -592,10 +593,11 @@ static void am65_cpsw_get_regs(struct net_device *ndev,
- 			       struct ethtool_regs *regs, void *p)
- {
- 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
--	u32 i, j, pos, *reg = p;
-+	u32 ale_entries, i, j, pos, *reg = p;
- 
- 	/* update CPSW IP version */
- 	regs->version = AM65_CPSW_REGDUMP_VER;
-+	ale_entries = cpsw_ale_get_num_entries(common->ale);
- 
- 	pos = 0;
- 	for (i = 0; i < ARRAY_SIZE(am65_cpsw_regdump); i++) {
-@@ -603,7 +605,7 @@ static void am65_cpsw_get_regs(struct net_device *ndev,
- 
- 		if (am65_cpsw_regdump[i].hdr.module_id ==
- 		    AM65_CPSW_REGDUMP_MOD_CPSW_ALE_TBL) {
--			u32 ale_tbl_len = common->ale->params.ale_entries *
-+			u32 ale_tbl_len = ale_entries *
- 					  ALE_ENTRY_WORDS * sizeof(u32) +
- 					  sizeof(struct am65_cpsw_regdump_hdr);
- 			reg[pos++] = ale_tbl_len;
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 9ad872bfae3a..a94aef3f54a5 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -1079,3 +1079,8 @@ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data)
- 		data += ALE_ENTRY_WORDS;
+diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+index 4a65edc5a375..9b425f184f3c 100644
+--- a/drivers/net/ethernet/ti/cpsw.c
++++ b/drivers/net/ethernet/ti/cpsw.c
+@@ -1278,12 +1278,6 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
  	}
- }
-+
-+u32 cpsw_ale_get_num_entries(struct cpsw_ale *ale)
-+{
-+	return ale ? ale->params.ale_entries : 0;
-+}
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index 6a3cb6898728..735692f066bf 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -119,6 +119,7 @@ int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control);
- int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
- 			 int control, int value);
- void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data);
-+u32 cpsw_ale_get_num_entries(struct cpsw_ale *ale);
+ 	data->channels = prop;
  
- static inline int cpsw_ale_get_vlan_p0_untag(struct cpsw_ale *ale, u16 vid)
- {
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index fa54efe3be63..4d02c5135611 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -339,7 +339,8 @@ int cpsw_get_regs_len(struct net_device *ndev)
- {
- 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+-	if (of_property_read_u32(node, "ale_entries", &prop)) {
+-		dev_err(&pdev->dev, "Missing ale_entries property in the DT.\n");
+-		return -EINVAL;
+-	}
+-	data->ale_entries = prop;
+-
+ 	if (of_property_read_u32(node, "bd_ram_size", &prop)) {
+ 		dev_err(&pdev->dev, "Missing bd_ram_size property in the DT.\n");
+ 		return -EINVAL;
+diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
+index 8ed78577cded..a3528c5c823f 100644
+--- a/drivers/net/ethernet/ti/cpsw_new.c
++++ b/drivers/net/ethernet/ti/cpsw_new.c
+@@ -1243,7 +1243,6 @@ static int cpsw_probe_dt(struct cpsw_common *cpsw)
  
--	return cpsw->data.ale_entries * ALE_ENTRY_WORDS * sizeof(u32);
-+	return cpsw_ale_get_num_entries(cpsw->ale) *
-+	       ALE_ENTRY_WORDS * sizeof(u32);
- }
+ 	data->active_slave = 0;
+ 	data->channels = CPSW_MAX_QUEUES;
+-	data->ale_entries = CPSW_ALE_NUM_ENTRIES;
+ 	data->dual_emac = true;
+ 	data->bd_ram_size = CPSW_BD_RAM_SIZE;
+ 	data->mac_control = 0;
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.c b/drivers/net/ethernet/ti/cpsw_priv.c
+index 482a1a451e43..51cc29f39038 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.c
++++ b/drivers/net/ethernet/ti/cpsw_priv.c
+@@ -500,8 +500,8 @@ int cpsw_init_common(struct cpsw_common *cpsw, void __iomem *ss_regs,
  
- void cpsw_get_regs(struct net_device *ndev, struct ethtool_regs *regs, void *p)
+ 	ale_params.dev			= dev;
+ 	ale_params.ale_ageout		= ale_ageout;
+-	ale_params.ale_entries		= data->ale_entries;
+ 	ale_params.ale_ports		= CPSW_ALE_PORTS_NUM;
++	ale_params.dev_id		= "cpsw";
+ 
+ 	cpsw->ale = cpsw_ale_create(&ale_params);
+ 	if (IS_ERR(cpsw->ale)) {
+diff --git a/drivers/net/ethernet/ti/cpsw_priv.h b/drivers/net/ethernet/ti/cpsw_priv.h
+index bf4e179b4ca4..7b7f3596b20d 100644
+--- a/drivers/net/ethernet/ti/cpsw_priv.h
++++ b/drivers/net/ethernet/ti/cpsw_priv.h
+@@ -117,7 +117,6 @@ do {								\
+ #define CPSW_MAX_QUEUES		8
+ #define CPSW_CPDMA_DESCS_POOL_SIZE_DEFAULT 256
+ #define CPSW_ALE_AGEOUT_DEFAULT		10 /* sec */
+-#define CPSW_ALE_NUM_ENTRIES		1024
+ #define CPSW_FIFO_QUEUE_TYPE_SHIFT	16
+ #define CPSW_FIFO_SHAPE_EN_SHIFT	16
+ #define CPSW_FIFO_RATE_EN_SHIFT		20
+@@ -294,7 +293,6 @@ struct cpsw_platform_data {
+ 	u32	channels;	/* number of cpdma channels (symmetric) */
+ 	u32	slaves;		/* number of slave cpgmac ports */
+ 	u32	active_slave;/* time stamping, ethtool and SIOCGMIIPHY slave */
+-	u32	ale_entries;	/* ale table size */
+ 	u32	bd_ram_size;	/*buffer descriptor ram size */
+ 	u32	mac_control;	/* Mac control register */
+ 	u16	default_vlan;	/* Def VLAN for ALE lookup in VLAN aware mode*/
 -- 
 2.17.1
 
