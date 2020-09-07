@@ -2,107 +2,185 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6228EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6198215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sdlgVprv"
+	by mail.kernel.org (Postfix) with ESMTP id 29A482075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgIGMFA (ORCPT
+        id S1729228AbgIGMHr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbgIGL7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:59:48 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2994C061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:59:47 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id c10so12525384edk.6
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 04:59:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bR2mzR5z4Fp1s//vb7R8PemzbT1nIPea5CxsPeQGbCo=;
-        b=sdlgVprv5Ml6FcGFfq4SFwKLBdhqpgt1/tD2prJUf3yezMMf+zk3OqmlSCmjl90GHA
-         9J+0bfsuL2zGyEMQv67lgp7Uh5bekpJZkJHE6RCa3MxRx2asJEH0Rqd9mlGTMD/4z6Ur
-         rlj+DdN2WEqADLINNVdSYBEhSR/vahUY1tKDlmtHNxKtIAaiKOIlwVeS9MfAxEMbdzNI
-         veqHk6YVwBCiYL+JFMHTSCZgP67iVXGNuh01a9SlxoSynu7DM83hrYh4tzt5UwLCwkk9
-         giM2ryBZgwbxSSOdWZIXQxuIHht3JyKr6Uv/HaVrENAUpyjSEsHY1RcTVtVySWPD86y2
-         ro2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bR2mzR5z4Fp1s//vb7R8PemzbT1nIPea5CxsPeQGbCo=;
-        b=O6x6LeFBICqtwfQk6jNduTJj+qKzTSEm+RqgHccsy/+UpNYZyKnLcvdu4N5WI+rMOU
-         Z919d2YoXBBGkbpV6Se+oevVWPmHYmtRRySfcKiaFQPSzFCCmZSJSmvAYekOOXW5hSsP
-         Jchc2nkRzLSSPQmhFH/lv0pmhkY6YYLWqhP6XB+CSp6gBNmPkIAkcWr5HSP59kLJBeNd
-         9+L4c0S95A+Mu9PY2JLGdadIFNL1U+nULLuvgrpcRIbH4SOllIgPlYUZY896fnnrZqlv
-         pDZpjJ3bVLMuaSD70MS8v963ftZ1womAV+1kIDAM700F0Oa8c5J+ivKhrfBpPNz8NHMO
-         0sWQ==
-X-Gm-Message-State: AOAM532RFHOLsiIj0vvDQIuL6srd5P6dm9vVR9CYAiqkNSwckqbOVtuk
-        twqwKaN2ubfV/NJl+7NE/ghVOdT0ozVGH23fXjhUU/T6vcU=
-X-Google-Smtp-Source: ABdhPJyvgUJP0ylxO5qehk4m0jdhpk8hsO0Sw1TL7vejIAJ+s0I1Q151uttBgmbE3hq97WmzbCF8SLXZr4mDtGwGZag=
-X-Received: by 2002:a50:f687:: with SMTP id d7mr22155378edn.353.1599479986024;
- Mon, 07 Sep 2020 04:59:46 -0700 (PDT)
+        Mon, 7 Sep 2020 08:07:47 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3502 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729199AbgIGMA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:00:57 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 47B1B437D911662C7AF1;
+        Mon,  7 Sep 2020 20:00:45 +0800 (CST)
+Received: from dggemi710-chm.china.huawei.com (10.3.20.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 7 Sep 2020 20:00:10 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggemi710-chm.china.huawei.com (10.3.20.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Mon, 7 Sep 2020 20:00:10 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
+ Mon, 7 Sep 2020 20:00:10 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Mel Gorman <mgorman@suse.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Ingo Molnar <mingo@kernel.org>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Subject: [RFC] sched/numa: don't move tasks to idle numa nodes while src node
+ has very light load?
+Thread-Topic: [RFC] sched/numa: don't move tasks to idle numa nodes while src
+ node has very light load?
+Thread-Index: AdaFDgJxar2HSiPxTFetuIpaUOKfaA==
+Date:   Mon, 7 Sep 2020 12:00:10 +0000
+Message-ID: <e7b7462375de4175a83ece3b60bab899@hisilicon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.201.74]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-16-brgl@bgdev.pl>
- <20200904164917.GC1891694@smile.fi.intel.com> <CAMRc=MeG8xuB0GNbMLi6+QZTphSN==77Hsw1fjVNU_+Z=Ky2qQ@mail.gmail.com>
- <20200907115051.GY1891694@smile.fi.intel.com>
-In-Reply-To: <20200907115051.GY1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 7 Sep 2020 13:59:35 +0200
-Message-ID: <CAMpxmJWM265uk39mddEwVUYJdnM+1Stx3Ds8O9-ucYvMnV7hRw@mail.gmail.com>
-Subject: Re: [PATCH 15/23] gpio: mockup: use dynamic device IDs
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 1:50 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Sep 07, 2020 at 01:04:29PM +0200, Bartosz Golaszewski wrote:
-> > On Fri, Sep 4, 2020 at 6:49 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > On Fri, Sep 04, 2020 at 05:45:39PM +0200, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > >
-> > > > We're currently creating chips at module init time only so using a
-> > > > static index for dummy devices is fine. We want to support dynamically
-> > > > created chips however so we need to switch to dynamic device IDs.
-> > >
-> > > It misses ida_destroy().
-> >
-> > No, we always call ida_free() for separate IDs when removing devices
-> > and we remove all devices at module exit so no need to call
-> > ida_destroy().
->
-> Perhaps couple of words about this in the commit message?
->
+Hi All,
+In case we have a numa system with 4 nodes and in each node we have 24 cpus, and all of the 96 cores are idle.
+Then we start a process with 4 threads in this totally idle system. 
+Actually any one of the four numa nodes should have enough capability to run the 4 threads while they can still have 20 idle CPUS after that.
+But right now the existing code in CFS load balance will spread the 4 threads to multiple nodes.
+This results in two negative side effects:
+1. more numa nodes are awaken while they can save power in lowest frequency and halt status
+2. cache coherency overhead between numa nodes
 
-But ida_destroy() and ida_free() are already well documented. It's
-clear that we remove all devices at exit and that every device removes
-its ID, there's really no point in mentioning it again.
+A proof-of-concept patch I made to "fix" this issue to some extent is like:
 
-Bart
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 1a68a05..f671e15 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -9068,9 +9068,20 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+                }
+ 
+                /* Consider allowing a small imbalance between NUMA groups */
+-               if (env->sd->flags & SD_NUMA)
++               if (env->sd->flags & SD_NUMA) {
++                       /* if the src group uses only 1/4 capability and dst is idle
++                        * don't move task
++                        */
++                       if (busiest->sum_nr_running <= busiest->group_weight/4 &&
++                                       local->sum_nr_running == 0) {
++                               env->imbalance = 0;
++                               return;
++                       }
+                        env->imbalance = adjust_numa_imbalance(env->imbalance,
+                                                busiest->sum_nr_running);
++               }
+ 
+                return;
+        }
+
+And I wrote a simple process with 4 threads to measure the execution time:
+
+#include <stdio.h>
+#include <pthread.h>
+#include <sys/types.h>
+
+struct foo {
+    int x;
+    int y;
+} f1;
+
+void* thread_fun1(void* param)
+{
+    int s = 0; 
+    for (int i = 0; i < 1000000000; ++i)
+        s += f1.x;
+        return NULL;
+}
+
+void* thread_fun2(void* param)
+{   
+    for (int i = 0; i < 1000000000; ++i)
+        ++f1.y;
+        return NULL;
+}
+
+double difftimeval(const struct timeval *start, const struct timeval *end)
+{
+        double d;
+        time_t s;
+        suseconds_t u;
+
+        s = start->tv_sec - end->tv_sec;
+        u = start->tv_usec - end->tv_usec;
+
+        d = s;
+        d += u/1000000.0;
+
+        return d;
+}
+
+int main(void)
+{
+        pthread_t tid1,tid2,tid3,tid4;
+        struct timeval start,end;
+
+        gettimeofday(&start, NULL);
+
+        pthread_create(&tid1,NULL,thread_fun1,NULL);
+        pthread_create(&tid2,NULL,thread_fun2,NULL);
+        pthread_create(&tid3,NULL,thread_fun1,NULL);
+        pthread_create(&tid4,NULL,thread_fun2,NULL);
+
+        pthread_join(tid1,NULL);
+        pthread_join(tid2,NULL);
+        pthread_join(tid3,NULL);
+        pthread_join(tid4,NULL);
+
+        gettimeofday(&end, NULL);
+
+        printf("execution time:%f\n", difftimeval(&end, &start));
+}
+
+Before the PoC patch, the test result:
+$ ./a.out 
+execution time:10.734581
+
+After the PoC patch, the test result:
+$ ./a.out 
+execution time:6.775150
+
+The execution time reduces around 30-40% because 4 threads are put in single one numa node.
+
+On the other hand, the patch doesn't have to depend on NUMA, it can also apply to SCHED_MC with some changes. If one CPU can be still idle after they handle all tasks in the system, we maybe not need to wake up the 2nd CPU at all?
+
+I understand this PoC patch could have negative side effect in some corner cases, for example, if the four threads running in one process want more memory bandwidth by running in multiple nodes. But generally speaking, we do a tradeoff between cache locality and better CPU utilization as they are the main concerns. If one process highly depends on memory bandwidth, they may change their mempolicy?
+
+Thanks
+Barry
