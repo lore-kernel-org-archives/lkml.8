@@ -2,51 +2,53 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23178C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C3EC2D0E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D986721556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CED68208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497581;
-	bh=YUw1cSNV5LZ7oMZ+KQt0apRw1dnxoQm2n72NZgtq7aU=;
+	s=default; t=1599497585;
+	bh=Y7DfL2QIoK+7AlOig5I7K0jPWLIoatifmL4WfTHq3TM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fENd9HjgRSOG8xk52p+QUg40AuRqVoS7j0NgowURe67CKclYHBik2ajvVhp9iA9Jh
-	 gJwWdFRk+6m30Mq5FgopT7o3NIPhkwlxfcUWjnIgAwOJ5R4R3FnDvxRBHvkEMuURc7
-	 +FGSOf0s9hp0lS9HFrxPzI+AgDF8/sD512t2UsFQ=
+	b=iRQGxf68vkwvoBDUdTyiDlEsmDYdQs5QZvqEOdL4sXYJuMVGnNkxFVj4o8AWoLstN
+	 muw4SWFdwuIOxx8GZEG7ZPeZVMBh+jQYH3nBLgcf94hJgsWITomYQ1oTEXPLI8sQiu
+	 GMhEshaHd8k3fwCZq0av5kvaPSPwVZ1mT3ZhuTvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbgIGQwm (ORCPT
+        id S1730947AbgIGQw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:52:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48566 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:52:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730764AbgIGQek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:40 -0400
+        id S1730452AbgIGQen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCEEE21D92;
-        Mon,  7 Sep 2020 16:34:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38B9321941;
+        Mon,  7 Sep 2020 16:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496475;
-        bh=YUw1cSNV5LZ7oMZ+KQt0apRw1dnxoQm2n72NZgtq7aU=;
+        s=default; t=1599496482;
+        bh=Y7DfL2QIoK+7AlOig5I7K0jPWLIoatifmL4WfTHq3TM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5rATS2dqkPe6kX0J20jvdTKxX6sLVGkWqYfV4uLni6MWelcCOumueSFrWSC8xDe7
-         tsAEe80y4j810etpAdl21ant6v2bHI/gLNULGsXaYS369tNmo9D+HndAa8z9bjW9ct
-         mK9J13xz7d9A9WRFFmq7pIjDaV7AqWM8VqApeIFw=
+        b=wU5cYWoWfEY0BQuvEWxe/e2AwGO8id46R4BBHmf6ovpSPI+sUjN77Fi8VqEq0fOw/
+         QcK3phqLfxDqDaz8TAcUIo3f8qpnH2IeBegrl9WXESPU1D/4pGWiSfP9BRoZqw7SAs
+         FuLSxOwG1RwqUeeLa6ujn8dCHy4sTnJjxKy+R/OA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 07/26] ALSA: hda: Fix 2 channel swapping for Tegra
-Date:   Mon,  7 Sep 2020 12:34:07 -0400
-Message-Id: <20200907163426.1281284-7-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        kernel test robot <lkp@intel.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 12/26] irqchip/eznps: Fix build error for !ARC700 builds
+Date:   Mon,  7 Sep 2020 12:34:12 -0400
+Message-Id: <20200907163426.1281284-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
 References: <20200907163426.1281284-1-sashal@kernel.org>
@@ -59,48 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohan Kumar <mkumard@nvidia.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 216116eae43963c662eb84729507bad95214ca6b ]
+[ Upstream commit 89d29997f103d08264b0685796b420d911658b96 ]
 
-The Tegra HDA codec HW implementation has an issue related to not
-swapping the 2 channel Audio Sample Packet(ASP) channel mapping.
-Whatever the FL and FR mapping specified the left channel always
-comes out of left speaker and right channel on right speaker. So
-add condition to disallow the swapping of FL,FR during the playback.
+eznps driver is supposed to be platform independent however it ends up
+including stuff from inside arch/arc headers leading to rand config
+build errors.
 
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-Acked-by: Sameer Pujar <spujar@nvidia.com>
-Link: https://lore.kernel.org/r/20200825052415.20626-2-mkumard@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+The quick hack to fix this (proper fix is too much chrun for non active
+user-base) is to add following to nps platform agnostic header.
+ - copy AUX_IENABLE from arch/arc header
+ - move CTOP_AUX_IACK from arch/arc/plat-eznps/*/**
+
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lkml.kernel.org/r/20200824095831.5lpkmkafelnvlpi2@linutronix.de
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arc/plat-eznps/include/plat/ctop.h | 1 -
+ include/soc/nps/common.h                | 6 ++++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index 419d099b5582b..9bd697256e359 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -3430,6 +3430,7 @@ static int tegra_hdmi_build_pcms(struct hda_codec *codec)
+diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
+index 4f6a1673b3a6e..ddfca2c3357a0 100644
+--- a/arch/arc/plat-eznps/include/plat/ctop.h
++++ b/arch/arc/plat-eznps/include/plat/ctop.h
+@@ -43,7 +43,6 @@
+ #define CTOP_AUX_DPC				(CTOP_AUX_BASE + 0x02C)
+ #define CTOP_AUX_LPC				(CTOP_AUX_BASE + 0x030)
+ #define CTOP_AUX_EFLAGS				(CTOP_AUX_BASE + 0x080)
+-#define CTOP_AUX_IACK				(CTOP_AUX_BASE + 0x088)
+ #define CTOP_AUX_GPA1				(CTOP_AUX_BASE + 0x08C)
+ #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
  
- static int patch_tegra_hdmi(struct hda_codec *codec)
- {
-+	struct hdmi_spec *spec;
- 	int err;
+diff --git a/include/soc/nps/common.h b/include/soc/nps/common.h
+index 9b1d43d671a3f..8c18dc6d3fde5 100644
+--- a/include/soc/nps/common.h
++++ b/include/soc/nps/common.h
+@@ -45,6 +45,12 @@
+ #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_INST	0x5B60
+ #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_LIMM	0x00010422
  
- 	err = patch_generic_hdmi(codec);
-@@ -3437,6 +3438,10 @@ static int patch_tegra_hdmi(struct hda_codec *codec)
- 		return err;
++#ifndef AUX_IENABLE
++#define AUX_IENABLE				0x40c
++#endif
++
++#define CTOP_AUX_IACK				(0xFFFFF800 + 0x088)
++
+ #ifndef __ASSEMBLY__
  
- 	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
-+	spec = codec->spec;
-+	spec->chmap.ops.chmap_cea_alloc_validate_get_type =
-+		nvhdmi_chmap_cea_alloc_validate_get_type;
-+	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
- 
- 	return 0;
- }
+ /* In order to increase compilation test coverage */
 -- 
 2.25.1
 
