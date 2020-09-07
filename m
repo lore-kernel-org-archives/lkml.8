@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F9FC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C01C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85579207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F07C21556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497109;
-	bh=8QfiQeHJEJz7b327EU8FvscAsj0hUZMuzLBtnfgA1oU=;
+	s=default; t=1599497118;
+	bh=0xZQn08ge8u1b7LENZ75nSqgq2FnbOiaRR1KLQ2HahE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L9N+CSl7kv+zgVYBlxGmf4qs9VloJZbz5hDQFRwa3C77/JbjknUzGg616b/AlX/H+
-	 WMBtkD+sn/VXULwmr3OXHXyCewU0tmFOKOvZxWTC7XKqcCM1LWQAaT+ukTVjq60d1t
-	 XTDnsXQNJpaS2BHf2+LOJJfPSjAAfMg0/GXk5MS4=
+	b=KXF7W8dEARKYL+lVBlb+RDZf4tpz1OkfYU7Q39Ep+hc4lPnAXLwkQoKB8JS5NLQA3
+	 O4aCp4UnJUM0QdSbFw+kAQUtfZyXW4qd7S+KepnhfQDSBZcVFkArieZOT5fMRcUIs/
+	 l6NJQjC2UIFz8XatreHXtdYgPANA9QDCGzfO8Jq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgIGQpG (ORCPT
+        id S1731027AbgIGQo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:45:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49510 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730839AbgIGQfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:38 -0400
+        id S1730842AbgIGQfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60AF721D95;
-        Mon,  7 Sep 2020 16:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB8C221E9;
+        Mon,  7 Sep 2020 16:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496537;
-        bh=8QfiQeHJEJz7b327EU8FvscAsj0hUZMuzLBtnfgA1oU=;
+        s=default; t=1599496539;
+        bh=0xZQn08ge8u1b7LENZ75nSqgq2FnbOiaRR1KLQ2HahE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ueuy+ajqQNK2F+PSykvDkMVeSy7Qm0iYUeY5E1ASl0/MSTcaVTZVln5qYK1x7ZWY1
-         PRy8VmVThpGRkb6bEd5J5eIoAnGFfAqfmnI0GTRPVTQG1JFANFLK+Kfz6e6cMLa+ds
-         YUiGmhmcEB+Exm1lcxwoE6zjJKE9RlGEER9v3PDU=
+        b=mSwr1Lyaea7/EO/933pUYNVoNgjOtMR27cOlQmwYFhIcucAC0gTAW9JeWMgy08qxk
+         +zEB2RIaDtsZO3KdF0fNsEzCtRa4IWTJziGq4L5rKzvGbLOXmpbDyVZGou0AWX0cDe
+         kdkwzUESowsphhzqC5OjofHChmCIh7QSl0BWRgMk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        kernel test robot <lkp@intel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 09/13] irqchip/eznps: Fix build error for !ARC700 builds
-Date:   Mon,  7 Sep 2020 12:35:20 -0400
-Message-Id: <20200907163524.1281734-9-sashal@kernel.org>
+Cc:     Kamil Lorenc <kamil@re-ws.pl>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 11/13] net: usb: dm9601: Add USB ID of Keenetic Plus DSL
+Date:   Mon,  7 Sep 2020 12:35:22 -0400
+Message-Id: <20200907163524.1281734-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163524.1281734-1-sashal@kernel.org>
 References: <20200907163524.1281734-1-sashal@kernel.org>
@@ -61,58 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Kamil Lorenc <kamil@re-ws.pl>
 
-[ Upstream commit 89d29997f103d08264b0685796b420d911658b96 ]
+[ Upstream commit a609d0259183a841621f252e067f40f8cc25d6f6 ]
 
-eznps driver is supposed to be platform independent however it ends up
-including stuff from inside arch/arc headers leading to rand config
-build errors.
+Keenetic Plus DSL is a xDSL modem that uses dm9620 as its USB interface.
 
-The quick hack to fix this (proper fix is too much chrun for non active
-user-base) is to add following to nps platform agnostic header.
- - copy AUX_IENABLE from arch/arc header
- - move CTOP_AUX_IACK from arch/arc/plat-eznps/*/**
-
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lkml.kernel.org/r/20200824095831.5lpkmkafelnvlpi2@linutronix.de
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Kamil Lorenc <kamil@re-ws.pl>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/plat-eznps/include/plat/ctop.h | 1 -
- include/soc/nps/common.h                | 6 ++++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/dm9601.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arc/plat-eznps/include/plat/ctop.h b/arch/arc/plat-eznps/include/plat/ctop.h
-index 3c401ce0351ef..fb959828630ce 100644
---- a/arch/arc/plat-eznps/include/plat/ctop.h
-+++ b/arch/arc/plat-eznps/include/plat/ctop.h
-@@ -42,7 +42,6 @@
- #define CTOP_AUX_HW_COMPLY			(CTOP_AUX_BASE + 0x024)
- #define CTOP_AUX_LPC				(CTOP_AUX_BASE + 0x030)
- #define CTOP_AUX_EFLAGS				(CTOP_AUX_BASE + 0x080)
--#define CTOP_AUX_IACK				(CTOP_AUX_BASE + 0x088)
- #define CTOP_AUX_GPA1				(CTOP_AUX_BASE + 0x08C)
- #define CTOP_AUX_UDMC				(CTOP_AUX_BASE + 0x300)
+diff --git a/drivers/net/usb/dm9601.c b/drivers/net/usb/dm9601.c
+index 0b4bdd39106b0..fb18801d0fe7b 100644
+--- a/drivers/net/usb/dm9601.c
++++ b/drivers/net/usb/dm9601.c
+@@ -624,6 +624,10 @@ static const struct usb_device_id products[] = {
+ 	 USB_DEVICE(0x0a46, 0x1269),	/* DM9621A USB to Fast Ethernet Adapter */
+ 	 .driver_info = (unsigned long)&dm9601_info,
+ 	},
++	{
++	 USB_DEVICE(0x0586, 0x3427),	/* ZyXEL Keenetic Plus DSL xDSL modem */
++	 .driver_info = (unsigned long)&dm9601_info,
++	},
+ 	{},			// END
+ };
  
-diff --git a/include/soc/nps/common.h b/include/soc/nps/common.h
-index 9b1d43d671a3f..8c18dc6d3fde5 100644
---- a/include/soc/nps/common.h
-+++ b/include/soc/nps/common.h
-@@ -45,6 +45,12 @@
- #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_INST	0x5B60
- #define CTOP_INST_MOV2B_FLIP_R3_B1_B2_LIMM	0x00010422
- 
-+#ifndef AUX_IENABLE
-+#define AUX_IENABLE				0x40c
-+#endif
-+
-+#define CTOP_AUX_IACK				(0xFFFFF800 + 0x088)
-+
- #ifndef __ASSEMBLY__
- 
- /* In order to increase compilation test coverage */
 -- 
 2.25.1
 
