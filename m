@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106F6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0747FC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7B1521941
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3900221EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496622;
-	bh=VBDolsQa9bah2f35ikQNeh3bGYSd5ANyLGcQxwSCoX4=;
+	s=default; t=1599496631;
+	bh=MCpL6LB8MUB026Zf8apGOuhcoKAPd/ZbuWwOu9lqhaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jal37YDN14nVT6Af/Q2/XCeiCV8oHm1QYLuOYIqBMzJJmQhd+Y2U8mB9dg9gRKdFw
-	 AXkxy8/DKtGL0bxhODbmLR79V68WKZtMeqR3lssR9kjpRSzudoBfGC8iD4nAG2EfKm
-	 053zgSjbUMaDl4VUWfBoek4bCykKE7ss/tyQLGS0=
+	b=kdpmYJ96+pSKIS8+zHUhalKKxDCC1KNtNiSX9w5HnKHqJS1xz1obhJsQhJCQqShMf
+	 SsawK3uUEr6RrZ3fIBw6ZUXdicTQwD7FdKd4fPQMcll/AdFExH5kPmIRXqeRtWG+Km
+	 zEY1a3jSmGns3qMOZGlKJkpMfogNsH9j68IuW3nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730920AbgIGQg5 (ORCPT
+        id S1730652AbgIGQhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:37:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730703AbgIGQdp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:45 -0400
+        id S1730698AbgIGQdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A197121941;
-        Mon,  7 Sep 2020 16:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5E4B21775;
+        Mon,  7 Sep 2020 16:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496424;
-        bh=VBDolsQa9bah2f35ikQNeh3bGYSd5ANyLGcQxwSCoX4=;
+        s=default; t=1599496421;
+        bh=MCpL6LB8MUB026Zf8apGOuhcoKAPd/ZbuWwOu9lqhaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bipxg5EvnC8hQy5NauJaafk7Ed/G1z9HlXnee8PLGFIgzon2N8yz/PXAobN71xJIB
-         d5/3TY+hRTZ6fjWk2y32qn8D/MuFhtU5Hxz8eRXlqTMcVFtBKwYShdFFZrcGpSNwhY
-         3nNGaSMByW1KI7s+t+U4uK+rOcvH1I5MVpDHaTQM=
+        b=rsr8nJSIb17YoHf/31lr9FfQf9QK7kjeXaSv83if5t6+Zodp3OIdownI1wALBM1H/
+         7sBK7rhW9iiC9vOZQi+BHgdHl4Ob+S85elSMpcFhLvGUj1Kz4uCQUy52Ao9nvUYPg2
+         iSfblXKcc6EoFklzK25BUVA8EFVw8h0UjGuYGGOA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mingming Cao <mmc@linux.vnet.ibm.com>,
-        Dany Madden <drt@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH AUTOSEL 5.4 11/43] ibmvnic fix NULL tx_pools and rx_tools issue at do_reset
-Date:   Mon,  7 Sep 2020 12:32:57 -0400
-Message-Id: <20200907163329.1280888-11-sashal@kernel.org>
+Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/43] ALSA: hda/tegra: Program WAKEEN register for Tegra
+Date:   Mon,  7 Sep 2020 12:32:55 -0400
+Message-Id: <20200907163329.1280888-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -61,81 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mingming Cao <mmc@linux.vnet.ibm.com>
+From: Mohan Kumar <mkumard@nvidia.com>
 
-[ Upstream commit 9f13457377907fa253aef560e1a37e1ca4197f9b ]
+[ Upstream commit 23d63a31d9f44d7daeac0d1fb65c6a73c70e5216 ]
 
-At the time of do_rest, ibmvnic tries to re-initalize the tx_pools
-and rx_pools to avoid re-allocating the long term buffer. However
-there is a window inside do_reset that the tx_pools and
-rx_pools were freed before re-initialized making it possible to deference
-null pointers.
+The WAKEEN bits are used to indicate which bits in the
+STATESTS register may cause wake event during the codec
+state change request. Configure the WAKEEN register for
+the Tegra to detect the wake events.
 
-This patch fix this issue by always check the tx_pool
-and rx_pool are not NULL after ibmvnic_login. If so, re-allocating
-the pools. This will avoid getting into calling reset_tx/rx_pools with
-NULL adapter tx_pools/rx_pools pointer. Also add null pointer check in
-reset_tx_pools and reset_rx_pools to safe handle NULL pointer case.
-
-Signed-off-by: Mingming Cao <mmc@linux.vnet.ibm.com>
-Signed-off-by: Dany Madden <drt@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
+Acked-by: Sameer Pujar <spujar@nvidia.com>
+Link: https://lore.kernel.org/r/20200825052415.20626-3-mkumard@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_tegra.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 2d20a48f0ba0a..de45b3709c14e 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -416,6 +416,9 @@ static int reset_rx_pools(struct ibmvnic_adapter *adapter)
- 	int i, j, rc;
- 	u64 *size_array;
+diff --git a/sound/pci/hda/hda_tegra.c b/sound/pci/hda/hda_tegra.c
+index e5191584638ab..e378cb33c69df 100644
+--- a/sound/pci/hda/hda_tegra.c
++++ b/sound/pci/hda/hda_tegra.c
+@@ -169,6 +169,10 @@ static int __maybe_unused hda_tegra_runtime_suspend(struct device *dev)
+ 	struct hdac_bus *bus = azx_bus(chip);
  
-+	if (!adapter->rx_pool)
-+		return -1;
+ 	if (chip && chip->running) {
++		/* enable controller wake up event */
++		azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) |
++			   STATESTS_INT_MASK);
 +
- 	size_array = (u64 *)((u8 *)(adapter->login_rsp_buf) +
- 		be32_to_cpu(adapter->login_rsp_buf->off_rxadd_buff_size));
+ 		azx_stop_chip(chip);
+ 		synchronize_irq(bus->irq);
+ 		azx_enter_link_reset(chip);
+@@ -191,6 +195,9 @@ static int __maybe_unused hda_tegra_runtime_resume(struct device *dev)
+ 	if (chip && chip->running) {
+ 		hda_tegra_init(hda);
+ 		azx_init_chip(chip, 1);
++		/* disable controller wake up event*/
++		azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) &
++			   ~STATESTS_INT_MASK);
+ 	}
  
-@@ -586,6 +589,9 @@ static int reset_tx_pools(struct ibmvnic_adapter *adapter)
- 	int tx_scrqs;
- 	int i, rc;
- 
-+	if (!adapter->tx_pool)
-+		return -1;
-+
- 	tx_scrqs = be32_to_cpu(adapter->login_rsp_buf->num_txsubm_subcrqs);
- 	for (i = 0; i < tx_scrqs; i++) {
- 		rc = reset_one_tx_pool(adapter, &adapter->tso_pool[i]);
-@@ -1918,7 +1924,10 @@ static int do_reset(struct ibmvnic_adapter *adapter,
- 		    adapter->req_rx_add_entries_per_subcrq !=
- 		    old_num_rx_slots ||
- 		    adapter->req_tx_entries_per_subcrq !=
--		    old_num_tx_slots) {
-+		    old_num_tx_slots ||
-+		    !adapter->rx_pool ||
-+		    !adapter->tso_pool ||
-+		    !adapter->tx_pool) {
- 			release_rx_pools(adapter);
- 			release_tx_pools(adapter);
- 			release_napi(adapter);
-@@ -1931,10 +1940,14 @@ static int do_reset(struct ibmvnic_adapter *adapter,
- 		} else {
- 			rc = reset_tx_pools(adapter);
- 			if (rc)
-+				netdev_dbg(adapter->netdev, "reset tx pools failed (%d)\n",
-+						rc);
- 				goto out;
- 
- 			rc = reset_rx_pools(adapter);
- 			if (rc)
-+				netdev_dbg(adapter->netdev, "reset rx pools failed (%d)\n",
-+						rc);
- 				goto out;
- 		}
- 		ibmvnic_disable_irqs(adapter);
+ 	return 0;
 -- 
 2.25.1
 
