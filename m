@@ -2,108 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32DBC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC3DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82466207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:41:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Rhl6gyeo"
+	by mail.kernel.org (Postfix) with ESMTP id 1CE83207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbgIGQlq (ORCPT
+        id S1731038AbgIGQmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:41:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35286 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730945AbgIGQlD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:41:03 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C59EC061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:41:03 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z1so16468986wrt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:41:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6HzmAVHlN6inWuhNR/qi7K/O/N8qBgMh/gLHImP3oLI=;
-        b=Rhl6gyeocRUMRqArAntovDuFoSik3QlgtAtzFotLuXqcpSRMRkqtNsIv5Gcb9Fnw0e
-         N/C/m4yQ5ky/du94q5SXnkioiql9UDJriC3NLtyFKxqOjpCS6j6HsXlJU+KoORAAK054
-         5t4BCXfaclazE189avFgwVgxqYI0mokQOcsUErfyVofMTwu5z/kxWSugjP7H8Ic89MCN
-         Yr2LriQYIN1sgWopbfmKeM1rhyMgk6hHOwOVM/TW8uCwOLJ9wPgV3wuJDZDTt3lcpt+n
-         XqyjICws/7JQsA0tlT5s/wKwXFpkcMKeZETFvzg9ltUJnKqljlYh+9QbrE0QKEdgi9R0
-         WHrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6HzmAVHlN6inWuhNR/qi7K/O/N8qBgMh/gLHImP3oLI=;
-        b=RMSZeg9KP0BtBZmDfL592Nqb7eebBnIgGAOH6JJzxkfJBQ9Qfvx4ivWOwhwH3hSJ3K
-         XqGwESBu/cCYWe8p5oQOJ+/31/zm/q/SZ6jDGn9OTQgvb+q2KSnkAFDwxBoS4ldmLFeR
-         1HiqA0ikJnNhNyE0S7P9sq+OEHm2l444I/tQ3EBD02H/2lgUXcyPj3ChTCnc0RBWn+U4
-         6nd0UjWCdAjIxmYdTNkNRvZj8haf+avfgy0zPhwlNGh+YXjRBOLbQC3jxKlci1bEuao2
-         18nZL0zCa61qO0pKeVBa8aUq5TSNCWhj04irzDBXrFLG2w6wYOjtJMbRigeNxHbBHr3r
-         G/3w==
-X-Gm-Message-State: AOAM531RjBQXi0FQGwDaO9D38vy6dIY9/BgAfGDHpcE1e8nrORAE1VHr
-        HK3xc9h6pEKP16OrkGpLhBRMlw==
-X-Google-Smtp-Source: ABdhPJwwFuqsNpeKNr2Xcj0G7bwyHTIOXQSxqV9C4cdGzfqKQXz/HEY2/yNVuuYEC8tByhO7f/FTTA==
-X-Received: by 2002:adf:f082:: with SMTP id n2mr16879077wro.35.1599496861873;
-        Mon, 07 Sep 2020 09:41:01 -0700 (PDT)
-Received: from ?IPv6:2a02:8084:e84:2480:228:f8ff:fe6f:83a8? ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i1sm34957035wrc.49.2020.09.07.09.41.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 09:41:01 -0700 (PDT)
-Subject: Re: [PATCH v2 3/6] netlink/compat: Append NLMSG_DONE/extack to
- frag_list
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Stephen Suryaputra <ssuryaextr@gmail.com>,
-        netdev@vger.kernel.org
-References: <20200826014949.644441-1-dima@arista.com>
- <20200826014949.644441-4-dima@arista.com>
- <f579efc1375e46d9c2ff999ada1bcfed40ec2a8f.camel@sipsolutions.net>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <ff2e3bfb-f97b-6982-05d8-5448193225ab@arista.com>
-Date:   Mon, 7 Sep 2020 17:41:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mon, 7 Sep 2020 12:42:03 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2778 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730306AbgIGQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:39:56 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 5432B9CCF7EE259F5AD4;
+        Mon,  7 Sep 2020 17:39:53 +0100 (IST)
+Received: from localhost (10.52.124.38) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 7 Sep 2020
+ 17:39:52 +0100
+Date:   Mon, 7 Sep 2020 17:38:19 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+CC:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-samsung-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second
+ interrupt with touch screen
+Message-ID: <20200907173819.00005a48@Huawei.com>
+In-Reply-To: <20200907161141.31034-3-krzk@kernel.org>
+References: <20200907161141.31034-1-krzk@kernel.org>
+        <20200907161141.31034-3-krzk@kernel.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <f579efc1375e46d9c2ff999ada1bcfed40ec2a8f.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.124.38]
+X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/26/20 8:19 AM, Johannes Berg wrote:
-> On Wed, 2020-08-26 at 02:49 +0100, Dmitry Safonov wrote:
-[..]
->> +	nl_dump_check_consistent(cb, nlh);
->> +	memcpy(nlmsg_data(nlh), &nlk->dump_done_errno,
->> +			sizeof(nlk->dump_done_errno));
-> 
-> nit: indentation here looks odd.
-> 
-> Other than that, looks reasonable to me.
-> 
-> Reviewed-by: Johannes Berg <johannes@sipsolutions.net>
+On Mon,  7 Sep 2020 18:11:18 +0200
+Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-Thank you for the review!
+> The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
+> screen.  In such case the second interrupt is required.  This second
+> interrupt can be anyway provided, even without touch screens.  This
+> fixes dtbs_check warnings like:
+> 
+>   arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
--- 
-          Dmitry
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+
+Or I can pick this up through the IIO tree if that makes sense.
+I doubt anything else will touch this binding this cycle, so either
+way works for me.
+
+Jonathan
+
+> ---
+>  .../bindings/iio/adc/samsung,exynos-adc.yaml      | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> index cc3c8ea6a894..89b4f9c252a6 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> @@ -41,7 +41,10 @@ properties:
+>      maxItems: 2
+>  
+>    interrupts:
+> -    maxItems: 1
+> +    description:
+> +      ADC interrupt followed by optional touchscreen interrupt.
+> +    minItems: 1
+> +    maxItems: 2
+>  
+>    "#io-channel-cells":
+>      const: 1
+> @@ -107,6 +110,16 @@ allOf:
+>            items:
+>              - const: adc
+>  
+> +  - if:
+> +      properties:
+> +        has-touchscreen:
+> +          true
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 2
+> +          maxItems: 2
+> +
+>  examples:
+>    - |
+>      adc: adc@12d10000 {
+
+
