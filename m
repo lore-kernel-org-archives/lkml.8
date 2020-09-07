@@ -2,99 +2,259 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEE3C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4FEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FBF4207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5832145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:46:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="IYmxvA7X"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kQgmoMef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbgIGHpq (ORCPT
+        id S1727876AbgIGHqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37184 "EHLO
+        Mon, 7 Sep 2020 03:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726821AbgIGHpp (ORCPT
+        with ESMTP id S1727847AbgIGHqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:45:45 -0400
-Received: from canardo.mork.no (canardo.mork.no [IPv6:2001:4641::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3701CC061573;
-        Mon,  7 Sep 2020 00:45:44 -0700 (PDT)
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id 0877jMO6027725
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 7 Sep 2020 09:45:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1599464723; bh=F/cpKEbPOeBiiYDZm58dXUDkbQv3QMMupiIUIMsLI98=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=IYmxvA7XZxgTNjZdtiqqNQwmZylArahmbbj/z7bCvG82Axg//Sookx8SobMq9UqaI
-         t6dAaNzoTauNcm4HbfjQ+zOFZSWARTUXFxLdiqWSut9ln1Ba7hQKhHX7xNPu8TPKLR
-         RNXHnG56jYmVtDz9vSS6SL8QU5Ik98kxwQJytvQY=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.94)
-        (envelope-from <bjorn@mork.no>)
-        id 1kFBq5-000zls-55; Mon, 07 Sep 2020 09:45:21 +0200
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Kristian Evensen <kristian.evensen@gmail.com>
-Cc:     Daniele Palmas <dnlplm@gmail.com>,
-        Paul Gildea <paul.gildea@gmail.com>,
-        "davem\@davemloft.net" <davem@davemloft.net>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: usb: qmi_wwan: Fix for packets being rejected in the ring buffer used by the xHCI controller.
-Organization: m
-References: <CA+4pmEueEiz0Act8X6t4y3+4LOaOh_-ZfzScH0CbOKT99x91NA@mail.gmail.com>
-        <87wo7una02.fsf@miraculix.mork.no>
-        <CAGRyCJE-VYRthco5=rZ_PX0hkzhXmQ45yGJe_Gm1UvYJBKYQvQ@mail.gmail.com>
-        <CAKfDRXg2xRbLu=ZcQYdJUuYbfMQbav9pUDwcVMc-S+hwV3Johw@mail.gmail.com>
-Date:   Mon, 07 Sep 2020 09:45:21 +0200
-In-Reply-To: <CAKfDRXg2xRbLu=ZcQYdJUuYbfMQbav9pUDwcVMc-S+hwV3Johw@mail.gmail.com>
-        (Kristian Evensen's message of "Mon, 7 Sep 2020 09:25:16 +0200")
-Message-ID: <87v9gqghda.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Mon, 7 Sep 2020 03:46:09 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5458CC061755
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:46:09 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id h11so11682618ilj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eOcu8D5wTw2HeDSoosOfCg4t0DhAHSO+wPplJiiP8zs=;
+        b=kQgmoMefVTk+IjUZ91VOxE5uOnj6dN3OhFswHjPA8Sohyz/hprwyvf/fQn6Qoci4Jn
+         +QAj/8ckPZAQfT/hBgM6aPTrkQSyXVpGrDiRLjaZY14xaKKjo0wiD7ecNm1TgEJRaABC
+         vdH6n3ctU+AsvpY/VVWtT6KEOOFZJ44rlwDnYO9E1niHmbd3YWirTDC+aF7X//AzhGdJ
+         OvAXENpZMHKtvIaHfLrCEL4c1vDSyqIbLf70DiGnPXLWmUXx0/eVXIK/5pe/APtq6toh
+         c2/eaIZmh1uCL+bJd+1HrEKfAUazohnDWZbQUoWRz1c0K33JNlTT0fHRyZL2L42pERMP
+         ynZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eOcu8D5wTw2HeDSoosOfCg4t0DhAHSO+wPplJiiP8zs=;
+        b=syv4CtzDulJGKftZktsYaHXEVbaC8zquu24yfi6fU17lEOHiFSt3s/D8trfY3Y+ZCx
+         vbj/GimlaEUbzM6ga9LsVmMV7Uuker9igt8srdqm6ORQWphcf/qt7rYYMKHXYuxWFOaA
+         0O9qeVLyCI8ORkl3iEqqm8Q8NgY139LnWQxYpb0ZEGa0it8seZjTmdvOl+GKdX6LZneL
+         +0Y3ESCu2XDnRArQpv9JQWugZrg7OHUPGQnIKvv855uaPUwWfG873+w5ZcrJ40wkbdP2
+         rwOEQGN94hnjQAMa4fxq3W0L86up7SOHy3DsWkik0dsbEoi1PJgEkGJ9E/e3wT66AQCo
+         Fpqg==
+X-Gm-Message-State: AOAM5331gWkVQo83IWWKS2uLIHq2MiC2odcv836fNU7Lyg8qrdjnBTUV
+        qKwIB32M8NuEDt+myY1EIYb64FMzkrU8/LIAmg1Opw==
+X-Google-Smtp-Source: ABdhPJziDuXiwGvW9UM22wNMoxrqrL0azfO21D5OHGUhZejQeMz0dhIUigYLyuSuoA9rIgKn3f2lHV90i9Kjf0GwjC8=
+X-Received: by 2002:a92:c5ac:: with SMTP id r12mr17119968ilt.274.1599464767126;
+ Mon, 07 Sep 2020 00:46:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.102.4 at canardo
-X-Virus-Status: Clean
+References: <20200827063522.2563293-1-lokeshgidra@google.com>
+ <20200827063522.2563293-2-lokeshgidra@google.com> <20200901124136.r3krb2p23343licq@wittgenstein>
+In-Reply-To: <20200901124136.r3krb2p23343licq@wittgenstein>
+From:   Lokesh Gidra <lokeshgidra@google.com>
+Date:   Mon, 7 Sep 2020 00:45:56 -0700
+Message-ID: <CA+EESO5T9PSR8eATCrKtFXdR=x8T_McZDJ5wPtvFqcvBS=Qp2w@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] Add a new LSM-supporting anonymous inode interface
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Kalesh Singh <kaleshsingh@google.com>,
+        Calin Juravle <calin@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Jeffrey Vander Stoep <jeffv@google.com>,
+        kernel-team@android.com, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kristian Evensen <kristian.evensen@gmail.com> writes:
-
-> Hi all,
+On Tue, Sep 1, 2020 at 5:41 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
 >
-> I was able to trigger the same issue as reported by Paul, and came
-> across this patch (+ Daniele's other patch and thread on the libqmi
-> mailing list). Applying Paul's fix solved the problem for me, changing
-> the MTU of the QMI interface now works fine. Thanks a lot to everyone
-> involved!
+> On Wed, Aug 26, 2020 at 11:35:20PM -0700, Lokesh Gidra wrote:
+> > From: Daniel Colascione <dancol@google.com>
+> >
+> > This change adds a new function, anon_inode_getfd_secure, that creates
+> > anonymous-node file with individual non-S_PRIVATE inode to which security
+> > modules can apply policy. Existing callers continue using the original
+> > singleton-inode kind of anonymous-inode file. We can transition anonymous
+> > inode users to the new kind of anonymous inode in individual patches for
+> > the sake of bisection and review.
+> >
+> > The new function accepts an optional context_inode parameter that
+> > callers can use to provide additional contextual information to
+> > security modules for granting/denying permission to create an anon inode
+> > of the same type.
+> >
+> > For example, in case of userfaultfd, the created inode is a
+> > 'logical child' of the context_inode (userfaultfd inode of the
+> > parent process) in the sense that it provides the security context
+> > required during creation of the child process' userfaultfd inode.
+> >
+> > Signed-off-by: Daniel Colascione <dancol@google.com>
+> >
+> > [Fix comment documenting return values of inode_init_security_anon()]
+> > [Add context_inode description in comments to anon_inode_getfd_secure()]
+> > [Remove definition of anon_inode_getfile_secure() as there are no callers]
+> > [Make _anon_inode_getfile() static]
+> > [Use correct error cast in _anon_inode_getfile()]
+> > [Fix error handling in _anon_inode_getfile()]
+> >
+> > Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> > ---
+> >  fs/anon_inodes.c              | 147 +++++++++++++++++++++++++---------
+> >  include/linux/anon_inodes.h   |   8 ++
+> >  include/linux/lsm_hook_defs.h |   2 +
+> >  include/linux/lsm_hooks.h     |   9 +++
+> >  include/linux/security.h      |  10 +++
+> >  security/security.c           |   8 ++
+> >  6 files changed, 144 insertions(+), 40 deletions(-)
+> >
+> > diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> > index 89714308c25b..c3f16deda211 100644
+> > --- a/fs/anon_inodes.c
+> > +++ b/fs/anon_inodes.c
+> > @@ -55,61 +55,79 @@ static struct file_system_type anon_inode_fs_type = {
+> >       .kill_sb        = kill_anon_super,
+> >  };
+> >
+> > -/**
+> > - * anon_inode_getfile - creates a new file instance by hooking it up to an
+> > - *                      anonymous inode, and a dentry that describe the "class"
+> > - *                      of the file
+> > - *
+> > - * @name:    [in]    name of the "class" of the new file
+> > - * @fops:    [in]    file operations for the new file
+> > - * @priv:    [in]    private data for the new file (will be file's private_data)
+> > - * @flags:   [in]    flags
+> > - *
+> > - * Creates a new file by hooking it on a single inode. This is useful for files
+> > - * that do not need to have a full-fledged inode in order to operate correctly.
+> > - * All the files created with anon_inode_getfile() will share a single inode,
+> > - * hence saving memory and avoiding code duplication for the file/inode/dentry
+> > - * setup.  Returns the newly created file* or an error pointer.
+> > - */
+> > -struct file *anon_inode_getfile(const char *name,
+> > -                             const struct file_operations *fops,
+> > -                             void *priv, int flags)
+> > +static struct inode *anon_inode_make_secure_inode(
+> > +     const char *name,
+> > +     const struct inode *context_inode)
+> >  {
+> > -     struct file *file;
+> > +     struct inode *inode;
+> > +     const struct qstr qname = QSTR_INIT(name, strlen(name));
+> > +     int error;
+> > +
+> > +     inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+> > +     if (IS_ERR(inode))
+> > +             return inode;
+> > +     inode->i_flags &= ~S_PRIVATE;
+> > +     error = security_inode_init_security_anon(inode, &qname, context_inode);
+> > +     if (error) {
+> > +             iput(inode);
+> > +             return ERR_PTR(error);
+> > +     }
+> > +     return inode;
+> > +}
 >
-> I just have one question, is there a specific reason for the patch not
-> being resubmitted or Daniele's work not resumed? I do not use any of
-> the aggregation-stuff, so I don't know how that is affected by for
-> example Paul's change. If there is anything I can do to help, please
-> let me know.
+> Hey,
+>
+> Iiuc, this makes each newly created anon inode fd correspond to a unique
+> file and to a unique inode:
+>
+> fd1 -> file1 -> inode1
+> fd2 -> file2 -> inode2
+>
+Not every anon inode. Just the ones created through
+anon_inode_getfd_secure() API.
 
-Thanks for bringing this back into our collective memory.  The patch
-never made it to patchwork, probably due to the formatting issues, and
-was just forgotten.
+> Whereas before we had every anon inode fd correspond to a unique file
+> but all files map to the _same_ inode:
+>
+> fd1 -> file1 -> inode
+> fd2 -> file2 -> inode
+>
+Thils is still the case if anon_inode_getfile() and/or
+anon_inode_getfd() APIs are used.
 
-There are no other reasons than Daniele's concerns in the email you are
-replying to, AFAIK.  The issue pointed out by Paull should be fixed, but
-the fix must not break aggregation..
+> The old behavior of hooking up a each anon inode fd to the same inode
+> prevented having an evict method attached to the inode. Because it was
+> shared that wasn't possible but also simply because that inode never got
+> evicted anyway. That surely was intended but it's a bummer to some
+> extent.
+> With the new model you also can't have an evict method because now you
+> have a separate inode for each file.
+>
+> I'm probably going to get killed for suggesting this but:
+> If we're going to expand the anonymous inode infrastructure anyway is
+> there a way we can make it so that we have a way to allocate a single
+> inode for multiple anonymous inode fds and have callers opt-in to this
+> behavior. We'd need a way to find this inode again, obviously.
+>
+> This would allow for some features on top of anonymous inode fds that
+> can refer to the same object, i.e. anonymous inode fds that currently
+> stash away the same object in f->private_data.
+> In such a model we could allow such anonymous inode fds to stash away
+> objects in inode->i_private instead of f->private_data and attach an
+> evict method to it. This would e.g. allow a process to be killed when
+> the last pidfd to it is closed or a seccomp notifier fd to notify when
+> the filter is released without having to do separate reference counting.
+>
+I didn't fully understand the example you gave and the role that evict
+method will play in it. Can you please elaborate a bit more.
 
-This is a great opportunity for you to play with QMAP aggregation :-)
-Wouldn't it be good to do some measurements to document why it is such a
-bad idea?
+But, I'd like to point you to a previous discussion between Daniel
+Colascione (the original contributor of this patch series) and Stephan
+Smalley on the topic of inodes
+https://lore.kernel.org/lkml/CAKOZuesUVSYJ6EjHFL3QyiWKVmyhm1fLp5Bm_SHjB3_s1gn08A@mail.gmail.com/
 
+I agree with Daniel (see his replies in the thread link above) that a
+separate inode per anon inode fd keeps the design simple, particularly
+from the security context perspective.
 
-Bj=C3=B8rn
-
+> This would need a way to lookup that inode by the object that is stashed
+> away in it of course which could probably be done by an idr or an
+> xarray or something cleverer. It would obviously only affect a subset of
+> anonymous inode fds so any other anonymous inode fds wouldn't be
+> impacted since they can still use the single-anon-inode interface.
+>
+> Christian
