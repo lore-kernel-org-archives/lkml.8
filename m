@@ -5,49 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B870C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF33C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2299A207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3E82208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498163;
-	bh=SiZDO8TJseYfG8EFYanRKu4nC+XeQyvtHXeky5PXjSw=;
+	s=default; t=1599498176;
+	bh=cKkhVZVcMcX9KzrcnCMkq38mF8puxm9XVcCbDDzK8Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m8vwmkr2WtNMLcdoWrjMz429LdqPL7qOI0rd+i/bvnMZ2XJsuPKqGNcneq7RyN58+
-	 efyzPF5KraAVRRg0ENShpbbJiiXGxv2i37yrKxzHwoQojVbQ4vQlKlGRIKH9xbSD8I
-	 C1+FXLS9fHFp+CrQjwPLBPhoYiZsy6xNZzQplnIc=
+	b=Oc1pDaflZCZBO05QUQBLfOjQ5ACQUB8h3V4n0ghPni3ZB3RlM52QqrfhG05L+kU5p
+	 +7NGp8EX5HloX3pztsl0H69+WosVQ4PjiA54CR/yeNgitLWqY3ksYdj9Kibms9NVjT
+	 Z6xtOFqt+En3vmfpNKs07YSIqIqToXXbMao3ctN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbgIGRCl (ORCPT
+        id S1730980AbgIGRCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:02:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730458AbgIGQd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:28 -0400
+        id S1730681AbgIGQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF8F21974;
-        Mon,  7 Sep 2020 16:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 443A621941;
+        Mon,  7 Sep 2020 16:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496408;
-        bh=SiZDO8TJseYfG8EFYanRKu4nC+XeQyvtHXeky5PXjSw=;
+        s=default; t=1599496405;
+        bh=cKkhVZVcMcX9KzrcnCMkq38mF8puxm9XVcCbDDzK8Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrDtGH3deN5zKtzIAddIZ/n+M2Fmft7X1w4DAimRmOeuywTVoc5OtqFJ5gJhfxbq7
-         uTvkZm0PnrW6GYmpZj5kGoolzekdh/Qj3PWzKQ+a6D6EeyZZ1jfi7px3c+yik9QYtN
-         TdDIsgpzx0mODzvA483nfit/8IqwGZyNENTY4vGA=
+        b=kii9zdSEBVgF/F/Vwt4FEb/8REJzyL5l694rFqOk+jaZJmrKkuk8rl9DrOf/m1gYy
+         L75pVoM60W7jYCT89AViNrykzPNROVj6B9HObmzAJ6KQer/BbzPVaWiebLQxcdUGXm
+         5CU01kh/Q8/p16/31Kf+bqA9CgHksvHIvBpEL7iE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 53/53] gcov: Disable gcov build with GCC 10
-Date:   Mon,  7 Sep 2020 12:32:19 -0400
-Message-Id: <20200907163220.1280412-53-sashal@kernel.org>
+Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
+        iommu@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 5.8 51/53] iommu/amd: Do not force direct mapping when SME is active
+Date:   Mon,  7 Sep 2020 12:32:17 -0400
+Message-Id: <20200907163220.1280412-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -60,39 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
+[ Upstream commit 7cad554887f1c5fd77e57e6bf4be38370c2160cb ]
 
-GCOV built with GCC 10 doesn't initialize n_function variable.  This
-produces different kernel panics as was seen by Colin in Ubuntu and me
-in FC 32.
+Do not force devices supporting IOMMUv2 to be direct mapped when memory
+encryption is active. This might cause them to be unusable because their
+DMA mask does not include the encryption bit.
 
-As a workaround, let's disable GCOV build for broken GCC 10 version.
-
-Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
-Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
-Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Link: https://lore.kernel.org/r/20200824105415.21000-2-joro@8bytes.org
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/gcov/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/iommu/amd/iommu.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 3110c77230c7f..bb4b680e8455a 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -4,6 +4,7 @@ menu "GCOV-based kernel profiling"
- config GCOV_KERNEL
- 	bool "Enable gcov-based kernel profiling"
- 	depends on DEBUG_FS
-+	depends on !CC_IS_GCC || GCC_VERSION < 100000
- 	select CONSTRUCTORS if !UML
- 	default n
- 	help
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index 2f22326ee4dfe..547b41e376574 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -2650,7 +2650,12 @@ static int amd_iommu_def_domain_type(struct device *dev)
+ 	if (!dev_data)
+ 		return 0;
+ 
+-	if (dev_data->iommu_v2)
++	/*
++	 * Do not identity map IOMMUv2 capable devices when memory encryption is
++	 * active, because some of those devices (AMD GPUs) don't have the
++	 * encryption bit in their DMA-mask and require remapping.
++	 */
++	if (!mem_encrypt_active() && dev_data->iommu_v2)
+ 		return IOMMU_DOMAIN_IDENTITY;
+ 
+ 	return 0;
 -- 
 2.25.1
 
