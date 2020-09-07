@@ -2,93 +2,120 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE11C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4876DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8B9321481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599486798;
-	bh=PWtmn+Z9RrLCbibZwYxdj5VdBnfGeAWKO2SOBBWHdOs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XTXURHCyaijACHE5tUgHdUhORwvVME4bURF0RV5XiiSiB2uznhn2vGKVfKXKAmifM
-	 BYUQf/OneqY1STP1twzR3b+hD9HFsM/khdbgzb8ktGJ+ZozfAK8Y2ab2jcR3ne1Dpo
-	 wn9U2GLC4RJYCTi+muRhTY5x0jo+DZB2X1yEoNWg=
+	by mail.kernel.org (Postfix) with ESMTP id 0ED5A21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:55:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Z4pE4+0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729603AbgIGNu6 (ORCPT
+        id S1729721AbgIGNzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:50:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgIGNp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:45:29 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21F7920757;
-        Mon,  7 Sep 2020 13:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599485750;
-        bh=PWtmn+Z9RrLCbibZwYxdj5VdBnfGeAWKO2SOBBWHdOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UARSrkQBalFJiyuplZd86WZgcGkPGkHh4W5UB3z6sPDs/iucB9oO+xQADt4eocjHx
-         a/hL0/+MUz5WolqcV42GXojvatVRW78Ddr5uHibtCwV4KY+/0ANcxtSt5i675YoajP
-         kCiipNsHVLex8nVpM+VaHz/nDMFGtmygwkSiWfkA=
-Date:   Mon, 7 Sep 2020 15:36:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Denis Efremov <efremov@linux.com>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] sysfs: Add sysfs_emit and sysfs_emit_at to format
- sysfs output
-Message-ID: <20200907133604.GA2779041@kroah.com>
-References: <a9054fb521e65f2809671fa9c18e2453061e9d91.1598744610.git.joe@perches.com>
- <c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com>
+        Mon, 7 Sep 2020 09:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729694AbgIGNsF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:48:05 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EA9C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:48:04 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id e5so9811656qth.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:48:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RpRB6iljb2M31wwzZybgy6AB4+l8J65CnWPoS2cjpPY=;
+        b=Z4pE4+0zsGUqaenaa9Sotx3GjcxpCYEKHj5+k2JcptyuVQQuV4lpcx9TiwEJjrDsuu
+         wFVJKo4XIWj01ZJfOQNxvUYP5rPBkQJZIgIdWkznFKvhYMNihLKn/LHPZ4SgUpAno2fA
+         Uv0HZNF0qpkPRjerw+6nwTPRDLba7k+jViBz+ERSCn5hfvfGMkWsHdmLrEt2nqE+Sb9H
+         vbCHqrrABx3w3RziRDbF2r3dIosDXjRSbR1JdXhb1TOEULn1+kobjk/xXQbYLcyd+yxt
+         3aOjDrbwMv7qkcZEoz8KMnvHyGWS2dVsKwnzAdyoHuZobi0D7ShbOzEyQDI/STgCpSiU
+         yakg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RpRB6iljb2M31wwzZybgy6AB4+l8J65CnWPoS2cjpPY=;
+        b=TVxui0c5tITI2viP9o/fs3QivXPM0hAsGiRodDsBMhnTfHgOEcOX17dD/vd268qbXo
+         UPi/Ilz7DZ4vb5YbOcLsv5dVPq20PRnAKIX0BhCDhOZLOBApY71XJY4BlPo9/nlNfgef
+         Mtmj51cxfQ6GzZr5Wn0UFA/G2dAyWSfPK7lqQu1+Gf2FyHd3TATu2xJ5R0C+S5pcpZn9
+         KiD4/4ZY6bmjl/8zJlLHyyH5RTonwNlUnl4BTI0A77muOnmiiGUAN2AZWyp7brD2QOA2
+         fJoTT9B1BOa6VGGxM96gw1s5gv2ZTzjJGC/AsX6tGUe7gk2uRp7Thuu1IZR8woDe5RLZ
+         Rr4Q==
+X-Gm-Message-State: AOAM532ziPoQYlFE9om4kUkuqfvnlPlip2yQzyGK6sEiO5la4mXzSBAd
+        4w+364M7mfAaxttYnicjg2EjZNeLOqC5PQVvBNY=
+X-Google-Smtp-Source: ABdhPJyxkTrirT9I13DtZi1g3rHs4BUopE1qzFqaeXf+do879hoQZ6UGYPDN/a/4a8gotkwuRtVB/Q==
+X-Received: by 2002:ac8:1c43:: with SMTP id j3mr20742825qtk.302.1599486481577;
+        Mon, 07 Sep 2020 06:48:01 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id r34sm12164513qtr.18.2020.09.07.06.48.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 06:48:01 -0700 (PDT)
+Subject: Re: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200901003300.11985-1-jonathan@marek.ca>
+ <fa436d55-b986-944f-e90f-b81cb32eeb0e@linaro.org>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <3f1f8ff1-cf23-ae2c-4cff-cdcce0b11e2e@marek.ca>
+Date:   Mon, 7 Sep 2020 09:47:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c22b7006813b1776467a72e716a5970e9277b4b7.camel@perches.com>
+In-Reply-To: <fa436d55-b986-944f-e90f-b81cb32eeb0e@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 05:43:58PM -0700, Joe Perches wrote:
-> On Sat, 2020-08-29 at 16:48 -0700, Joe Perches wrote:
-> > Output defects can exist in sysfs content using sprintf and snprintf.
-> > 
-> > sprintf does not know the PAGE_SIZE maximum of the temporary buffer
-> > used for outputting sysfs content and it's possible to overrun the
-> > PAGE_SIZE buffer length.
-> > 
-> > Add a generic sysfs_emit function that knows that the size of the
-> > temporary buffer and ensures that no overrun is done.
-> > 
-> > Add a generic sysfs_emit_at function that can be used in multiple
-> > call situations that also ensures that no overrun is done.
+On 9/7/20 8:36 AM, Srinivas Kandagatla wrote:
 > 
-> This preliminary coccinelle script converts ~5000 instances treewide.
-> There are still many remaining instances that could be converted.
 > 
-> $ git grep -w sysfs_emit -- '*.[ch]'|wc -l
-> 4702
-> $ git grep -w sysfs_emit_at -- '*.[ch]'|wc -l
-> 229
+> On 01/09/2020 01:32, Jonathan Marek wrote:
+>> -#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct 
+>> fastrpc_req_mmap)
+>> -#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct 
+>> fastrpc_req_munmap)
+>> +#define FASTRPC_IOCTL_MMAP        _IOWR('R', 6, struct fastrpc_req_mmap)
+>> +#define FASTRPC_IOCTL_MUNMAP        _IOWR('R', 7, struct 
+>> fastrpc_req_munmap)
+> 
+> Looks like changes that do not belong to this patch!
+> 
+> I wanted to try this patch on SM8250.
+> How do you test attaching fastrpc to sensor core?, I mean which 
+> userspace lib/tool do you use?
+> 
+> --srini
+> 
 
-Can you send a patch that would at least convert the driver core code
-(drivers/base/*) to use these new helpers so we have an in-tree user
-when applying the first patch?
+I pushed my sdsprpcd implementation to github, which is responsible for 
+initializing the sensors, and uses this ioctl:
 
-thanks,
+https://github.com/flto/fastrpc
 
-greg k-h
+Note: it uses my own WIP fastrpc "library" instead of the one from 
+linaro, I also have other related code, like a sensor client, and 
+cDSP/aDSP compute examples, but need to confirm that I can share them
+
+Also, the corresponding dts patch I sent has a problem, the label = 
+"dsps"; should be label = "sdsp"; (copied the "dsps" from downstream, 
+but upstream expects "sdsp"), will send a v2 later today.
+
+>> +#define FASTRPC_IOCTL_INIT_ATTACH_SNS    _IO('R', 8)
