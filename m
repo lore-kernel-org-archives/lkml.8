@@ -2,168 +2,133 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90324C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836D3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8EC2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4972080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hEXKQqhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgIGRWH (ORCPT
+        id S1729831AbgIGRWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:22:07 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53352 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729678AbgIGNrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:47:37 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 37044B73E2F5FB36280A;
-        Mon,  7 Sep 2020 21:47:04 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 21:46:55 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
-        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
-        <bhsharma@redhat.com>
-CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <wangkefeng.wang@huawei.com>, <chenzhou10@huawei.com>
-Subject: [PATCH v12 9/9] kdump: update Documentation about crashkernel
-Date:   Mon, 7 Sep 2020 21:47:45 +0800
-Message-ID: <20200907134745.25732-10-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
+        Mon, 7 Sep 2020 13:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36582 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbgIGNrX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:47:23 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74A5C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:37:24 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id w8so12526710ilj.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PZpEmEr02MkgLosT7vPqFBX5vy+59cEEz8jZk2wlsPE=;
+        b=hEXKQqhJ9NmSx4YCpKMr1NwW45bcnwzOkhMBL8DjeyYLJm78qmx6PfgWclUzVWmb2h
+         fxaV6Sz2P9KxPrZSNITJVINtrvSAgSVSURAAgX1ASuRkdCqb7E91FrXanXeSPkc3ujAX
+         +FFNNl0haD5QGCZw+GF/SsD6+N2HO6LCjCJF+VFuY1mxeUJW36pdkCIztgxwx60mVlQc
+         yje66pdfUrcr4zkkHKkQoPkqLGdiP14j1niS7UWlfzNhCz3KJsftBXf8hOEiYD7uSXY9
+         mrAxej+Mmxa5Rq3IupJGnTLeDACHso2O2gLPL+GCXy5RjeQSrH+CAHW5xCBbD046Gi6G
+         Fe4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PZpEmEr02MkgLosT7vPqFBX5vy+59cEEz8jZk2wlsPE=;
+        b=Uqbrezxc6554nh9TqHtz9+atQ8Be9LxDJ7pucDQPXCa7/iJzye3eCQMbQlwMtr6JJV
+         3ef6UNcEpl8Xn4yZ5dz/WJDRFzzlug/6agl2wDjJgjkIW/OwpoUHajC/QrheHOICh44B
+         URr9qOPM6G8QAMKjbRoXbeQM++ZsntF2hEQ/ekuLTTVUyOcDLjeD3YzluBMIyuBtMfli
+         QDc0zbFpZuOiIc5VkOcxKLMo6Ffah3mES7FI3/uLllp9/ATuA3h514QELAUM3TPOGYun
+         b3YAoZPsgMEf6h5gn7+Te5xqY2bGnqDOodc39/hLKGdjQwQIElwcTAt49zw7GRgbqUrP
+         7C/A==
+X-Gm-Message-State: AOAM533Po9lwqcxmsCqlTWPfChV+sFVAWV4op5mM6wVlioQqYajwf5qB
+        sYdE0FXf5QF3VfW4rKnZZ8BUoMV04xvVI8XNaYeX8g==
+X-Google-Smtp-Source: ABdhPJyBenIIH2d8wv7qBpX9DpeJamhA8s78sQ62WqhL82+W2hjTg5gPuJzXToQlghF4RNr5s/7pUi3tIrgzsCAuZGI=
+X-Received: by 2002:a05:6e02:c26:: with SMTP id q6mr19152124ilg.235.1599485843333;
+ Mon, 07 Sep 2020 06:37:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <1597644455-8216-1-git-send-email-jiaxin.yu@mediatek.com>
+ <1597644455-8216-3-git-send-email-jiaxin.yu@mediatek.com> <CA+Px+wXSbGLb+AZnF8ETRycRUVjqk4xacm5DH6MzuMw0vh6Wzg@mail.gmail.com>
+ <CA+Px+wUMXoSL6w0wBduE7obJRWgCteeT8=_=U=8LR34JKTTGZA@mail.gmail.com>
+ <20200819103730.GB5441@sirena.org.uk> <CA+Px+wUV89KO8JJd3+HpOrgFRSc7sdg-DBW44C31262Qx9NzVg@mail.gmail.com>
+ <20200819194005.GC38371@sirena.org.uk>
+In-Reply-To: <20200819194005.GC38371@sirena.org.uk>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Mon, 7 Sep 2020 21:37:12 +0800
+Message-ID: <CA+Px+wWMH6iUzFq0g4BFC5qA993r9UBobmNAyS2ie+xDwci-yg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] dt-bindings: mediatek: mt6359: add codec document
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Jiaxin Yu <jiaxin.yu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ALSA development <alsa-devel@alsa-project.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, howie.huang@mediatek.com,
+        eason.yen@mediatek.com, shane.chien@mediatek.com,
+        bicycle.tsai@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For arm64, the behavior of crashkernel=X has been changed, which
-tries low allocation in DMA zone, and fall back to high allocation
-if it fails.
-We can also use "crashkernel=X,high" to select a high region above
-DMA zone, which also tries to allocate at least 256M low memory in
-DMA zone automatically.
-"crashkernel=Y,low" can be used to allocate specified size low memory
-in DMA zone.
-For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
+On Thu, Aug 20, 2020 at 3:40 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Wed, Aug 19, 2020 at 11:42:27PM +0800, Tzung-Bi Shih wrote:
+>
+> > But I found struct mfd_cell also contains member .of_compatible.  What
+> > is the difference if we use compatible string (as is) for this device
+> > instead of falling back to use device name to match?
+>
+> That's for binding the MFD subdevice to an OF node, you don't need to do
+> that for a device like this - you can just use the of_node of the parent
+> to get at the properties.
 
-For x86 and arm64, we introduce threshold for the required memory.
-if required size X is too large and leads to very little free low
-memory after low allocation, the system may not work well.
-So add a threshold and go for high allocation directly if the required
-size is too large. The threshold is set as the half of low memory.
+There is an issue we overlooked.  In sound/soc/codecs/mt6359.c,
+mt6359_parse_dt() cannot read the DT properties
+(https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/tree/sound/soc/codecs/mt6359.c?h=for-next#n2640).
 
-So update the Documentation.
+The original DTS is as following:
+pmic {
+  compatible = "mediatek,mt6359";
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- Documentation/admin-guide/kdump/kdump.rst     | 25 ++++++++++++++++---
- .../admin-guide/kernel-parameters.txt         | 13 ++++++++--
- 2 files changed, 33 insertions(+), 5 deletions(-)
+  mt6359codec: mt6359codec {
+    compatible = "mediatek,mt6359-sound";  (1)
+    mediatek,dmic-mode = <1>;
+    mediatek,mic-type-0 = <2>;
+  }
+}
+After removing the line at (1), mt6359_parse_dt() cannot read the DT properties.
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 2da65fef2a1c..549611abc581 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -299,7 +299,16 @@ Boot into System Kernel
-    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
-    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
- 
--   On x86 and x86_64, use "crashkernel=64M@16M".
-+   On x86 use "crashkernel=64M@16M".
-+
-+   On x86_64, use "crashkernel=X" to select a region under 4G first, and
-+   fall back to reserve region above 4G. And go for high allocation
-+   directly if the required size is too large.
-+   We can also use "crashkernel=X,high" to select a region above 4G, which
-+   also tries to allocate at least 256M below 4G automatically and
-+   "crashkernel=Y,low" can be used to allocate specified size low memory.
-+   Use "crashkernel=Y@X" if you really have to reserve memory from specified
-+   start address X.
- 
-    On ppc64, use "crashkernel=128M@32M".
- 
-@@ -316,8 +325,18 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
--   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
--   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-+   On arm64, use "crashkernel=X" to try low allocation in DMA zone, and
-+   fall back to high allocation if it fails. And go for high allocation
-+   directly if the required size is too large.
-+   We can also use "crashkernel=X,high" to select a high region above
-+   DMA zone, which also tries to allocate at least 256M low memory in
-+   DMA zone automatically.
-+   "crashkernel=Y,low" can be used to allocate specified size low memory
-+   in DMA zone.
-+   For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
-+   Use "crashkernel=Y@X" if you really have to reserve memory from
-+   specified start address X. Note that the start address of the kernel,
-+   X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a1068742a6df..f7df572d8f64 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -727,6 +727,10 @@
- 			[KNL, X86-64] Select a region under 4G first, and
- 			fall back to reserve region above 4G when '@offset'
- 			hasn't been specified.
-+			[KNL, arm64] Try low allocation in DMA zone, fall back
-+			to high allocation if it fails when '@offset' hasn't been
-+			specified. For non-RPi4 platforms, change DMA zone to
-+			DMA32 zone.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
-@@ -743,6 +747,8 @@
- 			Otherwise memory region will be allocated below 4G, if
- 			available.
- 			It will be ignored if crashkernel=X is specified.
-+			[KNL, arm64] range in high memory.
-+			Allow kernel to allocate physical memory region from top.
- 	crashkernel=size[KMG],low
- 			[KNL, X86-64] range under 4G. When crashkernel=X,high
- 			is passed, kernel could allocate physical memory region
-@@ -751,13 +757,16 @@
- 			requires at least 64M+32K low memory, also enough extra
- 			low memory is needed to make sure DMA buffers for 32-bit
- 			devices won't run out. Kernel would try to allocate at
--			at least 256M below 4G automatically.
-+			least 256M below 4G automatically.
- 			This one let user to specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
--
-+			[KNL, arm64] range in low memory.
-+			This one let user to specify a low range in DMA zone for
-+			crash dump kernel. For non-RPi4 platforms, change DMA zone
-+			to DMA32 zone.
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
- 
--- 
-2.20.1
+The PMIC drivers/mfd/mt6397-core.c:
+- "mediatek,mt6359"
+- has the struct mfd_cell of mt6359-sound
+- adds all mfd_cells via devm_mfd_add_devices().
 
+The audio codec sound/soc/codecs/mt6359.c:
+- "mediatek,mt6359-sound"
+
+
+Here are a few options we can come out with.
+1. adds back the compatible string in the DTS
+2. gets of_node of parent in mt6359.c, and iterates all children nodes
+to get the desired properties
+3. parses all children nodes in the PMIC driver, and put them into
+either platform_data or device properties
+(https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/tree/include/linux/mfd/core.h?h=for-next#n77)
+- The PMIC is common for several sub-devices.  It makes less sense to
+handle subdevice specific logic in the common code.
+4. others
+
+Could you share with us what would you suggest for fixing the issue?
