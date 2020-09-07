@@ -2,133 +2,187 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927E7C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE71F215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:22:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PWxlkKxN"
+	by mail.kernel.org (Postfix) with ESMTP id 54683215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599517424;
+	bh=Pao4NsJGj158+INc442LutV3UkAUffpThetfSRwJlm8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jKrk1p3C9lflrMCJW0VYpAlyVwCZiQ7aeZ6Gr4MIPLrW3T4IaJOeja4t0yZbT5qJe
+	 VZnBdTn+5GMTkpqN1Yn8kJ3ME4hXVhEtjn7Jvpct1oahors359tUDC1vWlkE1W0F2k
+	 tfB8TWIdjz0m7L41WHIY8TMFnTKqJaoHzDVrhxbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgIGWWj (ORCPT
+        id S1728056AbgIGWXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:22:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35038 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726938AbgIGWWg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:22:36 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087M2P64119530;
-        Mon, 7 Sep 2020 18:22:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=pp1;
- bh=BKqn82UHhNA5lY4QEpaNef4h2jnXBhjIPPiSrCQfmcY=;
- b=PWxlkKxNujSnpkkcIN7bj2u8K5bbsowcRTIdj5OzOWZHYAEBXytTkH5qz433DKCog+10
- hdtrdtKkpHpPOuYFmg5wQmKRUi+zdDXWo9Buo371gACiX0YDAIPK72QB2fljD6Px8Cu2
- 6EHscGJIdbK9+AwHr8VL658ie4HzIQ8PkqRGSYQ7gUXFKW3vV/EeLumhA+W7hNnvo9jn
- OSYOkh5vwnnoWl4p7uaq5X8zbqiBkM51c9lOgdRg2xavglPTuCN+vXlEXYf6BFyt4mPS
- 0SLx354GpV3CBT3yHMUj37tnCfwO36PNsVaFPny2Hx7ar8RnsgrIdOJRqLk6UMFkNrXt Sg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33du2pb43v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:22:25 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 087M2QPx119576;
-        Mon, 7 Sep 2020 18:22:24 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33du2pb43k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:22:24 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 087MMNsF031057;
-        Mon, 7 Sep 2020 22:22:23 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 33cyq51hn5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 22:22:22 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 087MMKhK33816896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 22:22:20 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E7F5A4051;
-        Mon,  7 Sep 2020 22:22:20 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68E18A4053;
-        Mon,  7 Sep 2020 22:22:19 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.173.93])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Sep 2020 22:22:19 +0000 (GMT)
-Date:   Tue, 8 Sep 2020 00:22:12 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
-        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v11 1/2] virtio: let arch advertise guest's memory
- access restrictions
-Message-ID: <20200908002212.462303b4.pasic@linux.ibm.com>
-In-Reply-To: <1599471547-28631-2-git-send-email-pmorel@linux.ibm.com>
-References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
-        <1599471547-28631-2-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Mon, 7 Sep 2020 18:23:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727103AbgIGWXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:23:41 -0400
+Received: from sol.localdomain (172-10-235-113.lightspeed.sntcca.sbcglobal.net [172.10.235.113])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C2F4215A4;
+        Mon,  7 Sep 2020 22:23:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599517420;
+        bh=Pao4NsJGj158+INc442LutV3UkAUffpThetfSRwJlm8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GOjvICHaaE1GyrJlCxMfbMuPlPP46n6ugcwDfu/sCesso3O2kYDTCKLE5GjgAG1K1
+         G205SVk3bVh1QKiQRi3yOTrBuyAuzbdBHvcj7xqbCbFYWg5PTqxGTwQ4aRbQV2YfuP
+         0qhk2GV32r+L3xdL/iEYhrUXiUB6acvpVr/gYVSQ=
+Date:   Mon, 7 Sep 2020 15:23:38 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fscrypt: Reduce object size of logging messages
+Message-ID: <20200907222338.GA68127@sol.localdomain>
+References: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
+ <20200904230341.GA6172@sol.localdomain>
+ <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- clxscore=1011 priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 mlxlogscore=977 mlxscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009070207
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 11:39:06 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> An architecture may restrict host access to guest memory,
-> e.g. IBM s390 Secure Execution or AMD SEV.
+On Fri, Sep 04, 2020 at 09:38:23PM -0700, Joe Perches wrote:
+> > > diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+> > > index 9212325763b0..c82cc3907e43 100644
+> > > --- a/fs/crypto/crypto.c
+> > > +++ b/fs/crypto/crypto.c
+> > > @@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
+> > >  	return err;
+> > >  }
+> > >  
+> > > -void fscrypt_msg(const struct inode *inode, const char *level,
+> > > -		 const char *fmt, ...)
+> > > +void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
+> > >  {
+> > >  	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
+> > >  				      DEFAULT_RATELIMIT_BURST);
+> > >  	struct va_format vaf;
+> > >  	va_list args;
+> > > +	int level;
+> > >  
+> > >  	if (!__ratelimit(&rs))
+> > >  		return;
+> > >  
+> > >  	va_start(args, fmt);
+> > > -	vaf.fmt = fmt;
+> > > +	level = printk_get_level(fmt);
+> > > +	vaf.fmt = printk_skip_level(fmt);
+> > >  	vaf.va = &args;
+> > >  	if (inode)
+> > > -		printk("%sfscrypt (%s, inode %lu): %pV\n",
+> > > -		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
+> > > +		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
+> > > +		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
+> > > +		       &vaf);
+> > >  	else
+> > > -		printk("%sfscrypt: %pV\n", level, &vaf);
+> > > +		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
+> > >  	va_end(args);
+> > 
+> > The problem with this approach is that if fscrypt_printk() is called without
+> > providing a log level in the format string (which one would assume would work,
+> > since printk() allows it), then the real format string will be truncated to just
+> > KERN_SOH because 'level' will be 0.
+> > Can you find a way to avoid that?
 > 
-> Provide a new Kconfig entry the architecture can select,
-> CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, when it provides
-> the arch_has_restricted_virtio_memory_access callback to advertise
-> to VIRTIO common code when the architecture restricts memory access
-> from the host.
+> While I don't think this is a problem in that all the fscrypt_<level>
+> calls will always prefix a KERN_<LEVEL>,
+
+It's still a pitfall that people could run into later.  It would be better to
+make fscrypt_printk() work in the expected way.
+
+> what btrfs uses:
 > 
-> The common code can then fail the probe for any device where
-> VIRTIO_F_ACCESS_PLATFORM is required, but not set.
+> 	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
+> ...
+> 	while ((kern_level = printk_get_level(fmt)) != 0) {
+> 		size_t size = printk_skip_level(fmt) - fmt;
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 		if (kern_level >= '0' && kern_level <= '7') {
+> 			memcpy(lvl, fmt,  size);
+> 			lvl[size] = '\0';
+> 		}
+> 		fmt += size;
+> 	}
+> 
+> and use "%s...", lvl, ...
+> 
 
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Is the loop really needed?  How about just:
 
-[..]
->  
-> +config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-> +	bool
-> +	help
-> +	  This option is selected if the architecture may need to enforce
-> +	  VIRTIO_F_IOMMU_PLATFORM.
-> +
+diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
+index 9212325763b0f..c5a87c2fe1020 100644
+--- a/fs/crypto/crypto.c
++++ b/fs/crypto/crypto.c
+@@ -329,11 +329,12 @@ int fscrypt_initialize(unsigned int cop_flags)
+ 	return err;
+ }
+ 
+-void fscrypt_msg(const struct inode *inode, const char *level,
+-		 const char *fmt, ...)
++void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
+ {
+ 	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
+ 				      DEFAULT_RATELIMIT_BURST);
++	const char *raw_fmt = printk_skip_level(fmt);
++	int hdr_len = raw_fmt - fmt;
+ 	struct va_format vaf;
+ 	va_list args;
+ 
+@@ -341,13 +342,13 @@ void fscrypt_msg(const struct inode *inode, const char *level,
+ 		return;
+ 
+ 	va_start(args, fmt);
+-	vaf.fmt = fmt;
++	vaf.fmt = raw_fmt;
+ 	vaf.va = &args;
+ 	if (inode)
+-		printk("%sfscrypt (%s, inode %lu): %pV\n",
+-		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
++		printk("%.*sfscrypt (%s, inode %lu): %pV\n",
++		       hdr_len, fmt, inode->i_sb->s_id, inode->i_ino, &vaf);
+ 	else
+-		printk("%sfscrypt: %pV\n", level, &vaf);
++		printk("%.*sfscrypt: %pV\n", hdr_len, fmt, &vaf);
+ 	va_end(args);
+ }
 
-A small nit: you use F_ACCESS_PLATFORM everywhere but here.
+> 
+> > > -#define fscrypt_warn(inode, fmt, ...)		\
+> > > -	fscrypt_msg((inode), KERN_WARNING, fmt, ##__VA_ARGS__)
+> > > -#define fscrypt_err(inode, fmt, ...)		\
+> > > -	fscrypt_msg((inode), KERN_ERR, fmt, ##__VA_ARGS__)
+> > > +#define fscrypt_err(inode, fmt, ...)					\
+> > > +	fscrypt_printk(inode, KERN_ERR fmt, ##__VA_ARGS__)
+> > > +#define fscrypt_warn(inode, fmt, ...)					\
+> > > +	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
+> > 
+> > It's probably best to keep the parentheses around 'inode'.
+> 
+> Not really as it's an independent argument that can't
+> effectively have any other purpose but to be an argument
+> to the fsrypt_printk function.
 
-Regards,
-Halil
+True, but since forgetting to include parentheses around macro arguments is such
+a common mistake, IMO they should just always be included so that people don't
+have to think about whether the omission is correct or not.
+
+- Eric
