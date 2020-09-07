@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD1AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C45D1C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C92421941
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855BA21927
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496654;
-	bh=DN1QFIiCGUOZpIUU7k3WwUP4VFVGGomKaZtle0ZutOA=;
+	s=default; t=1599496671;
+	bh=aL8L4JPV6nAQVF+hiDzhbM35OeSZuT8Epx32RXWWXkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z1slKxJSbJfRMpiLBKnTP8EUIa8BbueYw3pMoYhzdc2Y3u+bXoZwNxfgxxSJoH/o5
-	 +RNYzbDzLjpQ8v+vjZkexOI0kNqXbvMoyJ+0LF8X1qUe5nf2a/IKoqphavXFaxHvck
-	 FqJjXGxwjXk80P7Q6QIfWCqjfKWNFfbFmFuXTnxM=
+	b=xx5VUoKePC4FOrlMpIiE2cqdHXP20vA6Lg0jmzcx/B/oemfmup35N0Maytezt7+dF
+	 EtUB+jYx+yx3dT0k37F/jsAaSbVp06o9zy1259Ud4xy0pPO/6jl6gsJ7kC+VVkYQot
+	 t9aC6p1vXOSVHllb7INXY2aj9bD7mumtOuM3VGRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgIGQhc (ORCPT
+        id S1730825AbgIGQhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:37:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729827AbgIGQeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:05 -0400
+        id S1730744AbgIGQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA33A21D20;
-        Mon,  7 Sep 2020 16:33:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF28D21D80;
+        Mon,  7 Sep 2020 16:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496436;
-        bh=DN1QFIiCGUOZpIUU7k3WwUP4VFVGGomKaZtle0ZutOA=;
+        s=default; t=1599496450;
+        bh=aL8L4JPV6nAQVF+hiDzhbM35OeSZuT8Epx32RXWWXkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EC6DneCCulBbdQkpcJm+EyuL5M3z4r/8AjFZnUOVquPCQc+71Y6T9ywivth3lLMqB
-         Hr3jkgO3RkwspRPpYPjdQmW1azCKOQ+dFIUGxaNKATUndRuB/RJdTdJmF5nQYWC6Df
-         M57zt3IemngP2Qr23FcDmioacQ6HZYfPRY/9XPUo=
+        b=qIegqkdXRUNIzgsdqt9GXFL9yfIuMK/n4mqKWXt0DaTkU91Sj1ygcoG8Xgmrx5MG9
+         Vnb4dCxbmbAcTasKVnSNumSfu0Xzdg2cPd4NavthsL/NpNa7l10G+WRKPH4a7H2c3S
+         AfW9erpDhoecCFW40Olal3rHlO1tJO0tGRbT1GGc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ziye Yang <ziye.yang@intel.com>, Sagi Grimberg <sagi@grimberg.me>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 20/43] nvmet-tcp: Fix NULL dereference when a connect data comes in h2cdata pdu
-Date:   Mon,  7 Sep 2020 12:33:06 -0400
-Message-Id: <20200907163329.1280888-20-sashal@kernel.org>
+Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
+        Krzysztof Halasa <khc@pm.waw.pl>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/43] drivers/net/wan/hdlc_cisco: Add hard_header_len
+Date:   Mon,  7 Sep 2020 12:33:18 -0400
+Message-Id: <20200907163329.1280888-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -58,57 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ziye Yang <ziye.yang@intel.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit a6ce7d7b4adaebc27ee7e78e5ecc378a1cfc221d ]
+[ Upstream commit 1a545ebe380bf4c1433e3c136e35a77764fda5ad ]
 
-When handling commands without in-capsule data, we assign the ttag
-assuming we already have the queue commands array allocated (based
-on the queue size information in the connect data payload). However
-if the connect itself did not send the connect data in-capsule we
-have yet to allocate the queue commands,and we will assign a bogus
-ttag and suffer a NULL dereference when we receive the corresponding
-h2cdata pdu.
+This driver didn't set hard_header_len. This patch sets hard_header_len
+for it according to its header_ops->create function.
 
-Fix this by checking if we already allocated commands before
-dereferencing it when handling h2cdata, if we didn't, its for sure a
-connect and we should use the preallocated connect command.
+This driver's header_ops->create function (cisco_hard_header) creates
+a header of (struct hdlc_header), so hard_header_len should be set to
+sizeof(struct hdlc_header).
 
-Signed-off-by: Ziye Yang <ziye.yang@intel.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/tcp.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/wan/hdlc_cisco.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
-index 22014e76d7714..e31823f19a0fa 100644
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -150,6 +150,11 @@ static void nvmet_tcp_finish_cmd(struct nvmet_tcp_cmd *cmd);
- static inline u16 nvmet_tcp_cmd_tag(struct nvmet_tcp_queue *queue,
- 		struct nvmet_tcp_cmd *cmd)
- {
-+	if (unlikely(!queue->nr_cmds)) {
-+		/* We didn't allocate cmds yet, send 0xffff */
-+		return USHRT_MAX;
-+	}
-+
- 	return cmd - queue->cmds;
- }
- 
-@@ -847,7 +852,10 @@ static int nvmet_tcp_handle_h2c_data_pdu(struct nvmet_tcp_queue *queue)
- 	struct nvme_tcp_data_pdu *data = &queue->pdu.data;
- 	struct nvmet_tcp_cmd *cmd;
- 
--	cmd = &queue->cmds[data->ttag];
-+	if (likely(queue->nr_cmds))
-+		cmd = &queue->cmds[data->ttag];
-+	else
-+		cmd = &queue->connect;
- 
- 	if (le32_to_cpu(data->data_offset) != cmd->rbytes_done) {
- 		pr_err("ttag %u unexpected data offset %u (expected %u)\n",
+diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
+index a030f5aa6b951..cc33441af4691 100644
+--- a/drivers/net/wan/hdlc_cisco.c
++++ b/drivers/net/wan/hdlc_cisco.c
+@@ -370,6 +370,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 		memcpy(&state(hdlc)->settings, &new_settings, size);
+ 		spin_lock_init(&state(hdlc)->lock);
+ 		dev->header_ops = &cisco_header_ops;
++		dev->hard_header_len = sizeof(struct hdlc_header);
+ 		dev->type = ARPHRD_CISCO;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_on(dev);
 -- 
 2.25.1
 
