@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E76A1C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F8CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2C02067C
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08ED120C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="LElVZFxD"
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="DtKHEcqE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgIGS40 (ORCPT
+        id S1730275AbgIGS4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:56:26 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:39010 "EHLO
+        Mon, 7 Sep 2020 14:56:41 -0400
+Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:53310 "EHLO
         mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729923AbgIGS4K (ORCPT
+        by vger.kernel.org with ESMTP id S1729887AbgIGS4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:56:10 -0400
-Received: from pps.filterd (m0148663.ppops.net [127.0.0.1])
-        by mx0a-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087IriMh016001;
-        Mon, 7 Sep 2020 18:54:34 GMT
+        Mon, 7 Sep 2020 14:56:08 -0400
+Received: from pps.filterd (m0134421.ppops.net [127.0.0.1])
+        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087IoVCc011081;
+        Mon, 7 Sep 2020 18:54:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=message-id : date : from
  : to : cc : subject : references : mime-version : content-type; s=pps0720;
- bh=7k8IOMYoc1gVXN/TSihaTk/xr+vpjX1M0UAUzXmxFys=;
- b=LElVZFxDlhc9UPV8f7/9doJzeSoTI6VTDBXlmBUEMzV6X0gJItLI4NOMBJBO064C53zz
- hoNlGFdnE3kBPXfCJXkfIIa3vz6+NM98vILNdpyyrkN7A9itYr/tHSNfZ5naB2c9cYWG
- WsxT00eTKDaxvvMQL4q9oi2zKtomc8+BAMbLgi0tAFZs1a9IeHqwS8fxdnoJCZCm5IAD
- TYqCEighSqsWYkRcni5TVNybH9MDcDMYoUVXvvf9zffAfLOg/5BRdS02iB1uBK6i1e6u
- GDqIOr8Mr29j1oNGJ4ERkyoe87jIWJQxygfE7OlPLztyS4Z+TgeIY8IRQyscCTQM6aIJ Xg== 
-Received: from g9t5009.houston.hpe.com (g9t5009.houston.hpe.com [15.241.48.73])
-        by mx0a-002e3701.pphosted.com with ESMTP id 33cmj44mxs-1
+ bh=LB8gDcP5xT5vI1DQi4l4ZXWlIg0XZilz2Y2Ki/ifv2Q=;
+ b=DtKHEcqECbLk6WLQAnOD0FzZiGg5VI+uHI5g9lSClYAxCQcPir9wZAt3uk4GzjVSqgnf
+ /QXu8pRcmPgb1FZrC8953FbfPJ4rfDCiXuFEB/dEnHDRWvybvel3ma5p83ExRvML+nCn
+ +FBTSvtg6CvuNx3rMvc9pacrQI2pFMl002fXmCuNikVdspE7ykhWX4peNl8ASzgViByY
+ io1SGep6T/NE7t9oTV6B2ZAumoOX2TFfsKiMO06pNY4M2o0DeyXaFk/wwSP1U+ovckYP
+ Fg2nv+Q07QgMe1wVhuBifAumFpXhDOjFl0QEmicFT98ixXXIZw+064So4+3TickNHWdG yA== 
+Received: from g2t2354.austin.hpe.com (g2t2354.austin.hpe.com [15.233.44.27])
+        by mx0b-002e3701.pphosted.com with ESMTP id 33cm1x4r57-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 18:54:34 +0000
+        Mon, 07 Sep 2020 18:54:32 +0000
 Received: from dog.eag.rdlabs.hpecorp.net (dog.eag.rdlabs.hpecorp.net [128.162.243.181])
-        by g9t5009.houston.hpe.com (Postfix) with ESMTP id F2FD055;
-        Mon,  7 Sep 2020 18:54:32 +0000 (UTC)
+        by g2t2354.austin.hpe.com (Postfix) with ESMTP id 4F331AF;
+        Mon,  7 Sep 2020 18:54:31 +0000 (UTC)
 Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 5508)
-        id 53DBE30060F11; Mon,  7 Sep 2020 13:54:31 -0500 (CDT)
-Message-ID: <20200907185431.257694099@hpe.com>
+        id BC63230060F0B; Mon,  7 Sep 2020 13:54:30 -0500 (CDT)
+Message-ID: <20200907185430.685975987@hpe.com>
 User-Agent: quilt/0.66
-Date:   Mon, 07 Sep 2020 13:54:39 -0500
+Date:   Mon, 07 Sep 2020 13:54:33 -0500
 From:   Mike Travis <mike.travis@hpe.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -64,85 +64,214 @@ Cc:     Dimitri Sivanich <dimitri.sivanich@hpe.com>,
         Jian Cai <caij2003@gmail.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: [PATCH 09/12] x86/platform/uv: Update UV5 MMR references in UV GRU
+Subject: [PATCH 03/12] x86/platform/uv: Adjust references in UV kernel modules
 References: <20200907185430.363197758@hpe.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
 X-HPE-SCL: -1
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 adultscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009070181
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=718
+ bulkscore=0 priorityscore=1501 adultscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009070181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make modifications to the GRU mappings to accommodate changes for UV5.
+There is a symbol clash from the auto-generated uv_mmrs.h file that
+clashes with code in the UV kernel modules (is_uv() is the symbol).
+Change those prior to the symbol clash so as to not cause a compile error.
 
 Signed-off-by: Mike Travis <mike.travis@hpe.com>
 Reviewed-by: Dimitri Sivanich <dimitri.sivanich@hpe.com>
 Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
 ---
- arch/x86/kernel/apic/x2apic_uv_x.c |   30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+ drivers/misc/sgi-xp/xp.h            |   11 ++++++-----
+ drivers/misc/sgi-xp/xp_main.c       |    7 ++++---
+ drivers/misc/sgi-xp/xp_uv.c         |    9 ++++++---
+ drivers/misc/sgi-xp/xpc_main.c      |    9 +++++----
+ drivers/misc/sgi-xp/xpc_partition.c |    5 +++--
+ drivers/misc/sgi-xp/xpnet.c         |    5 +++--
+ 6 files changed, 27 insertions(+), 19 deletions(-)
 
---- linux.orig/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ linux/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -83,6 +83,9 @@ static unsigned long __init uv_early_rea
+--- linux.orig/drivers/misc/sgi-xp/xp.h
++++ linux/drivers/misc/sgi-xp/xp.h
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (C) 2004-2008 Silicon Graphics, Inc. All rights reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
  
- static inline bool is_GRU_range(u64 start, u64 end)
+ /*
+@@ -17,11 +18,11 @@
+ 
+ #if defined CONFIG_X86_UV || defined CONFIG_IA64_SGI_UV
+ #include <asm/uv/uv.h>
+-#define is_uv()		is_uv_system()
++#define is_uv_sys()		is_uv_system()
+ #endif
+ 
+-#ifndef is_uv
+-#define is_uv()		0
++#ifndef is_uv_sys
++#define is_uv_sys()		0
+ #endif
+ 
+ #ifdef USE_DBUG_ON
+@@ -79,7 +80,7 @@
+ 
+ #define XPC_MSG_SIZE(_payload_size) \
+ 				ALIGN(XPC_MSG_HDR_MAX_SIZE + (_payload_size), \
+-				      is_uv() ? 64 : 128)
++				      is_uv_sys() ? 64 : 128)
+ 
+ 
+ /*
+--- linux.orig/drivers/misc/sgi-xp/xp_main.c
++++ linux/drivers/misc/sgi-xp/xp_main.c
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (c) 2004-2008 Silicon Graphics, Inc.  All Rights Reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
+ 
+ /*
+@@ -233,7 +234,7 @@ xp_init(void)
+ 	for (ch_number = 0; ch_number < XPC_MAX_NCHANNELS; ch_number++)
+ 		mutex_init(&xpc_registrations[ch_number].mutex);
+ 
+-	if (is_uv())
++	if (is_uv_sys())
+ 		ret = xp_init_uv();
+ 	else
+ 		ret = 0;
+@@ -249,7 +250,7 @@ module_init(xp_init);
+ void __exit
+ xp_exit(void)
  {
-+	if (!gru_start_paddr)
-+		return false;
-+
- 	return start >= gru_start_paddr && end <= gru_end_paddr;
+-	if (is_uv())
++	if (is_uv_sys())
+ 		xp_exit_uv();
  }
  
-@@ -914,13 +917,24 @@ static __init void map_high(char *id, un
- static __init void map_gru_high(int max_pnode)
+--- linux.orig/drivers/misc/sgi-xp/xp_uv.c
++++ linux/drivers/misc/sgi-xp/xp_uv.c
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (c) 2008 Silicon Graphics, Inc.  All Rights Reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
+ 
+ /*
+@@ -148,7 +149,9 @@ xp_restrict_memprotect_uv(unsigned long
+ enum xp_retval
+ xp_init_uv(void)
  {
- 	union uvh_rh_gam_gru_overlay_config_u gru;
--	int shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
--	unsigned long mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
--	unsigned long base;
-+	unsigned long mask, base;
-+	int shift;
-+
-+	if (UVH_RH_GAM_GRU_OVERLAY_CONFIG) {
-+		gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG);
-+		shift = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
-+		mask = UVH_RH_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
-+	} else if (UVH_RH10_GAM_GRU_OVERLAY_CONFIG) {
-+		gru.v = uv_read_local_mmr(UVH_RH10_GAM_GRU_OVERLAY_CONFIG);
-+		shift = UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_SHFT;
-+		mask = UVH_RH10_GAM_GRU_OVERLAY_CONFIG_BASE_MASK;
-+	} else {
-+		pr_err("UV: GRU unavailable (no MMR)\n");
-+		return;
-+	}
+-	BUG_ON(!is_uv());
++	WARN_ON(!is_uv_sys());
++	if (!is_uv_sys())
++		return xpUnsupported;
  
--	gru.v = uv_read_local_mmr(UVH_RH_GAM_GRU_OVERLAY_CONFIG);
- 	if (!gru.s.enable) {
--		pr_info("UV: GRU disabled\n");
-+		pr_info("UV: GRU disabled (by BIOS)\n");
- 		return;
- 	}
+ 	xp_max_npartitions = XP_MAX_NPARTITIONS_UV;
+ #ifdef CONFIG_X86
+@@ -168,5 +171,5 @@ xp_init_uv(void)
+ void
+ xp_exit_uv(void)
+ {
+-	BUG_ON(!is_uv());
++	WARN_ON(!is_uv_sys());
+ }
+--- linux.orig/drivers/misc/sgi-xp/xpc_main.c
++++ linux/drivers/misc/sgi-xp/xpc_main.c
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (c) 2004-2009 Silicon Graphics, Inc.  All Rights Reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
  
-@@ -1289,7 +1303,11 @@ static void __init uv_init_hub_info(stru
- 	/* Show system specific info: */
- 	pr_info("UV: N:%d M:%d m_shift:%d n_lshift:%d\n", hi->n_val, hi->m_val, hi->m_shift, hi->n_lshift);
- 	pr_info("UV: gpa_mask/shift:0x%lx/%d pnode_mask:0x%x apic_pns:%d\n", hi->gpa_mask, hi->gpa_shift, hi->pnode_mask, hi->apic_pnode_shift);
--	pr_info("UV: mmr_base/shift:0x%lx/%ld gru_base/shift:0x%lx/%ld\n", hi->global_mmr_base, hi->global_mmr_shift, hi->global_gru_base, hi->global_gru_shift);
-+	pr_info("UV: mmr_base/shift:0x%lx/%ld\n", hi->global_mmr_base, hi->global_mmr_shift);
-+	if (hi->global_gru_base)
-+		pr_info("UV: gru_base/shift:0x%lx/%ld\n",
-+			hi->global_gru_base, hi->global_gru_shift);
-+
- 	pr_info("UV: gnode_upper:0x%lx gnode_extra:0x%x\n", hi->gnode_upper, hi->gnode_extra);
+ /*
+@@ -1043,7 +1044,7 @@ xpc_do_exit(enum xp_retval reason)
+ 
+ 	xpc_teardown_partitions();
+ 
+-	if (is_uv())
++	if (is_uv_sys())
+ 		xpc_exit_uv();
  }
  
+@@ -1226,7 +1227,7 @@ xpc_init(void)
+ 	dev_set_name(xpc_part, "part");
+ 	dev_set_name(xpc_chan, "chan");
+ 
+-	if (is_uv()) {
++	if (is_uv_sys()) {
+ 		ret = xpc_init_uv();
+ 
+ 	} else {
+@@ -1312,7 +1313,7 @@ out_2:
+ 
+ 	xpc_teardown_partitions();
+ out_1:
+-	if (is_uv())
++	if (is_uv_sys())
+ 		xpc_exit_uv();
+ 	return ret;
+ }
+--- linux.orig/drivers/misc/sgi-xp/xpc_partition.c
++++ linux/drivers/misc/sgi-xp/xpc_partition.c
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (c) 2004-2008 Silicon Graphics, Inc.  All Rights Reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
+ 
+ /*
+@@ -433,7 +434,7 @@ xpc_discovery(void)
+ 	 */
+ 	region_size = xp_region_size;
+ 
+-	if (is_uv())
++	if (is_uv_sys())
+ 		max_regions = 256;
+ 	else {
+ 		max_regions = 64;
+--- linux.orig/drivers/misc/sgi-xp/xpnet.c
++++ linux/drivers/misc/sgi-xp/xpnet.c
+@@ -3,7 +3,8 @@
+  * License.  See the file "COPYING" in the main directory of this archive
+  * for more details.
+  *
+- * Copyright (C) 1999-2009 Silicon Graphics, Inc. All rights reserved.
++ * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
++ * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+  */
+ 
+ /*
+@@ -515,7 +516,7 @@ xpnet_init(void)
+ {
+ 	int result;
+ 
+-	if (!is_uv())
++	if (!is_uv_sys())
+ 		return -ENODEV;
+ 
+ 	dev_info(xpnet, "registering network device %s\n", XPNET_DEVICE_NAME);
 
