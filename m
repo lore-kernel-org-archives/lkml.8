@@ -2,366 +2,280 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77441C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B25C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D25542080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:20:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iEuCxz9/"
+	by mail.kernel.org (Postfix) with ESMTP id A74D620658
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730606AbgIGRUW (ORCPT
+        id S1730855AbgIGRUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729612AbgIGNxU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:53:20 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB7AC061757
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:53:15 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 37so12330299oto.4
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:53:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ycAA+DdU1xPs+4BPRjymvkLu6X0RXJu9Y30n9A+nhw=;
-        b=iEuCxz9/GZ6l217tQFZNQnUWpR9k7WJUgYHDT3dvu6LGpJUTO3ZHU8XY45NhdzKDQO
-         1fKDlDTQJUBRg69fGPFS9NGm88rxiua5V6kLDIHzvXJQl2XTqcbaxMJ2A3jRMSNE3KpM
-         gljXkMSlOUveuv/7r6jtHMbsJfGshsRGGdmd0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ycAA+DdU1xPs+4BPRjymvkLu6X0RXJu9Y30n9A+nhw=;
-        b=cpgoOR/CKOwGvahWPaKLr4Q3jN1eE2FKBD3YFnHUuVCc1IKd6bhoPOn1xouTZIsEwc
-         MLWXOPZ0Fn82YhM2f4X/GcE2dBf6HazmzQps/YTcYn5ZXQPBWvoF6upvvnbezBAD1Kwu
-         0oGfLMm3zj9I/FNDxEBvJInHS6JZiTKrMlqv1VnQBglKFwCXIx8fUbZ+bAKRmLranecf
-         zO/179q3sq1SAGhbbDXFTHnxcVISxSQQWb3Ok8ZJ+3asknt3qV9ASDnAGDxpDdxnTEpX
-         r2HOG1uS1FjErIDRAD/KzCyTR/Oi9gLkIwyGVP7xLoQYysXs1+0bkSj64fFK1tJGar2l
-         cyQQ==
-X-Gm-Message-State: AOAM530EeaG0IBXfdWiNLUPrRw1HBTkCpF+eMPddUcnpl5+cpXxBt5jW
-        UCNTEVG2oEXGHqYBA2V3DmeKNduD0VJ8DQkDELTqjA==
-X-Google-Smtp-Source: ABdhPJyIa5ADwu1SDw+83jpp18ZhpBHh8/4pkOiQO0+iszF4Hhvn1IVbMUtYG2efgD1SKjDwsO+pmUrMsJOpLEnsVks=
-X-Received: by 2002:a05:6830:14d9:: with SMTP id t25mr14697170otq.188.1599486793337;
- Mon, 07 Sep 2020 06:53:13 -0700 (PDT)
+        Mon, 7 Sep 2020 13:20:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10829 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729670AbgIGNrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:47:40 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A730AA4FFA204FA96CE3;
+        Mon,  7 Sep 2020 21:46:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 7 Sep 2020 21:46:52 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <chenzhou10@huawei.com>
+Subject: [PATCH v12 6/9] arm64: kdump: reimplement crashkernel=X
+Date:   Mon, 7 Sep 2020 21:47:42 +0800
+Message-ID: <20200907134745.25732-7-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-References: <20200907112425.15610-1-kraxel@redhat.com> <20200907112425.15610-2-kraxel@redhat.com>
-In-Reply-To: <20200907112425.15610-2-kraxel@redhat.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Mon, 7 Sep 2020 15:53:02 +0200
-Message-ID: <CAKMK7uGjT73rh=9iuCKAXvC_CaOuygm8PgOQgofkTgH7wRysFw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] drm: allow limiting the scatter list size.
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
-        <etnaviv@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 1:24 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> Add drm_device argument to drm_prime_pages_to_sg(), so we can
-> call dma_max_mapping_size() to figure the segment size limit
-> and call into __sg_alloc_table_from_pages() with the correct
-> limit.
->
-> This fixes virtio-gpu with sev.  Possibly it'll fix other bugs
-> too given that drm seems to totaly ignore segment size limits
-> so far ...
->
-> v2: place max_segment in drm driver not gem object.
-> v3: move max_segment next to the other gem fields.
-> v4: just use dma_max_mapping_size().
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+There are following issues in arm64 kdump:
+1. We use crashkernel=X to reserve crashkernel below 4G, which
+will fail when there is no enough low memory.
+2. If reserving crashkernel above 4G, in this case, crash dump
+kernel will boot failure because there is no low memory available
+for allocation.
+3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
+if the memory reserved for crash dump kernel falled in ZONE_DMA32,
+the devices in crash dump kernel need to use ZONE_DMA will alloc
+fail.
 
-Uh, are you sure this works in all cases for virtio? The comments I've
-found suggest very much not ... Or is that all very old stuff only
-that no one cares about anymore?
--Daniel
+To solve these issues, change the behavior of crashkernel=X and
+introduce crashkernel=X,[high,low].
+crashkernel=X tries low allocation in DMA zone, and fall back to
+high allocation if it fails.
+We can also use "crashkernel=X,high" to select a region above DMA zone,
+which also tries to allocate at least 256M in DMA zone automatically.
+"crashkernel=Y,low" can be used to allocate specified size low memory.
 
-> ---
->  include/drm/drm_prime.h                     |  3 ++-
->  drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c |  3 ++-
->  drivers/gpu/drm/drm_gem_shmem_helper.c      |  2 +-
->  drivers/gpu/drm/drm_prime.c                 | 13 ++++++++++---
->  drivers/gpu/drm/etnaviv/etnaviv_gem.c       |  3 ++-
->  drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c |  2 +-
->  drivers/gpu/drm/msm/msm_gem.c               |  2 +-
->  drivers/gpu/drm/msm/msm_gem_prime.c         |  2 +-
->  drivers/gpu/drm/nouveau/nouveau_prime.c     |  2 +-
->  drivers/gpu/drm/radeon/radeon_prime.c       |  2 +-
->  drivers/gpu/drm/rockchip/rockchip_drm_gem.c |  5 +++--
->  drivers/gpu/drm/tegra/gem.c                 |  2 +-
->  drivers/gpu/drm/vgem/vgem_drv.c             |  2 +-
->  drivers/gpu/drm/xen/xen_drm_front_gem.c     |  3 ++-
->  14 files changed, 29 insertions(+), 17 deletions(-)
->
-> diff --git a/include/drm/drm_prime.h b/include/drm/drm_prime.h
-> index 9af7422b44cf..bf141e74a1c2 100644
-> --- a/include/drm/drm_prime.h
-> +++ b/include/drm/drm_prime.h
-> @@ -88,7 +88,8 @@ void drm_gem_dmabuf_vunmap(struct dma_buf *dma_buf, void *vaddr);
->  int drm_gem_prime_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
->  int drm_gem_dmabuf_mmap(struct dma_buf *dma_buf, struct vm_area_struct *vma);
->
-> -struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages);
-> +struct sg_table *drm_prime_pages_to_sg(struct drm_device *dev,
-> +                                      struct page **pages, unsigned int nr_pages);
->  struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
->                                      int flags);
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> index 519ce4427fce..d7050ab95946 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> @@ -302,7 +302,8 @@ static struct sg_table *amdgpu_dma_buf_map(struct dma_buf_attachment *attach,
->
->         switch (bo->tbo.mem.mem_type) {
->         case TTM_PL_TT:
-> -               sgt = drm_prime_pages_to_sg(bo->tbo.ttm->pages,
-> +               sgt = drm_prime_pages_to_sg(obj->dev,
-> +                                           bo->tbo.ttm->pages,
->                                             bo->tbo.num_pages);
->                 if (IS_ERR(sgt))
->                         return sgt;
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index 4b7cfbac4daa..0a952f27c184 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -656,7 +656,7 @@ struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_object *obj)
->
->         WARN_ON(shmem->base.import_attach);
->
-> -       return drm_prime_pages_to_sg(shmem->pages, obj->size >> PAGE_SHIFT);
-> +       return drm_prime_pages_to_sg(obj->dev, shmem->pages, obj->size >> PAGE_SHIFT);
->  }
->  EXPORT_SYMBOL_GPL(drm_gem_shmem_get_sg_table);
->
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index 1693aa7c14b5..8a6a3c99b7d8 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -802,9 +802,11 @@ static const struct dma_buf_ops drm_gem_prime_dmabuf_ops =  {
->   *
->   * This is useful for implementing &drm_gem_object_funcs.get_sg_table.
->   */
-> -struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_pages)
-> +struct sg_table *drm_prime_pages_to_sg(struct drm_device *dev,
-> +                                      struct page **pages, unsigned int nr_pages)
->  {
->         struct sg_table *sg = NULL;
-> +       size_t max_segment = 0;
->         int ret;
->
->         sg = kmalloc(sizeof(struct sg_table), GFP_KERNEL);
-> @@ -813,8 +815,13 @@ struct sg_table *drm_prime_pages_to_sg(struct page **pages, unsigned int nr_page
->                 goto out;
->         }
->
-> -       ret = sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
-> -                               nr_pages << PAGE_SHIFT, GFP_KERNEL);
-> +       if (dev)
-> +               max_segment = dma_max_mapping_size(dev->dev);
-> +       if (max_segment == 0 || max_segment > SCATTERLIST_MAX_SEGMENT)
-> +               max_segment = SCATTERLIST_MAX_SEGMENT;
-> +       ret = __sg_alloc_table_from_pages(sg, pages, nr_pages, 0,
-> +                                         nr_pages << PAGE_SHIFT,
-> +                                         max_segment, GFP_KERNEL);
->         if (ret)
->                 goto out;
->
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem.c b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> index f06e19e7be04..ea19f1d27275 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem.c
-> @@ -103,7 +103,8 @@ struct page **etnaviv_gem_get_pages(struct etnaviv_gem_object *etnaviv_obj)
->                 int npages = etnaviv_obj->base.size >> PAGE_SHIFT;
->                 struct sg_table *sgt;
->
-> -               sgt = drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-> +               sgt = drm_prime_pages_to_sg(etnaviv_obj->base.dev,
-> +                                           etnaviv_obj->pages, npages);
->                 if (IS_ERR(sgt)) {
->                         dev_err(dev->dev, "failed to allocate sgt: %ld\n",
->                                 PTR_ERR(sgt));
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> index 6d9e5c3c4dd5..4aa3426a9ba4 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gem_prime.c
-> @@ -19,7 +19,7 @@ struct sg_table *etnaviv_gem_prime_get_sg_table(struct drm_gem_object *obj)
->         if (WARN_ON(!etnaviv_obj->pages))  /* should have already pinned! */
->                 return ERR_PTR(-EINVAL);
->
-> -       return drm_prime_pages_to_sg(etnaviv_obj->pages, npages);
-> +       return drm_prime_pages_to_sg(obj->dev, etnaviv_obj->pages, npages);
->  }
->
->  void *etnaviv_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index b2f49152b4d4..b4553caaa196 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -126,7 +126,7 @@ static struct page **get_pages(struct drm_gem_object *obj)
->
->                 msm_obj->pages = p;
->
-> -               msm_obj->sgt = drm_prime_pages_to_sg(p, npages);
-> +               msm_obj->sgt = drm_prime_pages_to_sg(obj->dev, p, npages);
->                 if (IS_ERR(msm_obj->sgt)) {
->                         void *ptr = ERR_CAST(msm_obj->sgt);
->
-> diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-> index d7c8948427fe..515ef80816a0 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_prime.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-> @@ -19,7 +19,7 @@ struct sg_table *msm_gem_prime_get_sg_table(struct drm_gem_object *obj)
->         if (WARN_ON(!msm_obj->pages))  /* should have already pinned! */
->                 return NULL;
->
-> -       return drm_prime_pages_to_sg(msm_obj->pages, npages);
-> +       return drm_prime_pages_to_sg(obj->dev, msm_obj->pages, npages);
->  }
->
->  void *msm_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_prime.c b/drivers/gpu/drm/nouveau/nouveau_prime.c
-> index bae6a3eccee0..7766b810653f 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_prime.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_prime.c
-> @@ -32,7 +32,7 @@ struct sg_table *nouveau_gem_prime_get_sg_table(struct drm_gem_object *obj)
->         struct nouveau_bo *nvbo = nouveau_gem_object(obj);
->         int npages = nvbo->bo.num_pages;
->
-> -       return drm_prime_pages_to_sg(nvbo->bo.ttm->pages, npages);
-> +       return drm_prime_pages_to_sg(obj->dev, nvbo->bo.ttm->pages, npages);
->  }
->
->  void *nouveau_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/radeon/radeon_prime.c b/drivers/gpu/drm/radeon/radeon_prime.c
-> index b906e8fbd5f3..ea4c900e7c41 100644
-> --- a/drivers/gpu/drm/radeon/radeon_prime.c
-> +++ b/drivers/gpu/drm/radeon/radeon_prime.c
-> @@ -36,7 +36,7 @@ struct sg_table *radeon_gem_prime_get_sg_table(struct drm_gem_object *obj)
->         struct radeon_bo *bo = gem_to_radeon_bo(obj);
->         int npages = bo->tbo.num_pages;
->
-> -       return drm_prime_pages_to_sg(bo->tbo.ttm->pages, npages);
-> +       return drm_prime_pages_to_sg(obj->dev, bo->tbo.ttm->pages, npages);
->  }
->
->  void *radeon_gem_prime_vmap(struct drm_gem_object *obj)
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> index b9275ba7c5a5..77eeaf3439f6 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> @@ -85,7 +85,8 @@ static int rockchip_gem_get_pages(struct rockchip_gem_object *rk_obj)
->
->         rk_obj->num_pages = rk_obj->base.size >> PAGE_SHIFT;
->
-> -       rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-> +       rk_obj->sgt = drm_prime_pages_to_sg(rk_obj->base.dev,
-> +                                           rk_obj->pages, rk_obj->num_pages);
->         if (IS_ERR(rk_obj->sgt)) {
->                 ret = PTR_ERR(rk_obj->sgt);
->                 goto err_put_pages;
-> @@ -442,7 +443,7 @@ struct sg_table *rockchip_gem_prime_get_sg_table(struct drm_gem_object *obj)
->         int ret;
->
->         if (rk_obj->pages)
-> -               return drm_prime_pages_to_sg(rk_obj->pages, rk_obj->num_pages);
-> +               return drm_prime_pages_to_sg(obj->dev,rk_obj->pages, rk_obj->num_pages);
->
->         sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
->         if (!sgt)
-> diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
-> index 723df142a981..47e2935b8c68 100644
-> --- a/drivers/gpu/drm/tegra/gem.c
-> +++ b/drivers/gpu/drm/tegra/gem.c
-> @@ -284,7 +284,7 @@ static int tegra_bo_get_pages(struct drm_device *drm, struct tegra_bo *bo)
->
->         bo->num_pages = bo->gem.size >> PAGE_SHIFT;
->
-> -       bo->sgt = drm_prime_pages_to_sg(bo->pages, bo->num_pages);
-> +       bo->sgt = drm_prime_pages_to_sg(bo->gem.dev, bo->pages, bo->num_pages);
->         if (IS_ERR(bo->sgt)) {
->                 err = PTR_ERR(bo->sgt);
->                 goto put_pages;
-> diff --git a/drivers/gpu/drm/vgem/vgem_drv.c b/drivers/gpu/drm/vgem/vgem_drv.c
-> index 313339bbff90..15dd41e67de3 100644
-> --- a/drivers/gpu/drm/vgem/vgem_drv.c
-> +++ b/drivers/gpu/drm/vgem/vgem_drv.c
-> @@ -321,7 +321,7 @@ static struct sg_table *vgem_prime_get_sg_table(struct drm_gem_object *obj)
->  {
->         struct drm_vgem_gem_object *bo = to_vgem_bo(obj);
->
-> -       return drm_prime_pages_to_sg(bo->pages, bo->base.size >> PAGE_SHIFT);
-> +       return drm_prime_pages_to_sg(obj->dev, bo->pages, bo->base.size >> PAGE_SHIFT);
->  }
->
->  static struct drm_gem_object* vgem_prime_import(struct drm_device *dev,
-> diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> index 39ff95b75357..aed7510e2710 100644
-> --- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> +++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
-> @@ -179,7 +179,8 @@ struct sg_table *xen_drm_front_gem_get_sg_table(struct drm_gem_object *gem_obj)
->         if (!xen_obj->pages)
->                 return ERR_PTR(-ENOMEM);
->
-> -       return drm_prime_pages_to_sg(xen_obj->pages, xen_obj->num_pages);
-> +       return drm_prime_pages_to_sg(gem_obj->dev,
-> +                                    xen_obj->pages, xen_obj->num_pages);
->  }
->
->  struct drm_gem_object *
-> --
-> 2.27.0
->
+For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
 
+Another minor change, there may be two regions reserved for crash
+dump kernel, in order to distinct from the high region and make no
+effect to the use of existing kexec-tools, rename the low region as
+"Crash kernel (low)".
 
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h |  9 +++++
+ arch/arm64/kernel/setup.c      | 13 +++++++-
+ arch/arm64/mm/init.c           | 60 ++--------------------------------
+ arch/arm64/mm/mmu.c            |  4 +++
+ kernel/crash_core.c            |  8 +++--
+ 5 files changed, 34 insertions(+), 60 deletions(-)
+
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 402d208265a3..79909ae5e22e 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -28,7 +28,12 @@
+ /* 2M alignment for crash kernel regions */
+ #define CRASH_ALIGN	SZ_2M
+ 
++#ifdef CONFIG_ZONE_DMA
++#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
++#else
+ #define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
++#endif
++
+ #define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
+ 
+ #ifndef __ASSEMBLY__
+@@ -96,6 +101,10 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
+ 
++#ifdef CONFIG_KEXEC_CORE
++extern void __init reserve_crashkernel(void);
++#endif
++
+ #ifdef CONFIG_KEXEC_FILE
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 53acbeca4f57..1b24072f2bae 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -238,7 +238,18 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		/*
++		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
++		 * region in /proc/iomem.
++		 * In order to distinct from the high region and make no effect
++		 * to the use of existing kexec-tools, rename the low region as
++		 * "Crash kernel (low)".
++		 */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++				crashk_low_res.end <= res->end) {
++			crashk_low_res.name = "Crash kernel (low)";
++			request_resource(res, &crashk_low_res);
++		}
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index ad27dc4cc55e..e56a0e5d5b77 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -35,6 +35,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/kasan.h>
+ #include <asm/kernel-pgtable.h>
++#include <asm/kexec.h>
+ #include <asm/memory.h>
+ #include <asm/numa.h>
+ #include <asm/sections.h>
+@@ -69,66 +70,11 @@ EXPORT_SYMBOL(vmemmap);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ 
+-#ifdef CONFIG_KEXEC_CORE
+-/*
+- * reserve_crashkernel() - reserves memory for crash kernel
+- *
+- * This function reserves memory area given in "crashkernel=" kernel command
+- * line parameter. The memory reserved is used by dump capture kernel when
+- * primary kernel is crashing.
+- */
+-static void __init reserve_crashkernel(void)
+-{
+-	unsigned long long crash_base, crash_size;
+-	int ret;
+-
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+-				&crash_size, &crash_base);
+-	/* no crashkernel= or invalid value specified */
+-	if (ret || !crash_size)
+-		return;
+-
+-	crash_size = PAGE_ALIGN(crash_size);
+-
+-	if (crash_base == 0) {
+-		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
+-				crash_size, CRASH_ALIGN);
+-		if (crash_base == 0) {
+-			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+-				crash_size);
+-			return;
+-		}
+-	} else {
+-		/* User specifies base address explicitly. */
+-		if (!memblock_is_region_memory(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region is not memory\n");
+-			return;
+-		}
+-
+-		if (memblock_is_region_reserved(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
+-			return;
+-		}
+-
+-		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+-			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+-			return;
+-		}
+-	}
+-	memblock_reserve(crash_base, crash_size);
+-
+-	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+-		crash_base, crash_base + crash_size, crash_size >> 20);
+-
+-	crashk_res.start = crash_base;
+-	crashk_res.end = crash_base + crash_size - 1;
+-}
+-#else
++#ifndef CONFIG_KEXEC_CORE
+ static void __init reserve_crashkernel(void)
+ {
+ }
+-#endif /* CONFIG_KEXEC_CORE */
++#endif
+ 
+ #ifdef CONFIG_CRASH_DUMP
+ static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 75df62fea1b6..0b1b3ec18785 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -476,6 +476,10 @@ static void __init map_mem(pgd_t *pgdp)
+ 	 */
+ 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ #ifdef CONFIG_KEXEC_CORE
++	if (crashk_low_res.end)
++		memblock_mark_nomap(crashk_low_res.start,
++				    resource_size(&crashk_low_res));
++
+ 	if (crashk_res.end)
+ 		memblock_mark_nomap(crashk_res.start,
+ 				    resource_size(&crashk_res));
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index d968ef268fb4..3f735cb37ace 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -321,7 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
+ 
+ int __init reserve_crashkernel_low(void)
+ {
+-#if defined(CONFIG_X86_64)
++#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+ 	unsigned long long base, low_base = 0, low_size = 0;
+ 	unsigned long total_low_mem;
+ 	int ret;
+@@ -370,12 +370,14 @@ int __init reserve_crashkernel_low(void)
+ 
+ 	crashk_low_res.start = low_base;
+ 	crashk_low_res.end   = low_base + low_size - 1;
++#ifdef CONFIG_X86
+ 	insert_resource(&iomem_resource, &crashk_low_res);
++#endif
+ #endif
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_X86)
++#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+@@ -468,7 +470,9 @@ void __init reserve_crashkernel(void)
+ 
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end   = crash_base + crash_size - 1;
++#ifdef CONFIG_X86
+ 	insert_resource(&iomem_resource, &crashk_res);
++#endif
+ }
+ #endif /* CONFIG_KEXEC_CORE */
+ #endif
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.20.1
+
