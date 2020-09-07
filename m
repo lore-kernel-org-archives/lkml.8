@@ -2,120 +2,135 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA02C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F243C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 657852168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:11:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="th8jEA+j"
+	by mail.kernel.org (Postfix) with ESMTP id 3279921927
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgIGXLJ (ORCPT
+        id S1728009AbgIGXeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:11:09 -0400
-Received: from ozlabs.org ([203.11.71.1]:56563 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726929AbgIGXLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:11:08 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlkY42nBKz9sR4;
-        Tue,  8 Sep 2020 09:11:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599520266;
-        bh=FLpzBh1MtaOdJusvfew0y0vFNZl/o+pHZi6fZRvWzS8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=th8jEA+jxRuFJlAYJjznssQ9vOu0SK0w6yNuTWvVYW2fcdMCSJyyylKpmRLFdmILK
-         JL4Pb/KoxMRrCO++yq6BwFA8JvBP19gCKPASphsTfLM6A8vWud4GjidLW7E/HSWmDa
-         Ptdk7e8K4R4uYlLswmfsmhjBIJuh+iUS6MJ4I0Tn5wluXvBVctOph+UYRjffFtJj+U
-         +FsXZQwZUW5zQf962gnQgof9HMRmTZQmBDauNE6cBQIGvBJ4QfB1WPiobhlMDITPph
-         6S8AX2QuViZ8kL3jwhau3ykoe7xpITH4JkRR387dljWXwhwff2r+dmKpor4r8p9Qm5
-         Y3vMR2IWT6IvA==
-Date:   Tue, 8 Sep 2020 09:11:02 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: linux-next: build warnings in Linus' tree
-Message-ID: <20200908091102.4c2d7b37@canb.auug.org.au>
+        Mon, 7 Sep 2020 19:34:24 -0400
+Received: from mail-oln040092003100.outbound.protection.outlook.com ([40.92.3.100]:62592
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727769AbgIGXeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 19:34:21 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RKitb/YdjTubQh5aQHfwdzJtcr4t0p9nYPK8CmuXcbefjcVN+FnQwzoqgJFy7B8qUFOXzUTQ+gXqvJVXhwQDEjbiSo90e+1OX212NCDOfvbnxTy/jNyngMNE8PrybfRmJEUEHc4nTYmTe8YeV4vQP1WY3yqM8e1NDtKkI/aovpmeodUjsC6UGZL1KDdbSSZS5zpYsZRuBpSuCVooT65/cV9mrNWuzAXqKMekBFW0y4Rs48L+9G5HBZD62EnsK7zsEE5k0W+WjI28YKuPGhnn8SxSIgp5XtkIIpmfneDeDb4VUg4qJrBx+CLsyeCX92eCgczAr+z70nVW+uOaazrfIQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rGVdvKN8q6kgMjin1mRGqzW8zITlhvBY+iDO6b4ZzEI=;
+ b=NgEGn5FCuhIsSNDzQYq/ZuD4169nNoarJYduDeWzWWUpwkES58ZZubPDxu1b5mS4QLY2PKFZI9jz8n0BUCxaVLGoQc65Qfqu0lLzyUNev8niQW9C6sWKm7vnz4G39qZaghuojy+3L860v8KZ/f0UFgVhUV0hzTseh92lFTyq/OKqiKiE6uME/qMA8jtR/Lr893p7qjPf1473DU+G2LEx+BJ3BMu+rWrqtho9dM0zJBg20WpgZjsGDkqim2S5CexbuFjEBH5SyHjCn9lFu8jhAJHjAHtPScATH5gD2snHiCb91olX2L3QpZRkNbBPB5P9I6YRtoZBlEjhGtMfP9lHdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from CY1NAM02FT045.eop-nam02.prod.protection.outlook.com
+ (10.152.74.51) by CY1NAM02HT184.eop-nam02.prod.protection.outlook.com
+ (10.152.75.42) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17; Mon, 7 Sep
+ 2020 23:34:18 +0000
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ (2a01:111:e400:7e45::4e) by CY1NAM02FT045.mail.protection.outlook.com
+ (2a01:111:e400:7e45::367) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.17 via Frontend
+ Transport; Mon, 7 Sep 2020 23:34:18 +0000
+X-IncomingTopHeaderMarker: OriginalChecksum:3D16240347C6F5D2B96049424D23CE8239BFC7C0915850D3EDE7316F889146CA;UpperCasedChecksum:A48937B9C45BFA96B589DA1E2CE7673D31BF5949BF049546AAE35E5FD9FBF52D;SizeAsReceived:9297;Count:48
+Received: from BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
+ ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 23:34:18 +0000
+Subject: Re: [RFT 24/25] ARM: dts: s5pv210: align SPI GPIO node name with
+ dtschema in Aries
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-25-krzk@kernel.org>
+From:   Jonathan Bakker <xc-racer2@live.ca>
+Message-ID: <BN6PR04MB0660EA3B6B004B1B19C7AB3DCB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+Date:   Mon, 7 Sep 2020 16:34:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200907161141.31034-25-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MWHPR15CA0066.namprd15.prod.outlook.com
+ (2603:10b6:301:4c::28) To BN6PR04MB0660.namprd04.prod.outlook.com
+ (2603:10b6:404:d9::21)
+X-Microsoft-Original-Message-ID: <393fb8cc-74fd-dcaf-2586-9f166d007aef@live.ca>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/uFoOW0k_q3wB2MWWaZa.fiZ";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MWHPR15CA0066.namprd15.prod.outlook.com (2603:10b6:301:4c::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Mon, 7 Sep 2020 23:34:15 +0000
+X-Microsoft-Original-Message-ID: <393fb8cc-74fd-dcaf-2586-9f166d007aef@live.ca>
+X-TMN:  [Jfn/S8udGVxVxSbHjYs5j9h0t+0xRauF45DHS9uNoXkmtxlHERiBiSDxxkgHbYOo]
+X-MS-PublicTrafficType: Email
+X-IncomingHeaderCount: 48
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-Correlation-Id: 54f78097-1673-4444-d638-08d853868a03
+X-MS-TrafficTypeDiagnostic: CY1NAM02HT184:
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /qy4imoYjbEAsYbhK9zZY8S00ErwL4RlcV8746YYsfhNRHHULxWWoL02h7QF/a7Un4ZjR2TyfkEUzn2rT6KziPU4AURITYqEs/VGGEmHof1qyY9B/ySbGpCCskM249S5gJSQWJkhFbEX3kclx6Gry/ndzz9e1tLu0Is9jbwP0f4ezCQ1OpVAlOvZw4VfpQ38qcDSf18Fxf240DBrEyG04g==
+X-MS-Exchange-AntiSpam-MessageData: Y6K3F7ADQCDc0AfLChzWl44XDfmzeK3JRG0mX6/4DY+dGBQRuZjqU/2caGCy0XkVzyFIolzCwTWtOMbIspBvblzjCa9b4bps6WcGMr90U8gqeXeCM4URQPQjQ/bevcKk9lp7zfwQAG9a0BdoMpmjD+vum9B5DtCVlScu8CTs+iUdckFfQ/zLGf6oM2bKwhiAYjBI3Ts3GRCFLt7TOHZCYQ==
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54f78097-1673-4444-d638-08d853868a03
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 23:34:18.3043
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT045.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY1NAM02HT184
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uFoOW0k_q3wB2MWWaZa.fiZ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Works for me on the Galaxy S.
 
-Hi all,
+Tested-by: Jonathan Bakker <xc-racer2@live.ca>
 
-Building Linus' tree, today's linux-next build (x86_64 allmodconfig)
-produced these warnings:
+Thanks,
+Jonathan
 
-arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x2a3: unreac=
-hable instruction
-net/core/skbuff.o: warning: objtool: skb_push.cold()+0x1b: unreachable inst=
-ruction
-arch/x86/mm/mmio-mod.o: warning: objtool: pre()+0x21a: unreachable instruct=
-ion
-arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x142: u=
-nreachable instruction
-kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x26: unreachable i=
-nstruction
-kernel/cred.o: warning: objtool: get_task_cred.cold()+0x19: unreachable ins=
-truction
-drivers/misc/sgi-gru/grukservices.o: warning: objtool: gru_wait_abort_proc(=
-)+0x97: unreachable instruction
-drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: is_complete()+0x6c6: =
-unreachable instruction
-drivers/message/fusion/mptbase.o: warning: objtool: mpt_SoftResetHandler()+=
-0x4a5: unreachable instruction
-drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr()+0x2a9: un=
-reachable instruction
-drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.o: warning: objtool: o=
-tx2_sq_append_tso()+0xab6: unreachable instruction
-fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0x12: unrea=
-chable instruction
-fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_links()+0x=
-818: unreachable instruction
-fs/btrfs/relocation.o: warning: objtool: update_backref_cache.isra.0()+0x3b=
-f: unreachable instruction
-drivers/atm/horizon.o: warning: objtool: rx_data_av_handler()+0x452: unreac=
-hable instruction
-
-I have not idea what caused them.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/uFoOW0k_q3wB2MWWaZa.fiZ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9WvgYACgkQAVBC80lX
-0GxFOwgAnSNmvSLAEYvrUBt/zp7HbmCD+bSHTUck7NOu13MEdsmK4/ErgtpsuuEE
-tEF1BV7gTXFmSvbs8edxXgXopUZk1JH6U2R4t0r1SsL/Oc6qyMXyvfsSCf0Ma2jw
-qkI8hYZNS7SjteNp9849tND5DjbJ4QeHutafK5mcFdt4aN1tPE/DRieGruQu3nh0
-oIdHPUvdJtteQy3ArdhEUMEmSebEcy12lhewNhKY1jaUxfaGF2y+W/jXG7ohG4aW
-HBW8Nmsw8VB3p39xYG5ObQ3zwjJsW7kdqnrFyW0qY8lOhFrak9ncvjv1FsGib7zt
-8i7HDT2vzWjMk8AF+76N3QswbnM+3g==
-=GpWg
------END PGP SIGNATURE-----
-
---Sig_/uFoOW0k_q3wB2MWWaZa.fiZ--
+On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
+> The device tree schema expects SPI controller to be named "spi",
+> otherwise dtbs_check complain with a warning like:
+> 
+>   spi-gpio-0: $nodename:0: 'spi-gpio-0' does not match '^spi(@.*|-[0-9a-f])*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/s5pv210-aries.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
+> index 86c3b26fd21e..bd4450dbdcb6 100644
+> --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
+> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
+> @@ -545,7 +545,7 @@
+>  		value = <0x5200>;
+>  	};
+>  
+> -	spi_lcd: spi-gpio-0 {
+> +	spi_lcd: spi-2 {
+>  		compatible = "spi-gpio";
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> 
