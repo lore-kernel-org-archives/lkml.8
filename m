@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141E0C2D0A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1A9C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4E0E21789
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEA7208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497707;
-	bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
+	s=default; t=1599497717;
+	bh=63b4DkuQUeiKClxNyrWlMdMUnuYTE6lFx/8Il5h4JRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oMfd3M802g5xSEj4Z4SqQ8JXN/Vr+nHc9/rJzTzGDzE0sp1mBQlPpLK3WIeCixR6L
-	 El2fkr+XBWlCrVZsonRLrfSeCbrMuMf6Gnd+xyBDcGfseMgfikBDxfWdCkrviR8zB6
-	 CkWJ5Luiurt6FYzagP1TP8MXh+DPmEmCyyfi0y1I=
+	b=q4Wq76jTIV/PCRZk05rzjDg7Ilu+9MwqJecy0+pdlqS8JYR0K+vo5izA7tpae1vMi
+	 1mdC6asi4rRqahZtpSScMv7yANfeUXUeQxmzBDW2sKBrJdo2gpm+wXIMOaR36WnAcD
+	 AnIBSaN+S4+TPnKg25mDAfKP3Awy9qY51adokq/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731189AbgIGQzG (ORCPT
+        id S1730963AbgIGQzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48030 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:55:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730747AbgIGQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:17 -0400
+        id S1730527AbgIGQeV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521BE21D81;
-        Mon,  7 Sep 2020 16:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D602E21D94;
+        Mon,  7 Sep 2020 16:34:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496453;
-        bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
+        s=default; t=1599496459;
+        bh=63b4DkuQUeiKClxNyrWlMdMUnuYTE6lFx/8Il5h4JRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etrGPQeyPcHjSpgEcR+PlSFbfXWGYHsXxQIOSzVkezrKr4qQdTne/sn+U0NoSDUD1
-         /HfliiNxUqjWmKXk1zf51Wat1aHeegDICiOgV/kWQe3mdLgAqPxff8MxqxwdCu7NHh
-         YeYkW2vyNNavrNk33jWmbq4L5W6NaEY7DyGSPhfA=
+        b=VuZAhzgWFN2I4KFLm0AoUVqQiycA+wJuhkAdqZIiEletX5+iSb2N/oorCfoF/1gaZ
+         m+/WBctTP2EWPCu4wjSqiyzy5Sm70kOIiRfa0sEit1jwV8oVRtL/ER/NsI+mmL8xqx
+         h7n+KSbvYS50B7EtE3hS3opMCyRLTGdrqZjdl+II=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeniy Didin <Evgeniy.Didin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 34/43] ARC: [plat-hsdk]: Switch ethernet phy-mode to rgmii-id
-Date:   Mon,  7 Sep 2020 12:33:20 -0400
-Message-Id: <20200907163329.1280888-34-sashal@kernel.org>
+Cc:     Rander Wang <rander.wang@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 39/43] ALSA: hda: hdmi - add Rocketlake support
+Date:   Mon,  7 Sep 2020 12:33:25 -0400
+Message-Id: <20200907163329.1280888-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -62,51 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+From: Rander Wang <rander.wang@intel.com>
 
-[ Upstream commit 26907eb605fbc3ba9dbf888f21d9d8d04471271d ]
+[ Upstream commit f804a324a41a880c1ab43cc5145d8b3e5790430d ]
 
-HSDK board has Micrel KSZ9031, recent commit
-bcf3440c6dd ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-caused a breakdown of Ethernet.
-Using 'phy-mode = "rgmii"' is not correct because accodring RGMII
-specification it is necessary to have delay on RX (PHY to MAX)
-which is not generated in case of "rgmii".
-Using "rgmii-id" adds necessary delay and solves the issue.
+Add Rocketlake HDMI codec support. Rocketlake shares
+the pin-to-port mapping table with Tigerlake.
 
-Also adding name of PHY placed on HSDK board.
-
-Signed-off-by: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Rander Wang <rander.wang@intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Link: https://lore.kernel.org/r/20200902154207.1440393-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 5d64a5a940ee6..dcaa44e408ace 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -210,7 +210,7 @@ gmac: ethernet@8000 {
- 			reg = <0x8000 0x2000>;
- 			interrupts = <10>;
- 			interrupt-names = "macirq";
--			phy-mode = "rgmii";
-+			phy-mode = "rgmii-id";
- 			snps,pbl = <32>;
- 			snps,multicast-filter-bins = <256>;
- 			clocks = <&gmacclk>;
-@@ -228,7 +228,7 @@ mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				compatible = "snps,dwmac-mdio";
--				phy0: ethernet-phy@0 {
-+				phy0: ethernet-phy@0 { /* Micrel KSZ9031 */
- 					reg = <0>;
- 				};
- 			};
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 330fb7656c636..3e74a9181bc74 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -4204,6 +4204,7 @@ HDA_CODEC_ENTRY(0x8086280c, "Cannonlake HDMI",	patch_i915_glk_hdmi),
+ HDA_CODEC_ENTRY(0x8086280d, "Geminilake HDMI",	patch_i915_glk_hdmi),
+ HDA_CODEC_ENTRY(0x8086280f, "Icelake HDMI",	patch_i915_icl_hdmi),
+ HDA_CODEC_ENTRY(0x80862812, "Tigerlake HDMI",	patch_i915_tgl_hdmi),
++HDA_CODEC_ENTRY(0x80862816, "Rocketlake HDMI",	patch_i915_tgl_hdmi),
+ HDA_CODEC_ENTRY(0x8086281a, "Jasperlake HDMI",	patch_i915_icl_hdmi),
+ HDA_CODEC_ENTRY(0x80862880, "CedarTrail HDMI",	patch_generic_hdmi),
+ HDA_CODEC_ENTRY(0x80862882, "Valleyview2 HDMI",	patch_i915_byt_hdmi),
 -- 
 2.25.1
 
