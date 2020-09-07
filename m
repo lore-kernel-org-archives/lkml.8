@@ -2,102 +2,108 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD80AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A1AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C762080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KXJWYBon"
+	by mail.kernel.org (Postfix) with ESMTP id 648B5207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:59:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599497979;
+	bh=ABVRVam/T0l6Mh0+MS2l8X+KafuL8BLB17lQR10F5HI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TKmB6mq2W48CjGpS4GEZf5RmE4LSCOXv2CYRyCWwgsC4nHIjZSunf/V7zDprQl0pN
+	 yaHoo0Jqf0t3k0oKRYLsinbX4pO0GGRC2dP8f03/JWOoBGqH7aHU1gCCsUrgN/DvUG
+	 OKdEjeBZaod9/H4M2Q1EjvUyHSWhpy7p+GJmT/WU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgIGQ72 (ORCPT
+        id S1731184AbgIGQ7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38030 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730592AbgIGQ7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:59:02 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA7DC061573;
-        Mon,  7 Sep 2020 09:58:59 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f090900c4f00348aacf37a5.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:900:c4f0:348:aacf:37a5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 7 Sep 2020 12:59:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730731AbgIGQdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EA64B1EC00F4;
-        Mon,  7 Sep 2020 18:58:57 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599497938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=f8SfAAyXeqxq2AQb205NNpHyD9AfmQyyAEljoRCFv6k=;
-        b=KXJWYBon+qIU3Dc1jqyEl0uksmyVwjboVTQXyWOm6FdZvFVbSLGKec6ejmWNdxVLAbIvwp
-        WFdL1LkX10BO5BGgpGw/Ma5JeXuDn2PCoEpdZMW/06MnMg6plGn/rQ/eG7Ad1IIX/E/Ndk
-        LYheDfFOoz3D0esSwEqyajhwcrvprWo=
-Date:   Mon, 7 Sep 2020 18:58:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v7 19/72] x86/boot/compressed/64: Add stage1 #VC handler
-Message-ID: <20200907165851.GE16029@zn.tnic>
-References: <20200907131613.12703-1-joro@8bytes.org>
- <20200907131613.12703-20-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EB1721974;
+        Mon,  7 Sep 2020 16:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599496428;
+        bh=ABVRVam/T0l6Mh0+MS2l8X+KafuL8BLB17lQR10F5HI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aS91wZQkm/+xUKWliIHL0v3eSFjGxvD+dJLTRBQQgoCl/unypzw8CsxVOBJmmu56e
+         R7Ijp8bPJpQS8mYAzRmQV3W49M2Tz9Cy4hatidXMJsZkFqoUeLhqqXvEbB2nAVpIeF
+         aUdWBiMsIhnHdAQNk9yPIUzNQRdja4FzIKcck334=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 14/43] drivers/net/wan/lapbether: Set network_header before transmitting
+Date:   Mon,  7 Sep 2020 12:33:00 -0400
+Message-Id: <20200907163329.1280888-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200907131613.12703-20-joro@8bytes.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 03:15:20PM +0200, Joerg Roedel wrote:
-> +static inline u64 sev_es_rd_ghcb_msr(void)
-> +{
-> +	unsigned long low, high;
-> +
-> +	asm volatile("rdmsr\n" : "=a" (low), "=d" (high) :
-> +			"c" (MSR_AMD64_SEV_ES_GHCB));
-> +
-> +	return ((high << 32) | low);
-> +}
-> +
-> +static inline void sev_es_wr_ghcb_msr(u64 val)
-> +{
-> +	u32 low, high;
-> +
-> +	low  = val & 0xffffffffUL;
-> +	high = val >> 32;
-> +
-> +	asm volatile("wrmsr\n" : : "c" (MSR_AMD64_SEV_ES_GHCB),
-			   ^^
+From: Xie He <xie.he.0141@gmail.com>
 
-No need for that newline and the one above. I've zapped it while applying.
+[ Upstream commit 91244d108441013b7367b3b4dcc6869998676473 ]
 
+Set the skb's network_header before it is passed to the underlying
+Ethernet device for transmission.
+
+This patch fixes the following issue:
+
+When we use this driver with AF_PACKET sockets, there would be error
+messages of:
+   protocol 0805 is buggy, dev (Ethernet interface name)
+printed in the system "dmesg" log.
+
+This is because skbs passed down to the Ethernet device for transmission
+don't have their network_header properly set, and the dev_queue_xmit_nit
+function in net/core/dev.c complains about this.
+
+Reason of setting the network_header to this place (at the end of the
+Ethernet header, and at the beginning of the Ethernet payload):
+
+Because when this driver receives an skb from the Ethernet device, the
+network_header is also set at this place.
+
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wan/lapbether.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
+index 373c9ce4010a3..2cff914aada55 100644
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -210,6 +210,8 @@ static void lapbeth_data_transmit(struct net_device *ndev, struct sk_buff *skb)
+ 
+ 	skb->dev = dev = lapbeth->ethdev;
+ 
++	skb_reset_network_header(skb);
++
+ 	dev_hard_header(skb, dev, ETH_P_DEC, bcast_addr, NULL, 0);
+ 
+ 	dev_queue_xmit(skb);
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
