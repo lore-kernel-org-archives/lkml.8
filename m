@@ -2,188 +2,76 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80346C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C77C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439712168B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:51:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599483099;
-	bh=dDKYDabIhNqj67RmZ64czee8AVbD6PMYzyd1HopAsSo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1Q6lwvJELS/M/PUZ0ZPJ8rTZ47Bf5y2Kaj+Wx5zo9BHb7nEoY0NMH81LvU8MCo/nh
-	 oYp8ofX6eGRknBdICVJBtrw3RlDU8CnYxbvcva6xj4kSaLm48+TJpRNN3t9oYs9gad
-	 n2nHesFZIktVSsDE1EsAeEMsDaSDgTmmbYdnLrcQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5D99221481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729083AbgIGMve (ORCPT
+        id S1729236AbgIGMvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:51:34 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:64028 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729177AbgIGMqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:46:15 -0400
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 087Cj10Q009377;
-        Mon, 7 Sep 2020 21:45:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 087Cj10Q009377
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599482701;
-        bh=RgU8Sugxv4ASLW8GV3q9CaX17ZgN4c86hz8zqyhRkp4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KVLYrEKbu/VsRaCsN/TUIiCzxx76mAPNv3QUQxZReLYX0HRiqwHlLbpz0U9iuXkEJ
-         fdtVDe5npq/lH8vsOIWBs8cxOAB6A3j6s+8o2bjKoHXejS0thSUaCwcUJWRJkDIWXJ
-         1HrAk/bV61kGxnfNgs0tH51KMDCIU4oAvEvL4T45VEZl83E3G36oR9Q4evY43FRl7+
-         gi8lPgxloRX47Nsu+MheWnDMICBemBYBdR1Hgv0gyT/4N/4rcoFQkIut4ynccP4avk
-         //yvarxiA1PyAS9sR+j3Ro4Qc+0uh3V0EGBrgBXYf0tE4LO4pjV5noyi8ugrio4nXC
-         rFdv9oV6ZtPlg==
-X-Nifty-SrcIP: [209.85.214.175]
-Received: by mail-pl1-f175.google.com with SMTP id c3so4176578plz.5;
-        Mon, 07 Sep 2020 05:45:01 -0700 (PDT)
-X-Gm-Message-State: AOAM533qzY2ZbgoPPTeX3aWuLds+ycrmgvYduNPcuWvNlnPsJurSIg74
-        1zbw0tfp8YK91yuIaZMghmcEcKdBRX8jwoCUdjk=
-X-Google-Smtp-Source: ABdhPJw4UtF57UzI82pGuTgn7u0AI78jQLYV5p6rNVTR2t5OI2bMang+cdl+Y4cuAkIyNjGnFlsZKuD7wiB/ej4TtDg=
-X-Received: by 2002:a17:902:e901:: with SMTP id k1mr19763109pld.189.1599482700443;
- Mon, 07 Sep 2020 05:45:00 -0700 (PDT)
+        Mon, 7 Sep 2020 08:51:49 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45070 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729301AbgIGMsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:48:40 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id F35BBD5FA88D5E71FD9C;
+        Mon,  7 Sep 2020 20:47:52 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 7 Sep 2020 20:47:51 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <shawnguo@kernel.org>,
+        <s.hauer@pengutronix.de>
+CC:     <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: ethernet: dwmac: remove redundant null check before clk_disable_unprepare()
+Date:   Mon, 7 Sep 2020 20:46:54 +0800
+Message-ID: <1599482814-42552-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-References: <20200831182239.480317-1-masahiroy@kernel.org>
-In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 7 Sep 2020 21:44:23 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQx=8v=udVa2pC_GL-iV0Z=VCjszB4rQ+YwTP8fR00jeg@mail.gmail.com>
-Message-ID: <CAK7LNAQx=8v=udVa2pC_GL-iV0Z=VCjszB4rQ+YwTP8fR00jeg@mail.gmail.com>
-Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
- of extra-y
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 3:23 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> The vdso linker script is preprocessed on demand.
-> Adding it to 'targets' is enough to include the .cmd file.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
+Because clk_prepare_enable() and clk_disable_unprepare() already checked
+NULL clock parameter, so the additional checks are unnecessary, just
+remove them.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Applied to linux-kbuild.
-
-
->  arch/arm64/kernel/vdso/Makefile     | 2 +-
->  arch/arm64/kernel/vdso32/Makefile   | 2 +-
->  arch/nds32/kernel/vdso/Makefile     | 2 +-
->  arch/powerpc/kernel/vdso32/Makefile | 2 +-
->  arch/powerpc/kernel/vdso64/Makefile | 2 +-
->  arch/s390/kernel/vdso64/Makefile    | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index 45d5cfe46429..7cd8aafbe96e 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -54,7 +54,7 @@ endif
->  GCOV_PROFILE := n
->
->  obj-y += vdso.o
-> -extra-y += vdso.lds
-> +targets += vdso.lds
->  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-> index d6adb4677c25..572475b7b7ed 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -155,7 +155,7 @@ asm-obj-vdso := $(addprefix $(obj)/, $(asm-obj-vdso))
->  obj-vdso := $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
->
->  obj-y += vdso.o
-> -extra-y += vdso.lds
-> +targets += vdso.lds
->  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
->
->  # Force dependency (vdso.s includes vdso.so through incbin)
-> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Makefile
-> index 7c3c1ccb196e..55df25ef0057 100644
-> --- a/arch/nds32/kernel/vdso/Makefile
-> +++ b/arch/nds32/kernel/vdso/Makefile
-> @@ -20,7 +20,7 @@ GCOV_PROFILE := n
->
->
->  obj-y += vdso.o
-> -extra-y += vdso.lds
-> +targets += vdso.lds
->  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
->
->  # Force dependency
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-> index 87ab1152d5ce..fd5072a4c73c 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -29,7 +29,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
->  asflags-y := -D__VDSO32__ -s
->
->  obj-y += vdso32_wrapper.o
-> -extra-y += vdso32.lds
-> +targets += vdso32.lds
->  CPPFLAGS_vdso32.lds += -P -C -Upowerpc
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
-> index 38c317f25141..c737b3ea3207 100644
-> --- a/arch/powerpc/kernel/vdso64/Makefile
-> +++ b/arch/powerpc/kernel/vdso64/Makefile
-> @@ -17,7 +17,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
->  asflags-y := -D__VDSO64__ -s
->
->  obj-y += vdso64_wrapper.o
-> -extra-y += vdso64.lds
-> +targets += vdso64.lds
->  CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-> index 4a66a1cb919b..d0d406cfffa9 100644
-> --- a/arch/s390/kernel/vdso64/Makefile
-> +++ b/arch/s390/kernel/vdso64/Makefile
-> @@ -25,7 +25,7 @@ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
->  $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
->
->  obj-y += vdso64_wrapper.o
-> -extra-y += vdso64.lds
-> +targets += vdso64.lds
->  CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
->
->  # Disable gcov profiling, ubsan and kasan for VDSO code
-> --
-> 2.25.1
->
-
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+index 3c5df5e..efef547 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+@@ -129,8 +129,7 @@ static void imx_dwmac_exit(struct platform_device *pdev, void *priv)
+ {
+ 	struct imx_priv_data *dwmac = priv;
+ 
+-	if (dwmac->clk_tx)
+-		clk_disable_unprepare(dwmac->clk_tx);
++	clk_disable_unprepare(dwmac->clk_tx);
+ 	clk_disable_unprepare(dwmac->clk_mem);
+ }
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.9.5
+
