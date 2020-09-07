@@ -2,93 +2,92 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EDFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E861C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 287FC21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8B521582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:34:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fL3o6MyI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oKcX83qN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbgIGGdy (ORCPT
+        id S1726812AbgIGGeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:33:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35485 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726278AbgIGGdx (ORCPT
+        Mon, 7 Sep 2020 02:34:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54428 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726776AbgIGGeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:33:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599460432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=17hx+uQnRYN37kt9J2TS1rwaCj5ZQT0lilbznWEFqTQ=;
-        b=fL3o6MyIcQsBrTwrd+aE403ajYSyNlvZYCDwbE+xFspZeP39onyqwmrzM+FlcnauDV4n3H
-        I3xoFhfgsxD+Lc2Ko+bFSNPu0pVB7pv1x+JDEgn0ngVzXRUnw69ZKCPtOQH6xB/pXu6QoE
-        CG27XknfRnjQz0UMxYNVEP1mkbV397M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-AZ6I_DA3P3amXemm0ORAjA-1; Mon, 07 Sep 2020 02:33:50 -0400
-X-MC-Unique: AZ6I_DA3P3amXemm0ORAjA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74DC480046B;
-        Mon,  7 Sep 2020 06:33:49 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7101E805E0;
-        Mon,  7 Sep 2020 06:33:45 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 8C06F204A1; Mon,  7 Sep 2020 08:33:44 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     christian.koenig@amd.com, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3 2/2] drm/virtio: set max_segment
-Date:   Mon,  7 Sep 2020 08:33:43 +0200
-Message-Id: <20200907063343.18097-3-kraxel@redhat.com>
-In-Reply-To: <20200907063343.18097-1-kraxel@redhat.com>
-References: <20200907063343.18097-1-kraxel@redhat.com>
+        Mon, 7 Sep 2020 02:34:01 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A0FC061573;
+        Sun,  6 Sep 2020 23:34:01 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 7so7551993pgm.11;
+        Sun, 06 Sep 2020 23:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=m15jCTtsBAUKP+0jfB9in9HIjBdPjBE4Y+TgmZ5/xE0=;
+        b=oKcX83qNAmH/enHKgQVFuUZrgn1v592Ii5llp56wrH1uuq47AuZF7tgvVTEacw8m5X
+         67Ha0oF50dm2WcuelnBDh7hoqksWVFv232g7FbvwYXSjOqnAxRGNrnBqxkuCn41Jk907
+         KGmT2IDHdkSTpTO7vySyW4tq1LLXCMObaVHpaPcUkV95g6ScpC8AuUk3d3DHA0Vfp/nj
+         WfGbFYRiW4klopM/ON/sZuPQKlaNz/uRCshXvOq5aat/oTI4z864Ux2Xa8tGvloE2UiV
+         drbQdLjifGkxsl/NBlYH1b8VSLUrm4bWyRrzVYrr8h0Z2RPhc0Wgw71cWYavkTCCdtzn
+         3BoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=m15jCTtsBAUKP+0jfB9in9HIjBdPjBE4Y+TgmZ5/xE0=;
+        b=HVn78obfIpIYRQsjEAxdRu7dTIYvTu995NHdXq/xVxOl49X9aUUvr4fZyLx+HD7ZUm
+         4K9axayh6a0I54uZnqZS1FUQARZ2QLk/VSee6mdIiAriUX5jz8I90N+1kh04N7TGtkh3
+         Idg57JtfB1YKclXDvcI9Z9VzzZVjhn3lp3n1szr4fwfucVKZDXW33GMI0h8qktpHswkI
+         Nh86bcGPKKyxGxnzn9RubwUpIljpP7t5Yr9gaoT4dK0d5JNMCH7+rjzdJaMgLjheHTaR
+         Y/S2aQlploQLRK5ZOw87h8GoJgoSvefcUWJnGAyBoPww15AvwaQitBIlRVbfp6Zmpguq
+         a/4Q==
+X-Gm-Message-State: AOAM531MWw8ZY2n2h8FqGQZocALg+H/+2/eHASgb4CgirNDvpAekWF9Z
+        uDXOtxLAWeGJkCMHHWLdB5A=
+X-Google-Smtp-Source: ABdhPJw6ZH79o8HU3/QSSp52qMLeXwXaUJN0ob6XhOQCKSaHK7Tzit4rT2kSbg628qUever7ECTm0A==
+X-Received: by 2002:a62:8607:0:b029:13c:1611:6593 with SMTP id x7-20020a6286070000b029013c16116593mr16912878pfd.16.1599460440268;
+        Sun, 06 Sep 2020 23:34:00 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id q82sm14767933pfc.139.2020.09.06.23.33.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 23:33:59 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 12:01:53 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade
+ and fix-ups.
+Message-ID: <20200907063153.GA29062@gmail.com>
+References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+ <20200806072658.592444-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200806072658.592444-1-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When initializing call virtio_max_dma_size() to figure the scatter list
-limit.  Needed to make virtio-gpu work properly with SEV.
+Please review this patch-series.
 
-v2: place max_segment in drm driver not gem object.
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_kms.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 75d0dc2f6d28..151471acdfcf 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -167,6 +167,7 @@ int virtio_gpu_init(struct drm_device *dev)
- 		DRM_ERROR("failed to alloc vbufs\n");
- 		goto err_vbufs;
- 	}
-+	dev->max_segment = virtio_max_dma_size(vgdev->vdev);
- 
- 	/* get display info */
- 	virtio_cread_le(vgdev->vdev, struct virtio_gpu_config,
--- 
-2.27.0
-
+Thank you
+Vaibhav Gupta
