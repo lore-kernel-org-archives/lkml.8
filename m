@@ -2,33 +2,30 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D49DC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46713C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 202D321556
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F54F2177B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728150AbgIGUlN (ORCPT
+        id S1726949AbgIGUky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:41:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728073AbgIGUkx (ORCPT
+        Mon, 7 Sep 2020 16:40:54 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:43996 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbgIGUkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:40:53 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D05C061573;
-        Mon,  7 Sep 2020 13:40:51 -0700 (PDT)
+        Mon, 7 Sep 2020 16:40:51 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: sre)
-        with ESMTPSA id 6F9B5285353
+        with ESMTPSA id 7784A290B21
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 08765480115; Mon,  7 Sep 2020 22:40:47 +0200 (CEST)
+        id 0B999480117; Mon,  7 Sep 2020 22:40:47 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         =?UTF-8?q?Myl=C3=A8ne=20Josserand?= 
@@ -36,9 +33,9 @@ To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel@collabora.com,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCHv2 2/4] Input: rotary-encoder - Fix steps property reading
-Date:   Mon,  7 Sep 2020 22:40:43 +0200
-Message-Id: <20200907204045.95530-3-sebastian.reichel@collabora.com>
+Subject: [PATCHv2 3/4] Input: rotary-encoder - Use dev_err_probe
+Date:   Mon,  7 Sep 2020 22:40:44 +0200
+Message-Id: <20200907204045.95530-4-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907204045.95530-1-sebastian.reichel@collabora.com>
 References: <20200907204045.95530-1-sebastian.reichel@collabora.com>
@@ -49,33 +46,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DT binding specifies 24 being used by default, but driver
-initializes to 0. The steps variable will be used for a modulo
-operation at a later step, so do not allow 0 (does not make
-sense in any case).
+Simplify driver a bit by making use of dev_err_probe.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- drivers/input/misc/rotary_encoder.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/input/misc/rotary_encoder.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-index 6d613f2a017c..e9a5dbb10513 100644
+index e9a5dbb10513..16ad86fad7cb 100644
 --- a/drivers/input/misc/rotary_encoder.c
 +++ b/drivers/input/misc/rotary_encoder.c
-@@ -198,7 +198,12 @@ static int rotary_encoder_probe(struct platform_device *pdev)
+@@ -241,12 +241,8 @@ static int rotary_encoder_probe(struct platform_device *pdev)
+ 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
  
- 	mutex_init(&encoder->access_mutex);
- 
-+	encoder->steps = 24;
- 	device_property_read_u32(dev, "rotary-encoder,steps", &encoder->steps);
-+	if (!encoder->steps) {
-+		dev_err(dev, "invalid steps setting\n");
-+		return -EINVAL;
-+	}
- 
- 	err = device_property_read_u32(dev, "rotary-encoder,steps-per-period",
- 				       &steps_per_period);
+ 	encoder->gpios = devm_gpiod_get_array(dev, NULL, GPIOD_IN);
+-	if (IS_ERR(encoder->gpios)) {
+-		err = PTR_ERR(encoder->gpios);
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "unable to get gpios: %d\n", err);
+-		return err;
+-	}
++	if (IS_ERR(encoder->gpios))
++		return dev_err_probe(dev, PTR_ERR(encoder->gpios), "unable to get gpios\n");
+ 	if (encoder->gpios->ndescs < 2) {
+ 		dev_err(dev, "not enough gpios found\n");
+ 		return -EINVAL;
 -- 
 2.28.0
 
