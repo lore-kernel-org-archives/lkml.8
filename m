@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80187C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAA6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F18E207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2202080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497651;
-	bh=evB8kI8CgM2XueBp2na5lhPEYi41PUqB/SbvXYg6MdU=;
+	s=default; t=1599497661;
+	bh=3st5nF5UcQ80yr/lcX3pOnZPlbiq4npcK9jsNL3vzmI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I1vIxVjdiprIa1nmdk2oRH9h2JSdZsDCKkhyVWfUFyrTOfANEdWtBLfdMDqXu7psl
-	 jBSbe1rAoxcJ4gEp3aXHK2wesVMeJBOOmu8/QteMOqkNnF++nX7xK0mKsGYEEbBdtQ
-	 Cuy3xOOBHpF3QJi5jr9dk3BHd2Dcpb0cxuoRB9cI=
+	b=LDSlgpsVaApobciL1vDcmM0UFEEZ9reEGKtBn0GY3aV3dzpvnzOUKCmCiuUkRn70X
+	 lViVnqMj0N2yVpQu3RBK39ku18saVfjc/b+rEovI7nZoryOKdJeFKTCVkL+TVrEw3l
+	 y86mpVlMbQqJZW7pao9DbpHBaiaMZoIEzHOKMygQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgIGQx6 (ORCPT
+        id S1731165AbgIGQyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48440 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729884AbgIGQec (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:32 -0400
+        id S1730754AbgIGQe3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2067521D79;
-        Mon,  7 Sep 2020 16:34:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90EAA21941;
+        Mon,  7 Sep 2020 16:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496472;
-        bh=evB8kI8CgM2XueBp2na5lhPEYi41PUqB/SbvXYg6MdU=;
+        s=default; t=1599496469;
+        bh=3st5nF5UcQ80yr/lcX3pOnZPlbiq4npcK9jsNL3vzmI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krzcFWCL8+5aheDpPY69pQrt8q+mWesTON6aDpg5ywL87OwBCZPhr2onjJAql+n7a
-         s6U2sWQdrGDgm03WC4pgUx+Q65FudNf0PU3+CFd4He5U5VdnPc4B8n1upwp8D6H3Uo
-         hOgFnWvajWqJRyxASXc0P71Ob6G/2QBaBVD94Dis=
+        b=UcjcQz4QKAhucU0IMudflJOIdcI2cJ+di1Jw4dgh81aFIyTO8fkLRCs7xV3if4z34
+         CWxOEOOW9k9BQmXrxtAi+ljFhZUl2+S5FlpF0UqN2pH2na371aMvV9PYYmdeEkCy+I
+         qNpZamBsZpJ4wOf8A54pSM1cP54ldubnTRizdtPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/26] drivers/net/wan/lapbether: Added needed_tailroom
-Date:   Mon,  7 Sep 2020 12:34:04 -0400
-Message-Id: <20200907163426.1281284-4-sashal@kernel.org>
+Cc:     Hanjun Guo <guohanjun@huawei.com>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 02/26] dmaengine: acpi: Put the CSRT table after using it
+Date:   Mon,  7 Sep 2020 12:34:02 -0400
+Message-Id: <20200907163426.1281284-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
 References: <20200907163426.1281284-1-sashal@kernel.org>
@@ -61,36 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit 1ee39c1448c4e0d480c5b390e2db1987561fb5c2 ]
+[ Upstream commit 7eb48dd094de5fe0e216b550e73aa85257903973 ]
 
-The underlying Ethernet device may request necessary tailroom to be
-allocated by setting needed_tailroom. This driver should also set
-needed_tailroom to request the tailroom needed by the underlying
-Ethernet device to be allocated.
+The acpi_get_table() should be coupled with acpi_put_table() if
+the mapped table is not used at runtime to release the table
+mapping, put the CSRT table buf after using it.
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Link: https://lore.kernel.org/r/1595411661-15936-1-git-send-email-guohanjun@huawei.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/lapbether.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/dma/acpi-dma.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index c94dfa70f2a33..6b2553e893aca 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -343,6 +343,7 @@ static int lapbeth_new_device(struct net_device *dev)
- 	 */
- 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
- 					   + dev->needed_headroom;
-+	ndev->needed_tailroom = dev->needed_tailroom;
+diff --git a/drivers/dma/acpi-dma.c b/drivers/dma/acpi-dma.c
+index 4a748c3435d7d..8d99c84361cbb 100644
+--- a/drivers/dma/acpi-dma.c
++++ b/drivers/dma/acpi-dma.c
+@@ -131,11 +131,13 @@ static void acpi_dma_parse_csrt(struct acpi_device *adev, struct acpi_dma *adma)
+ 		if (ret < 0) {
+ 			dev_warn(&adev->dev,
+ 				 "error in parsing resource group\n");
+-			return;
++			break;
+ 		}
  
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+ 		grp = (struct acpi_csrt_group *)((void *)grp + grp->length);
+ 	}
++
++	acpi_put_table((struct acpi_table_header *)csrt);
+ }
+ 
+ /**
 -- 
 2.25.1
 
