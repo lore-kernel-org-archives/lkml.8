@@ -2,182 +2,184 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A36DC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBD7C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF81215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F1D2166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:40:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KjUPOTgo"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W3S1hjTN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726769AbgIGGjP (ORCPT
+        id S1726776AbgIGGki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:39:15 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28622 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726286AbgIGGjN (ORCPT
+        Mon, 7 Sep 2020 02:40:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30926 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726286AbgIGGkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:39:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599460751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eetlFRw0D/x8ec2NAwaNQj2c548Ry8s5O0p6d1F8FMM=;
-        b=KjUPOTgoywztcwmRE0RPzfEZ1wHL1P8tjffINIjSYO/ekfkOwAOBCpvhc6KJbj0EQCY2pD
-        fRikaccd0dTk4uWT2/C79vFPIfe0eRji7LkP6HGoFkzxjGz01uo0bR+YYiQP4BSWFy/ATW
-        8QkP7/r1tiTPeDui0WjWsWq0yhXZ1II=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-Im-pi5WkMveRzazWd9YxPQ-1; Mon, 07 Sep 2020 02:39:07 -0400
-X-MC-Unique: Im-pi5WkMveRzazWd9YxPQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C6F2427FD;
-        Mon,  7 Sep 2020 06:39:03 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 83EBB19C4F;
-        Mon,  7 Sep 2020 06:39:02 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9445C9A83; Mon,  7 Sep 2020 08:39:01 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 08:39:01 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org, christian.koenig@amd.com,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR VIVANTE GPU IP" 
-        <etnaviv@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
-        <nouveau@lists.freedesktop.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>,
-        "open list:DRM DRIVERS FOR NVIDIA TEGRA" 
-        <linux-tegra@vger.kernel.org>,
-        "moderated list:DRM DRIVERS FOR XEN" <xen-devel@lists.xenproject.org>
-Subject: Re: [PATCH v2 1/2] drm: allow limiting the scatter list size.
-Message-ID: <20200907063901.atwjdxz7iqyra22h@sirius.home.kraxel.org>
-References: <20200818092017.26290-1-kraxel@redhat.com>
- <20200818092017.26290-2-kraxel@redhat.com>
- <20200901074043.GT2352366@phenom.ffwll.local>
+        Mon, 7 Sep 2020 02:40:35 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0876WApM021205;
+        Mon, 7 Sep 2020 02:40:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=sUxH6UupmrTzk45VuALJ02RLoMALHR5XkiNic3S6+Zs=;
+ b=W3S1hjTNTgKRyCvrvQbWTgp6Td4FlNGWFQ3+HqA1Cmr/Ugm2ad7knV6ZsU2JVahM8xN1
+ dqORwbVfvP0QyilLUpP7XnWmhwbn9LNhrrBxZuD9kexbkCZHR+qAhxDTunNSZRvnV0fL
+ PlvdjLtjL3Jj8Iljq1lTZVGgkIoPXTq3ov53iil3bRatQmsUl4T3/RX/hS3+1yhYxGUY
+ kufMdijIqeKf/GlGZ4x4N7t79E8yVXWOMeh2uJOyZDc6LbJF0LpnDE+9izVJOM/h2LqS
+ 1V71bTxTOauj6a9Z9/bHInVrHIwzlw9Pkfvd+FKC6JG/maGCsRVm7s+x7+hSLkFm0rXV tQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33de6ntdep-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 02:40:17 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0876WJGv022007;
+        Mon, 7 Sep 2020 02:40:16 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33de6ntddq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 02:40:16 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0876c5YS015446;
+        Mon, 7 Sep 2020 06:40:15 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04dal.us.ibm.com with ESMTP id 33c2a8sg3x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 06:40:15 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0876e9gR42402062
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Sep 2020 06:40:09 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36CE67805E;
+        Mon,  7 Sep 2020 06:40:14 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0CC787805C;
+        Mon,  7 Sep 2020 06:40:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.49.245])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Sep 2020 06:40:06 +0000 (GMT)
+Subject: Re: [PATCH v8 3/5] perf jevents: Add support for parsing
+ perchip/percore events
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com
+References: <20200906112004.49574-1-kjain@linux.ibm.com>
+ <20200906112004.49574-4-kjain@linux.ibm.com> <20200906125552.GC1199773@krava>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <c414cdac-9051-5e0f-b638-3c3cca5394a6@linux.ibm.com>
+Date:   Mon, 7 Sep 2020 12:10:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901074043.GT2352366@phenom.ffwll.local>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200906125552.GC1199773@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-07_01:2020-09-07,2020-09-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 suspectscore=2
+ phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009070061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > +	/**
-> > +	 * @max_segment:
-> > +	 *
-> > +	 * Max size for scatter list segments.  When unset the default
-> > +	 * (SCATTERLIST_MAX_SEGMENT) is used.
-> > +	 */
-> > +	size_t max_segment;
+
+
+On 9/6/20 6:25 PM, Jiri Olsa wrote:
+> On Sun, Sep 06, 2020 at 04:50:02PM +0530, Kajol Jain wrote:
 > 
-> Is there no better place for this then "at the bottom"? drm_device is a
-> huge structure, piling stuff up randomly doesn't make it better :-)
+> SNIP
+> 
+>>  typedef int (*func)(void *data, struct json_event *je);
+>>  
+>>  int eprintf(int level, int var, const char *fmt, ...)
+>> @@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
+>>  		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
+>>  	if (je->perpkg)
+>>  		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
+>> +	if (je->aggr_mode)
+>> +		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
+>>  	if (je->metric_expr)
+>>  		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
+>>  	if (je->metric_name)
+>> @@ -379,6 +394,7 @@ struct event_struct {
+>>  	char *pmu;
+>>  	char *unit;
+>>  	char *perpkg;
+>> +	char *aggr_mode;
+>>  	char *metric_expr;
+>>  	char *metric_name;
+>>  	char *metric_group;
+>> @@ -408,6 +424,7 @@ struct event_struct {
+>>  	op(pmu);						\
+>>  	op(unit);						\
+>>  	op(perpkg);						\
+>> +	op(aggr_mode);						\
+>>  	op(metric_expr);					\
+>>  	op(metric_name);					\
+>>  	op(metric_group);					\
+>> @@ -613,6 +630,8 @@ static int json_events(const char *fn,
+>>  				addfield(map, &je.unit, "", "", val);
+>>  			} else if (json_streq(map, field, "PerPkg")) {
+>>  				addfield(map, &je.perpkg, "", "", val);
+>> +			} else if (json_streq(map, field, "AggregationMode")) {
+>> +				addfield(map, &je.aggr_mode, "", "", val);
+> 
+> I think you should free je.aggr_mode
 
-Moved next to the other gem fields for now (v3 posted).
+My bad, missed that part. Will send updated one.
 
-> I think ideally we'd have a gem substruct like we have on the modeset side
-> at least.
-
-Phew, that'll be quite some churn in the tree.  And there aren't that many
-gem-related fields in struct drm_device.
-
-So you are looking for something like below (header changes only)?
-
-take care,
-  Gerd
-
-diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-index c455ef404ca6..950167ede98a 100644
---- a/include/drm/drm_device.h
-+++ b/include/drm/drm_device.h
-@@ -299,22 +299,8 @@ struct drm_device {
- 	/** @mode_config: Current mode config */
- 	struct drm_mode_config mode_config;
- 
--	/** @object_name_lock: GEM information */
--	struct mutex object_name_lock;
--
--	/** @object_name_idr: GEM information */
--	struct idr object_name_idr;
--
--	/** @vma_offset_manager: GEM information */
--	struct drm_vma_offset_manager *vma_offset_manager;
--
--	/**
--	 * @max_segment:
--	 *
--	 * Max size for scatter list segments for GEM objects.  When
--	 * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
--	 */
--	size_t max_segment;
-+	/** @gem_config: Current GEM config */
-+	struct drm_gem_config gem_config;
- 
- 	/** @vram_mm: VRAM MM memory manager */
- 	struct drm_vram_mm *vram_mm;
-diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-index 337a48321705..74129fb29fb8 100644
---- a/include/drm/drm_gem.h
-+++ b/include/drm/drm_gem.h
-@@ -39,6 +39,25 @@
- 
- #include <drm/drm_vma_manager.h>
- 
-+struct drm_gem_config {
-+	/** @object_name_lock: GEM information */
-+	struct mutex object_name_lock;
-+
-+	/** @object_name_idr: GEM information */
-+	struct idr object_name_idr;
-+
-+	/** @vma_offset_manager: GEM information */
-+	struct drm_vma_offset_manager *vma_offset_manager;
-+
-+	/**
-+	 * @max_segment:
-+	 *
-+	 * Max size for scatter list segments for GEM objects.  When
-+	 * unset the default (SCATTERLIST_MAX_SEGMENT) is used.
-+	 */
-+	size_t max_segment;
-+};
-+
- struct drm_gem_object;
- 
- /**
-
+Thanks,
+Kajol Jain
+> 
+> jirka
+> 
+>>  			} else if (json_streq(map, field, "Deprecated")) {
+>>  				addfield(map, &je.deprecated, "", "", val);
+>>  			} else if (json_streq(map, field, "MetricName")) {
+>> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+>> index c8f306b572f4..7da1a3743b77 100644
+>> --- a/tools/perf/pmu-events/pmu-events.h
+>> +++ b/tools/perf/pmu-events/pmu-events.h
+>> @@ -2,6 +2,11 @@
+>>  #ifndef PMU_EVENTS_H
+>>  #define PMU_EVENTS_H
+>>  
+>> +enum aggr_mode_class {
+>> +	PerChip = 1,
+>> +	PerCore
+>> +};
+>> +
+>>  /*
+>>   * Describe each PMU event. Each CPU has a table of PMU events.
+>>   */
+>> @@ -14,6 +19,7 @@ struct pmu_event {
+>>  	const char *pmu;
+>>  	const char *unit;
+>>  	const char *perpkg;
+>> +	const char *aggr_mode;
+>>  	const char *metric_expr;
+>>  	const char *metric_name;
+>>  	const char *metric_group;
+>> -- 
+>> 2.26.2
+>>
+> 
