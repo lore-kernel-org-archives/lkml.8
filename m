@@ -2,101 +2,133 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C572C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231A9C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0E8215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599517204;
-	bh=swIGSxMN1jDi1c8fwD9FBdsPbQw6ciSZxqdF/TkV9Hs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MNVALbtbVpepM6tUxriiE4CpmMXi/IiZI4fzW8Yg+GX5Zk3Sz8EqQasE355UBe0ya
-	 0yh34xYuCxvzFTMnh0YMlYgm7ByJ7j3out79Ljmu63ELfFXeNSglCbbrZog5/ja3jy
-	 rEQ9UD5eE8j0xQd/2swoiNK/UihWUr2ez8E/7jTc=
+	by mail.kernel.org (Postfix) with ESMTP id BE71F215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PWxlkKxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgIGWUA (ORCPT
+        id S1727965AbgIGWWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:20:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51030 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgIGWT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 18:19:59 -0400
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D8FF2177B;
-        Mon,  7 Sep 2020 22:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599517198;
-        bh=swIGSxMN1jDi1c8fwD9FBdsPbQw6ciSZxqdF/TkV9Hs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=SRePmzTV+Gw+7ejZ5V2/+/3+ud4cxIYfIZWDTwq1yhlCIVmvNJWSzNn8fCV5oKLD3
-         0Jj7TCbJ0Ks8a3mOvr8bkYSfHUL04yghaz8QZe+jI3ffk6aOuKHX7JTzYIsoD0FMo9
-         yBNHWv2YVxV5VRdAggSdHLB/MFjHUIGGhRWHIk4Y=
-Received: by mail-ed1-f42.google.com with SMTP id q21so14017633edv.1;
-        Mon, 07 Sep 2020 15:19:58 -0700 (PDT)
-X-Gm-Message-State: AOAM5314wKUmGQOxsWx490DdD+qR4LNdY9ZIIGZqoKGB5gS09iS4Nqfr
-        D1tY5UfOP9YL7PAZ3j1sdcdqUI8e6BhW6b6qKA==
-X-Google-Smtp-Source: ABdhPJw0U71O9xX+kGgiTo+ISsow9OgeCF69V6CdeVmbppl0sXiRcIe81jcbLFmP95q2wZ92kN3RtTuWDcmb2e/43V0=
-X-Received: by 2002:aa7:dcd2:: with SMTP id w18mr24139741edu.288.1599517196951;
- Mon, 07 Sep 2020 15:19:56 -0700 (PDT)
+        Mon, 7 Sep 2020 18:22:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35038 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726938AbgIGWWg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 18:22:36 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 087M2P64119530;
+        Mon, 7 Sep 2020 18:22:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=BKqn82UHhNA5lY4QEpaNef4h2jnXBhjIPPiSrCQfmcY=;
+ b=PWxlkKxNujSnpkkcIN7bj2u8K5bbsowcRTIdj5OzOWZHYAEBXytTkH5qz433DKCog+10
+ hdtrdtKkpHpPOuYFmg5wQmKRUi+zdDXWo9Buo371gACiX0YDAIPK72QB2fljD6Px8Cu2
+ 6EHscGJIdbK9+AwHr8VL658ie4HzIQ8PkqRGSYQ7gUXFKW3vV/EeLumhA+W7hNnvo9jn
+ OSYOkh5vwnnoWl4p7uaq5X8zbqiBkM51c9lOgdRg2xavglPTuCN+vXlEXYf6BFyt4mPS
+ 0SLx354GpV3CBT3yHMUj37tnCfwO36PNsVaFPny2Hx7ar8RnsgrIdOJRqLk6UMFkNrXt Sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33du2pb43v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 18:22:25 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 087M2QPx119576;
+        Mon, 7 Sep 2020 18:22:24 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33du2pb43k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 18:22:24 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 087MMNsF031057;
+        Mon, 7 Sep 2020 22:22:23 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 33cyq51hn5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 22:22:22 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 087MMKhK33816896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Sep 2020 22:22:20 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E7F5A4051;
+        Mon,  7 Sep 2020 22:22:20 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68E18A4053;
+        Mon,  7 Sep 2020 22:22:19 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.173.93])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Sep 2020 22:22:19 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 00:22:12 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, mst@redhat.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 1/2] virtio: let arch advertise guest's memory
+ access restrictions
+Message-ID: <20200908002212.462303b4.pasic@linux.ibm.com>
+In-Reply-To: <1599471547-28631-2-git-send-email-pmorel@linux.ibm.com>
+References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
+        <1599471547-28631-2-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200907125646.1946282-1-fparent@baylibre.com>
- <CAAOTY_9HYvxEygv-oz9wf+JjiSfp+Zn1u5okMftz3SncfK0G5A@mail.gmail.com> <CAOwMV_xEEt+m+LuL_3dF2J8rp4m4gn2T8AR5nGLi0sDoiOC=RQ@mail.gmail.com>
-In-Reply-To: <CAOwMV_xEEt+m+LuL_3dF2J8rp4m4gn2T8AR5nGLi0sDoiOC=RQ@mail.gmail.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 8 Sep 2020 06:19:43 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9YE66Ta9Dw6AT45TwawLe1WpVMFcV2wownPYC7bG5cKg@mail.gmail.com>
-Message-ID: <CAAOTY_9YE66Ta9Dw6AT45TwawLe1WpVMFcV2wownPYC7bG5cKg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: mediatek: add bindings for MT8167 clocks
-To:     Fabien Parent <fparent@baylibre.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-clk@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, masahiroy@kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        CK Hu <ck.hu@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
-        mars.cheng@mediatek.com, macpaul.lin@mediatek.com,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        mtk01761 <wendell.lin@mediatek.com>,
-        Owen Chen <owen.chen@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-07_11:2020-09-07,2020-09-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ clxscore=1011 priorityscore=1501 phishscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 mlxlogscore=977 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009070207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Fabien:
+On Mon,  7 Sep 2020 11:39:06 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Fabien Parent <fparent@baylibre.com> =E6=96=BC 2020=E5=B9=B49=E6=9C=888=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=8812:05=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> Hi Chun-Kuang,
->
-> > Why don't you add compatible of "mediatek,mt8167-mmsys"?
->
-> I forgot to remove 'mmsys' from the commit message. I decided to add
-> the documentation as part of the series that add support for MT8167 to
-> drivers/soc/mediatek/mtk-mmsys.c.
->
-> If you think it would be better to document it here I can add the
-> bindings in the V2.
+> An architecture may restrict host access to guest memory,
+> e.g. IBM s390 Secure Execution or AMD SEV.
+> 
+> Provide a new Kconfig entry the architecture can select,
+> CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, when it provides
+> the arch_has_restricted_virtio_memory_access callback to advertise
+> to VIRTIO common code when the architecture restricts memory access
+> from the host.
+> 
+> The common code can then fail the probe for any device where
+> VIRTIO_F_ACCESS_PLATFORM is required, but not set.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
-It's OK that you separate mmsys (main) and mmsys clock (sub) to
-different series.
-I just want to make sure nothing is missing.
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+
+[..]
+>  
+> +config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
+> +	bool
+> +	help
+> +	  This option is selected if the architecture may need to enforce
+> +	  VIRTIO_F_IOMMU_PLATFORM.
+> +
+
+A small nit: you use F_ACCESS_PLATFORM everywhere but here.
 
 Regards,
-Chun-Kuang.
+Halil
