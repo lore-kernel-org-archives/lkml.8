@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA44EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E728C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:38:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67F8421941
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:38:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5F521941
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:38:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496696;
-	bh=Cs67b7b8aOKdlSY4NXgpobtUy8yeAmBH6EWwOpUJqEQ=;
+	s=default; t=1599496712;
+	bh=6lJqYousbkRWzTnKPucX719ewW66jKHGJq1Or/5QNn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N/K926/GVIoHObIn2huZpte9tLOb6XoxTUsFrkMRTPIEhziQhLJ3NsxZ5lqErLItY
-	 QR8HjX4mqKgAovvMF7Gq11UGt2Zxs4neShds5uIyPbB2FdtPp7ig8IzhcDL1ciS72h
-	 AbCDxhyUEoso9anzIx9ySLyoQW+ZKvxywUPjOfKU=
+	b=AKV06yH6RRMNbzBV0tAyTSWEBSXBnFQM8NXa/X4a8togs7c/f5iESt71ZHD4LPB04
+	 vFR+RujTjeu1EmwkYUa3nXp4Bv2qh6kgsGSwy11H5XC953EQZ3zRRPEFhp3wBogp+f
+	 34l05xHvOnkHtrSuUp/XJyF1jTpvRZrQ0rRPau4Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgIGQiM (ORCPT
+        id S1730946AbgIGQia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48092 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:38:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbgIGQeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:25 -0400
+        id S1729764AbgIGQeb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F4BD21D40;
-        Mon,  7 Sep 2020 16:34:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4B5421D82;
+        Mon,  7 Sep 2020 16:34:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496464;
-        bh=Cs67b7b8aOKdlSY4NXgpobtUy8yeAmBH6EWwOpUJqEQ=;
+        s=default; t=1599496470;
+        bh=6lJqYousbkRWzTnKPucX719ewW66jKHGJq1Or/5QNn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RcLLHj0l0X04DIAW34reFt4vB4M0/g90Wg92HR5pYvhUhCxfrwwQjXjGTDEHEAOf7
-         glsauiSYddTC/pAPLOB2QSDqLGgBBp/5B4x3Si9Joe5C+TSh/v4o/Tt4UC2sm9YShW
-         ih8BTaNZaBK1Naj3Wg+Si4tnKcGr1CHPW/HdCSpM=
+        b=0X7oLzWtHmTrNc2iL8ToqSznhhH2E1B2702g73zeob7W0b0GBiN6lJi41AZBtSz34
+         duFGYOOuROwO1eSYdtG3IcKLN5JikIkq8IXOMatDIDD3D4myAgtvwvuA9mZScThWVp
+         lXrspdbQg/zJSlDg9w1w5s8yxuw6xaywzA5oFOH8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leon Romanovsky <leonro@nvidia.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 43/43] gcov: Disable gcov build with GCC 10
-Date:   Mon,  7 Sep 2020 12:33:29 -0400
-Message-Id: <20200907163329.1280888-43-sashal@kernel.org>
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/26] netfilter: conntrack: allow sctp hearbeat after connection re-use
+Date:   Mon,  7 Sep 2020 12:34:03 -0400
+Message-Id: <20200907163426.1281284-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
-References: <20200907163329.1280888-1-sashal@kernel.org>
+In-Reply-To: <20200907163426.1281284-1-sashal@kernel.org>
+References: <20200907163426.1281284-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,39 +61,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@nvidia.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
+[ Upstream commit cc5453a5b7e90c39f713091a7ebc53c1f87d1700 ]
 
-GCOV built with GCC 10 doesn't initialize n_function variable.  This
-produces different kernel panics as was seen by Colin in Ubuntu and me
-in FC 32.
+If an sctp connection gets re-used, heartbeats are flagged as invalid
+because their vtag doesn't match.
 
-As a workaround, let's disable GCOV build for broken GCC 10 version.
+Handle this in a similar way as TCP conntrack when it suspects that the
+endpoints and conntrack are out-of-sync.
 
-Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
-Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
-Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
-Cc: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+When a HEARTBEAT request fails its vtag validation, flag this in the
+conntrack state and accept the packet.
+
+When a HEARTBEAT_ACK is received with an invalid vtag in the reverse
+direction after we allowed such a HEARTBEAT through, assume we are
+out-of-sync and re-set the vtag info.
+
+v2: remove left-over snippet from an older incarnation that moved
+    new_state/old_state assignments, thats not needed so keep that
+    as-is.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/gcov/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/netfilter/nf_conntrack_sctp.h |  2 ++
+ net/netfilter/nf_conntrack_proto_sctp.c     | 39 ++++++++++++++++++---
+ 2 files changed, 37 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 3941a9c48f833..005d8b851bc18 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -4,6 +4,7 @@ menu "GCOV-based kernel profiling"
- config GCOV_KERNEL
- 	bool "Enable gcov-based kernel profiling"
- 	depends on DEBUG_FS
-+	depends on !CC_IS_GCC || GCC_VERSION < 100000
- 	select CONSTRUCTORS if !UML
- 	default n
- 	---help---
+diff --git a/include/linux/netfilter/nf_conntrack_sctp.h b/include/linux/netfilter/nf_conntrack_sctp.h
+index 9a33f171aa822..625f491b95de8 100644
+--- a/include/linux/netfilter/nf_conntrack_sctp.h
++++ b/include/linux/netfilter/nf_conntrack_sctp.h
+@@ -9,6 +9,8 @@ struct ip_ct_sctp {
+ 	enum sctp_conntrack state;
+ 
+ 	__be32 vtag[IP_CT_DIR_MAX];
++	u8 last_dir;
++	u8 flags;
+ };
+ 
+ #endif /* _NF_CONNTRACK_SCTP_H */
+diff --git a/net/netfilter/nf_conntrack_proto_sctp.c b/net/netfilter/nf_conntrack_proto_sctp.c
+index 7d7e30ea0ecf9..a937d4f75613f 100644
+--- a/net/netfilter/nf_conntrack_proto_sctp.c
++++ b/net/netfilter/nf_conntrack_proto_sctp.c
+@@ -65,6 +65,8 @@ static const unsigned int sctp_timeouts[SCTP_CONNTRACK_MAX] = {
+ 	[SCTP_CONNTRACK_HEARTBEAT_ACKED]	= 210 SECS,
+ };
+ 
++#define	SCTP_FLAG_HEARTBEAT_VTAG_FAILED	1
++
+ #define sNO SCTP_CONNTRACK_NONE
+ #define	sCL SCTP_CONNTRACK_CLOSED
+ #define	sCW SCTP_CONNTRACK_COOKIE_WAIT
+@@ -288,6 +290,7 @@ static int sctp_packet(struct nf_conn *ct,
+ 	u_int32_t offset, count;
+ 	unsigned int *timeouts;
+ 	unsigned long map[256 / sizeof(unsigned long)] = { 0 };
++	bool ignore = false;
+ 
+ 	sh = skb_header_pointer(skb, dataoff, sizeof(_sctph), &_sctph);
+ 	if (sh == NULL)
+@@ -332,15 +335,39 @@ static int sctp_packet(struct nf_conn *ct,
+ 			/* Sec 8.5.1 (D) */
+ 			if (sh->vtag != ct->proto.sctp.vtag[dir])
+ 				goto out_unlock;
+-		} else if (sch->type == SCTP_CID_HEARTBEAT ||
+-			   sch->type == SCTP_CID_HEARTBEAT_ACK) {
++		} else if (sch->type == SCTP_CID_HEARTBEAT) {
++			if (ct->proto.sctp.vtag[dir] == 0) {
++				pr_debug("Setting %d vtag %x for dir %d\n", sch->type, sh->vtag, dir);
++				ct->proto.sctp.vtag[dir] = sh->vtag;
++			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
++				if (test_bit(SCTP_CID_DATA, map) || ignore)
++					goto out_unlock;
++
++				ct->proto.sctp.flags |= SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++				ct->proto.sctp.last_dir = dir;
++				ignore = true;
++				continue;
++			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++			}
++		} else if (sch->type == SCTP_CID_HEARTBEAT_ACK) {
+ 			if (ct->proto.sctp.vtag[dir] == 0) {
+ 				pr_debug("Setting vtag %x for dir %d\n",
+ 					 sh->vtag, dir);
+ 				ct->proto.sctp.vtag[dir] = sh->vtag;
+ 			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
+-				pr_debug("Verification tag check failed\n");
+-				goto out_unlock;
++				if (test_bit(SCTP_CID_DATA, map) || ignore)
++					goto out_unlock;
++
++				if ((ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) == 0 ||
++				    ct->proto.sctp.last_dir == dir)
++					goto out_unlock;
++
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++				ct->proto.sctp.vtag[dir] = sh->vtag;
++				ct->proto.sctp.vtag[!dir] = 0;
++			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
+ 			}
+ 		}
+ 
+@@ -375,6 +402,10 @@ static int sctp_packet(struct nf_conn *ct,
+ 	}
+ 	spin_unlock_bh(&ct->lock);
+ 
++	/* allow but do not refresh timeout */
++	if (ignore)
++		return NF_ACCEPT;
++
+ 	timeouts = nf_ct_timeout_lookup(ct);
+ 	if (!timeouts)
+ 		timeouts = sctp_pernet(nf_ct_net(ct))->timeouts;
 -- 
 2.25.1
 
