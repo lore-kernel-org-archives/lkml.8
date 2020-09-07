@@ -2,138 +2,102 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48399C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:51:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D91C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11FF206D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B904A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="BWe9Fs7U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="giFPadgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726710AbgIGGvC (ORCPT
+        id S1726446AbgIGGyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:51:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57026 "EHLO
+        Mon, 7 Sep 2020 02:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726278AbgIGGu6 (ORCPT
+        with ESMTP id S1726278AbgIGGyg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:50:58 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6432AC061573
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 23:50:56 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id u4so13877557ljd.10
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 23:50:56 -0700 (PDT)
+        Mon, 7 Sep 2020 02:54:36 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471CDC061573;
+        Sun,  6 Sep 2020 23:54:36 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id mm21so6236488pjb.4;
+        Sun, 06 Sep 2020 23:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1wiamZiSqOZYsHvayxqUn7pqDinjO3WGVZRcAVghQGw=;
-        b=BWe9Fs7UY5hMTg1jX+30qqCiCf9RwV7KMCDkQ2cklvsiLZQPuGkE7p78Dg7U/pHo5S
-         iIc58p8AuTtPfPQZ3Jw/ac8wEhmYoEvmcpq9tJEXjzwT3GFQvyRyv9BRBl8zXkSrxSGO
-         UZyIASZDkT4LcKoUjauMgnTWsJwcea368uJG8=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=o8g2x95/5vs9teUbA+OBdLU6ARSUU/ROuR8WWiVtU9g=;
+        b=giFPadgMBYboBptsHg38rbJuFrrSa7hN5l2ZasV3JrETKlbNfqoiI2M4BTiL2/4FVl
+         t3qr7tzlSXXzCyyJsCkoLasYAE3/mzHasPjNxASmT9ih5kqapZ/bSe6VPffuIpgbmsF5
+         8RLannbfcmiIlYYl2nofuISkLnCX4o3PsRokxpCnfQ+W4dFG61HezklWqfwprkIg1/1s
+         4qRbLkgZQfltAoPatGT7rTyb1r2rSvEVHDfa2B+3Q9+IjKULub2rgKNeVoHN1X2I08ar
+         96TLIn4xcZJjfdVYsFtvVYOnU1hVeZjMGVg2+JLviy47EF62nGac8hkwDVuo+yIxQZB9
+         Vj6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1wiamZiSqOZYsHvayxqUn7pqDinjO3WGVZRcAVghQGw=;
-        b=kLJL3eydMTt5pMkVZIaBWM1lQy8wK4A8I5dI5VAeSUDOy1EfKvNCdfu8StcCO5YGYZ
-         Hj+OJSIfozNrF6VKkhVjKmopoYKOMw4KcTmwpf+jS0kOJUQ9GQozl64G6PlmSV/wyqB8
-         TLY+MrrML+Uj/+Zoz/Jv+OWwYCdLKMkxRcmt8O17we3tJViksyI+EIPmI668nD0xiAG8
-         8b2t+s/pClA01ugvgoeTifoO4jd9MmzpkE8K3pnX1al+UYIeM/C4vB9INemkp/odQzHa
-         E8nagdJWXo+MuAzAKf84itkXVRsuDDhXVWus3PNpgFcRA67tfx2+OYD9fzZdBNER7mGh
-         7ybA==
-X-Gm-Message-State: AOAM533ngpDmki1XniTD7bRGAsWmhLAPol9HniFHd/JpiJOSZcjoS4jr
-        u1oKfQb/oWB+VjQxzWz4aE83BXPavP/v/4awekI=
-X-Google-Smtp-Source: ABdhPJyykUmfGWhJYO26lt/rteoq/QrNE6oIBGAl5GFaq10qZmw+x9Edsu4PY9l8iodW3b63i7TytQ==
-X-Received: by 2002:a2e:a0d5:: with SMTP id f21mr10362793ljm.364.1599461454862;
-        Sun, 06 Sep 2020 23:50:54 -0700 (PDT)
-Received: from [172.16.11.132] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f9sm6182599ljc.129.2020.09.06.23.50.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Sep 2020 23:50:54 -0700 (PDT)
-Subject: Re: [PATCH] /dev/zero: also implement ->read
-To:     Christoph Hellwig <hch@lst.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org
-References: <20200903155922.1111551-1-hch@lst.de>
- <8d430999-b155-dbfa-e7db-f414b48014b1@rasmusvillemoes.dk>
- <20200907062026.GA19076@lst.de>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <4a981ee8-2d57-c7ce-a1ca-43ad237471d2@rasmusvillemoes.dk>
-Date:   Mon, 7 Sep 2020 08:50:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=o8g2x95/5vs9teUbA+OBdLU6ARSUU/ROuR8WWiVtU9g=;
+        b=H6v/TrRDSnK0VJics8NJvkQ6nzNa40aBt5N2Ao/jjYkBceV0LDmYT37bvUb8OJGQDG
+         zXj5HG6k8ocEqlvOERaF1cDTCgOfhHMGdWwzjq+HTyrWG9PbuJfVN7jvCK7okdo1DaId
+         0Q6hDq+aOzNKALYO8S6S7CBV56ecDt59xUrogIEs1lgZji1YlnPZE49DBP68TfiEEovt
+         F1i1zggST6WmHa5ndvOwxMilpX3yDYSSVr36wuAwY32D41yHcwHXQiGPowQYgVPyc5sv
+         a3BmQSfzo7K3n8W1Al58yKaivq7wBBeDvkBciCSKfL5sc4C3XDER72dWdd35vveiLoXM
+         KpIQ==
+X-Gm-Message-State: AOAM531yq9pxZ4iYbJrr3DybiqVyCJZtcvnZNHFDsgMVIn3pRZwD4+0Z
+        naVQTciYTK0doEIJBjtPIyQ=
+X-Google-Smtp-Source: ABdhPJw55OcWofC6teQbiKEAY1os2nE0Xo3rrdLivdlVHahC5JQQHN2ViUEJwrnGbmArWTFuwtnBlg==
+X-Received: by 2002:a17:90a:5283:: with SMTP id w3mr19683479pjh.201.1599461675200;
+        Sun, 06 Sep 2020 23:54:35 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id q3sm14114254pfb.201.2020.09.06.23.54.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2020 23:54:34 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 12:22:16 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-fbdev@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v1 1/2] video: fbdev: aty:
+ radeon_pm: remove redundant CONFIG_PM container
+Message-ID: <20200907065139.GA29423@gmail.com>
+References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+ <20200806072658.592444-1-vaibhavgupta40@gmail.com>
+ <20200806072658.592444-2-vaibhavgupta40@gmail.com>
+ <20200907063347.GB29062@gmail.com>
+ <20200907064810.GB284261@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907062026.GA19076@lst.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907064810.GB284261@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/09/2020 08.20, Christoph Hellwig wrote:
-> On Mon, Sep 07, 2020 at 12:34:37AM +0200, Rasmus Villemoes wrote:
->> On 03/09/2020 17.59, Christoph Hellwig wrote:
+On Mon, Sep 07, 2020 at 08:48:10AM +0200, Greg KH wrote:
+> On Mon, Sep 07, 2020 at 12:03:47PM +0530, Vaibhav Gupta wrote:
+> > 
 > 
->>> +static ssize_t read_zero(struct file *file, char __user *buf,
->>> +			 size_t count, loff_t *ppos)
->>> +{
->>> +	size_t cleared = 0;
->>> +
->>> +	while (count) {
->>> +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
->>> +
->>> +		if (clear_user(buf + cleared, chunk))
->>> +			return cleared ? cleared : -EFAULT;
->>
->> Probably nobody really cares, but currently doing
->>
->> read(fd, &unmapped_page - 5, 123);
->>
->> returns 5, and those five bytes do get cleared; if I'm reading the above
->> right you'd return -EFAULT for that case.
->>
->>
->>> +		cleared += chunk;
->>> +		count -= chunk;
->>> +
->>> +		if (signal_pending(current))
->>> +			return cleared ? cleared : -ERESTARTSYS;
->>
->> I can't see how we can get here without 'cleared' being positive, so
->> this can just be 'return cleared' (and if you fix the above EFAULT case
->> to more accurately track how much got cleared, there's probably no
->> longer any code to be symmetric with anyway).
+> Why did you send empty emails out?
 > 
-> Yeah, I'll fix these up and resend.
-> 
+> greg k-h
+I was trying to re-ping the patches. Guess it went empty. I will send patches
+again.
 
-Actually, while you're micro-optimizing it, AFAIK VFS already handles
-count==0, so you can avoid the initial branch and the last
-cond_resched() by writing it something like
-
-  while (1) {
-    size_t chunk = min_t(size_t, count, PAGE_SIZE), c;
-    c = chunk - clear_user(buf + cleared, chunk);
-    if (unlikely(!c))
-       return cleared ?: -EFAULT;
-    cleared += c;
-    count -= c;
-    if (!count || signal_pending())
-       return cleared;
-    cond_resched();
-  }
-
-For the dd test case with the default bs=512 that avoids cond_resched()
-and signal_pending() altogether.
-
-Rasmus
+Vaibhav
