@@ -2,121 +2,104 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E46C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C792C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 021CE2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:17:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nGCE0gaQ"
+	by mail.kernel.org (Postfix) with ESMTP id EE75E21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730145AbgIGPRD (ORCPT
+        id S1729883AbgIGPRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:17:03 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:61867 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730048AbgIGPOJ (ORCPT
+        Mon, 7 Sep 2020 11:17:31 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:53487 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730120AbgIGPQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:14:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1599491650; x=1631027650;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=YjMSHQHURdbx/t6NUVi9Q5Iws7vt3dA1WAArwTiPwsI=;
-  b=nGCE0gaQ7gaQQNwf+JT2m+LKIAIW31CI38f3gJ53znGZJ0LVzEx1gbDU
-   ZVJPDWtcpldQMXPFUzyf0tQC7rPyQlYK1UHxrBdk6bIVF58Sqqc+I4zyg
-   StKlGxdbxWqyuV5nKd1Nk7OSprpo3ZhS667j8FoqgYWy4bpk/bsHAaDXv
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.76,402,1592870400"; 
-   d="scan'208";a="52576723"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-17c49630.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 07 Sep 2020 15:14:08 +0000
-Received: from EX13D16EUB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-        by email-inbound-relay-1e-17c49630.us-east-1.amazon.com (Postfix) with ESMTPS id D9334A23D5;
-        Mon,  7 Sep 2020 15:14:05 +0000 (UTC)
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.160.192) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 7 Sep 2020 15:13:55 +0000
-Subject: Re: [PATCH v8 17/18] nitro_enclaves: Add overview documentation
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        David Duncan <davdunc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "Frank van der Linden" <fllinden@amazon.com>,
-        Alexander Graf <graf@amazon.de>,
-        "Karen Noel" <knoel@redhat.com>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm <kvm@vger.kernel.org>,
-        ne-devel-upstream <ne-devel-upstream@amazon.com>
-References: <20200904173718.64857-1-andraprs@amazon.com>
- <20200904173718.64857-18-andraprs@amazon.com>
- <20200907090126.GD1101646@kroah.com>
- <44a8a921-1fb4-87ab-b8f2-c168c615dbbd@amazon.com>
- <20200907140803.GA3719869@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <b8a1e66c-7674-7354-599e-159efd260ba9@amazon.com>
-Date:   Mon, 7 Sep 2020 18:13:50 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
- Gecko/20100101 Thunderbird/78.2.1
+        Mon, 7 Sep 2020 11:16:31 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 1DD539F4;
+        Mon,  7 Sep 2020 11:06:23 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 07 Sep 2020 11:06:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm3; bh=L
+        NZ9BDmmfmh8OGRK1OlhnYmyHiIUpzUacs8VOuZ8w04=; b=b4Lsgrtj1BefwDoze
+        GoY+2YUuX9foRM6JEnPjjbbzW3QWu/bmUz7Y8VZC4vdfCNVhOUQiYrsxE/tjM15Z
+        Dz64NKf4bO8eO2RwyKiQldZs/Uae1LIH4kuGpm0Grf56IJOGGLh0qooWon9sE726
+        dg2PMCTq12IomJMDwyUYRfkUiaTD8dYE3dqupxdT5k1vcHp5HZMF34JjKOwvg8RR
+        qlFRsdwzqpn7M4CXw3FXWJWT+w7qflADPCCxF37YVrC8M4D1QxqbrlD99nc+dewU
+        R6XLlo2+gJRoXlokO3wjiJsxVtyO/ueqSt5A5n+xZhBWEjKAeFiI3WygY9yCoIvA
+        8RYeg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=LNZ9BDmmfmh8OGRK1OlhnYmyHiIUpzUacs8VOuZ8w
+        04=; b=oit6HXSQwQ3Pc5j8CLHTcfTDtPuanq54o0vpR49cmF06zmWpqYYUm14wp
+        R27+FUag2zO+7urGk+wkNjLto/xXB+MLX+i7a2750r/Z7IQKhnn2+RBp/UYsRTtw
+        hEnnp49RKcfHKGmcc0VhMhW4u5gwFYxeO5N+EiD0LokC6RLILSFyo1UUOnmMBoDA
+        6ghcZ3feLz13Pkcrq5W6KuklbwjnmYuLJUqToZGGjafxjFzD0PpedTWM531MPdSB
+        VC7Uog1yTkJ9ShtAhICaubzvvWhhuxCyfT6+ZJcxOD9aFJDcUEjZb8eq1eyA0our
+        9DpsB3HDTG2/DCx9Fwo/dgHRkDk2Q==
+X-ME-Sender: <xms:bExWX5hvB2c1DXTApKg9kSFi8rcMFPEaFQSf7cgwA8l09xl8hei9kg>
+    <xme:bExWX-Avg4SIZpEj2QHC8TJ4CiByNHtPQMuSKNUNMuQ2tHC4-GUKCM9g-Ohbmjvq8
+    zqkujN-LfaYxK3zmWo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudehtddgkeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthhqredttddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefgjeettdejgffgffdvteeutdehtdehgeehueetkeefgefhtdetjeekledu
+    gedvudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:bUxWX5H6vqLO6TSycubojKKngmIoVKgGlCxCk9NQg_-rQoIcb3dNUA>
+    <xmx:bUxWX-Rh_uDvmu5v3LsrQmpThnnVvDA9u5fnXK-vEXEFGSN2z9aO0w>
+    <xmx:bUxWX2xKtoq9D8FkMWi-ZJUHfZ5flWSVaDEo3i9ciggeuL2BhVHccQ>
+    <xmx:bkxWXws13rGW-YmoakDpzmdVREQJx3esuT1q_JWn754Jk6pNqTiohA>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B5E35328005A;
+        Mon,  7 Sep 2020 11:06:20 -0400 (EDT)
+Date:   Mon, 7 Sep 2020 17:06:18 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <jroedel@suse.de>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] iommu/sun50i: Fix set-but-not-used variable warning
+Message-ID: <20200907150618.g6jbkmvosfh2ek73@gilmour.lan>
+References: <20200904113906.3906-1-joro@8bytes.org>
 MIME-Version: 1.0
-In-Reply-To: <20200907140803.GA3719869@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.160.192]
-X-ClientProxiedBy: EX13D46UWB002.ant.amazon.com (10.43.161.70) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200904113906.3906-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAwNy8wOS8yMDIwIDE3OjA4LCBHcmVnIEtIIHdyb3RlOgo+IE9uIE1vbiwgU2VwIDA3LCAy
-MDIwIGF0IDA0OjQzOjExUE0gKzAzMDAsIFBhcmFzY2hpdiwgQW5kcmEtSXJpbmEgd3JvdGU6Cj4+
-Cj4+IE9uIDA3LzA5LzIwMjAgMTI6MDEsIEdyZWcgS0ggd3JvdGU6Cj4+PiBPbiBGcmksIFNlcCAw
-NCwgMjAyMCBhdCAwODozNzoxN1BNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+Pj4g
-U2lnbmVkLW9mZi1ieTogQW5kcmEgUGFyYXNjaGl2IDxhbmRyYXByc0BhbWF6b24uY29tPgo+Pj4+
-IFJldmlld2VkLWJ5OiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPgo+Pj4+IC0tLQo+
-Pj4+IENoYW5nZWxvZwo+Pj4+Cj4+Pj4gdjcgLT4gdjgKPj4+Pgo+Pj4+ICogQWRkIGluZm8gYWJv
-dXQgdGhlIHByaW1hcnkgLyBwYXJlbnQgVk0gQ0lEIHZhbHVlLgo+Pj4+ICogVXBkYXRlIHJlZmVy
-ZW5jZSBsaW5rIGZvciBodWdlIHBhZ2VzLgo+Pj4+ICogQWRkIHJlZmVyZW5jZSBsaW5rIGZvciB0
-aGUgeDg2IGJvb3QgcHJvdG9jb2wuCj4+Pj4gKiBBZGQgbGljZW5zZSBtZW50aW9uIGFuZCB1cGRh
-dGUgZG9jIHRpdGxlIC8gY2hhcHRlciBmb3JtYXR0aW5nLgo+Pj4+Cj4+Pj4gdjYgLT4gdjcKPj4+
-Pgo+Pj4+ICogTm8gY2hhbmdlcy4KPj4+Pgo+Pj4+IHY1IC0+IHY2Cj4+Pj4KPj4+PiAqIE5vIGNo
-YW5nZXMuCj4+Pj4KPj4+PiB2NCAtPiB2NQo+Pj4+Cj4+Pj4gKiBObyBjaGFuZ2VzLgo+Pj4+Cj4+
-Pj4gdjMgLT4gdjQKPj4+Pgo+Pj4+ICogVXBkYXRlIGRvYyB0eXBlIGZyb20gLnR4dCB0byAucnN0
-Lgo+Pj4+ICogVXBkYXRlIGRvY3VtZW50YXRpb24gYmFzZWQgb24gdGhlIGNoYW5nZXMgZnJvbSB2
-NC4KPj4+Pgo+Pj4+IHYyIC0+IHYzCj4+Pj4KPj4+PiAqIE5vIGNoYW5nZXMuCj4+Pj4KPj4+PiB2
-MSAtPiB2Mgo+Pj4+Cj4+Pj4gKiBOZXcgaW4gdjIuCj4+Pj4gLS0tCj4+Pj4gICAgRG9jdW1lbnRh
-dGlvbi9uaXRyb19lbmNsYXZlcy9uZV9vdmVydmlldy5yc3QgfCA5NSArKysrKysrKysrKysrKysr
-KysrKwo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA5NSBpbnNlcnRpb25zKCspCj4+Pj4gICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vbml0cm9fZW5jbGF2ZXMvbmVfb3ZlcnZpZXcu
-cnN0Cj4+PiBBIHdob2xlIG5ldyBzdWJkaXIsIGZvciBhIHNpbmdsZSBkcml2ZXIsIGFuZCBub3Qg
-dGllZCBpbnRvIHRoZSBrZXJuZWwKPj4+IGRvY3VtZW50YXRpb24gYnVpbGQgcHJvY2VzcyBhdCBh
-bGw/ICBOb3QgZ29vZCA6KAo+Pj4KPj4gV291bGQgdGhlICJ2aXJ0IiBkaXJlY3RvcnkgYmUgYSBi
-ZXR0ZXIgb3B0aW9uIGZvciB0aGlzIGRvYyBmaWxlPwo+IFllcy4KCkFscmlnaHQsIEknbGwgdXBk
-YXRlIHRoZSBkb2MgZmlsZSBsb2NhdGlvbiwgdGhlIGluZGV4IGZpbGUgYW5kIHRoZSAKTUFJTlRB
-SU5FUlMgZW50cnkgdG8gcmVmbGVjdCB0aGUgbmV3IGRvYyBmaWxlIGxvY2F0aW9uLgoKVGhhbmtz
-LApBbmRyYQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVyIChSb21hbmlhKSBTLlIuTC4gcmVn
-aXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0LCBVQkM1LCBmbG9vciAyLCBJYXNp
-LCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdpc3RlcmVkIGluIFJvbWFuaWEuIFJl
-Z2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
+On Fri, Sep 04, 2020 at 01:39:06PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+>=20
+> Fix the following warning the the SUN50I driver:
+>=20
+>    drivers/iommu/sun50i-iommu.c: In function 'sun50i_iommu_irq':
+>    drivers/iommu/sun50i-iommu.c:890:14: warning: variable 'iova' set but =
+not used [-Wunused-but-set-variable]
+>      890 |  phys_addr_t iova;
+>          |              ^~~~
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
 
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
