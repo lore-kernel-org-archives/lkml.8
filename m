@@ -2,145 +2,143 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87830C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3261DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F874206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="eQBtiDgJ"
+	by mail.kernel.org (Postfix) with ESMTP id E717F206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599499571;
+	bh=gjXisqWlCHJgG1MHtw8oGtySEd9v+oVnzVV5ewk2mtM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=pfFSTRkl4uwVRvwybfaRBoa/mm34XZWPCeTOgVk4T1ZHwlTPQrLKfj/JEyMgAnrlO
+	 vgzMtsLwhcQcOxsqSqwDD+ryjMsWKXWuO3T+guRZAfsetcsC06ubnZE1RjkrQhxxHB
+	 PTszgksOGX3m80zCukD06wHEPz87bei+spTfhv0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgIGNUs (ORCPT
+        id S1730893AbgIGR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:20:48 -0400
-Received: from mail-bn8nam12on2040.outbound.protection.outlook.com ([40.107.237.40]:7520
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729350AbgIGNOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:14:10 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AUiR9tgAuG2KoGizOhxioxT1t0i89QdXYz3IA3l1PgG7GbtTE1HsT7gYzMB182qtBNzrsXms83MK8uhzWtRlyX/Kkqi7lkG4muDXU7g8Pq2XDcoJFanX6uihprD25Seu2wZ2QvXHRH6TXj8kOvxvqSMQYRMOnNECpmMA3eUPAD4oRaIG19qk6XrQllSdVZYGOES5+2gb39LAkU3fnMgGYMLy30OB648JAZSwQGKLaXlKVnYriMAR0+CkvLOxa0V8dC60XbaerjzYeVgwtQ6FtXmRV9R9jHUnho1pOgjNNzuB2h0ddg9eSj6rNybawiISxHCsbEx+Es2AtU5VAMyDeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIG5nVSXmNiQ7oTb/9BefAzF/VsuaPjwanUnnCP/+08=;
- b=n01rB0iCVPVS8FbbC9YSwaaONHlhItA1utZ2BbOyynqBgaoHua1uKCjVf3Gth2+Zh/pbCaqbNeb8F4n/RHcy6cN8qnI3gxAu7rT5Kva056EKbKVfT1xrMIUEIJkK1zX+o9X3js58TFqHUrmF9TlG8CUgoZplN8Z+QbMQJRrDxzh3ajaSCwET1M9BJa9w3QCdwG8/2YNA1jm7ElMwT7MYOUD+wl+qgZEp7PBldzMspmyMXLL0sDrV0bgb0tLCRe0ei2i0NM3D8y9iRGZcTXCodVhLHOM2KshUsgCfFLXIIZ/AxT69Q1ZH1U9mGgBMIHIB0+8XQ7oISKx1y02+2xrtsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mIG5nVSXmNiQ7oTb/9BefAzF/VsuaPjwanUnnCP/+08=;
- b=eQBtiDgJJ+daRSBWsRgnG+PmfkLorQj1JNrFP73mCwBvZj/O+mIN2fM84AckC4ewjxuJSKLgQwQKR+gZo9isZO6HwY5TQ2gvw799Z7suoyVX6B0eSDBIiqo6AC02hqGIDI5JwqEeX59Ii2elLOZlNXJ/a2nqcl5YK4rXUAvHBMk=
-Received: from BYAPR02MB5638.namprd02.prod.outlook.com (2603:10b6:a03:9f::18)
- by BYAPR02MB5735.namprd02.prod.outlook.com (2603:10b6:a03:128::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.19; Mon, 7 Sep
- 2020 13:14:05 +0000
-Received: from BYAPR02MB5638.namprd02.prod.outlook.com
- ([fe80::895c:ca2a:bd78:8c6b]) by BYAPR02MB5638.namprd02.prod.outlook.com
- ([fe80::895c:ca2a:bd78:8c6b%5]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 13:14:05 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        Michal Simek <michals@xilinx.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net-next] net: xilinx: remove redundant null check before
- clk_disable_unprepare()
-Thread-Topic: [PATCH net-next] net: xilinx: remove redundant null check before
- clk_disable_unprepare()
-Thread-Index: AQHWhRc+nua2aTQ0EUCz2lx+OASiAaldJw0w
-Date:   Mon, 7 Sep 2020 13:14:05 +0000
-Message-ID: <BYAPR02MB5638CE555F06629B3EC83043C7280@BYAPR02MB5638.namprd02.prod.outlook.com>
-References: <1599483723-43704-1-git-send-email-zhangchangzhong@huawei.com>
-In-Reply-To: <1599483723-43704-1-git-send-email-zhangchangzhong@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [149.199.50.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6360e526-48f3-438e-5008-08d8532fe5d7
-x-ms-traffictypediagnostic: BYAPR02MB5735:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB5735E758ADAB2D545B19B420C7280@BYAPR02MB5735.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1060;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: J/me3vKBoA4mDrbGOUqa1f+KVCkwkkJ12bSHQhY6TmGJP+FbdOW40Txi4p+rWIfFj+DFuZt25vjHPMK0YcdXceJIFID918U22nbGogjDsqKqiq8b4fkStsjTSw0wYIEt+ehoWQGzKNBZu59p4EqNakBNPJYpxrhmtfRHJV4oDzR7cNf1k6qHpzYtUpCT5jGC/Bcvin2KPBGbhXovTKzzIZKP+IgMG0GrdAvHyDMgXEx6unfYonzo/qrU8UW/idJLf7Jv17JRVko6WDIXlcKWJNwCyZbw2NdIhxkTtcA8O3xdfBn9lJKlc2AvP/CKIaUmszt0+IZTED0NKSKvQIXXsg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5638.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(396003)(136003)(39860400002)(316002)(5660300002)(71200400001)(66446008)(66946007)(66476007)(76116006)(64756008)(66556008)(52536014)(2906002)(33656002)(9686003)(55016002)(54906003)(86362001)(26005)(186003)(8936002)(110136005)(478600001)(8676002)(53546011)(4326008)(6506007)(7696005)(83380400001)(6636002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: C0Qz8Z3PVYh0tVCjPq0EF5xRUhBujKjR0uKo3PcFwhIw4NHxfRWBtqiQonOZIuxeZhuvRDzL9SN6RxHrXhmxd0/H9gfpqmtUrjI8CUeCqnI8AyAqPziVzCLfeECo+qRGNwmnq5BnJF2hkLvaIU/uVxxDyAbT6ea9ebGNb9dP1sezo3/064IjjEJvQ72alxQ3eIIp+C/0KOGnwDnYXxVUMdGeuF58s7ukUbKGIu9x5iGwxgFhpsPwU2OczOZcP6ZcJrhNTbnS61CsghwL/AelWEg07z7c4m+nX0sqpwTCuKJ/ZhEg/4BxbpHXJK/xkBbwY7k9pWI4zqBVT4VxuPs/GM1eDzwkUpJr4q/YISDr6jGoftCoO+MQSECB9vqmEBdVki8MEFX3swPtONxbiF6bJLtp8qPK+ASYD6Mt5aSBJzyS5+Gz2KkitrMvS0UYVpvtJg5FisgRfRWrRrsYRyAz9VrkDHJa3Y0yb4PMzTm3kBRGRoQCH3sfQltZDNIGEF6PvadAVQHX1MnWYTziwokbTLgWazSFHmnp8LxCi3TGDsP6tMkaTWA4Z9DAUB8g87Og+YhjM1bHNEqeBadH7pTJBJCnALO2o9Ggmy2jBxcG4I+9tYITyOpDSKEnvApt0HDo0wciij5z3lCh8fGfEDIElQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 7 Sep 2020 13:26:08 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41587 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbgIGNUu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:20:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w5so15794580wrp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:20:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wJh+96DWgK4/OLwhvVspOgZjqQ2tTXtnfvMf9TMtY+0=;
+        b=MIlO9bhzcyjTXqukJdilqyEgzl2Zq/KhbgLyCGs/wrIfFDp7jMXFkVEpSPb01MKaxy
+         IDcgE+XlrZ18Y5ue+5pE7Lg4Gr+REukR1mS56wQIXiF32vqRnRm78RxAjRUoNzrxAFZK
+         bUkMOIVhYHgbAu9YqCuxgriEkWUTAnx7udKQB4FMMZvWHHOPb0qsier3IOZZY+J/5Mnk
+         m3/RnMr9EBUnRIE+mCP/d+iyLtWZ+fL3fO2jcFQ2B96vKo/6gUEFFWqIsKEY40UBYT7/
+         c0rVw/ITGS65GD7ILxJ64WC/jv7ZxLL3DYfVLraR0MnXV6SsWnLhcT3hvlbXuzycBCO8
+         Apew==
+X-Gm-Message-State: AOAM531dOtmEqTZABOGILb/jBMGRiW9tbC3TeW3v91tlebkUSqSugIdK
+        QUcOxp8eE+S4/K257xiKnzZiZDnCCEOiMcBn+Rg=
+X-Google-Smtp-Source: ABdhPJwfdgYm5BkwquVIODnEJccaJug77FwuJ80KdUg1SzNeTy6idbD1HYhmNquByLy+vxk+6mUW/qi/PzCQDGDHnkg=
+X-Received: by 2002:adf:e481:: with SMTP id i1mr21343750wrm.391.1599484846078;
+ Mon, 07 Sep 2020 06:20:46 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB5638.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6360e526-48f3-438e-5008-08d8532fe5d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 13:14:05.5577
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cVp/5/XpnFWFhqZykun/wr5Vs0vYyNLC+lGRsoeUVXusU2pki36Kk/erQCEDYlXEFTZjpWUwLiCZCg3gp4gXZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5735
+References: <20200907034502.753230-1-namhyung@kernel.org> <20200907034502.753230-9-namhyung@kernel.org>
+ <78911dd7-8a93-0f1b-7805-1fad87ad6979@huawei.com>
+In-Reply-To: <78911dd7-8a93-0f1b-7805-1fad87ad6979@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 7 Sep 2020 22:20:34 +0900
+Message-ID: <CAM9d7ci=knY_Wu8vbdfOzCtJX_onciz2eri8E=d2KM2qwG6QGQ@mail.gmail.com>
+Subject: Re: [PATCH 8/9] perf test: Free aliases for PMU event map aliases test
+To:     John Garry <john.garry@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Zhang Changzhong <zhangchangzhong@huawei.com>
-> Sent: Monday, September 7, 2020 6:32 PM
-> To: Radhey Shyam Pandey <radheys@xilinx.com>; davem@davemloft.net;
-> kuba@kernel.org; Michal Simek <michals@xilinx.com>
-> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH net-next] net: xilinx: remove redundant null check before
-> clk_disable_unprepare()
->=20
-> Because clk_prepare_enable() and clk_disable_unprepare() already checked
-> NULL clock parameter, so the additional checks are unnecessary, just
-> remove them.
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+Hello,
 
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+On Mon, Sep 7, 2020 at 7:31 PM John Garry <john.garry@huawei.com> wrote:
+>
+> On 07/09/2020 04:45, Namhyung Kim wrote:
+> > The aliases were never released causing the following leaks:
+> >
+> >    Indirect leak of 1224 byte(s) in 9 object(s) allocated from:
+> >      #0 0x7feefb830628 in malloc (/lib/x86_64-linux-gnu/libasan.so.5+0x107628)
+> >      #1 0x56332c8f1b62 in __perf_pmu__new_alias util/pmu.c:322
+> >      #2 0x56332c8f401f in pmu_add_cpu_aliases_map util/pmu.c:778
+> >      #3 0x56332c792ce9 in __test__pmu_event_aliases tests/pmu-events.c:295
+> >      #4 0x56332c792ce9 in test_aliases tests/pmu-events.c:367
+> >      #5 0x56332c76a09b in run_test tests/builtin-test.c:410
+> >      #6 0x56332c76a09b in test_and_print tests/builtin-test.c:440
+> >      #7 0x56332c76ce69 in __cmd_test tests/builtin-test.c:695
+> >      #8 0x56332c76ce69 in cmd_test tests/builtin-test.c:807
+> >      #9 0x56332c7d2214 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:312
+> >      #10 0x56332c6701a8 in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:364
+> >      #11 0x56332c6701a8 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:408
+> >      #12 0x56332c6701a8 in main /home/namhyung/project/linux/tools/perf/perf.c:538
+> >      #13 0x7feefb359cc9 in __libc_start_main ../csu/libc-start.c:308
+> >
+> > Cc: John Garry <john.garry@huawei.com>
+> > Fixes: 956a78356c24c ("perf test: Test pmu-events aliases")
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >   tools/perf/tests/pmu-events.c | 5 +++++
+> >   tools/perf/util/pmu.c         | 2 +-
+> >   tools/perf/util/pmu.h         | 1 +
+> >   3 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> > index eb19f9a0bc15..d3517a74d95e 100644
+> > --- a/tools/perf/tests/pmu-events.c
+> > +++ b/tools/perf/tests/pmu-events.c
+> > @@ -274,6 +274,7 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+> >       int res = 0;
+> >       bool use_uncore_table;
+> >       struct pmu_events_map *map = __test_pmu_get_events_map();
+> > +     struct perf_pmu_alias *a, *tmp;
+> >
+> >       if (!map)
+> >               return -1;
+> > @@ -347,6 +348,10 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+> >                         pmu_name, alias->name);
+> >       }
+> >
+> > +     list_for_each_entry_safe(a, tmp, &aliases, list) {
+> > +             list_del(&a->list);
+> > +             perf_pmu_free_alias(a);
+>
+> This looks ok.
 
 Thanks!
-> ---
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index fa5dc299..9aafd3e 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -2038,8 +2038,7 @@ static int axienet_remove(struct platform_device
-> *pdev)
->=20
->  	axienet_mdio_teardown(lp);
->=20
-> -	if (lp->clk)
-> -		clk_disable_unprepare(lp->clk);
-> +	clk_disable_unprepare(lp->clk);
->=20
->  	of_node_put(lp->phy_node);
->  	lp->phy_node =3D NULL;
-> --
-> 2.9.5
 
+>
+> I also notice that we have other paths like this, where the allocated
+> pmu (and aliases) are not freed for later error paths, it seems:
+>
+> parse_events_add_pmu() -> perf_pmu_find() -> pmu_lookup() ->
+> pmu_add_cpu_aliases().
+>
+> I had a quick look at the rest of the series, and could not see if we
+> fix up any of this.
+
+Right, I also found that and wondered why ASAN didn't report it.
+I think we should free all pmu instances from the pmus list.
+But this can be a later work..
+
+Thanks
+Namhyung
