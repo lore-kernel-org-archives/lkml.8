@@ -2,81 +2,69 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5804DC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E58C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFC22078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:24:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599470693;
-	bh=MF3X8v5mIVSH9DjNRPkf+bnMwllLl549DAVJziB2y3o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=K3DD9Ioj+6tEamoGMIs40lXlryphqaEyd/KLT8T3088qjJUMl3zQJsmy0TFsPJTY8
-	 ychO6natkzU4k06OrABkzhIulFINnyk6dU3y4Ka3dxFUWOl123biY0gzCHqz+0J7if
-	 1M2IENksCFUbgV4Cp35moX7kmX/ZRIBO11P/UR/k=
+	by mail.kernel.org (Postfix) with ESMTP id DF2772078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgIGJYv (ORCPT
+        id S1728305AbgIGJ1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:24:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 05:27:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60512 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgIGJYt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:24:49 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E6CB2078E;
-        Mon,  7 Sep 2020 09:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599470688;
-        bh=MF3X8v5mIVSH9DjNRPkf+bnMwllLl549DAVJziB2y3o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sYQhFQProeTUxz41B/fAN+u00aIzNiBOvvfGQdrtIhyKndVNP0j8lNqQWz/bSkCia
-         GtIMLvLp0bq9K95zQVxT4ijHJcw3u9JzE9nF8uvQT63XarslFfXw7CtMU11pQt/eJQ
-         h3o3ef5AOr/VEm9nGEGTJduqzROMWdMAGLI0pT34=
-Date:   Mon, 7 Sep 2020 11:25:03 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     ricky_wu@realtek.com
-Cc:     arnd@arndb.de, bhelgaas@google.com, ulf.hansson@linaro.org,
-        rui_feng@realsil.com.cn, linux-kernel@vger.kernel.org,
-        puranjay12@gmail.com, linux-pci@vger.kernel.org,
-        vailbhavgupta40@gmail.com
-Subject: Re: [PATCH v4 1/2] misc: rtsx: Fix power down flow
-Message-ID: <20200907092503.GA1393659@kroah.com>
-References: <20200904094220.27533-1-ricky_wu@realtek.com>
+        id S1728093AbgIGJ1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:27:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 9C485ADA8;
+        Mon,  7 Sep 2020 09:27:21 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 10:27:17 +0100
+From:   Mel Gorman <mgorman@suse.de>
+To:     Barry Song <song.bao.hua@hisilicon.com>
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] sched/fair: use dst group while checking imbalance for
+ NUMA balancer
+Message-ID: <20200907092717.GD3117@suse.de>
+References: <20200907072708.8664-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <20200904094220.27533-1-ricky_wu@realtek.com>
+In-Reply-To: <20200907072708.8664-1-song.bao.hua@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 04, 2020 at 05:42:19PM +0800, ricky_wu@realtek.com wrote:
-> From: Ricky Wu <ricky_wu@realtek.com>
+On Mon, Sep 07, 2020 at 07:27:08PM +1200, Barry Song wrote:
+> Something is wrong. In find_busiest_group(), we are checking if src has
+> higher load, however, in task_numa_find_cpu(), we are checking if dst
+> will have higher load after balancing. It seems it is not sensible to
+> check src.
+> It maybe cause wrong imbalance value, for example, if
+> dst_running = env->dst_stats.nr_running + 1 results in 3 or above, and
+> src_running = env->src_stats.nr_running - 1 results in 1;
+> The current code is thinking imbalance as 0 since src_running is smaller
+> than 2.
+> This is inconsistent with load balancer.
 > 
-> Fix and sort out rtsx driver power down flow
-> 
-> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
-> ---
->  drivers/misc/cardreader/rts5227.c  | 15 ---------------
->  drivers/misc/cardreader/rts5228.c  |  5 ++---
->  drivers/misc/cardreader/rts5249.c  | 17 -----------------
->  drivers/misc/cardreader/rts5260.c  | 16 ----------------
->  drivers/misc/cardreader/rtsx_pcr.c | 16 ++++++++++++++++
->  5 files changed, 18 insertions(+), 51 deletions(-)
 
-What changed from the previous versions?  That always needs to go below
-the --- line.
+It checks the conditions if the move was to happen. Have you evaluated
+this for a NUMA balancing load and confirmed it a) balances properly and
+b) does not increase the scan rate trying to "fix" the problem?
 
-Please fix up and resend a v5.
-
-thanks,
-
-greg k-h
+-- 
+Mel Gorman
+SUSE Labs
