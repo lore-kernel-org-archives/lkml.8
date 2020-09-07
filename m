@@ -2,119 +2,93 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC3DC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E066AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE83207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A616D2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbgIGQmD (ORCPT
+        id S1731044AbgIGQma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:42:03 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2778 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730306AbgIGQj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:39:56 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 5432B9CCF7EE259F5AD4;
-        Mon,  7 Sep 2020 17:39:53 +0100 (IST)
-Received: from localhost (10.52.124.38) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Mon, 7 Sep 2020
- 17:39:52 +0100
-Date:   Mon, 7 Sep 2020 17:38:19 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-CC:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?Q?Pawe=C5=82?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-samsung-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
-Subject: Re: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second
- interrupt with touch screen
-Message-ID: <20200907173819.00005a48@Huawei.com>
-In-Reply-To: <20200907161141.31034-3-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
-        <20200907161141.31034-3-krzk@kernel.org>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 7 Sep 2020 12:42:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41660 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730904AbgIGQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:36:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 31D97B019;
+        Mon,  7 Sep 2020 16:36:43 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [RFC 3/5] mm, page_alloc(): remove setup_pageset()
+Date:   Mon,  7 Sep 2020 18:36:26 +0200
+Message-Id: <20200907163628.26495-4-vbabka@suse.cz>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907163628.26495-1-vbabka@suse.cz>
+References: <20200907163628.26495-1-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.38]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 18:11:18 +0200
-Krzysztof Kozlowski <krzk@kernel.org> wrote:
+We initialize boot-time pagesets with setup_pageset(), which sets high and
+batch values that effectively disable pcplists.
 
-> The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
-> screen.  In such case the second interrupt is required.  This second
-> interrupt can be anyway provided, even without touch screens.  This
-> fixes dtbs_check warnings like:
-> 
->   arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+We can remove this wrapper if we just set these values for all pagesets in
+pageset_init(). Non-boot pagesets then subsequently update them to specific
+values.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/page_alloc.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-Or I can pick this up through the IIO tree if that makes sense.
-I doubt anything else will touch this binding this cycle, so either
-way works for me.
-
-Jonathan
-
-> ---
->  .../bindings/iio/adc/samsung,exynos-adc.yaml      | 15 ++++++++++++++-
->  1 file changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> index cc3c8ea6a894..89b4f9c252a6 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> @@ -41,7 +41,10 @@ properties:
->      maxItems: 2
->  
->    interrupts:
-> -    maxItems: 1
-> +    description:
-> +      ADC interrupt followed by optional touchscreen interrupt.
-> +    minItems: 1
-> +    maxItems: 2
->  
->    "#io-channel-cells":
->      const: 1
-> @@ -107,6 +110,16 @@ allOf:
->            items:
->              - const: adc
->  
-> +  - if:
-> +      properties:
-> +        has-touchscreen:
-> +          true
-> +    then:
-> +      properties:
-> +        interrupts:
-> +          minItems: 2
-> +          maxItems: 2
-> +
->  examples:
->    - |
->      adc: adc@12d10000 {
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index f669a251f654..a0cab2c6055e 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5902,7 +5902,7 @@ build_all_zonelists_init(void)
+ 	 * (a chicken-egg dilemma).
+ 	 */
+ 	for_each_possible_cpu(cpu)
+-		setup_pageset(&per_cpu(boot_pageset, cpu));
++		pageset_init(&per_cpu(boot_pageset, cpu));
+ 
+ 	mminit_verify_zonelist();
+ 	cpuset_init_current_mems_allowed();
+@@ -6228,12 +6228,13 @@ static void pageset_init(struct per_cpu_pageset *p)
+ 	pcp = &p->pcp;
+ 	for (migratetype = 0; migratetype < MIGRATE_PCPTYPES; migratetype++)
+ 		INIT_LIST_HEAD(&pcp->lists[migratetype]);
+-}
+ 
+-static void setup_pageset(struct per_cpu_pageset *p)
+-{
+-	pageset_init(p);
+-	pageset_update(&p->pcp, 0, 1);
++	/*
++	 * Set batch and high values safe for a boot pageset. Proper pageset's
++	 * initialization will update them.
++	 */
++	pcp->high = 0;
++	pcp->batch  = 1;
+ }
+ 
+ static void zone_set_pageset_high_and_batch(struct zone *zone)
+-- 
+2.28.0
 
