@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B23C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4FAC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB87B2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C7A2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498767;
-	bh=WaRb99NzFLhjb/eGzI25XFiRr/1YBLnkQgsNKe0DdCQ=;
+	s=default; t=1599498778;
+	bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWARnB35Y5uwR/OAJbAlxI7unolnDGHr1wmz9QahrHvW1+EpFiRTYFsOXXWSMBE1H
-	 Keq8FzSSjrlu1PJ5lQXkRpZFSvaDIVXpt2mFjooBtuFC6XW8HjoqKewcfyu0hEWivT
-	 bsd7LH75TVumERX1FPaiQKqrLsvBpOj7ziLYZaz0=
+	b=O1nCRq77ExRzFyZIHSrz2BGpWY+pxaoPUfcUnebnrX9eaPS/123U8pZxjcKans/gi
+	 ZoaH9Co2h6WeyrZdGH1trrseOVmk3FOCDAVtCCD6h9E+EJbtooUyX9oRKeX0Zu5kPt
+	 G8yP4Yw6DWGTEIG9SgpPugcVonocXdhL8nysElx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731218AbgIGRMp (ORCPT
+        id S1731265AbgIGRMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46422 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729859AbgIGQca (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:30 -0400
+        id S1730513AbgIGQc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 213A22177B;
-        Mon,  7 Sep 2020 16:32:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B96821775;
+        Mon,  7 Sep 2020 16:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496350;
-        bh=WaRb99NzFLhjb/eGzI25XFiRr/1YBLnkQgsNKe0DdCQ=;
+        s=default; t=1599496347;
+        bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxxWJiGInPvYT7ElImhDMyFl6oG4I/e4FtMy+DgfGyy0resQdhHrWxiv2QsSyrJiU
-         IcyvxYWVb5LhOPEIOxAVoIIr+biJ+ADiaIh314s+hNUZWK8n3d9jjhqzLOEll6MX0c
-         FxC2S+WOsbke+ipT9bLb3PAge/3eLQhBJb85+knA=
+        b=xUCV+qoIIxD+oO7SWJDjPUXBWSJI9wOQC9F8TrtJ+ut5ayymYyzCYU00aMbq3ihAr
+         9BF8pwycPyxyzJcU5tSiV3Bnu1HsfovPX47un7wvxAPYIU2QTyt21Cg/6n2bdbrpJ6
+         vtlptxIk6+hm1BG/udN02sMtr8Fj/ToQLAOpwTgo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 07/53] drivers/net/wan/lapbether: Added needed_tailroom
-Date:   Mon,  7 Sep 2020 12:31:33 -0400
-Message-Id: <20200907163220.1280412-7-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 05/53] rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
+Date:   Mon,  7 Sep 2020 12:31:31 -0400
+Message-Id: <20200907163220.1280412-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -61,36 +59,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1ee39c1448c4e0d480c5b390e2db1987561fb5c2 ]
+[ Upstream commit 68528d937dcd675e79973061c1a314db598162d1 ]
 
-The underlying Ethernet device may request necessary tailroom to be
-allocated by setting needed_tailroom. This driver should also set
-needed_tailroom to request the tailroom needed by the underlying
-Ethernet device to be allocated.
+Keep the ACK serial number in a variable in rxrpc_input_ack() as it's used
+frequently.
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/lapbether.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/input.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 1ea15f2123ed5..cc297ea9c6ece 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -340,6 +340,7 @@ static int lapbeth_new_device(struct net_device *dev)
- 	 */
- 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
- 					   + dev->needed_headroom;
-+	ndev->needed_tailroom = dev->needed_tailroom;
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 767579328a069..a7699e56eac88 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -843,7 +843,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 		struct rxrpc_ackinfo info;
+ 		u8 acks[RXRPC_MAXACKS];
+ 	} buf;
+-	rxrpc_serial_t acked_serial;
++	rxrpc_serial_t ack_serial, acked_serial;
+ 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
+ 	int nr_acks, offset, ioffset;
  
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+@@ -856,6 +856,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	}
+ 	offset += sizeof(buf.ack);
+ 
++	ack_serial = sp->hdr.serial;
+ 	acked_serial = ntohl(buf.ack.serial);
+ 	first_soft_ack = ntohl(buf.ack.firstPacket);
+ 	prev_pkt = ntohl(buf.ack.previousPacket);
+@@ -864,31 +865,31 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
+ 			      buf.ack.reason : RXRPC_ACK__INVALID);
+ 
+-	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
++	trace_rxrpc_rx_ack(call, ack_serial, acked_serial,
+ 			   first_soft_ack, prev_pkt,
+ 			   summary.ack_reason, nr_acks);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
+ 		rxrpc_input_ping_response(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 	if (buf.ack.reason == RXRPC_ACK_REQUESTED)
+ 		rxrpc_input_requested_ack(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING) {
+-		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
++		_proto("Rx ACK %%%u PING Request", ack_serial);
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ping);
+ 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ack);
+ 	}
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		return;
+@@ -904,7 +905,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		goto out;
+@@ -964,7 +965,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	    RXRPC_TX_ANNO_LAST &&
+ 	    summary.nr_acks == call->tx_top - hard_ack &&
+ 	    rxrpc_is_client_call(call))
+-		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
++		rxrpc_propose_ACK(call, RXRPC_ACK_PING, ack_serial,
+ 				  false, true,
+ 				  rxrpc_propose_ack_ping_for_lost_reply);
+ 
 -- 
 2.25.1
 
