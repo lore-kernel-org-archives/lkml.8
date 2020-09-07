@@ -2,489 +2,205 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39D2EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3A6C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB2212087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599494554;
-	bh=P5xkN8PmDWM1AkyGGJIfWbrQnD51SoBF+MSMoAA8Lys=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=HV0pu6kO/+Asvuly0cb6QFU/PCM7jsmT2Vgwa5arNbSL3e/xnY8HFchckGUrDoSep
-	 2CZFtgWqfbntF4zQdb5iNRvGv+URJ3jBk+TqSiTpaDhhScwBJRVaUsu1fGeoMYiTos
-	 2Bbk+4CwnTGUECqc9h3M2cfFpgiFtXZMEs1yTXHQ=
+	by mail.kernel.org (Postfix) with ESMTP id 95531208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="L5Y9wMv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730204AbgIGQC0 (ORCPT
+        id S1730337AbgIGQCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:02:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730272AbgIGQAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:00:19 -0400
-Received: from mail.kernel.org (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
+        Mon, 7 Sep 2020 12:02:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730175AbgIGQBa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:01:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91FD1C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2eIR6kOywvDQ+JkAQrzHBLrjWuZKaxrdLTttVTI6scY=; b=L5Y9wMv0dx1VLchx7fHIQee8gb
+        YgONFyr1QD5UAt9PYYIAm1/ZKnOBoyD+RMrWoQMoX4nWhB7wmBcti8wMha00+ATo9uLotZZ9h3fv0
+        MryhEHFgJE9ilGNz/ACjBJN0W9SZuEpv2IWBT9dOBY84E7RZAxsQHY5W3gZUDhV+EVKo3rG24cBEp
+        46uRqu3lEOtbdbP7un86pWTEcWfqe267vJiBK8xnTMotHuyKwzBqY79Ejy21TazZE2LxtxEwZm1oi
+        /fTUNGfV5j5Y0iRBTMg3mJXsEgFTD57/aJN32Bk6KhmpPbVrUvEuyBwNOTKKLNFUQf1o2jGVO+mf0
+        7L4RSrSQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFJa0-0006VZ-2J; Mon, 07 Sep 2020 16:01:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A2082176B;
-        Mon,  7 Sep 2020 15:59:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599494379;
-        bh=P5xkN8PmDWM1AkyGGJIfWbrQnD51SoBF+MSMoAA8Lys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcqD/xlrEENJTuYz9y1hZm5GlzHI4Odh27xK6KPTAoVNaJLviXvJJaoKT6LD2n6U6
-         /bmQAKdISZtmKnHIohb+JCGwZ8nmti9fjb8fRNOZoiDGq1YA45Jx+VQYGxObTPcNki
-         EWu6W3S3uikop/X8jUzYbON4JWOXRwfr+NS2ZSyQ=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kFJYP-00ATun-7p; Mon, 07 Sep 2020 17:59:37 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Yu Chen <chenyu56@huawei.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/11] phy: hisilicon: phy-hi3670-usb3: fix coding style
-Date:   Mon,  7 Sep 2020 17:59:28 +0200
-Message-Id: <dd7fc1ee122cead36ded61f2a86f489cdae5ff57.1599493845.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599493845.git.mchehab+huawei@kernel.org>
-References: <cover.1599493845.git.mchehab+huawei@kernel.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 79AB4303DA0;
+        Mon,  7 Sep 2020 18:01:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6729D20107B6F; Mon,  7 Sep 2020 18:01:15 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 18:01:15 +0200
+From:   peterz@infradead.org
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, mark.rutland@arm.com, luto@amacapital.net
+Subject: Re: [PATCH V2 3/3] perf/x86: Reset the dirty counter to prevent the
+ leak for an RDPMC task
+Message-ID: <20200907160115.GS2674@hirez.programming.kicks-ass.net>
+References: <20200821195754.20159-1-kan.liang@linux.intel.com>
+ <20200821195754.20159-3-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821195754.20159-3-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Address the issues reported by checkpatch --strict,
-and add a SPDX tag.
+On Fri, Aug 21, 2020 at 12:57:54PM -0700, kan.liang@linux.intel.com wrote:
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 0f3d01562ded..fa08d810dcd2 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1440,7 +1440,10 @@ static void x86_pmu_start(struct perf_event *event, int flags)
+>  
+>  	cpuc->events[idx] = event;
+>  	__set_bit(idx, cpuc->active_mask);
+> -	__set_bit(idx, cpuc->running);
+> +	/* The cpuc->running is only used by the P4 PMU */
+> +	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON) &&
+> +	    (boot_cpu_data.x86 == 0xf))
+> +		__set_bit(idx, cpuc->running);
+>  	x86_pmu.enable(event);
+>  	perf_event_update_userpage(event);
+>  }
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- drivers/phy/hisilicon/phy-hi3670-usb3.c | 157 ++++++++++++------------
- 1 file changed, 76 insertions(+), 81 deletions(-)
+Yuck! Use a static_branch() or something. This is a gnarly nest of code
+that runs 99.9% of the time to conclude a negative. IOW a complete waste
+of cycles for everybody not running a P4 space heater.
 
-diff --git a/drivers/phy/hisilicon/phy-hi3670-usb3.c b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-index fd679b39185a..cb0bfcbbfbfa 100644
---- a/drivers/phy/hisilicon/phy-hi3670-usb3.c
-+++ b/drivers/phy/hisilicon/phy-hi3670-usb3.c
-@@ -1,28 +1,20 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * Phy provider for USB 3.1 controller on HiSilicon Kirin970 platform
-  *
-- * Copyright (C) 2017-2018 Hilisicon Electronics Co., Ltd.
-+ * Copyright (C) 2017-2020 Hilisicon Electronics Co., Ltd.
-  *		http://www.huawei.com
-  *
-  * Authors: Yu Chen <chenyu56@huawei.com>
-- *
-- * This program is free software: you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2  of
-- * the License as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
- #include <linux/regmap.h>
--#include <linux/clk.h>
- 
- #define SCTRL_SCDEEPSLEEPED		(0x0)
- #define USB_CLK_SELECTED		BIT(20)
-@@ -116,7 +108,7 @@
- #define TCPC_VALID			BIT(4)
- #define TCPC_LOW_POWER_EN		BIT(3)
- #define TCPC_MUX_CONTROL_MASK		(3 << 0)
--#define TCPC_MUX_CONTROL_USB31		(1 << 0)
-+#define TCPC_MUX_CONTROL_USB31		BIT(0)
- 
- #define SYSMODE_CFG_TYPEC_DISABLE	BIT(3)
- 
-@@ -151,13 +143,13 @@ static int hi3670_phy_cr_clk(struct regmap *usb31misc)
- 
- 	/* Clock up */
- 	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_CLK, CFG54_USB31PHY_CR_CLK);
-+				 CFG54_USB31PHY_CR_CLK, CFG54_USB31PHY_CR_CLK);
- 	if (ret)
- 		return ret;
- 
- 	/* Clock down */
- 	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_CLK, 0);
-+				 CFG54_USB31PHY_CR_CLK, 0);
- 
- 	return ret;
- }
-@@ -165,7 +157,7 @@ static int hi3670_phy_cr_clk(struct regmap *usb31misc)
- static int hi3670_phy_cr_set_sel(struct regmap *usb31misc)
- {
- 	return regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_SEL, CFG54_USB31PHY_CR_SEL);
-+				  CFG54_USB31PHY_CR_SEL, CFG54_USB31PHY_CR_SEL);
- }
- 
- static int hi3670_phy_cr_start(struct regmap *usb31misc, int direction)
-@@ -174,10 +166,12 @@ static int hi3670_phy_cr_start(struct regmap *usb31misc, int direction)
- 
- 	if (direction)
- 		ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_WR_EN, CFG54_USB31PHY_CR_WR_EN);
-+					 CFG54_USB31PHY_CR_WR_EN,
-+					 CFG54_USB31PHY_CR_WR_EN);
- 	else
- 		ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_RD_EN, CFG54_USB31PHY_CR_RD_EN);
-+					 CFG54_USB31PHY_CR_RD_EN,
-+					 CFG54_USB31PHY_CR_RD_EN);
- 
- 	if (ret)
- 		return ret;
-@@ -187,7 +181,7 @@ static int hi3670_phy_cr_start(struct regmap *usb31misc, int direction)
- 		return ret;
- 
- 	ret = regmap_update_bits(usb31misc, USB_MISC_CFG54,
--			CFG54_USB31PHY_CR_RD_EN | CFG54_USB31PHY_CR_WR_EN, 0);
-+				 CFG54_USB31PHY_CR_RD_EN | CFG54_USB31PHY_CR_WR_EN, 0);
- 
- 	return ret;
- }
-@@ -223,8 +217,7 @@ static int hi3670_phy_cr_set_addr(struct regmap *usb31misc, u32 addr)
- 		return ret;
- 
- 	reg &= ~(CFG54_USB31PHY_CR_ADDR_MASK << CFG54_USB31PHY_CR_ADDR_SHIFT);
--	reg |= ((addr & CFG54_USB31PHY_CR_ADDR_MASK) <<
--			CFG54_USB31PHY_CR_ADDR_SHIFT);
-+	reg |= ((addr & CFG54_USB31PHY_CR_ADDR_MASK) << CFG54_USB31PHY_CR_ADDR_SHIFT);
- 	ret = regmap_write(usb31misc, USB_MISC_CFG54, reg);
- 
- 	return ret;
-@@ -288,7 +281,7 @@ static int hi3670_phy_cr_write(struct regmap *usb31misc, u32 addr, u32 val)
- 		return ret;
- 
- 	ret = regmap_write(usb31misc, USB_MISC_CFG58,
--			val & CFG58_USB31PHY_CR_DATA_MASK);
-+			   val & CFG58_USB31PHY_CR_DATA_MASK);
- 	if (ret)
- 		return ret;
- 
-@@ -308,7 +301,7 @@ static int hi3670_phy_set_params(struct hi3670_priv *priv)
- 	int retry = 3;
- 
- 	ret = regmap_write(priv->usb31misc, USB3OTG_CTRL4,
--			priv->eye_diagram_param);
-+			   priv->eye_diagram_param);
- 	if (ret) {
- 		dev_err(priv->dev, "set USB3OTG_CTRL4 failed\n");
- 		return ret;
-@@ -316,10 +309,11 @@ static int hi3670_phy_set_params(struct hi3670_priv *priv)
- 
- 	while (retry-- > 0) {
- 		ret = hi3670_phy_cr_read(priv->usb31misc,
--				TX_VBOOST_LVL_REG, &reg);
-+					 TX_VBOOST_LVL_REG, &reg);
- 		if (!ret)
- 			break;
--		else if (ret != -ETIMEDOUT) {
-+
-+		if (ret != -ETIMEDOUT) {
- 			dev_err(priv->dev, "read TX_VBOOST_LVL_REG failed\n");
- 			return ret;
- 		}
-@@ -327,8 +321,7 @@ static int hi3670_phy_set_params(struct hi3670_priv *priv)
- 	if (ret)
- 		return ret;
- 
--	reg |= (TX_VBOOST_LVL_ENABLE |
--			(priv->tx_vboost_lvl << TX_VBOOST_LVL_START));
-+	reg |= (TX_VBOOST_LVL_ENABLE | (priv->tx_vboost_lvl << TX_VBOOST_LVL_START));
- 	ret = hi3670_phy_cr_write(priv->usb31misc, TX_VBOOST_LVL_REG, reg);
- 	if (ret)
- 		dev_err(priv->dev, "write TX_VBOOST_LVL_REG failed\n");
-@@ -364,24 +357,24 @@ static int hi3670_config_phy_clock(struct hi3670_priv *priv)
- 	if (hi3670_is_abbclk_seleted(priv)) {
- 		/* usb refclk iso disable */
- 		ret = regmap_write(priv->peri_crg, PERI_CRG_ISODIS,
--				USB_REFCLK_ISO_EN);
-+				   USB_REFCLK_ISO_EN);
- 		if (ret)
- 			goto out;
- 
- 		/* enable usb_tcxo_en */
- 		ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3,
--				USB_TCXO_EN |
--				(USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START));
-+				   USB_TCXO_EN |
-+				   (USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START));
- 
- 		/* select usbphy clk from abb */
- 		mask = SC_CLK_USB3PHY_3MUX1_SEL;
- 		ret = regmap_update_bits(priv->pctrl,
--				PCTRL_PERI_CTRL24, mask, 0);
-+					 PCTRL_PERI_CTRL24, mask, 0);
- 		if (ret)
- 			goto out;
- 
- 		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0,
--				CFGA0_USB2PHY_REFCLK_SELECT, 0);
-+					 CFGA0_USB2PHY_REFCLK_SELECT, 0);
- 		if (ret)
- 			goto out;
- 
-@@ -393,34 +386,36 @@ static int hi3670_config_phy_clock(struct hi3670_priv *priv)
- 		ret = regmap_write(priv->usb31misc, USB3OTG_CTRL7, val);
- 		if (ret)
- 			goto out;
--	} else {
--		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG54,
--				CFG54_USB3PHY_REF_USE_PAD,
--				CFG54_USB3PHY_REF_USE_PAD);
--		if (ret)
--			goto out;
- 
--		ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0,
--				CFGA0_USB2PHY_REFCLK_SELECT,
--				CFGA0_USB2PHY_REFCLK_SELECT);
--		if (ret)
--			goto out;
--
--		ret = regmap_read(priv->usb31misc, USB3OTG_CTRL7, &val);
--		if (ret)
--			goto out;
--		val &= ~CTRL7_USB2_REFCLKSEL_MASK;
--		val |= CTRL7_USB2_REFCLKSEL_PAD;
--		ret = regmap_write(priv->usb31misc, USB3OTG_CTRL7, val);
--		if (ret)
--			goto out;
--
--		ret = regmap_write(priv->peri_crg,
--				PERI_CRG_PEREN6, GT_CLK_USB2PHY_REF);
--		if (ret)
--			goto out;
-+		return 0;
- 	}
- 
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG54,
-+				 CFG54_USB3PHY_REF_USE_PAD,
-+				 CFG54_USB3PHY_REF_USE_PAD);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0,
-+				 CFGA0_USB2PHY_REFCLK_SELECT,
-+				 CFGA0_USB2PHY_REFCLK_SELECT);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read(priv->usb31misc, USB3OTG_CTRL7, &val);
-+	if (ret)
-+		goto out;
-+	val &= ~CTRL7_USB2_REFCLKSEL_MASK;
-+	val |= CTRL7_USB2_REFCLKSEL_PAD;
-+	ret = regmap_write(priv->usb31misc, USB3OTG_CTRL7, val);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_write(priv->peri_crg,
-+			   PERI_CRG_PEREN6, GT_CLK_USB2PHY_REF);
-+	if (ret)
-+		goto out;
-+
- 	return 0;
- out:
- 	dev_err(priv->dev, "failed to config phy clock ret: %d\n", ret);
-@@ -437,7 +432,7 @@ static int hi3670_config_tca(struct hi3670_priv *priv)
- 		goto out;
- 
- 	ret = regmap_write(priv->usb31misc, TCA_INTR_EN,
--			INTR_EN_XA_TIMEOUT_EVT_EN | INTR_EN_XA_ACK_EVT_EN);
-+			   INTR_EN_XA_TIMEOUT_EVT_EN | INTR_EN_XA_ACK_EVT_EN);
- 	if (ret)
- 		goto out;
- 
-@@ -447,13 +442,13 @@ static int hi3670_config_tca(struct hi3670_priv *priv)
- 		goto out;
- 
- 	ret = regmap_update_bits(priv->usb31misc, TCA_GCFG,
--			GCFG_ROLE_HSTDEV | GCFG_OP_MODE,
--			GCFG_ROLE_HSTDEV | GCFG_OP_MODE_CTRL_SYNC_MODE);
-+				 GCFG_ROLE_HSTDEV | GCFG_OP_MODE,
-+				 GCFG_ROLE_HSTDEV | GCFG_OP_MODE_CTRL_SYNC_MODE);
- 	if (ret)
- 		goto out;
- 
- 	ret = regmap_update_bits(priv->usb31misc, TCA_SYSMODE_CFG,
--			SYSMODE_CFG_TYPEC_DISABLE, 0);
-+				 SYSMODE_CFG_TYPEC_DISABLE, 0);
- 	if (ret)
- 		goto out;
- 
-@@ -467,7 +462,7 @@ static int hi3670_config_tca(struct hi3670_priv *priv)
- 		goto out;
- 
- 	ret = regmap_write(priv->usb31misc, TCA_VBUS_CTRL,
--		VBUS_CTRL_POWERPRESENT_OVERRD | VBUS_CTRL_VBUSVALID_OVERRD);
-+			   VBUS_CTRL_POWERPRESENT_OVERRD | VBUS_CTRL_VBUSVALID_OVERRD);
- 	if (ret)
- 		goto out;
- 
-@@ -485,7 +480,7 @@ static int hi3670_phy_init(struct phy *phy)
- 
- 	/* assert controller */
- 	val = CFGA0_VAUX_RESET | CFGA0_USB31C_RESET |
--		CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
-+	      CFGA0_USB3PHY_RESET | CFGA0_USB2PHY_POR;
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFGA0, val, 0);
- 	if (ret)
- 		goto out;
-@@ -496,13 +491,13 @@ static int hi3670_phy_init(struct phy *phy)
- 
- 	/* Exit from IDDQ mode */
- 	ret = regmap_update_bits(priv->usb31misc, USB3OTG_CTRL5,
--			CTRL5_USB2_SIDDQ, 0);
-+				 CTRL5_USB2_SIDDQ, 0);
- 	if (ret)
- 		goto out;
- 
- 	/* Release USB31 PHY out of TestPowerDown mode */
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG50,
--			CFG50_USB3_PHY_TEST_POWERDOWN, 0);
-+				 CFG50_USB3_PHY_TEST_POWERDOWN, 0);
- 	if (ret)
- 		goto out;
- 
-@@ -512,13 +507,13 @@ static int hi3670_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	udelay(100);
-+	usleep_range(100, 120);
- 
- 	/* Tell the PHY power is stable */
- 	val = CFG54_USB3_PHY0_ANA_PWR_EN | CFG54_PHY0_PCS_PWR_STABLE |
--		CFG54_PHY0_PMA_PWR_STABLE;
-+	      CFG54_PHY0_PMA_PWR_STABLE;
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG54,
--			val, val);
-+				 val, val);
- 	if (ret)
- 		goto out;
- 
-@@ -528,8 +523,8 @@ static int hi3670_phy_init(struct phy *phy)
- 
- 	/* Enable SSC */
- 	ret = regmap_update_bits(priv->usb31misc, USB_MISC_CFG5C,
--			CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN,
--			CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN);
-+				 CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN,
-+				 CFG5C_USB3_PHY0_SS_MPLLA_SSC_EN);
- 	if (ret)
- 		goto out;
- 
-@@ -539,7 +534,7 @@ static int hi3670_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	udelay(100);
-+	usleep_range(100, 120);
- 
- 	/* Set fake vbus valid signal */
- 	val = CTRL0_USB3_VBUSVLD | CTRL0_USB3_VBUSVLD_SEL;
-@@ -552,7 +547,7 @@ static int hi3670_phy_init(struct phy *phy)
- 	if (ret)
- 		goto out;
- 
--	udelay(100);
-+	usleep_range(100, 120);
- 
- 	ret = hi3670_phy_set_params(priv);
- 	if (ret)
-@@ -579,10 +574,10 @@ static int hi3670_phy_exit(struct phy *phy)
- 	if (hi3670_is_abbclk_seleted(priv)) {
- 		/* disable usb_tcxo_en */
- 		ret = regmap_write(priv->pctrl, PCTRL_PERI_CTRL3,
--				USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
-+				   USB_TCXO_EN << PCTRL_PERI_CTRL3_MSK_START);
- 	} else {
- 		ret = regmap_write(priv->peri_crg, PERI_CRG_PERDIS6,
--				GT_CLK_USB2PHY_REF);
-+				   GT_CLK_USB2PHY_REF);
- 		if (ret)
- 			goto out;
- 	}
-@@ -612,39 +607,39 @@ static int hi3670_phy_probe(struct platform_device *pdev)
- 
- 	priv->dev = dev;
- 	priv->peri_crg = syscon_regmap_lookup_by_phandle(dev->of_node,
--					"hisilicon,pericrg-syscon");
-+							 "hisilicon,pericrg-syscon");
- 	if (IS_ERR(priv->peri_crg)) {
- 		dev_err(dev, "no hisilicon,pericrg-syscon\n");
- 		return PTR_ERR(priv->peri_crg);
- 	}
- 
- 	priv->pctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
--					"hisilicon,pctrl-syscon");
-+						      "hisilicon,pctrl-syscon");
- 	if (IS_ERR(priv->pctrl)) {
- 		dev_err(dev, "no hisilicon,pctrl-syscon\n");
- 		return PTR_ERR(priv->pctrl);
- 	}
- 
- 	priv->sctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
--					"hisilicon,sctrl-syscon");
-+						      "hisilicon,sctrl-syscon");
- 	if (IS_ERR(priv->sctrl)) {
- 		dev_err(dev, "no hisilicon,sctrl-syscon\n");
- 		return PTR_ERR(priv->sctrl);
- 	}
- 
- 	priv->usb31misc = syscon_regmap_lookup_by_phandle(dev->of_node,
--					"hisilicon,usb31-misc-syscon");
-+							  "hisilicon,usb31-misc-syscon");
- 	if (IS_ERR(priv->usb31misc)) {
- 		dev_err(dev, "no hisilicon,usb31-misc-syscon\n");
- 		return PTR_ERR(priv->usb31misc);
- 	}
- 
- 	if (of_property_read_u32(dev->of_node, "eye-diagram-param",
--				&(priv->eye_diagram_param)))
-+				 &priv->eye_diagram_param))
- 		priv->eye_diagram_param = KIRIN970_USB_DEFAULT_PHY_PARAM;
- 
- 	if (of_property_read_u32(dev->of_node, "usb3-phy-tx-vboost-lvl",
--				&(priv->tx_vboost_lvl)))
-+				 &priv->tx_vboost_lvl))
- 		priv->eye_diagram_param = KIRIN970_USB_DEFAULT_PHY_VBOOST;
- 
- 	phy = devm_phy_create(dev, NULL, &hi3670_phy_ops);
-@@ -657,7 +652,7 @@ static int hi3670_phy_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id hi3670_phy_of_match[] = {
--	{.compatible = "hisilicon,hi3670-usb-phy",},
-+	{ .compatible = "hisilicon,hi3670-usb-phy" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, hi3670_phy_of_match);
--- 
-2.26.2
+> @@ -1544,6 +1547,9 @@ static void x86_pmu_del(struct perf_event *event, int flags)
+>  	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
+>  		goto do_del;
+>  
+> +	if (READ_ONCE(x86_pmu.attr_rdpmc) && x86_pmu.sched_task &&
+> +	    test_bit(event->hw.idx, cpuc->active_mask))
+> +		__set_bit(event->hw.idx, cpuc->dirty);
 
+And that too seems like an overly complicated set of tests and branches.
+This should be effectivly true for the 99% common case.
+
+> @@ -2219,11 +2225,45 @@ static int x86_pmu_event_init(struct perf_event *event)
+>  	return err;
+>  }
+>  
+> +void x86_pmu_clear_dirty_counters(void)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	int i;
+> +
+> +	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
+> +		return;
+> +
+> +	 /* Don't need to clear the assigned counter. */
+> +	for (i = 0; i < cpuc->n_events; i++)
+> +		__clear_bit(cpuc->assign[i], cpuc->dirty);
+> +
+> +	for_each_set_bit(i, cpuc->dirty, X86_PMC_IDX_MAX) {
+> +		/* Metrics events don't have corresponding HW counters. */
+> +		if (is_metric_idx(i))
+> +			continue;
+> +		else if (i >= INTEL_PMC_IDX_FIXED)
+> +			wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR0 + (i - INTEL_PMC_IDX_FIXED), 0);
+> +		else
+> +			wrmsrl(x86_pmu_event_addr(i), 0);
+> +	}
+> +
+> +	bitmap_zero(cpuc->dirty, X86_PMC_IDX_MAX);
+> +}
+
+The bitmap_{empty,zero}() do indeed compile into single instructions,
+neat!
+
+>  static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
+>  {
+>  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+>  		return;
+>  
+> +	/*
+> +	 * Enable sched_task() for the RDPMC task,
+> +	 * and clear the existing dirty counters.
+> +	 */
+> +	if (x86_pmu.sched_task && event->hw.target && !is_sampling_event(event)) {
+> +		perf_sched_cb_inc(event->ctx->pmu);
+> +		x86_pmu_clear_dirty_counters();
+> +	}
+
+I'm failing to see the correctness of the !is_sampling_event() part
+there.
+
+>  	/*
+>  	 * This function relies on not being called concurrently in two
+>  	 * tasks in the same mm.  Otherwise one task could observe
+> @@ -2246,6 +2286,9 @@ static void x86_pmu_event_unmapped(struct perf_event *event, struct mm_struct *m
+>  	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+>  		return;
+>  
+> +	if (x86_pmu.sched_task && event->hw.target && !is_sampling_event(event))
+> +		perf_sched_cb_dec(event->ctx->pmu);
+> +
+
+Idem.
+
+>  	if (atomic_dec_and_test(&mm->context.perf_rdpmc_allowed))
+>  		on_each_cpu_mask(mm_cpumask(mm), cr4_update_pce, NULL, 1);
+>  }
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index c72e4904e056..e67713bfa33a 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4166,11 +4166,39 @@ static void intel_pmu_cpu_dead(int cpu)
+>  	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
+>  }
+>  
+> +static void intel_pmu_rdpmc_sched_task(struct perf_event_context *ctx)
+> +{
+> +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	struct perf_event *event;
+> +
+> +	if (bitmap_empty(cpuc->dirty, X86_PMC_IDX_MAX))
+> +		return;
+> +
+> +	/*
+> +	 * If the new task has the RDPMC enabled, clear the dirty counters to
+> +	 * prevent the potential leak. If the new task doesn't have the RDPMC
+> +	 * enabled, do nothing.
+> +	 */
+> +	list_for_each_entry(event, &ctx->event_list, event_entry) {
+> +		if (event->hw.target &&
+> +		    (event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED) &&
+> +		    !is_sampling_event(event) &&
+> +		    atomic_read(&event->mmap_count))
+> +			break;
+> +	}
+> +	if (&event->event_entry == &ctx->event_list)
+> +		return;
+
+That's horrific, what's wrong with something like:
+
+	if (!atomic_read(&current->mm->context.perf_rdpmc_allowed))
+		return;
+
+> +
+> +	x86_pmu_clear_dirty_counters();
+> +}
+
+How is this Intel specific code? IIRC AMD has RDPMC too.
