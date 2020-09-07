@@ -2,74 +2,183 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5DDC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A19C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE087206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C075E206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbgIGRbr (ORCPT
+        id S1731093AbgIGRcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:31:47 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:42176
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729626AbgIGRbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:31:42 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="358318231"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 19:31:40 +0200
-Date:   Mon, 7 Sep 2020 19:31:40 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Denis Efremov <efremov@linux.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2=5D_Coccinelle=3A_api=3A_Add_SmPL?=
- =?UTF-8?Q?_script_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget=5Fand=5Fiorema?=
- =?UTF-8?Q?p=5Fresource=2Ecocci=E2=80=9D?=
-In-Reply-To: <8fb7782c-538b-b657-af13-da71124e6afa@web.de>
-Message-ID: <alpine.DEB.2.22.394.2009071930510.2476@hadrien>
-References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <4b505afc-ae48-d8eb-f4e1-8e3f7192f73d@web.de> <alpine.DEB.2.22.394.2009071900450.2476@hadrien> <8fb7782c-538b-b657-af13-da71124e6afa@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 7 Sep 2020 13:32:02 -0400
+Received: from 8bytes.org ([81.169.241.247]:41840 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729482AbgIGNS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:27 -0400
+Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 4CE9DCAC;
+        Mon,  7 Sep 2020 15:16:46 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     x86@kernel.org
+Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v7 08/72] x86/umip: Factor out instruction fetch
+Date:   Mon,  7 Sep 2020 15:15:09 +0200
+Message-Id: <20200907131613.12703-9-joro@8bytes.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
+References: <20200907131613.12703-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Joerg Roedel <jroedel@suse.de>
 
+Factor out the code to fetch the instruction from user-space to a helper
+function.
 
-On Mon, 7 Sep 2020, Markus Elfring wrote:
+No functional changes.
 
-> >> +++ b/scripts/coccinelle/api/use_devm_platform_get_and_ioremap_resource.cocci
-> >> @@ -0,0 +1,48 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/// Simplify a function call combination by using a known wrapper function.
-> >> +//
-> >> +// Keywords: wrapper function conversion ioremap resources
-> >> +// Confidence: High
-> >
-> > Shouldn't there be some options?  --no-includes and perhaps
-> > --include-headers would seem reasonable.
->
-> I imagine that the proposed source code transformation can work also without
-> additional semantic patch command options.
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ arch/x86/include/asm/insn-eval.h |  2 ++
+ arch/x86/kernel/umip.c           | 26 +++++-----------------
+ arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
+ 3 files changed, 46 insertions(+), 20 deletions(-)
 
-It can.  But it will be more efficient and more exhaustive if you include
-them.
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index 2b6ccf2c49f1..b8b9ef1bbd06 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
++int insn_fetch_from_user(struct pt_regs *regs,
++			 unsigned char buf[MAX_INSN_SIZE]);
+ 
+ #endif /* _ASM_X86_INSN_EVAL_H */
+diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
+index 2c304fd0bb1a..ad135be4f1f0 100644
+--- a/arch/x86/kernel/umip.c
++++ b/arch/x86/kernel/umip.c
+@@ -335,11 +335,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
+  */
+ bool fixup_umip_exception(struct pt_regs *regs)
+ {
+-	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
+-	unsigned long seg_base = 0, *reg_addr;
++	int nr_copied, reg_offset, dummy_data_size, umip_inst;
+ 	/* 10 bytes is the maximum size of the result of UMIP instructions */
+ 	unsigned char dummy_data[10] = { 0 };
+ 	unsigned char buf[MAX_INSN_SIZE];
++	unsigned long *reg_addr;
+ 	void __user *uaddr;
+ 	struct insn insn;
+ 	int seg_defs;
+@@ -347,26 +347,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
+ 	if (!regs)
+ 		return false;
+ 
+-	/*
+-	 * If not in user-space long mode, a custom code segment could be in
+-	 * use. This is true in protected mode (if the process defined a local
+-	 * descriptor table), or virtual-8086 mode. In most of the cases
+-	 * seg_base will be zero as in USER_CS.
+-	 */
+-	if (!user_64bit_mode(regs))
+-		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
+-
+-	if (seg_base == -1L)
+-		return false;
+-
+-	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
+-				    sizeof(buf));
+-	nr_copied = sizeof(buf) - not_copied;
++	nr_copied = insn_fetch_from_user(regs, buf);
+ 
+ 	/*
+-	 * The copy_from_user above could have failed if user code is protected
+-	 * by a memory protection key. Give up on emulation in such a case.
+-	 * Should we issue a page fault?
++	 * The insn_fetch_from_user above could have failed if user code
++	 * is protected by a memory protection key. Give up on emulation
++	 * in such a case.  Should we issue a page fault?
+ 	 */
+ 	if (!nr_copied)
+ 		return false;
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 5e69603ff63f..947b7f1a0042 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -1367,3 +1367,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
+ 		return (void __user *)-1L;
+ 	}
+ }
++
++/**
++ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
++ * @regs:	Structure with register values as seen when entering kernel mode
++ * @buf:	Array to store the fetched instruction
++ *
++ * Gets the linear address of the instruction and copies the instruction bytes
++ * to the buf.
++ *
++ * Returns:
++ *
++ * Number of instruction bytes copied.
++ *
++ * 0 if nothing was copied.
++ */
++int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
++{
++	unsigned long seg_base = 0;
++	int not_copied;
++
++	/*
++	 * If not in user-space long mode, a custom code segment could be in
++	 * use. This is true in protected mode (if the process defined a local
++	 * descriptor table), or virtual-8086 mode. In most of the cases
++	 * seg_base will be zero as in USER_CS.
++	 */
++	if (!user_64bit_mode(regs)) {
++		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
++		if (seg_base == -1L)
++			return 0;
++	}
++
++
++	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
++				    MAX_INSN_SIZE);
++
++	return MAX_INSN_SIZE - not_copied;
++}
+-- 
+2.28.0
 
-julia
