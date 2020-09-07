@@ -2,75 +2,85 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6870AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1007EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29A5C2177B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599512351;
-	bh=XXdJdrXSDXXRuKqiD07l3whQ+kMfrHo1hVSzCvy3FBU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KG28VIdzemixuk23aAwqWC8rZ8DKDQFvJ0BtOqGD3+t2GMLxIeOfHMUkWTixZFrji
-	 4kVGw0Dc+vViF1B3scq1GE2zykn3QsAl/NMuYbWVSI1gDJ8GT7qfsq9fO03qEYOob0
-	 BHdzVbFODik2Xpr99cO//n5qBiv+cG+9TFM7goOU=
+	by mail.kernel.org (Postfix) with ESMTP id B30B820C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="NRKZlmQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgIGU6r (ORCPT
+        id S1727070AbgIGVDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 17:03:01 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42472 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbgIGU6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:58:45 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        id S1726853AbgIGVC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 17:02:58 -0400
+Received: from zn.tnic (p200300ec2f0909008054e7a53e29f06e.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:900:8054:e7a5:3e29:f06e])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 561CA215A4;
-        Mon,  7 Sep 2020 20:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599512324;
-        bh=XXdJdrXSDXXRuKqiD07l3whQ+kMfrHo1hVSzCvy3FBU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=f6w0qWtwCnfg0gdQDKslSFNp8X6yyTJYQ0jJMUW7IVqQp+HyMVb+7MHVpr6tZgfFu
-         530Ri/dV1aaN2AuwAX8veEqNb975usJT5jVm5bPMRHqQye6Q8zy6/P5APn6e/aRgVg
-         QEpRYUxy8eRfCoIkG8vBbLqfNWrr+fJBg/wpMN+k=
-Date:   Mon, 7 Sep 2020 13:58:42 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     <davem@davemloft.net>, <f.fainelli@gmail.com>, <timur@kernel.org>,
-        <zhengdejin5@gmail.com>, <hkallweit1@gmail.com>, <leon@kernel.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: ethernet: dnet: Remove set but unused
- variable 'len'
-Message-ID: <20200907135842.38f0c211@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200907141207.11778-1-wanghai38@huawei.com>
-References: <20200907141207.11778-1-wanghai38@huawei.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4644F1EC0212;
+        Mon,  7 Sep 2020 23:02:57 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1599512577;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=C07RKJGN+hcvDzBdFNGPR9nFrixvo0q7M59F2sq3pp0=;
+        b=NRKZlmQJaDFFKHX86WYVKOykATlMGpNqdsJ7O+L/V0XtwaNjazffNem3ANfzikwkIovhuc
+        ACtBQNX1pZKD+H0SCkzTrSdd5AFXbeKr0nhMwX80VrHWII0yNVB6qK7Xs46lEEzR7aWCqy
+        rSff/HIMYq4cUSnTQczhGperAZ5hjo0=
+Date:   Mon, 7 Sep 2020 23:02:46 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v7 36/72] x86/sev-es: Add SEV-ES Feature Detection
+Message-ID: <20200907210246.GG16029@zn.tnic>
+References: <20200907131613.12703-1-joro@8bytes.org>
+ <20200907131613.12703-37-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907131613.12703-37-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Sep 2020 22:12:07 +0800 Wang Hai wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
->=20
-> drivers/net/ethernet/dnet.c: In function dnet_start_xmit
-> drivers/net/ethernet/dnet.c:511:15: warning: variable =E2=80=98len=E2=80=
-=99 set but not used [-Wunused-but-set-variable]
->=20
-> commit 4796417417a6 ("dnet: Dave DNET ethernet controller driver (updated=
-)")
-> involved this unused variable, remove it.
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+On Mon, Sep 07, 2020 at 03:15:37PM +0200, Joerg Roedel wrote:
+> @@ -347,7 +348,13 @@ bool sme_active(void)
+>  
+>  bool sev_active(void)
+>  {
+> -	return sme_me_mask && sev_enabled;
+> +	return !!(sev_status & MSR_AMD64_SEV_ENABLED);
 
-tx_status is also not used. But I guess one change per commit,=20
-so applied. Thanks!
+Dropped those "!!" here too while applying.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
