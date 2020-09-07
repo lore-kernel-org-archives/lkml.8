@@ -2,68 +2,85 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055AEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21FAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:20:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A134D2193E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B852F21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgIGGS5 (ORCPT
+        id S1726446AbgIGGUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:18:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:47760 "EHLO verein.lst.de"
+        Mon, 7 Sep 2020 02:20:30 -0400
+Received: from verein.lst.de ([213.95.11.211]:47767 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726267AbgIGGS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:18:56 -0400
+        id S1725823AbgIGGU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 02:20:29 -0400
 Received: by verein.lst.de (Postfix, from userid 2407)
-        id 90B7E68BFE; Mon,  7 Sep 2020 08:18:53 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 08:18:53 +0200
+        id EE1C56736F; Mon,  7 Sep 2020 08:20:26 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 08:20:26 +0200
 From:   Christoph Hellwig <hch@lst.de>
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] RISC-V: Allow drivers to provide custom read_cycles64
- for M-mode kernel
-Message-ID: <20200907061853.GA19038@lst.de>
-References: <20200904165709.GA32667@lst.de> <mhng-5249e999-3e82-417d-8d39-dcb4a159bd83@palmerdabbelt-glaptop1> <CAAhSdy0HW8Rjyoiu+Ldx31C9zCBdxJZxhDBcXC4sgitfXnPNDg@mail.gmail.com> <CAAhSdy3ESD6L_T1rFprDF2jduN8buTz173F6_mYCbTL3s4RG2A@mail.gmail.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Christoph Hellwig <hch@lst.de>, arnd@arndb.de,
+        gregkh@linuxfoundation.org, christophe.leroy@csgroup.eu,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] /dev/zero: also implement ->read
+Message-ID: <20200907062026.GA19076@lst.de>
+References: <20200903155922.1111551-1-hch@lst.de> <8d430999-b155-dbfa-e7db-f414b48014b1@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhSdy3ESD6L_T1rFprDF2jduN8buTz173F6_mYCbTL3s4RG2A@mail.gmail.com>
+In-Reply-To: <8d430999-b155-dbfa-e7db-f414b48014b1@rasmusvillemoes.dk>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 05, 2020 at 11:05:48AM +0530, Anup Patel wrote:
-> Your patch will also break if the SOC specific timer has a 32bit
-> free-running counter
-> unlike the 64bit free-running counter found on CLINT.
+On Mon, Sep 07, 2020 at 12:34:37AM +0200, Rasmus Villemoes wrote:
+> On 03/09/2020 17.59, Christoph Hellwig wrote:
+> > Christophe reported a major speedup due to avoiding the iov_iter
+> > overhead, so just add this trivial function.  Note that /dev/zero
+> > already implements both an iter and non-iter writes so this just
+> > makes it more symmetric.
+> > 
+> > Christophe Leroy <christophe.leroy@csgroup.eu>
 > 
-> I guess it's better to let the SOC timer driver provide the
-> method/function to read the
-> free-running counter.
+> ?-by ?
 
-Seriously, build the interfaces once you know the consumers.  Don't
-build pie in the sky interfaces just because you can, because that
-is what creates all the problems.
+Suggested-by,
 
-And of coruse at least for IPIs which absolutely are performance
-criticical we need a standard interface (one that doesn't suck as much
-as the SBI detour with the four extra context switches).  But I guess
-I have already given up on RISC-V because the incompetency about things
-like the irq design are just so horrible that it isn't worth bothering
-any more.
+> > +static ssize_t read_zero(struct file *file, char __user *buf,
+> > +			 size_t count, loff_t *ppos)
+> > +{
+> > +	size_t cleared = 0;
+> > +
+> > +	while (count) {
+> > +		size_t chunk = min_t(size_t, count, PAGE_SIZE);
+> > +
+> > +		if (clear_user(buf + cleared, chunk))
+> > +			return cleared ? cleared : -EFAULT;
+> 
+> Probably nobody really cares, but currently doing
+> 
+> read(fd, &unmapped_page - 5, 123);
+> 
+> returns 5, and those five bytes do get cleared; if I'm reading the above
+> right you'd return -EFAULT for that case.
+> 
+> 
+> > +		cleared += chunk;
+> > +		count -= chunk;
+> > +
+> > +		if (signal_pending(current))
+> > +			return cleared ? cleared : -ERESTARTSYS;
+> 
+> I can't see how we can get here without 'cleared' being positive, so
+> this can just be 'return cleared' (and if you fix the above EFAULT case
+> to more accurately track how much got cleared, there's probably no
+> longer any code to be symmetric with anyway).
+
+Yeah, I'll fix these up and resend.
