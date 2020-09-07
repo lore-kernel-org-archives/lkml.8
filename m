@@ -2,188 +2,109 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E00C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8109CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9927206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599462109;
-	bh=ZAj/I1uTuH7D1upBhwBN2EIGxNIlWwzeBuzktnN7cPg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XNZB7ACXqoNYqEnn1HVpMWMwfJbbg0MyIXS1ILIwrqr/ot7Z8xoLrQU1KRQ+XpS8D
-	 xmsvrC4ivlPm6LYbmZG300Tr+kiqxYxOZSFLsp9JDKUCi31Qk2GtdViHFYzBiKOvI1
-	 g2xOTQqDzaJtKUf6naQspbHLLty73Rc/U7GBQQho=
+	by mail.kernel.org (Postfix) with ESMTP id 28E0B206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:02:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iGE5Cdik"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726892AbgIGHBq (ORCPT
+        id S1726769AbgIGHBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgIGHBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:01:44 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F87320768;
-        Mon,  7 Sep 2020 07:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599462102;
-        bh=ZAj/I1uTuH7D1upBhwBN2EIGxNIlWwzeBuzktnN7cPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dWgnC5aHFdj7QU+pJRFFdwbAPl8QNG56z+agDCDUgDDLL51W/mtGbd38rBklCd2hI
-         YanKJxBRVc59P5+pa2WRqkKH9x+9BIphwalsxUyzEPAHD3wa8TTHkxn0krIjjQlMpJ
-         Z4ei21H7kQR1p4R06BSf2ezf6GzJzfMqeuuOddLo=
-Date:   Mon, 7 Sep 2020 09:01:57 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Naveen Panwar <naveen.panwar27@gmail.com>
-Cc:     devel@driverdev.osuosl.org, mpe@ellerman.id.au,
-        stern@rowland.harvard.edu, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: Ralink: ralink-gdma: Fixed codestyle issue and
- warnings
-Message-ID: <20200907070157.GA606215@kroah.com>
-References: <20200907065745.21439-1-naveen.panwar27@gmail.com>
+        Mon, 7 Sep 2020 03:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbgIGHAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 03:00:31 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64D56C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:00:30 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id v15so7593914pgh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZB01nxLyQQ2oxAI+dDxfZXKWbIvB8x5H0InVProFwEk=;
+        b=iGE5Cdikz2WDHv2brLa0kGSf0Oyke/kI5FiddDBhh+ZQu4j85gbU3TlsK0oCn2Lu0w
+         hqcU3iLfW5vzpOogIiR3dfTDtzFuE76qTO2JIgH6nMQmsEZEWDgI0wqCE6WIRGk6A27+
+         1RLgd92imZ0HxzZxA9lXP9kFMJFZRW2WZpfLSgwQSrhJ00/4+p08wqADrOPRtjaDnyvr
+         SJrJ1nKQ3a8Ey7Uov3UZhW+p/Oc/7YDmr1VHA8eib4ofkHMi4By9OyXHwRJnI9g4DPNO
+         PaxzkYx0GVXvR/OOkgOhvBGUApvewi6a7MRXJ2P5p/2ZqGjOng2enxCX/DFGsnxbGP/X
+         io8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZB01nxLyQQ2oxAI+dDxfZXKWbIvB8x5H0InVProFwEk=;
+        b=MgbMDPlOLF6yAmCNvCV9rM4y1qDw3Stkgc1jDwzXudFEvsC4c3cO3G6MGHcou5c2v6
+         rA1Qp6XMiFbr3TIEjWQQwBEnKtl+dbmNg3g9ZJwYtgqFqKBBXiyTQHkBKgiEfbgbo5ZS
+         oEhJ2CdAoHU/wQ7P5/D4nnt2q2ovo6wHF1Ctd8p3wNFJCmNped3q6QfwZQD+FDnnTeJb
+         u+OCeB2IGwV/HnBTIFwfznIpyryGmqpDfhk7yqYP9H+z7vT7npV6Pca8+lIvzZ14C2ru
+         kxoJl3e+1ri7phAaqmpzIkMHN5CBhfmjwFf42kHK2auBuvkH23c3SWKNi5F5zo6HlsM5
+         Rpow==
+X-Gm-Message-State: AOAM533iZMCkMx85ZxKzTov19bdu9a7RHy82lU2z71bvET0mGYQPqSJr
+        fvG1aAiOIXzoBr4ja8gdz5C1bsnmPbwdXivBzA9tJRD5AjX/Fw==
+X-Google-Smtp-Source: ABdhPJxuNIxHplTBaOBAdYC4reZOx0YehpPyyImzvd9PJ/q1QoVrRnICkvZUEj+F6D3F2KJO1GuoRJoMsZo/pllt2kA=
+X-Received: by 2002:aa7:8756:: with SMTP id g22mr18657106pfo.37.1599462025620;
+ Mon, 07 Sep 2020 00:00:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907065745.21439-1-naveen.panwar27@gmail.com>
+References: <20200904155025.55718-1-xypron.glpk@gmx.de>
+In-Reply-To: <20200904155025.55718-1-xypron.glpk@gmx.de>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Mon, 7 Sep 2020 10:00:14 +0300
+Message-ID: <CAD8XO3ZLqkuajo3GVRdvXiFXMH9P-vp-PX5s6idgA51ouVDpKQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 12:27:45PM +0530, Naveen Panwar wrote:
-> Fixed checkpatch warnings two warnings still exits about DT
-> compatible strings appers undocumented. Fixed the other codestyle
-> errors, and some warnings about use of volatile and un-necessary
-> out of memory errors.
-> 
-> Signed-off-by: Naveen Panwar <naveen.panwar27@gmail.com>
+On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+>
+> In the memory map the regions with the lowest addresses may be of type
+> EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
+> rest of the memory. So for calculating the maximum loading address for the
+> device tree and the initial ramdisk image these reserved areas should not
+> be taken into account.
+>
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 > ---
->  drivers/staging/ralink-gdma/ralink-gdma.c | 29 ++++++++++++-----------
->  1 file changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/staging/ralink-gdma/ralink-gdma.c b/drivers/staging/ralink-gdma/ralink-gdma.c
-> index eabf10933..1c3388b7c 100644
-> --- a/drivers/staging/ralink-gdma/ralink-gdma.c
-> +++ b/drivers/staging/ralink-gdma/ralink-gdma.c
-> @@ -122,7 +122,8 @@ struct gdma_dma_dev {
->  	struct gdma_data *data;
->  	void __iomem *base;
->  	struct tasklet_struct task;
-> -	volatile unsigned long chan_issued;
-> +
-> +	unsigned long chan_issued;
->  	atomic_t cnt;
->  
->  	struct gdma_dmaengine_chan chan[];
-> @@ -135,8 +136,8 @@ struct gdma_data {
->  	int (*start_transfer)(struct gdma_dmaengine_chan *chan);
->  };
->  
-> -static struct gdma_dma_dev *gdma_dma_chan_get_dev(
-> -	struct gdma_dmaengine_chan *chan)
-> +static struct gdma_dma_dev *gdma_dma_chan_get_dev
-> +	(struct gdma_dmaengine_chan *chan)
->  {
->  	return container_of(chan->vchan.chan.device, struct gdma_dma_dev,
->  		ddev);
-> @@ -510,10 +511,10 @@ static void gdma_dma_issue_pending(struct dma_chan *c)
->  	spin_unlock_irqrestore(&chan->vchan.lock, flags);
->  }
->  
-> -static struct dma_async_tx_descriptor *gdma_dma_prep_slave_sg(
-> -		struct dma_chan *c, struct scatterlist *sgl,
-> -		unsigned int sg_len, enum dma_transfer_direction direction,
-> -		unsigned long flags, void *context)
-> +static struct dma_async_tx_descriptor *gdma_dma_prep_slave_sg
-> +	(struct dma_chan *c, struct scatterlist *sgl,
-> +	 unsigned int sg_len, enum dma_transfer_direction direction,
-> +	 unsigned long flags, void *context)
->  {
->  	struct gdma_dmaengine_chan *chan = to_gdma_dma_chan(c);
->  	struct gdma_dma_desc *desc;
-> @@ -522,7 +523,7 @@ static struct dma_async_tx_descriptor *gdma_dma_prep_slave_sg(
->  
->  	desc = kzalloc(struct_size(desc, sg, sg_len), GFP_ATOMIC);
->  	if (!desc) {
-> -		dev_err(c->device->dev, "alloc sg decs error\n");
-> +		goto free_rx_tx;
->  		return NULL;
->  	}
->  	desc->residue = 0;
-> @@ -558,9 +559,9 @@ static struct dma_async_tx_descriptor *gdma_dma_prep_slave_sg(
->  	return NULL;
->  }
->  
-> -static struct dma_async_tx_descriptor *gdma_dma_prep_dma_memcpy(
-> -		struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> -		size_t len, unsigned long flags)
-> +static struct dma_async_tx_descriptor *gdma_dma_prep_dma_memcpy
-> +	(struct dma_chan *c, dma_addr_t dest, dma_addr_t src,
-> +	 size_t len, unsigned long flags)
->  {
->  	struct gdma_dmaengine_chan *chan = to_gdma_dma_chan(c);
->  	struct gdma_dma_desc *desc;
-> @@ -577,7 +578,7 @@ static struct dma_async_tx_descriptor *gdma_dma_prep_dma_memcpy(
->  
->  	desc = kzalloc(struct_size(desc, sg, num_periods), GFP_ATOMIC);
->  	if (!desc) {
-> -		dev_err(c->device->dev, "alloc memcpy decs error\n");
-> +		goto free_rx_tx;
->  		return NULL;
->  	}
->  	desc->residue = len;
-> @@ -601,8 +602,8 @@ static struct dma_async_tx_descriptor *gdma_dma_prep_dma_memcpy(
->  	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
->  }
->  
-> -static struct dma_async_tx_descriptor *gdma_dma_prep_dma_cyclic(
-> -	struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
-> +static struct dma_async_tx_descriptor *gdma_dma_prep_dma_cyclic
-> +	(struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
->  	size_t period_len, enum dma_transfer_direction direction,
->  	unsigned long flags)
->  {
-> -- 
-> 2.17.1
-> 
-> _______________________________________________
-> devel mailing list
-> devel@linuxdriverproject.org
-> http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+>  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> index c2484bf75c5d..13058ac75765 100644
+> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
+>         map.map_end = map.map + map_size;
+>
+>         for_each_efi_memory_desc_in_map(&map, md) {
+> -               if (md->attribute & EFI_MEMORY_WB) {
+> +               if (md->attribute & EFI_MEMORY_WB &&
+> +                   md->type != EFI_RESERVED_TYPE) {
 
-Hi,
+shouldn't the type here be CONVENTIONAL?
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch did many different things all at once, making it difficult
-  to review.  All Linux kernel patches need to only do one thing at a
-  time.  If you need to do multiple things (such as clean up all coding
-  style issues in a file/driver), do it in a sequence of patches, each
-  one doing only one thing.  This will make it easier to review the
-  patches to ensure that they are correct, and to help alleviate any
-  merge issues that larger patches can cause.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+>                         if (membase > md->phys_addr)
+>                                 membase = md->phys_addr;
+>                 }
+> --
+> 2.28.0
+>
