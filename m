@@ -7,35 +7,35 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7179C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7618E206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0389206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730827AbgIGRgb (ORCPT
+        id S1731070AbgIGRh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:36:31 -0400
-Received: from 8bytes.org ([81.169.241.247]:43658 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:37:59 -0400
+Received: from 8bytes.org ([81.169.241.247]:43606 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgIGNSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:16 -0400
+        id S1729466AbgIGNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:04 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 5B5F5F13;
-        Mon,  7 Sep 2020 15:16:51 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 276A31008;
+        Mon,  7 Sep 2020 15:17:02 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 18/72] x86/boot/compressed/64: Change add_identity_map() to take start and end
-Date:   Mon,  7 Sep 2020 15:15:19 +0200
-Message-Id: <20200907131613.12703-19-joro@8bytes.org>
+Subject: [PATCH v7 39/72] x86/sev-es: Setup early #VC handler
+Date:   Mon,  7 Sep 2020 15:15:40 +0200
+Message-Id: <20200907131613.12703-40-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,69 +60,110 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Changing the function to take start and end as parameters instead of
-start and size simplifies the callers, which don't need to calculate
-the size if they already have start and end.
+Setup an early handler for #VC exceptions. There is no GHCB mapped
+yet, so just re-use the vc_no_ghcb_handler. It can only handle CPUID
+exit-codes, but that should be enough to get the kernel through
+verify_cpu() and __startup_64() until it runs on virtual addresses.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ arch/x86/include/asm/sev-es.h |  3 +++
+ arch/x86/kernel/head64.c      | 20 ++++++++++++++++++++
+ arch/x86/kernel/head_64.S     | 27 +++++++++++++++++++++++++++
+ 3 files changed, 50 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index c63257bf8373..62e42c11a336 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -89,10 +89,8 @@ static struct x86_mapping_info mapping_info;
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 6dc52440c4b4..7175d432ebfe 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -73,4 +73,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
+ 	return (val & mask);
+ }
+ 
++/* Early IDT entry points for #VC handler */
++extern void vc_no_ghcb(void);
++
+ #endif
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index 4282dac694c3..621b5e8aef4c 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -40,6 +40,7 @@
+ #include <asm/desc.h>
+ #include <asm/extable.h>
+ #include <asm/trapnr.h>
++#include <asm/sev-es.h>
+ 
  /*
-  * Adds the specified range to the identity mappings.
-  */
--static void add_identity_map(unsigned long start, unsigned long size)
-+static void add_identity_map(unsigned long start, unsigned long end)
+  * Manage page tables very early on.
+@@ -540,10 +541,29 @@ static struct desc_ptr bringup_idt_descr = {
+ 	.address	= 0, /* Set at runtime */
+ };
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++static void set_bringup_idt_handler(int n, void *handler)
++{
++	struct idt_data data;
++	gate_desc desc;
++
++	init_idt_data(&data, n, handler);
++	idt_init_desc(&desc, &data);
++	native_write_idt_entry(bringup_idt_table, n, &desc);
++}
++#endif
++
+ /* This runs while still in the direct mapping */
+ static void startup_64_load_idt(unsigned long physbase)
  {
--	unsigned long end = start + size;
--
- 	/* Align boundary to 2M. */
- 	start = round_down(start, PMD_SIZE);
- 	end = round_up(end, PMD_SIZE);
-@@ -107,8 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long size)
- /* Locates and clears a region for a new top level page table. */
- void initialize_identity_maps(void)
- {
--	unsigned long start, size;
--
- 	/* If running as an SEV guest, the encryption mask is required. */
- 	set_sev_encryption_mask();
+ 	struct desc_ptr *desc = fixup_pointer(&bringup_idt_descr, physbase);
++	void __maybe_unused *handler;
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	/* VMM Communication Exception */
++	handler = fixup_pointer(vc_no_ghcb, physbase);
++	set_bringup_idt_handler(X86_TRAP_VC, handler);
++#endif
  
-@@ -155,9 +151,7 @@ void initialize_identity_maps(void)
- 	 * New page-table is set up - map the kernel image and load it
- 	 * into cr3.
- 	 */
--	start = (unsigned long)_head;
--	size  = _end - _head;
--	add_identity_map(start, size);
-+	add_identity_map((unsigned long)_head, (unsigned long)_end);
- 	write_cr3(top_level_pgt);
- }
+ 	desc->address = (unsigned long)fixup_pointer(bringup_idt_table, physbase);
+ 	native_load_idt(desc);
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 3b40ec44a67d..2e5aa03b4321 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -348,6 +348,33 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
+ 	jmp restore_regs_and_return_to_kernel
+ SYM_CODE_END(early_idt_handler_common)
  
-@@ -189,7 +183,8 @@ static void do_pf_error(const char *msg, unsigned long error_code,
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++/*
++ * VC Exception handler used during very early boot. The
++ * early_idt_handler_array can't be used because it returns via the
++ * paravirtualized INTERRUPT_RETURN and pv-ops don't work that early.
++ */
++SYM_CODE_START_NOALIGN(vc_no_ghcb)
++	UNWIND_HINT_IRET_REGS offset=8
++
++	/* Build pt_regs */
++	PUSH_AND_CLEAR_REGS
++
++	/* Call C handler */
++	movq    %rsp, %rdi
++	movq	ORIG_RAX(%rsp), %rsi
++	call    do_vc_no_ghcb
++
++	/* Unwind pt_regs */
++	POP_REGS
++
++	/* Remove Error Code */
++	addq    $8, %rsp
++
++	/* Pure iret required here - don't use INTERRUPT_RETURN */
++	iretq
++SYM_CODE_END(vc_no_ghcb)
++#endif
  
- void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- {
--	unsigned long address = native_read_cr2();
-+	unsigned long address = native_read_cr2() & PMD_MASK;
-+	unsigned long end = address + PMD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
-@@ -204,5 +199,5 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 	 * Error code is sane - now identity map the 2M region around
- 	 * the faulting address.
- 	 */
--	add_identity_map(address & PMD_MASK, PMD_SIZE);
-+	add_identity_map(address, end);
- }
+ #define SYM_DATA_START_PAGE_ALIGNED(name)			\
+ 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
 -- 
 2.28.0
 
