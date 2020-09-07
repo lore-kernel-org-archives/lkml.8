@@ -2,70 +2,100 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB55C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2602C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 100BE21548
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADF521548
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dn2D9TiX"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RdWmnUTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgIGGLh (ORCPT
+        id S1726770AbgIGGMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51022 "EHLO
+        Mon, 7 Sep 2020 02:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725803AbgIGGLg (ORCPT
+        with ESMTP id S1725823AbgIGGMJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:11:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A520BC061573;
-        Sun,  6 Sep 2020 23:11:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=qfcALgvFzZYc/TWT3h5fMbHKeWOPoZL7AoIZsE93hQo=; b=dn2D9TiXe1LDIDlV1gQsXwiTjX
-        5dA9T1ojQpMSM5eJyXJPC+XIleTHAJp2xN8n4Vmxa+uPtaPXMLjwBNVaQlEc4JXjJ+AZXOTbktX1Q
-        HEYagLu5mM5tpQz68LbkspH8Rl/+4maOP1z4/Q7lR2Trde+6AdiJJSb84ctKey68868Mi7iBdCdG8
-        XSFe2xxB4SkRrx/qlOl1BPytAIMjYsImzjZ55XT9n4Q7Qw02TGYmMZNolsHpaXTDKr7iwPT1zlo1B
-        FGHOTlcrCQzMIopOcac4bS0lxYWGpeF4jxoWAdkIomOlLbKDeQbqw7VDbXSRnT7qSTKTzADqQfwTq
-        Sfv0OQoQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFANC-0003wC-UU; Mon, 07 Sep 2020 06:11:26 +0000
-Date:   Mon, 7 Sep 2020 07:11:26 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     robh+dt@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
-        bp@alien8.de, mchehab@kernel.org, tony.luck@intel.com,
-        devicetree@vger.kernel.org, aou@eecs.berkeley.edu,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        rrichter@marvell.com, james.morse@arm.com,
-        linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] soc: sifive: Add SiFive specific Cadence DDR
- controller driver
-Message-ID: <20200907061126.GA14999@infradead.org>
-References: <1599457679-8947-1-git-send-email-yash.shah@sifive.com>
- <1599457679-8947-3-git-send-email-yash.shah@sifive.com>
+        Mon, 7 Sep 2020 02:12:09 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F06C061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 23:12:09 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id jw11so64267pjb.0
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 23:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nwfDt8r0FFxI94uOTy5nUUE9dpoo9ucjDC826xRAHEs=;
+        b=RdWmnUTRghIGlypN/+rErqMOa0Yg9EhOyyB+9YiIc89y5b/84E69P00KPUURWt45vI
+         1i6hlDIqilO/79vhKrR1bBxm5KIIFxkw23ziv6o6zgUhRLOvwNAxY4kUu5Tel0/9/xl8
+         ff+0U2b2bBGiSCpZ5hyf3A3ovBOeAsSgRRrwqyAbptAr9Ah2YmDgI5DNU5l2qdH1f7hs
+         IZJCbkScUN5Jjv8U19S0vO5l+nV+ZhLO+ArKdwpUvP9ZKudLRJGN9nm0plIOEKKOakr6
+         TBsZfrnEZpU1SN8pbt8APKcNfv87D6F2ldHk1TLPoYUz7nuVzG7ZRj1u8xghCHgI5ird
+         fJfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nwfDt8r0FFxI94uOTy5nUUE9dpoo9ucjDC826xRAHEs=;
+        b=CCgxdXenaYShW4wdzT0Huw3DWQUpxQN8EM3pNV1ykf9ovM1wNZsJxba57Q2g6npQBl
+         0mM8HJ036yfuX3B44IjaVnb+OpWEgsE87A3RlPK8whgbu5RYm6MpxTLC2U2cOpHxv0j6
+         R+OMCQAs5fbasn7zP4yjYrgLT3q2crSU9ERMB0tcwPomSIZkLxWUeAF2+GnVmYhzxEmE
+         yJHUHsRyKnFWzdnrX1b1aC3zuROuIZ4cYtWIlKH+xFWCcnAdwQjo1vlu6XarC7AHvEx8
+         nI+OVMvy2XktDgkxkGpu93bOFnnlGCgAoMbuTn7oUexkASZSVNHz6uAS774RcB8WuW9t
+         Qjjg==
+X-Gm-Message-State: AOAM533UCBgn3KSkKw8c0WqBdFoo4aTdfEEYf4G2YQ7uVepRbZrYS2SL
+        pn3jJLTJSlmZXm6RtVLh86VSTw==
+X-Google-Smtp-Source: ABdhPJyXIcxBcY1dyA6eSqz/P+UKb/0TLMDBhuiYIHDbS48jQyDmiKFYOrcEZo0Qr12Qcr58IQ41xw==
+X-Received: by 2002:a17:90a:ad8b:: with SMTP id s11mr18924661pjq.40.1599459122404;
+        Sun, 06 Sep 2020 23:12:02 -0700 (PDT)
+Received: from localhost ([122.181.47.55])
+        by smtp.gmail.com with ESMTPSA id l20sm13907048pfc.72.2020.09.06.23.12.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 06 Sep 2020 23:12:01 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 11:41:54 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     rjw@rjwysocki.net, sudeep.holla@arm.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq,cppc: fix issue when hotplugging out policy->cpu
+Message-ID: <20200907061154.iiyaq4m3vjtrlkp4@vireshk-i7>
+References: <20200903111955.31029-1-ionela.voinescu@arm.com>
+ <20200904050604.yoar2c6fofcikipp@vireshk-i7>
+ <20200904094303.GA10031@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599457679-8947-3-git-send-email-yash.shah@sifive.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200904094303.GA10031@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 11:17:58AM +0530, Yash Shah wrote:
-> Add a driver to manage the Cadence DDR controller present on SiFive SoCs
-> At present the driver manages the EDAC feature of the DDR controller.
-> Additional features may be added to the driver in future to control
-> other aspects of the DDR controller.
+On 04-09-20, 10:43, Ionela Voinescu wrote:
+> Do you know why it was designed this way in the first place?
 
-So if this is a generic(ish) Cadence IP block shouldn't it be named
-Cadence and made generic?  Or is the frontend somehow SiFive specific?
+No.
+
+> I assumed it was designed like this (per-cpu cppc_cpudata structures) to
+> allow for the future addition of support for the HW_ALL CPPC coordination
+> type. In that case you can still have PSD (dependency) domains but the
+> desired performance controls would be per-cpu, with the coordination
+> done in hardware/firmware. So, in the HW_ALL case you'd end up having
+> different performance controls even for CPUs in the same policy.
+> Currently the CPPC driver only supports SW_ANY which is the traditional
+> cpufreq approach.
+
+Then the person who would add that feature will take care of fixing the issues
+then. We should make sure we handle the current use-case optimally. And a
+per-cpu thing isn't working well for that.
+
+-- 
+viresh
