@@ -2,73 +2,177 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E100C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B6EC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C018C21582
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aiJetSAJ"
+	by mail.kernel.org (Postfix) with ESMTP id 48059215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599509769;
+	bh=RAEHj8xYfuFWI4Y+q/aFyLQ3Y81fPmwq73CuPlLtuLo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GAOBpqSFolK6tt71vOhGMmYJztMrDnA2rr7nGTU1Gm8NVG4NFT9qawWAmlWHHxwwP
+	 6JhQ5b5GhssHRfVIfqLfhHWLaf6b10S1AL2JxpaEHrKrE9aLry+ihqGHpk1AZMmqVq
+	 TMRLtdsDNAxcJner6MhN5auDstmXnJ3M+0FhNC68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgIGUPU (ORCPT
+        id S1729378AbgIGUQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728834AbgIGUPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:15:20 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98596C061573;
-        Mon,  7 Sep 2020 13:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HFgEvpW3R88BEO0W4TSH3T3fDAqlzxYsLL7Hu+xZbDk=; b=aiJetSAJfdkq2mh4ZZZDTgDH+/
-        Ie8NLiM2SBOSMVrp6U1arwYlqWE/Eo7L1GvO+mumyvIKb3pXf2OvUTMbNtqiec50Yzppr40TT3rLJ
-        MacFYA88gNS6w/wSHlUblr5xFGBonsGmLvl1Vugh96YU5HprbUDtJ/Ygg5CiDf13Y8Zg8UrieyKf6
-        ishVTLin826hOaiVwCseYjJ+/eQU7mFqgirgNNeWnc04FKYw/RESX96q4gdUbQsxx2n+aST7+snYg
-        3ZcVc90rjMvVgWdWPlilljSLcGDkJ8HNSyZRLn23jhhrMnh4DWFsWB2Kn8XQrGpet07mHWrB5/Ril
-        DchM4ukA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFNXo-0007o8-OB; Mon, 07 Sep 2020 20:15:17 +0000
-Date:   Mon, 7 Sep 2020 21:15:16 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [PATCH] fs: align IOCB_* flags with RWF_* flags
-Message-ID: <20200907201516.GC27537@casper.infradead.org>
-References: <95de7ce4-9254-39f1-304f-4455f66bf0f4@kernel.dk>
+        Mon, 7 Sep 2020 16:16:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728834AbgIGUQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 16:16:05 -0400
+Received: from kernel.org (unknown [87.71.73.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEEA721556;
+        Mon,  7 Sep 2020 20:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599509764;
+        bh=RAEHj8xYfuFWI4Y+q/aFyLQ3Y81fPmwq73CuPlLtuLo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=He38jwjTrF8JsybKdtpkafn6I41PVh9VCu45Rcex2vcAXxwQSXaRmFllsBPIYZ+VL
+         vZjgVN2gASyM9VlZJ8s1FxZ73kaEMYdfXeCRo2+tYgHnkcL0pV9msWK3FqjY2+hfQ4
+         WUxdkaZyDiiR1eOPP4BI2bi8sU1hW+gyy5K8utdc=
+Date:   Mon, 7 Sep 2020 23:15:47 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 3/3] mm: make generic pXd_addr_end() macros inline
+ functions
+Message-ID: <20200907201547.GD1976319@kernel.org>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-4-gerald.schaefer@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <95de7ce4-9254-39f1-304f-4455f66bf0f4@kernel.dk>
+In-Reply-To: <20200907180058.64880-4-gerald.schaefer@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:08:10PM -0600, Jens Axboe wrote:
-> We have a set of flags that are shared between the two and inherired
-> in kiocb_set_rw_flags(), but we check and set these individually.
-> Reorder the IOCB flags so that the bottom part of the space is synced
-> with the RWF flag space, and then we can do them all in one mask and
-> set operation.
-> 
-> The only exception is RWF_SYNC, which needs to mark IOCB_SYNC and
-> IOCB_DSYNC. Do that one separately.
-> 
-> This shaves 15 bytes of text from kiocb_set_rw_flags() for me.
-> 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Hi,
 
-Suggested-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Some style comments below.
+
+On Mon, Sep 07, 2020 at 08:00:58PM +0200, Gerald Schaefer wrote:
+> From: Alexander Gordeev <agordeev@linux.ibm.com>
+> 
+> Since pXd_addr_end() macros take pXd page-table entry as a
+> parameter it makes sense to check the entry type on compile.
+> Even though most archs do not make use of page-table entries
+> in pXd_addr_end() calls, checking the type in traversal code
+> paths could help to avoid subtle bugs.
+> 
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+> ---
+>  include/linux/pgtable.h | 36 ++++++++++++++++++++----------------
+>  1 file changed, 20 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 67ebc22cf83d..d9e7d16c2263 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -656,31 +656,35 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+>   */
+>  
+>  #ifndef pgd_addr_end
+> -#define pgd_addr_end(pgd, addr, end)					\
+> -({	unsigned long __boundary = ((addr) + PGDIR_SIZE) & PGDIR_MASK;	\
+> -	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> -})
+> +#define pgd_addr_end pgd_addr_end
+> +static inline unsigned long pgd_addr_end(pgd_t pgd, unsigned long addr, unsigned long end)
+> +{	unsigned long __boundary = (addr + PGDIR_SIZE) & PGDIR_MASK;
+
+The code should be on a separate line from the curly brace.
+Besides, since this is not a macro anymore, I think it would be nicer to
+use 'boundary' without underscores.
+This applies to the changes below as well.
+
+> +	return (__boundary - 1 < end - 1) ? __boundary : end;
+> +}
+>  #endif
+>  
+>  #ifndef p4d_addr_end
+> -#define p4d_addr_end(p4d, addr, end)					\
+> -({	unsigned long __boundary = ((addr) + P4D_SIZE) & P4D_MASK;	\
+> -	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> -})
+> +#define p4d_addr_end p4d_addr_end
+> +static inline unsigned long p4d_addr_end(p4d_t p4d, unsigned long addr, unsigned long end)
+> +{	unsigned long __boundary = (addr + P4D_SIZE) & P4D_MASK;
+> +	return (__boundary - 1 < end - 1) ? __boundary : end;
+> +}
+>  #endif
+>  
+>  #ifndef pud_addr_end
+> -#define pud_addr_end(pud, addr, end)					\
+> -({	unsigned long __boundary = ((addr) + PUD_SIZE) & PUD_MASK;	\
+> -	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> -})
+> +#define pud_addr_end pud_addr_end
+> +static inline unsigned long pud_addr_end(pud_t pud, unsigned long addr, unsigned long end)
+> +{	unsigned long __boundary = (addr + PUD_SIZE) & PUD_MASK;
+> +	return (__boundary - 1 < end - 1) ? __boundary : end;
+> +}
+>  #endif
+>  
+>  #ifndef pmd_addr_end
+> -#define pmd_addr_end(pmd, addr, end)					\
+> -({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
+> -	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
+> -})
+> +#define pmd_addr_end pmd_addr_end
+> +static inline unsigned long pmd_addr_end(pmd_t pmd, unsigned long addr, unsigned long end)
+> +{	unsigned long __boundary = (addr + PMD_SIZE) & PMD_MASK;
+> +	return (__boundary - 1 < end - 1) ? __boundary : end;
+> +}
+>  #endif
+>  
+>  /*
+> -- 
+> 2.17.1
+> 
+
+-- 
+Sincerely yours,
+Mike.
