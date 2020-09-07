@@ -2,185 +2,113 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D43C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC890C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCB6206B5
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A66FB207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599502563;
+	bh=HMfH03YFktrnGLz7Ry3s392p+fH+S8X4kWzPrjgbpkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G/rlLYIz+tOysKNxqBpA78yitwc2/MF8/jzVv8eLQg9vcPmbfQ53tZqDii+k/o+dQ
+	 hc0RnuBLIymnDwCtJzFKkLJj01jbLAB3nMemL/yIM3lNqNoDKo9oPhuT9vKrF0plt5
+	 KQUpM7zLfIB4tiIGHsBBpEE1Tw5wp6kgpgQPel9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgIGSJL (ORCPT
+        id S1729454AbgIGSP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:09:11 -0400
-Received: from mga03.intel.com ([134.134.136.65]:51253 "EHLO mga03.intel.com"
+        Mon, 7 Sep 2020 14:15:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbgIGSJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:09:10 -0400
-IronPort-SDR: f9dHDpnSJga581iLrCVxttjQZ2od9HJEWIg7orYtMtr/4kka2GZX+zYTzkJ1dVwiW5dlbH8LW/
- AI43fujFQH8A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="158048842"
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="158048842"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 11:09:09 -0700
-IronPort-SDR: KvkpwFbtIMlj4iw2hYC2NDrBxIZxdBYQTGOgbGig2Vvn1PmHSEzvjxRaUEj3uaRqc/kutdCXCN
- dxtpZCTkYttw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="406898153"
-Received: from lkp-server02.sh.intel.com (HELO a98deea729ba) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2020 11:09:07 -0700
-Received: from kbuild by a98deea729ba with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kFLZj-0000DB-6B; Mon, 07 Sep 2020 18:09:07 +0000
-Date:   Tue, 08 Sep 2020 02:08:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 7f6aae3e054f8d36ac90812db4ffd78796a487d1
-Message-ID: <5f56770d.l++AabzgdalBXghz%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1728421AbgIGSPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:15:54 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C21020732;
+        Mon,  7 Sep 2020 18:15:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599502553;
+        bh=HMfH03YFktrnGLz7Ry3s392p+fH+S8X4kWzPrjgbpkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GN5qZaqazHD+wnnLvGnY7Ql7WNXe00bPkZfEj04TvlxU74gIxyU8QfuLcT7DKuPb0
+         FlHntndMazrilYZA8KUGV7d4kkArPspIbgMNJle3rBSelJVBUsHqSalYlL9j3C1tGN
+         PrX4gFYZlOayburJhKjSmt4f2COWcO+/zPXAIqTE=
+Date:   Mon, 7 Sep 2020 14:15:52 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Kristian Evensen <kristian.evensen@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>,
+        Daniele Palmas <dnlplm@gmail.com>,
+        =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 17/33] net: usb: qmi_wwan: add Telit 0x1050
+ composition
+Message-ID: <20200907181552.GN8670@sasha-vm>
+References: <20191026132110.4026-1-sashal@kernel.org>
+ <20191026132110.4026-17-sashal@kernel.org>
+ <CAKfDRXjjuW4VM03HeVoeEyG=cULUK8ZXexWu48rfFvJE+DD8_g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKfDRXjjuW4VM03HeVoeEyG=cULUK8ZXexWu48rfFvJE+DD8_g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 7f6aae3e054f8d36ac90812db4ffd78796a487d1  Merge branch 'core/build'
+On Mon, Sep 07, 2020 at 11:36:37AM +0200, Kristian Evensen wrote:
+>Hi,
+>
+>On Sat, Oct 26, 2019 at 3:27 PM Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Daniele Palmas <dnlplm@gmail.com>
+>>
+>> [ Upstream commit e0ae2c578d3909e60e9448207f5d83f785f1129f ]
+>>
+>> This patch adds support for Telit FN980 0x1050 composition
+>>
+>> 0x1050: tty, adb, rmnet, tty, tty, tty, tty
+>>
+>> Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+>> Acked-by: Bjørn Mork <bjorn@mork.no>
+>> Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/net/usb/qmi_wwan.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+>> index e406a05e79dcd..57e9166b4bff3 100644
+>> --- a/drivers/net/usb/qmi_wwan.c
+>> +++ b/drivers/net/usb/qmi_wwan.c
+>> @@ -1252,6 +1252,7 @@ static const struct usb_device_id products[] = {
+>>         {QMI_FIXED_INTF(0x2357, 0x0201, 4)},    /* TP-LINK HSUPA Modem MA180 */
+>>         {QMI_FIXED_INTF(0x2357, 0x9000, 4)},    /* TP-LINK MA260 */
+>>         {QMI_QUIRK_SET_DTR(0x1bc7, 0x1040, 2)}, /* Telit LE922A */
+>> +       {QMI_QUIRK_SET_DTR(0x1bc7, 0x1050, 2)}, /* Telit FN980 */
+>>         {QMI_FIXED_INTF(0x1bc7, 0x1100, 3)},    /* Telit ME910 */
+>>         {QMI_FIXED_INTF(0x1bc7, 0x1101, 3)},    /* Telit ME910 dual modem */
+>>         {QMI_FIXED_INTF(0x1bc7, 0x1200, 5)},    /* Telit LE920 */
+>> --
+>> 2.20.1
+>>
+>
+>When testing the FN980 with kernel 4.14, I noticed that the qmi device
+>was not there. Checking the git log, I see that this patch was never
+>applied. The patch applies fine, so I guess it was just missed
+>somewhere. If it could be added to the next 4.14 release, it would be
+>much appreciated.
 
-elapsed time: 721m
+Interesting, yes - I'm not sure why it's missing. I'll queue it up.
 
-configs tested: 111
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                               defconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-arm                              allmodconfig
-nds32                            alldefconfig
-mips                        workpad_defconfig
-mips                     cu1000-neo_defconfig
-powerpc                          g5_defconfig
-mips                          ath25_defconfig
-sh                      rts7751r2d1_defconfig
-ia64                             allmodconfig
-sh                        edosk7760_defconfig
-arm                          collie_defconfig
-mips                   sb1250_swarm_defconfig
-arm                       omap2plus_defconfig
-nios2                         3c120_defconfig
-sh                         apsh4a3a_defconfig
-m68k                          atari_defconfig
-powerpc                     pseries_defconfig
-arc                        nsimosci_defconfig
-sh                          landisk_defconfig
-powerpc                         wii_defconfig
-h8300                    h8300h-sim_defconfig
-xtensa                              defconfig
-h8300                               defconfig
-arm                        neponset_defconfig
-powerpc                  mpc885_ads_defconfig
-mips                           ip28_defconfig
-mips                        omega2p_defconfig
-mips                 pnx8335_stb225_defconfig
-mips                         bigsur_defconfig
-m68k                           sun3_defconfig
-arm                         socfpga_defconfig
-openrisc                            defconfig
-alpha                            allyesconfig
-sh                           se7343_defconfig
-arm                          pxa168_defconfig
-sh                         ecovec24_defconfig
-mips                           ip27_defconfig
-powerpc                      pasemi_defconfig
-mips                          ath79_defconfig
-arm                     eseries_pxa_defconfig
-arm                            mmp2_defconfig
-arm                        mini2440_defconfig
-ia64                             alldefconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                                defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20200907
-x86_64               randconfig-a004-20200907
-x86_64               randconfig-a003-20200907
-x86_64               randconfig-a005-20200907
-x86_64               randconfig-a001-20200907
-x86_64               randconfig-a002-20200907
-i386                 randconfig-a004-20200907
-i386                 randconfig-a005-20200907
-i386                 randconfig-a006-20200907
-i386                 randconfig-a003-20200907
-i386                 randconfig-a001-20200907
-i386                 randconfig-a002-20200907
-i386                 randconfig-a016-20200907
-i386                 randconfig-a015-20200907
-i386                 randconfig-a011-20200907
-i386                 randconfig-a013-20200907
-i386                 randconfig-a014-20200907
-i386                 randconfig-a012-20200907
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allyesconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-x86_64                           allyesconfig
-
-clang tested configs:
-x86_64               randconfig-a013-20200907
-x86_64               randconfig-a011-20200907
-x86_64               randconfig-a016-20200907
-x86_64               randconfig-a012-20200907
-x86_64               randconfig-a015-20200907
-x86_64               randconfig-a014-20200907
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Thanks,
+Sasha
