@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF33C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9CDC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3E82208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1926B2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:03:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498176;
-	bh=cKkhVZVcMcX9KzrcnCMkq38mF8puxm9XVcCbDDzK8Mw=;
+	s=default; t=1599498182;
+	bh=MfRNgySIkpHHnYNgad/82iP6adXIbt8e2kLzPLxy684=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oc1pDaflZCZBO05QUQBLfOjQ5ACQUB8h3V4n0ghPni3ZB3RlM52QqrfhG05L+kU5p
-	 +7NGp8EX5HloX3pztsl0H69+WosVQ4PjiA54CR/yeNgitLWqY3ksYdj9Kibms9NVjT
-	 Z6xtOFqt+En3vmfpNKs07YSIqIqToXXbMao3ctN0=
+	b=d3IT7HYzSsAsnKX7louGAnNgdXLoIfujdRsCzTpaIhvaxRv8UThZc1nABocdftTeo
+	 s3GVyXVCCqdMzgGofDq4xj2B6uROuvwAxOa1qdWPJvHhsSCCGC0KGYW8xvfA3D/7rn
+	 u6Bsk0P5ay8EG8jtTTIGm9ykGNT9mqg6B4ExOqwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbgIGRCy (ORCPT
+        id S1730759AbgIGRC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730681AbgIGQd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:26 -0400
+        id S1729835AbgIGQd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 443A621941;
-        Mon,  7 Sep 2020 16:33:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4937821927;
+        Mon,  7 Sep 2020 16:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496405;
-        bh=cKkhVZVcMcX9KzrcnCMkq38mF8puxm9XVcCbDDzK8Mw=;
+        s=default; t=1599496406;
+        bh=MfRNgySIkpHHnYNgad/82iP6adXIbt8e2kLzPLxy684=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kii9zdSEBVgF/F/Vwt4FEb/8REJzyL5l694rFqOk+jaZJmrKkuk8rl9DrOf/m1gYy
-         L75pVoM60W7jYCT89AViNrykzPNROVj6B9HObmzAJ6KQer/BbzPVaWiebLQxcdUGXm
-         5CU01kh/Q8/p16/31Kf+bqA9CgHksvHIvBpEL7iE=
+        b=aISA6hhybXRrGXN/MWFBn5JBR09pWSFPhkSAV/cVy5mE/mbpMwLbO6QrnUYy30jmq
+         jT6WJ2fuYaFmMHL+1syaff3+PaBGYmSY86JaCjOHF+e4WtTmYBkT4uQ8JPxp1IyNfO
+         2UTYKpTuEXEUrSOcmJtsBF4SLS/mMMh0Wqyz1+hs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>,
         iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.8 51/53] iommu/amd: Do not force direct mapping when SME is active
-Date:   Mon,  7 Sep 2020 12:32:17 -0400
-Message-Id: <20200907163220.1280412-51-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 52/53] iommu/amd: Do not use IOMMUv2 functionality when SME is active
+Date:   Mon,  7 Sep 2020 12:32:18 -0400
+Message-Id: <20200907163220.1280412-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -60,38 +60,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-[ Upstream commit 7cad554887f1c5fd77e57e6bf4be38370c2160cb ]
+[ Upstream commit 2822e582501b65707089b097e773e6fd70774841 ]
 
-Do not force devices supporting IOMMUv2 to be direct mapped when memory
-encryption is active. This might cause them to be unusable because their
-DMA mask does not include the encryption bit.
+When memory encryption is active the device is likely not in a direct
+mapped domain. Forbid using IOMMUv2 functionality for now until finer
+grained checks for this have been implemented.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Link: https://lore.kernel.org/r/20200824105415.21000-2-joro@8bytes.org
+Link: https://lore.kernel.org/r/20200824105415.21000-3-joro@8bytes.org
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd/iommu.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/iommu/amd/iommu_v2.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 2f22326ee4dfe..547b41e376574 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -2650,7 +2650,12 @@ static int amd_iommu_def_domain_type(struct device *dev)
- 	if (!dev_data)
- 		return 0;
+diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
+index e4b025c5637c4..5a188cac7a0f1 100644
+--- a/drivers/iommu/amd/iommu_v2.c
++++ b/drivers/iommu/amd/iommu_v2.c
+@@ -737,6 +737,13 @@ int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
  
--	if (dev_data->iommu_v2)
+ 	might_sleep();
+ 
 +	/*
-+	 * Do not identity map IOMMUv2 capable devices when memory encryption is
-+	 * active, because some of those devices (AMD GPUs) don't have the
-+	 * encryption bit in their DMA-mask and require remapping.
++	 * When memory encryption is active the device is likely not in a
++	 * direct-mapped domain. Forbid using IOMMUv2 functionality for now.
 +	 */
-+	if (!mem_encrypt_active() && dev_data->iommu_v2)
- 		return IOMMU_DOMAIN_IDENTITY;
++	if (mem_encrypt_active())
++		return -ENODEV;
++
+ 	if (!amd_iommu_v2_supported())
+ 		return -ENODEV;
  
- 	return 0;
 -- 
 2.25.1
 
