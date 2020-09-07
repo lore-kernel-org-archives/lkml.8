@@ -2,94 +2,133 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF8DC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8211EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D79BC207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497028;
-	bh=FLjVWqdzzGbjc6JJXhuMZ4OiQNBkym+OTNYfGvDLGZY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=asXyCCNiXQJYIKxHzqpKWn8rp/3Bt2WRPhiJ6GLArhyEOOc27Ar8sOGIrxeitviK/
-	 0yWzp7OhXlORNZ1DHPwuE5shCUDVo2dpIhBTeNZBzLqU+tA0mYmVgtatmG6I5b1/pC
-	 mNXvjjzz47juUg69YdJMilgT1wDGa7vIRcRBKrCk=
+	by mail.kernel.org (Postfix) with ESMTP id 55FF22080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731054AbgIGQno (ORCPT
+        id S1730985AbgIGQoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:43:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49790 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:44:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:40964 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbgIGQfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAD0321D90;
-        Mon,  7 Sep 2020 16:35:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496550;
-        bh=FLjVWqdzzGbjc6JJXhuMZ4OiQNBkym+OTNYfGvDLGZY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHxHkRRpx+1AzT38M68ZDbKkPxtUdS3YGRYm7fMZ3tGmXuPhmn7yVwrSjA5eBU2Qe
-         wFV0Q+c6hQgvscFL2lX1ecXRxda7FcG/8WhjBpy/wFB5ioRcW6ZiBzrtQuBPlf4SYP
-         gCVUTR/FwtXKx0WFkm5+obNZrbMktDkomEtbaitk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Himadri Pandya <himadrispandya@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 05/10] net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
-Date:   Mon,  7 Sep 2020 12:35:38 -0400
-Message-Id: <20200907163543.1281889-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
-References: <20200907163543.1281889-1-sashal@kernel.org>
+        id S1730757AbgIGQoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:44:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AEAF431B;
+        Mon,  7 Sep 2020 09:43:55 -0700 (PDT)
+Received: from bogus (unknown [10.57.10.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E2043F68F;
+        Mon,  7 Sep 2020 09:43:53 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 17:43:51 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Cristian Marussi <cristian.marussi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lukasz.luba@arm.com, Jonathan.Cameron@Huawei.com,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v5 2/3] firmware: arm_scmi: Add SCMI System Power Control
+ driver
+Message-ID: <20200907164351.GB3656@bogus>
+References: <20200819161002.26637-1-cristian.marussi@arm.com>
+ <20200819161002.26637-3-cristian.marussi@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819161002.26637-3-cristian.marussi@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himadri Pandya <himadrispandya@gmail.com>
+On Wed, Aug 19, 2020 at 05:10:01PM +0100, Cristian Marussi wrote:
+> Add an SCMI System Power control driver to handle platform's requests
+> carried by SYSTEM_POWER_STATE_NOTIFIER notifications: such platform
+> requested system power state transitions are handled accordingly,
+> gracefully or forcefully, depending on the notifications' message flags.
+> 
+> Graceful requests are by default relayed to userspace using the same
+> Kernel API used to handle ACPI Shutdown bus events: alternatively, instead,
+> a few available module parameters can be used to tunnel instead such
+> requests to userspace via signals addressed to CAD pid.
+> 
+> When handling graceful requests, grant userspace processes a maximum
+> (configurable) time to perform their duties and then revert to a forceful
+> transition, so avoiding completely timing out platform's maximum grace time
+> and hitting possible abrupt power-cuts.
+> 
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> ----
+> V3 --> V4
+> - fix alignment checkpatch issues
+> V2 --> V3
+> - changed Kconfig to fix naming and defaulting to n
+> V1 --> V2
+> - use common event enums
+> - introduced optioanl alternative signal based comms 2 userspace
+> ---
+>  drivers/firmware/Kconfig                      |  12 +
+>  drivers/firmware/arm_scmi/Makefile            |   1 +
+>  drivers/firmware/arm_scmi/driver.c            |   1 +
+>  .../firmware/arm_scmi/scmi_power_control.c    | 389 ++++++++++++++++++
+>  4 files changed, 403 insertions(+)
+>  create mode 100644 drivers/firmware/arm_scmi/scmi_power_control.c
+> 
+> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+> index fbd785dd0513..a77545c08040 100644
+> --- a/drivers/firmware/Kconfig
+> +++ b/drivers/firmware/Kconfig
+> @@ -40,6 +40,18 @@ config ARM_SCMI_POWER_DOMAIN
+>  	  will be called scmi_pm_domain. Note this may needed early in boot
+>  	  before rootfs may be available.
+>  
+> +config ARM_SCMI_POWER_CONTROL
+> +	bool "SCMI system power control driver"
+> +	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
+> +	default n
+> +	help
+> +	  This enables System Power control logic which binds system shutdown or
+> +	  reboot actions to SCMI System Power notifications generated by SCP
+> +	  firmware.
+> +
+> +	  Graceful requests' methods and timeout and can be configured using
+> +	  a few available module parameters.
+> +
+>  config ARM_SCPI_PROTOCOL
+>  	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+>  	depends on ARM || ARM64 || COMPILE_TEST
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index 643f2320f976..6a0e24f9e0b1 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -7,3 +7,4 @@ scmi-transport-$(CONFIG_MAILBOX) += mailbox.o
+>  scmi-transport-$(CONFIG_HAVE_ARM_SMCCC_DISCOVERY) += smc.o
+>  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o
+>  obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+> +obj-$(CONFIG_ARM_SCMI_POWER_CONTROL) += scmi_power_control.o
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index f749af6e79fc..484b3f7126b5 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -732,6 +732,7 @@ struct scmi_prot_devnames {
+>  
+>  static struct scmi_prot_devnames devnames[] = {
+>  	{ SCMI_PROTOCOL_POWER,  { "genpd" },},
+> +	{ SCMI_PROTOCOL_SYSTEM, {"syspower" },},
 
-[ Upstream commit a092b7233f0e000cc6f2c71a49e2ecc6f917a5fc ]
+				^ missing space
 
-The buffer size is 2 Bytes and we expect to receive the same amount of
-data. But sometimes we receive less data and run into uninit-was-stored
-issue upon read. Hence modify the error check on the return value to match
-with the buffer size as a prevention.
+Split the above into separate patch as it doesn't depend on new config
+and can be added without it. I plan to merge the scmi system protocol
+part for v5.10 and the above addition of device. We need to wait for more
+feedback on the driver front especially user notification part.
 
-Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/asix_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
-index 2092ef6431f20..712765976a221 100644
---- a/drivers/net/usb/asix_common.c
-+++ b/drivers/net/usb/asix_common.c
-@@ -251,7 +251,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
- 
- 	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
- 
--	if (ret < 0) {
-+	if (ret < 2) {
- 		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
- 		goto out;
- 	}
 -- 
-2.25.1
-
+Regards,
+Sudeep
