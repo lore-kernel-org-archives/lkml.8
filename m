@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D43C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08818C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE3F8206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA4421481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599494013;
-	bh=bOtNvPKd1buomuDeBpZzqGRO3R6GMfbAEg8/sDVnLbg=;
+	s=default; t=1599494021;
+	bh=MDm/x39065SOo01K6qZuV7PZJI+UXbxgaHzoKWMO8tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JgQZK05ZE/SbOIPaKEf7AXOUZD6S62eFmw0FyqlmoJVWQBpJYSlv+ZsGjmSMmoYfw
-	 B92erl49W6u93ti4/ughTXcgc68e1nKftcZ9kmfSjRS96KnhJKlxoLbTukmu/U4Vod
-	 slGSm+lGZBFcHcoFFozpWL2BmmO2s+ES8TtoNpfg=
+	b=EvG71c9GiwecXrOL2p6/SYfAihkdpdZrUBKkU0Wl8J2CTBg7vBDHgmH1NMv5V41VG
+	 c5ZgTZAO2EvI2mweWFUoX1uAzlO+P17HMvtK/8CnidllBbpyFXOl+I+XlveSLP0y7G
+	 hkhYqA0EIfFZXAjaydfpqMkWyQ49jP6exm1O0Wrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730206AbgIGPxb (ORCPT
+        id S1730255AbgIGPxj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:53:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58686 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 11:53:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730015AbgIGOvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:51:49 -0400
+        id S1729974AbgIGOvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:51:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02F9621924;
-        Mon,  7 Sep 2020 14:51:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AEA12177B;
+        Mon,  7 Sep 2020 14:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599490279;
-        bh=bOtNvPKd1buomuDeBpZzqGRO3R6GMfbAEg8/sDVnLbg=;
+        s=default; t=1599490269;
+        bh=MDm/x39065SOo01K6qZuV7PZJI+UXbxgaHzoKWMO8tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1MHmCQfOr4X3wWjX6IQ3rwja05HHJTOw+UvuGXj0aN6axRPVil/jBk5r/UJEAR4aO
-         Ssbim/0ObmcFTIK+FT6ffbI0q1Xr0aQYGv6PpRiWAJcwz7wCDbppmvBgjycqVqWR4J
-         V5iFfXj0xM9h7kuUXf4PoM2CFpwjAufNO9gR0z9k=
+        b=tNZrtEWO45CRF+E/OrbMnOHpLv6PCX/TNkRXj1BARuZF1Ju9YXW3C/eh95H133hvx
+         TZEBI66qkmXv8rHm5cCT1r2WvSZ70JTVlrj+0rsnHajlpnOJ5/cd2KH0SbUel4og6U
+         cfnz8gsno2H98HW+mHktnzmjDSF9q4uQwOFl+ISo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     himadrispandya@gmail.com, dvyukov@google.com,
         linux-usb@vger.kernel.org
@@ -47,11 +47,11 @@ Cc:     perex@perex.cz, tiwai@suse.com, stern@rowland.harvard.ed,
         johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
         alsa-devel@alsa-project.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Juergen Stuber <starblue@users.sourceforge.net>,
-        legousb-devel@lists.sourceforge.net
-Subject: [PATCH v2 05/11] USB: legousbtower: use usb_control_msg_recv()
-Date:   Mon,  7 Sep 2020 16:51:02 +0200
-Message-Id: <20200907145108.3766613-6-gregkh@linuxfoundation.org>
+        Alexander Tsoy <alexander@tsoy.me>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH v2 11/11] ALSA: remove calls to usb_pipe_type_check for control endpoints
+Date:   Mon,  7 Sep 2020 16:51:08 +0200
+Message-Id: <20200907145108.3766613-12-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
 References: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
@@ -62,139 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usb_control_msg_recv() function can handle data on the stack, as
-well as properly detecting short reads, so move to use that function
-instead of the older usb_control_msg() call.  This ends up removing a
-lot of extra lines in the driver.
+A USB device will always haev a bi-directional endpoint 0, that's just
+how the devices work, so no need to check for that in a few quirk tests
+as it will always pass.
 
-Cc: Juergen Stuber <starblue@users.sourceforge.net>
-Cc: legousb-devel@lists.sourceforge.net
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Alexander Tsoy <alexander@tsoy.me>
+Cc: alsa-devel@alsa-project.org
+Reported-by: Alan Stern <stern@rowland.harvard.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
 v2:
- - no change from v1
+ - new patch, was not in v1 series, suggested by Alan.
 
- drivers/usb/misc/legousbtower.c | 60 +++++++++++----------------------
- 1 file changed, 19 insertions(+), 41 deletions(-)
+ sound/usb/quirks.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index f922544056de..c3583df4c324 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -308,15 +308,9 @@ static int tower_open(struct inode *inode, struct file *file)
- 	int subminor;
- 	int retval = 0;
- 	struct usb_interface *interface;
--	struct tower_reset_reply *reset_reply;
-+	struct tower_reset_reply reset_reply;
- 	int result;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index fc3aab04a0bc..35da4aa918c7 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -875,8 +875,6 @@ static int snd_usb_nativeinstruments_boot_quirk(struct usb_device *dev)
+ {
+ 	int ret;
  
--	reset_reply = kmalloc(sizeof(*reset_reply), GFP_KERNEL);
--	if (!reset_reply) {
--		retval = -ENOMEM;
--		goto exit;
--	}
--
- 	nonseekable_open(inode, file);
- 	subminor = iminor(inode);
+-	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+-		return -EINVAL;
+ 	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+ 				  0xaf, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+ 				  1, 0, NULL, 0, 1000);
+@@ -984,8 +982,6 @@ static int snd_usb_axefx3_boot_quirk(struct usb_device *dev)
  
-@@ -347,15 +341,11 @@ static int tower_open(struct inode *inode, struct file *file)
- 	}
+ 	dev_dbg(&dev->dev, "Waiting for Axe-Fx III to boot up...\n");
  
- 	/* reset the tower */
--	result = usb_control_msg(dev->udev,
--				 usb_rcvctrlpipe(dev->udev, 0),
--				 LEGO_USB_TOWER_REQUEST_RESET,
--				 USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
--				 0,
--				 0,
--				 reset_reply,
--				 sizeof(*reset_reply),
--				 1000);
-+	result = usb_control_msg_recv(dev->udev, 0,
-+				      LEGO_USB_TOWER_REQUEST_RESET,
-+				      USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
-+				      0, 0,
-+				      &reset_reply, sizeof(reset_reply), 1000);
- 	if (result < 0) {
- 		dev_err(&dev->udev->dev,
- 			"LEGO USB Tower reset control request failed\n");
-@@ -394,7 +384,6 @@ static int tower_open(struct inode *inode, struct file *file)
- 	mutex_unlock(&dev->lock);
+-	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+-		return -EINVAL;
+ 	/* If the Axe-Fx III has not fully booted, it will timeout when trying
+ 	 * to enable the audio streaming interface. A more generous timeout is
+ 	 * used here to detect when the Axe-Fx III has finished booting as the
+@@ -1117,8 +1113,6 @@ static int snd_usb_motu_m_series_boot_quirk(struct usb_device *dev)
+ {
+ 	int ret;
  
- exit:
--	kfree(reset_reply);
- 	return retval;
- }
- 
-@@ -753,7 +742,7 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
- 	struct device *idev = &interface->dev;
- 	struct usb_device *udev = interface_to_usbdev(interface);
- 	struct lego_usb_tower *dev;
--	struct tower_get_version_reply *get_version_reply = NULL;
-+	struct tower_get_version_reply get_version_reply;
- 	int retval = -ENOMEM;
- 	int result;
- 
-@@ -798,34 +787,25 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
- 	dev->interrupt_in_interval = interrupt_in_interval ? interrupt_in_interval : dev->interrupt_in_endpoint->bInterval;
- 	dev->interrupt_out_interval = interrupt_out_interval ? interrupt_out_interval : dev->interrupt_out_endpoint->bInterval;
- 
--	get_version_reply = kmalloc(sizeof(*get_version_reply), GFP_KERNEL);
--	if (!get_version_reply) {
--		retval = -ENOMEM;
--		goto error;
--	}
--
- 	/* get the firmware version and log it */
--	result = usb_control_msg(udev,
--				 usb_rcvctrlpipe(udev, 0),
--				 LEGO_USB_TOWER_REQUEST_GET_VERSION,
--				 USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
--				 0,
--				 0,
--				 get_version_reply,
--				 sizeof(*get_version_reply),
--				 1000);
--	if (result != sizeof(*get_version_reply)) {
--		if (result >= 0)
--			result = -EIO;
-+	result = usb_control_msg_recv(udev, 0,
-+				      LEGO_USB_TOWER_REQUEST_GET_VERSION,
-+				      USB_TYPE_VENDOR | USB_DIR_IN | USB_RECIP_DEVICE,
-+				      0,
-+				      0,
-+				      &get_version_reply,
-+				      sizeof(get_version_reply),
-+				      1000);
-+	if (!result) {
- 		dev_err(idev, "get version request failed: %d\n", result);
- 		retval = result;
- 		goto error;
- 	}
- 	dev_info(&interface->dev,
- 		 "LEGO USB Tower firmware version is %d.%d build %d\n",
--		 get_version_reply->major,
--		 get_version_reply->minor,
--		 le16_to_cpu(get_version_reply->build_no));
-+		 get_version_reply.major,
-+		 get_version_reply.minor,
-+		 le16_to_cpu(get_version_reply.build_no));
- 
- 	/* we can register the device now, as it is ready */
- 	usb_set_intfdata(interface, dev);
-@@ -844,11 +824,9 @@ static int tower_probe(struct usb_interface *interface, const struct usb_device_
- 		 USB_MAJOR, dev->minor);
- 
- exit:
--	kfree(get_version_reply);
- 	return retval;
- 
- error:
--	kfree(get_version_reply);
- 	tower_delete(dev);
- 	return retval;
- }
+-	if (usb_pipe_type_check(dev, usb_sndctrlpipe(dev, 0)))
+-		return -EINVAL;
+ 	ret = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+ 			      1, USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+ 			      0x0, 0, NULL, 0, 1000);
 -- 
 2.28.0
 
