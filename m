@@ -2,154 +2,183 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7D4C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02659C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 672F9207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C25B02080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599496981;
+	bh=N2TzsaDDwqM6tAPNhthsqRzY7Ob4UQpx+wDCC0gnkxQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KQvesVxoC6gDGA/lVs/NL5HnT84xvgrqRC/qQ1JqZd9sQQqoJ65wcB8e2/HaG2nGe
+	 54SZ66+i4nd3/38AEGzdKspGgWKgHlSZhgfHOcvrh+shh//hryKUVydsKQMLN0NjDV
+	 4okJwOUzVzesfD2TPYuXNLHKow6gVuvr/n+VILqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgIGQmd (ORCPT
+        id S1730307AbgIGQgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:42:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41658 "EHLO mx2.suse.de"
+        Mon, 7 Sep 2020 12:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730907AbgIGQgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:36:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 2D9AAB012;
-        Mon,  7 Sep 2020 16:36:43 +0000 (UTC)
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: [RFC 2/5] mm, page_alloc: calculate pageset high and batch once per zone
-Date:   Mon,  7 Sep 2020 18:36:25 +0200
-Message-Id: <20200907163628.26495-3-vbabka@suse.cz>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907163628.26495-1-vbabka@suse.cz>
-References: <20200907163628.26495-1-vbabka@suse.cz>
+        id S1730688AbgIGQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:36 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A5E21789;
+        Mon,  7 Sep 2020 16:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599496413;
+        bh=N2TzsaDDwqM6tAPNhthsqRzY7Ob4UQpx+wDCC0gnkxQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HXrYHZ7qhbGu9/EsSb9GmQfkoWiTerOg9PRDdlD4S0ROb7UFaMPyhn0pean2YoYGd
+         5IJu4RMvdlgaI4PHXkLmnqLV6MXa6+mc2gX3cdhLXKly9Qy9ZzLQQTnm5NV2rsvygt
+         8f+Rgg+OLhQBDArKYUKfdqcERd1ZM/WvsEzMQTJs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 03/43] netfilter: conntrack: allow sctp hearbeat after connection re-use
+Date:   Mon,  7 Sep 2020 12:32:49 -0400
+Message-Id: <20200907163329.1280888-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We currently call pageset_set_high_and_batch() for each possible cpu,
-which repeats the same calculations of high and batch values.
+From: Florian Westphal <fw@strlen.de>
 
-Instead call it once per zone, and it applies the calculated values
-to all per-cpu pagesets of the zone.
+[ Upstream commit cc5453a5b7e90c39f713091a7ebc53c1f87d1700 ]
 
-This also allows removing zone_pageset_init() and __zone_pcp_update() wrappers.
+If an sctp connection gets re-used, heartbeats are flagged as invalid
+because their vtag doesn't match.
 
-No functional change.
+Handle this in a similar way as TCP conntrack when it suspects that the
+endpoints and conntrack are out-of-sync.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+When a HEARTBEAT request fails its vtag validation, flag this in the
+conntrack state and accept the packet.
+
+When a HEARTBEAT_ACK is received with an invalid vtag in the reverse
+direction after we allowed such a HEARTBEAT through, assume we are
+out-of-sync and re-set the vtag info.
+
+v2: remove left-over snippet from an older incarnation that moved
+    new_state/old_state assignments, thats not needed so keep that
+    as-is.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/page_alloc.c | 40 +++++++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 23 deletions(-)
+ include/linux/netfilter/nf_conntrack_sctp.h |  2 ++
+ net/netfilter/nf_conntrack_proto_sctp.c     | 39 ++++++++++++++++++---
+ 2 files changed, 37 insertions(+), 4 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0b516208afda..f669a251f654 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6236,12 +6236,13 @@ static void setup_pageset(struct per_cpu_pageset *p)
- 	pageset_update(&p->pcp, 0, 1);
- }
+diff --git a/include/linux/netfilter/nf_conntrack_sctp.h b/include/linux/netfilter/nf_conntrack_sctp.h
+index 9a33f171aa822..625f491b95de8 100644
+--- a/include/linux/netfilter/nf_conntrack_sctp.h
++++ b/include/linux/netfilter/nf_conntrack_sctp.h
+@@ -9,6 +9,8 @@ struct ip_ct_sctp {
+ 	enum sctp_conntrack state;
  
--static void pageset_set_high_and_batch(struct zone *zone,
--				       struct per_cpu_pageset *p)
-+static void zone_set_pageset_high_and_batch(struct zone *zone)
- {
- 	unsigned long new_high;
- 	unsigned long new_batch;
- 	int fraction = READ_ONCE(percpu_pagelist_fraction);
-+	int cpu;
-+	struct per_cpu_pageset *p;
+ 	__be32 vtag[IP_CT_DIR_MAX];
++	u8 last_dir;
++	u8 flags;
+ };
  
- 	if (fraction) {
- 		new_high = zone_managed_pages(zone) / fraction;
-@@ -6253,23 +6254,25 @@ static void pageset_set_high_and_batch(struct zone *zone,
- 		new_high = 6 * new_batch;
- 		new_batch = max(1UL, 1 * new_batch);
+ #endif /* _NF_CONNTRACK_SCTP_H */
+diff --git a/net/netfilter/nf_conntrack_proto_sctp.c b/net/netfilter/nf_conntrack_proto_sctp.c
+index 4f897b14b6069..810cca24b3990 100644
+--- a/net/netfilter/nf_conntrack_proto_sctp.c
++++ b/net/netfilter/nf_conntrack_proto_sctp.c
+@@ -62,6 +62,8 @@ static const unsigned int sctp_timeouts[SCTP_CONNTRACK_MAX] = {
+ 	[SCTP_CONNTRACK_HEARTBEAT_ACKED]	= 210 SECS,
+ };
+ 
++#define	SCTP_FLAG_HEARTBEAT_VTAG_FAILED	1
++
+ #define sNO SCTP_CONNTRACK_NONE
+ #define	sCL SCTP_CONNTRACK_CLOSED
+ #define	sCW SCTP_CONNTRACK_COOKIE_WAIT
+@@ -369,6 +371,7 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
+ 	u_int32_t offset, count;
+ 	unsigned int *timeouts;
+ 	unsigned long map[256 / sizeof(unsigned long)] = { 0 };
++	bool ignore = false;
+ 
+ 	if (sctp_error(skb, dataoff, state))
+ 		return -NF_ACCEPT;
+@@ -427,15 +430,39 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
+ 			/* Sec 8.5.1 (D) */
+ 			if (sh->vtag != ct->proto.sctp.vtag[dir])
+ 				goto out_unlock;
+-		} else if (sch->type == SCTP_CID_HEARTBEAT ||
+-			   sch->type == SCTP_CID_HEARTBEAT_ACK) {
++		} else if (sch->type == SCTP_CID_HEARTBEAT) {
++			if (ct->proto.sctp.vtag[dir] == 0) {
++				pr_debug("Setting %d vtag %x for dir %d\n", sch->type, sh->vtag, dir);
++				ct->proto.sctp.vtag[dir] = sh->vtag;
++			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
++				if (test_bit(SCTP_CID_DATA, map) || ignore)
++					goto out_unlock;
++
++				ct->proto.sctp.flags |= SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++				ct->proto.sctp.last_dir = dir;
++				ignore = true;
++				continue;
++			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++			}
++		} else if (sch->type == SCTP_CID_HEARTBEAT_ACK) {
+ 			if (ct->proto.sctp.vtag[dir] == 0) {
+ 				pr_debug("Setting vtag %x for dir %d\n",
+ 					 sh->vtag, dir);
+ 				ct->proto.sctp.vtag[dir] = sh->vtag;
+ 			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
+-				pr_debug("Verification tag check failed\n");
+-				goto out_unlock;
++				if (test_bit(SCTP_CID_DATA, map) || ignore)
++					goto out_unlock;
++
++				if ((ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) == 0 ||
++				    ct->proto.sctp.last_dir == dir)
++					goto out_unlock;
++
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
++				ct->proto.sctp.vtag[dir] = sh->vtag;
++				ct->proto.sctp.vtag[!dir] = 0;
++			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
++				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
+ 			}
+ 		}
+ 
+@@ -470,6 +497,10 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
  	}
--	pageset_update(&p->pcp, new_high, new_batch);
--}
--
--static void __meminit zone_pageset_init(struct zone *zone, int cpu)
--{
--	struct per_cpu_pageset *pcp = per_cpu_ptr(zone->pageset, cpu);
+ 	spin_unlock_bh(&ct->lock);
  
--	pageset_init(pcp);
--	pageset_set_high_and_batch(zone, pcp);
-+	for_each_possible_cpu(cpu) {
-+		p = per_cpu_ptr(zone->pageset, cpu);
-+		pageset_update(&p->pcp, new_high, new_batch);
-+	}
- }
- 
- void __meminit setup_zone_pageset(struct zone *zone)
- {
- 	int cpu;
-+	struct per_cpu_pageset *p;
++	/* allow but do not refresh timeout */
++	if (ignore)
++		return NF_ACCEPT;
 +
- 	zone->pageset = alloc_percpu(struct per_cpu_pageset);
--	for_each_possible_cpu(cpu)
--		zone_pageset_init(zone, cpu);
-+	for_each_possible_cpu(cpu) {
-+		p = per_cpu_ptr(zone->pageset, cpu);
-+		pageset_init(p);
-+	}
-+
-+	zone_set_pageset_high_and_batch(zone);
- }
- 
- /*
-@@ -8002,15 +8005,6 @@ int lowmem_reserve_ratio_sysctl_handler(struct ctl_table *table, int write,
- 	return 0;
- }
- 
--static void __zone_pcp_update(struct zone *zone)
--{
--	unsigned int cpu;
--
--	for_each_possible_cpu(cpu)
--		pageset_set_high_and_batch(zone,
--				per_cpu_ptr(zone->pageset, cpu));
--}
--
- /*
-  * percpu_pagelist_fraction - changes the pcp->high for each zone on each
-  * cpu.  It is the fraction of total pages in each zone that a hot per cpu
-@@ -8043,7 +8037,7 @@ int percpu_pagelist_fraction_sysctl_handler(struct ctl_table *table, int write,
- 		goto out;
- 
- 	for_each_populated_zone(zone)
--		__zone_pcp_update(zone);
-+		zone_set_pageset_high_and_batch(zone);
- out:
- 	mutex_unlock(&pcp_batch_high_lock);
- 	return ret;
-@@ -8659,7 +8653,7 @@ EXPORT_SYMBOL(free_contig_range);
- void __meminit zone_pcp_update(struct zone *zone)
- {
- 	mutex_lock(&pcp_batch_high_lock);
--	__zone_pcp_update(zone);
-+	zone_set_pageset_high_and_batch(zone);
- 	mutex_unlock(&pcp_batch_high_lock);
- }
- 
+ 	timeouts = nf_ct_timeout_lookup(ct);
+ 	if (!timeouts)
+ 		timeouts = nf_sctp_pernet(nf_ct_net(ct))->timeouts;
 -- 
-2.28.0
+2.25.1
 
