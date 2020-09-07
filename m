@@ -2,87 +2,102 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBD0C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54410C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6850C2137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599513034;
-	bh=UumymxLYqQ3OdFcuPJn2ZB1M+tzni4fLO4l47tqH7+k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rzYMSo7z7UGqwhDmPWMinHI0ed4P9+9320n5pK/02bgSX+4kSNI7ahOpLp1mDGetk
-	 kSZFd1bsnj66chykTjbl/8MXth7gqeTU3pRUhr7EFyjkbhCSW4/4ofMet8C82d5Ued
-	 U6YXs/xv0mI3GNpy8TkpJgRgqQYT+l6OxWpQIY8s=
+	by mail.kernel.org (Postfix) with ESMTP id 03ED82145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:11:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="StXi5U9i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgIGVKc (ORCPT
+        id S1726994AbgIGVL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:10:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726458AbgIGVK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:10:29 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
+        Mon, 7 Sep 2020 17:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726458AbgIGVLx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 17:11:53 -0400
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E9BC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 14:11:52 -0700 (PDT)
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8172137B;
-        Mon,  7 Sep 2020 21:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599513028;
-        bh=UumymxLYqQ3OdFcuPJn2ZB1M+tzni4fLO4l47tqH7+k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZkHhuiu9ZoRLcegon6Y/AEMkvXigJt6M7xUdk/kLGxrtjXqKhVAlvA6HGeT9FJN6m
-         LULLn7TGxYPs/2221nPMepiYegr0A2034KetdvY09R5iNIVvW4ELk+G0zB334V510e
-         C74SUt/pUql/DMHv9a6kfyCTXaQlR01MAuFm8ShQ=
-Date:   Mon, 7 Sep 2020 14:10:26 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Mingming Cao <mmc@linux.vnet.ibm.com>,
-        Dany Madden <drt@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.8 14/53] ibmvnic fix NULL tx_pools and
- rx_tools issue at do_reset
-Message-ID: <20200907141026.093fc160@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200907163220.1280412-14-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
-        <20200907163220.1280412-14-sashal@kernel.org>
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4E3B580719;
+        Tue,  8 Sep 2020 09:11:50 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1599513110;
+        bh=qY43FpSIb2O4d73LN2PEOs4Kyx82EZudCVnoDOcDXx0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=StXi5U9ioUkfBU/A4HAFCeebv3QOQIa6dID0Dw6dkS8TiFaZ9QwBsNiFV8ta//IBM
+         grGeM7+MLGHMb2DwVVwcxMDOZa1QIG2qpuNVpuMXxmPqtBZxEleTEAkVm4cXerO3/f
+         L83aGtoDcUH6R1S8ZT90ZAEj0XRCMXwfLcD9ImspiRNlwzCG1Qe/ysTWgRkxMlwsoh
+         tZBYcoZoQXQZpq5OuLi1inVrthqyB99L0vMDntPHCWeUYTDvjVJDeUrmda+zYmY8/U
+         dT7hx9O7dLNaQXC900GJHOkUmD8xEx2aw/WToSpXUrenrNWu1IDPEKNjmHu6V0Vqlt
+         1g2URbfAvPASw==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f56a2160001>; Tue, 08 Sep 2020 09:11:50 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Sep 2020 09:11:50 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Tue, 8 Sep 2020 09:11:50 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
+Thread-Topic: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
+Thread-Index: AQHWhMBx9UPh5FBBykunMtOiHpEnW6lciSsAgABZMwCAAADXAIAAAR+A
+Date:   Mon, 7 Sep 2020 21:11:49 +0000
+Message-ID: <95868563-7637-83b4-38fc-eea71bacaf0b@alliedtelesis.co.nz>
+References: <20200907024149.20001-1-chris.packham@alliedtelesis.co.nz>
+ <20200907024149.20001-3-chris.packham@alliedtelesis.co.nz>
+ <20200907154532.GY3112546@lunn.ch>
+ <36712d90-6bfe-8965-22b1-6b6dd460116d@alliedtelesis.co.nz>
+ <20200907210748.GF3254313@lunn.ch>
+In-Reply-To: <20200907210748.GF3254313@lunn.ch>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D942245C49CCD04A94B81883E0243340@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 12:31:40 -0400 Sasha Levin wrote:
-> [ Upstream commit 9f13457377907fa253aef560e1a37e1ca4197f9b ]
-
-> @@ -2024,10 +2033,14 @@ static int do_reset(struct ibmvnic_adapter *adapter,
->  		} else {
->  			rc = reset_tx_pools(adapter);
->  			if (rc)
-> +				netdev_dbg(adapter->netdev, "reset tx pools failed (%d)\n",
-> +						rc);
->  				goto out;
->  
->  			rc = reset_rx_pools(adapter);
->  			if (rc)
-> +				netdev_dbg(adapter->netdev, "reset rx pools failed (%d)\n",
-> +						rc);
->  				goto out;
->  		}
->  		ibmvnic_disable_irqs(adapter);
-
-Hi Sasha!
-
-I just pushed this to net:
-
-8ae4dff882eb ("ibmvnic: add missing parenthesis in do_reset()")
-
-You definitely want to pull that in if you decide to backport this one.
+DQpPbiA4LzA5LzIwIDk6MDcgYW0sIEFuZHJldyBMdW5uIHdyb3RlOg0KPiBPbiBNb24sIFNlcCAw
+NywgMjAyMCBhdCAwOTowNDo0OFBNICswMDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4gT24g
+OC8wOS8yMCAzOjQ1IGFtLCBBbmRyZXcgTHVubiB3cm90ZToNCj4+PiBPbiBNb24sIFNlcCAwNywg
+MjAyMCBhdCAwMjo0MTo0OFBNICsxMjAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4+PiBUaGUg
+c3dpdGNoZXMgd2l0aCBpbnRlZ3JhdGVkIENQVXMgaGF2ZSBvbmx5IGdvdCBhIHNpbmdsZSBpMmMg
+Y29udHJvbGxlci4NCj4+Pj4gVGhlIGluY29ycmVjdGx5IGdhaW5lZCBvbmUgd2hlbiB0aGV5IHdl
+cmUgc3BsaXQgZnJvbSB0aGUgQXJtYWRhLVhQLg0KPj4gU29tZW9uZSBwb2ludGVkIG91dCBhIHNt
+YWxsIGdyYW1tbyBpbnN0ZWFkIG9mICJUaGUgaW5jb3JyZWN0bHkiIGl0DQo+PiBzaG91bGQgYmUg
+IlRoZXkgaW5jb3JyZWN0bHkiLiBJcyBpdCB3b3J0aCBtZSBzZW5kaW5nIGEgdjIganVzdCB0byBm
+aXggdGhhdD8NCj4gWW91IGFyZSBhc2tpbmcgc29tZWJvZHkgd2hvIGlzIGR5c2xleGljLCBhbmQg
+b2Z0ZW4gZmFpbHMgdG8gbm90aWNlDQo+IHRoaW5ncyBsaWtlIHRoaXMsIHBhcnRpY3VsYXJseSB3
+aGVuIHdyaXR0ZW4gYnkgbWUgOi0pDQo+DQo+IFVwIHRvIHlvdS4NCkknbGwgc2VuZCBhIHYyIGZp
+eGluZyB0aGUgZ3JhbW1vIGFuZCBpbmNsdWRpbmcgeW91ciByLWJ5LiBJZiB0aGUgc2VyaWVzIA0K
+aGFzIGFscmVhZHkgYmVlbiBwaWNrZWQgdXAgdGhlbiBubyBncmVhdCBsb3NzLg0K
