@@ -2,199 +2,151 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73788C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B482C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4010E205CB
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4DA21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:22:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z4FKmT75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728995AbgIGKV4 (ORCPT
+        id S1728705AbgIGKWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:21:56 -0400
-Received: from ex13-edg-ou-002.vmware.com ([208.91.0.190]:56107 "EHLO
-        EX13-EDG-OU-002.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728829AbgIGKVn (ORCPT
+        Mon, 7 Sep 2020 06:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728986AbgIGKVz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:21:43 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-002.vmware.com (10.113.208.156) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 7 Sep 2020 03:21:24 -0700
-Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id E93DC40271;
-        Mon,  7 Sep 2020 03:21:24 -0700 (PDT)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <gregkh@linuxfoundation.org>
-CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <peterx@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <vsirnapalli@vmware.com>, <akaher@vmware.com>
-Subject: [PATCH v4.19.y 2/3] vfio-pci: Fault mmaps to enable vma tracking
-Date:   Mon, 7 Sep 2020 15:47:21 +0530
-Message-ID: <1599473843-34234-2-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599473843-34234-1-git-send-email-akaher@vmware.com>
-References: <1599473843-34234-1-git-send-email-akaher@vmware.com>
+        Mon, 7 Sep 2020 06:21:55 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2DAC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:21:54 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b16so6531141pjp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:21:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DlZMhc8hmWDX2ZWHISagSA2inr2CmIbaM90rLlkkX2Y=;
+        b=z4FKmT751iwYNJDVxUHuh97VQixOoKqshuVLVSk+A66nwKitSyLHJHdlsOrueqQ9xZ
+         CrtM4r5aXM8/jnhXkOv5DZ2iB0654KyAgU+sLOb8JllNfE9PWGkHTqOi9TVswABW9NI0
+         qijj1z8rRtSjFbvxtcF++oL4Ce/HqJ+jpVoS96UgtiXoPBwS0Q4cqetFSJcJnNu46W5q
+         qT8ewTf0WSVfNPuuiavDKzpD5xNHE9PVgnJCUYeFXiyfM9dTr1BvL5FyhchNDVYKYdTu
+         kvXxkOLGP92pkE5vpjy30sc3HXoyzYZdo8BwY6uTICTrrm8acD4PbwXbT5cHwrksoxE3
+         ccqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DlZMhc8hmWDX2ZWHISagSA2inr2CmIbaM90rLlkkX2Y=;
+        b=fnAfhxTYa2q61xM72iK2T4Zg46EtWcflL29VkCe1DfgsgVoOpJc++nkV46R3I/gvk4
+         +US09ub0J/GVk+biwV9NFF9473LePE8346m7Mgv8n5SRPhtVvHkqGrWHccAo2ZZe+bHe
+         f+L9vgs2R4iTwzj2bzr7ysDLWjZtzSONVl9Mg0kKuL9te2vKFwELNAW7VVqrdtCETaRV
+         thDjJt7xHFbvPX99aWajSVq0KPmFWCukfDlH5wlhTJjY2I8GdDJL6UHffqpVyc9r+a3Y
+         R2nGWA4Br1NiytJXAVH0JippZrCg/TTi5wJbXOFM/ZF9p7zhjAnsjufh4Mq8s7bebJP9
+         dpfA==
+X-Gm-Message-State: AOAM5306qpgnZG7sPE88aBlz0ygulL4IHxJ7TlJoc1tJAGhoUgyWMX46
+        Vd2TnIjlub6SHSmfQ6I962rzhKPJp5y2mn0eAHM8Yg==
+X-Google-Smtp-Source: ABdhPJwwvPyxHgWhevcGPZDwDAqnJ75Hv8xCmd648Yuwz0t6G4giWyAT3J/aElkEVJfc4WxZqGTC9KDOPdn0l8DU0Xk=
+X-Received: by 2002:a17:90a:d596:: with SMTP id v22mr7666482pju.146.1599474114280;
+ Mon, 07 Sep 2020 03:21:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-002.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+References: <20200904155025.55718-1-xypron.glpk@gmx.de> <CAD8XO3ZLqkuajo3GVRdvXiFXMH9P-vp-PX5s6idgA51ouVDpKQ@mail.gmail.com>
+ <fec7e55e-154c-5348-5181-6d9efdc0245a@gmx.de>
+In-Reply-To: <fec7e55e-154c-5348-5181-6d9efdc0245a@gmx.de>
+From:   Maxim Uvarov <maxim.uvarov@linaro.org>
+Date:   Mon, 7 Sep 2020 13:21:43 +0300
+Message-ID: <CAD8XO3YGKwqbt6cYZQgauioeywLFg56tm+PFM6_nGhuJwSk4Jg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] efi/libstub: DRAM base calculation
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-efi@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+On Mon, 7 Sep 2020 at 11:31, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+>
+> On 07.09.20 09:00, Maxim Uvarov wrote:
+> > On Fri, 4 Sep 2020 at 18:50, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> >>
+> >> In the memory map the regions with the lowest addresses may be of type
+> >> EFI_RESERVED_TYPE. The reserved areas may be discontinuous relative to the
+> >> rest of the memory. So for calculating the maximum loading address for the
+> >> device tree and the initial ramdisk image these reserved areas should not
+> >> be taken into account.
+> >>
+> >> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+> >> ---
+> >>  drivers/firmware/efi/libstub/efi-stub.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/firmware/efi/libstub/efi-stub.c b/drivers/firmware/efi/libstub/efi-stub.c
+> >> index c2484bf75c5d..13058ac75765 100644
+> >> --- a/drivers/firmware/efi/libstub/efi-stub.c
+> >> +++ b/drivers/firmware/efi/libstub/efi-stub.c
+> >> @@ -106,7 +106,8 @@ static unsigned long get_dram_base(void)
+> >>         map.map_end = map.map + map_size;
+> >>
+> >>         for_each_efi_memory_desc_in_map(&map, md) {
+> >> -               if (md->attribute & EFI_MEMORY_WB) {
+> >> +               if (md->attribute & EFI_MEMORY_WB &&
+> >> +                   md->type != EFI_RESERVED_TYPE) {
+> >
+> > shouldn't the type here be CONVENTIONAL?
+>
+> In 32bit ARM reserve_kernel_base() the following are considered:
+>
+> * EFI_LOADER_CODE
+> * EFI_LOADER_DATA
+> * EFI_BOOT_SERVICES_CODE
+> * EFI_BOOT_SERVICES_DATA
+> * EFI_CONVENTIONAL_MEMORY
+>
+> What I have not yet fully understood is why Linux on ARM 32bit tries to
+> put the kernel into the first 128 MiB. Cf. handle_kernel_image() in
+> drivers/firmware/efi/libstub/arm32-stub.c.
+>
 
-commit 11c4cd07ba111a09f49625f9e4c851d83daf0a22 upstream.
+Are you looking to the latest kernel?
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/firmware/efi/libstub/arm32-stub.c?h=v5.9-rc4#n211
+efi_bs_call(allocate_pages,..) is only for EFI_CONVENTIONAL_MEMORY.
 
-Rather than calling remap_pfn_range() when a region is mmap'd, setup
-a vm_ops handler to support dynamic faulting of the range on access.
-This allows us to manage a list of vmas actively mapping the area that
-we can later use to invalidate those mappings.  The open callback
-invalidates the vma range so that all tracking is inserted in the
-fault handler and removed in the close handler.
+> According to the comments this is due to some implementation detail in
+> the Linux zImage decompressor and not required by UEFI or the hardware:
+>
+>          Verify that the DRAM base address is compatible with the ARM
+>          boot protocol, which determines the base of DRAM by masking
+>          off the low 27 bits of the address at which the zImage is
+>          loaded. These assumptions are made by the decompressor,
+>          before any memory map is available.
 
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[Ajay: Regenerated the patch for v4.19]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
----
- drivers/vfio/pci/vfio_pci.c         | 76 ++++++++++++++++++++++++++++++++++++-
- drivers/vfio/pci/vfio_pci_private.h |  7 ++++
- 2 files changed, 81 insertions(+), 2 deletions(-)
+I think that is also fixed with:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/firmware/efi/libstub/arm32-stub.c?h=v5.9-rc4&id=d0f9ca9be11f25ef4151195eab7ea36d136084f6
 
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 66783a3..3cd5960 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -1121,6 +1121,70 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
- 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
- }
- 
-+static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
-+			    struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mmap_vma = kmalloc(sizeof(*mmap_vma), GFP_KERNEL);
-+	if (!mmap_vma)
-+		return -ENOMEM;
-+
-+	mmap_vma->vma = vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_add(&mmap_vma->vma_next, &vdev->vma_list);
-+	mutex_unlock(&vdev->vma_lock);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Zap mmaps on open so that we can fault them in on access and therefore
-+ * our vma_list only tracks mappings accessed since last zap.
-+ */
-+static void vfio_pci_mmap_open(struct vm_area_struct *vma)
-+{
-+	zap_vma_ptes(vma, vma->vm_start, vma->vm_end - vma->vm_start);
-+}
-+
-+static void vfio_pci_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+	struct vfio_pci_mmap_vma *mmap_vma;
-+
-+	mutex_lock(&vdev->vma_lock);
-+	list_for_each_entry(mmap_vma, &vdev->vma_list, vma_next) {
-+		if (mmap_vma->vma == vma) {
-+			list_del(&mmap_vma->vma_next);
-+			kfree(mmap_vma);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&vdev->vma_lock);
-+}
-+
-+static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct vfio_pci_device *vdev = vma->vm_private_data;
-+
-+	if (vfio_pci_add_vma(vdev, vma))
-+		return VM_FAULT_OOM;
-+
-+	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
-+			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
-+		return VM_FAULT_SIGBUS;
-+
-+	return VM_FAULT_NOPAGE;
-+}
-+
-+static const struct vm_operations_struct vfio_pci_mmap_ops = {
-+	.open = vfio_pci_mmap_open,
-+	.close = vfio_pci_mmap_close,
-+	.fault = vfio_pci_mmap_fault,
-+};
-+
- static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- {
- 	struct vfio_pci_device *vdev = device_data;
-@@ -1170,8 +1234,14 @@ static int vfio_pci_mmap(void *device_data, struct vm_area_struct *vma)
- 	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
- 	vma->vm_pgoff = (pci_resource_start(pdev, index) >> PAGE_SHIFT) + pgoff;
- 
--	return remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
--			       req_len, vma->vm_page_prot);
-+	/*
-+	 * See remap_pfn_range(), called from vfio_pci_fault() but we can't
-+	 * change vm_flags within the fault handler.  Set them now.
-+	 */
-+	vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-+	vma->vm_ops = &vfio_pci_mmap_ops;
-+
-+	return 0;
- }
- 
- static void vfio_pci_request(void *device_data, unsigned int count)
-@@ -1243,6 +1313,8 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	spin_lock_init(&vdev->irqlock);
- 	mutex_init(&vdev->ioeventfds_lock);
- 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
-+	mutex_init(&vdev->vma_lock);
-+	INIT_LIST_HEAD(&vdev->vma_list);
- 
- 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
- 	if (ret) {
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index cde3b5d..9743c93 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -76,6 +76,11 @@ struct vfio_pci_dummy_resource {
- 	struct list_head	res_next;
- };
- 
-+struct vfio_pci_mmap_vma {
-+	struct vm_area_struct	*vma;
-+	struct list_head	vma_next;
-+};
-+
- struct vfio_pci_device {
- 	struct pci_dev		*pdev;
- 	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
-@@ -111,6 +116,8 @@ struct vfio_pci_device {
- 	struct list_head	dummy_resources_list;
- 	struct mutex		ioeventfds_lock;
- 	struct list_head	ioeventfds_list;
-+	struct mutex		vma_lock;
-+	struct list_head	vma_list;
- };
- 
- #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
--- 
-2.7.4
+Maxim.
 
+>
+> Best regards
+>
+> Heinrich
+>
+> >
+> >>                         if (membase > md->phys_addr)
+> >>                                 membase = md->phys_addr;
+> >>                 }
+> >> --
+> >> 2.28.0
+> >>
+>
