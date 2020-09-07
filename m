@@ -2,132 +2,82 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48C0C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA73C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD71C20732
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE24620732
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:47:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599457656;
+	bh=a5/cEIfWcSChJxUlNOZzqt8Opy8n1npVY2hwYGW1gGU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AibfmlcOxqz583dtlxozb8xFQgcW8XC0gJGcwRpkLLKKnkTnIN2DmKPKjn56vZKPr
+	 PnimojPNXu8hLBWVJ2iycLtk1+9UbLVrEs0hHyzJGwhyERFr0blLPPgOlNpKMVs/cO
+	 0VOjS9szybIiZfw7dQrT8plM7oRJWIuQiw6AHgsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgIGFqt (ORCPT
+        id S1727007AbgIGFrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 01:46:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:33044 "EHLO inva021.nxp.com"
+        Mon, 7 Sep 2020 01:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbgIGFqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 01:46:05 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7173C200D6A;
-        Mon,  7 Sep 2020 07:46:03 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 41779200D48;
-        Mon,  7 Sep 2020 07:45:58 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 817DC402DF;
-        Mon,  7 Sep 2020 07:45:51 +0200 (CEST)
-From:   Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-To:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, leoyang.li@nxp.com,
-        lorenzo.pieralisi@arm.com, gustavo.pimentel@synopsys.com
-Cc:     minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH 4/7] arm64: dts: layerscape: Add big-endian property for PCIe nodes
-Date:   Mon,  7 Sep 2020 13:37:58 +0800
-Message-Id: <20200907053801.22149-5-Zhiqiang.Hou@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907053801.22149-1-Zhiqiang.Hou@nxp.com>
-References: <20200907053801.22149-1-Zhiqiang.Hou@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1726722AbgIGFrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 01:47:32 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03DB820732;
+        Mon,  7 Sep 2020 05:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599457652;
+        bh=a5/cEIfWcSChJxUlNOZzqt8Opy8n1npVY2hwYGW1gGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rENsCMts3CvNXOxvQBkjMQXGS5wtwS44RE0bhwLam9rSZ+OsWVcRPdF7G58SeUhV0
+         2ntcJk2vA/cIz9Y/3pBEQuJ9NN8v/Bir93iVS+w24XHg66aLFcm0+LB63plNIdEhtB
+         MEf0R+O/LZnf08NcwP6Im3nD7uQk4E2g5ZC32cJ8=
+Date:   Mon, 7 Sep 2020 07:47:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+b8639c8dcb5ec4483d4f@syzkaller.appspotmail.com,
+        Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] block : Fix use-after-free Read
+ in delete_partition
+Message-ID: <20200907054729.GA280798@kroah.com>
+References: <20200906201158.14014-1-anant.thazhemadam@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200906201158.14014-1-anant.thazhemadam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Mon, Sep 07, 2020 at 01:41:56AM +0530, Anant Thazhemadam wrote:
+> A use-after-free read of the kobject member being casted out to the
+> device structure containing it seems to be potentially possible
+> due to unsafe casting using container_of (since an edge case such
+> as when the ptr being casted might be NULL or problematic is not
+> accounted for).
+> Using container_of_safe resolves this issue, with no obvious tradeoffs
+> and without considerable expense.
 
-Add the big-endian property for LS1012A, LS1043A and LS1046A
-PCIe devicetree nodes.
+No, now every caller has to check for NULL, and that would mean that you
+now need to fix up hundreds of different places in the kernel.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
- 3 files changed, 7 insertions(+)
+Please fix the root cause that would cause NULL to be passed to this
+call in the block code, don't paper over the issue here.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index ff19ec415b60..77a0d401c177 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -511,6 +511,7 @@
- 					<0000 0 0 2 &gic 0 111 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 5c2e370f6316..70e07612da12 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -837,6 +837,7 @@
- 					<0000 0 0 2 &gic 0 111 0x4>,
- 					<0000 0 0 3 &gic 0 112 0x4>,
- 					<0000 0 0 4 &gic 0 113 0x4>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-@@ -863,6 +864,7 @@
- 					<0000 0 0 2 &gic 0 121 0x4>,
- 					<0000 0 0 3 &gic 0 122 0x4>,
- 					<0000 0 0 4 &gic 0 123 0x4>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-@@ -889,6 +891,7 @@
- 					<0000 0 0 2 &gic 0 155 0x4>,
- 					<0000 0 0 3 &gic 0 156 0x4>,
- 					<0000 0 0 4 &gic 0 157 0x4>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 0246d975a206..efcbfe8e5e1d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -741,6 +741,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-@@ -777,6 +778,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
-@@ -813,6 +815,7 @@
- 					<0000 0 0 2 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 3 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
- 					<0000 0 0 4 &gic GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
-+			big-endian;
- 			status = "disabled";
- 		};
- 
--- 
-2.17.1
+thanks,
 
+greg k-h
