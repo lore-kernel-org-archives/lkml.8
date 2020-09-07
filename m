@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D271C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1362080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D9C206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgIGRdY (ORCPT
+        id S1731269AbgIGRdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:33:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60394 "EHLO
+        Mon, 7 Sep 2020 13:33:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbgIGNS0 (ORCPT
+        with ESMTP id S1729489AbgIGNS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:18:26 -0400
 Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3387C061797;
-        Mon,  7 Sep 2020 06:18:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6B52C06179F;
+        Mon,  7 Sep 2020 06:18:07 -0700 (PDT)
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 8C0C4FF5;
-        Mon,  7 Sep 2020 15:16:59 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id D88D1FB8;
+        Mon,  7 Sep 2020 15:16:53 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 34/72] x86/idt: Move two function from k/idt.c to i/a/desc.h
-Date:   Mon,  7 Sep 2020 15:15:35 +0200
-Message-Id: <20200907131613.12703-35-joro@8bytes.org>
+Subject: [PATCH v7 23/72] x86/boot/compressed/64: Setup GHCB Based VC Exception handler
+Date:   Mon,  7 Sep 2020 15:15:24 +0200
+Message-Id: <20200907131613.12703-24-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -64,139 +64,500 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move these two functions from kernel/idt.c to include/asm/desc.h:
-
-	* init_idt_data()
-	* idt_init_desc()
-
-These functions are needed to setup IDT entries very early and need to
-be called from head64.c. To be usable this early these functions need to
-be compiled without instrumentation and the stack-protector feature.
-These features need to be kept enabled for kernel/idt.c, so head64.c
-must use its own versions.
+Install an exception handler for #VC exception that uses a GHCB. Also
+add the infrastructure for handling different exit-codes by decoding
+the instruction that caused the exception and error handling.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/desc.h      | 27 +++++++++++++++++++++++++
- arch/x86/include/asm/desc_defs.h |  7 +++++++
- arch/x86/kernel/idt.c            | 34 --------------------------------
- 3 files changed, 34 insertions(+), 34 deletions(-)
+ arch/x86/Kconfig                           |   1 +
+ arch/x86/boot/compressed/Makefile          |   5 +
+ arch/x86/boot/compressed/idt_64.c          |   4 +
+ arch/x86/boot/compressed/idt_handlers_64.S |   3 +-
+ arch/x86/boot/compressed/misc.c            |   7 +
+ arch/x86/boot/compressed/misc.h            |   7 +
+ arch/x86/boot/compressed/sev-es.c          | 111 +++++++++++++++
+ arch/x86/include/asm/sev-es.h              |  39 ++++++
+ arch/x86/include/uapi/asm/svm.h            |   1 +
+ arch/x86/kernel/sev-es-shared.c            | 154 +++++++++++++++++++++
+ 10 files changed, 331 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/desc.h b/arch/x86/include/asm/desc.h
-index 1ced11d31932..476082a83d1c 100644
---- a/arch/x86/include/asm/desc.h
-+++ b/arch/x86/include/asm/desc.h
-@@ -383,6 +383,33 @@ static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 8a48d3eedb84..5a604353ec42 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1523,6 +1523,7 @@ config AMD_MEM_ENCRYPT
+ 	select DYNAMIC_PHYSICAL_MASK
+ 	select ARCH_USE_MEMREMAP_PROT
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
++	select INSTRUCTION_DECODER
+ 	help
+ 	  Say yes to enable support for the encryption of system memory.
+ 	  This requires an AMD processor that supports Secure Memory
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 7302f184bece..3224f1d9a5cd 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -45,6 +45,11 @@ KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS += -D__DISABLE_EXPORTS
+ KBUILD_CFLAGS += -include $(srctree)/include/linux/hidden.h
  
- void alloc_intr_gate(unsigned int n, const void *addr);
++# sev-es.c indirectly inludes inat-table.h which is generated during
++# compilation and stored in $(objtree). Add the directory to the includes so
++# that the compiler finds it even with out-of-tree builds (make O=/some/path).
++CFLAGS_sev-es.o += -I$(objtree)/arch/x86/lib/
++
+ KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ GCOV_PROFILE := n
+ UBSAN_SANITIZE :=n
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index f3ca7324be44..804a502ee0d2 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -46,5 +46,9 @@ void load_stage2_idt(void)
  
-+static inline void init_idt_data(struct idt_data *data, unsigned int n,
-+				 const void *addr)
-+{
-+	BUG_ON(n > 0xFF);
-+
-+	memset(data, 0, sizeof(*data));
-+	data->vector	= n;
-+	data->addr	= addr;
-+	data->segment	= __KERNEL_CS;
-+	data->bits.type	= GATE_INTERRUPT;
-+	data->bits.p	= 1;
-+}
-+
-+static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
-+{
-+	unsigned long addr = (unsigned long) d->addr;
-+
-+	gate->offset_low	= (u16) addr;
-+	gate->segment		= (u16) d->segment;
-+	gate->bits		= d->bits;
-+	gate->offset_middle	= (u16) (addr >> 16);
-+#ifdef CONFIG_X86_64
-+	gate->offset_high	= (u32) (addr >> 32);
-+	gate->reserved		= 0;
+ 	set_idt_entry(X86_TRAP_PF, boot_page_fault);
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++	set_idt_entry(X86_TRAP_VC, boot_stage2_vc);
 +#endif
++
+ 	load_boot_idt(&boot_idt_desc);
+ }
+diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+index 92eb4df478a1..22890e199f5b 100644
+--- a/arch/x86/boot/compressed/idt_handlers_64.S
++++ b/arch/x86/boot/compressed/idt_handlers_64.S
+@@ -72,5 +72,6 @@ SYM_FUNC_END(\name)
+ EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+-EXCEPTION_HANDLER	boot_stage1_vc do_vc_no_ghcb error_code=1
++EXCEPTION_HANDLER	boot_stage1_vc do_vc_no_ghcb		error_code=1
++EXCEPTION_HANDLER	boot_stage2_vc do_boot_stage2_vc	error_code=1
+ #endif
+diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
+index e478e40fbe5a..267e7f93050e 100644
+--- a/arch/x86/boot/compressed/misc.c
++++ b/arch/x86/boot/compressed/misc.c
+@@ -442,6 +442,13 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
+ 	parse_elf(output);
+ 	handle_relocations(output, output_len, virt_addr);
+ 	debug_putstr("done.\nBooting the kernel.\n");
++
++	/*
++	 * Flush GHCB from cache and map it encrypted again when running as
++	 * SEV-ES guest.
++	 */
++	sev_es_shutdown_ghcb();
++
+ 	return output;
+ }
+ 
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 01c0fb3417ca..9995c70ca813 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -115,6 +115,12 @@ static inline void console_init(void)
+ 
+ void set_sev_encryption_mask(void);
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++void sev_es_shutdown_ghcb(void);
++#else
++static inline void sev_es_shutdown_ghcb(void) { }
++#endif
++
+ /* acpi.c */
+ #ifdef CONFIG_ACPI
+ acpi_physical_address get_rsdp_addr(void);
+@@ -144,5 +150,6 @@ extern struct desc_ptr boot_idt_desc;
+ /* IDT Entry Points */
+ void boot_page_fault(void);
+ void boot_stage1_vc(void);
++void boot_stage2_vc(void);
+ 
+ #endif /* BOOT_COMPRESSED_MISC_H */
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+index bb91cbb5920e..633d47df702f 100644
+--- a/arch/x86/boot/compressed/sev-es.c
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -13,10 +13,17 @@
+ #include "misc.h"
+ 
+ #include <asm/sev-es.h>
++#include <asm/trapnr.h>
++#include <asm/trap_pf.h>
+ #include <asm/msr-index.h>
+ #include <asm/ptrace.h>
+ #include <asm/svm.h>
+ 
++#include "error.h"
++
++struct ghcb boot_ghcb_page __aligned(PAGE_SIZE);
++struct ghcb *boot_ghcb;
++
+ static inline u64 sev_es_rd_ghcb_msr(void)
+ {
+ 	unsigned long low, high;
+@@ -38,8 +45,112 @@ static inline void sev_es_wr_ghcb_msr(u64 val)
+ 			"a"(low), "d" (high) : "memory");
+ }
+ 
++static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
++{
++	char buffer[MAX_INSN_SIZE];
++	enum es_result ret;
++
++	memcpy(buffer, (unsigned char *)ctxt->regs->ip, MAX_INSN_SIZE);
++
++	insn_init(&ctxt->insn, buffer, MAX_INSN_SIZE, 1);
++	insn_get_length(&ctxt->insn);
++
++	ret = ctxt->insn.immediate.got ? ES_OK : ES_DECODE_FAILED;
++
++	return ret;
 +}
 +
- extern unsigned long system_vectors[];
++static enum es_result vc_write_mem(struct es_em_ctxt *ctxt,
++				   void *dst, char *buf, size_t size)
++{
++	memcpy(dst, buf, size);
++
++	return ES_OK;
++}
++
++static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
++				  void *src, char *buf, size_t size)
++{
++	memcpy(buf, src, size);
++
++	return ES_OK;
++}
++
+ #undef __init
++#undef __pa
+ #define __init
++#define __pa(x)	((unsigned long)(x))
++
++#define __BOOT_COMPRESSED
++
++/* Basic instruction decoding support needed */
++#include "../../lib/inat.c"
++#include "../../lib/insn.c"
  
- extern void load_current_idt(void);
-diff --git a/arch/x86/include/asm/desc_defs.h b/arch/x86/include/asm/desc_defs.h
-index 5621fb3f2d1a..f7e7099af595 100644
---- a/arch/x86/include/asm/desc_defs.h
-+++ b/arch/x86/include/asm/desc_defs.h
-@@ -74,6 +74,13 @@ struct idt_bits {
- 			p	: 1;
- } __attribute__((packed));
+ /* Include code for early handlers */
+ #include "../../kernel/sev-es-shared.c"
++
++static bool early_setup_sev_es(void)
++{
++	if (!sev_es_negotiate_protocol())
++		sev_es_terminate(GHCB_SEV_ES_REASON_PROTOCOL_UNSUPPORTED);
++
++	if (set_page_decrypted((unsigned long)&boot_ghcb_page))
++		return false;
++
++	/* Page is now mapped decrypted, clear it */
++	memset(&boot_ghcb_page, 0, sizeof(boot_ghcb_page));
++
++	boot_ghcb = &boot_ghcb_page;
++
++	/* Initialize lookup tables for the instruction decoder */
++	inat_init_tables();
++
++	return true;
++}
++
++void sev_es_shutdown_ghcb(void)
++{
++	if (!boot_ghcb)
++		return;
++
++	/*
++	 * GHCB Page must be flushed from the cache and mapped encrypted again.
++	 * Otherwise the running kernel will see strange cache effects when
++	 * trying to use that page.
++	 */
++	if (set_page_encrypted((unsigned long)&boot_ghcb_page))
++		error("Can't map GHCB page encrypted");
++}
++
++void do_boot_stage2_vc(struct pt_regs *regs, unsigned long exit_code)
++{
++	struct es_em_ctxt ctxt;
++	enum es_result result;
++
++	if (!boot_ghcb && !early_setup_sev_es())
++		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
++
++	vc_ghcb_invalidate(boot_ghcb);
++	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
++	if (result != ES_OK)
++		goto finish;
++
++	switch (exit_code) {
++	default:
++		result = ES_UNSUPPORTED;
++		break;
++	}
++
++finish:
++	if (result == ES_OK) {
++		vc_finish_insn(&ctxt);
++	} else if (result != ES_RETRY) {
++		/*
++		 * For now, just halt the machine. That makes debugging easier,
++		 * later we just call sev_es_terminate() here.
++		 */
++		while (true)
++			asm volatile("hlt\n");
++	}
++}
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+index 48a44038b5d1..6dc52440c4b4 100644
+--- a/arch/x86/include/asm/sev-es.h
++++ b/arch/x86/include/asm/sev-es.h
+@@ -9,7 +9,14 @@
+ #define __ASM_ENCRYPTED_STATE_H
  
-+struct idt_data {
-+	unsigned int	vector;
-+	unsigned int	segment;
-+	struct idt_bits	bits;
-+	const void	*addr;
+ #include <linux/types.h>
++#include <asm/insn.h>
+ 
++#define GHCB_SEV_INFO		0x001UL
++#define GHCB_SEV_INFO_REQ	0x002UL
++#define		GHCB_INFO(v)		((v) & 0xfffUL)
++#define		GHCB_PROTO_MAX(v)	(((v) >> 48) & 0xffffUL)
++#define		GHCB_PROTO_MIN(v)	(((v) >> 32) & 0xffffUL)
++#define		GHCB_PROTO_OUR		0x0001UL
+ #define GHCB_SEV_CPUID_REQ	0x004UL
+ #define		GHCB_CPUID_REQ_EAX	0
+ #define		GHCB_CPUID_REQ_EBX	1
+@@ -19,12 +26,44 @@
+ 					(((unsigned long)reg & 3) << 30) | \
+ 					(((unsigned long)fn) << 32))
+ 
++#define	GHCB_PROTOCOL_MAX	0x0001UL
++#define GHCB_DEFAULT_USAGE	0x0000UL
++
+ #define GHCB_SEV_CPUID_RESP	0x005UL
+ #define GHCB_SEV_TERMINATE	0x100UL
++#define		GHCB_SEV_TERMINATE_REASON(reason_set, reason_val)	\
++			(((((u64)reason_set) &  0x7) << 12) |		\
++			 ((((u64)reason_val) & 0xff) << 16))
++#define		GHCB_SEV_ES_REASON_GENERAL_REQUEST	0
++#define		GHCB_SEV_ES_REASON_PROTOCOL_UNSUPPORTED	1
+ 
+ #define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
+ #define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
+ 
++enum es_result {
++	ES_OK,			/* All good */
++	ES_UNSUPPORTED,		/* Requested operation not supported */
++	ES_VMM_ERROR,		/* Unexpected state from the VMM */
++	ES_DECODE_FAILED,	/* Instruction decoding failed */
++	ES_EXCEPTION,		/* Instruction caused exception */
++	ES_RETRY,		/* Retry instruction emulation */
 +};
 +
- struct gate_struct {
- 	u16		offset_low;
- 	u16		segment;
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 53946c104fa0..4bb4e3d6099e 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -11,13 +11,6 @@
- #include <asm/desc.h>
- #include <asm/hw_irq.h>
++struct es_fault_info {
++	unsigned long vector;
++	unsigned long error_code;
++	unsigned long cr2;
++};
++
++struct pt_regs;
++
++/* ES instruction emulation context */
++struct es_em_ctxt {
++	struct pt_regs *regs;
++	struct insn insn;
++	struct es_fault_info fi;
++};
++
+ void do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code);
  
--struct idt_data {
--	unsigned int	vector;
--	unsigned int	segment;
--	struct idt_bits	bits;
--	const void	*addr;
--};
--
- #define DPL0		0x0
- #define DPL3		0x3
+ static inline u64 lower_bits(u64 val, unsigned int bits)
+diff --git a/arch/x86/include/uapi/asm/svm.h b/arch/x86/include/uapi/asm/svm.h
+index 2e8a30f06c74..c68d1618c9b0 100644
+--- a/arch/x86/include/uapi/asm/svm.h
++++ b/arch/x86/include/uapi/asm/svm.h
+@@ -29,6 +29,7 @@
+ #define SVM_EXIT_WRITE_DR6     0x036
+ #define SVM_EXIT_WRITE_DR7     0x037
+ #define SVM_EXIT_EXCP_BASE     0x040
++#define SVM_EXIT_LAST_EXCP     0x05f
+ #define SVM_EXIT_INTR          0x060
+ #define SVM_EXIT_NMI           0x061
+ #define SVM_EXIT_SMI           0x062
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+index 0bea32341afa..7ac6e6b0ae57 100644
+--- a/arch/x86/kernel/sev-es-shared.c
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -9,6 +9,118 @@
+  * and is included directly into both code-bases.
+  */
  
-@@ -178,20 +171,6 @@ bool idt_is_f00f_address(unsigned long address)
++static void sev_es_terminate(unsigned int reason)
++{
++	u64 val = GHCB_SEV_TERMINATE;
++
++	/*
++	 * Tell the hypervisor what went wrong - only reason-set 0 is
++	 * currently supported.
++	 */
++	val |= GHCB_SEV_TERMINATE_REASON(0, reason);
++
++	/* Request Guest Termination from Hypvervisor */
++	sev_es_wr_ghcb_msr(val);
++	VMGEXIT();
++
++	while (true)
++		asm volatile("hlt\n" : : : "memory");
++}
++
++static bool sev_es_negotiate_protocol(void)
++{
++	u64 val;
++
++	/* Do the GHCB protocol version negotiation */
++	sev_es_wr_ghcb_msr(GHCB_SEV_INFO_REQ);
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++
++	if (GHCB_INFO(val) != GHCB_SEV_INFO)
++		return false;
++
++	if (GHCB_PROTO_MAX(val) < GHCB_PROTO_OUR ||
++	    GHCB_PROTO_MIN(val) > GHCB_PROTO_OUR)
++		return false;
++
++	return true;
++}
++
++static void vc_ghcb_invalidate(struct ghcb *ghcb)
++{
++	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
++}
++
++static bool vc_decoding_needed(unsigned long exit_code)
++{
++	/* Exceptions don't require to decode the instruction */
++	return !(exit_code >= SVM_EXIT_EXCP_BASE &&
++		 exit_code <= SVM_EXIT_LAST_EXCP);
++}
++
++static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
++				      struct pt_regs *regs,
++				      unsigned long exit_code)
++{
++	enum es_result ret = ES_OK;
++
++	memset(ctxt, 0, sizeof(*ctxt));
++	ctxt->regs = regs;
++
++	if (vc_decoding_needed(exit_code))
++		ret = vc_decode_insn(ctxt);
++
++	return ret;
++}
++
++static void vc_finish_insn(struct es_em_ctxt *ctxt)
++{
++	ctxt->regs->ip += ctxt->insn.length;
++}
++
++static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
++					  struct es_em_ctxt *ctxt,
++					  u64 exit_code, u64 exit_info_1,
++					  u64 exit_info_2)
++{
++	enum es_result ret;
++
++	/* Fill in protocol and format specifiers */
++	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
++	ghcb->ghcb_usage       = GHCB_DEFAULT_USAGE;
++
++	ghcb_set_sw_exit_code(ghcb, exit_code);
++	ghcb_set_sw_exit_info_1(ghcb, exit_info_1);
++	ghcb_set_sw_exit_info_2(ghcb, exit_info_2);
++
++	sev_es_wr_ghcb_msr(__pa(ghcb));
++	VMGEXIT();
++
++	if ((ghcb->save.sw_exit_info_1 & 0xffffffff) == 1) {
++		u64 info = ghcb->save.sw_exit_info_2;
++		unsigned long v;
++
++		info = ghcb->save.sw_exit_info_2;
++		v = info & SVM_EVTINJ_VEC_MASK;
++
++		/* Check if exception information from hypervisor is sane. */
++		if ((info & SVM_EVTINJ_VALID) &&
++		    ((v == X86_TRAP_GP) || (v == X86_TRAP_UD)) &&
++		    ((info & SVM_EVTINJ_TYPE_MASK) == SVM_EVTINJ_TYPE_EXEPT)) {
++			ctxt->fi.vector = v;
++			if (info & SVM_EVTINJ_VALID_ERR)
++				ctxt->fi.error_code = info >> 32;
++			ret = ES_EXCEPTION;
++		} else {
++			ret = ES_VMM_ERROR;
++		}
++	} else {
++		ret = ES_OK;
++	}
++
++	return ret;
++}
++
+ /*
+  * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
+  * page yet, so it only supports the MSR based communication with the
+@@ -64,3 +176,45 @@ void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
+ 	while (true)
+ 		asm volatile("hlt\n");
  }
- #endif
- 
--static inline void idt_init_desc(gate_desc *gate, const struct idt_data *d)
--{
--	unsigned long addr = (unsigned long) d->addr;
--
--	gate->offset_low	= (u16) addr;
--	gate->segment		= (u16) d->segment;
--	gate->bits		= d->bits;
--	gate->offset_middle	= (u16) (addr >> 16);
--#ifdef CONFIG_X86_64
--	gate->offset_high	= (u32) (addr >> 32);
--	gate->reserved		= 0;
--#endif
--}
--
- static __init void
- idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
- {
-@@ -205,19 +184,6 @@ idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sy
- 	}
- }
- 
--static void init_idt_data(struct idt_data *data, unsigned int n,
--			  const void *addr)
--{
--	BUG_ON(n > 0xFF);
--
--	memset(data, 0, sizeof(*data));
--	data->vector	= n;
--	data->addr	= addr;
--	data->segment	= __KERNEL_CS;
--	data->bits.type	= GATE_INTERRUPT;
--	data->bits.p	= 1;
--}
--
- static __init void set_intr_gate(unsigned int n, const void *addr)
- {
- 	struct idt_data data;
++
++static enum es_result vc_insn_string_read(struct es_em_ctxt *ctxt,
++					  void *src, char *buf,
++					  unsigned int data_size,
++					  unsigned int count,
++					  bool backwards)
++{
++	int i, b = backwards ? -1 : 1;
++	enum es_result ret = ES_OK;
++
++	for (i = 0; i < count; i++) {
++		void *s = src + (i * data_size * b);
++		char *d = buf + (i * data_size);
++
++		ret = vc_read_mem(ctxt, s, d, data_size);
++		if (ret != ES_OK)
++			break;
++	}
++
++	return ret;
++}
++
++static enum es_result vc_insn_string_write(struct es_em_ctxt *ctxt,
++					   void *dst, char *buf,
++					   unsigned int data_size,
++					   unsigned int count,
++					   bool backwards)
++{
++	int i, s = backwards ? -1 : 1;
++	enum es_result ret = ES_OK;
++
++	for (i = 0; i < count; i++) {
++		void *d = dst + (i * data_size * s);
++		char *b = buf + (i * data_size);
++
++		ret = vc_write_mem(ctxt, d, b, data_size);
++		if (ret != ES_OK)
++			break;
++	}
++
++	return ret;
++}
 -- 
 2.28.0
 
