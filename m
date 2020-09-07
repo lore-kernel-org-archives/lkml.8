@@ -2,150 +2,134 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB52C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93633C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1C7206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421C5206E7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:46:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="A0Stn/cy"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pv6055qY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgIGRqA (ORCPT
+        id S1731266AbgIGRqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730654AbgIGRoF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:44:05 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AC7C061757
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 10:44:03 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id e17so15052846wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 10:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TtLg9Y4dgEBmAcytToxU0LrQsMgfNF7OgoEHJZ2Q+vw=;
-        b=A0Stn/cyvojbDX7w3lzbvMIO7gTwe43sZAGbFpuAEdS5sHSClH8/IZ2AifZ+YY+VOX
-         UVwM/aA+6tWtgJSEoCDO1PW617SUSIQB8k6b0bPqqeB7dxfGKJQUxNBeFtcQo9e3Ascw
-         6zhcNnrpuccjT086HR4puL61ghnrcI3EOoQm8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TtLg9Y4dgEBmAcytToxU0LrQsMgfNF7OgoEHJZ2Q+vw=;
-        b=F4/xREyk18L2C2ijY4HmP5AXB4Jvo3ADjNvaRGKDA6PcmsqriHCvBRy+UT9V/dYmk1
-         WoJh43zeanxDhHyMCRL1G0aZwHrzVqMKSsPo2IdOq5C02atmJ2Qoa2M9ewAN6yP8HVWJ
-         JI34goDyJ1zkuByefvYFsfo43fmz2vAIYvsUkw8lXvqy7LJo5j+eFtsqbhOK9ptgy/ct
-         PpktBSDTkWQeZDxWPwA7lFlvtSMpUpYwNXHNkfgY+sJCkX2Z495UbbESSGsMJnz7n7Vo
-         MPbxbScUz9D33M0w8XCIzyPjnzeX0clwrHfFCnh7AKd3f8ZtbWSiby4Zy7+VgHvlAgfM
-         bdmg==
-X-Gm-Message-State: AOAM532ACZzvwoJUfc0MdI6YphOvz0ZcjkkbbbdNyBI79Q2bboeY116B
-        oLze9Q+jifbWOPlJxUFtJQto9pKTK3GhW/eNdLxhPw==
-X-Google-Smtp-Source: ABdhPJyNQsBm1Y3/ieHSfjO664M9CBhnY/ZnuJjayy1tYR+ob0ku/Wpd26F5nf8H2/xl9/84D4TcAGvzrj4IPjrxwfU=
-X-Received: by 2002:a1c:bad5:: with SMTP id k204mr408820wmf.111.1599500642170;
- Mon, 07 Sep 2020 10:44:02 -0700 (PDT)
+        Mon, 7 Sep 2020 13:46:15 -0400
+Received: from mail-db8eur05on2086.outbound.protection.outlook.com ([40.107.20.86]:23681
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729392AbgIGNPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:15:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OQqgnEnpmkSSOLoU94iPnRtWuKRB/xUnrRrrTiZK2v9ywY5qI/074A2G/dYnz4hVRnXR0iFikGTGcO8qGu8n3lraBURclOjKv+c1uUyT8yOAd9riVv/abucNbsTNQjlCq4s02l9ZpGYFwlhoZ8VILEk2EvrNkvsbYhrfLclNtoq9SLuzOGUFs9UUz7R9f0kKOAz+4eUxleZ787psaLxUbxZ1RGMWO3+szF8lfT2ltbrjiXHrXstGez2nw6oC+A20AZamX6y+GZ3d5yEr6/mIjmM/tSJqaDSmBIxGVlgn0M1658rO/JJ0NJG60foIZszd51jSKdRmuP2r35kAFStdPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DoePcN69ivmb0SggDRYbg2M7F+yG+BSHLfiE7Hl7W6w=;
+ b=W4R2RQ88KV1isL17FlmWx8jP5gcAHvHewtHEMa2IuQlp77ywWPcI3P9YEdxsqP0oIFuzGrrZruoTbPIhf108XgLh+PbE8WEkrGEgX6tTLk5qqyVgjl8PeTE2M4nnDtGrCbNhKMmB+Oydh6vkoy3qtcwkDjxiEgDQyjXg6Om/qMhZKVHiE/UPO/lh72z2gtYC3Rouv4r8V0lNJj5wCjcgr6hgx62+zZ5KhJuXVOqjD9o3RBcHw1igX8mAKXDCPIPKUOwRTREGABSp0gC2gG+e1QEdEDigttC00gJeyJ/8IUsuNnudCHy5jYIz5X4qOua1VUAVwT8ZkC4Sk9GLja3Yzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DoePcN69ivmb0SggDRYbg2M7F+yG+BSHLfiE7Hl7W6w=;
+ b=pv6055qYV2mYnbgMWrQbKh2HR8WPCFhqlxkm2X/PBfjFVH2rZ5CrgIUZjvmcNA9YPi+YwaiiEEe1cuwMZtUjo71ThhB0keC9wNKKRNTiJIMs66VzudwYI1lpNYGsMsnDLBc1pBUO2TCDH5aYOCQDQyqhCDIcJ82kGFOFIifB2XU=
+Received: from AM8PR04MB7315.eurprd04.prod.outlook.com (2603:10a6:20b:1d4::7)
+ by AM0PR04MB6403.eurprd04.prod.outlook.com (2603:10a6:208:16a::32) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
+ 2020 13:14:50 +0000
+Received: from AM8PR04MB7315.eurprd04.prod.outlook.com
+ ([fe80::c10b:eaf9:da9a:966e]) by AM8PR04MB7315.eurprd04.prod.outlook.com
+ ([fe80::c10b:eaf9:da9a:966e%7]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 13:14:50 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] net: ethernet: fec: remove redundant null check
+ before clk_disable_unprepare()
+Thread-Topic: [PATCH net-next] net: ethernet: fec: remove redundant null check
+ before clk_disable_unprepare()
+Thread-Index: AQHWhRWCkFkK9RfGS0CnsK1Xua9dPKldJlLA
+Date:   Mon, 7 Sep 2020 13:14:50 +0000
+Message-ID: <AM8PR04MB731542047A051973B74BBAD4FF280@AM8PR04MB7315.eurprd04.prod.outlook.com>
+References: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
+In-Reply-To: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f5383ef1-b98d-42f7-b3ee-08d853300071
+x-ms-traffictypediagnostic: AM0PR04MB6403:
+x-microsoft-antispam-prvs: <AM0PR04MB640370E77CC7439F053EAD10FF280@AM0PR04MB6403.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:483;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ZyUVeYENs573Ts9zj+nXRMmEAMlXywpTaMsjXphBP8zDDS1e5TlOEVsojK7ppVOShe0EQTBUB5fhf9CH059OAvTfPO99NFIU3W1IwSNFIwKbnmXGsN2GfdWdAe0UkT9QpBAD7Ju0GUQvsoZNdNSfq8qZ+xM8BwH8mQj9OfAfz7Z/42mpW9Vy/3IhRcz9yRLvAxm388jXnJuMCcONUti9vV3uRBpbDa3B6iKQe2bFg0qvliT4q6/tNPleoCNp1YZylhvvok5fDZcGmP6SnTuYb+5xbkpHzEbonLgBTFNvh4pPZrirpwhC4OB+Vi7s5RZz
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7315.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(366004)(7696005)(6506007)(478600001)(2906002)(26005)(5660300002)(316002)(186003)(66946007)(4744005)(76116006)(54906003)(110136005)(4326008)(66476007)(64756008)(66446008)(8936002)(66556008)(55016002)(86362001)(71200400001)(8676002)(52536014)(9686003)(83380400001)(33656002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: UbNdXXJShXprBKfOSzJLXMhpCFVP86aGqyRT3sTjMBKpcZ+iPLgQQz7resJeaqER1aGugtLm8gVSs8jYC7C9oJst1WwJBbyMDdAZJxc3oKCY8RtPsHHo42sG3g+79QtDYE6sG21CCTTg84HVtydrYVZ2JdkBhF8dLLFnHUpsL4KXpzYukY/JTtKRhDPk6Ejj738waORoANywhvAq+5o67uk2v+/Cj0V9QOUJvqPIYEbQEHW5mn4gzEnmku+TSt92J6JhqETit6UeSbZeEAKf7qOifXrz6q28zGKlczfd6ijbgqVo7UY9lDGUy9VtIYDsfPjolnKJJtxklHHD+tOKwShlregqSARfo7YpRmbu/GAV094GIejeiwf1v+ntu6XitGM8Fz7NMiRGH4Umh24vaLXAxgd9Br2BC1lIS2CrbS8fKUvEqH1aeZiG6alcMCuyX+CS1BEs8pFearpKY75tu51pSDWTP56xaUlM6jvOWN4UTjPxmv6gPO3QNyDwJAjxTjo/lCK47ohWt9oyx+28pYmCCSwEeEC2eq0a+XZEpsUUdYCfp0lWB0jCuNMA/MFQn3NW1Iq83dzZuc65ut8VwIgmkKayMbUGGR6eQBXVvGQPOzNBvpl3SHdkg00Vom+6Sn1jmwOpf0R9DtaBfciNaQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200824193036.6033-1-james.quinlan@broadcom.com>
- <b19bc982-a0c4-c6ff-d8f5-650f2b3a83c8@gmail.com> <20200827063517.GA4637@lst.de>
- <CA+-6iNy3U9pO0Bykzgvb9n9fcsBi6FiatLdpA1s0HgQNWZ49mg@mail.gmail.com> <20200907091649.GA6428@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200907091649.GA6428@e121166-lin.cambridge.arm.com>
-From:   Jim Quinlan <james.quinlan@broadcom.com>
-Date:   Mon, 7 Sep 2020 13:43:23 -0400
-Message-ID: <CA+-6iNzoz3pM2pJksXogeuou6wB9W-59rN-amCLERFLuY5zLMg@mail.gmail.com>
-Subject: Re: [PATCH v11 00/11] PCI: brcmstb: enable PCIe for STB chips
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "open list:PCI NATIVE HOST BRIDGE AND ENDPOINT DRIVERS" 
-        <linux-pci@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" 
-        <devicetree@vger.kernel.org>,
-        "open list:DRM DRIVERS FOR ALLWINNER A10" 
-        <dri-devel@lists.freedesktop.org>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        Julien Grall <julien.grall@arm.com>,
-        "open list:ACPI FOR ARM64 (ACPI/arm64)" <linux-acpi@vger.kernel.org>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:ALLWINNER A10 CSI DRIVER" <linux-media@vger.kernel.org>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:SUPERH" <linux-sh@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM8PR04MB7315.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5383ef1-b98d-42f7-b3ee-08d853300071
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 13:14:50.3016
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Ssi9yKZqctULFfkE0pHbL7wH75cdM7EzF6TmPDNIGC44LCFSy1ttC/c7NQwtkA9YEF1jPQ+n/kANxaGQDuC0Fg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6403
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 5:16 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Thu, Aug 27, 2020 at 09:29:59AM -0400, Jim Quinlan wrote:
-> > On Thu, Aug 27, 2020 at 2:35 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Tue, Aug 25, 2020 at 10:40:27AM -0700, Florian Fainelli wrote:
-> > > > Hi,
-> > > >
-> > > > On 8/24/2020 12:30 PM, Jim Quinlan wrote:
-> > > >>
-> > > >> Patchset Summary:
-> > > >>    Enhance a PCIe host controller driver.  Because of its unusual design
-> > > >>    we are foced to change dev->dma_pfn_offset into a more general role
-> > > >>    allowing multiple offsets.  See the 'v1' notes below for more info.
-> > > >
-> > > > We are version 11 and counting, and it is not clear to me whether there is
-> > > > any chance of getting these patches reviewed and hopefully merged for the
-> > > > 5.10 merge window.
-> > > >
-> > > > There are a lot of different files being touched, so what would be the
-> > > > ideal way of routing those changes towards inclusion?
-> > >
-> > > FYI, I offered to take the dma-mapping bits through the dma-mapping tree.
-> > > I have a bit of a backlog, but plan to review and if Jim is ok with that
-> > > apply the current version.
-> > Sounds good to me.
->
-> Hi Jim,
->
-> is the dependency now solved ? Should we review/take this series as
-> is for v5.10 through the PCI tree ?
-Hello Lorenzo,
+From: Zhang Changzhong <zhangchangzhong@huawei.com> Sent: Monday, September=
+ 7, 2020 8:50 PM
+> Because clk_prepare_enable() and clk_disable_unprepare() already checked
+> NULL clock parameter, so the additional checks are unnecessary, just remo=
+ve
+> them.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-We are still working out a regression with the DMA offset commit on
-the RaspberryPi.  Nicolas has found the root cause and we are now
-devising a solution.
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_main.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c
+> b/drivers/net/ethernet/freescale/fec_main.c
+> index fb37816..c043afb 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -1960,8 +1960,7 @@ static int fec_enet_clk_enable(struct net_device
+> *ndev, bool enable)
+>  		mutex_unlock(&fep->ptp_clk_mutex);
+>  	}
+>  failed_clk_ptp:
+> -	if (fep->clk_enet_out)
+> -		clk_disable_unprepare(fep->clk_enet_out);
+> +	clk_disable_unprepare(fep->clk_enet_out);
+>=20
+>  	return ret;
+>  }
+> --
+> 2.9.5
 
-Thanks,
-Jim Quinlan
-Broadcom STB
-
->
-> Thanks,
-> Lorenzo
