@@ -2,99 +2,94 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9081EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E38C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F0C2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="VSQj3Cfq"
+	by mail.kernel.org (Postfix) with ESMTP id 4C2092080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599501263;
+	bh=pbOfow5vag3gTuUiXJsk3w65QeSK1YC8q7mI90YISaE=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=Ki6NgmaFzZUQbnC5419cbjvgCrAMZSQzIEZnO3Ep3bFJyZm40zk9foIEgkmqZA7ER
+	 yA9jN/85AEM+mcWF+HejuYUhcj9YHrsFMfeglEjavDJEbALkncfuE2+nQ1M2/pa9mn
+	 AzLUINz2MdAoBkOkklvQQsSj46w82nq9eDD3dKgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbgIGRyK (ORCPT
+        id S1728881AbgIGLWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:54:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbgIGLWj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:22:39 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFB4C0617A9
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 04:06:05 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d18so13500109iop.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 04:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=og92g0L7hPgsl8mDF4E0oRjHENzkIz2/kCylVnn3aEQ=;
-        b=VSQj3CfqsFG0w0R6IxVFzdq16ii5bv8V7LWtx8mdfazpSH82uYeoie36r4Ix/aZNjm
-         rmVIDi989E2n1MmojSJDRlZiGBvVEppkRQQqi+m2pKrwISBsxj1Lyea4x+266sVik2qY
-         OA2+Cm2PT2j/75XX1RvwMBLLB+a1zyBDo/aP4SupJprcZ0fs8AlJMMAoFxNbUoXlo2Q/
-         cPLuCtWe3tFYJQWyLmkPdYjafhnQ3Ma9gOcMyXCU1Q+FffNcDNQpPq4dyoC3Qf+Glj82
-         PPSJeJjKB5BAqYlhuj7vUVP+okdpZmjCcraoI8gLNg5Ltv/AR8UzUnwVVaXtjr5r889n
-         9JmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=og92g0L7hPgsl8mDF4E0oRjHENzkIz2/kCylVnn3aEQ=;
-        b=GKZ8OlnsQwnNwcfVXYAV9Wlv01FWixAy8M/uavAYrSkOAkVpac0rYhjqdqe+X1Xtm6
-         upH446D+uxlIfcjhPFa+5hjcMH5lu8lWUBxOf5PdALsBtILIs2tEkqioF5KDzGb3BLqX
-         4wUSywJYECvsTSNeyXkqHCV9FkPULNzaUIAGBwOWHydZIaK4A9XN/BafVH/Xlx/1iV3T
-         x8uZlYgrkkZ2PuSQgzJ0qNAtxBEAsFB7angiHz4MN8CbhxD67BIb4CQqHe3ydDPg+u0M
-         zqKs+tCF9yWgEiO/7eezt/oE7b1litcVeh3Jz0TpKUlQOoyNbzyQ3y8G54/4hpWDDavO
-         MLiw==
-X-Gm-Message-State: AOAM533elsy4vEfsc8UXvBwZSqOKdI5aiD4nwwndlpz21zrECFCODam0
-        CzAc/3zPL9CAqB5VkQat2O95m6ENCrGBhKbKao+Vww==
-X-Google-Smtp-Source: ABdhPJyod5VJBi59vRhPy1AeFPICUDWH+c8TTmKc169CEOJtj3iVYBKBHtDG0vSqtP6YjcYurac6iPQb5KedcXxThBY=
-X-Received: by 2002:a5d:8352:: with SMTP id q18mr3579085ior.31.1599476765032;
- Mon, 07 Sep 2020 04:06:05 -0700 (PDT)
+        Mon, 7 Sep 2020 07:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728703AbgIGLUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:20:36 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B3912168B;
+        Mon,  7 Sep 2020 11:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599477055;
+        bh=pbOfow5vag3gTuUiXJsk3w65QeSK1YC8q7mI90YISaE=;
+        h=From:To:Subject:Date:From;
+        b=bMxpYFbxNuEgXRkoI/DHctwkDSX4T1RoL1Jx1VOaH4rAinH1A0TIJQRqiUFQ08cwW
+         o/WMvMhAG2mU6HZyM/IYwZummkFl0ujE/jFeCaHLJ6rr0oJ0TdIbqQgMN9cKB+jy0I
+         uEHy7dsQAfPmCUuKj19b9hDoDXdX7Pon44hEbTkY=
+Received: by pali.im (Postfix)
+        id 151BA814; Mon,  7 Sep 2020 13:10:53 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>, marek.behun@nic.cz
+Subject: [PATCH v3 0/5] PCIe aardvark controller improvements
+Date:   Mon,  7 Sep 2020 13:10:33 +0200
+Message-Id: <20200907111038.5811-1-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-17-brgl@bgdev.pl>
- <20200904165029.GD1891694@smile.fi.intel.com>
-In-Reply-To: <20200904165029.GD1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 7 Sep 2020 13:05:54 +0200
-Message-ID: <CAMRc=MfrYJrkX2RfjXkCLtyzkM8MemTuUgEu_n-E+2mngk9mbA@mail.gmail.com>
-Subject: Re: [PATCH 16/23] gpio: mockup: refactor the module init function
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 6:57 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Sep 04, 2020 at 05:45:40PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This is in preparation for dynamically created chips.
-> >
-> > Let's split out the code that can be reused when creating chips at
-> > run-time. Let's also move the code preparing the device properties into
-> > a separate routine. This has the advantage of simplifying the error
-> > handling.
->
-> Almost all contents of this patch should go to proposed helper as I mentioned
-> before. Will make this patch quite small and understandable.
->
+Hi,
 
-Sorry, I'm not sure what you're referring to.
+we have some more improvements for PCIe aardvark controller (Armada 3720
+SOC - EspressoBIN and Turris MOX).
 
-Bart
+The main improvement is that with these patches the driver can be compiled
+as a module, and can be reloaded at runtime.
+
+Marek & Pali
+
+
+Changes in V3:
+* Rebased on top of the v5.9-rc1 release
+
+Changes in V2 for patch 4/5:
+* Protect pci_stop_root_bus() and pci_remove_root_bus() function calls by
+  pci_lock_rescan_remove() and pci_unlock_rescan_remove()
+
+Pali Rohár (5):
+  PCI: aardvark: Fix compilation on s390
+  PCI: aardvark: Check for errors from pci_bridge_emul_init() call
+  PCI: pci-bridge-emul: Export API functions
+  PCI: aardvark: Implement driver 'remove' function and allow to build
+    it as module
+  PCI: aardvark: Move PCIe reset card code to advk_pcie_train_link()
+
+ drivers/pci/controller/Kconfig        |   2 +-
+ drivers/pci/controller/pci-aardvark.c | 104 ++++++++++++++++----------
+ drivers/pci/pci-bridge-emul.c         |   4 +
+ 3 files changed, 71 insertions(+), 39 deletions(-)
+
+-- 
+2.20.1
+
