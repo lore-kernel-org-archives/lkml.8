@@ -2,113 +2,96 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEEEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BD3C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222432054F
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1DB206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:10:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VocdMNhT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v5W+SMP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgIGQKg (ORCPT
+        id S1730345AbgIGQKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:10:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729932AbgIGOdi (ORCPT
+        Mon, 7 Sep 2020 12:10:52 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39414 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729916AbgIGOd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:33:38 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5055DC061573;
-        Mon,  7 Sep 2020 07:33:36 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id t23so16407734ljc.3;
-        Mon, 07 Sep 2020 07:33:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=62zNFkwm//4ntRqXyoEhNkr7gnf03DDFz7QWu/35PZQ=;
-        b=VocdMNhTjr1eQ4qg1fl2wRIHbb+HZvmt4o+WUEpVvs7y6bpPKjoa+HsJYFjpX0hSNH
-         hWqcUmXVgsFDbDOXLvQROEHE5nMX1iiaYDd6I4uVBj2xycK9KqqfOm++ygAmY9CYhpIt
-         T771ZjzgJtVyJ82GR+Ny0mULHLBstcRFrQWnLY+unp671gfIgtalUupR3U42juLLtP6h
-         2oE7Fh49ujqezOWYGqsCUNXvS7AYTMbdskXCWOFbFnKScOI+LxfV/w5HWoemgPB8fv+X
-         EUebjBQotKv3mkSLsiTGWeEiLqzHG/les2EHHR6wDI1/duG7A15HEtjoKQoIWPKaVsf0
-         f3ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=62zNFkwm//4ntRqXyoEhNkr7gnf03DDFz7QWu/35PZQ=;
-        b=gIvVq7VXpyIv+OF8BtYDOzSJplEUytPX7fuQ9DTdN/tBthD2lJ7HzZK0g7CcOhvhlk
-         G5aodTrRDAo4QiXERgmwDHslBb6uWq2gK4ChGocyesS95CaZEnLeVsdydQFM/intM4m5
-         wU5KfOQsZEkXxLPHx/pAuzWshFj68GvD9bWQhhq4+iNhHYeXWMe9E3SUixEiRhKfPVqk
-         gyvM33ty0LLCnNBI7hTJhWBt6D020bA5geKTJCvxm9uzQiadXpkeNDL6TOZcJw4FgFVq
-         BXoN5mH4rBgaBZmNwZHuEa4N6tkxhkOpsgavEJLgqQ090nfRJQK6GYTfwCcx3RFyexv4
-         MTow==
-X-Gm-Message-State: AOAM531+NWXOfiu1E/nCa7CgaYWMFdG5AIZ6mcQnMpxbmiMhx5ZmE4t7
-        cr7jCQMEws0ggj+gt+hSHMytAd3gC3g=
-X-Google-Smtp-Source: ABdhPJwC6KBpcYD8vM0x+aa2VAoR2OO3AIuOQ1WyISe8il59xTaXwK4vUu8B20fNP6s1lWCFHHeO1A==
-X-Received: by 2002:a2e:911:: with SMTP id 17mr11317863ljj.207.1599489209563;
-        Mon, 07 Sep 2020 07:33:29 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id n2sm6243490lji.97.2020.09.07.07.33.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 07:33:29 -0700 (PDT)
-Subject: Re: [PATCH v5 13/36] i2c: tegra: Clean up probe function
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200906185039.22700-1-digetx@gmail.com>
- <20200906185039.22700-14-digetx@gmail.com>
- <CAHp75Vfm24pNS_OR5m4DSuxLfH_XA+uzGhC_egk+41gCPchNjg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1477bf0e-5723-8781-05bd-0f30c0b9c3a7@gmail.com>
-Date:   Mon, 7 Sep 2020 17:33:28 +0300
+        Mon, 7 Sep 2020 10:33:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EXOUX079209;
+        Mon, 7 Sep 2020 09:33:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599489204;
+        bh=KCPnGV1i/mXb3dwVsRcfzbm3+yvLIM1pM8h2rceZWm4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=v5W+SMP/ll1uyPqrH7gdBF4EFtvlq87kJLQ2ypsZqIFeP+2a3giWkZuWe7JUi60SE
+         Mi3/0tXELvzSlDLYJ49yQOV5r0EDi7RdDunMKs6JCYsbbSmuIk8uG3+S4VuU2q+PLl
+         fZVUoX5ufMMAY7QYgdGnLs1UcUiG3/qBdmQ86FRM=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EXOZc004527;
+        Mon, 7 Sep 2020 09:33:24 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
+ 2020 09:33:24 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 7 Sep 2020 09:33:24 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EXMIG052342;
+        Mon, 7 Sep 2020 09:33:22 -0500
+Subject: Re: [PATCH net-next 9/9] net: ethernet: ti: ale: add support for
+ multi port k3 cpsw versions
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>
+References: <20200904230924.9971-1-grygorii.strashko@ti.com>
+ <20200904230924.9971-10-grygorii.strashko@ti.com>
+ <20200904171022.63f103fa@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <282d021a-976f-df42-6e20-4af8d6812a19@ti.com>
+Date:   Mon, 7 Sep 2020 17:33:21 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vfm24pNS_OR5m4DSuxLfH_XA+uzGhC_egk+41gCPchNjg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200904171022.63f103fa@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.09.2020 11:20, Andy Shevchenko пишет:
-> On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+Hi Jakub,
+
+On 05/09/2020 03:10, Jakub Kicinski wrote:
+> On Sat, 5 Sep 2020 02:09:24 +0300 Grygorii Strashko wrote:
+>> The TI J721E (CPSW9g) ALE version is similar, in general, to Sitara AM3/4/5
+>> CPSW ALE, but has more extended functions and different ALE VLAN entry
+>> format.
 >>
->> The driver's probe function code is a bit difficult to read. This patch
->> reorders code of the probe function, forming groups of code that are easy
->> to work with. The reset_control_get() now may return -EPROBE_DEFER on
->> newer Tegra SoCs because they use BPMP driver that provides reset controls
->> and BPMP doesn't come up early during boot, previously rst was protected
->> by other checks error checks in the code, hence dev_err_probe() is used
->> now for the rst. The probe tear-down order now matches the driver-removal
->> order.
+>> This patch adds support for for multi port TI J721E (CPSW9g) ALE variant.
 > 
-> Seems that partially this can be done in the patches that converted to
-> new/better APIs.
+> and:
+> 
+> drivers/net/ethernet/ti/cpsw_ale.c:195:28: warning: symbol 'vlan_entry_k3_cpswxg' was not declared. Should it be static?
+> 
 
-Okay, I'll split this patch a bit more.
+Thank you for your report, I've posted v2.
+I've had to install latest sparse version (0.6.2) manually to make it work properly.
 
-> Also consider the use of a temporary variable for struct device
-> pointer. It might make your life easier.
-
-Whole driver now uses i2c_dev->dev pattern and the "dev" variable
-originally was used for improving indentation of the error messages that
-are now gone. Hence there is no real need to keep the temporal variable,
-IMO.
+-- 
+Best regards,
+grygorii
