@@ -2,289 +2,307 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA47C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA36C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00E02208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599468904;
-	bh=h0dzECAlJcaUj2DyOGtmStzWmm1Oimzbwx2te+tHEwU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0u4B45xwnZwnUfxJU8rM/0yiCyzdBCzRPqFrO3Jh7Pr0O7qLdsJuec8CeXtDX2Btz
-	 LryvoZgwPEf9RgiEP0KDNCFzT05Q2IvLlUoYRII6Yklou9KkZedkeyFtjIFsJ/ahPs
-	 V9TGpY4xivnmq7D9hR86tanpsesR6kB3jvLdsMJs=
+	by mail.kernel.org (Postfix) with ESMTP id 8FE892078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:56:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fjk57qKM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgIGIzB (ORCPT
+        id S1728113AbgIGI4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:55:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbgIGIzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:55:01 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82AF720757;
-        Mon,  7 Sep 2020 08:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599468899;
-        bh=h0dzECAlJcaUj2DyOGtmStzWmm1Oimzbwx2te+tHEwU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=erArDS/k5tl0YdDvN8AQKEBXad+mxvHAMDPO1ZzBi4LTztrqdD8bEVz+C8WT+Nc5l
-         avyVnLlnU+sU2hSd0kICBhZxf+eAkQAaKhZ5ZKqt6lJEFg5crYUfmmXPAXdqVxI2B+
-         S+zXVCN1qryM2oFOI5PrvKTLWQ4OmTTYl4RooQXM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kFCvR-009iBY-K7; Mon, 07 Sep 2020 09:54:57 +0100
+        Mon, 7 Sep 2020 04:56:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727954AbgIGI4A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:56:00 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55956C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 01:56:00 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id u4so14290355ljd.10
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 01:56:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7qtTkOpU/pJA1K1Rti7fapj7mfwVdYYIwMVOblHQUng=;
+        b=fjk57qKMmmr4skrdLEx3AZ3gEi9aphyyGXUoJWLOUD9IRCpoD7TM50RZbqnCgGutH/
+         ZwsgOiTb6Up4nX6Bt9y8uQ17zOXJyKwbQ7CIpCC/7zGW3CPQKylkbhTIGDUKa0QTFjAG
+         SJdT4TufeBFhvBrezqcXek023VwQZSVH8X6JuXSHcat2jfqEw2/k2y5rvMzVE0I7pjj9
+         kJ7T0U+WiebS+iXpeO+LkvdA+x/jXvIx3c5J0pD4JenxO+w+iF8i4NwUwOWB6/E070n6
+         eFmIbnO82iesj6KsSQ4eMLklJxdxx0kWRn3WGSrcgtrFhl+YYlHvkDi4qIUJ6ClN3QLh
+         I3uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7qtTkOpU/pJA1K1Rti7fapj7mfwVdYYIwMVOblHQUng=;
+        b=ba2/opvdgyPk/i6ILP18N5NXwyiDdVz5klKczNtz+BQH4Aiypdx2Q4mbqjG1gemRza
+         8MlitZx57ENs8toJMOUTFUJihsQ8VFaEBENVB8FuAP5B4tiVSBgSSj9sa98sOXcP/xAh
+         MgjQ0a2vKNb8y6oYvX4An6Kqsl7JNpAWoy8HljfPtw97TUt2r68xySesgtqN45SOIYZA
+         Zu4P7XZaggpb1YhqftfjDHot6JTs+8gYwlT+9Ken58h2rUl1jf+O2ZHzI2hU8O+DbiQK
+         FOq3E/zX7ygozM1kf1GM50ZL3hkPv2Al3GkZZ00AF9xWEbtOnj7O3zpzxhYW1EHOcnPR
+         aJ7g==
+X-Gm-Message-State: AOAM532y1wHbeR1VDJpE7l5CsS9aWh/6ThFgJ9O7xyVVq2ibOTtSU3Kp
+        eqAbFE5Xt+usrOdM3DPodgbMH+AszRv6lhhceCw0Yw==
+X-Google-Smtp-Source: ABdhPJxv6dxouCRyr/31m9WjNWty3a/jEsviJnnAY7FLV9sE/GS7YMXGrWtZ1/ZoppCQtLZrgsMmg0/yDbvrptmeFm8=
+X-Received: by 2002:a2e:9ccd:: with SMTP id g13mr10059300ljj.29.1599468958630;
+ Mon, 07 Sep 2020 01:55:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 07 Sep 2020 09:54:57 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Justin He <Justin.He@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
-In-Reply-To: <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200904092744.167655-1-jianyong.wu@arm.com>
- <20200904092744.167655-9-jianyong.wu@arm.com> <874kocmqqx.wl-maz@kernel.org>
- <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <366387fa507f9c5d5044549cea958ce1@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <20200826163330.16e5b0d4@canb.auug.org.au> <CADYN=9KQcdLH=BfXZ2riuH0icw7d+2HbfPxvww7fiJG2G=8ALQ@mail.gmail.com>
+ <20200826193945.GT2855@paulmck-ThinkPad-P72> <CADYN=9+XRhPOkds36JdHU-h2h3va=JJj6aeDHmNUzrpCHWEJ0A@mail.gmail.com>
+ <20200828132944.GN2855@paulmck-ThinkPad-P72> <CADYN=9JBB6EntswRtVuUezoOzqCai2PkFP-7FDpYmAUU1+SYJA@mail.gmail.com>
+ <20200828225914.GQ2855@paulmck-ThinkPad-P72> <CADYN=9K+g430cJZ_ay4o3ivDKdpTSTSnJMDPsEq0uDTQ7LMvSA@mail.gmail.com>
+ <20200903161437.GP29330@paulmck-ThinkPad-P72>
+In-Reply-To: <20200903161437.GP29330@paulmck-ThinkPad-P72>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 7 Sep 2020 10:55:47 +0200
+Message-ID: <CADYN=9+BkXePzNr9u_sXtPZcziufb+eYkxVxdqPVLR9czR6Otg@mail.gmail.com>
+Subject: Re: linux-next: Tree for Aug 26
+To:     paulmck@kernel.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-07 09:40, Jianyong Wu wrote:
-> Hi Marc,
-> 
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Saturday, September 5, 2020 7:02 PM
->> To: Jianyong Wu <Jianyong.Wu@arm.com>
->> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
->> tglx@linutronix.de; pbonzini@redhat.com; 
->> sean.j.christopherson@intel.com;
->> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
->> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
->> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
->> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Justin He
->> <Justin.He@arm.com>; nd <nd@arm.com>
->> Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
->> 
->> On Fri, 04 Sep 2020 10:27:42 +0100,
->> Jianyong Wu <jianyong.wu@arm.com> wrote:
->> >
->> > Currently, there is no mechanism to keep time sync between guest and
->> > host in arm64 virtualization environment. Time in guest will drift
->> > compared with host after boot up as they may both use third party time
->> > sources to correct their time respectively. The time deviation will be
->> > in order of milliseconds. But in some scenarios,like in cloud
->> > envirenment, we ask for higher time precision.
->> >
->> > kvm ptp clock, which choose the host clock source as a reference clock
->> > to sync time between guest and host, has been adopted by x86 which
->> > makes the time sync order from milliseconds to nanoseconds.
->> >
->> > This patch enables kvm ptp clock for arm64 and improve clock sync
->> > precison significantly.
->> >
->> > Test result comparisons between with kvm ptp clock and without it in
->> > arm64 are as follows. This test derived from the result of command
->> > 'chronyc sources'. we should take more care of the last sample column
->> > which shows the offset between the local clock and the source at the last
->> measurement.
->> >
->> > no kvm ptp in guest:
->> > MS Name/IP address   Stratum Poll Reach LastRx Last sample
->> >
->> ==========================================================
->> ==============
->> > ^* dns1.synet.edu.cn      2   6   377    13  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    21  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    29  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    37  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    45  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    53  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    61  +1040us[+1581us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377     4   -130us[ +796us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    12   -130us[ +796us] +/-   21ms
->> > ^* dns1.synet.edu.cn      2   6   377    20   -130us[ +796us] +/-   21ms
->> >
->> > in host:
->> > MS Name/IP address   Stratum Poll Reach LastRx Last sample
->> >
->> ==========================================================
->> ==============
->> > ^* 120.25.115.20          2   7   377    72   -470us[ -603us] +/-   18ms
->> > ^* 120.25.115.20          2   7   377    92   -470us[ -603us] +/-   18ms
->> > ^* 120.25.115.20          2   7   377   112   -470us[ -603us] +/-   18ms
->> > ^* 120.25.115.20          2   7   377     2   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377    22   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377    43   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377    63   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377    83   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377   103   +872ns[-6808ns] +/-   17ms
->> > ^* 120.25.115.20          2   7   377   123   +872ns[-6808ns] +/-   17ms
->> >
->> > The dns1.synet.edu.cn is the network reference clock for guest and
->> > 120.25.115.20 is the network reference clock for host. we can't get
->> > the clock error between guest and host directly, but a roughly
->> > estimated value will be in order of hundreds of us to ms.
->> >
->> > with kvm ptp in guest:
->> > chrony has been disabled in host to remove the disturb by network clock.
->> >
->> > MS Name/IP address         Stratum Poll Reach LastRx Last sample
->> >
->> ==========================================================
->> ==============
->> > * PHC0                    0   3   377     8     -7ns[   +1ns] +/-    3ns
->> > * PHC0                    0   3   377     8     +1ns[  +16ns] +/-    3ns
->> > * PHC0                    0   3   377     6     -4ns[   -0ns] +/-    6ns
->> > * PHC0                    0   3   377     6     -8ns[  -12ns] +/-    5ns
->> > * PHC0                    0   3   377     5     +2ns[   +4ns] +/-    4ns
->> > * PHC0                    0   3   377    13     +2ns[   +4ns] +/-    4ns
->> > * PHC0                    0   3   377    12     -4ns[   -6ns] +/-    4ns
->> > * PHC0                    0   3   377    11     -8ns[  -11ns] +/-    6ns
->> > * PHC0                    0   3   377    10    -14ns[  -20ns] +/-    4ns
->> > * PHC0                    0   3   377     8     +4ns[   +5ns] +/-    4ns
->> >
->> > The PHC0 is the ptp clock which choose the host clock as its source
->> > clock. So we can see that the clock difference between host and guest
->> > is in order of ns.
->> >
->> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
->> > ---
->> >  drivers/clocksource/arm_arch_timer.c | 24 +++++++++++++
->> >  drivers/ptp/Kconfig                  |  2 +-
->> >  drivers/ptp/ptp_kvm_arm64.c          | 53
->> ++++++++++++++++++++++++++++
->> >  3 files changed, 78 insertions(+), 1 deletion(-)  create mode 100644
->> > drivers/ptp/ptp_kvm_arm64.c
->> >
->> > diff --git a/drivers/clocksource/arm_arch_timer.c
->> > b/drivers/clocksource/arm_arch_timer.c
->> > index d55acffb0b90..aaf286e90092 100644
->> > --- a/drivers/clocksource/arm_arch_timer.c
->> > +++ b/drivers/clocksource/arm_arch_timer.c
->> > @@ -1650,3 +1650,27 @@ static int __init arch_timer_acpi_init(struct
->> > acpi_table_header *table)  }  TIMER_ACPI_DECLARE(arch_timer,
->> > ACPI_SIG_GTDT, arch_timer_acpi_init);  #endif
->> > +
->> > +#if IS_ENABLED(CONFIG_PTP_1588_CLOCK_KVM)
->> > +#include <linux/arm-smccc.h>
->> > +int kvm_arch_ptp_get_crosststamp(unsigned long *cycle, struct
->> timespec64 *ts,
->> > +			      struct clocksource **cs)
->> > +{
->> > +	struct arm_smccc_res hvc_res;
->> > +	ktime_t ktime;
->> > +
->> > +	/* Currently, linux guest will always use the virtual counter */
->> > +
->> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_PTP_FU
->> NC_ID,
->> > +			     ARM_PTP_VIRT_COUNTER, &hvc_res);
->> > +	if ((long long)(hvc_res.a0) < 0)
->> > +		return -EOPNOTSUPP;
->> > +
->> > +	ktime = (long long)hvc_res.a0;
->> > +	*ts = ktime_to_timespec64(ktime);
->> > +	*cycle = (long long)hvc_res.a1;
->> > +	*cs = &clocksource_counter;
->> > +
->> > +	return 0;
->> > +}
->> > +EXPORT_SYMBOL_GPL(kvm_arch_ptp_get_crosststamp);
->> > +#endif
->> > diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig index
->> > 942f72d8151d..127e96f14f89 100644
->> > --- a/drivers/ptp/Kconfig
->> > +++ b/drivers/ptp/Kconfig
->> > @@ -106,7 +106,7 @@ config PTP_1588_CLOCK_PCH  config
->> > PTP_1588_CLOCK_KVM
->> >  	tristate "KVM virtual PTP clock"
->> >  	depends on PTP_1588_CLOCK
->> > -	depends on KVM_GUEST && X86
->> > +	depends on KVM_GUEST && X86 || ARM64 && ARM_ARCH_TIMER
->> &&
->> > +ARM_PSCI_FW
->> >  	default y
->> >  	help
->> >  	  This driver adds support for using kvm infrastructure as a PTP
->> > diff --git a/drivers/ptp/ptp_kvm_arm64.c b/drivers/ptp/ptp_kvm_arm64.c
->> > new file mode 100644 index 000000000000..961abed93dfd
->> > --- /dev/null
->> > +++ b/drivers/ptp/ptp_kvm_arm64.c
->> > @@ -0,0 +1,53 @@
->> > +// SPDX-License-Identifier: GPL-2.0-only
->> > +/*
->> > + *  Virtual PTP 1588 clock for use with KVM guests
->> > + *  Copyright (C) 2019 ARM Ltd.
->> > + *  All Rights Reserved
->> > + */
->> > +
->> > +#include <linux/kernel.h>
->> > +#include <linux/err.h>
->> > +#include <asm/hypervisor.h>
->> > +#include <linux/module.h>
->> > +#include <linux/psci.h>
->> > +#include <linux/arm-smccc.h>
->> > +#include <linux/timecounter.h>
->> > +#include <linux/sched/clock.h>
->> > +#include <asm/arch_timer.h>
->> > +
->> > +int kvm_arch_ptp_init(void)
->> > +{
->> > +	struct arm_smccc_res hvc_res;
->> > +
->> > +
->> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_FEATUR
->> ES_FUNC_ID,
->> > +			     &hvc_res);
->> > +	if (!(hvc_res.a0 | BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
->> > +		return -EOPNOTSUPP;
->> > +
->> > +	return 0;
->> 
->> What happens if the
->> ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID function isn't
->> implemented (on an old kernel or a non-KVM hypervisor)? The expected
->> behaviour is that a0 will contain SMCCC_RET_NOT_SUPPORTED, which is 
->> -1.
->> The result is that this function always returns "supported". Not an 
->> acceptable
->> behaviour.
->> 
-> Oh!  it's really a stupid mistake, should be "&" not "|".
+On Thu, 3 Sep 2020 at 18:14, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> On Thu, Sep 03, 2020 at 10:39:10AM +0200, Anders Roxell wrote:
+> > Hi Paul,
+> >
+> > On Sat, 29 Aug 2020 at 00:59, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Fri, Aug 28, 2020 at 09:24:19PM +0200, Anders Roxell wrote:
+> > > > On Fri, 28 Aug 2020 at 15:29, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > >
+> > > > > On Fri, Aug 28, 2020 at 09:37:17AM +0200, Anders Roxell wrote:
+> > > > > > On Wed, 26 Aug 2020 at 21:39, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > > > > >
+> > > > > > > On Wed, Aug 26, 2020 at 08:19:01PM +0200, Anders Roxell wrote:
+> > > > > > > > On Wed, 26 Aug 2020 at 08:33, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > > > > >
+> > > > > > > [ . . . ]
+> > > > > > >
+> > > > > > > > I've built and run an arm64 allmodconfig kernel where I use the
+> > > > > > > > defconfig as the base, I do this for testing purposes.
+> > > > > > > > I can see the following call trace [1]:
+> > > > > > > >
+> > > > > > > > [ 2595.811453][    T1] Running tests on all trace events:
+> > > > > > > > [ 2595.860933][    T1] Testing all events:
+> > > > > > > > [ 4316.066072][    T8] kworker/dying (8) used greatest stack depth:
+> > > > > > > > 27056 bytes left
+> > > > > > > > [ 8561.924871][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for
+> > > > > > > > 22s! [migration/0:14]
+> > > > > > > > [ 8561.934498][    C0] Modules linked in:
+> > > > > > > > [ 8561.942303][    C0] irq event stamp: 4044
+> > > > > > > > [ 8561.949044][    C0] hardirqs last  enabled at (4043):
+> > > > > > > > [<ffffa000126b530c>] _raw_spin_unlock_irqrestore+0xac/0x138
+> > > > > > > > [ 8561.960848][    C0] hardirqs last disabled at (4044):
+> > > > > > > > [<ffffa000126a89f8>] __schedule+0xf8/0x7e0
+> > > > > > > > [ 8561.971418][    C0] softirqs last  enabled at (3698):
+> > > > > > > > [<ffffa00010001b04>] __do_softirq+0x524/0x5f8
+> > > > > > > > [ 8561.982191][    C0] softirqs last disabled at (3689):
+> > > > > > > > [<ffffa000101216c8>] __irq_exit_rcu+0x128/0x1a0
+> > > > > > > > [ 8561.993068][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
+> > > > > > > >    W         5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
+> > > > > > > > [ 8562.005684][    C0] Hardware name: linux,dummy-virt (DT)
+> > > > > > > > [ 8562.013247][    C0] pstate: 80400005 (Nzcv daif +PAN -UAO BTYPE=--)
+> > > > > > > > [ 8562.021657][    C0] pc : arch_local_irq_enable+0x58/0x80
+> > > > > > > > [ 8562.029323][    C0] lr : _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > > > [ 8562.036739][    C0] sp : ffff0000698efaa0
+> > > > > > > > [ 8562.042984][    C0] x29: ffff0000698efaa0 x28: ffff00006ad0f270
+> > > > > > > > [ 8562.053814][    C0] x27: ffff00006ad0f248 x26: ffff0000698d4718
+> > > > > > > > [ 8562.064687][    C0] x25: ffff00006ad0e798 x24: ffffa000139e3a40
+> > > > > > > > [ 8562.075506][    C0] x23: 0000000000000001 x22: ffffa000154f5000
+> > > > > > > > [ 8562.086425][    C0] x21: ffff00006ad0e798 x20: ffff00006ad0e780
+> > > > > > > > [ 8562.097255][    C0] x19: ffffa000126a905c x18: 00000000000014c0
+> > > > > > > > [ 8562.108071][    C0] x17: 0000000000001500 x16: 0000000000001440
+> > > > > > > > [ 8562.118918][    C0] x15: 00000000f1f1f1f1 x14: 003d090000000000
+> > > > > > > > [ 8562.129739][    C0] x13: 00003d0900000000 x12: ffff80000d31df41
+> > > > > > > > [ 8562.140544][    C0] x11: 1fffe0000d31df40 x10: ffff80000d31df40
+> > > > > > > > [ 8562.151366][    C0] x9 : dfffa00000000000 x8 : ffff0000698efa07
+> > > > > > > > [ 8562.162247][    C0] x7 : 0000000000000001 x6 : 00007ffff2ce20c0
+> > > > > > > > [ 8562.173072][    C0] x5 : ffff0000698d4040 x4 : dfffa00000000000
+> > > > > > > > [ 8562.183954][    C0] x3 : ffffa0001040f904 x2 : 0000000000000007
+> > > > > > > > [ 8562.194811][    C0] x1 : ffffa00014080000 x0 : 00000000000000e0
+> > > > > > > > [ 8562.205858][    C0] Call trace:
+> > > > > > > > [ 8562.211739][    C0]  arch_local_irq_enable+0x58/0x80
+> > > > > > > > [ 8562.219076][    C0]  _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > > > [ 8562.226394][    C0]  __schedule+0x75c/0x7e0
+> > > > > > > > [ 8562.233074][    C0]  preempt_schedule_notrace+0x64/0xc0
+> > > > > > > > [ 8562.268210][    C0]  ftrace_ops_list_func+0x494/0x4e0
+> > > > > > > > [ 8562.275735][    C0]  ftrace_graph_call+0x0/0x4
+> > > > > > > > [ 8562.282647][    C0]  preempt_count_add+0xc/0x240
+> > > > > > > > [ 8562.289686][    C0]  schedule+0xe4/0x160
+> > > > > > > > [ 8562.296187][    C0]  smpboot_thread_fn+0x47c/0x540
+> > > > > > > > [ 8562.303377][    C0]  kthread+0x23c/0x260
+> > > > > > > > [ 8562.309906][    C0]  ret_from_fork+0x10/0x18
+> > > > > > > > [ 8562.316604][    C0] Kernel panic - not syncing: softlockup: hung tasks
+> > > > > > > > [ 8562.325230][    C0] CPU: 0 PID: 14 Comm: migration/0 Tainted: G
+> > > > > > > >    W    L    5.9.0-rc2-next-20200826-00005-g24628bb4c0bf #1
+> > > > > > > > [ 8562.337861][    C0] Hardware name: linux,dummy-virt (DT)
+> > > > > > > > [ 8562.345374][    C0] Call trace:
+> > > > > > > > [ 8562.351228][    C0]  dump_backtrace+0x0/0x320
+> > > > > > > > [ 8562.358070][    C0]  show_stack+0x38/0x60
+> > > > > > > > [ 8562.364728][    C0]  dump_stack+0x1c0/0x280
+> > > > > > > > [ 8562.371447][    C0]  panic+0x32c/0x614
+> > > > > > > > [ 8562.377868][    C0]  watchdog_timer_fn+0x49c/0x560
+> > > > > > > > [ 8562.385076][    C0]  __run_hrtimer+0x1cc/0x360
+> > > > > > > > [ 8562.392021][    C0]  __hrtimer_run_queues+0x1a0/0x220
+> > > > > > > > [ 8562.399500][    C0]  hrtimer_interrupt+0x1f8/0x440
+> > > > > > > > [ 8562.406807][    C0]  arch_timer_handler_virt+0x68/0xa0
+> > > > > > > > [ 8562.414338][    C0]  handle_percpu_devid_irq+0x118/0x2a0
+> > > > > > > > [ 8562.421992][    C0]  __handle_domain_irq+0x150/0x1c0
+> > > > > > > > [ 8562.429315][    C0]  gic_handle_irq+0x98/0x120
+> > > > > > > > [ 8562.436297][    C0]  el1_irq+0xd4/0x1c0
+> > > > > > >
+> > > > > > > We appear to have taken an interrupt here, just after releasing
+> > > > > > > an irq-disabled lock and enabling interrupts.
+> > > > > > >
+> > > > > > > > [ 8562.442748][    C0]  arch_local_irq_enable+0x58/0x80
+> > > > > > > > [ 8562.450116][    C0]  _raw_spin_unlock_irq+0x84/0xc0
+> > > > > > > > [ 8562.457360][    C0]  __schedule+0x75c/0x7e0
+> > > > > > > > [ 8562.464142][    C0]  preempt_schedule_notrace+0x64/0xc0
+> > > > > > > > [ 8562.471745][    C0]  ftrace_ops_list_func+0x494/0x4e0
+> > > > > > > > [ 8562.479195][    C0]  ftrace_graph_call+0x0/0x4
+> > > > > > > > [ 8562.486159][    C0]  preempt_count_add+0xc/0x240
+> > > > > > > > [ 8562.493210][    C0]  schedule+0xe4/0x160
+> > > > > > >
+> > > > > > > We are trying to sleep, so we took a pass through the scheduler and
+> > > > > > > did some tracing.
+> > > > > > >
+> > > > > > > > [ 8562.499737][    C0]  smpboot_thread_fn+0x47c/0x540
+> > > > > > >
+> > > > > > > Here we might be bringing up a CPU?  Except that according to your
+> > > > > > > dmesg, there is only one CPU.  ("RCU restricting CPUs from NR_CPUS=256
+> > > > > > > to nr_cpu_ids=1").  So this seems unlikely.
+> > > > > > >
+> > > > > > > Huh.  The first dmesg in output-next-20200826.log is instead a
+> > > > > > > DEBUG_LOCKS_WARN_ON() from lockdep.  Might this be related?  Or do you
+> > > > > > > also see this warning when boot happens quickly?
+> > > > > > >
+> > > > > > > (I do see the soft lockup later on.)
+> > > > > > >
+> > > > > > > > [ 8562.506960][    C0]  kthread+0x23c/0x260
+> > > > > > > > [ 8562.513496][    C0]  ret_from_fork+0x10/0x18
+> > > > > > > > [ 8562.521052][    C0] Kernel Offset: disabled
+> > > > > > > > [ 8562.527725][    C0] CPU features: 0x0240002,20002004
+> > > > > > > > [ 8562.534950][    C0] Memory Limit: none
+> > > > > > > > [ 8562.543830][    C0] ---[ end Kernel panic - not syncing:
+> > > > > > > > softlockup: hung tasks ]---
+> > > > > > > >
+> > > > > > > > When I tested to checkout and build e6df9766894d ("Merge remote-tracking branch
+> > > > > > > > 'irqchip/irq/irqchip-next' into master") that was merged into today's
+> > > > > > > > tag I was able to
+> > > > > > > > boot [2]. When I checked out 25e6e115dd1d ("Merge remote-tracking
+> > > > > > > > branch 'rcu/rcu/next' into master") and built and tested that I was
+> > > > > > > > able to boot [3] after a
+> > > > > > > > looong time. To clarify, the rcu merge comes after the irqchip merge.
+> > > > > > > >
+> > > > > > > > I also tried to only revert the rcu tree from todays next tag like this:
+> > > > > > > > "git diff e6df9766894d..25e6e115dd1d | patch -Rp1". When I built that
+> > > > > > > > I was able to
+> > > > > > > > boot [4] too.
+> > > > > > > >
+> > > > > > > > Any idea what's going on here?
+> > > > > > >
+> > > > > > > Could you please try bisecting the RCU commits?
+> > > > > >
+> > > > > > I did a bisect and found:
+> > > > > > 3c8e1e3eca23 ("rcu: Always set .need_qs from __rcu_read_lock() for strict GPs")
+> > > > > >
+> > > > > > When I reverted that on next-20200826 and on next-20200827 the
+> > > > > > allmodconfig kernel boots [1], there's other issues that I can see in
+> > > > > > the log but not this one.
+> > > > >
+> > > > > Thank you for bisecting!
+> > > > >
+> > > > > I take it that you have CONFIG_RCU_STRICT_GRACE_PERIOD=y in your .config?
+> > > >
+> > > > Correct.
+> > > >
+> > > > > Ah, you do, according to this line in your dmesg:
+> > > > >
+> > > > >         rcu:    RCU strict (and thus non-scalable) grace periods enabled.
+> > > >
+> > > > Yup.
+> > > >
+> > > > >
+> > > > > And much else besides, serious debugging enabled!  ;-)
+> > > >
+> > > > as you can see from the time it takes to boot it is alot =)
+> > > >
+> > > > >
+> > > > > Does this reproduce with CONFIG_RCU_STRICT_GRACE_PERIOD=n?
+> > > >
+> > > > I trying that now.
+> > > >
+> > > > > My guess,
+> > > > > given the commit that your bisection converged on, is that it will not
+> > > > > reproduce in that case.
+> > > >
+> > > > Your guess was correct, it worked =)
+> > >
+> > > I cannot reproduce this.  I would suggest enabling KASAN, but you have
+> > > already enabled it.  At this point, I suggest clearing up the other
+> > > issues.  If this issue remains, please let me know and I will see what
+> > > additional diagnostics I can provide.
+> >
+> > On tag next-20200902 I see this workqueue lockup [1], does that give
+> > you any ideas?
+> > when I disable CONFIG_RCU_STRICT_GRACE_PERIOD it works.
+>
+> Does exactly the same commit as you bisected to last time determine
+> whether this happens or not?
 
-But even then. (-1 & whatever) is always true.
+Yes it's the exact same commit.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Cheers,
+Anders
+
+>
+>                                                         Thanx, Paul
+>
+> > Cheers,
+> > Anders
+> > [1] http://ix.io/2w0B
+> >
+> > >
+> > >                                                         Thanx, Paul
+> > >
+> > > > Cheers,
+> > > > Anders
+> > > >
+> > > > >
+> > > > >                                                         Thanx, Paul
+> > > > >
+> > > > > > Cheers,
+> > > > > > Anders
+> > > > > > [1] https://people.linaro.org/~anders.roxell/output-next-20200827-3c8e1e3eca23.log
+> > > > > >
+> > > > > > >  They are linear,
+> > > > > > > extending from 0d23eddbe5d4 ("rcu: Remove KCSAN stubs") to 72cc80705122
+> > > > > > > ("rcu: Remove unused "cpu" parameter from rcu_report_qs_rdp()".
+> > > > > > >
+> > > > > > > I do regularly test single-CPU premptible RCU, but not on ARM.  Nor do
+> > > > > > > I normally enable quite this much debug, so I might have missed something.
+> > > > > > >
+> > > > > > >                                                         Thanx, Paul
+> > > > > > >
+> > > > > > > > Cheers,
+> > > > > > > > Anders
+> > > > > > > > [1] https://people.linaro.org/~anders.roxell/output-next-20200826.log
+> > > > > > > > [2] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-e6df9766894d.log
+> > > > > > > > [3] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-25e6e115dd1d.log
+> > > > > > > > [4] https://people.linaro.org/~anders.roxell/output-next-20200826-bisect-revert-e6df9766894d-25e6e115dd1d.log
