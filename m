@@ -2,141 +2,122 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E09C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2679F2137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599490665;
-	bh=7qCTpFFNqVHtpIMDAKfKXUS+bFE7hzcYks7b6ByyYYk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=ASAxsR2cRl1dv2kJcEb+Suozl8U2VI9GPTSpmKLbI2eeqH3iy3Yr+txtgEjOOCZhI
-	 mqB9+lV0Q2f8Cm1cg/m/JMcz2VZixIuvDtBiWxY4JHFD3Ua45hGE/gQ9IyrPufDSJX
-	 809B3E2snUYY4wRDY3cw0NCAYiyd+EcL/7K7g93A=
+	by mail.kernel.org (Postfix) with ESMTP id 24DEA207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbgIGO4g (ORCPT
+        id S1730092AbgIGO5o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 10:57:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:37686 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730019AbgIGOvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:51:02 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE3772176B;
-        Mon,  7 Sep 2020 14:51:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599490261;
-        bh=7qCTpFFNqVHtpIMDAKfKXUS+bFE7hzcYks7b6ByyYYk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=i7cbHqNM8H80YrBKKrffwXGThOtzzgcasGBvFkRfT7FH9nFjKPReIo6OfblvqC8J8
-         dcFzGdDcEzRsAq9FHSI69+mXJXBePLE+tU9T7CxLvPOaFBeO7Qt7ENNJqN0ouv/WHx
-         p+qTucob7AxMxRRcAJKUFp7Nutzrjr2zfrQTAv1Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     himadrispandya@gmail.com, dvyukov@google.com,
-        linux-usb@vger.kernel.org
-Cc:     perex@perex.cz, tiwai@suse.com, stern@rowland.harvard.ed,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        alsa-devel@alsa-project.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 00/11] USB: new USB control message helper functions
-Date:   Mon,  7 Sep 2020 16:50:57 +0200
-Message-Id: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+        id S1730037AbgIGOv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:51:59 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15915106F;
+        Mon,  7 Sep 2020 07:51:59 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF8AA3F73C;
+        Mon,  7 Sep 2020 07:51:57 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:51:55 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     peterz@infradead.org
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        vincent.donnefort@arm.com, mingo@redhat.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        valentin.schneider@arm.com, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
+Message-ID: <20200907145155.fsmeygi4fiypikzk@e107158-lin.cambridge.arm.com>
+References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
+ <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
+ <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
+ <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
+ <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
+ <20200907104845.6rust2lf2o3d5gmq@e107158-lin.cambridge.arm.com>
+ <20200907111320.GP2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200907111320.GP2674@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a recent discussion about a USB networking bug found by syzbot, and
-fixed by Himadri Pandya, the design of the existing usb_control_msg()
-call was brought up as not being the "nicest" thing to use by Dmitry
-Vyukov:
-        https://lore.kernel.org/r/CACT4Y+YbDODLRFn8M5QcY4CazhpeCaunJnP_udXtAs0rYoASSg@mail.gmail.com
+On 09/07/20 13:13, peterz@infradead.org wrote:
+> On Mon, Sep 07, 2020 at 11:48:45AM +0100, Qais Yousef wrote:
+> > IMHO the above is a hack. Out-of-tree modules should rely on public headers and
+> > exported functions only. What you propose means that people who want to use
+> > these tracepoints in meaningful way must have a prebuilt kernel handy. Which is
+> > maybe true for us who work in the embedded world. But users who run normal
+> > distro kernels (desktop/servers) will fail to build against
+> 
+> But this isn't really aimed at regular users. We're aiming this at
+> developers (IIUC) so I dont really see this as a problem.
+> 
+> > FWIW, I did raise this concern with Peter in 2019 OSPM and he was okay with the
+> > exports as it's still not a contract and they can disappear anytime we want.
+> > Migrating to using BTF is the right way forward IMO. I don't think what we have
+> > here is out-of-control yet. Though I agree they're annoying.
+> 
+> Right, we're hiding behind the explicit lack of ABI for modules.
+> 
+> Anyway, CTF/BTF/random other crap that isn't DWARFs should work fine to
+> replace all this muck. Just no idea what the state of any of that is.
 
-The function makes it hard to get right, in that it will return the
-number of bytes sent/received, but almost no one checks to see if a
-short read/write happens.  With a malicious, or broken, USB device, this
-can cause drivers to act on data that they did not anticipate, and
-sometimes copy internal kernel data out to userspace.
+So I was thinking of having a function that allows a module to read member of
+struct rq (or any struct for that matters), but I think that's the harder
+(though neater) way around.
 
-So let's fix this up by creating two new functions,
-usb_control_msg_send() and usb_control_msg_recv().  These functions
-either complete the full transation, or they return an error, a short
-send/recv is now an error.
+Just compiled a kernel with CONFIG_DEBUG_INFO_BTF_INFO; and doing
 
-They also accept data off of the stack, saving individual drivers the
-pain of having to constantly allocate memory on their own for tiny
-messages, thereby saving overall kernel code space.
+	$ pahole rq
+	struct rq {
+        raw_spinlock_t             lock;                 /*     0     4 */
+        unsigned int               nr_running;           /*     4     4 */
+        long unsigned int          last_blocked_load_update_tick; /*     8     8 */
+        unsigned int               has_blocked_load;     /*    16     4 */
 
-The api also does not require a raw USB "pipe" to be sent to the
-function, as we know the direction, so just pass in the endpoint number
-instead, again making it easier on the USB driver author to use.
+        /* XXX 12 bytes hole, try to pack */
 
-This series first takes a helper function out of the sound core for
-verifying USB endpoints to be able to use internally, and then adds the
-new functions, converts over some internal USB code to use them, and
-then starts to clean up some drivers using these new functions, as an
-example of the savings that can happen by using these functions.
+        call_single_data_t         nohz_csd;             /*    32    32 */
+        /* --- cacheline 1 boundary (64 bytes) --- */
+        unsigned int               nohz_tick_stopped;    /*    64     4 */
+        atomic_t                   nohz_flags;           /*    68     4 */
+        unsigned int               ttwu_pending;         /*    72     4 */
 
-Thanks to Dmitry and Himadri for the idea on how to do all of this.
+        /* XXX 4 bytes hole, try to pack */
 
-greg k-h
+        u64                        nr_switches;          /*    80     8 */
+	.
+	.
+	.
+	}
 
-Changes from v1:
-	- added acks from Takashi Iwai
-	- dropped changes to one function in patch 04 thanks to review
-	  from Alan Stern
-	- typo fix in comment in patch 01
-	- added new patch 11 to remove some unneeded checks in the sound
-	  drivers for endpoint statuses that would always be true.
+dumps the struct rq {...}; which means one can easily use that to autogenerate
+a header containing the structs they care about accessing for their running
+kernel.
 
-*** BLURB HERE ***
+pahole automatically knows how to find /sys/kernel/btf/vmlinux to parse the
+debug info btw.
 
-Greg Kroah-Hartman (11):
-  USB: move snd_usb_pipe_sanity_check into the USB core
-  USB: add usb_control_msg_send() and usb_control_msg_recv()
-  USB: core: message.c: use usb_control_msg_send() in a few places
-  USB: core: hub.c: use usb_control_msg_send() in a few places
-  USB: legousbtower: use usb_control_msg_recv()
-  sound: usx2y: move to use usb_control_msg_send()
-  sound: 6fire: move to use usb_control_msg_send() and
-    usb_control_msg_recv()
-  sound: line6: move to use usb_control_msg_send() and
-    usb_control_msg_recv()
-  sound: hiface: move to use usb_control_msg_send()
-  Bluetooth: ath3k: use usb_control_msg_send() and
-    usb_control_msg_recv()
-  ALSA: remove calls to usb_pipe_type_check for control endpoints
+The only caveat is that one has to recompile the module for each running
+kernel; but that's acceptable I think. Not sure how many allow loading a module
+that's not compiled for that particular kernel version anyway.
 
- drivers/bluetooth/ath3k.c       |  90 +++++------------
- drivers/usb/core/hub.c          |  99 ++++++++----------
- drivers/usb/core/message.c      | 171 ++++++++++++++++++++++++++++----
- drivers/usb/core/urb.c          |  31 ++++--
- drivers/usb/misc/legousbtower.c |  60 ++++-------
- include/linux/usb.h             |   7 ++
- sound/usb/6fire/firmware.c      |  38 +++----
- sound/usb/helper.c              |  16 +--
- sound/usb/helper.h              |   1 -
- sound/usb/hiface/pcm.c          |  14 ++-
- sound/usb/line6/driver.c        |  69 +++++--------
- sound/usb/line6/podhd.c         |  17 ++--
- sound/usb/line6/toneport.c      |   8 +-
- sound/usb/mixer_scarlett_gen2.c |   2 +-
- sound/usb/quirks.c              |  12 +--
- sound/usb/usx2y/us122l.c        |  42 ++------
- 16 files changed, 335 insertions(+), 342 deletions(-)
+Note to try this you'll need pahole v1.16 or newer. And compiling pahole on
+Ubuntu is a pain. I had to create a fedora docker image to compile it in.
 
--- 
-2.28.0
+So I think we have this already solved. Though not sure how to document it..
 
+Thanks
+
+--
+Qais Yousef
