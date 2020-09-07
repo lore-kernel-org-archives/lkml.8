@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A49C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18938C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 076C3208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D6F208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497274;
-	bh=zPaXF53HJOhCMm4iH+1r//KMldENlKCw7dZCzzwKWwo=;
+	s=default; t=1599497291;
+	bh=RVxEar8vD0mPwWMghOaEsGuVyW2pF6wXmGmSCVwUICY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRGd6jU8KWO0T7YoQbH36u4Ka28Nbf+y4IFAd7FRaU7T5GcTr9jq5cfQQmCm/6ujv
-	 TWx5h5xZ96yJ1sXIpvKAF1nMDBhZuUjMGvmAJWPEAu4J+8nlIKhOvCrUEnu09EWRU0
-	 j0d758+JwvlADxoittPODPzlQ/KBQ8qe32misuaY=
+	b=pIBpIc3EBShGTZu9OsFliB0Suu0g6TiO1qiPKBOCg9EOnHA5Vzn4M6c1ngPMZ/zbh
+	 lkg2AezHVW+UFARILo5P0R1wKAGqR9nuPXIYME2q46/hKQBTO1RliF7ZrWLQpR6JJV
+	 aoNmu7OPP6LOFSBw6mb/t9Itg2T8M1zcxe7i++lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgIGQru (ORCPT
+        id S1730668AbgIGQsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:47:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49184 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:48:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730823AbgIGQfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:17 -0400
+        id S1730775AbgIGQfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19645221EF;
-        Mon,  7 Sep 2020 16:35:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A86421D80;
+        Mon,  7 Sep 2020 16:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496517;
-        bh=zPaXF53HJOhCMm4iH+1r//KMldENlKCw7dZCzzwKWwo=;
+        s=default; t=1599496513;
+        bh=RVxEar8vD0mPwWMghOaEsGuVyW2pF6wXmGmSCVwUICY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwByrt4R45GT8tIFkTrzM7+ZMZuSF6c8VjX0b2UvnbPkcKBIjgupSZHskwFm1t3rJ
-         j9mcHAzwhtfWmpMgzh/YVnjbkWRtqknJEnB/Y0Xg7JmsupnyFOhWgc5PRn0taUvxB1
-         mstOri2cobA7annXs9FruBC3rUXXqVEeyv7jiMKI=
+        b=yUeLWVY0p26iz4jUflNlfh1HtsPKsJRvlPZH5iBUzvCR/f3MPfTrtd2pnWxUceQZb
+         ZpFSrO8IdNKalz+dSFyArawISueFeC6s/2Be6Lr5YiRcbwh22amV92c7ScW34ggjJ/
+         EnUglzJcU3A2U37WJjGEkSDuHTauSotHTipTMlIs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
-        Krzysztof Halasa <khc@pm.waw.pl>,
+Cc:     Himadri Pandya <himadrispandya@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/17] drivers/net/wan/hdlc_cisco: Add hard_header_len
-Date:   Mon,  7 Sep 2020 12:34:55 -0400
-Message-Id: <20200907163500.1281543-12-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/17] net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
+Date:   Mon,  7 Sep 2020 12:34:52 -0400
+Message-Id: <20200907163500.1281543-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
 References: <20200907163500.1281543-1-sashal@kernel.org>
@@ -60,38 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Himadri Pandya <himadrispandya@gmail.com>
 
-[ Upstream commit 1a545ebe380bf4c1433e3c136e35a77764fda5ad ]
+[ Upstream commit a092b7233f0e000cc6f2c71a49e2ecc6f917a5fc ]
 
-This driver didn't set hard_header_len. This patch sets hard_header_len
-for it according to its header_ops->create function.
+The buffer size is 2 Bytes and we expect to receive the same amount of
+data. But sometimes we receive less data and run into uninit-was-stored
+issue upon read. Hence modify the error check on the return value to match
+with the buffer size as a prevention.
 
-This driver's header_ops->create function (cisco_hard_header) creates
-a header of (struct hdlc_header), so hard_header_len should be set to
-sizeof(struct hdlc_header).
-
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
+Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
+Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/hdlc_cisco.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/usb/asix_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
-index a408abc25512a..7f99fb666f196 100644
---- a/drivers/net/wan/hdlc_cisco.c
-+++ b/drivers/net/wan/hdlc_cisco.c
-@@ -377,6 +377,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
- 		memcpy(&state(hdlc)->settings, &new_settings, size);
- 		spin_lock_init(&state(hdlc)->lock);
- 		dev->header_ops = &cisco_header_ops;
-+		dev->hard_header_len = sizeof(struct hdlc_header);
- 		dev->type = ARPHRD_CISCO;
- 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
- 		netif_dormant_on(dev);
+diff --git a/drivers/net/usb/asix_common.c b/drivers/net/usb/asix_common.c
+index e9fcf6ef716a8..9bf18127e63a1 100644
+--- a/drivers/net/usb/asix_common.c
++++ b/drivers/net/usb/asix_common.c
+@@ -309,7 +309,7 @@ int asix_read_phy_addr(struct usbnet *dev, int internal)
+ 
+ 	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
+ 
+-	if (ret < 0) {
++	if (ret < 2) {
+ 		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
