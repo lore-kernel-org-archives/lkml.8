@@ -2,108 +2,377 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A71AC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B759C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:23:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="oNpsNk5/"
+	by mail.kernel.org (Postfix) with ESMTP id 6C3402078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730112AbgIGPXA (ORCPT
+        id S1729942AbgIGPYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:23:00 -0400
-Received: from mail-am6eur05on2099.outbound.protection.outlook.com ([40.107.22.99]:27521
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730070AbgIGPVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:21:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HbSZYDucA5jA54Oq2d0BkzkyqPPsTW/0j6pF9QGidXCrvpyypFfzpxtnxhKLAiRZb8a3Rt9jQdsnjGG8LIRirUeVnLubSLeWVy5IfvO2/501z2YJ5T+O7mymWY72irM5QywT4+yn43K9eRArOj/OIaBS3r0xUU/oULE05cAY6l+jmPdtVE0d1mYreUaxnMHm2ImLY85BAEZRL0WkWrRP3or0OBKREsYd63GyExmHZiiCzAYxfYy/SqwcINuPsCCCYk1/sujnsX2IYqd7EbDeR3yMmXy1yhBeJjYO50rutpdVcyMApw+C8u6ypssaQGd8saHnTowXSBpnnHKFatU7/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKbAOcf0S4+Jb9bYEtxTtEOgkSOjxwy+x/YQ6O8+/UM=;
- b=l/OUKODrcpNAqL+QTUzOkBK3EmbzOPSeIT5OGx535LYKcZuPPToSYaOVEUrTDILONuFv9GZ3HyEVzcWDgq6aKdNlNQEuT/tES3y2N3Q+lzU6y4LC0YxfB/T2qXPVlT78z+9lN35g8cmW2BTg21n3jnjh4jcWqKVq5kFzUq8Zs6M1OJFGjZYhXWdWqyaHXtEp0NmbLFv6LcRQw7nL5T68Zn7yuE2xYVNywmU+sp3Lq8qGIWY+dD/IKCw+AlOClRJZv/stfQ7y+l3pic3fgkW4eCrHpBfu27OhSwABwyJcsLGEylKv6yR1N6LxvKx5kb4JeNggkJRZ3RyNdapwX1C0oA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
- dkim=pass header.d=habana.ai; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZKbAOcf0S4+Jb9bYEtxTtEOgkSOjxwy+x/YQ6O8+/UM=;
- b=oNpsNk5/aHYo/HdFkWYab254QqyJHmzYNOeanPFHR30HEbeQDJPqpIxb9ir8Q1/hqifZYj/PZr1vaUrVBrF02zFL3t+6S4QZxKaxcS03aVU6b2uOB9G+FUvJU04sOyFkL/2zWGuebS1UNOg9za1oYhzhYpUS8220GRxr58XNLmM=
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com (2603:10a6:10:ef::22)
- by DB6PR0201MB2389.eurprd02.prod.outlook.com (2603:10a6:4:33::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
- 2020 15:20:55 +0000
-Received: from DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::95e1:b3c:ddde:4c32]) by DB8PR02MB5468.eurprd02.prod.outlook.com
- ([fe80::95e1:b3c:ddde:4c32%4]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 15:20:55 +0000
-From:   Tomer Tayar <ttayar@habana.ai>
-To:     Oded Gabbay <oded.gabbay@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SW_Drivers <SW_Drivers@habana.ai>
-Subject: RE: [PATCH 6/6] habanalabs: check flag before reset because of f/w
- event
-Thread-Topic: [PATCH 6/6] habanalabs: check flag before reset because of f/w
- event
-Thread-Index: AQHWguu65u1yRXRl/061mkUfYix4q6ldTuSw
-Date:   Mon, 7 Sep 2020 15:20:55 +0000
-Message-ID: <DB8PR02MB5468E5717B7EA94B19A80383D2280@DB8PR02MB5468.eurprd02.prod.outlook.com>
-References: <20200904184623.13478-1-oded.gabbay@gmail.com>
- <20200904184623.13478-6-oded.gabbay@gmail.com>
-In-Reply-To: <20200904184623.13478-6-oded.gabbay@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=habana.ai;
-x-originating-ip: [31.154.181.186]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f6176fd0-c57b-48b3-c87b-08d853419d79
-x-ms-traffictypediagnostic: DB6PR0201MB2389:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR0201MB238955248BB81CE55F738353D2280@DB6PR0201MB2389.eurprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TlKEXPiK+UOesKEIKFy3feBS48XLAflzv43/u4DNZqEXdbWUiduZ9H8iu0OTrqbMFXwBkhHXAHpM7XA2Uq+A5CVSInqY+95QQrLikdBn4quz7T6nORzW6cTTXz0kvUZSPX0YXUUY7E+QGPD3/4kecbxyWZx9ZOb9lUlnNExGeRbZKn/bHeivQFLLWuPcARhQlYVI90GrnenLIxvVnri8nYkv6vLOulWTvO4CjxFiIEaGPqjw3aImkECSl139TtRKLdv3PId5zjR9FGEN2Bc3K5QZX511uc3OGfvx6bICwyVUwS1KhY8XL2XCw8aGRKL7
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5468.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(136003)(39850400004)(346002)(396003)(186003)(86362001)(558084003)(5660300002)(26005)(66476007)(66556008)(53546011)(110136005)(6506007)(478600001)(33656002)(52536014)(2906002)(8676002)(66946007)(8936002)(7696005)(316002)(64756008)(9686003)(71200400001)(55016002)(76116006)(6636002)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 2XQkdVQZFFDGUIbA/+cbiPI2yYKkpXTzHBhzxqzhNcVxelu4N7/5bjWX2nWm8fxWinKvy+1weZtXeNWjwrQMdmxPgDwfcYFySWr5FcccqPdi/PMCxU+iRAN32S9MDXlm/CdZXdhpyMgxTFPjZe/rHOJcORsdGPTj/4mePBq8XlKmO03+qWD5pZOSSO8c+I33JJjg8lydTI9f2i2ocWl+HfC9zu0DWKe/lPxDKWpoQLMBbOKurNoxH6TC/COH4ooqHQqJvMiho2gfQPddx6naXQjJsxNejVaPgtb1Bvu6k3avrcrzPAynvFgR7r3ppvn8Nc+znQtoI1OkE0d6ZdUGjuQoCoxD1/7Q/jlsUbDJWTr1xTI95B7V3RAv/x27r7jfFsVFB9qhW6LJbyqX1CzdBJ54GyRr7MximBNpHJ4QlRv0ZUzvHKzlmeYx4sQ7WaZ/SSeuVpSXYSISUKikpWjxRzrd6N1EeBJKlF/h5uM4It1WXc5AazPl2iYCeOxNyrgug+tomcrNobtAkmG3IYGMcP9KkPaY7I2B2Z+brHvQ3TfMRWy7E/bHBwlwBzovfscdoDsjG33aQM4nQebEsad6sO2WdEkij54g5QP53aKhlFPDd2rIU+GSZ8ObcjSkX301NRgk3Tmui9g5GtwqjhR2pA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: habana.ai
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5468.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6176fd0-c57b-48b3-c87b-08d853419d79
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 15:20:55.2459
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CEtiURbglXCavOV0ZhaH9USlqzLVvV8rFfTnO/90aefjsnS24Y7qSz0r1Tq+kFnDKfCGYyVKJyq1v5NwI5v3gQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0201MB2389
+        Mon, 7 Sep 2020 11:24:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:46808 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729826AbgIGPVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:21:37 -0400
+IronPort-SDR: 7Gl1WGu0PjPObo6iaCQ3N5ytkPPV+H/3uPOqmfAC9GbFCrpoX6OZHaL7HzvBbpIfkPy7/fK/fO
+ mrrIxOmxx0kQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="145723310"
+X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
+   d="scan'208";a="145723310"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 08:21:17 -0700
+IronPort-SDR: 7zLtq05ymGQw3PlMk+sXpReSi9epU6jZPa1KJG3Rvq/Na75v0x0ieihEq1DTXMvhPGCVJhbzf9
+ Y5SgLM+3rpSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
+   d="scan'208";a="328121980"
+Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
+  by fmsmga004.fm.intel.com with ESMTP; 07 Sep 2020 08:21:14 -0700
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     broonie@kernel.org, lee.jones@linaro.org,
+        linux-kernel@vger.kernel.org
+Cc:     trix@redhat.com, yilun.xu@intel.com,
+        matthew.gerlach@linux.intel.com, russell.h.weight@intel.com,
+        lgoncalv@redhat.com, hao.wu@intel.com, mdf@kernel.org
+Subject: [PATCH v5] mfd: intel-m10-bmc: add Intel MAX 10 BMC chip support for Intel FPGA PAC
+Date:   Mon,  7 Sep 2020 23:16:53 +0800
+Message-Id: <1599491813-20819-1-git-send-email-yilun.xu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 4, 2020 at 21:46 Oded Gabbay <oded.gabbay@gmail.com> wrote:
-> For consistency with GAUDI code, add check of the relevant flag in the
-> device structure before resetting the GOYA device in case of firmware
-> event.
->=20
-> Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+This patch implements the basic functions of the BMC chip for some Intel
+FPGA PCIe Acceleration Cards (PAC). The BMC is implemented using the
+Intel MAX 10 CPLD.
 
-This patch-set is:
-Reviewed-by: Tomer Tayar <ttayar@habana.ai>
+This BMC chip is connected to the FPGA by a SPI bus. To provide direct
+register access from the FPGA, the "SPI slave to Avalon Master Bridge"
+(spi-avmm) IP is integrated in the chip. It converts encoded streams of
+bytes from the host to the internal register read/write on the Avalon
+bus. So This driver uses the regmap-spi-avmm for register accessing.
+
+Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+Signed-off-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+Reviewed-by: Tom Rix <trix@redhat.com>
+---
+v2: Split out the regmap-spi-avmm part.
+    Rename the file intel-m10-bmc-main.c to intel-m10-bmc.c, cause
+     there is only one source file left for this module now.
+v3: Add the sub devices in mfd_cell.
+    Some minor fixes.
+v4: No change.
+v5: Changes the names of mfd_cell.
+    Use ATTRIBUTE_GROUPS() to simplify the code.
+    Use the generic 'ddata' for the instance of struct intel_m10bmc.
+    More comments to clarify the function check_m10bmc_version().
+    Some minor fixes.
+---
+ .../ABI/testing/sysfs-driver-intel-m10-bmc         |  15 ++
+ drivers/mfd/Kconfig                                |  13 ++
+ drivers/mfd/Makefile                               |   2 +
+ drivers/mfd/intel-m10-bmc.c                        | 162 +++++++++++++++++++++
+ include/linux/mfd/intel-m10-bmc.h                  |  56 +++++++
+ 5 files changed, 248 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+ create mode 100644 drivers/mfd/intel-m10-bmc.c
+ create mode 100644 include/linux/mfd/intel-m10-bmc.h
+
+diff --git a/Documentation/ABI/testing/sysfs-driver-intel-m10-bmc b/Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+new file mode 100644
+index 0000000..979a2d6
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-driver-intel-m10-bmc
+@@ -0,0 +1,15 @@
++What:		/sys/bus/spi/devices/.../bmc_version
++Date:		June 2020
++KernelVersion:	5.10
++Contact:	Xu Yilun <yilun.xu@intel.com>
++Description:	Read only. Returns the hardware build version of Intel
++		MAX10 BMC chip.
++		Format: "0x%x".
++
++What:		/sys/bus/spi/devices/.../bmcfw_version
++Date:		June 2020
++KernelVersion:	5.10
++Contact:	Xu Yilun <yilun.xu@intel.com>
++Description:	Read only. Returns the firmware version of Intel MAX10
++		BMC chip.
++		Format: "0x%x".
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2310959..7b2252c 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -2118,5 +2118,18 @@ config SGI_MFD_IOC3
+ 	  If you have an SGI Origin, Octane, or a PCI IOC3 card,
+ 	  then say Y. Otherwise say N.
+ 
++config MFD_INTEL_M10_BMC
++	tristate "Intel MAX 10 Board Management Controller"
++	depends on SPI_MASTER
++	select REGMAP_SPI_AVMM
++	select MFD_CORE
++	help
++	  Support for the Intel MAX 10 board management controller using the
++	  SPI interface.
++
++	  This driver provides common support for accessing the device,
++	  additional drivers must be enabled in order to use the functionality
++	  of the device.
++
+ endmenu
+ endif
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index a60e5f8..dd2cc7b 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -264,3 +264,5 @@ obj-$(CONFIG_MFD_STMFX) 	+= stmfx.o
+ obj-$(CONFIG_MFD_KHADAS_MCU) 	+= khadas-mcu.o
+ 
+ obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
++
++obj-$(CONFIG_MFD_INTEL_M10_BMC)   += intel-m10-bmc.o
+diff --git a/drivers/mfd/intel-m10-bmc.c b/drivers/mfd/intel-m10-bmc.c
+new file mode 100644
+index 0000000..23168f99
+--- /dev/null
++++ b/drivers/mfd/intel-m10-bmc.c
+@@ -0,0 +1,162 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Intel MAX 10 Board Management Controller chip
++ *
++ * Copyright (C) 2018-2020 Intel Corporation. All rights reserved.
++ */
++#include <linux/bitfield.h>
++#include <linux/init.h>
++#include <linux/mfd/core.h>
++#include <linux/mfd/intel-m10-bmc.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/regmap.h>
++#include <linux/spi/spi.h>
++
++enum m10bmc_type {
++	M10_N3000,
++};
++
++static struct mfd_cell m10bmc_pacn3000_subdevs[] = {
++	{ .name = "n3000bmc-hwmon" },
++	{ .name = "n3000bmc-retimer" },
++	{ .name = "n3000bmc-secure" },
++};
++
++static struct regmap_config intel_m10bmc_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.max_register = M10BMC_MEM_END,
++};
++
++static ssize_t bmc_version_show(struct device *dev,
++				struct device_attribute *attr, char *buf)
++{
++	struct intel_m10bmc *ddata = dev_get_drvdata(dev);
++	unsigned int val;
++	int ret;
++
++	ret = m10bmc_sys_read(ddata, M10BMC_BUILD_VER, &val);
++	if (ret)
++		return ret;
++
++	return sprintf(buf, "0x%x\n", val);
++}
++static DEVICE_ATTR_RO(bmc_version);
++
++static ssize_t bmcfw_version_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct intel_m10bmc *ddata = dev_get_drvdata(dev);
++	unsigned int val;
++	int ret;
++
++	ret = m10bmc_sys_read(ddata, NIOS2_FW_VERSION, &val);
++	if (ret)
++		return ret;
++
++	return sprintf(buf, "0x%x\n", val);
++}
++static DEVICE_ATTR_RO(bmcfw_version);
++
++static struct attribute *m10bmc_attrs[] = {
++	&dev_attr_bmc_version.attr,
++	&dev_attr_bmcfw_version.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(m10bmc);
++
++static int check_m10bmc_version(struct intel_m10bmc *ddata)
++{
++	unsigned int v;
++	int ret;
++
++	/*
++	 * This check is to filter out the very old legacy BMC versions,
++	 * M10BMC_LEGACY_SYS_BASE is the offset to this old block of mmio
++	 * registers. In the old BMC chips, the BMC version info is stored
++	 * in this old version register, so its read out value would have not
++	 * been 0xffffffff. But in new BMC chips that the driver supports, it
++	 * is 0xffffffff.
++	 */
++	ret = m10bmc_raw_read(ddata,
++			      M10BMC_LEGACY_SYS_BASE + M10BMC_BUILD_VER, &v);
++	if (ret)
++		return -ENODEV;
++
++	if (v != 0xffffffff) {
++		dev_err(ddata->dev, "bad version M10BMC detected\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int intel_m10_bmc_spi_probe(struct spi_device *spi)
++{
++	const struct spi_device_id *id = spi_get_device_id(spi);
++	struct device *dev = &spi->dev;
++	struct mfd_cell *cells;
++	struct intel_m10bmc *ddata;
++	int ret, n_cell;
++
++	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
++
++	ddata->dev = dev;
++
++	ddata->regmap =
++		devm_regmap_init_spi_avmm(spi, &intel_m10bmc_regmap_config);
++	if (IS_ERR(ddata->regmap)) {
++		ret = PTR_ERR(ddata->regmap);
++		dev_err(dev, "Failed to allocate regmap: %d\n", ret);
++		return ret;
++	}
++
++	spi_set_drvdata(spi, ddata);
++
++	ret = check_m10bmc_version(ddata);
++	if (ret) {
++		dev_err(dev, "Failed to identify m10bmc hardware\n");
++		return ret;
++	}
++
++	switch (id->driver_data) {
++	case M10_N3000:
++		cells = m10bmc_pacn3000_subdevs;
++		n_cell = ARRAY_SIZE(m10bmc_pacn3000_subdevs);
++		break;
++	default:
++		return -ENODEV;
++	}
++
++	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_AUTO, cells, n_cell,
++				   NULL, 0, NULL);
++	if (ret)
++		dev_err(dev, "Failed to register sub-devices: %d\n", ret);
++
++	return ret;
++}
++
++static const struct spi_device_id m10bmc_spi_id[] = {
++	{ "m10-n3000", M10_N3000 },
++	{ }
++};
++MODULE_DEVICE_TABLE(spi, m10bmc_spi_id);
++
++static struct spi_driver intel_m10bmc_spi_driver = {
++	.driver = {
++		.name = "intel-m10-bmc",
++		.dev_groups = m10bmc_groups,
++	},
++	.probe = intel_m10_bmc_spi_probe,
++	.id_table = m10bmc_spi_id,
++};
++module_spi_driver(intel_m10bmc_spi_driver);
++
++MODULE_DESCRIPTION("Intel MAX 10 BMC Device Driver");
++MODULE_AUTHOR("Intel Corporation");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("spi:intel-m10-bmc");
+diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
+new file mode 100644
+index 0000000..8520178
+--- /dev/null
++++ b/include/linux/mfd/intel-m10-bmc.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Intel MAX 10 Board Management Controller chip.
++ *
++ * Copyright (C) 2018-2020 Intel Corporation, Inc.
++ */
++#ifndef __MFD_INTEL_M10_BMC_H
++#define __MFD_INTEL_M10_BMC_H
++
++#include <linux/regmap.h>
++
++#define M10BMC_LEGACY_SYS_BASE		0x300400
++#define M10BMC_SYS_BASE			0x300800
++#define M10BMC_MEM_END			0x200000fc
++
++/* Register offset of system registers */
++#define NIOS2_FW_VERSION		0x0
++#define M10BMC_TEST_REG			0x3c
++#define M10BMC_BUILD_VER		0x68
++#define M10BMC_VER_MAJOR_MSK		GENMASK(23, 16)
++#define M10BMC_VER_PCB_INFO_MSK		GENMASK(31, 24)
++
++/**
++ * struct intel_m10bmc - Intel MAX 10 BMC parent driver data structure
++ * @dev: this device
++ * @regmap: the regmap used to access registers by m10bmc itself
++ */
++struct intel_m10bmc {
++	struct device *dev;
++	struct regmap *regmap;
++};
++
++/*
++ * register access helper functions.
++ *
++ * m10bmc_raw_read - read m10bmc register per addr
++ * m10bmc_sys_read - read m10bmc system register per offset
++ */
++static inline int
++m10bmc_raw_read(struct intel_m10bmc *m10bmc, unsigned int addr,
++		unsigned int *val)
++{
++	int ret;
++
++	ret = regmap_read(m10bmc->regmap, addr, val);
++	if (ret)
++		dev_err(m10bmc->dev, "fail to read raw reg %x: %d\n",
++			addr, ret);
++
++	return ret;
++}
++
++#define m10bmc_sys_read(m10bmc, offset, val) \
++	m10bmc_raw_read(m10bmc, M10BMC_SYS_BASE + (offset), val)
++
++#endif /* __MFD_INTEL_M10_BMC_H */
+-- 
+2.7.4
+
