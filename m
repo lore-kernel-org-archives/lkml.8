@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13804C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4836E20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4ED420838
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G1buQ9PM"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hEYF4PSl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgIGF7N (ORCPT
+        id S1727027AbgIGF7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 01:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49044 "EHLO
+        Mon, 7 Sep 2020 01:59:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbgIGF6i (ORCPT
+        with ESMTP id S1726802AbgIGF6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 01:58:38 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32D1C061757;
-        Sun,  6 Sep 2020 22:58:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCF0CC061756;
+        Sun,  6 Sep 2020 22:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=QKmvOnnTVM0cYTahP4FVnPiXurVXegESFen5M4G3dfE=; b=G1buQ9PMxmdJgetN+VLd+kaOqN
-        TRUHXmXYBmWIvlhH0FDjdYtVMcgRVbyr8nFISWh9K2oDNbcOgvsbxE/HzfN8wYMNd4SmM0oXH4QTC
-        kDMLmo4miwehgrgoy5g92HqmcmGTjav7b8OyY5x++3tPs8DptjMtqlY+ojERSpeosWVBz+fc295br
-        eUJKm8G0dM3HXDiTItycZRh9jiNOtgOr9Z4DCJLGDGjFdTW1j8ppJFItTLFFzGELGlgTObsD1Efzg
-        DV+pcFKG/1b1GALVuIaYbJA8y/zgIh06WiEscM4jmH3IWVHc0Znr9s83hr7cczGBj8EKdPr7j/sGI
-        YKRtfsuw==;
+        bh=LZG506isFI0SSgZ6Zw+vMgWmYh0hewhmkGW4YKK3Ono=; b=hEYF4PSl9zeran7ag2rqjrqpS+
+        F5YHwGNHRtUS/Z2Jy9aT/DAniqZ1qGd8gaILOKip2LnfpJ6kCpY+MIDo0A15yM5WxzPKOVdDJL34G
+        oE8EBQwCz4G+IKkBMhP4/mRP4MXhf2D2smtrEYKj08iYpqhmQlRGMZV9pXsr1Yl+Ng649ggawxTBp
+        +HA2Nd09IHgmGMDBpn5zLsUDLH6GTwUQ9wB2LKQUI7TK7bYmgAADrm7kitmH7hb53jBlhFYnQGya7
+        dsKZQzhaFoxG6l9zVTDaNFfsu68KbENJX/9W82Z5FihOVKoQ83g0PrrgdmHTgoaktJZ8LAjuUv4e6
+        ffZQ6t1A==;
 Received: from [2001:4bb8:184:af1:e178:97b2:ac6b:4e16] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFAAi-00035h-VR; Mon, 07 Sep 2020 05:58:33 +0000
+        id 1kFAAg-00035H-HT; Mon, 07 Sep 2020 05:58:30 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -46,9 +46,9 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org
-Subject: [PATCH 5/8] riscv: use memcpy based uaccess for nommu again
-Date:   Mon,  7 Sep 2020 07:58:22 +0200
-Message-Id: <20200907055825.1917151-6-hch@lst.de>
+Subject: [PATCH 3/8] asm-generic: add nommu implementations of __{get,put}_kernel_nofault
+Date:   Mon,  7 Sep 2020 07:58:20 +0200
+Message-Id: <20200907055825.1917151-4-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907055825.1917151-1-hch@lst.de>
 References: <20200907055825.1917151-1-hch@lst.de>
@@ -60,95 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit adccfb1a805ea84d2db38eb53032533279bdaa97.
-
-Now that the generic uaccess by mempcy code handles unaligned addresses
-the generic code can be used for all RISC-V CPUs.
+Add native implementations of __{get,put}_kernel_nofault using
+{get,put}_unaligned, just like the {get,put}_user implementations.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/riscv/Kconfig               |  1 +
- arch/riscv/include/asm/uaccess.h | 36 ++++++++++++++++----------------
- arch/riscv/lib/Makefile          |  2 +-
- 3 files changed, 20 insertions(+), 19 deletions(-)
+ include/asm-generic/uaccess.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 07d53044013ede..460e3971a80fde 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -87,6 +87,7 @@ config RISCV
- 	select SYSCTL_EXCEPTION_TRACE
- 	select THREAD_INFO_IN_TASK
- 	select SET_FS
-+	select UACCESS_MEMCPY if !MMU
+diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
+index 6de5f524e9e631..b367f339be1a90 100644
+--- a/include/asm-generic/uaccess.h
++++ b/include/asm-generic/uaccess.h
+@@ -61,6 +61,22 @@ static inline int __put_user_fn(size_t size, void __user *to, void *from)
+ }
+ #define __put_user_fn(sz, u, k)	__put_user_fn(sz, u, k)
  
- config ARCH_MMAP_RND_BITS_MIN
- 	default 18 if 64BIT
-diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-index f56c66b3f5fe21..e8eedf22e90747 100644
---- a/arch/riscv/include/asm/uaccess.h
-+++ b/arch/riscv/include/asm/uaccess.h
-@@ -13,24 +13,6 @@
- /*
-  * User space memory access functions
-  */
--
--extern unsigned long __must_check __asm_copy_to_user(void __user *to,
--	const void *from, unsigned long n);
--extern unsigned long __must_check __asm_copy_from_user(void *to,
--	const void __user *from, unsigned long n);
--
--static inline unsigned long
--raw_copy_from_user(void *to, const void __user *from, unsigned long n)
--{
--	return __asm_copy_from_user(to, from, n);
--}
--
--static inline unsigned long
--raw_copy_to_user(void __user *to, const void *from, unsigned long n)
--{
--	return __asm_copy_to_user(to, from, n);
--}
--
- #ifdef CONFIG_MMU
- #include <linux/errno.h>
- #include <linux/compiler.h>
-@@ -385,6 +367,24 @@ do {								\
- 		-EFAULT;					\
- })
- 
++#define __get_kernel_nofault(dst, src, type, err_label)			\
++do {									\
++	*((type *)dst) = get_unaligned((type *)(src));			\
++	if (0) /* make sure the label looks used to the compiler */	\
++		goto err_label;						\
++} while (0)
 +
-+unsigned long __must_check __asm_copy_to_user(void __user *to,
-+	const void *from, unsigned long n);
-+unsigned long __must_check __asm_copy_from_user(void *to,
-+	const void __user *from, unsigned long n);
++#define __put_kernel_nofault(dst, src, type, err_label)			\
++do {									\
++	put_unaligned(*((type *)src), (type *)(dst));			\
++	if (0) /* make sure the label looks used to the compiler */	\
++		goto err_label;						\
++} while (0)
 +
-+static inline unsigned long
-+raw_copy_from_user(void *to, const void __user *from, unsigned long n)
-+{
-+	return __asm_copy_from_user(to, from, n);
-+}
++#define HAVE_GET_KERNEL_NOFAULT 1
 +
-+static inline unsigned long
-+raw_copy_to_user(void __user *to, const void *from, unsigned long n)
-+{
-+	return __asm_copy_to_user(to, from, n);
-+}
-+
- extern long strncpy_from_user(char *dest, const char __user *src, long count);
- 
- extern long __must_check strlen_user(const char __user *str);
-diff --git a/arch/riscv/lib/Makefile b/arch/riscv/lib/Makefile
-index 0d0db80800c4ed..47e7a82044608d 100644
---- a/arch/riscv/lib/Makefile
-+++ b/arch/riscv/lib/Makefile
-@@ -2,5 +2,5 @@
- lib-y			+= delay.o
- lib-y			+= memcpy.o
- lib-y			+= memset.o
--lib-y			+= uaccess.o
-+lib-$(CONFIG_MMU)	+= uaccess.o
- lib-$(CONFIG_64BIT)	+= tishift.o
+ static inline __must_check unsigned long
+ raw_copy_from_user(void *to, const void __user * from, unsigned long n)
+ {
 -- 
 2.28.0
 
