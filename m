@@ -2,112 +2,324 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A50C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F384C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 403272145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE333208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="lJcGOUcO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgIGIJz (ORCPT
+        id S1727915AbgIGIKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:09:55 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:54229 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbgIGIIK (ORCPT
+        Mon, 7 Sep 2020 04:10:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727089AbgIGIJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:08:10 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MCKSA-1kOVaG32kE-009TDD; Mon, 07 Sep 2020 10:08:06 +0200
-Received: by mail-qk1-f178.google.com with SMTP id w12so12034242qki.6;
-        Mon, 07 Sep 2020 01:08:06 -0700 (PDT)
-X-Gm-Message-State: AOAM530Lt7Ge8htALiNSodmS8PmTmh+BjoiE+8cA1UYLOrBOl8V5RJDV
-        IeC1Y6UTU5iN0SxqcKFYEYToMMuuMzbI4QV+hPo=
-X-Google-Smtp-Source: ABdhPJyqFRCsrEeyEM7bZdvSSTo4jU+m6vlP8peN5tbIXRsYf0JCy1F91ON0vW5MemSI01VaMJ40x2L3jNNufU0/pXE=
-X-Received: by 2002:a05:620a:15a7:: with SMTP id f7mr11286689qkk.3.1599466085512;
- Mon, 07 Sep 2020 01:08:05 -0700 (PDT)
+        Mon, 7 Sep 2020 04:09:34 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DD84C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 01:09:33 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w5so14762838wrp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 01:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vISUpoBN1kH4usxTG/CMAMfOFxyeKd1cKFFqqtgy4bk=;
+        b=lJcGOUcOHcK+PvwscgOv8mOjWubWf7aPCn0R/nFJ3UdfU5otHdGYsr4fh96L2epaP3
+         oJPhmAqZEMpDEorQcMgSWWUEi3ep6NK8/u8nauxq/JJmkqB8fbMeVfyDajkzli8GnaXK
+         i2THOayjoaoeREPD7jK0JXwn4Td6qHMQKsxo4idqbZ2MRlFXdPZaGGWRFqWtj+zlg28o
+         O3FD5XFp7CG+X1vU39q6HOUgnnlRrauSJbc6/Edm+uDCPMTro6CqSKOGXpETqf8jmogH
+         yeQfQbHK30lPsShylfmL9Vj6BlVcLqT8NG4dl5Kxmc50pjZM3RgpO7eX3LvVgiVcCtD7
+         fQDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vISUpoBN1kH4usxTG/CMAMfOFxyeKd1cKFFqqtgy4bk=;
+        b=Yp/da4yrhTC4RAINQCH8toi1Pkenv2cBpK8FAif/9BMPaWK1ZS16xVlizx1OM7zrtk
+         akhqSxWxUPNN3WaIfR2QKwkfLxm9U7M+qntXwxfkuQbXTjnsHPbdjjN8u13aifvGEXvb
+         2bkggHQT2ENH8KqqmYyrnx/hpx9OowNcaC8qE4PvjseZ+Hkc3+EOKRbXnV67wKR25BBo
+         dd1oaL94at2W0l3dBlD3MRmMQcLlMoytEWCKStlnX5xME/i0wUnvkqO9NIm1OQxXsrNm
+         Wju+Ar9qCk11jxkfG3OXkOOYQJExmHr3rUzE5TDAIdQulnza8fuaUmij8lxrtrnMr8QS
+         0/xQ==
+X-Gm-Message-State: AOAM5302XlzhxDbh/KllwpguMt+yvjXBHADwifUuwBCSmQFza41+DK9J
+        YdzJqvgqBGmRmtiV87puto8xDA==
+X-Google-Smtp-Source: ABdhPJwFAZdjB34nPwosr9u5j8SAPdQKnOwIeeN9TWxKUejFCFHDRsCd0X6ECXt09AWpkZe/BUFPkw==
+X-Received: by 2002:adf:e6c2:: with SMTP id y2mr21872961wrm.117.1599466171895;
+        Mon, 07 Sep 2020 01:09:31 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac? ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id i1sm31339865wrc.49.2020.09.07.01.09.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 01:09:31 -0700 (PDT)
+Subject: Re: [PATCH v2] drm/bridge: dw-mipi-dsi.c: Add VPG runtime config
+ through debugfs
+To:     Angelo Ribeiro <Angelo.Ribeiro@synopsys.com>,
+        yannick.fertre@st.com, philippe.cornu@st.com,
+        benjamin.gaignard@st.com, airlied@linux.ie, daniel@ffwll.ch,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        pop.adrian61@gmail.com
+Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Joao Pinto <Joao.Pinto@synopsys.com>
+References: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <5ecbb66f-1f65-d4c4-3593-49c537378efe@baylibre.com>
+Date:   Mon, 7 Sep 2020 10:09:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200904165216.1799796-1-hch@lst.de> <20200904165216.1799796-4-hch@lst.de>
- <20200904180617.GQ1236603@ZenIV.linux.org.uk> <20200904223518.GR1236603@ZenIV.linux.org.uk>
-In-Reply-To: <20200904223518.GR1236603@ZenIV.linux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 7 Sep 2020 10:07:49 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1doHskr=8uPrGetCAtD7QTRS5r=cfy6VJSoDsnE0=Aaw@mail.gmail.com>
-Message-ID: <CAK8P3a1doHskr=8uPrGetCAtD7QTRS5r=cfy6VJSoDsnE0=Aaw@mail.gmail.com>
-Subject: Re: [PATCH 3/8] asm-generic: fix unaligned access hamdling in raw_copy_{from,to}_user
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Ik2qRdFlVdhAn6JlAoBbd2pfoR4wBUPqIA0T58RvXJbcT3gJL0+
- hEP0ai5JoiDyDAneCWS5Wcpic55XLbv81dv/XriuW8y9Xqz7991iEBQfpj854vci6JeFoO5
- vgrdMPMfvqsVIZfZqiD7ogeFAuaD8di4aqRPCXiEdd6f1u9oCxB9rU0c1suNZn4gcXav2Xx
- whITIG/sSh8P4PMRti/aw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SG9aYn68QoU=:/KyAVZouWZ2+3T5gAQXNRv
- gQNtxkxQ2YXy1Cdo5nSPRo8RslAqziUMSvKIGqBzIZb7vPWSZRx2i5v6Pa3ln87Ujyx9+k8rz
- YA4m9O76XmjPRAq7GLBHGshuWEEj062safYzLeIvu4/StAUQX19jSlghhMXf515cVzjhQcg1a
- f8Oe+4Jcq4SxLpoUAHT3YIlgwXCxk/G3LB//UOsS8D2KfbUXdvI32UUB2FU7SWy8yaS2UGEsZ
- n5gR9SakYDn8D1Pi3CDiNjWrZsebRxZH2P8auLne+Wt+lNdJD3v8jL/YJUN0scCituqGoPG/H
- LWfPeYxLcNVOGfE800WgA7qXVrwDskgEW0GuM9hP2PagRtbxtdI38HcclKiwuFQWX/5dOV1r6
- V+lIaazes8oPupL+VI8JMuHDgkJZC509ISun8nOcv7ShDnUYqHX5leXxh2u+NLcyA4Ljhb/1Y
- vP1pqGoj1ePAoTIvg4By2m2TGNR/GMCfUyEqkou9ehT/TDyvZd9w9GXdCiaBcSLpn1sexbIyB
- l0sIxn1qr7igUjRzj4r85sIMcJFjl7nRgOUpCEp2SjckG64BqWepef8hGv7W4/i+HYGqnkWtn
- rFRMnosE11RGe9Vxq4Q5pbAL1b423CTnKq7GkC/lqzx/+muDHwmcJpZ6+NvvNk9oYPFq7d8RE
- s4cUcTm4AdqXkHmTeucYc6xKehXzBjQix22I9i9mhFiJrGhl7+IFfhP1PHuZgry+FIlz/wSwD
- ex3JVwJOpxp1lReUjw5GudvQf56UG+xRo5Yk0G7WTTIpdZyCPZV+2ZoWgdjs50jojjNWvw+v7
- MSRnc7Gd+zD8IYOPRgxS1wIVVSZ3SxpIa6GsqDcwZqsp/WQJK45TZ0CuEZ63wYFWI0F6geQ
+In-Reply-To: <a809feb7d7153a92e323416f744f1565e995da01.1586180592.git.angelo.ribeiro@synopsys.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 5, 2020 at 12:35 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Fri, Sep 04, 2020 at 07:06:17PM +0100, Al Viro wrote:
-> > On Fri, Sep 04, 2020 at 06:52:11PM +0200, Christoph Hellwig wrote:
-> > > Use get_unaligned and put_unaligned for the small constant size cases
-> > > in the generic uaccess routines.  This ensures they can be used for
-> > > architectures that do not support unaligned loads and stores, while
-> > > being a no-op for those that do.
-> >
-> > Frankly, I would rather get rid of those constant-sized cases entirely;
-> > sure, we'd need to adjust asm-generic/uaccess.h defaults for __get_user(),
-> > but there that kind of stuff would make sense; in raw_copy_from_user()
-> > it really doesn't.
+Hi,
 
-Right. When I originally wrote that part of asm-generic/uaccess.h, the
-idea was that its __get_user()/__put_user() would end up being used
-across most architectures, which then would only have to implement
-custom __copy_from_user()/__copy_to_user() with those special cases
-to get the optimum behavior. It didn't work out in the end, since
-copy_from_user() also has to deal with unaligned or partial copies
-that prevent it from degrading into a single instruction on anything
-other than the simplest NOMMU architectures.
+On 06/04/2020 15:49, Angelo Ribeiro wrote:
+> Add support for the video pattern generator (VPG) BER pattern mode and
+> configuration in runtime.
+> 
+> This enables using the debugfs interface to manipulate the VPG after
+> the pipeline is set.
+> Also, enables the usage of the VPG BER pattern.
+> 
+> Changes in v2:
+>   - Added VID_MODE_VPG_MODE
+>   - Solved incompatible return type on __get and __set
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Reported-by: Adrian Pop <pop.adrian61@gmail.com>
+> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: Jose Abreu <jose.abreu@synopsys.com>
+> Signed-off-by: Angelo Ribeiro <angelo.ribeiro@synopsys.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 98 ++++++++++++++++++++++++---
+>  1 file changed, 90 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> index b18351b..9de3645 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
+> @@ -91,6 +91,7 @@
+>  #define VID_MODE_TYPE_BURST			0x2
+>  #define VID_MODE_TYPE_MASK			0x3
+>  #define VID_MODE_VPG_ENABLE		BIT(16)
+> +#define VID_MODE_VPG_MODE		BIT(20)
+>  #define VID_MODE_VPG_HORIZONTAL		BIT(24)
+>  
+>  #define DSI_VID_PKT_SIZE		0x3c
+> @@ -221,6 +222,21 @@
+>  #define PHY_STATUS_TIMEOUT_US		10000
+>  #define CMD_PKT_STATUS_TIMEOUT_US	20000
+>  
+> +#ifdef CONFIG_DEBUG_FS
+> +#define VPG_DEFS(name, dsi) \
+> +	((void __force *)&((*dsi).vpg_defs.name))
+> +
+> +#define REGISTER(name, mask, dsi) \
+> +	{ #name, VPG_DEFS(name, dsi), mask, dsi }
+> +
+> +struct debugfs_entries {
+> +	const char				*name;
+> +	bool					*reg;
+> +	u32					mask;
+> +	struct dw_mipi_dsi			*dsi;
+> +};
+> +#endif /* CONFIG_DEBUG_FS */
+> +
+>  struct dw_mipi_dsi {
+>  	struct drm_bridge bridge;
+>  	struct mipi_dsi_host dsi_host;
+> @@ -238,9 +254,12 @@ struct dw_mipi_dsi {
+>  
+>  #ifdef CONFIG_DEBUG_FS
+>  	struct dentry *debugfs;
+> -
+> -	bool vpg;
+> -	bool vpg_horizontal;
+> +	struct debugfs_entries *debugfs_vpg;
+> +	struct {
+> +		bool vpg;
+> +		bool vpg_horizontal;
+> +		bool vpg_ber_pattern;
+> +	} vpg_defs;
+>  #endif /* CONFIG_DEBUG_FS */
+>  
+>  	struct dw_mipi_dsi *master; /* dual-dsi master ptr */
+> @@ -530,9 +549,11 @@ static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
+>  		val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
+>  
+>  #ifdef CONFIG_DEBUG_FS
+> -	if (dsi->vpg) {
+> +	if (dsi->vpg_defs.vpg) {
+>  		val |= VID_MODE_VPG_ENABLE;
+> -		val |= dsi->vpg_horizontal ? VID_MODE_VPG_HORIZONTAL : 0;
+> +		val |= dsi->vpg_defs.vpg_horizontal ?
+> +		       VID_MODE_VPG_HORIZONTAL : 0;
+> +		val |= dsi->vpg_defs.vpg_ber_pattern ? VID_MODE_VPG_MODE : 0;
+>  	}
+>  #endif /* CONFIG_DEBUG_FS */
+>  
+> @@ -961,6 +982,68 @@ static const struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
+>  
+>  #ifdef CONFIG_DEBUG_FS
+>  
+> +int dw_mipi_dsi_debugfs_write(void *data, u64 val)
+> +{
+> +	struct debugfs_entries *vpg = data;
+> +	struct dw_mipi_dsi *dsi;
+> +	u32 mode_cfg;
+> +
+> +	if (!vpg)
+> +		return -ENODEV;
+> +
+> +	dsi = vpg->dsi;
+> +
+> +	*vpg->reg = (bool)val;
+> +
+> +	mode_cfg = dsi_read(dsi, DSI_VID_MODE_CFG);
+> +
+> +	if (*vpg->reg)
+> +		mode_cfg |= vpg->mask;
+> +	else
+> +		mode_cfg &= ~vpg->mask;
+> +
+> +	dsi_write(dsi, DSI_VID_MODE_CFG, mode_cfg);
+> +
+> +	return 0;
+> +}
+> +
+> +int dw_mipi_dsi_debugfs_show(void *data, u64 *val)
+> +{
+> +	struct debugfs_entries *vpg = data;
+> +
+> +	if (!vpg)
+> +		return -ENODEV;
+> +
+> +	*val = *vpg->reg;
+> +
+> +	return 0;
+> +}
+> +
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_mipi_dsi_debugfs_show,
+> +			 dw_mipi_dsi_debugfs_write, "%llu\n");
+> +
+> +static void debugfs_create_files(void *data)
+> +{
+> +	struct dw_mipi_dsi *dsi = data;
+> +	struct debugfs_entries debugfs[] = {
+> +		REGISTER(vpg, VID_MODE_VPG_ENABLE, dsi),
+> +		REGISTER(vpg_horizontal, VID_MODE_VPG_HORIZONTAL, dsi),
+> +		REGISTER(vpg_ber_pattern, VID_MODE_VPG_MODE, dsi),
+> +	};
+> +	int i;
+> +
+> +	dsi->debugfs_vpg = kmalloc(sizeof(debugfs), GFP_KERNEL);
+> +	if (!dsi->debugfs_vpg)
+> +		return;
+> +
+> +	memcpy(dsi->debugfs_vpg, debugfs, sizeof(debugfs));
+> +
+> +	for (i = 0; i < ARRAY_SIZE(debugfs); i++)
+> +		debugfs_create_file(dsi->debugfs_vpg[i].name, 0644,
+> +				    dsi->debugfs, &dsi->debugfs_vpg[i],
+> +				    &fops_x32);
+> +}
+> +
+>  static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
+>  {
+>  	dsi->debugfs = debugfs_create_dir(dev_name(dsi->dev), NULL);
+> @@ -969,14 +1052,13 @@ static void dw_mipi_dsi_debugfs_init(struct dw_mipi_dsi *dsi)
+>  		return;
+>  	}
+>  
+> -	debugfs_create_bool("vpg", 0660, dsi->debugfs, &dsi->vpg);
+> -	debugfs_create_bool("vpg_horizontal", 0660, dsi->debugfs,
+> -			    &dsi->vpg_horizontal);
+> +	debugfs_create_files(dsi);
+>  }
+>  
+>  static void dw_mipi_dsi_debugfs_remove(struct dw_mipi_dsi *dsi)
+>  {
+>  	debugfs_remove_recursive(dsi->debugfs);
+> +	kfree(dsi->debugfs_vpg);
+>  }
+>  
+>  #else
+> 
 
-I'd still hope we can eventually come up with a generic
-__get_user()/__put_user() helper that avoids all the common
-architecture specific bugs in them, with a simpler way for
-an architecture to hook into with a set of inline functions
-while leaving the macros to common code, but that can be
-done another time.
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
 
-> IOW, there's a scattering of potentially valid uses that might be better
-> off with get_user().  And there's generic non-MMU variant that gets
-> used in get_user()/__get_user() on h8300 and riscv.  This one *is*
-> valid, but I don't think that raw_copy_from_user() is the right layer
-> for that.
->
-> For raw_copy_to_user() the picture is similar.  And I'd like to get
-> rid of that magical crap.  Let's not make it harder...
+Applying to drm-misc-next
 
-Agreed
-
-         Arnd
+Thanks,
+Neil
