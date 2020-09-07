@@ -2,37 +2,40 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F2C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C76C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84058208C7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99F5208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 08:24:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgIGIYe (ORCPT
+        id S1728109AbgIGIYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 04:24:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:37764 "EHLO huawei.com"
+        Mon, 7 Sep 2020 04:24:48 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10780 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726997AbgIGIYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 04:24:32 -0400
+        id S1727952AbgIGIYj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 04:24:39 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A93C9ACA92DB2CE89C2A;
-        Mon,  7 Sep 2020 16:24:29 +0800 (CST)
+        by Forcepoint Email with ESMTP id C57BA7D37C42C6534C9F;
+        Mon,  7 Sep 2020 16:24:34 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 16:24:23 +0800
+ 14.3.487.0; Mon, 7 Sep 2020 16:24:26 +0800
 From:   Yang Shen <shenyang39@huawei.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
         <xuzaibo@huawei.com>, <wangzhou1@hisilicon.com>
-Subject: [PATCH v2 00/10] crypto: hisilicon/zip - misc clean up
-Date:   Mon, 7 Sep 2020 16:21:52 +0800
-Message-ID: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
+Subject: [PATCH v2 09/10] crypto: hisilicon/zip - supplement some comments
+Date:   Mon, 7 Sep 2020 16:22:01 +0800
+Message-ID: <1599466922-10323-10-git-send-email-shenyang39@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
+References: <1599466922-10323-1-git-send-email-shenyang39@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -42,35 +45,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset make some clean up:
-patch 1:remove useless parameters
-patch 4:replace 'sprintf' with 'scnprintf'
-patch 7:fix static check warning
-and the rest patch fix some coding style
+Supplement some comments.
 
-v2:
-- remove the return check of 'scnprintf' in PATCH 4
+Signed-off-by: Yang Shen <shenyang39@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+---
+ drivers/crypto/hisilicon/zip/zip_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Shukun Tan (1):
-  crypto: hisilicon/zip - modify debugfs interface parameters
-
-Yang Shen (9):
-  crypto: hisilicon/zip - remove some useless parameters
-  crypto: hisilicon/zip - unify naming style for functions and macros
-  crypto: hisilicon/zip - replace 'sprintf' with 'scnprintf'
-  crypto: hisilicon/zip - use a enum parameter instead of some macros
-  crypto: hisilicon/zip - add print for error branch
-  crypto: hisilicon/zip - fix static check warning
-  crypto: hisilicon/zip - move some private macros from 'zip.h' to
-    'zip_crypto.c'
-  crypto: hisilicon/zip - supplement some comments
-  crypto: hisilicon/zip - fix some coding styles
-
- drivers/crypto/hisilicon/zip/zip.h        |  15 ----
- drivers/crypto/hisilicon/zip/zip_crypto.c | 112 ++++++++++++++++++--------
- drivers/crypto/hisilicon/zip/zip_main.c   | 126 ++++++++++++++----------------
- 3 files changed, 135 insertions(+), 118 deletions(-)
-
---
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index dddb51d..d077cc4 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -285,7 +285,7 @@ static int hisi_zip_set_user_domain_and_cache(struct hisi_qm *qm)
+ 	writel(HZIP_DECOMP_CHECK_ENABLE | HZIP_ALL_COMP_DECOMP_EN,
+ 	       base + HZIP_CLOCK_GATE_CTRL);
+ 
+-	/* enable sqc writeback */
++	/* enable sqc,cqc writeback */
+ 	writel(SQC_CACHE_ENABLE | CQC_CACHE_ENABLE | SQC_CACHE_WB_ENABLE |
+ 	       CQC_CACHE_WB_ENABLE | FIELD_PREP(SQC_CACHE_WB_THRD, 1) |
+ 	       FIELD_PREP(CQC_CACHE_WB_THRD, 1), base + QM_CACHE_CTL);
+@@ -358,7 +358,7 @@ static int current_qm_write(struct ctrl_debug_file *file, u32 val)
+ 	if (val > qm->vfs_num)
+ 		return -EINVAL;
+ 
+-	/* Calculate curr_qm_qp_num and store */
++	/* According PF or VF Dev ID to calculation curr_qm_qp_num and store */
+ 	if (val == 0) {
+ 		qm->debug.curr_qm_qp_num = qm->qp_num;
+ 	} else {
+-- 
 2.7.4
 
