@@ -2,98 +2,92 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37DEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E56BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74026207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F2E206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t2B6+jHg"
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J1vbJMbE";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="VAeAUM/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgIGQKd (ORCPT
+        id S1729915AbgIGQLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:10:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729933AbgIGOds (ORCPT
+        Mon, 7 Sep 2020 12:11:40 -0400
+Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:51662
+        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730325AbgIGQKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:33:48 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679C5C061574;
-        Mon,  7 Sep 2020 07:33:47 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id c2so16329933ljj.12;
-        Mon, 07 Sep 2020 07:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vD2eRvoRvLhwCLuKclwGo2hvr3g6d0CXFP/7GqbWwow=;
-        b=t2B6+jHg/WOVS90/IOammi9x92wHD56CkijDzqOo9nVLtikZMA6MBmt6e8bCcVrIOs
-         D3IpsoTiomhob+2gOYADqMDTt6E7pSBDlJ3dVH7SDd8iKLmILlZQ+cWnI5p1gw4kexck
-         O8iWGT2hJ7IDvjwzWWKsKJsRaOqnEHQpfxyXcljwJGmrnJIJH1fy5nVppHbGYi+5R/wd
-         7tS+MYhRMBtw1U2PjAF70N3rBhARc6eEm9Ur1CkG+Y82EnWScNRnTCvSuj7l12OuFZu3
-         +NysJdJCF1hiPaYkUeZuwTjWYSUKCph7C11LAdAR+AKcVMtXLLSDJph876VRejh+Trgj
-         m+wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vD2eRvoRvLhwCLuKclwGo2hvr3g6d0CXFP/7GqbWwow=;
-        b=rGgzk2Nc8I9U+ly+FS/RUTqC6QAF7PK8Ro+sor4HwNhJ0HaQLFLRhwo7sF2a0ltFyM
-         a9NRSZZos0+/cJLJO/1asPqdUM83a2/Lywc6sg0ltVlVLiD7LsMNDptEjTXSX7zx0VUI
-         oBxpcdGNluZqrah2TQ3jl8AOEyXQyx+qQcQGKnLbPG6ZXTZgbWfgNrOv7xKXIMsmfL3r
-         VGhJDOP4kA8Pk2eWPOumnWkXiLmdyhivu/FT2zV6Qs4LInJwWMoyXNPJVmH880+71q7j
-         IZafp6VIkRufuG952HPm7DPLWl6joxuhrtsynJKalv8Z7COD7lTTOEqOgCkEq5hRG25P
-         NXUg==
-X-Gm-Message-State: AOAM531CkI6GTfdGKoTzyQ91blcnVBDjPd+X4RovLgqTMeoQqxnlMhPg
-        lQnub9t5i20PB5/EHDTvCuRFvjJk5cM=
-X-Google-Smtp-Source: ABdhPJzoioEeNQ+7wHWfTov34CnHHT9//gsdhJUXMN79J9NNDlZJ1G94HqUXXdGOIo1EVhtniwk/8Q==
-X-Received: by 2002:a05:651c:327:: with SMTP id b7mr10296432ljp.140.1599489224130;
-        Mon, 07 Sep 2020 07:33:44 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id e23sm7556891lfj.80.2020.09.07.07.33.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 07:33:43 -0700 (PDT)
-Subject: Re: [PATCH v5 11/36] i2c: tegra: Use clk-bulk helpers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200906185039.22700-1-digetx@gmail.com>
- <20200906185039.22700-12-digetx@gmail.com>
- <CAHp75Vfo1L4yi9icV=_NEDVcTqxNbCe0uVPSZUhwKJNj9SYjYg@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <4d612ebb-45a0-9e0f-f5f3-5c242f47a1a4@gmail.com>
-Date:   Mon, 7 Sep 2020 17:33:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 7 Sep 2020 12:10:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599495022;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=tmKlaoTHXAk+QasQrFJv6v7Tfa9NDk4PE0MTUqA22Ts=;
+        b=J1vbJMbENH6Bs+sgVFa8EpoQ9cXJ8vsDymjVzW9/qqV6GhDKfX8DsEFKYaNXON+h
+        qop0aTnVrt+TWIa8MKFxsZNxHbMPbsRn6VyLGAruK4UdnWRy6E54PFrkA5ph7kyJKUS
+        voPlLT6ZpXqtR6UXx30PMs0ybprlNaaGp/4NjU9o=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599495022;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=tmKlaoTHXAk+QasQrFJv6v7Tfa9NDk4PE0MTUqA22Ts=;
+        b=VAeAUM/nm2zdP40yAwS9Zyv98nRBD9g1LS8XatLy9ilYu5Lk31ieVHr1H+YO/Bi5
+        R898j+V/Jj/Yz8ao3ESXR1hscwJ2cBkwjsGtPDvZVfsftMnB4qXM4Be6zmVDFL/DkXE
+        uH2VDDOYKmolhnZecK/npOB1YqLn7O1ZAbsrHj2w=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DF339C3275D
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Rakesh Pillai <pillair@codeaurora.org>,
+        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ath10k <ath10k@lists.infradead.org>
+Subject: Re: [PATCH 0/2] ath10k: Add chain-1 voltage regulator voting
+References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org>
+        <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
+Date:   Mon, 7 Sep 2020 16:10:22 +0000
+In-Reply-To: <CAD=FV=WTnULQs5skJiXfp+srsx5e8DeqW3uu2SEDVGoEmP2O1g@mail.gmail.com>
+        (Doug Anderson's message of "Mon, 24 Aug 2020 16:50:33 -0700")
+Message-ID: <01010174695526dd-c9cd10ce-a33e-438b-810d-df486ba002fb-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vfo1L4yi9icV=_NEDVcTqxNbCe0uVPSZUhwKJNj9SYjYg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-SES-Outgoing: 2020.09.07-54.240.27.188
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-07.09.2020 11:21, Andy Shevchenko пишет:
-> On Sun, Sep 6, 2020 at 9:51 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Use clk-bulk helpers and factor out clocks initialization into separate
->> function in order to make code cleaner.
-> 
-> Suggested-by? (If you consider it appropriate)
+Doug Anderson <dianders@chromium.org> writes:
 
-Sure! It turned out to be a very nice improvement for the code, thank you!
+> Hi,
+>
+> On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
+>>
+>> Add the support to vote for the chain-1
+>> voltage regulator for WCN3990. This is
+>> added as an optional property.
+>>
+>> Rakesh Pillai (2):
+>>   dt: bindings: Add new regulator as optional property for WCN3990
+>>   ath10k: Add support for chain1 regulator supply voting
+>>
+>>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 4 +++-
+>>  drivers/net/wireless/ath/ath10k/snoc.c                         | 1 +
+>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>
+> This series is marked as "Awaiting Upstream" in patchwork.  I don't
+> see anything blocking it landing now.
+
+Thanks, moved it to New state now.
+
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
