@@ -7,28 +7,24 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22098C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1298C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EACB02080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BD142080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731261AbgIGRd5 (ORCPT
+        id S1731384AbgIGRgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:33:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60390 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgIGNS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:26 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61D61C061796;
-        Mon,  7 Sep 2020 06:18:03 -0700 (PDT)
+        Mon, 7 Sep 2020 13:36:41 -0400
+Received: from 8bytes.org ([81.169.241.247]:43656 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729474AbgIGNSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:15 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 12C97FF7;
-        Mon,  7 Sep 2020 15:17:00 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id D2659F51;
+        Mon,  7 Sep 2020 15:16:51 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
@@ -49,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 35/72] x86/head/64: Move early exception dispatch to C code
-Date:   Mon,  7 Sep 2020 15:15:36 +0200
-Message-Id: <20200907131613.12703-36-joro@8bytes.org>
+Subject: [PATCH v7 19/72] x86/boot/compressed/64: Add stage1 #VC handler
+Date:   Mon,  7 Sep 2020 15:15:20 +0200
+Message-Id: <20200907131613.12703-20-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -64,140 +60,269 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Move the assembly coded dispatch between page-faults and all other
-exceptions to C code to make it easier to maintain and extend.
+Add the first handler for #VC exceptions. At stage 1 there is no GHCB
+yet becaue the kernel might still be running on the EFI page table.
 
-Also change the return-type of early_make_pgtable() to bool and make it
-static.
+The stage 1 handler is limited to the MSR based protocol to talk to
+the hypervisor and can only support CPUID exit-codes, but that is
+enough to get to stage 2.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/x86/include/asm/pgtable.h |  2 +-
- arch/x86/include/asm/setup.h   |  4 +++-
- arch/x86/kernel/head64.c       | 19 +++++++++++++++----
- arch/x86/kernel/head_64.S      | 11 +----------
- 4 files changed, 20 insertions(+), 16 deletions(-)
+ arch/x86/boot/compressed/Makefile          |  1 +
+ arch/x86/boot/compressed/idt_64.c          |  4 ++
+ arch/x86/boot/compressed/idt_handlers_64.S |  4 ++
+ arch/x86/boot/compressed/misc.h            |  1 +
+ arch/x86/boot/compressed/sev-es.c          | 45 +++++++++++++++
+ arch/x86/include/asm/msr-index.h           |  1 +
+ arch/x86/include/asm/sev-es.h              | 37 ++++++++++++
+ arch/x86/include/asm/trapnr.h              |  1 +
+ arch/x86/kernel/sev-es-shared.c            | 66 ++++++++++++++++++++++
+ 9 files changed, 160 insertions(+)
+ create mode 100644 arch/x86/boot/compressed/sev-es.c
+ create mode 100644 arch/x86/include/asm/sev-es.h
+ create mode 100644 arch/x86/kernel/sev-es-shared.c
 
-diff --git a/arch/x86/include/asm/pgtable.h b/arch/x86/include/asm/pgtable.h
-index 5e0dcc20614d..a02c67291cfc 100644
---- a/arch/x86/include/asm/pgtable.h
-+++ b/arch/x86/include/asm/pgtable.h
-@@ -28,7 +28,7 @@
- #include <asm-generic/pgtable_uffd.h>
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index c12c9223a1fb..7302f184bece 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -83,6 +83,7 @@ ifdef CONFIG_X86_64
+ 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
++	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev-es.o
+ endif
  
- extern pgd_t early_top_pgt[PTRS_PER_PGD];
--int __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
-+bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+diff --git a/arch/x86/boot/compressed/idt_64.c b/arch/x86/boot/compressed/idt_64.c
+index 5f083092a86d..f3ca7324be44 100644
+--- a/arch/x86/boot/compressed/idt_64.c
++++ b/arch/x86/boot/compressed/idt_64.c
+@@ -32,6 +32,10 @@ void load_stage1_idt(void)
+ {
+ 	boot_idt_desc.address = (unsigned long)boot_idt;
  
- void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
- void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 4b3ca5ade2fd..7d7a064af6ff 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -39,6 +39,8 @@ void vsmp_init(void);
- static inline void vsmp_init(void) { }
- #endif
- 
-+struct pt_regs;
 +
- void setup_bios_corruption_check(void);
- void early_platform_quirks(void);
- 
-@@ -49,8 +51,8 @@ extern void i386_reserve_resources(void);
- extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
- extern unsigned long __startup_secondary_64(void);
- extern void startup_64_setup_env(unsigned long physbase);
--extern int early_make_pgtable(unsigned long address);
- extern void early_setup_idt(void);
-+extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
- 
- #ifdef CONFIG_X86_INTEL_MID
- extern void x86_intel_mid_early_setup(void);
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 7bfd5c27c773..4282dac694c3 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -38,6 +38,8 @@
- #include <asm/fixmap.h>
- #include <asm/realmode.h>
- #include <asm/desc.h>
-+#include <asm/extable.h>
-+#include <asm/trapnr.h>
- 
- /*
-  * Manage page tables very early on.
-@@ -317,7 +319,7 @@ static void __init reset_early_page_tables(void)
++	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
++		set_idt_entry(X86_TRAP_VC, boot_stage1_vc);
++
+ 	load_boot_idt(&boot_idt_desc);
  }
  
- /* Create a new PMD entry */
--int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
-+bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
- {
- 	unsigned long physaddr = address - __PAGE_OFFSET;
- 	pgdval_t pgd, *pgd_p;
-@@ -327,7 +329,7 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
+diff --git a/arch/x86/boot/compressed/idt_handlers_64.S b/arch/x86/boot/compressed/idt_handlers_64.S
+index b20e57504a94..92eb4df478a1 100644
+--- a/arch/x86/boot/compressed/idt_handlers_64.S
++++ b/arch/x86/boot/compressed/idt_handlers_64.S
+@@ -70,3 +70,7 @@ SYM_FUNC_END(\name)
+ 	.code64
  
- 	/* Invalid address or early pgt is done ?  */
- 	if (physaddr >= MAXMEM || read_cr3_pa() != __pa_nodebug(early_top_pgt))
--		return -1;
-+		return false;
+ EXCEPTION_HANDLER	boot_page_fault do_boot_page_fault error_code=1
++
++#ifdef CONFIG_AMD_MEM_ENCRYPT
++EXCEPTION_HANDLER	boot_stage1_vc do_vc_no_ghcb error_code=1
++#endif
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 9840c82a39f1..eaa8b45ebccb 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -141,5 +141,6 @@ extern struct desc_ptr boot_idt_desc;
  
- again:
- 	pgd_p = &early_top_pgt[pgd_index(address)].pgd;
-@@ -384,10 +386,10 @@ int __init __early_make_pgtable(unsigned long address, pmdval_t pmd)
- 	}
- 	pmd_p[pmd_index(address)] = pmd;
+ /* IDT Entry Points */
+ void boot_page_fault(void);
++void boot_stage1_vc(void);
  
--	return 0;
-+	return true;
- }
- 
--int __init early_make_pgtable(unsigned long address)
-+static bool __init early_make_pgtable(unsigned long address)
- {
- 	unsigned long physaddr = address - __PAGE_OFFSET;
- 	pmdval_t pmd;
-@@ -397,6 +399,15 @@ int __init early_make_pgtable(unsigned long address)
- 	return __early_make_pgtable(address, pmd);
- }
- 
-+void __init do_early_exception(struct pt_regs *regs, int trapnr)
+ #endif /* BOOT_COMPRESSED_MISC_H */
+diff --git a/arch/x86/boot/compressed/sev-es.c b/arch/x86/boot/compressed/sev-es.c
+new file mode 100644
+index 000000000000..bb91cbb5920e
+--- /dev/null
++++ b/arch/x86/boot/compressed/sev-es.c
+@@ -0,0 +1,45 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
++
++/*
++ * misc.h needs to be first because it knows how to include the other kernel
++ * headers in the pre-decompression code in a way that does not break
++ * compilation.
++ */
++#include "misc.h"
++
++#include <asm/sev-es.h>
++#include <asm/msr-index.h>
++#include <asm/ptrace.h>
++#include <asm/svm.h>
++
++static inline u64 sev_es_rd_ghcb_msr(void)
 +{
-+	if (trapnr == X86_TRAP_PF &&
-+	    early_make_pgtable(native_read_cr2()))
-+		return;
++	unsigned long low, high;
 +
-+	early_fixup_exception(regs, trapnr);
++	asm volatile("rdmsr\n" : "=a" (low), "=d" (high) :
++			"c" (MSR_AMD64_SEV_ES_GHCB));
++
++	return ((high << 32) | low);
 +}
 +
- /* Don't add a printk in there. printk relies on the PDA which is not initialized 
-    yet. */
- static void __init clear_bss(void)
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 1de09b58e578..3b40ec44a67d 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -341,18 +341,9 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
- 	pushq %r15				/* pt_regs->r15 */
- 	UNWIND_HINT_REGS
++static inline void sev_es_wr_ghcb_msr(u64 val)
++{
++	u32 low, high;
++
++	low  = val & 0xffffffffUL;
++	high = val >> 32;
++
++	asm volatile("wrmsr\n" : : "c" (MSR_AMD64_SEV_ES_GHCB),
++			"a"(low), "d" (high) : "memory");
++}
++
++#undef __init
++#define __init
++
++/* Include code for early handlers */
++#include "../../kernel/sev-es-shared.c"
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index dc131b84ac3a..cd6d651ff730 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -466,6 +466,7 @@
+ #define MSR_AMD64_IBSBRTARGET		0xc001103b
+ #define MSR_AMD64_IBSOPDATA4		0xc001103d
+ #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
++#define MSR_AMD64_SEV_ES_GHCB		0xc0010130
+ #define MSR_AMD64_SEV			0xc0010131
+ #define MSR_AMD64_SEV_ENABLED_BIT	0
+ #define MSR_AMD64_SEV_ENABLED		BIT_ULL(MSR_AMD64_SEV_ENABLED_BIT)
+diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
+new file mode 100644
+index 000000000000..48a44038b5d1
+--- /dev/null
++++ b/arch/x86/include/asm/sev-es.h
+@@ -0,0 +1,37 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ */
++
++#ifndef __ASM_ENCRYPTED_STATE_H
++#define __ASM_ENCRYPTED_STATE_H
++
++#include <linux/types.h>
++
++#define GHCB_SEV_CPUID_REQ	0x004UL
++#define		GHCB_CPUID_REQ_EAX	0
++#define		GHCB_CPUID_REQ_EBX	1
++#define		GHCB_CPUID_REQ_ECX	2
++#define		GHCB_CPUID_REQ_EDX	3
++#define		GHCB_CPUID_REQ(fn, reg) (GHCB_SEV_CPUID_REQ | \
++					(((unsigned long)reg & 3) << 30) | \
++					(((unsigned long)fn) << 32))
++
++#define GHCB_SEV_CPUID_RESP	0x005UL
++#define GHCB_SEV_TERMINATE	0x100UL
++
++#define	GHCB_SEV_GHCB_RESP_CODE(v)	((v) & 0xfff)
++#define	VMGEXIT()			{ asm volatile("rep; vmmcall\n\r"); }
++
++void do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code);
++
++static inline u64 lower_bits(u64 val, unsigned int bits)
++{
++	u64 mask = (1ULL << bits) - 1;
++
++	return (val & mask);
++}
++
++#endif
+diff --git a/arch/x86/include/asm/trapnr.h b/arch/x86/include/asm/trapnr.h
+index 082f45631fa9..f5d2325aa0b7 100644
+--- a/arch/x86/include/asm/trapnr.h
++++ b/arch/x86/include/asm/trapnr.h
+@@ -26,6 +26,7 @@
+ #define X86_TRAP_XF		19	/* SIMD Floating-Point Exception */
+ #define X86_TRAP_VE		20	/* Virtualization Exception */
+ #define X86_TRAP_CP		21	/* Control Protection Exception */
++#define X86_TRAP_VC		29	/* VMM Communication Exception */
+ #define X86_TRAP_IRET		32	/* IRET Exception */
  
--	cmpq $14,%rsi		/* Page fault? */
--	jnz 10f
--	GET_CR2_INTO(%rdi)	/* can clobber %rax if pv */
--	call early_make_pgtable
--	andl %eax,%eax
--	jz 20f			/* All good */
--
--10:
- 	movq %rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
--	call early_fixup_exception
-+	call do_early_exception
- 
--20:
- 	decl early_recursion_flag(%rip)
- 	jmp restore_regs_and_return_to_kernel
- SYM_CODE_END(early_idt_handler_common)
+ #endif
+diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
+new file mode 100644
+index 000000000000..0bea32341afa
+--- /dev/null
++++ b/arch/x86/kernel/sev-es-shared.c
+@@ -0,0 +1,66 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * AMD Encrypted Register State Support
++ *
++ * Author: Joerg Roedel <jroedel@suse.de>
++ *
++ * This file is not compiled stand-alone. It contains code shared
++ * between the pre-decompression boot code and the running Linux kernel
++ * and is included directly into both code-bases.
++ */
++
++/*
++ * Boot VC Handler - This is the first VC handler during boot, there is no GHCB
++ * page yet, so it only supports the MSR based communication with the
++ * hypervisor and only the CPUID exit-code.
++ */
++void __init do_vc_no_ghcb(struct pt_regs *regs, unsigned long exit_code)
++{
++	unsigned int fn = lower_bits(regs->ax, 32);
++	unsigned long val;
++
++	/* Only CPUID is supported via MSR protocol */
++	if (exit_code != SVM_EXIT_CPUID)
++		goto fail;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EAX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->ax = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EBX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->bx = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_ECX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->cx = val >> 32;
++
++	sev_es_wr_ghcb_msr(GHCB_CPUID_REQ(fn, GHCB_CPUID_REQ_EDX));
++	VMGEXIT();
++	val = sev_es_rd_ghcb_msr();
++	if (GHCB_SEV_GHCB_RESP_CODE(val) != GHCB_SEV_CPUID_RESP)
++		goto fail;
++	regs->dx = val >> 32;
++
++	/* Skip over the CPUID two-byte opcode */
++	regs->ip += 2;
++
++	return;
++
++fail:
++	sev_es_wr_ghcb_msr(GHCB_SEV_TERMINATE);
++	VMGEXIT();
++
++	/* Shouldn't get here - if we do halt the machine */
++	while (true)
++		asm volatile("hlt\n");
++}
 -- 
 2.28.0
 
