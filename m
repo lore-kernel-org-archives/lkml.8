@@ -2,104 +2,101 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32606C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4595C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC5921473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BEE2087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbgIGPt3 (ORCPT
+        id S1730262AbgIGPts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:49:29 -0400
-Received: from david.siemens.de ([192.35.17.14]:33625 "EHLO david.siemens.de"
+        Mon, 7 Sep 2020 11:49:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40052 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgIGPrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:47:01 -0400
-Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 087Fkc26025246
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 17:46:38 +0200
-Received: from [139.22.116.238] ([139.22.116.238])
-        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 087FkbFU013301;
-        Mon, 7 Sep 2020 17:46:37 +0200
-Subject: Re: watchdog: sp5100_tco support for AMD V/R/E series
-To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org,
-        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
-        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
-        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
-References: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
- <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <9e270546-7962-932b-2e4c-3c833b7d4b30@siemens.com>
-Date:   Mon, 7 Sep 2020 17:46:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1730200AbgIGPrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:47:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1C7F2ACCC;
+        Mon,  7 Sep 2020 15:47:16 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 17:47:14 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Changki Kim <changki.kim@samsung.com>,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        changbin.du@intel.com, masahiroy@kernel.org, rd.dunlap@gmail.com,
+        gregkh@linuxfoundation.org, krzk@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: printk: Add process name information to printk() output.
+Message-ID: <20200907154713.GE8084@alley>
+References: <CGME20200904082449epcas2p4420d5df2083325b328a182c79f5c0948@epcas2p4.samsung.com>
+ <20200904082438.20707-1-changki.kim@samsung.com>
+ <874kod6fgh.fsf@jogness.linutronix.de>
+ <20200904124530.GB20558@alley>
+ <87y2lp4r6o.fsf@jogness.linutronix.de>
+ <20200904151336.GC20558@alley>
+ <87ft7xazsf.fsf@jogness.linutronix.de>
+ <20200907095437.GD8084@alley>
+ <87d02xj2ui.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d02xj2ui.fsf@jogness.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07.09.20 17:31, Guenter Roeck wrote:
-> On 9/7/20 4:20 AM, Jan Kiszka wrote:
->> Hi all,
->>
->> Arsalan reported that the upstream driver for sp5100_tco does not work
->> for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
->>
->> [   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
->> [   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
->> [   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
->>
->> ..and fix it:
->>
->> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
->> index 85e9664318c9..5482154fde42 100644
->> --- a/drivers/watchdog/sp5100_tco.c
->> +++ b/drivers/watchdog/sp5100_tco.c
->> @@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
->>  		/* Set the Watchdog timer resolution to 1 sec and enable */
->>  		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
->>  					  ~EFCH_PM_WATCHDOG_DISABLE,
->> -					  EFCH_PM_DECODEEN_SECOND_RES);
->> +					  EFCH_PM_DECODEEN_SECOND_RES |
->> +					  EFCH_PM_DECODEEN_WDT_TMREN);
+On Mon 2020-09-07 12:36:45, John Ogness wrote:
+> On 2020-09-07, Petr Mladek <pmladek@suse.com> wrote:
+> > This extra metadata are not currently read by crashdump tools.
 > 
-> Confusing. The register in question is a 32-bit register, but only a byte
-> is written into it. Bit 24-25 are supposed to be the resolution, bit 25-26
-> set to 0 enable the watchdog. Bit 7 is supposed to enable MMIO decoding.
-> This is from AMD Publication 52740. So something in the existing code
-> is (or seems to be) wrong, but either case I don't see how setting bit 7
-> (or 31 ?) would enable the watchdog hardware.
-> 
-> Hmm, I wrote that code. Guess I'll need to to spend some time figuring out
-> what is going on.
+> crash [0] prints dictionary data.
+> [0] https://github.com/crash-utility/crash
 
-The logic came from [1] which inspired [2] - that's where I pointed out
-the large overlap with the existing upstream driver. I would love to see
-all that consolidated.
+Grr, I have missed this. It makes things more complicated.
 
-BTW, the R1505G is family 0x17. Maybe something changed there, and that
-bit 7 was just reserved/ignored so far. ENOSPECS
+We need to find a way that would allow to add more metadata without
+breaking support for the existing ones.
 
-Jan
+I know, it works with the current dictionary. "crash" just prints it
+the same way as "cat /dev/kmsg". Dict entries are printed on separate
+lines. It is better than nothing. But it is not much user friendly.
 
-[1]
-https://git.yoctoproject.org/cgit/cgit.cgi/meta-amd/commit/meta-amd-bsp/recipes-kernel/amd-wdt/files/amd_wdt.c?id=cd760c9f04d276382a0f5156dabdb766594ace56
-[2]
-https://github.com/siemens/efibootguard/commit/3a702aa96d193f26571ea4e70db29ef01a0d4d5f
+If we add more metadata, people would want to see it some more
+userfriendly way, e.g.:
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+	[2020-08-20T07:58:48][  T136] random: crng init done
+
+instead of
+
+	[    1.394073] random: crng init done
+	 PID = 136
+	 CPU = 3
+	 IRQ_CONTEXT = 0;
+	 TS_MONO = 234632423
+	 TS_REAL = 1599211091487260162
+	 [...]
+
+For this, "crash" would need to understand the different variables
+stored in dictionary. So, it would become harder to change
+the format as well.
+
+
+Anyway, "crash" could get the information about struct printk_ext_info
+via VMCOREINFO_STRUCT_SIZE(), VMCOREINFO_OFFSET() macros.
+We could extend the structure if we do not change the format
+of the existing items.
+
+I am not 100% sure that the array of struct printk_ext_info is the
+best solution. But I still somehow like it more than dict ring. IMHO,
+it is more reliable and much easier to work with on the kernel side.
+
+Best Regards,
+Petr
