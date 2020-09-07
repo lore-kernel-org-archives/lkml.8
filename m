@@ -2,84 +2,110 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBA4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB164C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAF5921789
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B08A21582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ierPQQxr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgIGUVi (ORCPT
+        id S1729822AbgIGUVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:21:38 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:17994 "EHLO
-        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729658AbgIGUVZ (ORCPT
+        Mon, 7 Sep 2020 16:21:47 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:43564 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729757AbgIGUVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:21:25 -0400
-Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
- EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Mon, 7 Sep 2020 13:21:21 -0700
-Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id EF9574072D;
-        Mon,  7 Sep 2020 13:21:21 -0700 (PDT)
-From:   Ajay Kaher <akaher@vmware.com>
-To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
-CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
-        <peterx@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <vsirnapalli@vmware.com>, <akaher@vmware.com>
-Subject: [PATCH v4.14.y 0/3] vfio: Fix for CVE-2020-12888
-Date:   Tue, 8 Sep 2020 01:47:08 +0530
-Message-ID: <1599509828-23596-4-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599509828-23596-1-git-send-email-akaher@vmware.com>
-References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
+        Mon, 7 Sep 2020 16:21:38 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087KLYuZ016372;
+        Mon, 7 Sep 2020 15:21:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599510094;
+        bh=HElTGPfHN8eqJ8L/c6Hjkkfa9XQnaNhJXi0kU+nLVsc=;
+        h=From:To:CC:Subject:Date;
+        b=ierPQQxr6MlcDKvfJ1SCKLooiKxwZ5bYAW2xVp79KCBZb0wrZ6Tbb1eCzCeJKCH+y
+         2Vo7K6WmTUn60s6NCiUz+013HGyltTlQ2LQs4qEsn+Dkh/Y+YGJWUe7hsiEIyrXlbu
+         lpYorSvDbpzYkXCbNF0tJHL5La0obNZTDl4nK8X4=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087KLYib049308
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Sep 2020 15:21:34 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
+ 2020 15:21:34 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 7 Sep 2020 15:21:33 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087KLWog127219;
+        Mon, 7 Sep 2020 15:21:33 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     Tony Lindgren <tony@atomide.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH next 0/6] ARM: dts: am57xx/dra7x: switch to new cpsw switch drv
+Date:   Mon, 7 Sep 2020 23:21:19 +0300
+Message-ID: <20200907202125.22943-1-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
-Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
- designate permitted sender hosts)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-devices may lead to DoS scenario
-    
-The VFIO modules allow users (guest VMs) to enable or disable access to the
-devices' MMIO memory address spaces. If a user attempts to access (read/write)
-the devices' MMIO address space when it is disabled, some h/w devices issue an
-interrupt to the CPU to indicate a fatal error condition, crashing the system.
-This flaw allows a guest user or process to crash the host system resulting in
-a denial of service.
-    
-Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-before user access.
-    
-Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-can later use to invalidate those mappings.
-    
-Patch 3/ block the user from accessing memory spaces which is disabled by using
-new vma list support to zap, or invalidate, those memory mappings in order to
-force them to be faulted back in on access.
-    
-Upstreamed patches link:
-https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
-        
-[PATCH v4.14.y 1/3]:
-Backporting of upsream commit 41311242221e:
-vfio/type1: Support faulting PFNMAP vmas
-        
-[PATCH v4.14.y 2/3]:
-Backporting of upsream commit 11c4cd07ba11:
-vfio-pci: Fault mmaps to enable vma tracking
-        
-[PATCH v4.14.y 3/3]:
-Backporting of upsream commit abafbc551fdd:
-vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+Hi Tony,
+
+Since Kernel v5.5 commits:
+ 111cf1ab4da3 ("net: ethernet: ti: introduce cpsw switchdev based driver part 2 - switch")
+ ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
+the new CPSW driver with switchdev support has been introduced and one
+am571x-idk board was converted to use it. And since that time (Nov 2019) no
+significant issues were reported for the new CPSW driver.
+
+Therefore it's time to switch all am57xx/dra7x boards to use new cpsw switch
+driver. Those boards have 1 or 2 Ext. port wired and configured in dual_mac mode
+by default. The dual_mac mode has been preserved the same way between
+legacy and new driver it's safe to switch drivers.
+
+Grygorii Strashko (6):
+  ARM: dts: am5729: beagleboneai: switch to new cpsw switch drv
+  ARM: dts: am57xx-idk: switch to new cpsw switch drv
+  ARM: dts: beagle-x15: switch to new cpsw switch drv
+  ARM: dts: dra7x-evm: switch to new cpsw switch drv
+  ARM: dts: am57xx-cl-som-am57x: switch to new cpsw switch drv
+  ARM: dts: dra7: drop legacy cpsw dt node
+
+ arch/arm/boot/dts/am571x-idk.dts              | 27 ----------
+ arch/arm/boot/dts/am5729-beagleboneai.dts     | 14 +++--
+ arch/arm/boot/dts/am572x-idk.dts              |  5 --
+ arch/arm/boot/dts/am574x-idk.dts              |  5 --
+ .../boot/dts/am57xx-beagle-x15-common.dtsi    | 13 +++--
+ arch/arm/boot/dts/am57xx-cl-som-am57x.dts     | 13 +++--
+ arch/arm/boot/dts/am57xx-idk-common.dtsi      | 14 +++--
+ arch/arm/boot/dts/dra7-evm.dts                | 13 +++--
+ arch/arm/boot/dts/dra7-l4.dtsi                | 54 -------------------
+ arch/arm/boot/dts/dra7.dtsi                   |  4 +-
+ arch/arm/boot/dts/dra71-evm.dts               | 14 ++---
+ arch/arm/boot/dts/dra72-evm-common.dtsi       |  4 --
+ arch/arm/boot/dts/dra72-evm-revc.dts          | 14 ++---
+ arch/arm/boot/dts/dra72-evm.dts               | 13 +++--
+ arch/arm/boot/dts/dra76-evm.dts               | 14 +++--
+ 15 files changed, 67 insertions(+), 154 deletions(-)
+
+-- 
+2.17.1
+
