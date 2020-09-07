@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C88C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53228C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3658206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D993207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498341;
-	bh=d4MCGwCqQlcYJhFyTu2YWQpqUFTmOLbIk17fsT39at8=;
+	s=default; t=1599498356;
+	bh=K8NWduBVmg9YF1y4rdiDDnwQjVvnRrBoGIGBUbtMHzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02O+VGsS4jBifCyKsUSFxBcndmTMVFQBucaqy6w9F5RMMw8u7i8q3Zfhs1mtCmVAf
-	 xbqVf+0hYyZKTLNKb58lxrKF+cjWBGo1fXWKjAXpV2qu4LKmMZYHwpfyIzwyTzJHw9
-	 9q1OZCn4/squF7QlpHJbFkgGIesFl+mnQSy7Mxp4=
+	b=TR/VyfuMyDtga6xgC8JhyOe6dWz3L03cUnnVfoUGZSJMgNXWqapEIPFl6jCCs2pAC
+	 plg3k3XgJmOwGKCTFzE/WdLNMx32Swx8y/FVwEdMTV4/T+dZ1crhW2luFpXjJalXKQ
+	 WVqicZQBP71Fw7Q5EW7P0FSDlnYu3+uSbOTM5txc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbgIGRFj (ORCPT
+        id S1731173AbgIGRFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730505AbgIGQdI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:08 -0400
+        id S1730344AbgIGQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:04 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C671F21927;
-        Mon,  7 Sep 2020 16:33:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29ABB208C7;
+        Mon,  7 Sep 2020 16:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496387;
-        bh=d4MCGwCqQlcYJhFyTu2YWQpqUFTmOLbIk17fsT39at8=;
+        s=default; t=1599496383;
+        bh=K8NWduBVmg9YF1y4rdiDDnwQjVvnRrBoGIGBUbtMHzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=quiC/+VjjcMIfECPZ9nTCToGFyOaw1B1x5u5gQZXHhhNHjHBIAfP7LPg1q2G0FE5G
-         8pRHRZPVFSnmlmyr8Q7CVgllKP7Bhw11Z94F3GEs9nZ/aI7CrQc2VGuk52tLkkYYAz
-         VgTAS8e+bmBC2rTEY1Mfb/kvVewPaM/U2OjHErlU=
+        b=jDDaV2ZL8gDIn7bOGdnUMUHmPrD859CumEEQkKo0Z5dOIq6BVXxrhbsueu5OeuVq4
+         6kNyBT0LkAO5XDs4j/ejyl2G15xZFEZZRl1g8CXS2K13sCwTsp6WFH5TARHwITKWYJ
+         j24i/d2bD3NpSNqPj0OyCgVCIpPvPoEDcTnCFZcM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nirenjan Krishnan <nirenjan@gmail.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 37/53] HID: quirks: Set INCREMENT_USAGE_ON_DUPLICATE for all Saitek X52 devices
-Date:   Mon,  7 Sep 2020 12:32:03 -0400
-Message-Id: <20200907163220.1280412-37-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Christoph Hellwig <hch@lst.de>,
+        James Smart <james.smart@broadcom.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 34/53] nvme-rdma: fix timeout handler
+Date:   Mon,  7 Sep 2020 12:32:00 -0400
+Message-Id: <20200907163220.1280412-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -59,54 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nirenjan Krishnan <nirenjan@gmail.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 77df710ba633dfb6c65c65cf99ea9e084a1c9933 ]
+[ Upstream commit 0475a8dcbcee92a5d22e40c9c6353829fc6294b8 ]
 
-The Saitek X52 family of joysticks has a pair of axes that were
-originally (by the Windows driver) used as mouse pointer controls. The
-corresponding usage page is the Game Controls page, which is not
-recognized by the generic HID driver, and therefore, both axes get
-mapped to ABS_MISC. The quirk makes the second axis get mapped to
-ABS_MISC+1, and therefore made available separately.
+When a request times out in a LIVE state, we simply trigger error
+recovery and let the error recovery handle the request cancellation,
+however when a request times out in a non LIVE state, we make sure to
+complete it immediately as it might block controller setup or teardown
+and prevent forward progress.
 
-One Saitek X52 device is already fixed. This patch fixes the other two
-known devices with VID/PID 06a3:0255 and 06a3:0762.
+However tearing down the entire set of I/O and admin queues causes
+freeze/unfreeze imbalance (q->mq_freeze_depth) because and is really
+an overkill to what we actually need, which is to just fence controller
+teardown that may be running, stop the queue, and cancel the request if
+it is not already completed.
 
-Signed-off-by: Nirenjan Krishnan <nirenjan@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Now that we have the controller teardown_lock, we can safely serialize
+request cancellation. This addresses a hang caused by calling extra
+queue freeze on controller namespaces, causing unfreeze to not complete
+correctly.
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 2 ++
- drivers/hid/hid-quirks.c | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/nvme/host/rdma.c | 49 +++++++++++++++++++++++++++-------------
+ 1 file changed, 33 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 7cfa9785bfbb0..476cb99bd61b7 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1011,6 +1011,8 @@
- #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
- #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
- #define USB_DEVICE_ID_SAITEK_X52	0x075c
-+#define USB_DEVICE_ID_SAITEK_X52_2	0x0255
-+#define USB_DEVICE_ID_SAITEK_X52_PRO	0x0762
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index ffe83d1f576bf..99bf88eb812c5 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -1159,6 +1159,7 @@ static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
+ 	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_RESETTING))
+ 		return;
  
- #define USB_VENDOR_ID_SAMSUNG		0x0419
- #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index c242150d35a3a..5247147f5cc7c 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -147,6 +147,8 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_2), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_PRO), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
++	dev_warn(ctrl->ctrl.device, "starting error recovery\n");
+ 	queue_work(nvme_reset_wq, &ctrl->err_work);
+ }
+ 
+@@ -1925,6 +1926,22 @@ static int nvme_rdma_cm_handler(struct rdma_cm_id *cm_id,
+ 	return 0;
+ }
+ 
++static void nvme_rdma_complete_timed_out(struct request *rq)
++{
++	struct nvme_rdma_request *req = blk_mq_rq_to_pdu(rq);
++	struct nvme_rdma_queue *queue = req->queue;
++	struct nvme_rdma_ctrl *ctrl = queue->ctrl;
++
++	/* fence other contexts that may complete the command */
++	mutex_lock(&ctrl->teardown_lock);
++	nvme_rdma_stop_queue(queue);
++	if (!blk_mq_request_completed(rq)) {
++		nvme_req(rq)->status = NVME_SC_HOST_ABORTED_CMD;
++		blk_mq_complete_request(rq);
++	}
++	mutex_unlock(&ctrl->teardown_lock);
++}
++
+ static enum blk_eh_timer_return
+ nvme_rdma_timeout(struct request *rq, bool reserved)
+ {
+@@ -1935,29 +1952,29 @@ nvme_rdma_timeout(struct request *rq, bool reserved)
+ 	dev_warn(ctrl->ctrl.device, "I/O %d QID %d timeout\n",
+ 		 rq->tag, nvme_rdma_queue_idx(queue));
+ 
+-	/*
+-	 * Restart the timer if a controller reset is already scheduled. Any
+-	 * timed out commands would be handled before entering the connecting
+-	 * state.
+-	 */
+-	if (ctrl->ctrl.state == NVME_CTRL_RESETTING)
+-		return BLK_EH_RESET_TIMER;
+-
+ 	if (ctrl->ctrl.state != NVME_CTRL_LIVE) {
+ 		/*
+-		 * Teardown immediately if controller times out while starting
+-		 * or we are already started error recovery. all outstanding
+-		 * requests are completed on shutdown, so we return BLK_EH_DONE.
++		 * If we are resetting, connecting or deleting we should
++		 * complete immediately because we may block controller
++		 * teardown or setup sequence
++		 * - ctrl disable/shutdown fabrics requests
++		 * - connect requests
++		 * - initialization admin requests
++		 * - I/O requests that entered after unquiescing and
++		 *   the controller stopped responding
++		 *
++		 * All other requests should be cancelled by the error
++		 * recovery work, so it's fine that we fail it here.
+ 		 */
+-		flush_work(&ctrl->err_work);
+-		nvme_rdma_teardown_io_queues(ctrl, false);
+-		nvme_rdma_teardown_admin_queue(ctrl, false);
++		nvme_rdma_complete_timed_out(rq);
+ 		return BLK_EH_DONE;
+ 	}
+ 
+-	dev_warn(ctrl->ctrl.device, "starting error recovery\n");
++	/*
++	 * LIVE state should trigger the normal error recovery which will
++	 * handle completing this request.
++	 */
+ 	nvme_rdma_error_recovery(ctrl);
+-
+ 	return BLK_EH_RESET_TIMER;
+ }
+ 
 -- 
 2.25.1
 
