@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A66C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A54F5C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A27720C09
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63E972087D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:33:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599503629;
-	bh=s0flrS3T7iHEQZPLLbZNxQAS1/ObOpRmsE3khQgaTCQ=;
+	s=default; t=1599503631;
+	bh=SNHOlGVRp9tnGD12pIQzWTN4qNINzqpUoktgGrWekX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5zuM1MdoGmNR8nZTz5VW9AOKeRYrBYv/4yUZDI2kpYaofPhxLcPcAIHaiTWGTqaw
-	 umPKqfEe0BZyO30hFw9Sqk56Q74rSk1NEzaT5ViikZV186K5jYFRZGMlUUKwHj+OkT
-	 wn9dtMS/WwoDrR2KVua3RjsNNk71V9pArI/Uh5fk=
+	b=eFoscxw9OlDoabe0QkLPWcwtadobOnBzn7mLtST0DbF+oSpJs1S2CMjOJG/pw6Qw1
+	 YRQh+1vmmOXEpOO8X8vKZ6Bs9NYWIx/Z9Wj6N7OUeV4SuxjzME73/+a9FLHcCGKB82
+	 ncPLzbz5Up6qv9Z3iJJQ3RwxfmUeF+ZKxnoxi7x4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729960AbgIGSdp (ORCPT
+        id S1730181AbgIGSdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:33:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41076 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 14:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729371AbgIGSdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:33:40 -0400
+        id S1729538AbgIGSdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:33:43 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C522087D;
-        Mon,  7 Sep 2020 18:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 417C020C09;
+        Mon,  7 Sep 2020 18:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599503619;
-        bh=s0flrS3T7iHEQZPLLbZNxQAS1/ObOpRmsE3khQgaTCQ=;
+        s=default; t=1599503622;
+        bh=SNHOlGVRp9tnGD12pIQzWTN4qNINzqpUoktgGrWekX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ctpz+j1nJ7LaJQNoTLyEz9rqwr5xi2gzDyVSSOjC+E8K0PoJmjXn1zhUuXL6q0Ugn
-         E85aqCmpGzNx3HA/LGmOUEVGAMHVShXclAT+vto16Oin1hSMxHSrIXDNdPTVSmI837
-         qwlorB8yeviwPXzeag9b7nPOUhnywxl72QSVTPRE=
+        b=gmYZJQRShqYDqRLZyvXggf1qSytOj7VpU7EDxcaA9jEW6nyLDunWqaQ/XlQk49yPe
+         K9XCjNfWGvnEcEmhmP8PLru5OLEHMnMN2oORtld2/ceLiH9sIoj7iGBAa2N/Dbsi8i
+         F4FaJA59RnivKNFIksNg87IzAzW4cwMk/avMnFkg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>,
         Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH 05/11] ARM: dts: s3c6410: align node SROM bus node name with dtschema in SMDK6410
-Date:   Mon,  7 Sep 2020 20:33:07 +0200
-Message-Id: <20200907183313.29234-6-krzk@kernel.org>
+Subject: [PATCH 06/11] ARM: dts: s3c6410: remove additional CPU compatible
+Date:   Mon,  7 Sep 2020 20:33:08 +0200
+Message-Id: <20200907183313.29234-7-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907183313.29234-1-krzk@kernel.org>
 References: <20200907183313.29234-1-krzk@kernel.org>
@@ -62,30 +62,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SROM controller is modeled with a bus so align the device node name
-with dtschema to fix warning:
+Only the specific compatible (arm,arm1176jzf-s) is allowed by dtschema:
 
-  srom-cs1@18000000: $nodename:0: 'srom-cs1@18000000'
-    does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+  cpu@0: compatible: ['arm,arm1176jzf-s', 'arm,arm1176'] is too long
+  cpu@0: compatible: Additional items are not allowed ('arm,arm1176' was unexpected)
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/s3c6410-smdk6410.dts | 2 +-
+ arch/arm/boot/dts/s3c64xx.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/s3c6410-smdk6410.dts b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-index 74379061a11a..69c9ec4cf381 100644
---- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
-+++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
-@@ -42,7 +42,7 @@
- 		#clock-cells = <0>;
- 	};
+diff --git a/arch/arm/boot/dts/s3c64xx.dtsi b/arch/arm/boot/dts/s3c64xx.dtsi
+index 2e611df37911..cb11a87dbc42 100644
+--- a/arch/arm/boot/dts/s3c64xx.dtsi
++++ b/arch/arm/boot/dts/s3c64xx.dtsi
+@@ -34,7 +34,7 @@
  
--	srom-cs1@18000000 {
-+	srom-cs1-bus@18000000 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+ 		cpu@0 {
+ 			device_type = "cpu";
+-			compatible = "arm,arm1176jzf-s", "arm,arm1176";
++			compatible = "arm,arm1176jzf-s";
+ 			reg = <0x0>;
+ 		};
+ 	};
 -- 
 2.17.1
 
