@@ -2,70 +2,144 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8775C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7CEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68926215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B17F21481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:53:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dqIBHsA1";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="XlrHe4x7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgIGMxB (ORCPT
+        id S1728501AbgIGMxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:53:01 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:59210 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729043AbgIGMvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:53:20 -0400
+Received: from a27-18.smtp-out.us-west-2.amazonses.com ([54.240.27.18]:59036
+        "EHLO a27-18.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729339AbgIGMvX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 08:51:23 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0D3ACEB8BDC1D413E296;
-        Mon,  7 Sep 2020 20:50:43 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.70) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 7 Sep 2020 20:50:40 +0800
-From:   Zhang Changzhong <zhangchangzhong@huawei.com>
-To:     <fugang.duan@nxp.com>, <davem@davemloft.net>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net: ethernet: fec: remove redundant null check before clk_disable_unprepare()
-Date:   Mon, 7 Sep 2020 20:49:44 +0800
-Message-ID: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
-X-Mailer: git-send-email 1.8.3.1
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599483067;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
+        bh=ui1fKpiCptH0S6+EMGetZQ1ytRLWPuhfc4/2yA0rrYU=;
+        b=dqIBHsA1fMmANHggaNieBuPOabNMb5Vd90KOYGbyLIEG860dLSt03Im9Dba7s834
+        qP4SaKB0dw8Aoj5vpwr5RP1+9HkbstPYiXsGJFBuHf5ZnEZBEu0+sfDF49d1uqZJNgg
+        pOQ1T2zobv3KVhPkmZaGpYzxL08gkBqLPRIPRc7I=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599483067;
+        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
+        bh=ui1fKpiCptH0S6+EMGetZQ1ytRLWPuhfc4/2yA0rrYU=;
+        b=XlrHe4x7RwAo0o2Dk8TJCfkWKSexEGx/MZpL8yFcyYK7mk4jwi/o4B1LOYy9u+IY
+        iHoxX3a4DEPRSJsyIZyYgtWbof/jTqoBoaaNCzz8+CYJ6mi+gA4GT0kik/sW0iw2eQ6
+        SY6pNJCGPWVXZVFnnCCPNcIKbIStbYVuDK5vap60=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.112.70]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 7 Sep 2020 12:51:07 +0000
+From:   rojay@codeaurora.org
+To:     Akash Asthana <akashast@codeaurora.org>
+Cc:     wsa@kernel.org, swboyd@chromium.org, dianders@chromium.org,
+        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
+        mka@chromium.org, msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
+        rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH V2 1/2] i2c: i2c-qcom-geni: Store DMA mapping data in
+ geni_i2c_dev struct
+In-Reply-To: <c09a6bb3-6a7d-bcf8-42ad-cc8dc971c705@codeaurora.org>
+References: <20200820103522.26242-1-rojay@codeaurora.org>
+ <20200820103522.26242-2-rojay@codeaurora.org>
+ <c09a6bb3-6a7d-bcf8-42ad-cc8dc971c705@codeaurora.org>
+Message-ID: <01010174689ebbd5-8447b255-ce45-49e0-a6ef-ee35e183953d-000000@us-west-2.amazonses.com>
+X-Sender: rojay@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
+X-SES-Outgoing: 2020.09.07-54.240.27.18
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because clk_prepare_enable() and clk_disable_unprepare() already checked
-NULL clock parameter, so the additional checks are unnecessary, just
-remove them.
+On 2020-08-26 17:25, Akash Asthana wrote:
+> Hi Roja,
+> 
+> On 8/20/2020 4:05 PM, Roja Rani Yarubandi wrote:
+>> Store DMA mapping data in geni_i2c_dev struct to enhance DMA mapping
+>> data scope. For example during shutdown callback to unmap DMA mapping,
+>> this stored DMA mapping data can be used to call geni_se_tx_dma_unprep
+>> and geni_se_rx_dma_unprep functions.
+>> 
+>> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+>> ---
+>> Changes in V2:
+>>   - As per Stephen's comments, changed commit text, fixed minor 
+>> nitpicks.
+>> 
+>>   drivers/i2c/busses/i2c-qcom-geni.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>> 
+>> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
+>> b/drivers/i2c/busses/i2c-qcom-geni.c
+>> index 7f130829bf01..1fda5c7c2cfc 100644
+>> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+>> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+>> @@ -86,6 +86,9 @@ struct geni_i2c_dev {
+>>   	u32 clk_freq_out;
+>>   	const struct geni_i2c_clk_fld *clk_fld;
+>>   	int suspended;
+>> +	dma_addr_t tx_dma;
+>> +	dma_addr_t rx_dma;
+>> +	size_t xfer_len;
+>>   };
+>>     struct geni_i2c_err_log {
+>> @@ -358,6 +361,7 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev 
+>> *gi2c, struct i2c_msg *msg,
+>>   	struct geni_se *se = &gi2c->se;
+>>   	size_t len = msg->len;
+>>   +	gi2c->xfer_len = msg->len;
+> 
+> nit: gi2c->xfer = len, for tx_one_msg as well.
+> 
+> Regards,
+> 
+> Akash
+> 
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Okay
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index fb37816..c043afb 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -1960,8 +1960,7 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
- 		mutex_unlock(&fep->ptp_clk_mutex);
- 	}
- failed_clk_ptp:
--	if (fep->clk_enet_out)
--		clk_disable_unprepare(fep->clk_enet_out);
-+	clk_disable_unprepare(fep->clk_enet_out);
- 
- 	return ret;
- }
--- 
-2.9.5
-
+>>   	if (!of_machine_is_compatible("lenovo,yoga-c630"))
+>>   		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+>>   @@ -384,6 +388,7 @@ static int geni_i2c_rx_one_msg(struct 
+>> geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>>   	if (dma_buf) {
+>>   		if (gi2c->err)
+>>   			geni_i2c_rx_fsm_rst(gi2c);
+>> +		gi2c->rx_dma = rx_dma;
+>>   		geni_se_rx_dma_unprep(se, rx_dma, len);
+>>   		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>>   	}
+>> @@ -400,6 +405,7 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev 
+>> *gi2c, struct i2c_msg *msg,
+>>   	struct geni_se *se = &gi2c->se;
+>>   	size_t len = msg->len;
+>>   +	gi2c->xfer_len = msg->len;
+>>   	if (!of_machine_is_compatible("lenovo,yoga-c630"))
+>>   		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
+>>   @@ -429,6 +435,7 @@ static int geni_i2c_tx_one_msg(struct 
+>> geni_i2c_dev *gi2c, struct i2c_msg *msg,
+>>   	if (dma_buf) {
+>>   		if (gi2c->err)
+>>   			geni_i2c_tx_fsm_rst(gi2c);
+>> +		gi2c->tx_dma = tx_dma;
+>>   		geni_se_tx_dma_unprep(se, tx_dma, len);
+>>   		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
+>>   	}
