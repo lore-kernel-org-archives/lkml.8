@@ -2,128 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 992BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D336C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44A02078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03B221473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fhuYzsV/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRKop/o+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbgIGPia (ORCPT
+        id S1730193AbgIGPjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
+        Mon, 7 Sep 2020 11:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730143AbgIGPfA (ORCPT
+        with ESMTP id S1730180AbgIGPfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:35:00 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528DBC061575
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 08:34:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TfuRDbRYW8TYNwANgZL+EbTXtIdzHJowKXdYA+i1hXw=; b=fhuYzsV/70PNv7x2BbqGWXddBI
-        oilJKFSd0d1raGi62ooPs3mBJIv0A7Fe6781M/c+ZjccAR0ZHRWFyFRzIUyo2adx+YnFIv/aFA4sC
-        xLYiHUmLitZw5wMHlZBHUQr28AhxzVt57xSOs3nOixcU4huTap9bAhYXdv9xhucZx/LAvhDZbstVE
-        9UjC3Ffr5jOK+GHUKzzKlwYi4vqjDiP/g3zQJZiCCbEz6rZXO/QKXJR0Ane5szsTiSUNl/l+OOWGd
-        9J9PuCUsvkCE3JZLLDlTn4XpEti0tJlI7dDNSuTzuXf8TZmSFTcKdJXmGdmZOyVLjhOkNA9kbdGH2
-        7kfFkAXQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFJ9v-0002dS-VS; Mon, 07 Sep 2020 15:34:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 130A5300238;
-        Mon,  7 Sep 2020 17:34:18 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EDA1F2C09D7F3; Mon,  7 Sep 2020 17:34:17 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 17:34:17 +0200
-From:   peterz@infradead.org
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Phil Auld <pauld@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Requirements to control kernel isolation/nohz_full at runtime
-Message-ID: <20200907153417.GL1362448@hirez.programming.kicks-ass.net>
-References: <20200901104640.GA13814@lenoir>
+        Mon, 7 Sep 2020 11:35:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F5FC061573;
+        Mon,  7 Sep 2020 08:35:13 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id j7so1797050plk.11;
+        Mon, 07 Sep 2020 08:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2iFqwT4LVt1GmMyaphEkLC+szKUS+5awlK2tO4HV4yY=;
+        b=LRKop/o+FlX1+zxDoN3dyTWIXA9Hufu8ozxbvEaVbPt4avhksSHg9gg9Xdjc2X4jCM
+         49L/Y5ssEHT3vyL4oaDQoiL4CwMpfWm8lufVeLBM0b4db9fWZWZdWDSOIUN1oXvajxGr
+         9J6CGcp9dg7y11Ag5XIMPKrq41dg5qxYgplmbqKnV4KTdfzzYZIKnTOF6B4mrZolfyU9
+         rP5Fp+oau2Ca8t1yKK6tNmDQfErqPodidON7Cq0FLIY/vdwXaMWpT4tFJBLx24MNR92V
+         hzzsuTBYphkb+1ndB+gV4FiJPIkVzWzjMRpt7jzevgWi8tTZCttpDSuGzPmI8ruzkF0F
+         vvWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2iFqwT4LVt1GmMyaphEkLC+szKUS+5awlK2tO4HV4yY=;
+        b=rANkHskJXYhSZsMntbyPmdI3emCWNKBZOL+Bd3dWqxEI973rF/H2nZb2/+floUrcHi
+         vG+0vCgIR/t2FgUraYSCOEQligGYXd/khU4Zoz8h1XLnxsQQPpc2UCV5wBjNMKTLnYgX
+         43v61JXHdi7QYn5Upmqa1AwzxYXEVJP/dUZz2Zr5ovcaI6AYgTPN2u/ju+A/M+ou3t+b
+         9jmq+JpJHHgggQ9M9sMwtwUN84CRj/TWh8hiOuxcUR6jxt4735ApWfrx+MLpDcDLm7wW
+         cWKLPiSkrX3KbL/jHMZk8/uHZ+Pf4mk/AIZ2nxLAC77h7ec/RjDFqMSUtNcGdGccThdj
+         P49w==
+X-Gm-Message-State: AOAM530s8Kf4NK4lwFTBqzb7eN8aETCPKESMm2gDPRsCuiBWxX2In753
+        n8QcuqlW8ewYPG/25oWLk14CCLWfmQF0fBoDhFw=
+X-Google-Smtp-Source: ABdhPJw166M/KQdh5DvSJ2ii7x1eL8g3Lg4xkKxVgvriGvUnalc2cdM9ihP20WgqavU85pKjXWFLcv4Aje1FYx6gK4s=
+X-Received: by 2002:a17:902:b289:: with SMTP id u9mr19923485plr.226.1599492913310;
+ Mon, 07 Sep 2020 08:35:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901104640.GA13814@lenoir>
+References: <20200906185039.22700-1-digetx@gmail.com> <20200906185039.22700-7-digetx@gmail.com>
+ <CAHp75VevXe3c2LGF3jZyDfvPpRAz+-GQKvXEO4OKvuur=RgXCQ@mail.gmail.com>
+ <f9ec5178-e38e-ed9a-25f8-21e53ccd31d1@gmail.com> <CAHp75Vdj7HYN0SWt9StqB8K6JrUCk7dtDhAUwYDkkBXc1R8ueg@mail.gmail.com>
+ <c76f64c8-bd46-36f0-edb4-3ddca281a72b@gmail.com>
+In-Reply-To: <c76f64c8-bd46-36f0-edb4-3ddca281a72b@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Sep 2020 18:34:56 +0300
+Message-ID: <CAHp75Vf3BirttCnW5KarsL0_MqofpWnEN5K5z+TY2YZV-R9fhQ@mail.gmail.com>
+Subject: Re: [PATCH v5 06/36] i2c: tegra: Runtime PM always available on Tegra
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 7, 2020 at 6:25 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> 07.09.2020 18:05, Andy Shevchenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Mon, Sep 7, 2020 at 5:32 PM Dmitry Osipenko <digetx@gmail.com> wrote=
+:
+> >> 07.09.2020 11:10, Andy Shevchenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 
-(your mailer broke and forgot to keep lines shorter than 78 chars)
+...
 
-On Tue, Sep 01, 2020 at 12:46:41PM +0200, Frederic Weisbecker wrote:
+> >> Would be great if anyone could put effort into changing the default
+> >> get_sync() behaviour and add get_sync_nofail(). Otherwise this will be=
+ a
+> >> never ending problem.
+> >
+> > I didn't get this. For time being the API (yes, with its all cons) has
+> > the clear usage:
+> > a) don't check for errors -- you are fine
+> > b) if you start checking errors, keep in mind refcounting.
+> >
+> > So, I don't see how nofail() can fix b) case.
+> >
+>
+> It's a very unintuitive behaviour which none of other APIs have. I would
+> never expect the refcount to be bumped in a case of error, this is a
+> clear drawback of the API, IMO.
 
-> == TIF_NOHZ ==
-> 
-> Need to get rid of that in order not to trigger syscall slowpath on
-> CPUs that don't want nohz_full.  Also we don't want to iterate all
-> threads and clear the flag when the last nohz_full CPU exits nohz_full
-> mode. Prefer static keys to call context tracking on archs. x86 does
-> that well.
+I agree.
 
-Build on the common entry code I suppose. Then any arch that uses that
-gets to have the new features.
+> Perhaps this is not seen as a problem by
+> people who have excellent memory and can easily remember about existence
+> of such non-standard quirks, or by people who're touching the RPM code
+> frequently.
 
-> == Proper entry code ==
-> 
-> We must make sure that a given arch never calls exception_enter() /
-> exception_exit().  This saves the previous state of context tracking
-> and switch to kernel mode (from context tracking POV) temporarily.
-> Since this state is saved on the stack, this prevents us from turning
-> off context tracking entirely on a CPU: The tracking must be done on
-> all CPUs and that takes some cycles.
-> 
-> This means that, considering early entry code (before the call to
-> context tracking upon kernel entry, and after the call to context
-> tracking upon kernel exit), we must take care of few things:
-> 
-> 1) Make sure early entry code can't trigger exceptions. Or if it does,
-> the given exception can't schedule or use RCU (unless it calls
-> rcu_nmi_enter()). Otherwise the exception must call
-> exception_enter()/exception_exit() which we don't want.
+...or by running coccinelle script.
 
-I think this is true for x86. Early entry has interrupts disabled, any
-exception that can still happen is NMI-like and will thus use
-rcu_nmi_enter().
-
-On x86 that now includes #DB (which is also excluded due to us refusing
-to set execution breakpoints on entry code), #BP, NMI and MCE.
-
-> 2) No call to schedule_user().
-
-I'm not sure what that is supposed to do, but x86 doesn't appear to have
-it, so all good :-)
-
-> 3) Make sure early entry code is not interruptible or
-> preempt_schedule_irq() would rely on
-> exception_entry()/exception_exit()
-
-This is so for x86.
-
-> 4) Make sure early entry code can't be traced (no call to
-> preempt_schedule_notrace()), or if it does it can't schedule
-
-noinstr is your friend.
-
-> I believe x86 does most of that well.
-
-It does now.
-
+--=20
+With Best Regards,
+Andy Shevchenko
