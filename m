@@ -7,35 +7,39 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A19C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68979C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C075E206E6
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7C32080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbgIGRcC (ORCPT
+        id S1731234AbgIGRcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:32:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:41840 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgIGNS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:27 -0400
+        Mon, 7 Sep 2020 13:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729502AbgIGNSd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:33 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6960FC0617A4;
+        Mon,  7 Sep 2020 06:18:18 -0700 (PDT)
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 4CE9DCAC;
-        Mon,  7 Sep 2020 15:16:46 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 6587BE67;
+        Mon,  7 Sep 2020 15:16:50 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 08/72] x86/umip: Factor out instruction fetch
-Date:   Mon,  7 Sep 2020 15:15:09 +0200
-Message-Id: <20200907131613.12703-9-joro@8bytes.org>
+Subject: [PATCH v7 16/72] x86/boot/compressed/64: Always switch to own page-table
+Date:   Mon,  7 Sep 2020 15:15:17 +0200
+Message-Id: <20200907131613.12703-17-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,125 +64,139 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Factor out the code to fetch the instruction from user-space to a helper
-function.
+When booted through startup_64 the kernel keeps running on the EFI
+page-table until the KASLR code sets up its own page-table. Without
+KASLR the pre-decompression boot code never switches off the EFI
+page-table. Change that by unconditionally switching to a kernel
+controlled page-table after relocation.
 
-No functional changes.
+This makes sure we can make changes to the mapping when necessary, for
+example map pages unencrypted in SEV and SEV-ES guests.
+
+Also remove the debug_putstr() calls in initialize_identity_maps()
+because the function now runs before console_init() is called.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/insn-eval.h |  2 ++
- arch/x86/kernel/umip.c           | 26 +++++-----------------
- arch/x86/lib/insn-eval.c         | 38 ++++++++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+), 20 deletions(-)
+ arch/x86/boot/compressed/head_64.S      |  3 +-
+ arch/x86/boot/compressed/ident_map_64.c | 51 +++++++++++++++----------
+ arch/x86/boot/compressed/kaslr.c        |  3 --
+ 3 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
-index 2b6ccf2c49f1..b8b9ef1bbd06 100644
---- a/arch/x86/include/asm/insn-eval.h
-+++ b/arch/x86/include/asm/insn-eval.h
-@@ -19,5 +19,7 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
- int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
- unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
- int insn_get_code_seg_params(struct pt_regs *regs);
-+int insn_fetch_from_user(struct pt_regs *regs,
-+			 unsigned char buf[MAX_INSN_SIZE]);
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 1fffaec1c069..37c8c2c8f8b6 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -533,10 +533,11 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
+ 	rep	stosq
  
- #endif /* _ASM_X86_INSN_EVAL_H */
-diff --git a/arch/x86/kernel/umip.c b/arch/x86/kernel/umip.c
-index 2c304fd0bb1a..ad135be4f1f0 100644
---- a/arch/x86/kernel/umip.c
-+++ b/arch/x86/kernel/umip.c
-@@ -335,11 +335,11 @@ static void force_sig_info_umip_fault(void __user *addr, struct pt_regs *regs)
+ /*
+- * Load stage2 IDT
++ * Load stage2 IDT and switch to our own page-table
   */
- bool fixup_umip_exception(struct pt_regs *regs)
- {
--	int not_copied, nr_copied, reg_offset, dummy_data_size, umip_inst;
--	unsigned long seg_base = 0, *reg_addr;
-+	int nr_copied, reg_offset, dummy_data_size, umip_inst;
- 	/* 10 bytes is the maximum size of the result of UMIP instructions */
- 	unsigned char dummy_data[10] = { 0 };
- 	unsigned char buf[MAX_INSN_SIZE];
-+	unsigned long *reg_addr;
- 	void __user *uaddr;
- 	struct insn insn;
- 	int seg_defs;
-@@ -347,26 +347,12 @@ bool fixup_umip_exception(struct pt_regs *regs)
- 	if (!regs)
- 		return false;
+ 	pushq	%rsi
+ 	call	load_stage2_idt
++	call	initialize_identity_maps
+ 	popq	%rsi
  
--	/*
--	 * If not in user-space long mode, a custom code segment could be in
--	 * use. This is true in protected mode (if the process defined a local
--	 * descriptor table), or virtual-8086 mode. In most of the cases
--	 * seg_base will be zero as in USER_CS.
--	 */
--	if (!user_64bit_mode(regs))
--		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
--
--	if (seg_base == -1L)
--		return false;
--
--	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
--				    sizeof(buf));
--	nr_copied = sizeof(buf) - not_copied;
-+	nr_copied = insn_fetch_from_user(regs, buf);
+ /*
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index e3d980ae9c2b..ecf9353b064d 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -86,9 +86,31 @@ phys_addr_t physical_mask = (1ULL << __PHYSICAL_MASK_SHIFT) - 1;
+  */
+ static struct x86_mapping_info mapping_info;
  
- 	/*
--	 * The copy_from_user above could have failed if user code is protected
--	 * by a memory protection key. Give up on emulation in such a case.
--	 * Should we issue a page fault?
-+	 * The insn_fetch_from_user above could have failed if user code
-+	 * is protected by a memory protection key. Give up on emulation
-+	 * in such a case.  Should we issue a page fault?
- 	 */
- 	if (!nr_copied)
- 		return false;
-diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
-index 5e69603ff63f..947b7f1a0042 100644
---- a/arch/x86/lib/insn-eval.c
-+++ b/arch/x86/lib/insn-eval.c
-@@ -1367,3 +1367,41 @@ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs)
- 		return (void __user *)-1L;
- 	}
- }
-+
-+/**
-+ * insn_fetch_from_user() - Copy instruction bytes from user-space memory
-+ * @regs:	Structure with register values as seen when entering kernel mode
-+ * @buf:	Array to store the fetched instruction
-+ *
-+ * Gets the linear address of the instruction and copies the instruction bytes
-+ * to the buf.
-+ *
-+ * Returns:
-+ *
-+ * Number of instruction bytes copied.
-+ *
-+ * 0 if nothing was copied.
++/*
++ * Adds the specified range to what will become the new identity mappings.
++ * Once all ranges have been added, the new mapping is activated by calling
++ * finalize_identity_maps() below.
 + */
-+int insn_fetch_from_user(struct pt_regs *regs, unsigned char buf[MAX_INSN_SIZE])
++void add_identity_map(unsigned long start, unsigned long size)
 +{
-+	unsigned long seg_base = 0;
-+	int not_copied;
++	unsigned long end = start + size;
 +
-+	/*
-+	 * If not in user-space long mode, a custom code segment could be in
-+	 * use. This is true in protected mode (if the process defined a local
-+	 * descriptor table), or virtual-8086 mode. In most of the cases
-+	 * seg_base will be zero as in USER_CS.
-+	 */
-+	if (!user_64bit_mode(regs)) {
-+		seg_base = insn_get_seg_base(regs, INAT_SEG_REG_CS);
-+		if (seg_base == -1L)
-+			return 0;
-+	}
++	/* Align boundary to 2M. */
++	start = round_down(start, PMD_SIZE);
++	end = round_up(end, PMD_SIZE);
++	if (start >= end)
++		return;
 +
-+
-+	not_copied = copy_from_user(buf, (void __user *)(seg_base + regs->ip),
-+				    MAX_INSN_SIZE);
-+
-+	return MAX_INSN_SIZE - not_copied;
++	/* Build the mapping. */
++	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
++				  start, end);
 +}
++
+ /* Locates and clears a region for a new top level page table. */
+ void initialize_identity_maps(void)
+ {
++	unsigned long start, size;
++
+ 	/* If running as an SEV guest, the encryption mask is required. */
+ 	set_sev_encryption_mask();
+ 
+@@ -121,37 +143,24 @@ void initialize_identity_maps(void)
+ 	 */
+ 	top_level_pgt = read_cr3_pa();
+ 	if (p4d_offset((pgd_t *)top_level_pgt, 0) == (p4d_t *)_pgtable) {
+-		debug_putstr("booted via startup_32()\n");
+ 		pgt_data.pgt_buf = _pgtable + BOOT_INIT_PGT_SIZE;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE - BOOT_INIT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 	} else {
+-		debug_putstr("booted via startup_64()\n");
+ 		pgt_data.pgt_buf = _pgtable;
+ 		pgt_data.pgt_buf_size = BOOT_PGT_SIZE;
+ 		memset(pgt_data.pgt_buf, 0, pgt_data.pgt_buf_size);
+ 		top_level_pgt = (unsigned long)alloc_pgt_page(&pgt_data);
+ 	}
+-}
+ 
+-/*
+- * Adds the specified range to what will become the new identity mappings.
+- * Once all ranges have been added, the new mapping is activated by calling
+- * finalize_identity_maps() below.
+- */
+-void add_identity_map(unsigned long start, unsigned long size)
+-{
+-	unsigned long end = start + size;
+-
+-	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
+-	if (start >= end)
+-		return;
+-
+-	/* Build the mapping. */
+-	kernel_ident_mapping_init(&mapping_info, (pgd_t *)top_level_pgt,
+-				  start, end);
++	/*
++	 * New page-table is set up - map the kernel image and load it
++	 * into cr3.
++	 */
++	start = (unsigned long)_head;
++	size  = _end - _head;
++	add_identity_map(start, size);
++	write_cr3(top_level_pgt);
+ }
+ 
+ /*
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index e27de98ed038..82662869c4cb 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -861,9 +861,6 @@ void choose_random_location(unsigned long input,
+ 
+ 	boot_params->hdr.loadflags |= KASLR_FLAG;
+ 
+-	/* Prepare to add new identity pagetables on demand. */
+-	initialize_identity_maps();
+-
+ 	if (IS_ENABLED(CONFIG_X86_32))
+ 		mem_limit = KERNEL_IMAGE_SIZE;
+ 	else
 -- 
 2.28.0
 
