@@ -2,229 +2,154 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4CDC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFCAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B11F21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ChwnxHd8"
+	by mail.kernel.org (Postfix) with ESMTP id E7D5A206D4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:23:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599477823;
+	bh=Sp+B9glHEiQL9X5ESJUoG443QwUdRzr0XJbD8+1OOWI=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QH/JwbspcuPpeqferqQsPI+EGDPcg7Ch5KTU4yTExkLMX/TStzaWp6QNtWeU25xJ3
+	 33I6+xqNGV5BSxIq7Bob4hY8SWx+Vake2WFTYZrt7p2WEpDFBacn2YxOfW39OIx6Sq
+	 cAljuJ85xVSS2EbNjDhRWY+rQsIv4F/Ep+klqS8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgIGLUw (ORCPT
+        id S1728591AbgIGLXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:20:52 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:57210 "EHLO mail.skyhub.de"
+        Mon, 7 Sep 2020 07:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbgIGLTM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:19:12 -0400
-Received: from zn.tnic (p200300ec2f09090030eade31917bbe1c.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:900:30ea:de31:917b:be1c])
+        id S1728714AbgIGLUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:20:36 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F3EF41EC0445;
-        Mon,  7 Sep 2020 13:18:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599477524;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=IchRjOSRh+sRDrPo1JFsixmldHqDwOcJjES6CFnvA5o=;
-        b=ChwnxHd8s84v/14/oxkZicv5CUVrwHYkZQqm7A5eHOdZS+/YBR9hlSCzhpTd2C/ZnVgQcH
-        1gpukxVDisQlkBvU1SgGgTMooIysBYw8sw3khE5ZZHvz7eHDqO+1FObcRba/0VuTJMavQP
-        8r8jOLU4hse5MHrYPwdI2OrHXjLt0rU=
-Date:   Mon, 7 Sep 2020 13:18:43 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Jacob Jun Pan <jacob.jun.pan@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Sohil Mehta <sohil.mehta@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH v7 9/9] x86/mmu: Allocate/free PASID
-Message-ID: <20200907111843.GC16029@zn.tnic>
-References: <1598540794-132666-1-git-send-email-fenghua.yu@intel.com>
- <1598540794-132666-10-git-send-email-fenghua.yu@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 69FAF2176B;
+        Mon,  7 Sep 2020 11:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599477064;
+        bh=Sp+B9glHEiQL9X5ESJUoG443QwUdRzr0XJbD8+1OOWI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=wH7FszL4wDQpZXuWAP4ZftBal/8epDpNckFZFwQjEGu7A2aLrC7ykI1tEixDrrMz2
+         R+mNr3RQpNrFFoIATWWqFPkOrCFwz/PlQZOy7y+smPo0v+Bv6uoDRxb0BbpRQNd0/Y
+         cWGnGQFF5KoRuEZ001UFvQ7+O5eH3PsA4KWsUNOk=
+Received: by pali.im (Postfix)
+        id B15D5814; Mon,  7 Sep 2020 13:11:02 +0200 (CEST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-pci@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Xogium <contact@xogium.me>, marek.behun@nic.cz
+Subject: [PATCH v3 4/5] PCI: aardvark: Implement driver 'remove' function and allow to build it as module
+Date:   Mon,  7 Sep 2020 13:10:37 +0200
+Message-Id: <20200907111038.5811-5-pali@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200907111038.5811-1-pali@kernel.org>
+References: <20200907111038.5811-1-pali@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1598540794-132666-10-git-send-email-fenghua.yu@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 08:06:34AM -0700, Fenghua Yu wrote:
-> A PASID is allocated for an "mm" the first time any thread binds
-> to an SVM capable device and is freed from the "mm" when the SVM is
-> unbound by the last thread. It's possible for the "mm" to have different
-> PASID values in different binding/unbinding SVM cycles.
-> 
-> The mm's PASID (non-zero for valid PASID or 0 for invalid PASID) is
-> propagated to per-thread PASID MSR for all threads within the mm through
-> through IPI, context switch, or inherit to ensure a running thread has
-> the right PASID MSR matching the mm's PASID.
+Providing driver's 'remove' function allows kernel to bind and unbind devices
+from aardvark driver. It also allows to build aardvark driver as a module.
 
-That sentence has grown too large and confused. Pls fix.
+Compiling aardvark as a module simplifies development and debugging of
+this driver as it can be reloaded at runtime without the need to reboot
+to new kernel.
 
-> Suggested-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-> Reviewed-by: Tony Luck <tony.luck@intel.com>
-> ---
-> v7:
-> - Don't fix up PASID in #GP. Instead, update the PASID MSR by IPI and
->   context switch after PASID allocation and free. Inherit PASID from
->   parent. (Andy)
-> 
-> Before v7:
-> - Allocate a PASID for the mm and free it until mm exit.
-> 
->  arch/x86/include/asm/disabled-features.h |  2 +-
->  arch/x86/include/asm/fpu/api.h           | 12 +++++
->  arch/x86/include/asm/fpu/internal.h      |  2 +
->  arch/x86/kernel/fpu/xstate.c             | 56 ++++++++++++++++++++++++
->  drivers/iommu/intel/svm.c                | 28 +++++++++++-
->  5 files changed, 98 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-> index 588d83e9da49..5861d34f9771 100644
-> --- a/arch/x86/include/asm/disabled-features.h
-> +++ b/arch/x86/include/asm/disabled-features.h
-> @@ -56,7 +56,7 @@
->  # define DISABLE_PTI		(1 << (X86_FEATURE_PTI & 31))
->  #endif
->  
-> -#ifdef CONFIG_INTEL_IOMMU_SVM
-> +#ifdef CONFIG_IOMMU_SUPPORT
->  # define DISABLE_ENQCMD	0
->  #else
->  # define DISABLE_ENQCMD (1 << (X86_FEATURE_ENQCMD & 31))
+Signed-off-by: Pali Rohár <pali@kernel.org>
+Reviewed-by: Marek Behún <marek.behun@nic.cz>
+---
+ drivers/pci/controller/Kconfig        |  2 +-
+ drivers/pci/controller/pci-aardvark.c | 27 ++++++++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-That hunk belongs with the previous patch.
-
-> diff --git a/arch/x86/include/asm/fpu/api.h b/arch/x86/include/asm/fpu/api.h
-> index b774c52e5411..dcd9503b1098 100644
-> --- a/arch/x86/include/asm/fpu/api.h
-> +++ b/arch/x86/include/asm/fpu/api.h
-> @@ -62,4 +62,16 @@ extern void switch_fpu_return(void);
->   */
->  extern int cpu_has_xfeatures(u64 xfeatures_mask, const char **feature_name);
->  
-> +/*
-> + * Tasks that are not using SVA have mm->pasid set to zero to note that they
-> + * will not have the valid bit set in MSR_IA32_PASID while they are running.
-> + */
-> +#define PASID_DISABLED	0
-> +
-> +#ifdef CONFIG_IOMMU_SUPPORT
-> +/* Update current's PASID MSR/state by mm's PASID. */
-> +void update_pasid(void);
-> +#else
-> +static inline void update_pasid(void) { }
-> +#endif
->  #endif /* _ASM_X86_FPU_API_H */
-> diff --git a/arch/x86/include/asm/fpu/internal.h b/arch/x86/include/asm/fpu/internal.h
-> index 0a460f2a3f90..2d737e02b59a 100644
-> --- a/arch/x86/include/asm/fpu/internal.h
-> +++ b/arch/x86/include/asm/fpu/internal.h
-> @@ -583,6 +583,8 @@ static inline void switch_fpu_finish(struct fpu *new_fpu)
->  			pkru_val = pk->pkru;
->  	}
->  	__write_pkru(pkru_val);
-> +
-> +	update_pasid();
->  }
->  
->  /*
-> diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-> index 67f1a03b9b23..556040e14f1c 100644
-> --- a/arch/x86/kernel/fpu/xstate.c
-> +++ b/arch/x86/kernel/fpu/xstate.c
-> @@ -1402,3 +1402,59 @@ int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
->  	return 0;
->  }
->  #endif /* CONFIG_PROC_PID_ARCH_STATUS */
-> +
-> +#ifdef CONFIG_IOMMU_SUPPORT
-> +void update_pasid(void)
-> +{
-> +	u64 pasid_state;
-> +	u32 pasid;
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_ENQCMD))
-> +		return;
-> +
-> +	if (!current->mm)
-> +		return;
-> +
-> +	pasid = READ_ONCE(current->mm->pasid);
-> +	/* Set the valid bit in the PASID MSR/state only for valid pasid. */
-> +	pasid_state = pasid == PASID_DISABLED ?
-> +		      pasid : pasid | MSR_IA32_PASID_VALID;
-> +
-> +	/*
-> +	 * No need to hold fregs_lock() since the task's fpstate won't
-> +	 * be changed by others (e.g. ptrace) while the task is being
-> +	 * switched to or is in IPI.
-> +	 */
-> +	if (!test_thread_flag(TIF_NEED_FPU_LOAD)) {
-> +		/* The MSR is active and can be directly updated. */
-> +		wrmsrl(MSR_IA32_PASID, pasid_state);
-> +	} else {
-> +		struct fpu *fpu = &current->thread.fpu;
-> +		struct ia32_pasid_state *ppasid_state;
-> +		struct xregs_state *xsave;
-> +
-> +		/*
-> +		 * The CPU's xstate registers are not currently active. Just
-> +		 * update the PASID state in the memory buffer here. The
-> +		 * PASID MSR will be loaded when returning to user mode.
-> +		 */
-> +		xsave = &fpu->state.xsave;
-> +		xsave->header.xfeatures |= XFEATURE_MASK_PASID;
-> +		ppasid_state = get_xsave_addr(xsave, XFEATURE_PASID);
-> +		if (ppasid_state) {
-> +			/*
-> +			 * Only update the task's PASID state when it's
-> +			 * different from the mm's pasid.
-> +			 */
-> +			if (ppasid_state->pasid != pasid_state) {
-> +				/*
-> +				 * Invalid fpregs so that xrstors will pick up
-							  ^^^^^^^
-
-Not "xrstors" but the "state restoring" or so.
-
-
-> +				 * the PASID state.
-> +				 */
-> +				__fpu_invalidate_fpregs_state(fpu);
-> +				ppasid_state->pasid = pasid_state;
-> +			}
-
-What happens if get_xsave_addr() returns NULL? A WARN_ONCE maybe?
-
-Ok, done with review.
-
-Thx.
-
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index f18c3725ef80..a7aa22512a92 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -12,7 +12,7 @@ config PCI_MVEBU
+ 	select PCI_BRIDGE_EMUL
+ 
+ config PCI_AARDVARK
+-	bool "Aardvark PCIe controller"
++	tristate "Aardvark PCIe controller"
+ 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
+ 	depends on OF
+ 	depends on PCI_MSI_IRQ_DOMAIN
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 2e2e2a2ff51d..b16822e344ab 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -14,6 +14,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
+ #include <linux/kernel.h>
++#include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/phy/phy.h>
+@@ -1121,6 +1122,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 
+ 	pcie = pci_host_bridge_priv(bridge);
+ 	pcie->pdev = pdev;
++	platform_set_drvdata(pdev, pcie);
+ 
+ 	pcie->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pcie->base))
+@@ -1198,18 +1200,37 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static int advk_pcie_remove(struct platform_device *pdev)
++{
++	struct advk_pcie *pcie = platform_get_drvdata(pdev);
++	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
++
++	pci_lock_rescan_remove();
++	pci_stop_root_bus(bridge->bus);
++	pci_remove_root_bus(bridge->bus);
++	pci_unlock_rescan_remove();
++
++	advk_pcie_remove_msi_irq_domain(pcie);
++	advk_pcie_remove_irq_domain(pcie);
++
++	return 0;
++}
++
+ static const struct of_device_id advk_pcie_of_match_table[] = {
+ 	{ .compatible = "marvell,armada-3700-pcie", },
+ 	{},
+ };
++MODULE_DEVICE_TABLE(of, advk_pcie_of_match_table);
+ 
+ static struct platform_driver advk_pcie_driver = {
+ 	.driver = {
+ 		.name = "advk-pcie",
+ 		.of_match_table = advk_pcie_of_match_table,
+-		/* Driver unloading/unbinding currently not supported */
+-		.suppress_bind_attrs = true,
+ 	},
+ 	.probe = advk_pcie_probe,
++	.remove = advk_pcie_remove,
+ };
+-builtin_platform_driver(advk_pcie_driver);
++module_platform_driver(advk_pcie_driver);
++
++MODULE_DESCRIPTION("Aardvark PCIe controller");
++MODULE_LICENSE("GPL v2");
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
