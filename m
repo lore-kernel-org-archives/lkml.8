@@ -2,82 +2,127 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEE3C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F52E2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDB62080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbgIGRPQ (ORCPT
+        id S1731212AbgIGRPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:15:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:36604 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729715AbgIGOGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:06:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B78F91045;
-        Mon,  7 Sep 2020 07:05:57 -0700 (PDT)
-Received: from [10.57.6.175] (unknown [10.57.6.175])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E9023F73C;
-        Mon,  7 Sep 2020 07:05:54 -0700 (PDT)
-Subject: Re: [PATCH v7] perf test: Introduce script for Arm CoreSight testing
-To:     leo.yan@linaro.org, acme@kernel.org, mathieu.poirier@linaro.org,
-        mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
-References: <20200907130154.9601-1-leo.yan@linaro.org>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <6333f002-1213-0e20-0fcc-b3bfc0723b97@arm.com>
-Date:   Mon, 7 Sep 2020 15:10:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 7 Sep 2020 13:15:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59240 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729763AbgIGOFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:05:46 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1646D9B65E56938C9A4D;
+        Mon,  7 Sep 2020 22:05:38 +0800 (CST)
+Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 7 Sep 2020 22:05:28 +0800
+From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        <rafael@kernel.org>, Ingo Molnar <mingo@redhat.com>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        "Sean V Kelley" <sean.v.kelley@linux.intel.com>,
+        <linux-api@vger.kernel.org>, "Hanjun Guo" <guohanjun@huawei.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH v10 2/6] x86: Support Generic Initiator only proximity domains
+Date:   Mon, 7 Sep 2020 22:03:03 +0800
+Message-ID: <20200907140307.571932-3-Jonathan.Cameron@huawei.com>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
+References: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200907130154.9601-1-leo.yan@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.123.41.22]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/07/2020 02:01 PM, Leo Yan wrote:
-> We need a simple method to test Perf with Arm CoreSight drivers, this
-> could be used for smoke testing when new patch is coming for perf or
-> CoreSight drivers, and we also can use the test to confirm if the
-> CoreSight has been enabled successfully on new platforms.
-> 
-> This patch introduces the shell script test_arm_coresight.sh which is
-> under the 'pert test' framework.  This script provides three testing
-> scenarios:
+In common with memoryless domains we only register GI domains
+if the proximity node is not online. If a domain is already
+a memory containing domain, or a memoryless domain there is
+nothing to do just because it also contains a Generic Initiator.
 
-...
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+---
+ arch/x86/include/asm/numa.h |  2 ++
+ arch/x86/kernel/setup.c     |  1 +
+ arch/x86/mm/numa.c          | 14 ++++++++++++++
+ 3 files changed, 17 insertions(+)
 
-> Below is detailed usage for it:
-> 
->    # cd $linux/tools/perf  -> This is important so can use shell script
->    # perf test list
->      [...]
->      70: probe libc's inet_pton & backtrace it with ping
->      71: Check Arm CoreSight trace data recording and synthesized samples
->      72: Check open filename arg using perf trace + vfs_getname
->      73: Zstd perf.data compression/decompression
->      74: Add vfs_getname probe to get syscall args filenames
->      75: Use vfs_getname probe to get syscall args filenames
-> 
->    # perf test 71
->      71: Check Arm CoreSight trace data recording and branch samples: Ok
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index bbfde3d2662f..f631467272a3 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -62,12 +62,14 @@ extern void numa_clear_node(int cpu);
+ extern void __init init_cpu_to_node(void);
+ extern void numa_add_cpu(int cpu);
+ extern void numa_remove_cpu(int cpu);
++extern void init_gi_nodes(void);
+ #else	/* CONFIG_NUMA */
+ static inline void numa_set_node(int cpu, int node)	{ }
+ static inline void numa_clear_node(int cpu)		{ }
+ static inline void init_cpu_to_node(void)		{ }
+ static inline void numa_add_cpu(int cpu)		{ }
+ static inline void numa_remove_cpu(int cpu)		{ }
++static inline void init_gi_nodes(void)			{ }
+ #endif	/* CONFIG_NUMA */
+ 
+ #ifdef CONFIG_DEBUG_PER_CPU_MAPS
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3511736fbc74..9062c146f03a 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1218,6 +1218,7 @@ void __init setup_arch(char **cmdline_p)
+ 	prefill_possible_map();
+ 
+ 	init_cpu_to_node();
++	init_gi_nodes();
+ 
+ 	io_apic_init_mappings();
+ 
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index aa76ec2d359b..fc630dc6764e 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -747,6 +747,20 @@ static void __init init_memory_less_node(int nid)
+ 	 */
+ }
+ 
++/*
++ * Generic Initiator Nodes may have neither CPU nor Memory.
++ * At this stage if either of the others were present we would
++ * already be online.
++ */
++void __init init_gi_nodes(void)
++{
++	int nid;
++
++	for_each_node_state(nid, N_GENERIC_INITIATOR)
++		if (!node_online(nid))
++			init_memory_less_node(nid);
++}
++
+ /*
+  * Setup early cpu_to_node.
+  *
+-- 
+2.19.1
 
-Leo,
-
-Thank you so much for testcase !
-
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
