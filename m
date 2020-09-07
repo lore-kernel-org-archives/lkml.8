@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F038C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E815C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4204A21D80
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D0521D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496591;
-	bh=oAQs44u1zUPWlrnad2tUoyXptQENSkio0WetpFVO03U=;
+	s=default; t=1599496600;
+	bh=R1DlbR4hqNKkIN0iCJx6S2toPcEtswptm9ebDwIlBXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KU2SbrAR5uVG+b21R/PP+D/mC4o0tKNPNs31W6nLPrgVAbPZquohojIOesNPuY6yZ
-	 0lK4CvWoVCWifKaWGJ1bM9rUHPI5P/M19hISF30Y56bFy1PE/BeRRwfeZ9pYLndGUD
-	 wrlnKcvY5zy2zVf5uvHW3Wl4x9Iz1TrSqjrnIpNo=
+	b=FkQTTsUD9WvMFmJPpNFW9JqCKl3y9SgDKfQpwFNyvB1EtnMMcBvlqeGYiaxDfPZo4
+	 TinvcAjlDSMpTBFxS2mydBKHUbyTyhaKyfyArUmANnrv9hs62+sCjBGf1txxsWsjII
+	 SE1sPmXJPXJYnireyD636ngIfeDw51rfrDknCi1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730894AbgIGQg3 (ORCPT
+        id S1730898AbgIGQgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:36:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46662 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:36:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730686AbgIGQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:36 -0400
+        id S1729833AbgIGQdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F0C821974;
-        Mon,  7 Sep 2020 16:33:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6662321789;
+        Mon,  7 Sep 2020 16:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496416;
-        bh=oAQs44u1zUPWlrnad2tUoyXptQENSkio0WetpFVO03U=;
+        s=default; t=1599496420;
+        bh=R1DlbR4hqNKkIN0iCJx6S2toPcEtswptm9ebDwIlBXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fnbh9JHg4/DsiB3vqd3NR5iS97DNa4f8Ch3XXoMqaVa/Sqoqm5MkMzMv7ltAz8TTQ
-         nvFNey/4Ye4/ptdMtlEgNe7IYbAxrzX2HYvjeOwLKHtEsPMDgOEYxFdLI7ARYlFPHl
-         ZvAD0/P9tQ6HOKsgWJPEQPDNMtd8yrNEzURabEh8=
+        b=IlJlcl0KBCY5e99VdWRp3wktJpARrHex1PqH7V5i4U+1LMqNzgfB5J4h48uAQ40Gy
+         ociVQykhp1S19GFBrERuVJQVbjF3ooKWMol6cORRouMi5AAfY1K/LXN9lKIABoZ93F
+         silPbYipzFz+4aoGRSo4XcTbfdFE+KjeKug9DBkY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/43] drivers/net/wan/lapbether: Added needed_tailroom
-Date:   Mon,  7 Sep 2020 12:32:51 -0400
-Message-Id: <20200907163329.1280888-5-sashal@kernel.org>
+Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 08/43] ALSA: hda: Fix 2 channel swapping for Tegra
+Date:   Mon,  7 Sep 2020 12:32:54 -0400
+Message-Id: <20200907163329.1280888-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -61,36 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Mohan Kumar <mkumard@nvidia.com>
 
-[ Upstream commit 1ee39c1448c4e0d480c5b390e2db1987561fb5c2 ]
+[ Upstream commit 216116eae43963c662eb84729507bad95214ca6b ]
 
-The underlying Ethernet device may request necessary tailroom to be
-allocated by setting needed_tailroom. This driver should also set
-needed_tailroom to request the tailroom needed by the underlying
-Ethernet device to be allocated.
+The Tegra HDA codec HW implementation has an issue related to not
+swapping the 2 channel Audio Sample Packet(ASP) channel mapping.
+Whatever the FL and FR mapping specified the left channel always
+comes out of left speaker and right channel on right speaker. So
+add condition to disallow the swapping of FL,FR during the playback.
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
+Acked-by: Sameer Pujar <spujar@nvidia.com>
+Link: https://lore.kernel.org/r/20200825052415.20626-2-mkumard@nvidia.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/lapbether.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/pci/hda/patch_hdmi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index 996eb9c55b39a..373c9ce4010a3 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -340,6 +340,7 @@ static int lapbeth_new_device(struct net_device *dev)
- 	 */
- 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
- 					   + dev->needed_headroom;
-+	ndev->needed_tailroom = dev->needed_tailroom;
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index ec9460f3a288e..330fb7656c636 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -3677,6 +3677,7 @@ static int tegra_hdmi_build_pcms(struct hda_codec *codec)
  
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+ static int patch_tegra_hdmi(struct hda_codec *codec)
+ {
++	struct hdmi_spec *spec;
+ 	int err;
+ 
+ 	err = patch_generic_hdmi(codec);
+@@ -3684,6 +3685,10 @@ static int patch_tegra_hdmi(struct hda_codec *codec)
+ 		return err;
+ 
+ 	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
++	spec = codec->spec;
++	spec->chmap.ops.chmap_cea_alloc_validate_get_type =
++		nvhdmi_chmap_cea_alloc_validate_get_type;
++	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
