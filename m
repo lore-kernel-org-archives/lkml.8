@@ -2,134 +2,95 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A17C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFB0C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AF5421941
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C9C21532
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:21:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgIGRVJ (ORCPT
+        id S1729774AbgIGRVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:21:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729676AbgIGNri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:21:18 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:62077 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729667AbgIGNri (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:47:38 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9DFCE3B12DCB8CB47E17;
-        Mon,  7 Sep 2020 21:46:58 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 21:46:51 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
-        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
-        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
-        <bhsharma@redhat.com>
-CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
-        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
-        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
-        <wangkefeng.wang@huawei.com>, <chenzhou10@huawei.com>
-Subject: [PATCH v12 5/9] arm64: kdump: introduce some macroes for crash kernel reservation
-Date:   Mon, 7 Sep 2020 21:47:41 +0800
-Message-ID: <20200907134745.25732-6-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="466420197"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 15:46:44 +0200
+Date:   Mon, 7 Sep 2020 15:46:44 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Coccinelle <cocci@systeme.lip6.fr>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Denis Efremov <efremov@linux.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_Coccinelle=3A_api=3A_Add_SmPL_scr?=
+ =?UTF-8?Q?ipt_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget=5Fand=5Fioremap=5Fre?=
+ =?UTF-8?Q?source=2Ecocci=E2=80=9D?=
+In-Reply-To: <46d314d5-822e-3d73-2d70-015794556e56@web.de>
+Message-ID: <alpine.DEB.2.22.394.2009071544460.2476@hadrien>
+References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <alpine.DEB.2.22.394.2009071357140.2476@hadrien> <477abcea-e008-e509-d03f-f2753ebdfb20@web.de> <alpine.DEB.2.22.394.2009071506350.2476@hadrien>
+ <46d314d5-822e-3d73-2d70-015794556e56@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
-for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
-upper bound of high crash memory, use macroes instead.
+> >>>> +@replacement depends on patch@
+> >>>> +expression base, device1, device2, index, private, resource;
+> >>>> +@@
+> >>>> +(
+> >>>> +-resource = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >>>> + base =
+> >>>> +-       devm_ioremap_resource
+> >>>> ++       devm_platform_get_and_ioremap_resource
+> >>>> +                             (
+> >>>> +-                             &
+> >>>> +                               device1
+> >>>> +-                                     ->dev
+> >>>> +                              ,
+> >>>> +-                             resource
+> >>>> ++                             index, &resource
+> >>>> +                             );
+> >>>> +|
+> >>>> +-private->res = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >>>> + base =
+> >>>> +-       devm_ioremap_resource
+> >>>> ++       devm_platform_get_and_ioremap_resource
+> >>>> +                             (device2,
+> >>>
+> >>> It is very suspicious that in one case you change the first argument of
+> >>> devm_platform_get_and_ioremap_resource and in one case you don't.
+> >>
+> >> I noticed a few special cases during my source code analysis approach.
+> >
+> > This is not a reasonable answer.  Does the rule work correctly or not?
+> > If it doesn't work correctly, it needs to be removed.
+>
+> Both source code change patterns from these branches of a SmPL disjunction
+> work as I would expect it by the current Coccinelle software.
+> Would you like to clarify any remaining related open issues?
 
-Besides, keep consistent with x86, use CRASH_ALIGN as the lower bound
-of crash kernel reservation.
+In one case the first argument of devm_ioremap_resource has to be changed
+to produce the first argument of devm_platform_get_and_ioremap_resource
+and in the other case there is no such change.  "work as I would expect"
+is not a proper explanation of why this is correct.  Maybe you can point
+to some previous commits that have made the change in this way.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/include/asm/kexec.h     | 6 ++++++
- arch/arm64/include/asm/processor.h | 1 +
- arch/arm64/mm/init.c               | 8 ++++----
- 3 files changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d24b527e8c00..402d208265a3 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -25,6 +25,12 @@
- 
- #define KEXEC_ARCH KEXEC_ARCH_AARCH64
- 
-+/* 2M alignment for crash kernel regions */
-+#define CRASH_ALIGN	SZ_2M
-+
-+#define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
-+#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
-+
- #ifndef __ASSEMBLY__
- 
- /**
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index 240fe5e5b720..af71063f352c 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -95,6 +95,7 @@
- #endif /* CONFIG_ARM64_FORCE_52BIT */
- 
- extern phys_addr_t arm64_dma_phys_limit;
-+extern phys_addr_t arm64_dma32_phys_limit;
- #define ARCH_LOW_ADDRESS_LIMIT	(arm64_dma_phys_limit - 1)
- 
- struct debug_info {
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 481d22c32a2e..ad27dc4cc55e 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -67,7 +67,7 @@ EXPORT_SYMBOL(vmemmap);
-  * bit addressable memory area.
-  */
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
--static phys_addr_t arm64_dma32_phys_limit __ro_after_init;
-+phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
- /*
-@@ -92,8 +92,8 @@ static void __init reserve_crashkernel(void)
- 
- 	if (crash_base == 0) {
- 		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
--				crash_size, SZ_2M);
-+		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
-+				crash_size, CRASH_ALIGN);
- 		if (crash_base == 0) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
-@@ -111,7 +111,7 @@ static void __init reserve_crashkernel(void)
- 			return;
- 		}
- 
--		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
- 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
- 			return;
- 		}
--- 
-2.20.1
-
+julia
