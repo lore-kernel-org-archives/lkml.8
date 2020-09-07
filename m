@@ -2,126 +2,137 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C7DC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B052DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4282080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:23:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB692080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="s4MbRGJa"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="TtAf3lFu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgIGRXR (ORCPT
+        id S1729810AbgIGRXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:23:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729653AbgIGNpP (ORCPT
+        Mon, 7 Sep 2020 13:23:25 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:19770 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729514AbgIGNnS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:45:15 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2DC1C0617A1
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:41:30 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id 23so2854988wmk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:41:30 -0700 (PDT)
+        Mon, 7 Sep 2020 09:43:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=QC9NTo7nxtZYJpQO/i/DXWRBIzGZiJeRrgmmIrmcLsY=;
-        b=s4MbRGJaHgZspQUWINVYJ4pv8oUtjLjvmGIgxMKTQ5dpZP+CTosv0PbYmzzxxGGXV1
-         lu//CLYOxuze23vL1Bsidfemp47rjnE9diiVDGA8zX6qY7htd9eYMagMAyg+h08jG0Of
-         2+B5S4bbYrx0Z+7QhYZpW1sYioo4B4NxC0mipIVfVaGUKBPBaaVG8jiHoIJ0FFzS2VmY
-         abMTL8QLr3mcS0n8SK1Y6ohWVxow8eGg9rJ3VpEmH5/fbCLItYW8VkWRtMRorA/nE0NY
-         8z30jLgXskcLoNjNbRF5RWlrDlZjgSCM2YaL1KafEg8a9O1f/ASIE+LMY5azSFzU/NJo
-         KtFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=QC9NTo7nxtZYJpQO/i/DXWRBIzGZiJeRrgmmIrmcLsY=;
-        b=PDiu5N6Ns+JZWhrni15x7D2NswFoOsRIYE/TXSHr0D2zK6ei/6GwO/fU3geTWE8FBI
-         bIjaOqK8ujLW7S2OoLbv8+qSfk7D6iR6DhmRS6AOlP5CLzRZaoDk66bPpdaV2XOL9648
-         PqMxWhcQkARXeefh1QZS+elsCbKtupVVO/KFnXPMIHSbcSz5U4bSioU46sTAe6rrEb9v
-         5MM6FyFak7W2AupaliKDkStzi8U+7ray/dR/b+Or77J1jQgyEAtXTXM2+zWzf28WhI1W
-         x9fxGBn16roXya35p5MM1vG9TeUKrXWCI9NNty/BSGjF5dnlv1niQSmpfFCk+PcAl9Ae
-         lC0w==
-X-Gm-Message-State: AOAM532b7HLAu4SO1D6SBfOf5XEsj9i0MRX8n6Xt5mgfGioqIrwVStzg
-        IvrrqofrU+k1ut77lEtC+zP96uvgNQ==
-X-Google-Smtp-Source: ABdhPJwfBXSFasOjomiIxo9IXspK1cNnb4LrYot1/kxO1J7dSMNEmNNlULqP5o8LlWMBrqdqJrkBo5GUVQ==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:f693:9fff:fef4:2449])
- (user=elver job=sendgmr) by 2002:a5d:6551:: with SMTP id z17mr20816665wrv.200.1599486089420;
- Mon, 07 Sep 2020 06:41:29 -0700 (PDT)
-Date:   Mon,  7 Sep 2020 15:40:53 +0200
-In-Reply-To: <20200907134055.2878499-1-elver@google.com>
-Message-Id: <20200907134055.2878499-9-elver@google.com>
-Mime-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH RFC 08/10] kfence, lockdep: make KFENCE compatible with lockdep
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, glider@google.com, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, cl@linux.com, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, mark.rutland@arm.com, penberg@kernel.org
-Cc:     hpa@zytor.com, paulmck@kernel.org, andreyknvl@google.com,
-        aryabinin@virtuozzo.com, luto@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, dvyukov@google.com,
-        edumazet@google.com, gregkh@linuxfoundation.org, mingo@redhat.com,
-        jannh@google.com, corbet@lwn.net, keescook@chromium.org,
-        peterz@infradead.org, cai@lca.pw, tglx@linutronix.de,
-        will@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1599486198; x=1631022198;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=6VQbLOy77M7fAKsGR2G82WO7fDDbNA8p2pbqM8zfSyk=;
+  b=TtAf3lFuBU4twdxeJ4WUdiF5hITcEfoTPjkkl9dXcauTowW9w5iJxNH+
+   qXUOkrY+TRDAZOnSi4L5qZ15LQ7qJuQLzzrHvf8VqmvHHKlWVRer3WdE0
+   AeX5rOtfBkuW3LLYxvvA6fSpkZ/MdmAq5TiSB/BhhtPTzvVyz2QGIF8XK
+   E=;
+X-IronPort-AV: E=Sophos;i="5.76,401,1592870400"; 
+   d="scan'208";a="74201643"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-119b4f96.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 07 Sep 2020 13:35:42 +0000
+Received: from EX13D16EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-119b4f96.us-west-2.amazon.com (Postfix) with ESMTPS id 8709E1A067C;
+        Mon,  7 Sep 2020 13:35:39 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.38) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 7 Sep 2020 13:35:28 +0000
+Subject: Re: [PATCH v8 15/18] nitro_enclaves: Add Makefile for the Nitro
+ Enclaves driver
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
+ <20200904173718.64857-16-andraprs@amazon.com>
+ <20200907090011.GC1101646@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <f5c0f79c-f581-fab5-9a3b-97380ef7fc2a@amazon.com>
+Date:   Mon, 7 Sep 2020 16:35:23 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <20200907090011.GC1101646@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D20UWA001.ant.amazon.com (10.43.160.34) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lockdep checks that dynamic key registration is only performed on keys
-that are not static objects. With KFENCE, it is possible that such a
-dynamically allocated key is a KFENCE object which may, however, be
-allocated from a static memory pool (if HAVE_ARCH_KFENCE_STATIC_POOL).
-
-Therefore, ignore KFENCE-allocated objects in static_obj().
-
-Co-developed-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/locking/lockdep.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 54b74fabf40c..0cf5d5ecbd31 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -38,6 +38,7 @@
- #include <linux/seq_file.h>
- #include <linux/spinlock.h>
- #include <linux/kallsyms.h>
-+#include <linux/kfence.h>
- #include <linux/interrupt.h>
- #include <linux/stacktrace.h>
- #include <linux/debug_locks.h>
-@@ -755,6 +756,13 @@ static int static_obj(const void *obj)
- 	if (arch_is_kernel_initmem_freed(addr))
- 		return 0;
- 
-+	/*
-+	 * KFENCE objects may be allocated from a static memory pool, but are
-+	 * not actually static objects.
-+	 */
-+	if (is_kfence_address(obj))
-+		return 0;
-+
- 	/*
- 	 * static variable?
- 	 */
--- 
-2.28.0.526.ge36021eeef-goog
+CgpPbiAwNy8wOS8yMDIwIDEyOjAwLCBHcmVnIEtIIHdyb3RlOgo+Cj4KPiBPbiBGcmksIFNlcCAw
+NCwgMjAyMCBhdCAwODozNzoxNVBNICswMzAwLCBBbmRyYSBQYXJhc2NoaXYgd3JvdGU6Cj4+IFNp
+Z25lZC1vZmYtYnk6IEFuZHJhIFBhcmFzY2hpdiA8YW5kcmFwcnNAYW1hem9uLmNvbT4KPj4gUmV2
+aWV3ZWQtYnk6IEFsZXhhbmRlciBHcmFmIDxncmFmQGFtYXpvbi5jb20+Cj4+IC0tLQo+PiBDaGFu
+Z2Vsb2cKPj4KPj4gdjcgLT4gdjgKPj4KPj4gKiBObyBjaGFuZ2VzLgo+Pgo+PiB2NiAtPiB2Nwo+
+Pgo+PiAqIE5vIGNoYW5nZXMuCj4+Cj4+IHY1IC0+IHY2Cj4+Cj4+ICogTm8gY2hhbmdlcy4KPj4K
+Pj4gdjQgLT4gdjUKPj4KPj4gKiBObyBjaGFuZ2VzLgo+Pgo+PiB2MyAtPiB2NAo+Pgo+PiAqIE5v
+IGNoYW5nZXMuCj4+Cj4+IHYyIC0+IHYzCj4+Cj4+ICogUmVtb3ZlIHRoZSBHUEwgYWRkaXRpb25h
+bCB3b3JkaW5nIGFzIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyIGlzCj4+ICAgIGFscmVhZHkgaW4g
+cGxhY2UuCj4+Cj4+IHYxIC0+IHYyCj4+Cj4+ICogVXBkYXRlIHBhdGggdG8gTWFrZWZpbGUgdG8g
+bWF0Y2ggdGhlIGRyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcwo+PiAgICBkaXJlY3RvcnkuCj4+
+IC0tLQo+PiAgIGRyaXZlcnMvdmlydC9NYWtlZmlsZSAgICAgICAgICAgICAgICB8ICAyICsrCj4+
+ICAgZHJpdmVycy92aXJ0L25pdHJvX2VuY2xhdmVzL01ha2VmaWxlIHwgMTEgKysrKysrKysrKysK
+Pj4gICAyIGZpbGVzIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy92aXJ0L25pdHJvX2VuY2xhdmVzL01ha2VmaWxlCj4+Cj4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3ZpcnQvTWFrZWZpbGUgYi9kcml2ZXJzL3ZpcnQvTWFrZWZpbGUKPj4gaW5k
+ZXggZmQzMzEyNDdjMjdhLi5mMjg0MjVjZTRiMzkgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvdmly
+dC9NYWtlZmlsZQo+PiArKysgYi9kcml2ZXJzL3ZpcnQvTWFrZWZpbGUKPj4gQEAgLTUsMyArNSw1
+IEBACj4+Cj4+ICAgb2JqLSQoQ09ORklHX0ZTTF9IVl9NQU5BR0VSKSArPSBmc2xfaHlwZXJ2aXNv
+ci5vCj4+ICAgb2JqLXkgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICs9IHZib3hndWVz
+dC8KPj4gKwo+PiArb2JqLSQoQ09ORklHX05JVFJPX0VOQ0xBVkVTKSArPSBuaXRyb19lbmNsYXZl
+cy8KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9NYWtlZmlsZSBi
+L2RyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9NYWtlZmlsZQo+PiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmU5ZjRmY2QxNTkxZQo+PiAtLS0gL2Rldi9udWxs
+Cj4+ICsrKyBiL2RyaXZlcnMvdmlydC9uaXRyb19lbmNsYXZlcy9NYWtlZmlsZQo+PiBAQCAtMCww
+ICsxLDExIEBACj4+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wCj4+ICsjCj4+
+ICsjIENvcHlyaWdodCAyMDIwIEFtYXpvbi5jb20sIEluYy4gb3IgaXRzIGFmZmlsaWF0ZXMuIEFs
+bCBSaWdodHMgUmVzZXJ2ZWQuCj4+ICsKPj4gKyMgRW5jbGF2ZSBsaWZldGltZSBtYW5hZ2VtZW50
+IHN1cHBvcnQgZm9yIE5pdHJvIEVuY2xhdmVzIChORSkuCj4+ICsKPj4gK29iai0kKENPTkZJR19O
+SVRST19FTkNMQVZFUykgKz0gbml0cm9fZW5jbGF2ZXMubwo+PiArCj4+ICtuaXRyb19lbmNsYXZl
+cy15IDo9IG5lX3BjaV9kZXYubyBuZV9taXNjX2Rldi5vCj4+ICsKPj4gK2NjZmxhZ3MteSArPSAt
+V2FsbAo+IFRoYXQgZmxhZyBpcyBfcmVhbGx5XyByaXNreSBvdmVyIHRpbWUsIGFyZSB5b3UgX1NV
+UkVfIHRoYXQgYWxsIG5ldwo+IHZlcnNpb25zIG9mIGNsYW5nIGFuZCBnY2Mgd2lsbCBuZXZlciBw
+cm9kdWNlIGFueSB3YXJuaW5ncz8gIFBlb3BsZSB3b3JrCj4gdG8gZml4IHVwIGJ1aWxkIHdhcm5p
+bmdzIHF1aXRlIHF1aWNrbHkgZm9yIG5ldyBjb21waWxlcnMsIHlvdSBzaG91bGRuJ3QKPiBwcmV2
+ZW50IHRoZSBjb2RlIGZyb20gYmVpbmcgYnVpbHQgYXQgYWxsIGp1c3QgZm9yIHRoYXQsIHJpZ2h0
+Pwo+CgpUaGF0IHdvdWxkIGFsc28gbmVlZCBXZXJyb3IsIHRvIGhhdmUgd2FybmluZ3MgdHJlYXRl
+ZCBhcyBlcnJvcnMgYW5kIApwcmV2ZW50IGJ1aWxkaW5nIHRoZSBjb2RlYmFzZS4gSWYgaXQncyBh
+Ym91dCBzb21ldGhpbmcgbW9yZSwganVzdCBsZXQgbWUgCmtub3cuCgpXb3VsZCB0aGlzIGFwcGx5
+IHRvIHRoZSBzYW1wbGVzIGRpcmVjdG9yeSBhcyB3ZWxsLCBubz8KCkkgY291bGQgcmVtb3ZlIHRo
+ZSBXYWxsIGZsYWdzIGFuZCBrZWVwIGl0IGZvciBkZXZlbG9wbWVudCB2YWxpZGF0aW9uIApwdXJw
+b3NlcyBvbiBteSBzaWRlIHRvIHNvbHZlIGF0IGxlYXN0IHRoZSB3YXJuaW5ncyB0aGF0IHdvdWxk
+IGZ1cnRoZXIgc2VlLgoKVGhhbmtzLApBbmRyYQoKCgpBbWF6b24gRGV2ZWxvcG1lbnQgQ2VudGVy
+IChSb21hbmlhKSBTLlIuTC4gcmVnaXN0ZXJlZCBvZmZpY2U6IDI3QSBTZi4gTGF6YXIgU3RyZWV0
+LCBVQkM1LCBmbG9vciAyLCBJYXNpLCBJYXNpIENvdW50eSwgNzAwMDQ1LCBSb21hbmlhLiBSZWdp
+c3RlcmVkIGluIFJvbWFuaWEuIFJlZ2lzdHJhdGlvbiBudW1iZXIgSjIyLzI2MjEvMjAwNS4K
 
