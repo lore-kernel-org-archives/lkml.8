@@ -2,140 +2,131 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F79C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB7DC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 116FD215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:24:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50E321582
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:31:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="QjObz1im"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgIGGYI (ORCPT
+        id S1726422AbgIGGbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:24:08 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:50712 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgIGGYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:24:06 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1kFAZM-0002T0-IF; Mon, 07 Sep 2020 16:24:01 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Mon, 07 Sep 2020 16:24:00 +1000
-Date:   Mon, 7 Sep 2020 16:24:00 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [PATCH] crypto: sun4i-ss - Fix SHA1 hash on A33-variant with BE CPU
-Message-ID: <20200907062400.GA15841@gondor.apana.org.au>
-References: <202009061621.J89kO43Q%lkp@intel.com>
+        Mon, 7 Sep 2020 02:31:00 -0400
+Received: from mail-eopbgr1310125.outbound.protection.outlook.com ([40.107.131.125]:50000
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725823AbgIGGa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 02:30:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HoyP7+vNbX1FCm+Zqe4Yki88gpz/8+Gy1U0CIHBoDu4mEIv3cnU7jcoV9pBrGE1N049iwwtOCax917cbOV2Kzfzu9hjpJ5wDOAlfy52qWsks5/jsc62XSUNbHhXN3TB0VaxYLg/yeY/utUkhOI+X7HmpdKP8HjtLslSVcJuGfRJ9Wt0Bue2DNAouCtfd2nMsiAJzRHXkLpuG27PEIBpzr5OfLjwBNzV5AFcWXkeSVlqRqqRdbvAg/ekx970xola5J/P/iCXceIXhfFpS8fbOmWWev5RrIJiUTQ69d35PghpewZ8+fU34HcKJ/pLpr34C+uuWdiKkj46BTD8Rn0Y4ag==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3PCMxeJsmyDGnQkGWQIC0tvWy6MBa1bRGEmDr02x3LQ=;
+ b=jB+fekBk9YzuCYzwVOOuc3tAsdT8CzDeCT4hrCkdHM2J/ZDl4rwxPOk0/89HYSnBD2Ed2b1KX2niX3iywygGYSI6n6eem9VAEUYQfxYB4jRb7ITT3BhgNkrzT2ddF/xrXa78FtBYRpgVTwr3gCIXtodyCdcZoWmGTtHV2UkbmY8JHybDDjhPbhe51QctbsVu4Jb6en/PoS2M2aT8TFUY7sbjr3pnD5uV4acKPgjldDRP9YSVhIgUCq1DJxJGmimBJ5yX92wn7pUaJ1HthIsNp5DUMnPY2pOJMs8mwaBnQiDMXjcAb+3ehG7CnVIxSBWcaOcQOR0jqAb2aGl23WsPVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3PCMxeJsmyDGnQkGWQIC0tvWy6MBa1bRGEmDr02x3LQ=;
+ b=QjObz1imAIfd/IjbAmcp2TaR0m+dBRuy7e+/T6eWkEiFf5bb3+gll6Q1tpC9CSQn3wex283bqfbWjjE94lQdfHFB9iB/IgJmpElELEXUIu028efJ6kIr9FIG1U7icF74011n9HD3cYRD49vQsCyuvNqZ1QNWnzkj2N8ajv/71zg=
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM (2603:1096:802:1a::17)
+ by KU1P153MB0200.APCP153.PROD.OUTLOOK.COM (2603:1096:802:2a::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.3; Mon, 7 Sep
+ 2020 06:30:48 +0000
+Received: from KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61]) by KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+ ([fe80::800c:633d:2d74:4f61%5]) with mapi id 15.20.3391.003; Mon, 7 Sep 2020
+ 06:30:48 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "namit@vmware.com" <namit@vmware.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+Subject: RE: [RESEND][PATCH v3] x86/apic/flat64: Add back the
+ early_param("apic", parse_apic)
+Thread-Topic: [RESEND][PATCH v3] x86/apic/flat64: Add back the
+ early_param("apic", parse_apic)
+Thread-Index: AQHWXDqcBL16zQ0AeEGLYyUOD3kNpalccIfQ
+Date:   Mon, 7 Sep 2020 06:30:47 +0000
+Message-ID: <KU1P153MB01207E71069B0883E44218E4BF280@KU1P153MB0120.APCP153.PROD.OUTLOOK.COM>
+References: <20200626182106.57219-1-decui@microsoft.com>
+ <87mu3ys391.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87mu3ys391.fsf@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9a8210d2-6baa-4293-a33a-cc8a3a861df6;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-09-06T21:27:16Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: linutronix.de; dkim=none (message not signed)
+ header.d=none;linutronix.de; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [2601:600:105:f217:6c5f:7d2:8c52:e817]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0684c8e4-2046-4788-bc0a-08d852f78ef4
+x-ms-traffictypediagnostic: KU1P153MB0200:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <KU1P153MB0200C0A528C76B26E545DF6CBF280@KU1P153MB0200.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jJafX5rQwxWzQbikTlUMcwyghxKiKAOBBMO4PryG1X6U6+nGmHvubr1LHi+Ldv/ZBXTnVuJimzvijp1Xs/iQ1dnGaAhqza002GXJJoQgVIMeVflrF9ssYyTPcf4auguI3jD1J7Z6yHwOSfFAWxHEE+i3JRJc15NDoHi4FhNYAZEwBoeGAGFo4rAeyIGaHyiILXH9IBRklBG92bkzbXUKjtE1LEOG29ywDFwnYXXBmPzl6tqZ/T6pIp+MFyTHbntqyOUdfK2GkUn8TXaW4OkHv1vkRGVCCJar24r4KPnO6rTfhYSrtGE0o+0LsqBHADlbiEuPKCjv5nMWsOUBmm/MxHE7nQwoZXLZAfgF3TuOweVy18DynzPirkGTsmZujgNR8xOcvXB1NNFAEz9e8d/VH5DuA2VIxSBP/nnqTkv/reY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KU1P153MB0120.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(366004)(376002)(136003)(33656002)(5660300002)(4326008)(54906003)(52536014)(7696005)(6506007)(4744005)(110136005)(478600001)(2906002)(316002)(8676002)(8936002)(6636002)(9686003)(66476007)(66446008)(55016002)(7416002)(64756008)(82960400001)(66946007)(10290500003)(71200400001)(82950400001)(76116006)(66556008)(186003)(8990500004)(86362001)(921003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: afr8yxZtMx079Zrkj/rIbWdI5NvkM8lU9YDzEzpDPhTG7LtxfSha6hb/c3ohrXssgZZfvWsr1oA0Zy3AptzrA0vhr33r/GzE4rLE1vJjeepdKZPMFDc+oP0D1EAQ0R5Mc87EYwV9qvxSbKGBDHSNsn5ywjsgdGtcDjBJymStB+eNE65ittYwQJNVhoKNOAaBdCUfwEPdKvOSuuqHYTDftZk47euuWqqLR50vo48kte2SYH/2UrII/2jjl7Vn9WMO2OQAfkSjFpi2q0uP6GiwoKIpEtNQvdAjzqm8QSfP5XL8O3CiyjfuYiljdBjPVsFKlGRj9PMV5oBwthjpnG414fsGZlEgTU1GkZPReCbQ8NvFqievbBxGaukR2iyxRByMGn/Ioz8ijYJN2V3JpAgYv8QwX1+6Jln//uTqkX++paypvHGQaSHpJ+aKONpjEViawpewTIbjGbTFlUuAam+XPb81l5pOiSgj8Xx8lFEHMCQtaeYOl1W5g2wZGXpzSevyEQ179UZDlAutpRnEeG7U0wAvKzmaom3DH6/nzT/ieM/a2RkTWHVXMiuKddwCrcrVGsr/GYPoxxrVbTixUhwiGOd8AGLMw9QQDwGMeaTCmdp3ntmn7Ex9+0xTDG7EGLQ1jD8zaeniMep9uUqwzMGdUZMMKfTFKS3pUJE/TzZ8zEasYEVPwCVfcVM54kOGApfkG4NVxGOT1C7SqWth9bUTuw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202009061621.J89kO43Q%lkp@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: KU1P153MB0120.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0684c8e4-2046-4788-bc0a-08d852f78ef4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 06:30:47.5901
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z7bV8hdAQc5zL33A1ZWOV+73q6aRbv4E4C1AYG1b1nKkVvP7NPYGEZ2k/9LJbgr9dcIv9D5sdooJ29TjXizuLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KU1P153MB0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 04:52:24PM +0800, kernel test robot wrote:
->
-> >> drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:483:35: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [assigned] [usertype] v @@     got restricted __le32 [usertype] @@
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:483:35: sparse:     expected unsigned int [assigned] [usertype] v
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:483:35: sparse:     got restricted __le32 [usertype]
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:485:35: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [assigned] [usertype] v @@     got restricted __be32 [usertype] @@
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:485:35: sparse:     expected unsigned int [assigned] [usertype] v
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:485:35: sparse:     got restricted __be32 [usertype]
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:490:27: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [addressable] [assigned] [usertype] v @@     got restricted __le32 [usertype] @@
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:490:27: sparse:     expected unsigned int [addressable] [assigned] [usertype] v
->    drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c:490:27: sparse:     got restricted __le32 [usertype]
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Friday, July 17, 2020 6:03 AM
+> [...]
+Hi, I'm very sorry for this extremely late reply -- I was sidetracked by so=
+mething
+else and I just had a chance to revisit the issue. Thank you tglx for the c=
+omments
+and suggestions, which I think are reasonable. I realized this patch is pro=
+blematic.
+The good news is that the LAPIC emulation bug has been fixed in the latest =
+version
+of Hyper-V and now kdump can work reliably. I think the hypervisor fix woul=
+d be=20
+backported to old Hyper-V versions, so hopefully this won't be an issue ove=
+r time.
 
-This appears to be a genuine bug, on big-endian CPUs at least.
-
----8<---
-When the hash is written out on the A33 variant, it is incorrectly
-swabbed on big-endian CPUs, when it should simply be written out as
-is because it's already in the right format.  This was caught by
-sparse warnings.
-
-Instead of using cpu_to_Xe32 followed by a memcpy, this patch
-converts the final hash write to use put_unaligned instead.  This
-simplifies the code and makes the A33 variant handling a lot clearer.
-
-This patch also fixes the incorrect endianness marking on wb,
-although this should have no effect in the genereated code.
-
-Fixes: 1e02e6fbdadb ("crypto: sun4i-ss - add the A33 variant of SS")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
-index dc35edd90034..84f7921de577 100644
---- a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
-+++ b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-hash.c
-@@ -9,6 +9,7 @@
-  * You could find the datasheet in Documentation/arm/sunxi.rst
-  */
- #include "sun4i-ss.h"
-+#include <asm/unaligned.h>
- #include <linux/scatterlist.h>
- 
- /* This is a totally arbitrary value */
-@@ -196,7 +197,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 	struct sg_mapping_iter mi;
- 	int in_r, err = 0;
- 	size_t copied = 0;
--	__le32 wb = 0;
-+	u32 wb = 0;
- 
- 	dev_dbg(ss->dev, "%s %s bc=%llu len=%u mode=%x wl=%u h0=%0x",
- 		__func__, crypto_tfm_alg_name(areq->base.tfm),
-@@ -408,7 +409,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 
- 		nbw = op->len - 4 * nwait;
- 		if (nbw) {
--			wb = cpu_to_le32(*(u32 *)(op->buf + nwait * 4));
-+			wb = le32_to_cpup((__le32 *)(op->buf + nwait * 4));
- 			wb &= GENMASK((nbw * 8) - 1, 0);
- 
- 			op->byte_count += nbw;
-@@ -417,7 +418,7 @@ static int sun4i_hash(struct ahash_request *areq)
- 
- 	/* write the remaining bytes of the nbw buffer */
- 	wb |= ((1 << 7) << (nbw * 8));
--	bf[j++] = le32_to_cpu(wb);
-+	((__le32 *)bf)[j++] = cpu_to_le32(wb);
- 
- 	/*
- 	 * number of space to pad to obtain 64o minus 8(size) minus 4 (final 1)
-@@ -479,16 +480,16 @@ static int sun4i_hash(struct ahash_request *areq)
- 	/* Get the hash from the device */
- 	if (op->mode == SS_OP_SHA1) {
- 		for (i = 0; i < 5; i++) {
-+			v = readl(ss->base + SS_MD0 + i * 4);
- 			if (ss->variant->sha1_in_be)
--				v = cpu_to_le32(readl(ss->base + SS_MD0 + i * 4));
-+				put_unaligned(v, areq->result + i * 4);
- 			else
--				v = cpu_to_be32(readl(ss->base + SS_MD0 + i * 4));
--			memcpy(areq->result + i * 4, &v, 4);
-+				put_unaligned_be32(v, areq->result + i * 4);
- 		}
- 	} else {
- 		for (i = 0; i < 4; i++) {
--			v = cpu_to_le32(readl(ss->base + SS_MD0 + i * 4));
--			memcpy(areq->result + i * 4, &v, 4);
-+			v = readl(ss->base + SS_MD0 + i * 4);
-+			put_unaligned_le32(v, areq->result + i * 4);
- 		}
- 	}
- 
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Thanks,
+-- Dexuan
