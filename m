@@ -2,115 +2,180 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49E7C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 218FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9541E2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAE321481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSd/QbpL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730184AbgIGPYs (ORCPT
+        id S1730187AbgIGPZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:24:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37592 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730160AbgIGPXl (ORCPT
+        Mon, 7 Sep 2020 11:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730153AbgIGPXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:23:41 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 37so12538859oto.4;
-        Mon, 07 Sep 2020 08:23:40 -0700 (PDT)
+        Mon, 7 Sep 2020 11:23:39 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FF5C061573;
+        Mon,  7 Sep 2020 08:23:37 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id r7so9411736ybl.6;
+        Mon, 07 Sep 2020 08:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=atNQu443wohaZMIITwmFzOCQT4mAdD+gEFufNnG4IJE=;
+        b=ZSd/QbpLkn/LjM7Y2du9R/pLZypRLQpjjYyVcOS0+/oHAl7CvAy0/+UAWQPn7BL4bj
+         E2HUCzUQIo2TIJ+bosFjR3mQgxKe9GEJAdilc0QEIv/p+HnNDN+wT/BjrwWhGNPIFXha
+         q3n3OJcCIfARs/2DIW/iaCoVvQ0jSChSm7RC+IF5L4h9dB19N3x7fXYvT5VLH7pax8mk
+         fbMVrgI/VzOlUaZEOArUfRo0Y+DwEHLvfQhUaUwSQmDw10tKrrVeHJ2BGvavpeNQYB+a
+         ETZgnbtU1Wrj4kHJ0EHhTbcGWmWZF/yoKBNX62U3xrEXa4PDMeVmvDoFbM9pHCvsOHWk
+         qCgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wvn2btk6OaWtKKqXcuwG3Mb/+3b+ZXDIOngM0aY6pjg=;
-        b=XaZEXWy8EsoZxu7hvbr+cnQ3Hin3RWQ1fuJLNPsMPjsPv6EDRziGnxqs2Fbr+dfjcG
-         Ox6fVe4oOT8VJsy84s/NkwPMzos2s5zuEvQ0QflC0o1nIpszoE5y+9fCNZEzfaAnud/D
-         zk6fV9oQPHhcvXleqvlXUamb99OtAr9zbImODajj5Msbtcl4hcv92KtrbsxGHV1FIdxe
-         EZprnfRxnnE0X5IDVr+PPM8CNc9JoEx+oo8/XQJcD0PG/SBTc2yK5z+o8ha5rrdrS1js
-         mQY3hkA0tPtBXeJiozZqeP/d9yNH2PhVQgryNLQkZK1flJTyZvq7iGLvoxVr+iTGAcIP
-         y95A==
-X-Gm-Message-State: AOAM532o2EfFivRcmR3froIablVXkmDiCsY3Nkir9h2m4UP2rDsSmTn6
-        jjjV5JveTvQ7CoJJlJirP3j/gBSAkUUbupDD4m8=
-X-Google-Smtp-Source: ABdhPJyDwgT+6M2sQy7tGvosk035vPyDVZyUNCPmIeCmF3kluyMlyIYL0NDIKleeHYd1wrhn0a3Lngnt0gBXEn3ic7M=
-X-Received: by 2002:a05:6830:1008:: with SMTP id a8mr13928569otp.107.1599492220372;
- Mon, 07 Sep 2020 08:23:40 -0700 (PDT)
+        bh=atNQu443wohaZMIITwmFzOCQT4mAdD+gEFufNnG4IJE=;
+        b=gmLS6DwIOIYwyIe+Gv54Ypo/4nUfTmKn/LD5DY9JsLFUDkuZuFOJq9hNsFn32EXQpT
+         y03HSToFHv6HP2VNcMBi3pp9+mWRvWcui/T82tzC2odkPxLiiLfQgtPey5tZExTuVwFS
+         s6yx8OvS/POtnArKxZTGmvUuSt4xlvlsJj3FZu46Cr8ZAtNyIk2P8Gu5FWTTZqcoHX57
+         JwdxqvN70MldelE0t5NBAlpuk9jCog5ph+0OSWs1ZBoRRh+Al34uT+hhgHWtJsOfcKnh
+         PXfLKboNOcVfuvzbSW8KU6h2UGXHCIKcv6fSORiEHLvvyyinYDdprNCVf71bb8AjiFtO
+         cDsA==
+X-Gm-Message-State: AOAM533Cx0mpLB9uNh9AR3/mVd2smPnBl2crdTY3Z4Knqu3z58V2yLAX
+        uX9BHAICmqQ9XXYVZFHFHizk8O8NNOuIHXPcZBJCGUDrkppgrg==
+X-Google-Smtp-Source: ABdhPJy3zKtooXkqbJLFceevNpH4Mj2uLh3ybXnb6/QzswnK4s67ONxNoQ25ri4wXoVAjymqjj82QIJaCffrAFaaKtc=
+X-Received: by 2002:a25:7608:: with SMTP id r8mr30831434ybc.518.1599492215825;
+ Mon, 07 Sep 2020 08:23:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200904154547.3836-1-brgl@bgdev.pl> <20200904154547.3836-24-brgl@bgdev.pl>
- <26ea1683-da8f-30e7-f004-3616e96d56b3@infradead.org> <20200907095932.GU1891694@smile.fi.intel.com>
- <CAMpxmJXvhYOVkZY7LLf=v+o8E2xKTh1RYhLrdVsS9nN1XZ5QJQ@mail.gmail.com>
- <20200907115310.GA1891694@smile.fi.intel.com> <CAMpxmJUfNkko4Rrb4N5CF_rdwRAWGhVr9DSOHfhYyTxYSH7dsQ@mail.gmail.com>
- <20200907122238.GA1849893@kroah.com> <CAMpxmJXM=8oGoPSGg8G8XJ4HXJFrAQ2-_EXrz3rf3+ZmCSWB7g@mail.gmail.com>
- <20200907140829.GL1891694@smile.fi.intel.com>
-In-Reply-To: <20200907140829.GL1891694@smile.fi.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 7 Sep 2020 17:23:28 +0200
-Message-ID: <CAMuHMdV42oUu=af_O=aUVED_Nxce0wnTKTMNNSskaSGT=p5ZMw@mail.gmail.com>
-Subject: Re: [PATCH 23/23] Documentation: gpio: add documentation for gpio-mockup
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825162718.5838-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdXkGBfwNOwd5-=U3wg6U0O+3BErbXuybbuytgzsCmZqRQ@mail.gmail.com>
+ <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com> <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
+In-Reply-To: <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 7 Sep 2020 16:23:09 +0100
+Message-ID: <CA+V-a8so3b7A-KdVN5DZEEwUwPckut_v0DDnw6r_ci=wL9owUw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: r8a7742-iwg21d-q7: Enable SD2 LED indication
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hi Geert,
 
-On Mon, Sep 7, 2020 at 4:14 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Mon, Sep 07, 2020 at 03:49:23PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Sep 7, 2020 at 2:22 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > On Mon, Sep 07, 2020 at 02:06:15PM +0200, Bartosz Golaszewski wrote:
+On Mon, Sep 7, 2020 at 8:55 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> ...
+> Hi Prabhakar,
 >
-> > > Yes it is.  Or at least until you fix all existing users so that if you
-> > > do change it, no one notices it happening :)
+> On Fri, Sep 4, 2020 at 7:15 PM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+> > On Thu, Sep 3, 2020 at 1:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
+> > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > > > Add support for LED trigger on SD2 interface.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > > >
-> >
-> > Then another question is: do we really want to commit to a stable ABI
-> > for a module we only use for testing purposes and which doesn't
-> > interact with any real hardware.
-> >
-> > Rewriting this module without any legacy cruft is tempting though. :)
+> > > > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
+> > > > @@ -63,6 +63,16 @@
+> > > >                 enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
+> > > >         };
+> > > >
+> > > > +       leds {
+> > > > +               compatible = "gpio-leds";
+> > > > +
+> > > > +               sdhi2_led {
+> > > > +                       label = "sdio-led";
+> > > > +                       gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
+> > >
+> > > GPIO_ACTIVE_HIGH?
+> > >
+> > > The LED is driven by an NPN transistor, with the LED between 3.3V and
+> > > the transistor's collector.
 >
-> Another thought spoken loudly: maybe it can be unified with GPIO aggregator
-> code? In that case it makes sense.
+> Oops, 3.3V is not VCC_3V3, but SD_3V3, so it is not always-on, but
+> controlled by SDIO_PWR.
+>
+> > I did try with GPIO_ACTIVE_HIGH and it didn't work as expected. To
+> > make sure I can control the LED through sysfs I deleted the node from
+> > DTS and exported the pin GP5_22 (858) and writing the value "out"
+> > direction and setting the values 0/1 to value did not toggle the SDIO
+> > LED as expected and it stayed OFF all the time.
+>
+> Hence when SDIO_PWR is turned off, you cannot control the LED just by
+> toggling GP5_22.
+>
+> > Looks like there is some information missing in the schematics.
+> >
+> > I did some experiments. I completely removed the SDHI, LED and
+> > regulator  nodes and  booted the system and exported GP1_27 (989) and
+> > wrote values 0/1  and this toggled the SDIO_LED.
+> >
+> > U-boot sets the below, so in u-boot the SDIO_LED is ON:
+> >     gpio_direction_output(GPIO_GP_1_27, 0); /* power on */
+> >     gpio_set_value(GPIO_GP_1_27, 0);
+> >     gpio_direction_output(GPIO_GP_5_22, 0); /* LED  */
+> >     gpio_set_value(GPIO_GP_5_22, 1);
+> >     gpio_direction_output(GPIO_GP_1_8, 0); /* 1: 3.3V, 0: 1.8V*/
+> >     gpio_set_value(GPIO_GP_1_8, 1);
+> >
+> > So in comparison we would need a hog node as below (and with this the
+> > LED triggers correctly as expected),
+> >
+> > &gpio5 {
+> >     sdio-led-gpio {
+> >         gpio-hog;
+> >         gpios = <22 GPIO_ACTIVE_HIGH>;
+> >         output-high;
+> >         line-name = "sdio-led-gpio";
+> >     };
+> > };
+> >
+> > Let me know if you are OK with the above.
+>
+> The above means the LED is always lit when SDIO_PWR is enabled.
+> While I agree that's some kind of SD activity indicator, probably it's less
+> fine-grained than using the mmc1 trigger?
+> I assume the mmc1 trigger is only activated when SDIO_PWR is enabled.
+> Are you sure this doesn't work?
+> Perhaps your kernel was missing SD trigger support, or "mmc1" is the
+> wrong SD instance?
+>
+> > Looks like the SDIO_PWR is tied up with an SDIO_LED pin and the
+> > information is missing from schematics.
+>
+> No, I think we just misread the schematics.
+>
+My bad I misinterpreted the trigger, with GP5_22 being GPIO_ACTIVE_LOW
+the LED remained ON when the card was inserted and turned OFF when the
+card was pulled out.
 
-You want to aggregate GPIOs out of thin air?
+When GP5_22 being GPIO_ACTIVE_HIGH the LED blinked and stayed OFF when
+the card was inserted and remained OFF when the card was pulled out.
+As a result I misinterpreted it.
 
-From DT, that would be something like
+I can confirm when GP5_22 is GPIO_ACTIVE_HIGH and there is any
+activity on SD (read/write) the led turns ON.
 
-    gpios = <&gpio1 2>, <0>, <0>, <&gpio2, 5>;
-
-?
-
-For writing into ".../new_device", we could agree on something like "0"
-means not backed by an existing GPIO?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers,
+Prabhakar
