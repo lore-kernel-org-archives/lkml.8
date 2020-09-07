@@ -2,145 +2,120 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D50EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA02C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE295215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657852168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:11:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="th8jEA+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgIGXBD (ORCPT
+        id S1727889AbgIGXLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:01:03 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:32790 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726929AbgIGXBA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:01:00 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 2A26E18029121;
-        Mon,  7 Sep 2020 23:00:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sky91_0512991270cf
-X-Filterd-Recvd-Size: 4449
-Received: from XPS-9350 (cpe-72-134-242-36.natsow.res.rr.com [72.134.242.36])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  7 Sep 2020 23:00:55 +0000 (UTC)
-Message-ID: <a661d908cd6e2b0396c75c2eb52b95f33e92cd5e.camel@perches.com>
-Subject: Re: [PATCH] fscrypt: Reduce object size of logging messages
-From:   Joe Perches <joe@perches.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        linux-fscrypt@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Mon, 07 Sep 2020 16:00:52 -0700
-In-Reply-To: <20200907222338.GA68127@sol.localdomain>
-References: <d9e2693cc157bbc09df92a91a9ecad8dcc8438ce.camel@perches.com>
-         <20200904230341.GA6172@sol.localdomain>
-         <ec1347522c95c89425b3189b071b35f9d912e3e0.camel@perches.com>
-         <20200907222338.GA68127@sol.localdomain>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Mon, 7 Sep 2020 19:11:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:56563 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726929AbgIGXLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 19:11:08 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlkY42nBKz9sR4;
+        Tue,  8 Sep 2020 09:11:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599520266;
+        bh=FLpzBh1MtaOdJusvfew0y0vFNZl/o+pHZi6fZRvWzS8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=th8jEA+jxRuFJlAYJjznssQ9vOu0SK0w6yNuTWvVYW2fcdMCSJyyylKpmRLFdmILK
+         JL4Pb/KoxMRrCO++yq6BwFA8JvBP19gCKPASphsTfLM6A8vWud4GjidLW7E/HSWmDa
+         Ptdk7e8K4R4uYlLswmfsmhjBIJuh+iUS6MJ4I0Tn5wluXvBVctOph+UYRjffFtJj+U
+         +FsXZQwZUW5zQf962gnQgof9HMRmTZQmBDauNE6cBQIGvBJ4QfB1WPiobhlMDITPph
+         6S8AX2QuViZ8kL3jwhau3ykoe7xpITH4JkRR387dljWXwhwff2r+dmKpor4r8p9Qm5
+         Y3vMR2IWT6IvA==
+Date:   Tue, 8 Sep 2020 09:11:02 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: linux-next: build warnings in Linus' tree
+Message-ID: <20200908091102.4c2d7b37@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/uFoOW0k_q3wB2MWWaZa.fiZ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi again.
+--Sig_/uFoOW0k_q3wB2MWWaZa.fiZ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2020-09-07 at 15:23 -0700, Eric Biggers wrote:
-> On Fri, Sep 04, 2020 at 09:38:23PM -0700, Joe Perches wrote:
-> > > > diff --git a/fs/crypto/crypto.c b/fs/crypto/crypto.c
-> > > > index 9212325763b0..c82cc3907e43 100644
-> > > > --- a/fs/crypto/crypto.c
-> > > > +++ b/fs/crypto/crypto.c
-> > > > @@ -329,25 +329,27 @@ int fscrypt_initialize(unsigned int cop_flags)
-> > > >  	return err;
-> > > >  }
-> > > >  
-> > > > -void fscrypt_msg(const struct inode *inode, const char *level,
-> > > > -		 const char *fmt, ...)
-> > > > +void fscrypt_printk(const struct inode *inode, const char *fmt, ...)
-> > > >  {
-> > > >  	static DEFINE_RATELIMIT_STATE(rs, DEFAULT_RATELIMIT_INTERVAL,
-> > > >  				      DEFAULT_RATELIMIT_BURST);
-> > > >  	struct va_format vaf;
-> > > >  	va_list args;
-> > > > +	int level;
-> > > >  
-> > > >  	if (!__ratelimit(&rs))
-> > > >  		return;
-> > > >  
-> > > >  	va_start(args, fmt);
-> > > > -	vaf.fmt = fmt;
-> > > > +	level = printk_get_level(fmt);
-> > > > +	vaf.fmt = printk_skip_level(fmt);
-> > > >  	vaf.va = &args;
-> > > >  	if (inode)
-> > > > -		printk("%sfscrypt (%s, inode %lu): %pV\n",
-> > > > -		       level, inode->i_sb->s_id, inode->i_ino, &vaf);
-> > > > +		printk("%c%cfscrypt (%s, inode %lu): %pV\n",
-> > > > +		       KERN_SOH_ASCII, level, inode->i_sb->s_id, inode->i_ino,
-> > > > +		       &vaf);
-> > > >  	else
-> > > > -		printk("%sfscrypt: %pV\n", level, &vaf);
-> > > > +		printk("%c%cfscrypt: %pV\n", KERN_SOH_ASCII, level, &vaf);
-> > > >  	va_end(args);
-> > > 
-> > > The problem with this approach is that if fscrypt_printk() is called without
-> > > providing a log level in the format string (which one would assume would work,
-> > > since printk() allows it), then the real format string will be truncated to just
-> > > KERN_SOH because 'level' will be 0.
-> > > Can you find a way to avoid that?
-> > 
-> > While I don't think this is a problem in that all the fscrypt_<level>
-> > calls will always prefix a KERN_<LEVEL>,
-> 
-> It's still a pitfall that people could run into later.  It would be better to
-> make fscrypt_printk() work in the expected way.
-> 
-> > what btrfs uses:
-> > 
-> > 	char lvl[PRINTK_MAX_SINGLE_HEADER_LEN + 1] = "\0";
-> > ...
-> > 	while ((kern_level = printk_get_level(fmt)) != 0) {
-> > 		size_t size = printk_skip_level(fmt) - fmt;
-> > 
-> > 		if (kern_level >= '0' && kern_level <= '7') {
-> > 			memcpy(lvl, fmt,  size);
-> > 			lvl[size] = '\0';
-> > 		}
-> > 		fmt += size;
-> > 	}
-> > 
-> > and use "%s...", lvl, ...
-> 
-> Is the loop really needed?
+Hi all,
 
-It prevents defects (that btrfs had) where
-btrfs_<level> used formats with KERN_<LEVEL>.
+Building Linus' tree, today's linux-next build (x86_64 allmodconfig)
+produced these warnings:
 
-> > > > +#define fscrypt_warn(inode, fmt, ...)					\
-> > > > +	fscrypt_printk(inode, KERN_WARNING fmt, ##__VA_ARGS__)
-> > > 
-> > > It's probably best to keep the parentheses around 'inode'.
-> > 
-> > Not really as it's an independent argument that can't
-> > effectively have any other purpose but to be an argument
-> > to the fsrypt_printk function.
-> 
-> True, but since forgetting to include parentheses around macro arguments is such
-> a common mistake, IMO they should just always be included so that people don't
-> have to think about whether the omission is correct or not.
+arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x2a3: unreac=
+hable instruction
+net/core/skbuff.o: warning: objtool: skb_push.cold()+0x1b: unreachable inst=
+ruction
+arch/x86/mm/mmio-mod.o: warning: objtool: pre()+0x21a: unreachable instruct=
+ion
+arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x142: u=
+nreachable instruction
+kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x26: unreachable i=
+nstruction
+kernel/cred.o: warning: objtool: get_task_cred.cold()+0x19: unreachable ins=
+truction
+drivers/misc/sgi-gru/grukservices.o: warning: objtool: gru_wait_abort_proc(=
+)+0x97: unreachable instruction
+drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: is_complete()+0x6c6: =
+unreachable instruction
+drivers/message/fusion/mptbase.o: warning: objtool: mpt_SoftResetHandler()+=
+0x4a5: unreachable instruction
+drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr()+0x2a9: un=
+reachable instruction
+drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.o: warning: objtool: o=
+tx2_sq_append_tso()+0xab6: unreachable instruction
+fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0x12: unrea=
+chable instruction
+fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_links()+0x=
+818: unreachable instruction
+fs/btrfs/relocation.o: warning: objtool: update_backref_cache.isra.0()+0x3b=
+f: unreachable instruction
+drivers/atm/horizon.o: warning: objtool: rx_data_av_handler()+0x452: unreac=
+hable instruction
 
-We think differently.
-Unnecessary parentheses are unnecessary and there
-isn't a possiblity adding them here can be useful.
+I have not idea what caused them.
 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/uFoOW0k_q3wB2MWWaZa.fiZ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9WvgYACgkQAVBC80lX
+0GxFOwgAnSNmvSLAEYvrUBt/zp7HbmCD+bSHTUck7NOu13MEdsmK4/ErgtpsuuEE
+tEF1BV7gTXFmSvbs8edxXgXopUZk1JH6U2R4t0r1SsL/Oc6qyMXyvfsSCf0Ma2jw
+qkI8hYZNS7SjteNp9849tND5DjbJ4QeHutafK5mcFdt4aN1tPE/DRieGruQu3nh0
+oIdHPUvdJtteQy3ArdhEUMEmSebEcy12lhewNhKY1jaUxfaGF2y+W/jXG7ohG4aW
+HBW8Nmsw8VB3p39xYG5ObQ3zwjJsW7kdqnrFyW0qY8lOhFrak9ncvjv1FsGib7zt
+8i7HDT2vzWjMk8AF+76N3QswbnM+3g==
+=GpWg
+-----END PGP SIGNATURE-----
+
+--Sig_/uFoOW0k_q3wB2MWWaZa.fiZ--
