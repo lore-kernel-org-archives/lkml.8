@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D3C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B11C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 359692080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF722080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497397;
-	bh=evB8kI8CgM2XueBp2na5lhPEYi41PUqB/SbvXYg6MdU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ICYATllTMnBuK3agVZMyDDlApxTairBq+ju6kIhaXEgWwhONJwe6GFGW+0EDQcyh
-	 cGVkUsXtFG/zg/Unj2lgckNHijTgN8EPcVOOMJGwUpsSjJ92vTNasYB+8u8Icge10H
-	 JH4tG4jbJLuE3LNqE1E6WhYOA3OG11tZOBlJQnL0=
+	s=default; t=1599497405;
+	bh=TRp+T/pAqQH1aSfGdNxlVrb79U0JdQ9CMrLL27xk2sg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=BKzTQ09YPEAYFeTjqh/V3nv+ePSRkQd9rXDttlcS3psxpzq7g/iQ07oo6c9KREu5y
+	 V43S68b7YaKK2GT6w/pZ3QaDRBrkkwOqqMhY1lu7AoSmYaTf74p4YtUM6sY6d45zUB
+	 XBznAkBnsk0Try/sJ0z+DTsDbNWgTy9kKlerEHD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbgIGQtz (ORCPT
+        id S1731098AbgIGQuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:49:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48970 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730806AbgIGQfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:05 -0400
+        id S1730803AbgIGQfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92D3521D95;
-        Mon,  7 Sep 2020 16:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4074121941;
+        Mon,  7 Sep 2020 16:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496505;
-        bh=evB8kI8CgM2XueBp2na5lhPEYi41PUqB/SbvXYg6MdU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ua+yVNT8/ZVn6xtlZB2lqjDUyVXZmpWn7j2zVMgYY6v9Qrbt35jdXo2t/ZQ57HeKd
-         DC8tXQldX1j9BAPVTtSmNDPHzSlWn470eeqkeah+AcjJgpF6xEa6NJxt97OWlR1k6f
-         moikQ04DVBWWyhjZzwi9bA8v/HWSu7JXJfcMAbkI=
+        s=default; t=1599496503;
+        bh=TRp+T/pAqQH1aSfGdNxlVrb79U0JdQ9CMrLL27xk2sg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XTIMpZwVVrTewp7v2XZhst+mGx15iclLN7VERD14sYYq+nltkhiHNIC8QN2COD5P2
+         TUjaKU7cxE5xr+OpVO+O8/gkRD/tF48Kto4wbekHsl0pwV8yRL0r+z+EY4/bN9h20p
+         a6agJ/nGkm/Ecv4eyl19P90QJH/qcwjwMxFqqShY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 03/17] drivers/net/wan/lapbether: Added needed_tailroom
-Date:   Mon,  7 Sep 2020 12:34:46 -0400
-Message-Id: <20200907163500.1281543-3-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 01/17] ARC: HSDK: wireup perf irq
+Date:   Mon,  7 Sep 2020 12:34:44 -0400
+Message-Id: <20200907163500.1281543-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163500.1281543-1-sashal@kernel.org>
-References: <20200907163500.1281543-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,36 +57,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 1ee39c1448c4e0d480c5b390e2db1987561fb5c2 ]
+[ Upstream commit fe81d927b78c4f0557836661d32e41ebc957b024 ]
 
-The underlying Ethernet device may request necessary tailroom to be
-allocated by setting needed_tailroom. This driver should also set
-needed_tailroom to request the tailroom needed by the underlying
-Ethernet device to be allocated.
+Newer version of HSDK aka HSDK-4xD (with dual issue HS48x4 CPU) wired up
+the perf interrupt, so enable that in DT.
+This is OK for old HSDK where this irq is ignored because pct irq is not
+wired up in hardware.
 
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wan/lapbether.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arc/boot/dts/hsdk.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wan/lapbether.c b/drivers/net/wan/lapbether.c
-index c94dfa70f2a33..6b2553e893aca 100644
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -343,6 +343,7 @@ static int lapbeth_new_device(struct net_device *dev)
- 	 */
- 	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
- 					   + dev->needed_headroom;
-+	ndev->needed_tailroom = dev->needed_tailroom;
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 57d81c6aa379d..aeacea148793c 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -79,6 +79,8 @@ idu_intc: idu-interrupt-controller {
  
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+ 	arcpct: pct {
+ 		compatible = "snps,archs-pct";
++		interrupt-parent = <&cpu_intc>;
++		interrupts = <20>;
+ 	};
+ 
+ 	/* TIMER0 with interrupt for clockevent */
 -- 
 2.25.1
 
