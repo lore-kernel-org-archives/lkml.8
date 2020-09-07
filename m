@@ -2,147 +2,73 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38953C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF05DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7D020738
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:44:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ELT9WAfQ"
+	by mail.kernel.org (Postfix) with ESMTP id BA08820738
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgIGKoD (ORCPT
+        id S1728731AbgIGKoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:44:03 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42802 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728618AbgIGKn7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:43:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599475435;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=c1vAH2sOnIecyBuC1bgws2niE0JgFrbZ244nIj8c+DU=;
-        b=ELT9WAfQ9lZ9di6q8gu5ELBsQ3QbQFgQ/sV1dUGT+mdTPKNd0ETpiFQtkFAfDvQGTw0kKm
-        Yynf0darHZYjkXoE2V6UfWGgunRIh21fyqxA/GJioQqyuAKN25yBH3FEJjhKwuhNShzJH5
-        DM1Z97ikZvzO/atuyfF1cuAENuQC+WM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-uykzQjHlNiu2lD-lNSLY4w-1; Mon, 07 Sep 2020 06:43:54 -0400
-X-MC-Unique: uykzQjHlNiu2lD-lNSLY4w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BA64E1084CA6;
-        Mon,  7 Sep 2020 10:43:52 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-108.pek2.redhat.com [10.72.12.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BEAA60C0F;
-        Mon,  7 Sep 2020 10:43:45 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, jasowang@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     lulu@redhat.com, Eli Cohen <elic@nvidia.com>,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH] vhost-vdpa: fix backend feature ioctls
-Date:   Mon,  7 Sep 2020 18:43:43 +0800
-Message-Id: <20200907104343.31141-1-jasowang@redhat.com>
+        Mon, 7 Sep 2020 06:44:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:60618 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728406AbgIGKoX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:44:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12B48106F;
+        Mon,  7 Sep 2020 03:44:23 -0700 (PDT)
+Received: from bogus (unknown [10.57.10.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 471233F66E;
+        Mon,  7 Sep 2020 03:44:20 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 11:44:18 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/3] cpufreq: arm_scmi: Constify scmi_perf_ops pointers
+Message-ID: <20200907104418.GC17330@bogus>
+References: <20200906230452.33410-1-rikard.falkeborn@gmail.com>
+ <20200906230452.33410-2-rikard.falkeborn@gmail.com>
+ <20200907102200.GB17330@bogus>
+ <20200907102551.3f7zwrmd3uqthaxs@vireshk-i7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907102551.3f7zwrmd3uqthaxs@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 653055b9acd4 ("vhost-vdpa: support get/set backend features")
-introduces two malfunction backend features ioctls:
+On Mon, Sep 07, 2020 at 03:55:51PM +0530, Viresh Kumar wrote:
+> On 07-09-20, 11:22, Sudeep Holla wrote:
+> > Hi Viresh,
+> >
+> > On Mon, Sep 07, 2020 at 01:04:50AM +0200, Rikard Falkeborn wrote:
+> > > The perf_ops are not modified through this pointer. Make them const to
+> > > indicate that. This is in preparation to make the scmi-ops pointers in
+> > > scmi_handle const.
+> > >
+> >
+> > Your ack needed to take this as series via {arm-,}soc
+>
+> Can I just pick the first patch and you do the rest ? Will it result
+> in any warnings at either end ?
+>
 
-1) the ioctls was blindly added to vring ioctl instead of vdpa device
-   ioctl
-2) vhost_set_backend_features() was called when dev mutex has already
-   been held which will lead a deadlock
+Initially I thought out suggesting the same, but then I realised(not
+checked though), without this change in arm-soc the scmi-cpufreq driver
+might produce warnings as the const value gets assigned to non const.
+No ?
 
-This patch fixes the above issues.
-
-Cc: Eli Cohen <elic@nvidia.com>
-Reported-by: Zhu Lingshan <lingshan.zhu@intel.com>
-Fixes: 653055b9acd4 ("vhost-vdpa: support get/set backend features")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/vdpa.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/vhost/vdpa.c b/drivers/vhost/vdpa.c
-index 3fab94f88894..796fe979f997 100644
---- a/drivers/vhost/vdpa.c
-+++ b/drivers/vhost/vdpa.c
-@@ -353,8 +353,6 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 	struct vdpa_callback cb;
- 	struct vhost_virtqueue *vq;
- 	struct vhost_vring_state s;
--	u64 __user *featurep = argp;
--	u64 features;
- 	u32 idx;
- 	long r;
- 
-@@ -381,18 +379,6 @@ static long vhost_vdpa_vring_ioctl(struct vhost_vdpa *v, unsigned int cmd,
- 
- 		vq->last_avail_idx = vq_state.avail_index;
- 		break;
--	case VHOST_GET_BACKEND_FEATURES:
--		features = VHOST_VDPA_BACKEND_FEATURES;
--		if (copy_to_user(featurep, &features, sizeof(features)))
--			return -EFAULT;
--		return 0;
--	case VHOST_SET_BACKEND_FEATURES:
--		if (copy_from_user(&features, featurep, sizeof(features)))
--			return -EFAULT;
--		if (features & ~VHOST_VDPA_BACKEND_FEATURES)
--			return -EOPNOTSUPP;
--		vhost_set_backend_features(&v->vdev, features);
--		return 0;
- 	}
- 
- 	r = vhost_vring_ioctl(&v->vdev, cmd, argp);
-@@ -440,8 +426,20 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
- 	struct vhost_vdpa *v = filep->private_data;
- 	struct vhost_dev *d = &v->vdev;
- 	void __user *argp = (void __user *)arg;
-+	u64 __user *featurep = argp;
-+	u64 features;
- 	long r;
- 
-+	if (cmd == VHOST_SET_BACKEND_FEATURES) {
-+		r = copy_from_user(&features, featurep, sizeof(features));
-+		if (r)
-+			return r;
-+		if (features & ~VHOST_VDPA_BACKEND_FEATURES)
-+			return -EOPNOTSUPP;
-+		vhost_set_backend_features(&v->vdev, features);
-+		return 0;
-+	}
-+
- 	mutex_lock(&d->mutex);
- 
- 	switch (cmd) {
-@@ -476,6 +474,10 @@ static long vhost_vdpa_unlocked_ioctl(struct file *filep,
- 	case VHOST_VDPA_SET_CONFIG_CALL:
- 		r = vhost_vdpa_set_config_call(v, argp);
- 		break;
-+	case VHOST_GET_BACKEND_FEATURES:
-+		features = VHOST_VDPA_BACKEND_FEATURES;
-+		r = copy_to_user(featurep, &features, sizeof(features));
-+		break;
- 	default:
- 		r = vhost_dev_ioctl(&v->vdev, cmd, argp);
- 		if (r == -ENOIOCTLCMD)
--- 
-2.20.1
-
+--
+Regards,
+Sudeep
