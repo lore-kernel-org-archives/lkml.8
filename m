@@ -2,55 +2,55 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65402C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D2DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCC9207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DC9207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498048;
-	bh=YB6LMn6dVIAQQecjsMuXES5wSTgr8G+mlKOQ3KV/a/8=;
+	s=default; t=1599498078;
+	bh=DV7gGrRAoLENF14ze7dE4iENAKav/G+BIt/ovTdJumY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ouGiO+eVvvDEltYtaGaZL1UxnZiBg3mC2W8nedVWnyp0fUrmAo4LvPMANRwrogaXm
-	 I4Oz21nKcP4N2Kqql6TywnNsJGVINoZoiygK8FJUV40xQHoNeySRuq5MNLy4HRctLe
-	 /DLZyOapYKKSLWffwab3vxyLNaTjIRZuwlpe+Uzk=
+	b=XUqczVP39YGYtqabQ1pXx1dcGfbUTQasyuOA3TfNsJiLNfLKe8x7fOVfOOjTu4hwU
+	 bXVwGJ1z9gjzOrDrX87qFE5xzPDs/Phb2M0zBl700kvvxZzqrG2DwlCEVGOLsHuSk6
+	 Bt3pir/P51CJjYO3NHUWd8WKefs5/3h/sFctsqK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbgIGQ7F (ORCPT
+        id S1730727AbgIGQds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbgIGQdx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:53 -0400
+        id S1730630AbgIGQcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD1321927;
-        Mon,  7 Sep 2020 16:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A004E21532;
+        Mon,  7 Sep 2020 16:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496431;
-        bh=YB6LMn6dVIAQQecjsMuXES5wSTgr8G+mlKOQ3KV/a/8=;
+        s=default; t=1599496352;
+        bh=DV7gGrRAoLENF14ze7dE4iENAKav/G+BIt/ovTdJumY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrBtNZLbgPDPgOEez+zdRHxQ7E6NjXab+SayYx/ZBK+aSg4JhVnMvfYVDkJCK1osw
-         D6XXJoH9i6uyJE99EIKqkD2CTU1OylkgYYcKzya+/AIRD9KS/L3ygETeOv/HpJOjy/
-         iTEoeMBi7N/N2DX43wbmT7WRHXo7QNyZSTlMBmK4=
+        b=oqgJQpfFRJa+wpxEPz4PRoj1txwspRrcgUxZYV/18035SzHyK9E9KebO50Nv5czlZ
+         U/vzEO6pD2aML6CAnQ1iieCZroHZpFbqjCE3sVAmue9hj0eavXKK859VkF2HF47hGs
+         gB6eoSRStdODfQ0BdhMt/ccxKuvLOsYctgEcEEh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amar Singhal <asinghal@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 16/43] cfg80211: Adjust 6 GHz frequency to channel conversion
-Date:   Mon,  7 Sep 2020 12:33:02 -0400
-Message-Id: <20200907163329.1280888-16-sashal@kernel.org>
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 09/53] firestream: Fix memleak in fs_open
+Date:   Mon,  7 Sep 2020 12:31:35 -0400
+Message-Id: <20200907163220.1280412-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
-References: <20200907163329.1280888-1-sashal@kernel.org>
+In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
+References: <20200907163220.1280412-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,43 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amar Singhal <asinghal@codeaurora.org>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 2d9b55508556ccee6410310fb9ea2482fd3328eb ]
+[ Upstream commit 15ac5cdafb9202424206dc5bd376437a358963f9 ]
 
-Adjust the 6 GHz frequency to channel conversion function,
-the other way around was previously handled.
+When make_rate() fails, vcc should be freed just
+like other error paths in fs_open().
 
-Signed-off-by: Amar Singhal <asinghal@codeaurora.org>
-Link: https://lore.kernel.org/r/1592599921-10607-1-git-send-email-asinghal@codeaurora.org
-[rewrite commit message, hard-code channel 2]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/util.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/atm/firestream.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index 8481e9ac33da5..9abafd76ec50e 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -116,11 +116,13 @@ int ieee80211_frequency_to_channel(int freq)
- 		return (freq - 2407) / 5;
- 	else if (freq >= 4910 && freq <= 4980)
- 		return (freq - 4000) / 5;
--	else if (freq < 5945)
-+	else if (freq < 5925)
- 		return (freq - 5000) / 5;
-+	else if (freq == 5935)
-+		return 2;
- 	else if (freq <= 45000) /* DMG band lower limit */
--		/* see 802.11ax D4.1 27.3.22.2 */
--		return (freq - 5940) / 5;
-+		/* see 802.11ax D6.1 27.3.22.2 */
-+		return (freq - 5950) / 5;
- 	else if (freq >= 58320 && freq <= 70200)
- 		return (freq - 56160) / 2160;
- 	else
+diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
+index cc87004d5e2d6..5f22555933df1 100644
+--- a/drivers/atm/firestream.c
++++ b/drivers/atm/firestream.c
+@@ -998,6 +998,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
+ 				error = make_rate (pcr, r, &tmc0, NULL);
+ 				if (error) {
+ 					kfree(tc);
++					kfree(vcc);
+ 					return error;
+ 				}
+ 			}
 -- 
 2.25.1
 
