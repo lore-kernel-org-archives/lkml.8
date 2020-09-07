@@ -2,115 +2,124 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE31C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB031C2D0A8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1D6A20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:23:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sslab.ics.keio.ac.jp header.i=@sslab.ics.keio.ac.jp header.b="Wy+lY5pi"
+	by mail.kernel.org (Postfix) with ESMTP id 7AA1E20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599495850;
+	bh=yx/xrKwi3d342OuVJ6+t5DVvoWKbXVtqclPlrgpbk3Y=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QF/gCow3fpK3gekCptw7cNi4zF1EQJDms0Ax0rk2PhdEMqdaB7dcA/XKLAqB+ypsp
+	 lp9JEPpPctJ+YJnZjOVgVeclLsRzm9Z9aNydFxp9TLqZh9drI7FDLyx2wcYUtlN4Y7
+	 p+K4fk3HjiUX1tW1DnbXt0t/79FCS8yngdTUQksE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbgIGQXx (ORCPT
+        id S1730541AbgIGQYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60802 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730411AbgIGQXk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:23:40 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95A56C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:23:39 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id c3so4400925plz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 09:23:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sslab.ics.keio.ac.jp; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=SDxUUQ+8c+YEIDDJur8rYrh3CcLj60cM5IrQcltAbJU=;
-        b=Wy+lY5pi2y0MXKbzHqJ4nxyLK8FkoENJ+OWduamenQCm/MHiU+zeaS9LOSSiSk7TmX
-         OQwBenpNoA2RRwW+bDYWYnuPBVvGkPeIZJXm0ZMBz4gBd2pC5Kw5z5E0N3ZbM34nAw+k
-         OdteM1Ed8drJUGv6ZCa9m6kJPpuG9BZzrYu+w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=SDxUUQ+8c+YEIDDJur8rYrh3CcLj60cM5IrQcltAbJU=;
-        b=AROd8RDtjE2wbvSdl9L3reFR+b3fngfKYBd/gtW+Q1CBeSsdHCQ7pEJ3rI0ywLU24M
-         Co2N5w6BK6+UHLb17VHaMWIth4AdmmlabkHkYgonpxqauWbUr66gjqoLgVYVK74FloAm
-         Fbp1Axgy+Zx9cTqnlAWhwMZzEUsApyjamHr/MppgJHYdIPIO0ZvsnjFZY/TRL2IOsCSk
-         lztWKrh/dHcyl1eP7zXLST9xGHN643Mt3a6IDvgFeYIy2QQ0B+Cfwu8l5MkHzi8IqFMw
-         iBQD4n2gIORqqP0YBXFWM2C7oMUPdH67MjaS6QmwMX5zGpWFEpOvxFW15eIrdq593H6s
-         pGjw==
-X-Gm-Message-State: AOAM530vWUQDyR3TW/KE4ju3p1Ktq0PZcDY1xcds0TNEx0E4HbHj3B+V
-        3hGscfD/byTTL2USulgG7ly8Dw==
-X-Google-Smtp-Source: ABdhPJyt1f1puArMGZEw7H7IWnsOdW3BtYIeDECpZMGG2uhioAhtb/hu+XxvwnoXRKkOXMIXD2nqUQ==
-X-Received: by 2002:a17:902:d353:: with SMTP id l19mr9227410plk.220.1599495818901;
-        Mon, 07 Sep 2020 09:23:38 -0700 (PDT)
-Received: from brooklyn.i.sslab.ics.keio.ac.jp (sslab-relay.ics.keio.ac.jp. [131.113.126.173])
-        by smtp.googlemail.com with ESMTPSA id v1sm3229622pjn.1.2020.09.07.09.23.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 09:23:38 -0700 (PDT)
-From:   Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     keitasuzuki.park@sslab.ics.keio.ac.jp,
-        takafumi@sslab.ics.keio.ac.jp,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-wireless@vger.kernel.org (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list.pdl@broadcom.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        brcm80211-dev-list@cypress.com (open list:BROADCOM BRCM80211
-        IEEE802.11n WIRELESS DRIVER),
-        netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] brcmsmac: fix potential memory leak in wlc_phy_attach_lcnphy
-Date:   Mon,  7 Sep 2020 16:22:43 +0000
-Message-Id: <20200907162245.17997-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
+        Mon, 7 Sep 2020 12:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729937AbgIGQNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:13:18 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39503207DE;
+        Mon,  7 Sep 2020 16:13:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599495197;
+        bh=yx/xrKwi3d342OuVJ6+t5DVvoWKbXVtqclPlrgpbk3Y=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=AvZnRTKZawYE3HQooBh8Fj2d4hN/5dCV9Kt4ZgIPQouJdeq/+bazDiPaEgGeCW4V2
+         ZAPxuKbRNKpo88YfNvxNxs0DB2HO8xoKg2K9Yvv9rJ/EMc0EeuadiOKjDZxKkZJb3v
+         EoDlBPgID3PfgjjKpnCeqwOFOa7Y0cgpEF6mPfNc=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: [PATCH 12/25] ARM: dts: s5pv210: add RTC 32 KHz clock in Goni
+Date:   Mon,  7 Sep 2020 18:11:28 +0200
+Message-Id: <20200907161141.31034-13-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
+References: <20200907161141.31034-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When wlc_phy_txpwr_srom_read_lcnphy fails in wlc_phy_attach_lcnphy,
-the allocated pi->u.pi_lcnphy is leaked, since struct brcms_phy will be
-freed in the caller function.
+The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
+However there is no such clock provider but rather a regulator driver
+which registers the clock as a regulator.  This is an old driver which
+will not be updated so add a workaround - a fixed-clock to fill missing
+clock phandle reference in S3C RTC.
 
-Fix this by calling wlc_phy_detach_lcnphy in the error handler of
-wlc_phy_txpwr_srom_read_lcnphy before returning.
+This fixes dtbs_check warnings:
 
-Signed-off-by: Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
+  rtc@e2800000: clocks: [[2, 145]] is too short
+  rtc@e2800000: clock-names: ['rtc'] is too short
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- .../net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c    | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/s5pv210-goni.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
-index 7ef36234a25d..6d70f51b2ddf 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmsmac/phy/phy_lcn.c
-@@ -5065,8 +5065,10 @@ bool wlc_phy_attach_lcnphy(struct brcms_phy *pi)
- 	pi->pi_fptr.radioloftget = wlc_lcnphy_get_radio_loft;
- 	pi->pi_fptr.detach = wlc_phy_detach_lcnphy;
+diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
+index fbbd93707404..c8714bf0b6e4 100644
+--- a/arch/arm/boot/dts/s5pv210-goni.dts
++++ b/arch/arm/boot/dts/s5pv210-goni.dts
+@@ -33,6 +33,13 @@
+ 			0x50000000 0x08000000>;
+ 	};
  
--	if (!wlc_phy_txpwr_srom_read_lcnphy(pi))
-+	if (!wlc_phy_txpwr_srom_read_lcnphy(pi)) {
-+		wlc_phy_detach_lcnphy(pi);
- 		return false;
-+	}
++	pmic_ap_clk: clock-0 {
++		/* Workaround for missing clock on PMIC */
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++	};
++
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -224,6 +231,11 @@
+ 					regulator-max-microvolt = <1200000>;
+ 					regulator-always-on;
+ 				};
++
++				ap32khz_reg: EN32KHz-AP {
++					regulator-name = "32KHz AP";
++					regulator-always-on;
++				};
+ 			};
+ 		};
+ 	};
+@@ -308,6 +320,11 @@
+ 	status = "okay";
+ };
  
- 	if (LCNREV_IS(pi->pubpi.phy_rev, 1)) {
- 		if (pi_lcn->lcnphy_tempsense_option == 3) {
++&rtc {
++	clocks = <&clocks CLK_RTC>, <&pmic_ap_clk>;
++	clock-names = "rtc", "rtc_src";
++};
++
+ &sdhci0 {
+ 	bus-width = <4>;
+ 	non-removable;
 -- 
 2.17.1
 
