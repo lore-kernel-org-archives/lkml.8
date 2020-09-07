@@ -4,31 +4,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC0BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCC4C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5237621481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01632166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbgIGNZx (ORCPT
+        id S1729333AbgIGN2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:25:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:41596 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 09:28:18 -0400
+Received: from 8bytes.org ([81.169.241.247]:43612 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729427AbgIGNRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:17:46 -0400
+        id S1729469AbgIGNSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:04 -0400
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 2985EA6D;
-        Mon,  7 Sep 2020 15:16:44 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 2118C1004;
+        Mon,  7 Sep 2020 15:17:01 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
         Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -36,7 +36,6 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -46,9 +45,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 04/72] KVM: SVM: Use __packed shorthand
-Date:   Mon,  7 Sep 2020 15:15:05 +0200
-Message-Id: <20200907131613.12703-5-joro@8bytes.org>
+Subject: [PATCH v7 37/72] x86/sev-es: Print SEV-ES info into kernel log
+Date:   Mon,  7 Sep 2020 15:15:38 +0200
+Message-Id: <20200907131613.12703-38-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -59,62 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@alien8.de>
+From: Joerg Roedel <jroedel@suse.de>
 
-Use the shorthand to make it more readable.
+Refactor the message printed to the kernel log which indicates whether
+SEV or SME is active to print a list of enabled encryption features.
+This will scale better in the future when more memory encryption
+features might be added. Also add SEV-ES to the list of features.
 
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@alien8.de>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/svm.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/mm/mem_encrypt.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 06e52585aed3..cf13f9e78585 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -150,14 +150,14 @@ struct __attribute__ ((__packed__)) vmcb_control_area {
- #define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
- #define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
- 
--struct __attribute__ ((__packed__)) vmcb_seg {
-+struct vmcb_seg {
- 	u16 selector;
- 	u16 attrib;
- 	u32 limit;
- 	u64 base;
--};
-+} __packed;
- 
--struct __attribute__ ((__packed__)) vmcb_save_area {
-+struct vmcb_save_area {
- 	struct vmcb_seg es;
- 	struct vmcb_seg cs;
- 	struct vmcb_seg ss;
-@@ -231,7 +231,7 @@ struct __attribute__ ((__packed__)) vmcb_save_area {
- 	u64 xcr0;
- 	u8 valid_bitmap[16];
- 	u64 x87_state_gpa;
--};
-+} __packed;
- 
- struct ghcb {
- 	struct vmcb_save_area save;
-@@ -256,11 +256,11 @@ static inline void __unused_size_checks(void)
- 	BUILD_BUG_ON(sizeof(struct ghcb)		!= EXPECTED_GHCB_SIZE);
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index d0d4ebcec1be..d6b8f4c1d3fa 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -407,6 +407,31 @@ void __init mem_encrypt_free_decrypted_mem(void)
+ 	free_init_pages("unused decrypted", vaddr, vaddr_end);
  }
  
--struct __attribute__ ((__packed__)) vmcb {
-+struct vmcb {
- 	struct vmcb_control_area control;
- 	u8 reserved_control[1024 - sizeof(struct vmcb_control_area)];
- 	struct vmcb_save_area save;
--};
-+} __packed;
++static void print_mem_encrypt_feature_info(void)
++{
++	pr_info("AMD Memory Encryption Features active:");
++
++	/* Secure Memory Encryption */
++	if (sme_active()) {
++		/*
++		 * SME is mutually exclusive with any of the SEV
++		 * features below.
++		 */
++		pr_cont(" SME\n");
++		return;
++	}
++
++	/* Secure Encrypted Virtualization */
++	if (sev_active())
++		pr_cont(" SEV");
++
++	/* Encrypted Register State */
++	if (sev_es_active())
++		pr_cont(" SEV-ES");
++
++	pr_cont("\n");
++}
++
+ /* Architecture __weak replacement functions */
+ void __init mem_encrypt_init(void)
+ {
+@@ -422,8 +447,6 @@ void __init mem_encrypt_init(void)
+ 	if (sev_active())
+ 		static_branch_enable(&sev_enable_key);
  
- #define SVM_CPUID_FUNC 0x8000000a
+-	pr_info("AMD %s active\n",
+-		sev_active() ? "Secure Encrypted Virtualization (SEV)"
+-			     : "Secure Memory Encryption (SME)");
++	print_mem_encrypt_feature_info();
+ }
  
 -- 
 2.28.0
