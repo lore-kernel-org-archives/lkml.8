@@ -6,81 +6,67 @@ X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D55C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78468C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF953215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111F9208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599501999;
-	bh=sNUUOGd+zmw4ssO5Tsq9VNd3B6I/l3WoE9Y4I1kNoGE=;
+	s=default; t=1599502012;
+	bh=VTpbtI+U+Oa0WV5lQWZOK3e6QHyJaTjJJb4i+y9WPMo=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=e111V8sgFphXfZ/VaVOGK/zIcT/+CDWsRqUedBmDkrM8TO3OSMtS0sO5Vo2U1AnPu
-	 ENy3qX1UjsG1YMS8f5T+3+4kzEmZ1UV+XEuIihJ3XzfmraOgHQqq7BtfRHsUpDPG2I
-	 LXDFHQjDPAw+IdPtub9EBu/r3Bb64qunAeuRovxE=
+	b=bojU3n74RxcE0VlwjYeX2mwobP9HSrMolvxuDmrbH5kPsbo/drSbFF6ImqwGRr4bP
+	 KTFinianIOrKsDwcZX0j6ees0PDzfhCgj65fgBv4AX+7lccnzqGIpupTa3k9ozFcGb
+	 75qL1gqXFB3WYLVDOexkyddSSihHuA+TUoAOQWCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729351AbgIGSGc (ORCPT
+        id S1731435AbgIGSGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32882 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 14:06:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729588AbgIGSG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:06:27 -0400
+        id S1728916AbgIGSGi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:06:38 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B994A208C7;
-        Mon,  7 Sep 2020 18:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46F82078E;
+        Mon,  7 Sep 2020 18:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599501987;
-        bh=sNUUOGd+zmw4ssO5Tsq9VNd3B6I/l3WoE9Y4I1kNoGE=;
+        s=default; t=1599501998;
+        bh=VTpbtI+U+Oa0WV5lQWZOK3e6QHyJaTjJJb4i+y9WPMo=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=nZYioifeQakWCas9N4J/sLJK5DhXwtkJBaeEjG2GsDaYRM2i5awiiAGT7a0efSpwm
-         4BZxrWI1tBpbWcVEKU9GIWFuMoULj4n2bkPHkQZ0rxb3ytSYdOgjYinXnqZQuGSzCp
-         L5dBjA4ZJWCJkg5XIawmg/HP7q2MmcDSyn9FGC4E=
-Date:   Mon, 07 Sep 2020 19:05:43 +0100
+        b=cAtgwNzjWCE6kF43vKXebrt0Bps4nWQQhpVLQJGxs8V2dTNJSuT5u40HkIfEO2DSt
+         wSHZ9wQ6xzqM8nLYwT0fpEPKH78AoG8TsEOgOZ8uINawFnqw2474m29DHsytG9ONXJ
+         XumREVHH0wLFcG6wi22+6bQVZoSAHio6Qa0NHth0=
+Date:   Mon, 07 Sep 2020 19:05:54 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     alsa-devel@alsa-project.org,
-        Bard Liao <yung-chuan.liao@linux.intel.com>, vkoul@kernel.org
-Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org,
-        hui.wang@canonical.com, srinivas.kandagatla@linaro.org,
-        tiwai@suse.de, mengdong.lin@intel.com, rander.wang@linux.intel.com,
-        ranjani.sridharan@linux.intel.com, bard.liao@intel.com,
-        pierre-louis.bossart@linux.intel.com, gregkh@linuxfoundation.org,
-        sanyog.r.kale@intel.com, jank@cadence.com
-In-Reply-To: <20200904182854.3944-1-yung-chuan.liao@linux.intel.com>
-References: <20200904182854.3944-1-yung-chuan.liao@linux.intel.com>
-Subject: Re: [PATCH v3 0/3] ASoC: Add sdw stream operations to dailink ops.
-Message-Id: <159950192275.52707.7554622112953148730.b4-ty@kernel.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        patches@opensource.cirrus.com
+In-Reply-To: <20200904122506.28017-1-ckeepax@opensource.cirrus.com>
+References: <20200904122506.28017-1-ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH] regulator: lochnagar: Add additional VDDCORE range
+Message-Id: <159950194953.52863.15525758301624487565.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 5 Sep 2020 02:28:51 +0800, Bard Liao wrote:
-> Sdw stream operation APIs can be called once per stream. Move these
-> operations to dailink ops. The linked series is "soundwire: Remove sdw
-> stream operations from Intel soundwire dai".
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> 
-> Changes in v3:
->  - s/ASOC/ASoC
-> 
-> [...]
+On Fri, 4 Sep 2020 13:25:06 +0100, Charles Keepax wrote:
+> In the case of an unrecognised mini-card the Lochnagar will not
+> initialise the VDDCORE voltage register leading to a value outside of the
+> current range. Add an additional range to cover these values, initially
+> this wasn't done since they are duplicates of the existing minimum
+> value.
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/3] ASoC: soc-dai: clarify return value for get_sdw_stream()
-      commit: d20e834e13ce349c9b901b9dd8b7013e255083e8
-[2/3] ASoC: Intel: sof_sdw: add dailink .trigger callback
-      commit: ae3a3918edf57bde7651964be04d0807cccae8f2
-[3/3] ASoC: Intel: sof_sdw: add dailink .prepare and .hw_free callback
-      commit: 06998d49bcac8a9df3341db99c5f81ae4ef51c84
+[1/1] regulator: lochnagar: Add additional VDDCORE range
+      commit: 6dc9674d95b8a8a81b85a4bed77f86d1b039be10
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
