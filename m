@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A63CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4151BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB7662080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF875207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497075;
-	bh=sCSX/hkS/jZYAfpuxjYlfWkuz9jej7DqloL+c37m8TY=;
+	s=default; t=1599497102;
+	bh=zPaXF53HJOhCMm4iH+1r//KMldENlKCw7dZCzzwKWwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=seNQGApQjKFjiDxc0luUoDo5lX1ENxgUHWf2/aDzzM/U+I4OdsJRBXdUJT3KL8f+8
-	 FtVVigVjqowbr0dH4nB+ait0iACyNT0cOJliQJt18hfrvcjT/D6bNQac2uO+ng8QbG
-	 cCKegmFPrI2L4wYkve4meVoq0Ug8r2TC9gv30Ddk=
+	b=HS9Tj23xRUEvEzYq4w5+r0k4rqMl4Gqkwm+Wv3IvxCB3FNFabYemCGmfY3i22am/Y
+	 zhCXedsy3VOABB5WuOMCIZpIEzk67Iaw+usk3FWaf/4pubArLeXZtPjowWxeLIETY/
+	 vdnpU80sjSRisvOhxsopXwZ+tN1NtJ6LztMxLjq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbgIGQob (ORCPT
+        id S1731060AbgIGQo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:44:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730856AbgIGQfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:47 -0400
+        id S1730840AbgIGQfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 163A421D82;
-        Mon,  7 Sep 2020 16:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7EA7221E7;
+        Mon,  7 Sep 2020 16:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496546;
-        bh=sCSX/hkS/jZYAfpuxjYlfWkuz9jej7DqloL+c37m8TY=;
+        s=default; t=1599496538;
+        bh=zPaXF53HJOhCMm4iH+1r//KMldENlKCw7dZCzzwKWwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+xDGslEf/KluX4yxRqekzlB10Dh3nGh02TicbncYYiXSoFwWlg/1HlXwnIG7NpQk
-         dkK7fLHuGvAzYGlQCGzCHavva6qyM9LoNElD75ymoTjnGroWBb/jdfrtmlmeSEfIi5
-         7RBPVW9at9f/dmSNstkcE6ZQUsi8a0M8cxsFMKQs=
+        b=b3LNhgAhKqC3b9Izg6hJfFWV+Vaxbmn3x/S8b3Hpu5sFPNcUgyCi0vu2WIRvknkXv
+         XrwZY7iBRvA6OoWoW+7QPF6od9I46YlQIihCk0BxhiBpiaC3PbxI4kLLRxNJy1E1yL
+         ZlI8zK9fACgIL1ZP53/ulWQL5skbCtestWJOCdGw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+Cc:     Xie He <xie.he.0141@gmail.com>, Martin Schiller <ms@dev.tdt.de>,
+        Krzysztof Halasa <khc@pm.waw.pl>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/10] firestream: Fix memleak in fs_open
-Date:   Mon,  7 Sep 2020 12:35:35 -0400
-Message-Id: <20200907163543.1281889-2-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/13] drivers/net/wan/hdlc_cisco: Add hard_header_len
+Date:   Mon,  7 Sep 2020 12:35:21 -0400
+Message-Id: <20200907163524.1281734-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
-References: <20200907163543.1281889-1-sashal@kernel.org>
+In-Reply-To: <20200907163524.1281734-1-sashal@kernel.org>
+References: <20200907163524.1281734-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,32 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Xie He <xie.he.0141@gmail.com>
 
-[ Upstream commit 15ac5cdafb9202424206dc5bd376437a358963f9 ]
+[ Upstream commit 1a545ebe380bf4c1433e3c136e35a77764fda5ad ]
 
-When make_rate() fails, vcc should be freed just
-like other error paths in fs_open().
+This driver didn't set hard_header_len. This patch sets hard_header_len
+for it according to its header_ops->create function.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+This driver's header_ops->create function (cisco_hard_header) creates
+a header of (struct hdlc_header), so hard_header_len should be set to
+sizeof(struct hdlc_header).
+
+Cc: Martin Schiller <ms@dev.tdt.de>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Acked-by: Krzysztof Halasa <khc@pm.waw.pl>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/firestream.c | 1 +
+ drivers/net/wan/hdlc_cisco.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
-index 04b39d0da8681..70708608ab1e7 100644
---- a/drivers/atm/firestream.c
-+++ b/drivers/atm/firestream.c
-@@ -1009,6 +1009,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
- 				error = make_rate (pcr, r, &tmc0, NULL);
- 				if (error) {
- 					kfree(tc);
-+					kfree(vcc);
- 					return error;
- 				}
- 			}
+diff --git a/drivers/net/wan/hdlc_cisco.c b/drivers/net/wan/hdlc_cisco.c
+index a408abc25512a..7f99fb666f196 100644
+--- a/drivers/net/wan/hdlc_cisco.c
++++ b/drivers/net/wan/hdlc_cisco.c
+@@ -377,6 +377,7 @@ static int cisco_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 		memcpy(&state(hdlc)->settings, &new_settings, size);
+ 		spin_lock_init(&state(hdlc)->lock);
+ 		dev->header_ops = &cisco_header_ops;
++		dev->hard_header_len = sizeof(struct hdlc_header);
+ 		dev->type = ARPHRD_CISCO;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_on(dev);
 -- 
 2.25.1
 
