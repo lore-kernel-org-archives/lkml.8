@@ -2,264 +2,158 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B19C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047B5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:19:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A76B20838
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA809207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:19:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgIGNOE (ORCPT
+        id S1729542AbgIGNTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:14:04 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:41689 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729418AbgIGNIj (ORCPT
+        Mon, 7 Sep 2020 09:19:47 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:59063 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729430AbgIGNLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:08:39 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 07 Sep 2020 06:08:15 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Sep 2020 06:08:13 -0700
-Received: from c-rojay-linux.qualcomm.com ([10.206.21.80])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 07 Sep 2020 18:37:35 +0530
-Received: by c-rojay-linux.qualcomm.com (Postfix, from userid 88981)
-        id C17E920F7; Mon,  7 Sep 2020 18:37:33 +0530 (IST)
-From:   Roja Rani Yarubandi <rojay@codeaurora.org>
-To:     wsa@kernel.org
-Cc:     swboyd@chromium.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
-        mka@chromium.org, akashast@codeaurora.org,
-        msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
-        rnayak@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>
-Subject: [PATCH V3] i2c: i2c-qcom-geni: Add shutdown callback for i2c
-Date:   Mon,  7 Sep 2020 18:37:31 +0530
-Message-Id: <20200907130731.2607-1-rojay@codeaurora.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 7 Sep 2020 09:11:47 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="466412596"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 15:11:31 +0200
+Date:   Mon, 7 Sep 2020 15:11:31 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Coccinelle <cocci@systeme.lip6.fr>,
+        Dejin Zheng <zhengdejin5@gmail.com>,
+        Denis Efremov <efremov@linux.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_Coccinelle=3A_api=3A_Add_SmPL_scr?=
+ =?UTF-8?Q?ipt_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget=5Fand=5Fioremap=5Fre?=
+ =?UTF-8?Q?source=2Ecocci=E2=80=9D?=
+In-Reply-To: <477abcea-e008-e509-d03f-f2753ebdfb20@web.de>
+Message-ID: <alpine.DEB.2.22.394.2009071506350.2476@hadrien>
+References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <alpine.DEB.2.22.394.2009071357140.2476@hadrien> <477abcea-e008-e509-d03f-f2753ebdfb20@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323329-1914540151-1599484292=:2476"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hardware is still accessing memory after SMMU translation
-is disabled (as part of smmu shutdown callback), then the
-IOVAs (I/O virtual address) which it was using will go on the bus
-as the physical addresses which will result in unknown crashes
-like NoC/interconnect errors.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-So, implement shutdown callback to i2c driver to stop on-going transfer
-and unmap DMA mappings during system "reboot" or "shutdown".
+--8323329-1914540151-1599484292=:2476
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Store DMA mapping data in geni_i2c_dev struct to enhance DMA mapping
-data scope. For example during shutdown callback to unmap DMA mapping,
-this stored DMA mapping data can be used to call geni_se_tx_dma_unprep
-and geni_se_rx_dma_unprep functions.
 
-Fixes: 37692de5d523 ("i2c: i2c-qcom-geni: Add bus driver for the Qualcomm GENI I2C controller")
-Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
----
-Changes in V2:
- - As per Stephen's comments added seperate function for stop transfer,
-   fixed minor nitpicks.
- - As per Stephen's comments, changed commit text.
 
-Changes in V3:
- - As per Stephen's comments, squashed patch 1 into patch 2, added Fixes tag.
- - As per Akash's comments, included FIFO case in stop_xfer, fixed minor nitpicks.
+On Mon, 7 Sep 2020, Markus Elfring wrote:
 
- drivers/i2c/busses/i2c-qcom-geni.c | 70 +++++++++++++++++++++++++++---
- include/linux/qcom-geni-se.h       |  5 +++
- 2 files changed, 69 insertions(+), 6 deletions(-)
+> >> +@display depends on context@
+> >> +expression base, device1, device2, index, private, resource;
+> >> +@@
+> >> +(
+> >> +*resource = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >> + base =
+> >> +*       devm_ioremap_resource
+> >> +                             (&device1->dev, resource);
+> >
+> > Why do you require these statements to be next to each other?
+>
+> I would appreciate indications for a general change acceptance
+> also according to such a simple transformation approach.
+> I imagine that it will become more challenging to tolerate extra
+> source code between these function calls (by the specification
+> of special SmPL filters).
+>
+>
+> >> +|
+> >> +*private->res = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >> + base =
+> >> +*       devm_ioremap_resource
+> >> +                             (device2, private->res);
+> >
+> > Why do you have this special case?
+>
+> The usage of the data structure member “res” triggers corresponding
+> software design consequences.
 
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index dead5db3315a..b3609760909f 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -86,6 +86,9 @@ struct geni_i2c_dev {
- 	u32 clk_freq_out;
- 	const struct geni_i2c_clk_fld *clk_fld;
- 	int suspended;
-+	dma_addr_t tx_dma;
-+	dma_addr_t rx_dma;
-+	size_t xfer_len;
- };
- 
- struct geni_i2c_err_log {
-@@ -352,12 +355,12 @@ static void geni_i2c_tx_fsm_rst(struct geni_i2c_dev *gi2c)
- static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 				u32 m_param)
- {
--	dma_addr_t rx_dma;
- 	unsigned long time_left;
- 	void *dma_buf = NULL;
- 	struct geni_se *se = &gi2c->se;
- 	size_t len = msg->len;
- 
-+	gi2c->xfer_len = len;
- 	if (!of_machine_is_compatible("lenovo,yoga-c630"))
- 		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
- 
-@@ -368,7 +371,7 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 
- 	writel_relaxed(len, se->base + SE_I2C_RX_TRANS_LEN);
- 
--	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &rx_dma)) {
-+	if (dma_buf && geni_se_rx_dma_prep(se, dma_buf, len, &gi2c->rx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
- 		i2c_put_dma_safe_msg_buf(dma_buf, msg, false);
- 		dma_buf = NULL;
-@@ -384,7 +387,8 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 	if (dma_buf) {
- 		if (gi2c->err)
- 			geni_i2c_rx_fsm_rst(gi2c);
--		geni_se_rx_dma_unprep(se, rx_dma, len);
-+		geni_se_rx_dma_unprep(se, gi2c->rx_dma, len);
-+		gi2c->rx_dma = (dma_addr_t)NULL;
- 		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
- 	}
- 
-@@ -394,12 +398,12 @@ static int geni_i2c_rx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 				u32 m_param)
- {
--	dma_addr_t tx_dma;
- 	unsigned long time_left;
- 	void *dma_buf = NULL;
- 	struct geni_se *se = &gi2c->se;
- 	size_t len = msg->len;
- 
-+	gi2c->xfer_len = len;
- 	if (!of_machine_is_compatible("lenovo,yoga-c630"))
- 		dma_buf = i2c_get_dma_safe_msg_buf(msg, 32);
- 
-@@ -410,7 +414,7 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 
- 	writel_relaxed(len, se->base + SE_I2C_TX_TRANS_LEN);
- 
--	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &tx_dma)) {
-+	if (dma_buf && geni_se_tx_dma_prep(se, dma_buf, len, &gi2c->tx_dma)) {
- 		geni_se_select_mode(se, GENI_SE_FIFO);
- 		i2c_put_dma_safe_msg_buf(dma_buf, msg, false);
- 		dma_buf = NULL;
-@@ -429,7 +433,8 @@ static int geni_i2c_tx_one_msg(struct geni_i2c_dev *gi2c, struct i2c_msg *msg,
- 	if (dma_buf) {
- 		if (gi2c->err)
- 			geni_i2c_tx_fsm_rst(gi2c);
--		geni_se_tx_dma_unprep(se, tx_dma, len);
-+		geni_se_tx_dma_unprep(se, gi2c->tx_dma, len);
-+		gi2c->tx_dma = (dma_addr_t)NULL;
- 		i2c_put_dma_safe_msg_buf(dma_buf, msg, !gi2c->err);
- 	}
- 
-@@ -479,6 +484,51 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
- 	return ret;
- }
- 
-+static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
-+{
-+	int ret;
-+	u32 dma;
-+	u32 val;
-+	u32 geni_status;
-+	struct geni_se *se = &gi2c->se;
-+
-+	ret = pm_runtime_get_sync(gi2c->se.dev);
-+	if (ret < 0) {
-+		dev_err(gi2c->se.dev, "Failed to resume device: %d\n", ret);
-+		return;
-+	}
-+
-+	geni_status = readl_relaxed(gi2c->se.base + SE_GENI_STATUS);
-+	if (geni_status & M_GENI_CMD_ACTIVE) {
-+		geni_i2c_abort_xfer(gi2c);
-+		dma = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-+		if (dma) {
-+			val = readl_relaxed(gi2c->se.base + SE_DMA_DEBUG_REG0);
-+			if (val & DMA_TX_ACTIVE) {
-+				gi2c->cur_wr = 0;
-+				if (gi2c->err)
-+					geni_i2c_tx_fsm_rst(gi2c);
-+				if (gi2c->tx_dma) {
-+					geni_se_tx_dma_unprep(se,
-+						 gi2c->tx_dma, gi2c->xfer_len);
-+					gi2c->tx_dma = (dma_addr_t)NULL;
-+				}
-+			} else if (val & DMA_RX_ACTIVE) {
-+				gi2c->cur_rd = 0;
-+				if (gi2c->err)
-+					geni_i2c_rx_fsm_rst(gi2c);
-+				if (gi2c->rx_dma) {
-+					geni_se_rx_dma_unprep(se,
-+						gi2c->rx_dma, gi2c->xfer_len);
-+					gi2c->rx_dma = (dma_addr_t)NULL;
-+				}
-+			}
-+		}
-+	}
-+
-+	pm_runtime_put_sync_suspend(gi2c->se.dev);
-+}
-+
- static u32 geni_i2c_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
-@@ -630,6 +680,13 @@ static int geni_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static void geni_i2c_shutdown(struct platform_device *pdev)
-+{
-+	struct geni_i2c_dev *gi2c = platform_get_drvdata(pdev);
-+
-+	geni_i2c_stop_xfer(gi2c);
-+}
-+
- static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
- {
- 	int ret;
-@@ -694,6 +751,7 @@ MODULE_DEVICE_TABLE(of, geni_i2c_dt_match);
- static struct platform_driver geni_i2c_driver = {
- 	.probe  = geni_i2c_probe,
- 	.remove = geni_i2c_remove,
-+	.shutdown = geni_i2c_shutdown,
- 	.driver = {
- 		.name = "geni_i2c",
- 		.pm = &geni_i2c_pm_ops,
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index 8f385fbe5a0e..7279d8b3b04c 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -96,6 +96,7 @@ struct geni_se {
- #define SE_DMA_RX_FSM_RST		0xd58
- #define SE_HW_PARAM_0			0xe24
- #define SE_HW_PARAM_1			0xe28
-+#define SE_DMA_DEBUG_REG0		0xe40
- 
- /* GENI_FORCE_DEFAULT_REG fields */
- #define FORCE_DEFAULT	BIT(0)
-@@ -226,6 +227,10 @@ struct geni_se {
- #define RX_GENI_CANCEL_IRQ		BIT(11)
- #define RX_GENI_GP_IRQ_EXT		GENMASK(13, 12)
- 
-+/* SE_DMA_DEBUG_REG0 Register fields */
-+#define DMA_TX_ACTIVE			BIT(0)
-+#define DMA_RX_ACTIVE			BIT(1)
-+
- /* SE_HW_PARAM_0 fields */
- #define TX_FIFO_WIDTH_MSK		GENMASK(29, 24)
- #define TX_FIFO_WIDTH_SHFT		24
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+I don't think this is a reliable rule.  You included two examples below.
+They involve structures of different types. It seems unlikely that there
+is a guarantee that the res field of all structures is used in the same
+way.  Furthermore, this is the context case.  What is the purpose of
+making the distinction?  The user will have to figure out what to do by
+hand in any case.
 
+> The expressions which are passed as the first function call parameters
+> can be different.
+>
+>
+> >> +@replacement depends on patch@
+> >> +expression base, device1, device2, index, private, resource;
+> >> +@@
+> >> +(
+> >> +-resource = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >> + base =
+> >> +-       devm_ioremap_resource
+> >> ++       devm_platform_get_and_ioremap_resource
+> >> +                             (
+> >> +-                             &
+> >> +                               device1
+> >> +-                                     ->dev
+> >> +                              ,
+> >> +-                             resource
+> >> ++                             index, &resource
+> >> +                             );
+> >> +|
+> >> +-private->res = platform_get_resource(device1, IORESOURCE_MEM, index);
+> >> + base =
+> >> +-       devm_ioremap_resource
+> >> ++       devm_platform_get_and_ioremap_resource
+> >> +                             (device2,
+> >
+> > It is very suspicious that in one case you change the first argument of
+> > devm_platform_get_and_ioremap_resource and in one case you don't.
+>
+> I noticed a few special cases during my source code analysis approach.
+
+This is not a reasonable answer.  Does the rule work correctly or not?  If
+it doesn't work correctly, it needs to be removed.
+
+> > If you don't know how to make the change in some cases, it would be better
+> > to do nothing at all.
+>
+> How do you think about to take another look at any update candidates?
+>
+> Examples:
+> * mvebu_sei_probe
+>   https://elixir.bootlin.com/linux/v5.9-rc4/source/drivers/irqchip/irq-mvebu-sei.c#L368
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/irqchip/irq-mvebu-sei.c?id=f4d51dffc6c01a9e94650d95ce0104964f8ae822#n368
+
+I don't see any purpose to providing two links for everything.
+
+julia
+
+>
+> * hi655x_pmic_probe
+>   https://elixir.bootlin.com/linux/v5.9-rc4/source/drivers/mfd/hi655x-pmic.c#L92
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/mfd/hi655x-pmic.c?id=f4d51dffc6c01a9e94650d95ce0104964f8ae822#n92
+>
+> Regards,
+> Markus
+>
+--8323329-1914540151-1599484292=:2476--
