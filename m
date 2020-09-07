@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E126C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F28C10DAA
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 176612137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593B62137B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:46:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599450356;
-	bh=/ezLOUjEb1sybaeNg6XSgQUZreC01ojuo7OkRbB+S0I=;
+	s=default; t=1599450360;
+	bh=jOrY6qXMfnu5bZICCJi2nHtuUskKGfjxFtbjnrKRwbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0cu/UB4yyM9D6uiJUjhThEaaizyseEMaqjtRDLOGXOLLs30n0pizXhr/gcicbHE19
-	 IMYVsPisVHohFQ30f4u6QNFyxm7dJrtP2+RiS6v3sMS5dpIN9Us8ZXA3zrmLPsCB5/
-	 tKuB7jArrDhd9d88NX+3hZ2uSTe1TTWsIfEESTXo=
+	b=BofmH80Pu5wuWK007iq3QsN9HqpYymFbnyS5SIOUjks0/akC0SXwSM9sQruvAxY/o
+	 5/c/nyOCJhPnt2H19rq3VDwBjAnJJMPR6FMIooVa3BrtR1IOUsreTt2kDZYnfCCJ8k
+	 kPiiaz2bEx/4WNlW9NUQXwnzDcerFgxJ330BT7J4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbgIGDpz (ORCPT
+        id S1726882AbgIGDp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 23:45:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
+        Sun, 6 Sep 2020 23:45:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbgIGDpn (ORCPT
+        with ESMTP id S1726328AbgIGDpr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 23:45:43 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF57C061574
-        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 20:45:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id j34so2001801pgi.7
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:45:43 -0700 (PDT)
+        Sun, 6 Sep 2020 23:45:47 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75622C061573
+        for <linux-kernel@vger.kernel.org>; Sun,  6 Sep 2020 20:45:47 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id d6so858359pfn.9
+        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:45:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=COmd0QhRwTcOdkv6a/fr3ZA4O+22//SNbc2QK6yqgUE=;
-        b=rkxeeaWdH44GqtT3OvLRW9OM0OvULSN1K1wvHJ+cynx4So3gVTWf359iGpeJ4O5eYd
-         2QMRHiqOv3UkBdwjncU7rq3qpS/hvhK4CMtHyjxxE3MdVaQvKqfqDI7GLIG4V+bW3sjp
-         IGyInY3V1wYNuFL06FEI7GERIOoglVGJssCsyaGKnZJt5LIUpSmReIsXed5pKI3b9Dg0
-         ozQ6SFyCv9MTZyPbLiBn9tDEwGL2zzAEVZPS8LuA4z/M8AnbywMBIL66CdOmKRcsqZpu
-         qPdO0iYDAOdHDUnLp64H7O8T+I4rV7J0c88/5wGs+S7aNsFkaUacWTKWR12ZOgQCawri
-         NtIQ==
+        bh=QTlcu/2luaGCL/RLv/AOF68hjXPRVqBoWMqe+lz0jaE=;
+        b=CBsCcxpnDHWFo5f9UejHLh7LFnTD6pgtGQRhArjkjyfZC45FELInjbHubOEyIsmfdJ
+         YTso06KPhQUcoi3ye2lgQDp4KvSne+B2ECxbKtPBewyaCq381o8NoXz+eRMkgKHtxN8F
+         H3jwIUC43IpXQ0LTwkBxz1dXGyYwdjpXJHwmJUSyZRinQYRL4W55SPV07XqyWPXK59hG
+         2xV/BZeF6SAhVSv6KASzm3xnJMaCzn998NGOIn7xEJtL6IU0dFAFeLH+VGr8qpwcNmj/
+         TIU4wDr3wWHdSxj87srp8mMyylR0fh/jNkTSeGGttCVM9h2W7ctsFmZ7fFdcLzyODQTX
+         /4QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=COmd0QhRwTcOdkv6a/fr3ZA4O+22//SNbc2QK6yqgUE=;
-        b=dcM7J3y9J+Yr4yaBunICEI9jNyiHG5p9w/FNH0byQKY7yrbadz5zxV03N44WNIPUWB
-         mT0xkwl2W1y4hOoomyQk8b6cXXDZeiyvCv5gH6wcffruOcaGa+Befl2CS26R6iKXnBu2
-         Vh0ELiH2eqIowj76RcKvjMCExxjHgomL0V1PTVaueXtiK+OBnVBwof4XVrz0e9d1wxwY
-         zUEexnGyFLC1uwSfQGxyF03FDF2q5HDneS5+Er6tmFi5HEXS9J6M7ENbHmcTdAOwB+6W
-         m+bLOqNad7NUwb2BG2SbxvZDPbtOKouHwFazW+j27iS+pawIt72cxDsCpoRhnZucm2UY
-         LUjg==
-X-Gm-Message-State: AOAM530L/l0T3ULii9hsDnomCRITiNK06PGUmazipVx53UrIrmgN0DhQ
-        0haOxbg3wcTxDS+vr4oTDlNtV+bs6f2Zzg==
-X-Google-Smtp-Source: ABdhPJxk/FdanmKzh6rIvUN4xwhCsGa/gxFKWfUTz1Z3oB4HoiZevMH0rTwKLbG6rAluB3nLzC+9Ew==
-X-Received: by 2002:a63:6dc2:: with SMTP id i185mr7280832pgc.297.1599450337563;
-        Sun, 06 Sep 2020 20:45:37 -0700 (PDT)
+        bh=QTlcu/2luaGCL/RLv/AOF68hjXPRVqBoWMqe+lz0jaE=;
+        b=bxRAwfcG1Ls2JRl5nx7wg1a/a59ieuTpWLZLsniFxPZrJcoBK1RcevDToGRE/ERKnf
+         2McqHa4dlKyPHJBaPB4x0VGMRKUQuAlffuWa+chNbYV2ueb7nnqIOONJvB/0vFyqka19
+         D6M+zKOZzmooaTCfNRkoQ+abGQIUnAc6ag4t6m2LbR1XsImoc5OMTuhVRvCyfiyryhLp
+         D4nHL4EnnWyz3q5EpLEMSGhwVtqzLeL6d340w0Eorh5xAuNTEQsw2iOcRAw3KF8nGGgq
+         m8oN/2FecXJ/6QHFCgXvHggYXkuOlVGLJsTM+2hIMscQ4JxCOFsCAOk/flrbG07HXFVR
+         SThQ==
+X-Gm-Message-State: AOAM5328PASvQebYb2T6kd6sgcWv3s7Ae2SsOfgPF2bWCPjCiR63kq6S
+        CBjcytVOz2pHRWhvFFohyzF64ZN2Q8i5+w==
+X-Google-Smtp-Source: ABdhPJz9ZaQsAE7mcOWu6puNmHYCFKwiqTKczTBi7IBHbDRCgfEEXGq0O8rzLZK5kRsx1NurHe488g==
+X-Received: by 2002:a62:63c6:: with SMTP id x189mr19206761pfb.216.1599450347009;
+        Sun, 06 Sep 2020 20:45:47 -0700 (PDT)
 Received: from balhae.roam.corp.google.com ([101.235.31.111])
-        by smtp.gmail.com with ESMTPSA id l123sm11099672pgl.24.2020.09.06.20.45.33
+        by smtp.gmail.com with ESMTPSA id l123sm11099672pgl.24.2020.09.06.20.45.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 20:45:37 -0700 (PDT)
+        Sun, 06 Sep 2020 20:45:46 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@redhat.com>
@@ -74,10 +74,11 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         Stephane Eranian <eranian@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Andi Kleen <andi@firstfloor.org>,
-        Ian Rogers <irogers@google.com>
-Subject: [PATCH 6/9] perf metric: Free metric when it failed to resolve
-Date:   Mon,  7 Sep 2020 12:44:59 +0900
-Message-Id: <20200907034502.753230-7-namhyung@kernel.org>
+        Ian Rogers <irogers@google.com>,
+        John Garry <john.garry@huawei.com>
+Subject: [PATCH 8/9] perf test: Free aliases for PMU event map aliases test
+Date:   Mon,  7 Sep 2020 12:45:01 +0900
+Message-Id: <20200907034502.753230-9-namhyung@kernel.org>
 X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 In-Reply-To: <20200907034502.753230-1-namhyung@kernel.org>
 References: <20200907034502.753230-1-namhyung@kernel.org>
@@ -88,87 +89,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The metricgroup__add_metric() can find multiple match for a metric
-group and it's possible to fail.  Also it can fail in the middle like
-in resolve_metric() even for single metric.
+The aliases were never released causing the following leaks:
 
-In those cases, the intermediate list and ids will be leaked like:
+  Indirect leak of 1224 byte(s) in 9 object(s) allocated from:
+    #0 0x7feefb830628 in malloc (/lib/x86_64-linux-gnu/libasan.so.5+0x107628)
+    #1 0x56332c8f1b62 in __perf_pmu__new_alias util/pmu.c:322
+    #2 0x56332c8f401f in pmu_add_cpu_aliases_map util/pmu.c:778
+    #3 0x56332c792ce9 in __test__pmu_event_aliases tests/pmu-events.c:295
+    #4 0x56332c792ce9 in test_aliases tests/pmu-events.c:367
+    #5 0x56332c76a09b in run_test tests/builtin-test.c:410
+    #6 0x56332c76a09b in test_and_print tests/builtin-test.c:440
+    #7 0x56332c76ce69 in __cmd_test tests/builtin-test.c:695
+    #8 0x56332c76ce69 in cmd_test tests/builtin-test.c:807
+    #9 0x56332c7d2214 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:312
+    #10 0x56332c6701a8 in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:364
+    #11 0x56332c6701a8 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:408
+    #12 0x56332c6701a8 in main /home/namhyung/project/linux/tools/perf/perf.c:538
+    #13 0x7feefb359cc9 in __libc_start_main ../csu/libc-start.c:308
 
-  Direct leak of 3 byte(s) in 1 object(s) allocated from:
-    #0 0x7f4c938f40b5 in strdup (/lib/x86_64-linux-gnu/libasan.so.5+0x920b5)
-    #1 0x55f7e71c1bef in __add_metric util/metricgroup.c:683
-    #2 0x55f7e71c31d0 in add_metric util/metricgroup.c:906
-    #3 0x55f7e71c3844 in metricgroup__add_metric util/metricgroup.c:940
-    #4 0x55f7e71c488d in metricgroup__add_metric_list util/metricgroup.c:993
-    #5 0x55f7e71c488d in parse_groups util/metricgroup.c:1045
-    #6 0x55f7e71c60a4 in metricgroup__parse_groups_test util/metricgroup.c:1087
-    #7 0x55f7e71235ae in __compute_metric tests/parse-metric.c:164
-    #8 0x55f7e7124650 in compute_metric tests/parse-metric.c:196
-    #9 0x55f7e7124650 in test_recursion_fail tests/parse-metric.c:318
-    #10 0x55f7e7124650 in test__parse_metric tests/parse-metric.c:356
-    #11 0x55f7e70be09b in run_test tests/builtin-test.c:410
-    #12 0x55f7e70be09b in test_and_print tests/builtin-test.c:440
-    #13 0x55f7e70c101a in __cmd_test tests/builtin-test.c:661
-    #14 0x55f7e70c101a in cmd_test tests/builtin-test.c:807
-    #15 0x55f7e7126214 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:312
-    #16 0x55f7e6fc41a8 in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:364
-    #17 0x55f7e6fc41a8 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:408
-    #18 0x55f7e6fc41a8 in main /home/namhyung/project/linux/tools/perf/perf.c:538
-    #19 0x7f4c93492cc9 in __libc_start_main ../csu/libc-start.c:308
-
-Fixes: 83de0b7d535de ("perf metric: Collect referenced metrics in struct metric_ref_node")
+Cc: John Garry <john.garry@huawei.com>
+Fixes: 956a78356c24c ("perf test: Test pmu-events aliases")
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/metricgroup.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+ tools/perf/tests/pmu-events.c | 5 +++++
+ tools/perf/util/pmu.c         | 2 +-
+ tools/perf/util/pmu.h         | 1 +
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index b28c09447c10..c8904e471a71 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -939,7 +939,7 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index eb19f9a0bc15..d3517a74d95e 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -274,6 +274,7 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+ 	int res = 0;
+ 	bool use_uncore_table;
+ 	struct pmu_events_map *map = __test_pmu_get_events_map();
++	struct perf_pmu_alias *a, *tmp;
  
- 		ret = add_metric(&list, pe, metric_no_group, &m, NULL, &ids);
- 		if (ret)
--			return ret;
-+			goto out;
- 
- 		/*
- 		 * Process any possible referenced metrics
-@@ -948,12 +948,14 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 		ret = resolve_metric(metric_no_group,
- 				     &list, map, &ids);
- 		if (ret)
--			return ret;
-+			goto out;
+ 	if (!map)
+ 		return -1;
+@@ -347,6 +348,10 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+ 			  pmu_name, alias->name);
  	}
  
- 	/* End of pmu events. */
--	if (!has_match)
--		return -EINVAL;
-+	if (!has_match) {
-+		ret = -EINVAL;
-+		goto out;
++	list_for_each_entry_safe(a, tmp, &aliases, list) {
++		list_del(&a->list);
++		perf_pmu_free_alias(a);
 +	}
- 
- 	list_for_each_entry(m, &list, nd) {
- 		if (events->len > 0)
-@@ -968,9 +970,14 @@ static int metricgroup__add_metric(const char *metric, bool metric_no_group,
- 		}
- 	}
- 
-+out:
-+	/*
-+	 * add to metric_list so that they can be released
-+	 * even if it's failed
-+	 */
- 	list_splice(&list, metric_list);
- 	expr_ids__exit(&ids);
--	return 0;
-+	return ret;
+ 	free(pmu);
+ 	return res;
+ }
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index f1688e1f6ed7..555cb3524c25 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -274,7 +274,7 @@ static void perf_pmu_update_alias(struct perf_pmu_alias *old,
  }
  
- static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
+ /* Delete an alias entry. */
+-static void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
++void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
+ {
+ 	zfree(&newalias->name);
+ 	zfree(&newalias->desc);
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 44ccbdbb1c37..b63c4c5e335e 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -113,6 +113,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+ 
+ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+ bool pmu_uncore_alias_match(const char *pmu_name, const char *name);
++void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+ 
+ int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+ 
 -- 
 2.28.0.526.ge36021eeef-goog
 
