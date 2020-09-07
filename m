@@ -2,120 +2,129 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F97C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FF6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E79C20C09
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599472027;
-	bh=cFHskjvmHO3vzxD+eGBoRNZ+sFpiHGFme6jLOuWP8Uc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TQ0PYPCRRGvb8FRsqUdBtv3k+JWAj7T2dt5W+GnFKjSriseEHV50BS35OP6U4so55
-	 w3Ew3zUA3UkaM7ndcoF4aErPJt5RiIXilK/lELxkE8tuJv+oLk3yvPftriPk1eSLfv
-	 GRAJHBBJDdPIVfyESuE/Mg2yxZDedHQ8kf9pYQiY=
+	by mail.kernel.org (Postfix) with ESMTP id 77C3421473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:48:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="iNNkv4mX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgIGJrF (ORCPT
+        id S1728367AbgIGJsy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 05:48:54 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:37625 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbgIGJrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:47:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49EFA2078E;
-        Mon,  7 Sep 2020 09:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599472023;
-        bh=cFHskjvmHO3vzxD+eGBoRNZ+sFpiHGFme6jLOuWP8Uc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=19AbdD+EC1bO4XviCsVbOEsgKBlvuTcIcRwYpDXdAbiyDIC2ngljNeSByIj6g2WwR
-         pwHlJAa2zca7ViqS+HXJHlbRqiyn/WpxFytm5SMsvxtaqOBqDi0a5jaudF1eVdGURu
-         jTZbUs3gK3gLc/gZXJVqSV1JOAEE6FHqZ7nCuP54=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kFDjp-009iuT-BE; Mon, 07 Sep 2020 10:47:01 +0100
+        id S1728243AbgIGJsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:48:54 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 9200af26;
+        Mon, 7 Sep 2020 09:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=from:to:cc
+        :subject:date:message-id:mime-version:content-transfer-encoding;
+         s=mail; bh=cQIv0FN/1r4pyfX0hFoYLi9BTW0=; b=iNNkv4mXUOxg5vAaCvKe
+        17VL2v+r80MJLDFm3WP9OYei28jMEkzDag0NSDB87wJuc3IIr1u6qoCQKluWu+84
+        ILk+6euSGq5OtIxPexizPLhCe/EoWl/dy2WBOhvGdPfydC8GnmJt/NTUHDaypBVF
+        72+V5x2PBeIXdoAj83SSQCJJ+IXecBi94rGZ4c5HMdAg5PKE5glcv+ULaa8i57o9
+        DOF4LcWOgqEYwYmfnb0G3dQB2hndt6PNdUqgPEuGHjF/XEoBcqvzY4fajqOX60AO
+        06j4rkQlSBwdLDQZ6T1yIHwrMxzdnQpdQQta6qdZVG7lmhgPWW3LyFGp1m62wZo3
+        nw==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 01f808c3 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Mon, 7 Sep 2020 09:20:07 +0000 (UTC)
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Borislav Petkov <bp@suse.de>
+Subject: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
+Date:   Mon,  7 Sep 2020 11:48:43 +0200
+Message-Id: <20200907094843.1949-1-Jason@zx2c4.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 07 Sep 2020 10:47:01 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Justin He <Justin.He@arm.com>, nd <nd@arm.com>
-Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
-In-Reply-To: <HE1PR0802MB25551446DC85DB3684D09211F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-References: <20200904092744.167655-1-jianyong.wu@arm.com>
- <20200904092744.167655-9-jianyong.wu@arm.com> <874kocmqqx.wl-maz@kernel.org>
- <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
- <366387fa507f9c5d5044549cea958ce1@kernel.org>
- <HE1PR0802MB25551446DC85DB3684D09211F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <67f3381467d02c8d3f25682cd99898e9@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-07 10:28, Jianyong Wu wrote:
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Monday, September 7, 2020 4:55 PM
->> To: Jianyong Wu <Jianyong.Wu@arm.com>
+Popular tools, like intel-undervolt, use MSR 0x150 to control the CPU
+voltage offset. In fact, evidently the intel_turbo_max_3 driver in-tree
+also uses this MSR. So, teach the kernel's MSR list about this, so that
+intel-undervolt and other such tools don't spew warnings to dmesg, while
+unifying the constant used throughout the kernel.
 
-[...]
+Fixes: a7e1f67ed29f ("x86/msr: Filter MSR writes")
+Cc: Borislav Petkov <bp@suse.de>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+ arch/x86/include/asm/msr-index.h         | 2 ++
+ arch/x86/kernel/msr.c                    | 5 ++++-
+ drivers/platform/x86/intel_turbo_max_3.c | 6 +++---
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
->> >> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_FEATUR
->> >> ES_FUNC_ID,
->> >> > +			     &hvc_res);
->> >> > +	if (!(hvc_res.a0 | BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
->> >> > +		return -EOPNOTSUPP;
->> >> > +
->> >> > +	return 0;
->> >>
->> >> What happens if the
->> >> ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID function isn't
->> implemented
->> >> (on an old kernel or a non-KVM hypervisor)? The expected behaviour is
->> >> that a0 will contain SMCCC_RET_NOT_SUPPORTED, which is -1.
->> >> The result is that this function always returns "supported". Not an
->> >> acceptable behaviour.
->> >>
->> > Oh!  it's really a stupid mistake, should be "&" not "|".
->> 
->> But even then. (-1 & whatever) is always true.
-> 
-> Yeah, what about checking if a0 is non-negative first? Like:
-> if (hvc_res.a0 < 0 || !(hvc_res.a0 & BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
-> 	return -EOPNOTSUPP;
-
-I don't get it. You already carry a patch from Will that gives
-you a way to check for a service (kvm_arm_hyp_service_available()).
-
-Why do you need to reinvent the wheel?
-
-         M.
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index 2859ee4f39a8..0bcb3604d0e2 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -132,6 +132,8 @@
+ #define MSR_IA32_MCU_OPT_CTRL		0x00000123
+ #define RNGDS_MITG_DIS			BIT(0)
+ 
++#define MSR_IA32_OC_MAILBOX		0x00000150
++
+ #define MSR_IA32_SYSENTER_CS		0x00000174
+ #define MSR_IA32_SYSENTER_ESP		0x00000175
+ #define MSR_IA32_SYSENTER_EIP		0x00000176
+diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
+index 49dcfb85e773..64f6200681e3 100644
+--- a/arch/x86/kernel/msr.c
++++ b/arch/x86/kernel/msr.c
+@@ -86,8 +86,11 @@ static int filter_write(u32 reg)
+ 	default: break;
+ 	}
+ 
+-	if (reg == MSR_IA32_ENERGY_PERF_BIAS)
++	switch (reg) {
++	case MSR_IA32_ENERGY_PERF_BIAS:
++	case MSR_IA32_OC_MAILBOX:
+ 		return 0;
++	}
+ 
+ 	pr_err_ratelimited("Write to unrecognized MSR 0x%x by %s\n"
+ 			   "Please report to x86@kernel.org\n",
+diff --git a/drivers/platform/x86/intel_turbo_max_3.c b/drivers/platform/x86/intel_turbo_max_3.c
+index 892140b62898..991cdbc3295b 100644
+--- a/drivers/platform/x86/intel_turbo_max_3.c
++++ b/drivers/platform/x86/intel_turbo_max_3.c
+@@ -17,8 +17,8 @@
+ 
+ #include <asm/cpu_device_id.h>
+ #include <asm/intel-family.h>
++#include <asm/msr.h>
+ 
+-#define MSR_OC_MAILBOX			0x150
+ #define MSR_OC_MAILBOX_CMD_OFFSET	32
+ #define MSR_OC_MAILBOX_RSP_OFFSET	32
+ #define MSR_OC_MAILBOX_BUSY_BIT		63
+@@ -41,14 +41,14 @@ static int get_oc_core_priority(unsigned int cpu)
+ 	value = cmd << MSR_OC_MAILBOX_CMD_OFFSET;
+ 	/* Set the busy bit to indicate OS is trying to issue command */
+ 	value |=  BIT_ULL(MSR_OC_MAILBOX_BUSY_BIT);
+-	ret = wrmsrl_safe(MSR_OC_MAILBOX, value);
++	ret = wrmsrl_safe(MSR_IA32_OC_MAILBOX, value);
+ 	if (ret) {
+ 		pr_debug("cpu %d OC mailbox write failed\n", cpu);
+ 		return ret;
+ 	}
+ 
+ 	for (i = 0; i < OC_MAILBOX_RETRY_COUNT; ++i) {
+-		ret = rdmsrl_safe(MSR_OC_MAILBOX, &value);
++		ret = rdmsrl_safe(MSR_IA32_OC_MAILBOX, &value);
+ 		if (ret) {
+ 			pr_debug("cpu %d OC mailbox read failed\n", cpu);
+ 			break;
 -- 
-Jazz is not dead. It just smells funny...
+2.28.0
+
