@@ -2,183 +2,145 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74421C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87830C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 365962080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F874206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:25:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="Gi64PDyC"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="eQBtiDgJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgIGRZQ (ORCPT
+        id S1729576AbgIGNUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35648 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729562AbgIGNlP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:41:15 -0400
-Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C7F6C061575
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:41:12 -0700 (PDT)
-Received: by mail-wr1-x449.google.com with SMTP id 33so5746153wre.0
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:41:11 -0700 (PDT)
+        Mon, 7 Sep 2020 09:20:48 -0400
+Received: from mail-bn8nam12on2040.outbound.protection.outlook.com ([40.107.237.40]:7520
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729350AbgIGNOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:14:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AUiR9tgAuG2KoGizOhxioxT1t0i89QdXYz3IA3l1PgG7GbtTE1HsT7gYzMB182qtBNzrsXms83MK8uhzWtRlyX/Kkqi7lkG4muDXU7g8Pq2XDcoJFanX6uihprD25Seu2wZ2QvXHRH6TXj8kOvxvqSMQYRMOnNECpmMA3eUPAD4oRaIG19qk6XrQllSdVZYGOES5+2gb39LAkU3fnMgGYMLy30OB648JAZSwQGKLaXlKVnYriMAR0+CkvLOxa0V8dC60XbaerjzYeVgwtQ6FtXmRV9R9jHUnho1pOgjNNzuB2h0ddg9eSj6rNybawiISxHCsbEx+Es2AtU5VAMyDeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mIG5nVSXmNiQ7oTb/9BefAzF/VsuaPjwanUnnCP/+08=;
+ b=n01rB0iCVPVS8FbbC9YSwaaONHlhItA1utZ2BbOyynqBgaoHua1uKCjVf3Gth2+Zh/pbCaqbNeb8F4n/RHcy6cN8qnI3gxAu7rT5Kva056EKbKVfT1xrMIUEIJkK1zX+o9X3js58TFqHUrmF9TlG8CUgoZplN8Z+QbMQJRrDxzh3ajaSCwET1M9BJa9w3QCdwG8/2YNA1jm7ElMwT7MYOUD+wl+qgZEp7PBldzMspmyMXLL0sDrV0bgb0tLCRe0ei2i0NM3D8y9iRGZcTXCodVhLHOM2KshUsgCfFLXIIZ/AxT69Q1ZH1U9mGgBMIHIB0+8XQ7oISKx1y02+2xrtsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=06/chDIM1D/CQyVkMXWbiHKfJ0qcUiQ/wlOCjUIfV4g=;
-        b=Gi64PDyCJvCp/tt4Z0/hjKNv06G6HgiODtWEhrPq/9718UaxP4j1aMYDXi14PDx4GM
-         LqTk2jESKOu67g0eDwANYR/VFP70rFlrilGv5cwaNXAoImiLI9KgqBDdfi4rgpuaWRbE
-         3lSqsYubl65SjuLWTAqZCN92vqnoLX4nyGD26p3UeGSBdSNHD30ruAfJ5DebQn+WDZG0
-         mz5+7YDvAfM6oL8bGuQc4llyrn0xm57Ntt5SwSkzahoT5PLL94LxKF31f8ekJDjdeEgK
-         /t09asBE9p+CmE277jxbz+b5azRphPdc1VO0TlF1ylp/UDv2Aolea0uGa0WlcWO5/oQh
-         /DHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=06/chDIM1D/CQyVkMXWbiHKfJ0qcUiQ/wlOCjUIfV4g=;
-        b=WeTTSBvQEb2HgaEwl50ETF1QUk4sgtCHsquNG7cflhEoy8pJoKEVCnJW2sSred/MRW
-         b3KtIniYHnpigT9BCMWVaZyfEPLhRjMKb3ZNF31QjdGAwUyyG8+A1Rr6DQX0H6qeNE/K
-         wURhRckySXaXUMQdk6zofALXa3TBp4XySjircM2iAaFkmroyuzm3dByJTDk4vVplvWR+
-         bsXAeppkJ9p655ulYBChJWXOhn+6cham517ibZamPkRRnSrD3FYsUs9joX9ADS66z3qn
-         n1P40W1oWCrXtrgI8BmIMv+k1p+rAK/GVKBKzm4s2o2PaY1VuMH8URIOA4lokAVRYTK2
-         3ohA==
-X-Gm-Message-State: AOAM533vs9rrcDHD4avKXIydEcRnQR5Pt5gqoMOmm6rOkpy7OYXecH7p
-        5vFDqvXWXZRAKZAzEaORHyNJgQsEPA==
-X-Google-Smtp-Source: ABdhPJyA//VxoSplqPrkXv/zugF4TAybenik7vBycKUrpvQnl+gUJlrGweOUts2LFD7+sLTPAyx8DGpKqg==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:f693:9fff:fef4:2449])
- (user=elver job=sendgmr) by 2002:a7b:ce0d:: with SMTP id m13mr22014038wmc.83.1599486069496;
- Mon, 07 Sep 2020 06:41:09 -0700 (PDT)
-Date:   Mon,  7 Sep 2020 15:40:45 +0200
-Message-Id: <20200907134055.2878499-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH RFC 00/10] KFENCE: A low-overhead sampling-based memory safety
- error detector
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, glider@google.com, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, cl@linux.com, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, mark.rutland@arm.com, penberg@kernel.org
-Cc:     hpa@zytor.com, paulmck@kernel.org, andreyknvl@google.com,
-        aryabinin@virtuozzo.com, luto@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, dvyukov@google.com,
-        edumazet@google.com, gregkh@linuxfoundation.org, mingo@redhat.com,
-        jannh@google.com, corbet@lwn.net, keescook@chromium.org,
-        peterz@infradead.org, cai@lca.pw, tglx@linutronix.de,
-        will@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mIG5nVSXmNiQ7oTb/9BefAzF/VsuaPjwanUnnCP/+08=;
+ b=eQBtiDgJJ+daRSBWsRgnG+PmfkLorQj1JNrFP73mCwBvZj/O+mIN2fM84AckC4ewjxuJSKLgQwQKR+gZo9isZO6HwY5TQ2gvw799Z7suoyVX6B0eSDBIiqo6AC02hqGIDI5JwqEeX59Ii2elLOZlNXJ/a2nqcl5YK4rXUAvHBMk=
+Received: from BYAPR02MB5638.namprd02.prod.outlook.com (2603:10b6:a03:9f::18)
+ by BYAPR02MB5735.namprd02.prod.outlook.com (2603:10b6:a03:128::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.19; Mon, 7 Sep
+ 2020 13:14:05 +0000
+Received: from BYAPR02MB5638.namprd02.prod.outlook.com
+ ([fe80::895c:ca2a:bd78:8c6b]) by BYAPR02MB5638.namprd02.prod.outlook.com
+ ([fe80::895c:ca2a:bd78:8c6b%5]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
+ 13:14:05 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Zhang Changzhong <zhangchangzhong@huawei.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        Michal Simek <michals@xilinx.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net-next] net: xilinx: remove redundant null check before
+ clk_disable_unprepare()
+Thread-Topic: [PATCH net-next] net: xilinx: remove redundant null check before
+ clk_disable_unprepare()
+Thread-Index: AQHWhRc+nua2aTQ0EUCz2lx+OASiAaldJw0w
+Date:   Mon, 7 Sep 2020 13:14:05 +0000
+Message-ID: <BYAPR02MB5638CE555F06629B3EC83043C7280@BYAPR02MB5638.namprd02.prod.outlook.com>
+References: <1599483723-43704-1-git-send-email-zhangchangzhong@huawei.com>
+In-Reply-To: <1599483723-43704-1-git-send-email-zhangchangzhong@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=xilinx.com;
+x-originating-ip: [149.199.50.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6360e526-48f3-438e-5008-08d8532fe5d7
+x-ms-traffictypediagnostic: BYAPR02MB5735:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR02MB5735E758ADAB2D545B19B420C7280@BYAPR02MB5735.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1060;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J/me3vKBoA4mDrbGOUqa1f+KVCkwkkJ12bSHQhY6TmGJP+FbdOW40Txi4p+rWIfFj+DFuZt25vjHPMK0YcdXceJIFID918U22nbGogjDsqKqiq8b4fkStsjTSw0wYIEt+ehoWQGzKNBZu59p4EqNakBNPJYpxrhmtfRHJV4oDzR7cNf1k6qHpzYtUpCT5jGC/Bcvin2KPBGbhXovTKzzIZKP+IgMG0GrdAvHyDMgXEx6unfYonzo/qrU8UW/idJLf7Jv17JRVko6WDIXlcKWJNwCyZbw2NdIhxkTtcA8O3xdfBn9lJKlc2AvP/CKIaUmszt0+IZTED0NKSKvQIXXsg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB5638.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(346002)(396003)(136003)(39860400002)(316002)(5660300002)(71200400001)(66446008)(66946007)(66476007)(76116006)(64756008)(66556008)(52536014)(2906002)(33656002)(9686003)(55016002)(54906003)(86362001)(26005)(186003)(8936002)(110136005)(478600001)(8676002)(53546011)(4326008)(6506007)(7696005)(83380400001)(6636002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: C0Qz8Z3PVYh0tVCjPq0EF5xRUhBujKjR0uKo3PcFwhIw4NHxfRWBtqiQonOZIuxeZhuvRDzL9SN6RxHrXhmxd0/H9gfpqmtUrjI8CUeCqnI8AyAqPziVzCLfeECo+qRGNwmnq5BnJF2hkLvaIU/uVxxDyAbT6ea9ebGNb9dP1sezo3/064IjjEJvQ72alxQ3eIIp+C/0KOGnwDnYXxVUMdGeuF58s7ukUbKGIu9x5iGwxgFhpsPwU2OczOZcP6ZcJrhNTbnS61CsghwL/AelWEg07z7c4m+nX0sqpwTCuKJ/ZhEg/4BxbpHXJK/xkBbwY7k9pWI4zqBVT4VxuPs/GM1eDzwkUpJr4q/YISDr6jGoftCoO+MQSECB9vqmEBdVki8MEFX3swPtONxbiF6bJLtp8qPK+ASYD6Mt5aSBJzyS5+Gz2KkitrMvS0UYVpvtJg5FisgRfRWrRrsYRyAz9VrkDHJa3Y0yb4PMzTm3kBRGRoQCH3sfQltZDNIGEF6PvadAVQHX1MnWYTziwokbTLgWazSFHmnp8LxCi3TGDsP6tMkaTWA4Z9DAUB8g87Og+YhjM1bHNEqeBadH7pTJBJCnALO2o9Ggmy2jBxcG4I+9tYITyOpDSKEnvApt0HDo0wciij5z3lCh8fGfEDIElQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB5638.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6360e526-48f3-438e-5008-08d8532fe5d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Sep 2020 13:14:05.5577
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cVp/5/XpnFWFhqZykun/wr5Vs0vYyNLC+lGRsoeUVXusU2pki36Kk/erQCEDYlXEFTZjpWUwLiCZCg3gp4gXZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5735
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the Kernel Electric-Fence (KFENCE) infrastructure. KFENCE is a
-low-overhead sampling-based memory safety error detector of heap
-use-after-free, invalid-free, and out-of-bounds access errors.  This
-series enables KFENCE for the x86 and arm64 architectures, and adds
-KFENCE hooks to the SLAB and SLUB allocators.
+> -----Original Message-----
+> From: Zhang Changzhong <zhangchangzhong@huawei.com>
+> Sent: Monday, September 7, 2020 6:32 PM
+> To: Radhey Shyam Pandey <radheys@xilinx.com>; davem@davemloft.net;
+> kuba@kernel.org; Michal Simek <michals@xilinx.com>
+> Cc: netdev@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH net-next] net: xilinx: remove redundant null check before
+> clk_disable_unprepare()
+>=20
+> Because clk_prepare_enable() and clk_disable_unprepare() already checked
+> NULL clock parameter, so the additional checks are unnecessary, just
+> remove them.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
 
-KFENCE is designed to be enabled in production kernels, and has near
-zero performance overhead. Compared to KASAN, KFENCE trades performance
-for precision. The main motivation behind KFENCE's design, is that with
-enough total uptime KFENCE will detect bugs in code paths not typically
-exercised by non-production test workloads. One way to quickly achieve a
-large enough total uptime is when the tool is deployed across a large
-fleet of machines.
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-KFENCE objects each reside on a dedicated page, at either the left or
-right page boundaries. The pages to the left and right of the object
-page are "guard pages", whose attributes are changed to a protected
-state, and cause page faults on any attempted access to them. Such page
-faults are then intercepted by KFENCE, which handles the fault
-gracefully by reporting a memory access error.
-
-Guarded allocations are set up based on a sample interval (can be set
-via kfence.sample_interval). After expiration of the sample interval, a
-guarded allocation from the KFENCE object pool is returned to the main
-allocator (SLAB or SLUB). At this point, the timer is reset, and the
-next allocation is set up after the expiration of the interval.
-
-To enable/disable a KFENCE allocation through the main allocator's
-fast-path without overhead, KFENCE relies on static branches via the
-static keys infrastructure. The static branch is toggled to redirect the
-allocation to KFENCE.
-
-We have verified by running synthetic benchmarks (sysbench I/O,
-hackbench) that a kernel with KFENCE is performance-neutral compared to
-a non-KFENCE baseline kernel.
-
-KFENCE is inspired by GWP-ASan [1], a userspace tool with similar
-properties. The name "KFENCE" is a homage to the Electric Fence Malloc
-Debugger [2].
-
-For more details, see Documentation/dev-tools/kfence.rst added in the
-series -- also viewable here:
-
-	https://raw.githubusercontent.com/google/kasan/kfence/Documentation/dev-tools/kfence.rst
-
-[1] http://llvm.org/docs/GwpAsan.html
-[2] https://linux.die.net/man/3/efence
-
-Alexander Potapenko (6):
-  mm: add Kernel Electric-Fence infrastructure
-  x86, kfence: enable KFENCE for x86
-  mm, kfence: insert KFENCE hooks for SLAB
-  mm, kfence: insert KFENCE hooks for SLUB
-  kfence, kasan: make KFENCE compatible with KASAN
-  kfence, kmemleak: make KFENCE compatible with KMEMLEAK
-
-Marco Elver (4):
-  arm64, kfence: enable KFENCE for ARM64
-  kfence, lockdep: make KFENCE compatible with lockdep
-  kfence, Documentation: add KFENCE documentation
-  kfence: add test suite
-
- Documentation/dev-tools/index.rst  |   1 +
- Documentation/dev-tools/kfence.rst | 285 +++++++++++
- MAINTAINERS                        |  11 +
- arch/arm64/Kconfig                 |   1 +
- arch/arm64/include/asm/kfence.h    |  39 ++
- arch/arm64/mm/fault.c              |   4 +
- arch/x86/Kconfig                   |   2 +
- arch/x86/include/asm/kfence.h      |  60 +++
- arch/x86/mm/fault.c                |   4 +
- include/linux/kfence.h             | 174 +++++++
- init/main.c                        |   2 +
- kernel/locking/lockdep.c           |   8 +
- lib/Kconfig.debug                  |   1 +
- lib/Kconfig.kfence                 |  70 +++
- mm/Makefile                        |   1 +
- mm/kasan/common.c                  |   7 +
- mm/kfence/Makefile                 |   6 +
- mm/kfence/core.c                   | 730 +++++++++++++++++++++++++++
- mm/kfence/kfence-test.c            | 777 +++++++++++++++++++++++++++++
- mm/kfence/kfence.h                 | 104 ++++
- mm/kfence/report.c                 | 201 ++++++++
- mm/kmemleak.c                      |  11 +
- mm/slab.c                          |  46 +-
- mm/slab_common.c                   |   6 +-
- mm/slub.c                          |  72 ++-
- 25 files changed, 2591 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/dev-tools/kfence.rst
- create mode 100644 arch/arm64/include/asm/kfence.h
- create mode 100644 arch/x86/include/asm/kfence.h
- create mode 100644 include/linux/kfence.h
- create mode 100644 lib/Kconfig.kfence
- create mode 100644 mm/kfence/Makefile
- create mode 100644 mm/kfence/core.c
- create mode 100644 mm/kfence/kfence-test.c
- create mode 100644 mm/kfence/kfence.h
- create mode 100644 mm/kfence/report.c
-
--- 
-2.28.0.526.ge36021eeef-goog
+Thanks!
+> ---
+>  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> index fa5dc299..9aafd3e 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -2038,8 +2038,7 @@ static int axienet_remove(struct platform_device
+> *pdev)
+>=20
+>  	axienet_mdio_teardown(lp);
+>=20
+> -	if (lp->clk)
+> -		clk_disable_unprepare(lp->clk);
+> +	clk_disable_unprepare(lp->clk);
+>=20
+>  	of_node_put(lp->phy_node);
+>  	lp->phy_node =3D NULL;
+> --
+> 2.9.5
 
