@@ -2,103 +2,80 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9621CC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E1EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5578021897
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:16:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzcxqGHV"
+	by mail.kernel.org (Postfix) with ESMTP id D30AC2145D
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599513437;
+	bh=BEe8Hg1nQQakfRqqaWVZYwWtfSMQg1VV24e16mX7NUo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fHV+KaAeeBFY5WYK593IwxWePDpVdQ9q33/VFiaQ05ETRAhD2j1y3l0LgESJX9Ao+
+	 TY0E9yf9vCJ9w/6dULR45kz8aC+fjGUFlzHK0lEdKL7UcVWmZOwIj9jR/bldaN6Kpy
+	 FK85q6lN4gDAAG3lFXz0Y8ko3CxUTYf8/URbMeAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgIGVQw (ORCPT
+        id S1727847AbgIGVRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:16:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgIGVQt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:16:49 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DE6C061573;
-        Mon,  7 Sep 2020 14:16:48 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id u3so3703540pjr.3;
-        Mon, 07 Sep 2020 14:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jEv+l13bPkBP4OOO6HkaA4yQbFTE9py5vEtLN31aW4g=;
-        b=BzcxqGHVOYdkZE/nnHA8ZpbvIRerru6/9TGkmI3ESjmBTfOm89nzydtUlOeSYkUKgb
-         22SVAiF0JGw3QvBkuEE7NswtB3pObFVfj80mQa7C2hCckc/FzGJCpF6iH3FC1GGpd+sB
-         a0hvdEYF0l53MrbmdAXoZVnKiSNlU4vFEkb/x//x8qe28CZ6zLFk5T8XpGhKWpsaTfFA
-         ewvUcgkEBAx9PDVIfHUML4YIS5Az/CkWApYyVQ2oRDMRM23R+CUgoYjSD4ghZzVfU1be
-         Nil64Kbv7StYr1vXCOFmTFRrSIvZoUc0xouSOBZNqukDa+E4UNO1fQmAc2IDz5vsxtzU
-         QlIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jEv+l13bPkBP4OOO6HkaA4yQbFTE9py5vEtLN31aW4g=;
-        b=qg98Ejzoxgl13q/GaVgDrn9npDxoajXXqDgEqF4ofSN2sf4J+4w4bLlSqooEYKhu76
-         UxnPqN+oI+yQljP30VtvWpSX0ewtekQoIYokSA1164Kh2eIa5JU0Es0IA2h5YpCndNNJ
-         e4m/8pC27Y/KUMkc4AdXN9OrS1oRrMH+Db+E2vn4KMZq5hNzqPgJbko4CJifnHEGwkO+
-         HghPDV2b2ezDudlh1lrb6EOmW5i9O8pnmHZMXXScE6ZVYSZShm7V2qV98X0bT8epUCzf
-         g6tbP0BKQhCKa2qpaHV9qlmO5ss0sHWGMLJGOLVDWlPSp3lQKQpYez4g+ZABTWn16Qjx
-         ZErg==
-X-Gm-Message-State: AOAM530KOeDvWaghbkIuzd2F8pydAaS6n1VXfYGBm7m3LFCmYVjYdGOL
-        yhaaPe2HxUkfUi8o5zTmsfDOmpsT/gZpeBnxDwQ=
-X-Google-Smtp-Source: ABdhPJyrV4Rxe5S7NUnqsFSZFn7WjWk7sv6Vc2yz+aHCKxi5JmemKN84LlgOsNHpoHIOLCu8rwya5UeQ8wz8IycelD8=
-X-Received: by 2002:a17:90a:bd02:: with SMTP id y2mr1024403pjr.66.1599513407260;
- Mon, 07 Sep 2020 14:16:47 -0700 (PDT)
+        Mon, 7 Sep 2020 17:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726458AbgIGVRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 17:17:14 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF352145D;
+        Mon,  7 Sep 2020 21:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599513433;
+        bh=BEe8Hg1nQQakfRqqaWVZYwWtfSMQg1VV24e16mX7NUo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xvxS4z+XU5iApb0nusPKcPwaFNsDlzBs+fbAc8SntCP0X6MEqRqY92xSKoR0ApKIu
+         w8UDaOIVV2z1oU7FqHIKuB2c+wD4LDnnd/Rbv3H6aY4/alij2U55SebZSIViiuMbFq
+         oTcJnDePJIZhLu14ZoT9s2fZ/U7Xlzd6Lk19zKTY=
+From:   Will Deacon <will@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, kernel-team@android.com,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH] arm64/mm/ptdump: Add address markers for BPF regions
+Date:   Mon,  7 Sep 2020 22:17:08 +0100
+Message-Id: <159951266812.2988869.10740934941923948664.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1599208259-11191-1-git-send-email-anshuman.khandual@arm.com>
+References: <1599208259-11191-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
- <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com> <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
-In-Reply-To: <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Mon, 7 Sep 2020 14:16:36 -0700
-Message-ID: <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com>
-Subject: Re: Question about dev_validate_header used in af_packet.c
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 2:06 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> The CAP_SYS_RAWIO exception indeed was requested to be able to
-> purposely test devices against bad inputs. The gmane link
-> unfortunately no longer works, but this was the discussion thread:
-> https://www.mail-archive.com/netdev@vger.kernel.org/msg99920.html
->
-> It zeroes the packet up max_header_len to ensure that an unintentional
-> short packet will at least not result in reading undefined data. Now
-> that the dust has settled around the min_header_len/max_header_len
-> changes, maybe now is a good time to revisit removing that
-> CAP_SYS_RAWIO loophole.
+On Fri, 4 Sep 2020 14:00:59 +0530, Anshuman Khandual wrote:
+> Kernel virtual region [BPF_JIT_REGION_START..BPF_JIT_REGION_END] is missing
+> from address_markers[], hence relevant page table entries are not displayed
+> with /sys/kernel/debug/kernel_page_tables. This adds those missing markers.
+> While here, also rename arch/arm64/mm/dump.c which sounds bit ambiguous, as
+> arch/arm64/mm/ptdump.c instead.
 
-Thank you for your explanation! I can now understand the logic of
-dev_hard_header. Thanks!
+Applied to arm64 (for-next/mm), thanks!
 
-Do you mean we can now consider removing the ability to bypass the
-header_ops->validate check? That is what I am thinking about, too!
+[1/1] arm64/mm/ptdump: Add address markers for BPF regions
+      https://git.kernel.org/arm64/c/c048ddf86cdd
 
-I looked at the link you gave me. I see that Alan Cox wanted to keep
-the ability of intentionally feeding corrupt frames to drivers, to
-test whether drivers are able to handle incomplete headers. However, I
-think after we added the header validation in af_packet.c, drivers no
-longer need to ensure they can handle incomplete headers correctly
-(because this is already handled by us). So there's no point in
-keeping the ability to test this, either.
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
