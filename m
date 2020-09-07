@@ -2,518 +2,125 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55138C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7001DC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 190822145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="t4moaJFI"
+	by mail.kernel.org (Postfix) with ESMTP id 4689F217A0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgIGVim (ORCPT
+        id S1728149AbgIGVis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54068 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbgIGViV (ORCPT
+        Mon, 7 Sep 2020 17:38:48 -0400
+Received: from mail-il1-f207.google.com ([209.85.166.207]:40251 "EHLO
+        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgIGViW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:38:21 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901B9C061573;
-        Mon,  7 Sep 2020 14:38:20 -0700 (PDT)
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D627523E3E;
-        Mon,  7 Sep 2020 23:38:14 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1599514695;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZeczG1mnMZE7ftnO9cO6ti9bLuYHqe0gzQd/P+jVadc=;
-        b=t4moaJFIP6U88eWpJvr8TjAKNRh+gy5V4KY0yuY8/Tp5UWY66wsgO8u7vozD12IN3WetiK
-        vtYqOsrdDzht1DFFs/mkKt45ZZv0q4qWAFuebNsb69yui5CyMOICQ06e81YIFFPWW7iko7
-        5WDNFhuZjuipWsJXzhoyq7Vdj2/v+P8=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Michael Walle <michael@walle.cc>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v9 02/13] dt-bindings: mfd: Add bindings for sl28cpld
-Date:   Mon,  7 Sep 2020 23:37:51 +0200
-Message-Id: <20200907213802.26745-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200907213802.26745-1-michael@walle.cc>
-References: <20200907213802.26745-1-michael@walle.cc>
+        Mon, 7 Sep 2020 17:38:22 -0400
+Received: by mail-il1-f207.google.com with SMTP id g188so10608849ilh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 14:38:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=R5dhbd1kdkcgMyAGfhuVfrBhTKEzGI7jgwcgg/qLjgA=;
+        b=FHsaoB/YbCoC5GD8Pe5oLtbfO8uCkztxVdDZ/l5Hi+BwW71coSDMgsGI7Ac7h4u7n7
+         dm+hopbXqG9y5CUSksUC3YTwCFAwl7890KIIKY4RsNxPIp1iqVkLsWx1t+AkoAfgbvs+
+         /ACIkLuSw9L3BPGpM3/Ry+8kye41TYjEvoMcI6FeltCxfJHnmogPb77dlUP4261h4kGO
+         kvdTUZkHh8Gcg/gCbpbi7w46Xeu5AH7Te6oRPyggiDkNZkjmhTS3WMfwECJPaceCFVx3
+         HE0QLPHIiFVOUTLAujPDQ95Pxc8CofNVucSjs5HOR1JKMYo0VDFG/WXQAOFWbf4+PqPX
+         BOBw==
+X-Gm-Message-State: AOAM530Hod0ENZJ78FueCDA1ckAFizmyskxQojd7tGVanTNvUXgzhYtV
+        iIM1gDJJRP87PcN0r4I5WIoT5GEb1AUVsEEIPusrYbMYRi9O
+X-Google-Smtp-Source: ABdhPJzliQi/m7INB68wkxG7vZYa4xsfP2sBRSQm1xAaU6V7FFTld9rlLNyqcKdQLMzpZc4OZP9t+qyugvLiN4+liwCvqhlSpCEh
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+X-Received: by 2002:a05:6e02:4a1:: with SMTP id e1mr21374824ils.113.1599514701522;
+ Mon, 07 Sep 2020 14:38:21 -0700 (PDT)
+Date:   Mon, 07 Sep 2020 14:38:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000098ed0505aec00954@google.com>
+Subject: WARNING: refcount bug in qrtr_recvmsg
+From:   syzbot <syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com>
+To:     bjorn.andersson@linaro.org, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a device tree bindings for the board management controller found on
-the Kontron SMARC-sAL28 board.
+Hello,
 
-Signed-off-by: Michael Walle <michael@walle.cc>
-Reviewed-by: Rob Herring <robh@kernel.org>
+syzbot found the following issue on:
+
+HEAD commit:    c70672d8 Merge tag 's390-5.9-5' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=163f0c31900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bd46548257448703
+dashboard link: https://syzkaller.appspot.com/bug?extid=d0f27d9af17914bf253b
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=124cc6a5900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11436195900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+refcount_t: addition on 0; use-after-free.
+WARNING: CPU: 0 PID: 118 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 118 Comm: kworker/u4:3 Not tainted 5.9.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: qrtr_ns_handler qrtr_ns_worker
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x198/0x1fd lib/dump_stack.c:118
+ panic+0x347/0x7c0 kernel/panic.c:231
+ __warn.cold+0x20/0x46 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+Code: 07 31 ff 89 de e8 e7 df d8 fd 84 db 0f 85 36 ff ff ff e8 9a e3 d8 fd 48 c7 c7 00 dc 93 88 c6 05 67 18 12 07 01 e8 09 e7 a9 fd <0f> 0b e9 17 ff ff ff e8 7b e3 d8 fd 0f b6 1d 4c 18 12 07 31 ff 89
+RSP: 0018:ffffc900013479d8 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8880a8dd4000 RSI: ffffffff815db9a7 RDI: fffff52000268f2d
+RBP: 0000000000000002 R08: 0000000000000001 R09: ffff8880ae620f8b
+R10: 0000000000000000 R11: 0000000038313154 R12: ffff88821b0f4040
+R13: ffff888095619c00 R14: ffff8880a87eb7f0 R15: ffff8880a87eb7f4
+ refcount_add include/linux/refcount.h:204 [inline]
+ refcount_inc include/linux/refcount.h:241 [inline]
+ kref_get include/linux/kref.h:45 [inline]
+ qrtr_node_acquire net/qrtr/qrtr.c:196 [inline]
+ qrtr_node_lookup net/qrtr/qrtr.c:388 [inline]
+ qrtr_send_resume_tx net/qrtr/qrtr.c:980 [inline]
+ qrtr_recvmsg+0x845/0x970 net/qrtr/qrtr.c:1043
+ sock_recvmsg_nosec net/socket.c:885 [inline]
+ sock_recvmsg net/socket.c:903 [inline]
+ sock_recvmsg net/socket.c:899 [inline]
+ kernel_recvmsg+0x110/0x160 net/socket.c:928
+ qrtr_ns_worker+0x15a/0x14fc net/qrtr/ns.c:624
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
-Changes since v8:
- - none
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Changes since v7:
- - none
-
-Changes since v6:
- - renamed "sl28cpld-r1" to "sl28cpld"
- - made paths relative
- - moved "reg" and "compatible" to the top of a node
-
-Changes since v5:
- - none
-
-Changes since v4:
- - fix the regex of the unit-address
-
-Changes since v3:
- - see cover letter
-
- .../bindings/gpio/kontron,sl28cpld-gpio.yaml  |  54 +++++++
- .../hwmon/kontron,sl28cpld-hwmon.yaml         |  27 ++++
- .../kontron,sl28cpld-intc.yaml                |  54 +++++++
- .../bindings/mfd/kontron,sl28cpld.yaml        | 153 ++++++++++++++++++
- .../bindings/pwm/kontron,sl28cpld-pwm.yaml    |  35 ++++
- .../watchdog/kontron,sl28cpld-wdt.yaml        |  35 ++++
- 6 files changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
- create mode 100644 Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
- create mode 100644 Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
- create mode 100644 Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-new file mode 100644
-index 000000000000..e2d2c10e536a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/kontron,sl28cpld-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  There are three flavors of the GPIO controller, one full featured
-+  input/output with interrupt support (kontron,sl28cpld-gpio), one
-+  output-only (kontron,sl28-gpo) and one input-only (kontron,sl28-gpi).
-+
-+  Each controller supports 8 GPIO lines.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-gpio
-+      - kontron,sl28cpld-gpi
-+      - kontron,sl28cpld-gpo
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-line-names:
-+      minItems: 1
-+      maxItems: 8
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-new file mode 100644
-index 000000000000..010333cb25c0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hwmon/kontron,sl28cpld-hwmon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Hardware monitoring driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-fan
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
-new file mode 100644
-index 000000000000..e8dfa6507f64
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/kontron,sl28cpld-intc.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/interrupt-controller/kontron,sl28cpld-intc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Interrupt controller driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  The following interrupts are available. All types and levels are fixed
-+  and handled by the board management controller.
-+
-+  ==== ============= ==================================
-+   IRQ line/device   description
-+  ==== ============= ==================================
-+    0  RTC_INT#      Interrupt line from on-board RTC
-+    1  SMB_ALERT#    Event on SMB_ALERT# line (P1)
-+    2  ESPI_ALERT0#  Event on ESPI_ALERT0# line (S43)
-+    3  ESPI_ALERT1#  Event on ESPI_ALERT1# line (S44)
-+    4  PWR_BTN#      Event on PWR_BTN# line (P128)
-+    5  SLEEP#        Event on SLEEP# line (S149)
-+    6  watchdog      Interrupt of the internal watchdog
-+    7  n/a           not used
-+  ==== ============= ==================================
-+
-+properties:
-+  compatible:
-+    enum:
-+      - kontron,sl28cpld-intc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+required:
-+  - compatible
-+  - interrupts
-+  - "#interrupt-cells"
-+  - interrupt-controller
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-new file mode 100644
-index 000000000000..eb3b43547cb6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml
-@@ -0,0 +1,153 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/kontron,sl28cpld.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Kontron's sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  The board management controller may contain different IP blocks like
-+  watchdog, fan monitoring, PWM controller, interrupt controller and a
-+  GPIO controller.
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld
-+
-+  reg:
-+    description:
-+      I2C device address.
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+patternProperties:
-+  "^gpio(@[0-9a-f]+)?$":
-+    $ref: ../gpio/kontron,sl28cpld-gpio.yaml
-+
-+  "^hwmon(@[0-9a-f]+)?$":
-+    $ref: ../hwmon/kontron,sl28cpld-hwmon.yaml
-+
-+  "^interrupt-controller(@[0-9a-f]+)?$":
-+    $ref: ../interrupt-controller/kontron,sl28cpld-intc.yaml
-+
-+  "^pwm(@[0-9a-f]+)?$":
-+    $ref: ../pwm/kontron,sl28cpld-pwm.yaml
-+
-+  "^watchdog(@[0-9a-f]+)?$":
-+    $ref: ../watchdog/kontron,sl28cpld-wdt.yaml
-+
-+required:
-+  - "#address-cells"
-+  - "#size-cells"
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        sl28cpld@4a {
-+            compatible = "kontron,sl28cpld";
-+            reg = <0x4a>;
-+            #address-cells = <1>;
-+            #size-cells = <0>;
-+
-+            watchdog@4 {
-+                compatible = "kontron,sl28cpld-wdt";
-+                reg = <0x4>;
-+                kontron,assert-wdt-timeout-pin;
-+            };
-+
-+            hwmon@b {
-+                compatible = "kontron,sl28cpld-fan";
-+                reg = <0xb>;
-+            };
-+
-+            pwm@c {
-+                compatible = "kontron,sl28cpld-pwm";
-+                reg = <0xc>;
-+                #pwm-cells = <2>;
-+            };
-+
-+            pwm@e {
-+                compatible = "kontron,sl28cpld-pwm";
-+                reg = <0xe>;
-+                #pwm-cells = <2>;
-+            };
-+
-+            gpio@10 {
-+                compatible = "kontron,sl28cpld-gpio";
-+                reg = <0x10>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+                gpio-line-names = "a", "b", "c";
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+
-+            gpio@15 {
-+                compatible = "kontron,sl28cpld-gpio";
-+                reg = <0x15>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+
-+            gpio@1a {
-+                compatible = "kontron,sl28cpld-gpo";
-+                reg = <0x1a>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+            };
-+
-+            gpio@1b {
-+                compatible = "kontron,sl28cpld-gpi";
-+                reg = <0x1b>;
-+
-+                gpio-controller;
-+                #gpio-cells = <2>;
-+            };
-+
-+            interrupt-controller@1c {
-+                compatible = "kontron,sl28cpld-intc";
-+                reg = <0x1c>;
-+                interrupts-extended = <&gpio2 6
-+                               IRQ_TYPE_EDGE_FALLING>;
-+
-+                interrupt-controller;
-+                #interrupt-cells = <2>;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
-new file mode 100644
-index 000000000000..981cfec53f37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/kontron,sl28cpld-pwm.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/kontron,sl28cpld-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: PWM driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+  The controller supports one PWM channel and supports only four distinct
-+  frequencies (250Hz, 500Hz, 1kHz, 2kHz).
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#pwm-cells":
-+    const: 2
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-new file mode 100644
-index 000000000000..179272f74de5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/kontron,sl28cpld-wdt.yaml
-@@ -0,0 +1,35 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/watchdog/kontron,sl28cpld-wdt.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Watchdog driver for the sl28cpld board management controller
-+
-+maintainers:
-+  - Michael Walle <michael@walle.cc>
-+
-+description: |
-+  This module is part of the sl28cpld multi-function device. For more
-+  details see ../mfd/kontron,sl28cpld.yaml.
-+
-+allOf:
-+  - $ref: watchdog.yaml#
-+
-+properties:
-+  compatible:
-+    const: kontron,sl28cpld-wdt
-+
-+  reg:
-+    maxItems: 1
-+
-+  kontron,assert-wdt-timeout-pin:
-+    description: The SMARC standard defines a WDT_TIME_OUT# pin. If this
-+      property is set, this output will be pulsed when the watchdog bites
-+      and the system resets.
-+    type: boolean
-+
-+required:
-+  - compatible
-+
-+additionalProperties: false
--- 
-2.20.1
-
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
