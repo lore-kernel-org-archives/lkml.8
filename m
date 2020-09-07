@@ -7,35 +7,39 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779EBC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D139BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49EFE2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2A6C2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgIGReb (ORCPT
+        id S1731425AbgIGRe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:34:31 -0400
-Received: from 8bytes.org ([81.169.241.247]:43666 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729334AbgIGNSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:18:23 -0400
+        Mon, 7 Sep 2020 13:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbgIGNS0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:18:26 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C10C06179A;
+        Mon,  7 Sep 2020 06:18:04 -0700 (PDT)
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 5C177E5D;
-        Mon,  7 Sep 2020 15:16:49 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 00BC5FDA;
+        Mon,  7 Sep 2020 15:16:56 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
+        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
         Dan Williams <dan.j.williams@intel.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
@@ -45,9 +49,9 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 14/72] x86/boot/compressed/64: Rename kaslr_64.c to ident_map_64.c
-Date:   Mon,  7 Sep 2020 15:15:15 +0200
-Message-Id: <20200907131613.12703-15-joro@8bytes.org>
+Subject: [PATCH v7 29/72] x86/head/64: Install startup GDT
+Date:   Mon,  7 Sep 2020 15:15:30 +0200
+Message-Id: <20200907131613.12703-30-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -60,96 +64,102 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-The file contains only code related to identity mapped page-tables.
-Rename the file and compile it always in.
+Handling exceptions during boot requires a working GDT. The kernel GDT
+can't be used on the direct mapping, so load a startup GDT and setup
+segments.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/boot/compressed/Makefile                       | 2 +-
- arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} | 9 +++++++++
- arch/x86/boot/compressed/kaslr.c                        | 9 ---------
- arch/x86/boot/compressed/misc.h                         | 8 ++++++++
- 4 files changed, 18 insertions(+), 10 deletions(-)
- rename arch/x86/boot/compressed/{kaslr_64.c => ident_map_64.c} (95%)
+ arch/x86/include/asm/setup.h |  1 +
+ arch/x86/kernel/head64.c     | 33 +++++++++++++++++++++++++++++++++
+ arch/x86/kernel/head_64.S    | 14 ++++++++++++++
+ 3 files changed, 48 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index b378fb14d87c..c12c9223a1fb 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -79,7 +79,7 @@ vmlinux-objs-y := $(obj)/vmlinux.lds $(obj)/kernel_info.o $(obj)/head_$(BITS).o
- vmlinux-objs-$(CONFIG_EARLY_PRINTK) += $(obj)/early_serial_console.o
- vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr.o
- ifdef CONFIG_X86_64
--	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
-+	vmlinux-objs-y += $(obj)/ident_map_64.o
- 	vmlinux-objs-y += $(obj)/idt_64.o $(obj)/idt_handlers_64.o
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
-diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/ident_map_64.c
-similarity index 95%
-rename from arch/x86/boot/compressed/kaslr_64.c
-rename to arch/x86/boot/compressed/ident_map_64.c
-index f9c5c13d979b..d9932a133ac9 100644
---- a/arch/x86/boot/compressed/kaslr_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -29,6 +29,15 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 84b645cc8bc9..5c2fd05bd52c 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -48,6 +48,7 @@ extern void reserve_standard_io_resources(void);
+ extern void i386_reserve_resources(void);
+ extern unsigned long __startup_64(unsigned long physaddr, struct boot_params *bp);
+ extern unsigned long __startup_secondary_64(void);
++extern void startup_64_setup_env(unsigned long physbase);
+ extern int early_make_pgtable(unsigned long address);
  
-+#ifdef CONFIG_X86_5LEVEL
-+unsigned int __pgtable_l5_enabled;
-+unsigned int pgdir_shift = 39;
-+unsigned int ptrs_per_p4d = 1;
-+#endif
-+
-+/* Used by PAGE_KERN* macros: */
-+pteval_t __default_kernel_pte_mask __read_mostly = ~0;
-+
- /* Used to track our page table allocation area. */
- struct alloc_pgt_data {
- 	unsigned char *pgt_buf;
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 877970d76249..e27de98ed038 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -40,17 +40,8 @@
- #include <asm/setup.h>	/* For COMMAND_LINE_SIZE */
- #undef _SETUP
- 
--#ifdef CONFIG_X86_5LEVEL
--unsigned int __pgtable_l5_enabled;
--unsigned int pgdir_shift __ro_after_init = 39;
--unsigned int ptrs_per_p4d __ro_after_init = 1;
--#endif
--
- extern unsigned long get_cmd_line_ptr(void);
- 
--/* Used by PAGE_KERN* macros: */
--pteval_t __default_kernel_pte_mask __read_mostly = ~0;
--
- /* Simplified build-specific string for starting entropy. */
- static const char build_str[] = UTS_RELEASE " (" LINUX_COMPILE_BY "@"
- 		LINUX_COMPILE_HOST ") (" LINUX_COMPILER ") " UTS_VERSION;
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 8feb5f6f329e..98b7a1df9c59 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -134,6 +134,14 @@ int count_immovable_mem_regions(void);
- static inline int count_immovable_mem_regions(void) { return 0; }
+ #ifdef CONFIG_X86_INTEL_MID
+diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+index cbb71c1b574f..8c82be44be94 100644
+--- a/arch/x86/kernel/head64.c
++++ b/arch/x86/kernel/head64.c
+@@ -61,6 +61,24 @@ unsigned long vmemmap_base __ro_after_init = __VMEMMAP_BASE_L4;
+ EXPORT_SYMBOL(vmemmap_base);
  #endif
  
-+/* ident_map_64.c */
-+#ifdef CONFIG_X86_5LEVEL
-+extern unsigned int __pgtable_l5_enabled, pgdir_shift, ptrs_per_p4d;
-+#endif
++/*
++ * GDT used on the boot CPU before switching to virtual addresses.
++ */
++static struct desc_struct startup_gdt[GDT_ENTRIES] = {
++	[GDT_ENTRY_KERNEL32_CS]         = GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_CS]           = GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
++	[GDT_ENTRY_KERNEL_DS]           = GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
++};
 +
-+/* Used by PAGE_KERN* macros: */
-+extern pteval_t __default_kernel_pte_mask;
++/*
++ * Address needs to be set at runtime because it references the startup_gdt
++ * while the kernel still uses a direct mapping.
++ */
++static struct desc_ptr startup_gdt_descr = {
++	.size = sizeof(startup_gdt),
++	.address = 0,
++};
 +
- /* idt_64.c */
- extern gate_desc boot_idt[BOOT_IDT_ENTRIES];
- extern struct desc_ptr boot_idt_desc;
+ #define __head	__section(.head.text)
+ 
+ static void __head *fixup_pointer(void *ptr, unsigned long physaddr)
+@@ -489,3 +507,18 @@ void __init x86_64_start_reservations(char *real_mode_data)
+ 
+ 	start_kernel();
+ }
++
++/*
++ * Setup boot CPU state needed before kernel switches to virtual addresses.
++ */
++void __head startup_64_setup_env(unsigned long physbase)
++{
++	/* Load GDT */
++	startup_gdt_descr.address = (unsigned long)fixup_pointer(startup_gdt, physbase);
++	native_load_gdt(&startup_gdt_descr);
++
++	/* New GDT is live - reload data segment registers */
++	asm volatile("movl %%eax, %%ds\n"
++		     "movl %%eax, %%ss\n"
++		     "movl %%eax, %%es\n" : : "a"(__KERNEL_DS) : "memory");
++}
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 16da4ac01597..2b2e91627221 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -73,6 +73,20 @@ SYM_CODE_START_NOALIGN(startup_64)
+ 	/* Set up the stack for verify_cpu(), similar to initial_stack below */
+ 	leaq	(__end_init_task - SIZEOF_PTREGS)(%rip), %rsp
+ 
++	leaq	_text(%rip), %rdi
++	pushq	%rsi
++	call	startup_64_setup_env
++	popq	%rsi
++
++	/* Now switch to __KERNEL_CS so IRET works reliably */
++	pushq	$__KERNEL_CS
++	leaq	.Lon_kernel_cs(%rip), %rax
++	pushq	%rax
++	lretq
++
++.Lon_kernel_cs:
++	UNWIND_HINT_EMPTY
++
+ 	/* Sanitize CPU configuration */
+ 	call verify_cpu
+ 
 -- 
 2.28.0
 
