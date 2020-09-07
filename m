@@ -2,129 +2,150 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20996C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D05C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED3CE2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5FD02075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="D0HjMw01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729248AbgIGMRw (ORCPT
+        id S1729081AbgIGMSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:17:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:8886 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgIGMFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:05:39 -0400
-IronPort-SDR: schj4sZXXsm3jR4qgi3fIKafDUyqKRG8lBJyJu0pNTxIkhz9KdWiJKFsCOTy4VThq5bPgIbJtt
- mkT5Q9IYsIaw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="138043156"
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="138043156"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 05:05:38 -0700
-IronPort-SDR: u3kyUqM+DzJMN1nqoCID/BSaawI1ZfVxVB69PrOnOu6JskkaUh9tjcBJrtNahUNpfu4CURW2SH
- 7lg5Fl5hEiRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
-   d="scan'208";a="406818249"
-Received: from black.fi.intel.com (HELO black.fi.intel.com.) ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 07 Sep 2020 05:05:37 -0700
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH v2 2/2] Documentation: Remove device connection documentation
-Date:   Mon,  7 Sep 2020 15:05:32 +0300
-Message-Id: <20200907120532.37611-3-heikki.krogerus@linux.intel.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907120532.37611-1-heikki.krogerus@linux.intel.com>
-References: <20200907120532.37611-1-heikki.krogerus@linux.intel.com>
+        Mon, 7 Sep 2020 08:18:53 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:33879 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729236AbgIGMK4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:10:56 -0400
+X-UUID: 2dabae5c51bd471fbdfdd5bd53216433-20200907
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=fV5jHebeyEfLp5i1jQbRfIe1nBzzc22w8CcM/KCSvdQ=;
+        b=D0HjMw0153gFXmvMGuhqSF+aJVaGIwFe2tGOKHvwvTyDa4/EW4+JPjiNb+dugbLmfaS7zGKp2oy7ZX0LNFD9RoRR3ggYfL9YoMYPD5eCzdxM1QWqjDOwH816a+/pzTmq+HB9WfSpBYX6aZKYaqajkrjQHksYAMYp3CEzvJggBiQ=;
+X-UUID: 2dabae5c51bd471fbdfdd5bd53216433-20200907
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1796186004; Mon, 07 Sep 2020 20:10:52 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 7 Sep 2020 20:10:48 +0800
+Received: from localhost.localdomain (10.17.3.153) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 7 Sep 2020 20:10:48 +0800
+From:   Jianjun Wang <jianjun.wang@mediatek.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Ryder Lee <ryder.lee@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        <davem@davemloft.net>, <linux-pci@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: [v1,1/3] dt-bindings: Add YAML schemas for Gen3 PCIe controller
+Date:   Mon, 7 Sep 2020 20:08:50 +0800
+Message-ID: <20200907120852.12090-2-jianjun.wang@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200907120852.12090-1-jianjun.wang@mediatek.com>
+References: <20200907120852.12090-1-jianjun.wang@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The API that allowed device connection descriptions to
-be added is now removed, so removing also the documentation
-for it.
-
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
- .../driver-api/device_connection.rst          | 43 -------------------
- Documentation/driver-api/index.rst            |  1 -
- 2 files changed, 44 deletions(-)
- delete mode 100644 Documentation/driver-api/device_connection.rst
-
-diff --git a/Documentation/driver-api/device_connection.rst b/Documentation/driver-api/device_connection.rst
-deleted file mode 100644
-index ba364224c349b..0000000000000
---- a/Documentation/driver-api/device_connection.rst
-+++ /dev/null
-@@ -1,43 +0,0 @@
--==================
--Device connections
--==================
--
--Introduction
--------------
--
--Devices often have connections to other devices that are outside of the direct
--child/parent relationship. A serial or network communication controller, which
--could be a PCI device, may need to be able to get a reference to its PHY
--component, which could be attached for example to the I2C bus. Some device
--drivers need to be able to control the clocks or the GPIOs for their devices,
--and so on.
--
--Device connections are generic descriptions of any type of connection between
--two separate devices.
--
--Device connections alone do not create a dependency between the two devices.
--They are only descriptions which are not tied to either of the devices directly.
--A dependency between the two devices exists only if one of the two endpoint
--devices requests a reference to the other. The descriptions themselves can be
--defined in firmware (not yet supported) or they can be built-in.
--
--Usage
-------
--
--Device connections should exist before device ``->probe`` callback is called for
--either endpoint device in the description. If the connections are defined in
--firmware, this is not a problem. It should be considered if the connection
--descriptions are "built-in", and need to be added separately.
--
--The connection description consists of the names of the two devices with the
--connection, i.e. the endpoints, and unique identifier for the connection which
--is needed if there are multiple connections between the two devices.
--
--After a description exists, the devices in it can request reference to the other
--endpoint device, or they can request the description itself.
--
--API
-----
--
--.. kernel-doc:: drivers/base/devcon.c
--   :functions: device_connection_find_match device_connection_find device_connection_add device_connection_remove
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index 5ef2cfe3a16b3..6e7c702e0268d 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -22,7 +22,6 @@ available subsections can be seen below.
-    pm/index
-    clk
-    device-io
--   device_connection
-    dma-buf
-    device_link
-    component
--- 
-2.28.0
+QWRkIFlBTUwgc2NoZW1hcyBkb2N1bWVudGF0aW9uIGZvciBHZW4zIFBDSWUgY29udHJvbGxlciBv
+bg0KTWVkaWFUZWsgU29Dcy4NCg0KQWNrZWQtYnk6IFJ5ZGVyIExlZSA8cnlkZXIubGVlQG1lZGlh
+dGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IEppYW5qdW4gV2FuZyA8amlhbmp1bi53YW5nQG1lZGlh
+dGVrLmNvbT4NCi0tLQ0KIC4uLi9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1nZW4zLnlhbWwg
+ICAgICB8IDE1OCArKysrKysrKysrKysrKysrKysNCiAxIGZpbGUgY2hhbmdlZCwgMTU4IGluc2Vy
+dGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbWVkaWF0ZWstcGNpZS1nZW4z
+LnlhbWwNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwMDAwMDAuLjEwOGQyOTI1
+OWMwNQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3BjaS9tZWRpYXRlay1wY2llLWdlbjMueWFtbA0KQEAgLTAsMCArMSwxNTggQEANCisjIFNQ
+RFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMCBPUiBCU0QtMi1DbGF1c2UpDQorJVlBTUwg
+MS4yDQorLS0tDQorJGlkOiBodHRwOi8vZGV2aWNldHJlZS5vcmcvc2NoZW1hcy9wY2kvbWVkaWF0
+ZWstcGNpZS1nZW4zLnlhbWwjDQorJHNjaGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEt
+c2NoZW1hcy9jb3JlLnlhbWwjDQorDQordGl0bGU6IEdlbjMgUENJZSBjb250cm9sbGVyIG9uIE1l
+ZGlhVGVrIFNvQ3MNCisNCittYWludGFpbmVyczoNCisgIC0gSmlhbmp1biBXYW5nIDxqaWFuanVu
+LndhbmdAbWVkaWF0ZWsuY29tPg0KKw0KK2FsbE9mOg0KKyAgLSAkcmVmOiAvc2NoZW1hcy9wY2kv
+cGNpLWJ1cy55YW1sIw0KKw0KK3Byb3BlcnRpZXM6DQorICBjb21wYXRpYmxlOg0KKyAgICBvbmVP
+ZjoNCisgICAgICAtIGNvbnN0OiBtZWRpYXRlayxnZW4zLXBjaWUNCisgICAgICAtIGNvbnN0OiBt
+ZWRpYXRlayxtdDgxOTItcGNpZQ0KKw0KKyAgZGV2aWNlX3R5cGU6DQorICAgIGNvbnN0OiBwY2kN
+CisNCisgICIjYWRkcmVzcy1jZWxscyI6DQorICAgIGNvbnN0OiAzDQorDQorICAiI3NpemUtY2Vs
+bHMiOg0KKyAgICBjb25zdDogMg0KKw0KKyAgcmVnOg0KKyAgICBpdGVtczoNCisgICAgICAtIGRl
+c2NyaXB0aW9uOiBDb250cm9sbGVyIGNvbnRyb2wgYW5kIHN0YXR1cyByZWdpc3RlcnMuDQorDQor
+ICByZWctbmFtZXM6DQorICAgIGl0ZW1zOg0KKyAgICAgIC0gY29uc3Q6IHBjaWUtbWFjDQorDQor
+ICBpbnRlcnJ1cHRzOg0KKyAgICBtYXhJdGVtczogMQ0KKw0KKyAgYnVzLXJhbmdlOg0KKyAgICBk
+ZXNjcmlwdGlvbjogUmFuZ2Ugb2YgYnVzIG51bWJlcnMgYXNzb2NpYXRlZCB3aXRoIHRoaXMgY29u
+dHJvbGxlci4NCisNCisgIHJhbmdlczoNCisgICAgbWluSXRlbXM6IDENCisgICAgbWF4SXRlbXM6
+IDgNCisNCisgIHJlc2V0czoNCisgICAgbWluSXRlbXM6IDENCisgICAgbWF4SXRlbXM6IDINCisN
+CisgIHJlc2V0LW5hbWVzOg0KKyAgICBhbnlPZjoNCisgICAgICAtIGNvbnN0OiBtYWMtcnN0DQor
+ICAgICAgLSBjb25zdDogcGh5LXJzdA0KKw0KKyAgY2xvY2tzOg0KKyAgICBtYXhJdGVtczogNQ0K
+Kw0KKyAgYXNzaWduZWQtY2xvY2tzOg0KKyAgICBtYXhJdGVtczogMQ0KKw0KKyAgYXNzaWduZWQt
+Y2xvY2stcGFyZW50czoNCisgICAgbWF4SXRlbXM6IDENCisNCisgIHBoeXM6DQorICAgIG1heEl0
+ZW1zOiAxDQorDQorICBwaHktbmFtZXM6DQorICAgIGNvbnN0OiBwY2llLXBoeQ0KKw0KKyAgJyNp
+bnRlcnJ1cHQtY2VsbHMnOg0KKyAgICBjb25zdDogMQ0KKw0KKyAgaW50ZXJydXB0LW1hcC1tYXNr
+Og0KKyAgICBkZXNjcmlwdGlvbjogU3RhbmRhcmQgUENJIElSUSBtYXBwaW5nIHByb3BlcnRpZXMu
+DQorDQorICBpbnRlcnJ1cHQtbWFwOg0KKyAgICBkZXNjcmlwdGlvbjogU3RhbmRhcmQgUENJIElS
+USBtYXBwaW5nIHByb3BlcnRpZXMuDQorDQorICBsZWdhY3ktaW50ZXJydXB0LWNvbnRyb2xsZXI6
+DQorICAgIGRlc2NyaXB0aW9uOiBJbnRlcnJ1cHQgY29udHJvbGxlciBub2RlIGZvciBoYW5kbGlu
+ZyBsZWdhY3kgUENJIGludGVycnVwdHMuDQorICAgIHR5cGU6IG9iamVjdA0KKyAgICBwcm9wZXJ0
+aWVzOg0KKyAgICAgICIjYWRkcmVzcy1jZWxscyI6DQorICAgICAgICBjb25zdDogMA0KKyAgICAg
+ICIjaW50ZXJydXB0LWNlbGxzIjoNCisgICAgICAgIGNvbnN0OiAxDQorICAgICAgaW50ZXJydXB0
+LWNvbnRyb2xsZXI6IHRydWUNCisNCisgICAgcmVxdWlyZWQ6DQorICAgICAgLSAiI2FkZHJlc3Mt
+Y2VsbHMiDQorICAgICAgLSAiI2ludGVycnVwdC1jZWxscyINCisgICAgICAtIGludGVycnVwdC1j
+b250cm9sbGVyDQorDQorcmVxdWlyZWQ6DQorICAtIGNvbXBhdGlibGUNCisgIC0gZGV2aWNlX3R5
+cGUNCisgIC0gIiNhZGRyZXNzLWNlbGxzIg0KKyAgLSAiI3NpemUtY2VsbHMiDQorICAtIHJlZw0K
+KyAgLSByZWctbmFtZXMNCisgIC0gYnVzLXJhbmdlDQorICAtIGludGVycnVwdHMNCisgIC0gcmFu
+Z2VzDQorICAtIGNsb2Nrcw0KKyAgLSAnI2ludGVycnVwdC1jZWxscycNCisgIC0gaW50ZXJydXB0
+LW1hcA0KKyAgLSBpbnRlcnJ1cHQtbWFwLW1hc2sNCisgIC0gbGVnYWN5LWludGVycnVwdC1jb250
+cm9sbGVyDQorDQorYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQorDQorZXhhbXBsZXM6DQor
+ICAtIHwNCisgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2Fy
+bS1naWMuaD4NCisgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVy
+L2lycS5oPg0KKw0KKyAgICBidXMgew0KKyAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8Mj47DQor
+ICAgICAgICAjc2l6ZS1jZWxscyA9IDwyPjsNCisNCisgICAgICAgIHBjaWU6IHBjaWVAMTEyMzAw
+MDAgew0KKyAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTkyLXBjaWUiOw0K
+KyAgICAgICAgICAgIGRldmljZV90eXBlID0gInBjaSI7DQorICAgICAgICAgICAgI2FkZHJlc3Mt
+Y2VsbHMgPSA8Mz47DQorICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8Mj47DQorICAgICAgICAg
+ICAgcmVnID0gPDB4MDAgMHgxMTIzMDAwMCAweDAwIDB4NDAwMD47DQorICAgICAgICAgICAgcmVn
+LW5hbWVzID0gInBjaWUtbWFjIjsNCisgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MjUxIElSUV9UWVBFX0xFVkVMX0hJR0ggMD47DQorICAgICAgICAgICAgYnVzLXJhbmdlID0gPDB4
+MDAgMHhmZj47DQorICAgICAgICAgICAgcmFuZ2VzID0gPDB4ODIwMDAwMDAgMHgwMCAweDEyMDAw
+MDAwIDB4MDAgMHgxMjAwMDAwMCAweDAwIDB4MTAwMDAwMD47DQorICAgICAgICAgICAgY2xvY2tz
+ID0gPCZpbmZyYWNmZyA0MD4sDQorICAgICAgICAgICAgICAgICAgICAgPCZpbmZyYWNmZyA0Mz4s
+DQorICAgICAgICAgICAgICAgICAgICAgPCZpbmZyYWNmZyA5Nz4sDQorICAgICAgICAgICAgICAg
+ICAgICAgPCZpbmZyYWNmZyA5OT4sDQorICAgICAgICAgICAgICAgICAgICAgPCZpbmZyYWNmZyAx
+MTE+Ow0KKyAgICAgICAgICAgIGFzc2lnbmVkLWNsb2NrcyA9IDwmdG9wY2tnZW4gNTA+Ow0KKyAg
+ICAgICAgICAgIGFzc2lnbmVkLWNsb2NrLXBhcmVudHMgPSA8JnRvcGNrZ2VuIDkxPjsNCisNCisg
+ICAgICAgICAgICBwaHlzID0gPCZwY2llcGh5PjsNCisgICAgICAgICAgICBwaHktbmFtZXMgPSAi
+cGNpZS1waHkiOw0KKyAgICAgICAgICAgIHJlc2V0cyA9IDwmaW5mcmFjZmdfcnN0IDA+Ow0KKyAg
+ICAgICAgICAgIHJlc2V0LW5hbWVzID0gInBoeS1yc3QiOw0KKw0KKyAgICAgICAgICAgICNpbnRl
+cnJ1cHQtY2VsbHMgPSA8MT47DQorICAgICAgICAgICAgaW50ZXJydXB0LW1hcC1tYXNrID0gPDAg
+MCAwIDB4Nz47DQorICAgICAgICAgICAgaW50ZXJydXB0LW1hcCA9IDwwIDAgMCAxICZwY2llX2lu
+dGMgMD4sDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDAgMCAyICZwY2llX2ludGMg
+MT4sDQorICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDAgMCAzICZwY2llX2ludGMgMj4s
+DQorICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDAgMCA0ICZwY2llX2ludGMgMz47DQor
+ICAgICAgICAgICAgcGNpZV9pbnRjOiBsZWdhY3ktaW50ZXJydXB0LWNvbnRyb2xsZXIgew0KKyAg
+ICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwwPjsNCisgICAgICAgICAgICAg
+ICAgICAgICAgI2ludGVycnVwdC1jZWxscyA9IDwxPjsNCisgICAgICAgICAgICAgICAgICAgICAg
+aW50ZXJydXB0LWNvbnRyb2xsZXI7DQorICAgICAgICAgICAgfTsNCisgICAgICAgIH07DQorICAg
+IH07DQotLSANCjIuMjUuMQ0K
 
