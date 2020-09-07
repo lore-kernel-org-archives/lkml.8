@@ -2,228 +2,104 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32606C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE3321473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AC5921473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbgIGPtY (ORCPT
+        id S1730257AbgIGPt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:49:24 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:54589 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730146AbgIGPil (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:38:41 -0400
-Received: from threadripper.lan ([149.172.98.151]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MKsax-1jz1mO2Uaj-00LArU; Mon, 07 Sep 2020 17:37:45 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Christoph Hellwig <hch@lst.de>, Russell King <rmk@arm.linux.org.uk>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>, kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linus.walleij@linaro.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/9] ARM: traps: use get_kernel_nofault instead of set_fs()
-Date:   Mon,  7 Sep 2020 17:36:43 +0200
-Message-Id: <20200907153701.2981205-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200907153701.2981205-1-arnd@arndb.de>
-References: <20200907153701.2981205-1-arnd@arndb.de>
+        Mon, 7 Sep 2020 11:49:29 -0400
+Received: from david.siemens.de ([192.35.17.14]:33625 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730222AbgIGPrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 11:47:01 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id 087Fkc26025246
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 7 Sep 2020 17:46:38 +0200
+Received: from [139.22.116.238] ([139.22.116.238])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 087FkbFU013301;
+        Mon, 7 Sep 2020 17:46:37 +0200
+Subject: Re: watchdog: sp5100_tco support for AMD V/R/E series
+To:     Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org,
+        "Awan, Arsalan" <Arsalan_Awan@mentor.com>,
+        "Hombourger, Cedric" <Cedric_Hombourger@mentor.com>,
+        "Farnsworth, Wade" <wade_farnsworth@mentor.com>
+References: <15c8913e-9026-2649-9911-71d6f1c79519@siemens.com>
+ <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <9e270546-7962-932b-2e4c-3c833b7d4b30@siemens.com>
+Date:   Mon, 7 Sep 2020 17:46:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bqL9TqSlLxoRFFmGo0QZlOzE4loGzIV2al/StD8nh0dRqmEo/zl
- r64AuU+j3zZIcpJ6aJRTDhH/hcUIRPN0v5Ce+f7pq0+Pp8u9hWU8oEVPjpBBwogE+XZO5No
- yCZBEAexPXzjyNtW8kovGgln9eIgE+krcRPWvUn/+8dWvPjezJSouRZiuckvQOO9eR1YOws
- VWiVkFvqGHaxoJfst5xjA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CSTeWP/Fmbs=:E8ArNtSucnOwkJb173KkVn
- IFhVpT/SayTL0XFhu8YBu2d7K0bL9QnhCHK4fB2CFn0Zj2g3TMFjdioycUx2V4BaIKupaQDIs
- wI8mBHmGHVyoVjvlcdlZKLSdfELYqVeHF4kmrwxRpDKJvcnOCJME7Rej/KDkpE6ag+Ku18u+S
- yd5YNp33A9tdwdJii9LINoc87+IuZ8zULpSiWFjGT21fQAbi2xLWVJitEDlOpFnANCjlFLXWo
- b3LLS4keCz7+qN55MsLOE0S2XYC2Ysbw7ubVOFa+rkW55p+wPt4i/ksIxd4nQWX5qC5FKKVCE
- AB4ZmIdysWUCXUadYMP2Zemix0HlSGwjRIFgkVaqVCcd3rrUY17VT3dRZQr4ZUUe5mzItwpQV
- vmVNrXP59siGL3uPhFAlQt+SqGN1gQnL2bE1lisYTdl8TsepO6sI3UQslea4PhVZ4hnbn8N65
- jZeoWlAB8KyTCeFQsJxCfzZisUI4uigMcagsHFoDxwLdGQDdNdU4NVx49T2eWg6mlWPLsBnGy
- 7GFt3Qm4BIQdDXksjITSF7oh5hslqPcyZ9W6JFvoxNEGUs89KFfPsJ1ckPAEqgZ35a7RC+UVj
- JODqUytSWQ4zgyD1qO+Pdsl8SCVlDnUaibLrcEPawVKITJ90Mo+8rlFAn7IOM4ITlIwbATXZ6
- P0l1KLrLU85ifgidC5vUKDxqq0+jv/cdc8O46AzDbsmqfld29FWhTZo6Vy2L0ZFDCkhMnUDw7
- OsZTugwqnbpd/JGAfSwg31t+KdQOl+uCFV8vCxlBfxS0Vi2wY3bW7ToTBVFZ8qcTG4Prq1Gus
- YX+14gkcMYMMyV9PS2ocYDIj1r+hUM9KDPzRnhOLzrwatKBB8vtTe4ANv9ofKnBAKb49ftq
+In-Reply-To: <f7e3233b-97e4-1f25-e18e-edb39ca86ce9@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The stack dumping code needs to work for both kernel and user mode,
-and currently this works by using set_fs() and then calling get_user()
-to carefully access a potentially invalid pointer.
+On 07.09.20 17:31, Guenter Roeck wrote:
+> On 9/7/20 4:20 AM, Jan Kiszka wrote:
+>> Hi all,
+>>
+>> Arsalan reported that the upstream driver for sp5100_tco does not work
+>> for embedded Ryzen. Meanwhile, I was able to confirm that on an R1505G:
+>>
+>> [   11.607251] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
+>> [   11.607337] sp5100-tco sp5100-tco: Using 0xfed80b00 for watchdog MMIO address
+>> [   11.607344] sp5100-tco sp5100-tco: Watchdog hardware is disabled
+>>
+>> ..and fix it:
+>>
+>> diff --git a/drivers/watchdog/sp5100_tco.c b/drivers/watchdog/sp5100_tco.c
+>> index 85e9664318c9..5482154fde42 100644
+>> --- a/drivers/watchdog/sp5100_tco.c
+>> +++ b/drivers/watchdog/sp5100_tco.c
+>> @@ -193,7 +193,8 @@ static void tco_timer_enable(struct sp5100_tco *tco)
+>>  		/* Set the Watchdog timer resolution to 1 sec and enable */
+>>  		sp5100_tco_update_pm_reg8(EFCH_PM_DECODEEN3,
+>>  					  ~EFCH_PM_WATCHDOG_DISABLE,
+>> -					  EFCH_PM_DECODEEN_SECOND_RES);
+>> +					  EFCH_PM_DECODEEN_SECOND_RES |
+>> +					  EFCH_PM_DECODEEN_WDT_TMREN);
+> 
+> Confusing. The register in question is a 32-bit register, but only a byte
+> is written into it. Bit 24-25 are supposed to be the resolution, bit 25-26
+> set to 0 enable the watchdog. Bit 7 is supposed to enable MMIO decoding.
+> This is from AMD Publication 52740. So something in the existing code
+> is (or seems to be) wrong, but either case I don't see how setting bit 7
+> (or 31 ?) would enable the watchdog hardware.
+> 
+> Hmm, I wrote that code. Guess I'll need to to spend some time figuring out
+> what is going on.
 
-Change both locations to handle user and kernel mode differently, using
-get_kernel_nofault() in case of kernel pointers.
+The logic came from [1] which inspired [2] - that's where I pointed out
+the large overlap with the existing upstream driver. I would love to see
+all that consolidated.
 
-I change __get_user() to get_user() here for consistency, as user space
-stacks should not point into kernel memory.
+BTW, the R1505G is family 0x17. Maybe something changed there, and that
+bit 7 was just reserved/ignored so far. ENOSPECS
 
-In dump_backtrace_entry() I assume that dump_mem() can only operate on
-kernel pointers when in_entry_text(from) is true, rather than checking
-the mode register.
+Jan
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/kernel/traps.c | 69 ++++++++++++++++++-----------------------
- 1 file changed, 31 insertions(+), 38 deletions(-)
+[1]
+https://git.yoctoproject.org/cgit/cgit.cgi/meta-amd/commit/meta-amd-bsp/recipes-kernel/amd-wdt/files/amd_wdt.c?id=cd760c9f04d276382a0f5156dabdb766594ace56
+[2]
+https://github.com/siemens/efibootguard/commit/3a702aa96d193f26571ea4e70db29ef01a0d4d5f
 
-diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-index 17d5a785df28..ebed261b356f 100644
---- a/arch/arm/kernel/traps.c
-+++ b/arch/arm/kernel/traps.c
-@@ -60,7 +60,7 @@ static int __init user_debug_setup(char *str)
- __setup("user_debug=", user_debug_setup);
- #endif
- 
--static void dump_mem(const char *, const char *, unsigned long, unsigned long);
-+static void dump_mem(const char *, const char *, unsigned long, unsigned long, bool kernel_mode);
- 
- void dump_backtrace_entry(unsigned long where, unsigned long from,
- 			  unsigned long frame, const char *loglvl)
-@@ -76,7 +76,7 @@ void dump_backtrace_entry(unsigned long where, unsigned long from,
- #endif
- 
- 	if (in_entry_text(from) && end <= ALIGN(frame, THREAD_SIZE))
--		dump_mem(loglvl, "Exception stack", frame + 4, end);
-+		dump_mem(loglvl, "Exception stack", frame + 4, end, true);
- }
- 
- void dump_backtrace_stm(u32 *stack, u32 instruction, const char *loglvl)
-@@ -119,20 +119,11 @@ static int verify_stack(unsigned long sp)
-  * Dump out the contents of some memory nicely...
-  */
- static void dump_mem(const char *lvl, const char *str, unsigned long bottom,
--		     unsigned long top)
-+		     unsigned long top, bool kernel_mode)
- {
- 	unsigned long first;
--	mm_segment_t fs;
- 	int i;
- 
--	/*
--	 * We need to switch to kernel mode so that we can use __get_user
--	 * to safely read from kernel space.  Note that we now dump the
--	 * code first, just in case the backtrace kills us.
--	 */
--	fs = get_fs();
--	set_fs(KERNEL_DS);
--
- 	printk("%s%s(0x%08lx to 0x%08lx)\n", lvl, str, bottom, top);
- 
- 	for (first = bottom & ~31; first < top; first += 32) {
-@@ -144,20 +135,25 @@ static void dump_mem(const char *lvl, const char *str, unsigned long bottom,
- 
- 		for (p = first, i = 0; i < 8 && p < top; i++, p += 4) {
- 			if (p >= bottom && p < top) {
--				unsigned long val;
--				if (__get_user(val, (unsigned long *)p) == 0)
--					sprintf(str + i * 9, " %08lx", val);
-+				u32 val;
-+				int err;
-+
-+				if (kernel_mode)
-+					err = get_kernel_nofault(val, (u32 *)p);
-+				else
-+					err = get_user(val, (u32 *)p);
-+
-+				if (!err)
-+					sprintf(str + i * 9, " %08x", val);
- 				else
- 					sprintf(str + i * 9, " ????????");
- 			}
- 		}
- 		printk("%s%04lx:%s\n", lvl, first & 0xffff, str);
- 	}
--
--	set_fs(fs);
- }
- 
--static void __dump_instr(const char *lvl, struct pt_regs *regs)
-+static void dump_instr(const char *lvl, struct pt_regs *regs)
- {
- 	unsigned long addr = instruction_pointer(regs);
- 	const int thumb = thumb_mode(regs);
-@@ -173,10 +169,20 @@ static void __dump_instr(const char *lvl, struct pt_regs *regs)
- 	for (i = -4; i < 1 + !!thumb; i++) {
- 		unsigned int val, bad;
- 
--		if (thumb)
--			bad = get_user(val, &((u16 *)addr)[i]);
--		else
--			bad = get_user(val, &((u32 *)addr)[i]);
-+		if (!user_mode(regs)) {
-+			if (thumb) {
-+				u16 val16;
-+				bad = get_kernel_nofault(val16, &((u16 *)addr)[i]);
-+				val = val16;
-+			} else {
-+				bad = get_kernel_nofault(val, &((u32 *)addr)[i]);
-+			}
-+		} else {
-+			if (thumb)
-+				bad = get_user(val, &((u16 *)addr)[i]);
-+			else
-+				bad = get_user(val, &((u32 *)addr)[i]);
-+		}
- 
- 		if (!bad)
- 			p += sprintf(p, i == 0 ? "(%0*x) " : "%0*x ",
-@@ -189,20 +195,6 @@ static void __dump_instr(const char *lvl, struct pt_regs *regs)
- 	printk("%sCode: %s\n", lvl, str);
- }
- 
--static void dump_instr(const char *lvl, struct pt_regs *regs)
--{
--	mm_segment_t fs;
--
--	if (!user_mode(regs)) {
--		fs = get_fs();
--		set_fs(KERNEL_DS);
--		__dump_instr(lvl, regs);
--		set_fs(fs);
--	} else {
--		__dump_instr(lvl, regs);
--	}
--}
--
- #ifdef CONFIG_ARM_UNWIND
- static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk,
- 				  const char *loglvl)
-@@ -276,6 +268,7 @@ static int __die(const char *str, int err, struct pt_regs *regs)
- 	struct task_struct *tsk = current;
- 	static int die_counter;
- 	int ret;
-+	bool kernel_mode = !user_mode(regs);
- 
- 	pr_emerg("Internal error: %s: %x [#%d]" S_PREEMPT S_SMP S_ISA "\n",
- 	         str, err, ++die_counter);
-@@ -290,9 +283,9 @@ static int __die(const char *str, int err, struct pt_regs *regs)
- 	pr_emerg("Process %.*s (pid: %d, stack limit = 0x%p)\n",
- 		 TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk), end_of_stack(tsk));
- 
--	if (!user_mode(regs) || in_interrupt()) {
-+	if (kernel_mode || in_interrupt()) {
- 		dump_mem(KERN_EMERG, "Stack: ", regs->ARM_sp,
--			 THREAD_SIZE + (unsigned long)task_stack_page(tsk));
-+			 THREAD_SIZE + (unsigned long)task_stack_page(tsk), kernel_mode);
- 		dump_backtrace(regs, tsk, KERN_EMERG);
- 		dump_instr(KERN_EMERG, regs);
- 	}
 -- 
-2.27.0
-
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
