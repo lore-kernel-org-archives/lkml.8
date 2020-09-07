@@ -2,90 +2,86 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_INVALID,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A579C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949CCC2D0E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F232E20732
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A802166E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VgLRVDp/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R30FrVFA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726762AbgIGFyu (ORCPT
+        id S1726853AbgIGF6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 01:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
+        Mon, 7 Sep 2020 01:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgIGFyn (ORCPT
+        with ESMTP id S1726732AbgIGF6h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 01:54:43 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5283FC061573;
-        Sun,  6 Sep 2020 22:54:42 -0700 (PDT)
+        Mon, 7 Sep 2020 01:58:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88B6C061574;
+        Sun,  6 Sep 2020 22:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=DLtDog/Sr3T09dS0hr8djLFY4+UOXPYwaMXYNsd+eOk=; b=VgLRVDp/TPdIEIEivGZWfrd6v6
-        xkpj/etrmTs2ORqCyJ7aTIlUAEb+G3LIMxYm8FHYkmFXLTYRq96NybCz325oD/vK/SKgfjD3ucV3O
-        0Zs5t9R7ykIOILdYyb7y1M4s28ICWAumOGM70S/a6etH4vxjzQLmlkjYeKzXpSdC1j2ZsoIA8PXfe
-        +RksZJRmB63xOree9TDvIXvCHojkPDLv2GMkJe3dMwP9DTYWQEFmbXKna3fxXFRY3jyGcwEvtUJYw
-        7wENDGpF+vqSCmF5+dlCQS//m8oukAIGtH13Xl0wOKQye2XFpPVzyLgsmvNIPQO2RdEy0ApqwzQga
-        8xXDeCVw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFA6u-0003cz-Ar; Mon, 07 Sep 2020 05:54:36 +0000
-Subject: Re: [PATCH v2 2/3] soc: sifive: Add SiFive specific Cadence DDR
- controller driver
-To:     Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, bp@alien8.de,
-        mchehab@kernel.org, tony.luck@intel.com
-Cc:     aou@eecs.berkeley.edu, james.morse@arm.com, rrichter@marvell.com,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        sachin.ghadi@sifive.com
-References: <1599457679-8947-1-git-send-email-yash.shah@sifive.com>
- <1599457679-8947-3-git-send-email-yash.shah@sifive.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <697413e6-8f44-8db4-6434-0f22984bdc9c@infradead.org>
-Date:   Sun, 6 Sep 2020 22:54:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=RIXQEf9L32x2nCRSAR4fbxYw+icKSSPU8Vsh6D6+7r0=; b=R30FrVFADjC0p5xwxfRVo7qWUc
+        A6fGogfRR1wSmWR8BWODbMpvolShmup7QRuYeheM/53AjXSfeVkelsss28CshU3tYcaueE/X21iBc
+        LA+l+fzgY3ekJqqRd8lwP2rPma62noqvJWnzsjA4HNwbDM2IJmkCjuMuqAy7BYfxAAoJP7EGt4V1u
+        Y7S0Tga/jW7kgxEGPrGCqkIapN1mEnNn025KP1hOR1gnErfrRfBYkXDXgse9Z5JV1A/MZtFe0TBMz
+        Xw1dLV0uDQAZb9g41DpupXmJsfTQYRRNODKXN7prVkJ3TBW4BV4MmSUjjn53ReJWfK6lNAVCLtaJl
+        AVZVnHqg==;
+Received: from [2001:4bb8:184:af1:e178:97b2:ac6b:4e16] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFAAe-00034c-3z; Mon, 07 Sep 2020 05:58:28 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org
+Subject: [PATCH 1/8] uaccess: provide a generic TASK_SIZE_MAX definition
+Date:   Mon,  7 Sep 2020 07:58:18 +0200
+Message-Id: <20200907055825.1917151-2-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907055825.1917151-1-hch@lst.de>
+References: <20200907055825.1917151-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <1599457679-8947-3-git-send-email-yash.shah@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/6/20 10:47 PM, Yash Shah wrote:
-> diff --git a/drivers/soc/sifive/Kconfig b/drivers/soc/sifive/Kconfig
-> index 58cf8c4..f41d8fe 100644
-> --- a/drivers/soc/sifive/Kconfig
-> +++ b/drivers/soc/sifive/Kconfig
-> @@ -7,4 +7,10 @@ config SIFIVE_L2
->  	help
->  	  Support for the L2 cache controller on SiFive platforms.
->  
-> +config SIFIVE_DDR
-> +	bool "Sifive DDR controller driver"
-> +	help
-> +	  Support for the management of cadence DDR controller on SiFive
+Define TASK_SIZE_MAX as TASK_SIZE if not otherwise defined.
 
-	                                Cadence
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ include/linux/uaccess.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> +	  platforms.
-> +
->  endif
-
-
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 70073c802b48ed..d0e43761c708d8 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -31,6 +31,10 @@ typedef struct {
+ 	/* empty dummy */
+ } mm_segment_t;
+ 
++#ifndef TASK_SIZE_MAX
++#define TASK_SIZE_MAX			TASK_SIZE
++#endif
++
+ #define uaccess_kernel()		(false)
+ #define user_addr_max()			(TASK_SIZE_MAX)
+ 
 -- 
-~Randy
+2.28.0
 
