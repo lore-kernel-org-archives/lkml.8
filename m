@@ -2,123 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC34CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82496C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 682A9206B5
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:05:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E4pUSDNF"
+	by mail.kernel.org (Postfix) with ESMTP id 51EA22078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 18:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599501988;
+	bh=kQx1n0wiA1AOHZa0bgXD1ERswBDInvHAo+u2PUb7JAM=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=wkF/N7qAmMuTlooY+tuuK7Ci9GCUSoXZ0GDqXgNoROt9QDv4phFJkNCYYWJ0h0mLI
+	 ssQpE+edYx1tJQFqhNIoUdOvrCFxUt2GR1lFvi3YEnGKwODblMQ3exZCJwtL15x/BF
+	 kDBB0Dwy8qlm1z0uFfOf/eQ27edJN2kwOl5m6DMM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729197AbgIGSFn (ORCPT
+        id S1731371AbgIGSGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 14:05:43 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:49866 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729741AbgIGSEx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 14:04:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599501890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=wEV7c2hoejQ1ixum50rA5xwKvNmSW5uoo1V8Pac1bKo=;
-        b=E4pUSDNFVNkGaVDsM5mr5Og+r+k6Zt2TFwU6Jgk2I2ArPo6I89LVTSdSzSvzASzwe8CUCw
-        4qmd0Slo+xq/4K5OZmavcX45yVn8kk+Ohvl8t63w6ImEteogqjqtNxvozBpFRq2OIDx0Ot
-        6LPSkLu9FopmPqoi52/5lqRYgAFfhnw=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-x2w9Zp_zMP-hOuqQoDF3KA-1; Mon, 07 Sep 2020 14:04:48 -0400
-X-MC-Unique: x2w9Zp_zMP-hOuqQoDF3KA-1
-Received: by mail-qk1-f197.google.com with SMTP id v16so7854891qka.18
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 11:04:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wEV7c2hoejQ1ixum50rA5xwKvNmSW5uoo1V8Pac1bKo=;
-        b=EH0uaJ9l4/NbqylLKyNYxcWC9dDMV/L6ZT7VLlPiv2vSPoeTfxdjlK6+EmoUE8ZWwj
-         ZZ8dAy26Dzg0ZOZ9+FXgFXTgqNDMrwIbmdWIDdowtMTUJydtB0Q9eE32CrPiCLVjklIn
-         eRBuvRsG++AV4Lf+m/sgL0uvf6qJ9lTQAKF4UOH+ch2nXiXQZPw84evnxGa9hNOLLCuZ
-         OMPwLarGeIvvZwre2SUhZW+rA2bqDI+5Zjh/cLwOX/0s3jdkA1zyzvCZ6ckMaPPUBJCM
-         3xYxzlPCzFk1bensyS5PiWokbo61s8dMBxcJWUfL2zE980h0SdW3UcYXR2JC9qS14DSN
-         +PCg==
-X-Gm-Message-State: AOAM532mDtqRwzbpqRY0u/qgh23HRoQ3be+BtwM4Ua1FAgB+o53AXQ8P
-        wKQnm/Iuy2suP3ZkLrYIt8G9QjrVp/L5Y6/Mdwf++BKtzMvzxZ+UFmDzbQ8M/HPYc2ZaYKLU/JZ
-        1ecSARnCoAGSkgLRqJQ9bwoFN
-X-Received: by 2002:a37:8c02:: with SMTP id o2mr18932750qkd.461.1599501888005;
-        Mon, 07 Sep 2020 11:04:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzc9bmRu1RY4kwHcHrlv9A879aAJwVxMmr05CDWzHdIf5f9kZB3pGIWJMKzUyS2DL1f0/pOQg==
-X-Received: by 2002:a37:8c02:: with SMTP id o2mr18932729qkd.461.1599501887741;
-        Mon, 07 Sep 2020 11:04:47 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id e24sm11088555qka.76.2020.09.07.11.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 11:04:47 -0700 (PDT)
-From:   trix@redhat.com
-To:     jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] net: sched: skip an unnecessay check
-Date:   Mon,  7 Sep 2020 11:04:38 -0700
-Message-Id: <20200907180438.11983-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Mon, 7 Sep 2020 14:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729588AbgIGSGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 14:06:22 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE49E206B5;
+        Mon,  7 Sep 2020 18:06:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599501982;
+        bh=kQx1n0wiA1AOHZa0bgXD1ERswBDInvHAo+u2PUb7JAM=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=C5w3wL4XwX/GcnMJRYFWZmdFVKZedCu/emD0LUVm0E3wtFIE6M32A18ibuoHXz+0t
+         1Hmow6qLz4DSki7oheINH1Q2NIAH3/4fsYXE+V5At6lLtVRNShWFG42EawIsKf/ykx
+         X1J5b6QogdMWHmq7a3WP0shu30xLILZPFQdOn+fU=
+Date:   Mon, 07 Sep 2020 19:05:38 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Maxime Ripard <mripard@kernel.org>,
+        Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org
+In-Reply-To: <20200831034852.18841-1-samuel@sholland.org>
+References: <20200831034852.18841-1-samuel@sholland.org>
+Subject: Re: [PATCH 0/9] ASoC: sun8i-codec driver cleanup
+Message-Id: <159950192274.52707.8359144994628782541.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+On Sun, 30 Aug 2020 22:48:43 -0500, Samuel Holland wrote:
+> Now that the fixes series is merged, here is a series of small cleanups
+> to the sun8i-codec driver. These help shorten the patch stack for the
+> next series, which will add support for the other two DAIs in this
+> codec: AIF2 and AIF3.
+> 
+> Samuel Holland (9):
+>   ASoC: sun8i-codec: Remove extraneous widgets
+>   ASoC: sun8i-codec: Fix AIF1 MODCLK widget name
+>   ASoC: sun8i-codec: Fix AIF1_ADCDAT_CTRL field names
+>   ASoC: sun8i-codec: Fix AIF1_MXR_SRC field names
+>   ASoC: sun8i-codec: Fix ADC_DIG_CTRL field name
+>   ASoC: sun8i-codec: Fix field bit number indentation
+>   ASoC: sun8i-codec: Sort masks in a consistent order
+>   ASoC: sun8i-codec: Attach the bus clock to the regmap
+>   ASoC: sun8i-codec: Manage module clock via DAPM
+> 
+> [...]
 
-Reviewing the error handling in tcf_action_init_1()
-most of the early handling uses
+Applied to
 
-err_out:
-	if (cookie) {
-		kfree(cookie->data);
-		kfree(cookie);
-	}
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-before cookie could ever be set.
+Thanks!
 
-So skip the unnecessay check.
+[1/9] ASoC: sun8i-codec: Remove extraneous widgets
+      commit: b8cbb1cab70342756725c1beded6b81031a95762
+[2/9] ASoC: sun8i-codec: Fix AIF1 MODCLK widget name
+      commit: 2455e37adef39bf7fd12df963b86fa7f313f1ad4
+[3/9] ASoC: sun8i-codec: Fix AIF1_ADCDAT_CTRL field names
+      commit: fa5c0ca1f90aaadb6539ec6c407221f2ab7b7608
+[4/9] ASoC: sun8i-codec: Fix AIF1_MXR_SRC field names
+      commit: 0ba95493023de45744962af41ef5ad90bad7d8bb
+[5/9] ASoC: sun8i-codec: Fix ADC_DIG_CTRL field name
+      commit: 30aff91ec7840fb72daef7ce389a9414e5db4075
+[6/9] ASoC: sun8i-codec: Fix field bit number indentation
+      commit: fcb7b39ee3d877e4eb79fb2abf15644d1b36285c
+[7/9] ASoC: sun8i-codec: Sort masks in a consistent order
+      commit: f30ef55c332935c1d7c5f4ae3d084bec8d05712e
+[8/9] ASoC: sun8i-codec: Attach the bus clock to the regmap
+      commit: efb736fb9eceac6ce335bbaa3d788a05649160b5
+[9/9] ASoC: sun8i-codec: Manage module clock via DAPM
+      commit: 6b3bb3c82b94521d6d61c1bf7c766c8c3bddacf5
 
-Signed-off-by: Tom Rix <trix@redhat.com>
----
- net/sched/act_api.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/net/sched/act_api.c b/net/sched/act_api.c
-index 063d8aaf2900..f64af9d9dfee 100644
---- a/net/sched/act_api.c
-+++ b/net/sched/act_api.c
-@@ -976,7 +976,7 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- #endif
- 		NL_SET_ERR_MSG(extack, "Failed to load TC action module");
- 		err = -ENOENT;
--		goto err_out;
-+		goto err_free;
- 	}
- 
- 	/* backward compatibility for policer */
-@@ -1013,11 +1013,12 @@ struct tc_action *tcf_action_init_1(struct net *net, struct tcf_proto *tp,
- 
- err_mod:
- 	module_put(a_o->owner);
--err_out:
-+err_free:
- 	if (cookie) {
- 		kfree(cookie->data);
- 		kfree(cookie);
- 	}
-+err_out:
- 	return ERR_PTR(err);
- }
- 
--- 
-2.18.1
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
