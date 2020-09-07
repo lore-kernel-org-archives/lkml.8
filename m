@@ -8,56 +8,55 @@ X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF63CC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528A9C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1D4207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14CA82137B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EXSiRSb/"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zBLox/2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730097AbgIGO6w (ORCPT
+        id S1730085AbgIGO7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:58:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:58106 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730053AbgIGOwr (ORCPT
+        Mon, 7 Sep 2020 10:59:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41638 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730049AbgIGOwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:52:47 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EqVXc119190;
-        Mon, 7 Sep 2020 09:52:31 -0500
+        Mon, 7 Sep 2020 10:52:31 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EqR5k083985;
+        Mon, 7 Sep 2020 09:52:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599490351;
-        bh=/NefBZrlruG7dOiM4EB9ygkKaj4ChnUJiHPWyy4oeQI=;
+        s=ti-com-17Q1; t=1599490347;
+        bh=SKjEARJSEdZouxBFx9iMfSktRPFzjW/EAp3EiPowD5g=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=EXSiRSb/eAEJe2di3D63K9NOIgfUTvTS2txhFkJkyKUBvwpp7CZIGHH4twBJeN5VS
-         Ev/fjSkqmQV0mQ+VWhOlQ5ZV0Iqy9HQ125VW/3oPrVRgQOLj+DnPl64bPiH2XnSoxr
-         nuI1xfNjuklnc+jDiNUV2PqRd3q06lC99d/706Lk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087EqVjm128233
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 7 Sep 2020 09:52:31 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+        b=zBLox/2D6xSZrodBqQ6+1kl8lnUMriOJqCD2tlEOTsTVoFYepFJ2W7WDSVQPnjp4T
+         fgEwgh1N8cCfQyhA5x7NsroLMl24xfct4qBYLhppzmuf1LPmxssh/BUimtxDVjO3U7
+         BwOAuQCd2/pmtD5RfHfGNrTpNRAA5KtlvpxCy5YE=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EqQ5a034660;
+        Mon, 7 Sep 2020 09:52:27 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
- 2020 09:52:31 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 09:52:26 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 7 Sep 2020 09:52:31 -0500
+ Frontend Transport; Mon, 7 Sep 2020 09:52:26 -0500
 Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EqEER010923;
-        Mon, 7 Sep 2020 09:52:29 -0500
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EqEEP010923;
+        Mon, 7 Sep 2020 09:52:24 -0500
 From:   Roger Quadros <rogerq@ti.com>
 To:     <t-kristo@ti.com>, <nm@ti.com>
 CC:     <robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
         <kishon@ti.com>, Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 6/6] arm64: dts: ti: k3-j7200-common-proc-board: Add USB support
-Date:   Mon, 7 Sep 2020 17:52:13 +0300
-Message-ID: <20200907145213.30788-7-rogerq@ti.com>
+Subject: [PATCH v2 4/6] arm64: dts: ti: k3-j7200-main: Add USB controller
+Date:   Mon, 7 Sep 2020 17:52:11 +0300
+Message-ID: <20200907145213.30788-5-rogerq@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200907145213.30788-1-rogerq@ti.com>
 References: <20200907145213.30788-1-rogerq@ti.com>
@@ -69,53 +68,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable USB0 port in high-speed (2.0) mode.
-
-The board uses lane 3 of SERDES for USB. Set the mux
-accordingly.
+j7200 has on USB controller instance. Add that.
 
 Signed-off-by: Roger Quadros <rogerq@ti.com>
 ---
- .../dts/ti/k3-j7200-common-proc-board.dts     | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 30 +++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-index 0ecaba600704..5ce3fddbd617 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
-@@ -42,6 +42,12 @@
- 			J721E_IOPAD(0xe4, PIN_INPUT, 8) /* (V1) TIMER_IO0.MMC1_SDCD */
- 		>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+index af9e8e46b49e..c64bf652f0d2 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+@@ -331,4 +331,34 @@
+ 		no-1-8-v;
+ 		dma-coherent;
  	};
 +
-+	main_usbss0_pins_default: main-usbss0-pins-default {
-+		pinctrl-single,pins = <
-+			J721E_IOPAD(0x120, PIN_OUTPUT, 0) /* (T4) USB0_DRVVBUS */
-+		>;
++	usbss0: cdns-usb@4104000 {
++		compatible = "ti,j721e-usb";
++		reg = <0x00 0x4104000 0x00 0x100>;
++		dma-coherent;
++		power-domains = <&k3_pds 288 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 288 12>, <&k3_clks 288 3>;
++		clock-names = "ref", "lpm";
++		assigned-clocks = <&k3_clks 288 12>;	/* USB2_REFCLK */
++		assigned-clock-parents = <&k3_clks 288 13>; /* HFOSC0 */
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		usb0: usb@6000000 {
++			compatible = "cdns,usb3";
++			reg = <0x00 0x6000000 0x00 0x10000>,
++			      <0x00 0x6010000 0x00 0x10000>,
++			      <0x00 0x6020000 0x00 0x10000>;
++			reg-names = "otg", "xhci", "dev";
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,	/* irq.0 */
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,	/* irq.6 */
++				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;	/* otgirq.0 */
++			interrupt-names = "host",
++					  "peripheral",
++					  "otg";
++			maximum-speed = "super-speed";
++			dr_mode = "otg";
++		};
 +	};
  };
- 
- &wkup_uart0 {
-@@ -145,3 +151,19 @@
- 	idle-states = <SERDES0_LANE0_PCIE1_LANE0>, <SERDES0_LANE1_PCIE1_LANE1>,
- 		      <SERDES0_LANE2_QSGMII_LANE1>, <SERDES0_LANE3_IP4_UNUSED>;
- };
-+
-+&usb_serdes_mux {
-+	idle-states = <1>; /* USB0 to SERDES lane 3 */
-+};
-+
-+&usbss0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_usbss0_pins_default>;
-+	ti,vbus-divider;
-+	ti,usb2-only;
-+};
-+
-+&usb0 {
-+	dr_mode = "otg";
-+	maximum-speed = "high-speed";
-+};
 -- 
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
 Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
