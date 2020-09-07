@@ -2,121 +2,160 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CFEC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37370C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B876B21481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0406C20768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbgIGO3v (ORCPT
+        id S1729894AbgIGObU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:29:51 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:46885
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729786AbgIGOWH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:22:07 -0400
-X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
-   d="scan'208";a="358301232"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 16:18:57 +0200
-Date:   Mon, 7 Sep 2020 16:18:56 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Markus Elfring <Markus.Elfring@web.de>
-cc:     Dejin Zheng <zhengdejin5@gmail.com>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        Denis Efremov <efremov@linux.com>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_Coccinelle=3A_api=3A_Add_SmPL_scr?=
- =?UTF-8?Q?ipt_=E2=80=9Cuse=5Fdevm=5Fplatform=5Fget=5Fand=5Fioremap=5Fre?=
- =?UTF-8?Q?source=2Ecocci=E2=80=9D?=
-In-Reply-To: <8aaa799f-0ec4-cfd0-854a-e1006d0d200a@web.de>
-Message-ID: <alpine.DEB.2.22.394.2009071618200.2476@hadrien>
-References: <25b804fd-0d04-475d-f614-26c03c9fd544@web.de> <5f9fdd59-4b0b-1cb5-c3a2-92efc5bb3841@web.de> <alpine.DEB.2.22.394.2009071357140.2476@hadrien> <477abcea-e008-e509-d03f-f2753ebdfb20@web.de> <alpine.DEB.2.22.394.2009071506350.2476@hadrien>
- <46d314d5-822e-3d73-2d70-015794556e56@web.de> <alpine.DEB.2.22.394.2009071544460.2476@hadrien> <8aaa799f-0ec4-cfd0-854a-e1006d0d200a@web.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Mon, 7 Sep 2020 10:31:20 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:32900 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729707AbgIGOXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:23:52 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1AD2C804481131BD0AD1;
+        Mon,  7 Sep 2020 21:32:33 +0800 (CST)
+Received: from [127.0.0.1] (10.74.149.191) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Mon, 7 Sep 2020
+ 21:32:23 +0800
+Subject: Re: [PATCH net-next 0/2] net: two updates related to UDP GSO
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     David Miller <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>
+References: <1599286273-26553-1-git-send-email-tanhuazhong@huawei.com>
+ <20200906114153.7dccce5d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
+From:   tanhuazhong <tanhuazhong@huawei.com>
+Message-ID: <126e5424-2453-eef4-d5b6-adeaedbb6eca@huawei.com>
+Date:   Mon, 7 Sep 2020 21:32:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.5.2
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-540454265-1599488337=:2476"
+In-Reply-To: <CA+FuTSfeEuTLAGJZkzoMUvx+0j3dY265i8okPLyDO6S-8KHdbQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.149.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-540454265-1599488337=:2476
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
 
 
+On 2020/9/7 17:22, Willem de Bruijn wrote:
+> On Sun, Sep 6, 2020 at 8:42 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>>
+>> On Sat, 5 Sep 2020 14:11:11 +0800 Huazhong Tan wrote:
+>>> There are two updates relates to UDP GSO.
+>>> #1 adds a new GSO type for UDPv6
+>>> #2 adds check for UDP GSO when csum is disable in netdev_fix_features().
+>>>
+>>> Changes since RFC V2:
+>>> - modifies the timing of setting UDP GSO type when doing UDP GRO in #1.
+>>>
+>>> Changes since RFC V1:
+>>> - updates NETIF_F_GSO_LAST suggested by Willem de Bruijn.
+>>>    and add NETIF_F_GSO_UDPV6_L4 feature for each driver who support UDP GSO in #1.
+>>>    - add #2 who needs #1.
+>>
+>> Please CC people who gave you feedback (Willem).
+>>
+>> I don't feel good about this series. IPv6 is not optional any more.
+>> AFAIU you have some issues with csum support in your device? Can you
+>> use .ndo_features_check() to handle this?
+>>
+>> The change in semantics of NETIF_F_GSO_UDP_L4 from "v4 and v6" to
+>> "just v4" can trip people over; this is not a new feature people
+>> may be depending on the current semantics.
+>>
+>> Willem, what are your thoughts on this?
+> 
+> If that is the only reason, +1 on fixing it up in the driver's
+> ndo_features_check.
+> 
 
-On Mon, 7 Sep 2020, Markus Elfring wrote:
+Hi, Willem & Jakub.
 
-> >>>>>> +@replacement depends on patch@
-> >>>>>> +expression base, device1, device2, index, private, resource;
-> >>>>>> +@@
-> >>>>>> +(
-> >>>>>> +-resource = platform_get_resource(device1, IORESOURCE_MEM, index);
-> >>>>>> + base =
-> >>>>>> +-       devm_ioremap_resource
-> >>>>>> ++       devm_platform_get_and_ioremap_resource
-> >>>>>> +                             (
-> >>>>>> +-                             &
-> >>>>>> +                               device1
-> >>>>>> +-                                     ->dev
-> >>>>>> +                              ,
-> >>>>>> +-                             resource
-> >>>>>> ++                             index, &resource
-> >>>>>> +                             );
-> >>>>>> +|
-> >>>>>> +-private->res = platform_get_resource(device1, IORESOURCE_MEM, index);
-> >>>>>> + base =
-> >>>>>> +-       devm_ioremap_resource
-> >>>>>> ++       devm_platform_get_and_ioremap_resource
-> >>>>>> +                             (device2,
-> …
-> >> Both source code change patterns from these branches of a SmPL disjunction
-> >> work as I would expect it by the current Coccinelle software.
-> >> Would you like to clarify any remaining related open issues?
-> >
-> > In one case the first argument of devm_ioremap_resource has to be changed
-> > to produce the first argument of devm_platform_get_and_ioremap_resource
-> > and in the other case there is no such change.  "work as I would expect"
-> > is not a proper explanation of why this is correct.
->
-> Would like to achieve that a SmPL script (like the one which I present here)
-> can help to adjust the implementation of the functions “mvebu_sei_probe”
-> and “hi655x_pmic_probe” (for example) for the desired reuse of the wrapper
-> function “devm_platform_get_and_ioremap_resource”?
->
->
-> > Maybe you can point to some previous commits that have made the change in this way.
+This series mainly fixes the feature dependency between hardware 
+checksum and UDP GSO.
+When turn off hardware checksum offload, run 'ethtool -k [devname]'
+we can see TSO is off as well, but udp gso still is on.
 
-I looked at some of the provided examples, but none of them leaves the
-first argument of devm_ioremap_resource unchanged.
+[root@localhost ~]# ethtool -K eth0 tx off
+Actual changes:
+tx-checksumming: off
+	tx-checksum-ipv4: off
+	tx-checksum-ipv6: off
+	tx-checksum-sctp: off
+tcp-segmentation-offload: off
+	tx-tcp-segmentation: off [requested on]
+	tx-tcp-ecn-segmentation: off [requested on]
+	tx-tcp6-segmentation: off [requested on]
+[root@localhost ~]# ethtool -k eth0
+Features for eth0:
+rx-checksumming: on
+tx-checksumming: off
+	tx-checksum-ipv4: off
+	tx-checksum-ip-generic: off [fixed]
+	tx-checksum-ipv6: off
+	tx-checksum-fcoe-crc: off [fixed]
+	tx-checksum-sctp: off
+...
+tcp-segmentation-offload: off
+	tx-tcp-segmentation: off [requested on]
+	tx-tcp-ecn-segmentation: off [requested on]
+	tx-tcp-mangleid-segmentation: off
+	tx-tcp6-segmentation: off [requested on]
+udp-fragmentation-offload: off
+generic-segmentation-offload: on
+generic-receive-offload: on
+...
+tx-udp-segmentation: on
+...
 
-julia
+.ndo_feature_check seems unnecessary.
+Because the stack has already do this check.
+in __ip_append_data() below if branch will not run if hardware checksum 
+offload is off.
+         if (transhdrlen &&
+             length + fragheaderlen <= mtu &&
+             rt->dst.dev->features & (NETIF_F_HW_CSUM | NETIF_F_IP_CSUM) &&
+             (!(flags & MSG_MORE) || cork->gso_size) &&
+             (!exthdrlen || (rt->dst.dev->features & 
+NETIF_F_HW_ESP_TX_CSUM)))
+                 csummode = CHECKSUM_PARTIAL;
+...
+so skb->ip_summed set as CHECKSUM_NONE,
+then in udp_send_skb()
+         if (cork->gso_size) {
+		...
+                 if (skb->ip_summed != CHECKSUM_PARTIAL || is_udplite ||
+                     dst_xfrm(skb_dst(skb))) {
+                         kfree_skb(skb); 
+ 
 
->
-> Not yet for these source code examples.
->
-> Some patches were contributed.
-> https://lore.kernel.org/patchwork/project/lkml/list/?q=devm_platform_get_and_ioremap_resource&archive=both&state=*
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/log/?qt=grep&q=devm_platform_get_and_ioremap_resource
->
-> Regards,
-> Markus
->
---8323329-540454265-1599488337=:2476--
+                         return -EIO;
+                 }
+the packet who needs udp gso will return ERROR.
+
+For this kind of problem how could we fix it?
+
+Thanks.
+Huazhong.
+
+> .
+> 
+
