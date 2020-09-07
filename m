@@ -2,297 +2,533 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09C6C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09183C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6294E207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:08:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O2L0eLGd"
+	by mail.kernel.org (Postfix) with ESMTP id B262420C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbgIGKIT (ORCPT
+        id S1728587AbgIGKI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbgIGKII (ORCPT
+        Mon, 7 Sep 2020 06:08:26 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:59368 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728364AbgIGKHz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:08:08 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A8E6C061575
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:08:08 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id c127so1373281vsc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:08:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dZ0cXtIu18O1k22F/ZDQa/bXyptLZb81gkafcnjYNcM=;
-        b=O2L0eLGdR+6+ZhRzQIz42SKnDGT0lu7O6LKXrLLcRyWaY3A4BOwdgSFgeWg0bN/Efh
-         Fak+f85L/g4Qpl1UXC9ta/tPAic75s2ru0IsLhvDD2XT0lreXQnG2ksFAt+N7DJC4PPi
-         wFXZ9JNFr9qbD8MbzUBRhihO6wvFInG8xlAksZhYEBTIuKx37atFH1d1LsgK4GPU86nj
-         ntwGoA9ZTlttMtr4Shq+5qxC2Je3wJUNjtyK4S35317lToJbFRdKk5QfAkZfAFYxeGNP
-         dLMfjTTk1zo1FLQYxPqUOg6XydIgz4lUKW6utGB7GnMK2FNEU3y6QkiZCiXYZSJ4NHbq
-         cTkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dZ0cXtIu18O1k22F/ZDQa/bXyptLZb81gkafcnjYNcM=;
-        b=KNQePcaC4sYCWSY+9+Xx6aJoUq3PLleB0lish7ox/eOf/rbGVoT2Fi2/N5O7U+Tdro
-         D9iqhGL5cOGqLV+apwNTfu63Cl+OQ1IzaCWwQaVlSOzzYUGsoxuXmx7ybErvx/j7bZT6
-         ER+QirDClzWn1P717BNObJYFT5YIU4xeO98N9OZTvDLxoOZUPXAKBh4ZVmnRXoQJmIzX
-         DY12IT92qNdclLekzYLp3eqJZ2crWHFp+04A8xYdryojB86EKaueuGECky82FkDQ/96C
-         ccB3aVq7n8n2LVJT3idjUroPOWEbQOoK3Mc4D9X1L02cPcnACdzycQfAEWIwatqtLX8Q
-         bHHA==
-X-Gm-Message-State: AOAM530fJmTvc2xTuCANEHsp7WHu3reqiBz0Qa6gZ+a4rRJiyKZCZ8jm
-        AufYBe5QXKZWVG39bNn2tsxDNjIwWZgfsHWx6ShivQ==
-X-Google-Smtp-Source: ABdhPJzK8imxVzFICBf5slUvnoT+nIGcFmxhDDZ+N5lgeyXxY/MWgnT4W+c7RvwPtr/PAV7TEjJg1KFBqInVadg+qOY=
-X-Received: by 2002:a67:308c:: with SMTP id w134mr10855802vsw.8.1599473287226;
- Mon, 07 Sep 2020 03:08:07 -0700 (PDT)
+        Mon, 7 Sep 2020 06:07:55 -0400
+Authenticated-By: 
+X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 087A7ac16026768, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexmb05.realtek.com.tw[172.21.6.98])
+        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 087A7ac16026768
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 7 Sep 2020 18:07:37 +0800
+Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 7 Sep 2020 18:07:36 +0800
+Received: from localhost (172.22.88.222) by RTEXMB01.realtek.com.tw
+ (172.21.6.94) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Mon, 7 Sep 2020
+ 18:07:36 +0800
+From:   <ricky_wu@realtek.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <ricky_wu@realtek.com>, <bhelgaas@google.com>,
+        <ulf.hansson@linaro.org>, <rui_feng@realsil.com.cn>,
+        <linux-kernel@vger.kernel.org>, <puranjay12@gmail.com>,
+        <linux-pci@vger.kernel.org>, <vailbhavgupta40@gamail.com>
+Subject: [PATCH v5 2/2] misc: rtsx: Add power saving functions and fix driving parameter
+Date:   Mon, 7 Sep 2020 18:07:31 +0800
+Message-ID: <20200907100731.7722-1-ricky_wu@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200904164315.24618-1-krzk@kernel.org> <20200904164315.24618-2-krzk@kernel.org>
-In-Reply-To: <20200904164315.24618-2-krzk@kernel.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 7 Sep 2020 12:07:30 +0200
-Message-ID: <CAPDyKFo2Kqcpjb7QmsNgyD_kji2vXt3G2SqdDp9DUnvotKyojA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mmc: host: Enable compile testing of multiple drivers
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Prabu Thangamuthu <prabu.t@synopsys.com>,
-        Manjunath M B <manjumb@synopsys.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-arm-kernel@axis.com,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [172.22.88.222]
+X-ClientProxiedBy: RTEXMB04.realtek.com.tw (172.21.6.97) To
+ RTEXMB01.realtek.com.tw (172.21.6.94)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 4 Sep 2020 at 18:43, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> Multiple MMC host controller driver can be compile tested as they do not
-> depend on architecture specific headers.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Ricky Wu <ricky_wu@realtek.com>
 
-I tried to apply this, but there was a conflict around the SDHCI_S3C.
-Can you please rebase.
+v4:
+split power down flow and power saving function to two patch
 
-Kind regards
-Uffe
+v5:
+fix up modified change under the --- line
 
+Add rts522a L1 sub-state support
+Save more power on rts5227 rts5249 rts525a rts5260
+Fix rts5260 driving parameter
 
->
-> ---
->
-> Changes since v1:
-> 1. Add COMMON_CLK dependency to MESON_GX to fix errors like:
->    ERROR: modpost: "devm_clk_register" [drivers/mmc/host/meson-gx-mmc.ko] undefined!
-> ---
->  drivers/mmc/host/Kconfig | 41 +++++++++++++++++++++-------------------
->  1 file changed, 22 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index eea01fde0591..93db789cf8ec 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -178,7 +178,7 @@ config MMC_SDHCI_OF_AT91
->  config MMC_SDHCI_OF_ESDHC
->         tristate "SDHCI OF support for the Freescale eSDHC controller"
->         depends on MMC_SDHCI_PLTFM
-> -       depends on PPC || ARCH_MXC || ARCH_LAYERSCAPE
-> +       depends on PPC || ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
->         select MMC_SDHCI_IO_ACCESSORS
->         select FSL_GUTS
->         help
-> @@ -216,7 +216,7 @@ config MMC_SDHCI_OF_DWCMSHC
->  config MMC_SDHCI_OF_SPARX5
->         tristate "SDHCI OF support for the MCHP Sparx5 SoC"
->         depends on MMC_SDHCI_PLTFM
-> -       depends on ARCH_SPARX5
-> +       depends on ARCH_SPARX5 || COMPILE_TEST
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
->           found in the MCHP Sparx5 SoC.
-> @@ -238,7 +238,7 @@ config MMC_SDHCI_CADENCE
->
->  config MMC_SDHCI_CNS3XXX
->         tristate "SDHCI support on the Cavium Networks CNS3xxx SoC"
-> -       depends on ARCH_CNS3XXX
-> +       depends on ARCH_CNS3XXX || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         help
->           This selects the SDHCI support for CNS3xxx System-on-Chip devices.
-> @@ -262,7 +262,7 @@ config MMC_SDHCI_ESDHC_MCF
->
->  config MMC_SDHCI_ESDHC_IMX
->         tristate "SDHCI support for the Freescale eSDHC/uSDHC i.MX controller"
-> -       depends on ARCH_MXC
-> +       depends on ARCH_MXC || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         select MMC_CQHCI
-> @@ -276,7 +276,7 @@ config MMC_SDHCI_ESDHC_IMX
->
->  config MMC_SDHCI_DOVE
->         tristate "SDHCI support on Marvell's Dove SoC"
-> -       depends on ARCH_DOVE || MACH_DOVE
-> +       depends on ARCH_DOVE || MACH_DOVE || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         help
-> @@ -289,7 +289,7 @@ config MMC_SDHCI_DOVE
->
->  config MMC_SDHCI_TEGRA
->         tristate "SDHCI platform support for the Tegra SD/MMC Controller"
-> -       depends on ARCH_TEGRA
-> +       depends on ARCH_TEGRA || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         select MMC_CQHCI
-> @@ -301,7 +301,8 @@ config MMC_SDHCI_TEGRA
->
->  config MMC_SDHCI_S3C
->         tristate "SDHCI support on Samsung S3C SoC"
-> -       depends on MMC_SDHCI && (PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS)
-> +       depends on MMC_SDHCI
-> +       depends on PLAT_SAMSUNG || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
->           often referrered to as the HSMMC block in some of the Samsung S3C
-> @@ -313,7 +314,7 @@ config MMC_SDHCI_S3C
->
->  config MMC_SDHCI_SIRF
->         tristate "SDHCI support on CSR SiRFprimaII and SiRFmarco SoCs"
-> -       depends on ARCH_SIRF
-> +       depends on ARCH_SIRF || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         help
-> @@ -351,7 +352,8 @@ config MMC_SDHCI_PXAV2
->
->  config MMC_SDHCI_SPEAR
->         tristate "SDHCI support on ST SPEAr platform"
-> -       depends on MMC_SDHCI && PLAT_SPEAR
-> +       depends on MMC_SDHCI
-> +       depends on PLAT_SPEAR || COMPILE_TEST
->         depends on OF
->         help
->           This selects the Secure Digital Host Controller Interface (SDHCI)
-> @@ -374,7 +376,7 @@ config MMC_SDHCI_S3C_DMA
->
->  config MMC_SDHCI_BCM_KONA
->         tristate "SDHCI support on Broadcom KONA platform"
-> -       depends on ARCH_BCM_MOBILE
-> +       depends on ARCH_BCM_MOBILE || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         help
->           This selects the Broadcom Kona Secure Digital Host Controller
-> @@ -422,7 +424,8 @@ config MMC_SDHCI_IPROC
->
->  config MMC_MESON_GX
->         tristate "Amlogic S905/GX*/AXG SD/MMC Host Controller support"
-> -       depends on ARCH_MESON
-> +       depends on ARCH_MESON || COMPILE_TEST
-> +       depends on COMMON_CLK
->         help
->           This selects support for the Amlogic SD/MMC Host Controller
->           found on the S905/GX*/AXG family of SoCs.  This controller is
-> @@ -458,7 +461,7 @@ config MMC_MESON_MX_SDIO
->
->  config MMC_MOXART
->         tristate "MOXART SD/MMC Host Controller support"
-> -       depends on ARCH_MOXART
-> +       depends on ARCH_MOXART || COMPILE_TEST
->         help
->           This selects support for the MOXART SD/MMC Host Controller.
->           MOXA provides one multi-functional card reader which can
-> @@ -467,7 +470,7 @@ config MMC_MOXART
->
->  config MMC_SDHCI_ST
->         tristate "SDHCI support on STMicroelectronics SoC"
-> -       depends on ARCH_STI || FSP2
-> +       depends on ARCH_STI || FSP2 || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         help
-> @@ -587,7 +590,7 @@ config MMC_TIFM_SD
->
->  config MMC_MVSDIO
->         tristate "Marvell MMC/SD/SDIO host driver"
-> -       depends on PLAT_ORION
-> +       depends on PLAT_ORION || (COMPILE_TEST && ARM)
->         depends on OF
->         help
->           This selects the Marvell SDIO host driver.
-> @@ -599,7 +602,7 @@ config MMC_MVSDIO
->
->  config MMC_DAVINCI
->         tristate "TI DAVINCI Multimedia Card Interface support"
-> -       depends on ARCH_DAVINCI
-> +       depends on ARCH_DAVINCI || COMPILE_TEST
->         help
->           This selects the TI DAVINCI Multimedia card Interface.
->           If you have an DAVINCI board with a Multimedia Card slot,
-> @@ -628,7 +631,7 @@ config MMC_SPI
->
->  config MMC_S3C
->         tristate "Samsung S3C SD/MMC Card Interface support"
-> -       depends on ARCH_S3C24XX
-> +       depends on ARCH_S3C24XX || COMPILE_TEST
->         depends on S3C24XX_DMAC
->         help
->           This selects a driver for the MCI interface found in
-> @@ -681,7 +684,7 @@ config MMC_SDRICOH_CS
->
->  config MMC_SDHCI_SPRD
->         tristate "Spreadtrum SDIO host Controller"
-> -       depends on ARCH_SPRD
-> +       depends on ARCH_SPRD || COMPILE_TEST
->         depends on MMC_SDHCI_PLTFM
->         select MMC_SDHCI_IO_ACCESSORS
->         select MMC_HSQ
-> @@ -698,7 +701,7 @@ config MMC_TMIO_CORE
->
->  config MMC_TMIO
->         tristate "Toshiba Mobile IO Controller (TMIO) MMC/SD function support"
-> -       depends on MFD_TMIO || MFD_ASIC3
-> +       depends on MFD_TMIO || MFD_ASIC3 || COMPILE_TEST
->         select MMC_TMIO_CORE
->         help
->           This provides support for the SD/MMC cell found in TC6393XB,
-> @@ -971,7 +974,7 @@ config MMC_REALTEK_USB
->
->  config MMC_SUNXI
->         tristate "Allwinner sunxi SD/MMC Host Controller support"
-> -       depends on ARCH_SUNXI
-> +       depends on ARCH_SUNXI || COMPILE_TEST
->         help
->           This selects support for the SD/MMC Host Controller on
->           Allwinner sunxi SoCs.
-> --
-> 2.17.1
->
+Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+---
+ drivers/misc/cardreader/rts5227.c  | 112 +++++++++++++++++++++-
+ drivers/misc/cardreader/rts5249.c  | 145 ++++++++++++++++++++++++++++-
+ drivers/misc/cardreader/rts5260.c  |  28 +++---
+ drivers/misc/cardreader/rtsx_pcr.h |  17 ++++
+ 4 files changed, 283 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+index 747391e3fb5d..8859011672cb 100644
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -72,15 +72,80 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 
+ 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
+ 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
++	if (rtsx_check_mmc_support(reg))
++		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
+ 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
+ 	if (rtsx_reg_check_reverse_socket(reg))
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+ }
+ 
++static void rts5227_init_from_cfg(struct rtsx_pcr *pcr)
++{
++	struct pci_dev *pdev = pcr->pci;
++	int l1ss;
++	u32 lval;
++	struct rtsx_cr_option *option = &pcr->option;
++
++	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
++	if (!l1ss)
++		return;
++
++	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
++
++	if (CHK_PCI_PID(pcr, 0x522A)) {
++		if (0 == (lval & 0x0F))
++			rtsx_pci_enable_oobs_polling(pcr);
++		else
++			rtsx_pci_disable_oobs_polling(pcr);
++	}
++
++	if (lval & PCI_L1SS_CTL1_ASPM_L1_1)
++		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
++	else
++		rtsx_clear_dev_flag(pcr, ASPM_L1_1_EN);
++
++	if (lval & PCI_L1SS_CTL1_ASPM_L1_2)
++		rtsx_set_dev_flag(pcr, ASPM_L1_2_EN);
++	else
++		rtsx_clear_dev_flag(pcr, ASPM_L1_2_EN);
++
++	if (lval & PCI_L1SS_CTL1_PCIPM_L1_1)
++		rtsx_set_dev_flag(pcr, PM_L1_1_EN);
++	else
++		rtsx_clear_dev_flag(pcr, PM_L1_1_EN);
++
++	if (lval & PCI_L1SS_CTL1_PCIPM_L1_2)
++		rtsx_set_dev_flag(pcr, PM_L1_2_EN);
++	else
++		rtsx_clear_dev_flag(pcr, PM_L1_2_EN);
++
++	if (option->ltr_en) {
++		u16 val;
++
++		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
++		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
++			option->ltr_enabled = true;
++			option->ltr_active = true;
++			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
++		} else {
++			option->ltr_enabled = false;
++		}
++	}
++
++	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
++				| PM_L1_1_EN | PM_L1_2_EN))
++		option->force_clkreq_0 = false;
++	else
++		option->force_clkreq_0 = true;
++
++}
++
+ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	u16 cap;
++	struct rtsx_cr_option *option = &pcr->option;
+ 
++	rts5227_init_from_cfg(pcr);
+ 	rtsx_pci_init_cmd(pcr);
+ 
+ 	/* Configure GPIO as output */
+@@ -102,9 +167,17 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+ 	rts5227_fill_driving(pcr, OUTPUT_3V3);
+ 	/* Configure force_clock_req */
+ 	if (pcr->flags & PCR_REVERSE_SOCKET)
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB8, 0xB8);
++		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0x30, 0x30);
+ 	else
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB8, 0x88);
++		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0x30, 0x00);
++
++	if (option->force_clkreq_0)
++		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
++	else
++		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
++
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, pcr->reg_pm_ctrl3, 0x10, 0x00);
+ 
+ 	return rtsx_pci_send_cmd(pcr, 100);
+@@ -359,6 +432,27 @@ static int rts522a_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
+ 	return rtsx_pci_send_cmd(pcr, 100);
+ }
+ 
++static void rts522a_set_l1off_cfg_sub_d0(struct rtsx_pcr *pcr, int active)
++{
++	struct rtsx_cr_option *option = &pcr->option;
++	int aspm_L1_1, aspm_L1_2;
++	u8 val = 0;
++
++	aspm_L1_1 = rtsx_check_dev_flag(pcr, ASPM_L1_1_EN);
++	aspm_L1_2 = rtsx_check_dev_flag(pcr, ASPM_L1_2_EN);
++
++	if (active) {
++		/* run, latency: 60us */
++		if (aspm_L1_1)
++			val = option->ltr_l1off_snooze_sspwrgate;
++	} else {
++		/* l1off, latency: 300us */
++		if (aspm_L1_2)
++			val = option->ltr_l1off_sspwrgate;
++	}
++
++	rtsx_set_l1off_sub(pcr, val);
++}
+ 
+ /* rts522a operations mainly derived from rts5227, except phy/hw init setting.
+  */
+@@ -375,15 +469,29 @@ static const struct pcr_ops rts522a_pcr_ops = {
+ 	.switch_output_voltage = rts522a_switch_output_voltage,
+ 	.cd_deglitch = NULL,
+ 	.conv_clk_and_div_n = NULL,
++	.set_l1off_cfg_sub_d0 = rts522a_set_l1off_cfg_sub_d0,
+ };
+ 
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+ {
++	struct rtsx_cr_option *option = &pcr->option;
++
+ 	rts5227_init_params(pcr);
+ 	pcr->ops = &rts522a_pcr_ops;
+ 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+ 
++	option->dev_flags = LTR_L1SS_PWR_GATE_EN;
++	option->ltr_en = true;
++
++	/* init latency of active, idle, L1OFF to 60us, 300us, 3ms */
++	option->ltr_active_latency = LTR_ACTIVE_LATENCY_DEF;
++	option->ltr_idle_latency = LTR_IDLE_LATENCY_DEF;
++	option->ltr_l1off_latency = LTR_L1OFF_LATENCY_DEF;
++	option->l1_snooze_delay = L1_SNOOZE_DELAY_DEF;
++	option->ltr_l1off_sspwrgate = 0x7F;
++	option->ltr_l1off_snooze_sspwrgate = 0x78;
++
+ 	pcr->option.ocp_en = 1;
+ 	if (pcr->option.ocp_en)
+ 		pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
+diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+index 719aa2d61919..b85279f1fc5e 100644
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -73,6 +73,8 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 
+ 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
+ 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
++	if (rtsx_check_mmc_support(reg))
++		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
+ 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
+ 	if (rtsx_reg_check_reverse_socket(reg))
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+@@ -91,6 +93,14 @@ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+ 
+ 	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
+ 
++	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
++		if (0 == (lval & 0x0F))
++			rtsx_pci_enable_oobs_polling(pcr);
++		else
++			rtsx_pci_disable_oobs_polling(pcr);
++	}
++
++
+ 	if (lval & PCI_L1SS_CTL1_ASPM_L1_1)
+ 		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
+ 
+@@ -130,6 +140,112 @@ static int rts5249_init_from_hw(struct rtsx_pcr *pcr)
+ 	return 0;
+ }
+ 
++static void rts52xa_save_content_from_efuse(struct rtsx_pcr *pcr)
++{
++	u8 cnt, sv;
++	u16 j = 0;
++	u8 tmp;
++	u8 val;
++	int i;
++
++	rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
++				REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_POR);
++	udelay(1);
++
++	pcr_dbg(pcr, "Enable efuse por!");
++	pcr_dbg(pcr, "save efuse to autoload");
++
++	rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD, REG_EFUSE_ADD_MASK, 0x00);
++	rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
++				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
++	/* Wait transfer end */
++	for (j = 0; j < 1024; j++) {
++		rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
++		if ((tmp & 0x80) == 0)
++			break;
++	}
++	rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
++	cnt = val & 0x0F;
++	sv = val & 0x10;
++
++	if (sv) {
++		for (i = 0; i < 4; i++) {
++			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
++				REG_EFUSE_ADD_MASK, 0x04 + i);
++			rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
++				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
++			/* Wait transfer end */
++			for (j = 0; j < 1024; j++) {
++				rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
++				if ((tmp & 0x80) == 0)
++					break;
++			}
++			rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
++			rtsx_pci_write_register(pcr, 0xFF04 + i, 0xFF, val);
++		}
++	} else {
++		rtsx_pci_write_register(pcr, 0xFF04, 0xFF, (u8)PCI_VID(pcr));
++		rtsx_pci_write_register(pcr, 0xFF05, 0xFF, (u8)(PCI_VID(pcr) >> 8));
++		rtsx_pci_write_register(pcr, 0xFF06, 0xFF, (u8)PCI_PID(pcr));
++		rtsx_pci_write_register(pcr, 0xFF07, 0xFF, (u8)(PCI_PID(pcr) >> 8));
++	}
++
++	for (i = 0; i < cnt * 4; i++) {
++		if (sv)
++			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
++				REG_EFUSE_ADD_MASK, 0x08 + i);
++		else
++			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
++				REG_EFUSE_ADD_MASK, 0x04 + i);
++		rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
++				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
++		/* Wait transfer end */
++		for (j = 0; j < 1024; j++) {
++			rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
++			if ((tmp & 0x80) == 0)
++				break;
++		}
++		rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
++		rtsx_pci_write_register(pcr, 0xFF08 + i, 0xFF, val);
++	}
++	rtsx_pci_write_register(pcr, 0xFF00, 0xFF, (cnt & 0x7F) | 0x80);
++	rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
++		REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_BYPASS);
++	pcr_dbg(pcr, "Disable efuse por!");
++}
++
++static void rts52xa_save_content_to_autoload_space(struct rtsx_pcr *pcr)
++{
++	u8 val;
++
++	rtsx_pci_read_register(pcr, RESET_LOAD_REG, &val);
++	if (val & 0x02) {
++		rtsx_pci_read_register(pcr, RTS525A_BIOS_CFG, &val);
++		if (val & RTS525A_LOAD_BIOS_FLAG) {
++			rtsx_pci_write_register(pcr, RTS525A_BIOS_CFG,
++				RTS525A_LOAD_BIOS_FLAG, RTS525A_CLEAR_BIOS_FLAG);
++
++			rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
++				REG_EFUSE_POWER_MASK, REG_EFUSE_POWERON);
++
++			pcr_dbg(pcr, "Power ON efuse!");
++			mdelay(1);
++			rts52xa_save_content_from_efuse(pcr);
++		} else {
++			rtsx_pci_read_register(pcr, RTS524A_PME_FORCE_CTL, &val);
++			if (!(val & 0x08))
++				rts52xa_save_content_from_efuse(pcr);
++		}
++	} else {
++		pcr_dbg(pcr, "Load from autoload");
++		rtsx_pci_write_register(pcr, 0xFF00, 0xFF, 0x80);
++		rtsx_pci_write_register(pcr, 0xFF04, 0xFF, (u8)PCI_VID(pcr));
++		rtsx_pci_write_register(pcr, 0xFF05, 0xFF, (u8)(PCI_VID(pcr) >> 8));
++		rtsx_pci_write_register(pcr, 0xFF06, 0xFF, (u8)PCI_PID(pcr));
++		rtsx_pci_write_register(pcr, 0xFF07, 0xFF, (u8)(PCI_PID(pcr) >> 8));
++	}
++}
++
+ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	struct rtsx_cr_option *option = &(pcr->option);
+@@ -139,6 +255,9 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
+ 
+ 	rtsx_pci_init_cmd(pcr);
+ 
++	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A))
++		rts52xa_save_content_to_autoload_space(pcr);
++
+ 	/* Rest L1SUB Config */
+ 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, L1SUB_CONFIG3, 0xFF, 0x00);
+ 	/* Configure GPIO as output */
+@@ -157,18 +276,36 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
+ 	else
+ 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB0, 0x80);
+ 
++	rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
++
++	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
++		rtsx_pci_write_register(pcr, REG_VREF, PWD_SUSPND_EN, PWD_SUSPND_EN);
++		rtsx_pci_write_register(pcr, RTS524A_PM_CTRL3, 0x01, 0x00);
++		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL, 0x30, 0x20);
++	} else {
++		rtsx_pci_write_register(pcr, PME_FORCE_CTL, 0xFF, 0x30);
++		rtsx_pci_write_register(pcr, PM_CTRL3, 0x01, 0x00);
++	}
++
+ 	/*
+ 	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
+ 	 * to drive low, and we forcibly request clock.
+ 	 */
+ 	if (option->force_clkreq_0)
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++		rtsx_pci_write_register(pcr, PETXCFG,
+ 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
+ 	else
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++		rtsx_pci_write_register(pcr, PETXCFG,
+ 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
+ 
+-	return rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
++	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
++		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
++				REG_EFUSE_POWER_MASK, REG_EFUSE_POWEROFF);
++		pcr_dbg(pcr, "Power OFF efuse!");
++	}
++
++	return 0;
+ }
+ 
+ static int rts5249_optimize_phy(struct rtsx_pcr *pcr)
+@@ -652,6 +789,8 @@ static int rts525a_extra_init_hw(struct rtsx_pcr *pcr)
+ {
+ 	rts5249_extra_init_hw(pcr);
+ 
++	rtsx_pci_write_register(pcr, RTS5250_CLK_CFG3, RTS525A_CFG_MEM_PD, RTS525A_CFG_MEM_PD);
++
+ 	rtsx_pci_write_register(pcr, PCLK_CTL, PCLK_MODE_SEL, PCLK_MODE_SEL);
+ 	if (is_version(pcr, 0x525A, IC_VER_A)) {
+ 		rtsx_pci_write_register(pcr, L1SUB_CONFIG2,
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index 897cfee350e7..080a7d67a8e1 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -26,21 +26,17 @@ static u8 rts5260_get_ic_version(struct rtsx_pcr *pcr)
+ 
+ static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
+ {
+-	u8 driving_3v3[6][3] = {
+-		{0x94, 0x94, 0x94},
+-		{0x11, 0x11, 0x18},
+-		{0x55, 0x55, 0x5C},
+-		{0x94, 0x94, 0x94},
+-		{0x94, 0x94, 0x94},
+-		{0xFF, 0xFF, 0xFF},
++	u8 driving_3v3[4][3] = {
++		{0x11, 0x11, 0x11},
++		{0x22, 0x22, 0x22},
++		{0x55, 0x55, 0x55},
++		{0x33, 0x33, 0x33},
+ 	};
+-	u8 driving_1v8[6][3] = {
+-		{0x9A, 0x89, 0x89},
+-		{0xC4, 0xC4, 0xC4},
+-		{0x3C, 0x3C, 0x3C},
++	u8 driving_1v8[4][3] = {
++		{0x35, 0x33, 0x33},
++		{0x8A, 0x88, 0x88},
++		{0xBD, 0xBB, 0xBB},
+ 		{0x9B, 0x99, 0x99},
+-		{0x9A, 0x89, 0x89},
+-		{0xFE, 0xFE, 0xFE},
+ 	};
+ 	u8 (*driving)[3], drive_sel;
+ 
+@@ -58,7 +54,7 @@ static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
+ 	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
+ 			 0xFF, driving[drive_sel][1]);
+ 
+-	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
++	rtsx_pci_write_register(pcr, SD30_DAT_DRIVE_SEL,
+ 			 0xFF, driving[drive_sel][2]);
+ }
+ 
+@@ -82,6 +78,8 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+ 
+ 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
+ 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
++	if (rtsx_check_mmc_support(reg))
++		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
+ 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
+ 	if (rtsx_reg_check_reverse_socket(reg))
+ 		pcr->flags |= PCR_REVERSE_SOCKET;
+@@ -559,6 +557,8 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
+ 		rtsx_pci_write_register(pcr, PETXCFG,
+ 				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
+ 
++	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/misc/cardreader/rtsx_pcr.h b/drivers/misc/cardreader/rtsx_pcr.h
+index 6b322db8738e..fe5f4ca0f937 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.h
++++ b/drivers/misc/cardreader/rtsx_pcr.h
+@@ -18,7 +18,24 @@
+ #define RTS522A_PM_CTRL3		0xFF7E
+ 
+ #define RTS524A_PME_FORCE_CTL		0xFF78
++#define REG_EFUSE_BYPASS		0x08
++#define REG_EFUSE_POR			0x04
++#define REG_EFUSE_POWER_MASK		0x03
++#define REG_EFUSE_POWERON		0x03
++#define REG_EFUSE_POWEROFF		0x00
++#define RTS5250_CLK_CFG3		0xFF79
++#define RTS525A_CFG_MEM_PD		0xF0
+ #define RTS524A_PM_CTRL3		0xFF7E
++#define RTS525A_BIOS_CFG		0xFF2D
++#define RTS525A_LOAD_BIOS_FLAG	0x01
++#define RTS525A_CLEAR_BIOS_FLAG	0x00
++
++#define RTS525A_EFUSE_CTL		0xFC32
++#define REG_EFUSE_ENABLE		0x80
++#define REG_EFUSE_MODE			0x40
++#define RTS525A_EFUSE_ADD		0xFC33
++#define REG_EFUSE_ADD_MASK		0x3F
++#define RTS525A_EFUSE_DATA		0xFC35
+ 
+ #define LTR_ACTIVE_LATENCY_DEF		0x883C
+ #define LTR_IDLE_LATENCY_DEF		0x892C
+-- 
+2.17.1
+
