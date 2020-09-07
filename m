@@ -2,544 +2,168 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F0BC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24BEA207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B2121481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:41:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lu0duZYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729968AbgIGOgq (ORCPT
+        id S1729856AbgIGOlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:36:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:49895 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729769AbgIGO3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:29:43 -0400
-IronPort-SDR: xgcc31ZCFsm0VAfV2k1KWyV3RxPw3wZjKpWPlwWut6PJVZbBoOJOF0tnvFSDaCAwPcPUzXibfN
- ZZfezvfMUPfQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="219565952"
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="219565952"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 07:27:29 -0700
-IronPort-SDR: DZCr14OZKooF4yGXjaJq964KKVnvunD9/oTXtS+pZ+vqFznF74zScti8jGrE7C8vlZBSFrVD0T
- erdq6QLvGeMw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="284195658"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Sep 2020 07:27:27 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com,
-        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH v8 1/2] fpga: dfl: create a dfl bus type to support DFL devices
-Date:   Mon,  7 Sep 2020 22:23:13 +0800
-Message-Id: <1599488593-16433-1-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 7 Sep 2020 10:41:02 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:55816 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729896AbgIGObz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:31:55 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 087EVm53113911;
+        Mon, 7 Sep 2020 09:31:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599489108;
+        bh=9zdhcOMR7Ccf+ysTWrNasl7P6ckqRz+nS1O8WjwH018=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=lu0duZYyQh7/VdKn07lhW1meZp3a1NzzWpzFzfFAdotOzBNBvc11FBYaJhP9u0Wwf
+         TxR2bhxdmL7aikSAllJu2kS5ytyQL6OjTsY03da+0rubrnviM+aHAeyo8QUjYMH9sW
+         eBNFEL5mV0hrPU8IjJFcZxz2EPSua3dkUZun1FRM=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 087EVmTe095335
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 7 Sep 2020 09:31:48 -0500
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 7 Sep
+ 2020 09:31:47 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 7 Sep 2020 09:31:47 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 087EVkNt072909;
+        Mon, 7 Sep 2020 09:31:47 -0500
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+To:     "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>
+CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: [PATCH net-next v2 1/9] net: ethernet: ti: ale: add cpsw_ale_get_num_entries api
+Date:   Mon, 7 Sep 2020 17:31:35 +0300
+Message-ID: <20200907143143.13735-2-grygorii.strashko@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200907143143.13735-1-grygorii.strashko@ti.com>
+References: <20200907143143.13735-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A new bus type "dfl" is introduced for private features which are not
-initialized by DFL feature drivers (dfl-fme & dfl-afu drivers). So these
-private features could be handled by separate driver modules.
+Add cpsw_ale_get_num_entries() API to return number of ALE table entries
+and update existing drivers to use it.
 
-DFL feature drivers (dfl-fme, dfl-port) will create DFL devices on
-enumeration. DFL drivers could be registered on this bus to match these
-DFL devices. They are matched by dfl type & feature_id.
-
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
-Reviewed-by: Tom Rix <trix@redhat.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
-v2: change the bus uevent format.
-    change the dfl device's sysfs name format.
-    refactor dfl_dev_add().
-    minor fixes for comments from Hao and Tom.
-v3: no change.
-v4: improve the uevent format, 4 bits for type & 12 bits for id.
-    change dfl_device->type to u8.
-    A dedicate field in struct dfl_feature for dfl device instance.
-    error out if dfl_device already exist on dfl_devs_init().
-v5: minor fixes for Hao's comments
-v6: the input param of dfl_devs_add() changes to struct
-    dfl_feature_platform_data.
-    improve the comments.
-v7: no change.
-v8: remove the dfl_info_attr macro.
-    some minor fixes for Moritz's comments.
----
- Documentation/ABI/testing/sysfs-bus-dfl |  15 ++
- drivers/fpga/dfl.c                      | 265 +++++++++++++++++++++++++++++++-
- drivers/fpga/dfl.h                      |  86 +++++++++++
- 3 files changed, 358 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+ drivers/net/ethernet/ti/am65-cpsw-ethtool.c | 10 ++++++----
+ drivers/net/ethernet/ti/cpsw_ale.c          |  5 +++++
+ drivers/net/ethernet/ti/cpsw_ale.h          |  1 +
+ drivers/net/ethernet/ti/cpsw_ethtool.c      |  3 ++-
+ 4 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-dfl b/Documentation/ABI/testing/sysfs-bus-dfl
-new file mode 100644
-index 0000000..23543be
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-dfl
-@@ -0,0 +1,15 @@
-+What:		/sys/bus/dfl/devices/dfl_dev.X/type
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns type of DFL FIU of the device. Now DFL
-+		supports 2 FIU types, 0 for FME, 1 for PORT.
-+		Format: 0x%x
-+
-+What:		/sys/bus/dfl/devices/dfl_dev.X/feature_id
-+Date:		Aug 2020
-+KernelVersion:	5.10
-+Contact:	Xu Yilun <yilun.xu@intel.com>
-+Description:	Read-only. It returns feature identifier local to its DFL FIU
-+		type.
-+		Format: 0x%x
-diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
-index 52cafa2..b450870 100644
---- a/drivers/fpga/dfl.c
-+++ b/drivers/fpga/dfl.c
-@@ -30,12 +30,6 @@ static DEFINE_MUTEX(dfl_id_mutex);
-  * index to dfl_chardevs table. If no chardev support just set devt_type
-  * as one invalid index (DFL_FPGA_DEVT_MAX).
-  */
--enum dfl_id_type {
--	FME_ID,		/* fme id allocation and mapping */
--	PORT_ID,	/* port id allocation and mapping */
--	DFL_ID_MAX,
--};
--
- enum dfl_fpga_devt_type {
- 	DFL_FPGA_DEVT_FME,
- 	DFL_FPGA_DEVT_PORT,
-@@ -250,6 +244,247 @@ int dfl_fpga_check_port_id(struct platform_device *pdev, void *pport_id)
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_check_port_id);
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+index 496dafb25128..6e4d4f9e32e0 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-ethtool.c
+@@ -572,13 +572,14 @@ static int am65_cpsw_nway_reset(struct net_device *ndev)
+ static int am65_cpsw_get_regs_len(struct net_device *ndev)
+ {
+ 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+-	u32 i, regdump_len = 0;
++	u32 ale_entries, i, regdump_len = 0;
  
-+static DEFINE_IDA(dfl_device_ida);
-+
-+static const struct dfl_device_id *
-+dfl_match_one_device(const struct dfl_device_id *id, struct dfl_device *ddev)
-+{
-+	if (id->type == ddev->type && id->feature_id == ddev->feature_id)
-+		return id;
-+
-+	return NULL;
-+}
-+
-+static int dfl_bus_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+	struct dfl_driver *ddrv = to_dfl_drv(drv);
-+	const struct dfl_device_id *id_entry;
-+
-+	id_entry = ddrv->id_table;
-+	if (id_entry) {
-+		while (id_entry->feature_id) {
-+			if (dfl_match_one_device(id_entry, ddev)) {
-+				ddev->id_entry = id_entry;
-+				return 1;
-+			}
-+			id_entry++;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_probe(struct device *dev)
-+{
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	return ddrv->probe(ddev);
-+}
-+
-+static int dfl_bus_remove(struct device *dev)
-+{
-+	struct dfl_driver *ddrv = to_dfl_drv(dev->driver);
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	if (ddrv->remove)
-+		ddrv->remove(ddev);
-+
-+	return 0;
-+}
-+
-+static int dfl_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	/* The type has 4 valid bits and feature_id has 12 valid bits */
-+	return add_uevent_var(env, "MODALIAS=dfl:t%01Xf%03X",
-+			      ddev->type, ddev->feature_id);
-+}
-+
-+static ssize_t
-+type_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	return sprintf(buf, "0x%x\n", ddev->type);
-+}
-+static DEVICE_ATTR_RO(type);
-+
-+static ssize_t
-+feature_id_show(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	return sprintf(buf, "0x%x\n", ddev->feature_id);
-+}
-+static DEVICE_ATTR_RO(feature_id);
-+
-+static struct attribute *dfl_dev_attrs[] = {
-+	&dev_attr_type.attr,
-+	&dev_attr_feature_id.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(dfl_dev);
-+
-+static struct bus_type dfl_bus_type = {
-+	.name		= "dfl",
-+	.match		= dfl_bus_match,
-+	.probe		= dfl_bus_probe,
-+	.remove		= dfl_bus_remove,
-+	.uevent		= dfl_bus_uevent,
-+	.dev_groups	= dfl_dev_groups,
-+};
-+
-+static void release_dfl_dev(struct device *dev)
-+{
-+	struct dfl_device *ddev = to_dfl_dev(dev);
-+
-+	if (ddev->mmio_res.parent)
-+		release_resource(&ddev->mmio_res);
-+
-+	ida_simple_remove(&dfl_device_ida, ddev->id);
-+	kfree(ddev->irqs);
-+	kfree(ddev);
-+}
-+
-+static struct dfl_device *
-+dfl_dev_add(struct dfl_feature_platform_data *pdata,
-+	    struct dfl_feature *feature)
-+{
-+	struct platform_device *pdev = pdata->dev;
-+	struct resource *parent_res;
-+	struct dfl_device *ddev;
-+	int id, i, ret;
-+
-+	ddev = kzalloc(sizeof(*ddev), GFP_KERNEL);
-+	if (!ddev)
-+		return ERR_PTR(-ENOMEM);
-+
-+	id = ida_simple_get(&dfl_device_ida, 0, 0, GFP_KERNEL);
-+	if (id < 0) {
-+		dev_err(&pdev->dev, "unable to get id\n");
-+		kfree(ddev);
-+		return ERR_PTR(id);
-+	}
-+
-+	/* freeing resources by put_device() after device_initialize() */
-+	device_initialize(&ddev->dev);
-+	ddev->dev.parent = &pdev->dev;
-+	ddev->dev.bus = &dfl_bus_type;
-+	ddev->dev.release = release_dfl_dev;
-+	ddev->id = id;
-+	ret = dev_set_name(&ddev->dev, "dfl_dev.%d", id);
-+	if (ret)
-+		goto put_dev;
-+
-+	ddev->type = feature_dev_id_type(pdev);
-+	ddev->feature_id = feature->id;
-+	ddev->cdev = pdata->dfl_cdev;
-+
-+	/* add mmio resource */
-+	parent_res = &pdev->resource[feature->resource_index];
-+	ddev->mmio_res.flags = IORESOURCE_MEM;
-+	ddev->mmio_res.start = parent_res->start;
-+	ddev->mmio_res.end = parent_res->end;
-+	ddev->mmio_res.name = dev_name(&ddev->dev);
-+	ret = insert_resource(parent_res, &ddev->mmio_res);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s failed to claim resource: %pR\n",
-+			dev_name(&ddev->dev), &ddev->mmio_res);
-+		goto put_dev;
-+	}
-+
-+	/* then add irq resource */
-+	if (feature->nr_irqs) {
-+		ddev->irqs = kcalloc(feature->nr_irqs,
-+				     sizeof(*ddev->irqs), GFP_KERNEL);
-+		if (!ddev->irqs) {
-+			ret = -ENOMEM;
-+			goto put_dev;
-+		}
-+
-+		for (i = 0; i < feature->nr_irqs; i++)
-+			ddev->irqs[i] = feature->irq_ctx[i].irq;
-+
-+		ddev->num_irqs = feature->nr_irqs;
-+	}
-+
-+	ret = device_add(&ddev->dev);
-+	if (ret)
-+		goto put_dev;
-+
-+	dev_dbg(&pdev->dev, "add dfl_dev: %s\n", dev_name(&ddev->dev));
-+	return ddev;
-+
-+put_dev:
-+	/* calls release_dfl_dev() which does the clean up  */
-+	put_device(&ddev->dev);
-+	return ERR_PTR(ret);
-+}
-+
-+static void dfl_devs_remove(struct dfl_feature_platform_data *pdata)
-+{
-+	struct dfl_feature *feature;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ddev) {
-+			device_unregister(&feature->ddev->dev);
-+			feature->ddev = NULL;
-+		}
-+	}
-+}
-+
-+static int dfl_devs_add(struct dfl_feature_platform_data *pdata)
-+{
-+	struct dfl_feature *feature;
-+	struct dfl_device *ddev;
-+	int ret;
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
-+		if (feature->ioaddr)
-+			continue;
-+
-+		if (feature->ddev) {
-+			ret = -EEXIST;
-+			goto err;
-+		}
-+
-+		ddev = dfl_dev_add(pdata, feature);
-+		if (IS_ERR(ddev)) {
-+			ret = PTR_ERR(ddev);
-+			goto err;
-+		}
-+
-+		feature->ddev = ddev;
-+	}
-+
-+	return 0;
-+
-+err:
-+	dfl_devs_remove(pdata);
-+	return ret;
-+}
-+
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner)
-+{
-+	if (!dfl_drv || !dfl_drv->probe || !dfl_drv->id_table)
-+		return -EINVAL;
-+
-+	dfl_drv->drv.owner = owner;
-+	dfl_drv->drv.bus = &dfl_bus_type;
-+
-+	return driver_register(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(__dfl_driver_register);
-+
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv)
-+{
-+	driver_unregister(&dfl_drv->drv);
-+}
-+EXPORT_SYMBOL(dfl_driver_unregister);
-+
- #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
- 
- /**
-@@ -261,12 +496,15 @@ void dfl_fpga_dev_feature_uinit(struct platform_device *pdev)
- 	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct dfl_feature *feature;
- 
--	dfl_fpga_dev_for_each_feature(pdata, feature)
-+	dfl_devs_remove(pdata);
-+
-+	dfl_fpga_dev_for_each_feature(pdata, feature) {
- 		if (feature->ops) {
- 			if (feature->ops->uinit)
- 				feature->ops->uinit(pdev, feature);
- 			feature->ops = NULL;
++	ale_entries = cpsw_ale_get_num_entries(common->ale);
+ 	for (i = 0; i < ARRAY_SIZE(am65_cpsw_regdump); i++) {
+ 		if (am65_cpsw_regdump[i].hdr.module_id ==
+ 		    AM65_CPSW_REGDUMP_MOD_CPSW_ALE_TBL) {
+ 			regdump_len += sizeof(struct am65_cpsw_regdump_hdr);
+-			regdump_len += common->ale->params.ale_entries *
++			regdump_len += ale_entries *
+ 				       ALE_ENTRY_WORDS * sizeof(u32);
+ 			continue;
  		}
-+	}
- }
- EXPORT_SYMBOL_GPL(dfl_fpga_dev_feature_uinit);
+@@ -592,10 +593,11 @@ static void am65_cpsw_get_regs(struct net_device *ndev,
+ 			       struct ethtool_regs *regs, void *p)
+ {
+ 	struct am65_cpsw_common *common = am65_ndev_to_common(ndev);
+-	u32 i, j, pos, *reg = p;
++	u32 ale_entries, i, j, pos, *reg = p;
  
-@@ -347,6 +585,10 @@ int dfl_fpga_dev_feature_init(struct platform_device *pdev,
- 		drv++;
+ 	/* update CPSW IP version */
+ 	regs->version = AM65_CPSW_REGDUMP_VER;
++	ale_entries = cpsw_ale_get_num_entries(common->ale);
+ 
+ 	pos = 0;
+ 	for (i = 0; i < ARRAY_SIZE(am65_cpsw_regdump); i++) {
+@@ -603,7 +605,7 @@ static void am65_cpsw_get_regs(struct net_device *ndev,
+ 
+ 		if (am65_cpsw_regdump[i].hdr.module_id ==
+ 		    AM65_CPSW_REGDUMP_MOD_CPSW_ALE_TBL) {
+-			u32 ale_tbl_len = common->ale->params.ale_entries *
++			u32 ale_tbl_len = ale_entries *
+ 					  ALE_ENTRY_WORDS * sizeof(u32) +
+ 					  sizeof(struct am65_cpsw_regdump_hdr);
+ 			reg[pos++] = ale_tbl_len;
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index 9ad872bfae3a..a94aef3f54a5 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -1079,3 +1079,8 @@ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data)
+ 		data += ALE_ENTRY_WORDS;
  	}
- 
-+	ret = dfl_devs_add(pdata);
-+	if (ret)
-+		goto exit;
-+
- 	return 0;
- exit:
- 	dfl_fpga_dev_feature_uinit(pdev);
-@@ -1284,11 +1526,17 @@ static int __init dfl_fpga_init(void)
- {
- 	int ret;
- 
-+	ret = bus_register(&dfl_bus_type);
-+	if (ret)
-+		return ret;
-+
- 	dfl_ids_init();
- 
- 	ret = dfl_chardev_init();
--	if (ret)
-+	if (ret) {
- 		dfl_ids_destroy();
-+		bus_unregister(&dfl_bus_type);
-+	}
- 
- 	return ret;
  }
-@@ -1626,6 +1874,7 @@ static void __exit dfl_fpga_exit(void)
++
++u32 cpsw_ale_get_num_entries(struct cpsw_ale *ale)
++{
++	return ale ? ale->params.ale_entries : 0;
++}
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index 6a3cb6898728..735692f066bf 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -119,6 +119,7 @@ int cpsw_ale_control_get(struct cpsw_ale *ale, int port, int control);
+ int cpsw_ale_control_set(struct cpsw_ale *ale, int port,
+ 			 int control, int value);
+ void cpsw_ale_dump(struct cpsw_ale *ale, u32 *data);
++u32 cpsw_ale_get_num_entries(struct cpsw_ale *ale);
+ 
+ static inline int cpsw_ale_get_vlan_p0_untag(struct cpsw_ale *ale, u16 vid)
  {
- 	dfl_chardev_uinit();
- 	dfl_ids_destroy();
-+	bus_unregister(&dfl_bus_type);
+diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
+index fa54efe3be63..4d02c5135611 100644
+--- a/drivers/net/ethernet/ti/cpsw_ethtool.c
++++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
+@@ -339,7 +339,8 @@ int cpsw_get_regs_len(struct net_device *ndev)
+ {
+ 	struct cpsw_common *cpsw = ndev_to_cpsw(ndev);
+ 
+-	return cpsw->data.ale_entries * ALE_ENTRY_WORDS * sizeof(u32);
++	return cpsw_ale_get_num_entries(cpsw->ale) *
++	       ALE_ENTRY_WORDS * sizeof(u32);
  }
  
- module_init(dfl_fpga_init);
-diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-index 5973769..5dc758f 100644
---- a/drivers/fpga/dfl.h
-+++ b/drivers/fpga/dfl.h
-@@ -236,6 +236,7 @@ struct dfl_feature_irq_ctx {
-  * @irq_ctx: interrupt context list.
-  * @nr_irqs: number of interrupt contexts.
-  * @ops: ops of this sub feature.
-+ * @ddev: ptr to the dfl device of this sub feature.
-  * @priv: priv data of this feature.
-  */
- struct dfl_feature {
-@@ -246,6 +247,7 @@ struct dfl_feature {
- 	struct dfl_feature_irq_ctx *irq_ctx;
- 	unsigned int nr_irqs;
- 	const struct dfl_feature_ops *ops;
-+	struct dfl_device *ddev;
- 	void *priv;
- };
- 
-@@ -514,4 +516,88 @@ long dfl_feature_ioctl_set_irq(struct platform_device *pdev,
- 			       struct dfl_feature *feature,
- 			       unsigned long arg);
- 
-+/**
-+ * enum dfl_id_type - define the DFL FIU types
-+ */
-+enum dfl_id_type {
-+	FME_ID,
-+	PORT_ID,
-+	DFL_ID_MAX,
-+};
-+
-+/**
-+ * struct dfl_device_id -  dfl device identifier
-+ * @type: contains 4 bits DFL FIU type of the device. See enum dfl_id_type.
-+ * @feature_id: contains 12 bits feature identifier local to its DFL FIU type.
-+ * @driver_data: driver specific data.
-+ */
-+struct dfl_device_id {
-+	u8 type;
-+	u16 feature_id;
-+	unsigned long driver_data;
-+};
-+
-+/**
-+ * struct dfl_device - represent an dfl device on dfl bus
-+ *
-+ * @dev: generic device interface.
-+ * @id: id of the dfl device.
-+ * @type: type of DFL FIU of the device. See enum dfl_id_type.
-+ * @feature_id: 16 bits feature identifier local to its DFL FIU type.
-+ * @mmio_res: mmio resource of this dfl device.
-+ * @irqs: list of Linux IRQ numbers of this dfl device.
-+ * @num_irqs: number of IRQs supported by this dfl device.
-+ * @cdev: pointer to DFL FPGA container device this dfl device belongs to.
-+ * @id_entry: matched id entry in dfl driver's id table.
-+ */
-+struct dfl_device {
-+	struct device dev;
-+	int id;
-+	u8 type;
-+	u16 feature_id;
-+	struct resource mmio_res;
-+	int *irqs;
-+	unsigned int num_irqs;
-+	struct dfl_fpga_cdev *cdev;
-+	const struct dfl_device_id *id_entry;
-+};
-+
-+/**
-+ * struct dfl_driver - represent an dfl device driver
-+ *
-+ * @drv: driver model structure.
-+ * @id_table: pointer to table of device IDs the driver is interested in.
-+ *	      { } member terminated.
-+ * @probe: mandatory callback for device binding.
-+ * @remove: callback for device unbinding.
-+ */
-+struct dfl_driver {
-+	struct device_driver drv;
-+	const struct dfl_device_id *id_table;
-+
-+	int (*probe)(struct dfl_device *dfl_dev);
-+	void (*remove)(struct dfl_device *dfl_dev);
-+};
-+
-+#define to_dfl_dev(d) container_of(d, struct dfl_device, dev)
-+#define to_dfl_drv(d) container_of(d, struct dfl_driver, drv)
-+
-+/*
-+ * use a macro to avoid include chaining to get THIS_MODULE.
-+ */
-+#define dfl_driver_register(drv) \
-+	__dfl_driver_register(drv, THIS_MODULE)
-+int __dfl_driver_register(struct dfl_driver *dfl_drv, struct module *owner);
-+void dfl_driver_unregister(struct dfl_driver *dfl_drv);
-+
-+/*
-+ * module_dfl_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces module_init() and module_exit().
-+ */
-+#define module_dfl_driver(__dfl_driver) \
-+	module_driver(__dfl_driver, dfl_driver_register, \
-+		      dfl_driver_unregister)
-+
- #endif /* __FPGA_DFL_H */
+ void cpsw_get_regs(struct net_device *ndev, struct ethtool_regs *regs, void *p)
 -- 
-2.7.4
+2.17.1
 
