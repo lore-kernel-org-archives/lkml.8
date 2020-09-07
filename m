@@ -2,184 +2,157 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBD7C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B14C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86F1D2166E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BA1221556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:42:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="W3S1hjTN"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L+UO0ICz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbgIGGki (ORCPT
+        id S1726800AbgIGGmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:40:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30926 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726286AbgIGGkf (ORCPT
+        Mon, 7 Sep 2020 02:42:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46866 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726278AbgIGGmD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:40:35 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0876WApM021205;
-        Mon, 7 Sep 2020 02:40:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=sUxH6UupmrTzk45VuALJ02RLoMALHR5XkiNic3S6+Zs=;
- b=W3S1hjTNTgKRyCvrvQbWTgp6Td4FlNGWFQ3+HqA1Cmr/Ugm2ad7knV6ZsU2JVahM8xN1
- dqORwbVfvP0QyilLUpP7XnWmhwbn9LNhrrBxZuD9kexbkCZHR+qAhxDTunNSZRvnV0fL
- PlvdjLtjL3Jj8Iljq1lTZVGgkIoPXTq3ov53iil3bRatQmsUl4T3/RX/hS3+1yhYxGUY
- kufMdijIqeKf/GlGZ4x4N7t79E8yVXWOMeh2uJOyZDc6LbJF0LpnDE+9izVJOM/h2LqS
- 1V71bTxTOauj6a9Z9/bHInVrHIwzlw9Pkfvd+FKC6JG/maGCsRVm7s+x7+hSLkFm0rXV tQ== 
+        Mon, 7 Sep 2020 02:42:03 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0876XDXG196115;
+        Mon, 7 Sep 2020 02:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=VTd7tf3IxVvheuWTtAA0Oyi6rKdLBmE2KftHseLU0x0=;
+ b=L+UO0ICz6MYU7RlEtXTKpV5w1kYYgJGhoNMZ7nakH7KTra+4X5t6EpmQBPWZIXiS2rcZ
+ Ee3Ji8IlfTpz3gVb8q/Jakf5zNVY1QAVvMm9Ky474+yyP6Xvun81i/V3hJSNGZ9vqkOA
+ 31RAQnGEuRVtL4FPvTcMKBby8iammAh6KhhMPQmE6bXXpatn4pYXxkoZZhdnX3/Yhp57
+ kiJI+ULf59fwp4PMKc2klDYoojaMgkbqDtQ3d2qc/wwAYlb/dAQjqvQQtHZojRgkHcO8
+ bDZgI/k9VOvFCxIBiUBe1LrnyqoKDZZFngkh2MB91DmNBWsUYNPgaC+WvWL/rOUDIXKJ YQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33de6ntdep-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33dct5434n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 02:40:17 -0400
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0876WJGv022007;
-        Mon, 7 Sep 2020 02:40:16 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33de6ntddq-1
+        Mon, 07 Sep 2020 02:41:51 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0876Xiig002501;
+        Mon, 7 Sep 2020 02:41:50 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33dct5433x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 02:40:16 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0876c5YS015446;
-        Mon, 7 Sep 2020 06:40:15 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04dal.us.ibm.com with ESMTP id 33c2a8sg3x-1
+        Mon, 07 Sep 2020 02:41:50 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0876bjIY025144;
+        Mon, 7 Sep 2020 06:41:48 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma04fra.de.ibm.com with ESMTP id 33cm5hgsx2-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 07 Sep 2020 06:40:15 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0876e9gR42402062
+        Mon, 07 Sep 2020 06:41:47 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0876eCsn56820206
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 7 Sep 2020 06:40:09 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36CE67805E;
-        Mon,  7 Sep 2020 06:40:14 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CC787805C;
-        Mon,  7 Sep 2020 06:40:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.49.245])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  7 Sep 2020 06:40:06 +0000 (GMT)
-Subject: Re: [PATCH v8 3/5] perf jevents: Add support for parsing
- perchip/percore events
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
+        Mon, 7 Sep 2020 06:40:12 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D98BDA4053;
+        Mon,  7 Sep 2020 06:41:44 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58DABA405D;
+        Mon,  7 Sep 2020 06:41:39 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.49.245])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  7 Sep 2020 06:41:39 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
         yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, irogers@google.com,
         maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        john.garry@huawei.com
-References: <20200906112004.49574-1-kjain@linux.ibm.com>
- <20200906112004.49574-4-kjain@linux.ibm.com> <20200906125552.GC1199773@krava>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <c414cdac-9051-5e0f-b638-3c3cca5394a6@linux.ibm.com>
-Date:   Mon, 7 Sep 2020 12:10:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        john.garry@huawei.com, kjain@linux.ibm.com
+Subject: [PATCH v9 0/5] powerpc/perf: Add json file support for hv_24x7 core level events
+Date:   Mon,  7 Sep 2020 12:11:28 +0530
+Message-Id: <20200907064133.75090-1-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200906125552.GC1199773@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-09-07_01:2020-09-07,2020-09-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 suspectscore=2
- phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0 impostorscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
+ suspectscore=0 priorityscore=1501 impostorscore=0 adultscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009070061
+ definitions=main-2009070064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Patchset enhance current runtime parameter support. It introduces new
+fields like "PerChip" and "PerCore" similar to the field "PerPkg" which is
+used to specify perpkg events.
 
+The "PerCore" and "PerChip" specifies whether its core or chip events.
+Based on which we can decide which runtime parameter user want to
+access. Now character  '?' can refers different parameter based on user
+requirement.
 
-On 9/6/20 6:25 PM, Jiri Olsa wrote:
-> On Sun, Sep 06, 2020 at 04:50:02PM +0530, Kajol Jain wrote:
-> 
-> SNIP
-> 
->>  typedef int (*func)(void *data, struct json_event *je);
->>  
->>  int eprintf(int level, int var, const char *fmt, ...)
->> @@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
->>  		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
->>  	if (je->perpkg)
->>  		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
->> +	if (je->aggr_mode)
->> +		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
->>  	if (je->metric_expr)
->>  		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
->>  	if (je->metric_name)
->> @@ -379,6 +394,7 @@ struct event_struct {
->>  	char *pmu;
->>  	char *unit;
->>  	char *perpkg;
->> +	char *aggr_mode;
->>  	char *metric_expr;
->>  	char *metric_name;
->>  	char *metric_group;
->> @@ -408,6 +424,7 @@ struct event_struct {
->>  	op(pmu);						\
->>  	op(unit);						\
->>  	op(perpkg);						\
->> +	op(aggr_mode);						\
->>  	op(metric_expr);					\
->>  	op(metric_name);					\
->>  	op(metric_group);					\
->> @@ -613,6 +630,8 @@ static int json_events(const char *fn,
->>  				addfield(map, &je.unit, "", "", val);
->>  			} else if (json_streq(map, field, "PerPkg")) {
->>  				addfield(map, &je.perpkg, "", "", val);
->> +			} else if (json_streq(map, field, "AggregationMode")) {
->> +				addfield(map, &je.aggr_mode, "", "", val);
-> 
-> I think you should free je.aggr_mode
+Initially, every time we want to add new terms like chip, core, thread
+etc, we need to create corrsponding fields in pmu_events and event
+struct.
+This patchset adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'AggregationMode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-My bad, missed that part. Will send updated one.
+This patchset also adds  changes of adding new structure
+called 'json_event' inside jevents.c
+file to improve the callback prototype inside jevent file.
+Initially, whenever user want to add new field, they need to update
+in all function callback which makes it more and more complex with
+increased number of parmeters.
+With this change, we just need to add it in new structure 'json_event'.
+link to the RFC patch: https://lkml.org/lkml/2020/8/25/217
 
-Thanks,
-Kajol Jain
-> 
-> jirka
-> 
->>  			} else if (json_streq(map, field, "Deprecated")) {
->>  				addfield(map, &je.deprecated, "", "", val);
->>  			} else if (json_streq(map, field, "MetricName")) {
->> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
->> index c8f306b572f4..7da1a3743b77 100644
->> --- a/tools/perf/pmu-events/pmu-events.h
->> +++ b/tools/perf/pmu-events/pmu-events.h
->> @@ -2,6 +2,11 @@
->>  #ifndef PMU_EVENTS_H
->>  #define PMU_EVENTS_H
->>  
->> +enum aggr_mode_class {
->> +	PerChip = 1,
->> +	PerCore
->> +};
->> +
->>  /*
->>   * Describe each PMU event. Each CPU has a table of PMU events.
->>   */
->> @@ -14,6 +19,7 @@ struct pmu_event {
->>  	const char *pmu;
->>  	const char *unit;
->>  	const char *perpkg;
->> +	const char *aggr_mode;
->>  	const char *metric_expr;
->>  	const char *metric_name;
->>  	const char *metric_group;
->> -- 
->> 2.26.2
->>
-> 
+Changelog:
+v8 -> v9
+- Free aggr_mode memory [Jiri Olsa].
+
+v7 -> v8
+- Change commit typo from jevents.h to jevents.c
+- Make json_events function static in first patch.
+
+v6 -> v7
+- Remove min and get_cpu_str functions from jevents.c
+- Make json_events function static to solve warning part [John Garry].
+- Add event attribute in json_events function to remove strcpy from
+  real_event function, as suggested by Jiri Olsa.
+- Add warning while checking aggr_mode value [Jiri Olsa].
+
+Kajol Jain (5):
+  perf/jevents: Remove jevents.h file
+  perf/jevents: Add new structure to pass json fields.
+  perf jevents: Add support for parsing perchip/percore events
+  perf/tools: Pass pmu_event structure as a parameter for
+    arch_get_runtimeparam
+  perf/tools/pmu_events/powerpc: Add hv_24x7 core level metric events
+
+ tools/perf/arch/powerpc/util/header.c         |   7 +-
+ .../arch/powerpc/power9/nest_metrics.json     |  35 ++-
+ tools/perf/pmu-events/jevents.c               | 234 +++++++++---------
+ tools/perf/pmu-events/jevents.h               |  23 --
+ tools/perf/pmu-events/pmu-events.h            |   6 +
+ tools/perf/util/metricgroup.c                 |   5 +-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ 7 files changed, 154 insertions(+), 159 deletions(-)
+ delete mode 100644 tools/perf/pmu-events/jevents.h
+
+-- 
+2.26.2
+
