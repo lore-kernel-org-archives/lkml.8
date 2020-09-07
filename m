@@ -2,78 +2,234 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D091C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E46C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF6EE2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF69B208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jXFW2vpq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbgIGR44 (ORCPT
+        id S1729388AbgIGR5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:56:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:33118 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgIGLUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:20:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C31B911D4;
-        Mon,  7 Sep 2020 04:02:27 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9DF33F66E;
-        Mon,  7 Sep 2020 04:02:26 -0700 (PDT)
-Date:   Mon, 7 Sep 2020 12:02:24 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Phil Auld <pauld@redhat.com>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        vincent.donnefort@arm.com, mingo@redhat.com, peterz@infradead.org,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        valentin.schneider@arm.com
-Subject: Re: [PATCH v2] sched/debug: Add new tracepoint to track cpu_capacity
-Message-ID: <20200907110223.gtdgqod2iv2w7xmg@e107158-lin.cambridge.arm.com>
-References: <1598605249-72651-1-git-send-email-vincent.donnefort@arm.com>
- <20200828102724.wmng7p6je2pkc33n@e107158-lin.cambridge.arm.com>
- <1e806d48-fd54-fd86-5b3a-372d9876f360@arm.com>
- <20200828172658.dxygk7j672gho4ax@e107158-lin.cambridge.arm.com>
- <58f5d2e8-493b-7ce1-6abd-57705e5ab437@arm.com>
- <20200902135423.GB93959@lorien.usersys.redhat.com>
+        Mon, 7 Sep 2020 13:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728897AbgIGR5a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:57:30 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1A6C061575
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 10:57:30 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w2so15080518wmi.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 10:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RsFG54GV+NP4F+IIVMuYkYvf7gdGYuBHjlNkFLPcIoM=;
+        b=jXFW2vpqo0B1JyOT5VBIuG9gyefyLdQ0ycGwHcTHninipd8+5VtxLgb8IkgYYvMt+v
+         8W+GI4P2cd8TxlUpDDrsjBQnd8tqBCLuASSa1+xYojW+R0KHtDvEovie75S1Z6YMzFju
+         JSavVRhxpqkmcQ+s4OQk1bVYh4yKB5g9BqEvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=RsFG54GV+NP4F+IIVMuYkYvf7gdGYuBHjlNkFLPcIoM=;
+        b=XIm/pxCRS3DCuXfsqCscSozJqltKnzvsKpyNloX3w8skK6JYfdS2dkRSj+mkK7dRK7
+         aC50C4xd2fghAnU/eXalBdBkVtncds59FWR4ZDli2/M5izpbmwSd4Iyvu+ZzLHnZEn5j
+         t0GZZC3ua+tb5M5YwvmYWeZL//BZyhQUcgVQJGtvopdAKf7anjmj0RHSIXbHbcsPZEsO
+         g5kjWu8w98xra3Zs4nz9rog0n/0iMIw2YknfhqOtrDfxzToIS9nvkROO21lODNxnew06
+         ECNkxUmjXdS4VHyCG4XYIlqXHsrbAZfMxL1Ty33m5u54iTOvhldkqytHrc+PeY1wlISq
+         yoww==
+X-Gm-Message-State: AOAM532gsMehxKpK9imgYcySEjqZQ4BkKNU3K4Io0qe5pKypeO7hU+Mz
+        HM3f3MobSpmo9KsyZL2qOp1OcA==
+X-Google-Smtp-Source: ABdhPJwkSG6w/oKeAR2zEQQ1pJGVVVgYfJ7bv5Pg1nyA4WyBR3gTj1fQsBdjbM44Fhl2fJnj9VpuFQ==
+X-Received: by 2002:a7b:c387:: with SMTP id s7mr423949wmj.171.1599501448675;
+        Mon, 07 Sep 2020 10:57:28 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id 71sm30404303wrm.23.2020.09.07.10.57.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 10:57:27 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 19:57:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v1 0/2] video: fbdev: radeonfb: PCI PM framework upgrade
+ and fix-ups.
+Message-ID: <20200907175725.GX2352366@phenom.ffwll.local>
+Mail-Followup-To: Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thierry Reding <treding@nvidia.com>, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+References: <20200806072256.585705-1-vaibhavgupta40@gmail.com>
+ <20200907075559.GN2352366@phenom.ffwll.local>
+ <20200907091621.GA30377@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200902135423.GB93959@lorien.usersys.redhat.com>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200907091621.GA30377@gmail.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/02/20 09:54, Phil Auld wrote:
+On Mon, Sep 07, 2020 at 02:46:21PM +0530, Vaibhav Gupta wrote:
+> On Mon, Sep 07, 2020 at 09:55:59AM +0200, Daniel Vetter wrote:
+> > On Thu, Aug 06, 2020 at 12:52:54PM +0530, Vaibhav Gupta wrote:
+> > > Linux Kernel Mentee: Remove Legacy Power Management. 
+> > > 
+> > > The original goal of the patch series is to upgrade the power management
+> > > framework of radeonfb fbdev driver. This has been done by upgrading .suspend()
+> > > and .resume() callbacks.
+> > > 
+> > > The upgrade makes sure that the involvement of PCI Core does not change the
+> > > order of operations executed in a driver. Thus, does not change its behavior.
+> > > 
+> > > During this process, it was found that "#if defined(CONFIG_PM)" at line 1434 is
+> > > redundant. This was introduced in the commit
+> > > 42ddb453a0cd ("radeon: Conditionally compile PM code").
 > > 
-> > I think this decoupling is not necessary. The natural place for those
-> > scheduler trace_event based on trace_points extension files is
-> > kernel/sched/ and here the internal sched.h can just be included.
+> > I do wonder whether it wouldn't be better to just outright delete these,
+> > we have the drm radeon driver for pretty much all the same hardware ...
+> > -Daniel
 > > 
-> > If someone really wants to build this as an out-of-tree module there is
-> > an easy way to make kernel/sched/sched.h visible.
-> >
+> Hello Daniel,
+> I don't have any problem in either way. My priority is to get rid of the
+> legacy .suspend and .resume pointers from "struct pci_driver" . Hence, modifying
+> every driver that is using them.
+
+Ok, also sounds like we can't just ditch it outright and merging your
+patches makes sense.
+
+Please note that Bart (he's usually picking up the fbdev patches) is on
+vacations until next week, I guess he'll then go and vacuum up everything
+for 5.10 as he usually does.
+
+Cheers, Daniel
+
 > 
-> It's not so much that we really _want_ to do this in an external module.
-> But we aren't adding more trace events and my (limited) knowledge of
-> BPF let me to the conclusion that its raw tracepoint functionality
-> requires full events.  I didn't see any other way to do it.
+> Vaibhav Gupta
+> > > 
+> > > ------------
+> > > 
+> > > Before 42ddb453a0cd:
+> > > $ git show 65122f7e80b5:drivers/video/aty/radeon_pm.c | grep -n "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+> > > 
+> > > Based on output in terminal:
+> > > 
+> > > 547:#ifdef CONFIG_PM
+> > >        |-- 959:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 972:#endif
+> > >        |-- 1291:#ifdef CONFIG_PPC_OF
+> > >        |-- 1301:#endif /* CONFIG_PPC_OF */
+> > >        |-- 1943:#ifdef CONFIG_PPC_OF
+> > >                    |-- 2206:#if 0 /* Not ready yet */
+> > >                    |-- 2508:#endif /* 0 */
+> > >        |-- 2510:#endif /* CONFIG_PPC_OF */
+> > >        |-- 2648:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 2654:#endif /* CONFIG_PPC_PMAC */
+> > >        |-- 2768:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 2774:#endif /* CONFIG_PPC_PMAC */
+> > >        |-- 2791:#ifdef CONFIG_PPC_OF__disabled
+> > >        |-- 2801:#endif /* CONFIG_PPC_OF */
+> > > 2803:#endif /* CONFIG_PM */
+> > > 
+> > > ------------
+> > > 
+> > > After 42ddb453a0cd:
+> > > $ git show 42ddb453a0cd:drivers/video/aty/radeon_pm.c | grep -n "#ifdef\|#if\|#else\|#endif\|#elif\|#ifndef"
+> > > 
+> > > Based on output in terminal:
+> > > 
+> > > 547:#ifdef CONFIG_PM
+> > >        |-- 959:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 972:#endif
+> > >        |-- 1291:#ifdef CONFIG_PPC_OF
+> > >        |-- 1301:#endif /* CONFIG_PPC_OF */
+> > >        |-- 1430:#if defined(CONFIG_PM)
+> > >                    |-- 1431:#if defined(CONFIG_X86) || defined(CONFIG_PPC_PMAC)
+> > >                    |-- 1944:#endif
+> > >                    |-- 1946:#ifdef CONFIG_PPC_OF
+> > >                                |-- 1947:#ifdef CONFIG_PPC_PMAC
+> > >                                |-- 2208:#endif
+> > >                    |-- 2209:#endif
+> > >                    |-- 2211:#if 0 /* Not ready yet */
+> > >                    |-- 2513:#endif /* 0 */
+> > >        |-- 2515:#endif /* CONFIG_PPC_OF */
+> > >        |-- 2653:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 2659:#endif /* CONFIG_PPC_PMAC */
+> > >        |-- 2773:#ifdef CONFIG_PPC_PMAC
+> > >        |-- 2779:#endif /* CONFIG_PPC_PMAC */
+> > >        |-- 2796:#ifdef CONFIG_PPC_OF__disabled
+> > >        |-- 2806:#endif /* CONFIG_PPC_OF */
+> > > 2808:#endif /* CONFIG_PM */
+> > > 
+> > > ------------
+> > > 
+> > > This also affected the CONFIG_PPC_OF container (line 1943 at commit 65122f7e80b5)
+> > > 
+> > > The patch-series fixes it along with PM upgrade.
+> > > 
+> > > All patches are compile-tested only.
+> > > 
+> > > Test tools:
+> > >     - Compiler: gcc (GCC) 10.1.0
+> > >     - allmodconfig build: make -j$(nproc) W=1 all
+> > > 
+> > > Vaibhav Gupta (2):
+> > >   video: fbdev: aty: radeon_pm: remove redundant CONFIG_PM container
+> > >   fbdev: radeonfb:use generic power management
+> > > 
+> > >  drivers/video/fbdev/aty/radeon_base.c | 10 ++++---
+> > >  drivers/video/fbdev/aty/radeon_pm.c   | 38 ++++++++++++++++++++-------
+> > >  drivers/video/fbdev/aty/radeonfb.h    |  3 +--
+> > >  3 files changed, 35 insertions(+), 16 deletions(-)
+> > > 
+> > > -- 
+> > > 2.27.0
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > -- 
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-I did have a patch that allowed that. It might be worth trying to upstream it.
-It just required a new macro which could be problematic.
-
-https://github.com/qais-yousef/linux/commit/fb9fea29edb8af327e6b2bf3bc41469a8e66df8b
-
-With the above I could attach using bpf::RAW_TRACEPOINT mechanism.
-
-Cheers
-
---
-Qais Yousef
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
