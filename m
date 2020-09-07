@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82730C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54170C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34D5A207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0F8207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:55:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497700;
-	bh=uOc0azX8v4k0GSQ8D2c65Vbw9pkR+3DpUsRWNI9PVYg=;
+	s=default; t=1599497707;
+	bh=VZJnraZM6yoNBszRUhaP+fnBHLTcAb3TgTZWtLcSQ6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+7CO6qEZeIP4OvePb+GEFVktd8GeBhAjygstawbfxE1CzKEfWCwSr5ReITnyhyDU
-	 ZpoZzzzywg1eucQ0YkjTrxTVJsuB7qtIUcZn5BMdz7AxwDU4ao/ODhCgBCK7Q1Zta7
-	 In52KK952jHDht6YzqsxwuYvaur1NopSlBufWBLs=
+	b=JwPQMKJBlY5SdfXe+NOlkym7oQDmTstD6DjHK2n7tR6XdbqWOGSVUgCrZclQR2ZOj
+	 xRdxliRBHkMv4QQP3qgmq4E92xh5sT52YtwW27ZvSOAN6hD5zctowQ/ciPFBkZa6OB
+	 8RxVftDVtdsosKhT308kSJm8a96YyNfuLdmuwXRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731086AbgIGQyl (ORCPT
+        id S1731181AbgIGQzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:54:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:55:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729877AbgIGQeW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:34:22 -0400
+        id S1730749AbgIGQeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:34:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D180121D79;
-        Mon,  7 Sep 2020 16:34:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB68121D82;
+        Mon,  7 Sep 2020 16:34:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496462;
-        bh=uOc0azX8v4k0GSQ8D2c65Vbw9pkR+3DpUsRWNI9PVYg=;
+        s=default; t=1599496454;
+        bh=VZJnraZM6yoNBszRUhaP+fnBHLTcAb3TgTZWtLcSQ6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQYf5h4sF4825/mVNXiK5HwIvosOgPTBMi5PhhnsRJcSr8PiySMhAaL57i4tqC4L8
-         oOsiwxhICxoWyQHzseZkWopqn8wkIhUqySehYaFsffEPM2imnWXS9bRmWPjpJ4TEMm
-         Ym48jke7bfG9QDwvtr6C9v5i2UcCtvGrtXuW6Et4=
+        b=xUm5ui/M9PL0A7FbaknGP2dK8yMBba2/tJ5xa0Yq0fxLiZQSolWUbPUuX2Fbbp8nD
+         KwVYVTgSCH+l+xiDV8NJJG6fmgGfUDiUSdcJR/lWavdacz5zhD8Qo//Ik8vh+oXsvn
+         U+ftZNrj3QKmIYjzvSARzkiOWeDGmMqCzjTHCh+M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sandeep Raghuraman <sandy.8925@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 41/43] drm/amdgpu: Fix bug in reporting voltage for CIK
-Date:   Mon,  7 Sep 2020 12:33:27 -0400
-Message-Id: <20200907163329.1280888-41-sashal@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 35/43] cpufreq: intel_pstate: Refuse to turn off with HWP enabled
+Date:   Mon,  7 Sep 2020 12:33:21 -0400
+Message-Id: <20200907163329.1280888-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
 References: <20200907163329.1280888-1-sashal@kernel.org>
@@ -60,41 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Raghuraman <sandy.8925@gmail.com>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-[ Upstream commit d98299885c9ea140c1108545186593deba36c4ac ]
+[ Upstream commit 43298db3009f06fe5c69e1ca8b6cfc2565772fa1 ]
 
-On my R9 390, the voltage was reported as a constant 1000 mV.
-This was due to a bug in smu7_hwmgr.c, in the smu7_read_sensor()
-function, where some magic constants were used in a condition,
-to determine whether the voltage should be read from PLANE2_VID
-or PLANE1_VID. The VDDC mask was incorrectly used, instead of
-the VDDGFX mask.
+After commit f6ebbcf08f37 ("cpufreq: intel_pstate: Implement passive
+mode with HWP enabled") it is possible to change the driver status
+to "off" via sysfs with HWP enabled, which effectively causes the
+driver to unregister itself, but HWP remains active and it forces the
+minimum performance, so even if another cpufreq driver is loaded,
+it will not be able to control the CPU frequency.
 
-This patch changes the code to use the correct defined constants
-(and apply the correct bitshift), thus resulting in correct voltage reporting.
+For this reason, make the driver refuse to change the status to
+"off" with HWP enabled.
 
-Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/cpufreq/intel_pstate.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-index e6da53e9c3f46..3a2a1dc9a786a 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu7_hwmgr.c
-@@ -3575,7 +3575,8 @@ static int smu7_read_sensor(struct pp_hwmgr *hwmgr, int idx,
- 	case AMDGPU_PP_SENSOR_GPU_POWER:
- 		return smu7_get_gpu_power(hwmgr, (uint32_t *)value);
- 	case AMDGPU_PP_SENSOR_VDDGFX:
--		if ((data->vr_config & 0xff) == 0x2)
-+		if ((data->vr_config & VRCONF_VDDGFX_MASK) ==
-+		    (VR_SVI2_PLANE_2 << VRCONF_VDDGFX_SHIFT))
- 			val_vid = PHM_READ_INDIRECT_FIELD(hwmgr->device,
- 					CGS_IND_REG__SMC, PWR_SVI2_STATUS, PLANE2_VID);
- 		else
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 927eb3fd23660..5bad88f6ddd59 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2533,9 +2533,15 @@ static int intel_pstate_update_status(const char *buf, size_t size)
+ {
+ 	int ret;
+ 
+-	if (size == 3 && !strncmp(buf, "off", size))
+-		return intel_pstate_driver ?
+-			intel_pstate_unregister_driver() : -EINVAL;
++	if (size == 3 && !strncmp(buf, "off", size)) {
++		if (!intel_pstate_driver)
++			return -EINVAL;
++
++		if (hwp_active)
++			return -EBUSY;
++
++		return intel_pstate_unregister_driver();
++	}
+ 
+ 	if (size == 6 && !strncmp(buf, "active", size)) {
+ 		if (intel_pstate_driver) {
 -- 
 2.25.1
 
