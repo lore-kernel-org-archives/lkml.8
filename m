@@ -2,176 +2,155 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0204C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A020AC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C04D21473
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="xev6xkOJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7031121473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:31:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgIGKbf (ORCPT
+        id S1728656AbgIGKbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:31:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728940AbgIGK2K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:28:10 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86EE8C061574
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:28:09 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id i22so17548222eja.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zC3AjkfkprEZqAAF7NrLvBA7iHOLdrgU623W0AvOrc8=;
-        b=xev6xkOJ3ERQwgt6zd2d2oVhYHp0aaQN+/YNUtlkUOMGMF2VXFkbu+9pSzDWQi4XwK
-         xiRo7rK9+zdGFIEjrIitRpwib9Tnt8MJ0Muzfjakz/vh5LZmf0a+8xElnG6wmoWUbPrB
-         RLdPZSvIY2uZ9wA3xlid8F/FztYI1KRLTZXxpq3m1XP7w/kyD7Vqa7gbQeHS+Ck4/yp0
-         EpiV2JG3qRp2csIp+UG9r83UYnOZsRvPkqHR9UxSu8YqcBJL8Zn1sokUpOu+7dC1O1rJ
-         zI7RybFJm0F2fz1U/82/DpY4P2SILSRC7nw/nxwnG7BI88LWOWm6y7Icjn+r+1UtW+49
-         A3dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zC3AjkfkprEZqAAF7NrLvBA7iHOLdrgU623W0AvOrc8=;
-        b=AyZ1H4y4C2jcGI34Ls440k9ipj2nJD8bEaJa/XkrPIKSJeDRormAZ9VywyC1DTw63C
-         ovURQQZ0TgBz63iohQokjt+iYJpfNmYQZo53smUMZI7rz3sKEKYog5l6/qLhb214U3t8
-         8uckDwt7tXQdCVKwJsoVlSIOaUoHMPsqL2hziw8NnC9U69K4qChnuB1lUx37WC7O/QXC
-         g5hq73ZqOQf8OcRwYcLZkglrg+Fw7zZSOBtSBMW2Xv2LzAvrTCH2XZ8sb5OQcW5ByW/e
-         IB6fgSu8lDAkNFxsFcUOomZAtEx/M/ffaBpwpuA09uuN5gHfH/b3ImnUbyeMjNIKPuGF
-         jRug==
-X-Gm-Message-State: AOAM53047zwK2K7qbKipWfF45SLKFAVlFPJ57Zj0hgiIydS+9HazYaGQ
-        ryZ0Jyy2OG9kd83Vevpt9EHj1g==
-X-Google-Smtp-Source: ABdhPJxnWiMooG/MtjMpEbVaVBmU0gLwXtAR25UcFbu/9ktwRSIUjbuBbod67GMd2Ea/Y26JYFdtVA==
-X-Received: by 2002:a17:906:9443:: with SMTP id z3mr21320271ejx.156.1599474488206;
-        Mon, 07 Sep 2020 03:28:08 -0700 (PDT)
-Received: from localhost.localdomain (dh207-98-39.xnet.hr. [88.207.98.39])
-        by smtp.googlemail.com with ESMTPSA id dm22sm14767031edb.49.2020.09.07.03.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 03:28:07 -0700 (PDT)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Robert Marko <robert.marko@sartura.hr>,
-        John Crispin <john@phrozen.org>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [RESEND PATCH v7] ARM: dts: qcom: ipq4019: add USB devicetree nodes
-Date:   Mon,  7 Sep 2020 12:28:02 +0200
-Message-Id: <20200907102802.11276-1-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.26.2
+        Mon, 7 Sep 2020 06:31:43 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2773 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728836AbgIGKbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:31:12 -0400
+Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D8EF433B1587288A086;
+        Mon,  7 Sep 2020 11:31:08 +0100 (IST)
+Received: from [127.0.0.1] (10.47.2.208) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 7 Sep 2020
+ 11:31:07 +0100
+Subject: Re: [PATCH 8/9] perf test: Free aliases for PMU event map aliases
+ test
+To:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+CC:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andi Kleen <andi@firstfloor.org>,
+        Ian Rogers <irogers@google.com>
+References: <20200907034502.753230-1-namhyung@kernel.org>
+ <20200907034502.753230-9-namhyung@kernel.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <78911dd7-8a93-0f1b-7805-1fad87ad6979@huawei.com>
+Date:   Mon, 7 Sep 2020 11:28:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200907034502.753230-9-namhyung@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.2.208]
+X-ClientProxiedBy: lhreml726-chm.china.huawei.com (10.201.108.77) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since we now have driver for the USB PHY, lets add the necessary nodes to DTSI.
+On 07/09/2020 04:45, Namhyung Kim wrote:
+> The aliases were never released causing the following leaks:
+> 
+>    Indirect leak of 1224 byte(s) in 9 object(s) allocated from:
+>      #0 0x7feefb830628 in malloc (/lib/x86_64-linux-gnu/libasan.so.5+0x107628)
+>      #1 0x56332c8f1b62 in __perf_pmu__new_alias util/pmu.c:322
+>      #2 0x56332c8f401f in pmu_add_cpu_aliases_map util/pmu.c:778
+>      #3 0x56332c792ce9 in __test__pmu_event_aliases tests/pmu-events.c:295
+>      #4 0x56332c792ce9 in test_aliases tests/pmu-events.c:367
+>      #5 0x56332c76a09b in run_test tests/builtin-test.c:410
+>      #6 0x56332c76a09b in test_and_print tests/builtin-test.c:440
+>      #7 0x56332c76ce69 in __cmd_test tests/builtin-test.c:695
+>      #8 0x56332c76ce69 in cmd_test tests/builtin-test.c:807
+>      #9 0x56332c7d2214 in run_builtin /home/namhyung/project/linux/tools/perf/perf.c:312
+>      #10 0x56332c6701a8 in handle_internal_command /home/namhyung/project/linux/tools/perf/perf.c:364
+>      #11 0x56332c6701a8 in run_argv /home/namhyung/project/linux/tools/perf/perf.c:408
+>      #12 0x56332c6701a8 in main /home/namhyung/project/linux/tools/perf/perf.c:538
+>      #13 0x7feefb359cc9 in __libc_start_main ../csu/libc-start.c:308
+> 
+> Cc: John Garry <john.garry@huawei.com>
+> Fixes: 956a78356c24c ("perf test: Test pmu-events aliases")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>   tools/perf/tests/pmu-events.c | 5 +++++
+>   tools/perf/util/pmu.c         | 2 +-
+>   tools/perf/util/pmu.h         | 1 +
+>   3 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+> index eb19f9a0bc15..d3517a74d95e 100644
+> --- a/tools/perf/tests/pmu-events.c
+> +++ b/tools/perf/tests/pmu-events.c
+> @@ -274,6 +274,7 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+>   	int res = 0;
+>   	bool use_uncore_table;
+>   	struct pmu_events_map *map = __test_pmu_get_events_map();
+> +	struct perf_pmu_alias *a, *tmp;
+>   
+>   	if (!map)
+>   		return -1;
+> @@ -347,6 +348,10 @@ static int __test__pmu_event_aliases(char *pmu_name, int *count)
+>   			  pmu_name, alias->name);
+>   	}
+>   
+> +	list_for_each_entry_safe(a, tmp, &aliases, list) {
+> +		list_del(&a->list);
+> +		perf_pmu_free_alias(a);
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-Cc: Luka Perkov <luka.perkov@sartura.hr>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 74 +++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+This looks ok.
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 74d8e2c8e4b3..8b72a149bc33 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -605,5 +605,79 @@ ethphy4: ethernet-phy@4 {
- 				reg = <4>;
- 			};
- 		};
-+
-+		usb3_ss_phy: ssphy@9a000 {
-+			compatible = "qcom,usb-ss-ipq4019-phy";
-+			#phy-cells = <0>;
-+			reg = <0x9a000 0x800>;
-+			reg-names = "phy_base";
-+			resets = <&gcc USB3_UNIPHY_PHY_ARES>;
-+			reset-names = "por_rst";
-+			status = "disabled";
-+		};
-+
-+		usb3_hs_phy: hsphy@a6000 {
-+			compatible = "qcom,usb-hs-ipq4019-phy";
-+			#phy-cells = <0>;
-+			reg = <0xa6000 0x40>;
-+			reg-names = "phy_base";
-+			resets = <&gcc USB3_HSPHY_POR_ARES>, <&gcc USB3_HSPHY_S_ARES>;
-+			reset-names = "por_rst", "srif_rst";
-+			status = "disabled";
-+		};
-+
-+		usb3@8af8800 {
-+			compatible = "qcom,dwc3";
-+			reg = <0x8af8800 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&gcc GCC_USB3_MASTER_CLK>,
-+				 <&gcc GCC_USB3_SLEEP_CLK>,
-+				 <&gcc GCC_USB3_MOCK_UTMI_CLK>;
-+			clock-names = "master", "sleep", "mock_utmi";
-+			ranges;
-+			status = "disabled";
-+
-+			dwc3@8a00000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x8a00000 0xf8000>;
-+				interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&usb3_hs_phy>, <&usb3_ss_phy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+				dr_mode = "host";
-+			};
-+		};
-+
-+		usb2_hs_phy: hsphy@a8000 {
-+			compatible = "qcom,usb-hs-ipq4019-phy";
-+			#phy-cells = <0>;
-+			reg = <0xa8000 0x40>;
-+			reg-names = "phy_base";
-+			resets = <&gcc USB2_HSPHY_POR_ARES>, <&gcc USB2_HSPHY_S_ARES>;
-+			reset-names = "por_rst", "srif_rst";
-+			status = "disabled";
-+		};
-+
-+		usb2@60f8800 {
-+			compatible = "qcom,dwc3";
-+			reg = <0x60f8800 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			clocks = <&gcc GCC_USB2_MASTER_CLK>,
-+				 <&gcc GCC_USB2_SLEEP_CLK>,
-+				 <&gcc GCC_USB2_MOCK_UTMI_CLK>;
-+			clock-names = "master", "sleep", "mock_utmi";
-+			ranges;
-+			status = "disabled";
-+
-+			dwc3@6000000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x6000000 0xf8000>;
-+				interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&usb2_hs_phy>;
-+				phy-names = "usb2-phy";
-+				dr_mode = "host";
-+			};
-+		};
- 	};
- };
--- 
-2.26.2
+I also notice that we have other paths like this, where the allocated 
+pmu (and aliases) are not freed for later error paths, it seems:
+
+parse_events_add_pmu() -> perf_pmu_find() -> pmu_lookup() -> 
+pmu_add_cpu_aliases().
+
+I had a quick look at the rest of the series, and could not see if we 
+fix up any of this.
+
+Cheers,
+john
+
+> +	}
+>   	free(pmu);
+>   	return res;
+>   }
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index f1688e1f6ed7..555cb3524c25 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -274,7 +274,7 @@ static void perf_pmu_update_alias(struct perf_pmu_alias *old,
+>   }
+>   
+>   /* Delete an alias entry. */
+> -static void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
+> +void perf_pmu_free_alias(struct perf_pmu_alias *newalias)
+>   {
+>   	zfree(&newalias->name);
+>   	zfree(&newalias->desc);
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 44ccbdbb1c37..b63c4c5e335e 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -113,6 +113,7 @@ void pmu_add_cpu_aliases_map(struct list_head *head, struct perf_pmu *pmu,
+>   
+>   struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu);
+>   bool pmu_uncore_alias_match(const char *pmu_name, const char *name);
+> +void perf_pmu_free_alias(struct perf_pmu_alias *alias);
+>   
+>   int perf_pmu__convert_scale(const char *scale, char **end, double *sval);
+>   
+> 
 
