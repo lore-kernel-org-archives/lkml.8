@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02659C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01454C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C25B02080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAA6A207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599496981;
-	bh=N2TzsaDDwqM6tAPNhthsqRzY7Ob4UQpx+wDCC0gnkxQ=;
+	s=default; t=1599497013;
+	bh=NQKH7qV+mvGMmdYVsn+drBg78YJ7yUGWecvlsGgCjo4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQvesVxoC6gDGA/lVs/NL5HnT84xvgrqRC/qQ1JqZd9sQQqoJ65wcB8e2/HaG2nGe
-	 54SZ66+i4nd3/38AEGzdKspGgWKgHlSZhgfHOcvrh+shh//hryKUVydsKQMLN0NjDV
-	 4okJwOUzVzesfD2TPYuXNLHKow6gVuvr/n+VILqU=
+	b=QX73BZyHDjj9Shz0yWyyQcGT4eFbjE/ECiKQNe3wJ9Nq66cGn0m0CNGht5JRM8tEX
+	 nrWqTsyp387pxi819VOdRPvALCAna5othrFe/3VhY9edDlGjU9JCAzx59fpS1KfXpm
+	 KebLUkBSxZeAolluVrEq/d7QmDR7g8emsis7feoY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgIGQgh (ORCPT
+        id S1730943AbgIGQnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:43:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730688AbgIGQdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:36 -0400
+        id S1730854AbgIGQf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A5E21789;
-        Mon,  7 Sep 2020 16:33:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12FD521D90;
+        Mon,  7 Sep 2020 16:35:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496413;
-        bh=N2TzsaDDwqM6tAPNhthsqRzY7Ob4UQpx+wDCC0gnkxQ=;
+        s=default; t=1599496557;
+        bh=NQKH7qV+mvGMmdYVsn+drBg78YJ7yUGWecvlsGgCjo4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HXrYHZ7qhbGu9/EsSb9GmQfkoWiTerOg9PRDdlD4S0ROb7UFaMPyhn0pean2YoYGd
-         5IJu4RMvdlgaI4PHXkLmnqLV6MXa6+mc2gX3cdhLXKly9Qy9ZzLQQTnm5NV2rsvygt
-         8f+Rgg+OLhQBDArKYUKfdqcERd1ZM/WvsEzMQTJs=
+        b=L7S/I63A2sE18jvg9ISYdLIgkBqQhLejM/8mmxkPCOLsBuIva0CcJFvCG8j2BtZun
+         1s4/oQ0/OaTsq7SesceCsBS7vglV0pvuSfYJOqeXSfgzOjQ5Sn9EIiXRde02cgTdGI
+         /WUCbts/B3/BA5I1oWW7mWkbCPCJcodUm5BSewbg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/43] netfilter: conntrack: allow sctp hearbeat after connection re-use
-Date:   Mon,  7 Sep 2020 12:32:49 -0400
-Message-Id: <20200907163329.1280888-3-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/10] gcov: Disable gcov build with GCC 10
+Date:   Mon,  7 Sep 2020 12:35:43 -0400
+Message-Id: <20200907163543.1281889-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
-References: <20200907163329.1280888-1-sashal@kernel.org>
+In-Reply-To: <20200907163543.1281889-1-sashal@kernel.org>
+References: <20200907163543.1281889-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,124 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit cc5453a5b7e90c39f713091a7ebc53c1f87d1700 ]
+[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
 
-If an sctp connection gets re-used, heartbeats are flagged as invalid
-because their vtag doesn't match.
+GCOV built with GCC 10 doesn't initialize n_function variable.  This
+produces different kernel panics as was seen by Colin in Ubuntu and me
+in FC 32.
 
-Handle this in a similar way as TCP conntrack when it suspects that the
-endpoints and conntrack are out-of-sync.
+As a workaround, let's disable GCOV build for broken GCC 10 version.
 
-When a HEARTBEAT request fails its vtag validation, flag this in the
-conntrack state and accept the packet.
-
-When a HEARTBEAT_ACK is received with an invalid vtag in the reverse
-direction after we allowed such a HEARTBEAT through, assume we are
-out-of-sync and re-set the vtag info.
-
-v2: remove left-over snippet from an older incarnation that moved
-    new_state/old_state assignments, thats not needed so keep that
-    as-is.
-
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
+Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
+Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
+Cc: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netfilter/nf_conntrack_sctp.h |  2 ++
- net/netfilter/nf_conntrack_proto_sctp.c     | 39 ++++++++++++++++++---
- 2 files changed, 37 insertions(+), 4 deletions(-)
+ kernel/gcov/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/netfilter/nf_conntrack_sctp.h b/include/linux/netfilter/nf_conntrack_sctp.h
-index 9a33f171aa822..625f491b95de8 100644
---- a/include/linux/netfilter/nf_conntrack_sctp.h
-+++ b/include/linux/netfilter/nf_conntrack_sctp.h
-@@ -9,6 +9,8 @@ struct ip_ct_sctp {
- 	enum sctp_conntrack state;
- 
- 	__be32 vtag[IP_CT_DIR_MAX];
-+	u8 last_dir;
-+	u8 flags;
- };
- 
- #endif /* _NF_CONNTRACK_SCTP_H */
-diff --git a/net/netfilter/nf_conntrack_proto_sctp.c b/net/netfilter/nf_conntrack_proto_sctp.c
-index 4f897b14b6069..810cca24b3990 100644
---- a/net/netfilter/nf_conntrack_proto_sctp.c
-+++ b/net/netfilter/nf_conntrack_proto_sctp.c
-@@ -62,6 +62,8 @@ static const unsigned int sctp_timeouts[SCTP_CONNTRACK_MAX] = {
- 	[SCTP_CONNTRACK_HEARTBEAT_ACKED]	= 210 SECS,
- };
- 
-+#define	SCTP_FLAG_HEARTBEAT_VTAG_FAILED	1
-+
- #define sNO SCTP_CONNTRACK_NONE
- #define	sCL SCTP_CONNTRACK_CLOSED
- #define	sCW SCTP_CONNTRACK_COOKIE_WAIT
-@@ -369,6 +371,7 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
- 	u_int32_t offset, count;
- 	unsigned int *timeouts;
- 	unsigned long map[256 / sizeof(unsigned long)] = { 0 };
-+	bool ignore = false;
- 
- 	if (sctp_error(skb, dataoff, state))
- 		return -NF_ACCEPT;
-@@ -427,15 +430,39 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
- 			/* Sec 8.5.1 (D) */
- 			if (sh->vtag != ct->proto.sctp.vtag[dir])
- 				goto out_unlock;
--		} else if (sch->type == SCTP_CID_HEARTBEAT ||
--			   sch->type == SCTP_CID_HEARTBEAT_ACK) {
-+		} else if (sch->type == SCTP_CID_HEARTBEAT) {
-+			if (ct->proto.sctp.vtag[dir] == 0) {
-+				pr_debug("Setting %d vtag %x for dir %d\n", sch->type, sh->vtag, dir);
-+				ct->proto.sctp.vtag[dir] = sh->vtag;
-+			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
-+				if (test_bit(SCTP_CID_DATA, map) || ignore)
-+					goto out_unlock;
-+
-+				ct->proto.sctp.flags |= SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
-+				ct->proto.sctp.last_dir = dir;
-+				ignore = true;
-+				continue;
-+			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
-+				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
-+			}
-+		} else if (sch->type == SCTP_CID_HEARTBEAT_ACK) {
- 			if (ct->proto.sctp.vtag[dir] == 0) {
- 				pr_debug("Setting vtag %x for dir %d\n",
- 					 sh->vtag, dir);
- 				ct->proto.sctp.vtag[dir] = sh->vtag;
- 			} else if (sh->vtag != ct->proto.sctp.vtag[dir]) {
--				pr_debug("Verification tag check failed\n");
--				goto out_unlock;
-+				if (test_bit(SCTP_CID_DATA, map) || ignore)
-+					goto out_unlock;
-+
-+				if ((ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) == 0 ||
-+				    ct->proto.sctp.last_dir == dir)
-+					goto out_unlock;
-+
-+				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
-+				ct->proto.sctp.vtag[dir] = sh->vtag;
-+				ct->proto.sctp.vtag[!dir] = 0;
-+			} else if (ct->proto.sctp.flags & SCTP_FLAG_HEARTBEAT_VTAG_FAILED) {
-+				ct->proto.sctp.flags &= ~SCTP_FLAG_HEARTBEAT_VTAG_FAILED;
- 			}
- 		}
- 
-@@ -470,6 +497,10 @@ int nf_conntrack_sctp_packet(struct nf_conn *ct,
- 	}
- 	spin_unlock_bh(&ct->lock);
- 
-+	/* allow but do not refresh timeout */
-+	if (ignore)
-+		return NF_ACCEPT;
-+
- 	timeouts = nf_ct_timeout_lookup(ct);
- 	if (!timeouts)
- 		timeouts = nf_sctp_pernet(nf_ct_net(ct))->timeouts;
+diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+index 1276aabaab550..1d78ed19a3512 100644
+--- a/kernel/gcov/Kconfig
++++ b/kernel/gcov/Kconfig
+@@ -3,6 +3,7 @@ menu "GCOV-based kernel profiling"
+ config GCOV_KERNEL
+ 	bool "Enable gcov-based kernel profiling"
+ 	depends on DEBUG_FS
++	depends on !CC_IS_GCC || GCC_VERSION < 100000
+ 	select CONSTRUCTORS if !UML
+ 	default n
+ 	---help---
 -- 
 2.25.1
 
