@@ -2,244 +2,105 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E37C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ABCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A333521532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5F621556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2Bjm85v"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="D64xvzFL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbgIGRNy (ORCPT
+        id S1731034AbgIGRON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:13:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
+        Mon, 7 Sep 2020 13:14:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730498AbgIGRNq (ORCPT
+        with ESMTP id S1729351AbgIGOQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:13:46 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29784C061573;
-        Mon,  7 Sep 2020 10:13:44 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id e23so19075511eja.3;
-        Mon, 07 Sep 2020 10:13:44 -0700 (PDT)
+        Mon, 7 Sep 2020 10:16:31 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2CB2C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 07:15:55 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id v196so8717539pfc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 07:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7TGKe3H6jMAYGiTs6kFoy9n4vW2P17ChzLhdJQLwaF4=;
-        b=m2Bjm85vz8tiN6hI7Hfp3pSDKj0cdm6zU0bwT214EeCHu9+pc4Fb/MNreDSFscptkJ
-         sDS9CMbp/xdxHRgC0OgUaT8WCYnlmRpBfXTS5POVSyubs2PEoNCmReAwxVbI6vUoiZXk
-         YyXlSAIPapLAKC0cQzHmQjEiMdkcJiru18Izcvi4jC6VYngk1/s3r1k7/zMIF8eBXYpT
-         pynzzS5oA0OqmdIN0SSe9qzZ8Lms8tSuQoENXPr1KQLyP8Kpe3QotqR23YkOPYYCgk2B
-         tuaKnqI8GSUvX3zTmnJVlR3nEgfbNG2nHrPv+dVrrvF0tTyXwQOrplVyCJA0+EXyQCa1
-         dPQg==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=pMKtnu62KrFlClqQRGBjCSOknfMgdgn3+wr6HnRppNY=;
+        b=D64xvzFLBlnNeTQkT8TNQY9QSEEmAeebO85yfOC8NPD1qtRe6ZhnRviUtvOdxf7zNs
+         K5w9Tc56LdukXCGiVOV0RnjgFVbBUOBeD0YvkNdcyIRUZqHMAGLUalClCgCTARRRghvX
+         0syIVDRXlYXf/9UkCbwkjho2LiGFWDgF0jefQzrfll1AaP8/1iF03O7LOXwtlHzPC5o2
+         I7l8npCZsBDhjEaTB0HUB7llatpo1fnrqibiAczZYpjt9RwxiE1/4IJ0nbgeUY7dfu0K
+         DdpHrv1SwsxdcqShg+ockpxLo9zrZWTK4NGRi2HGlIb9t7VQbc2feZTADbtP9rlW2EI0
+         cR4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7TGKe3H6jMAYGiTs6kFoy9n4vW2P17ChzLhdJQLwaF4=;
-        b=Wu1HKw/XH4+iVvIKJCrteULyzpDKTadON2doyuiMlP8Nmainpx7gUyJ23QaInJmE29
-         4zFg3VTQNlfwKHrDFr0T8XxEkTiCX0k4wNeDDTGA1zHzkS/r16rKwjnk4eqvBcSnNQPj
-         P76iKnCd7vsXFdetRwcwU5Pfvyb9gSJltmTzmhWgzlSb46LkZIRXGwgsFgxYjGX/dHq9
-         DiEu7/BASzJZd7f6dIKhVGYur/m/6ce5Xh4bD2h6J4AXMPVY59cM5x03s1vYUDQ1lHxZ
-         SHaA0mk4hnJFGooTZmHNs/Pol/uHdpnI6mTkLJpAor/15Wtx8QICADFWNDgpcoLdWuDm
-         dMLw==
-X-Gm-Message-State: AOAM5317/uG+hOBxiw4w4yTRzHn+61lqGYZpMNX9mP0rwaWW//0GfvZ/
-        E1rTt+cXVOl06mson9ObHgTxcAJkucQT/w==
-X-Google-Smtp-Source: ABdhPJzLAwg9pbpp4n8CSNlxU/iw7Vf1bDjKydx21x5FKZjyYqA2Nh5jCk0ow+T7Ne2LPThNafKkvg==
-X-Received: by 2002:a17:906:5902:: with SMTP id h2mr22973494ejq.423.1599498822819;
-        Mon, 07 Sep 2020 10:13:42 -0700 (PDT)
-Received: from mamamia.internal (a89-183-24-75.net-htp.de. [89.183.24.75])
-        by smtp.gmail.com with ESMTPSA id s19sm2290592eja.54.2020.09.07.10.13.41
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=pMKtnu62KrFlClqQRGBjCSOknfMgdgn3+wr6HnRppNY=;
+        b=qOdHTxmlRbTBJdS3uXzQDeqWIJND5JTjS9Il2f3zxehOdXoPoiG/PqWihOT/jVm5Tf
+         qrpXDRbrw6Z2PfqjzQw7VMrFzUXbbbzAAok+CGMzWgyoBVo72yhuOOvZYM2Bc2g2SDCZ
+         02jFfKu361aJXjfaHBKgkt3uScdRnnJKY8/5YKihsrZccyhf1EPA32c/i2ahAaWnwbiG
+         Tfs86LweaUOaN6kAjc4rNR5j209OVU2OpLZCZsCSChpdEUFlcc8Pa+AVS85lFL9kwXu6
+         SyPHplJl2SEonV056RHPINV4K0tzD8+w8qhwUGpFPVKq14keqalvfOiAP2aO6zfX4sAF
+         kBFA==
+X-Gm-Message-State: AOAM532Smx4UdcfCn0ukvia2UYQlXNlMO9TjLz1ekOq0aqtY5ukom2Ka
+        x+4100aby8qTtNoBZOOKzKkLAg==
+X-Google-Smtp-Source: ABdhPJxDzNPgTKU+KaHZmsuByNel5l69rVNLnkpVmRixOH4K76E96CSThsbS7P+Xe0BpNllo+5a76Q==
+X-Received: by 2002:a63:4a19:: with SMTP id x25mr16395793pga.56.1599488154774;
+        Mon, 07 Sep 2020 07:15:54 -0700 (PDT)
+Received: from ?IPv6:2600:1010:b025:3136:b1da:8d24:b138:6fff? ([2600:1010:b025:3136:b1da:8d24:b138:6fff])
+        by smtp.gmail.com with ESMTPSA id m25sm15245324pfa.32.2020.09.07.07.15.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 10:13:42 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: marvell: espressobin: Add ethernet switch
- aliases
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200907112718.5994-1-pali@kernel.org>
-From:   Andre Heider <a.heider@gmail.com>
-Message-ID: <3ec54259-4bfe-8462-e8d5-083fc009707a@gmail.com>
-Date:   Mon, 7 Sep 2020 19:13:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
-MIME-Version: 1.0
-In-Reply-To: <20200907112718.5994-1-pali@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 07 Sep 2020 07:15:53 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v6 6/9] kernel: entry: Support Syscall User Dispatch for common syscall entry
+Date:   Mon, 7 Sep 2020 07:15:52 -0700
+Message-Id: <0639209E-B6C6-4F86-84F4-04B91E1CC8AA@amacapital.net>
+References: <20200907101522.zo6qzgp4qfzkz7cs@wittgenstein>
+Cc:     Gabriel Krisman Bertazi <krisman@collabora.com>, luto@kernel.org,
+        tglx@linutronix.de, keescook@chromium.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        willy@infradead.org, linux-kselftest@vger.kernel.org,
+        shuah@kernel.org, kernel@collabora.com
+In-Reply-To: <20200907101522.zo6qzgp4qfzkz7cs@wittgenstein>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+X-Mailer: iPhone Mail (17H35)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pali,
 
-On 07/09/2020 13:27, Pali Rohár wrote:
-> Espressobin boards have 3 ethernet ports and some of them got assigned more
-> then one MAC address. MAC addresses are stored in U-Boot environment.
-> 
-> Since commit a2c7023f7075c ("net: dsa: read mac address from DT for slave
-> device") kernel can use MAC addresses from DT for particular DSA port.
-> 
-> Currently Espressobin DTS file contains alias just for ethernet0.
-> 
-> This patch defines additional ethernet aliases in Espressobin DTS files, so
-> bootloader can fill correct MAC address for DSA switch ports if more MAC
-> addresses were specified.
-> 
-> DT alias ethernet1 is used for wan port, DT aliases ethernet2 and ethernet3
-> are used for lan ports for both Espressobin revisions (V5 and V7).
-> 
-> Fixes: 5253cb8c00a6f ("arm64: dts: marvell: espressobin: add ethernet alias")
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> ---
->   .../dts/marvell/armada-3720-espressobin-v7-emmc.dts  | 10 ++++++++--
->   .../boot/dts/marvell/armada-3720-espressobin-v7.dts  | 10 ++++++++--
->   .../boot/dts/marvell/armada-3720-espressobin.dtsi    | 12 ++++++++----
->   3 files changed, 24 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> index 03733fd92732..215d2f702623 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7-emmc.dts
-> @@ -20,17 +20,23 @@
->   	compatible = "globalscale,espressobin-v7-emmc", "globalscale,espressobin-v7",
->   		     "globalscale,espressobin", "marvell,armada3720",
->   		     "marvell,armada3710";
-> +
-> +	aliases {
-> +		/* ethernet1 is wan port */
-> +		ethernet1 = &switch0port3;
-> +		ethernet3 = &switch0port1;
-> +	};
->   };
->   
->   &switch0 {
->   	ports {
-> -		port@1 {
-> +		switch0port1: port@1 {
->   			reg = <1>;
->   			label = "lan1";
->   			phy-handle = <&switch0phy0>;
->   		};
->   
-> -		port@3 {
-> +		switch0port3: port@3 {
->   			reg = <3>;
->   			label = "wan";
->   			phy-handle = <&switch0phy2>;
 
-My dts-foo is a little rusty, but now that you labeled the ports in the 
-.dtsi, can this whole "switch0" block reduced to something like:
+> On Sep 7, 2020, at 3:15 AM, Christian Brauner <christian.brauner@ubuntu.co=
+m> wrote:
+>=20
+> =EF=BB=BFOn Fri, Sep 04, 2020 at 04:31:44PM -0400, Gabriel Krisman Bertazi=
+ wrote:
+>> Syscall User Dispatch (SUD) must take precedence over seccomp, since the
+>> use case is emulation (it can be invoked with a different ABI) such that
+>> seccomp filtering by syscall number doesn't make sense in the first
+>> place.  In addition, either the syscall is dispatched back to userspace,
+>> in which case there is no resource for seccomp to protect, or the
+>=20
+> Tbh, I'm torn here. I'm not a super clever attacker but it feels to me
+> that this is still at least a clever way to circumvent a seccomp
+> sandbox.
+> If I'd be confined by a seccomp profile that would cause me to be
+> SIGKILLed when I try do open() I could prctl() myself to do user
+> dispatch to prevent that from happening, no?
+>=20
 
-&switch0port1 {
-	label = "lan1";
-};
-
-&switch0port3 {
-	label = "wan";
-};
-
-?
-
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> index 8570c5f47d7d..b6f4af8ebafb 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin-v7.dts
-> @@ -19,17 +19,23 @@
->   	model = "Globalscale Marvell ESPRESSOBin Board V7";
->   	compatible = "globalscale,espressobin-v7", "globalscale,espressobin",
->   		     "marvell,armada3720", "marvell,armada3710";
-> +
-> +	aliases {
-> +		/* ethernet1 is wan port */
-> +		ethernet1 = &switch0port3;
-> +		ethernet3 = &switch0port1;
-> +	};
->   };
->   
->   &switch0 {
->   	ports {
-> -		port@1 {
-> +		switch0port1: port@1 {
->   			reg = <1>;
->   			label = "lan1";
->   			phy-handle = <&switch0phy0>;
->   		};
->   
-> -		port@3 {
-> +		switch0port3: port@3 {
->   			reg = <3>;
->   			label = "wan";
->   			phy-handle = <&switch0phy2>;
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-> index b97218c72727..0775c16e0ec8 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtsi
-> @@ -13,6 +13,10 @@
->   / {
->   	aliases {
->   		ethernet0 = &eth0;
-> +		/* for dsa slave device */
-> +		ethernet1 = &switch0port1;
-> +		ethernet2 = &switch0port2;
-> +		ethernet3 = &switch0port3;
->   		serial0 = &uart0;
->   		serial1 = &uart1;
->   	};
-> @@ -120,7 +124,7 @@
->   			#address-cells = <1>;
->   			#size-cells = <0>;
->   
-> -			port@0 {
-> +			switch0port0: port@0 {
-
-This label is unused it seems.
-
-Regards,
-Andre
-
->   				reg = <0>;
->   				label = "cpu";
->   				ethernet = <&eth0>;
-> @@ -131,19 +135,19 @@
->   				};
->   			};
->   
-> -			port@1 {
-> +			switch0port1: port@1 {
->   				reg = <1>;
->   				label = "wan";
->   				phy-handle = <&switch0phy0>;
->   			};
->   
-> -			port@2 {
-> +			switch0port2: port@2 {
->   				reg = <2>;
->   				label = "lan0";
->   				phy-handle = <&switch0phy1>;
->   			};
->   
-> -			port@3 {
-> +			switch0port3: port@3 {
->   				reg = <3>;
->   				label = "lan1";
->   				phy-handle = <&switch0phy2>;
-> 
+Not really, I think. The idea is that you didn=E2=80=99t actually do open().=
+ You did a SYSCALL instruction which meant something else, and the syscall d=
+ispatch correctly prevented the kernel from misinterpreting it as open().
 
