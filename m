@@ -2,52 +2,52 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B026EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40911C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 707EE206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9EA2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498473;
-	bh=mmh0CepIcG1mpL1AKzdAl1yZDSGrYI73gdVhh+oTT+w=;
+	s=default; t=1599498604;
+	bh=xaS4RPuideRwfyWKHJq45bSXXUp7Eu3+kH8yooLyJPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yXRAiNK5mHGX1urT+lo75rerOvQHzDhYK1wEnHuz7a0I45UhIosokIobtOW1FNtPL
-	 hOPuHEVEkTddI2ff+IlbIWgl4mCs8kSXhwoPFHrAKIEZvLdRuPaYONuGPTTNlT+DBq
-	 cv3KyNcN+MyPxB0WxOOqyeTcncflVO6HZ9wB/CnU=
+	b=m2mhS0E/3ozIlLVgg8W7T6C7miDiUfGoDlvYKwJyP3828jVr7L1CBY5etlzn6l/sb
+	 9lL/2rKmU9FdX47dndH/zcBuTRyZJ3QpqRGYz95/Vf6OsWSvRBZK2fTFkNwJSjsXAK
+	 CjtTPwzvxQvlrcWO6EnonfuoHO/jMdmA1x5WE1z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgIGRHo (ORCPT
+        id S1730776AbgIGRJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:09:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729838AbgIGQcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:48 -0400
+        id S1730654AbgIGQcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:32:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9795A217A0;
-        Mon,  7 Sep 2020 16:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08DD9208C7;
+        Mon,  7 Sep 2020 16:32:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496368;
-        bh=mmh0CepIcG1mpL1AKzdAl1yZDSGrYI73gdVhh+oTT+w=;
+        s=default; t=1599496365;
+        bh=xaS4RPuideRwfyWKHJq45bSXXUp7Eu3+kH8yooLyJPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVNM0NrGrkHncyEKIrsQtYF2jJ9FpCkEJd4C+i5fYbfUieTYtoXbcuduY9fUULBfP
-         fNgHHXtHC1NQDtrQ1SyFHvke065Jor/NR/Zfm37omejgHNVg4BaatGSH/OZKUYjo06
-         o7ITT34d7Ox+rBRgagLE0H0tyquZkonuAhr69EbE=
+        b=hk8EUNahZwAuywPJ2vddTWe3zZ0Ee4sh419xNt4NJlF2m8bJ/MhQIYW1CruSqyy8J
+         06xQA+YB7PQmzF7PcNNe1gR7Ou2fOotDKeYdftaJPxV33gIcQCznUSlNfIIZG7buVT
+         cj80YSAV9npNWFnzNAKIgwF1pGcEGkBliylt9t1s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amar Singhal <asinghal@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 21/53] cfg80211: Adjust 6 GHz frequency to channel conversion
-Date:   Mon,  7 Sep 2020 12:31:47 -0400
-Message-Id: <20200907163220.1280412-21-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 19/53] cfg80211: regulatory: reject invalid hints
+Date:   Mon,  7 Sep 2020 12:31:45 -0400
+Message-Id: <20200907163220.1280412-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -60,43 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amar Singhal <asinghal@codeaurora.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 2d9b55508556ccee6410310fb9ea2482fd3328eb ]
+[ Upstream commit 47caf685a6854593348f216e0b489b71c10cbe03 ]
 
-Adjust the 6 GHz frequency to channel conversion function,
-the other way around was previously handled.
+Reject invalid hints early in order to not cause a kernel
+WARN later if they're restored to or similar.
 
-Signed-off-by: Amar Singhal <asinghal@codeaurora.org>
-Link: https://lore.kernel.org/r/1592599921-10607-1-git-send-email-asinghal@codeaurora.org
-[rewrite commit message, hard-code channel 2]
+Reported-by: syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=d451401ffd00a60677ee
+Link: https://lore.kernel.org/r/20200819084648.13956-1-johannes@sipsolutions.net
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/util.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/wireless/reg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/wireless/util.c b/net/wireless/util.c
-index 4d3b76f94f55e..a72d2ad6ade8b 100644
---- a/net/wireless/util.c
-+++ b/net/wireless/util.c
-@@ -121,11 +121,13 @@ int ieee80211_freq_khz_to_channel(u32 freq)
- 		return (freq - 2407) / 5;
- 	else if (freq >= 4910 && freq <= 4980)
- 		return (freq - 4000) / 5;
--	else if (freq < 5945)
-+	else if (freq < 5925)
- 		return (freq - 5000) / 5;
-+	else if (freq == 5935)
-+		return 2;
- 	else if (freq <= 45000) /* DMG band lower limit */
--		/* see 802.11ax D4.1 27.3.22.2 */
--		return (freq - 5940) / 5;
-+		/* see 802.11ax D6.1 27.3.22.2 */
-+		return (freq - 5950) / 5;
- 	else if (freq >= 58320 && freq <= 70200)
- 		return (freq - 56160) / 2160;
- 	else
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 0d74a31ef0ab4..fc2af2c8b6d54 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2944,6 +2944,9 @@ int regulatory_hint_user(const char *alpha2,
+ 	if (WARN_ON(!alpha2))
+ 		return -EINVAL;
+ 
++	if (!is_world_regdom(alpha2) && !is_an_alpha2(alpha2))
++		return -EINVAL;
++
+ 	request = kzalloc(sizeof(struct regulatory_request), GFP_KERNEL);
+ 	if (!request)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
