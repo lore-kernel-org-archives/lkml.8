@@ -2,117 +2,125 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A63C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:50:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1161BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC1F20DD4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 03:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C47CA20838
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 04:02:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="qCxcvXcS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726596AbgIGDuZ (ORCPT
+        id S1725910AbgIGEBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 6 Sep 2020 23:50:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49301 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbgIGDuX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 6 Sep 2020 23:50:23 -0400
-Received: from mail-pg1-f200.google.com ([209.85.215.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1kF8Ae-0005v6-ED
-        for linux-kernel@vger.kernel.org; Mon, 07 Sep 2020 03:50:20 +0000
-Received: by mail-pg1-f200.google.com with SMTP id 184so5372570pgg.11
-        for <linux-kernel@vger.kernel.org>; Sun, 06 Sep 2020 20:50:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=3g3V+QNt3GCtg2Hc+UJaZtxoWISK1rJHJzXJXHO3wbk=;
-        b=nlHyLmmBGSb0SAk+2GvAWTEE+364wfBZawdoDCthZeC7xyo96PdiwtNyEgv7nrq9Gf
-         JHMjRnIHoR9xT0+2cynTyRDwY386YbxufdX+PWeJyLEkO4yjrke/4EeV+D5ZGp8jE7kl
-         ceKs2TsiTfcLMEikV5g5PG6T1smIqgVlQIfKeFztxWYz/MMb96YMx+GQyciibX1IzZ9f
-         5y9WoqutVYkfG/XSTUu2rOqqAqSFsTixRpAFjPs6niwdUXx8Qx4Y9uDQmv5LZUvWHZaL
-         H1kjM9cC4oTtTwBHjuEcjiOXCW5yGnFp3CiYicFsB2wS/2j4W4b7bodbT0mncY6jkHXd
-         qyRQ==
-X-Gm-Message-State: AOAM532FJSCjkkm2N0XmvDEIBzOj2MIwRzx3aJGVKSUvoGV9QHQgWNCl
-        KXT/e6ICGd/QHqNrKyqfnmW0qp5qAEkRgNyxJc0hUlbq4GCwGy07enw0ShYw7OYvZmjMsKWv602
-        rrZ9sQTtqTmDNsVtgBcpNVq9ypAmJ20StC+luKY9T
-X-Received: by 2002:aa7:8b02:: with SMTP id f2mr17326308pfd.59.1599450618942;
-        Sun, 06 Sep 2020 20:50:18 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwiw6zva7WG2JalWfZO5CnnUA49jrjPIHrcrSaL3UTwr1qmqpBYYx79C1OGaVQ4e1GVoN+a1g==
-X-Received: by 2002:aa7:8b02:: with SMTP id f2mr17326293pfd.59.1599450618608;
-        Sun, 06 Sep 2020 20:50:18 -0700 (PDT)
-Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id e1sm10828706pjv.17.2020.09.06.20.50.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2020 20:50:17 -0700 (PDT)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     davem@davemloft.net, kuba@kernel.org, skhan@linuxfoundation.org
-Cc:     po-hsu.lin@canonical.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCHv3] selftests: rtnetlink: load fou module for kci_test_encap_fou() test
-Date:   Mon,  7 Sep 2020 11:50:10 +0800
-Message-Id: <20200907035010.9154-1-po-hsu.lin@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 7 Sep 2020 00:01:13 -0400
+Received: from mail-mw2nam10on2056.outbound.protection.outlook.com ([40.107.94.56]:51904
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725778AbgIGEBK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 00:01:10 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MccTc8G+dMd1pGAyEvXl8yuhFqWAr31RT6Mml2l4jDNa4jgsRL4BoVYzBPYJFTGgis4GT0d6y0NQ9qfie2P0mux3YvS9/geODmAeMhc+TBehlMjHGhOjLQnxYNc/BKA9ciCe8GkiXlatHTlh/Rco0y7u4S7gB+6+Hdt88GW8m0oNDqzieu6JhG9drCu2l0uZXtVLz2f8iDVRDeQAR1X4P7eS+znYNTg3bie5vz8ulN/UpEc5I5ZsMfE1WTRbUs9KXVB7U3aZnkA1L5LiGJjS0vtCAHT76n9cNiF3wT5d4+OvvWrW4Hw7zlXvnZOxnSBPUlFhGnQ0qfJi4iAdsxu0xw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3FU48ufH16I77XoY5GAJToYJfa8nkyqW+DjLFkNqcQ=;
+ b=b1MmiPsD7m0JHqQ66MVhd8SIndIT/Aaln6XNspPEnBGctXGdvPErMqIxvlXPpNnmCqu0LpnIjS1XGrRkc1HPfRD6A531aF5M0VwYsY5nBLKZz2dYCmqO5x+H8CO5f32yx6KjMs2Gv7+Rt/fWATJyLjusL+zYGDfCt3sedjntMHj0dK+NEcChONJruSPkLd72gKZlP+lCYJwfx+VE9uNusg9MQw1hKXZS8CpRLsRMlTHdHhOW7zHUJGEyDvrsbRhG5EfZ0TXG/yXZSy9AtKVXQwfBY6gzd6VsJoDexUSjkgEtAmDMapTrXiSI83/nXP5x1yhOMdexiQLxrEkExYCkEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u3FU48ufH16I77XoY5GAJToYJfa8nkyqW+DjLFkNqcQ=;
+ b=qCxcvXcSd5A6guSuUjgASpLkhhSDWpcB8dy8tBxpifgp0KFdyQe/qofzmGzXHlJA0PGvFZ04JvCBFjKit382Yj6XxA0MxbrhPc0Tc8wbZ9tT+JE1U94xON91AbRTVQfK/LldESxrvqfmIMlBfBVd0sRBhYwVjNBPysOOmzo213I=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com (2603:10b6:4:56::12)
+ by DM6PR12MB4315.namprd12.prod.outlook.com (2603:10b6:5:223::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Mon, 7 Sep
+ 2020 04:01:08 +0000
+Received: from DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::4df1:4ad8:38cd:128c]) by DM5PR1201MB0188.namprd12.prod.outlook.com
+ ([fe80::4df1:4ad8:38cd:128c%7]) with mapi id 15.20.3348.017; Mon, 7 Sep 2020
+ 04:01:08 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     akshu.agrawal@amd.com, derek.fang@realtek.com,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ASoC: rt5682: Have global name clock option for parent clk
+Date:   Mon,  7 Sep 2020 09:30:37 +0530
+Message-Id: <20200907040038.3124-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:22::24) To DM5PR1201MB0188.namprd12.prod.outlook.com
+ (2603:10b6:4:56::12)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from local.dlink.router (122.179.60.60) by MA1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 04:01:04 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.179.60.60]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 449fc26f-1ac2-46ca-2263-08d852e2a5e9
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4315:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4315919BE701B0A6367F3E74F8280@DM6PR12MB4315.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tNHBQeA60/9bXHOjOqjNJqvFh1BQ+VrQgiHzJMu7sLm/6tHENAVUYhEdWd2OS6upJlkz/kPGPoEID0TdBrLKm42caYT1Zin4zxbGLyONcdz/CWWYusGIzm3oB56kuftY1K0wO9n+XR5fpS+dGDccsI/yojpuZoSWyv+Qyykqm41x8cSlzQLlUvJ9BM96LNy60DvFrnoCLbVdTvCZXZJq3JcLbjFaoQylHKT9ncCpDDwrfLYOfZ3kw2dWBhUj9m/Tx7qcbLGUL2fe/6fmi5/XlDzn+QQSS87QpfRqYCH760O/MsyvfAQSJk3wr/XjMVIxm8ydOPayPpB6+Jve90eWqvJP8ca4AqWVhamYO/R7K+FW/OeyVvkZTzWsxfR2HQSZ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1201MB0188.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(366004)(396003)(39860400002)(376002)(66556008)(66476007)(1076003)(6506007)(6486002)(36756003)(956004)(6512007)(8676002)(316002)(8936002)(2616005)(4744005)(52116002)(16526019)(6666004)(66946007)(109986005)(86362001)(478600001)(44832011)(4326008)(26005)(5660300002)(54906003)(2906002)(186003)(266003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: xvlOFXqli+k2YwP7vAyjj9RcilRJ+t0aOZMxdTNw/5F5rfTWGKw1iMttLKNH6jyUfLMmSEbtvhGu93wsUqAMd/rAqnJlS1IYi0z3XgjUjcfr/S7hZa+bk4dM6tWIwiGF8xoxTGqNAaLfQ2hBqB9nh3T8czgbhE3GDrdG50csbWlDZ+wgZeYGOmelinJS5Fr8tBeka2uD4HqBqJdfVF/czXv+caRMyFGB9YG9BNTu95Z/MQJdvXVLPX+UDbZTJ3QF9Lt2JJuEPFDe1hnNM7+PbNeq6BLYIog2Rl1GuQINQmkl9YTPnq2otSe8OJsQoC31lWLJGhq9XkskuVEVnL/Ej1E1XveeIvoYMFIH1gI/sbPqGh9felKfuCWhqhN5oZrAZGIboFFm3Ua+ne7Ju7FKluhRLeNgVulkbMQuSLszFKI89tGDelNsV6IOKqsLDmDM4z5AEiF78Qz2pM2pgmZvVTytjgpbhfUxi9SyDOlYL8VL2pBB+nOHNfHqQu1mI35xMnQ8JFZR8ImW/fg+cT31TdXMiB+na8eaCu2U9YzIn4mwLgF9WZFz/83uEcxFA7Tg6jdoulxCINA6Qc3CgncJ1y76dgo3HPuy0dhHhoaTLxz1iQqg/JOU95wG93Kw492TyoowLXqRc70V9cxs/QF1+A==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449fc26f-1ac2-46ca-2263-08d852e2a5e9
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR1201MB0188.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 04:01:07.7638
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KjvgCi3q4cBqA70z17v9kZQyzgcFlYjcEPht1gu0mHIEBIe1jgB2pbPjwIKx8MpPWx1+/WCiKJ90YOmdR1M2jA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4315
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kci_test_encap_fou() test from kci_test_encap() in rtnetlink.sh
-needs the fou module to work. Otherwise it will fail with:
+When adding parent clk(mclk) to wclk, this adds fallback option
+for the case where global clk name is used.
 
-  $ ip netns exec "$testns" ip fou add port 7777 ipproto 47
-  RTNETLINK answers: No such file or directory
-  Error talking to the kernel
-
-Add the CONFIG_NET_FOU into the config file as well. Which needs at
-least to be set as a loadable module.
-
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
 ---
- tools/testing/selftests/net/config       | 1 +
- tools/testing/selftests/net/rtnetlink.sh | 6 ++++++
- 2 files changed, 7 insertions(+)
+ sound/soc/codecs/rt5682.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/config b/tools/testing/selftests/net/config
-index 3b42c06b..c5e50ab 100644
---- a/tools/testing/selftests/net/config
-+++ b/tools/testing/selftests/net/config
-@@ -31,3 +31,4 @@ CONFIG_NET_SCH_ETF=m
- CONFIG_NET_SCH_NETEM=y
- CONFIG_TEST_BLACKHOLE_DEV=m
- CONFIG_KALLSYMS=y
-+CONFIG_NET_FOU=m
-diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selftests/net/rtnetlink.sh
-index 7c38a90..a711b3e 100755
---- a/tools/testing/selftests/net/rtnetlink.sh
-+++ b/tools/testing/selftests/net/rtnetlink.sh
-@@ -520,6 +520,11 @@ kci_test_encap_fou()
- 		return $ksft_skip
- 	fi
- 
-+	if ! /sbin/modprobe -q -n fou; then
-+		echo "SKIP: module fou is not found"
-+		return $ksft_skip
-+	fi
-+	/sbin/modprobe -q fou
- 	ip -netns "$testns" fou add port 7777 ipproto 47 2>/dev/null
- 	if [ $? -ne 0 ];then
- 		echo "FAIL: can't add fou port 7777, skipping test"
-@@ -540,6 +545,7 @@ kci_test_encap_fou()
- 		return 1
- 	fi
- 
-+	/sbin/modprobe -q -r fou
- 	echo "PASS: fou"
- }
- 
+diff --git a/sound/soc/codecs/rt5682.c b/sound/soc/codecs/rt5682.c
+index 93ebf0279b62..26928bc49bcb 100644
+--- a/sound/soc/codecs/rt5682.c
++++ b/sound/soc/codecs/rt5682.c
+@@ -2780,6 +2780,7 @@ static int rt5682_register_dai_clks(struct snd_soc_component *component)
+ 			if (rt5682->mclk) {
+ 				init.parent_data = &(struct clk_parent_data){
+ 					.fw_name = "mclk",
++					.name = __clk_get_name(rt5682->mclk),
+ 				};
+ 				init.num_parents = 1;
+ 			}
 -- 
-2.7.4
+2.20.1
 
