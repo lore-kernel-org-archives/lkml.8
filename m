@@ -2,88 +2,78 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175D5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E90C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDA132087D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A099206B8
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730231AbgIGPwu (ORCPT
+        id S1730279AbgIGPxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:52:50 -0400
-Received: from mga17.intel.com ([192.55.52.151]:25785 "EHLO mga17.intel.com"
+        Mon, 7 Sep 2020 11:53:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:37668 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730221AbgIGPwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:52:34 -0400
-IronPort-SDR: XLendpVzhN8Mt4KG5/sHo+UV+ChOat8WTxaIMm+uZ3LxioFTEqDPeohrIl6Z6l32MRP34fxeXL
- QiKrR/wwhlxA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="138066938"
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="138066938"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 08:52:29 -0700
-IronPort-SDR: OKawkKFMoTnSGMbguXThLtl8NtjcwhxLsewqqLKPYgFmHyfSdylAm5yyICdAjMpdfR2/DEblnQ
- njoVBfvoFnZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,402,1592895600"; 
-   d="scan'208";a="333197015"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 08:52:26 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFJNC-00EzvH-KL; Mon, 07 Sep 2020 18:48:02 +0300
-Date:   Mon, 7 Sep 2020 18:48:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     himadrispandya@gmail.com, dvyukov@google.com,
-        linux-usb@vger.kernel.org, perex@perex.cz, tiwai@suse.com,
-        stern@rowland.harvard.ed, linux-kernel@vger.kernel.org,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-bluetooth@vger.kernel.org, alsa-devel@alsa-project.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2 03/11] USB: core: message.c: use
- usb_control_msg_send() in a few places
-Message-ID: <20200907154802.GO1891694@smile.fi.intel.com>
-References: <20200907145108.3766613-1-gregkh@linuxfoundation.org>
- <20200907145108.3766613-4-gregkh@linuxfoundation.org>
- <20200907145644.GA3767938@kroah.com>
+        id S1730033AbgIGOvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:51:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84D5D31B;
+        Mon,  7 Sep 2020 07:51:22 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D55E53F73C;
+        Mon,  7 Sep 2020 07:51:20 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 15:51:15 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: Re: [PATCH 0/2] r8a7742 add PCIe node
+Message-ID: <20200907145115.GA10138@e121166-lin.cambridge.arm.com>
+References: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200907145644.GA3767938@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200810174156.30880-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 04:56:44PM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Sep 07, 2020 at 04:51:00PM +0200, Greg Kroah-Hartman wrote:
-> > There are a few calls to usb_control_msg() that can be converted to use
-> > usb_control_msg_send() instead, so do that in order to make the error
-> > checking a bit simpler.
-> > 
-> > Cc: Alan Stern <stern@rowland.harvard.edu>
-> > Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: linux-usb@vger.kernel.org
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On Mon, Aug 10, 2020 at 06:41:54PM +0100, Lad Prabhakar wrote:
+> Hi All,
 > 
-> Oops, Andy, sorry, you gave me a Reviewed-by: Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> on the previous version of this,
-> I'll add it next round, or when it's queued up.
+> This patch set adds PCIe instance to r8a7742 Soc dtsi.
+> patches apply on-top of [1] + [2]
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/geert/
+>     renesas-devel.git/log/?h=renesas-arm-dt-for-v5.10
+> [2] https://patchwork.kernel.org/project/linux-renesas-soc/
+>     list/?series=330277
+> 
+> Cheers,
+> Prabhakar
+> 
+> Lad Prabhakar (2):
+>   dt-bindings: PCI: rcar: Add device tree support for r8a7742
+>   ARM: dts: r8a7742: Add PCIe Controller device node
+> 
+>  .../devicetree/bindings/pci/rcar-pci.txt      |  3 +-
+>  arch/arm/boot/dts/r8a7742.dtsi                | 35 +++++++++++++++++++
+>  2 files changed, 37 insertions(+), 1 deletion(-)
 
-NP! Whatever works better for you.
+I took patch (1) in pci/rcar, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lorenzo
