@@ -2,87 +2,119 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0E1C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADC2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D3121532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498621;
-	bh=c+LatMKoM5/1BtRYscz0019UW7w/K1nTQivhKbKM+5A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sI6lw5lpLJrTa8fngTLNXm4UfkS55ybDxUA9gtYwKWHKJndrWh07jh+botDAXMdLs
-	 o6OD2Dp7S7KQmG1wW/FUGV2XDUqGpeORDlp9sPZqnmcVASpQupR38rbyzF2Q70oWtq
-	 mSNe2qAjhdgKKCgTAwJx6an9hG4aBlYLb8qCbvIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 239C321532
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgIGRKS (ORCPT
+        id S1730883AbgIGRK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38244 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:10:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:41654 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729826AbgIGRJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 13:09:13 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FD98206B8;
-        Mon,  7 Sep 2020 17:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599498552;
-        bh=c+LatMKoM5/1BtRYscz0019UW7w/K1nTQivhKbKM+5A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yZUdJ2q+CoFJrKpQif7Uu7/CVm3k0fTvJEpPo2b076qALItHtgWLU8Vlioo9h2dCm
-         n7jtruYdt9WQgX6MMRzzhTaGZMCfSpIxra9rrOY37S+ebdGDJ4PTJCjltfLVt4iruz
-         K5o/ZS2od70QbhK4hxG6TRP5XQsNOyQLo6JUhBew=
-Date:   Mon, 7 Sep 2020 13:09:11 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     gregkh@linuxfoundation.org, alex.williamson@redhat.com,
-        cohuck@redhat.com, peterx@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v5.4.y 0/3] vfio: Fix for CVE-2020-12888
-Message-ID: <20200907170911.GM8670@sasha-vm>
-References: <1599401277-32172-1-git-send-email-akaher@vmware.com>
- <1599401277-32172-4-git-send-email-akaher@vmware.com>
+        id S1730662AbgIGRKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:10:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B1BB31B;
+        Mon,  7 Sep 2020 10:10:11 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39C633F66E;
+        Mon,  7 Sep 2020 10:10:09 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 18:10:06 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "amurray@thegoodpenguin.co.uk" <amurray@thegoodpenguin.co.uk>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        alan.mikhak@sifive.com, kishon@ti.com,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: Re: [PATCH 0/2] PCI: dwc: Add support to handle prefetchable memory
+ separately
+Message-ID: <20200907171006.GD10272@e121166-lin.cambridge.arm.com>
+References: <20200602100940.10575-1-vidyas@nvidia.com>
+ <DM5PR12MB127675E8C053755CB82A54BCDA8B0@DM5PR12MB1276.namprd12.prod.outlook.com>
+ <389018aa-79c8-4a1e-5379-8b8e42939859@nvidia.com>
+ <dd32f413-aa1c-b2e6-d76f-9d2897a8cfad@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599401277-32172-4-git-send-email-akaher@vmware.com>
+In-Reply-To: <dd32f413-aa1c-b2e6-d76f-9d2897a8cfad@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 06, 2020 at 07:37:57PM +0530, Ajay Kaher wrote:
->CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
->devices may lead to DoS scenario
->
->The VFIO modules allow users (guest VMs) to enable or disable access to the
->devices' MMIO memory address spaces. If a user attempts to access (read/write)
->the devices' MMIO address space when it is disabled, some h/w devices issue an
->interrupt to the CPU to indicate a fatal error condition, crashing the system.
->This flaw allows a guest user or process to crash the host system resulting in
->a denial of service.
->
->Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
->before user access.
->
->Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
->remap_pfn_range(). Also provides a list of vmas actively mapping the area which
->can later use to invalidate those mappings.
->
->Patch 3/ block the user from accessing memory spaces which is disabled by using
->new vma list support to zap, or invalidate, those memory mappings in order to
->force them to be faulted back in on access.
+On Mon, Jul 06, 2020 at 10:05:06AM +0530, Vidya Sagar wrote:
+> 
+> 
+> On 18-Jun-20 12:26 AM, Vidya Sagar wrote:
+> > 
+> > 
+> > On 02-Jun-20 10:37 PM, Gustavo Pimentel wrote:
+> > > External email: Use caution opening links or attachments
+> > > 
+> > > 
+> > > On Tue, Jun 2, 2020 at 11:9:38, Vidya Sagar <vidyas@nvidia.com> wrote:
+> > > 
+> > > > In this patch series,
+> > > > Patch-1
+> > > > adds required infrastructure to deal with prefetchable memory region
+> > > > information coming from 'ranges' property of the respective
+> > > > device-tree node
+> > > > separately from non-prefetchable memory region information.
+> > > > Patch-2
+> > > > Adds support to use ATU region-3 for establishing the mapping
+> > > > between CPU
+> > > > addresses and PCIe bus addresses.
+> > > > It also changes the logic to determine whether mapping is
+> > > > required or not by
+> > > > checking both CPU address and PCIe bus address for both prefetchable and
+> > > > non-prefetchable regions. If the addresses are same, then, it is
+> > > > understood
+> > > > that 1:1 mapping is in place and there is no need to setup ATU mapping
+> > > > whereas if the addresses are not the same, then, there is a need
+> > > > to setup ATU
+> > > > mapping. This is certainly true for Tegra194 and what I heard
+> > > > from our HW
+> > > > engineers is that it should generally be true for any DWC based
+> > > > implementation
+> > > > also.
+> > > > Hence, I request Synopsys folks (Jingoo Han & Gustavo Pimentel
+> > > > ??) to confirm
+> > > > the same so that this particular patch won't cause any
+> > > > regressions for other
+> > > > DWC based platforms.
+> > > 
+> > > Hi Vidya,
+> > > 
+> > > Unfortunately due to the COVID-19 lockdown, I can't access my development
+> > > prototype setup to test your patch.
+> > > It might take some while until I get the possibility to get access to it
+> > > again.
+> > Hi Gustavo,
+> > Did you find time to check this?
+> > Adding Kishon and Alan as well to take a look at this and verify on
+> > their platforms if possible.
+> Hi Kishon and Alan, did you find time to verify this on your respective
+> platforms?
 
-I've queued this and the 4.19 backports, thanks!
+Yes please. I would like to merge this code, in preparation for that
+to happen mind rebasing the series against my pci/dwc branch with
+Rob's suggested changes implemented ?
 
--- 
-Thanks,
-Sasha
+Thanks a lot,
+Lorenzo
