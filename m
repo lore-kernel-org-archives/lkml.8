@@ -7,32 +7,29 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C840C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20E1A2080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B502080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731348AbgIGRcw (ORCPT
+        id S1731353AbgIGRc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:32:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729495AbgIGNS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:32:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:43572 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729478AbgIGNS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 09:18:26 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A0BC0617A2;
-        Mon,  7 Sep 2020 06:18:10 -0700 (PDT)
 Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id 5A0B0FC7;
-        Mon,  7 Sep 2020 15:16:52 +0200 (CEST)
+        by theia.8bytes.org (Postfix) with ESMTPSA id 4EFC4D3B;
+        Mon,  7 Sep 2020 15:16:47 +0200 (CEST)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     x86@kernel.org
 Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Jiri Slaby <jslaby@suse.cz>,
@@ -43,15 +40,14 @@ Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
         David Rientjes <rientjes@google.com>,
         Cfir Cohen <cfir@google.com>,
         Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
         Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Martin Radev <martin.b.radev@gmail.com>,
         linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 20/72] x86/boot/compressed/64: Call set_sev_encryption_mask() earlier
-Date:   Mon,  7 Sep 2020 15:15:21 +0200
-Message-Id: <20200907131613.12703-21-joro@8bytes.org>
+Subject: [PATCH v7 10/72] x86/insn: Add insn_get_modrm_reg_off()
+Date:   Mon,  7 Sep 2020 15:15:11 +0200
+Message-Id: <20200907131613.12703-11-joro@8bytes.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
 References: <20200907131613.12703-1-joro@8bytes.org>
@@ -64,52 +60,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Call set_sev_encryption_mask() while still on the stage 1 #VC-handler,
-because the stage 2 handler needs the kernel's own page-tables to be
-set up, to which calling set_sev_encryption_mask() is a prerequisite.
+Add a function to the instruction decoder which returns the pt_regs
+offset of the register specified in the reg field of the modrm byte.
 
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- arch/x86/boot/compressed/head_64.S      | 9 ++++++++-
- arch/x86/boot/compressed/ident_map_64.c | 3 ---
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/insn-eval.h |  1 +
+ arch/x86/lib/insn-eval.c         | 23 +++++++++++++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 37c8c2c8f8b6..1c80f1738fd9 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -533,9 +533,16 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	rep	stosq
+diff --git a/arch/x86/include/asm/insn-eval.h b/arch/x86/include/asm/insn-eval.h
+index 392b4fe377f9..f748f57f1491 100644
+--- a/arch/x86/include/asm/insn-eval.h
++++ b/arch/x86/include/asm/insn-eval.h
+@@ -17,6 +17,7 @@
  
- /*
-- * Load stage2 IDT and switch to our own page-table
-+ * If running as an SEV guest, the encryption mask is required in the
-+ * page-table setup code below. When the guest also has SEV-ES enabled
-+ * set_sev_encryption_mask() will cause #VC exceptions, but the stage2
-+ * handler can't map its GHCB because the page-table is not set up yet.
-+ * So set up the encryption mask here while still on the stage1 #VC
-+ * handler. Then load stage2 IDT and switch to the kernel's own
-+ * page-table.
-  */
- 	pushq	%rsi
-+	call	set_sev_encryption_mask
- 	call	load_stage2_idt
- 	call	initialize_identity_maps
- 	popq	%rsi
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index 62e42c11a336..b4f2a5f503cd 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -105,9 +105,6 @@ static void add_identity_map(unsigned long start, unsigned long end)
- /* Locates and clears a region for a new top level page table. */
- void initialize_identity_maps(void)
- {
--	/* If running as an SEV guest, the encryption mask is required. */
--	set_sev_encryption_mask();
--
- 	/* Exclude the encryption mask from __PHYSICAL_MASK */
- 	physical_mask &= ~sme_me_mask;
+ void __user *insn_get_addr_ref(struct insn *insn, struct pt_regs *regs);
+ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs);
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs);
+ unsigned long insn_get_seg_base(struct pt_regs *regs, int seg_reg_idx);
+ int insn_get_code_seg_params(struct pt_regs *regs);
+ int insn_fetch_from_user(struct pt_regs *regs,
+diff --git a/arch/x86/lib/insn-eval.c b/arch/x86/lib/insn-eval.c
+index 2323c85132cf..f20942ce76c6 100644
+--- a/arch/x86/lib/insn-eval.c
++++ b/arch/x86/lib/insn-eval.c
+@@ -20,6 +20,7 @@
  
+ enum reg_type {
+ 	REG_TYPE_RM = 0,
++	REG_TYPE_REG,
+ 	REG_TYPE_INDEX,
+ 	REG_TYPE_BASE,
+ };
+@@ -439,6 +440,13 @@ static int get_reg_offset(struct insn *insn, struct pt_regs *regs,
+ 			regno += 8;
+ 		break;
+ 
++	case REG_TYPE_REG:
++		regno = X86_MODRM_REG(insn->modrm.value);
++
++		if (X86_REX_R(insn->rex_prefix.value))
++			regno += 8;
++		break;
++
+ 	case REG_TYPE_INDEX:
+ 		regno = X86_SIB_INDEX(insn->sib.value);
+ 		if (X86_REX_X(insn->rex_prefix.value))
+@@ -807,6 +815,21 @@ int insn_get_modrm_rm_off(struct insn *insn, struct pt_regs *regs)
+ 	return get_reg_offset(insn, regs, REG_TYPE_RM);
+ }
+ 
++/**
++ * insn_get_modrm_reg_off() - Obtain register in reg part of the ModRM byte
++ * @insn:	Instruction containing the ModRM byte
++ * @regs:	Register values as seen when entering kernel mode
++ *
++ * Returns:
++ *
++ * The register indicated by the reg part of the ModRM byte. The
++ * register is obtained as an offset from the base of pt_regs.
++ */
++int insn_get_modrm_reg_off(struct insn *insn, struct pt_regs *regs)
++{
++	return get_reg_offset(insn, regs, REG_TYPE_REG);
++}
++
+ /**
+  * get_seg_base_limit() - obtain base address and limit of a segment
+  * @insn:	Instruction. Must be valid.
 -- 
 2.28.0
 
