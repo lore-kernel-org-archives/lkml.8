@@ -2,160 +2,168 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89604C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90324C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E75620658
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j87jGnf4"
+	by mail.kernel.org (Postfix) with ESMTP id 5E8EC2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgIGRWR (ORCPT
+        id S1729892AbgIGRWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:22:17 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17933 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729618AbgIGNrY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:47:24 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f5639990001>; Mon, 07 Sep 2020 06:46:01 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 06:46:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 07 Sep 2020 06:46:15 -0700
-Received: from [10.21.180.11] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
- 2020 13:46:04 +0000
-Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
- to devlink reload command
-To:     Jakub Kicinski <kuba@kernel.org>, Jiri Pirko <jiri@resnulli.us>
-CC:     Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jiri Pirko <jiri@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-2-git-send-email-moshe@mellanox.com>
- <20200831121501.GD3794@nanopsycho.orion>
- <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
- <20200902094627.GB2568@nanopsycho>
- <20200902083025.43407d8f@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200903055729.GB2997@nanopsycho.orion>
- <20200903124719.75325f0c@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <20200904090450.GH2997@nanopsycho.orion>
- <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Moshe Shemesh <moshe@nvidia.com>
-Message-ID: <6bd0fa45-68ce-b82d-98e6-327c6cd50e80@nvidia.com>
-Date:   Mon, 7 Sep 2020 16:46:01 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Mon, 7 Sep 2020 13:22:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53352 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729678AbgIGNrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:47:37 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 37044B73E2F5FB36280A;
+        Mon,  7 Sep 2020 21:47:04 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.487.0; Mon, 7 Sep 2020 21:46:55 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <james.morse@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <dyoung@redhat.com>, <bhe@redhat.com>, <corbet@lwn.net>,
+        <John.P.donnelly@oracle.com>, <prabhakar.pkin@gmail.com>,
+        <bhsharma@redhat.com>
+CC:     <horms@verge.net.au>, <robh+dt@kernel.org>, <arnd@arndb.de>,
+        <nsaenzjulienne@suse.de>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-doc@vger.kernel.org>, <guohanjun@huawei.com>,
+        <xiexiuqi@huawei.com>, <huawei.libin@huawei.com>,
+        <wangkefeng.wang@huawei.com>, <chenzhou10@huawei.com>
+Subject: [PATCH v12 9/9] kdump: update Documentation about crashkernel
+Date:   Mon, 7 Sep 2020 21:47:45 +0800
+Message-ID: <20200907134745.25732-10-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904125647.799e66e4@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599486361; bh=sezZ54ZD5NQ3LevSrG7FfxnzS5K+ZBc6/xKbw6Ghdtk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=j87jGnf4hAx99HX18Vz4sFPm10YlIagjhYt7hUTVfiDYDB/u7GB2y5Fj07DfmvKVn
-         ly8I+bBqw2woI6HY/0vcYACfDa+kVjZ7lMQm6INiKy5JILysUWUOjVcUqK3FG1k3hM
-         NsEaL988wxRmjtvaU25MgmX+x7f+zEfawETJM4JOXMwXNbGwhRxYlVBBGNs4w3kssM
-         5f9pckjKHtw9ptP+veBgh3l6M91aT3+VqkhQ4fq3ZiK4ZvwHjBpf3TJvTOOkt1TfAO
-         4SfhpLqz1gHmDNCVwB6lbYHT1qc3QUpNoWPxPGEmbEYtkNhWC64EbxzmqVBQCfc91x
-         VBTZjukiXjkQA==
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For arm64, the behavior of crashkernel=X has been changed, which
+tries low allocation in DMA zone, and fall back to high allocation
+if it fails.
+We can also use "crashkernel=X,high" to select a high region above
+DMA zone, which also tries to allocate at least 256M low memory in
+DMA zone automatically.
+"crashkernel=Y,low" can be used to allocate specified size low memory
+in DMA zone.
+For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
 
-On 9/4/2020 10:56 PM, Jakub Kicinski wrote:
-> External email: Use caution opening links or attachments
->
->
-> On Fri, 4 Sep 2020 11:04:50 +0200 Jiri Pirko wrote:
->> Thu, Sep 03, 2020 at 09:47:19PM CEST, kuba@kernel.org wrote:
->>> On Thu, 3 Sep 2020 07:57:29 +0200 Jiri Pirko wrote:
->>>> Wed, Sep 02, 2020 at 05:30:25PM CEST, kuba@kernel.org wrote:
->>>>> On Wed, 2 Sep 2020 11:46:27 +0200 Jiri Pirko wrote:
->>>>>>> ? Do we need such change there too or keep it as is, each action by=
- itself
->>>>>>> and return what was performed ?
->>>>>> Well, I don't know. User asks for X, X should be performed, not Y or=
- Z.
->>>>>> So perhaps the return value is not needed.
->>>>>> Just driver advertizes it supports X, Y, Z and the users says:
->>>>>> 1) do X, driver does X
->>>>>> 2) do Y, driver does Y
->>>>>> 3) do Z, driver does Z
->>>>>> [
->>>>>> I think this kindof circles back to the original proposal...
->>>>> Why? User does not care if you activate new devlink params when
->>>>> activating new firmware. Trust me. So why make the user figure out
->>>>> which of all possible reset option they should select? If there is
->>>>> a legitimate use case to limit what is reset - it should be handled
->>>>> by a separate negative attribute, like --live which says don't reset
->>>>> anything.
->>>> I see. Okay. Could you please sum-up the interface as you propose it?
->>> What I proposed on v1, pass requested actions as a bitfield, driver may
->>> perform more actions, we can return performed actions in the response.
->> Okay. So for example for mlxsw, user might say:
->> 1) I want driver reinit
->>      kernel reports: fw reset and driver reinit was done
->> 2) I want fw reset
->>      kernel reports: fw reset and driver reinit was done
->> 3) I want fw reset and driver reinit
->>      kernel reports: fw reset and driver reinit was done
-> Yup.
->
->>> Then separate attribute to carry constraints for the request, like
->>> --live.
->> Hmm, this is a bit unclear how it is supposed to work. The constraints
->> apply for all? I mean, the actions are requested by a bitfield.
->> So the user can say:
->> I want fw reset and driver reinit --live. "--live" applies to both fw
->> reset and driver reinit? That is odd.
-> The way I was thinking about it - the constraint expresses what sort of
-> downtime the user can accept. So yes, it'd apply to all. If any of the
-> reset actions does not meet the constraint then error should be
-> returned.
->
-> In that sense I don't like --live because it doesn't really say much.
-> AFAIU it means 1) no link flap; 2) < 2 sec datapath downtime; 3) no
-> configuration is lost in kernel or device (including netdev config,
-> link config, flow rules, counters etc.). I was hoping at least the
-> documentation in patch 14 would be more precise.
+For x86 and arm64, we introduce threshold for the required memory.
+if required size X is too large and leads to very little free low
+memory after low allocation, the system may not work well.
+So add a threshold and go for high allocation directly if the required
+size is too large. The threshold is set as the half of low memory.
 
+So update the Documentation.
 
-Actually, while writing "no-reset" or "live-patching" I meant also no=20
-downtime at all and nothing resets (config, rules ... anything), that=20
-fits mlx5 live-patching.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ Documentation/admin-guide/kdump/kdump.rst     | 25 ++++++++++++++++---
+ .../admin-guide/kernel-parameters.txt         | 13 ++++++++--
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-However, to make it more generic,=C2=A0 I can allow few seconds downtime an=
-d=20
-add similar constrains as you mentioned here to "no-reset". I will add=20
-that to the documentation patch.
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 2da65fef2a1c..549611abc581 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -299,7 +299,16 @@ Boot into System Kernel
+    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+ 
+-   On x86 and x86_64, use "crashkernel=64M@16M".
++   On x86 use "crashkernel=64M@16M".
++
++   On x86_64, use "crashkernel=X" to select a region under 4G first, and
++   fall back to reserve region above 4G. And go for high allocation
++   directly if the required size is too large.
++   We can also use "crashkernel=X,high" to select a region above 4G, which
++   also tries to allocate at least 256M below 4G automatically and
++   "crashkernel=Y,low" can be used to allocate specified size low memory.
++   Use "crashkernel=Y@X" if you really have to reserve memory from specified
++   start address X.
+ 
+    On ppc64, use "crashkernel=128M@32M".
+ 
+@@ -316,8 +325,18 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
+ 
+-   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+-   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
++   On arm64, use "crashkernel=X" to try low allocation in DMA zone, and
++   fall back to high allocation if it fails. And go for high allocation
++   directly if the required size is too large.
++   We can also use "crashkernel=X,high" to select a high region above
++   DMA zone, which also tries to allocate at least 256M low memory in
++   DMA zone automatically.
++   "crashkernel=Y,low" can be used to allocate specified size low memory
++   in DMA zone.
++   For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
++   Use "crashkernel=Y@X" if you really have to reserve memory from
++   specified start address X. Note that the start address of the kernel,
++   X if explicitly specified, must be aligned to 2MiB (0x200000).
+ 
+ Load the Dump-capture Kernel
+ ============================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a1068742a6df..f7df572d8f64 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -727,6 +727,10 @@
+ 			[KNL, X86-64] Select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
++			[KNL, arm64] Try low allocation in DMA zone, fall back
++			to high allocation if it fails when '@offset' hasn't been
++			specified. For non-RPi4 platforms, change DMA zone to
++			DMA32 zone.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
+ 
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+@@ -743,6 +747,8 @@
+ 			Otherwise memory region will be allocated below 4G, if
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
++			[KNL, arm64] range in high memory.
++			Allow kernel to allocate physical memory region from top.
+ 	crashkernel=size[KMG],low
+ 			[KNL, X86-64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+@@ -751,13 +757,16 @@
+ 			requires at least 64M+32K low memory, also enough extra
+ 			low memory is needed to make sure DMA buffers for 32-bit
+ 			devices won't run out. Kernel would try to allocate at
+-			at least 256M below 4G automatically.
++			least 256M below 4G automatically.
+ 			This one let user to specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+-
++			[KNL, arm64] range in low memory.
++			This one let user to specify a low range in DMA zone for
++			crash dump kernel. For non-RPi4 platforms, change DMA zone
++			to DMA32 zone.
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
+ 
+-- 
+2.20.1
 
-> I think you're saying that it's strange to express that as a constraint
-> because internally it maps to one of two fw reset types. And there is
-> only one driver reinit procedure. But I don't think that the
-> distinction of reset types is valuable to the user. What matters is if
-> application SLAs will be met or not.
->
-> I assume that deeper/longer reset is always less risky and would be
-> preferred unless constraint is specified.
->
->>> I'd think the supported actions in devlink_ops would be fine as a
->>> bitfield, too. Combinations are often hard to capture in static data.
