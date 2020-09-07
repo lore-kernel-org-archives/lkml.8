@@ -2,75 +2,117 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48298C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A50C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0284B2075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30142078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599471116;
+	bh=eP5wyhYnUgbeM5N0DytP9/JFLIDxyhmR9T/dZ+SfNqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=puV6jyJ0GoaNCVk8JutzjJIbmxS1rHf/V8ZtGEcoHzNdkxfIQ3k2gfbsWBct+Vi3i
+	 o8oHU1z7OLTJaw83AN6aPROnHR5RTFidQdTropTtNjV9WZhd81GEfHrMFdiEU44mX9
+	 LlYUQkuWsCoFGrWQbP8YtXA4fQ2BtgmYrhJuP2Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgIGJbn (ORCPT
+        id S1728324AbgIGJby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:31:43 -0400
-Received: from sym2.noone.org ([178.63.92.236]:34772 "EHLO sym2.noone.org"
+        Mon, 7 Sep 2020 05:31:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728093AbgIGJbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:31:42 -0400
-Received: by sym2.noone.org (Postfix, from userid 1002)
-        id 4BlNMc58xSzvjc1; Mon,  7 Sep 2020 11:31:40 +0200 (CEST)
-From:   Tobias Klauser <tklauser@distanz.ch>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH] fs: adjust dirtytime_interval_handler definition to match prototype
-Date:   Mon,  7 Sep 2020 11:31:40 +0200
-Message-Id: <20200907093140.13434-1-tklauser@distanz.ch>
-X-Mailer: git-send-email 2.11.0
+        id S1728093AbgIGJbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:31:52 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B382F2075A;
+        Mon,  7 Sep 2020 09:31:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599471111;
+        bh=eP5wyhYnUgbeM5N0DytP9/JFLIDxyhmR9T/dZ+SfNqk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sEK0NXYonD/CE8Y+G5BKcSukg0YWIon0CbRP/xlCInE2m+Qr3KT2RpmvGwPr+lL5V
+         m3uvfqEV/7dBjjypb0/32ltnSaeYuR/vlhwZ4wKr+vpFR+hsm5ySbFS6X7Kl4nAYdB
+         2aHK6g6YfUHVP12VokidWhyIsCISXd0ZotDABrR4=
+Date:   Mon, 7 Sep 2020 11:32:06 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>, Len Brown <len.brown@intel.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Herring <robh@kernel.org>
+Subject: Re: [RFC][PATCH] pinctrl: Rework driver_deferred_probe_check_state()
+ evaluation since default timeout has changed
+Message-ID: <20200907093206.GB1393659@kroah.com>
+References: <20200808043512.106865-1-john.stultz@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200808043512.106865-1-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-changed ctl_table.proc_handler to take a kernel pointer. Adjust the
-definition of dirtytime_interval_handler to match its prototype in
-linux/writeback.h which fixes the following sparse error/warning:
+On Sat, Aug 08, 2020 at 04:35:12AM +0000, John Stultz wrote:
+> In commit bec6c0ecb243 ("pinctrl: Remove use of
+> driver_deferred_probe_check_state_continue()"), we removed the
+> use of driver_deferred_probe_check_state_continue() which
+> effectively never returned -ETIMED_OUT, with the
+> driver_deferred_probe_check_state() function that had been
+> reworked to properly return ETIMED_OUT when the deferred probe
+> timeout expired. Along with that change, we set the default
+> timeout to 30 seconds.
+> 
+> However, since moving the timeout to 30 seconds caused some
+> issues for some users with optional dt links, we set the
+> default timeout back to zero - see commit ce68929f07de ("driver
+> core: Revert default driver_deferred_probe_timeout value to 0")
+> 
+> This in essence changed the behavior of the pinctrl's usage
+> of driver_deferred_probe_check_state(), as it now would return
+> ETIMED_OUT by default. Thierry reported this caused problems with
+> resume on tegra platforms.
+> 
+> Thus this patch tweaks the pinctrl logic so that it behaves as
+> before. If modules are enabled, we'll only return EPROBE_DEFERRED
+> while we're missing drivers linked in the DT.
+> 
+> Cc: linux-pm@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Saravana Kannan <saravanak@google.com>
+> Cc: Todd Kjos <tkjos@google.com>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Rob Herring <robh@kernel.org>
+> Fixes: bec6c0ecb243 ("pinctrl: Remove use of driver_deferred_probe_check_state_continue()")
+> Fixes: ce68929f07de ("driver core: Revert default driver_deferred_probe_timeout value to 0")
+> Reported-by: Thierry Reding <thierry.reding@gmail.com>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> ---
+>  drivers/pinctrl/devicetree.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-fs/fs-writeback.c:2189:50: warning: incorrect type in argument 3 (different address spaces)
-fs/fs-writeback.c:2189:50:    expected void *
-fs/fs-writeback.c:2189:50:    got void [noderef] __user *buffer
-fs/fs-writeback.c:2184:5: error: symbol 'dirtytime_interval_handler' redeclared with different type (incompatible argument 3 (different address spaces)):
-fs/fs-writeback.c:2184:5:    int extern [addressable] [signed] [toplevel] dirtytime_interval_handler( ... )
-fs/fs-writeback.c: note: in included file:
-./include/linux/writeback.h:374:5: note: previously declared as:
-./include/linux/writeback.h:374:5:    int extern [addressable] [signed] [toplevel] dirtytime_interval_handler( ... )
-
-Fixes: 32927393dc1c ("sysctl: pass kernel pointers to ->proc_handler")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Tobias Klauser <tklauser@distanz.ch>
----
- fs/fs-writeback.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
-index 149227160ff0..58b27e4070a3 100644
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -2184,7 +2184,7 @@ static int __init start_dirtytime_writeback(void)
- __initcall(start_dirtytime_writeback);
- 
- int dirtytime_interval_handler(struct ctl_table *table, int write,
--			       void __user *buffer, size_t *lenp, loff_t *ppos)
-+			       void *buffer, size_t *lenp, loff_t *ppos)
- {
- 	int ret;
- 
--- 
-2.27.0
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
