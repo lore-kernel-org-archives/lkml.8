@@ -2,250 +2,94 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A039C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AF5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5552075A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599471436;
-	bh=RAVFYWF61yZlm6poHvins/OPqRcDNk08eg76v4/LKL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GwyC9Po2j2faS0WfPwwZRevMfZ80P6O3ZSQHzfNyv9+PJMw0lIZtk6Q++TxAxgaxc
-	 jhf22uBojOASh7+EtSTv3bFurT7U/1hRKuD4LSKTT7VHaF7jmRmhM14pdiYAyqY+DY
-	 pOLlwvY2aR26mFRwn74N2zoHUg1mQSvjAq12bj10=
+	by mail.kernel.org (Postfix) with ESMTP id 0A1472075A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:38:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mJi1fSz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgIGJhP (ORCPT
+        id S1728417AbgIGJi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:37:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727122AbgIGJhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:37:13 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB1D2075A;
-        Mon,  7 Sep 2020 09:37:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599471432;
-        bh=RAVFYWF61yZlm6poHvins/OPqRcDNk08eg76v4/LKL8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1pzelSJBh78G4TJVa+ssVPFnvppPJlArhl8uvfTueDaoKEukMhUcFHmh0GGgi7IjU
-         Y/OQ+hLcrXC3kFsm7f4UGA6fQwiuSw9klndxNBnVMzVdsIgxwGB91GakJHK7N2TKuA
-         4/ts+DVvYdHve8/i2YIZdmUMsra8jhK3/D8l+nbY=
-Date:   Mon, 7 Sep 2020 11:37:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Hemant Kumar <hemantk@codeaurora.org>
-Cc:     manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jhugo@codeaurora.org,
-        bbhatt@codeaurora.org
-Subject: Re: [PATCH v5 4/4] bus: mhi: clients: Add userspace client interface
- driver
-Message-ID: <20200907093725.GC1393659@kroah.com>
-References: <1596696063-17802-1-git-send-email-hemantk@codeaurora.org>
- <1596696063-17802-5-git-send-email-hemantk@codeaurora.org>
+        Mon, 7 Sep 2020 05:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727122AbgIGJiP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:38:15 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0444BC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 02:38:15 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id x14so15024101wrl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 02:38:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q9bP/xoJ+T6gS3ooO5y+uznagdOfHkS2kkQH3P/gVPE=;
+        b=mJi1fSz7M5Lr031HrqOc2vIpZdQEGkG0kniFjTC+Efro5LjGWBiFhbr/W8/CfaGgUL
+         8VC2+kZcZjCsAHUtHRfzdynmLK99Gk68kAUZdqRNt6F/VrUlfhgxBv5sdYZRa1Ok+YxG
+         70oVXdN2vUs7vNwy2fdxiogKZHzniD9lVkijsf8hKWD+2GfEhgS4TuOY3Cnx1HX9riz8
+         kKm4O1vkqHDJSb8/WanZi8DOeK2ALLKVuF0tjKVl9lcmOgS7nA0+TCk4EAKwPHiZaIJ/
+         AP81EU26AHAgVP68NhyrEWf62ZfW5jZ3kxvOvXIEXOK1idHlX74cCb28DF2HAGt3GhK8
+         E3Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=q9bP/xoJ+T6gS3ooO5y+uznagdOfHkS2kkQH3P/gVPE=;
+        b=SEPrG1CPIf5rYncALDCTCcjr/l3IAvdkp115vbQEp2I+9weF6nDKnE3PAy0nZcvX6i
+         mg3H3ZlM254YJibktXRCnsOHw8NxQnF4cLF5YsRvULSO0uQ8VYIHNz8f7GX96W9siBa4
+         ZR1WpnI74ZEhrmOpMdMQQIF3cglwz+YtjCWLEGAp/yHBcefY0O38nNfL2pzZDGSdMI2V
+         2kcHGpZhWpv5xX9ZbGkZ+4loCJo9i8qnysW6WMgCMV/+EzxsDtlMUH8IKhe8GlZlHP3n
+         PpZVF/UGfeHcg9yFqDFMlGzsQui2vAQCQY1+QGoXYmRiJz8Np8cRpOCGKQ+FiIUsSg3f
+         cXAA==
+X-Gm-Message-State: AOAM5303Y6W7Fzkq7D3T9fHDXgTE0qnsR4gbTJogkftJP3AiGh6WMnob
+        okDHie5VyGHe9W5vf3qP++mSnA==
+X-Google-Smtp-Source: ABdhPJwanebMcJF3b2wK++MK94YD9JrWiXeqBZFXJwRJfjn+8khXs/yrtoWZ3SVcFI6GcFsVI4vi/w==
+X-Received: by 2002:a5d:570b:: with SMTP id a11mr17548904wrv.139.1599471493555;
+        Mon, 07 Sep 2020 02:38:13 -0700 (PDT)
+Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id n17sm25170687wrw.0.2020.09.07.02.38.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 02:38:12 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com
+Cc:     linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/4] clk: meson: axg: add clocks for MIPI-DSI support
+Date:   Mon,  7 Sep 2020 11:38:06 +0200
+Message-Id: <20200907093810.6585-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1596696063-17802-5-git-send-email-hemantk@codeaurora.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 05, 2020 at 11:41:03PM -0700, Hemant Kumar wrote:
-> This MHI client driver allows userspace clients to transfer
-> raw data between MHI device and host using standard file operations.
-> Device file node is created with format
-> 
-> /dev/mhi_<controller_name>_<mhi_device_name>
-> 
-> Currently it supports LOOPBACK channel.
-> 
-> Signed-off-by: Hemant Kumar <hemantk@codeaurora.org>
-> ---
->  drivers/bus/mhi/Kconfig          |   6 +
->  drivers/bus/mhi/Makefile         |   1 +
->  drivers/bus/mhi/clients/Kconfig  |  15 +
+This adds the VPU & VAPB clocks along the MIPI DSI Host clock.
 
-Why a whole new subdirectory for just one file?
+The clock scheme is based on the GXBB & G12A VPU clocks, with a different CTS
+clock output used for MIPI-DSI.
 
-Please keep it in the same directory until you get too many different
-files.
+Neil Armstrong (4):
+  dt-bindings: clk: axg-clkc: add Video Clocks
+  dt-bindings: clk: axg-clkc: add MIPI DSI Host clock binding
+  clk: meson: axg: add Video Clocks
+  clk: meson: axg: add MIPI DSI Host clock
 
->  drivers/bus/mhi/clients/Makefile |   3 +
->  drivers/bus/mhi/clients/uci.c    | 662 +++++++++++++++++++++++++++++++++++++++
->  5 files changed, 687 insertions(+)
->  create mode 100644 drivers/bus/mhi/clients/Kconfig
->  create mode 100644 drivers/bus/mhi/clients/Makefile
->  create mode 100644 drivers/bus/mhi/clients/uci.c
-> 
-> diff --git a/drivers/bus/mhi/Kconfig b/drivers/bus/mhi/Kconfig
-> index 6a217ff..927c392 100644
-> --- a/drivers/bus/mhi/Kconfig
-> +++ b/drivers/bus/mhi/Kconfig
-> @@ -20,3 +20,9 @@ config MHI_BUS_DEBUG
->  	 Enable debugfs support for use with the MHI transport. Allows
->  	 reading and/or modifying some values within the MHI controller
->  	 for debug and test purposes.
-> +
-> +if MHI_BUS
-> +
-> +source "drivers/bus/mhi/clients/Kconfig"
-> +
-> +endif
-> diff --git a/drivers/bus/mhi/Makefile b/drivers/bus/mhi/Makefile
-> index 19e6443..48f6028 100644
-> --- a/drivers/bus/mhi/Makefile
-> +++ b/drivers/bus/mhi/Makefile
-> @@ -1,2 +1,3 @@
->  # core layer
->  obj-y += core/
-> +obj-y += clients/
-> diff --git a/drivers/bus/mhi/clients/Kconfig b/drivers/bus/mhi/clients/Kconfig
-> new file mode 100644
-> index 0000000..37aaf51
-> --- /dev/null
-> +++ b/drivers/bus/mhi/clients/Kconfig
-> @@ -0,0 +1,15 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +menu "MHI clients support"
-> +
-> +config MHI_UCI
-> +       tristate "MHI UCI"
-> +       depends on MHI_BUS
-> +       help
-> +	 MHI based userspace client interface driver is used for transferring
-> +	 raw data between host and device using standard file operations from
-> +	 userspace. Open, read, write, and close operations are supported
-> +	 by this driver. Please check mhi_uci_match_table for all supported
-> +	 channels that are exposed to userspace.
-> +
+ drivers/clk/meson/axg.c              | 840 +++++++++++++++++++++++++++
+ drivers/clk/meson/axg.h              |  23 +-
+ include/dt-bindings/clock/axg-clkc.h |  25 +
+ 3 files changed, 887 insertions(+), 1 deletion(-)
 
-Module name information?
+-- 
+2.22.0
 
-
-> +endmenu
-> diff --git a/drivers/bus/mhi/clients/Makefile b/drivers/bus/mhi/clients/Makefile
-> new file mode 100644
-> index 0000000..cd34282
-> --- /dev/null
-> +++ b/drivers/bus/mhi/clients/Makefile
-> @@ -0,0 +1,3 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +
-> +obj-$(CONFIG_MHI_UCI) += uci.o
-
-Why not mhi_ as a prefix?  This is a very generic module name, right?
-
-> diff --git a/drivers/bus/mhi/clients/uci.c b/drivers/bus/mhi/clients/uci.c
-> new file mode 100644
-> index 0000000..a25d5d0
-> --- /dev/null
-> +++ b/drivers/bus/mhi/clients/uci.c
-> @@ -0,0 +1,662 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.*/
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/mhi.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/poll.h>
-> +
-> +#define DEVICE_NAME "mhi"
-> +#define MHI_UCI_DRIVER_NAME "mhi_uci"
-> +#define MAX_UCI_MINORS (128)
-> +
-> +static DEFINE_IDR(uci_idr);
-> +static DEFINE_MUTEX(uci_idr_mutex);
-> +static struct class *uci_dev_class;
-> +static int uci_dev_major = -1;
-
-Why init this to -1?
-
-> +
-> +/**
-> + * struct uci_chan - MHI channel for a uci device
-> + * @wq: wait queue for reader/writer
-> + * @lock: spin lock
-> + * @pending: list of rx buffers userspace is waiting to read
-> + * @cur_buf: current buffer userspace is reading
-> + * @rx_size: size of the current rx buffer userspace is reading
-> + */
-> +struct uci_chan {
-> +	wait_queue_head_t wq;
-> +
-> +	/* protects pending and cur_buf members */
-> +	spinlock_t lock;
-> +
-> +	struct list_head pending;
-> +	struct uci_buf *cur_buf;
-> +	size_t rx_size;
-> +};
-> +
-> +/**
-> + * struct uci_buf - uci buffer
-> + * @data: data buffer
-> + * @len: length of data buffer
-> + * @node: list node of the uci buffer
-> + */
-> +struct uci_buf {
-> +	void *data;
-> +	size_t len;
-> +	struct list_head node;
-> +};
-> +
-> +/**
-> + * struct uci_dev - MHI uci device
-> + * @minor: uci device node minor number
-> + * @mhi_dev: associated mhi device object
-> + * @chan: MHI channel name
-> + * @lock: mutex lock
-> + * @ul_chan: uplink uci channel object
-> + * @dl_chan: downlink uci channel object
-> + * @mtu: max tx buffer length
-> + * @actual_mtu: maximum size of incoming buffer
-> + * @ref_count: uci_dev reference count
-> + * @open_count: device node open count
-> + * @enabled: uci device probed
-> + */
-> +struct uci_dev {
-> +	unsigned int minor;
-> +	struct mhi_device *mhi_dev;
-> +	const char *chan;
-> +
-> +	/* protects uci_dev struct members */
-> +	struct mutex lock;
-> +
-> +	struct uci_chan ul_chan;
-> +	struct uci_chan dl_chan;
-> +	size_t mtu;
-> +	size_t actual_mtu;
-> +	struct kref ref_count;
-> +	struct kref open_count;
-
-I'm stopping right here.  A structure can only have ONE reference count
-to control its lifespan.  You have 2 here, which guarantees that either
-you are using a kref incorrectly, or your code is totally confused and
-will break easily.
-
-Please fix this as this is not how to do this.
-
-Also, why does anyone need to care about the number of times that open()
-is called?  The vfs layer should handle all of that for you, right?
-
-No other misc driver has to deal with this multi-layered reference
-counting, so perhaps you are making this a lot more complex than it
-really has to be?
-
-thanks,
-
-greg k-h
