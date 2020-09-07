@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BBCEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B870C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE04E207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2299A207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498157;
-	bh=fMnkgAblkIzmn4NV5qpGYdRfZFLnYfW+R/fXUqvNWzI=;
+	s=default; t=1599498163;
+	bh=SiZDO8TJseYfG8EFYanRKu4nC+XeQyvtHXeky5PXjSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sm2ju6bBOlGB0Gsto3FW4NUTsmeD6R9whlSM9opTV6Ilh/nDGZLKwvs2wbL79howf
-	 qCo4uXfsif1QadpuIg2vIwwSHUkrzRUMdjvOqSnQpamyLSRIlLY+C7aU4vnI6l0t/V
-	 oVmfzgBJHpwOu1J4wc1JoRqrUt6GB+T8MLEhOLIA=
+	b=m8vwmkr2WtNMLcdoWrjMz429LdqPL7qOI0rd+i/bvnMZ2XJsuPKqGNcneq7RyN58+
+	 efyzPF5KraAVRRg0ENShpbbJiiXGxv2i37yrKxzHwoQojVbQ4vQlKlGRIKH9xbSD8I
+	 C1+FXLS9fHFp+CrQjwPLBPhoYiZsy6xNZzQplnIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730680AbgIGQdZ (ORCPT
+        id S1730936AbgIGRCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:33:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729851AbgIGQch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:37 -0400
+        id S1730458AbgIGQd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC343217A0;
-        Mon,  7 Sep 2020 16:32:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF8F21974;
+        Mon,  7 Sep 2020 16:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496353;
-        bh=fMnkgAblkIzmn4NV5qpGYdRfZFLnYfW+R/fXUqvNWzI=;
+        s=default; t=1599496408;
+        bh=SiZDO8TJseYfG8EFYanRKu4nC+XeQyvtHXeky5PXjSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZ23v3jzYH6cvhN/VT6/Av0T7inaPKka/VAxsYYFxgU2DYtXukRR5/C7s29T96e6q
-         0w/vMtHhdXVXWpCPEGizHdgtVl9tYJa+6qIM4fC6CJW/gWv0sB8CF7e26GHVqU2T3L
-         Zqb0fj4pzzzazFKv6Z89vwYSB2dibLdHLfAlfXow=
+        b=IrDtGH3deN5zKtzIAddIZ/n+M2Fmft7X1w4DAimRmOeuywTVoc5OtqFJ5gJhfxbq7
+         uTvkZm0PnrW6GYmpZj5kGoolzekdh/Qj3PWzKQ+a6D6EeyZZ1jfi7px3c+yik9QYtN
+         TdDIsgpzx0mODzvA483nfit/8IqwGZyNENTY4vGA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ye Bin <yebin10@huawei.com>, Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 10/53] scsi: qedf: Fix null ptr reference in qedf_stag_change_work
-Date:   Mon,  7 Sep 2020 12:31:36 -0400
-Message-Id: <20200907163220.1280412-10-sashal@kernel.org>
+Cc:     Leon Romanovsky <leonro@nvidia.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 53/53] gcov: Disable gcov build with GCC 10
+Date:   Mon,  7 Sep 2020 12:32:19 -0400
+Message-Id: <20200907163220.1280412-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -59,32 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+From: Leon Romanovsky <leonro@nvidia.com>
 
-[ Upstream commit f308a35f547cd7c1d8a901c12b3ac508e96df665 ]
+[ Upstream commit cfc905f158eaa099d6258031614d11869e7ef71c ]
 
-Link: https://lore.kernel.org/r/20200824033436.45570-1-yebin10@huawei.com
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+GCOV built with GCC 10 doesn't initialize n_function variable.  This
+produces different kernel panics as was seen by Colin in Ubuntu and me
+in FC 32.
+
+As a workaround, let's disable GCOV build for broken GCC 10 version.
+
+Link: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1891288
+Link: https://lore.kernel.org/lkml/20200827133932.3338519-1-leon@kernel.org
+Link: https://lore.kernel.org/lkml/CAHk-=whbijeSdSvx-Xcr0DPMj0BiwhJ+uiNnDSVZcr_h_kg7UA@mail.gmail.com/
+Cc: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedf/qedf_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/gcov/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 36b1ca2dadbb5..51cfab9d1afdc 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -3843,7 +3843,7 @@ void qedf_stag_change_work(struct work_struct *work)
- 	    container_of(work, struct qedf_ctx, stag_work.work);
- 
- 	if (!qedf) {
--		QEDF_ERR(&qedf->dbg_ctx, "qedf is NULL");
-+		QEDF_ERR(NULL, "qedf is NULL");
- 		return;
- 	}
- 	QEDF_ERR(&qedf->dbg_ctx, "Performing software context reset.\n");
+diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
+index 3110c77230c7f..bb4b680e8455a 100644
+--- a/kernel/gcov/Kconfig
++++ b/kernel/gcov/Kconfig
+@@ -4,6 +4,7 @@ menu "GCOV-based kernel profiling"
+ config GCOV_KERNEL
+ 	bool "Enable gcov-based kernel profiling"
+ 	depends on DEBUG_FS
++	depends on !CC_IS_GCC || GCC_VERSION < 100000
+ 	select CONSTRUCTORS if !UML
+ 	default n
+ 	help
 -- 
 2.25.1
 
