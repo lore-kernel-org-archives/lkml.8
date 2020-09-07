@@ -2,139 +2,250 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408F1C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 483942078B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:44:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599482682;
-	bh=i45Q5Y7+UcDsp9NgOV3maOrvpDqRRVJRZKVEtzcg+3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GceiRpS9Lpt472+VdIstKImmujCR9y54SRpux5L63KtTafPFYHAxikGIlK+cTx9js
-	 uF37GJRh+7TIwkDK5UMQsdyLC5DI4nqqvJEYBTEt9w1krUQxqB6vMGKStWh3/hnTv0
-	 zG3if3TF1KIrmAwzHJjgZC/JBSl8Y4zj/yEzDB0Q=
+	by mail.kernel.org (Postfix) with ESMTP id DE70A21473
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ghnakjhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729265AbgIGMoZ (ORCPT
+        id S1729118AbgIGMov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729183AbgIGMfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:35:32 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A796206E6;
-        Mon,  7 Sep 2020 12:35:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599482131;
-        bh=i45Q5Y7+UcDsp9NgOV3maOrvpDqRRVJRZKVEtzcg+3c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MGLJO6yS5MeiLg9qHAMBDR4xg9ulG8Rc4cQz94VRQflH1iulltX+by7nLGRVy+ZeO
-         j/iG3sJFj6V3cNe1YufvOB9++O6Ri2wiW7kF8GwHjCaEJ+vT8wpAQPuf+JWl4rqJ1D
-         CUiI//HVxqlXtCpNUTyGdNG0puVFA8u4LlmlzVgI=
-Date:   Mon, 7 Sep 2020 14:35:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v3 1/3] bcm-vk: add bcm_vk UAPI
-Message-ID: <20200907123546.GB2371705@kroah.com>
-References: <20200825194400.28960-1-scott.branden@broadcom.com>
- <20200825194400.28960-2-scott.branden@broadcom.com>
+        Mon, 7 Sep 2020 08:44:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54098 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729225AbgIGMhh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 08:37:37 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D36DC061575
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:37:37 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id s205so15977417lja.7
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=cwPCPEtLET3S/2dbcGHpUnIU95ePzW+j47quR2vi66k=;
+        b=ghnakjhgPg51NqpbL4mKUXOhAKH9iYlN+aCVAKDxHPe01brXbyklVs+MbTapmk1aAF
+         342zpt+y4wPH6ZV4VCMO7olS9gyjNV5aGmIGpZWw9tn0PHb8tjSasDp6jY4QRrgbyT0N
+         eZJH3LkcDNh8KHSjY3dtGBxz2T815OWwuUtND3pXRFXHLoD8CtPQ7jjYqeMWUuWwW9qx
+         KuHBjsf5+39yOIHrK17FT66OGA7NR5+Zs3VFWZLL5Z3mEv8iE0bLtyuO5BxTfoNFz4f+
+         zUv+8nB0jMMIApd+iB5nxnw1eh+sClsxBn0epvWu9YkMOgY58sGnO7cv29aGsf6A0jRa
+         Z2Yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cwPCPEtLET3S/2dbcGHpUnIU95ePzW+j47quR2vi66k=;
+        b=TXEaHPF4SSPkbOc5Xj2baWmdjjE8VWYu9jKCW24sQeSJjb+i8++O24GPQ5M4ILJik9
+         dcnCJnme+9qWP4/PM1/5/2iZjoiyxtWPHrmO5xthVcAtW8hSf/hpHHKgZuTqzzGvX2ic
+         RJcJoyR9E56DBQ7Y89ZJ3xvR5fvSso8SvB5rL1djnd/+z/fgqmuWFCa1nEd7lODvFRNB
+         HbDQF7cxcC3DeFfGOXHVkLshi9yD7W747nmbyunJ/IEHBzI8If6SqFgHOIbprYGiuxe/
+         2Ph+rMyHe8GBaQyxxevDZM7L07Hk+4qNd0bBQDqOKix5NP9IzAkjyo6sdHFI0tTS94f8
+         jdwQ==
+X-Gm-Message-State: AOAM5319vbETdCIbYlRygGFZ0/61OFJT5xXoqhwEkULW6WQwVV+UXOOa
+        YrCnH6N+2maPRPjAZYFFYG56D3dE31CUontRae7PvA==
+X-Google-Smtp-Source: ABdhPJyhcL++PoFUbugUdIh1EzFFpd3kEua+HBTjPE9mZynQQnAQpNnIwlg9isjHDy6XShUvpnTJgGOdECgZgpix0mo=
+X-Received: by 2002:a05:651c:505:: with SMTP id o5mr6077136ljp.177.1599482253662;
+ Mon, 07 Sep 2020 05:37:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200825194400.28960-2-scott.branden@broadcom.com>
+References: <e7b7462375de4175a83ece3b60bab899@hisilicon.com>
+In-Reply-To: <e7b7462375de4175a83ece3b60bab899@hisilicon.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Mon, 7 Sep 2020 14:37:22 +0200
+Message-ID: <CAKfTPtDoL34u3bteN+DckHTcZc7vczf1xeZRiKk6RCev6-Gh3w@mail.gmail.com>
+Subject: Re: [RFC] sched/numa: don't move tasks to idle numa nodes while src
+ node has very light load?
+To:     "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+Cc:     Mel Gorman <mgorman@suse.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Ingo Molnar <mingo@kernel.org>, Linuxarm <linuxarm@huawei.com>,
+        "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 12:43:58PM -0700, Scott Branden wrote:
-> Add user space api for bcm-vk driver.
-> 
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 include/uapi/linux/misc/bcm_vk.h
-> 
-> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
-> new file mode 100644
-> index 000000000000..da7848e7c438
-> --- /dev/null
-> +++ b/include/uapi/linux/misc/bcm_vk.h
-> @@ -0,0 +1,99 @@
-> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
-> +/*
-> + * Copyright 2018-2020 Broadcom.
-> + */
-> +
-> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
-> +#define __UAPI_LINUX_MISC_BCM_VK_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +#define BCM_VK_MAX_FILENAME 64
-> +
-> +struct vk_image {
-> +	__u32 type; /* Type of image */
-> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
-> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
-> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
+On Mon, 7 Sep 2020 at 14:00, Song Bao Hua (Barry Song)
+<song.bao.hua@hisilicon.com> wrote:
+>
+> Hi All,
+> In case we have a numa system with 4 nodes and in each node we have 24 cp=
+us, and all of the 96 cores are idle.
+> Then we start a process with 4 threads in this totally idle system.
+> Actually any one of the four numa nodes should have enough capability to =
+run the 4 threads while they can still have 20 idle CPUS after that.
+> But right now the existing code in CFS load balance will spread the 4 thr=
+eads to multiple nodes.
+> This results in two negative side effects:
+> 1. more numa nodes are awaken while they can save power in lowest frequen=
+cy and halt status
+> 2. cache coherency overhead between numa nodes
+>
+> A proof-of-concept patch I made to "fix" this issue to some extent is lik=
+e:
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1a68a05..f671e15 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -9068,9 +9068,20 @@ static inline void calculate_imbalance(struct lb_e=
+nv *env, struct sd_lb_stats *s
+>                 }
+>
+>                 /* Consider allowing a small imbalance between NUMA group=
+s */
+> -               if (env->sd->flags & SD_NUMA)
+> +               if (env->sd->flags & SD_NUMA) {
+> +                       /* if the src group uses only 1/4 capability and =
+dst is idle
+> +                        * don't move task
+> +                        */
+> +                       if (busiest->sum_nr_running <=3D busiest->group_w=
+eight/4 &&
+> +                                       local->sum_nr_running =3D=3D 0) {
+> +                               env->imbalance =3D 0;
+> +                               return;
 
-nit, but this should really be __u8 filename[...
-right?
+Without considering if that makes sense or not, such tests should be
+in adjust_numa_imbalance() which is there to decide if it's worth
+"fixing" the imbalance between numa node or not.
+
+The default behavior of load balancer is all about spreading tasks.
+Then we have 2 NUMA hooks to prevent this to happen if it doesn't make
+sense:
+-This adjust_numa_imbalance()
+-The fbq_type which is used to skip some rqs
+
+Finally, there were several discussions around adjust_numa_imbalance()
+when it was introduced and one was how to define how much imbalance is
+allowed that will not regress the performance. The conclusion was that
+it depends of a lot of inputs about the topology like the number of
+CPUs, the number of nodes, the distance between nodes and several
+others things. So as a 1st step, it was decided to use the simple and
+current implementation.
+
+The 1/4 threshold that you use above may work for some used cases on
+your system but will most probably be wrong for others. We must find
+something that is not just a heuristic and can work of other system
+too
 
 
 
-> +};
-> +
-> +struct vk_reset {
-> +	__u32 arg1;
-> +	__u32 arg2;
-> +};
-> +
-> +#define VK_MAGIC		0x5e
-> +
-> +/* Load image to Valkyrie */
-> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
-> +
-> +/* Send Reset to Valkyrie */
-> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
-> +
-> +/*
-> + * message block - basic unit in the message where a message's size is always
-> + *		   N x sizeof(basic_block)
-> + */
-> +struct vk_msg_blk {
-> +	__u8 function_id;
-> +#define VK_FID_TRANS_BUF	5
-> +#define VK_FID_SHUTDOWN		8
-> +	__u8 size;
-
-Size of what?
-
-> +	__u16 trans_id; /* transport id, queue & msg_id */
-> +	__u32 context_id;
-> +	__u32 args[2];
-> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
-> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
-> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
-> +#define VK_CMD_MASK		0x0f00 /* command mask */
-> +};
-
-What are these defines for?  The args?  Something else?  It's not really
-obvious here...
-
-thanks,
-
-greg k-h
+> +                       }
+>                         env->imbalance =3D adjust_numa_imbalance(env->imb=
+alance,
+>                                                 busiest->sum_nr_running);
+> +               }
+>
+>                 return;
+>         }
+>
+> And I wrote a simple process with 4 threads to measure the execution time=
+:
+>
+> #include <stdio.h>
+> #include <pthread.h>
+> #include <sys/types.h>
+>
+> struct foo {
+>     int x;
+>     int y;
+> } f1;
+>
+> void* thread_fun1(void* param)
+> {
+>     int s =3D 0;
+>     for (int i =3D 0; i < 1000000000; ++i)
+>         s +=3D f1.x;
+>         return NULL;
+> }
+>
+> void* thread_fun2(void* param)
+> {
+>     for (int i =3D 0; i < 1000000000; ++i)
+>         ++f1.y;
+>         return NULL;
+> }
+>
+> double difftimeval(const struct timeval *start, const struct timeval *end=
+)
+> {
+>         double d;
+>         time_t s;
+>         suseconds_t u;
+>
+>         s =3D start->tv_sec - end->tv_sec;
+>         u =3D start->tv_usec - end->tv_usec;
+>
+>         d =3D s;
+>         d +=3D u/1000000.0;
+>
+>         return d;
+> }
+>
+> int main(void)
+> {
+>         pthread_t tid1,tid2,tid3,tid4;
+>         struct timeval start,end;
+>
+>         gettimeofday(&start, NULL);
+>
+>         pthread_create(&tid1,NULL,thread_fun1,NULL);
+>         pthread_create(&tid2,NULL,thread_fun2,NULL);
+>         pthread_create(&tid3,NULL,thread_fun1,NULL);
+>         pthread_create(&tid4,NULL,thread_fun2,NULL);
+>
+>         pthread_join(tid1,NULL);
+>         pthread_join(tid2,NULL);
+>         pthread_join(tid3,NULL);
+>         pthread_join(tid4,NULL);
+>
+>         gettimeofday(&end, NULL);
+>
+>         printf("execution time:%f\n", difftimeval(&end, &start));
+> }
+>
+> Before the PoC patch, the test result:
+> $ ./a.out
+> execution time:10.734581
+>
+> After the PoC patch, the test result:
+> $ ./a.out
+> execution time:6.775150
+>
+> The execution time reduces around 30-40% because 4 threads are put in sin=
+gle one numa node.
+>
+> On the other hand, the patch doesn't have to depend on NUMA, it can also =
+apply to SCHED_MC with some changes. If one CPU can be still idle after the=
+y handle all tasks in the system, we maybe not need to wake up the 2nd CPU =
+at all?
+>
+> I understand this PoC patch could have negative side effect in some corne=
+r cases, for example, if the four threads running in one process want more =
+memory bandwidth by running in multiple nodes. But generally speaking, we d=
+o a tradeoff between cache locality and better CPU utilization as they are =
+the main concerns. If one process highly depends on memory bandwidth, they =
+may change their mempolicy?
+>
+> Thanks
+> Barry
