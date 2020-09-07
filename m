@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EECBC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21323C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 338E52080A
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C36042080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599497135;
-	bh=OHnXjEPxGErMLYM4E4G7ZywRBihIxSmMG+srvaJ4CtI=;
+	s=default; t=1599497145;
+	bh=K2PGk4ztZK2SavoJZdLUu6GbXFrGLphmmGLkD0+uLbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iQP9yiGp+r9A5JO2EIYe3RM4xK2joFgEQgad2trQ2KsFlShOJE3s1N1i0sDg/WCIH
-	 AHVKWGqZih1290WzN7pFGNN5tGdM7/3FkIuHM8gMYUWoIzVdx+YW1RH3S1X6p+i8vn
-	 f3YioIuYdj/FOsiq/Zg/F5xf1vWKFh++Gqt0IDsY=
+	b=yWxKHNsPmsMpM1uiS42Rgu3SOjsynYcnpN4HL2m1zEUy7yiSuUMtdUMY8xZhrjRxe
+	 UjxRAbcwFvWm6BpEu9U3SuWd/TSx7uCNCDv9nZT06R3c8BleM19uiDhRAbsZYXBx7S
+	 GgWgWaEl2BsIx8KiirgLI18zcEvGKAaj1+GpwcVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbgIGQpc (ORCPT
+        id S1731088AbgIGQpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 12:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730838AbgIGQfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:35:36 -0400
+        id S1729895AbgIGQfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:35:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0434321D80;
-        Mon,  7 Sep 2020 16:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE9322207;
+        Mon,  7 Sep 2020 16:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496535;
-        bh=OHnXjEPxGErMLYM4E4G7ZywRBihIxSmMG+srvaJ4CtI=;
+        s=default; t=1599496533;
+        bh=K2PGk4ztZK2SavoJZdLUu6GbXFrGLphmmGLkD0+uLbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ihy3t5i2ZEpRzjwlKRkP09bu1tj4ZaaP7qlv04Rl3Rz4FjVfKTeAGPB9D/GUShObP
-         SSscDp5+PZ99a3mXwFbAkfZutIHnBNKIOd0icEruNrAdfCjjn2Y7md/QgACjbtBH4G
-         C+HUueEDUayl0ZS0Q/JoIPEnKhZt4EnQ8N70pAu8=
+        b=mWaJkSrr4Csxlt3mWQPZ77MLXIG4wpmO1RZAVHk65kUQBzeP0VOAOTC+tg3xwADCi
+         xotkoLq25IlDEJr7e7bodXZf4Hbu0fj8kIdwxRILQ8vBKWNCMiiNIMm8d5tnyPfGk6
+         3zUEh0GWgNF0CKd4NDcwmOAEPbv/w+70Xgp8X81c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@redhat.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/13] xfs: initialize the shortform attr header padding entry
-Date:   Mon,  7 Sep 2020 12:35:19 -0400
-Message-Id: <20200907163524.1281734-8-sashal@kernel.org>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/13] cfg80211: regulatory: reject invalid hints
+Date:   Mon,  7 Sep 2020 12:35:17 -0400
+Message-Id: <20200907163524.1281734-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163524.1281734-1-sashal@kernel.org>
 References: <20200907163524.1281734-1-sashal@kernel.org>
@@ -61,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 125eac243806e021f33a1fdea3687eccbb9f7636 ]
+[ Upstream commit 47caf685a6854593348f216e0b489b71c10cbe03 ]
 
-Don't leak kernel memory contents into the shortform attr fork.
+Reject invalid hints early in order to not cause a kernel
+WARN later if they're restored to or similar.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reported-by: syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?extid=d451401ffd00a60677ee
+Link: https://lore.kernel.org/r/20200819084648.13956-1-johannes@sipsolutions.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr_leaf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/wireless/reg.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 70da4113c2baf..7b9dd76403bfd 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -520,8 +520,8 @@ xfs_attr_shortform_create(xfs_da_args_t *args)
- 		ASSERT(ifp->if_flags & XFS_IFINLINE);
- 	}
- 	xfs_idata_realloc(dp, sizeof(*hdr), XFS_ATTR_FORK);
--	hdr = (xfs_attr_sf_hdr_t *)ifp->if_u1.if_data;
--	hdr->count = 0;
-+	hdr = (struct xfs_attr_sf_hdr *)ifp->if_u1.if_data;
-+	memset(hdr, 0, sizeof(*hdr));
- 	hdr->totsize = cpu_to_be16(sizeof(*hdr));
- 	xfs_trans_log_inode(args->trans, dp, XFS_ILOG_CORE | XFS_ILOG_ADATA);
- }
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index 6d5f3f737207d..a649763b854d5 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -2321,6 +2321,9 @@ int regulatory_hint_user(const char *alpha2,
+ 	if (WARN_ON(!alpha2))
+ 		return -EINVAL;
+ 
++	if (!is_world_regdom(alpha2) && !is_an_alpha2(alpha2))
++		return -EINVAL;
++
+ 	request = kzalloc(sizeof(struct regulatory_request), GFP_KERNEL);
+ 	if (!request)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
