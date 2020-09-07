@@ -2,122 +2,120 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F2C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F97C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 469DF2078E
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E79C20C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599472027;
+	bh=cFHskjvmHO3vzxD+eGBoRNZ+sFpiHGFme6jLOuWP8Uc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=TQ0PYPCRRGvb8FRsqUdBtv3k+JWAj7T2dt5W+GnFKjSriseEHV50BS35OP6U4so55
+	 w3Ew3zUA3UkaM7ndcoF4aErPJt5RiIXilK/lELxkE8tuJv+oLk3yvPftriPk1eSLfv
+	 GRAJHBBJDdPIVfyESuE/Mg2yxZDedHQ8kf9pYQiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728356AbgIGJqL convert rfc822-to-8bit (ORCPT
+        id S1728414AbgIGJrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:46:11 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:52642 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726301AbgIGJqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:46:11 -0400
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id C932CA238EC1CD0FD2CB;
-        Mon,  7 Sep 2020 17:46:08 +0800 (CST)
-Received: from dggemi762-chm.china.huawei.com (10.1.198.148) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 7 Sep 2020 17:44:04 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggemi762-chm.china.huawei.com (10.1.198.148) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 7 Sep 2020 17:44:03 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
- Mon, 7 Sep 2020 17:44:04 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Mel Gorman <mgorman@suse.de>
-CC:     "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: RE: [PATCH] sched/fair: use dst group while checking imbalance for
- NUMA balancer
-Thread-Topic: [PATCH] sched/fair: use dst group while checking imbalance for
- NUMA balancer
-Thread-Index: AQHWhOi4NR3jMQOEjUuGVuHcF7fpAalcYjqAgACG3OA=
-Date:   Mon, 7 Sep 2020 09:44:03 +0000
-Message-ID: <9c8e148805bc4da1a2bfdd72f1c76f06@hisilicon.com>
-References: <20200907072708.8664-1-song.bao.hua@hisilicon.com>
- <20200907092717.GD3117@suse.de>
-In-Reply-To: <20200907092717.GD3117@suse.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.201.74]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 7 Sep 2020 05:47:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44148 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbgIGJrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:47:04 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49EFA2078E;
+        Mon,  7 Sep 2020 09:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599472023;
+        bh=cFHskjvmHO3vzxD+eGBoRNZ+sFpiHGFme6jLOuWP8Uc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=19AbdD+EC1bO4XviCsVbOEsgKBlvuTcIcRwYpDXdAbiyDIC2ngljNeSByIj6g2WwR
+         pwHlJAa2zca7ViqS+HXJHlbRqiyn/WpxFytm5SMsvxtaqOBqDi0a5jaudF1eVdGURu
+         jTZbUs3gK3gLc/gZXJVqSV1JOAEE6FHqZ7nCuP54=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kFDjp-009iuT-BE; Mon, 07 Sep 2020 10:47:01 +0100
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 07 Sep 2020 10:47:01 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Justin He <Justin.He@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v14 08/10] ptp: arm64: Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0802MB25551446DC85DB3684D09211F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+References: <20200904092744.167655-1-jianyong.wu@arm.com>
+ <20200904092744.167655-9-jianyong.wu@arm.com> <874kocmqqx.wl-maz@kernel.org>
+ <HE1PR0802MB2555CC56351616836A95FB19F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+ <366387fa507f9c5d5044549cea958ce1@kernel.org>
+ <HE1PR0802MB25551446DC85DB3684D09211F4280@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <67f3381467d02c8d3f25682cd99898e9@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-09-07 10:28, Jianyong Wu wrote:
+>> -----Original Message-----
+>> From: Marc Zyngier <maz@kernel.org>
+>> Sent: Monday, September 7, 2020 4:55 PM
+>> To: Jianyong Wu <Jianyong.Wu@arm.com>
 
+[...]
 
-> -----Original Message-----
-> From: Mel Gorman [mailto:mgorman@suse.de]
-> Sent: Monday, September 7, 2020 9:27 PM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: mingo@redhat.com; peterz@infradead.org; juri.lelli@redhat.com;
-> vincent.guittot@linaro.org; dietmar.eggemann@arm.com;
-> bsegall@google.com; linux-kernel@vger.kernel.org; Linuxarm
-> <linuxarm@huawei.com>; Mel Gorman <mgorman@techsingularity.net>;
-> Peter Zijlstra <a.p.zijlstra@chello.nl>; Valentin Schneider
-> <valentin.schneider@arm.com>; Phil Auld <pauld@redhat.com>; Hillf Danton
-> <hdanton@sina.com>; Ingo Molnar <mingo@kernel.org>
-> Subject: Re: [PATCH] sched/fair: use dst group while checking imbalance for
-> NUMA balancer
+>> >> 	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_KVM_FEATUR
+>> >> ES_FUNC_ID,
+>> >> > +			     &hvc_res);
+>> >> > +	if (!(hvc_res.a0 | BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
+>> >> > +		return -EOPNOTSUPP;
+>> >> > +
+>> >> > +	return 0;
+>> >>
+>> >> What happens if the
+>> >> ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID function isn't
+>> implemented
+>> >> (on an old kernel or a non-KVM hypervisor)? The expected behaviour is
+>> >> that a0 will contain SMCCC_RET_NOT_SUPPORTED, which is -1.
+>> >> The result is that this function always returns "supported". Not an
+>> >> acceptable behaviour.
+>> >>
+>> > Oh!  it's really a stupid mistake, should be "&" not "|".
+>> 
+>> But even then. (-1 & whatever) is always true.
 > 
-> On Mon, Sep 07, 2020 at 07:27:08PM +1200, Barry Song wrote:
-> > Something is wrong. In find_busiest_group(), we are checking if src has
-> > higher load, however, in task_numa_find_cpu(), we are checking if dst
-> > will have higher load after balancing. It seems it is not sensible to
-> > check src.
-> > It maybe cause wrong imbalance value, for example, if
-> > dst_running = env->dst_stats.nr_running + 1 results in 3 or above, and
-> > src_running = env->src_stats.nr_running - 1 results in 1;
-> > The current code is thinking imbalance as 0 since src_running is smaller
-> > than 2.
-> > This is inconsistent with load balancer.
-> >
-> 
-> It checks the conditions if the move was to happen. Have you evaluated
-> this for a NUMA balancing load and confirmed it a) balances properly and
-> b) does not increase the scan rate trying to "fix" the problem?
+> Yeah, what about checking if a0 is non-negative first? Like:
+> if (hvc_res.a0 < 0 || !(hvc_res.a0 & BIT(ARM_SMCCC_KVM_FUNC_KVM_PTP)))
+> 	return -EOPNOTSUPP;
 
-I think the original code was trying to check if the numa migration
-would lead to new imbalance in load balancer. In case src is A, dst is B, and
-both of them have nr_running as 2. A moves one task to B, then A
-will have 1, B will have 3. In load balancer, A will try to pull task
-from B since B's nr_running is larger than min_imbalance. But the code
-is saying imbalance=0 by finding A's nr_running is smaller than
-min_imbalance.
+I don't get it. You already carry a patch from Will that gives
+you a way to check for a service (kvm_arm_hyp_service_available()).
 
-Will share more test data if you need.
+Why do you need to reinvent the wheel?
 
-> 
-> --
-> Mel Gorman
-> SUSE Labs
-
-Thanks
-Barry
+         M.
+-- 
+Jazz is not dead. It just smells funny...
