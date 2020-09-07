@@ -2,130 +2,114 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF57EC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE55BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3BA20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD19B20757
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:49:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="gJMepwpD"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O6LLROK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgIGNri (ORCPT
+        id S1729605AbgIGNtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:47:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729596AbgIGNoI (ORCPT
+        Mon, 7 Sep 2020 09:49:17 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:47370 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729585AbgIGNnd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:44:08 -0400
-Received: from mail-ej1-x649.google.com (mail-ej1-x649.google.com [IPv6:2a00:1450:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5999C06179F
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 06:41:28 -0700 (PDT)
-Received: by mail-ej1-x649.google.com with SMTP id w10so5559032ejq.11
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 06:41:28 -0700 (PDT)
+        Mon, 7 Sep 2020 09:43:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=6l8eSHfBJbgjXLH4YKy244cAN4v6gWSGUkqWIYWs5l8=;
-        b=gJMepwpDD2I7mUYxDrgz/A+g9gfSD/BA/UuHnQFWRrhx63jrzAm++vIK181a9bjlv9
-         +fyJs0UBhDwHyL6bmgDBoBCj+YXB5NcIWStWKiSyw+U5jw3hXU5qNrqCgVh70poBTziM
-         hVjzHzlUPAP+6ZrjPMb0VVDUmjdbm+Fic5uHT4D0LLJBRfryu3ilfMTyrvJ6Pe67zAKM
-         QPB1+20ESihTrASldDU+keBcOA+VdB6aTwV7W7EB3NGfe+MymBScoWc26UcdcpDZRQUj
-         K7o1qF+WpCWcT7AO1+jrbBJd9uRJMgPkaub7KeMCED/zCqeZW5LsKuVbAAFjxIU1VdGp
-         kNhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=6l8eSHfBJbgjXLH4YKy244cAN4v6gWSGUkqWIYWs5l8=;
-        b=Izp9TYcpWOw1IKKxhv+DO4xWdPXLHjaqpmBYaxpgnrlK6DMTu/fPrGzGKWhUu4UBNz
-         ds9g5lDRZ6JehwDznachPXILMDvivxPO3MYtSUIkXUFzpwNjYBgTLLFz37wR2GA5WKY9
-         KNo9vcIbxAcOOF47N/TZ4RGAxYVOgoqYFve2VrykjDys3Xz8mWYriE6rp5NLbqChFO3z
-         V47fc9LNmQa0A9LCsZObmusJjmS0FbC6vO5CqkAic5V/T7o3VAOgWQyiBqa1JS/tgYVT
-         +bJXb/lMDvz9Xpfeux0HZm725Yqkw12ToHbynv4acyQlVFe7s0Gzntys+PjqBmnVY00l
-         Fr5A==
-X-Gm-Message-State: AOAM533lwbi5vahqdG4wmkthE0XeTV2/HZTqAEXdrjyDTmaM9mwAzE3d
-        NLmMiUrcmC5YVf5piAtAIx1+hkbUxA==
-X-Google-Smtp-Source: ABdhPJyZu6FsfB3DPagX7+/xIWmjZXKqXJcTOhpqkU8N9KdWRQ4MmOfijnPAcqP/AO+UJAuVA1aIngFA6A==
-X-Received: from elver.muc.corp.google.com ([2a00:79e0:15:13:f693:9fff:fef4:2449])
- (user=elver job=sendgmr) by 2002:a50:be82:: with SMTP id b2mr22342862edk.303.1599486086811;
- Mon, 07 Sep 2020 06:41:26 -0700 (PDT)
-Date:   Mon,  7 Sep 2020 15:40:52 +0200
-In-Reply-To: <20200907134055.2878499-1-elver@google.com>
-Message-Id: <20200907134055.2878499-8-elver@google.com>
-Mime-Version: 1.0
-References: <20200907134055.2878499-1-elver@google.com>
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH RFC 07/10] kfence, kmemleak: make KFENCE compatible with KMEMLEAK
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, glider@google.com, akpm@linux-foundation.org,
-        catalin.marinas@arm.com, cl@linux.com, rientjes@google.com,
-        iamjoonsoo.kim@lge.com, mark.rutland@arm.com, penberg@kernel.org
-Cc:     hpa@zytor.com, paulmck@kernel.org, andreyknvl@google.com,
-        aryabinin@virtuozzo.com, luto@kernel.org, bp@alien8.de,
-        dave.hansen@linux.intel.com, dvyukov@google.com,
-        edumazet@google.com, gregkh@linuxfoundation.org, mingo@redhat.com,
-        jannh@google.com, corbet@lwn.net, keescook@chromium.org,
-        peterz@infradead.org, cai@lca.pw, tglx@linutronix.de,
-        will@kernel.org, x86@kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1599486213; x=1631022213;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=tt6wtfdb3398uJssYij92A1z15vJIiwy4hdYo2eToCU=;
+  b=O6LLROK7t/YJ527m/XO++o2zlCwMYScvCM/jTM4VtfGpb9kPO/t7gcS6
+   yA7MiTU2CLJl1egbEiDNa2i2RSzvY9El3FFASaQ82OEMfwBJM08sDxaNz
+   C5hEw189a4YadQAyGk6RdxGA5IHBpWG+jM5Fz39qGho6PG78Bd4yWddr0
+   o=;
+X-IronPort-AV: E=Sophos;i="5.76,401,1592870400"; 
+   d="scan'208";a="66028583"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 07 Sep 2020 13:43:30 +0000
+Received: from EX13D16EUB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan3.iad.amazon.com [10.40.163.38])
+        by email-inbound-relay-1d-74cf8b49.us-east-1.amazon.com (Postfix) with ESMTPS id BDED9C05E1;
+        Mon,  7 Sep 2020 13:43:27 +0000 (UTC)
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.161.85) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 7 Sep 2020 13:43:17 +0000
+Subject: Re: [PATCH v8 17/18] nitro_enclaves: Add overview documentation
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        David Duncan <davdunc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "Frank van der Linden" <fllinden@amazon.com>,
+        Alexander Graf <graf@amazon.de>,
+        "Karen Noel" <knoel@redhat.com>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvm <kvm@vger.kernel.org>,
+        ne-devel-upstream <ne-devel-upstream@amazon.com>
+References: <20200904173718.64857-1-andraprs@amazon.com>
+ <20200904173718.64857-18-andraprs@amazon.com>
+ <20200907090126.GD1101646@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <44a8a921-1fb4-87ab-b8f2-c168c615dbbd@amazon.com>
+Date:   Mon, 7 Sep 2020 16:43:11 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.1
+MIME-Version: 1.0
+In-Reply-To: <20200907090126.GD1101646@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.85]
+X-ClientProxiedBy: EX13D36UWA001.ant.amazon.com (10.43.160.71) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Potapenko <glider@google.com>
-
-Add compatibility with KMEMLEAK, by making KMEMLEAK aware of the KFENCE
-memory pool. This allows building debug kernels with both enabled, which
-also helped in debugging KFENCE.
-
-Co-developed-by: Marco Elver <elver@google.com>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Alexander Potapenko <glider@google.com>
----
- mm/kmemleak.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 5e252d91eb14..2809c25c0a88 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -97,6 +97,7 @@
- #include <linux/atomic.h>
- 
- #include <linux/kasan.h>
-+#include <linux/kfence.h>
- #include <linux/kmemleak.h>
- #include <linux/memory_hotplug.h>
- 
-@@ -1946,8 +1947,18 @@ void __init kmemleak_init(void)
- 	/* register the data/bss sections */
- 	create_object((unsigned long)_sdata, _edata - _sdata,
- 		      KMEMLEAK_GREY, GFP_ATOMIC);
-+#if defined(CONFIG_KFENCE) && defined(CONFIG_HAVE_ARCH_KFENCE_STATIC_POOL)
-+	/* KFENCE objects are located in .bss, which may confuse kmemleak. Skip them. */
-+	create_object((unsigned long)__bss_start, __kfence_pool - __bss_start,
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+	create_object((unsigned long)__kfence_pool + KFENCE_POOL_SIZE,
-+		      __bss_stop - (__kfence_pool + KFENCE_POOL_SIZE),
-+		      KMEMLEAK_GREY, GFP_ATOMIC);
-+#else
- 	create_object((unsigned long)__bss_start, __bss_stop - __bss_start,
- 		      KMEMLEAK_GREY, GFP_ATOMIC);
-+#endif
-+
- 	/* only register .data..ro_after_init if not within .data */
- 	if (&__start_ro_after_init < &_sdata || &__end_ro_after_init > &_edata)
- 		create_object((unsigned long)__start_ro_after_init,
--- 
-2.28.0.526.ge36021eeef-goog
+CgpPbiAwNy8wOS8yMDIwIDEyOjAxLCBHcmVnIEtIIHdyb3RlOgo+Cj4gT24gRnJpLCBTZXAgMDQs
+IDIwMjAgYXQgMDg6Mzc6MTdQTSArMDMwMCwgQW5kcmEgUGFyYXNjaGl2IHdyb3RlOgo+PiBTaWdu
+ZWQtb2ZmLWJ5OiBBbmRyYSBQYXJhc2NoaXYgPGFuZHJhcHJzQGFtYXpvbi5jb20+Cj4+IFJldmll
+d2VkLWJ5OiBBbGV4YW5kZXIgR3JhZiA8Z3JhZkBhbWF6b24uY29tPgo+PiAtLS0KPj4gQ2hhbmdl
+bG9nCj4+Cj4+IHY3IC0+IHY4Cj4+Cj4+ICogQWRkIGluZm8gYWJvdXQgdGhlIHByaW1hcnkgLyBw
+YXJlbnQgVk0gQ0lEIHZhbHVlLgo+PiAqIFVwZGF0ZSByZWZlcmVuY2UgbGluayBmb3IgaHVnZSBw
+YWdlcy4KPj4gKiBBZGQgcmVmZXJlbmNlIGxpbmsgZm9yIHRoZSB4ODYgYm9vdCBwcm90b2NvbC4K
+Pj4gKiBBZGQgbGljZW5zZSBtZW50aW9uIGFuZCB1cGRhdGUgZG9jIHRpdGxlIC8gY2hhcHRlciBm
+b3JtYXR0aW5nLgo+Pgo+PiB2NiAtPiB2Nwo+Pgo+PiAqIE5vIGNoYW5nZXMuCj4+Cj4+IHY1IC0+
+IHY2Cj4+Cj4+ICogTm8gY2hhbmdlcy4KPj4KPj4gdjQgLT4gdjUKPj4KPj4gKiBObyBjaGFuZ2Vz
+Lgo+Pgo+PiB2MyAtPiB2NAo+Pgo+PiAqIFVwZGF0ZSBkb2MgdHlwZSBmcm9tIC50eHQgdG8gLnJz
+dC4KPj4gKiBVcGRhdGUgZG9jdW1lbnRhdGlvbiBiYXNlZCBvbiB0aGUgY2hhbmdlcyBmcm9tIHY0
+Lgo+Pgo+PiB2MiAtPiB2Mwo+Pgo+PiAqIE5vIGNoYW5nZXMuCj4+Cj4+IHYxIC0+IHYyCj4+Cj4+
+ICogTmV3IGluIHYyLgo+PiAtLS0KPj4gICBEb2N1bWVudGF0aW9uL25pdHJvX2VuY2xhdmVzL25l
+X292ZXJ2aWV3LnJzdCB8IDk1ICsrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5n
+ZWQsIDk1IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlv
+bi9uaXRyb19lbmNsYXZlcy9uZV9vdmVydmlldy5yc3QKPiBBIHdob2xlIG5ldyBzdWJkaXIsIGZv
+ciBhIHNpbmdsZSBkcml2ZXIsIGFuZCBub3QgdGllZCBpbnRvIHRoZSBrZXJuZWwKPiBkb2N1bWVu
+dGF0aW9uIGJ1aWxkIHByb2Nlc3MgYXQgYWxsPyAgTm90IGdvb2QgOigKPgoKV291bGQgdGhlICJ2
+aXJ0IiBkaXJlY3RvcnkgYmUgYSBiZXR0ZXIgb3B0aW9uIGZvciB0aGlzIGRvYyBmaWxlPwoKSSBj
+YW4gdGhlbiBhZGQgdGhlIGRvYyBuYW1lIHRvIHRoZSBjb3JyZXNwb25kaW5nIGluZGV4IGZpbGUg
+YXMgd2VsbC4KClRoYW5rcywKQW5kcmEKCgoKQW1hem9uIERldmVsb3BtZW50IENlbnRlciAoUm9t
+YW5pYSkgUy5SLkwuIHJlZ2lzdGVyZWQgb2ZmaWNlOiAyN0EgU2YuIExhemFyIFN0cmVldCwgVUJD
+NSwgZmxvb3IgMiwgSWFzaSwgSWFzaSBDb3VudHksIDcwMDA0NSwgUm9tYW5pYS4gUmVnaXN0ZXJl
+ZCBpbiBSb21hbmlhLiBSZWdpc3RyYXRpb24gbnVtYmVyIEoyMi8yNjIxLzIwMDUuCg==
 
