@@ -2,104 +2,110 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E99C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CAFC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04820768
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FA120768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 10:47:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="s/CTb7+I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NHpXhgWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgIGKq5 (ORCPT
+        id S1728896AbgIGKrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 06:46:57 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:47419 "EHLO mail.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728679AbgIGKqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 06:46:49 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 4c9a9bfa
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 7 Sep 2020 10:18:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=YRWb63lJVe5k63YRgdeGYsmd2Bk=; b=s/CTb7
-        +I8bahKDFZBpLm+nJqsHR9ej/3MHQ+HgCyYk/NygA/vnXOKRoS9Jn5iRFWZUr4rK
-        kNVf0Ec8bPrVfub6H/YJhdFWLaoEiThbHxH5y6Mgp+fbFg+uuv0KgdeAlbrJINlO
-        ZcX17dnhwVAgnpt5XI/VDbTS5tUNHpST/B8rkx6Sf+C4d+kOtXfQM13UZEko/RvB
-        bIbiOtF+pGIcWH1l64LtvZlBgvSF6uWwuiKebSVeL3F66t5Nlo9z7fcI0gjS+vAU
-        hICw9obsbSKq+R9JGmoVTZ6HIQZt7jD9PRpX2Lnw5T0dBeLHBqDCEDTiO2XWdbE/
-        Va0ZqF6tkf/UBbPA==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d0ac0383 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Mon, 7 Sep 2020 10:18:02 +0000 (UTC)
-Received: by mail-io1-f41.google.com with SMTP id h4so13538102ioe.5
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:46:46 -0700 (PDT)
-X-Gm-Message-State: AOAM533jg5R9ArKxTL/G54BptJ2IXuZjNC6+/OZs9G+4LZTnhITWItqc
-        FFHa5moOygB2fg+m3ImeFs/ZiX+zEGRg4tWfYXY=
-X-Google-Smtp-Source: ABdhPJzMpaY4lmNeXEQUbkmxDHjkjYiWcE6cIYClsNoFqMPtUkyBE3a9p9czyEOQ6qaXTT5yfb63qWzpc8dZ9KwqG10=
-X-Received: by 2002:a02:8802:: with SMTP id r2mr19505406jai.75.1599475605957;
- Mon, 07 Sep 2020 03:46:45 -0700 (PDT)
+        Mon, 7 Sep 2020 06:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728885AbgIGKq6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 06:46:58 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A159FC061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 03:46:57 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id m15so3206358pls.8
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 03:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oHqP26qj43N4RBV6m+y6Vmj2dP7/Hi68DySAIyks+G0=;
+        b=NHpXhgWjWGlByubbaTjCKAj60noin3QEkegdu4B4US8ebMNrw5KB0h6P2myNVcYlXW
+         5K8hC+akao3PBsFCY82wWI9h+yNknJBkrh2Va4qOxA+9IRP9l+wAewfVV2Ryg6ohYmPw
+         GPSuhoR+tHBKGNdglwj09UP4Fi8MKyAPWmVIzYyM819jxLIoRqYG7R1jRVlGhazmSR1D
+         QmfXDEbCc/TIJSiHkuW09Vp79T5E2b8pB4mryYU8yhNC5kdeAXSkbhZ8CW+AXbGIoUuj
+         +kJexsgZLvvdcRdXrWEVUZKN4jtF+buYwOxJaeVhVUk0NnkjMcYLaptUJ9sjQhLEg9Xd
+         yFnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oHqP26qj43N4RBV6m+y6Vmj2dP7/Hi68DySAIyks+G0=;
+        b=AzqO15sNjLsI70HQyTfIKi6yCS/iaf5WirBno0bpaMutLMOc20dK619/UPVvvtfAaB
+         xMvhaAvjOCw+f8VCMnxpOUSuwujJrzOtITy3n2d4fj5MpvVm5pFygk9EuDITtbLoKQca
+         uPSI1XeZazfp6rzr18uP/ZcSsR01boxxZGQlHIjur5iWAsN0/9I+8K27IbwxO78btPGT
+         SldSAlHqD72tOZ/iyy721VXIE+xdcnUK1G3lXcG/J7C0I94o0va8+qXBMRV5vE6wLHuM
+         txRvxs9DP+PU87jRRTgtA9xN8tiLFl/fJdLrquFVTiVG4qBqrgQZzvM1yInLyc61nIyq
+         PBJg==
+X-Gm-Message-State: AOAM533Z92+ihI3H/SIOF/JlLFqeeo32gyeWejesphP8IuNqqzFyE/HU
+        WQ5nXI+khklGDV3Tlb37vkRnIg==
+X-Google-Smtp-Source: ABdhPJyvOthwoEeoNO/6CVTJe8x8r1dDxqw7Y0ZYDMK+h6BeTNL7+ljl/PHbcwvP8sKPe/khV3LSmQ==
+X-Received: by 2002:a17:90a:d986:: with SMTP id d6mr19588449pjv.108.1599475617167;
+        Mon, 07 Sep 2020 03:46:57 -0700 (PDT)
+Received: from localhost ([122.181.47.55])
+        by smtp.gmail.com with ESMTPSA id h35sm2261938pgl.31.2020.09.07.03.46.56
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Sep 2020 03:46:56 -0700 (PDT)
+Date:   Mon, 7 Sep 2020 16:16:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/3] cpufreq: arm_scmi: Constify scmi_perf_ops pointers
+Message-ID: <20200907104649.rra566kfygqdr24x@vireshk-i7>
+References: <20200906230452.33410-1-rikard.falkeborn@gmail.com>
+ <20200906230452.33410-2-rikard.falkeborn@gmail.com>
+ <20200907102200.GB17330@bogus>
+ <20200907102551.3f7zwrmd3uqthaxs@vireshk-i7>
+ <20200907104418.GC17330@bogus>
 MIME-Version: 1.0
-References: <20200907094843.1949-1-Jason@zx2c4.com> <20200907100647.GB10657@zn.tnic>
-In-Reply-To: <20200907100647.GB10657@zn.tnic>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 7 Sep 2020 12:46:35 +0200
-X-Gmail-Original-Message-ID: <CAHmME9o_Odo97K7QXKO=konVE-UxR7iBCE5S8uAJgc=kJ2EgsA@mail.gmail.com>
-Message-ID: <CAHmME9o_Odo97K7QXKO=konVE-UxR7iBCE5S8uAJgc=kJ2EgsA@mail.gmail.com>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907104418.GC17330@bogus>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Borislav,
-
-
-On Mon, Sep 7, 2020 at 12:06 PM Borislav Petkov <bp@suse.de> wrote:
->
-> + Srinivas.
-> + kitsunyan.
->
-> On Mon, Sep 07, 2020 at 11:48:43AM +0200, Jason A. Donenfeld wrote:
-> > Popular tools, like intel-undervolt, use MSR 0x150 to control the CPU
-> > voltage offset. In fact, evidently the intel_turbo_max_3 driver in-tree
-> > also uses this MSR. So, teach the kernel's MSR list about this, so that
-> > intel-undervolt and other such tools don't spew warnings to dmesg, while
-> > unifying the constant used throughout the kernel.
+On 07-09-20, 11:44, Sudeep Holla wrote:
+> On Mon, Sep 07, 2020 at 03:55:51PM +0530, Viresh Kumar wrote:
+> > On 07-09-20, 11:22, Sudeep Holla wrote:
+> > > Hi Viresh,
+> > >
+> > > On Mon, Sep 07, 2020 at 01:04:50AM +0200, Rikard Falkeborn wrote:
+> > > > The perf_ops are not modified through this pointer. Make them const to
+> > > > indicate that. This is in preparation to make the scmi-ops pointers in
+> > > > scmi_handle const.
+> > > >
+> > >
+> > > Your ack needed to take this as series via {arm-,}soc
 > >
-> > Fixes: a7e1f67ed29f ("x86/msr: Filter MSR writes")
-> > Cc: Borislav Petkov <bp@suse.de>
-> > Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> > ---
-> >  arch/x86/include/asm/msr-index.h         | 2 ++
-> >  arch/x86/kernel/msr.c                    | 5 ++++-
-> >  drivers/platform/x86/intel_turbo_max_3.c | 6 +++---
-> >  3 files changed, 9 insertions(+), 4 deletions(-)
+> > Can I just pick the first patch and you do the rest ? Will it result
+> > in any warnings at either end ?
 > >
-> > diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-> > -     if (reg == MSR_IA32_ENERGY_PERF_BIAS)
-> > +     switch (reg) {
-> > +     case MSR_IA32_ENERGY_PERF_BIAS:
-> > +     case MSR_IA32_OC_MAILBOX:
-> >               return 0;
-> > +     }
-> Actually, we added the filtering to catch exactly such misuses and,
+> 
+> Initially I thought out suggesting the same, but then I realised(not
+> checked though), without this change in arm-soc the scmi-cpufreq driver
+> might produce warnings as the const value gets assigned to non const.
+> No ?
 
-Are you sure that intel-undervolt using OC_MAILBOX from userspace is
-actually a "misuse"? Should the kernel or kernel drivers actually be
-involved with the task of underclocking? This seems pretty squarely in
-the realm of "hobbyists poking and prodding at their CPUs" rather than
-something made for a kernel driver, right? Also, what was the
-justification for whitelisting MSR_IA32_ENERGY_PERF_BIAS?
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Jason
+-- 
+viresh
