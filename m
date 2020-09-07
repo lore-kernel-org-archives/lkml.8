@@ -2,205 +2,105 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135B3C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CE1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D171B206E7
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B4BB208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599500544;
+	bh=1kDnLVFqzUH6CQ8yg91FlxkD3s6uN6+leIwZezvx2tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yWBdpZp4bXzTF82RBMADRZ5Mg/c6tn3NAGY6G4t0Ufre3sizNGpL40gm8+7AHgWoE
+	 OV9WfF+btO3rBAOBY93K7jMmLMcKAW39CjjcfOSuXHaBKWfz9cdGZ3WIY27dNKldac
+	 qKD2HK+cLHZEmOrvHo1gQZT2Eyaymj1pGlpwlTMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731421AbgIGRl6 (ORCPT
+        id S1730649AbgIGRmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:41:58 -0400
-Received: from 8bytes.org ([81.169.241.247]:43570 "EHLO theia.8bytes.org"
+        Mon, 7 Sep 2020 13:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729436AbgIGNRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:17:55 -0400
-Received: from cap.home.8bytes.org (p549add56.dip0.t-ipconnect.de [84.154.221.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1731422AbgIGRmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:42:03 -0400
+Received: from pali.im (pali.im [31.31.79.79])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by theia.8bytes.org (Postfix) with ESMTPSA id E8D7E12E2;
-        Mon,  7 Sep 2020 15:17:08 +0200 (CEST)
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <joro@8bytes.org>, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v7 52/72] x86/sev-es: Handle DR7 read/write events
-Date:   Mon,  7 Sep 2020 15:15:53 +0200
-Message-Id: <20200907131613.12703-53-joro@8bytes.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200907131613.12703-1-joro@8bytes.org>
-References: <20200907131613.12703-1-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 75718206E7;
+        Mon,  7 Sep 2020 17:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599500523;
+        bh=1kDnLVFqzUH6CQ8yg91FlxkD3s6uN6+leIwZezvx2tw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dvwT/ePn33sVALbr6WwKNwXWkZFj8YDlt96TXffmwy9b6U+tq/EBRs7QRD6GtuOb7
+         aeJgPEYahT7eP+eFnbWeYakrWLgWcDXyS/ztrdxiDgliD+cm4bXNWgFi659tWqN1lb
+         Gf7LU7JaOB1rSGIb6pPRyjAdo2UcgFxneWcpx1GA=
+Received: by pali.im (Postfix)
+        id 0D420814; Mon,  7 Sep 2020 19:42:00 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 19:42:00 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Andre Heider <a.heider@gmail.com>
+Cc:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: marvell: espressobin: Add ethernet switch
+ aliases
+Message-ID: <20200907174200.yqojaguthi6khn3v@pali>
+References: <20200907112718.5994-1-pali@kernel.org>
+ <3ec54259-4bfe-8462-e8d5-083fc009707a@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ec54259-4bfe-8462-e8d5-083fc009707a@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+On Monday 07 September 2020 19:13:41 Andre Heider wrote:
+> > @@ -120,7 +124,7 @@
+> >   			#address-cells = <1>;
+> >   			#size-cells = <0>;
+> > -			port@0 {
+> > +			switch0port0: port@0 {
+> 
+> This label is unused it seems.
 
-Add code to handle #VC exceptions on DR7 register reads and writes.
-This is needed early because show_regs() reads DR7 to print it out.
+Yes, it is unused, but I defined labels for all ports so it would be
+clean that ports are indexed from zero and not from one. Also it looks
+inconsistent if some of DSA ports have labels and some does not.
 
-Under SEV-ES there is currently no support for saving/restoring the
-DRx registers, but software expects to be able to write to the DR7
-register. For now, cache the value written to DR7 and return it on
-read attempts, but do not touch the real hardware DR7.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-[ jroedel@suse.de: - Adapt to #VC handling framework
-                   - Support early usage ]
-Co-developed-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/kernel/sev-es.c | 85 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
-
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 439b963ed52b..7879fe640dcc 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -29,6 +29,8 @@
- #include <asm/traps.h>
- #include <asm/svm.h>
- 
-+#define DR7_RESET_VALUE        0x400
-+
- /* For early boot hypervisor communication in SEV-ES enabled guests */
- static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
- 
-@@ -76,6 +78,13 @@ struct sev_es_runtime_data {
- 	 */
- 	bool ghcb_active;
- 	bool backup_ghcb_active;
-+
-+	/*
-+	 * Cached DR7 value - write it on DR7 writes and return it on reads.
-+	 * That value will never make it to the real hardware DR7 as debugging
-+	 * is currently unsupported in SEV-ES guests.
-+	 */
-+	unsigned long dr7;
- };
- 
- struct ghcb_state {
-@@ -519,6 +528,21 @@ static long *vc_insn_get_reg(struct es_em_ctxt *ctxt)
- 	return reg_array + offset;
- }
- 
-+static long *vc_insn_get_rm(struct es_em_ctxt *ctxt)
-+{
-+	long *reg_array;
-+	int offset;
-+
-+	reg_array = (long *)ctxt->regs;
-+	offset    = insn_get_modrm_rm_off(&ctxt->insn, ctxt->regs);
-+
-+	if (offset < 0)
-+		return NULL;
-+
-+	offset /= sizeof(long);
-+
-+	return reg_array + offset;
-+}
- static enum es_result vc_do_mmio(struct ghcb *ghcb, struct es_em_ctxt *ctxt,
- 				 unsigned int bytes, bool read)
- {
-@@ -768,6 +792,61 @@ static enum es_result vc_handle_mmio(struct ghcb *ghcb,
- 	return ret;
- }
- 
-+static enum es_result vc_handle_dr7_write(struct ghcb *ghcb,
-+					  struct es_em_ctxt *ctxt)
-+{
-+	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
-+	long val, *reg = vc_insn_get_rm(ctxt);
-+	enum es_result ret;
-+
-+	if (!reg)
-+		return ES_DECODE_FAILED;
-+
-+	val = *reg;
-+
-+	/* Upper 32 bits must be written as zeroes */
-+	if (val >> 32) {
-+		ctxt->fi.vector = X86_TRAP_GP;
-+		ctxt->fi.error_code = 0;
-+		return ES_EXCEPTION;
-+	}
-+
-+	/* Clear out other reserved bits and set bit 10 */
-+	val = (val & 0xffff23ffL) | BIT(10);
-+
-+	/* Early non-zero writes to DR7 are not supported */
-+	if (!data && (val & ~DR7_RESET_VALUE))
-+		return ES_UNSUPPORTED;
-+
-+	/* Using a value of 0 for ExitInfo1 means RAX holds the value */
-+	ghcb_set_rax(ghcb, val);
-+	ret = sev_es_ghcb_hv_call(ghcb, ctxt, SVM_EXIT_WRITE_DR7, 0, 0);
-+	if (ret != ES_OK)
-+		return ret;
-+
-+	if (data)
-+		data->dr7 = val;
-+
-+	return ES_OK;
-+}
-+
-+static enum es_result vc_handle_dr7_read(struct ghcb *ghcb,
-+					 struct es_em_ctxt *ctxt)
-+{
-+	struct sev_es_runtime_data *data = this_cpu_read(runtime_data);
-+	long *reg = vc_insn_get_rm(ctxt);
-+
-+	if (!reg)
-+		return ES_DECODE_FAILED;
-+
-+	if (data)
-+		*reg = data->dr7;
-+	else
-+		*reg = DR7_RESET_VALUE;
-+
-+	return ES_OK;
-+}
-+
- static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 					 struct ghcb *ghcb,
- 					 unsigned long exit_code)
-@@ -775,6 +854,12 @@ static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
- 	enum es_result result;
- 
- 	switch (exit_code) {
-+	case SVM_EXIT_READ_DR7:
-+		result = vc_handle_dr7_read(ghcb, ctxt);
-+		break;
-+	case SVM_EXIT_WRITE_DR7:
-+		result = vc_handle_dr7_write(ghcb, ctxt);
-+		break;
- 	case SVM_EXIT_CPUID:
- 		result = vc_handle_cpuid(ghcb, ctxt);
- 		break;
--- 
-2.28.0
-
+> 
+> >   				reg = <0>;
+> >   				label = "cpu";
+> >   				ethernet = <&eth0>;
+> > @@ -131,19 +135,19 @@
+> >   				};
+> >   			};
+> > -			port@1 {
+> > +			switch0port1: port@1 {
+> >   				reg = <1>;
+> >   				label = "wan";
+> >   				phy-handle = <&switch0phy0>;
+> >   			};
+> > -			port@2 {
+> > +			switch0port2: port@2 {
+> >   				reg = <2>;
+> >   				label = "lan0";
+> >   				phy-handle = <&switch0phy1>;
+> >   			};
+> > -			port@3 {
+> > +			switch0port3: port@3 {
+> >   				reg = <3>;
+> >   				label = "lan1";
+> >   				phy-handle = <&switch0phy2>;
+> > 
+> 
