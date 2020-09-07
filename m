@@ -2,137 +2,143 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBFEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12092C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9105120768
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:34:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599489261;
-	bh=RNbfAwKg808EmwHCSsYfFUQo6wpnABBo6mgSy7XA3/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GyZzd6xLUFlx1U6SPC9tfj6VgQRQIU8SHx+u2r0T4OjYakPUgpzk3LrWYz4hMQhhc
-	 Vk9/Sl1p9Lfr8LRBcX9XAB8wrt7W++BjmKf/Cb9TOsde9V2wotRhQoSwB+Ad/EIRpj
-	 Bwt+kHFnyDoIpTYTD33XzUKdUQ4+cs7q3pQ0rm9M=
+	by mail.kernel.org (Postfix) with ESMTP id BC1DC20768
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 14:35:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbgIGOeT (ORCPT
+        id S1729954AbgIGOea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 10:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51658 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 10:34:30 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:47218 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729759AbgIGO2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:28:49 -0400
-Received: from localhost (p54b331dd.dip0.t-ipconnect.de [84.179.49.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D6662064B;
-        Mon,  7 Sep 2020 14:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599488928;
-        bh=RNbfAwKg808EmwHCSsYfFUQo6wpnABBo6mgSy7XA3/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SP3rwR+E0gxpKOpgZb3C1djsmkGs9uGPktSrF5RNVaapzUEwkhEKqAQ0+TpgJY8Gg
-         viWpog1od5YDV0xoTD6OCoGMFCxrlueSyEytvm0LJzCV6NNfv/LceAnm1+V9AArfo+
-         +SVG4u+j/mkHlRvYQEAk/n4/LKUeEyBM5DG6xFGg=
-Date:   Mon, 7 Sep 2020 16:28:41 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     trix@redhat.com
-Cc:     syniurge@gmail.com, nehal-bakulchandra.shah@amd.com,
-        shyam-sundar.s-k@amd.com, natechancellor@gmail.com,
-        ndesaulniers@google.com, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] i2c: amd_mp2: handle num is 0 input for i2c_amd_xfer
-Message-ID: <20200907142841.GA3931@ninjato>
-References: <20200904180647.21080-1-trix@redhat.com>
+        id S1729883AbgIGO33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:29:29 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1kFI8t-00Dcm0-OV; Mon, 07 Sep 2020 16:29:11 +0200
+Date:   Mon, 7 Sep 2020 16:29:11 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Dan Murphy <dmurphy@ti.com>, davem@davemloft.net,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 1/3] net: dp83869: Add ability to advertise
+ Fiber connection
+Message-ID: <20200907142911.GT3112546@lunn.ch>
+References: <20200903114259.14013-1-dmurphy@ti.com>
+ <20200903114259.14013-2-dmurphy@ti.com>
+ <20200905111755.4bd874b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200904180647.21080-1-trix@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200905111755.4bd874b2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 05, 2020 at 11:17:55AM -0700, Jakub Kicinski wrote:
+> On Thu, 3 Sep 2020 06:42:57 -0500 Dan Murphy wrote:
+> > Add the ability to advertise the Fiber connection if the strap or the
+> > op-mode is configured for 100Base-FX.
+> > 
+> > Auto negotiation is not supported on this PHY when in fiber mode.
+> > 
+> > Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> 
+> Some comments, I'm not very phy-knowledgeable so bear with me
+> (hopefully PHY maintainers can correct me, too).
+> 
+> > diff --git a/drivers/net/phy/dp83869.c b/drivers/net/phy/dp83869.c
+> > index 58103152c601..48a68474f89c 100644
+> > --- a/drivers/net/phy/dp83869.c
+> > +++ b/drivers/net/phy/dp83869.c
+> > @@ -52,6 +52,11 @@
+> >  					 BMCR_FULLDPLX | \
+> >  					 BMCR_SPEED1000)
+> >  
+> > +#define MII_DP83869_FIBER_ADVERTISE    (ADVERTISED_TP | ADVERTISED_MII | \
+> > +					ADVERTISED_FIBRE | ADVERTISED_BNC |  \
+> 
+> I'm not actually sure myself what the semantics of port type advertise
+> bits are, but if this is fiber why advertise TP and do you really have
+> BNC connectors? :S
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Jakub
 
-On Fri, Sep 04, 2020 at 11:06:47AM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
->=20
-> clang static analyzer reports this problem
->=20
-> i2c-amd-mp2-plat.c:174:9: warning: Branch condition evaluates
->   to a garbage value
->         return err ? err : num;
->                ^~~
->=20
-> err is not initialized, it depends on the being set in the
-> transfer loop which will not happen if num is 0.  Surveying
-> other master_xfer() implementations show all handle a 0 num.
->=20
-> Because returning 0 is expected, initialize err to 0.
+Normally, we start with a base of ETHTOOL_LINK_MODE_TP_BIT,
+ETHTOOL_LINK_MODE_MII_BIT and then use genphy_read_abilities() to read
+the standard registers in the PHY to determine what the PHY
+supports. The PHY driver has the ability of provide its own function
+to get the supported features, which is happening here. As far as i
+remember, there is no standard way to indicate a PHY is doing Fibre,
+not copper.
 
-Well, it is not expected. The core does:
+I agree that TP and BMC make no sense here, since my understanding is
+that the device only supports Fibre when strapped for Fibre. It cannot
+swap to TP, and it has been at least 20 years since i last had a BNC
+cable in my hands.
 
-2019         if (WARN_ON(!msgs || num < 1))
-2020                 return -EINVAL;
+In this context, i've no idea what MII means.
 
-Dunno if we should apply the patch nonetheless or add a comment that num
-is guaranteed to be at least 1.
+> > +					ADVERTISED_Pause | ADVERTISED_Asym_Pause | \
+> > +					ADVERTISED_100baseT_Full)
+> 
+> You say 100Base-FX, yet you advertise 100Base-T?
 
->=20
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/i2c/busses/i2c-amd-mp2-plat.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-amd-mp2-plat.c b/drivers/i2c/busses/i=
-2c-amd-mp2-plat.c
-> index 17df9e8845b6..506433bc0ff2 100644
-> --- a/drivers/i2c/busses/i2c-amd-mp2-plat.c
-> +++ b/drivers/i2c/busses/i2c-amd-mp2-plat.c
-> @@ -155,7 +155,7 @@ static int i2c_amd_xfer(struct i2c_adapter *adap, str=
-uct i2c_msg *msgs, int num)
->  	struct amd_i2c_dev *i2c_dev =3D i2c_get_adapdata(adap);
->  	int i;
->  	struct i2c_msg *pmsg;
-> -	int err;
-> +	int err =3D 0;
-> =20
->  	/* the adapter might have been deleted while waiting for the bus lock */
->  	if (unlikely(!i2c_dev->common.mp2_dev))
-> --=20
-> 2.18.1
->=20
+100Base-FX does not actually exist in ADVERTISED_X form. I guess this
+is historical. It was not widely supported, the broadcom PHYs appear
+to support it, but not much else. We were also running out of bits to
+represent these ADVERTISED_X values. Now that we have changed to linux
+bitmaps and have unlimited number of bits, it makes sense to add it.
 
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
+> > @@ -383,7 +389,37 @@ static int dp83869_configure_mode(struct phy_device *phydev,
+> >  
+> >  		break;
+> >  	case DP83869_RGMII_1000_BASE:
+> > +		break;
+> >  	case DP83869_RGMII_100_BASE:
+> > +		/* Only allow advertising what this PHY supports */
+> > +		linkmode_and(phydev->advertising, phydev->advertising,
+> > +			     phydev->supported);
+> > +
+> > +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> > +				 phydev->supported);
+> > +		linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT,
+> > +				 phydev->advertising);
+> > +
+> > +		/* Auto neg is not supported in fiber mode */
+> > +		bmcr = phy_read(phydev, MII_BMCR);
+> > +		if (bmcr < 0)
+> > +			return bmcr;
+> > +
+> > +		phydev->autoneg = AUTONEG_DISABLE;
+> > +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> > +				   phydev->supported);
+> > +		linkmode_clear_bit(ETHTOOL_LINK_MODE_Autoneg_BIT,
+> > +				   phydev->advertising);
+> > +
+> > +		if (bmcr & BMCR_ANENABLE) {
+> > +			ret =  phy_modify(phydev, MII_BMCR, BMCR_ANENABLE, 0);
+> > +			if (ret < 0)
+> > +				return ret;
+> > +		}
+> > +
+> > +		phy_modify_changed(phydev, MII_ADVERTISE,
+> > +				   MII_DP83869_FIBER_ADVERTISE,
+> > +				   MII_DP83869_FIBER_ADVERTISE);
+> 
+> This only accesses standard registers, should it perhaps be a helper in
+> the kernel's phy code?
 
------BEGIN PGP SIGNATURE-----
+I suspect the PHY is not following the standard when strapped to
+fibre.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9WQ5UACgkQFA3kzBSg
-Kbb4lRAAqR+qYYGfBuYJNz9IlZD4fINTsBtP7KTjVgiMDIn11bUyT1xVHbld0Ut7
-Mj0juR4/0NVyWKL59HW/zU5qxcRs5q0VYK3VBfYlTYRaGMTrDkRjr6dK1s3TksFp
-3BF0nmwIL6H+UaBdWuh4nPuIJC8KOM6CpxfpukWoGlQlrgbDiDrnevA6QaA2i+br
-D+UynwNQ4naOYJ2JDzWeAZZ/ca5OTbezVhKWb5MqSIFzs188pSopFJlHAAjJsWhz
-2BBWibXh2syLzuTsFXgGaL0S5Bbs/reBG2Uit6H2kOSNp+EUZGWkE6ewAgV8Tm5d
-e4Jfww+NmrzWm28rPW4asVz6xI9BZm3kgWZS/BqZiahVu0cTFvgUtQntxRRNxg2U
-n3Xcxru2iMQn5/tE08Z6iKk8vsefAiC1MyoeRS4VqytAg8i/7Xjn61m/lC+X5XU0
-VkV/im6BfMFZ1s+N5R8gZ+nPcxkbvzw8ZA5hNJImbyu2F1rKwiipjtLtd/nMw12+
-C95ZqawbVsCKtYDPJFWYhyMeR0LpZd2gMskWzBHI6i5Um7Ba0lON4R9YbpAfc8X7
-8TYHB/xVnsIe+c1Sd857ZOOAm0otamj/i9FilxGQbgYVqRs83Z8dvRCc4+ikiQJR
-+7MGAu1AJkKaxm2xNW6BW/3iS06vBFTreKuSkDxV+JRedsq8Gjc=
-=r3dn
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+	Andrew
