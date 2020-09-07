@@ -2,60 +2,62 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE837C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C73C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94A82215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68FC215A4
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 22:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="EAwXcvhP"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="emT8VmPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgIGWEc (ORCPT
+        id S1728216AbgIGWEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 18:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58416 "EHLO
+        Mon, 7 Sep 2020 18:04:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgIGWEU (ORCPT
+        with ESMTP id S1728113AbgIGWEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 18:04:20 -0400
 Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9571C061755
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E700BC061757
         for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 15:04:19 -0700 (PDT)
 Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C8D39806B5;
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id DFFF8891B0;
         Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
         s=mail181024; t=1599516254;
-        bh=Q02+/9NY7pSuY9wiR+9Qb9y2Y6jEeyrcs5Z2A0X3LB0=;
-        h=From:To:Cc:Subject:Date;
-        b=EAwXcvhPjr4/jl3mLpfonY2+A0A1HNwzg/5jDFqjf4UJ62suA4PZDpoaDB1/OcXa7
-         8U6dWhUkrz7oRO1kOhiwXoT7VnE4x5o3bw3/75Hs4ACIouksjuOgfiAFOyTxH9CylJ
-         4rZn/HmjPAJYg64x79ETH41datqgfkvXsJq151Xquf/baCCMkJJiSuiV9PhOob/TeT
-         Xu2PO6At1diZkS8xBiw53fNnL7y3q91keuR3Kz+Cesq5rJCVB7lJEQ7XiMM/Bt7dM6
-         a9P4XBNSJW3khAa8106tAIuAGIM2yoaS39d+5G+TszegsZwYEyprkED7Ym3C0IsiWW
-         z1mEr1cwNm1AA==
+        bh=t9kWVwdz3UiadOPYbUab6wnQhbmCb906FDfP3HnvERU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=emT8VmPSwjkWoVPlpkR32uaj6y6asl68EWpHtj5Z0Xew9nbL7F7MpLhU0khGvdJhQ
+         ZFaYQlyv9RVwLwmrSyZGqpsalef2iRBXQXu8SeMX8UNbNTffXLqvgRtBJswu7Qi+Us
+         eTmonRFXfv1fOdrrMz9jM8xFurLalb79wFJtYqFqnqfDnGFq999m82YdgMkLNWDUUW
+         IyXBdW+tWpnbRDziW2bYdllDXbqGWL2DsGinhWtCA27mmg1ctCTCFTruH7En6wr1Fs
+         sBoIna176ATZ4zhWepJzo4gyWzM/+Og8DqkB4AHwoJE/Lz2ghcboL8a4A3sf6Il+LV
+         8D6e6gGt7/Jgg==
 Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f56ae5e0000>; Tue, 08 Sep 2020 10:04:14 +1200
+        id <B5f56ae5e0002>; Tue, 08 Sep 2020 10:04:14 +1200
 Received: from pauld-dl.ws.atlnz.lc (pauld-dl.ws.atlnz.lc [10.33.23.16])
-        by smtp (Postfix) with ESMTP id C2EEB13EEBA;
+        by smtp (Postfix) with ESMTP id CABCB13EEBA;
         Tue,  8 Sep 2020 10:04:13 +1200 (NZST)
 Received: by pauld-dl.ws.atlnz.lc (Postfix, from userid 1684)
-        id 7657A1E3850; Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
+        id 7EFC21E3851; Tue,  8 Sep 2020 10:04:14 +1200 (NZST)
 From:   Paul Davey <paul.davey@alliedtelesis.co.nz>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Paul Davey <paul.davey@alliedtelesis.co.nz>
-Subject: [PATCH net-next v2 0/3] Allow more than 255 IPv4 multicast interfaces
-Date:   Tue,  8 Sep 2020 10:04:05 +1200
-Message-Id: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
+Subject: [PATCH net-next v2 2/3] ipmr: Add high byte of VIF ID to igmpmsg
+Date:   Tue,  8 Sep 2020 10:04:07 +1200
+Message-Id: <20200907220408.32385-3-paul.davey@alliedtelesis.co.nz>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
+References: <20200907220408.32385-1-paul.davey@alliedtelesis.co.nz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 x-atlnz-ls: pat
@@ -64,39 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently it is not possible to use more than 255 multicast interfaces
-for IPv4 due to the format of the igmpmsg header which only has 8 bits
-available for the VIF ID.  There is space available in the igmpmsg
-header to store the full VIF ID in the form of an unused byte following
-the VIF ID field.  There is also enough space for the full VIF ID in
-the Netlink cache notifications, however the value is currently taken
-directly from the igmpmsg header and has thus already been truncated.
+Use the unused3 byte in struct igmpmsg to hold the high 8 bits of the
+VIF ID.
 
-Adding the high byte of the VIF ID into the unused3 byte of igmpmsg
-allows use of more than 255 IPv4 multicast interfaces. The full VIF ID
-is  also available in the Netlink notification by assembling it from
-both bytes from the igmpmsg.
+If using more than 255 IPv4 multicast interfaces it is necessary to have
+access to a VIF ID for cache reports that is wider than 8 bits, the VIF
+ID present in the igmpmsg reports sent to mroute_sk was only 8 bits wide
+in the igmpmsg header.  Adding the high 8 bits of the 16 bit VIF ID in
+the unused byte allows use of more than 255 IPv4 multicast interfaces.
 
-Additionally this reveals a deficiency in the Netlink cache report
-notifications, they lack any means for differentiating cache reports
-relating to different multicast routing tables.  This is easily
-resolved by adding the multicast route table ID to the cache reports.
+Signed-off-by: Paul Davey <paul.davey@alliedtelesis.co.nz>
+---
+ include/uapi/linux/mroute.h | 4 ++--
+ net/ipv4/ipmr.c             | 8 ++++++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-changes in v2:
- - Added high byte of VIF ID to igmpmsg struct replacing unused3
-   member.
- - Assemble VIF ID in Netlink notification from both bytes in igmpmsg
-   header.
-
-Paul Davey (3):
-  ipmr: Add route table ID to netlink cache reports
-  ipmr: Add high byte of VIF ID to igmpmsg
-  ipmr: Use full VIF ID in netlink cache reports
-
- include/uapi/linux/mroute.h |  5 +++--
- net/ipv4/ipmr.c             | 14 ++++++++++----
- 2 files changed, 13 insertions(+), 6 deletions(-)
-
+diff --git a/include/uapi/linux/mroute.h b/include/uapi/linux/mroute.h
+index 918f1ef32ffe..1a42f5f9b31b 100644
+--- a/include/uapi/linux/mroute.h
++++ b/include/uapi/linux/mroute.h
+@@ -113,8 +113,8 @@ struct igmpmsg {
+ 	__u32 unused1,unused2;
+ 	unsigned char im_msgtype;		/* What is this */
+ 	unsigned char im_mbz;			/* Must be zero */
+-	unsigned char im_vif;			/* Interface (this ought to be a vifi_t!) */
+-	unsigned char unused3;
++	unsigned char im_vif;			/* Low 8 bits of Interface */
++	unsigned char im_vif_hi;		/* High 8 bits of Interface */
+ 	struct in_addr im_src,im_dst;
+ };
+=20
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index 19b2f586319b..4809318f591b 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -1038,10 +1038,13 @@ static int ipmr_cache_report(struct mr_table *mrt=
+,
+ 		memcpy(msg, skb_network_header(pkt), sizeof(struct iphdr));
+ 		msg->im_msgtype =3D assert;
+ 		msg->im_mbz =3D 0;
+-		if (assert =3D=3D IGMPMSG_WRVIFWHOLE)
++		if (assert =3D=3D IGMPMSG_WRVIFWHOLE) {
+ 			msg->im_vif =3D vifi;
+-		else
++			msg->im_vif_hi =3D vifi >> 8;
++		} else {
+ 			msg->im_vif =3D mrt->mroute_reg_vif_num;
++			msg->im_vif_hi =3D mrt->mroute_reg_vif_num >> 8;
++		}
+ 		ip_hdr(skb)->ihl =3D sizeof(struct iphdr) >> 2;
+ 		ip_hdr(skb)->tot_len =3D htons(ntohs(ip_hdr(pkt)->tot_len) +
+ 					     sizeof(struct iphdr));
+@@ -1054,6 +1057,7 @@ static int ipmr_cache_report(struct mr_table *mrt,
+ 		ip_hdr(skb)->protocol =3D 0;
+ 		msg =3D (struct igmpmsg *)skb_network_header(skb);
+ 		msg->im_vif =3D vifi;
++		msg->im_vif_hi =3D vifi >> 8;
+ 		skb_dst_set(skb, dst_clone(skb_dst(pkt)));
+ 		/* Add our header */
+ 		igmp =3D skb_put(skb, sizeof(struct igmphdr));
 --=20
 2.28.0
 
