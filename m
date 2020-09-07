@@ -2,200 +2,130 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B9BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D55121481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40B221481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:55:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YiWMvTTw";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bYyZJ8B/"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="h9KtAmbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728952AbgIGMzF (ORCPT
+        id S1729359AbgIGMz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:55:05 -0400
-Received: from a27-56.smtp-out.us-west-2.amazonses.com ([54.240.27.56]:39304
-        "EHLO a27-56.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729377AbgIGMxa (ORCPT
+        Mon, 7 Sep 2020 08:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729241AbgIGMzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:53:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599483207;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID;
-        bh=lH7mqjfgItPUsDA2PLbOekcGn95vJGTAWrS7CKJEon8=;
-        b=YiWMvTTwdlLPWELUgb/m/kWT6jdFSL31rgsdF8oNfkGti7I23Lwzq8Rm37e0MYVn
-        mU6VR+U1d+qLttty9R8YIGpaaQs3I6vA/8HpR7ZsIHl5NgCrr7bFDzJ1N0zgAWp9ikJ
-        E8DfhQZX1W4+11zkhuo5Y5RRsRPToWChiEf76jL8=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599483207;
-        h=MIME-Version:Content-Type:Content-Transfer-Encoding:Date:From:To:Cc:Subject:In-Reply-To:References:Message-ID:Feedback-ID;
-        bh=lH7mqjfgItPUsDA2PLbOekcGn95vJGTAWrS7CKJEon8=;
-        b=bYyZJ8B/H5Nl3Fa9ZdpX/jfcbY9k53UYkDTMFqoedzxNbxB+wvA1mSQearXltF+k
-        jf86FgANAIf5Psd80WO+ysVlspKfz8Xbus54ATcPUIE5KkvkqtUQ9JRsy4hRKj8l9BE
-        gQ5ogXbZBLRjABqgQDI9ytb3INkrv7fJosWTCS5Y=
+        Mon, 7 Sep 2020 08:55:09 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D9FC061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 05:55:08 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id a8so4463090plm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 05:55:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LtZPyi/AukZy15ogdyhyhhfmtD6VdGQ8V+ah+uZ5ZRE=;
+        b=h9KtAmbLvtAS6iQDVPynlTja6eFvARzIIqyZGjsQ20GC/J+Yg5jFY7D2QRZMKrFLiz
+         dkdtie2ACqm1XDPCxL6BuFnkf1P0yhhdZ+z6efRlhKEBnn2tRUzsOrLKAKteYS3VgSbA
+         0IXGpUnL3OAaVlIoFtWisIbQ8UxaacynRRsYiMtJ4VlnpwrfdgrbjBkryuLm+QGNESZq
+         e46wSb/XIxBk5v4sHHKdlvTMkWktAxgO4Oy6ypC1/YgB30YLpnfn0pM1juOdO2m6jJ9B
+         c9oMbJxuGXEz5NKHKA+r923gYTdTjS7/ZFvAEAgeqJ2vdW6GiHkJ+M13nDsh4aa0Ocoz
+         Z6rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LtZPyi/AukZy15ogdyhyhhfmtD6VdGQ8V+ah+uZ5ZRE=;
+        b=i68EHtact+JanUT3DC353muu94cqd8iGjNUQf0hSJdJQFXwpO/bDWuJct+iDPjKhfp
+         u1hdTbtV14PIoHkUeEQiNR12T17Wdu/dOkGFmWSN8mxjiZa+S7gyEeyS9c1R20jxf7Pg
+         i5kF8BjtpjbbM1BK0F0OtcqSBo8wNaH7qd2kLeirUZqQyO0vgKoOJj3AT7/ASLp8JLhk
+         e9GMKRnmGGILm9a9j4L6CpPyjpYe8pweiWex8nIIn7StnI2BONcCsaHyujzZ/zA9Ewkq
+         zq4cQ3MDgmUhvVA+9OWgHk0AEX6DnRnjz0FVR8Y2R3Lq2yOcU2LMzcWexZjO2k0V8X57
+         416A==
+X-Gm-Message-State: AOAM530HvWyZfRPhbxGkP+nPlf9/k9JDIYYC9PYLruiL7Lyfv0cUYdZa
+        Y4IOtpUFbuLWpRFVND1AMmCi4g==
+X-Google-Smtp-Source: ABdhPJwSJhwbdTK3aiOECk1N01cYyEhVPN+DwxgBITkWSDuyKHu9bvElYyztoBA6ts42wvdnXIfuaw==
+X-Received: by 2002:a17:902:c692:b029:d0:90a3:24f4 with SMTP id r18-20020a170902c692b02900d090a324f4mr13703671plx.12.1599483307097;
+        Mon, 07 Sep 2020 05:55:07 -0700 (PDT)
+Received: from [192.168.1.182] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id z7sm5473517pfj.75.2020.09.07.05.55.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 05:55:06 -0700 (PDT)
+Subject: Re: [PATCH next] io_uring: fix task hung in io_uring_setup
+To:     Pavel Begunkov <asml.silence@gmail.com>,
+        Hillf Danton <hdanton@sina.com>
+Cc:     io-uring@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk,
+        syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+References: <20200903132119.14564-1-hdanton@sina.com>
+ <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
+ <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <192220ac-fd43-c553-e694-a3e51bcbfa4a@kernel.dk>
+Date:   Mon, 7 Sep 2020 06:55:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 7 Sep 2020 12:53:27 +0000
-From:   rojay@codeaurora.org
-To:     Akash Asthana <akashast@codeaurora.org>
-Cc:     wsa@kernel.org, swboyd@chromium.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
-        mka@chromium.org, msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
-        rnayak@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH V2 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
-In-Reply-To: <ba1935d2-9fec-cf82-ed19-bc005befcb40@codeaurora.org>
-References: <20200820103522.26242-1-rojay@codeaurora.org>
- <20200820103522.26242-3-rojay@codeaurora.org>
- <ba1935d2-9fec-cf82-ed19-bc005befcb40@codeaurora.org>
-Message-ID: <0101017468a0de0f-8a49e28e-dcf5-41a9-bf06-296ac6edea26-000000@us-west-2.amazonses.com>
-X-Sender: rojay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
-X-SES-Outgoing: 2020.09.07-54.240.27.56
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 17:26, Akash Asthana wrote:
-> Hi Roja,
+On 9/7/20 2:50 AM, Pavel Begunkov wrote:
+> On 03/09/2020 17:04, Jens Axboe wrote:
+>> On 9/3/20 7:21 AM, Hillf Danton wrote:
+>>>
+>>> The smart syzbot found the following issue:
+>>>
+>>> INFO: task syz-executor047:6853 blocked for more than 143 seconds.
+>>>       Not tainted 5.9.0-rc3-next-20200902-syzkaller #0
+>>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+>>> task:syz-executor047 state:D stack:28104 pid: 6853 ppid:  6847 flags:0x00004000
+>>> Call Trace:
+>>>  context_switch kernel/sched/core.c:3777 [inline]
+>>>  __schedule+0xea9/0x2230 kernel/sched/core.c:4526
+>>>  schedule+0xd0/0x2a0 kernel/sched/core.c:4601
+>>>  schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+>>>  do_wait_for_common kernel/sched/completion.c:85 [inline]
+>>>  __wait_for_common kernel/sched/completion.c:106 [inline]
+>>>  wait_for_common kernel/sched/completion.c:117 [inline]
+>>>  wait_for_completion+0x163/0x260 kernel/sched/completion.c:138
+>>>  io_sq_thread_stop fs/io_uring.c:6906 [inline]
+>>>  io_finish_async fs/io_uring.c:6920 [inline]
+>>>  io_sq_offload_create fs/io_uring.c:7595 [inline]
+>>>  io_uring_create fs/io_uring.c:8671 [inline]
+>>>  io_uring_setup+0x1495/0x29a0 fs/io_uring.c:8744
+>>>  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+>>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>>
+>>> because the sqo_thread kthread is created in io_sq_offload_create() without
+>>> being waked up. Then in the error branch of that function we will wait for
+>>> the sqo kthread that never runs. It's fixed by waking it up before waiting.
+>>
+>> Looks good - applied, thanks.
 > 
-> On 8/20/2020 4:05 PM, Roja Rani Yarubandi wrote:
->> If the hardware is still accessing memory after SMMU translation
->> is disabled (as part of smmu shutdown callback), then the
->> IOVAs (I/O virtual address) which it was using will go on the bus
->> as the physical addresses which will result in unknown crashes
->> like NoC/interconnect errors.
->> 
->> So, implement shutdown callback to i2c driver to unmap DMA mappings
->> during system "reboot" or "shutdown".
->> 
->> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
->> ---
->> Changes in V2:
->>   - As per Stephen's comments added seperate function for stop 
->> transfer,
->>     fixed minor nitpicks.
->> 
->>   drivers/i2c/busses/i2c-qcom-geni.c | 43 
->> ++++++++++++++++++++++++++++++
->>   include/linux/qcom-geni-se.h       |  5 ++++
->>   2 files changed, 48 insertions(+)
->> 
->> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
->> b/drivers/i2c/busses/i2c-qcom-geni.c
->> index 1fda5c7c2cfc..d07f2f33bb75 100644
->> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->> @@ -486,6 +486,28 @@ static int geni_i2c_xfer(struct i2c_adapter 
->> *adap,
->>   	return ret;
->>   }
->>   +static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
->> +{
->> +	u32 val;
->> +	struct geni_se *se = &gi2c->se;
->> +
->> +	val = readl_relaxed(gi2c->se.base + SE_DMA_DEBUG_REG0);
->> +	if (val & DMA_TX_ACTIVE) {
->> +		geni_i2c_abort_xfer(gi2c);
->> +		gi2c->cur_wr = 0;
->> +		if (gi2c->err)
->> +			geni_i2c_tx_fsm_rst(gi2c);
->> +		geni_se_tx_dma_unprep(se, gi2c->tx_dma, gi2c->xfer_len);
->> +	}
-> should be 'else if', because TX and RX can't happen parallel.
->> +	if (val & DMA_RX_ACTIVE) {
->> +		geni_i2c_abort_xfer(gi2c);
->> +		gi2c->cur_rd = 0;
->> +		if (gi2c->err)
->> +			geni_i2c_rx_fsm_rst(gi2c);
->> +		geni_se_rx_dma_unprep(se, gi2c->rx_dma, gi2c->xfer_len);
->> +	}
->> +}
->> +
->>   static u32 geni_i2c_func(struct i2c_adapter *adap)
->>   {
->>   	return I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & 
->> ~I2C_FUNC_SMBUS_QUICK);
->> @@ -617,6 +639,26 @@ static int geni_i2c_remove(struct platform_device 
->> *pdev)
->>   	return 0;
->>   }
->>   +static void geni_i2c_shutdown(struct platform_device *pdev)
->> +{
->> +	int ret;
->> +	u32 dma;
->> +	struct geni_i2c_dev *gi2c = platform_get_drvdata(pdev);
->> +	struct geni_se *se = &gi2c->se;
->> +
->> +	ret = pm_runtime_get_sync(gi2c->se.dev);
->> +	if (ret < 0) {
->> +		dev_err(gi2c->se.dev, "Failed to resume device: %d\n", ret);
->> +		return;
->> +	}
->> +
->> +	dma = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-> 
-> Wrt to current issue context it may be suffice to stop just DMA mode
-> transfers but why not stop all mode of active transfer during shutdown
-> in a generic way.
-> 
-> Regards,
-> 
-> Akash
-> 
+> BTW, I don't see the patch itself, and it's neither in io_uring, block
+> nor fs mailing lists. Hillf, could you please CC proper lists next time?
 
-Okay, I will include FIFO transfer case also in stop_xfer
+He did, but I'm guessing that vger didn't like the email for whatever
+reason. Hillf, did you get an error back from vger when sending the patch?
 
->> +	if (dma)
->> +		geni_i2c_stop_xfer(gi2c);
->> +
->> +	pm_runtime_put_sync_suspend(gi2c->se.dev);
->> +}
->> +
->>   static int __maybe_unused geni_i2c_runtime_suspend(struct device 
->> *dev)
->>   {
->>   	int ret;
->> @@ -677,6 +719,7 @@ MODULE_DEVICE_TABLE(of, geni_i2c_dt_match);
->>   static struct platform_driver geni_i2c_driver = {
->>   	.probe  = geni_i2c_probe,
->>   	.remove = geni_i2c_remove,
->> +	.shutdown = geni_i2c_shutdown,
->>   	.driver = {
->>   		.name = "geni_i2c",
->>   		.pm = &geni_i2c_pm_ops,
->> diff --git a/include/linux/qcom-geni-se.h 
->> b/include/linux/qcom-geni-se.h
->> index dd464943f717..c3c016496d98 100644
->> --- a/include/linux/qcom-geni-se.h
->> +++ b/include/linux/qcom-geni-se.h
->> @@ -77,6 +77,7 @@ struct geni_se {
->>   #define SE_DMA_RX_FSM_RST		0xd58
->>   #define SE_HW_PARAM_0			0xe24
->>   #define SE_HW_PARAM_1			0xe28
->> +#define SE_DMA_DEBUG_REG0		0xe40
->>     /* GENI_FORCE_DEFAULT_REG fields */
->>   #define FORCE_DEFAULT	BIT(0)
->> @@ -207,6 +208,10 @@ struct geni_se {
->>   #define RX_GENI_CANCEL_IRQ		BIT(11)
->>   #define RX_GENI_GP_IRQ_EXT		GENMASK(13, 12)
->>   +/* SE_DMA_DEBUG_REG0 Register fields */
->> +#define DMA_TX_ACTIVE			BIT(0)
->> +#define DMA_RX_ACTIVE			BIT(1)
->> +
->>   /* SE_HW_PARAM_0 fields */
->>   #define TX_FIFO_WIDTH_MSK		GENMASK(29, 24)
->>   #define TX_FIFO_WIDTH_SHFT		24
+-- 
+Jens Axboe
+
