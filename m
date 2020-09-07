@@ -2,268 +2,82 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 393BE206B8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F52E2080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731259AbgIGRPS (ORCPT
+        id S1731103AbgIGRPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:15:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10831 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729665AbgIGOH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 10:07:29 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6EE913EE4F8741CD6BFC;
-        Mon,  7 Sep 2020 22:07:24 +0800 (CST)
-Received: from lhrphicprd00229.huawei.com (10.123.41.22) by
- DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
- 14.3.487.0; Mon, 7 Sep 2020 22:07:15 +0800
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     <linux-mm@kvack.org>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <x86@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        <rafael@kernel.org>, Ingo Molnar <mingo@redhat.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, <linuxarm@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        "Sean V Kelley" <sean.v.kelley@linux.intel.com>,
-        <linux-api@vger.kernel.org>, "Hanjun Guo" <guohanjun@huawei.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v10 5/6] node: Add access1 class to represent CPU to memory characteristics
-Date:   Mon, 7 Sep 2020 22:03:06 +0800
-Message-ID: <20200907140307.571932-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
-References: <20200907140307.571932-1-Jonathan.Cameron@huawei.com>
+        Mon, 7 Sep 2020 13:15:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:36604 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729715AbgIGOGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 10:06:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B78F91045;
+        Mon,  7 Sep 2020 07:05:57 -0700 (PDT)
+Received: from [10.57.6.175] (unknown [10.57.6.175])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E9023F73C;
+        Mon,  7 Sep 2020 07:05:54 -0700 (PDT)
+Subject: Re: [PATCH v7] perf test: Introduce script for Arm CoreSight testing
+To:     leo.yan@linaro.org, acme@kernel.org, mathieu.poirier@linaro.org,
+        mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
+References: <20200907130154.9601-1-leo.yan@linaro.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <6333f002-1213-0e20-0fcc-b3bfc0723b97@arm.com>
+Date:   Mon, 7 Sep 2020 15:10:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.123.41.22]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200907130154.9601-1-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New access1 class is nearly the same as access0, but always provides
-characteristics for CPUs to memory.   The existing access0 class
-provides characteristics to nearest or direct connnect initiator
-which may be a Generic Initiator such as a GPU or network adapter.
+On 09/07/2020 02:01 PM, Leo Yan wrote:
+> We need a simple method to test Perf with Arm CoreSight drivers, this
+> could be used for smoke testing when new patch is coming for perf or
+> CoreSight drivers, and we also can use the test to confirm if the
+> CoreSight has been enabled successfully on new platforms.
+> 
+> This patch introduces the shell script test_arm_coresight.sh which is
+> under the 'pert test' framework.  This script provides three testing
+> scenarios:
 
-This new class allows thread placement on CPUs to be performed
-so as to give optimal access characteristics to memory, even if that
-memory is for example attached to a GPU or similar and only accessible
-to the CPU via an appropriate bus.
+...
 
-Suggested-by: Dan Willaims <dan.j.williams@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
----
- drivers/acpi/numa/hmat.c | 87 +++++++++++++++++++++++++++++++---------
- 1 file changed, 68 insertions(+), 19 deletions(-)
+> Below is detailed usage for it:
+> 
+>    # cd $linux/tools/perf  -> This is important so can use shell script
+>    # perf test list
+>      [...]
+>      70: probe libc's inet_pton & backtrace it with ping
+>      71: Check Arm CoreSight trace data recording and synthesized samples
+>      72: Check open filename arg using perf trace + vfs_getname
+>      73: Zstd perf.data compression/decompression
+>      74: Add vfs_getname probe to get syscall args filenames
+>      75: Use vfs_getname probe to get syscall args filenames
+> 
+>    # perf test 71
+>      71: Check Arm CoreSight trace data recording and branch samples: Ok
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-index 6a91a55229ae..daacb1cb9cee 100644
---- a/drivers/acpi/numa/hmat.c
-+++ b/drivers/acpi/numa/hmat.c
-@@ -56,7 +56,7 @@ struct memory_target {
- 	unsigned int memory_pxm;
- 	unsigned int processor_pxm;
- 	struct resource memregions;
--	struct node_hmem_attrs hmem_attrs;
-+	struct node_hmem_attrs hmem_attrs[2];
- 	struct list_head caches;
- 	struct node_cache_attrs cache_attrs;
- 	bool registered;
-@@ -65,6 +65,7 @@ struct memory_target {
- struct memory_initiator {
- 	struct list_head node;
- 	unsigned int processor_pxm;
-+	bool has_cpu;
- };
- 
- struct memory_locality {
-@@ -108,6 +109,7 @@ static __init void alloc_memory_initiator(unsigned int cpu_pxm)
- 		return;
- 
- 	initiator->processor_pxm = cpu_pxm;
-+	initiator->has_cpu = node_state(pxm_to_node(cpu_pxm), N_CPU);
- 	list_add_tail(&initiator->node, &initiators);
- }
- 
-@@ -215,28 +217,28 @@ static u32 hmat_normalize(u16 entry, u64 base, u8 type)
- }
- 
- static void hmat_update_target_access(struct memory_target *target,
--					     u8 type, u32 value)
-+				      u8 type, u32 value, int access)
- {
- 	switch (type) {
- 	case ACPI_HMAT_ACCESS_LATENCY:
--		target->hmem_attrs.read_latency = value;
--		target->hmem_attrs.write_latency = value;
-+		target->hmem_attrs[access].read_latency = value;
-+		target->hmem_attrs[access].write_latency = value;
- 		break;
- 	case ACPI_HMAT_READ_LATENCY:
--		target->hmem_attrs.read_latency = value;
-+		target->hmem_attrs[access].read_latency = value;
- 		break;
- 	case ACPI_HMAT_WRITE_LATENCY:
--		target->hmem_attrs.write_latency = value;
-+		target->hmem_attrs[access].write_latency = value;
- 		break;
- 	case ACPI_HMAT_ACCESS_BANDWIDTH:
--		target->hmem_attrs.read_bandwidth = value;
--		target->hmem_attrs.write_bandwidth = value;
-+		target->hmem_attrs[access].read_bandwidth = value;
-+		target->hmem_attrs[access].write_bandwidth = value;
- 		break;
- 	case ACPI_HMAT_READ_BANDWIDTH:
--		target->hmem_attrs.read_bandwidth = value;
-+		target->hmem_attrs[access].read_bandwidth = value;
- 		break;
- 	case ACPI_HMAT_WRITE_BANDWIDTH:
--		target->hmem_attrs.write_bandwidth = value;
-+		target->hmem_attrs[access].write_bandwidth = value;
- 		break;
- 	default:
- 		break;
-@@ -329,8 +331,12 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
- 
- 			if (mem_hier == ACPI_HMAT_MEMORY) {
- 				target = find_mem_target(targs[targ]);
--				if (target && target->processor_pxm == inits[init])
--					hmat_update_target_access(target, type, value);
-+				if (target && target->processor_pxm == inits[init]) {
-+					hmat_update_target_access(target, type, value, 0);
-+					/* If the node has a CPU, update access 1*/
-+					if (node_state(pxm_to_node(inits[init]), N_CPU))
-+						hmat_update_target_access(target, type, value, 1);
-+				}
- 			}
- 		}
- 	}
-@@ -567,6 +573,7 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 	unsigned int mem_nid, cpu_nid;
- 	struct memory_locality *loc = NULL;
- 	u32 best = 0;
-+	bool access0done = false;
- 	int i;
- 
- 	mem_nid = pxm_to_node(target->memory_pxm);
-@@ -578,7 +585,11 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 	if (target->processor_pxm != PXM_INVAL) {
- 		cpu_nid = pxm_to_node(target->processor_pxm);
- 		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
--		return;
-+		access0done = true;
-+		if (node_state(cpu_nid, N_CPU)) {
-+			register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
-+			return;
-+		}
- 	}
- 
- 	if (list_empty(&localities))
-@@ -592,6 +603,40 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 	 */
- 	bitmap_zero(p_nodes, MAX_NUMNODES);
- 	list_sort(p_nodes, &initiators, initiator_cmp);
-+	if (!access0done) {
-+		for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
-+			loc = localities_types[i];
-+			if (!loc)
-+				continue;
-+
-+			best = 0;
-+			list_for_each_entry(initiator, &initiators, node) {
-+				u32 value;
-+
-+				if (!test_bit(initiator->processor_pxm, p_nodes))
-+					continue;
-+
-+				value = hmat_initiator_perf(target, initiator,
-+							    loc->hmat_loc);
-+				if (hmat_update_best(loc->hmat_loc->data_type, value, &best))
-+					bitmap_clear(p_nodes, 0, initiator->processor_pxm);
-+				if (value != best)
-+					clear_bit(initiator->processor_pxm, p_nodes);
-+			}
-+			if (best)
-+				hmat_update_target_access(target, loc->hmat_loc->data_type, best, 0);
-+		}
-+
-+		for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
-+			cpu_nid = pxm_to_node(i);
-+			register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-+		}
-+	}
-+
-+	/* Access 1 ignores Generic Initiators */
-+	bitmap_zero(p_nodes, MAX_NUMNODES);
-+	list_sort(p_nodes, &initiators, initiator_cmp);
-+	best = 0;
- 	for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
- 		loc = localities_types[i];
- 		if (!loc)
-@@ -601,6 +646,10 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 		list_for_each_entry(initiator, &initiators, node) {
- 			u32 value;
- 
-+			if (!initiator->has_cpu) {
-+				clear_bit(initiator->processor_pxm, p_nodes);
-+				continue;
-+			}
- 			if (!test_bit(initiator->processor_pxm, p_nodes))
- 				continue;
- 
-@@ -611,12 +660,11 @@ static void hmat_register_target_initiators(struct memory_target *target)
- 				clear_bit(initiator->processor_pxm, p_nodes);
- 		}
- 		if (best)
--			hmat_update_target_access(target, loc->hmat_loc->data_type, best);
-+			hmat_update_target_access(target, loc->hmat_loc->data_type, best, 1);
- 	}
--
- 	for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
- 		cpu_nid = pxm_to_node(i);
--		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-+		register_memory_node_under_compute_node(mem_nid, cpu_nid, 1);
- 	}
- }
- 
-@@ -629,10 +677,10 @@ static void hmat_register_target_cache(struct memory_target *target)
- 		node_add_cache(mem_nid, &tcache->cache_attrs);
- }
- 
--static void hmat_register_target_perf(struct memory_target *target)
-+static void hmat_register_target_perf(struct memory_target *target, int access)
- {
- 	unsigned mem_nid = pxm_to_node(target->memory_pxm);
--	node_set_perf_attrs(mem_nid, &target->hmem_attrs, 0);
-+	node_set_perf_attrs(mem_nid, &target->hmem_attrs[access], access);
- }
- 
- static void hmat_register_target_device(struct memory_target *target,
-@@ -734,7 +782,8 @@ static void hmat_register_target(struct memory_target *target)
- 	if (!target->registered) {
- 		hmat_register_target_initiators(target);
- 		hmat_register_target_cache(target);
--		hmat_register_target_perf(target);
-+		hmat_register_target_perf(target, 0);
-+		hmat_register_target_perf(target, 1);
- 		target->registered = true;
- 	}
- 	mutex_unlock(&target_lock);
--- 
-2.19.1
+Leo,
 
+Thank you so much for testcase !
+
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
