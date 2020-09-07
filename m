@@ -2,92 +2,95 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 102C9C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27ACAC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F6F20757
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:17:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495463;
-	bh=jWL3HWcEEiNy/8rVC7of/uRNx5Tnyo1FPmlxmXCKRBs=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g8qay/hVMNZBQvlQrwviTzwUWoQZrs8Nng8c3F+G2mREEdNWfK2AQc8e/e64jG654
-	 ud0vz4LiILw+Mo4cJzAeZ/F6UokpfekjEgqOF3HJyuSnXIIq7yVvN5VaqYlDxjWKwc
-	 TIw4+ziGP1b2DP1pMmoc3nP+seXahU3G9H+r4WWQ=
+	by mail.kernel.org (Postfix) with ESMTP id E3357207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:18:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FQEYfq0g";
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="WOkohfLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgIGQOk (ORCPT
+        id S1730379AbgIGQSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:14:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729893AbgIGQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:13:59 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1641D2177B;
-        Mon,  7 Sep 2020 16:13:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495238;
-        bh=jWL3HWcEEiNy/8rVC7of/uRNx5Tnyo1FPmlxmXCKRBs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=iKLcR5zfkqvnazuCXr9yn7VqbcERxdWOIZBqIz9YdCR//HQh5G4biLwQe9jpFkztW
-         jMEzjpnJlJ09LOpX92V8MZ6uxOQ7HXBuNvSglz/haWLZZiiesc1yIr5eUFpWP9ChEc
-         Fi6sj66RzV9aDkequXlALLdESWA+dvlG3DOOZrKs=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [RFT 23/25] ARM: dts: s5pv210: replace deprecated "gpios" i2c-gpio property in Goni
-Date:   Mon,  7 Sep 2020 18:11:39 +0200
-Message-Id: <20200907161141.31034-24-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
+        Mon, 7 Sep 2020 12:18:25 -0400
+Received: from a27-185.smtp-out.us-west-2.amazonses.com ([54.240.27.185]:58404
+        "EHLO a27-185.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730394AbgIGQR5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:17:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599495477;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type;
+        bh=fHmkMsSqCrU8zIQPY0mHmkrXR5chyuKH+CWAaoIweHQ=;
+        b=FQEYfq0gGffYY1Ec74e0ofLEgX0B1+/OhdhLfZ1pOWI0arQqmparOJjzooQFj+MP
+        Cx0yb3XNuMgMg4Tt0xIUAPAilzrxx/2Mdfjdp4tAUtvFO364eKXLA6NffVvaKSzySHd
+        b7sjvbGhQEWZ3HoEDadH9imPa0w4WW2gjTCgq5Bc=
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599495477;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:MIME-Version:Content-Type:Feedback-ID;
+        bh=fHmkMsSqCrU8zIQPY0mHmkrXR5chyuKH+CWAaoIweHQ=;
+        b=WOkohfLwII1vMzCj+g8XljGkk2sP0NCv1ZRQAwswfrzcrH9JyvEY9iJYDKojWqCl
+        gBSDW7nF6JbnxfGsyRHhqkswqrJwnTCTr8qKPNVIDiFrxZ1b2xtSI4E+3BM6qX6yYVQ
+        JAyykVCvPAv1YGPx3qmqCtQwtii7Ie1/+FxkmPNo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 999ABC38689
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Rakesh Pillai" <pillair@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH] ath10k: Use bdf calibration variant for snoc targets
+References: <1593193990-30366-1-git-send-email-pillair@codeaurora.org>
+        <87y2ls4lbf.fsf@codeaurora.org>
+        <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com>
+Date:   Mon, 7 Sep 2020 16:17:57 +0000
+In-Reply-To: <0101017459fdd62b-791355e4-ea88-4142-96a7-06849bcd7b09-000000@us-west-2.amazonses.com>
+        (Rakesh Pillai's message of "Fri, 4 Sep 2020 16:40:41 +0000")
+Message-ID: <01010174695c181a-6f8e9efc-bbc9-45ff-8d54-62db5e0163f6-000000@us-west-2.amazonses.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-SES-Outgoing: 2020.09.07-54.240.27.185
+Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"gpios" property is deprecated.  Update the Goni DTS to fix
-dtbs_checks warnings like:
+"Rakesh Pillai" <pillair@codeaurora.org> writes:
 
-  i2c-pmic: 'sda-gpios' is a required property
-  i2c-pmic: 'scl-gpios' is a required property
+>> > --- a/drivers/net/wireless/ath/ath10k/qmi.c
+>> > +++ b/drivers/net/wireless/ath/ath10k/qmi.c
+>> > @@ -576,6 +576,8 @@ static int ath10k_qmi_cap_send_sync_msg(struct
+>> ath10k_qmi *qmi)
+>> >  	if (resp->chip_info_valid) {
+>> >  		qmi->chip_info.chip_id = resp->chip_info.chip_id;
+>> >  		qmi->chip_info.chip_family = resp->chip_info.chip_family;
+>> > +	} else {
+>> > +		qmi->chip_info.chip_id = 0xFF;
+>> >  	}
+>> 
+>> So you hard code chip_id to 0xff if it's not valid. Is it 100%
+>> guaranteed that there never will be a chip id with 0xff?
+>
+> 0x0 and 0xff are invalid chip id and are are not used.
+> If the chip_id read fails, we fallback to the default board data.
+> 0xff is used to go to the default board data (Also this is in alignment with
+> the current implementation of board_id)
+>
+> Does that make sense ?
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s5pv210-goni.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I'm a bit hesitant, over the years I have seen cases so many cases where
+"foo is not used anywhere" and later that foo is actually used
+somewhere. 0xff means that there's only 254 different values, but I
+guess there are not that many chip ids? So a chip id is very different
+from a board id, right?
 
-diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
-index eec6531e6ef8..ad8d5d2fa32d 100644
---- a/arch/arm/boot/dts/s5pv210-goni.dts
-+++ b/arch/arm/boot/dts/s5pv210-goni.dts
-@@ -76,8 +76,8 @@
- 
- 	i2c_pmic: i2c-pmic {
- 		compatible = "i2c-gpio";
--		gpios = <&gpj4 0 GPIO_ACTIVE_HIGH>, /* sda */
--			<&gpj4 3 GPIO_ACTIVE_HIGH>; /* scl */
-+		sda-gpios = <&gpj4 0 GPIO_ACTIVE_HIGH>;
-+		scl-gpios = <&gpj4 3 GPIO_ACTIVE_HIGH>;
- 		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
- 		#address-cells = <1>;
- 		#size-cells = <0>;
 -- 
-2.17.1
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
