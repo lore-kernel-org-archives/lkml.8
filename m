@@ -2,106 +2,100 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91876C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89EA821532
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFB92080A
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498738;
-	bh=58wy6+NLVtxqoBa6LJfUWGbvwTcc7WuVJSuHWnbCVhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zekRfGTY/BKj8bhxJyXiNiTQAUeyyPCm98GGj3uWN6QbK/wx42zCl5XlLhtUFmaXl
-	 /Mk/ppr7nrNGDADG4Pq/7zuvJE7HWojH6479vyqjBzIYHFp7vQzHRc9vc03wECdCQm
-	 2lBt3drSrpQCi7ADb/eFxSOcE3wIFbb1XIOzV2CU=
+	s=default; t=1599498752;
+	bh=DPat3ZlRzIlx3pGvdlS9ov4+JwXoTqRT6aH65lpZpUw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=kfgTMehwAzYKlQmxQJlPc1LCdRW+SYTkp/3u2Z0n6u5XkaEKbeLo4O1EA+tOKvNDv
+	 df2Dolu/q4rEcBpOe8pIzLkoSEIaJz/zYVDAw4SJOCe0F3rxWYffxotXbGCpWrPBqi
+	 felytCTwEm3KV1T/wvlPX7yawEhZNiPPhTA3uQI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731187AbgIGRMO (ORCPT
+        id S1730769AbgIGRMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46524 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:12:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgIGQck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1731183AbgIGRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 13:12:12 -0400
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75109218AC;
-        Mon,  7 Sep 2020 16:32:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DA43217A0;
+        Mon,  7 Sep 2020 17:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496356;
-        bh=58wy6+NLVtxqoBa6LJfUWGbvwTcc7WuVJSuHWnbCVhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBkz5tndOsWLCklhjnhiTod6ZxxExhjS93XnIfCyTVxinlIyhE/prn1lPJHLSz/v3
-         kuJOemtdwWbRVM58SOpTm2g9SBei63fN/RdF/cbm8xK1SK5lVAo9AXoaASEwWT3szT
-         i20sabq0HjAfE/lhydlUNgBNvMTDpVv36t2QO3LI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 12/53] ALSA: hda/tegra: Program WAKEEN register for Tegra
-Date:   Mon,  7 Sep 2020 12:31:38 -0400
-Message-Id: <20200907163220.1280412-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
+        s=default; t=1599498731;
+        bh=DPat3ZlRzIlx3pGvdlS9ov4+JwXoTqRT6aH65lpZpUw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hDIxuj2XhhhEEqVgjAA3HcCmq5ToR/R66AcQtmotmjrIDZak1xnhMwZhFXqG9mJVl
+         7gx4HAq0nxoE/XiAVFScPLr9HnUwWyEzmXGrGcVisKN4f76KZkCiy8vk4j7HSLwCIM
+         zLC88dGIlGzNeTM4sDs8L5lj74Oyn5DD+fXSDc78=
+Received: by mail-ed1-f46.google.com with SMTP id c10so13404467edk.6;
+        Mon, 07 Sep 2020 10:12:11 -0700 (PDT)
+X-Gm-Message-State: AOAM5305R91HP1SniJPOH1bTem9grAExEjciNUjX+7V/6HqighDmuHdT
+        PdUIZMn73wB0QGOc2EIEL6LBB88HMaZwNRGeh9Y=
+X-Google-Smtp-Source: ABdhPJzMyTdkAJy73PxNoZs+gNdlcqSGeh07/2bjshW3rB0M3t0yIQeyrq5QnkZWdasM4Y6BXvKIZqTmLZdf4IZC5FI=
+X-Received: by 2002:aa7:da16:: with SMTP id r22mr23231660eds.132.1599498730074;
+ Mon, 07 Sep 2020 10:12:10 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200907161141.31034-1-krzk@kernel.org> <20200907161141.31034-3-krzk@kernel.org>
+ <20200907173819.00005a48@Huawei.com>
+In-Reply-To: <20200907173819.00005a48@Huawei.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 7 Sep 2020 19:11:57 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPe0W_+hN=pk9F5O61w7riYuBhmK3=JvrYzDY8LU7xvH4A@mail.gmail.com>
+Message-ID: <CAJKOXPe0W_+hN=pk9F5O61w7riYuBhmK3=JvrYzDY8LU7xvH4A@mail.gmail.com>
+Subject: Re: [PATCH 02/25] dt-bindings: iio: adc: exynos-adc: require second
+ interrupt with touch screen
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohan Kumar <mkumard@nvidia.com>
+On Mon, 7 Sep 2020 at 18:39, Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
+>
+> On Mon,  7 Sep 2020 18:11:18 +0200
+> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> > The ADC in S3C/S5P/Exynos SoCs can be used also for handling touch
+> > screen.  In such case the second interrupt is required.  This second
+> > interrupt can be anyway provided, even without touch screens.  This
+> > fixes dtbs_check warnings like:
+> >
+> >   arch/arm/boot/dts/s5pv210-aquila.dt.yaml: adc@e1700000: interrupts: [[23], [24]] is too long
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
+>
+> Or I can pick this up through the IIO tree if that makes sense.
+> I doubt anything else will touch this binding this cycle, so either
+> way works for me.
 
-[ Upstream commit 23d63a31d9f44d7daeac0d1fb65c6a73c70e5216 ]
+Let's wait for Rob's review and then if you could, please pick it up.
 
-The WAKEEN bits are used to indicate which bits in the
-STATESTS register may cause wake event during the codec
-state change request. Configure the WAKEEN register for
-the Tegra to detect the wake events.
-
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-Acked-by: Sameer Pujar <spujar@nvidia.com>
-Link: https://lore.kernel.org/r/20200825052415.20626-3-mkumard@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/hda/hda_tegra.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/sound/pci/hda/hda_tegra.c b/sound/pci/hda/hda_tegra.c
-index 0cc5fad1af8a9..ae40ca3f29837 100644
---- a/sound/pci/hda/hda_tegra.c
-+++ b/sound/pci/hda/hda_tegra.c
-@@ -179,6 +179,10 @@ static int __maybe_unused hda_tegra_runtime_suspend(struct device *dev)
- 	struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
- 
- 	if (chip && chip->running) {
-+		/* enable controller wake up event */
-+		azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) |
-+			   STATESTS_INT_MASK);
-+
- 		azx_stop_chip(chip);
- 		azx_enter_link_reset(chip);
- 	}
-@@ -200,6 +204,9 @@ static int __maybe_unused hda_tegra_runtime_resume(struct device *dev)
- 	if (chip && chip->running) {
- 		hda_tegra_init(hda);
- 		azx_init_chip(chip, 1);
-+		/* disable controller wake up event*/
-+		azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) &
-+			   ~STATESTS_INT_MASK);
- 	}
- 
- 	return 0;
--- 
-2.25.1
-
+Best regards,
+Krzysztof
