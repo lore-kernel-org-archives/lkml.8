@@ -2,99 +2,103 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95E2C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29861C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BFA2207C3
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tyz+V32H"
+	by mail.kernel.org (Postfix) with ESMTP id CAADD207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 11:51:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgIGLul (ORCPT
+        id S1728811AbgIGLvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 07:50:41 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24974 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729145AbgIGLrw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 07:47:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599479271;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LJK2rYubePS6o9IGw+xv/Kicmr6oDOLLUaC6aIiTRC8=;
-        b=Tyz+V32HME1J5XS3IrvFlTI00zHH+CAmMnMvhZkrlVPDy/51RgkGhvSypHxft57Zbnv5tl
-        ZCPmCcuzC6/oYlz3Tnx1CZl0e/KupbLZNHFBglTeWNMTqqobOSwJuko7Cwd27fmrao7GEd
-        j2TmWoW2TTvdAknBGk2zH2czQXlhqJ0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-4-PYqdx2vkOBuCVrrp-aWETg-1; Mon, 07 Sep 2020 07:47:48 -0400
-X-MC-Unique: PYqdx2vkOBuCVrrp-aWETg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B77C100670D;
-        Mon,  7 Sep 2020 11:47:47 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 448141A3D7;
-        Mon,  7 Sep 2020 11:47:47 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 36C8C79FE6;
-        Mon,  7 Sep 2020 11:47:47 +0000 (UTC)
-Date:   Mon, 7 Sep 2020 07:47:47 -0400 (EDT)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <1180880820.16044889.1599479267134.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20200904161240.GA3730201@kroah.com>
-References: <20200811150129.53343-1-vdronov@redhat.com> <20200904114207.375220-1-vdronov@redhat.com> <20200904161240.GA3730201@kroah.com>
-Subject: Re: [PATCH] debugfs: Fix module state check condition
+        Mon, 7 Sep 2020 07:51:41 -0400
+Received: from mga12.intel.com ([192.55.52.136]:26050 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729150AbgIGLsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 07:48:47 -0400
+IronPort-SDR: vLai4c0X6towIrb1+/Iqc+B3EQoxm7tp6BmDhSHWxTPpZC3jFxcxhXvZADHWaE4xJQjBStkF/h
+ W5ib7I0KX0bg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9736"; a="137508004"
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="137508004"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 04:48:44 -0700
+IronPort-SDR: 0zBgpsTw0cufd6Q64xwCLhA/+X/Ay4w6reVTb3zoIKdjiO+uU7qDrRNNuoQuaQywEl6rxBH1Bc
+ RyWZdz+94YJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,401,1592895600"; 
+   d="scan'208";a="333141923"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 07 Sep 2020 04:48:41 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1kFFdW-00EwHp-NR; Mon, 07 Sep 2020 14:48:38 +0300
+Date:   Mon, 7 Sep 2020 14:48:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 13/23] gpio: mockup: pass the chip label as device
+ property
+Message-ID: <20200907114838.GX1891694@smile.fi.intel.com>
+References: <20200904154547.3836-1-brgl@bgdev.pl>
+ <20200904154547.3836-14-brgl@bgdev.pl>
+ <20200904164820.GB1891694@smile.fi.intel.com>
+ <CAMRc=Mea4pGbW+fY3mCWfNSSqo9ZwaJxx2C0JmstnQOc8eVrLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.208.73, 10.4.195.19]
-Thread-Topic: debugfs: Fix module state check condition
-Thread-Index: Kw0NjrRlcAHw1JiDINDqN4pEdx9zzA==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mea4pGbW+fY3mCWfNSSqo9ZwaJxx2C0JmstnQOc8eVrLg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Greg,
-
------ Original Message -----
-> From: "Greg KH" <gregkh@linuxfoundation.org>
-> Subject: Re: [PATCH] debugfs: Fix module state check condition
+On Mon, Sep 07, 2020 at 01:01:02PM +0200, Bartosz Golaszewski wrote:
+> On Fri, Sep 4, 2020 at 6:48 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Sep 04, 2020 at 05:45:37PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > >
+> > > While we do check the "chip-name" property in probe(), we never actually
+> > > use it. Let's pass the chip label to the driver using device properties
+> > > as we'll want to allow users to define their own once dynamically
+> > > created chips are supported.
+> > >
+> > > The property is renamed to "chip-label" to not cause any confusion with
+> > > the actual chip name which is of the form: "gpiochipX".
+> > >
+> > > If the "chip-label" property is missing, let's do what most devices in
+> > > drivers/gpio/ do and use dev_name().
+> >
+> > Just wondering if we have a documentation in kernel how this mockup mechanism
+> > works and what kind of properties it uses.
+> >
+> > Side note: moving to software nodes would make some advantages in future such
+> > as visibility properties and their values (not yet implemented, but there is an
+> > idea to move forward).
 > 
-...skip...
-> > A customer which has reported this issue replied with a test result:
-> > 
-> > > I ran the same test.
-> > > Started ib_write_bw traffic and started watch command to read RoCE
-> > > stats : watch -d -n 1 "cat /sys/kernel/debug/bnxt_re/bnxt_re0/info".
-> > > While the command is running, unloaded roce driver and I did not
-> > > observe the call trace that was seen earlier.
-> 
-> Having this info, that this was affecting a user, would have been good
-> in the original changelog info, otherwise this just looked like a code
-> cleanup patch to me.
+> Seems like we're implicitly using software nodes already:
+> fwnode_create_software_node() is called when adding device properties.
 
-Thank you, Greg. Makes sense indeed, I will pay attention to this next time(s).
+It's not the same APIs, though the former is called from the latter.
+But maybe for now it's okay.
 
-<rant>oh so many little but important details to know and follow...</rant>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> I'll go queue this up now, thanks.
-> 
-> greg k-h
-
-Best regards,
-Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
