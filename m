@@ -2,94 +2,71 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB9AC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8AAC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D569A215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:04:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599483884;
-	bh=UdahbKu3BTdB082i1nMSXw7zx46/R98LUElP39bIllM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lwutpVmXIFLuulJCX7aiUdNIFdYoDp1wI49PoC0OhRohGv29X+TtZ577oHvxbpR/Q
-	 kIPa25A9yRfB/8/Eg68FzjI4Y9DvMuBjKKSPgaS10I1r3kF423JbnFLE0Sp8NAwNI9
-	 K9DgqvOR6Ei2AMA49I4hFABfL3s/MrgkqXAgPbBI=
+	by mail.kernel.org (Postfix) with ESMTP id 07B8121481
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 13:06:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbgIGNEl (ORCPT
+        id S1729382AbgIGNGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 09:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729363AbgIGNBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 09:01:42 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E0F20639;
-        Mon,  7 Sep 2020 13:01:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599483696;
-        bh=UdahbKu3BTdB082i1nMSXw7zx46/R98LUElP39bIllM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lfpRj1HlHH3CSTamCvrByUagPXoW0SBh+LuVu7Vv/oSqf9uCB6wUCjCRYLoPcSG/S
-         WIRjBkxznXPwzqHDzmneIv+ysiL38zyR+/dyfTvyib9eTtzez8DYSKky3x2K2jqg99
-         9PTzfff6YUDvD1G4ttvAd8TAjLoAxA5ZnpoUUzP8=
-Date:   Mon, 7 Sep 2020 15:01:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Gage Eads <gage.eads@intel.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        magnus.karlsson@intel.com, bjorn.topel@intel.com
-Subject: Re: [PATCH v3 01/19] dlb2: add skeleton for DLB 2.0 driver
-Message-ID: <20200907130150.GE2371705@kroah.com>
-References: <20200901191548.31646-1-gage.eads@intel.com>
- <20200901191548.31646-2-gage.eads@intel.com>
+        Mon, 7 Sep 2020 09:06:14 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:59776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729318AbgIGNDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 09:03:10 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 10F611C9B9968BC436E5;
+        Mon,  7 Sep 2020 21:03:07 +0800 (CST)
+Received: from localhost.localdomain (10.175.112.70) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 7 Sep 2020 21:03:03 +0800
+From:   Zhang Changzhong <zhangchangzhong@huawei.com>
+To:     <radhey.shyam.pandey@xilinx.com>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <michal.simek@xilinx.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: xilinx: remove redundant null check before clk_disable_unprepare()
+Date:   Mon, 7 Sep 2020 21:02:03 +0800
+Message-ID: <1599483723-43704-1-git-send-email-zhangchangzhong@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901191548.31646-2-gage.eads@intel.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.112.70]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 02:15:30PM -0500, Gage Eads wrote:
-> --- /dev/null
-> +++ b/drivers/misc/dlb2/dlb2_main.c
-> @@ -0,0 +1,208 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/* Copyright(c) 2018-2020 Intel Corporation */
-> +
-> +#include <linux/aer.h>
-> +#include <linux/cdev.h>
-> +#include <linux/delay.h>
-> +#include <linux/fs.h>
-> +#include <linux/init.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "dlb2_main.h"
-> +
-> +static const char
-> +dlb2_driver_copyright[] = "Copyright(c) 2018-2020 Intel Corporation";
+Because clk_prepare_enable() and clk_disable_unprepare() already checked
+NULL clock parameter, so the additional checks are unnecessary, just
+remove them.
 
-Why have this in a string and then:
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>
+---
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Copyright(c) 2018-2020 Intel Corporation");
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index fa5dc299..9aafd3e 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -2038,8 +2038,7 @@ static int axienet_remove(struct platform_device *pdev)
+ 
+ 	axienet_mdio_teardown(lp);
+ 
+-	if (lp->clk)
+-		clk_disable_unprepare(lp->clk);
++	clk_disable_unprepare(lp->clk);
+ 
+ 	of_node_put(lp->phy_node);
+ 	lp->phy_node = NULL;
+-- 
+2.9.5
 
-Not use it?
-
-It's probably not needed at all, right?
-
-Don't you get a build warning about this when applying and building this
-patch?
-
-thanks,
-
-greg k-h
