@@ -2,111 +2,96 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FD0C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF60BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208492145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9699D207C3
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 07:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yFUZp/06"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fZR+63to"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgIGHfN (ORCPT
+        id S1727118AbgIGHhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 03:35:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35414 "EHLO
+        Mon, 7 Sep 2020 03:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgIGHeL (ORCPT
+        with ESMTP id S1726896AbgIGHhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 03:34:11 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D92DBC061575
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 00:34:10 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id w2so13352435wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 00:34:10 -0700 (PDT)
+        Mon, 7 Sep 2020 03:37:17 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689F6C061573;
+        Mon,  7 Sep 2020 00:37:16 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id q6so11654347ild.12;
+        Mon, 07 Sep 2020 00:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=FnyQ6M7lKnSyvb2WTqWDs4juP1iSvzr23umTcdcFBl4=;
-        b=yFUZp/06NfwHE/K2aBTW0DdB2itxHC+OR2dfwK7I+7POKFdsnbScCsblQY9LA9yS7r
-         ETrI8vkClVOCkFGLgkgUweusW8/j/aLvr2jMNpgIou0UUH4xTXAtcH79On//zAX3W09g
-         jLeGoZaL2a8js7u+jEtOX3092kR2mF05Glo/hErZ7UPTAqq8YjuLVB6yi/dKunrbZ2v2
-         EGoQnyGgQwDQLRa2KQKiq2Ce+mjEYeifnkQ/cYGF2pcsmGF1+O16OFvnWa5vwuGZ8zFq
-         4aiDnchNriBgwQPbtmI1il+gRRnx0TYGK8kQXUiHLyUjCRTIvfFhfGMXhs9OxW2qtKV6
-         sYTg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eolZlUfohQCfZPBZcIwQSDwC/RZau21wdgFrsxtxQ/Q=;
+        b=fZR+63tocruhbQ29gKa2Bsb+yu0tbqWTH49j1FJXqZ1Z5rMSngcBRjNAgFCFaVoKMN
+         rVu54yIOO9RwKIk4GoOHZWQn2ACkEI2FoPDT8a2k47lY9gxs63NFJi82rqObULMOYqPQ
+         +O81OzCaagBiDzLyjPBWapXkUtQm71Fr1+895TYw0ofjGLnV9Lu8Qv9NwG65Gazxj3PO
+         voKSLAbW+N44NZxypxr8RCu/5CNhMkhd0Lx7YR8BFM3NAIUL8eJpH0ThD2d480ZuHzsy
+         YujBT4gcfd3uYtuA8ZaNCHhfaQQwfEYQC2GjC0YtybN1ll0nz1DDBV05sw2GlmJgMNaX
+         mZ6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=FnyQ6M7lKnSyvb2WTqWDs4juP1iSvzr23umTcdcFBl4=;
-        b=nTzAw8dmfbadHJHsxmrFfRyKw9aJIGttjlsuJHAh73/66z3YqY0CSGPTPthL5qEhpv
-         JhkLgca5trw/h+KrJG+zkJfmK71tzYcUCr4lkP5SEDFS6Oh4mva1IrEc67FB6ojzKFmA
-         +TgFP/cAmTSFKUdYcNzU7bs4yaamlm+mVdOCLBCXX+AD4h8CfxNdKzX+GjNyZezQ7YGs
-         SBz1oqRDtSuDL2+wQOM5KK7r90XojQg0hCuQ4P7sxv0SVz93JRaFJ69duZxz68uGt9uS
-         sFJfaQem9AtA3fnEAs5ogksSCOWe9rUoGbbAIpKfs2sTvhnKfba7No0wBfKtSmywAw1s
-         cdSg==
-X-Gm-Message-State: AOAM532D2biZU1cCMZ6iHoMgLq9BM1vsrMl4SO2OYZhIEhyt2md4nG54
-        9jabieywcug4xFQz62HYUPFArg==
-X-Google-Smtp-Source: ABdhPJxkU//D39wU0M3fJ1RRtwypstB8RNHkXuu98ipJC3IiN1dKlgAJT4r/cOmwRdGakdSEQYMQSA==
-X-Received: by 2002:a7b:c341:: with SMTP id l1mr19927754wmj.80.1599464049140;
-        Mon, 07 Sep 2020 00:34:09 -0700 (PDT)
-Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
-        by smtp.gmail.com with ESMTPSA id u66sm527689wme.1.2020.09.07.00.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 00:34:08 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     kishon@ti.com, repk@triplefau.lt, devicetree@vger.kernel.org
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] dt-bindings: phy: amlogic,meson-axg-mipi-pcie-analog: remove reg attribute
-Date:   Mon,  7 Sep 2020 09:34:00 +0200
-Message-Id: <20200907073402.26674-2-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200907073402.26674-1-narmstrong@baylibre.com>
-References: <20200907073402.26674-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eolZlUfohQCfZPBZcIwQSDwC/RZau21wdgFrsxtxQ/Q=;
+        b=pQ/BfJlwyk15nPJLwUKFf8L6YyMLaEOHhrouisxSwZQfmbuc1iCvDjSBQJ+2M0yKEo
+         mX/AyWrlfCShCtkt43CaHTmOSQD8J8YoymRUJX93aT+0rebAI0+xlI1wRbDVRWU+0ogi
+         b4XMyBAs907YZtbiQFw64barm2/qBF75r0D64b09Cykzws8W3xC3XPZUKNO6iNOxMyXO
+         V02hbnwAh0GNfS3Ncz7hqgLQaZVGMSJiOcERHNT+aFqRzo2BTWAKxPJ8twjdCk7yDaZC
+         6Zy899A8z9/7JzgBOWJIJ6PCq0p9zKLtSO6aYz1aUyhWaXB6Me7pY6gB2aPuDh5xD5iW
+         dxjQ==
+X-Gm-Message-State: AOAM532khZNlFVbXKDCybIczrwclnPUmYuGSgBk60FLuDwtoLoXpmiX2
+        d/4n6emUYhsLJHy0Cj4sGKFNxS6jbAmVkUfFAoU=
+X-Google-Smtp-Source: ABdhPJxUHqVjQ7XHcZ4b0XX0BxUwUksFCnJVZiI+Ufad/nOHFQde/oYEnPwshOIkmppn5BIl7Ryzrsz5ftL92TDgcJo=
+X-Received: by 2002:a92:5f04:: with SMTP id t4mr18192392ilb.299.1599464234888;
+ Mon, 07 Sep 2020 00:37:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200904132143.9496-1-abbotti@mev.co.uk>
+In-Reply-To: <20200904132143.9496-1-abbotti@mev.co.uk>
+From:   David Rheinsberg <david.rheinsberg@gmail.com>
+Date:   Mon, 7 Sep 2020 09:37:02 +0200
+Message-ID: <CADyDSO7znNjdrXzgU8yVCy6XGbcdwPdmrbu849ZtsqoBCePWQw@mail.gmail.com>
+Subject: Re: {PATCH 0/2] HID: wiimote: Minor change to spinlock usage
+To:     Ian Abbott <abbotti@mev.co.uk>
+Cc:     "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic AXG MIPI + PCIe Analog PHY should be a subnode of the hhi mfd
-node like the axg-clkc node.
+Hi
 
-Thus the reg attribute is not needed.
+On Fri, 4 Sep 2020 at 15:21, Ian Abbott <abbotti@mev.co.uk> wrote:
+>
+> [I have posted these patches previously, but that was over a year ago.
+> --IA]
+>
+> A couple of minor changes to the wiimote core module.  They do not
+> change functionality of the driver:
+>
+> 1) HID: wiimote: make handlers[] const
+> 2) HID: wiimote: narrow spinlock range in wiimote_hid_event()
+>
+>  drivers/hid/hid-wiimote-core.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml      | 4 ----
- 1 file changed, 4 deletions(-)
+Looks still good ;)
 
-diff --git a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-index 18c1ec5e19ad..a9040aa387cf 100644
---- a/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-+++ b/Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-@@ -13,15 +13,11 @@ properties:
-   compatible:
-     const: amlogic,axg-mipi-pcie-analog-phy
- 
--  reg:
--    maxItems: 1
--
-   "#phy-cells":
-     const: 1
- 
- required:
-   - compatible
--  - reg
-   - "#phy-cells"
- 
- additionalProperties: false
--- 
-2.22.0
+Reviewed-by: David Rheinsberg <david.rheinsberg@gmail.com>
 
+Thanks!
+David
