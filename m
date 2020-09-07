@@ -2,114 +2,107 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B82FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1013C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD80207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599495302;
-	bh=bwtOi8QElP0mGjZhVUaaYJrre3PcACxIN1rrV3SxlNw=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MlDvaP5eyOZ2R/O/uhcWRz2EnKDqqjCvALavFIWQBfpiTW/ijZ+de2RgGMzon8OkB
-	 M0UQjblv9SZVaBpDzfRPmn+OFpjaVvSJN9on3Njk69U9+LgRx4QW2lmiPIjm9peNb5
-	 HaGeXYI4ZUv0gX6/TV6ZURkUItK5UZ2wBNOLU6MQ=
+	by mail.kernel.org (Postfix) with ESMTP id 7A400206E6
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 16:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgIGQO7 (ORCPT
+        id S1730503AbgIGQPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:14:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730453AbgIGQOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:14:06 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1AB207DE;
-        Mon,  7 Sep 2020 16:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599495245;
-        bh=bwtOi8QElP0mGjZhVUaaYJrre3PcACxIN1rrV3SxlNw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=UYSZxr7VgfQX85+efnx0NAZinxygKy1kqfcI7NL163KkguKnH6Q6dd6fGPoc7+E0Z
-         wxtyeFS25ChjYbXllL/KHWggeCnRQvDmF7P85PVn9/oUtIecD3rE+pknvEsLHJsstj
-         R5STZXc7cq6FhMu0OvpuG97q4DvqJIDNW8EpzziY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jonathan Bakker <xc-racer2@live.ca>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: [RFT 25/25] ARM: dts: s5pv210: align DMA channels with dtschema
-Date:   Mon,  7 Sep 2020 18:11:41 +0200
-Message-Id: <20200907161141.31034-26-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200907161141.31034-1-krzk@kernel.org>
-References: <20200907161141.31034-1-krzk@kernel.org>
+        Mon, 7 Sep 2020 12:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729996AbgIGQPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:15:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6688C061574
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 09:15:37 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kFJno-0001sv-G5; Mon, 07 Sep 2020 18:15:32 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1kFJnn-0002et-PM; Mon, 07 Sep 2020 18:15:31 +0200
+Date:   Mon, 7 Sep 2020 18:15:31 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Thorsten Scherer <t.scherer@eckelmann.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: siox: explicitly support only threaded irqs
+Message-ID: <20200907161531.x7wdxmb5e3qdbtn7@pengutronix.de>
+References: <20200907153135.3307-1-a.fatoum@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cgjxmmqsfjfxvawn"
+Content-Disposition: inline
+In-Reply-To: <20200907153135.3307-1-a.fatoum@pengutronix.de>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dtschema expects DMA channels in specific order (tx, rx and tx-sec).
-The order actually should not matter because dma-names is used however
-let's make it aligned with dtschema to suppress warnings like:
 
-  i2s@eee30000: dma-names: ['rx', 'tx', 'tx-sec'] is not valid under any of the given schemas
+--cgjxmmqsfjfxvawn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm/boot/dts/s5pv210.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Hello Ahmad,
 
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index 96e667ba1c3f..72fb9d9f7ba3 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -240,8 +240,8 @@
- 			reg = <0xeee30000 0x1000>;
- 			interrupt-parent = <&vic2>;
- 			interrupts = <16>;
--			dma-names = "rx", "tx", "tx-sec";
--			dmas = <&pdma1 9>, <&pdma1 10>, <&pdma1 11>;
-+			dma-names = "tx", "rx", "tx-sec";
-+			dmas = <&pdma1 10>, <&pdma1 9>, <&pdma1 11>;
- 			clock-names = "iis",
- 				      "i2s_opclk0",
- 				      "i2s_opclk1";
-@@ -260,8 +260,8 @@
- 			reg = <0xe2100000 0x1000>;
- 			interrupt-parent = <&vic2>;
- 			interrupts = <17>;
--			dma-names = "rx", "tx";
--			dmas = <&pdma1 12>, <&pdma1 13>;
-+			dma-names = "tx", "rx";
-+			dmas = <&pdma1 13>, <&pdma1 12>;
- 			clock-names = "iis", "i2s_opclk0";
- 			clocks = <&clocks CLK_I2S1>, <&clocks SCLK_AUDIO1>;
- 			pinctrl-names = "default";
-@@ -275,8 +275,8 @@
- 			reg = <0xe2a00000 0x1000>;
- 			interrupt-parent = <&vic2>;
- 			interrupts = <18>;
--			dma-names = "rx", "tx";
--			dmas = <&pdma1 14>, <&pdma1 15>;
-+			dma-names = "tx", "rx";
-+			dmas = <&pdma1 15>, <&pdma1 14>;
- 			clock-names = "iis", "i2s_opclk0";
- 			clocks = <&clocks CLK_I2S2>, <&clocks SCLK_AUDIO2>;
- 			pinctrl-names = "default";
--- 
-2.17.1
+On Mon, Sep 07, 2020 at 05:31:35PM +0200, Ahmad Fatoum wrote:
+> The gpio-siox driver uses handle_nested_irq() to implement its
+> interrupt support. This is only capable of handling threaded irq
+> actions. For a hardirq action it triggers a NULL pointer oops.
+> (It calls action->thread_fn which is NULL then.)
+>=20
+> Prevent registration of a hardirq action by setting
+> gpio_irq_chip::threaded to true.
 
+cool commit log :-)
+
+> Cc: u.kleine-koenig@pengutronix.de
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks for picking this up.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--cgjxmmqsfjfxvawn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl9WXKAACgkQwfwUeK3K
+7Alg0Qf/VlxWkLp9Bpt+uYNTELqmDL/zHOIn4GQTGgJrM34u8CTDAlLetTFtr9OW
+edbUtd2vWanorXEl3qdPxqi31FmgbQljDmwOu15VQuEsSzb8mNMkSRP2BOuiCRas
+B10LsGriMod8/49H2A5UVhSs/cNVT0JiLgPxQIssWYulH07agqHlSNCeMmgf7GTA
+6JJHYUl/Mld/qnKABxDUIYTTv70U9tXO2KsSkOFs4IF9AZIroQayBiDyDDvxJrPB
+gt0SpzcHMFE7to6edyGIbdxU+ag22FzL/XJnDM2EALjr6c7vAX6n9ui1HpZ7BNsI
+WEA54N3FLA5A1MYwDqwnhKwVVMhGUA==
+=J3Py
+-----END PGP SIGNATURE-----
+
+--cgjxmmqsfjfxvawn--
