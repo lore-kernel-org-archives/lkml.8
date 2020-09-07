@@ -2,191 +2,130 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4166CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3F0C2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F034B20C09
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXYL2Lf+"
+	by mail.kernel.org (Postfix) with ESMTP id 34D8520C09
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 09:43:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbgIGJlI (ORCPT
+        id S1728396AbgIGJnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 05:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54950 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbgIGJlF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 05:41:05 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74627C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 02:41:04 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id q13so7025669vsj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 02:41:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kIca8443CSDJzX13RTZ2oe86ZVBDa2TpFg9gh5GtOMQ=;
-        b=jXYL2Lf+6eb68KLQm+cL4NheEBa+kW2UpNKYu+eQvw+3tni/khjNr1BTmBumm+tYym
-         C7ACwYKo+EcWURxBCrQI12QXdwfLnGbTuZdVhw5FvGfhxHKVQOhrGAb49Kolav/3k/8e
-         gS0IYolGS08Gu8ZRD3MV+T8yyAhjzJWN3XNTiI+v1t8PDMiB65WyCSWCN+nU88v9AAx5
-         nRjlMJfJ3d2EeeIA4mDcf3/Cg4axtshp/nu0iTeTALxRk29wEBVV+5u8VTP2uGc1ev+C
-         85lz8p1UbU3o8o/Rgr4fFyb39x/j4mp9JSo/3Z43NqcOxuCo5Ti8b5Zd2aLERJbwZwTi
-         lBKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kIca8443CSDJzX13RTZ2oe86ZVBDa2TpFg9gh5GtOMQ=;
-        b=d2qeRSVa7j1Ku78PSUQ5xHYUyCArqPZN3EbZVuTtWcFSFs5sgtUj04bUe2p1tPJ45p
-         HObTPz/jTGQfAAGepP0Miyh9hQRrDqSsN7Zt9y8QbHfIcVxCZIwkzLf4RBtmFcgFKWpN
-         PbRNzjL205wZOWge1AJdiEVuspB/DrJSDuWLXdPvYyMwh5Wczx4QMVW2hkzln0ti4fHE
-         /IF37RqNFCrQN5B0OPHMjLG7U3ACpL1sOQ7PRUA+zThEO7l64wzweKuApEdKfTePTG4a
-         GUDGdlUEG5sS1Sbv8k2kX18YV2HgRvZIAritEsl7t1P9TBOxA7klowPO++nzPzszczOD
-         CMhw==
-X-Gm-Message-State: AOAM533k4s/VEN+cLJKP1fMQX0Nk47QoWzjSObvuCdwkC5t0VhUOLz//
-        IW2599Y5eWvwJwNCCCVDHYiJtLswhrxY8g==
-X-Google-Smtp-Source: ABdhPJxfzR1C1mdmwG6YmcvTdUkc3igsS522Us2S3jwHX5+ywMEX9CP737W5Jw70dqVZkBd+oRKRPA==
-X-Received: by 2002:a67:ec7:: with SMTP id 190mr11850549vso.124.1599471662035;
-        Mon, 07 Sep 2020 02:41:02 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id g142sm2399413vkg.36.2020.09.07.02.41.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 07 Sep 2020 02:41:01 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id i22so3416536uat.8
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 02:41:00 -0700 (PDT)
-X-Received: by 2002:ab0:2404:: with SMTP id f4mr10667066uan.108.1599471660425;
- Mon, 07 Sep 2020 02:41:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200906031827.16819-1-xie.he.0141@gmail.com>
-In-Reply-To: <20200906031827.16819-1-xie.he.0141@gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 7 Sep 2020 11:40:21 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
-Message-ID: <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
-Subject: Re: [PATCH net] net/packet: Fix a comment about hard_header_len and
- headroom allocation
-To:     Xie He <xie.he.0141@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
+        Mon, 7 Sep 2020 05:43:20 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:60318 "EHLO a.mx.secunet.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726301AbgIGJnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 05:43:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 368CF201CC;
+        Mon,  7 Sep 2020 11:43:16 +0200 (CEST)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id DrTO_au6XWdt; Mon,  7 Sep 2020 11:43:15 +0200 (CEST)
+Received: from mail-essen-02.secunet.de (mail-essen-02.secunet.de [10.53.40.205])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 65E4D2009B;
+        Mon,  7 Sep 2020 11:43:15 +0200 (CEST)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ mail-essen-02.secunet.de (10.53.40.205) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Mon, 7 Sep 2020 11:43:15 +0200
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Mon, 7 Sep 2020
+ 11:43:15 +0200
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id B50913180513;
+ Mon,  7 Sep 2020 11:43:14 +0200 (CEST)
+Date:   Mon, 7 Sep 2020 11:43:14 +0200
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     Dmitry Safonov <dima@arista.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Jakub Kicinski <kuba@kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Mao Wenan <maowenan@huawei.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Or Cohen <orcohen@paloaltonetworks.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        <netdev@vger.kernel.org>,
+        "Johannes Berg" <johannes@sipsolutions.net>,
+        Shuah Khan <shuah@kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v2 0/6] xfrm: Add compat layer
+Message-ID: <20200907094314.GI20687@gauss3.secunet.de>
+References: <20200826014949.644441-1-dima@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200826014949.644441-1-dima@arista.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 6, 2020 at 5:18 AM Xie He <xie.he.0141@gmail.com> wrote:
->
-> This comment is outdated and no longer reflects the actual implementation
-> of af_packet.c.
+On Wed, Aug 26, 2020 at 02:49:43AM +0100, Dmitry Safonov wrote:
+> Changes since v1:
+> - reworked patches set to use translator
+> - separated the compat layer into xfrm_compat.c,
+>   compiled under XFRM_USER_COMPAT config
+> - 32-bit messages now being sent in frag_list (like wext-core does)
+> - instead of __packed add compat_u64 members in compat structures
+> - selftest reworked to kselftest lib API
+> - added netlink dump testing to the selftest
+> 
+> XFRM is disabled for compatible users because of the UABI difference.
+> The difference is in structures paddings and in the result the size
+> of netlink messages differ.
+> 
+> Possibility for compatible application to manage xfrm tunnels was
+> disabled by: the commmit 19d7df69fdb2 ("xfrm: Refuse to insert 32 bit
+> userspace socket policies on 64 bit systems") and the commit 74005991b78a
+> ("xfrm: Do not parse 32bits compiled xfrm netlink msg on 64bits host").
+> 
+> This is my second attempt to resolve the xfrm/compat problem by adding
+> the 64=>32 and 32=>64 bit translators those non-visibly to a user
+> provide translation between compatible user and kernel.
+> Previous attempt was to interrupt the message ABI according to a syscall
+> by xfrm_user, which resulted in over-complicated code [1].
+> 
+> Florian Westphal provided the idea of translator and some draft patches
+> in the discussion. In these patches, his idea is reused and some of his
+> initial code is also present.
+> 
+> There were a couple of attempts to solve xfrm compat problem:
+> https://lkml.org/lkml/2017/1/20/733
+> https://patchwork.ozlabs.org/patch/44600/
+> http://netdev.vger.kernel.narkive.com/2Gesykj6/patch-net-next-xfrm-correctly-parse-netlink-msg-from-32bits-ip-command-on-64bits-host
+> 
+> All the discussions end in the conclusion that xfrm should have a full
+> compatible layer to correctly work with 32-bit applications on 64-bit
+> kernels:
+> https://lkml.org/lkml/2017/1/23/413
+> https://patchwork.ozlabs.org/patch/433279/
+> 
+> In some recent lkml discussion, Linus said that it's worth to fix this
+> problem and not giving people an excuse to stay on 32-bit kernel:
+> https://lkml.org/lkml/2018/2/13/752
+> 
+> There is also an selftest for ipsec tunnels.
+> It doesn't depend on any library and compat version can be easy
+> build with: make CFLAGS=-m32 net/ipsec
+> 
+> Patches as a .git branch:
+> https://github.com/0x7f454c46/linux/tree/xfrm-compat-v2
+> 
+> [1]: https://lkml.kernel.org/r/20180726023144.31066-1-dima@arista.com
 
-If it was previously true, can you point to a commit that changes the behavior?
+Thanks for the patches, looks good!
 
->
-> Reasons for the new comment:
->
-> 1.
->
-> In this file, the function packet_snd first reserves a headroom of
-> length (dev->hard_header_len + dev->needed_headroom).
-> Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-> which calls dev->header_ops->create, to create the link layer header.
-> If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-> length (dev->hard_header_len), and checks if the user has provided a
-> header of length (dev->hard_header_len) (in dev_validate_header).
+Please fix the issue reported from 'kernel test robot' and resend.
 
-Not entirely, a header greater than dev->min_header_len that passes
-dev_validate_header.
-
-> This shows the developers of af_packet.c expect hard_header_len to
-> be consistent with header_ops.
->
-> 2.
->
-> In this file, the function packet_sendmsg_spkt has a FIXME comment.
-> That comment states that prepending an LL header internally in a driver
-> is considered a bug. I believe this bug can be fixed by setting
-> hard_header_len to 0, making the internal header completely invisible
-> to af_packet.c (and requesting the headroom in needed_headroom instead).
-
-Ack.
-
-> 3.
->
-> There is a commit for a WiFi driver:
-> commit 9454f7a895b8 ("mwifiex: set needed_headroom, not hard_header_len")
-> According to the discussion about it at:
->   https://patchwork.kernel.org/patch/11407493/
-> The author tried to set the WiFi driver's hard_header_len to the Ethernet
-> header length, and request additional header space internally needed by
-> setting needed_headroom. This means this usage is already adopted by
-> driver developers.
->
-> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Cc: Eric Dumazet <eric.dumazet@gmail.com>
-> Cc: Brian Norris <briannorris@chromium.org>
-> Cc: Cong Wang <xiyou.wangcong@gmail.com>
-> Signed-off-by: Xie He <xie.he.0141@gmail.com>
-> ---
->  net/packet/af_packet.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
->
-> diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
-> index 2b33e977a905..c808c76efa71 100644
-> --- a/net/packet/af_packet.c
-> +++ b/net/packet/af_packet.c
-> @@ -93,12 +93,15 @@
->
->  /*
->     Assumptions:
-> -   - if device has no dev->hard_header routine, it adds and removes ll header
-> -     inside itself. In this case ll header is invisible outside of device,
-> -     but higher levels still should reserve dev->hard_header_len.
-> -     Some devices are enough clever to reallocate skb, when header
-> -     will not fit to reserved space (tunnel), another ones are silly
-> -     (PPP).
-> +   - If the device has no dev->header_ops, there is no LL header visible
-> +     outside of the device. In this case, its hard_header_len should be 0.
-
-Such a constraint is more robustly captured with a compile time
-BUILD_BUG_ON check. Please do add a comment that summarizes why the
-invariant holds.
-
-More about the older comment, but if reusing: it's not entirely clear
-to me what "outside of the device" means. The upper layers that
-receive data from the device and send data to it, including
-packet_snd, I suppose? Not the lower layers, clearly. Maybe that can
-be more specific.
-
-> +     The device may prepend its own header internally. In this case, its
-> +     needed_headroom should be set to the space needed for it to add its
-> +     internal header.
-> +     For example, a WiFi driver pretending to be an Ethernet driver should
-> +     set its hard_header_len to be the Ethernet header length, and set its
-> +     needed_headroom to be (the real WiFi header length - the fake Ethernet
-> +     header length).
->     - packet socket receives packets with pulled ll header,
->       so that SOCK_RAW should push it back.
->
-> --
-> 2.25.1
->
+Thanks!
