@@ -2,180 +2,120 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58407C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEAE321481
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1359F2078E
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 15:25:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSd/QbpL"
+	dkim=pass (2048-bit key) header.d=tessares-net.20150623.gappssmtp.com header.i=@tessares-net.20150623.gappssmtp.com header.b="l3gYcQrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgIGPZI (ORCPT
+        id S1730040AbgIGPWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 11:25:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
+        Mon, 7 Sep 2020 11:22:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730153AbgIGPXj (ORCPT
+        with ESMTP id S1730151AbgIGPRI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 11:23:39 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FF5C061573;
-        Mon,  7 Sep 2020 08:23:37 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id r7so9411736ybl.6;
-        Mon, 07 Sep 2020 08:23:37 -0700 (PDT)
+        Mon, 7 Sep 2020 11:17:08 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D64BC061756
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 08:07:36 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c8so13101137edv.5
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 08:07:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=atNQu443wohaZMIITwmFzOCQT4mAdD+gEFufNnG4IJE=;
-        b=ZSd/QbpLkn/LjM7Y2du9R/pLZypRLQpjjYyVcOS0+/oHAl7CvAy0/+UAWQPn7BL4bj
-         E2HUCzUQIo2TIJ+bosFjR3mQgxKe9GEJAdilc0QEIv/p+HnNDN+wT/BjrwWhGNPIFXha
-         q3n3OJcCIfARs/2DIW/iaCoVvQ0jSChSm7RC+IF5L4h9dB19N3x7fXYvT5VLH7pax8mk
-         fbMVrgI/VzOlUaZEOArUfRo0Y+DwEHLvfQhUaUwSQmDw10tKrrVeHJ2BGvavpeNQYB+a
-         ETZgnbtU1Wrj4kHJ0EHhTbcGWmWZF/yoKBNX62U3xrEXa4PDMeVmvDoFbM9pHCvsOHWk
-         qCgQ==
+        d=tessares-net.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BsqSCPCPiaLJ8Go+KX+dmTuaOJyEKP9pJrk437CGKxg=;
+        b=l3gYcQrwwdOR9fijZnyUEmRnV41Jn1GPXnCDbFgLE3/DycIWBY+5xj64K+P4kaRsS/
+         jWcZgNfSWwU8vJc22qhfcZOz9MyrpKUMuSIf9Ab+agdioBrleVzplVKE38nLSY5cBUX1
+         ucE+0iOfFSSJCPm8cPHdOGfAEHGc6PTo2aks7VEfJc3QFzqYJEKBjF6QHscBNiJWDZFL
+         yro4UN8yf3Q34nB4re9cCV6hQxXMtz9ndNbsnZ3Ynh5pQZXM9ySv7MuphzR07H6p9bMn
+         FtQUT68lqjxh7HJ0iD4WVyQAd/X2+uiq9CM4zPbJCnZXBEPp0n3sfqRnrw0ggdAGClnB
+         VzNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=atNQu443wohaZMIITwmFzOCQT4mAdD+gEFufNnG4IJE=;
-        b=gmLS6DwIOIYwyIe+Gv54Ypo/4nUfTmKn/LD5DY9JsLFUDkuZuFOJq9hNsFn32EXQpT
-         y03HSToFHv6HP2VNcMBi3pp9+mWRvWcui/T82tzC2odkPxLiiLfQgtPey5tZExTuVwFS
-         s6yx8OvS/POtnArKxZTGmvUuSt4xlvlsJj3FZu46Cr8ZAtNyIk2P8Gu5FWTTZqcoHX57
-         JwdxqvN70MldelE0t5NBAlpuk9jCog5ph+0OSWs1ZBoRRh+Al34uT+hhgHWtJsOfcKnh
-         PXfLKboNOcVfuvzbSW8KU6h2UGXHCIKcv6fSORiEHLvvyyinYDdprNCVf71bb8AjiFtO
-         cDsA==
-X-Gm-Message-State: AOAM533Cx0mpLB9uNh9AR3/mVd2smPnBl2crdTY3Z4Knqu3z58V2yLAX
-        uX9BHAICmqQ9XXYVZFHFHizk8O8NNOuIHXPcZBJCGUDrkppgrg==
-X-Google-Smtp-Source: ABdhPJy3zKtooXkqbJLFceevNpH4Mj2uLh3ybXnb6/QzswnK4s67ONxNoQ25ri4wXoVAjymqjj82QIJaCffrAFaaKtc=
-X-Received: by 2002:a25:7608:: with SMTP id r8mr30831434ybc.518.1599492215825;
- Mon, 07 Sep 2020 08:23:35 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BsqSCPCPiaLJ8Go+KX+dmTuaOJyEKP9pJrk437CGKxg=;
+        b=GDu1HBdMBQe5HHUBvKH+ViX7XY9B0pZvTKuGV1P9VuO8mOqxHJqUeFt2z3AIunIXrb
+         ZwV4NbHXLevuwbu2W0+q5G1Djx6YFKhw6eyrd5wqcsVld3nCSPMYZEWVvJSilK3SX56c
+         rXlhZ5vZSMvotp6FSJFq3rMtPF3ew4ogKgv5niBBxV8+vSMRyS5Sdf56bN+8vwTL8hRh
+         2mpxMh+sZqcuzR3ITDMoqEAixIAWIbS/JxwNdvHDJIfGw51nKTfVaxW1h092xmfZE6co
+         TcwlNYEGTNeKzEhBnUEF0sTyOuSEIzEWEgUVfsyUNVnXCckQgnk+oxK7M9ZqzCGVjHtL
+         +7OA==
+X-Gm-Message-State: AOAM532LsPqeda/P8l53OtjMEKh+QGSKifIs3S59JhZstvvWnyD6hLjm
+        OfKIWn0f/6XxzaLKtdag/YFDaEXSjRkkog==
+X-Google-Smtp-Source: ABdhPJz4KjCatnUJFTsRS8yPpcGqriKrL3EhPhWrN7yE7V6S7tBAHkHGZ5mzppwc0wjk5DI/rOsxiQ==
+X-Received: by 2002:aa7:d15a:: with SMTP id r26mr22499081edo.181.1599491254960;
+        Mon, 07 Sep 2020 08:07:34 -0700 (PDT)
+Received: from tsr-lap-08.nix.tessares.net ([2a02:578:85b0:e00:8ddf:bedd:580e:7a7e])
+        by smtp.gmail.com with ESMTPSA id o11sm15104926edw.80.2020.09.07.08.07.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Sep 2020 08:07:34 -0700 (PDT)
+Subject: Re: [MPTCP][PATCH net 2/2] mptcp: fix subflow's remote_id issues
+To:     Geliang Tang <geliangtang@gmail.com>
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        mptcp@lists.01.org, linux-kernel@vger.kernel.org
+References: <f24ee917e4043d2befe2a0f96cd57aa74d2a4b26.1599474422.git.geliangtang@gmail.com>
+ <7187516ee5a9f17a7bf1e4aa9a849da2dd56a734.1599474422.git.geliangtang@gmail.com>
+From:   Matthieu Baerts <matthieu.baerts@tessares.net>
+Message-ID: <a62124ba-bb3e-bd19-e2b4-50e8cb1465ea@tessares.net>
+Date:   Mon, 7 Sep 2020 17:07:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200825162718.5838-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825162718.5838-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXkGBfwNOwd5-=U3wg6U0O+3BErbXuybbuytgzsCmZqRQ@mail.gmail.com>
- <CA+V-a8uT8d8P8REuXcW9qtCxM84DH+Q4LXZnVTYhT--kswKF=g@mail.gmail.com> <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
-In-Reply-To: <CAMuHMdW+JBd2iu4BsQHdEV=4dt7mh_14TyHLMQcywAJVPFZZCg@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 7 Sep 2020 16:23:09 +0100
-Message-ID: <CA+V-a8so3b7A-KdVN5DZEEwUwPckut_v0DDnw6r_ci=wL9owUw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: r8a7742-iwg21d-q7: Enable SD2 LED indication
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7187516ee5a9f17a7bf1e4aa9a849da2dd56a734.1599474422.git.geliangtang@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+Hi Geliang,
 
-On Mon, Sep 7, 2020 at 8:55 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Fri, Sep 4, 2020 at 7:15 PM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Thu, Sep 3, 2020 at 1:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Tue, Aug 25, 2020 at 6:28 PM Lad Prabhakar
-> > > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > > > Add support for LED trigger on SD2 interface.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > >
-> > > > --- a/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > > > +++ b/arch/arm/boot/dts/r8a7742-iwg21d-q7.dts
-> > > > @@ -63,6 +63,16 @@
-> > > >                 enable-gpios = <&gpio3 11 GPIO_ACTIVE_HIGH>;
-> > > >         };
-> > > >
-> > > > +       leds {
-> > > > +               compatible = "gpio-leds";
-> > > > +
-> > > > +               sdhi2_led {
-> > > > +                       label = "sdio-led";
-> > > > +                       gpios = <&gpio5 22 GPIO_ACTIVE_LOW>;
-> > >
-> > > GPIO_ACTIVE_HIGH?
-> > >
-> > > The LED is driven by an NPN transistor, with the LED between 3.3V and
-> > > the transistor's collector.
->
-> Oops, 3.3V is not VCC_3V3, but SD_3V3, so it is not always-on, but
-> controlled by SDIO_PWR.
->
-> > I did try with GPIO_ACTIVE_HIGH and it didn't work as expected. To
-> > make sure I can control the LED through sysfs I deleted the node from
-> > DTS and exported the pin GP5_22 (858) and writing the value "out"
-> > direction and setting the values 0/1 to value did not toggle the SDIO
-> > LED as expected and it stayed OFF all the time.
->
-> Hence when SDIO_PWR is turned off, you cannot control the LED just by
-> toggling GP5_22.
->
-> > Looks like there is some information missing in the schematics.
-> >
-> > I did some experiments. I completely removed the SDHI, LED and
-> > regulator  nodes and  booted the system and exported GP1_27 (989) and
-> > wrote values 0/1  and this toggled the SDIO_LED.
-> >
-> > U-boot sets the below, so in u-boot the SDIO_LED is ON:
-> >     gpio_direction_output(GPIO_GP_1_27, 0); /* power on */
-> >     gpio_set_value(GPIO_GP_1_27, 0);
-> >     gpio_direction_output(GPIO_GP_5_22, 0); /* LED  */
-> >     gpio_set_value(GPIO_GP_5_22, 1);
-> >     gpio_direction_output(GPIO_GP_1_8, 0); /* 1: 3.3V, 0: 1.8V*/
-> >     gpio_set_value(GPIO_GP_1_8, 1);
-> >
-> > So in comparison we would need a hog node as below (and with this the
-> > LED triggers correctly as expected),
-> >
-> > &gpio5 {
-> >     sdio-led-gpio {
-> >         gpio-hog;
-> >         gpios = <22 GPIO_ACTIVE_HIGH>;
-> >         output-high;
-> >         line-name = "sdio-led-gpio";
-> >     };
-> > };
-> >
-> > Let me know if you are OK with the above.
->
-> The above means the LED is always lit when SDIO_PWR is enabled.
-> While I agree that's some kind of SD activity indicator, probably it's less
-> fine-grained than using the mmc1 trigger?
-> I assume the mmc1 trigger is only activated when SDIO_PWR is enabled.
-> Are you sure this doesn't work?
-> Perhaps your kernel was missing SD trigger support, or "mmc1" is the
-> wrong SD instance?
->
-> > Looks like the SDIO_PWR is tied up with an SDIO_LED pin and the
-> > information is missing from schematics.
->
-> No, I think we just misread the schematics.
->
-My bad I misinterpreted the trigger, with GP5_22 being GPIO_ACTIVE_LOW
-the LED remained ON when the card was inserted and turned OFF when the
-card was pulled out.
+On 07/09/2020 12:29, Geliang Tang wrote:
+> This patch set the init remote_id to zero, otherwise it will be a random
+> number.
+> 
+> Then it added the missing subflow's remote_id setting code both in
+> __mptcp_subflow_connect and in subflow_ulp_clone.
 
-When GP5_22 being GPIO_ACTIVE_HIGH the LED blinked and stayed OFF when
-the card was inserted and remained OFF when the card was pulled out.
-As a result I misinterpreted it.
+Thank you for this other patch!
 
-I can confirm when GP5_22 is GPIO_ACTIVE_HIGH and there is any
-activity on SD (read/write) the led turns ON.
+Here as well, may you add a "Fixes:" tag please?
+
+(...)
+
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index dc2c57860d2d..255695221309 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -186,7 +186,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>   {
+>   	struct sock *sk = (struct sock *)msk;
+>   	struct mptcp_pm_addr_entry *local;
+> -	struct mptcp_addr_info remote;
+> +	struct mptcp_addr_info remote = { 0 };
+
+To respect the "reversed Xmas tree" way to declare variables, may you 
+move this line up to be the first one in the list please?
+
+The rest looks good to me, thank you!
 
 Cheers,
-Prabhakar
+Matt
+-- 
+Tessares | Belgium | Hybrid Access Solutions
+www.tessares.net
