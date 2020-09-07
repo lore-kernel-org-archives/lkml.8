@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7A2C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0146AC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2FD207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B05BE207DE
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498286;
-	bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
+	s=default; t=1599498320;
+	bh=7kfMXVWrXLnU/OBvt23uMLhrzPlBrRM7MJEEVR6nPs8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jLrzKqW/sTdu432gfNEC6+S17gBaBGF8oaMJGch6EnfIz8sX3X6jqyYvnnHg+5+Yn
-	 121lQA1h/xNC+trxB6lJi26MHC9BtHN1tjg5dx1AehK/dc73coHEwzS8vHls/0RE3D
-	 ePfuYDoUvSuu4oulfTVGWzMHT35pl7qHPzbJuBN8=
+	b=XIO4/JBxE60jT6rN0Xv3c6IGGBMIWGjg1eZi1SUgigtAUOh4ubXbTcdodAV69r0rd
+	 DQpLKRMYHcD5ALonq5bDOWe9PNkGZ5FyJA1AZZJdnBljw/7euz5pWyErNZwjW6YX4Y
+	 ZiYJBq1KZiSRL4bjZHyRbK93zNVld8nrz1lCiAeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbgIGREp (ORCPT
+        id S1730868AbgIGRFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 13:04:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47008 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:05:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgIGQdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:33:13 -0400
+        id S1730623AbgIGQdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9000221973;
-        Mon,  7 Sep 2020 16:33:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F220A21775;
+        Mon,  7 Sep 2020 16:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496392;
-        bh=yvfnzkumOLeNZfCzoJKHdy3baNkUPfQBaVECQlvIDrA=;
+        s=default; t=1599496388;
+        bh=7kfMXVWrXLnU/OBvt23uMLhrzPlBrRM7MJEEVR6nPs8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1xBt7gLf7BCrHQ+tuuwPPhXyaHZjCpTjvlR0xSdkCi66iHckqV+m/RVn9Qm2K8s3
-         1zHO03vUgO99sBQdsJkINLmqocCscZ1c1pa9qx578bQs6m1DDEV8c8jRpVce3gN8I0
-         KzNHeY+s9e6FiZvf2BLOtL9TsD7U0b339u/B1Lh8=
+        b=pZ/By3KSSPlUNDICFOG+ekSagJDyZCTwSJPmXRawDXEJH9nNWYEk+/tnDrWeR1C5b
+         YKs5mHsNs/HpilW8UccCscMFudXJdH1W52IfZ7wBWvqfCKvGbB6FRioAbmyY2NdneU
+         r5e3WLqeCZynhM1+m9D8QqVoI7rLsCrpzFI+7XzI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeniy Didin <Evgeniy.Didin@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Alexey Brodkin <abrodkin@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.8 41/53] ARC: [plat-hsdk]: Switch ethernet phy-mode to rgmii-id
-Date:   Mon,  7 Sep 2020 12:32:07 -0400
-Message-Id: <20200907163220.1280412-41-sashal@kernel.org>
+Cc:     Nicholas Miell <nmiell@gmail.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 38/53] HID: microsoft: Add rumble support for the 8bitdo SN30 Pro+ controller
+Date:   Mon,  7 Sep 2020 12:32:04 -0400
+Message-Id: <20200907163220.1280412-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
 References: <20200907163220.1280412-1-sashal@kernel.org>
@@ -62,51 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
+From: Nicholas Miell <nmiell@gmail.com>
 
-[ Upstream commit 26907eb605fbc3ba9dbf888f21d9d8d04471271d ]
+[ Upstream commit 724a419ea28f7514a391e80040230f69cf626707 ]
 
-HSDK board has Micrel KSZ9031, recent commit
-bcf3440c6dd ("net: phy: micrel: add phy-mode support for the KSZ9031 PHY")
-caused a breakdown of Ethernet.
-Using 'phy-mode = "rgmii"' is not correct because accodring RGMII
-specification it is necessary to have delay on RX (PHY to MAX)
-which is not generated in case of "rgmii".
-Using "rgmii-id" adds necessary delay and solves the issue.
+When operating in XInput mode, the 8bitdo SN30 Pro+ requires the same
+quirk as the official Xbox One Bluetooth controllers for rumble to
+function.
 
-Also adding name of PHY placed on HSDK board.
+Other controllers like the N30 Pro 2, SF30 Pro, SN30 Pro, etc. probably
+also need this quirk, but I do not have the hardware to test.
 
-Signed-off-by: Evgeniy Didin <Evgeniy.Didin@synopsys.com>
-Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Nicholas Miell <nmiell@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/boot/dts/hsdk.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/hid-ids.h       | 1 +
+ drivers/hid/hid-microsoft.c | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-index 5d64a5a940ee6..dcaa44e408ace 100644
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -210,7 +210,7 @@ gmac: ethernet@8000 {
- 			reg = <0x8000 0x2000>;
- 			interrupts = <10>;
- 			interrupt-names = "macirq";
--			phy-mode = "rgmii";
-+			phy-mode = "rgmii-id";
- 			snps,pbl = <32>;
- 			snps,multicast-filter-bins = <256>;
- 			clocks = <&gmacclk>;
-@@ -228,7 +228,7 @@ mdio {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				compatible = "snps,dwmac-mdio";
--				phy0: ethernet-phy@0 {
-+				phy0: ethernet-phy@0 { /* Micrel KSZ9031 */
- 					reg = <0>;
- 				};
- 			};
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 476cb99bd61b7..95f9d285b3c6b 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -846,6 +846,7 @@
+ #define USB_DEVICE_ID_MS_POWER_COVER     0x07da
+ #define USB_DEVICE_ID_MS_XBOX_ONE_S_CONTROLLER	0x02fd
+ #define USB_DEVICE_ID_MS_PIXART_MOUSE    0x00cb
++#define USB_DEVICE_ID_8BITDO_SN30_PRO_PLUS      0x02e0
+ 
+ #define USB_VENDOR_ID_MOJO		0x8282
+ #define USB_DEVICE_ID_RETRO_ADAPTER	0x3201
+diff --git a/drivers/hid/hid-microsoft.c b/drivers/hid/hid-microsoft.c
+index 2d8b589201a4e..8cb1ca1936e42 100644
+--- a/drivers/hid/hid-microsoft.c
++++ b/drivers/hid/hid-microsoft.c
+@@ -451,6 +451,8 @@ static const struct hid_device_id ms_devices[] = {
+ 		.driver_data = MS_SURFACE_DIAL },
+ 	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_MS_XBOX_ONE_S_CONTROLLER),
+ 		.driver_data = MS_QUIRK_FF },
++	{ HID_BLUETOOTH_DEVICE(USB_VENDOR_ID_MICROSOFT, USB_DEVICE_ID_8BITDO_SN30_PRO_PLUS),
++		.driver_data = MS_QUIRK_FF },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, ms_devices);
 -- 
 2.25.1
 
