@@ -2,123 +2,188 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196ECC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80346C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D323620639
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="T9kSV4Vx"
+	by mail.kernel.org (Postfix) with ESMTP id 439712168B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 12:51:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599483099;
+	bh=dDKYDabIhNqj67RmZ64czee8AVbD6PMYzyd1HopAsSo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1Q6lwvJELS/M/PUZ0ZPJ8rTZ47Bf5y2Kaj+Wx5zo9BHb7nEoY0NMH81LvU8MCo/nh
+	 oYp8ofX6eGRknBdICVJBtrw3RlDU8CnYxbvcva6xj4kSaLm48+TJpRNN3t9oYs9gad
+	 n2nHesFZIktVSsDE1EsAeEMsDaSDgTmmbYdnLrcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbgIGMuc (ORCPT
+        id S1729083AbgIGMve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 08:50:32 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11897 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729262AbgIGMor (ORCPT
+        Mon, 7 Sep 2020 08:51:34 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:64028 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729177AbgIGMqP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 08:44:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f562b1a0000>; Mon, 07 Sep 2020 05:44:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 07 Sep 2020 05:44:24 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 07 Sep 2020 05:44:24 -0700
-Received: from [172.27.12.170] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 7 Sep
- 2020 12:44:16 +0000
-Subject: Re: [PATCH rdma-next 3/4] lib/scatterlist: Add support in dynamic
- allocation of SG table from pages
-To:     Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
-References: <20200903121853.1145976-1-leon@kernel.org>
- <20200903121853.1145976-4-leon@kernel.org> <20200907072921.GC19875@lst.de>
-From:   Maor Gottlieb <maorg@nvidia.com>
-Message-ID: <15552707-c9ae-b76b-f6ff-7fedd5b02aed@nvidia.com>
-Date:   Mon, 7 Sep 2020 15:44:08 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.2.1
+        Mon, 7 Sep 2020 08:46:15 -0400
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 087Cj10Q009377;
+        Mon, 7 Sep 2020 21:45:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 087Cj10Q009377
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1599482701;
+        bh=RgU8Sugxv4ASLW8GV3q9CaX17ZgN4c86hz8zqyhRkp4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KVLYrEKbu/VsRaCsN/TUIiCzxx76mAPNv3QUQxZReLYX0HRiqwHlLbpz0U9iuXkEJ
+         fdtVDe5npq/lH8vsOIWBs8cxOAB6A3j6s+8o2bjKoHXejS0thSUaCwcUJWRJkDIWXJ
+         1HrAk/bV61kGxnfNgs0tH51KMDCIU4oAvEvL4T45VEZl83E3G36oR9Q4evY43FRl7+
+         gi8lPgxloRX47Nsu+MheWnDMICBemBYBdR1Hgv0gyT/4N/4rcoFQkIut4ynccP4avk
+         //yvarxiA1PyAS9sR+j3Ro4Qc+0uh3V0EGBrgBXYf0tE4LO4pjV5noyi8ugrio4nXC
+         rFdv9oV6ZtPlg==
+X-Nifty-SrcIP: [209.85.214.175]
+Received: by mail-pl1-f175.google.com with SMTP id c3so4176578plz.5;
+        Mon, 07 Sep 2020 05:45:01 -0700 (PDT)
+X-Gm-Message-State: AOAM533qzY2ZbgoPPTeX3aWuLds+ycrmgvYduNPcuWvNlnPsJurSIg74
+        1zbw0tfp8YK91yuIaZMghmcEcKdBRX8jwoCUdjk=
+X-Google-Smtp-Source: ABdhPJw4UtF57UzI82pGuTgn7u0AI78jQLYV5p6rNVTR2t5OI2bMang+cdl+Y4cuAkIyNjGnFlsZKuD7wiB/ej4TtDg=
+X-Received: by 2002:a17:902:e901:: with SMTP id k1mr19763109pld.189.1599482700443;
+ Mon, 07 Sep 2020 05:45:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200907072921.GC19875@lst.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599482650; bh=Do+ITTDxBPQkRwNINDAMtH/xddQo5kNkcXGmE8sqjYI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:Content-Type:
-         Content-Transfer-Encoding:Content-Language:X-Originating-IP:
-         X-ClientProxiedBy;
-        b=T9kSV4Vx3B5KdRjaa2H9jq5hfVpsWyHmHeZo8m9GE/J0ZZnId6jCB8TZmVUpK8Ice
-         FV6Q7vvKlIoIuvv0HhR0I2SMC97KcKbT4TI63pJpKiB1YfbRTYLQ1Mlhsz2Smjy4lj
-         LkqbVDtLtM3sei34IQX41ndOdcRECr7Vx914sJh6x8OpEANC5k86qo5fWtfZ3mvQc1
-         eWChnZH+yxHmxM2GjSNaZX+7qAiro30JXqv1CyceB+zEXkcWgriINYAPv7OmYI4uiy
-         RAgR1SzsTGGy1pc8SbuSPb5ylRguuYh23V/1+FXIHRXry/GACHeAYnOuah/aiE+e+R
-         Y/q5m1lubwfpw==
+References: <20200831182239.480317-1-masahiroy@kernel.org>
+In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Mon, 7 Sep 2020 21:44:23 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQx=8v=udVa2pC_GL-iV0Z=VCjszB4rQ+YwTP8fR00jeg@mail.gmail.com>
+Message-ID: <CAK7LNAQx=8v=udVa2pC_GL-iV0Z=VCjszB4rQ+YwTP8fR00jeg@mail.gmail.com>
+Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
+ of extra-y
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 9/7/2020 10:29 AM, Christoph Hellwig wrote:
-> On Thu, Sep 03, 2020 at 03:18:52PM +0300, Leon Romanovsky wrote:
->> +struct sg_append {
->> +	struct scatterlist *prv; /* Previous entry to append */
->> +	unsigned int left_pages; /* Left pages to add to table */
->> +};
-> I don't really see the point in this structure.   Either pass it as
-> two separate arguments, or switch sg_alloc_table_append and the
-> internal helper to pass all arguments as a struct.
-
-I did it to avoid more than 8 arguments of this function, will change it 
-to be 9 if it's fine for you.
+On Tue, Sep 1, 2020 at 3:23 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
->> + *    A user may provide an offset at a start and a size of valid data in a buffer
->> + *    specified by the page array. A user may provide @append to chain pages to
-> This adds a few pointles > 80 char lines.
-
-Will fix.
+> The vdso linker script is preprocessed on demand.
+> Adding it to 'targets' is enough to include the .cmd file.
 >
->> +struct scatterlist *
->> +sg_alloc_table_append(struct sg_table *sgt, struct page **pages,
->> +		      unsigned int n_pages, unsigned int offset,
->> +		      unsigned long size, unsigned int max_segment,
->> +		      gfp_t gfp_mask, struct sg_append *append)
->> +{
->> +#ifdef CONFIG_ARCH_NO_SG_CHAIN
->> +	if (append->left_pages)
->> +		return ERR_PTR(-EOPNOTSUPP);
->> +#endif
-> Which makes this API entirely useless for !CONFIG_ARCH_NO_SG_CHAIN,
-> doesn't it?  Wouldn't it make more sense to not provide it for that
-> case and add an explicitl dependency in the callers?
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-Current implementation allow us to support small memory registration 
-which not require chaining. I am not aware which archs has the SG_CHAIN 
-support and I don't want to break it so I can't add it to as dependency 
-to the Kconfig. Another option is to do the logic in the caller, but it 
-isn't clean.
 
+Applied to linux-kbuild.
+
+
+>  arch/arm64/kernel/vdso/Makefile     | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile   | 2 +-
+>  arch/nds32/kernel/vdso/Makefile     | 2 +-
+>  arch/powerpc/kernel/vdso32/Makefile | 2 +-
+>  arch/powerpc/kernel/vdso64/Makefile | 2 +-
+>  arch/s390/kernel/vdso64/Makefile    | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
 >
->> +	return alloc_from_pages_common(sgt, pages, n_pages, offset, size,
->> +				       max_segment, gfp_mask, append);
-> And if we somehow manage to sort that out we can merge
-> sg_alloc_table_append and alloc_from_pages_common, reducing the amount
-> of wrappers that just make it too hard to follow the code.
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> index 45d5cfe46429..7cd8aafbe96e 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -54,7 +54,7 @@ endif
+>  GCOV_PROFILE := n
 >
->> +EXPORT_SYMBOL(sg_alloc_table_append);
-> EXPORT_SYMBOL_GPL, please.
+>  obj-y += vdso.o
+> -extra-y += vdso.lds
+> +targets += vdso.lds
+>  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+> index d6adb4677c25..572475b7b7ed 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -155,7 +155,7 @@ asm-obj-vdso := $(addprefix $(obj)/, $(asm-obj-vdso))
+>  obj-vdso := $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
+>
+>  obj-y += vdso.o
+> -extra-y += vdso.lds
+> +targets += vdso.lds
+>  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>
+>  # Force dependency (vdso.s includes vdso.so through incbin)
+> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Makefile
+> index 7c3c1ccb196e..55df25ef0057 100644
+> --- a/arch/nds32/kernel/vdso/Makefile
+> +++ b/arch/nds32/kernel/vdso/Makefile
+> @@ -20,7 +20,7 @@ GCOV_PROFILE := n
+>
+>
+>  obj-y += vdso.o
+> -extra-y += vdso.lds
+> +targets += vdso.lds
+>  CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+>
+>  # Force dependency
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+> index 87ab1152d5ce..fd5072a4c73c 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -29,7 +29,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+>  asflags-y := -D__VDSO32__ -s
+>
+>  obj-y += vdso32_wrapper.o
+> -extra-y += vdso32.lds
+> +targets += vdso32.lds
+>  CPPFLAGS_vdso32.lds += -P -C -Upowerpc
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
+> index 38c317f25141..c737b3ea3207 100644
+> --- a/arch/powerpc/kernel/vdso64/Makefile
+> +++ b/arch/powerpc/kernel/vdso64/Makefile
+> @@ -17,7 +17,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+>  asflags-y := -D__VDSO64__ -s
+>
+>  obj-y += vdso64_wrapper.o
+> -extra-y += vdso64.lds
+> +targets += vdso64.lds
+>  CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+> index 4a66a1cb919b..d0d406cfffa9 100644
+> --- a/arch/s390/kernel/vdso64/Makefile
+> +++ b/arch/s390/kernel/vdso64/Makefile
+> @@ -25,7 +25,7 @@ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+>  $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+>
+>  obj-y += vdso64_wrapper.o
+> -extra-y += vdso64.lds
+> +targets += vdso64.lds
+>  CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+>
+>  # Disable gcov profiling, ubsan and kasan for VDSO code
+> --
+> 2.25.1
+>
 
-Sure
+
+-- 
+Best Regards
+Masahiro Yamada
