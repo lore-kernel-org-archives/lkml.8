@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5884C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A23C2BC11
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2F52137B
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647482137B
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 05:59:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BweuExr6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XyRUTQyl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgIGF6v (ORCPT
+        id S1726969AbgIGF7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 01:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49040 "EHLO
+        Mon, 7 Sep 2020 01:59:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726794AbgIGF6i (ORCPT
+        with ESMTP id S1726833AbgIGF6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 01:58:38 -0400
+        Mon, 7 Sep 2020 01:58:40 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F8CC061755;
-        Sun,  6 Sep 2020 22:58:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F305AC061574;
+        Sun,  6 Sep 2020 22:58:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=jVjIwAEyeRXAFqYL1XhTmsgyUXaAG2pDm/oDzB7l/mc=; b=BweuExr6Mn6Bjt0U+etjmSfSDo
-        MBPlq+Qj6ZDf9ugPVq7/ek+ceu+bAhJi9DSIRZ4gueYWIuekuyCmTUZ00gUdgV7qhvITSX1Ej7/At
-        YN0g1P9Lo7EI9o4Y+eZPV9SMPZmYvTuXlgYVwiSkX/MsWy4JudvDKsZEVgCYdi+qczDrkvOR2RYur
-        robgMEv4cdglow0f5basy6vPaZUbGIew8DAtBGx1RAPi6eaNtMNG8RXZhF7vvFdXHzt8R3/ZlD4PW
-        ZoERGf/jPmRIEvzE4qHCpirNYQuedVSUv58VYv7O+mr/QN3/q08UXaiM9yraR8Uoyrlxwunu8kHE1
-        A0jfHVnA==;
+        bh=m+ZhzJSNyKv4ho4WyRpE+IYeLmm+BOA5yzpJjCDM1ow=; b=XyRUTQyl6EfcfGxglwwBPlkUPZ
+        Gcvb9MUcJap7nsGX7p+UnXKOrOIIQHJalyMsK6wL2ePsR5ZW2/YelQbE/3PrQyJUGdLiGy5U3etE2
+        B8l15qJ5eyWMfl6RFUvN3EEKONyVS0Lv9FF1Jwc7iY4TFRoEnemb9I6rhM6Lk/PAcP14kK83Dx5UL
+        eOFCipeljLlW9vNa+iwVyGBEXfln9sWcKoeq2nrbTpg0YgeZtWlzFFbCZ9DtPAdvPUy2n2P4dQcMh
+        L6K5a/4/SpjAOk7dtS5eFYhaQn0M300jIZNTrz/rSeizaQFgdyZGkxzhcYCzvbRTvvy2AvSc1JcJy
+        jaKyJJYg==;
 Received: from [2001:4bb8:184:af1:e178:97b2:ac6b:4e16] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFAAf-000354-B2; Mon, 07 Sep 2020 05:58:29 +0000
+        id 1kFAAm-00036y-Lz; Mon, 07 Sep 2020 05:58:36 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -46,9 +46,9 @@ To:     Paul Walmsley <paul.walmsley@sifive.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-arch@vger.kernel.org
-Subject: [PATCH 2/8] asm-generic: improve the nommu {get,put}_user handling
-Date:   Mon,  7 Sep 2020 07:58:19 +0200
-Message-Id: <20200907055825.1917151-3-hch@lst.de>
+Subject: [PATCH 8/8] riscv: remove address space overrides using set_fs()
+Date:   Mon,  7 Sep 2020 07:58:25 +0200
+Message-Id: <20200907055825.1917151-9-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200907055825.1917151-1-hch@lst.de>
 References: <20200907055825.1917151-1-hch@lst.de>
@@ -60,128 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of reusing raw_{copy,to}_from_user implement separate handlers
-using {get,put}_unaligned.  This ensures unaligned access is handled
-correctly, and avoid the need for the small constant size optimization
-in raw_{copy,to}_from_user.
+Stop providing the possibility to override the address space using
+set_fs() now that there is no need for that any more.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/asm-generic/uaccess.h | 91 ++++++++++++++++++++---------------
- 1 file changed, 51 insertions(+), 40 deletions(-)
+ arch/riscv/Kconfig                   |  1 -
+ arch/riscv/include/asm/thread_info.h |  6 ------
+ arch/riscv/include/asm/uaccess.h     | 27 +--------------------------
+ arch/riscv/kernel/process.c          |  1 -
+ 4 files changed, 1 insertion(+), 34 deletions(-)
 
-diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
-index ba68ee4dabfaa7..6de5f524e9e631 100644
---- a/include/asm-generic/uaccess.h
-+++ b/include/asm-generic/uaccess.h
-@@ -10,28 +10,60 @@
- #include <linux/string.h>
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 460e3971a80fde..33dde87218ddab 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -86,7 +86,6 @@ config RISCV
+ 	select SPARSE_IRQ
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select THREAD_INFO_IN_TASK
+-	select SET_FS
+ 	select UACCESS_MEMCPY if !MMU
  
- #ifdef CONFIG_UACCESS_MEMCPY
--static inline __must_check unsigned long
--raw_copy_from_user(void *to, const void __user * from, unsigned long n)
-+#include <asm/unaligned.h>
-+
-+static inline int __get_user_fn(size_t size, const void __user *from, void *to)
- {
--	if (__builtin_constant_p(n)) {
--		switch(n) {
--		case 1:
--			*(u8 *)to = *(u8 __force *)from;
--			return 0;
--		case 2:
--			*(u16 *)to = *(u16 __force *)from;
--			return 0;
--		case 4:
--			*(u32 *)to = *(u32 __force *)from;
--			return 0;
--#ifdef CONFIG_64BIT
--		case 8:
--			*(u64 *)to = *(u64 __force *)from;
--			return 0;
--#endif
--		}
-+	BUILD_BUG_ON(!__builtin_constant_p(size));
-+
-+	switch (size) {
-+	case 1:
-+		*(u8 *)to = get_unaligned((u8 __force *)from);
-+		return 0;
-+	case 2:
-+		*(u16 *)to = get_unaligned((u16 __force *)from);
-+		return 0;
-+	case 4:
-+		*(u32 *)to = get_unaligned((u32 __force *)from);
-+		return 0;
-+	case 8:
-+		*(u64 *)to = get_unaligned((u64 __force *)from);
-+		return 0;
-+	default:
-+		BUILD_BUG();
-+		return 0;
-+	}
-+
-+}
-+#define __get_user_fn(sz, u, k)	__get_user_fn(sz, u, k)
-+
-+static inline int __put_user_fn(size_t size, void __user *to, void *from)
-+{
-+	BUILD_BUG_ON(!__builtin_constant_p(size));
-+
-+	switch (size) {
-+	case 1:
-+		put_unaligned(*(u8 *)from, (u8 __force *)to);
-+		return 0;
-+	case 2:
-+		put_unaligned(*(u16 *)from, (u16 __force *)to);
-+		return 0;
-+	case 4:
-+		put_unaligned(*(u32 *)from, (u32 __force *)to);
-+		return 0;
-+	case 8:
-+		put_unaligned(*(u64 *)from, (u64 __force *)to);
-+		return 0;
-+	default:
-+		BUILD_BUG();
-+		return 0;
- 	}
-+}
-+#define __put_user_fn(sz, u, k)	__put_user_fn(sz, u, k)
+ config ARCH_MMAP_RND_BITS_MIN
+diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
+index 464a2bbc97ea33..a390711129de64 100644
+--- a/arch/riscv/include/asm/thread_info.h
++++ b/arch/riscv/include/asm/thread_info.h
+@@ -24,10 +24,6 @@
+ #include <asm/processor.h>
+ #include <asm/csr.h>
  
-+static inline __must_check unsigned long
-+raw_copy_from_user(void *to, const void __user * from, unsigned long n)
-+{
- 	memcpy(to, (const void __force *)from, n);
- 	return 0;
- }
-@@ -39,27 +71,6 @@ raw_copy_from_user(void *to, const void __user * from, unsigned long n)
- static inline __must_check unsigned long
- raw_copy_to_user(void __user *to, const void *from, unsigned long n)
- {
--	if (__builtin_constant_p(n)) {
--		switch(n) {
--		case 1:
--			*(u8 __force *)to = *(u8 *)from;
--			return 0;
--		case 2:
--			*(u16 __force *)to = *(u16 *)from;
--			return 0;
--		case 4:
--			*(u32 __force *)to = *(u32 *)from;
--			return 0;
--#ifdef CONFIG_64BIT
--		case 8:
--			*(u64 __force *)to = *(u64 *)from;
--			return 0;
--#endif
--		default:
--			break;
--		}
--	}
+-typedef struct {
+-	unsigned long seg;
+-} mm_segment_t;
 -
- 	memcpy((void __force *)to, from, n);
- 	return 0;
+ /*
+  * low level task data that entry.S needs immediate access to
+  * - this struct should fit entirely inside of one cache line
+@@ -39,7 +35,6 @@ typedef struct {
+ struct thread_info {
+ 	unsigned long		flags;		/* low level flags */
+ 	int                     preempt_count;  /* 0=>preemptible, <0=>BUG */
+-	mm_segment_t		addr_limit;
+ 	/*
+ 	 * These stack pointers are overwritten on every system call or
+ 	 * exception.  SP is also saved to the stack it can be recovered when
+@@ -59,7 +54,6 @@ struct thread_info {
+ {						\
+ 	.flags		= 0,			\
+ 	.preempt_count	= INIT_PREEMPT_COUNT,	\
+-	.addr_limit	= KERNEL_DS,		\
  }
+ 
+ #endif /* !__ASSEMBLY__ */
+diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
+index 264e52fb62b143..c47e6b35c551f4 100644
+--- a/arch/riscv/include/asm/uaccess.h
++++ b/arch/riscv/include/asm/uaccess.h
+@@ -26,29 +26,6 @@
+ #define __disable_user_access()							\
+ 	__asm__ __volatile__ ("csrc sstatus, %0" : : "r" (SR_SUM) : "memory")
+ 
+-/*
+- * The fs value determines whether argument validity checking should be
+- * performed or not.  If get_fs() == USER_DS, checking is performed, with
+- * get_fs() == KERNEL_DS, checking is bypassed.
+- *
+- * For historical reasons, these macros are grossly misnamed.
+- */
+-
+-#define MAKE_MM_SEG(s)	((mm_segment_t) { (s) })
+-
+-#define KERNEL_DS	MAKE_MM_SEG(~0UL)
+-#define USER_DS		MAKE_MM_SEG(TASK_SIZE)
+-
+-#define get_fs()	(current_thread_info()->addr_limit)
+-
+-static inline void set_fs(mm_segment_t fs)
+-{
+-	current_thread_info()->addr_limit = fs;
+-}
+-
+-#define uaccess_kernel() (get_fs().seg == KERNEL_DS.seg)
+-#define user_addr_max()	(get_fs().seg)
+-
+ /**
+  * access_ok: - Checks if a user space pointer is valid
+  * @addr: User space pointer to start of block to check
+@@ -76,9 +53,7 @@ static inline void set_fs(mm_segment_t fs)
+  */
+ static inline int __access_ok(unsigned long addr, unsigned long size)
+ {
+-	const mm_segment_t fs = get_fs();
+-
+-	return size <= fs.seg && addr <= fs.seg - size;
++	return size <= TASK_SIZE && addr <= TASK_SIZE - size;
+ }
+ 
+ /*
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 2b97c493427c9e..19225ec65db62f 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -84,7 +84,6 @@ void start_thread(struct pt_regs *regs, unsigned long pc,
+ 	}
+ 	regs->epc = pc;
+ 	regs->sp = sp;
+-	set_fs(USER_DS);
+ }
+ 
+ void flush_thread(void)
 -- 
 2.28.0
 
