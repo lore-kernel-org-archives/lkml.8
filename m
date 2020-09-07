@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5194CC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660A9C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10BBC207DE
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30299208C7
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 17:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599498087;
-	bh=tLFe5DOS/4QxxNc19pP7S+wa8+KR79j+WlMUV4sUwH4=;
+	s=default; t=1599498107;
+	bh=ugCFKD2zX5RIupkCCF9zzW/uoiRqME3jUwCIcPGmbFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PdcHUR7bgVbJ2jqeO+a1De+DDyAxAALFTAkSe6ZvgsJ6+cMyRiuyeKT2wbEFNPeQb
-	 oaIBb2hTInBkOoVZJsALT7qKYf0xRxGjMeVFIYLoNK7hkO4IcG3+CBm5SP38L0/ZQM
-	 iU0nY3bN0QuuLaZJLLJ7OCM5UCP2J4Ubn9rGLZLk=
+	b=a8FOGa+y8qJGYvBNSyTpYfyhlg6eO11YLXDer8jIdXKjf6HPQrGcO0U8R0f7/CXtO
+	 9ACNGkoCkKWi3B3sss/iEZr465qX61NJYaNJMY04eo0Pu4SeJyBCzTflNoz9YPRlZr
+	 2+FlGY2HfNXkI0MzZ05KbnC7xmQJnmPuEJA69gDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgIGQdq (ORCPT
+        id S1730658AbgIGRBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 12:33:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46498 "EHLO mail.kernel.org"
+        Mon, 7 Sep 2020 13:01:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730267AbgIGQch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 12:32:37 -0400
+        id S1730695AbgIGQdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 12:33:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A932217BA;
-        Mon,  7 Sep 2020 16:32:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23B6921D1B;
+        Mon,  7 Sep 2020 16:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599496355;
-        bh=tLFe5DOS/4QxxNc19pP7S+wa8+KR79j+WlMUV4sUwH4=;
+        s=default; t=1599496418;
+        bh=ugCFKD2zX5RIupkCCF9zzW/uoiRqME3jUwCIcPGmbFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PcXFJ0cl7zd1o1xjEyFYuAWLAKGjI34EKoUjjQ7EgiZ+e0R0aTHvaxvC27IeOGzdw
-         CiGqwDxwwOiFmYRe750h9p/n3lVLmmEvBfSBIWx8M3oAGF/xM2QmRmol56aIB0mlZw
-         IPVKMTj9Y52+W2Ovyo4a7yLZbKKiGKGtm50efo9U=
+        b=uq5ufsK/z2PCgNgzowOuCt4dCyYlmSFxg5bd6pwYvDWNErj7eqlcLeuClX/CPclLn
+         weF5QLjqoMGer9eZ6CwGJBrFyfFSUd9+1ByruUG86nAKXtiN4Nyv5hzFLTvz3A8C6H
+         IIeNVJcanR7OFY8X8ECU7YIxOhSF18pPtrEy3U/c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mohan Kumar <mkumard@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
-        alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.8 11/53] ALSA: hda: Fix 2 channel swapping for Tegra
-Date:   Mon,  7 Sep 2020 12:31:37 -0400
-Message-Id: <20200907163220.1280412-11-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/43] firestream: Fix memleak in fs_open
+Date:   Mon,  7 Sep 2020 12:32:53 -0400
+Message-Id: <20200907163329.1280888-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200907163220.1280412-1-sashal@kernel.org>
-References: <20200907163220.1280412-1-sashal@kernel.org>
+In-Reply-To: <20200907163329.1280888-1-sashal@kernel.org>
+References: <20200907163329.1280888-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,48 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mohan Kumar <mkumard@nvidia.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 216116eae43963c662eb84729507bad95214ca6b ]
+[ Upstream commit 15ac5cdafb9202424206dc5bd376437a358963f9 ]
 
-The Tegra HDA codec HW implementation has an issue related to not
-swapping the 2 channel Audio Sample Packet(ASP) channel mapping.
-Whatever the FL and FR mapping specified the left channel always
-comes out of left speaker and right channel on right speaker. So
-add condition to disallow the swapping of FL,FR during the playback.
+When make_rate() fails, vcc should be freed just
+like other error paths in fs_open().
 
-Signed-off-by: Mohan Kumar <mkumard@nvidia.com>
-Acked-by: Sameer Pujar <spujar@nvidia.com>
-Link: https://lore.kernel.org/r/20200825052415.20626-2-mkumard@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/atm/firestream.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index f0c6d2907e396..9442127d9b15d 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -3670,6 +3670,7 @@ static int tegra_hdmi_build_pcms(struct hda_codec *codec)
- 
- static int patch_tegra_hdmi(struct hda_codec *codec)
- {
-+	struct hdmi_spec *spec;
- 	int err;
- 
- 	err = patch_generic_hdmi(codec);
-@@ -3677,6 +3678,10 @@ static int patch_tegra_hdmi(struct hda_codec *codec)
- 		return err;
- 
- 	codec->patch_ops.build_pcms = tegra_hdmi_build_pcms;
-+	spec = codec->spec;
-+	spec->chmap.ops.chmap_cea_alloc_validate_get_type =
-+		nvhdmi_chmap_cea_alloc_validate_get_type;
-+	spec->chmap.ops.chmap_validate = nvhdmi_chmap_validate;
- 
- 	return 0;
- }
+diff --git a/drivers/atm/firestream.c b/drivers/atm/firestream.c
+index d287837ed7555..5acb459856752 100644
+--- a/drivers/atm/firestream.c
++++ b/drivers/atm/firestream.c
+@@ -998,6 +998,7 @@ static int fs_open(struct atm_vcc *atm_vcc)
+ 				error = make_rate (pcr, r, &tmc0, NULL);
+ 				if (error) {
+ 					kfree(tc);
++					kfree(vcc);
+ 					return error;
+ 				}
+ 			}
 -- 
 2.25.1
 
