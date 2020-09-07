@@ -2,102 +2,103 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54410C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9621CC43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03ED82145D
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5578021897
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 21:16:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="StXi5U9i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzcxqGHV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgIGVL4 (ORCPT
+        id S1727789AbgIGVQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 17:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49660 "EHLO
+        Mon, 7 Sep 2020 17:16:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726458AbgIGVLx (ORCPT
+        with ESMTP id S1726458AbgIGVQt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 17:11:53 -0400
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E9BC061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 14:11:52 -0700 (PDT)
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4E3B580719;
-        Tue,  8 Sep 2020 09:11:50 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1599513110;
-        bh=qY43FpSIb2O4d73LN2PEOs4Kyx82EZudCVnoDOcDXx0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=StXi5U9ioUkfBU/A4HAFCeebv3QOQIa6dID0Dw6dkS8TiFaZ9QwBsNiFV8ta//IBM
-         grGeM7+MLGHMb2DwVVwcxMDOZa1QIG2qpuNVpuMXxmPqtBZxEleTEAkVm4cXerO3/f
-         L83aGtoDcUH6R1S8ZT90ZAEj0XRCMXwfLcD9ImspiRNlwzCG1Qe/ysTWgRkxMlwsoh
-         tZBYcoZoQXQZpq5OuLi1inVrthqyB99L0vMDntPHCWeUYTDvjVJDeUrmda+zYmY8/U
-         dT7hx9O7dLNaQXC900GJHOkUmD8xEx2aw/WToSpXUrenrNWu1IDPEKNjmHu6V0Vqlt
-         1g2URbfAvPASw==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f56a2160001>; Tue, 08 Sep 2020 09:11:50 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Sep 2020 09:11:50 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Tue, 8 Sep 2020 09:11:50 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "jason@lakedaemon.net" <jason@lakedaemon.net>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
-Thread-Topic: [PATCH 2/3] ARM: dts: Remove non-existent i2c1 from 98dx3236
-Thread-Index: AQHWhMBx9UPh5FBBykunMtOiHpEnW6lciSsAgABZMwCAAADXAIAAAR+A
-Date:   Mon, 7 Sep 2020 21:11:49 +0000
-Message-ID: <95868563-7637-83b4-38fc-eea71bacaf0b@alliedtelesis.co.nz>
-References: <20200907024149.20001-1-chris.packham@alliedtelesis.co.nz>
- <20200907024149.20001-3-chris.packham@alliedtelesis.co.nz>
- <20200907154532.GY3112546@lunn.ch>
- <36712d90-6bfe-8965-22b1-6b6dd460116d@alliedtelesis.co.nz>
- <20200907210748.GF3254313@lunn.ch>
-In-Reply-To: <20200907210748.GF3254313@lunn.ch>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D942245C49CCD04A94B81883E0243340@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Mon, 7 Sep 2020 17:16:49 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66DE6C061573;
+        Mon,  7 Sep 2020 14:16:48 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id u3so3703540pjr.3;
+        Mon, 07 Sep 2020 14:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jEv+l13bPkBP4OOO6HkaA4yQbFTE9py5vEtLN31aW4g=;
+        b=BzcxqGHVOYdkZE/nnHA8ZpbvIRerru6/9TGkmI3ESjmBTfOm89nzydtUlOeSYkUKgb
+         22SVAiF0JGw3QvBkuEE7NswtB3pObFVfj80mQa7C2hCckc/FzGJCpF6iH3FC1GGpd+sB
+         a0hvdEYF0l53MrbmdAXoZVnKiSNlU4vFEkb/x//x8qe28CZ6zLFk5T8XpGhKWpsaTfFA
+         ewvUcgkEBAx9PDVIfHUML4YIS5Az/CkWApYyVQ2oRDMRM23R+CUgoYjSD4ghZzVfU1be
+         Nil64Kbv7StYr1vXCOFmTFRrSIvZoUc0xouSOBZNqukDa+E4UNO1fQmAc2IDz5vsxtzU
+         QlIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jEv+l13bPkBP4OOO6HkaA4yQbFTE9py5vEtLN31aW4g=;
+        b=qg98Ejzoxgl13q/GaVgDrn9npDxoajXXqDgEqF4ofSN2sf4J+4w4bLlSqooEYKhu76
+         UxnPqN+oI+yQljP30VtvWpSX0ewtekQoIYokSA1164Kh2eIa5JU0Es0IA2h5YpCndNNJ
+         e4m/8pC27Y/KUMkc4AdXN9OrS1oRrMH+Db+E2vn4KMZq5hNzqPgJbko4CJifnHEGwkO+
+         HghPDV2b2ezDudlh1lrb6EOmW5i9O8pnmHZMXXScE6ZVYSZShm7V2qV98X0bT8epUCzf
+         g6tbP0BKQhCKa2qpaHV9qlmO5ss0sHWGMLJGOLVDWlPSp3lQKQpYez4g+ZABTWn16Qjx
+         ZErg==
+X-Gm-Message-State: AOAM530KOeDvWaghbkIuzd2F8pydAaS6n1VXfYGBm7m3LFCmYVjYdGOL
+        yhaaPe2HxUkfUi8o5zTmsfDOmpsT/gZpeBnxDwQ=
+X-Google-Smtp-Source: ABdhPJyrV4Rxe5S7NUnqsFSZFn7WjWk7sv6Vc2yz+aHCKxi5JmemKN84LlgOsNHpoHIOLCu8rwya5UeQ8wz8IycelD8=
+X-Received: by 2002:a17:90a:bd02:: with SMTP id y2mr1024403pjr.66.1599513407260;
+ Mon, 07 Sep 2020 14:16:47 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
+ <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com> <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
+In-Reply-To: <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 7 Sep 2020 14:16:36 -0700
+Message-ID: <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com>
+Subject: Re: Question about dev_validate_header used in af_packet.c
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA4LzA5LzIwIDk6MDcgYW0sIEFuZHJldyBMdW5uIHdyb3RlOg0KPiBPbiBNb24sIFNlcCAw
-NywgMjAyMCBhdCAwOTowNDo0OFBNICswMDAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4gT24g
-OC8wOS8yMCAzOjQ1IGFtLCBBbmRyZXcgTHVubiB3cm90ZToNCj4+PiBPbiBNb24sIFNlcCAwNywg
-MjAyMCBhdCAwMjo0MTo0OFBNICsxMjAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0KPj4+PiBUaGUg
-c3dpdGNoZXMgd2l0aCBpbnRlZ3JhdGVkIENQVXMgaGF2ZSBvbmx5IGdvdCBhIHNpbmdsZSBpMmMg
-Y29udHJvbGxlci4NCj4+Pj4gVGhlIGluY29ycmVjdGx5IGdhaW5lZCBvbmUgd2hlbiB0aGV5IHdl
-cmUgc3BsaXQgZnJvbSB0aGUgQXJtYWRhLVhQLg0KPj4gU29tZW9uZSBwb2ludGVkIG91dCBhIHNt
-YWxsIGdyYW1tbyBpbnN0ZWFkIG9mICJUaGUgaW5jb3JyZWN0bHkiIGl0DQo+PiBzaG91bGQgYmUg
-IlRoZXkgaW5jb3JyZWN0bHkiLiBJcyBpdCB3b3J0aCBtZSBzZW5kaW5nIGEgdjIganVzdCB0byBm
-aXggdGhhdD8NCj4gWW91IGFyZSBhc2tpbmcgc29tZWJvZHkgd2hvIGlzIGR5c2xleGljLCBhbmQg
-b2Z0ZW4gZmFpbHMgdG8gbm90aWNlDQo+IHRoaW5ncyBsaWtlIHRoaXMsIHBhcnRpY3VsYXJseSB3
-aGVuIHdyaXR0ZW4gYnkgbWUgOi0pDQo+DQo+IFVwIHRvIHlvdS4NCkknbGwgc2VuZCBhIHYyIGZp
-eGluZyB0aGUgZ3JhbW1vIGFuZCBpbmNsdWRpbmcgeW91ciByLWJ5LiBJZiB0aGUgc2VyaWVzIA0K
-aGFzIGFscmVhZHkgYmVlbiBwaWNrZWQgdXAgdGhlbiBubyBncmVhdCBsb3NzLg0K
+On Mon, Sep 7, 2020 at 2:06 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> The CAP_SYS_RAWIO exception indeed was requested to be able to
+> purposely test devices against bad inputs. The gmane link
+> unfortunately no longer works, but this was the discussion thread:
+> https://www.mail-archive.com/netdev@vger.kernel.org/msg99920.html
+>
+> It zeroes the packet up max_header_len to ensure that an unintentional
+> short packet will at least not result in reading undefined data. Now
+> that the dust has settled around the min_header_len/max_header_len
+> changes, maybe now is a good time to revisit removing that
+> CAP_SYS_RAWIO loophole.
+
+Thank you for your explanation! I can now understand the logic of
+dev_hard_header. Thanks!
+
+Do you mean we can now consider removing the ability to bypass the
+header_ops->validate check? That is what I am thinking about, too!
+
+I looked at the link you gave me. I see that Alan Cox wanted to keep
+the ability of intentionally feeding corrupt frames to drivers, to
+test whether drivers are able to handle incomplete headers. However, I
+think after we added the header validation in af_packet.c, drivers no
+longer need to ensure they can handle incomplete headers correctly
+(because this is already handled by us). So there's no point in
+keeping the ability to test this, either.
