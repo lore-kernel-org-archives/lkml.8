@@ -2,63 +2,108 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF28C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B78C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1CA20796
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CAC20796
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 06:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GhscpEag";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TiSh7O5L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbgIGGEA (ORCPT
+        id S1726769AbgIGGFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 02:04:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:47705 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725803AbgIGGEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 02:04:00 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 09E1468BFE; Mon,  7 Sep 2020 08:03:57 +0200 (CEST)
-Date:   Mon, 7 Sep 2020 08:03:56 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Russell King <rmk@arm.linux.org.uk>
-Subject: Re: remove set_fs for riscv
-Message-ID: <20200907060356.GA18655@lst.de>
-References: <20200904165216.1799796-1-hch@lst.de> <CAK8P3a3t8a0gD2HsoPsMi7whtNb7BdzPN6-oo6ABnqkbQJoBfA@mail.gmail.com> <20200905071735.GB13228@lst.de> <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
+        Mon, 7 Sep 2020 02:05:54 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46322 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725803AbgIGGFx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 02:05:53 -0400
+Date:   Mon, 07 Sep 2020 06:05:50 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599458751;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MmZKSCN3+6pV2/92G4WHoEYPtg3SqP1ndcFRKpdZNOc=;
+        b=GhscpEagv/FUbnIW9+ybGBBfJOzvXY+Jgbe1U0AJjL4ydPtQ0B8t1/kAfEecbn6s4tPSlN
+        OqNKwgLvBoayU5jwoakdNTODoLvOw6KLbnuFIbQLDBPtkqUSu9QZ0CiHBj+NfcuQ7oVaWY
+        BFdeNLZb9uraJwQXc9ngZamQUmtX2L8KthrMfVzpTl0SrakbCSlsDLmhXZpDmAxPkCCvuv
+        UOaJTnYAFPom44SP/a4/6s6yqpPMcQsVSXBWwU3Jo10KfXCXXgYkCy6geYZlespMQ12FoS
+        +vJGI05G9zmOeR2gKGFKOjzuz0nHQBS/F+HmV5tVTjGlIRxW4nfVMHUivD6E9A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599458751;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MmZKSCN3+6pV2/92G4WHoEYPtg3SqP1ndcFRKpdZNOc=;
+        b=TiSh7O5Lx2rEkrn5m17hyD8z2wQT7/O2CUwcsQgNoWRMTU2PSBnd1ji79n0J10n6ycGLAb
+        mPXSkFYaREKF4nAA==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/build] x86/boot/compressed: Warn on orphan section placement
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200902025347.2504702-6-keescook@chromium.org>
+References: <20200902025347.2504702-6-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3BN-Afy4Gj+mGjxiKODUBZwjh+XRbXqQKV-uEhyhOTfA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Message-ID: <159945875015.20229.3592882775194866773.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 12:14:59AM +0200, Arnd Bergmann wrote:
-> I've had a first pass at this now, see
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=arm-kill-set_fs
-> 
-> There are a couple of things in there that ended up uglier than I was
-> hoping for, and it's completely untested beyond compilation. Is this
-> roughly what you had in mind? I can do some testing then and post
-> it to the Arm mailing list.
+The following commit has been merged into the core/build branch of tip:
 
-Looks sensible.  The OABI hacks a are a little ugly, but so would be
-every other alternative.
+Commit-ID:     6e0bf0e0e55000742a53c5f3b58f8669e0091a11
+Gitweb:        https://git.kernel.org/tip/6e0bf0e0e55000742a53c5f3b58f8669e0091a11
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Tue, 01 Sep 2020 19:53:47 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 03 Sep 2020 10:28:36 +02:00
 
-Note that you don't need to add a TASK_SIZE_MAX definition to arm if you
-base it on my series as that provides a default one.  I also think with
-these changes arm/nommu should be able to use UACCESS_MEMCPY.
+x86/boot/compressed: Warn on orphan section placement
+
+We don't want to depend on the linker's orphan section placement
+heuristics as these can vary between linkers, and may change between
+versions. All sections need to be explicitly handled in the linker
+script.
+
+Now that all sections are explicitly handled, enable orphan section
+warnings.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Link: https://lore.kernel.org/r/20200902025347.2504702-6-keescook@chromium.org
+---
+ arch/x86/boot/compressed/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 5b7f6e1..871cc07 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -54,6 +54,7 @@ KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
+ # Compressed kernel should be built as PIE since it may be loaded at any
+ # address by the bootloader.
+ LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
++LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
+ LDFLAGS_vmlinux += -T
+ 
+ hostprogs	:= mkpiggy
