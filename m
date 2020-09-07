@@ -2,73 +2,124 @@ Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF547C43461
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A103C43461
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799C4215A4
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599511152;
-	bh=3mw0JYdczY6laRRrjKNsKqCHxTGTnBzH+AYqiYoKJTw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mpdsIvkAfu+hrmby78o/XhRxaR355NsghDKVgvvjrplrD9pvPkCIffzEd+2k4p/TA
-	 B62WTUjqZY1hPJjEm85hi/OGGGX1xzNCJ9sR/38+kn7jMmYLlvjTGf8aDQLkzzzeJM
-	 W94mULxqhE/N+PgKKPh1MEfwQ5X1AOFrOANV0Smg=
+	by mail.kernel.org (Postfix) with ESMTP id F3FB421556
+	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 20:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgIGUjH (ORCPT
+        id S1727788AbgIGUjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 16:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgIGUjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 16:39:06 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EBDD21582;
-        Mon,  7 Sep 2020 20:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599511145;
-        bh=3mw0JYdczY6laRRrjKNsKqCHxTGTnBzH+AYqiYoKJTw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QbKRTN23fD/j+mjVvouurhXNoa2igmJq1fOYjF8ZC3zq6z2BEAD2YdYIab9Qu7P0y
-         PSfMAnZZDD2pnBrKQqbKhQngJKyIOK4yNu0cuxAW1g07oGSg44CTwDJ2y0ywZsXZel
-         /z5XwUg5kZFUsxiQqq+8LP5ljAnzPDWcZsWnmguU=
-Date:   Mon, 7 Sep 2020 13:39:04 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Andy Duan <fugang.duan@nxp.com>
-Cc:     Zhang Changzhong <zhangchangzhong@huawei.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: ethernet: fec: remove redundant null
- check before clk_disable_unprepare()
-Message-ID: <20200907133904.4672abf1@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <AM8PR04MB731542047A051973B74BBAD4FF280@AM8PR04MB7315.eurprd04.prod.outlook.com>
-References: <1599482984-42783-1-git-send-email-zhangchangzhong@huawei.com>
-        <AM8PR04MB731542047A051973B74BBAD4FF280@AM8PR04MB7315.eurprd04.prod.outlook.com>
+        Mon, 7 Sep 2020 16:39:23 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:9185 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726962AbgIGUjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 16:39:22 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Mon, 7 Sep 2020 13:39:20 -0700
+Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 6F07240385;
+        Mon,  7 Sep 2020 13:39:21 -0700 (PDT)
+From:   Ajay Kaher <akaher@vmware.com>
+To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
+CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
+        <peterx@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
+        <vsirnapalli@vmware.com>, <akaher@vmware.com>
+Subject: [PATCH v4.9.y 1/3] vfio/type1: Support faulting PFNMAP vmas
+Date:   Tue, 8 Sep 2020 02:05:14 +0530
+Message-ID: <1599510917-23734-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 7 Sep 2020 13:14:50 +0000 Andy Duan wrote:
-> From: Zhang Changzhong <zhangchangzhong@huawei.com> Sent: Monday, September 7, 2020 8:50 PM
-> > Because clk_prepare_enable() and clk_disable_unprepare() already checked
-> > NULL clock parameter, so the additional checks are unnecessary, just remove
-> > them.
-> > 
-> > Reported-by: Hulk Robot <hulkci@huawei.com>
-> > Signed-off-by: Zhang Changzhong <zhangchangzhong@huawei.com>  
-> 
-> Acked-by: Fugang Duan <fugang.duan@nxp.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-Applied, thanks!
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
+
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.9]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index a9f58f3..ccef02c 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -213,6 +213,32 @@ static int put_pfn(unsigned long pfn, int prot)
+ 	return 0;
+ }
+ 
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
+ {
+ 	struct page *page[1];
+@@ -226,12 +252,16 @@ static int vaddr_get_pfn(unsigned long vaddr, int prot, unsigned long *pfn)
+ 
+ 	down_read(&current->mm->mmap_sem);
+ 
++retry:
+ 	vma = find_vma_intersection(current->mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, current->mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
+ 	}
+ 
+ 	up_read(&current->mm->mmap_sem);
+-- 
+2.7.4
+
