@@ -2,175 +2,212 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48C27C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37853C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB0D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ele0Rrax"
+	by mail.kernel.org (Postfix) with ESMTP id EE951207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599584267;
+	bh=E4o1TDNMgXR3ltqTwm9aXT1R3QWQWrh1SreqKE+iRdk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zSao5yern9MZLR6dfOimznrVsfuglKBbEuxmglG0GZaDQX7eCVEAZwuFKl58TXLuQ
+	 FjXUPw1eUelyVCy0FQoixcCmD3KNkSfORVxxGRDTE6hvVu3TqJh3OBQLt4JdmdHR7M
+	 td4bAyO/VBMatUkejjyfnC+M5UN67VRWz6SVAkIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731640AbgIHQ52 (ORCPT
+        id S1731957AbgIHQ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:57:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731432AbgIHQ5B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:57:01 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0501C061573;
-        Tue,  8 Sep 2020 09:57:01 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w7so11464622pfi.4;
-        Tue, 08 Sep 2020 09:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kBD1EJXPjVAPBpvdc8wf1ILIVz5P8vX0mxtXEPwALzw=;
-        b=Ele0Rrax+SxCArR7vCT+Ep4XzRpupXA++JWD3kHsYCsN5NDhZAVsIEGGQQ88ehNC5R
-         46X0/j2chtpx+hmu9XItNJmS3if7iMfnXSYDV1uEJMrQHQDW22kF9ka/I3di4/dJSFYF
-         4mtMnPvRlqjWvbhmtg21sQpyMB8u4w4i21teNB+X3EFAJhMHaLCu5aKE2z+IrKZzcuRB
-         8LmD1TVvq7PW+2h4Y8+DchxExEX+odbLBhJV+TqhWyBPLlyj/IFZkOOwXg5f6T1hM9cn
-         I1yEt6NQJu3QdvQoIL6YzFaipMpF4S26ypm5drRygYvWFfuiOGAdfr8wrkQXzy2hLNNH
-         xKCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kBD1EJXPjVAPBpvdc8wf1ILIVz5P8vX0mxtXEPwALzw=;
-        b=ixkI/jGdZJVTUcZNk2LluRjrMzZAUr8tN10xq39LAgE2+PMkJBWfYgTUYSDHf4x5M7
-         qfJv8mz5yVUeLJgxRnAdYy2Rg5dHyOA6NIiiKxVOS0zP1/hpUPTgBDJokrQMU+yIM/J0
-         8TKnxXMRpuirmFfytgFIn/kn5pghLEr3LAxmM28QTG7ZwhhRc41sL1df8b/ydAvZzPpZ
-         pEKE42QFA3McF7EjW1vTOMFc0QGOJqsf4dFUTH1JHo7FRbsLj7Aqw/B17vDtauae895c
-         n4Ja4C8FCnWvgY5d4zI8bW7HBVR1XnZJZbC1SU8fVdZLjcGcrCqeX07gXU0tiFmMmc7H
-         EL7g==
-X-Gm-Message-State: AOAM532m5CC7SJB4bfTPY0ocr/WWt6HyYdUv/P9JRusBiWdw5Pxo/sFT
-        +2VdxOsiBWDvBCJs/y7X5z4=
-X-Google-Smtp-Source: ABdhPJwZxemNY6Dve6ZxiSwz4vCGjA5iIlNIPUHL3l9AnM4JkFzTMbYq7IAQKVpAR9CjNuYYwMBgSQ==
-X-Received: by 2002:a05:6a00:8c5:b029:13e:ce2c:88bd with SMTP id s5-20020a056a0008c5b029013ece2c88bdmr96593pfu.0.1599584221085;
-        Tue, 08 Sep 2020 09:57:01 -0700 (PDT)
-Received: from gmail.com ([106.201.26.241])
-        by smtp.gmail.com with ESMTPSA id h15sm4467pfo.23.2020.09.08.09.56.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 09:57:00 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 22:24:58 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        John Garry <john.garry@huawei.com>,
-        Don Brace <don.brace@microsemi.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
-Subject: Re: [PATCH v2 00/15] scsi: use generic power management
-Message-ID: <20200908165458.GA9948@gmail.com>
-References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+        Tue, 8 Sep 2020 12:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731847AbgIHQUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:20:22 -0400
+Received: from kernel.org (unknown [87.71.73.56])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9CE821D93;
+        Tue,  8 Sep 2020 12:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599568323;
+        bh=E4o1TDNMgXR3ltqTwm9aXT1R3QWQWrh1SreqKE+iRdk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SyEwTcWeWaj5fnJOWcZkA4g1K/6G3dZ9eGWpWoOs8wFLveiNeFY/HN9Ys3hddw4Ix
+         Hda12jT7gq0vHLbLYRlYfMUWaeSI3gTzRMim2LXupXZs1Vve7Fui8jwLq6j5cAimFf
+         5f9ZDd5aFctsg+vQXtTjJfOj10UunsKMmHI5oNQc=
+Date:   Tue, 8 Sep 2020 15:31:50 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
+ boot
+Message-ID: <20200908123150.GF1976319@kernel.org>
+References: <20200818141554.13945-1-rppt@kernel.org>
+ <20200818141554.13945-7-rppt@kernel.org>
+ <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+ <20200819115335.GU752365@kernel.org>
+ <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
+ <20200819173347.GW752365@kernel.org>
+ <6c8b30fb-1b6c-d446-0b09-255b79468f7c@redhat.com>
+ <20200820155228.GZ752365@kernel.org>
+ <fdda6ba7-9418-2b52-eee8-ce5e9bfdb6ad@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <fdda6ba7-9418-2b52-eee8-ce5e9bfdb6ad@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:04:13PM +0530, Vaibhav Gupta wrote:
-> Linux Kernel Mentee: Remove Legacy Power Management.
+Hi David,
+
+On Tue, Sep 08, 2020 at 11:09:19AM +0200, David Hildenbrand wrote:
+> On 20.08.20 17:52, Mike Rapoport wrote:
+> > On Wed, Aug 19, 2020 at 07:45:29PM +0200, David Hildenbrand wrote:
+> >> On 19.08.20 19:33, Mike Rapoport wrote:
+> >>> On Wed, Aug 19, 2020 at 02:10:43PM +0200, David Hildenbrand wrote:
+> >>>> On 19.08.20 13:53, Mike Rapoport wrote:
+> >>>>> On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
+> >>>>>> On 18.08.20 16:15, Mike Rapoport wrote:
+> >>>>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+> >>>>>>>
+> >>>>>>> Taking pages out from the direct map and bringing them back may create
+> >>>>>>> undesired fragmentation and usage of the smaller pages in the direct
+> >>>>>>> mapping of the physical memory.
+> >>>>>>>
+> >>>>>>> This can be avoided if a significantly large area of the physical memory
+> >>>>>>> would be reserved for secretmem purposes at boot time.
+> >>>>>>>
+> >>>>>>> Add ability to reserve physical memory for secretmem at boot time using
+> >>>>>>> "secretmem" kernel parameter and then use that reserved memory as a global
+> >>>>>>> pool for secret memory needs.
+> >>>>>>
+> >>>>>> Wouldn't something like CMA be the better fit? Just wondering. Then, the
+> >>>>>> memory can actually be reused for something else while not needed.
+> >>>>>
+> >>>>> The memory allocated as secret is removed from the direct map and the
+> >>>>> boot time reservation is intended to reduce direct map fragmentatioan
+> >>>>> and to avoid splitting 1G pages there. So with CMA I'd still need to
+> >>>>> allocate 1G chunks for this and once 1G page is dropped from the direct
+> >>>>> map it still cannot be reused for anything else until it is freed.
+> >>>>>
+> >>>>> I could use CMA to do the boot time reservation, but doing the
+> >>>>> reservesion directly seemed simpler and more explicit to me.
+> >>>>
+> >>>> Well, using CMA would give you the possibility to let the memory be used
+> >>>> for other purposes until you decide it's the right time to take it +
+> >>>> remove the direct mapping etc.
+> >>>
+> >>> I still can't say I follow you here. If I reseve a CMA area as a pool
+> >>> for secret memory 1G pages, it is still reserved and it still cannot be
+> >>> used for other purposes, right?
+> >>
+> >> So, AFAIK, if you create a CMA pool it can be used for any MOVABLE
+> >> allocations (similar to ZONE_MOVABLE) until you actually allocate CMA
+> >> memory from that region. Other allocations on that are will then be
+> >> migrated away (using alloc_contig_range()).
+> >>
+> >> For example, if you have a 1~GiB CMA area, you could allocate 4~MB pages
+> >> from that CMA area on demand (removing the direct mapping, etc ..), and
+> >> free when no longer needed (instantiating the direct mapping). The free
+> >> memory in that area could used for MOVABLE allocations.
+> > 
+> > The boot time resrvation is intended to avoid splitting 1G pages in the
+> > direct map. Without the boot time reservation, we maintain a pool of 2M
+> > pages so the 1G pages are split and 2M pages remain unsplit.
+> > 
+> > If I scale your example to match the requirement to avoid splitting 1G
+> > pages in the direct map, that would mean creating a CMA area of several
+> > tens of gigabytes and then doing cma_alloc() of 1G each time we need to
+> > refill the secretmem pool. 
+> > 
+> > It is quite probable that we won't be able to get 1G from CMA after the
+> > system worked for some time.
 > 
-> The purpose of this patch series is to upgrade power management in scsi
-> drivers. This has been done by upgrading .suspend() and .resume() callbacks.
+> Why? It should only contain movable pages, and if that is not the case,
+> it's a bug we have to fix. It should behave just as ZONE_MOVABLE.
+> (although I agree that in corner cases, alloc_contig_pages() might
+> temporarily fail on some chunks - e.g., with long/short-term page
+> pinnings - in contrast to memory offlining, it won't retry forever)
+ 
+The use-case I had in mind for the boot time reservation in secretmem is
+a machine that runs VMs and there is a desire to have the VM memory
+protected from the host. In a way this should be similar to booting a
+host with mem=X where most of the machine memory never gets to be used
+by the host kernel.
+
+For such use case, boot time reservation controlled by the command
+line parameter seems to me simpler than using CMA. I agree that there is
+no way to use the reserved memory for other purpose, but then we won't
+need to create physically contiguous chunk of several gigs every time a
+VM is created.
+
+> > With boot time reservation we won't need physcally contiguous 1G to
+> > satisfy smaller allocation requests for secretmem because we don't need
+> > to maintain 1G mappings in the secretmem pool.
 > 
-> The upgrade makes sure that the involvement of PCI Core does not change the
-> order of operations executed in a driver. Thus, does not change its behavior.
+> You can allocate within your CMA area however you want - doesn't need to
+> be whole gigabytes in case there is no need for it.
+
+The whole point of boot time reservation is to prevent splitting 1G
+pages in the direct map. Allocating smaller chunks will still cause
+fragmentation of the direct map.
+
+> Again, the big benefit of CMA is that the reserved memory can be reused
+> for other purpose while nobody is actually making use of it.
+
+Right, but I think if a user explicitly asked to use X gigabytes for the
+secretmem we can allow that.
+
+> > 
+> > That said, I believe the addition of the boot time reservation, either
+> > direct or with CMA, can be added as an incrememntal patch after the
+> > "core" functionality is merged.
 > 
-> In general, drivers with legacy PM, .suspend() and .resume() make use of PCI
-> helper functions like pci_request/release_regions(), pci_set_power_state(),
-> pci_save/restore_state(), pci_enable/disable_device(), etc. to complete
-> their job.
+> I am not convinced that we want to let random processes to do
+> alloc_pages() in the range of tens of gigabytes. It's not just mlocked
+> memory. I prefer either using CMA or relying on the boot time
+> reservations. But let's see if there are other opinions and people just
+> don't care.
 > 
-> The conversion requires the removal of those function calls, change the
-> callbacks' definition accordingly and make use of dev_pm_ops structure.
-> 
-> v2: kbuild error in v1.
-> 
-> All patches are compile-tested only.
-> 
-> Test tools:
->     - Compiler: gcc (GCC) 10.1.0
->     - allmodconfig build: make -j$(nproc) W=1 all
-> 
-> Vaibhav Gupta (15):
->   scsi: megaraid_sas: use generic power management
->   scsi: aacraid: use generic power management
->   scsi: aic7xxx: use generic power management
->   scsi: aic79xx: use generic power management
->   scsi: arcmsr: use generic power management
->   scsi: esas2r: use generic power management
->   scsi: hisi_sas_v3_hw: use generic power management
->   scsi: mpt3sas_scsih: use generic power management
->   scsi: lpfc: use generic power management
->   scsi: pm_8001: use generic power management
->   scsi: hpsa: use generic power management
->   scsi: 3w-9xxx: use generic power management
->   scsi: 3w-sas: use generic power management
->   scsi: mvumi: use generic power management
->   scsi: pmcraid: use generic power management
-> 
->  drivers/scsi/3w-9xxx.c                    |  30 ++-----
->  drivers/scsi/3w-sas.c                     |  31 ++-----
->  drivers/scsi/aacraid/linit.c              |  34 ++------
->  drivers/scsi/aic7xxx/aic79xx.h            |  12 +--
->  drivers/scsi/aic7xxx/aic79xx_core.c       |   8 +-
->  drivers/scsi/aic7xxx/aic79xx_osm_pci.c    |  43 +++-------
->  drivers/scsi/aic7xxx/aic79xx_pci.c        |   6 +-
->  drivers/scsi/aic7xxx/aic7xxx.h            |  10 +--
->  drivers/scsi/aic7xxx/aic7xxx_core.c       |   6 +-
->  drivers/scsi/aic7xxx/aic7xxx_osm_pci.c    |  46 +++-------
->  drivers/scsi/aic7xxx/aic7xxx_pci.c        |   4 +-
->  drivers/scsi/arcmsr/arcmsr_hba.c          |  35 +++-----
->  drivers/scsi/esas2r/esas2r.h              |   5 +-
->  drivers/scsi/esas2r/esas2r_init.c         |  48 +++--------
->  drivers/scsi/esas2r/esas2r_main.c         |   3 +-
->  drivers/scsi/hisi_sas/hisi_sas_v3_hw.c    |  32 +++----
->  drivers/scsi/hpsa.c                       |  12 +--
->  drivers/scsi/lpfc/lpfc_init.c             | 100 +++++++---------------
->  drivers/scsi/megaraid/megaraid_sas_base.c |  61 ++++---------
->  drivers/scsi/mpt3sas/mpt3sas_scsih.c      |  36 +++-----
->  drivers/scsi/mvumi.c                      |  49 +++--------
->  drivers/scsi/pm8001/pm8001_init.c         |  46 ++++------
->  drivers/scsi/pmcraid.c                    |  44 +++-------
->  23 files changed, 212 insertions(+), 489 deletions(-)
+> Having that said, I have no further comments.
 > 
 > -- 
-> 2.27.0
+> Thanks,
 > 
-Please review the patch-series.
+> David / dhildenb
+> 
 
-Thanks
-Vaibhav Gupta
+-- 
+Sincerely yours,
+Mike.
