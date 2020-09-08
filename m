@@ -2,51 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A82C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE20C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C27A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C1F52080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589808;
-	bh=6qJvNmDRGejfAYEx5lKKBTmGe5r4//5E/gkQqoHT9U4=;
+	s=default; t=1599589815;
+	bh=ZVS6G0he7Yx5Wf0LqIjPdrGG+io5wAJnYSIi3O3FXLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMrmodekbqSF9VREo8Qb8Ov1zZY1HgW33j/Fx7vOl0zeWJC2ofKamnPaD6KZa/Dyo
-	 88Vt/R7yYfuBjzTkiHAGll7nYOwuzz8p1AfYnF8y6m7ihtmpkea4kkXUmzli1XYkJi
-	 TsOinH3S91AFWIM5SNZK+5KYxnnCSXQZS3iTWFws=
+	b=d3dR+HuxZ3cHOGh7tP4E+XSekmQj8AigHtAKVyEg4SrxOuGT/R4rtzWmvxTodPFLI
+	 rh0lO06fYFgKC6rNg5/1lbIqR70kHpL6cbKZDljitBeSVuqnZTmuSnYiW5nNdlR1lS
+	 qUOfdxbFFzN7Oyf1JSrCYIxJGWvL7vtxUFK3Efbc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbgIHSaG (ORCPT
+        id S1731392AbgIHQJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:09:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731399AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:25 -0400
+        id S1731059AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 907412472E;
-        Tue,  8 Sep 2020 15:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53003224DF;
+        Tue,  8 Sep 2020 15:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579649;
-        bh=6qJvNmDRGejfAYEx5lKKBTmGe5r4//5E/gkQqoHT9U4=;
+        s=default; t=1599579439;
+        bh=ZVS6G0he7Yx5Wf0LqIjPdrGG+io5wAJnYSIi3O3FXLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E2Jy/8EQ/b2q0ul7PYg7oOvHdEekXFfBsNMRr9A3FJwgIHqdoBfc1FpXBIzHawlhV
-         Alf/aigqYMVDimkL+n0ILZaKRAowUGbLLnpEMkBhnY4x0NPsmffatC+HThoPP656gh
-         b7JZpy/MI1fAusFJIDbF/4sXWmRcIPIF/8k6enZo=
+        b=09PI6jqgdyQtC4/iaF9R76nHc08ebRT/27Q88hTP/vXGUwI2A0+So7Y7JRz8oxId2
+         6RLMybP7ETjuPGvQw75RK1wKei4TWWKD9VBEvvRr19qUDZFY9iBQTAe6/73KJQ4nFR
+         ILHGbs6CmR51L9mXnmiRdofNu2bTgIP7/9fZHlZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.8 164/186] drm/amdgpu: Specify get_argument function for ci_smu_funcs
-Date:   Tue,  8 Sep 2020 17:25:06 +0200
-Message-Id: <20200908152249.612808835@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 048/186] rxrpc: Make rxrpc_kernel_get_srtt() indicate validity
+Date:   Tue,  8 Sep 2020 17:23:10 +0200
+Message-Id: <20200908152243.993277131@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,47 +59,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Raghuraman <sandy.8925@gmail.com>
+From: David Howells <dhowells@redhat.com>
 
-commit f7b2e34b4afb8d712913dc199d3292ea9e078637 upstream.
+[ Upstream commit 1d4adfaf65746203861c72d9d78de349eb97d528 ]
 
-Starting in Linux 5.8, the graphics and memory clock frequency were not being
-reported for CIK cards. This is a regression, since they were reported correctly
-in Linux 5.7.
+Fix rxrpc_kernel_get_srtt() to indicate the validity of the returned
+smoothed RTT.  If we haven't had any valid samples yet, the SRTT isn't
+useful.
 
-After investigation, I discovered that the smum_send_msg_to_smc() function,
-attempts to call the corresponding get_argument() function of ci_smu_funcs.
-However, the get_argument() function is not defined in ci_smu_funcs.
-
-This patch fixes the bug by specifying the correct get_argument() function.
-
-Fixes: a0ec225633d9f6 ("drm/amd/powerplay: unified interfaces for message issuing and response checking")
-Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: c410bf01933e ("rxrpc: Fix the excessive initial retransmission timeout")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/afs/fs_probe.c       |  4 ++--
+ fs/afs/vl_probe.c       |  4 ++--
+ include/net/af_rxrpc.h  |  2 +-
+ net/rxrpc/peer_object.c | 16 +++++++++++++---
+ 4 files changed, 18 insertions(+), 8 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-@@ -37,6 +37,7 @@
- #include "cgs_common.h"
- #include "atombios.h"
- #include "pppcielanes.h"
-+#include "smu7_smumgr.h"
+diff --git a/fs/afs/fs_probe.c b/fs/afs/fs_probe.c
+index 5d9ef517cf816..e7e98ad63a91a 100644
+--- a/fs/afs/fs_probe.c
++++ b/fs/afs/fs_probe.c
+@@ -161,8 +161,8 @@ responded:
+ 		}
+ 	}
  
- #include "smu/smu_7_0_1_d.h"
- #include "smu/smu_7_0_1_sh_mask.h"
-@@ -2948,6 +2949,7 @@ const struct pp_smumgr_func ci_smu_funcs
- 	.request_smu_load_specific_fw = NULL,
- 	.send_msg_to_smc = ci_send_msg_to_smc,
- 	.send_msg_to_smc_with_parameter = ci_send_msg_to_smc_with_parameter,
-+	.get_argument = smu7_get_argument,
- 	.download_pptable_settings = NULL,
- 	.upload_pptable_settings = NULL,
- 	.get_offsetof = ci_get_offsetof,
+-	rtt_us = rxrpc_kernel_get_srtt(call->net->socket, call->rxcall);
+-	if (rtt_us < server->probe.rtt) {
++	if (rxrpc_kernel_get_srtt(call->net->socket, call->rxcall, &rtt_us) &&
++	    rtt_us < server->probe.rtt) {
+ 		server->probe.rtt = rtt_us;
+ 		server->rtt = rtt_us;
+ 		alist->preferred = index;
+diff --git a/fs/afs/vl_probe.c b/fs/afs/vl_probe.c
+index e3aa013c21779..081b7e5b13f58 100644
+--- a/fs/afs/vl_probe.c
++++ b/fs/afs/vl_probe.c
+@@ -92,8 +92,8 @@ responded:
+ 		}
+ 	}
+ 
+-	rtt_us = rxrpc_kernel_get_srtt(call->net->socket, call->rxcall);
+-	if (rtt_us < server->probe.rtt) {
++	if (rxrpc_kernel_get_srtt(call->net->socket, call->rxcall, &rtt_us) &&
++	    rtt_us < server->probe.rtt) {
+ 		server->probe.rtt = rtt_us;
+ 		alist->preferred = index;
+ 		have_result = true;
+diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
+index 91eacbdcf33d2..f6abcc0bbd6e7 100644
+--- a/include/net/af_rxrpc.h
++++ b/include/net/af_rxrpc.h
+@@ -59,7 +59,7 @@ bool rxrpc_kernel_abort_call(struct socket *, struct rxrpc_call *,
+ void rxrpc_kernel_end_call(struct socket *, struct rxrpc_call *);
+ void rxrpc_kernel_get_peer(struct socket *, struct rxrpc_call *,
+ 			   struct sockaddr_rxrpc *);
+-u32 rxrpc_kernel_get_srtt(struct socket *, struct rxrpc_call *);
++bool rxrpc_kernel_get_srtt(struct socket *, struct rxrpc_call *, u32 *);
+ int rxrpc_kernel_charge_accept(struct socket *, rxrpc_notify_rx_t,
+ 			       rxrpc_user_attach_call_t, unsigned long, gfp_t,
+ 			       unsigned int);
+diff --git a/net/rxrpc/peer_object.c b/net/rxrpc/peer_object.c
+index ca29976bb193e..68396d0520525 100644
+--- a/net/rxrpc/peer_object.c
++++ b/net/rxrpc/peer_object.c
+@@ -502,11 +502,21 @@ EXPORT_SYMBOL(rxrpc_kernel_get_peer);
+  * rxrpc_kernel_get_srtt - Get a call's peer smoothed RTT
+  * @sock: The socket on which the call is in progress.
+  * @call: The call to query
++ * @_srtt: Where to store the SRTT value.
+  *
+- * Get the call's peer smoothed RTT.
++ * Get the call's peer smoothed RTT in uS.
+  */
+-u32 rxrpc_kernel_get_srtt(struct socket *sock, struct rxrpc_call *call)
++bool rxrpc_kernel_get_srtt(struct socket *sock, struct rxrpc_call *call,
++			   u32 *_srtt)
+ {
+-	return call->peer->srtt_us >> 3;
++	struct rxrpc_peer *peer = call->peer;
++
++	if (peer->rtt_count == 0) {
++		*_srtt = 1000000; /* 1S */
++		return false;
++	}
++
++	*_srtt = call->peer->srtt_us >> 3;
++	return true;
+ }
+ EXPORT_SYMBOL(rxrpc_kernel_get_srtt);
+-- 
+2.25.1
+
 
 
