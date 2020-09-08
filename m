@@ -2,54 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C23C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0880EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80F6E205CB
+	by mail.kernel.org (Postfix) with ESMTP id B7542206B8
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1599582308;
-	bh=aQgEJmdwFScVGUetRjWzLmFiuGLfik9Jz5FZpWYKO6s=;
+	bh=Ul1ge7AJKE/v1VgH/yt3dlwsH7LrnJcVrQYexuK4AFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=18N2Qw2E78xTgUoXaEhX8wXF2dcDCzdNAlrrrJ65ibePzpA1DO1IwMnSzxFKBs+dd
-	 wkgrMgKm1BLHaSDK0+ZX+/1jaMc4fNDB2nteBIJU6KLX85d0gwQ8oSrF55n0wdYRNb
-	 gOrlNAqPbJFQSrAgnqVwbTGn7APG22LZsxSLMqOs=
+	b=F7W1/CykstdzcxzC69nQ5mMydoMcgF+GgnZN6mPoLD9C4ePg0+nhkHFns4GoFSjs9
+	 5z7na9zmh3qShMPhgIsqPQKoIUPFBs+aoOQ4yFLjCxhEJCZ/bvXqBDCAh/cTQF7jpq
+	 XHypnoF89ljFnswlF0yJA4Z1p7lVM+kWZdqVW87k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731509AbgIHQY4 (ORCPT
+        id S1731772AbgIHQXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:24:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731512AbgIHQLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:55 -0400
+        id S1731138AbgIHQLU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B010B24746;
-        Tue,  8 Sep 2020 15:50:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0ED92247F8;
+        Tue,  8 Sep 2020 15:42:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580245;
-        bh=aQgEJmdwFScVGUetRjWzLmFiuGLfik9Jz5FZpWYKO6s=;
+        s=default; t=1599579774;
+        bh=Ul1ge7AJKE/v1VgH/yt3dlwsH7LrnJcVrQYexuK4AFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DgcPs+lnk0CnlH+GX3vgc+t8/57UdH0fEAnFHhsM4bFJEA7z7njnIUL0D2DsIQfav
-         tNCz2xJku1vGT3J1jLkabYk9NqFttk2TiidQsPva0vmJ00IQNnSt0S5zvucUzuGDYC
-         txLQ76pmKTJr+Aw+FZ9X+QCGYxWiSSkoRNhCSQis=
+        b=QYdCjfjWGe6genx4qw+1LzPjjoF3v0ypdebiFHwjVnqF+t84z9e7iuteFR1Ze+yI/
+         iywhfDKhMxoz7HjPZ813nQRr8r9u2fcwHDA/tZqUZdojALZuYerox0eHxd4JHSBzBk
+         0nAXDsOWbt/mmZVuWe1A7uXI8huWhbkL3TFQkIKg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himadri Pandya <himadrispandya@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 88/88] net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
-Date:   Tue,  8 Sep 2020 17:26:29 +0200
-Message-Id: <20200908152225.610715859@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 029/129] MIPS: mm: BMIPS5000 has inclusive physical caches
+Date:   Tue,  8 Sep 2020 17:24:30 +0200
+Message-Id: <20200908152231.143076933@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,34 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Himadri Pandya <himadrispandya@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit a092b7233f0e000cc6f2c71a49e2ecc6f917a5fc upstream.
+[ Upstream commit dbfc95f98f0158958d1f1e6bf06d74be38dbd821 ]
 
-The buffer size is 2 Bytes and we expect to receive the same amount of
-data. But sometimes we receive less data and run into uninit-was-stored
-issue upon read. Hence modify the error check on the return value to match
-with the buffer size as a prevention.
+When the BMIPS generic cpu-feature-overrides.h file was introduced,
+cpu_has_inclusive_caches/MIPS_CPU_INCLUSIVE_CACHES was not set for
+BMIPS5000 CPUs. Correct this when we have initialized the MIPS secondary
+cache successfully.
 
-Reported-and-tested by: syzbot+a7e220df5a81d1ab400e@syzkaller.appspotmail.com
-Signed-off-by: Himadri Pandya <himadrispandya@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f337967d6d87 ("MIPS: BMIPS: Add cpu-feature-overrides.h")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/asix_common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/mm/c-r4k.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/usb/asix_common.c
-+++ b/drivers/net/usb/asix_common.c
-@@ -309,7 +309,7 @@ int asix_read_phy_addr(struct usbnet *de
- 
- 	netdev_dbg(dev->net, "asix_get_phy_addr()\n");
- 
--	if (ret < 0) {
-+	if (ret < 2) {
- 		netdev_err(dev->net, "Error reading PHYID register: %02x\n", ret);
- 		goto out;
- 	}
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+index 89b9c851d8227..c4785a456dedc 100644
+--- a/arch/mips/mm/c-r4k.c
++++ b/arch/mips/mm/c-r4k.c
+@@ -1676,7 +1676,11 @@ static void setup_scache(void)
+ 				printk("MIPS secondary cache %ldkB, %s, linesize %d bytes.\n",
+ 				       scache_size >> 10,
+ 				       way_string[c->scache.ways], c->scache.linesz);
++
++				if (current_cpu_type() == CPU_BMIPS5000)
++					c->options |= MIPS_CPU_INCLUSIVE_CACHES;
+ 			}
++
+ #else
+ 			if (!(c->scache.flags & MIPS_CACHE_NOT_PRESENT))
+ 				panic("Dunno how to handle MIPS32 / MIPS64 second level cache");
+-- 
+2.25.1
+
 
 
