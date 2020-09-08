@@ -2,197 +2,249 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF57C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705A9C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 239E320658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594987;
-	bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIyzzMfw56O2ink/3khldXQpOHfnf7Wn86UXYKRfYnSgSQJNYk99eGfejYe978YGM
-	 WWWgG85b4OruyRS4GbJ9z6rGvzJckzvMQvb/AMvHS/nRdhX251/Uj6ZLhgkuj/mPsF
-	 EFvs/sNo89AWTgn/S3sQy0rbCOEZuQPkMwgVLjjw=
+	by mail.kernel.org (Postfix) with ESMTP id 36F2620658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SVXTsDpS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731872AbgIHT4V (ORCPT
+        id S1732421AbgIHT4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730574AbgIHPgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:36:50 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F92322583;
-        Tue,  8 Sep 2020 15:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579318;
-        bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXi/2jqAj9tub5FZfXJVwLhP3QwYdai6CjgXQYzN/S4jsTTaeHWTf8Q4F3Uy7AYHE
-         pZLMX604zwXGklyox+GxQ9SaTbCP/I0S30/e9DaaGf2lTEDvS2OM4SXBeg3PFWCEsP
-         Dzi73WFyKVAKR6b0RFVYukDwzKt2zqHpGKkc79Rw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 028/186] s390: dont trace preemption in percpu macros
-Date:   Tue,  8 Sep 2020 17:22:50 +0200
-Message-Id: <20200908152243.024767797@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:56:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:60750 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730560AbgIHPgp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:36:45 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 088FYRJn136537;
+        Tue, 8 Sep 2020 15:35:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=15pWPW/Ca41cmRWLeuMPyWbmipPwtweDunpubNIoPPI=;
+ b=SVXTsDpSFwpPl2YQu4pQGURdmipzP4knX+vFsNr4Xf+nYLSlX4XYR3f5uayYcU6bwbQh
+ rcWTxvH+qvnR5sfSliFIEg2QsTwDOZNTnXCp34PVu8bDs8lF5qFuQHDBAgxTtE3hUiFm
+ EWHwEyXn4VAidUm5YyZA6h8Lnix8nXCgpJXSLuEMSUsz36PEPYCLv3TjVZDvzUt+/v8R
+ uK1J8X+kMM8nCHSLIkuXWdDSsCkesnZ0a3wwnjae04wdh9PSq3WECNNilly14CPKB0pA
+ zasqVOZyIhdi6ZesycNYUEZ7FmfAFl+ZwoK+c/Cv7TIn9f9n0wpdei+xbWpluqBLeeDC Mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 33c2mkvaj2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 08 Sep 2020 15:35:32 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 088FTXks100262;
+        Tue, 8 Sep 2020 15:33:32 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 33dacj1nk1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 08 Sep 2020 15:33:32 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 088FXTdr008498;
+        Tue, 8 Sep 2020 15:33:30 GMT
+Received: from [10.175.177.246] (/10.175.177.246)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 08 Sep 2020 08:33:29 -0700
+Subject: Re: [PATCH v4 11/23] device-dax: Kill dax_kmem_res
+To:     David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        peterz@infradead.org, ard.biesheuvel@linaro.org,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <159643100485.4062302.976628339798536960.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <a3ad70a2-77a8-d50e-f372-731a8e27c03b@redhat.com>
+From:   Joao Martins <joao.m.martins@oracle.com>
+Message-ID: <17686fcc-202e-0982-d0de-54d5349cfb5d@oracle.com>
+Date:   Tue, 8 Sep 2020 16:33:25 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <a3ad70a2-77a8-d50e-f372-731a8e27c03b@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 suspectscore=1 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9738 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 priorityscore=1501
+ phishscore=0 adultscore=0 bulkscore=0 clxscore=1011 mlxlogscore=999
+ malwarescore=0 suspectscore=1 lowpriorityscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+[Sorry for the late response]
 
-[ Upstream commit 1196f12a2c960951d02262af25af0bb1775ebcc2 ]
+On 8/21/20 11:06 AM, David Hildenbrand wrote:
+> On 03.08.20 07:03, Dan Williams wrote:
+>> @@ -37,109 +45,94 @@ int dev_dax_kmem_probe(struct device *dev)
+>>  	 * could be mixed in a node with faster memory, causing
+>>  	 * unavoidable performance issues.
+>>  	 */
+>> -	numa_node = dev_dax->target_node;
+>>  	if (numa_node < 0) {
+>>  		dev_warn(dev, "rejecting DAX region with invalid node: %d\n",
+>>  				numa_node);
+>>  		return -EINVAL;
+>>  	}
+>>  
+>> -	/* Hotplug starting at the beginning of the next block: */
+>> -	kmem_start = ALIGN(range->start, memory_block_size_bytes());
+>> -
+>> -	kmem_size = range_len(range);
+>> -	/* Adjust the size down to compensate for moving up kmem_start: */
+>> -	kmem_size -= kmem_start - range->start;
+>> -	/* Align the size down to cover only complete blocks: */
+>> -	kmem_size &= ~(memory_block_size_bytes() - 1);
+>> -	kmem_end = kmem_start + kmem_size;
+>> -
+>> -	new_res_name = kstrdup(dev_name(dev), GFP_KERNEL);
+>> -	if (!new_res_name)
+>> +	res_name = kstrdup(dev_name(dev), GFP_KERNEL);
+>> +	if (!res_name)
+>>  		return -ENOMEM;
+>>  
+>> -	/* Region is permanently reserved if hotremove fails. */
+>> -	new_res = request_mem_region(kmem_start, kmem_size, new_res_name);
+>> -	if (!new_res) {
+>> -		dev_warn(dev, "could not reserve region [%pa-%pa]\n",
+>> -			 &kmem_start, &kmem_end);
+>> -		kfree(new_res_name);
+>> +	res = request_mem_region(range.start, range_len(&range), res_name);
+> 
+> I think our range could be empty after aligning. I assume
+> request_mem_region() would check that, but maybe we could report a
+> better error/warning in that case.
+> 
+dax_kmem_range() already returns a memory-block-aligned @range but
+IIUC request_mem_region() isn't checking for that. Having said that
+the returned @res wouldn't be different from the passed range.start.
 
-Since commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context}
-to per-cpu variables") the lockdep code itself uses percpu variables. This
-leads to recursions because the percpu macros are calling preempt_enable()
-which might call trace_preempt_on().
+>>  	/*
+>>  	 * Ensure that future kexec'd kernels will not treat this as RAM
+>>  	 * automatically.
+>>  	 */
+>> -	rc = add_memory_driver_managed(numa_node, new_res->start,
+>> -				       resource_size(new_res), kmem_name);
+>> +	rc = add_memory_driver_managed(numa_node, res->start,
+>> +				       resource_size(res), kmem_name);
+>> +
+>> +	res->flags |= IORESOURCE_BUSY;
+> 
+> Hm, I don't think that's correct. Any specific reason why to mark the
+> not-added, unaligned parts BUSY? E.g., walk_system_ram_range() could
+> suddenly stumble over it - and e.g., similarly kexec code when trying to
+> find memory for placing kexec images. I think we should leave this
+> !BUSY, just as it is right now.
+> 
+Agreed.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+>>  	if (rc) {
+>> -		release_resource(new_res);
+>> -		kfree(new_res);
+>> -		kfree(new_res_name);
+>> +		release_mem_region(range.start, range_len(&range));
+>> +		kfree(res_name);
+>>  		return rc;
+>>  	}
+>> -	dev_dax->dax_kmem_res = new_res;
+>> +
+>> +	dev_set_drvdata(dev, res_name);
+>>  
+>>  	return 0;
+>>  }
+>>  
+>>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>> -static int dev_dax_kmem_remove(struct device *dev)
+>> +static void dax_kmem_release(struct dev_dax *dev_dax)
+>>  {
+>> -	struct dev_dax *dev_dax = to_dev_dax(dev);
+>> -	struct resource *res = dev_dax->dax_kmem_res;
+>> -	resource_size_t kmem_start = res->start;
+>> -	resource_size_t kmem_size = resource_size(res);
+>> -	const char *res_name = res->name;
+>>  	int rc;
+>> +	struct device *dev = &dev_dax->dev;
+>> +	const char *res_name = dev_get_drvdata(dev);
+>> +	struct range range = dax_kmem_range(dev_dax);
+>>  
+>>  	/*
+>>  	 * We have one shot for removing memory, if some memory blocks were not
+>>  	 * offline prior to calling this function remove_memory() will fail, and
+>>  	 * there is no way to hotremove this memory until reboot because device
+>> -	 * unbind will succeed even if we return failure.
+>> +	 * unbind will proceed regardless of the remove_memory result.
+>>  	 */
+>> -	rc = remove_memory(dev_dax->target_node, kmem_start, kmem_size);
+>> -	if (rc) {
+>> -		any_hotremove_failed = true;
+>> -		dev_err(dev,
+>> -			"DAX region %pR cannot be hotremoved until the next reboot\n",
+>> -			res);
+>> -		return rc;
+>> +	rc = remove_memory(dev_dax->target_node, range.start, range_len(&range));
+>> +	if (rc == 0) {
+> 
+> if (!rc) ?
+> 
+Better off would be to keep the old order:
 
-diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
-index 50b4ce8cddfdc..918f0ba4f4d20 100644
---- a/arch/s390/include/asm/percpu.h
-+++ b/arch/s390/include/asm/percpu.h
-@@ -29,7 +29,7 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ old__, new__, prev__;				\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	prev__ = *ptr__;						\
- 	do {								\
-@@ -37,7 +37,7 @@
- 		new__ = old__ op (val);					\
- 		prev__ = cmpxchg(ptr__, old__, new__);			\
- 	} while (prev__ != old__);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	new__;								\
- })
- 
-@@ -68,7 +68,7 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
- 	if (__builtin_constant_p(val__) &&				\
- 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
-@@ -84,7 +84,7 @@
- 			: [val__] "d" (val__)				\
- 			: "cc");					\
- 	}								\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- }
- 
- #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
-@@ -95,14 +95,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();						\
- 	old__ + val__;							\
- })
- 
-@@ -114,14 +114,14 @@
- 	typedef typeof(pcp) pcp_op_T__; 				\
- 	pcp_op_T__ val__ = (val);					\
- 	pcp_op_T__ old__, *ptr__;					\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
- 	asm volatile(							\
- 		op "    %[old__],%[val__],%[ptr__]\n"			\
- 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
- 		: [val__] "d" (val__)					\
- 		: "cc");						\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- }
- 
- #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
-@@ -136,10 +136,10 @@
- 	typedef typeof(pcp) pcp_op_T__;					\
- 	pcp_op_T__ ret__;						\
- 	pcp_op_T__ *ptr__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = cmpxchg(ptr__, oval, nval);				\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -152,10 +152,10 @@
- ({									\
- 	typeof(pcp) *ptr__;						\
- 	typeof(pcp) ret__;						\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	ptr__ = raw_cpu_ptr(&(pcp));					\
- 	ret__ = xchg(ptr__, nval);					\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
-@@ -171,11 +171,11 @@
- 	typeof(pcp1) *p1__;						\
- 	typeof(pcp2) *p2__;						\
- 	int ret__;							\
--	preempt_disable();						\
-+	preempt_disable_notrace();					\
- 	p1__ = raw_cpu_ptr(&(pcp1));					\
- 	p2__ = raw_cpu_ptr(&(pcp2));					\
- 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
--	preempt_enable();						\
-+	preempt_enable_notrace();					\
- 	ret__;								\
- })
- 
--- 
-2.25.1
+	if (rc) {
+		any_hotremove_failed = true;
+		dev_err(dev, "%#llx-%#llx cannot be hotremoved until the next reboot\n",
+				range.start, range.end);
+	        return;
+	}
+
+	release_mem_region(range.start, range_len(&range));
+	dev_set_drvdata(dev, NULL);
+	kfree(res_name);
+	return;
 
 
+>> +		release_mem_region(range.start, range_len(&range));
+> 
+> remove_memory() does a release_mem_region_adjustable(). Don't you
+> actually want to release the *unaligned* region you requested?
+> 
+Isn't it what we're doing here?
+(The release_mem_region_adjustable() is using the same
+dax_kmem-aligned range and there's no split/adjust)
 
+Meaning right now (+ parent marked as !BUSY), and if I am understanding
+this correctly:
+
+request_mem_region(range.start, range_len)
+   __request_region(iomem_res, range.start, range_len) -> alloc @parent
+add_memory_driver_managed(parent.start, resource_size(parent))
+   __request_region(parent.start, resource_size(parent)) -> alloc @child
+
+[...]
+
+remove_memory(range.start, range_len)
+ request_mem_region_adjustable(range.start, range_len)
+  __release_region(range.start, range_len) -> remove @child
+
+release_mem_region(range.start, range_len)
+  __release_region(range.start, range_len) -> doesn't remove @parent because !BUSY?
+
+The add/removal of this relies on !BUSY. But now I am wondering if the parent remaining
+unreleased is deliberate even on CONFIG_MEMORY_HOTREMOVE=y.
+
+	Joao
