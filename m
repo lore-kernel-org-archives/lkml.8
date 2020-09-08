@@ -2,166 +2,170 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87067C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD5EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD0420658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599595150;
-	bh=DVKJ29QHAzz4qU2F/xNhd+abhHFEJS1721McD0/25Pw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S4/M+ooRJx3jSHtMYAdmaEqqWML/K3eNigWxzl0wVgKWEb3+GYphGtaQ49mItngto
-	 6kW1GIemovlV/ge0AuvTm7faIIsS38xZl59JqCvi1Rudn7n3mI7771EJ05fEQ1Itx0
-	 kjE1MS90JYiWkTPmvA/NfBefnGouEvSKpXxjjOIk=
+	by mail.kernel.org (Postfix) with ESMTP id 6E35F20658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YBoGuY78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731519AbgIHT7I (ORCPT
+        id S1731859AbgIHT7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:59:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730157AbgIHPfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:59:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22152 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730502AbgIHPfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:35:39 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C03C2245F;
-        Tue,  8 Sep 2020 15:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579277;
-        bh=DVKJ29QHAzz4qU2F/xNhd+abhHFEJS1721McD0/25Pw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2wHrl05yZnjZgvM12nSq0tAMHjjqVwh/gbLcwog0s+2HJEiV6Gi31CvK070PlOTPX
-         XMiLDssqSY2K+LXXSVHzX4p8QL1inBM4jyXntq93ZM/J4FF48TQaJv76t9Wm+Ih3YF
-         4RoKFddqSUQLklX8pydiAV2q2MWgeYQC0TYmzG2E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kalyan Thota <kalyan_t@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 003/186] drm/msm/dpu: Fix reservation failures in modeset
-Date:   Tue,  8 Sep 2020 17:22:25 +0200
-Message-Id: <20200908152241.819133349@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088E34OD115203;
+        Tue, 8 Sep 2020 10:28:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=hnEPJWjQehAapkjhT3/hyce7YGCgtDOCxns361usuB4=;
+ b=YBoGuY78haDj7xcAyBnfyvWFGNSLjAgXkgG5hLXtn0DzqrUI1tPjJS4tP6UPwQWW8dS4
+ SnHDWePPd91JjBj1c+IJEn07cnUmi07BzGhFi/MsllKWk7fnSi71UEGS9ssECVgL+R7f
+ p8DR/MTUObqnR7OQBY73aPxlgHjTVspBn+Sz40ZZRwxZlBLkAgTmN01ZEfrFmsoIJGnu
+ 7Nz7S7aDvG49R6PuBfF1cOi9Xxa8hYH6V1snbul9vFcEfcDFa9op8KhtbwQzu75R6LLl
+ QnZ3tySvAbOlzq7IihcOEpojbNHqy9+kjCR7TSsXUnRuO2/gpjjLBerMamDt9FRwf+8P Og== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33eaqn2mxu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:28:22 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088EPodA005497;
+        Tue, 8 Sep 2020 14:28:19 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03fra.de.ibm.com with ESMTP id 33c2a8a5nb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 14:28:19 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088ESHTg15008194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 14:28:17 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6D2A6A404D;
+        Tue,  8 Sep 2020 14:28:17 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE2D5A4057;
+        Tue,  8 Sep 2020 14:28:16 +0000 (GMT)
+Received: from [9.145.145.148] (unknown [9.145.145.148])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  8 Sep 2020 14:28:16 +0000 (GMT)
+Subject: Re: WARNING: refcount bug in smc_release (3)
+To:     syzbot <syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, ubraun@linux.ibm.com
+References: <00000000000061311205aec85935@google.com>
+From:   Karsten Graul <kgraul@linux.ibm.com>
+Organization: IBM Deutschland Research & Development GmbH
+Message-ID: <910efbe3-4764-4e6a-99bf-3ba1bf72b538@linux.ibm.com>
+Date:   Tue, 8 Sep 2020 16:28:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <00000000000061311205aec85935@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=747
+ spamscore=0 mlxscore=0 suspectscore=0 bulkscore=0 adultscore=0
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2009080133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalyan Thota <kalyan_t@codeaurora.org>
+#syz fix: net/smc: fix sock refcounting in case of termination
 
-[ Upstream commit ccc862b957c6413b008fbe458034372847992d7f ]
+On 08/09/2020 09:33, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=114602f2900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8b963fe6ec74e5dac8d7
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+8b963fe6ec74e5dac8d7@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> refcount_t: addition on 0; use-after-free.
+> WARNING: CPU: 1 PID: 28422 at lib/refcount.c:25 refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 28422 Comm: syz-executor.3 Not tainted 5.9.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x4a kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+>  exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+> RIP: 0010:refcount_warn_saturate+0x169/0x1e0 lib/refcount.c:25
+> Code: 07 31 ff 89 de e8 97 d2 d8 fd 84 db 0f 85 36 ff ff ff e8 4a d6 d8 fd 48 c7 c7 a0 da 93 88 c6 05 43 e5 11 07 01 e8 39 e7 a9 fd <0f> 0b e9 17 ff ff ff e8 2b d6 d8 fd 0f b6 1d 28 e5 11 07 31 ff 89
+> RSP: 0018:ffffc90017fafdd8 EFLAGS: 00010286
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: ffff8880477d43c0 RSI: ffffffff815dafc7 RDI: fffff52002ff5fad
+> RBP: 0000000000000002 R08: 0000000000000001 R09: ffff8880ae720f8b
+> R10: 0000000000000000 R11: 0000000000000001 R12: ffff888084ef0540
+> R13: ffff88800011aa80 R14: ffff888084ef0558 R15: 0000000000000000
+>  refcount_add include/linux/refcount.h:204 [inline]
+>  refcount_inc include/linux/refcount.h:241 [inline]
+>  sock_hold include/net/sock.h:692 [inline]
+>  smc_release+0x41d/0x490 net/smc/af_smc.c:180
+>  __sock_release+0xcd/0x280 net/socket.c:596
+>  sock_close+0x18/0x20 net/socket.c:1277
+>  __fput+0x285/0x920 fs/file_table.c:281
+>  task_work_run+0xdd/0x190 kernel/task_work.c:141
+>  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>  exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+>  exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+>  syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x416f01
+> Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> RSP: 002b:000000000169fbe0 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000416f01
+> RDX: 0000000000000000 RSI: 000000000000097b RDI: 0000000000000004
+> RBP: 0000000000000001 R08: 0000000000d9297a R09: 0000000000d9297e
+> R10: 000000000169fcd0 R11: 0000000000000293 R12: 000000000118d940
+> R13: 000000000118d940 R14: ffffffffffffffff R15: 000000000118cfec
+> Kernel Offset: disabled
+> Rebooting in 86400 seconds..
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
 
-In TEST_ONLY commit, rm global_state will duplicate the
-object and request for new reservations, once they pass
-then the new state will be swapped with the old and will
-be available for the Atomic Commit.
-
-This patch fixes some of missing links in the resource
-reservation sequence mentioned above.
-
-1) Creation of duplicate state in test_only commit (Rob)
-2) Allocate and release the resources on every modeset.
-3) Avoid allocation only when active is false.
-
-In a modeset operation, swap state happens well before
-disable. Hence clearing reservations in disable will
-cause failures in modeset enable.
-
-Allow reservations to be cleared/allocated before swap,
-such that only newly committed resources are pushed to HW.
-
-Changes in v1:
- - Move the rm release to atomic_check.
- - Ensure resource allocation and free happens when active
-   is not changed i.e only when mode is changed.(Rob)
-
-Changes in v2:
- - Handle dpu_kms_get_global_state API failure as it may
-   return EDEADLK (swboyd).
-
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index 0946a86b37b28..c0cd936314e66 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -586,7 +586,10 @@ static int dpu_encoder_virt_atomic_check(
- 	dpu_kms = to_dpu_kms(priv->kms);
- 	mode = &crtc_state->mode;
- 	adj_mode = &crtc_state->adjusted_mode;
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
-+	global_state = dpu_kms_get_global_state(crtc_state->state);
-+	if (IS_ERR(global_state))
-+		return PTR_ERR(global_state);
-+
- 	trace_dpu_enc_atomic_check(DRMID(drm_enc));
- 
- 	/*
-@@ -621,12 +624,15 @@ static int dpu_encoder_virt_atomic_check(
- 	/* Reserve dynamic resources now. */
- 	if (!ret) {
- 		/*
--		 * Avoid reserving resources when mode set is pending. Topology
--		 * info may not be available to complete reservation.
-+		 * Release and Allocate resources on every modeset
-+		 * Dont allocate when active is false.
- 		 */
- 		if (drm_atomic_crtc_needs_modeset(crtc_state)) {
--			ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
--					drm_enc, crtc_state, topology);
-+			dpu_rm_release(global_state, drm_enc);
-+
-+			if (!crtc_state->active_changed || crtc_state->active)
-+				ret = dpu_rm_reserve(&dpu_kms->rm, global_state,
-+						drm_enc, crtc_state, topology);
- 		}
- 	}
- 
-@@ -1175,7 +1181,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 	struct dpu_encoder_virt *dpu_enc = NULL;
- 	struct msm_drm_private *priv;
- 	struct dpu_kms *dpu_kms;
--	struct dpu_global_state *global_state;
- 	int i = 0;
- 
- 	if (!drm_enc) {
-@@ -1194,7 +1199,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	priv = drm_enc->dev->dev_private;
- 	dpu_kms = to_dpu_kms(priv->kms);
--	global_state = dpu_kms_get_existing_global_state(dpu_kms);
- 
- 	trace_dpu_enc_disable(DRMID(drm_enc));
- 
-@@ -1224,8 +1228,6 @@ static void dpu_encoder_virt_disable(struct drm_encoder *drm_enc)
- 
- 	DPU_DEBUG_ENC(dpu_enc, "encoder disabled\n");
- 
--	dpu_rm_release(global_state, drm_enc);
--
- 	mutex_unlock(&dpu_enc->enc_lock);
- }
- 
 -- 
-2.25.1
+Karsten
 
-
-
+(I'm a dude)
