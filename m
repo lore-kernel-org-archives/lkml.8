@@ -2,105 +2,109 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BEAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20398207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594800;
-	bh=g+Y6OJgjtiO5LtwGG8TxanGgSG6X9uTXvfM7dtbP7T4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IzlbFr96XvfjbJNa7X35h6X3X5D5gh5vO+oPrM1Z6pioMmcjnSijjj0m/7YPbTcSH
-	 S6KwYFYvwAmBJWEE6ECF+KFkSrKnANh/+fdxLk/IUqK2ts/LJZOQsx+bXGdkBXPSDx
-	 c84zUM2iDYy4eHdSzcnpwvG+hzUU3y2aZa3QMY0M=
+	by mail.kernel.org (Postfix) with ESMTP id A840720768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbgIHTxE (ORCPT
+        id S1731610AbgIHTxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:53:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730678AbgIHPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:48:05 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D735024824;
-        Tue,  8 Sep 2020 15:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579855;
-        bh=g+Y6OJgjtiO5LtwGG8TxanGgSG6X9uTXvfM7dtbP7T4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rXM6YtazehkDsYIp9Sp/nLSZBtHxgV7rvovVcJCGiUME7BotACMbA5KPfZ4W8io7N
-         RDDgVYz3ydgAyF85YD+U2Er/XPKpGwZ9BJ6Y9cKbDH/W2BOy98l+LgEgR+ZqXWZEG5
-         zbCso3bcOuLu5iIEd/tPGuXzs/xUYXKaothnu2WA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        Tue, 8 Sep 2020 15:53:34 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46598 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730662AbgIHTxR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:53:17 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 9157E1C0B87; Tue,  8 Sep 2020 21:53:11 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 21:53:11 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/129] drm/radeon: Prefer lower feedback dividers
-Date:   Tue,  8 Sep 2020 17:25:02 +0200
-Message-Id: <20200908152232.749853677@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+Subject: Re: [PATCH 4.19 41/88] net: ethernet: mlx4: Fix memory allocation in
+ mlx4_buddy_init()
+Message-ID: <20200908195311.GC6758@duo.ucw.cz>
+References: <20200908152221.082184905@linuxfoundation.org>
+ <20200908152223.178555420@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
+Content-Disposition: inline
+In-Reply-To: <20200908152223.178555420@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit fc8c70526bd30733ea8667adb8b8ffebea30a8ed ]
+--UPT3ojh+0CqEDtpF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Commit 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
-fixed screen flicker for HP Compaq nx9420 but breaks other laptops like
-Asus X50SL.
+Hi!
 
-Turns out we also need to favor lower feedback dividers.
+> On machines with much memory (> 2 TByte) and log_mtts_per_seg =3D=3D 0, a
+> max_order of 31 will be passed to mlx_buddy_init(), which results in
+> s =3D BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
+> kvmalloc_array() failure when it is converted to size_t.
+>=20
+>   mlx4_core 0000:b1:00.0: Failed to initialize memory region table, abort=
+ing
+>   mlx4_core: probe of 0000:b1:00.0 failed with error -12
+>=20
+> Fix this issue by changing the left shifting operand from a signed litera=
+l to
+> an unsigned one.
 
-Users confirmed this change fixes the regression and doesn't regress the
-original fix.
+Will we still have problems with > 4 TByte machines? Should the
+computation be done in u64?
 
-Fixes: 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
-BugLink: https://bugs.launchpad.net/bugs/1791312
-BugLink: https://bugs.launchpad.net/bugs/1861554
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/radeon/radeon_display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Best regards,
+									Pavel
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index f9f74150d0d73..e7c4e06bc7d4f 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -932,7 +932,7 @@ static void avivo_get_fb_ref_div(unsigned nom, unsigned den, unsigned post_div,
- 
- 	/* get matching reference and feedback divider */
- 	*ref_div = min(max(den/post_div, 1u), ref_div_max);
--	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
-+	*fb_div = max(nom * *ref_div * post_div / den, 1u);
- 
- 	/* limit fb divider to its maximum */
- 	if (*fb_div > fb_div_max) {
--- 
-2.25.1
+> Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand =
+adapters")
+> Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+> Signed-off-by: David S. Miller <davem@davemloft.net>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
+> +++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
+> @@ -114,7 +114,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, =
+int max_order)
+>  		goto err_out;
+> =20
+>  	for (i =3D 0; i <=3D buddy->max_order; ++i) {
+> -		s =3D BITS_TO_LONGS(1 << (buddy->max_order - i));
+> +		s =3D BITS_TO_LONGS(1UL << (buddy->max_order - i));
+>  		buddy->bits[i] =3D kvmalloc_array(s, sizeof(long), GFP_KERNEL | __GFP_=
+ZERO);
+>  		if (!buddy->bits[i])
+>  			goto err_out_free;
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--UPT3ojh+0CqEDtpF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1fhJwAKCRAw5/Bqldv6
+8rSiAJ0SDlKpMvw+OEk/HI9lrjlcK2+O6wCguY0eWqm2yogCIc5Ym9GDPYo7I2k=
+=xI+r
+-----END PGP SIGNATURE-----
+
+--UPT3ojh+0CqEDtpF--
