@@ -2,140 +2,99 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15AAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D29AC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 854222080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590504;
-	bh=YHqUTJhZOLOWSdR8o8KnGJz51BViWz7q6JqajmtEr1k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pqQ8283VK7aIF7IuGDHTl6W8cn03AfMTqTPOj/mt+u3tL8Ou6RW75iMiFpLbrx7OF
-	 LeiqDUqd5YDW51qrI9AOFwFnkuWRqIZben7aB6c0JUN7dsjqJPpzpJj1CHCc5OKkfz
-	 1etHjsRd4gFKuOHa/Uql3Ql8H0cVXw7AkVUZ2ix8=
+	by mail.kernel.org (Postfix) with ESMTP id 46D442080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:45:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="I4oOZtQZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731937AbgIHSld (ORCPT
+        id S1731952AbgIHSls (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:41:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731298AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:08:02 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B37D23F2B;
-        Tue,  8 Sep 2020 15:48:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580081;
-        bh=YHqUTJhZOLOWSdR8o8KnGJz51BViWz7q6JqajmtEr1k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kkfrVBN8g8bBQX6UceqCtuP/Qe1p/j9bjpWSIDpZ8nXsEG9FBZft4YPkxmcgq278L
-         pCXYKno0T41p12CgTKcHPX8v8khjarhhqpIQ80dtEkEoBwPw38J7rxjmSL5rp50NKZ
-         N0KbQec6OCPwTXv+daHwWVC3uHewKdlQpQGvWTJo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/88] netfilter: nf_tables: fix destination register zeroing
-Date:   Tue,  8 Sep 2020 17:25:25 +0200
-Message-Id: <20200908152222.280473336@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731672AbgIHSlX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:41:23 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8262C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:41:22 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id k15so11680234pfc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:41:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=4D/aBydAA1LQTR6RAnjefSXva1fBhHAgDj3nNAcVY8w=;
+        b=I4oOZtQZOez0KddVN7dcksQoTwbdyJ4OxlmiCG5XMety1n6ClKEETrC0Mu6j69oojo
+         stSVa0WCmNiybsE3lhIPzIe140XnltOX87QuxwhmqeK31Rlj3Lr3L15m3ZaIeYN3+rGx
+         4vRD+i8ONfe9NUCmyF0fFWG/+x1lIQnTMI57s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=4D/aBydAA1LQTR6RAnjefSXva1fBhHAgDj3nNAcVY8w=;
+        b=KLzfP1PxPTJatg2k5B2EJEz3Iys6QeNUIziKYHN2WptWjGYSc1wz4GcwaMivLg+hNi
+         VsItEE4+QadsP/YDrDccVzCSs7JQjlZURGce3Gtt2WIFfX2gcPzlNWSeg7cO4Kg02tuu
+         ghU0iO6uGQV9tmjFUKsOATRtLV6LVZSuGo6jFlfvm9YDDvJMCiCMpZx3XpO4MtQ0HN8t
+         AEmG74lCstDop0j/YHjgzW9ztYIQh+bxMNGJblc15JCJvShelT8BhLgEUk2QCqFWUcFI
+         Yo1VzY+fRM5XfVZrzociRuFxOjY5E0VYpLG7yI/FfgkzdIf+TWLUNDRu8IknPHkQr66P
+         UBgQ==
+X-Gm-Message-State: AOAM530K/WKrhRMeBGmu1Tzt7uI4tt5bX5MZpatDh5oRqHSiOg9tW0Ks
+        dtjXmQAnmvNEF1b4gEj6egF00w==
+X-Google-Smtp-Source: ABdhPJzBKbpQeJoUh8RreO5Yj8Dbux3oRM8iP1DbIG8FXrvBlSwVaq6nVzmBWzDYPKBUbXgVFwrAjg==
+X-Received: by 2002:a63:a55e:: with SMTP id r30mr88910pgu.61.1599590482423;
+        Tue, 08 Sep 2020 11:41:22 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s68sm148767pfb.91.2020.09.08.11.41.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:41:21 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Tycho Andersen <tycho@tycho.pizza>
+Cc:     Kees Cook <keescook@chromium.org>,
+        syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com,
+        "Tobin C . Harding" <me@tobin.cc>,
+        Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] seccomp: don't leak memory when filter install races
+Date:   Tue,  8 Sep 2020 11:40:57 -0700
+Message-Id: <159959037666.1186953.15847741084926154331.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200902014017.934315-1-tycho@tycho.pizza>
+References: <20200902014017.934315-1-tycho@tycho.pizza>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+On Tue, 1 Sep 2020 19:40:16 -0600, Tycho Andersen wrote:
+> In seccomp_set_mode_filter() with TSYNC | NEW_LISTENER, we first initialize
+> the listener fd, then check to see if we can actually use it later in
+> seccomp_may_assign_mode(), which can fail if anyone else in our thread
+> group has installed a filter and caused some divergence. If we can't, we
+> partially clean up the newly allocated file: we put the fd, put the file,
+> but don't actually clean up the *memory* that was allocated at
+> filter->notif. Let's clean that up too.
+> 
+> [...]
 
-[ Upstream commit 1e105e6afa6c3d32bfb52c00ffa393894a525c27 ]
+Applied, thanks!
 
-Following bug was reported via irc:
-nft list ruleset
-   set knock_candidates_ipv4 {
-      type ipv4_addr . inet_service
-      size 65535
-      elements = { 127.0.0.1 . 123,
-                   127.0.0.1 . 123 }
-      }
- ..
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . 123 }
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . udp dport }
+[1/2] seccomp: don't leak memory when filter install races
+      https://git.kernel.org/kees/c/a566a9012acd
+[2/2] mailmap, MAINTAINERS: move to tycho.pizza
+      https://git.kernel.org/kees/c/19d1d49f2a8c
 
-It should not have been possible to add a duplicate set entry.
-
-After some debugging it turned out that the problem is the immediate
-value (123) in the second-to-last rule.
-
-Concatenations use 32bit registers, i.e. the elements are 8 bytes each,
-not 6 and it turns out the kernel inserted
-
-inet firewall @knock_candidates_ipv4
-        element 0100007f ffff7b00  : 0 [end]
-        element 0100007f 00007b00  : 0 [end]
-
-Note the non-zero upper bits of the first element.  It turns out that
-nft_immediate doesn't zero the destination register, but this is needed
-when the length isn't a multiple of 4.
-
-Furthermore, the zeroing in nft_payload is broken.  We can't use
-[len / 4] = 0 -- if len is a multiple of 4, index is off by one.
-
-Skip zeroing in this case and use a conditional instead of (len -1) / 4.
-
-Fixes: 49499c3e6e18 ("netfilter: nf_tables: switch registers to 32 bit addressing")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/net/netfilter/nf_tables.h | 2 ++
- net/netfilter/nft_payload.c       | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index 024636c31adcf..93253ba1eeac3 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -130,6 +130,8 @@ static inline u8 nft_reg_load8(u32 *sreg)
- static inline void nft_data_copy(u32 *dst, const struct nft_data *src,
- 				 unsigned int len)
- {
-+	if (len % NFT_REG32_SIZE)
-+		dst[len / NFT_REG32_SIZE] = 0;
- 	memcpy(dst, src, len);
- }
- 
-diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
-index 19446a89a2a81..b1a9f330a51fe 100644
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -79,7 +79,9 @@ static void nft_payload_eval(const struct nft_expr *expr,
- 	u32 *dest = &regs->data[priv->dreg];
- 	int offset;
- 
--	dest[priv->len / NFT_REG32_SIZE] = 0;
-+	if (priv->len % NFT_REG32_SIZE)
-+		dest[priv->len / NFT_REG32_SIZE] = 0;
-+
- 	switch (priv->base) {
- 	case NFT_PAYLOAD_LL_HEADER:
- 		if (!skb_mac_header_was_set(skb))
+Best regards,
 -- 
-2.25.1
-
-
+Kees Cook
 
