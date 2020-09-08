@@ -2,111 +2,206 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5A3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2087FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92239207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599583957;
-	bh=pW1S8wYQ7shAS4VTkFPTvct/ClWzUHOw3xWhbsYQUNo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V2X1lRxnydUiS7LPA+d8gETOebluCD/eEI/QkSu78s24RUzOcRQBxnIXXsuPGg10H
-	 R2P9pidHAygJI4OIjmZUsKxzEI26JhomgwYlCGU6jzXdxCKKc6Q48+WrAnTZB5BVCQ
-	 y9HZ0DMsVDvHChs7pEyIoKKNPBBNdnROTEWt9da8=
+	by mail.kernel.org (Postfix) with ESMTP id B448E207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eLWCPBdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732058AbgIHQwW (ORCPT
+        id S1731447AbgIHQt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731909AbgIHQvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:51:09 -0400
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B576E2137B;
-        Tue,  8 Sep 2020 16:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599583868;
-        bh=pW1S8wYQ7shAS4VTkFPTvct/ClWzUHOw3xWhbsYQUNo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FgS6w9TKkNIumIokoiwznLHegSZ8da9H6/tyCUONyA8D6mS4MC5L9U2z22U5vpbaJ
-         F9LBw9H3U/ZQfNzWt6ceq2QpbMCME12qMJBPAnufXbEXaMdXUN5OQTdjSiBIy0r3bk
-         7U2jnKRg1UiTm9IReOgbeVZRQG6XO2kMrq5x8Ajs=
-Received: by mail-oo1-f51.google.com with SMTP id 4so4091291ooh.11;
-        Tue, 08 Sep 2020 09:51:08 -0700 (PDT)
-X-Gm-Message-State: AOAM5336w4FaUrgkkaZQMHIC9XcoaoO79MmlghHpn2rTwscnyo8U5huj
-        MQjZH4r+nvWe9apsBepBEXfpRVfNTTha4s0nQQ==
-X-Google-Smtp-Source: ABdhPJyVFdSAOgZ7160kEJoAezjYnztio3h9Ino2moi2r5NNuCCiGtHqBpSUtvivi5rsYhCBevOSckk/m/8RpCmF5Go=
-X-Received: by 2002:a4a:d306:: with SMTP id g6mr19090952oos.25.1599583867914;
- Tue, 08 Sep 2020 09:51:07 -0700 (PDT)
+        Tue, 8 Sep 2020 12:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732052AbgIHQsj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:48:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF40C06179B;
+        Tue,  8 Sep 2020 09:48:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=oseo1oDvGbSjzX3W8VD/a+snC1mEpAwE65LrT+9c/bQ=; b=eLWCPBdqbscc8ji4I9KQ3ECKYt
+        WaEKmMpj47OVWtOs2fuVa5TEc1lvBjzjNMpmqsW+TUFVfbEis16CfBQvK3sSaIJPrX1guGtxJ/k2R
+        5j4drCsb+jaDdGKp56cYOK2DyEFIT5IrvNaRGSvwFSm4hAUKfsRdHSDCgqBvkmYNhftq99e7eMr5K
+        NEnDFA6ItMNKlB6l9rmsJkeWnuZdSixCJ7XzXWgdztc76shQwizDnDONV7UPMVw2tTvOAHE5MJnfV
+        zFr1kg2fsDToh29ceR7I4qzavDbdsTsNTvlbN/o4dR54MK4qevsFXJ0+dDeekiERWLXrFoqficKpB
+        Z07YEx8A==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFgmr-0001SA-DR; Tue, 08 Sep 2020 16:48:05 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        iommu@lists.linux-foundation.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 05/12] dma-mapping: add (back) arch_dma_mark_clean for ia64
+Date:   Tue,  8 Sep 2020 18:47:51 +0200
+Message-Id: <20200908164758.3177341-6-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908164758.3177341-1-hch@lst.de>
+References: <20200908164758.3177341-1-hch@lst.de>
 MIME-Version: 1.0
-References: <20200904152404.20636-1-krzk@kernel.org> <20200904152404.20636-13-krzk@kernel.org>
- <CAL_Jsq+tGQhkqtQszOx7nvr1PR=YFz2p1=OnWQ8JxmSg4qNkHA@mail.gmail.com> <20200907060958.GA4525@kozik-lap>
-In-Reply-To: <20200907060958.GA4525@kozik-lap>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 8 Sep 2020 10:50:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJZ=PxDxH-=GUUg7WadZrAKjYbtE0sQ8h9YDGOGx6Ykwg@mail.gmail.com>
-Message-ID: <CAL_JsqJZ=PxDxH-=GUUg7WadZrAKjYbtE0sQ8h9YDGOGx6Ykwg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/14] dt-bindings: mtd: gpmi-nand: Fix matching of
- clocks on different SoCs
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 7, 2020 at 12:10 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Fri, Sep 04, 2020 at 04:36:39PM -0600, Rob Herring wrote:
-> > On Fri, Sep 4, 2020 at 9:25 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > >
-> > > Driver requires different amount of clocks for different SoCs.  Describe
-> > > these requirements properly to fix dtbs_check warnings like:
-> > >
-> > >     arch/arm64/boot/dts/freescale/imx8mm-beacon-kit.dt.yaml: nand-controller@33002000: clock-names:1: 'gpmi_apb' was expected
-> > >
-> > > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > >
-> > > ---
-> > >
-> > > Changes since v1:
-> > > 1. Do not require order of clocks (use pattern).
-> >
-> > To the extent that you can, you should fix the order in dts files
-> > first. If we just adjust the schemas to match the dts files, then
-> > what's the point?
->
-> The DTSes do not have mixed order of clocks between each other, as fair
-> as I remember. It was fix after Sasha Hauer comment that order is not
-> necessarily good.
->
-> We have the clock-names property, why enforcing the order?
+Add back a hook to optimize dcache flushing after reading executable
+code using DMA.  This gets ia64 out of the business of pretending to
+be dma incoherent just for this optimization.
 
-Because DT/OpenFirmware has always had a defined order for property
-values. '*-names' is just extra information.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/ia64/Kconfig               |  3 +--
+ arch/ia64/kernel/dma-mapping.c  | 14 +-------------
+ arch/ia64/mm/init.c             |  3 +--
+ include/linux/dma-direct.h      |  3 +++
+ include/linux/dma-noncoherent.h |  8 ++++++++
+ kernel/dma/Kconfig              |  6 ++++++
+ kernel/dma/direct.c             |  3 +++
+ 7 files changed, 23 insertions(+), 17 deletions(-)
 
-Rob
+diff --git a/arch/ia64/Kconfig b/arch/ia64/Kconfig
+index 5b4ec80bf5863a..513ba0c5d33610 100644
+--- a/arch/ia64/Kconfig
++++ b/arch/ia64/Kconfig
+@@ -8,6 +8,7 @@ menu "Processor type and features"
+ 
+ config IA64
+ 	bool
++	select ARCH_HAS_DMA_MARK_CLEAN
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
+ 	select ACPI
+@@ -32,8 +33,6 @@ config IA64
+ 	select TTY
+ 	select HAVE_ARCH_TRACEHOOK
+ 	select HAVE_VIRT_CPU_ACCOUNTING
+-	select DMA_NONCOHERENT_MMAP
+-	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select VIRT_TO_BUS
+ 	select GENERIC_IRQ_PROBE
+ 	select GENERIC_PENDING_IRQ if SMP
+diff --git a/arch/ia64/kernel/dma-mapping.c b/arch/ia64/kernel/dma-mapping.c
+index 09ef9ce9988d1f..f640ed6fe1d576 100644
+--- a/arch/ia64/kernel/dma-mapping.c
++++ b/arch/ia64/kernel/dma-mapping.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/dma-direct.h>
++#include <linux/dma-mapping.h>
+ #include <linux/export.h>
+ 
+ /* Set this to 1 if there is a HW IOMMU in the system */
+@@ -7,15 +7,3 @@ int iommu_detected __read_mostly;
+ 
+ const struct dma_map_ops *dma_ops;
+ EXPORT_SYMBOL(dma_ops);
+-
+-void *arch_dma_alloc(struct device *dev, size_t size,
+-		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+-{
+-	return dma_direct_alloc_pages(dev, size, dma_handle, gfp, attrs);
+-}
+-
+-void arch_dma_free(struct device *dev, size_t size, void *cpu_addr,
+-		dma_addr_t dma_addr, unsigned long attrs)
+-{
+-	dma_direct_free_pages(dev, size, cpu_addr, dma_addr, attrs);
+-}
+diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+index 0b3fb4c7af2920..02e5aa08294ee0 100644
+--- a/arch/ia64/mm/init.c
++++ b/arch/ia64/mm/init.c
+@@ -73,8 +73,7 @@ __ia64_sync_icache_dcache (pte_t pte)
+  * DMA can be marked as "clean" so that lazy_mmu_prot_update() doesn't have to
+  * flush them when they get mapped into an executable vm-area.
+  */
+-void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
+-		enum dma_data_direction dir)
++void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
+ {
+ 	unsigned long pfn = PHYS_PFN(paddr);
+ 
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index 6e87225600ae35..95e3e28bd93f47 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -150,6 +150,9 @@ static inline void dma_direct_sync_single_for_cpu(struct device *dev,
+ 
+ 	if (unlikely(is_swiotlb_buffer(paddr)))
+ 		swiotlb_tbl_sync_single(dev, paddr, size, dir, SYNC_FOR_CPU);
++
++	if (dir == DMA_FROM_DEVICE)
++		arch_dma_mark_clean(paddr, size);
+ }
+ 
+ static inline dma_addr_t dma_direct_map_page(struct device *dev,
+diff --git a/include/linux/dma-noncoherent.h b/include/linux/dma-noncoherent.h
+index ca09a4e07d2d3d..b9bc6c557ea46f 100644
+--- a/include/linux/dma-noncoherent.h
++++ b/include/linux/dma-noncoherent.h
+@@ -108,6 +108,14 @@ static inline void arch_dma_prep_coherent(struct page *page, size_t size)
+ }
+ #endif /* CONFIG_ARCH_HAS_DMA_PREP_COHERENT */
+ 
++#ifdef CONFIG_ARCH_HAS_DMA_MARK_CLEAN
++void arch_dma_mark_clean(phys_addr_t paddr, size_t size);
++#else
++static inline void arch_dma_mark_clean(phys_addr_t paddr, size_t size)
++{
++}
++#endif /* ARCH_HAS_DMA_MARK_CLEAN */
++
+ void *arch_dma_set_uncached(void *addr, size_t size);
+ void arch_dma_clear_uncached(void *addr, size_t size);
+ 
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index e7b801649f6574..281785feb874db 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -44,6 +44,12 @@ config ARCH_HAS_DMA_SET_MASK
+ config ARCH_HAS_DMA_WRITE_COMBINE
+ 	bool
+ 
++#
++# Select if the architectures provides the arch_dma_mark_clean hook
++#
++config ARCH_HAS_DMA_MARK_CLEAN
++	bool
++
+ config DMA_DECLARE_COHERENT
+ 	bool
+ 
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index db6ef07aec3b37..949c1cbf08b2d5 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -345,6 +345,9 @@ void dma_direct_sync_sg_for_cpu(struct device *dev,
+ 		if (unlikely(is_swiotlb_buffer(paddr)))
+ 			swiotlb_tbl_sync_single(dev, paddr, sg->length, dir,
+ 					SYNC_FOR_CPU);
++
++		if (dir == DMA_FROM_DEVICE)
++			arch_dma_mark_clean(paddr, sg->length);
+ 	}
+ 
+ 	if (!dev_is_dma_coherent(dev))
+-- 
+2.28.0
+
