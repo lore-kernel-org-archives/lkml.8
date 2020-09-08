@@ -2,55 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6166CC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA993C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1682080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:27:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B122087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589675;
-	bh=gNjhvH4+C+o+6lSMH6s19KO6QdOeaKVYNf7dHoeUAVQ=;
+	s=default; t=1599589680;
+	bh=NGMD93V9ArFeuIG8EFdY9DZSKhb0K8Og0xZXFCbWbnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZqG1SyuaFnCgJ2yVbPpH9k3l2CnYQupxrrhUjifck+ukLHic2xDU3HeY8OMNi9kC2
-	 Xp77vEPjG4+G1WVm6Kbis+sKuX62wfJivhWmanHf4LcH8fee61nlqDSWeYsLA/Fs7r
-	 Z5PWuMBPNWx4YtbdozvFE7FYsOf0UGxuzhh9tOEg=
+	b=Ui64DyMmVy4AXN7PcDFQ0jYdp5w5wfjzQzoebbop1zqir1svwduUk+qFVei2tESSX
+	 V6JP5OkVVVYRlsDB+dgpeK1ZC61ju1lVVIl5LJV9N2DMvOyc//fKjH1x0Cvg8ELnSD
+	 ZVtu21qwTjID12kIixlkPK4jLGVzA0WB8T8WzWrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbgIHS1x (ORCPT
+        id S1729161AbgIHS1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:27:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731417AbgIHQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731428AbgIHQK3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:29 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1966B24805;
-        Tue,  8 Sep 2020 15:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24BE824747;
+        Tue,  8 Sep 2020 15:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579794;
-        bh=gNjhvH4+C+o+6lSMH6s19KO6QdOeaKVYNf7dHoeUAVQ=;
+        s=default; t=1599579670;
+        bh=NGMD93V9ArFeuIG8EFdY9DZSKhb0K8Og0xZXFCbWbnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K4OkjV7sej7JvZ6RxzRizWRuR8FwkC3R9Bh/AfXNCnJQcWZSO3QaZXyBGU8uhxWsD
-         pxkGKEO98CPMATdi82DrkuJyFnN90VH9/2gnXyYUz0dXqMihnTYkCHuzk5T3qozXBv
-         6WffAd698uca0jxfH8nGwUu5koLR3W4s8IohmFgA=
+        b=VDFbi1B05OEFV1BpNiYcR9mbgdza+teXnByipYPjhcjHFjx6cfD2yEGz2IMvG1tGZ
+         RKSdUMg+GxPs0UYoYm4HiTm04l6jH3d0nkOio2bcUBAv2Amg5dv9tZWxDLIcIi97SZ
+         ERkz9hLK0JQ2n/KjqMarM9xpUTzcidBgCNGLoIHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/129] net: systemport: Fix memleak in bcm_sysport_probe
-Date:   Tue,  8 Sep 2020 17:24:37 +0200
-Message-Id: <20200908152231.479089440@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Benjamin Poirier <benjamin.poirier@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 144/186] ALSA: hda/realtek - Improved routing for Thinkpad X1 7th/8th Gen
+Date:   Tue,  8 Sep 2020 17:24:46 +0200
+Message-Id: <20200908152248.643397994@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,40 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 7ef1fc57301f3cef7201497aa27e89ccb91737fe ]
+commit 6a6660d049f88b89fd9a4b9db3581b245f7782fa upstream.
 
-When devm_kcalloc() fails, dev should be freed just
-like what we've done in the subsequent error paths.
+There've been quite a few regression reports about the lowered volume
+(reduced to ca 65% from the previous level) on Lenovo Thinkpad X1
+after the commit d2cd795c4ece ("ALSA: hda - fixup for the bass speaker
+on Lenovo Carbon X1 7th gen").  Although the commit itself does the
+right thing from HD-audio POV in order to have a volume control for
+bass speakers, it seems that the machine has some secret recipe under
+the hood.
 
-Fixes: 7b78be48a8eb6 ("net: systemport: Dynamically allocate number of TX rings")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Through experiments, Benjamin Poirier found out that the following
+routing gives the best result:
+* DAC1 (NID 0x02) -> Speaker pin (NID 0x14)
+* DAC2 (NID 0x03) -> Shared by both Bass Speaker pin (NID 0x17) &
+                     Headphone pin (0x21)
+* DAC3 (NID 0x06) -> Unused
+
+DAC1 seems to have some equalizer internally applied, and you'd get
+again the output in a bad quality if you connect this to the
+headphone pin.  Hence the headphone is connected to DAC2, which is now
+shared with the bass speaker pin.  DAC3 has no volume amp, hence it's
+not connected at all.
+
+For achieving the routing above, this patch introduced a couple of
+workarounds:
+
+* The connection list of bass speaker pin (NID 0x17) is reduced not to
+  include DAC3 (NID 0x06)
+* Pass preferred_pairs array to specify the fixed connection
+
+Here, both workarounds are needed because the generic parser prefers
+the individual DAC assignment over others.
+
+When the routing above is applied, the generic parser creates the two
+volume controls "Front" and "Bass Speaker".  Since we have only two
+DACs for three output pins, those are not fully controlling each
+output individually, and it would confuse PulseAudio.  For avoiding
+the pitfall, in this patch, we rename those volume controls to some
+unique ones ("DAC1" and "DAC2").  Then PulseAudio ignore them and
+concentrate only on the still good-working "Master" volume control.
+If a user still wants to control each DAC volume, they can still
+change manually via "DAC1" and "DAC2" volume controls.
+
+Fixes: d2cd795c4ece ("ALSA: hda - fixup for the bass speaker on Lenovo Carbon X1 7th gen")
+Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+Reviewed-by: Jaroslav Kysela <perex@perex.cz>
+Tested-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+Cc: <stable@vger.kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207407#c10
+BugLink: https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3214171
+BugLink: https://gist.github.com/hamidzr/dd81e429dc86f4327ded7a2030e7d7d9#gistcomment-3276276
+Link: https://lore/kernel.org/r/20200829112746.3118-1-benjamin.poirier@gmail.com
+Link: https://lore.kernel.org/r/20200903083300.6333-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_realtek.c |   42 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index 4dfdb5a58025b..71eb8914e620b 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2453,8 +2453,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 	priv->tx_rings = devm_kcalloc(&pdev->dev, txq,
- 				      sizeof(struct bcm_sysport_tx_ring),
- 				      GFP_KERNEL);
--	if (!priv->tx_rings)
--		return -ENOMEM;
-+	if (!priv->tx_rings) {
-+		ret = -ENOMEM;
-+		goto err_free_netdev;
-+	}
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5880,6 +5880,39 @@ static void alc275_fixup_gpio4_off(struc
+ 	}
+ }
  
- 	priv->is_lite = params->is_lite;
- 	priv->num_rx_desc_words = params->num_rx_desc_words;
--- 
-2.25.1
-
++/* Quirk for Thinkpad X1 7th and 8th Gen
++ * The following fixed routing needed
++ * DAC1 (NID 0x02) -> Speaker (NID 0x14); some eq applied secretly
++ * DAC2 (NID 0x03) -> Bass (NID 0x17) & Headphone (NID 0x21); sharing a DAC
++ * DAC3 (NID 0x06) -> Unused, due to the lack of volume amp
++ */
++static void alc285_fixup_thinkpad_x1_gen7(struct hda_codec *codec,
++					  const struct hda_fixup *fix, int action)
++{
++	static const hda_nid_t conn[] = { 0x02, 0x03 }; /* exclude 0x06 */
++	static const hda_nid_t preferred_pairs[] = {
++		0x14, 0x02, 0x17, 0x03, 0x21, 0x03, 0
++	};
++	struct alc_spec *spec = codec->spec;
++
++	switch (action) {
++	case HDA_FIXUP_ACT_PRE_PROBE:
++		snd_hda_override_conn_list(codec, 0x17, ARRAY_SIZE(conn), conn);
++		spec->gen.preferred_dacs = preferred_pairs;
++		break;
++	case HDA_FIXUP_ACT_BUILD:
++		/* The generic parser creates somewhat unintuitive volume ctls
++		 * with the fixed routing above, and the shared DAC2 may be
++		 * confusing for PA.
++		 * Rename those to unique names so that PA doesn't touch them
++		 * and use only Master volume.
++		 */
++		rename_ctl(codec, "Front Playback Volume", "DAC1 Playback Volume");
++		rename_ctl(codec, "Bass Speaker Playback Volume", "DAC2 Playback Volume");
++		break;
++	}
++}
++
+ static void alc233_alc662_fixup_lenovo_dual_codecs(struct hda_codec *codec,
+ 					 const struct hda_fixup *fix,
+ 					 int action)
+@@ -6148,6 +6181,7 @@ enum {
+ 	ALC289_FIXUP_DUAL_SPK,
+ 	ALC294_FIXUP_SPK2_TO_DAC1,
+ 	ALC294_FIXUP_ASUS_DUAL_SPK,
++	ALC285_FIXUP_THINKPAD_X1_GEN7,
+ 	ALC285_FIXUP_THINKPAD_HEADSET_JACK,
+ 	ALC294_FIXUP_ASUS_HPE,
+ 	ALC294_FIXUP_ASUS_COEF_1B,
+@@ -7293,11 +7327,17 @@ static const struct hda_fixup alc269_fix
+ 		.chained = true,
+ 		.chain_id = ALC294_FIXUP_SPK2_TO_DAC1
+ 	},
++	[ALC285_FIXUP_THINKPAD_X1_GEN7] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc285_fixup_thinkpad_x1_gen7,
++		.chained = true,
++		.chain_id = ALC269_FIXUP_THINKPAD_ACPI
++	},
+ 	[ALC285_FIXUP_THINKPAD_HEADSET_JACK] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_headset_jack,
+ 		.chained = true,
+-		.chain_id = ALC285_FIXUP_SPEAKER2_TO_DAC1
++		.chain_id = ALC285_FIXUP_THINKPAD_X1_GEN7
+ 	},
+ 	[ALC294_FIXUP_ASUS_HPE] = {
+ 		.type = HDA_FIXUP_VERBS,
 
 
