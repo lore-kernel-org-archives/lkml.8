@@ -2,51 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0A8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C27C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 120EA2145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB0621919
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587465;
-	bh=MfLFAZl9T5p6DZ86QSrGRTRInrhDWe4wQ8OUWmnQi9s=;
+	s=default; t=1599587466;
+	bh=nI+G4Iog4NcIHRp1cXd8iGS0OpmJNpKOk7lTtFG0BnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUnAp+bZpRhwf8feI1Z1DQUUNQj6I8tnDIqhRT5XDL1d/gd8B40bovmBiW4rrRFI1
-	 Xn2QbBoA9DhuuSaM4Rm4nFF2oHeVBiUSI/1UOZslxs5SGncVJAUN3fxygOKVycTrU6
-	 2bAjKUI8B1Zd2G9btyJoGYeszcxJNxVo/JEiNgfI=
+	b=0uix8WO1+St03Ey4DB8rUfuFVRdoSrs4hVOd9d/2PWiDiLCavhEpJbSlyMVmQEcdY
+	 Kt6x97lFTH141H5aaVlUYv/7NN42dcFF/3r3Tw3yAPLTlikMzP8fXEPL9E7qWQMFj/
+	 9kQNOkEDuM+cX7JxpzBn0OrNVuxj9QARfVn7mFJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732167AbgIHRvD (ORCPT
+        id S1732162AbgIHRvB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:51:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:51:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbgIHQN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731610AbgIHQN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85AEC248EB;
-        Tue,  8 Sep 2020 15:53:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D491D248D4;
+        Tue,  8 Sep 2020 15:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580384;
-        bh=MfLFAZl9T5p6DZ86QSrGRTRInrhDWe4wQ8OUWmnQi9s=;
+        s=default; t=1599580367;
+        bh=nI+G4Iog4NcIHRp1cXd8iGS0OpmJNpKOk7lTtFG0BnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fvgpq6EG3a8l76ipDi52JJBU/8q6SEfijfhO/S9/0N4F+KQf4S+cT4tfkczUoNgxs
-         ZRcysw1k6d0k/1Nv1v6RWZJ86l3VXOAm3lLJuXYefLVfWxBWMJbipCFkvk12b9dIAm
-         RO2WtzSp8L5jqg2bICJkeSRVvwPGazrRM5kr5UBc=
+        b=G3gXOzhxk692M9DB5JOsUtZDwQEf25gVIEMr1wn7BQF8kbYJGc+2BQLRA0u6pIXe3
+         2H2yZMpLTPtAwQKnlyo00ZFJo8JApDvr8IKZ6jFsQoaxBn16wZtmO6ntC8VqpaaXGA
+         mtSTFTFz4M65KIT/+/R6R+UIEhnHwq9ItBADoaM4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 55/65] dm cache metadata: Avoid returning cmd->bm wild pointer on error
-Date:   Tue,  8 Sep 2020 17:26:40 +0200
-Message-Id: <20200908152219.922371187@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 18/65] netfilter: nf_tables: add NFTA_SET_USERDATA if not null
+Date:   Tue,  8 Sep 2020 17:26:03 +0200
+Message-Id: <20200908152217.975666496@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -59,42 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit d16ff19e69ab57e08bf908faaacbceaf660249de upstream.
+[ Upstream commit 6f03bf43ee05b31d3822def2a80f11b3591c55b3 ]
 
-Maybe __create_persistent_data_objects() caller will use PTR_ERR as a
-pointer, it will lead to some strange things.
+Kernel sends an empty NFTA_SET_USERDATA attribute with no value if
+userspace adds a set with no NFTA_SET_USERDATA attribute.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e6d8ecac9e68 ("netfilter: nf_tables: Add new attributes into nft_set to store user data.")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-cache-metadata.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/md/dm-cache-metadata.c
-+++ b/drivers/md/dm-cache-metadata.c
-@@ -536,12 +536,16 @@ static int __create_persistent_data_obje
- 					  CACHE_MAX_CONCURRENT_LOCKS);
- 	if (IS_ERR(cmd->bm)) {
- 		DMERR("could not create block manager");
--		return PTR_ERR(cmd->bm);
-+		r = PTR_ERR(cmd->bm);
-+		cmd->bm = NULL;
-+		return r;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 5b8d5bfeb7ac5..7c95314f0b7de 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -2882,7 +2882,8 @@ static int nf_tables_fill_set(struct sk_buff *skb, const struct nft_ctx *ctx,
+ 			goto nla_put_failure;
  	}
  
- 	r = __open_or_format_metadata(cmd, may_format_device);
--	if (r)
-+	if (r) {
- 		dm_block_manager_destroy(cmd->bm);
-+		cmd->bm = NULL;
-+	}
+-	if (nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
++	if (set->udata &&
++	    nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
+ 		goto nla_put_failure;
  
- 	return r;
- }
+ 	desc = nla_nest_start(skb, NFTA_SET_DESC);
+-- 
+2.25.1
+
 
 
