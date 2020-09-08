@@ -1,170 +1,124 @@
-Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=iZCi=CS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9063AC2BC11
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ECF020757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5952145D
+	for <linux-kernel@archiver.kernel.org>; Wed,  9 Sep 2020 00:02:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MA3klo6H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nB2KDW+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgIHX4Y (ORCPT
+        id S1729251AbgIIACR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:56:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44662 "EHLO
+        Tue, 8 Sep 2020 20:02:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726560AbgIHX4S (ORCPT
+        with ESMTP id S1726801AbgIIACN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:56:18 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F247BC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:56:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=EK9nCPA8Amh2jxRu+oV/LS9FWBTa7vHxNwTW3NXJse0=; b=MA3klo6Ht+sTgmyqNNpAuyGXK7
-        FIPRvHG4I/77N2XWo41bS5s+vLglm9b18XFMj9rjdzdH0hejbyL4YYA+HK+Aqy7RQ+ZB+opBfvTga
-        TsLwFbfbu/kuPp+EtK8m+b2yiQxI7AFvBtwl1eZ+22RUQtlmXTeJoA2p7RS6Vvy+neLVlTOhJKLEO
-        gR1TD3GLgvuHLeEnmSLpGS0UsDW1xei8rWVhRaEt8JfvCqC9G3f7o0sZXOuuJ3Szj4MHENTArPGhU
-        tqKaFy/ut2sGaMkpv0fNrEjnxPm4HVv2O92X9W2OC+gzxlTauwAzBZyB7zlukZ6VKdxGoQNi/kKl4
-        OR9PPI4Q==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFnTA-0003fN-VS; Tue, 08 Sep 2020 23:56:13 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] drm: amd/display: fix spelling of "function"
-Message-ID: <a31672e7-9047-e4ef-93d8-d0c9afd47964@infradead.org>
-Date:   Tue, 8 Sep 2020 16:56:09 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 20:02:13 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6263EC061755;
+        Tue,  8 Sep 2020 17:02:13 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f18so513866pfa.10;
+        Tue, 08 Sep 2020 17:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=y360yayiYOlJxCwr5rfn4KJb8o+8ztUz73tehQvWcw8=;
+        b=nB2KDW+OR3WPaSBsU4mvY6t5wlDL3Q3x+eUGspx4Q+OeIiVcDwU8IXooaN2P+zVym7
+         AiiTFYHMzCR2bVvtK5J2UIl70gKwRJDwVNo9dr5QIS5WbMx6fCfdh0g7Duh4ve4IbgJ1
+         u+ZtXBw56z07JaNwoXaYnHZeeg7gozrF2Kqgt/FUhJmUzm7FsSIJkP4Bp2CtgMI73zin
+         Z0Kta8k5Q9c0BCXrc3zoaAfd3xTElFTeO1S2e6KAy57oblpMnLAlqMYzJrNDb3py4ZdX
+         WzxS4Qrc4L6KCG9RA7NkHhaoHgrS7/LJuXx+bVMXtIEKZbYvUlno+aGUVJD8zcFk4qli
+         eM9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=y360yayiYOlJxCwr5rfn4KJb8o+8ztUz73tehQvWcw8=;
+        b=KWcAJKxRytWL8bZg2Z2eB4ZFAKefq+uyeNOB3ToNDFE/uM4nw6XZzLcVqTn5Y2tFqY
+         IK+YsYK6LO5koM1V6NLtryex/ObHcx22hIRo3osaTtMNYYkam0SVDt5T6SLhzS9GZcTv
+         Qq/VKBuAaeug2RVLw8Nts4cGxKcLq49xGzAXLGvlJ2QmughKAN4Z3y/bYgmMKOoJdzNX
+         3Wxf3YCHFDa+VlVbNAZJeIFuPgDwPph9EQ+opdFZ6EUc8i1iEICLrj461Mr65H+CBz2+
+         becDF0i+ymfn+MN6hsvDd9+55dNHyT8Rqf+OXWF9yOG8paOA98O1FdlsF35qg0iLpz4B
+         DSdA==
+X-Gm-Message-State: AOAM531KS/weDL0Rw3w0sgfbKj9MyJQMwEARvoGydKR46pcZszAhUecF
+        wJMbKnm7NqDYMMvLaoeh5czuIyXn18NSqD2z
+X-Google-Smtp-Source: ABdhPJz9b8f5fWVX9O69rFi5FU4utYtNyPoAMzrRpPE1kXlTGjA+Da2t+c7sAX61071qBkj98UdmIA==
+X-Received: by 2002:aa7:80cc:: with SMTP id a12mr1161340pfn.4.1599609732930;
+        Tue, 08 Sep 2020 17:02:12 -0700 (PDT)
+Received: from zen.local (174-21-64-208.tukw.qwest.net. [174.21.64.208])
+        by smtp.gmail.com with ESMTPSA id a13sm146249pgq.41.2020.09.08.17.02.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 17:02:12 -0700 (PDT)
+From:   Trent Piepho <tpiepho@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        devicetree@vger.kernel.org, bcousson@baylibre.com,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>
+Subject: Re: [PATCH v4 1/2] pinctrl: single: parse #pinctrl-cells = 2
+Date:   Tue, 08 Sep 2020 16:52:58 -0700
+Message-ID: <3139716.CMS8C0sQ7x@zen.local>
+In-Reply-To: <20200701013320.130441-2-drew@beagleboard.org>
+References: <20200701013320.130441-1-drew@beagleboard.org> <20200701013320.130441-2-drew@beagleboard.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tuesday, June 30, 2020 6:33:19 PM PDT Drew Fustini wrote:
+> If "pinctrl-single,pins" has 3 arguments (offset, conf, mux), then
+> pcs_parse_one_pinctrl_entry() does an OR operation on conf and mux to
+> get the value to store in the register.
 
-Fix spellos of "function" in drivers/gpu/drm/amd/display/.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Harry Wentland <harry.wentland@amd.com>
-Cc: Leo Li <sunpeng.li@amd.com>
-Cc: amd-gfx@lists.freedesktop.org
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20.h   |    2 +-
- drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20v2.h |    2 +-
- drivers/gpu/drm/amd/display/dc/dml/dcn30/display_rq_dlg_calc_30.h   |    2 +-
- drivers/gpu/drm/amd/display/dc/gpio/dce120/hw_factory_dce120.c      |    2 +-
- drivers/gpu/drm/amd/display/dc/gpio/dcn10/hw_factory_dcn10.c        |    2 +-
- drivers/gpu/drm/amd/display/dc/gpio/dcn20/hw_factory_dcn20.c        |    2 +-
- drivers/gpu/drm/amd/display/dc/gpio/dcn21/hw_factory_dcn21.c        |    2 +-
- drivers/gpu/drm/amd/display/dc/gpio/dcn30/hw_factory_dcn30.c        |    2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+> -		vals[found].val = pinctrl_spec.args[1];
+> +
+> +		switch (pinctrl_spec.args_count) {
+> +		case 2:
+> +			vals[found].val = pinctrl_spec.args[1];
+> +			break;
+> +		case 3:
+> +			vals[found].val = (pinctrl_spec.args[1] | 
+pinctrl_spec.args[2]);
+> +			break;
+> +		}
+> 
+>  		dev_dbg(pcs->dev, "%pOFn index: 0x%x value: 0x%x\n",
+>  			pinctrl_spec.np, offset, 
+pinctrl_spec.args[1]);
 
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20.h
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20.h
-@@ -33,7 +33,7 @@ struct display_mode_lib;
- 
- // Function: dml_rq_dlg_get_rq_reg
- //  Main entry point for test to get the register values out of this DML class.
--//  This function calls <get_rq_param> and <extract_rq_regs> fucntions to calculate
-+//  This function calls <get_rq_param> and <extract_rq_regs> functions to calculate
- //  and then populate the rq_regs struct
- // Input:
- //  pipe_src_param - pipe source configuration (e.g. vp, pitch, etc.)
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20v2.h
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/dml/dcn20/display_rq_dlg_calc_20v2.h
-@@ -33,7 +33,7 @@ struct display_mode_lib;
- 
- // Function: dml_rq_dlg_get_rq_reg
- //  Main entry point for test to get the register values out of this DML class.
--//  This function calls <get_rq_param> and <extract_rq_regs> fucntions to calculate
-+//  This function calls <get_rq_param> and <extract_rq_regs> functions to calculate
- //  and then populate the rq_regs struct
- // Input:
- //  pipe_src_param - pipe source configuration (e.g. vp, pitch, etc.)
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/dml/dcn30/display_rq_dlg_calc_30.h
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/dml/dcn30/display_rq_dlg_calc_30.h
-@@ -32,7 +32,7 @@ struct display_mode_lib;
- 
- // Function: dml_rq_dlg_get_rq_reg
- //  Main entry point for test to get the register values out of this DML class.
--//  This function calls <get_rq_param> and <extract_rq_regs> fucntions to calculate
-+//  This function calls <get_rq_param> and <extract_rq_regs> functions to calculate
- //  and then populate the rq_regs struct
- // Input:
- //  pipe_param - pipe source configuration (e.g. vp, pitch, scaling, dest, etc.)
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/gpio/dce120/hw_factory_dce120.c
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/gpio/dce120/hw_factory_dce120.c
-@@ -162,7 +162,7 @@ static void define_hpd_registers(struct
- }
- 
- 
--/* fucntion table */
-+/* function table */
- static const struct hw_factory_funcs funcs = {
- 	.init_ddc_data = dal_hw_ddc_init,
- 	.init_generic = NULL,
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/gpio/dcn10/hw_factory_dcn10.c
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/gpio/dcn10/hw_factory_dcn10.c
-@@ -194,7 +194,7 @@ static void define_hpd_registers(struct
- }
- 
- 
--/* fucntion table */
-+/* function table */
- static const struct hw_factory_funcs funcs = {
- 	.init_ddc_data = dal_hw_ddc_init,
- 	.init_generic = dal_hw_generic_init,
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/gpio/dcn20/hw_factory_dcn20.c
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/gpio/dcn20/hw_factory_dcn20.c
-@@ -221,7 +221,7 @@ static void define_generic_registers(str
- 	generic->base.regs = &generic_regs[en].gpio;
- }
- 
--/* fucntion table */
-+/* function table */
- static const struct hw_factory_funcs funcs = {
- 	.init_ddc_data = dal_hw_ddc_init,
- 	.init_generic = dal_hw_generic_init,
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/gpio/dcn21/hw_factory_dcn21.c
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/gpio/dcn21/hw_factory_dcn21.c
-@@ -202,7 +202,7 @@ static void define_hpd_registers(struct
- }
- 
- 
--/* fucntion table */
-+/* function table */
- static const struct hw_factory_funcs funcs = {
- 	.init_ddc_data = dal_hw_ddc_init,
- 	.init_generic = dal_hw_generic_init,
---- linux-next-20200908.orig/drivers/gpu/drm/amd/display/dc/gpio/dcn30/hw_factory_dcn30.c
-+++ linux-next-20200908/drivers/gpu/drm/amd/display/dc/gpio/dcn30/hw_factory_dcn30.c
-@@ -218,7 +218,7 @@ static void define_hpd_registers(struct
- }
- 
- 
--/* fucntion table */
-+/* function table */
- static const struct hw_factory_funcs funcs = {
- 	.init_ddc_data = dal_hw_ddc_init,
- 	.init_generic = dal_hw_generic_init,
+If #pinctrl-cells value is greater than 2, nothing will set vals[found].val to 
+anything other than zero (from when it's calloc'ed) and the pinctrl will 
+silently be programmed to zero.
+
+The debug printout was not change to print vals[found].val, so it will 
+continue to print the value of the 2nd cell.
+
+The result is that a #pinctrl-cells of 3 will produce no warning or error, 
+program the pinctrl to zero, whilst at the same time emit debug log messages 
+that it is programming the expected values.
+
+The device tree documentation still states that #pinctrl-cells must be 1 when 
+using pinctrl-single,pins.  This new special case of ORing two values is not 
+documented.
+
+
 
