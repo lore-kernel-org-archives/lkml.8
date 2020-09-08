@@ -2,116 +2,129 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE94C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658E7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A74F12192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EF3E2192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599548804;
+	bh=fqYvBYmENcUKuM05hBKTFF4834yUPOhVdHnQb6n0AlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=q7wkbFymRgdHEreZlhcRh+atPzzYprZPQ7wTooAGuS77aCWW2MbnlJLnCW9k89OSD
+	 tapAJhWaXMlxNg0bWNP+unADiM1mv6uB+wBxm5NvhFLNf7fhu0oEgwze5TXRmMQLY0
+	 xC9maXEJz79RbkV2FNTbAPzoEDRHOBMzlpBT3n5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgIHHAx (ORCPT
+        id S1729104AbgIHHGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:00:53 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38496 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728995AbgIHHAA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:00:00 -0400
-Received: by mail-oi1-f194.google.com with SMTP id y6so15523657oie.5;
-        Mon, 07 Sep 2020 23:59:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=80BY8rNg7RfD6oxznXYOKPcFZuo8wajfOpZ0OBeC/wY=;
-        b=RqGXWXZ9/kAxQAFSyuC5kqinD3ki4bRUdQCvuUBMdUD+NSJ4wf//toLW3N6/2xpWSI
-         4xYPmSVXo1d4QZZk7IbFC372rxSH8PBVawRiRmYmwmipDSgE19hyBXsbXcUclHUI7zhl
-         baOaiGDUTAQSKJepnGQgdAa71SHWFs5ktn6Owkl/dVgnAwDE0Yz16m3t3Otw8iiLvA7r
-         CxoqGaf4XmBlVdiZIWvC/J3/bykpfrW+9BIwzaOWT9jAjEWmqwcneAleIhN/4ca92NUu
-         mF/SikMkKKHBiGthrYmeN29uidszA6oEUywvueO8kr6U+rF9Nfnl7SC9t9AToy4lr9RO
-         qjcw==
-X-Gm-Message-State: AOAM531m5uxK5E5rDhrG78duUtGRrc4iSEER4Gv4Q5UXuKJPX0Br0eRo
-        eu2XDYFr4nVHkqJ/t1i+cPoDfVotTwO2ijrL7sI=
-X-Google-Smtp-Source: ABdhPJw+Sdn/Kf/NbESMrEGT3ykKzS7L5e1uWHMt5PE98XyXUrM0snkLRMMoZ/Q/NW5lb7vt9j4vz11Ltnr3Qr8PC/E=
-X-Received: by 2002:aca:b742:: with SMTP id h63mr1711017oif.148.1599548399253;
- Mon, 07 Sep 2020 23:59:59 -0700 (PDT)
+        Tue, 8 Sep 2020 03:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728115AbgIHHGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:06:39 -0400
+Received: from localhost (p5486cc72.dip0.t-ipconnect.de [84.134.204.114])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A56542078E;
+        Tue,  8 Sep 2020 07:06:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599548798;
+        bh=fqYvBYmENcUKuM05hBKTFF4834yUPOhVdHnQb6n0AlQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S1FWuPl0lCeMAFrCseZLRH5u42zbxXf8aFyHvBionCIvL7rP9HrMAhFnR2DlZLSDC
+         SUFOVFAWrvq5nqtjw+ra4FGAUniVLWY6D/E1fK3xPmvmSq2uNrTA8+TQ2UPpfp+YFM
+         WF+7FAaLdP5DQ0o4nBLybvrBcoB3Vs9H6cu33PjI=
+Date:   Tue, 8 Sep 2020 09:06:35 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>
+Cc:     andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com,
+        jdelvare@suse.de, chris.packham@alliedtelesis.co.nz,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] i2c: algo-pca: Reapply i2c bus settings after
+ reset
+Message-ID: <20200908070634.GC5936@ninjato>
+References: <20200902211532.22684-1-evan.nimmo@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <20200908042708.2511528-1-masahiroy@kernel.org>
-In-Reply-To: <20200908042708.2511528-1-masahiroy@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 8 Sep 2020 08:59:48 +0200
-Message-ID: <CAMuHMdVobzKWKnN0ScqSY+Jv3N1ri8=mWEd-SZfH5+je+CVVcQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: preprocess module linker script
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Russell King <linux@armlinux.org.uk>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
+Content-Disposition: inline
+In-Reply-To: <20200902211532.22684-1-evan.nimmo@alliedtelesis.co.nz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 6:29 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> There was a request to preprocess the module linker script like we
-> do for the vmlinux one. (https://lkml.org/lkml/2020/8/21/512)
->
-> The difference between vmlinux.lds and module.lds is that the latter
-> is needed for external module builds, thus must be cleaned up by
-> 'make mrproper' instead of 'make clean'. Also, it must be created
-> by 'make modules_prepare'.
->
-> You cannot put it in arch/$(SRCARCH)/kernel/, which is cleaned up by
-> 'make clean'. I moved arch/$(SRCARCH)/kernel/module.lds to
-> arch/$(SRCARCH)/include/asm/module.lds.h, which is included from
-> scripts/module.lds.S.
->
-> scripts/module.lds is fine because 'make clean' keeps all the
-> build artifacts under scripts/.
->
-> You can add arch-specific sections in <asm/module.lds.h>.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Tested-by: Jessica Yu <jeyu@kernel.org>
-> Acked-by: Will Deacon <will@kernel.org>
 
->  arch/m68k/Makefile                                     |  1 -
->  .../{kernel/module.lds => include/asm/module.lds.h}    |  0
+--c3bfwLpm8qysLVxt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Hi Evan,
 
-Gr{oetje,eeting}s,
+> changes in v2:
+> - changed lowercase "pca to uppercase "PCA".
+> - reworded and reformatted the multiline comment.
+> - moved the clock frequency KERN_INFO closer to the call that sets this.
+> - moved the i2c_bus_settings struct to the more generic i2c.h and removed
+> - the comments indicating this as being for the pca chip.
 
-                        Geert
+As mentioned in v1, I think we should not have it in the generic i2c
+headers yet. a) it makes backporting more difficult and b) we need to
+find the optimal generic set of parameters which is a seperate issue.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> =20
+> -		pca_reset(pca_data);
+> -
+>  		clock =3D pca_clock(pca_data);
+> +
+>  		printk(KERN_INFO "%s: Clock frequency is %dkHz\n",
+>  		     adap->name, freqs[clock]);
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Minor nit: I think there is no need for the extra blank line, but I'll
+let you decide.
+
+> +/**
+> + * struct i2c_bus_settings - The configured i2c bus settings
+> + * @mode: Configured i2c bus mode
+> + * @tlow: Configured SCL LOW period
+> + * @thi: Configured SCL HIGH period
+> + * @clock_freq: The configured clock frequency
+> + */
+> +struct i2c_bus_settings {
+
+'pca_i2c_bus_settings' or similar?
+
+Rest looks good!
+
+Thanks,
+
+   Wolfram
+
+
+--c3bfwLpm8qysLVxt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9XLXcACgkQFA3kzBSg
+KbYlJQ//S6vZ98amQPpR33oXQtLX0cUQPC0OE9kkMetgOLuJlvVt5bDF8y7FsPwn
+BS/Bt6JLD2UPptlxLzRfB7t7LcerN1vhqS4pHPoqArhJioI1oOS62Luje1Ae4+vN
+cRigGgr5UUCUkCSVfiIP1n7f1eDdrmhkEs2LSiSEdUHJPtsXeMJaT/485lnGXyID
+wviXyjrAaobvSPcm0QtvvqT4gPhnQZS7DVxyTY9sDdQat+azMxE358KxOwvcBdKs
+pEQxhlnubSoA9PMmXsz6HIqyA4vtSEB0afBsz3qVzKm6nzDB5CJbve3YymBsIiYH
+n+gpMnt2sxPZ6AVHLCWH/mrqBJXgkxlBKZX0g9zZsnQmnl7ilX7GjVBxh5wyFgwq
+2U108E0OX1p6I6eu6GOWJFwKKGZC1Oc0rS3NTs4ez7Y5vpmd6ILB8glfx4TTwFRK
+5Y5qekyrjHHH40JGm/tJpjjs4jPwKjt8u+kQscoMr0TTncgSCTdKySYJ34SZ2r9y
+b7LtUeqktrqbZm9y3ull71O7PG/ZwCVKJm8TCwJdFRsNeTT+KnCJSynbfL8rThPg
+vjVSRHbFB/gc9HZD10vrDiaCanoZeLYDkUQk3opNvmu2oF8spSLFA2kfKanQL5q0
+hTCa8wTtFWe0mnY+bBMm6dnKduEx6WljyuRxwF7rP7eCLnz1FAs=
+=lT2Z
+-----END PGP SIGNATURE-----
+
+--c3bfwLpm8qysLVxt--
