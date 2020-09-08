@@ -2,129 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37B7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15E0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C88AC218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 956A2218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="SRN3KVOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgIHG5m (ORCPT
+        id S1729139AbgIHG67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:57:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:58426 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgIHG5l (ORCPT
+        Tue, 8 Sep 2020 02:58:59 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:44084 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728922AbgIHG6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:57:41 -0400
-Received: from mail-lj1-f198.google.com ([209.85.208.198])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1kFXZQ-0002qQ-Ru
-        for linux-kernel@vger.kernel.org; Tue, 08 Sep 2020 06:57:36 +0000
-Received: by mail-lj1-f198.google.com with SMTP id i9so4840082ljc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 23:57:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vzp7zmy16qSTY1Tj4XpNRu/ljIgkqSbcbe8XDlpXvi4=;
-        b=DUlD7XmWl2+97gK0pgwzhtKrtRjNb+Qq/59oelwkFq+Lr0eqOfNCNF1f1o9W/cmpbo
-         dEFuvG2vqQvIWoGh/mW/V3HJnkv7Qv32saHzrVlVaDWllWM5hqWXBgwFC06YeJXgBcKi
-         cNY8NG2L9cL/I7YzbZB/D7QABWCTZuk2YaimoLmFh9VGv4DeaZHNxMH2ogYBZGV0Xlww
-         aD/lTi+pWGB2pJ36C28B+S/sq0tkqc8o7g1rjnNz95xWOG7g6tuBQjbGjiE5EzmBtRIS
-         AJj0kNGDoGlX3yb5s5b6LsFNa90sVZklORSq9QMs12P6EdtQ+mPrzDlquI3LkQdrsesL
-         txTw==
-X-Gm-Message-State: AOAM5336RHcJE5SJLxnt9DY7WqmubPNlh8vwh7icxge70wjZkOYvoJeJ
-        0xRuvjTkyvy+mPAtu6/NM1e5YBnQbMt06TfYMX2iEbUwlLdpyONG7M/CUrYqrXXaJxhrz5LO6x9
-        Vg0gm3DMiHKiBM9OCZtYNFKqXeSEr/JmGovytiWzKKyrotlT8LD2ONZoT
-X-Received: by 2002:a19:a411:: with SMTP id q17mr11860167lfc.203.1599548256276;
-        Mon, 07 Sep 2020 23:57:36 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJygp/Cy9i5kwwqPW29UqRHI61VnfUXcFf9tILlkpm11JRKPQHotL77csl2OK1RXodhDbYgfkWa4aatVJw3RBRA=
-X-Received: by 2002:a19:a411:: with SMTP id q17mr11860150lfc.203.1599548255889;
- Mon, 07 Sep 2020 23:57:35 -0700 (PDT)
+        Tue, 8 Sep 2020 02:58:50 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886t7rI030774;
+        Mon, 7 Sep 2020 23:58:46 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=R1oTpZmA2x3Yv8mOLp6sTtbJd7UKNZAzMbXgw9yuxdM=;
+ b=SRN3KVOmoi9x0Za0/okEf6n1iuJ5VqqDsQfffgOKQxh8k+U7pfh7yhldMGE3o7oanGea
+ PKUqwlg6MaEyuZuuB3yAGDTPzIgESSsJe2LvDjKySmseolNC62sMj7/Zen61hoiz96EJ
+ OoiUBYtQiJcuIyok2Q5xa6DmE3/o6hfVulEsgaUFj7W3M2WJ6Lf+rrDCxDJeUsiypU0N
+ n8ANx7UsQ2h+4CCnWLu1uE2sl3v8JR33v+9ape2uNnEv9ULvmVs0upgHtxlJXai5YTe7
+ pmdMUjtljCmAS0UGBce4IprbvPhIHbsDbPRjr8Zwnyd7nr3VrmFH+IfbPia7bScFR0Oo lQ== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 33c81pth25-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 23:58:46 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:58:46 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:58:45 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 7 Sep 2020 23:58:45 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id CF1BA3F7043;
+        Mon,  7 Sep 2020 23:58:44 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886whxf004299;
+        Mon, 7 Sep 2020 23:58:43 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Mon, 7 Sep 2020 23:58:43 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        <linux-scsi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sudarsana Kalluru <sudarsana.kalluru@qlogic.com>,
+        <linux-spdx@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <GR-QLogic-Storage-Upstream@marvell.com>
+Subject: Re: [EXT] Re: [PATCH] MAINTAINERS: orphan sections with qlogic.com
+ group alias
+In-Reply-To: <yq1h7smkcqc.fsf@ca-mkp.ca.oracle.com>
+Message-ID: <alpine.LRH.2.21.9999.2009072352300.28578@irv1user01.caveonetworks.com>
+References: <20200828070824.8032-1-lukas.bulwahn@gmail.com>
+ <20200828091758.GF54274@SPB-NB-133.local>
+ <alpine.DEB.2.21.2008281524360.11562@felia>
+ <yq1h7smkcqc.fsf@ca-mkp.ca.oracle.com>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-References: <20200907035010.9154-1-po-hsu.lin@canonical.com> <20200907131217.61643ada@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200907131217.61643ada@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-Date:   Tue, 8 Sep 2020 14:57:24 +0800
-Message-ID: <CAMy_GT-kaqkcdR+0q5eKoW3CJn7dZSCfr+UxRf6e5iRzZMiKTA@mail.gmail.com>
-Subject: Re: [PATCHv3] selftests: rtnetlink: load fou module for
- kci_test_encap_fou() test
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 4:12 AM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Mon,  7 Sep 2020 11:50:10 +0800 Po-Hsu Lin wrote:
-> > The kci_test_encap_fou() test from kci_test_encap() in rtnetlink.sh
-> > needs the fou module to work. Otherwise it will fail with:
-> >
-> >   $ ip netns exec "$testns" ip fou add port 7777 ipproto 47
-> >   RTNETLINK answers: No such file or directory
-> >   Error talking to the kernel
-> >
-> > Add the CONFIG_NET_FOU into the config file as well. Which needs at
-> > least to be set as a loadable module.
-> >
-> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
->
-> > diff --git a/tools/testing/selftests/net/rtnetlink.sh b/tools/testing/selftests/net/rtnetlink.sh
-> > index 7c38a90..a711b3e 100755
-> > --- a/tools/testing/selftests/net/rtnetlink.sh
-> > +++ b/tools/testing/selftests/net/rtnetlink.sh
-> > @@ -520,6 +520,11 @@ kci_test_encap_fou()
-> >               return $ksft_skip
-> >       fi
-> >
-> > +     if ! /sbin/modprobe -q -n fou; then
-> > +             echo "SKIP: module fou is not found"
-> > +             return $ksft_skip
-> > +     fi
-> > +     /sbin/modprobe -q fou
-> >       ip -netns "$testns" fou add port 7777 ipproto 47 2>/dev/null
-> >       if [ $? -ne 0 ];then
-> >               echo "FAIL: can't add fou port 7777, skipping test"
-> > @@ -540,6 +545,7 @@ kci_test_encap_fou()
-> >               return 1
-> >       fi
-> >
-> > +     /sbin/modprobe -q -r fou
->
-> I think the common practice is to not remove the module at the end of
-> the test. It may be used by something else than the test itself.
->
-Hello Jakub,
-Thanks for your feedback.
+On Fri, 28 Aug 2020, 8:39am, Martin K. Petersen wrote:
 
-For this case I think it's safe to remove the module here, as it was
-never loaded before and thus causing this test to fail.
-If other tests in this rtnetlink.sh need this fou module, we should be
-able to spot those failures too, however this is the only failure as I
-can see.
-(pmtu.sh will need fou module to run as well, but it will be loaded there.)
+> 
+> Lukas,
+> 
+> > So, if these drivers are not orphans, you can answer Thomas Gleixner's
+> > original email from 2019. If you can quickly ack that patch set, I am
+> > happy to do the donkey work to get this apply nicely on the current
+> > master (please CC me on that response).
+> 
+> This is the first I hear of this since the patches weren't CC:ed to
+> linux-scsi. And not all of these changes pertain to storage drivers but
+> to networking so I am also not sure that mails sent to the above Storage
+> alias would have ended up in the right place.
+> 
+> But we'll get this fixed up. Reaching out to our contacts at Marvell.
+> 
 
-Shouldn't we insert the required module whenever the test needs it? So
-that we can run the test itself directly, without depending on other
-tests.
-Also, I can see modules for tests were being unloaded in other tests as well.
+Just to keep this thread updated, we are checking with the legal before 
+ack-ing the change on spdx. Nilesh has already updated Thomas G. about 
+this on the orignal spdx thread.
 
-Thanks
-
-> >       echo "PASS: fou"
-> >  }
-> >
->
+Regards,
+-Arun
+PS: Thanks Roman for the CC. These days our spam filters are a little
+    unfriendly towards the linux-* e-mails.
