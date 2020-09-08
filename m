@@ -2,257 +2,236 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D4DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94F5C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 258C42080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D39F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FK9dKPCI"
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="xCh81xpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbgIHSdo (ORCPT
+        id S1731795AbgIHSdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:33:44 -0400
-Received: from mout.gmx.net ([212.227.15.18]:42701 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731362AbgIHQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599581363;
-        bh=3rPErxsobiM2Nx402ZHly3ReD4PHag8PvdQVYoKtzkk=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=FK9dKPCIzV66zX5BBdoSO7RmkKl/+DgB1CWwBfuIHoNMXCDOslF7x4A1n4qPECnU2
-         d94z03WCQwq/qSSOCxoadQVDhuvpiD2Ot6GBAlh8BWchalGT1yif15OeB7Af+8PYl2
-         cx1ozdT9BVXwLMRciirooB8iREQpJF85aJdIRy0Y=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ts7.local ([84.179.245.142]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MxUnz-1kUnlP2bHt-00xrSJ; Tue, 08
- Sep 2020 14:02:30 +0200
-From:   Thomas Schmitt <scdbackup@gmx.net>
-To:     linux-scsi@vger.kernel.org
-Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, Thomas Schmitt <scdbackup@gmx.net>
-Subject: [PATCH 0/2] Fix automatic CD tray loading for data reading via sr
-Date:   Tue,  8 Sep 2020 14:02:05 +0200
-Message-Id: <20200908120207.5014-1-scdbackup@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        Tue, 8 Sep 2020 14:33:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731843AbgIHScN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:32:13 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9A5C0617AB
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:24:21 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id s13so279090wmh.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CqUNZPQoWK27ZwluptR7lmOmGnDUgLbIso50mEGeMNA=;
+        b=xCh81xpPbIIdQ/7J9jkA8BvZPOWnUqm1dGONxOZSWXkhOX7jZzHxmcL3TN0I/kjql9
+         kQbku02XgzFM6c1dJbPQq3FZK0MSAQ9yuP3paVxLJmCeWc7EMlYudhSw6anka+2OqPhl
+         NimzWJRhnXEuPRT7W+jk9OnuGF8bPld3Fh/23SGtNqxbsrJqnCrwvIJkwL7qPYjyQX2h
+         Am9p5AQOi6QrURcnhsceskJPAlniay5LQjG89pDzzpKgm75/64R+PWvB/0Va2Igqlfgz
+         brQdEO679PsYqfo+qeJfsfrznRuNJf286npI71+im+57glbjUdWCAb8v7w/aGkow4jgj
+         AtNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CqUNZPQoWK27ZwluptR7lmOmGnDUgLbIso50mEGeMNA=;
+        b=KSg02i4KxL7isTORNq7FIeXV5lAtItXvNoI2PNmQcna+misc71YfV9WTRoz6FqKTnQ
+         NTyGo9i4w4xcil71kHTa0UbDOlZjW6b1I8aPN0aVWvjO18j1sdoRozGiKEQBS6TJ5Sxm
+         clFbCGPea+Z0VXGjOlnJZGL+MRCr6etvgBYsWFyqpK+I2DWMwK1mDFuuX2DX1fzur1sW
+         v4EWlX1eVcaiXyyUAhR7twJWITu7xHrJY7hEEGosTJJ8hxlpMSKJ7v1Y3rw4BJsc897R
+         f3Ep5pbIXsDNvABNdABV9r/R3pKkf5jtlza4aEg6LbveEfykT29FsmWOXVRKk5ey+8MM
+         tuug==
+X-Gm-Message-State: AOAM532K1HvSE3LvcXG1eC7XQop9KnM9La7oyipdBHVu2GiTQF/ci64u
+        baK8c6BQvHhBvwx2KH3gHfsPJSWrqUc+Ld+5qOrFCA0LW8I=
+X-Google-Smtp-Source: ABdhPJxOwQbJk9/aV71MTPLxx7a72zVMcRW0Uovfz4WlvN1UIbLkNSAN3qn0cV3Q1nLP9bMLYeSupkeULTRFe8cdiM8=
+X-Received: by 2002:a1c:81c6:: with SMTP id c189mr394744wmd.124.1599589460131;
+ Tue, 08 Sep 2020 11:24:20 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200501193141.30293-1-rad@semihalf.com> <3ad44b75-387f-da75-d7b2-3a16ed00550c@linux.intel.com>
+ <CAOs-w0LPeKgooa_98x_Jkzus-Y5Kad7pDby0CriDGb6nTp_6sA@mail.gmail.com>
+ <8b97bf43-ddd8-df81-90e7-9e87c19af1ab@linux.intel.com> <CAOs-w0KvKcRnDkMtdAV2n_3XLfwk9KgM65QEO=6+qNshobJx3g@mail.gmail.com>
+ <2a88f81f-c7a3-f9fc-06a3-c39496b57d0c@linux.intel.com>
+In-Reply-To: <2a88f81f-c7a3-f9fc-06a3-c39496b57d0c@linux.intel.com>
+From:   =?UTF-8?Q?Rados=C5=82aw_Biernacki?= <rad@semihalf.com>
+Date:   Tue, 8 Sep 2020 20:24:03 +0200
+Message-ID: <CAOs-w0KRipoK5xHGf4eDkydd5GPE6HXpnKy1WVZctBkM4CiuDg@mail.gmail.com>
+Subject: Re: [PATCH V2] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
+        Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>, Takashi Iwai <tiwai@suse.com>,
+        "Sienkiewicz, Michal" <michal.sienkiewicz@intel.com>,
+        linux-kernel@vger.kernel.org,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Alex Levin <levinale@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:5nyH4+bxE2qnjrIl+MWxnoPVzz/IrW+WP23SLrCeOKb+BtiDEGQ
- dCTaVpa++4/ItLe+s2BqJbTUTomW0NANuXuNZ0S/4e6nGzJrWKRh4edeJCUdQdjXeNLWDpf
- C/HR2jCdV9g2tgnOKHXMUCCm/EBhqohUV6/timwE+8AhpHChA0SdFzlfLEQXnFOfwH2dC+Y
- nEMW8s7briQopvbPdS6cA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bEWSGX0SmkQ=:PB7hy06IZjKsc4nQwMl0Eu
- owkqWBXDV8YPDCsqL9fl79G2dv3G8DuB1U5HfW3vgQlv4BSIqRAqlLRFIQqyk20BaixEIrs0z
- Ok0/ANTIukGfzCuf+BD1FY8odBqcBiJJTfXOuK6mw8IlPZ4ABFCSEjPJdn4dU6o47iCzfWHJL
- I/50UGzwNtay3O4jsolc2bbdJzTTjueWEcfYQMyKm/tfZ5+2HuYAph5LkI1Ng0SmVqn3NfJwh
- Pbc764XmTAef2q4Eu4hZytoB+iEYVNWuptiXOOtSLKgQ+QE/cOjPQqBn+PFY9Y15QI6hjJ2zA
- t/UxOUf/0hKI8mhUZSqBzUrBqR8v7Fk9gY/GBpjgCYSfFwxkmX1K2eLWNjnoN2I0swRCSJnxW
- MB1Bd0vIVYU2xIWuR2WU1s66z9yu/2J/1xX+IVGzS/GR8AXv+56OW9YmKgKOgr2btEOX4e4Ps
- Ax6/vSeMxHaHBzRCE0KI7XPsbSfMziUvtINY4nfajeGa4vVpHcZyGg9vGkRo4vB0e0/GVNFeZ
- 1aGtcJz9KJ6mPzfy0z5UzCIUnma9YjQk97UvUTojmPgD3I3uekKQ1TMpVg9DemSJUJszUlRK0
- qvRYY8Zi7NW7aICXQ/nt4Hb+PPZ2BQeLJuz5Q49csFR12JVqX+d72x6Tva2cxp4kFXX3mL7P/
- 8aQ3MuFbJtbIFlzyVIe7uenXcTC8MMO1rvtjd7mVIQL1E1HDW+j/dwIWewQ4GfzE+sNaxErAk
- SiyN+QcV3Aby8Ow+3NYaTUsC0QzLs7G7fN3pS0p1yZZzFF0z9tP6mxFvhUmFFTFhrBVglMCkZ
- YSnja88FebP0bVs3xcfp5QUp3x16LErCNpuiL5AR0RHgp21Y3yXxw/nrmCYgjTWsvoBqGIT+c
- LyuZNKrinILUOBfPQgFlCpQqvgus8Vb6KYrLftMNspP6jSAy4zExcQoP1fqx0ESJUsrid0uTh
- bo8v6YcOyFa3LyLArFAhTHguBEoRXpNVVTBeWsaQvbwT+cFopG5ufnOagtmnDMB+MCxK7P2Nu
- lGqjhWVreG8+q+imxtPBIQD73eObmMxR9zXU2kIKC7zLuZisNVNLpaR3/GOxdlkUAF6DJLhFq
- rOEC8UmfpmMfqhmXs0aGO55pWk97f7vAJ0Of7orVDkQiuSnaLLTnv0TfOGMoJye3h8tAx4jdC
- 96dAOHGyPxXoJ4XaYJKwmXLpk1xMT5lw8Bak+wTlmo+WW0/P8zLOzd0Do6wySq6XoQ1pwj6hJ
- Sj2i29bH2mYGmbWQs01jMQevu0pxs10az8OlPWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Thanks for the tip!
+Let me reformat the patch.
 
-i am aware that a solution proposal for this problem was not accepted
-in november 2019. Mine is independent of this and also my first attempt to
-submit a kernel patch.
+wt., 8 wrz 2020 o 20:06 Pierre-Louis Bossart
+<pierre-louis.bossart@linux.intel.com> napisa=C5=82(a):
 
-If
-  open("/dev/sr0", O_RDONLY);
-pulls in the tray of an optical drive, it immediately returns -1 with
-errno ENOMEDIUM, or the first read(2) fails with EIO. Later, when the
-drive has stopped blinking, another open() yields success and read()
-works.
-This affects not only userland reading of the device file but also
-mounting the device.
-
-The fundamental problem of the current implementation is that function
-sr_block_open() does medium assessment before calling cdrom_open(), under
-which open_for_data() performs the tray loading too late.
-A minor problem is that there is currently no waiting loop for the drive's
-decision about the medium.
-
-Please regard my proposal as follow-up to commit 2bbea6e11735 ("cdrom: do
-not call check_disk_change() inside cdrom_open()") of march 2008. It moved
-medium assessment out ouf cdrom_open() but left behind tray loading.
-
-=2D-----------------------------------------------------------------------=
---
-For now my proposal fixes only data reading via sr, because that's what i
-am able to test:
-
-Factor out from open_for_data() a new function cdrom_handle_open_tray()
-and export it.
-It decides whether it can and should load the tray. If so, it emits the
-tray loading command and waits for up to 40 seconds for the drive to make
-its decision. Plus 1 second of waiting in case of a usable medium, in
-order to avoid hard-to-test narrow race conditions.
-
-Let cdrom_open() not attempt to load the tray any more, but rather just
-return -ENOMEDIUM if it detects an open tray.
-
-Let sr_block_open() call cdrom_handle_open_tray() under mutex cd->lock
-which it gives up immediately thereafter.
-Then it calls the same sequence of medium assessment, mutex cd->lock and
-cdrom_open() as it does currently.
-
-Thanks to commit 51a858817dcd ("scsi: sr: get rid of sr global mutex") of
-february 2020, the blocking of at most 41 seconds only affects the
-particular drive and not all other sr devices.
-
-=2D----------------------------------------------------------------------
-Successful tests:
-
-I tested with 3 different drives at SATA and USB (ASUS DRW-24D5MT,
-Pioneer BDR-S09, LG BH16NS40 in USB box) simultaneously by
-  time dd if=3D/dev/sr"$N" bs=3D2048 count=3D1 of=3D/dev/null
-with CD, DVD, and BD media. Waiting times ranged from 9 to 23 seconds.
-
-The same times were measured when each drive was the only busy one.
-
-Simultaneous full reads succeeded starting from open tray by
-  time dd if=3D/dev/sr"$N" bs=3D2048 status=3Dprogress of=3D/dev/null
-
-I tested mounting CD, DVD and BD with ISO 9660 from open tray by
-  mount /dev/sr"$N" /mnt/iso
-
-The patches were checked on Debian 10 by
-  ./scripts/checkpatch.pl --strict --codespell --codespellfile \
-       /usr/lib/python3/dist-packages/codespell_lib/data/dictionary.txt
-This yielded some small corrections in the moved code.
-
-=2D--------------------------------------------------------------------
-Patch base:
-
-My patches still talk of check_disk_change() because i do not know how
-to get a git branch which already shows the effect of the recent patch set
-"rework check_disk_change()" by Christoph Hellwig.
-
-For now my patches are based on next-20200827 because the then recent
-v5.9-rc2 did not boot unchanged on my machine due to a nvme problem.
-
-Please instruct me about the proper base and how to get it, if it is not
-by a simple git checkout -B from a clone of
-  git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-=2D-------------------------------------------------------------------
-The rest of this mail is about these aspects:
-- What about CD audio and non-sr CD drivers.
-- Why not (yet) waiting without mutex after tray loading.
-- Why i can only test data reading via sr.
-- Why the current code not always yields ENOMEDIUM at open() but sometimes
-  EIO at the first read(2).
-
-=2D-------------------------------------------------------------------
-What about CD audio and non-sr CD drivers:
-
-Because i lack of testing opportunities (see below), i omit:
-
-- Calling cdrom_handle_open_tray() in the bdops.open() functions of
-  cdrom/gdrom.c, block/paride/pcd.c, ide/ide-cd.c.
-
-- Calling cdrom_handle_open_tray() in the callers of
-  check_for_audio_disc(): cdrom_ioctl_audioctl() and
-  cdrom_ioctl_play_trkind() which control audio playback by the drive to
-  some (traditionally analog) audio outlet.
-
-- Replacing the tray loading code of check_for_audio_disc() in cdrom.c
-  by a mere status checker like by my proposal in open_for_data().
-  (It could stay in place but would be of no use any more.)
-
-My changes in sr_block_open() and open_for_data() could serve as
-templates for these omitted tasks.
-
-I would prepare patches if there is acceptance for untested code.
-
-=2D-------------------------------------------------------------------
-Why not (yet) waiting without mutex after tray loading:
-
-It seems to me that it should be safe to run the new function
-cdrom_handle_open_tray() without cd->lock, as it mainly emits drive
-commands START/STOP UNIT and TEST UNIT READY. It does not manipulate
-members of device structs.
-Without lock it would enable access to the drive by other threads during
-the waiting for a drive decision.
-
-But i have no idea how to prove that it is safe.
-
-=2D--------------------------------------------------------------------
-Why i can only test data reading via sr:
-
-None of my DVD and BD drives has a socket for plugging loudspeakers or
-earphones. So i cannot test the consequences of my proposal to the ability
-of playing audio tracks.
-
-sr is the only driver i can test, because of the extinction status of the
-devices of the other drivers which call cdrom_open():
-- gdrom seems to be for ancient gaming consoles. It is unclear to me
-  whether they could load a tray by own motor power.
-- paride is described as ATAPI via an old printer cable.
-- ide-cd ... was not that the CD part of hd swallowed by sr, as the HDD
-  part of hd was swallowed by sd ?
-
-sr is well alive. BD drives cost ~80 EUR, 25 GB BD-RE media <1 EUR.
-Not a competitor to HDD, but to USB sticks.
-
-=2D--------------------------------------------------------------------
-Why the current code not always yields ENOMEDIUM at open() but sometimes
-EIO at the first read(2):
-
-A newly bought Pioneer BDR-S09 shows this behavior with the current code.
-dd reports I/O error rather than no medium.
-
-Inspection by libburn shows that it waits with its reply to START/STOP
-UNIT until it has decided over the medium. The first following TEST UNIT
-READY yields key=3D6, asc=3D28h, ascq=3D00h "Not Ready to Ready change, me=
-dium
-may have changed" and the second TEST UNIT READY yields success.
-
-This substitutes for the missing waiting loop, but not for the lack of
-medium assessment after loading. So open(2) succeeds, but read(2) faces
-the medium assessment which was made when the tray was out. The result was
-in my experiments always EIO on the first read().
-
-This behavior is peculiar among my drives. Seven others reply to
-START/STOP UNIT as soon as the tray has moved in. Then for several seconds
-they reply to TEST UNIT READY by key=3D2, asc=3D04h, ascq=3D01h "Logical u=
-nit is
-in process of becoming ready".
-
-Have a nice day :)
-
-Thomas
-
-Thomas Schmitt (2):
-  cdrom: delegate automatic CD tray loading to callers of cdrom_open()
-  sr: fix automatic tray loading for data reading
-
- drivers/cdrom/cdrom.c | 165 +++++++++++++++++++++++++++++++-----------
- drivers/scsi/sr.c     |   9 ++-
- include/linux/cdrom.h |   3 +
- 3 files changed, 131 insertions(+), 46 deletions(-)
-
-=2D-
-2.20.1
-
+>
+>
+>
+> On 9/8/20 12:42 PM, Rados=C5=82aw Biernacki wrote:
+> > Sorry for missing the response for so long.
+> > Somehow lost this thread in my mailbox.
+>
+> That happens to all of us!
+>
+> > =C5=9Br., 6 maj 2020 o 00:04 Pierre-Louis Bossart
+> > <pierre-louis.bossart@linux.intel.com> napisa=C5=82(a):
+> >>
+> >>
+> >>>>> This single fix address two issues on machines with nau88125:
+> >>>>> 1) Audio distortion, due to lack of required clock rate on MCLK lin=
+e
+> >>>>> 2) Loud audible "pops" on headphones if there is no sysclk during n=
+au8825
+> >>>>>       playback power up sequence
+> >>>>>
+> >>>>> Explanation for:
+> >>>>> 1) Due to Skylake HW limitation, MCLK pin can only output 24MHz clk
+> >>>>>       rate (it can be only connected to XTAL parent clk). The BCLK =
+pin
+> >>>>>       can be driven by dividers and therefore FW is able to set it =
+to rate
+> >>>>>       required by chosen audio format. According to nau8825 datashe=
+et, 256*FS
+> >>>>>       sysclk gives the best audio quality and the only way to achie=
+ve this
+> >>>>>       (taking into account the above limitations) its to regenerate=
+ the MCLK
+> >>>>>       from BCLK on nau8825 side by FFL. Without required clk rate, =
+audio is
+> >>>>>       distorted by added harmonics.
+> >>>>
+> >>>> The BCLK is going to be a multiple of 50 * Fs due to clocking
+> >>>> restrictions. Can the codec regenerate a good-enough sysclk from thi=
+s?
+> >>>
+> >>> According to Intel, silicon has a limitation, on SKL/KBL only clk_id =
+=3D
+> >>> SKL_XTAL, .name =3D "xtal" is available for IO domain.
+> >>> As mentioned in the commit:
+> >>> MCLK is generated by using 24MHz Xtal directly or applying a divider
+> >>> (so no way of achieving the rate required by audio format).
+> >>> BCLK/FS is generated from 24MHz and uses dividers and additional
+> >>> padding bits are used to match the clock source.
+> >>> Next gen silicon has the possibility of using additional clock source=
+s.
+> >>>
+> >>> Summing up, using MCLK from SKL to NAU88L25 is not an option.
+> >>> The only option we found is to use BCLK and regen the required clock
+> >>> rate by FLL on the NAU88l25 side.
+> >>
+> >> Right, this 24 MHz is a recurring problem.
+> >> But what I was asking was if the NAU8825 is fine working with e.g. a
+> >> 2.4MHz bit clock. i.e. with 25 bit slots or padding at the end of the =
+frame?
+> >
+> >  From our tests NAU8825 is working fine with these parameters.
+> > Also the output audio signal looks fine on the scope and FFT and there
+> > are no audible glitches.
+> >
+> >>
+> >>>
+> >>>>>
+> >>>>> 2) Currently Skylake does not output MCLK/FS when the back-end DAI =
+op
+> >>>>>       hw_param is called, so we cannot switch to MCLK/FS in hw_para=
+m.  This
+> >>>>>       patch reduces pop by letting nau8825 keep using its internal =
+VCO clock
+> >>>>>       during widget power up sequence, until SNDRV_PCM_TRIGGER_STAR=
+T when
+> >>>>>       MCLK/FS is available. Once device resumes, the system will on=
+ly enable
+> >>>>>       power sequence for playback without doing hardware parameter,=
+ audio
+> >>>>>       format, and PLL configure. In the mean time, the jack detecio=
+n sequence
+> >>>>>       has changed PLL parameters and switched to internal clock. Th=
+us, the
+> >>>>>       playback signal distorted without correct PLL parameters.  Th=
+at is why
+> >>>>>       we need to configure the PLL again in SNDRV_PCM_TRIGGER_RESUM=
+E case.
+> >>>>
+> >>>> IIRC the FS can be controlled with the clk_ api with the Skylake dri=
+ver,
+> >>>> as done for some KBL platforms. Or is this not supported by the firm=
+ware
+> >>>> used by this machine?
+> >>>
+> >>> According to Ben, SKL had limitations in FW for managing the clk's
+> >>> back in the days.
+> >>> Can you point to the other driver you mention so we can cross check?
+> >>
+> >> There are two KBL drivers that control the SSP clocks from the machine
+> >> driver, but indeed I don't know if this would work on Firmware, it'd b=
+e
+> >> a question for Lech/Cezary.
+> >>
+> >> kbl_rt5663_max98927.c:          ret =3D clk_prepare_enable(priv->mclk)=
+;
+> >> kbl_rt5663_max98927.c:          ret =3D clk_prepare_enable(priv->sclk)=
+;
+> >> kbl_rt5663_rt5514_max98927.c:           ret =3D
+> >> clk_prepare_enable(priv->mclk);
+> >> kbl_rt5663_rt5514_max98927.c:           ret =3D
+> >> clk_prepare_enable(priv->sclk);
+> >> kbl_rt5663_rt5514_max98927.c:                   ret =3D
+> >> clk_prepare_enable(priv->mclk);
+> >>
+> >
+> > Czarek answered this and we got the same response from other Intel
+> > devs while consulting this change:
+> > FW cannot request a chosen rate (48k) for MCLK pin as it does not
+> > "align with what's present on SKL hw".
+> >
+> > The only way we found out for NAU8825 to cooperate at chosen rate with
+> > SKL HW is to regen the MCLK from BCLK by FLL as mentioned above.
+> > NHTL is used to set SSP0 (48k, 24/25 bit on 24MHz crystal).
+> > If I get all of this right, use of NHTL and HW "abilities" would
+> > explain why there is no call to change SSP from a machine driver.
+> >
+> >
+> > If all of this is ok I will send V3 with msleep() removed.
+>
+> Sounds good.
+>
+> You may want to simplify your commit message and just state what you
+> described, e.g.
+>
+> "Since 64xfs clocks cannot be generated, the NAU8825 is configured to
+> re-generate its system clock from the BCLK using the FLL. The link is
+> configured to use a 48kHz frame rate, and 24 bits in 25-bit slot. The
+> SSP configuration is extracted from NHLT settings and not dynamically
+> changed. Listening tests and measurements do not show any distortion or
+> issues".
+>
+>
+>
