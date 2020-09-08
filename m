@@ -4,69 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6975EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A457C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EFB206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F4E206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jzzh0sjM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p9feilB1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731980AbgIHQh4 (ORCPT
+        id S1732088AbgIHQiB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60586 "EHLO
+        Tue, 8 Sep 2020 12:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732048AbgIHQhQ (ORCPT
+        with ESMTP id S1731673AbgIHQhS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:16 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0899C0610E6
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:13:01 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id w7so11063470pfi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:13:01 -0700 (PDT)
+        Tue, 8 Sep 2020 12:37:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72E8C061A01
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:02:18 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id kk9so5710802pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SMcWrEBFn4y8oWuAmn2eZMWAoBr3QRyf1vevmm6kpYs=;
-        b=Jzzh0sjM+sebliF2+g0oD6UV30lD8Je25a3ORZDUih+SpSCxXDxxYCU+2gGsh9/OkJ
-         70s3sTKNRMsamCYPAapkWhpvADc+OyCyeznmqk45YsWg8gFtDxSYjWXriqEh3urgYvoy
-         tebnU1yTEvrd+phD+7FT8IeEymsitQrYPaUBiKH2kR+9ZsLjwx2c/axjW9Y6HLpLPT55
-         ViDKdLPdp5ygXnpd9fq7J2GGefutFP4GG3PkwixuiI9Pc63x7sraVe8wC3jcawGBX9oP
-         YJGU47XU8QZ1K0ai+PaP/jVxRUABdUb0B1JEBXUt1yo+63SthraFPxk3JDq17Req8iAK
-         Az3A==
+        bh=tB5vJBBCtNhXMgKB2GrADyceasBad1luqBoSGuNUjz8=;
+        b=p9feilB1M35mHPB65haOwv2e+Ui0Qw1FZR6nJHx+HtJ5jdCWL+Vw+aGtIfvQo1r1OJ
+         0aHmvXgoDtAt/sBoiUVFV59gpc7u5lw8lcsFx+Yj3j79cT4WAP1MKg/yMvt1A90Qnr8V
+         sD47h4UkaS+Ytrx40Sw8u+S7bIUHR3X0fSnVhGHgJLbbSyVQN6TnKb/P8CQmNn6TI69v
+         Vd+X3f7izf2lMBoCiIHx2Z3/Mn4O07a+wOiNjeYSiSi6/azINfDQiyib/FAzB+3VwhQU
+         +MAAJBmSsxhesuQWvcBOlU6uNChiTz9g7zt9S1akiMJl+zb91tDeOjIiaIywtwJRjiVo
+         LiZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SMcWrEBFn4y8oWuAmn2eZMWAoBr3QRyf1vevmm6kpYs=;
-        b=W/vN4k3BXB/u/znssDVQpBGe7BO1x5uzWBDRog1Fdhqyfm2xDps1mqBZSlT5GvxxuD
-         ennQRBeYvC8vaMMEj0ofsADvmwbNEomPnq+PgHhLPiwNS/oGwZS/J/dPV6/cMR6bqnZs
-         TpMieMmIlI5jv6dcVcPg6+5RYYZeT6qApDr4i+XzuQKb4MKQQ0jrhYgwD9RkoR8rSYAf
-         swV8FuB+eftWwdsCLcqVbeHpUv08IyXQ5W7fmIFZmbAVl6MCMfh7Xfso9qPAY9FwDsuy
-         Bkql4ewxPbHW93VSeh3sH3ttfEnckRomflSQGWNWHf276Uh2wW9RDamw1RfiWWCbalti
-         UvHQ==
-X-Gm-Message-State: AOAM533qRD0sMh4o8twosb+egz+BJdXmjHAj1LwLrifki7aZKjOPXDIE
-        48gV93NL/c8mc9qCD8BKpdv2aVIJYX02GCM7eFCzQg==
-X-Google-Smtp-Source: ABdhPJyefGenq86vwXxC8byR1bbNo446im+Q1wzZOY2tOktJ+HGERi+qxWaH7CgzJBKUU7/QW+Q68vuVcA9ikxvsBxY=
-X-Received: by 2002:a62:c2:: with SMTP id 185mr25215607pfa.11.1599574380885;
- Tue, 08 Sep 2020 07:13:00 -0700 (PDT)
+        bh=tB5vJBBCtNhXMgKB2GrADyceasBad1luqBoSGuNUjz8=;
+        b=hrwJnAdf9QagmWrdrGwhuVAdCjcyqF+kBHrTzMzqNJhcUUxYZz+97NwwZMwSTCq86T
+         t3hZFfMleci5LGO/JkG7La09feXDRyW3pRqF4Nwm0do81KgkXwuIDi4LszU2LYGSG36z
+         wuxz9L36n+QiKkMd0pn3DxIv+Hep5qlt3trJvUVCJlmDfu+iA2gC7dC/Qno9KEfvDQH5
+         +zUn3ZHvF3VTFzv5bsZg5qYWvpZBSo11bV3HGFHD+RauhsH4E/di/5Z0bRwzsCYMqlFC
+         ILAEx8UtAv9TA8p/A5aNF59b9eWp86hA9izyuhTM2lznRRkBys1GN1vTWCtsfAdtp8b1
+         hHCw==
+X-Gm-Message-State: AOAM530qyi0GzWPTnMnnBmxwOYyftgu30bKtBU4ZnLg787wDH5+pw2f1
+        E0Ae5JJRqXz1z14vpc3wPeOwyjRhNmIJs/EkDoDEfw==
+X-Google-Smtp-Source: ABdhPJwVsPMlGPGLSvUSlwAf67m6wSrtn8ecy42/I0lrRYwzO3XiWHqxki87TpJgnhSMr6md8e+Pc2LRgwAFcX0H4MU=
+X-Received: by 2002:a17:90a:81:: with SMTP id a1mr3986021pja.136.1599573737858;
+ Tue, 08 Sep 2020 07:02:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1597425745.git.andreyknvl@google.com> <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
- <20200827104033.GF29264@gaia> <CAAeHK+x_B+R3VcXndaQ=rwOExyQeFZEKZX-33oStiDFu1qePyg@mail.gmail.com>
- <20200908140620.GE25591@gaia>
-In-Reply-To: <20200908140620.GE25591@gaia>
+References: <cover.1597425745.git.andreyknvl@google.com> <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+ <20200827103819.GE29264@gaia> <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com> <20200827121604.GL29264@gaia>
+In-Reply-To: <20200827121604.GL29264@gaia>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 8 Sep 2020 16:12:49 +0200
-Message-ID: <CAAeHK+zkWojbbq1WgoC2D6JuR=Jy+jSU78PF74qdmD0aTg6cQQ@mail.gmail.com>
-Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
+Date:   Tue, 8 Sep 2020 16:02:06 +0200
+Message-ID: <CAAeHK+yYEFHAQMxhL=uwfgaejo3Ld0gp5=ss38CjW6wyYCaZFw@mail.gmail.com>
+Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
 To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         kasan-dev <kasan-dev@googlegroups.com>,
         Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Alexander Potapenko <glider@google.com>,
@@ -86,46 +85,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 4:06 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+On Thu, Aug 27, 2020 at 2:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
 >
-> On Tue, Sep 08, 2020 at 03:18:04PM +0200, Andrey Konovalov wrote:
-> > On Thu, Aug 27, 2020 at 12:40 PM Catalin Marinas
-> > <catalin.marinas@arm.com> wrote:
+> On Thu, Aug 27, 2020 at 11:56:49AM +0100, Vincenzo Frascino wrote:
+> > On 8/27/20 11:38 AM, Catalin Marinas wrote:
+> > > On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
+> > >> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+> > >> index 7717ea9bc2a7..cfac7d02f032 100644
+> > >> --- a/arch/arm64/kernel/mte.c
+> > >> +++ b/arch/arm64/kernel/mte.c
+> > >> @@ -18,10 +18,14 @@
+> > >>
+> > >>  #include <asm/barrier.h>
+> > >>  #include <asm/cpufeature.h>
+> > >> +#include <asm/kasan.h>
+> > >> +#include <asm/kprobes.h>
+> > >>  #include <asm/mte.h>
+> > >>  #include <asm/ptrace.h>
+> > >>  #include <asm/sysreg.h>
+> > >>
+> > >> +u64 gcr_kernel_excl __read_mostly;
 > > >
-> > > On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
-> > > > diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> > > > index 152d74f2cc9c..6880ddaa5144 100644
-> > > > --- a/arch/arm64/mm/proc.S
-> > > > +++ b/arch/arm64/mm/proc.S
-> > > > @@ -38,7 +38,7 @@
-> > > >  /* PTWs cacheable, inner/outer WBWA */
-> > > >  #define TCR_CACHE_FLAGS      TCR_IRGN_WBWA | TCR_ORGN_WBWA
-> > > >
-> > > > -#ifdef CONFIG_KASAN_SW_TAGS
-> > > > +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
-> > > >  #define TCR_KASAN_FLAGS TCR_TBI1
-> > > >  #else
-> > > >  #define TCR_KASAN_FLAGS 0
-> > >
-> > > I prefer to turn TBI1 on only if MTE is present. So on top of the v8
-> > > user series, just do this in __cpu_setup.
+> > > Could we make this __ro_after_init?
 > >
-> > Started working on this, but realized that I don't understand what
-> > exactly is suggested here. TCR_KASAN_FLAGS are used in __cpu_setup(),
-> > so this already happens in __cpu_setup().
+> > Yes, it makes sense, it should be updated only once through mte_init_tags().
 > >
-> > Do you mean that TBI1 should be enabled when CONFIG_ARM64_MTE is
-> > enabled, but CONFIG_KASAN_HW_TAGS is disabled?
+> > Something to consider though here is that this might not be the right approach
+> > if in future we want to add stack tagging. In such a case we need to know the
+> > kernel exclude mask before any C code is executed. Initializing the mask via
+> > mte_init_tags() it is too late.
 >
-> What I meant is that we should turn TBI1 only when the MTE is present in
-> hardware (and the ARM64_MTE option is on). But I probably missed the way
-> MTE is used with KASAN.
+> It depends on how stack tagging ends up in the kernel, whether it uses
+> ADDG/SUBG or not. If it's only IRG, I think it can cope with changing
+> the GCR_EL1.Excl in the middle of a function.
 >
-> So what happens if CONFIG_KASAN_HW_TAGS and CONFIG_ARM64_MTE are both on
-> but the hardware does not support MTE? Does KASAN still generate tagged
-> pointers? If yes, then the current patch is fine, we should always set
-> TBI1.
+> > I was thinking to add a compilation define instead of having gcr_kernel_excl in
+> > place. This might not work if the kernel excl mask is meant to change during the
+> > execution.
+>
+> A macro with the default value works for me. That's what it basically is
+> currently, only that it ends up in a variable.
 
-No, the tag is always 0xFF when MTE is not supported.
-
-Should we then only enable TBI1 if system_supports_mte() or something like that?
+Some thoughts on the topic: gcr_kernel_excl is currently initialized
+in mte_init_tags() and depends on the max_tag value dynamically
+provided to it, so it's not something that can be expressed with a
+define. In the case of KASAN the max_tag value is static, but if we
+rely on that we make core MTE code depend on KASAN, which doesn't seem
+right from the design perspective.
