@@ -2,228 +2,117 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8C7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B95C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDB5F20759
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jxt+vEBH"
+	by mail.kernel.org (Postfix) with ESMTP id EF0272078E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599588708;
+	bh=bLHFQoqjMw1LqzuW5lIQUHGrICvm3uFWuzg3G89iCmY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=e7bQO5tJqBicQcleN30Mcd6BjoroRN6SC/5YpGCfrAn7lKvbNdhffyFkaK27EAEfy
+	 pT9m4rti9DahuNeQh/2IkaMBLZ1k8SCqF5bgrNf+6bYk0RPjDTTz0f3nYIL38SlpGP
+	 8lCJ6c/sq3nLeAM42hb9S/MIMtEDumLagZUiE5XI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbgIHSLb (ORCPT
+        id S1731805AbgIHSJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:11:31 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13044 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732119AbgIHSKg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:10:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f57c8e00002>; Tue, 08 Sep 2020 11:09:36 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 08 Sep 2020 11:10:27 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 08 Sep 2020 11:10:27 -0700
-Received: from [10.2.171.137] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
- 2020 18:10:26 +0000
-Subject: Re: [PATCH v5 2/3] dt-bindings: media: imx274: Add optional input
- clock and supplies
-To:     Jacopo Mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <hverkuil@xs4all.nl>, <jacopo+renesas@jmondi.org>,
-        <luca@lucaceresoli.net>, <leonl@leopardimaging.com>,
-        <robh+dt@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1599012278-10203-1-git-send-email-skomatineni@nvidia.com>
- <1599012278-10203-3-git-send-email-skomatineni@nvidia.com>
- <20200903125542.nxiafnysatoexken@uno.localdomain>
- <d3a1843c-5d73-cfa6-9611-405b905ddcd1@nvidia.com>
- <20200903163525.p5z2adhp4wq453bs@uno.localdomain>
- <f38bb328-b282-783b-3ac5-5441001d10b6@nvidia.com>
- <20200908093341.GB834@valkosipuli.retiisi.org.uk>
- <20200908143459.cn7luzj27nhjzymt@uno.localdomain>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <94e97d7b-8337-505e-a5b6-4c9f4a690b55@nvidia.com>
-Date:   Tue, 8 Sep 2020 11:10:25 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 14:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731316AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:49 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFE7D24768;
+        Tue,  8 Sep 2020 15:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579710;
+        bh=bLHFQoqjMw1LqzuW5lIQUHGrICvm3uFWuzg3G89iCmY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cD+vvQSpDpTcYlPHceoRNtsOfu7TKk/mH8wTZ4Kc70yne4dQjvAUQTeF0TjrxoPo3
+         PQxGI4/KZ6qzIoDKk2qIQdUHzo2nDRegWgD5YWTs1vZxGS7zRS/PdKAhvf64uuTuP9
+         l2nBPth6PYr5wz3wmfI8C2LOo88A1rAzGTabtiuk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Norman Maurer <norman.maurer@googlemail.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 176/186] io_uring: no read/write-retry on -EAGAIN error and O_NONBLOCK marked file
+Date:   Tue,  8 Sep 2020 17:25:18 +0200
+Message-Id: <20200908152250.202142288@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200908143459.cn7luzj27nhjzymt@uno.localdomain>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599588576; bh=FN3tXc34iv1UsAy2cMQ8bvHXaIglBmKkaHwKKjVdSk8=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jxt+vEBHtMpTCI1wcHjAXvA3fH1ezk/uYWvxMgSVPpVGr60Aa02Tpx7S482/hd67J
-         86UlHHi0fGgneBqoWWuA7rDbI4s8e6nSez3iFfNFcvgp97Tu8DVjEq2lDthfT/9sdU
-         znxdUU1b6Etn1r2M7kD8wwp//l1+zRuUMCLVUVJmvz7j+JUFvSZ/uYP6v56VIMvtWH
-         7PK87G0HM2bkexLY8sJ5uxifyqACy/eRol92aXczBlkw18M9nUmbD+HSVe+jyz+vmD
-         BDXFMK14FJTEUaKEnnZxSU213yGX96nK7O3fH2Vh626gpFZIOci3scAjOkPvvUyCik
-         zQf8hwrkqfavw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jens Axboe <axboe@kernel.dk>
 
-On 9/8/20 7:34 AM, Jacopo Mondi wrote:
-> Hi Sakari, Sowjanya,
->
-> On Tue, Sep 08, 2020 at 12:33:41PM +0300, Sakari Ailus wrote:
->> On Thu, Sep 03, 2020 at 09:40:57AM -0700, Sowjanya Komatineni wrote:
->>> On 9/3/20 9:35 AM, Jacopo Mondi wrote:
->>>> Hi Sowjanya,
->>>>
->>>> On Thu, Sep 03, 2020 at 09:05:27AM -0700, Sowjanya Komatineni wrote:
->>>>> On 9/3/20 5:55 AM, Jacopo Mondi wrote:
->>>>>> Hello Sowjanya,
->>>>>>
->>>>>> On Tue, Sep 01, 2020 at 07:04:37PM -0700, Sowjanya Komatineni wrote:
->>>>>>> This patch adds IMX274 optional external clock input and voltage
->>>>>>> supplies to device tree bindings.
->>>>>>>
->>>>>>> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
->>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>> ---
->>>>>>>     .../devicetree/bindings/media/i2c/sony,imx274.yaml  | 21 ++++++=
-+++++++++++++++
->>>>>>>     1 file changed, 21 insertions(+)
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx27=
-4.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
->>>>>>> index 7ae47a6..57e7176 100644
->>>>>>> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
->>>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
->>>>>>> @@ -25,6 +25,27 @@ properties:
->>>>>>>       reset-gpios:
->>>>>>>         maxItems: 1
->>>>>>>
->>>>>> I just sent an update to my json-schema conversion of this bindings
->>>>>> document (not yet on patchwork, sorry) and Sakari pointed me to the
->>>>>> fact in between my v2 and my v4 this patch from you went in:
->>>>>> 4ea3273d24b ("dt-bindings: media: imx274: Add optional input clock a=
-nd supplies")
->>>>>>
->>>>>> I should probably now update my bindings conversion patch, basically
->>>>>> taking in what you've done here, but I would have one question.
->>>>>>
->>>>>>> +  clocks:
->>>>>>> +    maxItems: 1
->>>>>>> +    description: Reference to the sensor input clock
->>>>>>> +
->>>>>>> +  clock-names:
->>>>>>> +    maxItems: 1
->>>>>>> +    items:
->>>>>>> +      - const: inck
->>>>>>> +
->>>>>>> +  vana-supply:
->>>>>>> +    description:
->>>>>>> +      Analog voltage supply, 2.8 volts
->>>>>>> +
->>>>>>> +  vdig-supply:
->>>>>>> +    description:
->>>>>>> +      Digital IO voltage supply, 1.8 volts
->>>>>>> +
->>>>>>> +  vddl-supply:
->>>>>>> +    description:
->>>>>>> +      Digital core voltage supply, 1.2 volts
->>>>>> 4ea3273d24b introduced these regulators as VANA-supply, VDIG-supply
->>>>>> and VDDL-supply (please note the upper-case names). This version use=
-s
->>>>>> lower-case ones instead. Is this intentional ? The driver currently
->>>>>> does not parse any of these if I'm not mistaken, but as the bindings
->>>>>> in textual form defines an ABI which should be preserved during the
->>>>>> conversion to json-schema, should these be kept in upper-case ?
->>>>>>
->>>>>> Thanks
->>>>>>       j
->>>>> Yes, based on feedback lower case was recommended. So, changed to use
->>>>> lower-case names.
->>>>>
->>>>> These properties were not used by driver currently and from my prior =
-series
->>>>> only dt-binding got merged as=C2=A0 no feedback was received on it fo=
-r all prior
->>>>> versions.
->>>>>
->>>>> So, should be ok to change to lower-case as there properties are intr=
-oduced
->>>>> now and driver update using these properties is under review
->>>>>
->>>> Well, I see that patch went in v5.9-rc1, so it will be part of v5.9.
->>>>
->>>> If the bindings update goes in in v5.10 (or whatever comes after v5.9)
->>>> then we have a problem, as the DTB created for v5.9 won't work anymore
->>>> on any later version, and that should not happen. Alternatively, a fix
->>>> for the next -rc release could be fast-tracked, but you would
->>>> need to synchronize with the dt maintainers for that and make a patch
->>>> for the existing .txt bindings file.
->>>>
->>>> If the name change happens in the yaml file and one release is made
->>>> with the old names, then we're stuck with those forever and ever, if I
->>>> got the situation right.
->>>>
->>>> Please check with the dt and media maintainers, or they can comment
->>>> here if they glance through these lines.
->>>>
->>>> Thanks
->>>>     j
->>> Hi Leon Luo,
->>>
->>> I used upper case for regulator supply names in all prior 4 versions of
->>> IMX274 patch series as I see some other media i2c drivers doing it and
->>> dt-binding patch from v3 got merged in 5.9-rc1 which was using upper-ca=
-se.
->>>
->>> Later received feedback from Sakari requesting to use lower-case names =
-so
->>> updated to use lower case name now in v5.
->>>
->>> Not sure if we have timeline to squeeze in patch to change names to
->>> lower-case before they get into 5.10.
->>>
->>> Can you please comment?
->> We can merge patches through the fixes branch if needed. That is not an
->> issue.
->>
-> Good! So I'll make a v5 of the json-schema bindings soon that includes
-> the lower-case supplies and clock names and let's merge it as a fix in
-> this release cycle.
->
-> Sowjanya is this ok with you ?
-Yes fine for me.
-> Sakari, I'll then trust you to fast-track the patch if no other
-> issues!
->
-> Thanks
->    j
->
->>> Sakari,
->>>
->>> Can you also help understand why can't we keep upper case for regulator
->>> supplies?
->>>
->>> I see some other media i2c drivers using upper case as well.
->> The vast majority of bindings use lower case, that's it, simply.
->>
->> --
->> Regards,
->>
->> Sakari Ailus
+commit 355afaeb578abac907217c256a844cfafb0337b2 upstream.
+
+Actually two things that need fixing up here:
+
+- The io_rw_reissue() -EAGAIN retry is explicit to block devices and
+  regular files, so don't ever attempt to do that on other types of
+  files.
+
+- If we hit -EAGAIN on a nonblock marked file, don't arm poll handler for
+  it. It should just complete with -EAGAIN.
+
+Cc: stable@vger.kernel.org
+Reported-by: Norman Maurer <norman.maurer@googlemail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/io_uring.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2697,8 +2697,15 @@ static int io_read(struct io_kiocb *req,
+ 		else
+ 			ret2 = -EINVAL;
+ 
++		/* no retry on NONBLOCK marked file */
++		if (ret2 == -EAGAIN && (req->file->f_flags & O_NONBLOCK)) {
++			ret = 0;
++			goto done;
++		}
++
+ 		/* Catch -EAGAIN return for forced non-blocking submission */
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
++	done:
+ 			kiocb_done(kiocb, ret2);
+ 		} else {
+ copy_iov:
+@@ -2823,7 +2830,13 @@ static int io_write(struct io_kiocb *req
+ 		 */
+ 		if (ret2 == -EOPNOTSUPP && (kiocb->ki_flags & IOCB_NOWAIT))
+ 			ret2 = -EAGAIN;
++		/* no retry on NONBLOCK marked file */
++		if (ret2 == -EAGAIN && (req->file->f_flags & O_NONBLOCK)) {
++			ret = 0;
++			goto done;
++		}
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
++done:
+ 			kiocb_done(kiocb, ret2);
+ 		} else {
+ copy_iov:
+
+
