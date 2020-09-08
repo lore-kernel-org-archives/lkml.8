@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71771C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B9B2C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2A4207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:20:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49252080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589207;
-	bh=l/8H7rVMog7bWzM6uvkGF62iaNWvmch34g7eQFlLRUk=;
+	s=default; t=1599589264;
+	bh=mpA3MbNqtFQ4NxGhPR6tP5hHJmfELPRJmAUNWdcPSq8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GHDpvDJxPdv9z7QUSAox0MdrWVrIJomJAhdUK2D5wO5+VaBzns4QNyjCMGhTOgLnK
-	 t7V/Ywgkqg30zsoqBj3ohVTB+wfAnTD5mXYsO1blFmGo9tQZ7HOB382MWZ8S3BFwr9
-	 vWc8RrPvelFDGgtiW6D7SUmCT/Bz4LCt0/AUatW0=
+	b=e3uWH2s15lgoGeDC51vh+8jElMabJNHQdlJW1HV92RCMJAHlna0gV8p0r7vPHmxIt
+	 sPjFLAdN9QOnywz51CicQOV9mViJLWtb7n0vMPoTRDTYLdkAb8e8k3+s2RWh2peqxP
+	 glRKlUef2977wxyjGCzVANlrASgoYmndHoEAGg4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbgIHST5 (ORCPT
+        id S1731740AbgIHSUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731467AbgIHQLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:13 -0400
+        id S1731449AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0176824803;
-        Tue,  8 Sep 2020 15:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765CE2479A;
+        Tue,  8 Sep 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579789;
-        bh=l/8H7rVMog7bWzM6uvkGF62iaNWvmch34g7eQFlLRUk=;
+        s=default; t=1599579733;
+        bh=mpA3MbNqtFQ4NxGhPR6tP5hHJmfELPRJmAUNWdcPSq8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yaGFISJpoMFJQpaTy0ySvg3aZtE1x3qKqLPsPji4kdlhor+OIGsFd9A+6Pl9hTmZM
-         CE2DLxaZke5wHoeursRd4RPxYkxS4QpRQUtrH5NDta3FtGcludQjJw189egSkx0Ldm
-         TM+U9XhctIGW/lsMCpkRuxYBfXAsr0anvSaERZ24=
+        b=uc1YLGAiidJTAHy0dPiOPDJcVLAoyQD3M37YoyxNm4YI02AP3Dx37P0KmJa52PR23
+         uns6jxPt5dqOpbXbHIOQml2lZPfPRnHrHTyvg96uLb7853O3m/ggY4JoSieJYYk2W4
+         e4XjjZPV2c0TbBrD64X6XIoFe0dzzlqkBQBqnHUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/129] netfilter: nf_tables: fix destination register zeroing
-Date:   Tue,  8 Sep 2020 17:24:35 +0200
-Message-Id: <20200908152231.390238249@linuxfoundation.org>
+Subject: [PATCH 5.4 005/129] hwmon: (applesmc) check status earlier.
+Date:   Tue,  8 Sep 2020 17:24:06 +0200
+Message-Id: <20200908152229.969754408@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,80 +61,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 1e105e6afa6c3d32bfb52c00ffa393894a525c27 ]
+[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
 
-Following bug was reported via irc:
-nft list ruleset
-   set knock_candidates_ipv4 {
-      type ipv4_addr . inet_service
-      size 65535
-      elements = { 127.0.0.1 . 123,
-                   127.0.0.1 . 123 }
-      }
- ..
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . 123 }
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . udp dport }
+clang static analysis reports this representative problem
 
-It should not have been possible to add a duplicate set entry.
+applesmc.c:758:10: warning: 1st function call argument is an
+  uninitialized value
+        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After some debugging it turned out that the problem is the immediate
-value (123) in the second-to-last rule.
+buffer is filled by the earlier call
 
-Concatenations use 32bit registers, i.e. the elements are 8 bytes each,
-not 6 and it turns out the kernel inserted
+	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
 
-inet firewall @knock_candidates_ipv4
-        element 0100007f ffff7b00  : 0 [end]
-        element 0100007f 00007b00  : 0 [end]
+This problem is reported because a goto skips the status check.
+Other similar problems use data from applesmc_read_key before checking
+the status.  So move the checks to before the use.
 
-Note the non-zero upper bits of the first element.  It turns out that
-nft_immediate doesn't zero the destination register, but this is needed
-when the length isn't a multiple of 4.
-
-Furthermore, the zeroing in nft_payload is broken.  We can't use
-[len / 4] = 0 -- if len is a multiple of 4, index is off by one.
-
-Skip zeroing in this case and use a conditional instead of (len -1) / 4.
-
-Fixes: 49499c3e6e18 ("netfilter: nf_tables: switch registers to 32 bit addressing")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
+Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/nf_tables.h | 2 ++
- net/netfilter/nft_payload.c       | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index 2d0275f13bbfd..bc2c73f549622 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -143,6 +143,8 @@ static inline u64 nft_reg_load64(u32 *sreg)
- static inline void nft_data_copy(u32 *dst, const struct nft_data *src,
- 				 unsigned int len)
- {
-+	if (len % NFT_REG32_SIZE)
-+		dst[len / NFT_REG32_SIZE] = 0;
- 	memcpy(dst, src, len);
+diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+index 183ff3d251299..006bc07bcd301 100644
+--- a/drivers/hwmon/applesmc.c
++++ b/drivers/hwmon/applesmc.c
+@@ -748,15 +748,18 @@ static ssize_t applesmc_light_show(struct device *dev,
+ 	}
+ 
+ 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
++	if (ret)
++		goto out;
+ 	/* newer macbooks report a single 10-bit bigendian value */
+ 	if (data_length == 10) {
+ 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+ 		goto out;
+ 	}
+ 	left = buffer[2];
++
++	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	if (ret)
+ 		goto out;
+-	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	right = buffer[2];
+ 
+ out:
+@@ -805,12 +808,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
+ 		  to_index(attr));
+ 
+ 	ret = applesmc_read_key(newkey, buffer, 2);
+-	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
++
++	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
++	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
  }
  
-diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
-index 0e3bfbc26e790..62dc728bf93c9 100644
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -79,7 +79,9 @@ void nft_payload_eval(const struct nft_expr *expr,
- 	u32 *dest = &regs->data[priv->dreg];
- 	int offset;
+ static ssize_t applesmc_store_fan_speed(struct device *dev,
+@@ -846,12 +848,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
+ 	u8 buffer[2];
  
--	dest[priv->len / NFT_REG32_SIZE] = 0;
-+	if (priv->len % NFT_REG32_SIZE)
-+		dest[priv->len / NFT_REG32_SIZE] = 0;
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
 +
- 	switch (priv->base) {
- 	case NFT_PAYLOAD_LL_HEADER:
- 		if (!skb_mac_header_was_set(skb))
++	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
+ }
+ 
+ static ssize_t applesmc_store_fan_manual(struct device *dev,
+@@ -867,10 +868,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	val = (buffer[0] << 8 | buffer[1]);
+ 	if (ret)
+ 		goto out;
+ 
++	val = (buffer[0] << 8 | buffer[1]);
++
+ 	if (input)
+ 		val = val | (0x01 << to_index(attr));
+ 	else
+@@ -946,13 +948,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
+ 	u32 count;
+ 
+ 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
+-	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
+-						((u32)buffer[2]<<8) + buffer[3];
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
++
++	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
++						((u32)buffer[2]<<8) + buffer[3];
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
+ }
+ 
+ static ssize_t applesmc_key_at_index_read_show(struct device *dev,
 -- 
 2.25.1
 
