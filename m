@@ -2,86 +2,198 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15214C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BC1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D270020936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A992221F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgIHPVk (ORCPT
+        id S1730316AbgIHPYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:21:40 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15159 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730273AbgIHPQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:16:51 -0400
-IronPort-SDR: f+qnvgQbTTIj9+R2VJO38GyFzoxshrSzbDmvhVZwav36J6kNq5GY3VBA/TPt1bcNYOrM/yNesn
- 335Wao+Im7Ww==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222350543"
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="222350543"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:47:16 -0700
-IronPort-SDR: puPDPc9u2j1rpXBb9lkAFy9hUk9VxiuIy5q/f3cgrvaUGVA1uCpxSlgSAOXrarnxTE+c5vsTim
- B/lcp8Cq+Crw==
-X-IronPort-AV: E=Sophos;i="5.76,406,1592895600"; 
-   d="scan'208";a="448812218"
-Received: from mgarber-mobl1.amr.corp.intel.com (HELO [10.212.179.134]) ([10.212.179.134])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 07:47:15 -0700
-Subject: Re: [PATCH 1/7] soundwire: bus: use property to set interrupt masks
-To:     Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        hui.wang@canonical.com, Vinod Koul <vkoul@kernel.org>,
-        srinivas.kandagatla@linaro.org, ranjani.sridharan@linux.intel.com,
-        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        rander.wang@linux.intel.com, bard.liao@intel.com
-References: <20200818140656.29014-1-yung-chuan.liao@linux.intel.com>
- <20200818140656.29014-2-yung-chuan.liao@linux.intel.com>
- <20200828065125.GI2639@vkoul-mobl>
- <ec5fe867-f2e4-4278-0376-e54bcdd7f94d@perex.cz>
- <20200908121133.GA5551@sirena.org.uk>
- <1950b662-ec59-6603-36c7-7a41d9e8460c@perex.cz>
- <20200908143312.GC5551@sirena.org.uk>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <ce68a159-de6d-2d8a-c8a2-3e527cb1239e@linux.intel.com>
-Date:   Tue, 8 Sep 2020 09:47:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 11:24:02 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:51082 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730287AbgIHPTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:19:18 -0400
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id 961383B1372;
+        Tue,  8 Sep 2020 14:39:05 +0000 (UTC)
+X-Originating-IP: 2.224.242.101
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 28C8EC0002;
+        Tue,  8 Sep 2020 14:31:09 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 16:34:59 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, hverkuil@xs4all.nl,
+        jacopo+renesas@jmondi.org, luca@lucaceresoli.net,
+        leonl@leopardimaging.com, robh+dt@kernel.org, lgirdwood@gmail.com,
+        broonie@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] dt-bindings: media: imx274: Add optional input
+ clock and supplies
+Message-ID: <20200908143459.cn7luzj27nhjzymt@uno.localdomain>
+References: <1599012278-10203-1-git-send-email-skomatineni@nvidia.com>
+ <1599012278-10203-3-git-send-email-skomatineni@nvidia.com>
+ <20200903125542.nxiafnysatoexken@uno.localdomain>
+ <d3a1843c-5d73-cfa6-9611-405b905ddcd1@nvidia.com>
+ <20200903163525.p5z2adhp4wq453bs@uno.localdomain>
+ <f38bb328-b282-783b-3ac5-5441001d10b6@nvidia.com>
+ <20200908093341.GB834@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200908143312.GC5551@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200908093341.GB834@valkosipuli.retiisi.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sakari, Sowjanya,
 
+On Tue, Sep 08, 2020 at 12:33:41PM +0300, Sakari Ailus wrote:
+> On Thu, Sep 03, 2020 at 09:40:57AM -0700, Sowjanya Komatineni wrote:
+> >
+> > On 9/3/20 9:35 AM, Jacopo Mondi wrote:
+> > > Hi Sowjanya,
+> > >
+> > > On Thu, Sep 03, 2020 at 09:05:27AM -0700, Sowjanya Komatineni wrote:
+> > > > On 9/3/20 5:55 AM, Jacopo Mondi wrote:
+> > > > > Hello Sowjanya,
+> > > > >
+> > > > > On Tue, Sep 01, 2020 at 07:04:37PM -0700, Sowjanya Komatineni wrote:
+> > > > > > This patch adds IMX274 optional external clock input and voltage
+> > > > > > supplies to device tree bindings.
+> > > > > >
+> > > > > > Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> > > > > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > > > > > ---
+> > > > > >    .../devicetree/bindings/media/i2c/sony,imx274.yaml  | 21 +++++++++++++++++++++
+> > > > > >    1 file changed, 21 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > > index 7ae47a6..57e7176 100644
+> > > > > > --- a/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx274.yaml
+> > > > > > @@ -25,6 +25,27 @@ properties:
+> > > > > >      reset-gpios:
+> > > > > >        maxItems: 1
+> > > > > >
+> > > > > I just sent an update to my json-schema conversion of this bindings
+> > > > > document (not yet on patchwork, sorry) and Sakari pointed me to the
+> > > > > fact in between my v2 and my v4 this patch from you went in:
+> > > > > 4ea3273d24b ("dt-bindings: media: imx274: Add optional input clock and supplies")
+> > > > >
+> > > > > I should probably now update my bindings conversion patch, basically
+> > > > > taking in what you've done here, but I would have one question.
+> > > > >
+> > > > > > +  clocks:
+> > > > > > +    maxItems: 1
+> > > > > > +    description: Reference to the sensor input clock
+> > > > > > +
+> > > > > > +  clock-names:
+> > > > > > +    maxItems: 1
+> > > > > > +    items:
+> > > > > > +      - const: inck
+> > > > > > +
+> > > > > > +  vana-supply:
+> > > > > > +    description:
+> > > > > > +      Analog voltage supply, 2.8 volts
+> > > > > > +
+> > > > > > +  vdig-supply:
+> > > > > > +    description:
+> > > > > > +      Digital IO voltage supply, 1.8 volts
+> > > > > > +
+> > > > > > +  vddl-supply:
+> > > > > > +    description:
+> > > > > > +      Digital core voltage supply, 1.2 volts
+> > > > > 4ea3273d24b introduced these regulators as VANA-supply, VDIG-supply
+> > > > > and VDDL-supply (please note the upper-case names). This version uses
+> > > > > lower-case ones instead. Is this intentional ? The driver currently
+> > > > > does not parse any of these if I'm not mistaken, but as the bindings
+> > > > > in textual form defines an ABI which should be preserved during the
+> > > > > conversion to json-schema, should these be kept in upper-case ?
+> > > > >
+> > > > > Thanks
+> > > > >      j
+> > > > Yes, based on feedback lower case was recommended. So, changed to use
+> > > > lower-case names.
+> > > >
+> > > > These properties were not used by driver currently and from my prior series
+> > > > only dt-binding got merged as  no feedback was received on it for all prior
+> > > > versions.
+> > > >
+> > > > So, should be ok to change to lower-case as there properties are introduced
+> > > > now and driver update using these properties is under review
+> > > >
+> > > Well, I see that patch went in v5.9-rc1, so it will be part of v5.9.
+> > >
+> > > If the bindings update goes in in v5.10 (or whatever comes after v5.9)
+> > > then we have a problem, as the DTB created for v5.9 won't work anymore
+> > > on any later version, and that should not happen. Alternatively, a fix
+> > > for the next -rc release could be fast-tracked, but you would
+> > > need to synchronize with the dt maintainers for that and make a patch
+> > > for the existing .txt bindings file.
+> > >
+> > > If the name change happens in the yaml file and one release is made
+> > > with the old names, then we're stuck with those forever and ever, if I
+> > > got the situation right.
+> > >
+> > > Please check with the dt and media maintainers, or they can comment
+> > > here if they glance through these lines.
+> > >
+> > > Thanks
+> > >    j
+> >
+> > Hi Leon Luo,
+> >
+> > I used upper case for regulator supply names in all prior 4 versions of
+> > IMX274 patch series as I see some other media i2c drivers doing it and
+> > dt-binding patch from v3 got merged in 5.9-rc1 which was using upper-case.
+> >
+> > Later received feedback from Sakari requesting to use lower-case names so
+> > updated to use lower case name now in v5.
+> >
+> > Not sure if we have timeline to squeeze in patch to change names to
+> > lower-case before they get into 5.10.
+> >
+> > Can you please comment?
+>
+> We can merge patches through the fixes branch if needed. That is not an
+> issue.
+>
 
-On 9/8/20 9:33 AM, Mark Brown wrote:
-> On Tue, Sep 08, 2020 at 02:28:48PM +0200, Jaroslav Kysela wrote:
->> Dne 08. 09. 20 v 14:11 Mark Brown napsal(a):
-> 
->>> I don't have this patch and since I seem to get copied on quite a lot of
->>> soundwire only serieses I just delete them unread mostly.
+Good! So I'll make a v5 of the json-schema bindings soon that includes
+the lower-case supplies and clock names and let's merge it as a fix in
+this release cycle.
 
-We now try to use the ASoC/SoundWire prefix for cover letters to 
-highlight that a patchset changes things across two trees, does this 
-help or do we need a different way of flagging these patches?
+Sowjanya is this ok with you ?
+Sakari, I'll then trust you to fast-track the patch if no other
+issues!
 
->> It can be fetched from lore (mbox format):
-> 
->> https://lore.kernel.org/alsa-devel/20200818140656.29014-2-yung-chuan.liao@linux.intel.com/raw
-> 
-> Sure, I can go get stuff from the list archives but my list of things to
-> go through is in my inbox.
-> 
+Thanks
+  j
+
+> >
+> > Sakari,
+> >
+> > Can you also help understand why can't we keep upper case for regulator
+> > supplies?
+> >
+> > I see some other media i2c drivers using upper case as well.
+>
+> The vast majority of bindings use lower case, that's it, simply.
+>
+> --
+> Regards,
+>
+> Sakari Ailus
