@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85777C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C87EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BEF921741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8C02137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592100;
-	bh=dj+JlPWcOYv/4IzGZrhVLfRcyUyafVH/z9iYdjU8iy8=;
+	s=default; t=1599592117;
+	bh=J4CaTd7Li/OR/Dm2Ko/DItTSRlT5z2EhpUFE1LseStI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZ9i9E/2bVvbfaGZgGs/G++34G8eTunHFJeFkRkQ84Tqogud0MGVEqwQQ48lNTfXV
-	 ICkmVw5Ae2kAOu97fmw/QBLgf2E+rmZBdQdk4lYwVgFdjyZSH/UU+XMjXZF1neIxUq
-	 MB9LbNPshK/TU5C/SjGlteIWtyX6gc5V+L5llWv8=
+	b=WUhzzZ26iVcZzfTmp2UNlmmgWG+iEb92oLAkNN2lACZHeTGY31I2oixC89j9QWdZW
+	 RGF2XegYAT+WLhtDEx8mvxra1F3wWSvzLpJ6iUL2EhQ71p1W7vpwCVQBDeeWhdv01t
+	 7WhFUUHDbrjIz+f7W1nYeztyDUftQ+aR71idJo7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbgIHTIK (ORCPT
+        id S1731587AbgIHTIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:08:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731248AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731253AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:06:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61FDB23DC2;
-        Tue,  8 Sep 2020 15:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48BA723E1C;
+        Tue,  8 Sep 2020 15:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580000;
-        bh=dj+JlPWcOYv/4IzGZrhVLfRcyUyafVH/z9iYdjU8iy8=;
+        s=default; t=1599580004;
+        bh=J4CaTd7Li/OR/Dm2Ko/DItTSRlT5z2EhpUFE1LseStI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rNEacWKBaMj5R5gWbHb9RFXWQwBzC0vWc9qtyC8ohFQHOwLsvQn1evEltBKDL+zIi
-         sGTdT3UkbDZ5ZW4V/rIdetcHRLoLpA9PUy3kMWLDcRn4PwLNhEaHga0QFsmfxHPvY3
-         ofNxKjY4Y/EB268bb/xzTPpbRpEV74KjfSXgNjLc=
+        b=bEFRBpR5tWF7bCeqOcj0A1gSvXr2RNCxyOjmCr4cyLDz+NYkvQCZSIISvptHSWJrd
+         U/Y1EZjAHb4tFDt+bqgrreYemvPRbOCfr09/xBQVEsO4X4D7zDlMtIkGwwsh9iXB9Q
+         l4FtjnaKlZcx+gBx1+rA7QzrFZUeMNRRgCXAPoq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 120/129] mm: slub: fix conversion of freelist_corrupted()
-Date:   Tue,  8 Sep 2020 17:26:01 +0200
-Message-Id: <20200908152235.845154178@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: [PATCH 5.4 122/129] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
+Date:   Tue,  8 Sep 2020 17:26:03 +0200
+Message-Id: <20200908152235.948324566@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -65,76 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
+commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21 upstream.
 
-Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
-deactivate_slab()") suffered an update when picked up from LKML [1].
+SR-IOV VFs do not implement the memory enable bit of the command
+register, therefore this bit is not set in config space after
+pci_enable_device().  This leads to an unintended difference
+between PF and VF in hand-off state to the user.  We can correct
+this by setting the initial value of the memory enable bit in our
+virtualized config space.  There's really no need however to
+ever fault a user on a VF though as this would only indicate an
+error in the user's management of the enable bit, versus a PF
+where the same access could trigger hardware faults.
 
-Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
-created a no-op statement.  Fix it by sticking to the behavior intended
-in the original patch [1].  In addition, make freelist_corrupted()
-immune to passing NULL instead of &freelist.
-
-The issue has been spotted via static analysis and code review.
-
-[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
-
-Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -645,12 +645,12 @@ static void slab_fix(struct kmem_cache *
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -398,9 +398,15 @@ static inline void p_setd(struct perm_bi
+ /* Caller should hold memory_lock semaphore */
+ bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
+ {
++	struct pci_dev *pdev = vdev->pdev;
+ 	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
+ 
+-	return cmd & PCI_COMMAND_MEMORY;
++	/*
++	 * SR-IOV VF memory enable is handled by the MSE bit in the
++	 * PF SR-IOV capability, there's therefore no need to trigger
++	 * faults based on the virtual value.
++	 */
++	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
  }
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
--	    !check_valid_pointer(s, page, nextfree)) {
--		object_err(s, page, freelist, "Freechain corrupt");
--		freelist = NULL;
-+	    !check_valid_pointer(s, page, nextfree) && freelist) {
-+		object_err(s, page, *freelist, "Freechain corrupt");
-+		*freelist = NULL;
- 		slab_fix(s, "Isolate corrupted freechain");
- 		return true;
+ /*
+@@ -1726,6 +1732,15 @@ int vfio_config_init(struct vfio_pci_dev
+ 				 vconfig[PCI_INTERRUPT_PIN]);
+ 
+ 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
++
++		/*
++		 * VFs do no implement the memory enable bit of the COMMAND
++		 * register therefore we'll not have it set in our initial
++		 * copy of config space after pci_enable_device().  For
++		 * consistency with PFs, set the virtual enable bit here.
++		 */
++		*(__le16 *)&vconfig[PCI_COMMAND] |=
++					cpu_to_le16(PCI_COMMAND_MEMORY);
  	}
-@@ -1394,7 +1394,7 @@ static inline void dec_slabs_node(struct
- 							int objects) {}
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	return false;
- }
-@@ -2086,7 +2086,7 @@ static void deactivate_slab(struct kmem_
- 		 * 'freelist' is already corrupted.  So isolate all objects
- 		 * starting at 'freelist'.
- 		 */
--		if (freelist_corrupted(s, page, freelist, nextfree))
-+		if (freelist_corrupted(s, page, &freelist, nextfree))
- 			break;
- 
- 		do {
+ 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
 
 
