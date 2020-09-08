@@ -2,176 +2,98 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E87AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEA3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B66FF2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 167E4206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RMq48vfE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pmcyoVTK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgIHKkY (ORCPT
+        id S1729913AbgIHKlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32770 "EHLO
+        Tue, 8 Sep 2020 06:41:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729719AbgIHKiq (ORCPT
+        with ESMTP id S1729691AbgIHKjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:38:46 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E253C061573;
-        Tue,  8 Sep 2020 03:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=5ISh9u6ihC6dsEdEFWUT5lsWp0yYMA219sfvjogaE8k=; b=RMq48vfEHkq10ewZxKMyV0cJTU
-        d77ECXoAzBMqZ1yIhTkuY5cN6cMbnEBH8jiPxfD9YmPzbhUrJpMvWby2OzIs2NdgJob0ckc1t4fec
-        V+ibArMDnCJEgpQd9gHFKX1H4u+o4ncbUO1ONCh53IyHT7pHg15uySS//p2zEgjML8jxKQMbExswQ
-        8JHGvmr4wnEJrBoKylE/SyaBQ3O5nrksh1fC9SRIV3H/J9y7p0YMcKxMqDbyWaMUKnUdEQjqY63Z0
-        galX/vXXWZ056/5fU3dwLHeI/3QTEPQbpag6X3mvm+JKWgTjJrDB3MVGVU/Ws2BA6CnNzs220DepV
-        g8XJBbEw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFb0L-0006I4-VN; Tue, 08 Sep 2020 10:37:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A9D87305C10;
-        Tue,  8 Sep 2020 12:37:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D77520240A53; Tue,  8 Sep 2020 12:37:36 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 12:37:36 +0200
-From:   peterz@infradead.org
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org,
-        Eddy_Wu@trendmicro.com, x86@kernel.org, davem@davemloft.net,
-        rostedt@goodmis.org, naveen.n.rao@linux.ibm.com,
-        anil.s.keshavamurthy@intel.com, linux-arch@vger.kernel.org,
-        cameron@moodycamel.com, oleg@redhat.com, will@kernel.org,
-        paulmck@kernel.org, systemtap@sourceware.org
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-ID: <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
- <20200901190808.GK29142@worktop.programming.kicks-ass.net>
- <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
- <20200902070226.GG2674@hirez.programming.kicks-ass.net>
- <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
- <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
- <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
- <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
- <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
+        Tue, 8 Sep 2020 06:39:10 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F7F2C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 03:39:10 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n3so8578730pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 03:39:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HkPB3R9O6sMsMd9dcUXIlXN4Isqu12Nsn8RKRzxq5sA=;
+        b=pmcyoVTKycQfasYTZxfLUtFhSQv0ybyrZCo4IN6u6xwXD4apG3gW8J2XkWC0mHQ9qB
+         RnEZ11gfA33JChSteMjJjrr3wxT3Fj//XADN+6L4gjPeeaUospmPkVOylRHRbXTUZntS
+         4d4esBOxuiEtv1Wj81HZXjKgSsTUgXd7kD8DJxJDPSR+jDzuowQzbGfDrxdZuKQB8hLO
+         0i9cuxYBDRYn4AYg/Kj7/5/INr0JGWTzJfCIjwoH3zQo0zVZ2BDfLYsK5iPJt1t26zGi
+         bSgYct7wQPeC4jB71q2oO2z4K5Y2Y92+5nkMparsFKNsTH3gBqgBWCZED88Ohu0nSJNO
+         QZdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HkPB3R9O6sMsMd9dcUXIlXN4Isqu12Nsn8RKRzxq5sA=;
+        b=Qqc/sZIa1KB7GtJoBOUKoFWAsD5t4YRdN2XVATn1uAE2OWnLSA390jZjan0yTQ72fg
+         7Y7bRatU5lpJJKtDeUMPHxIGuUIlgwSUUom54sVSFKAbwaYr354eAqthgSuurYQ5HAKR
+         SSS3Na+uwPuN3/YSkat1XNsBLm88GsZFkhV1G+wkDYb4tmo3hGmQGzKhxLyFqOWY1y1z
+         XouJFDldn2xqle2LAZjhEEXOxmfUAWqpwdP8SBZ8p5iGxaL7i3YCUWEE8ZYqazNFaHIA
+         O0n12v4ujgWuM3uXFPpBr94dxMVkmLywCabPwnj3qcZ6Fwt1C/zAIFpiDGOCgh0grnkB
+         hCUA==
+X-Gm-Message-State: AOAM530t+q8w/sWVrjRjNvDa7rbW00uyCriEiiCyi33dncNTdbTU/Ezz
+        zuWlZztulvYiTaGZM87iR2tR3A==
+X-Google-Smtp-Source: ABdhPJzDeWCog+ZMAU2G7JYbGUhamkdwx/s5HwT41dUbTU93nfQWpzRJAEPDazYH7J2RzcfE6n7jvQ==
+X-Received: by 2002:a17:90a:160f:: with SMTP id n15mr3327841pja.75.1599561549629;
+        Tue, 08 Sep 2020 03:39:09 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id y13sm11455913pfr.141.2020.09.08.03.39.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 03:39:08 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:09:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     rjw@rjwysocki.net, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, amitk@kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmitry.baryshkov@linaro.org, tdas@codeaurora.org
+Subject: Re: [PATCH 2/7] arm64: dts: qcom: sm8250: Add cpufreq hw node
+Message-ID: <20200908103906.sgbaw3shfdpv5pma@vireshk-i7>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-3-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
+In-Reply-To: <20200908075716.30357-3-manivannan.sadhasivam@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 10:39:54AM +0900, Masami Hiramatsu wrote:
-
-> > There's a bug, that might make it miss it. I have a patch. I'll send it
-> > shortly.
+On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
 > 
-> OK, I've confirmed that the lockdep warns on kretprobe from INT3
-> with your fix.
+> Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
+> on SM8250 SoCs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
-I'm now trying and failing to reproduce.... I can't seem to make it use
-int3 today. It seems to want to use ftrace or refuses everything. I'm
-probably doing it wrong.
+You want this to go through my tree or ARM Soc ?
 
-Could you verify the below actually works? It's on top of the first 16
-patches.
-
-> Of course make it lockless then warning is gone.
-> But even without the lockless patch, this warning can be false-positive
-> because we prohibit nested kprobe call, right?
-
-Yes, because the actual nesting is avoided by kprobe_busy, but lockdep
-can't tell. Lockdep sees a regular lock user and an in-nmi lock user and
-figures that's a bad combination.
-
-
----
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1241,48 +1241,47 @@ void recycle_rp_inst(struct kretprobe_in
- }
- NOKPROBE_SYMBOL(recycle_rp_inst);
- 
--void kretprobe_hash_lock(struct task_struct *tsk,
--			 struct hlist_head **head, unsigned long *flags)
--__acquires(hlist_lock)
--{
--	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
--	raw_spinlock_t *hlist_lock;
--
--	*head = &kretprobe_inst_table[hash];
--	hlist_lock = kretprobe_table_lock_ptr(hash);
--	raw_spin_lock_irqsave(hlist_lock, *flags);
--}
--NOKPROBE_SYMBOL(kretprobe_hash_lock);
--
- static void kretprobe_table_lock(unsigned long hash,
- 				 unsigned long *flags)
- __acquires(hlist_lock)
- {
- 	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
--	raw_spin_lock_irqsave(hlist_lock, *flags);
-+	/*
-+	 * HACK, due to kprobe_busy we'll never actually recurse, make NMI
-+	 * context use a different lock class to avoid it reporting.
-+	 */
-+	raw_spin_lock_irqsave_nested(hlist_lock, *flags, !!in_nmi());
- }
- NOKPROBE_SYMBOL(kretprobe_table_lock);
- 
--void kretprobe_hash_unlock(struct task_struct *tsk,
--			   unsigned long *flags)
-+static void kretprobe_table_unlock(unsigned long hash,
-+				   unsigned long *flags)
- __releases(hlist_lock)
- {
-+	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
-+	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-+}
-+NOKPROBE_SYMBOL(kretprobe_table_unlock);
-+
-+void kretprobe_hash_lock(struct task_struct *tsk,
-+			 struct hlist_head **head, unsigned long *flags)
-+__acquires(hlist_lock)
-+{
- 	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
--	raw_spinlock_t *hlist_lock;
- 
--	hlist_lock = kretprobe_table_lock_ptr(hash);
--	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-+	*head = &kretprobe_inst_table[hash];
-+	kretprobe_table_lock(hash, flags);
- }
--NOKPROBE_SYMBOL(kretprobe_hash_unlock);
-+NOKPROBE_SYMBOL(kretprobe_hash_lock);
- 
--static void kretprobe_table_unlock(unsigned long hash,
--				   unsigned long *flags)
-+void kretprobe_hash_unlock(struct task_struct *tsk,
-+			   unsigned long *flags)
- __releases(hlist_lock)
- {
--	raw_spinlock_t *hlist_lock = kretprobe_table_lock_ptr(hash);
--	raw_spin_unlock_irqrestore(hlist_lock, *flags);
-+	unsigned long hash = hash_ptr(tsk, KPROBE_HASH_BITS);
-+	kretprobe_table_unlock(hash, flags);
- }
--NOKPROBE_SYMBOL(kretprobe_table_unlock);
-+NOKPROBE_SYMBOL(kretprobe_hash_unlock);
- 
- struct kprobe kprobe_busy = {
- 	.addr = (void *) get_kprobe,
+-- 
+viresh
