@@ -4,139 +4,170 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E1B6C43461
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DF0C2D0E0
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B405B206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61ACA2074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:28:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="kTOMUG7W"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Za6oo5Di"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731843AbgIHQ2a (ORCPT
+        id S1731775AbgIHQ1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:28:30 -0400
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:16156 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731134AbgIHQUd (ORCPT
+        Tue, 8 Sep 2020 12:27:24 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36145 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731677AbgIHQRa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:20:33 -0400
-Received: from pps.filterd (m0134425.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088GG5mh022056;
-        Tue, 8 Sep 2020 16:20:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pps0720;
- bh=tMzsGA8Qsfilm7iuAmNGJ37dDR1+5ZAtErbHf/+z2bI=;
- b=kTOMUG7W1W0Af0WlSM5Pmh3zNT5sbdo7XdT/c1L3nW8eJyPY958dn+JwgnGdPE0vonbD
- 6xpg76ZFZXqZlJ5SgXk63K7toFLoPYzE6+/kNao55uUkBSKb5VGEJcQ6Q8f/McPHCe9Z
- Lkn0CYgLISahyfSGzjiL3XEOvWdJZW4GZRaTsFAAayH87hVmpn/X49uPCSvNxTXYfUrj
- o8RArwgiITu5WjorijdGvkfv5wNRdhL2rSU3fgQ49eU7uZQEwW74yBbZ8sDRCCgfOpgp
- veHXu6RMElKSoPsb9z9cbqPJBI2dwTmmDINvJtyXve/UYEpMxqvd2oAjo4Bu9KTAp6Lx Zw== 
-Received: from g4t3426.houston.hpe.com (g4t3426.houston.hpe.com [15.241.140.75])
-        by mx0b-002e3701.pphosted.com with ESMTP id 33c3yqss2t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 16:20:19 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3426.houston.hpe.com (Postfix) with ESMTP id D3E0A4F;
-        Tue,  8 Sep 2020 16:20:17 +0000 (UTC)
-Received: from [16.99.146.51] (unknown [16.99.146.51])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 89AAD48;
-        Tue,  8 Sep 2020 16:20:14 +0000 (UTC)
-Subject: Re: [PATCH 04/12] x86/platform/uv: Update UV MMRs for UV5
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20200907185430.363197758@hpe.com>
- <20200907185430.782245884@hpe.com> <20200908152314.GD4114051@kroah.com>
- <3e93b858-f74d-8e93-e444-fd85fc5856e4@hpe.com>
- <20200908154430.GA4171853@kroah.com>
-From:   Mike Travis <mike.travis@hpe.com>
-Message-ID: <35d4ce27-7a93-c3d5-3c0d-99fff06229c2@hpe.com>
-Date:   Tue, 8 Sep 2020 09:20:14 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Tue, 8 Sep 2020 12:17:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599581847;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=llWPhpE901PAJhD8gxMNbLQolWNakElIXyEs6oe+NR4=;
+        b=Za6oo5DiGRMfuAiviiu7nHy7G6eumctO1QfaB3ablbfPo0fywQga8rYDokzklQ59CV8YdG
+        O/WOXll8mburDqH/bWrMTEQDXlKdZRgMVxdF5tE6lT+Kkg4f8YfIrZSpXxgclbVdpDJcV7
+        K1AeOeRao+802Sz9Cef+ljI+gl948Ek=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-1Y3WXrg7OV2fn3WGZK_2KQ-1; Tue, 08 Sep 2020 07:57:24 -0400
+X-MC-Unique: 1Y3WXrg7OV2fn3WGZK_2KQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFE408064B6;
+        Tue,  8 Sep 2020 11:57:22 +0000 (UTC)
+Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C25D027BCC;
+        Tue,  8 Sep 2020 11:57:17 +0000 (UTC)
+Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
+To:     Roman Gushchin <guro@fb.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Zi Yan <ziy@nvidia.com>, linux-mm@kvack.org,
+        Rik van Riel <riel@surriel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Nellans <dnellans@nvidia.com>,
+        linux-kernel@vger.kernel.org
+References: <20200902180628.4052244-1-zi.yan@sent.com>
+ <20200903142300.bjq2um5y5nwocvar@box>
+ <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
+Date:   Tue, 8 Sep 2020 13:57:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200908154430.GA4171853@kroah.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_08:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- spamscore=0 suspectscore=0 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 malwarescore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080155
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/8/2020 8:44 AM, Greg KH wrote:
-> On Tue, Sep 08, 2020 at 08:35:37AM -0700, Mike Travis wrote:
->>
->>
->> On 9/8/2020 8:23 AM, Greg KH wrote:
->>> On Mon, Sep 07, 2020 at 01:54:34PM -0500, Mike Travis wrote:
->>>> --- linux.orig/drivers/misc/sgi-gru/grufile.c
->>>> +++ linux/drivers/misc/sgi-gru/grufile.c
->>>> @@ -7,7 +7,8 @@
->>>>     * This file supports the user system call for file open, close, mmap, etc.
->>>>     * This also incudes the driver initialization code.
->>>>     *
->>>> - *  Copyright (c) 2008-2014 Silicon Graphics, Inc.  All Rights Reserved.
->>>> + * Copyright (c) 2018-2020 Hewlett Packard Enterprise Development LP
->>>> + * Copyright (c) 2008-2017 Silicon Graphics, Inc.  All Rights Reserved.
+On 03.09.20 18:30, Roman Gushchin wrote:
+> On Thu, Sep 03, 2020 at 05:23:00PM +0300, Kirill A. Shutemov wrote:
+>> On Wed, Sep 02, 2020 at 02:06:12PM -0400, Zi Yan wrote:
+>>> From: Zi Yan <ziy@nvidia.com>
 >>>
->>> Please drop all copyright changes from this series, as these do not look
->>> correct at all, sorry.
+>>> Hi all,
 >>>
->>> You can send an add-on patch for all of that if it's really necessary,
->>> and you get legal approval for it :)
+>>> This patchset adds support for 1GB THP on x86_64. It is on top of
+>>> v5.9-rc2-mmots-2020-08-25-21-13.
+>>>
+>>> 1GB THP is more flexible for reducing translation overhead and increasing the
+>>> performance of applications with large memory footprint without application
+>>> changes compared to hugetlb.
 >>
->> I can move them all to a single patch.  The HPE one is straight from their
->> guidance on Copyrights.  The older SGI one is also from SGI's guidance
->> though I'm not sure if I can find it anymore.  I also wasn't sure if it
->> should be retained since the HPE one didn't take effect until SGI was
->> legally part of HPE (circa 2018).  2017/18 was also the last time we did
->> this big a change (for the UV4A).
+>> This statement needs a lot of justification. I don't see 1GB THP as viable
+>> for any workload. Opportunistic 1GB allocation is very questionable
+>> strategy.
 > 
-> If you haven't touched a file in a year, you don't get to claim
-> copyright on that year.  If you wish to disagree on this, great, I'll
-> gladly take a patch that modifies the lines that has a signed-off-by
-> from one of your lawyers for it :)
+> Hello, Kirill!
+> 
+> I share your skepticism about opportunistic 1 GB allocations, however it might be useful
+> if backed by an madvise() annotations from userspace application. In this case,
+> 1 GB THPs might be an alternative to 1 GB hugetlbfs pages, but with a more convenient
+> interface.
 
-I skipped over that part.  But I'm moving all changes to a single patch 
-and I will look more closely at HPE's documents.  Heaven knows they have 
-plenty of lawyers, so many it's hard to ask a simple question... like 
-when does a copyright take effect.  When you change it internally, or 
-when it gets published?  Sounds like you lean towards the second?
+I have concerns if we would silently use 1~GB THPs in most scenarios
+where be would have used 2~MB THP. I'd appreciate a trigger to
+explicitly enable that - MADV_HUGEPAGE is not sufficient because some
+applications relying on that assume that the THP size will be 2~MB
+(especially, if you want sparse, large VMAs).
 
+E.g., read via man page
+
+"This  feature  is  primarily  aimed at applications that use large
+mappings of data and access large regions of that memory at a time
+(e.g., virtualization systems such as QEMU).  It  can  very  easily
+waste  memory (e.g., a 2 MB mapping that only ever accesses 1 byte will
+result in 2 MB of wired memory instead of one 4 KB page)."
+
+
+
+Having that said, I consider having 1~GB THP - similar to 512~MP THP on
+arm64 - useless in most setup and I am not sure if it is worth the
+trouble. Just use hugetlbfs for the handful of applications where it
+makes sense.
+
+-- 
 Thanks,
-Mike
 
-> 
-> thanks,
-> 
-> greg k-h
-> 
+David / dhildenb
+
