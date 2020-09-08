@@ -2,98 +2,158 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3185BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAE29206B5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A8C206B5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cD4P+Wct"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pxxpHzQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgIHLqQ (ORCPT
+        id S1730077AbgIHLsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41854 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729741AbgIHLiX (ORCPT
+        Tue, 8 Sep 2020 07:48:25 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:45320 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730145AbgIHLkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:38:23 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79DEC061573;
-        Tue,  8 Sep 2020 04:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3PuhP9uGjIipfkXqBzok/ejHi8BsHitcvoa7xFcrBwE=; b=cD4P+Wct6AGR6kYI5B+8HimOQk
-        HV95HuTMSTEL65KIotpV+hS46xqlFMrGV3guc5saUbuFu3HLVU5O0p9xFIWo+tSDfsMOR311qWrkf
-        Cf8IZoz7DZhSEkGLjNJacAyu/0yUt3keRVTYh6dUG6hLHL6nerlv/Omv9ZkY7HBkyYrM3yhl3LPsI
-        RGzbskPglasw1fVUx+hRejR7E2DfI7Q9DAwFX+xniqcJoviyajNk02GRLqtyuCFayy6gmfJl0yWEQ
-        jwQ7AoblGyki+qSw/Oxg7Bi+6UktcvDRYN9iWDJ9kXl6zLRcQ1KfGBMglDBVn27MVV46KfyUUQrad
-        2pOsKkrg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFbsb-0004Ni-Ui; Tue, 08 Sep 2020 11:33:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 092EA300130;
-        Tue,  8 Sep 2020 13:33:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B422923649288; Tue,  8 Sep 2020 13:33:39 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 13:33:39 +0200
-From:   peterz@infradead.org
-To:     "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "systemtap@sourceware.org" <systemtap@sourceware.org>
-Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Message-ID: <20200908113339.GQ1362448@hirez.programming.kicks-ass.net>
-References: <20200901190808.GK29142@worktop.programming.kicks-ass.net>
- <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
- <20200902070226.GG2674@hirez.programming.kicks-ass.net>
- <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
- <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
- <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
- <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
- <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
- <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
- <dd1b7b1fdbd84d20ad06abf0c06b4747@trendmicro.com>
+        Tue, 8 Sep 2020 07:40:16 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200908113738euoutp016166ea840e3370571ae89bd83ef83483~yy-IQYn0k0798807988euoutp01U
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:37:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200908113738euoutp016166ea840e3370571ae89bd83ef83483~yy-IQYn0k0798807988euoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1599565058;
+        bh=u9UQaTNidvGz8xQGItwzPmBXxLlY6mtig4v20LZiBcA=;
+        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
+        b=pxxpHzQ8C0Np3EljBRn599F6UekUpq0odohU1EiiF9oWYqJh2F+n8nBF/vnm14LbQ
+         hUZuZYzVI6/0xrfrDxViE0Wfki+2e/+4/hgmcdroM+kp+fz7BBOijWrEXbPuHIdmbc
+         DxLkzhc48rmVpYYkuR2tRn9RELla9rQM+q2Yf39I=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200908113737eucas1p13c031767f380c909bd65a2d5f8fc5365~yy-IB21KJ0523205232eucas1p12;
+        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 1B.5E.06456.10D675F5; Tue,  8
+        Sep 2020 12:37:37 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200908113737eucas1p191e5a7978d1850ad527b5a2cc4a13e2d~yy-Hk8FjS1315613156eucas1p1E;
+        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200908113737eusmtrp2994e6741e398941d03b4ae8a58ba6c95~yy-HkX-tO3046530465eusmtrp2l;
+        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-0a-5f576d01e018
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B1.C4.06017.10D675F5; Tue,  8
+        Sep 2020 12:37:37 +0100 (BST)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200908113737eusmtip1ea17ac50b289d3922cdc34eb5e8e3509~yy-HOYl930442004420eusmtip1X;
+        Tue,  8 Sep 2020 11:37:37 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] video: fbdev: radeon: Fix memleak in
+ radeonfb_pci_register
+To:     Mathieu Malaterre <malat@debian.org>,
+        Dinghao Liu <dinghao.liu@zju.edu.cn>
+Cc:     kjlu@umn.edu, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <c2434d86-64c9-2870-f8cc-df604adb17ef@samsung.com>
+Date:   Tue, 8 Sep 2020 13:37:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dd1b7b1fdbd84d20ad06abf0c06b4747@trendmicro.com>
+In-Reply-To: <CA+7wUswtuOPqQ131F5LdH=7dH+sWZc+jmMHXpaYmTDUehvx5eQ@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djP87qMueHxBm37zSw+NLUyW2z/3shi
+        ceXrezaLE/POsluc6PvAanF51xw2i7Ob3rI4sHv8apvL7NHzpoXV4373cSaPqwub2D0+b5Lz
+        6Nz1li2ALYrLJiU1J7MstUjfLoEro7//OXPBYq6KT1e+szYwzuXoYuTkkBAwkfgz8ydLFyMX
+        h5DACkaJ87dXsEM4Xxglbj/7ywjhfGaUuD71ADtMy/OdU6BaljNKfNv9iQ0kISTwllGiZycr
+        iM0mYCUxsX0VI4gtLBAocX7abSYQW0QgQGLL95tgK5gFrjJK/F38nRkkwStgJ3F08yEwm0VA
+        ReLF/s9g20QFIiQ+PTjMClEjKHFy5hMWEJsTaOiK96/AapgFxCVuPZnPBGHLS2x/O4cZZIGE
+        wD52iV29vUANHECOi8SmRbUQHwhLvDq+BeobGYn/O0F6QerXAR3U8QKqeTujxPLJ/9ggqqwl
+        7pz7xQYyiFlAU2L9Ln2IsKPE37fdUPP5JG68FYS4gU9i0rbpzBBhXomONiGIajWJDcs2sMGs
+        7dq5knkCo9IsJJ/NQvLNLCTfzELYu4CRZRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZg
+        Ojr97/inHYxfLyUdYhTgYFTi4f3gFRYvxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii
+        0pzU4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYN3Q+kFm2Y7fxfYUGm86gAKX4
+        qe7Lf5oe2rTzzbM7VtXPWtfI5b+4/ry2J9C1YFGx150W74Kz/49Gn6tqffaFu9xPmnuWaPAq
+        hln67iHCj3PeX9gdzlP3fgW/6bINR2+d19kZNy/P3Pj/n3ltT1sq2+u15935W3tkKcODh/Xa
+        cx65R5dMXaH4UomlOCPRUIu5qDgRAKTW7QZDAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrMIsWRmVeSWpSXmKPExsVy+t/xu7qMueHxBp87JCw+NLUyW2z/3shi
+        ceXrezaLE/POsluc6PvAanF51xw2i7Ob3rI4sHv8apvL7NHzpoXV4373cSaPqwub2D0+b5Lz
+        6Nz1li2ALUrPpii/tCRVISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjf
+        LkEvo7//OXPBYq6KT1e+szYwzuXoYuTkkBAwkXi+cwpLFyMXh5DAUkaJWa0fGLsYOYASMhLH
+        15dB1AhL/LnWxQZR85pRYs/xxWwgCTYBK4mJ7asYQWxhgUCJ89NuM4HYIgJ+EqcvfmcCaWAW
+        uM4oMXHfXmaI7muMEk+WPgSr4hWwkzi6+RAziM0ioCLxYv9ndhBbVCBC4vCOWYwQNYISJ2c+
+        YQGxOYE2rHj/CqyGWUBd4s+8S8wQtrjErSfzmSBseYntb+cwT2AUmoWkfRaSlllIWmYhaVnA
+        yLKKUSS1tDg3PbfYSK84Mbe4NC9dLzk/dxMjMAK3Hfu5ZQdj17vgQ4wCHIxKPLwfvMLihVgT
+        y4orcw8xSnAwK4nwOp09HSfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cDkkFcSb2hqaG5h
+        aWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgdGm29G0dq3cOpHwL9HrVs504S2p
+        n/KorTRZ/tOyHF7hHXVLz2rtvp5jLW12K0/kktKp80lnGVbMONRuL3s3ah/PwxeHrqQ63k4R
+        nMaS2WA2U0QlzfhmCMd7UW+rxW8fljXW8rTZ88Zr+0seY3jIV9rWGGBbX3T4gnNA8RQjiWMC
+        6xTrLptGKLEUZyQaajEXFScCAHezqRfWAgAA
+X-CMS-MailID: 20200908113737eucas1p191e5a7978d1850ad527b5a2cc4a13e2d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0
+References: <20200825062900.11210-1-dinghao.liu@zju.edu.cn>
+        <CGME20200825074817eucas1p29ac412697c8579d3f66c46d9e356b4e0@eucas1p2.samsung.com>
+        <CA+7wUswtuOPqQ131F5LdH=7dH+sWZc+jmMHXpaYmTDUehvx5eQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 11:15:14AM +0000, Eddy_Wu@trendmicro.com wrote:
-> > From: peterz@infradead.org <peterz@infradead.org>
-> >
-> > I'm now trying and failing to reproduce.... I can't seem to make it use
-> > int3 today. It seems to want to use ftrace or refuses everything. I'm
-> > probably doing it wrong.
-> >
+
+On 8/25/20 9:47 AM, Mathieu Malaterre wrote:
+> On Tue, Aug 25, 2020 at 9:27 AM Dinghao Liu <dinghao.liu@zju.edu.cn> wrote:
+>>
+>> When radeon_kick_out_firmware_fb() fails, info should be
+>> freed just like the subsequent error paths.
+>>
+>> Fixes: 069ee21a82344 ("fbdev: Fix loading of module radeonfb on PowerMac")
+>> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+>> ---
+>>  drivers/video/fbdev/aty/radeon_base.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/aty/radeon_base.c b/drivers/video/fbdev/aty/radeon_base.c
+>> index 3fe509cb9b87..13bd2bd5c043 100644
+>> --- a/drivers/video/fbdev/aty/radeon_base.c
+>> +++ b/drivers/video/fbdev/aty/radeon_base.c
+>> @@ -2307,7 +2307,7 @@ static int radeonfb_pci_register(struct pci_dev *pdev,
+>>
+>>         ret = radeon_kick_out_firmware_fb(pdev);
+>>         if (ret)
+>> -               return ret;
+>> +               goto err_release_fb;
 > 
-> You can turn off CONFIG_KPROBES_ON_FTRACE (and also sysctl
-> debug.kprobes-optimization) to make it use int3 handler
+> Good catch ! Thanks
+> 
+> Reviewed-by: Mathieu Malaterre <malat@debian.org>
 
-I'm fairly sure I used the sysctl like in your original reproducer.
+Applied to drm-misc-next tree, thanks.
 
-I'll try again later.
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+>>         /* request the mem regions */
+>>         ret = pci_request_region(pdev, 0, "radeonfb framebuffer");
+>> --
+>> 2.17.1
