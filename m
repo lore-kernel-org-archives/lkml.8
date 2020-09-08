@@ -4,69 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65144C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40F2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35DF6208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B2F208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599595953;
-	bh=dQl/cv3asrxqvHBK6gxEvrP1nC+3QbFJgNA48nB7Uoo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gV2cYQQQluixv4cO0xb+ImMxwYtCPnjXTv6t1c6xxiR9mGpaPccMYooyHsyX+aR7t
-	 5X0N+aZfqaslTG5ElFtQ8ATS+KpGTELZMJoXcRGKNt99raN/e3HRYcpMgpQGcL9zcx
-	 WgtR8N1Q7sAMx1uHMshrN9V7RL9u4Dy9C90QNbY0=
+	s=default; t=1599595965;
+	bh=T8bAQkHiIv+es4Wmgoj2fBeh0pHTyLqga1QKjLojgXs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SSSQyJAuF8CbLRvCTeT2nELZ7ENP+wQmBMgp/fUJvsSOXOfOahmmwBEMmfkSiZVoc
+	 7fJA+h9c3fpbMg7Dv5cHovWM9bkcwFPTC812UFrMZbHuedBnYXjJkwX4govMdfi6Gf
+	 2HvG3YBwl2KuWT8Ep3eh73wF2N9yxolDK+HkLMUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732225AbgIHUM3 (ORCPT
+        id S1728971AbgIHUM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:12:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51630 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 16:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729779AbgIHPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729781AbgIHPLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:11:17 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E23422581;
-        Tue,  8 Sep 2020 15:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FFED229C5;
+        Tue,  8 Sep 2020 14:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599577403;
-        bh=dQl/cv3asrxqvHBK6gxEvrP1nC+3QbFJgNA48nB7Uoo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/jetl4YqGIgX07RNuKDFdrZLQGTKYBnINjj5B4mRI2vXEygwV3rCLmz41YfJPep6
-         L9jVVpaJ3sp5zcHyDGREZ0R3PXKWnsnI/2QP7bxxe+2/n2KbKd+uPOkSrwngs7lm2u
-         fzCp6KhUt7yH2uVEO4II8MfFxR+9QyCjsef2yzco=
+        s=default; t=1599577147;
+        bh=T8bAQkHiIv+es4Wmgoj2fBeh0pHTyLqga1QKjLojgXs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TYyUoFNJp3sdQ5gGtcONTKVHKVQlzI1beFyBdXyPqKw/BUC1hdiKG+9kMCSYrfkou
+         zXilq2DNWZK80k5A1lbuzIweWnlEhFB2gHlE5Kn1l2iF5sjfLZH3fZv/dK1wdMZ89b
+         yk5s7Cfmd9en79mT3fmflqvtDJ5OMxPX8GV01bc8=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Adam Ford <aford173@gmail.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        Alifer Moraes <alifer.wsdm@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Vitor Massaru Iha <vitor@massaru.org>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Tim Harvey <tharvey@gateworks.com>,
+        Robert Jones <rjones@gateworks.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-power@fi.rohmeurope.com
 Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/8] ARM: dts: rk3188: Correct interrupt flags in examples
-Date:   Tue,  8 Sep 2020 17:02:35 +0200
-Message-Id: <20200908150241.5771-2-krzk@kernel.org>
+Subject: [PATCH] dt-bindings: mfd: Correct interrupt flags in examples
+Date:   Tue,  8 Sep 2020 16:59:00 +0200
+Message-Id: <20200908145900.4423-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200908150241.5771-1-krzk@kernel.org>
-References: <20200908150241.5771-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -78,39 +62,64 @@ have the same meaning:
 1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
 2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
 
-Correct the interrupt flags without affecting the code:
-  ACTIVE_HIGH => IRQ_TYPE_NONE
+Correct the interrupt flags, assuming the author of the code wanted some
+logical behavior behind the name "ACTIVE_xxx", this is:
+  ACTIVE_LOW => IRQ_TYPE_LEVEL_LOW
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
 ---
+ Documentation/devicetree/bindings/mfd/act8945a.txt          | 2 +-
+ Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml    | 3 ++-
+ Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-Not tested on HW.
----
- arch/arm/boot/dts/rk3188-bqedison2qc.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/rk3188-bqedison2qc.dts b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-index 66a0ff196eb1..b191347894f6 100644
---- a/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-+++ b/arch/arm/boot/dts/rk3188-bqedison2qc.dts
-@@ -7,6 +7,7 @@
- /dts-v1/;
- #include <dt-bindings/i2c/i2c.h>
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- #include "rk3188.dtsi"
+diff --git a/Documentation/devicetree/bindings/mfd/act8945a.txt b/Documentation/devicetree/bindings/mfd/act8945a.txt
+index e6f168db6c72..5ca75d888b4a 100644
+--- a/Documentation/devicetree/bindings/mfd/act8945a.txt
++++ b/Documentation/devicetree/bindings/mfd/act8945a.txt
+@@ -71,7 +71,7 @@ Example:
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
+ 			interrupt-parent = <&pioA>;
+-			interrupts = <45 GPIO_ACTIVE_LOW>;
++			interrupts = <45 IRQ_TYPE_LEVEL_LOW>;
  
- / {
-@@ -479,7 +480,7 @@
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&gpio3>;
--		interrupts = <RK_PD2 GPIO_ACTIVE_HIGH>;
-+		interrupts = <RK_PD2 IRQ_TYPE_NONE>;
- 		interrupt-names = "host-wake";
- 		brcm,drive-strength = <5>;
- 		pinctrl-names = "default";
+ 			active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
+ 			active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
+diff --git a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+index 9b6eb50606e8..e541eb0d02ed 100644
+--- a/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
++++ b/Documentation/devicetree/bindings/mfd/gateworks-gsc.yaml
+@@ -147,6 +147,7 @@ required:
+ examples:
+   - |
+     #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
+     i2c {
+         #address-cells = <1>;
+         #size-cells = <0>;
+@@ -155,7 +156,7 @@ examples:
+             compatible = "gw,gsc";
+             reg = <0x20>;
+             interrupt-parent = <&gpio1>;
+-            interrupts = <4 GPIO_ACTIVE_LOW>;
++            interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+             interrupt-controller;
+             #interrupt-cells = <1>;
+             #address-cells = <1>;
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+index c3c02ce73cde..386eec06cf08 100644
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
++++ b/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+@@ -39,7 +39,7 @@ pmic: pmic@4b {
+ 	compatible = "rohm,bd70528";
+ 	reg = <0x4b>;
+ 	interrupt-parent = <&gpio1>;
+-	interrupts = <29 GPIO_ACTIVE_LOW>;
++	interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
+ 	clocks = <&osc 0>;
+ 	#clock-cells = <0>;
+ 	clock-output-names = "bd70528-32k-out";
 -- 
 2.17.1
 
