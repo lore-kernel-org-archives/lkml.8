@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32390C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E33C2BB84
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 088C321481
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4F421D1A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fa2KeXtA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T5y9qhD9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgIHCQU (ORCPT
+        id S1729190AbgIHCQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40060 "EHLO
+        Mon, 7 Sep 2020 22:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgIHCLq (ORCPT
+        with ESMTP id S1728272AbgIHCLo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 22:11:46 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14DD3C061795;
-        Mon,  7 Sep 2020 19:11:46 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id b12so8304879lfp.9;
-        Mon, 07 Sep 2020 19:11:45 -0700 (PDT)
+        Mon, 7 Sep 2020 22:11:44 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7243CC0613ED;
+        Mon,  7 Sep 2020 19:11:43 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t23so18045828ljc.3;
+        Mon, 07 Sep 2020 19:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=HtsscUVX9USqMNRXBDByuYOqMY2muh1bB3NfySu7tl8=;
-        b=fa2KeXtAHAMJQOqBaP5RMOJTBSw+cDEK6ojVorwGCj4qKTPLaDySziuD5peEJGTu7k
-         cD20ecHaj5uUdDOjratvenhjB9If0XSmdqzGfSBAhB9RkdcTTnbRG7WlsF2C1a4Y7Ay7
-         AD/vk5sdfBfl1rNtrX5njAcU+iiLpMR8jsmkzhVGAZ3g3a8Fj4olBN9MB9ZvSWN1SEf3
-         0Vg4fYgk4T6cKISxEPua4jzV+3uHw57W1055TYEL+WQf2mqEMTV4KTbQfuclQq7pU5he
-         XJqJnyb/nJ/hxpRIsbmzG1t7E/QXFrvENHYfHa7QKiwNRsB4YMkZ6V+xfVTkWhiWbAEH
-         oo9Q==
+        bh=vFGzjwGX1HKX5lyPoG6GisXiLAg0DIxIZ91bMI/VsTM=;
+        b=T5y9qhD98NS9lAKyvB7qsB4SlfoBe6Juq/2QacU0JtvFXyHAB1xQ8sQoG21fSaNiCR
+         QKJpEf24zVDTnItxK4P/ppOUFmJMd0Nqnk5mtthHwx6yVGdDobW4MJVZB+jsZ9I+iIFv
+         7u+y6LXKnjnGiZ4A+SNSYBZEBstRCDEKu1lVzk5hHtkjd3WWQNF5R0ZJdH3NxsO5Naet
+         QXxNezItUcP0bwVrUiBJO/2Pl0Io5AUCllbfCnmy6ff2JBOuYEJ8wsM5sY3TINjSJEO0
+         6JNquyjfzZJTvteBV6BIPtkdLj1FfO+0HxqwqtrIDi9ZtRsXOmrI9O/l2n3KbJ5H2nHj
+         NQEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=HtsscUVX9USqMNRXBDByuYOqMY2muh1bB3NfySu7tl8=;
-        b=tLEZG+hEDz9Y3w/cNFHcjlmwC9Fii2TY9zckVQSoBYeI/EgsNo8m4n7rs9X4CZTAAg
-         kWUGzuZxxjmgzKxJh2Y/CRkHQBlmtsiOmFqQPX4+bcj3p9gitPcsPiPVs5JKRmgqeOjY
-         Zp5pcVKrJdFPzKeWmaC8TeKctvRH2TyeJR2s3JKd4QbnC2voYQkMmSYUgq3Ddsqwz9MU
-         IjVhjHGeVP5zbhKT8EdxZNt8ZKyc82uD8P5/lkaHXA8NT5dH5HHGCjHRkBIs79xuaC/a
-         OywQlPSzkvyVzm05RjbZVO8LALpHpAUFxwP4GRpXmdqgLdq6uMziCp4ubcZINTw/OEbS
-         nXKg==
-X-Gm-Message-State: AOAM531MxTBxvVB7OgGzcNVCwLKxkxC5O3e05KRvd73ZkyLHCZXpVVFG
-        aG/pUrH2MJXXjfNRPqXxGcA=
-X-Google-Smtp-Source: ABdhPJx7gNa1jKMbZzebHb1QwcP2ueIhpoe7fO7AvO/g6zQT/AFsGuEWw9z3y5QO8cYAUNxLt+a62A==
-X-Received: by 2002:a19:7604:: with SMTP id c4mr11501739lff.132.1599531104430;
-        Mon, 07 Sep 2020 19:11:44 -0700 (PDT)
+        bh=vFGzjwGX1HKX5lyPoG6GisXiLAg0DIxIZ91bMI/VsTM=;
+        b=DVtHF7kAEiCnZJFm9wDEr3p8jKPN3+pz3IElYYHQyrp6T1nshyGyW+bN2RMG06Ffcf
+         BD6bpPCXP72aA6sRsv9oOSy2Uq5kNUlmFxdYQYzR/9FAVEiyumg3+NRwHAKmNHUp6IXo
+         P0qKBH2833EqzKcrhcrf2DXVmmUwGp3pBbf9jF8IpLvKnLJf7PT8M4HmXJ+w6OD0+YGE
+         406rH93sG8QJiciUC0onOHeJq4dvKZ/Y/YalZ/arEk+CSP8P5GjfIu6SHmcOCvL5H2rF
+         tTYofA16F5LMG+ZzcEgHoeel+XnTQcrdsO94pDaRlsfQ4QUMvFaIiWjVYWhgaX9HNK6P
+         9M9Q==
+X-Gm-Message-State: AOAM531XVYqOgmCRBSibRozu5UAZj0kNPNc27d0cGcTu2PKla/WPHUaS
+        Nu29LmNlb/Aq5OzegUfuYgo=
+X-Google-Smtp-Source: ABdhPJyrQLtWtUtIPtGlO2UJGpCycfMwO0MduT3Qk3o8BSX0UetXZ2XYI7Oy1ZuSLypOxlTDJC0EFw==
+X-Received: by 2002:a05:651c:141:: with SMTP id c1mr996963ljd.182.1599531101953;
+        Mon, 07 Sep 2020 19:11:41 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.43
+        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 19:11:44 -0700 (PDT)
+        Mon, 07 Sep 2020 19:11:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 10/35] i2c: tegra: Use devm_platform_get_and_ioremap_resource()
-Date:   Tue,  8 Sep 2020 05:09:56 +0300
-Message-Id: <20200908021021.9123-11-digetx@gmail.com>
+Subject: [PATCH v6 07/35] i2c: tegra: Runtime PM always available on Tegra
+Date:   Tue,  8 Sep 2020 05:09:53 +0300
+Message-Id: <20200908021021.9123-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200908021021.9123-1-digetx@gmail.com>
 References: <20200908021021.9123-1-digetx@gmail.com>
@@ -83,35 +83,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver now uses devm_platform_get_and_ioremap_resource() which replaces
-the typical boilerplate code and makes code cleaner.
+The runtime PM is guaranteed to be always available on Tegra after commit
+40b2bb1b132a ("ARM: tegra: enforce PM requirement"). Hence let's remove
+all the RPM-availability checking and handling from the code.
 
 Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 29 ++++++-----------------------
+ 1 file changed, 6 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 90ba2f5327c5..c2bbdf92b11f 100644
+index 85ed0e02d48c..a52c72135390 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -1678,12 +1678,12 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	int irq;
- 	int ret;
+@@ -1775,18 +1775,10 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	if (!i2c_dev->is_vi)
+ 		pm_runtime_irq_safe(&pdev->dev);
+ 	pm_runtime_enable(&pdev->dev);
+-	if (!pm_runtime_enabled(&pdev->dev)) {
+-		ret = tegra_i2c_runtime_resume(&pdev->dev);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "runtime resume failed\n");
+-			goto unprepare_div_clk;
+-		}
+-	} else {
+-		ret = pm_runtime_get_sync(i2c_dev->dev);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "runtime resume failed\n");
+-			goto put_rpm;
+-		}
++	ret = pm_runtime_get_sync(i2c_dev->dev);
++	if (ret < 0) {
++		dev_err(dev, "runtime resume failed\n");
++		goto put_rpm;
+ 	}
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base_phys = res->start;
--	base = devm_ioremap_resource(&pdev->dev, res);
-+	base = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(base))
- 		return PTR_ERR(base);
+ 	if (i2c_dev->is_multimaster_mode) {
+@@ -1845,15 +1837,8 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 		clk_disable(i2c_dev->div_clk);
  
-+	base_phys = res->start;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	if (!res) {
- 		dev_err(&pdev->dev, "no irq resource\n");
+ put_rpm:
+-	if (pm_runtime_enabled(&pdev->dev))
+-		pm_runtime_put_sync(&pdev->dev);
+-	else
+-		tegra_i2c_runtime_suspend(&pdev->dev);
+-
+-	if (pm_runtime_enabled(&pdev->dev))
+-		pm_runtime_disable(&pdev->dev);
+-
+-unprepare_div_clk:
++	pm_runtime_put_sync(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
+ 	clk_unprepare(i2c_dev->div_clk);
+ 
+ unprepare_slow_clk:
+@@ -1875,8 +1860,6 @@ static int tegra_i2c_remove(struct platform_device *pdev)
+ 		clk_disable(i2c_dev->div_clk);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+-	if (!pm_runtime_status_suspended(&pdev->dev))
+-		tegra_i2c_runtime_suspend(&pdev->dev);
+ 
+ 	clk_unprepare(i2c_dev->div_clk);
+ 	clk_unprepare(i2c_dev->slow_clk);
 -- 
 2.27.0
 
