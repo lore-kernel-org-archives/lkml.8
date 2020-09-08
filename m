@@ -2,110 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782FDC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646E4C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5162F2075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB48D2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="WF675lbF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728452AbgIHDex (ORCPT
+        id S1728485AbgIHDfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:34:53 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728327AbgIHDew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 23:34:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E7AD9E161FE542E2FA04;
-        Tue,  8 Sep 2020 11:34:49 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 11:34:48 +0800
-Subject: Re: [PATCH 1/1] watchdog: remove unneeded inclusion of
- <uapi/linux/sched/types.h>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-watchdog <linux-watchdog@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200827062154.1847-1-thunder.leizhen@huawei.com>
- <55ad40ff-dcc1-5051-65d2-24201c471a8f@roeck-us.net>
- <f80cc7ea-9d1f-64a4-7c18-faf672bf8cf6@huawei.com>
- <18762ecb-9b47-18ed-6fbf-7cb4ee561a10@roeck-us.net>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <1098f1d5-0c36-d5b4-741a-4f2f6f42b428@huawei.com>
-Date:   Tue, 8 Sep 2020 11:34:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 7 Sep 2020 23:35:42 -0400
+Received: from ozlabs.org ([203.11.71.1]:39449 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728327AbgIHDfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 23:35:40 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlrQK6Vrbz9sT6;
+        Tue,  8 Sep 2020 13:35:37 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599536138;
+        bh=hmUo+ue5BTunrdrOnAjLr0o75jxoawOM7P1KpTi7tJ0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=WF675lbFf5FLyYzQ6h8KqJ+rx1ZCZpewRKijiwF3Lr95eIQNdSQyaR3I5bT/0QcYu
+         VaeppLpAJS6+/rKV7dkZ7l5poU3jdS8HyyuzXSdr8+XLUn8mMQ1hFdvOM4m12XsKIH
+         x45Tdx37r9V0IwubaaZKRs/LekkrKsqMH6dl858E8KwkqonrR62spZgRKzKChjkhD7
+         FfJBQBthvpvsm3NMJVV36Gia3xc1NdAcOb8INqm5Xlq4rkvdv73HgSxl01y/JsJjk9
+         nfV2kC+oJTenA6n9vD3vun2VYFOuxFfjVzDpbgEHkt0my37tyanM/tto4UJ3P4aNB5
+         8kmF6dHj/sIdA==
+Date:   Tue, 8 Sep 2020 13:35:36 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the nand tree
+Message-ID: <20200908133536.6ab7a7f0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <18762ecb-9b47-18ed-6fbf-7cb4ee561a10@roeck-us.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/tgg14zL0GiowthGSPrL/Wln";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/tgg14zL0GiowthGSPrL/Wln
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2020/9/8 10:40, Guenter Roeck wrote:
-> On 9/7/20 12:50 AM, Leizhen (ThunderTown) wrote:
->> Hi, Wim Van Sebroeck, Guenter Roeck:
->>   What's your opinion? Guenter Roeck given "Reviewed-by" two weeks ago.
->>
-> 
-> The patch is in my watchdog-next branch, and Wim usually picks it up
-> from there.
+After merging the nand tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Oh, thanks.
+drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c: In function 'common_nfc_set_geo=
+metry':
+drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c:513:33: error: 'chip' undeclared=
+ (first use in this function)
+  513 |   nanddev_get_ecc_requirements(&chip->base);
+      |                                 ^~~~
+drivers/mtd/nand/raw/gpmi-nand/gpmi-nand.c:513:33: note: each undeclared id=
+entifier is reported only once for each function it appears in
 
-> 
-> Guenter
-> 
->>
->> On 2020/8/27 21:40, Guenter Roeck wrote:
->>> On 8/26/20 11:21 PM, Zhen Lei wrote:
->>>> There has been no reference to "struct sched_param" since
->>>> commit 94beddacb53c ("sched,watchdog: Convert to sched_set_fifo()"), so
->>>> there's no need to include <uapi/linux/sched/types.h> any more, delete
->>>> it.
->>>>
->>>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->>>
->>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>>
->>>> ---
->>>>  drivers/watchdog/watchdog_dev.c | 2 --
->>>>  1 file changed, 2 deletions(-)
->>>>
->>>> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
->>>> index 6798addabd5a067..0f18fa2433310b0 100644
->>>> --- a/drivers/watchdog/watchdog_dev.c
->>>> +++ b/drivers/watchdog/watchdog_dev.c
->>>> @@ -43,8 +43,6 @@
->>>>  #include <linux/watchdog.h>	/* For watchdog specific items */
->>>>  #include <linux/uaccess.h>	/* For copy_to_user/put_user/... */
->>>>  
->>>> -#include <uapi/linux/sched/types.h>	/* For struct sched_param */
->>>> -
->>>>  #include "watchdog_core.h"
->>>>  #include "watchdog_pretimeout.h"
->>>>  
->>>>
->>>
->>>
->>>
->>
-> 
-> 
-> 
+Caused by commit
 
+  aa5faaa5f95c ("mtd: rawnand: Use nanddev_get/set_ecc_requirements() when =
+relevant")
+
+I have used the nand tree from next-20200903 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/tgg14zL0GiowthGSPrL/Wln
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9W/AgACgkQAVBC80lX
+0GzMjQf/e2bwIz+QCe+ttucH/cr0+dP56lGo7cq6mLRKN7cmk03iGG3Acr2FFfc2
+PriSexj/JtRe8DXQB4cydKFiZsDYXfE4Zv2j9Y8Z/qQPZXV/zuICopXqS5jc8/6E
+Hda5Bdomb9Gqos36RCGVqXV0aQ1kwWzoGFQhTnNxVOxsbZyaBygTXE9p3qYqAwmf
+tUUIAJP9MXZBBhTJpAYJlFCJEUR9svXuBayZuh9qhRZ++6AyO9UBcT4ZjmOw6RDN
+N1F2eOnPNCxDXxlklM2ZYZ15jAxaWiZh9xYO817SOFdRK6j5jvdEOrip1Jyv9/DH
+poWk7e4h8cEQbcWpAMVQdwIb0JbAZQ==
+=vXnl
+-----END PGP SIGNATURE-----
+
+--Sig_/tgg14zL0GiowthGSPrL/Wln--
