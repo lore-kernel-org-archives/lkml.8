@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C46C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ABC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36239208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DEFD20936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599596027;
-	bh=sNzB6t/5kKkQ+Ltfcjtg8unu1ta56Hhvl+AG2wXjpr8=;
+	s=default; t=1599596033;
+	bh=G1rBETN5Htd6dGPg5Ma1dHWDGClo+P7ZqLA4Y4JKMW4=;
 	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fe4S7y2WQELSst9+Y7jQJfbDDEbaixi9hcktBnjNwTZYwRDH8a3NjcDHOkdStYMGz
-	 owRzxTKZLf9lZpRmuY2/mmsk9HviNdXYWj/1xLXpG2Q2hWRB81A2lQwC9PiWPAa93l
-	 5M7IHUBSe3qdeNFbVngIM+49RodST50FvtNKI0RU=
+	b=SvFyzagh9Ghz565CebM20KUB2B3rVmEvlulJlECOoKqB6xqmDDJm1aotFJ0Sv5VaS
+	 0PZYwug4roc3RMhryX0itK5dX0kBkRiydI1IWQQuKLwMP4ykGiDXfr1SLjA60XBBJv
+	 b7MuUl0C1JGMmuMdA7TntwWH9JRbhrvzve5Z6JBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbgIHUNq (ORCPT
+        id S1730354AbgIHUNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34070 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 16:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731222AbgIHUNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:13:30 -0400
+        id S1726738AbgIHUNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 16:13:36 -0400
 Received: from localhost.localdomain (unknown [194.230.155.174])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2341A21919;
-        Tue,  8 Sep 2020 20:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2605120936;
+        Tue,  8 Sep 2020 20:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599596010;
-        bh=sNzB6t/5kKkQ+Ltfcjtg8unu1ta56Hhvl+AG2wXjpr8=;
+        s=default; t=1599596015;
+        bh=G1rBETN5Htd6dGPg5Ma1dHWDGClo+P7ZqLA4Y4JKMW4=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=gsnPn53TiN/dbM/VAPmS/R5HE8LefCbpm8Q2L3CaOSQPbuXnjyhGV39m3PDytut5Y
-         I8bggQ+fZLYRv1TN74BCjXucqJboDWBPvN13n6WsTeqs4xEhNwmP/cp7RlHoBlLFqP
-         neAeuTRUyfq+38cHhZTD36xl2YRPA3xaEEL5w0i4=
+        b=kHVa7NspCaBfKbJYvTF6xCHEcZYas6hLZDVQoWl0jXEoLlqWbA5/XM91+kVjb0c5X
+         wrt8HNNPXjipBPc8AgkMyYGY8pyny80M0nMQORV2hbMrQN73GpppOcCb15Rm28NAg6
+         B3Pb5zXg99rF/+FqvHyfLK01mMM7N1kSYNo9vU+s=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Sebastian Reichel <sre@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -48,9 +48,9 @@ To:     Sebastian Reichel <sre@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/7] power: supply: bq27xxx: adjust whitespace
-Date:   Tue,  8 Sep 2020 22:13:15 +0200
-Message-Id: <20200908201319.3567-3-krzk@kernel.org>
+Subject: [PATCH 5/7] power: supply: bq27xxx: add separate flag for single SoC register
+Date:   Tue,  8 Sep 2020 22:13:17 +0200
+Message-Id: <20200908201319.3567-5-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200908201319.3567-1-krzk@kernel.org>
 References: <20200908201319.3567-1-krzk@kernel.org>
@@ -59,26 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional change.
+bq27000, bq27010 and upcoming bq34z100 have a single byte SoC
+register.  However except this similarity, bq34z100 is quite different
+than bq27000/bq27010, so flag BQ27XXX_O_ZERO cannot be reused here.  Add
+a new bit flag describing that SoC is a single byte register.
+
+No functional change for bq27000 and bq27010.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/power/supply/bq27xxx_battery.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/power/supply/bq27xxx_battery.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
-index 65806f668b1f..2deac3fbb036 100644
+index e971af43dd45..88cdad0ecb08 100644
 --- a/drivers/power/supply/bq27xxx_battery.c
 +++ b/drivers/power/supply/bq27xxx_battery.c
-@@ -76,7 +76,7 @@
+@@ -855,6 +855,7 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
+ #define BQ27XXX_O_CFGUP		BIT(3)
+ #define BQ27XXX_O_RAM		BIT(4)
+ #define BQ27Z561_O_BITS		BIT(5)
++#define BQ27XXX_O_SOC_SI	BIT(6) /* SoC is single register */
  
- /* BQ27Z561 has different layout for Flags register */
- #define BQ27Z561_FLAG_FDC	BIT(4) /* Battery fully discharged */
--#define BQ27Z561_FLAG_FC		BIT(5) /* Battery fully charged */
-+#define BQ27Z561_FLAG_FC	BIT(5) /* Battery fully charged */
- #define BQ27Z561_FLAG_DIS_CH	BIT(6) /* Battery is discharging */
+ #define BQ27XXX_DATA(ref, key, opt) {		\
+ 	.opts = (opt),				\
+@@ -872,8 +873,8 @@ static struct {
+ 	enum power_supply_property *props;
+ 	size_t props_size;
+ } bq27xxx_chip_data[] = {
+-	[BQ27000]   = BQ27XXX_DATA(bq27000,   0         , BQ27XXX_O_ZERO),
+-	[BQ27010]   = BQ27XXX_DATA(bq27010,   0         , BQ27XXX_O_ZERO),
++	[BQ27000]   = BQ27XXX_DATA(bq27000,   0         , BQ27XXX_O_ZERO | BQ27XXX_O_SOC_SI),
++	[BQ27010]   = BQ27XXX_DATA(bq27010,   0         , BQ27XXX_O_ZERO | BQ27XXX_O_SOC_SI),
+ 	[BQ2750X]   = BQ27XXX_DATA(bq2750x,   0         , BQ27XXX_O_OTDC),
+ 	[BQ2751X]   = BQ27XXX_DATA(bq2751x,   0         , BQ27XXX_O_OTDC),
+ 	[BQ2752X]   = BQ27XXX_DATA(bq2752x,   0         , BQ27XXX_O_OTDC),
+@@ -1420,7 +1421,7 @@ static int bq27xxx_battery_read_soc(struct bq27xxx_device_info *di)
+ {
+ 	int soc;
  
- /* control register params */
+-	if (di->opts & BQ27XXX_O_ZERO)
++	if (di->opts & BQ27XXX_O_SOC_SI)
+ 		soc = bq27xxx_read(di, BQ27XXX_REG_SOC, true);
+ 	else
+ 		soc = bq27xxx_read(di, BQ27XXX_REG_SOC, false);
 -- 
 2.17.1
 
