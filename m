@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9C8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1E52080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C5F207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589351;
-	bh=Q1MWV3QF384tQ47rClttc12k8j/Mj6/7MqE4HXzRMng=;
+	s=default; t=1599589352;
+	bh=KY2vcxFNoq1KroSzVSsQo4HQfEBCab7hchzMg52KxXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rnXszvBBXtA85tb+AMdFAmz9UrqnwXeTb1p9i2/fT4y6EikI10ez4znbZbR2QaTB0
-	 0FBEMkDa6S5cMZejmz/2w8uARL9gqdEgdGkq5+Ad7IAYokqdmGf3daBPQUzJSPgXlX
-	 2KucrjTfgooaMLoGw1Cmchsrm+YjhXxuTBEq73V0=
+	b=x2tX9PsPw7jaTjOEWUD3XFXZcXD7MGkfuUzoM2Cn8S9M7REgN7TjgnXXysSkiFWm3
+	 RrkAH2vVHA+tns65DEKnX85cbe1LrfwxcKZzS1agn0qxLv9zvFevLcxRrve7CqIDNF
+	 0CdGscqQVTVzdWjGDnrV2nOVpja+PmDM7b/nOFSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732223AbgIHSW1 (ORCPT
+        id S1732163AbgIHSWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:22:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731456AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730920AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54F0A24756;
-        Tue,  8 Sep 2020 15:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 028432474C;
+        Tue,  8 Sep 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579687;
-        bh=Q1MWV3QF384tQ47rClttc12k8j/Mj6/7MqE4HXzRMng=;
+        s=default; t=1599579675;
+        bh=KY2vcxFNoq1KroSzVSsQo4HQfEBCab7hchzMg52KxXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAF0fx/gI/8o6dHxvbWtxw/8ZoiMOLXgZvMQbMIyYD+UDjtlxpJCpska9Pm2c8/j0
-         EbfficM4DMfJPctPLhASMmNwXBvavXKA7BKfkmRxPL+2Qgv4Vwfpl89w0oOsOHxBbW
-         UPXKPtZqasPTEUhWBw7tcMwAhCkEcqY9cvbUcj8s=
+        b=UCIvLayGeNSvYRGD93c6+uHwAK6PURvSTcF2z9xVeczMW5cx+wo/qnK/PyCTgbboA
+         JKBDVR93ylfNaDhtdapZS0toZjTEn6YHWkIoMrvnFcmP9l86qC22iVID+sk9fxl7Ah
+         TjFLNXeOFt4K0WH6pjESgZESyXnqUfI3Iapk4G94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 181/186] mm/migrate: fixup setting UFFD_WP flag
-Date:   Tue,  8 Sep 2020 17:25:23 +0200
-Message-Id: <20200908152250.448253850@linuxfoundation.org>
+        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.8 146/186] mmc: mediatek: add optional module reset property
+Date:   Tue,  8 Sep 2020 17:24:48 +0200
+Message-Id: <20200908152248.738325498@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -64,43 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alistair Popple <alistair@popple.id.au>
+From: Wenbin Mei <wenbin.mei@mediatek.com>
 
-commit ebdf8321eeeb623aed60f7ed16f7445363230118 upstream.
+commit 855d388df217989fbf1f18c781ae6490dbb48e86 upstream.
 
-Commit f45ec5ff16a75 ("userfaultfd: wp: support swap and page migration")
-introduced support for tracking the uffd wp bit during page migration.
-However the non-swap PTE variant was used to set the flag for zone device
-private pages which are a type of swap page.
+This patch fixs eMMC-Access on mt7622/Bpi-64.
+Before we got these Errors on mounting eMMC ion R64:
+[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
+flags 0x800 phys_seg 1 prio class 0
+[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
 
-This leads to corruption of the swap offset if the original PTE has the
-uffd_wp flag set.
+This patch adds a optional reset management for msdc.
+Sometimes the bootloader does not bring msdc register
+to default state, so need reset the msdc controller.
 
-Fixes: f45ec5ff16a75 ("userfaultfd: wp: support swap and page migration")
-Signed-off-by: Alistair Popple <alistair@popple.id.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Link: https://lkml.kernel.org/r/20200825064232.10023-1-alistair@popple.id.au
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: <stable@vger.kernel.org> # v5.4+
+Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Link: https://lore.kernel.org/r/20200814014346.6496-4-wenbin.mei@mediatek.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/migrate.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mmc/host/mtk-sd.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -251,7 +251,7 @@ static bool remove_migration_pte(struct
- 				entry = make_device_private_entry(new, pte_write(pte));
- 				pte = swp_entry_to_pte(entry);
- 				if (pte_swp_uffd_wp(*pvmw.pte))
--					pte = pte_mkuffd_wp(pte);
-+					pte = pte_swp_mkuffd_wp(pte);
- 			}
- 		}
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -22,6 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
++#include <linux/reset.h>
  
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/core.h>
+@@ -414,6 +415,7 @@ struct msdc_host {
+ 	struct pinctrl_state *pins_uhs;
+ 	struct delayed_work req_timeout;
+ 	int irq;		/* host interrupt */
++	struct reset_control *reset;
+ 
+ 	struct clk *src_clk;	/* msdc source clock */
+ 	struct clk *h_clk;      /* msdc h_clk */
+@@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_hos
+ 	u32 val;
+ 	u32 tune_reg = host->dev_comp->pad_tune_reg;
+ 
++	if (host->reset) {
++		reset_control_assert(host->reset);
++		usleep_range(10, 50);
++		reset_control_deassert(host->reset);
++	}
++
+ 	/* Configure to MMC/SD mode, clock free running */
+ 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+ 
+@@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platfor
+ 	if (IS_ERR(host->src_clk_cg))
+ 		host->src_clk_cg = NULL;
+ 
++	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
++								"hrst");
++	if (IS_ERR(host->reset))
++		return PTR_ERR(host->reset);
++
+ 	host->irq = platform_get_irq(pdev, 0);
+ 	if (host->irq < 0) {
+ 		ret = -EINVAL;
 
 
