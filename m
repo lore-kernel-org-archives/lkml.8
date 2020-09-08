@@ -2,322 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D921C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79099C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F160F205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A10F205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:21:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Y9N0HEjj"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PxQ3DtuI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731695AbgIHQUM (ORCPT
+        id S1731070AbgIHQUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:20:12 -0400
-Received: from mout.gmx.net ([212.227.15.15]:46129 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbgIHQJp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1599581381;
-        bh=tkT6oWoTKFu7v4ssWMOYmbprRPCJOoKLlg1czbQNknI=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Y9N0HEjjwOTCm0Plv4TwBuxzSPSgxazaxuj78yFj08KgLYMYBWEfL218yWwrbqKa8
-         pr94kjujE46zG0dT8If/pScgYvooRwEyhx+R2LdHwekXeES0iuRN54ajjjZzg38mov
-         6sIEnyJoUvcxHbDXclpZb0+HvasmfzKgW/wOzDSE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ts7.local ([84.179.245.142]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N4zAs-1kexBd1VUi-010qXC; Tue, 08
- Sep 2020 14:02:33 +0200
-From:   Thomas Schmitt <scdbackup@gmx.net>
-To:     linux-scsi@vger.kernel.org
-Cc:     axboe@kernel.dk, linux-kernel@vger.kernel.org, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, Thomas Schmitt <scdbackup@gmx.net>
-Subject: [PATCH 1/2] cdrom: delegate automatic CD tray loading to callers of cdrom_open()
-Date:   Tue,  8 Sep 2020 14:02:06 +0200
-Message-Id: <20200908120207.5014-2-scdbackup@gmx.net>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200908120207.5014-1-scdbackup@gmx.net>
-References: <20200908120207.5014-1-scdbackup@gmx.net>
+        Tue, 8 Sep 2020 12:20:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17062 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730607AbgIHQJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:47 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088DVXE9184251;
+        Tue, 8 Sep 2020 09:41:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=b3/S8z+XcaaneUPd0EkP9D6v+v/IBiNDUrZwO6+VVqU=;
+ b=PxQ3DtuIBtdFPySbUQO+rKJRdIUg9KQ8b2RVHhIxmeJ3XpQYz57ze6WAW7AHBAD2EqMU
+ ho5QC+zU9Q6L54085XtrhluZ6ynYToJU0MIf9HoQ9t9OlVx3ZnJ+3LIdd9dytpAplxnc
+ 4zfD+xMMhALdVm0RE0z78h25N7F8JGBLBtjgaaeBDN0cXkdwJKU/r8Zx/+W1ZlnRDwal
+ EvAZPmsmCfEKf9QOt6zOlkXdduHB6AUiL8JaN0iBHdO5zDxxO+DQqkN/Uj9qrliDY8G7
+ THM84qhlk79sI4/1wqYkLV+wigcbB5XEIiH/IECfucDCbA0A0f3yyLenDhYOo2jSzxgp zQ== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 33eat2gk3x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 09:41:50 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088DcMhS019719;
+        Tue, 8 Sep 2020 13:41:48 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 33c2a8bgev-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 13:41:48 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Dfkjf36897102
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 13:41:46 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1D4CC4C059;
+        Tue,  8 Sep 2020 13:41:46 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D07984C040;
+        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
+Received: from osiris (unknown [9.171.47.162])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  8 Sep 2020 13:41:45 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 15:41:44 +0200
+From:   Heiko Carstens <hca@linux.ibm.com>
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        rafael.j.wysocki@intel.com, svens@linux.ibm.com
+Subject: Re: [PATCH] s390/idle: Fix suspicious RCU usage
+Message-ID: <20200908134144.GH14136@osiris>
+References: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DlgdCJIDDQs/lxj1Hrpb5RPkLlSAeZSEFVZmZO2myxzVV72KEBF
- P19RoJnIWesn6mcBILSBmji1Q0eTX9TuZFTH2+epRPy7HMw0qAkhSZzNChNiQJytSsO12XD
- njvVqpf3X732RiQIACQGn6IexUWeKkKCaXnO/gDdIpc/fFQBqzhkK79cMyAavr/xZTsBqea
- F3IVshBjg0pSZuJbi7n0w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:U+o/rzYkQ/4=:BqZIN/64NYTADpdKNDX4nN
- nF7nViMstRNALr6WbFpnwHSfZZe4vdzkYctMkpUD7O82y77GmkrvOp3c/elZNyR00EEZ70p9x
- SHGo2rqfBfzBKN3x0GS5KlxCozkhulVAAQRoW1Do0UXxxMyT+uj76OJbZ3K2j5oTtYrjiKG5d
- kwEr3YCSiHx8o03t6Uj6WHzH1B2XcPIX081LR+bhh5yyt+X3zKrPVAMyV8B1hgkG9schqDPVG
- vGXH+yYo59RDPofVhlZCBOGoHmFyxBNzDvPZ/nynmvNh9GoF3XFYGCdLHxBcl3Uj8Vl6PCday
- YV5L6L/k7RKWWQUuPLPE4rVZBVzMs96DlZo0vBddZHVDYXqcsIhRLKssnvddo/SL+/JTlQrKd
- bUucvGOhYk6vt7im8FyyOLyCTCR1IGewHglnlaWjMASg1KTX4EtgygnhigDH5SsauF66itMtI
- /RCHpTZnhnOYLexjrOBThWQ7rP3sGqpZQHjPhAUMFAbvwXf0z3LMoZvJzk3vLqIhCPN+xivEk
- ckDEY65hxPebuIIcBaxF4+SLoI5+eAbjlzGdZeo1D5yL6XJZ2oTQZTMGH89dzUOcT3IXAVO9f
- DbEs4wNyVZoqiEzHDAJEjvWqu3ayCQ6TZJtgfD2A6Sj7oZBySmM3UpQZahTO3qVdrhhXg7ygh
- EBdj4d2gsxf6dj441IH6/n2zU9DUU+Cr8NhSHQMvzUx2I2sxsddpux/a6YVTKgKYSsRbNB4Qf
- UCG6Gpa8DKJg08YuMCf9lQwecOFmjDukLW5stvf2pYiJwS7dPOOkc1rtNKCkfSmGv7RBCTy9C
- KG5Ml1l+fXHJgd4zWjuTJDRVO3tfui4dGhvtrRqmKTkv80gyu5e2sWxYeq2xgtRVzuBDAnPwJ
- tO2UGWqCFJW2UC889fKcxgvzgaP/3Lm9fXDC+SzX5WrBRmmV29mL6k+g9XMcOGhoLKB1bMALF
- 8RTKUwYprVRDmcl2cQ1uaS7Omg9CARZTku1Kc7zUSQx1pEgVD/PVEQ1jJ8Zu2f7OWKdUdA+I7
- M4dXw9fmiWRkbbzGlN4hJgnvET3ooAwDHS8qTzinYNZyYLXzIHkFJuKXJ4pxubEvfNDaDu5hG
- +FtoWex8hRj0uvBZ7gTALFjVdfaCrK+77fFhHPLP03eAWVLp2mzNTzl0nBu0dEgExim+dxmLl
- yYzECSDL6TuV9uB53x3l61OIhj1jQIozzV/yHtoTo7ggzkzQrzKIh7iDRGmdxCZ2Dogi89odm
- OI0T6P7Z0Cju5vAwcFCbApFSzChkvDhLde1VbSA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908133031.GT1362448@hirez.programming.kicks-ass.net>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ adultscore=0 mlxlogscore=863 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 suspectscore=3 mlxscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If
-  open("/dev/sr0", O_RDONLY);
-pulls in the tray of an optical drive, it immediately returns -1 with
-errno ENOMEDIUM or the first read(2) fails with EIO. Later, when the drive
-has stopped blinking, another open() yields success and read() works.
-This affects not only userland reading of the device file but also
-mounting the device.
+On Tue, Sep 08, 2020 at 03:30:31PM +0200, peterz@infradead.org wrote:
+> 
+> After commit eb1f00237aca ("lockdep,trace: Expose tracepoints") the
+> lock tracepoints are visible to lockdep and RCU-lockdep is finding a
+> bunch more RCU violations that were previously hidden.
+> 
+> Switch the idle->seqcount over to using raw_write_*() to avoid the
+> lockdep annotation and thus the lock tracepoints.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/s390/kernel/idle.c |    5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Since commit 210ba1d1724f ("[SCSI] sr: update to follow tray status
-correctly") of january 2008 the necessary waiting loop after emitting the
-tray loading command is not performed, because sr_do_ioctl() is not called
-any more.
-Commit 2bbea6e11735 ("cdrom: do not call check_disk_change() inside
-cdrom_open()") of march 2008 moved medium assessment out of cdrom_open()
-and thus inevitable before automatic tray loading.
-
-Factor out a new function cdrom_handle_open_tray() in cdrom.c from
-open_for_data() and export it, so that callers of cdrom_open() can call
-it before their call of check_disk_change(). It decides whether it can and
-should load the tray. If so, it emits the tray loading command and waits
-for the drive to make its decision.
-
-Replace automatic tray loading in cdrom_open() by a mere check whether the
-drive reports a usable medium in a loaded tray.
-Unaware callers of cdrom_open() will not cause automatic tray loading
-any more, but rather will reliably see -ENOMEDIUM if the tray is open.
-
-Signed-off-by: Thomas Schmitt <scdbackup@gmx.net>
-=2D--
- drivers/cdrom/cdrom.c | 165 +++++++++++++++++++++++++++++++-----------
- include/linux/cdrom.h |   3 +
- 2 files changed, 124 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
-index 0c271b9e3c5b..d8d82623ed3e 100644
-=2D-- a/drivers/cdrom/cdrom.c
-+++ b/drivers/cdrom/cdrom.c
-@@ -286,6 +286,18 @@
- #include <scsi/scsi_common.h>
- #include <scsi/scsi_request.h>
-
-+/*
-+ * For the wait-and-retry loop after possibly having loaded the drive tra=
-y.
-+ * 10 retries in 20 seconds are hardcoded in sr_do_ioctl() which was used
-+ * up to 2008.
-+ * But time spans up to 25 seconds were measured by libburn on
-+ * drives connected via SATA or USB-SATA bridges.
-+ * So 20 retries * 2000 ms =3D 40 seconds seems more appropriate.
-+ */
-+#define CD_OPEN_MEDIUM_RETRY_MAX 20
-+#define CD_OPEN_MEDIUM_RETRY_MSLEEP 2000
-+#include <linux/delay.h>
-+
- /* used to tell the module to turn on full debugging messages */
- static bool debug;
- /* default compatibility mode */
-@@ -1040,6 +1052,106 @@ static void cdrom_count_tracks(struct cdrom_device=
-_info *cdi, tracktype *tracks)
- 	       tracks->cdi, tracks->xa);
- }
-
-+static
-+int wait_for_medium_decision(struct cdrom_device_info *cdi)
-+{
-+	int retry =3D 0, ret;
-+	const struct cdrom_device_ops *cdo =3D cdi->ops;
-+
-+	/* Wait until the intermediate drive status CDS_DRIVE_NOT_READY ends */
-+	while (1) {
-+		ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
-+		if (ret =3D=3D CDS_DRIVE_NOT_READY &&
-+		    retry++ < CD_OPEN_MEDIUM_RETRY_MAX)
-+			msleep(CD_OPEN_MEDIUM_RETRY_MSLEEP);
-+		else
-+			break;
-+	}
-+	if (ret !=3D CDS_DISC_OK)
-+		return ret;
-+	/*
-+	 * It is hard to test whether very recent readiness can cause race
-+	 * conditions with media change events. So wait a while to never
-+	 * undercut the average delay between actual readiness and detection
-+	 * which was tested without this additional msleep().
-+	 */
-+	msleep(CD_OPEN_MEDIUM_RETRY_MSLEEP / 2);
-+
-+	return CDS_DISC_OK;
-+}
-+
-+/*
-+ * To be called by expectant callers of cdrom_open(), before they call
-+ * check_disk_change() and then cdrom_open().
-+ *
-+ * If the mode is right, the drive capable, the tray out, and autoclose
-+ * enabled, try to move in the tray and wait for the drive's decision abo=
-ut
-+ * the medium.
-+ * Return 0 if cdrom_open() would not want to know the tray status, or th=
-e
-+ * drive cannot report its tray status at all, or the decision is CDS_DIS=
-C_OK.
-+ * Else return a negative error number.
-+ * Input parameter mode decides whether cdrom_open() will want to know or
-+ * change the tray status at all.
-+ * Input parameter leave_open =3D=3D 1 suppresses the try to close, and r=
-ather just
-+ * assesses the situation. Submit mode =3D=3D 0 to not hamper assessment.
-+ */
-+int cdrom_handle_open_tray(struct cdrom_device_info *cdi, fmode_t mode,
-+			   int leave_open)
-+{
-+	int ret;
-+	const struct cdrom_device_ops *cdo =3D cdi->ops;
-+
-+	if ((mode & FMODE_NDELAY) && (cdi->options & CDO_USE_FFLAGS))
-+		return 0;
-+	if (!cdo->drive_status)
-+		return 0;
-+
-+	ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
-+	cd_dbg(CD_OPEN, "drive_status=3D%d\n", ret);
-+	if (ret !=3D CDS_TRAY_OPEN)
-+		goto assess_and_return;
-+
-+	cd_dbg(CD_OPEN, "the tray is open...\n");
-+	if (leave_open)
-+		return -ENOMEDIUM;
-+	/* can/may i close it? */
-+	if (CDROM_CAN(CDC_CLOSE_TRAY) && cdi->options & CDO_AUTO_CLOSE) {
-+		cd_dbg(CD_OPEN, "trying to close the tray\n");
-+		ret =3D cdo->tray_move(cdi, 0);
-+		if (ret) {
-+			cd_dbg(CD_OPEN,
-+			       "bummer. tried to close the tray but failed.\n");
-+			/* Ignore the error from the low
-+			 * level driver.  We don't care why it
-+			 * couldn't close the tray.  We only care
-+			 * that there is no disc in the drive,
-+			 * since that is the _REAL_ problem here.
-+			 */
-+			return -ENOMEDIUM;
-+		}
-+	} else {
-+		if (!CDROM_CAN(CDC_CLOSE_TRAY))
-+			cd_dbg(CD_OPEN,
-+			       "bummer. this drive can't close the tray.\n");
-+		return -ENOMEDIUM;
-+	}
-+
-+	ret =3D wait_for_medium_decision(cdi);
-+	if (ret =3D=3D CDS_NO_DISC || ret =3D=3D CDS_TRAY_OPEN) {
-+		cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
-+		cd_dbg(CD_OPEN, "tray might not contain a medium\n");
-+		return -ENOMEDIUM;
-+	}
-+	cd_dbg(CD_OPEN, "the tray is now closed\n");
-+
-+assess_and_return:
-+	ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
-+	if (ret !=3D CDS_DISC_OK)
-+		return -ENOMEDIUM;
-+	return 0;
-+}
-+EXPORT_SYMBOL(cdrom_handle_open_tray);
-+
- static
- int open_for_data(struct cdrom_device_info *cdi)
- {
-@@ -1047,50 +1159,15 @@ int open_for_data(struct cdrom_device_info *cdi)
- 	const struct cdrom_device_ops *cdo =3D cdi->ops;
- 	tracktype tracks;
- 	cd_dbg(CD_OPEN, "entering open_for_data\n");
--	/* Check if the driver can report drive status.  If it can, we
--	   can do clever things.  If it can't, well, we at least tried! */
--	if (cdo->drive_status !=3D NULL) {
--		ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
--		cd_dbg(CD_OPEN, "drive_status=3D%d\n", ret);
--		if (ret =3D=3D CDS_TRAY_OPEN) {
--			cd_dbg(CD_OPEN, "the tray is open...\n");
--			/* can/may i close it? */
--			if (CDROM_CAN(CDC_CLOSE_TRAY) &&
--			    cdi->options & CDO_AUTO_CLOSE) {
--				cd_dbg(CD_OPEN, "trying to close the tray\n");
--				ret=3Dcdo->tray_move(cdi,0);
--				if (ret) {
--					cd_dbg(CD_OPEN, "bummer. tried to close the tray but failed.\n");
--					/* Ignore the error from the low
--					level driver.  We don't care why it
--					couldn't close the tray.  We only care
--					that there is no disc in the drive,
--					since that is the _REAL_ problem here.*/
--					ret=3D-ENOMEDIUM;
--					goto clean_up_and_return;
--				}
--			} else {
--				cd_dbg(CD_OPEN, "bummer. this drive can't close the tray.\n");
--				ret=3D-ENOMEDIUM;
--				goto clean_up_and_return;
--			}
--			/* Ok, the door should be closed now.. Check again */
--			ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
--			if ((ret =3D=3D CDS_NO_DISC) || (ret=3D=3DCDS_TRAY_OPEN)) {
--				cd_dbg(CD_OPEN, "bummer. the tray is still not closed.\n");
--				cd_dbg(CD_OPEN, "tray might not contain a medium\n");
--				ret=3D-ENOMEDIUM;
--				goto clean_up_and_return;
--			}
--			cd_dbg(CD_OPEN, "the tray is now closed\n");
--		}
--		/* the door should be closed now, check for the disc */
--		ret =3D cdo->drive_status(cdi, CDSL_CURRENT);
--		if (ret!=3DCDS_DISC_OK) {
--			ret =3D -ENOMEDIUM;
--			goto clean_up_and_return;
--		}
--	}
-+
-+	/*
-+	 * Check for open tray, but do not close it. The caller should
-+	 * have cared to call cdrom_handle_open_tray(,,0) in advance.
-+	 */
-+	ret =3D cdrom_handle_open_tray(cdi, (fmode_t)0, 1);
-+	if (ret)
-+		goto clean_up_and_return;
-+
- 	cdrom_count_tracks(cdi, &tracks);
- 	if (tracks.error =3D=3D CDS_NO_DISC) {
- 		cd_dbg(CD_OPEN, "bummer. no disc.\n");
-diff --git a/include/linux/cdrom.h b/include/linux/cdrom.h
-index f48d0a31deae..cf2b5fc9c6fd 100644
-=2D-- a/include/linux/cdrom.h
-+++ b/include/linux/cdrom.h
-@@ -98,6 +98,9 @@ int cdrom_multisession(struct cdrom_device_info *cdi,
- int cdrom_read_tocentry(struct cdrom_device_info *cdi,
- 		struct cdrom_tocentry *entry);
-
-+int cdrom_handle_open_tray(struct cdrom_device_info *cdi, fmode_t mode,
-+			   int leave_open);
-+
- /* the general block_device operations structure: */
- extern int cdrom_open(struct cdrom_device_info *cdi, struct block_device =
-*bdev,
- 			fmode_t mode);
-=2D-
-2.20.1
-
+Applied, thank you!
