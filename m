@@ -2,146 +2,107 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427ECC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB12C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 069B52087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDF32068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MKo8FGI8"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="KnYh3lHP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731319AbgIHSzb (ORCPT
+        id S1731426AbgIHS7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:55:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728350AbgIHSyu (ORCPT
+        Tue, 8 Sep 2020 14:59:01 -0400
+Received: from rcdn-iport-9.cisco.com ([173.37.86.80]:22168 "EHLO
+        rcdn-iport-9.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730572AbgIHS6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:54:50 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088IXZZd060588;
-        Tue, 8 Sep 2020 14:54:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=YPY+Z8lLZHccuoXJgk288xOmQXMV5vbQugXDWW9wyfA=;
- b=MKo8FGI8UaVB8fVz8LVcnNXD1HBUwimVgyVP22Yp9/7MyX1skYNyAHZRGRzDh0cf4bFT
- igBOGrtVs43YfSjlIJbl7qqdUZjTXQoxo6thNdkC0B66vK1vLpb2tF2yvdd6N5vwdq9U
- ZWuvzYs2wP38AklKx6N7LOLWUqRnWy7XBfugB6FdA40/QbPnpoCu2ppwASHXipIIki+I
- rTy8HsKIpytCHpIbWqyUmI60DtNoLIk3I8L6+6zFDDROaItKGl6Et3T33dy6nvj6puE+
- 0AHFBC9CUQyTxDupoTkeueOuMGucINf4/yT/N98Jgq6kjVp0jYD+ZA0vsQyFixgkc4rz UA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33edfjcqr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 14:54:46 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088IY337063620;
-        Tue, 8 Sep 2020 14:54:46 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33edfjcqqb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 14:54:46 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088IqGOZ028541;
-        Tue, 8 Sep 2020 18:54:45 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 33c2a8ywgq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 18:54:45 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Ish9e53870928
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 18:54:43 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60D7FB205F;
-        Tue,  8 Sep 2020 18:54:43 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 917EEB2064;
-        Tue,  8 Sep 2020 18:54:42 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.141.115])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 18:54:42 +0000 (GMT)
-Subject: Re: [PATCH v10 02/16] s390/vfio-ap: use new AP bus interface to
- search for queue devices
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com, fiuczy@linux.ibm.com, frankja@linux.ibm.com,
-        david@redhat.com, imbrenda@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, kernel test robot <lkp@intel.com>
-References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
- <20200821195616.13554-3-akrowiak@linux.ibm.com>
- <37cd9b7e-a619-6603-7e47-f5e85814d673@de.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <34c10327-8640-24e8-b882-96962cae5050@linux.ibm.com>
-Date:   Tue, 8 Sep 2020 14:54:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 8 Sep 2020 14:58:52 -0400
+X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 14:58:51 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=1391; q=dns/txt; s=iport;
+  t=1599591531; x=1600801131;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=m2WVpZpXrtQFXh3Ql4JrliPwX+fM66/2SHqLhNxgwkY=;
+  b=KnYh3lHP4/Pu4OSlhFDHLVbfoxOVsRcMaYRNRv459un7R/dOKJu/TVfZ
+   knVJe3j1CGYS+0nTi6yI2AAbBjKCaDRKp537mXeHkDVYbh9mHX4Esi4E0
+   spzQSsk0yz4pU8CBK7o05+KtEyqKAqKdiHtDVeOhk+uBaODMXfKpMSj26
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.76,406,1592870400"; 
+   d="scan'208";a="732158731"
+Received: from rcdn-core-1.cisco.com ([173.37.93.152])
+  by rcdn-iport-9.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 08 Sep 2020 18:51:43 +0000
+Received: from sjc-ads-9087.cisco.com (sjc-ads-9087.cisco.com [10.30.208.97])
+        by rcdn-core-1.cisco.com (8.15.2/8.15.2) with ESMTP id 088IphYE005304;
+        Tue, 8 Sep 2020 18:51:43 GMT
+Received: by sjc-ads-9087.cisco.com (Postfix, from userid 396877)
+        id D89BFBFD; Tue,  8 Sep 2020 11:51:42 -0700 (PDT)
+From:   Julius Hemanth Pitti <jpitti@cisco.com>
+To:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, xe-linux-external@cisco.com,
+        Julius Hemanth Pitti <jpitti@cisco.com>
+Subject: [PATCH] mm: memcg: yield cpu when we fail to charge pages
+Date:   Tue,  8 Sep 2020 11:50:51 -0700
+Message-Id: <20200908185051.62420-1-jpitti@cisco.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-In-Reply-To: <37cd9b7e-a619-6603-7e47-f5e85814d673@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_09:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 clxscore=1015 impostorscore=0 adultscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080171
+Content-Transfer-Encoding: 8bit
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.30.208.97, sjc-ads-9087.cisco.com
+X-Outbound-Node: rcdn-core-1.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For non root CG, in try_charge(), we keep trying
+to charge until we succeed. On non-preemptive
+kernel, when we are OOM, this results in holding
+CPU forever.
 
+On SMP systems, this doesn't create a big problem
+because oom_reaper get a change to kill victim
+and make some free pages. However on a single-core
+CPU (or cases where oom_reaper pinned to same CPU
+where try_charge is executing), oom_reaper shall
+never get scheduled and we stay in try_charge forever.
 
-On 9/4/20 4:11 AM, Christian Borntraeger wrote:
->
-> On 21.08.20 21:56, Tony Krowiak wrote:
->> This patch refactor's the vfio_ap device driver to use the AP bus's
->> ap_get_qdev() function to retrieve the vfio_ap_queue struct containing
->> information about a queue that is bound to the vfio_ap device driver.
->> The bus's ap_get_qdev() function retrieves the queue device from a
->> hashtable keyed by APQN. This is much more efficient than looping over
->> the list of devices attached to the AP bus by several orders of
->> magnitude.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> Reported-by: kernel test robot <lkp@intel.com>
-> I think this can go. No need to mark that an earlier version of this patch had an issue.
+Steps to repo this on non-smp:
+1. mount -t tmpfs none /sys/fs/cgroup
+2. mkdir /sys/fs/cgroup/memory
+3. mount -t cgroup none /sys/fs/cgroup/memory -o memory
+4. mkdir /sys/fs/cgroup/memory/0
+5. echo 40M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
+6. echo $$ > /sys/fs/cgroup/memory/0/tasks
+7. stress -m 5 --vm-bytes 10M --vm-hang 0
 
-I was just following the instructions in the robot comments. I'll get 
-rid of it.
+Signed-off-by: Julius Hemanth Pitti <jpitti@cisco.com>
+---
+ mm/memcontrol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
->
->
-> [...]
->
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
->> index f46dde56b464..a2aa05bec718 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -18,6 +18,7 @@
->>   #include <linux/delay.h>
->>   #include <linux/mutex.h>
->>   #include <linux/kvm_host.h>
->> +#include <linux/hashtable.h>
-> I dont think that this header file needs it. Any user of it will now include this.
-> Can you move this include into the respective C file when the hash stuff is
-> used?
-
-I can.
-
->
->
-> Other than that this looks good.
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 0d6f3ea86738..4620d70267cb 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2652,6 +2652,8 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
+ 	if (fatal_signal_pending(current))
+ 		goto force;
+ 
++	cond_resched();
++
+ 	/*
+ 	 * keep retrying as long as the memcg oom killer is able to make
+ 	 * a forward progress or bypass the charge if the oom killer
+-- 
+2.17.1
 
