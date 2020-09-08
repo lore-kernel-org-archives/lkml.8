@@ -2,79 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9751EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C6FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 569B721532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599538219;
-	bh=7odZQvUtuGLow8kJkUKxWanDGq/uvBKPEezxTaLB6tg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YSLABwtRXpoVdORn8G7Yy20mhAvcx7PVUt+HgYU2cEVQk7RH000q2hxlVMZ5+jBS4
-	 pEHy/d3r7130ub+KWM/ucijDcyatTEtsSRwURDM0gdUZQmelBBbsams1hw/gEEyHCr
-	 IfT88ffXHvDY3soY63+NmB3DZErk/zyqYhWGDfdg=
+	by mail.kernel.org (Postfix) with ESMTP id 0BCAB21532
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 04:15:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dxgd6gvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgIHEKR (ORCPT
+        id S1726118AbgIHEPb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 00:10:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46830 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 00:15:31 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37169 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbgIHEKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 00:10:15 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725804AbgIHEP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 00:15:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C688321481;
-        Tue,  8 Sep 2020 04:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599538215;
-        bh=7odZQvUtuGLow8kJkUKxWanDGq/uvBKPEezxTaLB6tg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EGj9vMkJxWQ/GG1XSj4TGjIvY+XtIE0dCS3QGAwfwmNfJcmW89yve0qJd5DaYLzAt
-         tv+4svBGxo9Qh28lbivrJmTi/pckrm/zPfaiIyGxdR5DhSLo06cgFOnVo62zVU6wSU
-         LZOfETfJbpfw72Msdhd1VxcsEtGtvd9vXtR0jPWU=
-Date:   Mon, 7 Sep 2020 21:10:13 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     wei.liu@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, davem@davemloft.net,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com
-Subject: Re: [PATCH net v2] hv_netvsc: Fix hibernation for mlx5 VF driver
-Message-ID: <20200907211013.0f1a6702@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200907071339.35677-1-decui@microsoft.com>
-References: <20200907071339.35677-1-decui@microsoft.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BlsJF3Rswz9sSP;
+        Tue,  8 Sep 2020 14:15:25 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1599538525;
+        bh=Wqtrfj5HlqGrcYAVH1VxP++Iktu5EHpo0Uh5otsB+Yw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dxgd6gvHmlZyMPSJGHOi5lJ9f/gSHg/5rhLlmKLYY1ZG71wlH1u1C5sbek4stOjFk
+         4bLPdNKGdlLSQ7KcqgpOOq8exsl8WHv7Id2gKFrVmAGbWGjW6+g9nKZr0UtCs6yAsa
+         I/IBcyVPD6RUXvTg+7gn/pH4uLvCt98XxbiJeulcpEcAwWreSeUUCQX/l3zgc+qL4L
+         5qIw0cm6qQOGv2UvRCJO2Gtr1ED58OVKBSBrkmkgbTKUMUHEjVT6p8tgjNFBDrxp9K
+         4X9sc5t8wauUA79vkbIMu+y10qHAjBbCQ/wFhJ5BtuRp3eKfXMAGLTKVaesX8tHL6d
+         wbMHvPA3uLp5w==
+Date:   Tue, 8 Sep 2020 14:15:24 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build warning after merge of the drm-misc tree
+Message-ID: <20200908141524.7b63519e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/.XlmKJHoCIUNF/Gn=PQnoFl";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  7 Sep 2020 00:13:39 -0700 Dexuan Cui wrote:
-> mlx5_suspend()/resume() keep the network interface, so during hibernation
-> netvsc_unregister_vf() and netvsc_register_vf() are not called, and hence
-> netvsc_resume() should call netvsc_vf_changed() to switch the data path
-> back to the VF after hibernation. Note: after we close and re-open the
-> vmbus channel of the netvsc NIC in netvsc_suspend() and netvsc_resume(),
-> the data path is implicitly switched to the netvsc NIC. Similarly,
-> netvsc_suspend() should not call netvsc_unregister_vf(), otherwise the VF
-> can no longer be used after hibernation.
-> 
-> For mlx4, since the VF network interafce is explicitly destroyed and
-> re-created during hibernation (see mlx4_suspend()/resume()), hv_netvsc
-> already explicitly switches the data path from and to the VF automatically
-> via netvsc_register_vf() and netvsc_unregister_vf(), so mlx4 doesn't need
-> this fix. Note: mlx4 can still work with the fix because in
-> netvsc_suspend()/resume() ndev_ctx->vf_netdev is NULL for mlx4.
-> 
-> Fixes: 0efeea5fb153 ("hv_netvsc: Add the support of hibernation")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+--Sig_/.XlmKJHoCIUNF/Gn=PQnoFl
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+Hi all,
+
+After merging the drm-misc tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
+
+WARNING: modpost: missing MODULE_LICENSE() in drivers/gpu/drm/panel/panel-s=
+amsung-s6e63m0.o
+
+Introduced by commit
+
+  b7b23e447687 ("drm/panel: s6e63m0: Break out SPI transport")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/.XlmKJHoCIUNF/Gn=PQnoFl
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XBVwACgkQAVBC80lX
+0GxB/ggAiHVjxZVmZRH4U48nYAh9BXl3leiuMFSupmtqObfxXFoXcNl+6zuSOun/
+LhE5yVnH+QqXB1J+UYI4Rmy6es14KAoEOl8kheQ/Zv7Jf9y43i+gasFhhxEq9g2d
+ucrUtu93e4rg0eXPjtVkqBw1JvWyPYwM5ukicisII2pUNpzjzLQBZf35VaZiNUM7
+cjiyLG8seiflM/aFDKjrHEmoI2C/u8UYHOk91jbox97r56d4zH1ry6yjXoSG7Shs
+njgKoefGvGXrgaAmRmKJbFKo7lMwCyPkRm5/w2Bgu4cFVDuKF+uD0V7F+CnymjOE
+tI6J9EQPV+BdufHHVdKOrrpzNE0rMw==
+=AR27
+-----END PGP SIGNATURE-----
+
+--Sig_/.XlmKJHoCIUNF/Gn=PQnoFl--
