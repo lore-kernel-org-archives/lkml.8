@@ -2,180 +2,263 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4665C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7D92087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B15920936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599603479;
-	bh=qls4vgzYscXVbIquDmtieK/fXg3amw/dAuDQjE5fhNM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1wywxudcWzxcZPb5F6KFpbQhrOsSJO5PO0Ebf7DmPtHuddOeDr6QettkGkDNCYZYI
-	 dc0A1vlHfkjFNvps29/pQ3AV2dnuWVDbcZItlPN1tNjUvjd+9FdEv8i0J+hOtBTRqE
-	 ANroG4Sg+cho4KKh+UDD+x+TKmNJDg6fn96CSafw=
+	s=default; t=1599603583;
+	bh=WSx1iUKGD6bsRY1emyiSlN3VJSdwi6R0XqFLz5EUkSQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=pTcblBKnaCZtNp9h+w0+GQ87Kyn/XLBf7QLzg7fZ93gT5jAfnS7fRktC7xYqVpJXj
+	 e6n4Hky1mtwlH9DaVCnZQvzR4gkzgLe/VX3jAyjexay1g8YjVGNkxVQAq6D7zJZRK0
+	 q/AvexEq6tRetlZvU/vwz3rZkniKM5GHCfxIWuaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgIHWRy (ORCPT
+        id S1729860AbgIHWTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:17:54 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:47291 "EHLO
-        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbgIHWRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:17:53 -0400
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 088MGrFk012572;
-        Wed, 9 Sep 2020 07:16:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 088MGrFk012572
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599603415;
-        bh=ofEPr9hBQLToa0tnpSFXT71R901tENs3+t3picjYQYs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D7ghS5PkAIHPitB5/n6EHnmjhmm/oinxegLnKiiN3WO3AAJIwD//zOR60ZfxFlwO/
-         47sjqnxrpVsE/w22W0UKc1iszBi2vruwc3f/1t8CPauJ2v0QVOxOtKvOSWSXgDZwjY
-         /ukYHxwsAHb/LMTCiO7x7l73txMM7ArHaJhDXKJKM92Yisgqt6w2FvV9lLZEo6fSfa
-         hZmCtKuvmtpWF+nt71nKbBYMzra13oV84EPpV+UtzeEZzmo8dankKJiGFGWXHRmAvd
-         Us2jF5CHt9pouh6hRQbDEpQTAmJ8DmuFoYcbHxmpHC+mOUo5pqwHzJpFFjg5rR0oAI
-         TZkrEZoH3Jb0A==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] kconfig: fix incomplete type 'struct gstr' warning
-Date:   Wed,  9 Sep 2020 07:16:38 +0900
-Message-Id: <20200908221638.2782778-2-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200908221638.2782778-1-masahiroy@kernel.org>
-References: <20200908221638.2782778-1-masahiroy@kernel.org>
+        Tue, 8 Sep 2020 18:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728631AbgIHWTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:19:40 -0400
+Received: from localhost (35.sub-72-107-115.myvzw.com [72.107.115.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942F02087D;
+        Tue,  8 Sep 2020 22:19:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599603578;
+        bh=WSx1iUKGD6bsRY1emyiSlN3VJSdwi6R0XqFLz5EUkSQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=aKIeHt+H2pE8g3rK9+J8FhOsCjI0qvqBdFnfBO38f/0g4XU5jhNRQBqRhu+x12if8
+         lJOhJVVXdarJcV95h2x62GY2ZvsWDoZ+58dKKREa3PcxXXv68qgpZqjCchOvc/c6kd
+         QEmgkcBpPnyafGL0guct6OBZs7SetfNVNyJ58geQ=
+Date:   Tue, 8 Sep 2020 17:19:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     ricky_wu@realtek.com
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org, bhelgaas@google.com,
+        ulf.hansson@linaro.org, rui_feng@realsil.com.cn,
+        linux-kernel@vger.kernel.org, puranjay12@gmail.com,
+        linux-pci@vger.kernel.org, vailbhavgupta40@gamail.com
+Subject: Re: [PATCH v5 1/2] misc: rtsx: Fix power down flow
+Message-ID: <20200908221937.GA646017@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200907100718.7672-1-ricky_wu@realtek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"make HOSTCXX=clang++ xconfig" reports the following:
+On Mon, Sep 07, 2020 at 06:07:18PM +0800, ricky_wu@realtek.com wrote:
+> From: Ricky Wu <ricky_wu@realtek.com>
+> 
+> Fix and sort out rtsx driver power down flow
 
-  HOSTCXX scripts/kconfig/qconf.o
-In file included from scripts/kconfig/qconf.cc:23:
-In file included from scripts/kconfig/lkc.h:15:
-scripts/kconfig/lkc_proto.h:26:13: warning: 'get_relations_str' has C-linkage specified, but returns incomplete type 'struct gstr' which could be incompatible with C [-Wreturn-type-c-linkage]
-struct gstr get_relations_str(struct symbol **sym_arr, struct list_head *head);
-            ^
+It would be nice to say what's changing here, but it's a great
+improvement to have this split out.
 
-Currently, get_relations_str() is declared before the struct gstr
-definition.
+For example, this drops the "pm_state == HOST_ENTER_S3" check, but
+there's no explanation.
 
-Move all declarations of menu.c functions below.
+Minor comments below.
 
-BTW, some are declared in lkc.h and some in lkc_proto.h, but the
-difference is unclear. I guess some refactoring is needed.
+> Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+> ---
+>  drivers/misc/cardreader/rts5227.c  | 15 ---------------
+>  drivers/misc/cardreader/rts5228.c  |  5 ++---
+>  drivers/misc/cardreader/rts5249.c  | 17 -----------------
+>  drivers/misc/cardreader/rts5260.c  | 16 ----------------
+>  drivers/misc/cardreader/rtsx_pcr.c | 16 ++++++++++++++++
+>  5 files changed, 18 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
+> index f5f392ddf3d6..747391e3fb5d 100644
+> --- a/drivers/misc/cardreader/rts5227.c
+> +++ b/drivers/misc/cardreader/rts5227.c
+> @@ -77,19 +77,6 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
+>  		pcr->flags |= PCR_REVERSE_SOCKET;
+>  }
+>  
+> -static void rts5227_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+> -{
+> -	/* Set relink_time to 0 */
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+> -
+> -	if (pm_state == HOST_ENTER_S3)
+> -		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x10);
+> -
+> -	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+> -}
+> -
+>  static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
+>  {
+>  	u16 cap;
+> @@ -239,7 +226,6 @@ static const struct pcr_ops rts5227_pcr_ops = {
+>  	.switch_output_voltage = rts5227_switch_output_voltage,
+>  	.cd_deglitch = NULL,
+>  	.conv_clk_and_div_n = NULL,
+> -	.force_power_down = rts5227_force_power_down,
+>  };
+>  
+>  /* SD Pull Control Enable:
+> @@ -389,7 +375,6 @@ static const struct pcr_ops rts522a_pcr_ops = {
+>  	.switch_output_voltage = rts522a_switch_output_voltage,
+>  	.cd_deglitch = NULL,
+>  	.conv_clk_and_div_n = NULL,
+> -	.force_power_down = rts5227_force_power_down,
+>  };
+>  
+>  void rts522a_init_params(struct rtsx_pcr *pcr)
+> diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
+> index 28feab1449ab..781a86def59a 100644
+> --- a/drivers/misc/cardreader/rts5228.c
+> +++ b/drivers/misc/cardreader/rts5228.c
+> @@ -99,9 +99,8 @@ static void rts5228_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+>  	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+>  				RELINK_TIME_MASK, 0);
+>  
+> -	if (pm_state == HOST_ENTER_S3)
+> -		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+> -					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+> +	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+> +			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+>  
+>  	rtsx_pci_write_register(pcr, FPDCTL,
+>  		SSC_POWER_DOWN, SSC_POWER_DOWN);
+> diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
+> index 941b3d77f1e9..719aa2d61919 100644
+> --- a/drivers/misc/cardreader/rts5249.c
+> +++ b/drivers/misc/cardreader/rts5249.c
+> @@ -78,20 +78,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+>  		pcr->flags |= PCR_REVERSE_SOCKET;
+>  }
+>  
+> -static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+> -{
+> -	/* Set relink_time to 0 */
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, 0xFF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
+> -
+> -	if (pm_state == HOST_ENTER_S3)
+> -		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+> -			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+> -
+> -	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
+> -}
+> -
+>  static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
+>  {
+>  	struct pci_dev *pdev = pcr->pci;
+> @@ -360,7 +346,6 @@ static const struct pcr_ops rts5249_pcr_ops = {
+>  	.card_power_on = rtsx_base_card_power_on,
+>  	.card_power_off = rtsx_base_card_power_off,
+>  	.switch_output_voltage = rtsx_base_switch_output_voltage,
+> -	.force_power_down = rtsx_base_force_power_down,
+>  };
+>  
+>  /* SD Pull Control Enable:
+> @@ -585,7 +570,6 @@ static const struct pcr_ops rts524a_pcr_ops = {
+>  	.card_power_on = rtsx_base_card_power_on,
+>  	.card_power_off = rtsx_base_card_power_off,
+>  	.switch_output_voltage = rtsx_base_switch_output_voltage,
+> -	.force_power_down = rtsx_base_force_power_down,
+>  	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+>  };
+>  
+> @@ -700,7 +684,6 @@ static const struct pcr_ops rts525a_pcr_ops = {
+>  	.card_power_on = rts525a_card_power_on,
+>  	.card_power_off = rtsx_base_card_power_off,
+>  	.switch_output_voltage = rts525a_switch_output_voltage,
+> -	.force_power_down = rtsx_base_force_power_down,
+>  	.set_l1off_cfg_sub_d0 = rts5250_set_l1off_cfg_sub_d0,
+>  };
+>  
+> diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+> index b9f66b1384a6..897cfee350e7 100644
+> --- a/drivers/misc/cardreader/rts5260.c
+> +++ b/drivers/misc/cardreader/rts5260.c
+> @@ -87,21 +87,6 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
+>  		pcr->flags |= PCR_REVERSE_SOCKET;
+>  }
+>  
+> -static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+> -{
+> -	/* Set relink_time to 0 */
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
+> -	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+> -				RELINK_TIME_MASK, 0);
+> -
+> -	if (pm_state == HOST_ENTER_S3)
+> -		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+> -					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+> -
+> -	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
+> -}
+> -
+>  static int rtsx_base_enable_auto_blink(struct rtsx_pcr *pcr)
+>  {
+>  	return rtsx_pci_write_register(pcr, OLT_LED_CTL,
+> @@ -620,7 +605,6 @@ static const struct pcr_ops rts5260_pcr_ops = {
+>  	.card_power_on = rts5260_card_power_on,
+>  	.card_power_off = rts5260_card_power_off,
+>  	.switch_output_voltage = rts5260_switch_output_voltage,
+> -	.force_power_down = rtsx_base_force_power_down,
+>  	.stop_cmd = rts5260_stop_cmd,
+>  	.set_l1off_cfg_sub_d0 = rts5260_set_l1off_cfg_sub_d0,
+>  	.enable_ocp = rts5260_enable_ocp,
+> diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+> index 37ccc67f4914..3f84b898bd9c 100644
+> --- a/drivers/misc/cardreader/rtsx_pcr.c
+> +++ b/drivers/misc/cardreader/rtsx_pcr.c
+> @@ -1096,6 +1096,20 @@ static void rtsx_pci_idle_work(struct work_struct *work)
+>  	mutex_unlock(&pcr->pcr_mutex);
+>  }
+>  
+> +static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
+> +{
+> +	/* Set relink_time to 0 */
+> +	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 1, MASK_8_BIT_DEF, 0);
+> +	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, MASK_8_BIT_DEF, 0);
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+Personally, I don't think MASK_8_BIT_DEF is an improvement over 0xFF.
 
- scripts/kconfig/lkc.h       | 47 +++++++++++++++++++++++--------------
- scripts/kconfig/lkc_proto.h | 14 -----------
- 2 files changed, 30 insertions(+), 31 deletions(-)
+> +	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
+> +			RELINK_TIME_MASK, 0);
+> +
+> +	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
+> +			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
+> +
+> +	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
 
-diff --git a/scripts/kconfig/lkc.h b/scripts/kconfig/lkc.h
-index d4ca8297364f..8454649b17bd 100644
---- a/scripts/kconfig/lkc.h
-+++ b/scripts/kconfig/lkc.h
-@@ -66,23 +66,6 @@ static inline void xfwrite(const void *str, size_t len, size_t count, FILE *out)
- 		fprintf(stderr, "Error in writing or end of file.\n");
- }
- 
--/* menu.c */
--void _menu_init(void);
--void menu_warn(struct menu *menu, const char *fmt, ...);
--struct menu *menu_add_menu(void);
--void menu_end_menu(void);
--void menu_add_entry(struct symbol *sym);
--void menu_add_dep(struct expr *dep);
--void menu_add_visibility(struct expr *dep);
--struct property *menu_add_prompt(enum prop_type type, char *prompt, struct expr *dep);
--void menu_add_expr(enum prop_type type, struct expr *expr, struct expr *dep);
--void menu_add_symbol(enum prop_type type, struct symbol *sym, struct expr *dep);
--void menu_add_option_modules(void);
--void menu_add_option_defconfig_list(void);
--void menu_add_option_allnoconfig_y(void);
--void menu_finalize(struct menu *parent);
--void menu_set_type(int type);
--
- /* util.c */
- struct file *file_lookup(const char *name);
- void *xmalloc(size_t size);
-@@ -109,6 +92,36 @@ void str_append(struct gstr *gs, const char *s);
- void str_printf(struct gstr *gs, const char *fmt, ...);
- const char *str_get(struct gstr *gs);
- 
-+/* menu.c */
-+void _menu_init(void);
-+void menu_warn(struct menu *menu, const char *fmt, ...);
-+struct menu *menu_add_menu(void);
-+void menu_end_menu(void);
-+void menu_add_entry(struct symbol *sym);
-+void menu_add_dep(struct expr *dep);
-+void menu_add_visibility(struct expr *dep);
-+struct property *menu_add_prompt(enum prop_type type, char *prompt, struct expr *dep);
-+void menu_add_expr(enum prop_type type, struct expr *expr, struct expr *dep);
-+void menu_add_symbol(enum prop_type type, struct symbol *sym, struct expr *dep);
-+void menu_add_option_modules(void);
-+void menu_add_option_defconfig_list(void);
-+void menu_add_option_allnoconfig_y(void);
-+void menu_finalize(struct menu *parent);
-+void menu_set_type(int type);
-+
-+extern struct menu rootmenu;
-+
-+bool menu_is_empty(struct menu *menu);
-+bool menu_is_visible(struct menu *menu);
-+bool menu_has_prompt(struct menu *menu);
-+const char *menu_get_prompt(struct menu *menu);
-+struct menu *menu_get_root_menu(struct menu *menu);
-+struct menu *menu_get_parent_menu(struct menu *menu);
-+bool menu_has_help(struct menu *menu);
-+const char *menu_get_help(struct menu *menu);
-+struct gstr get_relations_str(struct symbol **sym_arr, struct list_head *head);
-+void menu_get_ext_help(struct menu *menu, struct gstr *help);
-+
- /* symbol.c */
- void sym_clear_all_valid(void);
- struct symbol *sym_choice_default(struct symbol *sym);
-diff --git a/scripts/kconfig/lkc_proto.h b/scripts/kconfig/lkc_proto.h
-index f9ab98238aef..9e81be33c40f 100644
---- a/scripts/kconfig/lkc_proto.h
-+++ b/scripts/kconfig/lkc_proto.h
-@@ -12,20 +12,6 @@ bool conf_get_changed(void);
- void conf_set_changed_callback(void (*fn)(void));
- void conf_set_message_callback(void (*fn)(const char *s));
- 
--/* menu.c */
--extern struct menu rootmenu;
--
--bool menu_is_empty(struct menu *menu);
--bool menu_is_visible(struct menu *menu);
--bool menu_has_prompt(struct menu *menu);
--const char * menu_get_prompt(struct menu *menu);
--struct menu * menu_get_root_menu(struct menu *menu);
--struct menu * menu_get_parent_menu(struct menu *menu);
--bool menu_has_help(struct menu *menu);
--const char * menu_get_help(struct menu *menu);
--struct gstr get_relations_str(struct symbol **sym_arr, struct list_head *head);
--void menu_get_ext_help(struct menu *menu, struct gstr *help);
--
- /* symbol.c */
- extern struct symbol * symbol_hash[SYMBOL_HASHSIZE];
- 
--- 
-2.25.1
+This changes the value written from 0x3 to 0x7 (ALL_POWER_DOWN) in a
+couple cases.  I guess you know that's OK.
 
+> +}
+> +
+>  static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+>  {
+>  	if (pcr->ops->turn_off_led)
+> @@ -1109,6 +1123,8 @@ static void __maybe_unused rtsx_pci_power_off(struct rtsx_pcr *pcr, u8 pm_state)
+>  
+>  	if (pcr->ops->force_power_down)
+>  		pcr->ops->force_power_down(pcr, pm_state);
+> +	else
+> +		rtsx_base_force_power_down(pcr, pm_state);
+>  }
+>  
+>  void rtsx_pci_enable_ocp(struct rtsx_pcr *pcr)
+> -- 
+> 2.17.1
+> 
