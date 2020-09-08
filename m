@@ -2,54 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C51C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB661C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A19632087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ED820C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592986;
-	bh=G3yYAauvg1nc0U6RbIDLTD7OSZHU2kfssKheN+EhsM8=;
+	s=default; t=1599592999;
+	bh=Ip1cd+LUYZN48wmMT0S8Ar/UPgVJ/4po2YP2C7OXg5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=waJYBO6M5/TeO6Q/P1V4OJEEJVFscOlyjILMmQ9b/J7HxQez6ycwNT/Oxm76YGA2C
-	 b+ia9xNPW1aO1a0oSKfNtOO+Q4YIiNduxvz+BK6+WN5xcFF41cipbdqAEJwKEp9dXh
-	 7IAiaGJbHSb7Sq3woLd3ScKxBqAVW2901NNSlxmQ=
+	b=Rfxj6oPeCwE5RvsKokdqGkCs2/UJfSo+DxaZyWL7OrovPZ5EgLbpPZSbU4H0hRT5+
+	 zBf9K73Cr2173b1pOtDWl5yKCn2UedKxQukNy6Z4b/6Ob81GfB10dbib5dL+eplX/3
+	 AIgLAZc+Q8mu+/0m3HuAj84O1SeAej2ECQ3E3KAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbgIHTXF (ORCPT
+        id S1732110AbgIHTXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47736 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:23:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731030AbgIHQBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:31 -0400
+        id S1731028AbgIHQBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3194F241A4;
-        Tue,  8 Sep 2020 15:38:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8D8246F5;
+        Tue,  8 Sep 2020 15:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579536;
-        bh=G3yYAauvg1nc0U6RbIDLTD7OSZHU2kfssKheN+EhsM8=;
+        s=default; t=1599579629;
+        bh=Ip1cd+LUYZN48wmMT0S8Ar/UPgVJ/4po2YP2C7OXg5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JoHLGhELAqmeaKJEyJJhiDhLxBWoHnqb9wwRFk2lrZUusYOGTYmU5cZSEjOMdJQxt
-         7lEwtV88hVbqa4RtbbutUkmy1JY76p6coUawbfSdVQAxLxm/V97hDluYPgl/PG3ZH+
-         l7RLnsWlGIDZOl7N790ULSsAdsySSkHToUYSxvo4=
+        b=VYO5rwkwUW/iBLNxngdLkGYbhemUogpjIphgLkm5NRu5zBMOjBP5OfMolWrvyW4Tl
+         Xb+9CrDWyUy6dRmL1FooSbox332e5pZFhsUabj8KpGTLxGa1rL+y1MvmMB8AcDZjeo
+         ec93byxA7qYfWvSEmF2bfIp3HTDVNvNhIzTu4xgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 5.8 119/186] x86/entry: Fix AC assertion
-Date:   Tue,  8 Sep 2020 17:24:21 +0200
-Message-Id: <20200908152247.404223856@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Karthik Shivaram <karthikgs@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 157/186] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
+Date:   Tue,  8 Sep 2020 17:24:59 +0200
+Message-Id: <20200908152249.272904068@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,50 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Tejun Heo <tj@kernel.org>
 
-commit 662a0221893a3d58aa72719671844264306f6e4b upstream.
+commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
 
-The WARN added in commit 3c73b81a9164 ("x86/entry, selftests: Further
-improve user entry sanity checks") unconditionally triggers on a IVB
-machine because it does not support SMAP.
+All three generations of Sandisk SSDs lock up hard intermittently.
+Experiments showed that disabling NCQ lowered the failure rate significantly
+and the kernel has been disabling NCQ for some models of SD7's and 8's,
+which is obviously undesirable.
 
-For !SMAP hardware the CLAC/STAC instructions are patched out and thus if
-userspace sets AC, it is still have set after entry.
+Karthik worked with Sandisk to root cause the hard lockups to trim commands
+larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
+limits max trim size to 128M and applies it to all three generations of
+Sandisk SSDs.
 
-Fixes: 3c73b81a9164 ("x86/entry, selftests: Further improve user entry sanity checks")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
-Acked-by: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Karthik Shivaram <karthikgs@fb.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200902133200.666781610@infradead.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/common.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/ata/libata-core.c |    5 ++---
+ drivers/ata/libata-scsi.c |    8 +++++++-
+ include/linux/libata.h    |    1 +
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -55,8 +55,16 @@ static noinstr void check_user_regs(stru
- 		 * state, not the interrupt state as imagined by Xen.
- 		 */
- 		unsigned long flags = native_save_fl();
--		WARN_ON_ONCE(flags & (X86_EFLAGS_AC | X86_EFLAGS_DF |
--				      X86_EFLAGS_NT));
-+		unsigned long mask = X86_EFLAGS_DF | X86_EFLAGS_NT;
-+
-+		/*
-+		 * For !SMAP hardware we patch out CLAC on entry.
-+		 */
-+		if (boot_cpu_has(X86_FEATURE_SMAP) ||
-+		    (IS_ENABLED(CONFIG_64_BIT) && boot_cpu_has(X86_FEATURE_XENPV)))
-+			mask |= X86_EFLAGS_AC;
-+
-+		WARN_ON_ONCE(flags & mask);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -3868,9 +3868,8 @@ static const struct ata_blacklist_entry
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
+ 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
  
- 		/* We think we came from user mode. Make sure pt_regs agrees. */
- 		WARN_ON_ONCE(!user_mode(regs));
+-	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
+-	   SD7SN6S256G and SD8SN8U256G */
+-	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
++	/* Sandisk SD7/8/9s lock up hard on large trims */
++	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
+ 
+ 	/* devices which puke on READ_NATIVE_MAX */
+ 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2080,6 +2080,7 @@ static unsigned int ata_scsiop_inq_89(st
+ 
+ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
+ {
++	struct ata_device *dev = args->dev;
+ 	u16 min_io_sectors;
+ 
+ 	rbuf[1] = 0xb0;
+@@ -2105,7 +2106,12 @@ static unsigned int ata_scsiop_inq_b0(st
+ 	 * with the unmap bit set.
+ 	 */
+ 	if (ata_id_has_trim(args->id)) {
+-		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
++		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
++
++		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
++			max_blocks = 128 << (20 - SECTOR_SHIFT);
++
++		put_unaligned_be64(max_blocks, &rbuf[36]);
+ 		put_unaligned_be32(1, &rbuf[28]);
+ 	}
+ 
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -421,6 +421,7 @@ enum {
+ 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
+ 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
+ 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
++	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
+ 
+ 	 /* DMA mask for user DMA control: User visible values; DO NOT
+ 	    renumber */
 
 
