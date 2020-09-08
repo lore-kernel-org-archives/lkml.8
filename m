@@ -2,61 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC83C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FDDC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831392192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7C5F2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592518;
-	bh=EXGBLxErFJSF4VLwQyO8FppM6IWx1j6ZUvdeyM5Rk9c=;
+	s=default; t=1599592525;
+	bh=742W3CbqKDvwbrn1NvU05FnnBNu/FeZctm0eV7DtrN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEYOV1b4aHNn2LCp/37RAGNX0arxKehvAnx/U/64bOdFEijF3mfAmH8k7HxbLvFES
-	 pQRo2hZ8/lcvbMKW1oN6wyyAOzLH9eMfO5UibfK051wHkM1gIbxBs8K1DYu14fNRW5
-	 KPC5A20xsq9SNXlhdTMblhPEEnT/ZDZ53+3aFI8Y=
+	b=iNd++0sTRpXM9t/6itbHCPxdHGtBET4/1cFUbr1KmC7hSqlESElXtGxwEl0/QWkLg
+	 /FrMLQODSEBUBP+hFdfBiNAwVH46mhn5EUh62Jx5O0C1IIkQ3K6+mfy0MmnoOu7G4C
+	 N1qf8mfpAAy2GXwJABpSvNFQf2PTQ6rYHxfvt8wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbgIHTPP (ORCPT
+        id S1731913AbgIHTPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:15:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730303AbgIHQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731200AbgIHQEu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:04:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A43CC24078;
-        Tue,  8 Sep 2020 15:38:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02C724670;
+        Tue,  8 Sep 2020 15:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579507;
-        bh=EXGBLxErFJSF4VLwQyO8FppM6IWx1j6ZUvdeyM5Rk9c=;
+        s=default; t=1599579563;
+        bh=742W3CbqKDvwbrn1NvU05FnnBNu/FeZctm0eV7DtrN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Juypm0yIYPHcm78GUD0hUnuKKKQRc7DVBifMzgGv8n015jhylnTm171gbx2p+khO6
-         y0ZotG3XDwlNtchzdZFaXjS/6fwXz2MrhAQfnOvxa1dZloU7J/aa3uB67y0tk6usXB
-         Fgg2lUAlQJyi+CjukaEP6Q81Vm81ylQGrmqUlb70=
+        b=klyblTRCLx0jyepyLpcGpAw9a2yohPlCk/wONGo9iGn6OJUBNQeJrp1p3u4Jj/nRT
+         9VKVvyfd/p8WTNFGaiPDt88Ai28ZNpbMj5xnmE9FTGZT25y2i+Q74PNMXskTxwBSUf
+         TlhHBlkwsCgKm4Dsix8H4Mhs3L5nuZ5tBgI81aY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>, Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        William Cohen <wcohen@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 105/186] perf jevents: Fix suspicious code in fixregex()
-Date:   Tue,  8 Sep 2020 17:24:07 +0200
-Message-Id: <20200908152246.724078464@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 129/186] btrfs: set the lockdep class for log tree extent buffers
+Date:   Tue,  8 Sep 2020 17:24:31 +0200
+Message-Id: <20200908152247.892001151@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -69,47 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit e62458e3940eb3dfb009481850e140fbee183b04 ]
+commit d3beaa253fd6fa40b8b18a216398e6e5376a9d21 upstream.
 
-The new string should have enough space for the original string and the
-back slashes IMHO.
+These are special extent buffers that get rewound in order to lookup
+the state of the tree at a specific point in time.  As such they do not
+go through the normal initialization paths that set their lockdep class,
+so handle them appropriately when they are created and before they are
+locked.
 
-Fixes: fbc2844e84038ce3 ("perf vendor events: Use more flexible pattern matching for CPU identification for mapfile.csv")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: William Cohen <wcohen@redhat.com>
-Link: http://lore.kernel.org/lkml/20200903152510.489233-1-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/pmu-events/jevents.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/ctree.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index fa86c5f997cc5..fc9c158bfa134 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -137,7 +137,7 @@ static char *fixregex(char *s)
- 		return s;
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -1297,6 +1297,8 @@ tree_mod_log_rewind(struct btrfs_fs_info
+ 	btrfs_tree_read_unlock_blocking(eb);
+ 	free_extent_buffer(eb);
  
- 	/* allocate space for a new string */
--	fixed = (char *) malloc(len + 1);
-+	fixed = (char *) malloc(len + esc_count + 1);
- 	if (!fixed)
++	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb_rewin),
++				       eb_rewin, btrfs_header_level(eb_rewin));
+ 	btrfs_tree_read_lock(eb_rewin);
+ 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
+ 	WARN_ON(btrfs_header_nritems(eb_rewin) >
+@@ -1370,7 +1372,6 @@ get_old_root(struct btrfs_root *root, u6
+ 
+ 	if (!eb)
  		return NULL;
- 
--- 
-2.25.1
-
+-	btrfs_tree_read_lock(eb);
+ 	if (old_root) {
+ 		btrfs_set_header_bytenr(eb, eb->start);
+ 		btrfs_set_header_backref_rev(eb, BTRFS_MIXED_BACKREF_REV);
+@@ -1378,6 +1379,9 @@ get_old_root(struct btrfs_root *root, u6
+ 		btrfs_set_header_level(eb, old_root->level);
+ 		btrfs_set_header_generation(eb, old_generation);
+ 	}
++	btrfs_set_buffer_lockdep_class(btrfs_header_owner(eb), eb,
++				       btrfs_header_level(eb));
++	btrfs_tree_read_lock(eb);
+ 	if (tm)
+ 		__tree_mod_log_rewind(fs_info, eb, time_seq, tm);
+ 	else
 
 
