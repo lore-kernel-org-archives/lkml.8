@@ -2,140 +2,181 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFA8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBAAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F262080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF472080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cv+LslJ4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JixNYbDm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbgIHQ4X (ORCPT
+        id S1732086AbgIHQ43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:56:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58276 "EHLO
+        Tue, 8 Sep 2020 12:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731835AbgIHQWu (ORCPT
+        with ESMTP id S1731890AbgIHQWu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:22:50 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D941BC08EAD4
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:39:46 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id kk9so5763669pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:39:46 -0700 (PDT)
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA86AC09B044
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:40:34 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id x69so13690128oia.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u6IZBEYdJUicGrUE54qThuMWVgXq8hL/oKiMR3tNmWw=;
-        b=cv+LslJ4V6jfBHxvBBCk7QV/70j9a6RdII0YFlSLFtzmyWQa8pV+VXOTMXbYoLw3gJ
-         7DIJkOIRBeK9eyC075KhNoNS5tWP+NhRGWamXmd9VcbEgexsPRuHqUxTUvwMVVwGIrQF
-         jwja0RSSmK4sJz0xpuPKd0pIbeb4yMAcw3vrt3c8itGysNVbPAyttMGQV8BzfMCWY7yw
-         10eknqk7kUIcYYTpqo6phYE6GX1SOCg8dLd0QXO77rBoW3FuzgGfCkkGE3/GOXACuBrL
-         ygzDP55kRb9Cjp7f8QCSbAxJ5uTK/SVSXSDPlNwqOZyT/AGeeGHpjt+Z2NExWvZqpMZX
-         PPYA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gPcieJcPktL1nGtQ3CPYTKBD+Ta7XljCQbXl/MbV5To=;
+        b=JixNYbDmOvp2/Vgm8rdPkpElXATAbUeixoOvrkRTSwCOE607vlcS1SOqEVXv5WI7dP
+         EdJwGSsxWOj0EFurjaxlWrqa8RAGCNQc3Fhrf6wA38N6nKteuVuLkICNNiWJn1VNAxFA
+         xM3WNXezc3a8efPrz9VV+jbriI+FyvLxYjGVBfvYVqMIrAb0KhAefvVyKParNgGbch3w
+         AJqEtn0ig+RiMpls+0t3z+AbjLJkrhgNG1RXIY/BaQ0DgXNMEgbEdKTcH0T/ziCKzcke
+         XzmMbfbe+evCDZd0KXn++tA01B+c9/k6/Fd0OVeuxI3mz/3DnleGbdxuSDdeE7dE+xk+
+         zX5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u6IZBEYdJUicGrUE54qThuMWVgXq8hL/oKiMR3tNmWw=;
-        b=Tyk8+9lJb/4BY03UaA2p2MImv88LanBHkjCBk4SczXp0bSrkupmzWzPfkQDdVOinfo
-         jLWqH4SCt3coM5RjjMpbSa8v0vl9hQN4iXft+zArwo8bI33Lbwj23cu4zXsdSGnqQai7
-         BmJs4ToB7EI6sJ46o0XXtdU/KXnfjf3F8X9+FF56suKugq1glSC2tBgNUYgvplbT07Fi
-         87+9DBHA/kkrbSfUb9CTE1PvBmoeIrNH5+J8bYD2xm3FcGahP9dBV5XRC2URafbS/Tyu
-         4cwUMKt5Vg6G91Bs9+NagcgzwffikCettVa0F+5RCxjj4+tLgHoTeHWcDznb37IX7x0i
-         bAKg==
-X-Gm-Message-State: AOAM5305HEn6gLkMon+tpxvLzRcwVTMevbJV4RC1L7Ke96prTJ+jr/Ig
-        AayN5E+BCYeOejUGKGrqnl7CbZTq/x7ZuhVZPqcLlw==
-X-Google-Smtp-Source: ABdhPJws7YHVVJhG8H6UoWmd1N6htiZqw6o05TjLx9l7lnPD7Lq3S75jkqpmEFtYhNZsF2F4rx0yGYcdoIIg1vb7fUk=
-X-Received: by 2002:a17:90b:140c:: with SMTP id jo12mr4229667pjb.41.1599575986171;
- Tue, 08 Sep 2020 07:39:46 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gPcieJcPktL1nGtQ3CPYTKBD+Ta7XljCQbXl/MbV5To=;
+        b=B1FswEnUs4FX/9lWgYfVxAqZ7BHXuqBXCd1C1ToOMULkbJwTbafshxK07Pz0jLvTc+
+         3eFY/6LCSJ5iIIddlnEBQJg5OmuzNlW81fmEawbCORzhdqN4v6RrUi8KV1pEhWbNS2g+
+         QkzyHzplPWYrhJwNgoZMnfzSwvxa1ZsAYWIUpLF0atsqDHGcURiYHB52gDGnwul8iJGT
+         L9R9p3OrSYE+IcCCskYwYZxIV/UqzSBEKlUc7zMipSB2h/l5BH/q3T+KpKKA6DpY5ZHW
+         XNYLOBrDXLripBhdtPqV4R8ZhldtA23VsRca3FGwNNW/q9K7jXkTMxfQjZz4/QiAo8qN
+         o7KA==
+X-Gm-Message-State: AOAM532E1auDjN0ekd1LuhERLmkGJN2cYCE4vJK3ViP01KREj495y5Np
+        pTPgfeAIsQpzax4k89riCWqbiw==
+X-Google-Smtp-Source: ABdhPJwYAeXrfUaRThbJxg8f1ht0zPXpOv6/A90yB5RmZ7nAvvTYVm3A4VMv9KuNRHEZPSmyrLx5Sw==
+X-Received: by 2002:a05:6808:8e5:: with SMTP id d5mr2937201oic.33.1599576034193;
+        Tue, 08 Sep 2020 07:40:34 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id t10sm3422202ooh.4.2020.09.08.07.40.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 07:40:33 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 09:40:31 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        Elliot Berman <eberman@codeaurora.org>,
+        Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH v2 1/2] firmware: qcom_scm: Add memory protect virtual
+ address ranges
+Message-ID: <20200908144031.GL3715@yoga>
+References: <20200817082723.17458-1-stanimir.varbanov@linaro.org>
+ <20200817082723.17458-2-stanimir.varbanov@linaro.org>
 MIME-Version: 1.0
-References: <cover.1597425745.git.andreyknvl@google.com> <6a83a47d9954935d37a654978e96c951cc56a2f6.1597425745.git.andreyknvl@google.com>
-In-Reply-To: <6a83a47d9954935d37a654978e96c951cc56a2f6.1597425745.git.andreyknvl@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 8 Sep 2020 16:39:35 +0200
-Message-ID: <CAAeHK+y-gJ5JKcGZYfZutKtb=BoM3qfkOyoTi7CtW6apHUcCAw@mail.gmail.com>
-Subject: Re: [PATCH 22/35] arm64: mte: Enable in-kernel MTE
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817082723.17458-2-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 7:28 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> From: Vincenzo Frascino <vincenzo.frascino@arm.com>
->
-> The Tag Checking operation causes a synchronous data abort as
-> a consequence of a tag check fault when MTE is configured in
-> synchronous mode.
->
-> Enable MTE in Synchronous mode in EL1 to provide a more immediate
-> way of tag check failure detection in the kernel.
->
-> As part of this change enable match-all tag for EL1 to allow the
-> kernel to access user pages without faulting. This is required because
-> the kernel does not have knowledge of the tags set by the user in a
-> page.
->
-> Note: For MTE, the TCF bit field in SCTLR_EL1 affects only EL1 in a
-> similar way as TCF0 affects EL0.
->
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> ---
->  arch/arm64/kernel/cpufeature.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-> index 4d3abb51f7d4..4d94af19d8f6 100644
-> --- a/arch/arm64/kernel/cpufeature.c
-> +++ b/arch/arm64/kernel/cpufeature.c
-> @@ -1670,6 +1670,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
->         write_sysreg_s(0, SYS_TFSR_EL1);
->         write_sysreg_s(0, SYS_TFSRE0_EL1);
->
-> +       /* Enable Match-All at EL1 */
-> +       sysreg_clear_set(tcr_el1, 0, SYS_TCR_EL1_TCMA1);
-> +
->         /*
->          * CnP must be enabled only after the MAIR_EL1 register has been set
->          * up. Inconsistent MAIR_EL1 between CPUs sharing the same TLB may
-> @@ -1687,6 +1690,9 @@ static void cpu_enable_mte(struct arm64_cpu_capabilities const *cap)
->         mair &= ~MAIR_ATTRIDX(MAIR_ATTR_MASK, MT_NORMAL_TAGGED);
->         mair |= MAIR_ATTRIDX(MAIR_ATTR_NORMAL_TAGGED, MT_NORMAL_TAGGED);
->         write_sysreg_s(mair, SYS_MAIR_EL1);
-> +
-> +       /* Enable MTE Sync Mode for EL1 */
-> +       sysreg_clear_set(sctlr_el1, SCTLR_ELx_TCF_MASK, SCTLR_ELx_TCF_SYNC);
->         isb();
->
->         local_flush_tlb_all();
-> --
-> 2.28.0.220.ged08abb693-goog
->
+On Mon 17 Aug 03:27 CDT 2020, Stanimir Varbanov wrote:
 
-Should we change this commit to enable in-kernel MTE only if
-KASAN_HW_TAGS is enabled?
+> This adds a new SCM memprotect command to set virtual address ranges.
+> 
+
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+
+Please feel free to pick this through linux-media.
+
+Regards,
+Bjorn
+
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> ---
+>  drivers/firmware/qcom_scm.c | 24 ++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h |  1 +
+>  include/linux/qcom_scm.h    |  8 +++++++-
+>  3 files changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 0e7233a20f34..dec8dc42a6bc 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -757,6 +757,30 @@ int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>  }
+>  EXPORT_SYMBOL(qcom_scm_iommu_secure_ptbl_init);
+>  
+> +int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +				   u32 cp_nonpixel_start,
+> +				   u32 cp_nonpixel_size)
+> +{
+> +	int ret;
+> +	struct qcom_scm_desc desc = {
+> +		.svc = QCOM_SCM_SVC_MP,
+> +		.cmd = QCOM_SCM_MP_VIDEO_VAR,
+> +		.arginfo = QCOM_SCM_ARGS(4, QCOM_SCM_VAL, QCOM_SCM_VAL,
+> +					 QCOM_SCM_VAL, QCOM_SCM_VAL),
+> +		.args[0] = cp_start,
+> +		.args[1] = cp_size,
+> +		.args[2] = cp_nonpixel_start,
+> +		.args[3] = cp_nonpixel_size,
+> +		.owner = ARM_SMCCC_OWNER_SIP,
+> +	};
+> +	struct qcom_scm_res res;
+> +
+> +	ret = qcom_scm_call(__scm->dev, &desc, &res);
+> +
+> +	return ret ? : res.result[0];
+> +}
+> +EXPORT_SYMBOL(qcom_scm_mem_protect_video_var);
+> +
+>  static int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+>  				 size_t mem_sz, phys_addr_t src, size_t src_sz,
+>  				 phys_addr_t dest, size_t dest_sz)
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index d9ed670da222..14da834ac593 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -97,6 +97,7 @@ extern int scm_legacy_call(struct device *dev, const struct qcom_scm_desc *desc,
+>  #define QCOM_SCM_MP_RESTORE_SEC_CFG		0x02
+>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	0x03
+>  #define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	0x04
+> +#define QCOM_SCM_MP_VIDEO_VAR			0x08
+>  #define QCOM_SCM_MP_ASSIGN			0x16
+>  
+>  #define QCOM_SCM_SVC_OCMEM		0x0f
+> diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+> index 3d6a24697761..ba45537f688b 100644
+> --- a/include/linux/qcom_scm.h
+> +++ b/include/linux/qcom_scm.h
+> @@ -77,11 +77,13 @@ extern bool qcom_scm_restore_sec_cfg_available(void);
+>  extern int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+>  extern int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size);
+>  extern int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare);
+> +extern int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +					  u32 cp_nonpixel_start,
+> +					  u32 cp_nonpixel_size);
+>  extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  			       unsigned int *src,
+>  			       const struct qcom_scm_vmperm *newvm,
+>  			       unsigned int dest_cnt);
+> -
+>  extern bool qcom_scm_ocmem_lock_available(void);
+>  extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+>  			       u32 size, u32 mode);
+> @@ -128,6 +130,10 @@ static inline int qcom_scm_iommu_secure_ptbl_size(u32 spare, size_t *size)
+>  		{ return -ENODEV; }
+>  static inline int qcom_scm_iommu_secure_ptbl_init(u64 addr, u32 size, u32 spare)
+>  		{ return -ENODEV; }
+> +extern inline int qcom_scm_mem_protect_video_var(u32 cp_start, u32 cp_size,
+> +						 u32 cp_nonpixel_start,
+> +						 u32 cp_nonpixel_size)
+> +		{ return -ENODEV; }
+>  static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+>  		unsigned int *src, const struct qcom_scm_vmperm *newvm,
+>  		unsigned int dest_cnt) { return -ENODEV; }
+> -- 
+> 2.17.1
+> 
