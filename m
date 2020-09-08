@@ -2,66 +2,70 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CFAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C884CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8156E208C7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:54:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599562462;
-	bh=vvMiXR8spWwHMb+QxzD+PUuB6XpvOzXxHSAg0g2aaZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CnkEDrkfmCoLMTwEdXWyQqmdavKR3QSD1i9W/Ag8rcxXETj612DBfeTOXfS0/Oh8A
-	 wvKK+RUw5AgLEAMpwWITOrn61xCX1RtXu+TzX28tbY7FH7g9ypg3HkkmBbrjiUEi91
-	 p3Vk58a4QVh+g6et1vFVLB6S4Qy+IAE7bJ82p6rM=
+	by mail.kernel.org (Postfix) with ESMTP id 9A0BA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:56:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729650AbgIHKyB (ORCPT
+        id S1729746AbgIHK4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:54:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45126 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 06:56:38 -0400
+Received: from correo.us.es ([193.147.175.20]:40944 "EHLO mail.us.es"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgIHKxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:53:30 -0400
-Received: from localhost (unknown [122.182.239.242])
+        id S1729406AbgIHK4T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:56:19 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 7121A1C43A0
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:56:18 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 63523DA704
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:56:18 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 4E96CDA859; Tue,  8 Sep 2020 12:56:18 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 14E1CDA704;
+        Tue,  8 Sep 2020 12:56:16 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Tue, 08 Sep 2020 12:56:16 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157C82087C;
-        Tue,  8 Sep 2020 10:53:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599562407;
-        bh=vvMiXR8spWwHMb+QxzD+PUuB6XpvOzXxHSAg0g2aaZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YdZAcsVpxkSPQGIu7813LmCvxXjzLGMaw7vlVi3SEmYmA3z1MQdXymXxLgImz//i8
-         wAynp+ut5Z8MiQsWWcv4fA+/J/ZRZtbkCEuXT0l5m9RLbUfwzp9PhEz6pHEKUnkKdI
-         jI2ecwwAIKUPMSuNolJg7A/8dENgIjPJHjA0MNG8=
-Date:   Tue, 8 Sep 2020 16:23:19 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] phy: ti: am654: Fix a leak in serdes_am654_probe()
-Message-ID: <20200908105319.GE77521@vkoul-mobl>
-References: <20200905124648.GA183976@mwanda>
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id CB1814301DE1;
+        Tue,  8 Sep 2020 12:56:15 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 12:56:15 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Wang Hai <wanghai38@huawei.com>
+Cc:     kadlec@netfilter.org, fw@strlen.de, roopa@nvidia.com,
+        nikolay@nvidia.com, davem@davemloft.net, kuba@kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        bridge@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] netfilter: ebt_stp: Remove unused macro
+ BPDU_TYPE_TCN
+Message-ID: <20200908105615.GA17880@salvia>
+References: <20200904125653.15170-1-wanghai38@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200905124648.GA183976@mwanda>
+In-Reply-To: <20200904125653.15170-1-wanghai38@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-09-20, 15:46, Dan Carpenter wrote:
-> If devm_phy_create() fails then we need to call of_clk_del_provider(node)
-> to undo the call to of_clk_add_provider().
+On Fri, Sep 04, 2020 at 08:56:53PM +0800, Wang Hai wrote:
+> BPDU_TYPE_TCN is never used after it was introduced.
+> So better to remove it.
 
-Applied, thanks
-
--- 
-~Vinod
+Applied, thanks.
