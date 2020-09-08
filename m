@@ -2,182 +2,85 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A402C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26BF6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3B123CD2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFE723E20
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:46:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599579969;
-	bh=p/VXYwFUJB/kg5jcz4g7W6vjlMbDu0lvknVGLt7O638=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l85V8kOYYwIgEUu4bBbtRnwhGXEsI7PdqhcErw88hAgiGZT2J1dILN75GPMD8p3sj
-	 QVXk/SXoxhT9Ul37ecu1OWJmT3P6EL3cy2QVWmkImt7i1NJNl+vs7pqraIsLY1zhuc
-	 TnbOTJi8VhpX74O6R4iJkRHPYs97Ww910wKYVzXY=
+	s=default; t=1599580012;
+	bh=jo8XYvozevoqwLnr8Q8ChiN/Mq4AJaD2/hqaujjU+jw=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PNBN07DN+0Iw0IG83w0oZOrcK7gWa80E3sgbuyZgbmzsrYWCGDulubm2M1iDCTFew
+	 O9/vWSdHRKyom2D4hxdnXOdND99p81mpszfjEmVWFPR+qSZcF5eH7LC1wCRDd1DgYC
+	 C14x4a7cEL5/u1a/Fhz5y8T/Yow1lkxrObc0f9X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgIHPpj (ORCPT
+        id S1730532AbgIHPqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:45:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58868 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 11:46:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730534AbgIHPfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:35:50 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730609AbgIHPm2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:42:28 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B07722482;
-        Tue,  8 Sep 2020 15:34:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9DF22B4E;
+        Tue,  8 Sep 2020 14:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579289;
-        bh=p/VXYwFUJB/kg5jcz4g7W6vjlMbDu0lvknVGLt7O638=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hBWpiEuYPgjYQMzIsqPjuAwTV6VhT9/LIg6N/EkKWikg41N2Hvrb3ug34PI9rchXC
-         vQYMMCCucJKERhJ1u01qdbZ+M6JwtgSLfTMuBcTDU2HDfg0LcT6MUk6CvlZL9VEf7y
-         +PbfrkMZeE1U0rgQ8XIM/vx9Tm8Pzf5HKy9oWZJY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 008/186] hwmon: (applesmc) check status earlier.
-Date:   Tue,  8 Sep 2020 17:22:30 +0200
-Message-Id: <20200908152242.056051891@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1599577169;
+        bh=jo8XYvozevoqwLnr8Q8ChiN/Mq4AJaD2/hqaujjU+jw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JPbf4sMP6KmcVCTAryLd32cvDGv2RaJpdhFq6aE4BYR2ha21kqZ/1SaAxL9ZPf8Mt
+         4G+jN5cNbtfuleQ/g0rZxuMgJCxoev6ierAyzkVjN+wSoN3KRcqonaa6ssaEyOYFSj
+         zexwbpNsyG8uRkJReKcoe/L7fIF6gPIwtkW99EB4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] dt-bindings: power: Correct interrupt flags in examples
+Date:   Tue,  8 Sep 2020 16:59:22 +0200
+Message-Id: <20200908145922.4502-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
+These are simple defines so they could be used in DTS but they will not
+have the same meaning:
+1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
+2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
 
-[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
+Correct the interrupt flags, assuming the author of the code wanted some
+logical behavior behind the name "ACTIVE_xxx", this is:
+  ACTIVE_LOW => IRQ_TYPE_LEVEL_LOW
 
-clang static analysis reports this representative problem
-
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-buffer is filled by the earlier call
-
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
-
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
-Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ .../devicetree/bindings/power/supply/act8945a-charger.txt       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 3166184093157..a18887990f4a2 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -753,15 +753,18 @@ static ssize_t applesmc_light_show(struct device *dev,
- 	}
+diff --git a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
+index c7dfb7cecf40..cb737a9e1f16 100644
+--- a/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
++++ b/Documentation/devicetree/bindings/power/supply/act8945a-charger.txt
+@@ -33,7 +33,7 @@ Example:
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_charger_chglev &pinctrl_charger_lbo &pinctrl_charger_irq>;
+ 			interrupt-parent = <&pioA>;
+-			interrupts = <45 GPIO_ACTIVE_LOW>;
++			interrupts = <45 IRQ_TYPE_LEVEL_LOW>;
  
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
-+
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
- 
- out:
-@@ -810,12 +813,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 		  to_index(attr));
- 
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
-+
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
- }
- 
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -851,12 +853,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
-+
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -872,10 +873,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
-+
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -951,13 +953,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+ 			active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
+ 			active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
 -- 
-2.25.1
-
-
+2.17.1
 
