@@ -2,43 +2,67 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
+	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8CFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90A1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B49012080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E652080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:29:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YLy1dUAj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sf6t5Ggw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbgIHU2E (ORCPT
+        id S1730150AbgIHU3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:28:04 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:60789 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728970AbgIHU2B (ORCPT
+        Tue, 8 Sep 2020 16:29:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:56846 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728184AbgIHU3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:28:01 -0400
-Received: from localhost.localdomain ([93.22.150.22])
-        by mwinf5d58 with ME
-        id RYTp230040VEKhH03YTpGu; Tue, 08 Sep 2020 22:27:58 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 08 Sep 2020 22:27:58 +0200
-X-ME-IP: 93.22.150.22
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     hkallweit1@gmail.com, davem@davemloft.net, kuba@kernel.org,
-        mhabets@solarflare.com, tony.felice@timesys.com, mst@redhat.com,
-        gustavo@embeddedor.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] net: tc35815: switch from 'pci_' to 'dma_' API
-Date:   Tue,  8 Sep 2020 22:27:47 +0200
-Message-Id: <20200908202747.330007-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Tue, 8 Sep 2020 16:29:04 -0400
+From:   John Ogness <john.ogness@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599596941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmfOJhJGeZam4W8hd+NxCaKhrjMMSs2RZWBSk5gH5+I=;
+        b=YLy1dUAjrkO7qcxtibLWTsQn0THy1435mJlqzfhtCgUj94GiRS0q0rcUwsrBPJgZKXdgux
+        F6Qzc+1Dy8Ke7faRlBFUGi4A1A9I3j8wUdMj0GIwcQIHmVd+AceEdnLgjdkOV8cODxmeVR
+        +U//YQAgsYK2s3vVP4EInRgsZkp+NyGz2jDNFoen4PYpv5dwdCQSTIKBnyTQzR2UtNC4KB
+        EyDlT9p0/G7BR76KFj3kI2JkTjKjArquH3C80jkShInVbyEkluwhqhnGlYe9hHJDKt2T1B
+        Di82LPIe4gRP9fFACmOcm92DruKt+w/GYRVVanGNQJGNzK+6YPFQA238tot8yg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599596941;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OmfOJhJGeZam4W8hd+NxCaKhrjMMSs2RZWBSk5gH5+I=;
+        b=Sf6t5Ggw80z8llsGefDmljc5f0W/4ewUz4qTH4Z/qdzy+WryDwpmBI92vcPcqX70qlsULk
+        S6l4hiOjJmP6e9AA==
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH printk v4 3/6] printk: ringbuffer: clear initial reserved fields
+Date:   Tue,  8 Sep 2020 22:34:56 +0206
+Message-Id: <20200908202859.2736-4-john.ogness@linutronix.de>
+In-Reply-To: <20200908202859.2736-1-john.ogness@linutronix.de>
+References: <20200908202859.2736-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,268 +70,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+prb_reserve() will set some meta data values and leave others
+uninitialized (or rather, containing the values of the previous
+wrap). Simplify the API by always clearing out all the fields.
+Only the sequence number is filled in. The caller is now
+responsible for filling in the rest of the meta data fields.
+In particular, for correctly filling in text and dict lengths.
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
-
-When memory is allocated in 'tc35815_init_queues()' GFP_ATOMIC must be used
-because it can be called from 'tc35815_restart()' where some spinlock are
-taken.
-The call chain is:
-  tc35815_restart
-    --> tc35815_clear_queues
-      --> tc35815_init_queues
-
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/ethernet/toshiba/tc35815.c | 48 +++++++++++++++-----------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ kernel/printk/printk.c            | 12 ++++++++----
+ kernel/printk/printk_ringbuffer.c | 30 ++++++++++++++++++------------
+ 2 files changed, 26 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/toshiba/tc35815.c b/drivers/net/ethernet/toshiba/tc35815.c
-index 6bcda20ed7e7..eb82f5483023 100644
---- a/drivers/net/ethernet/toshiba/tc35815.c
-+++ b/drivers/net/ethernet/toshiba/tc35815.c
-@@ -454,9 +454,9 @@ static struct sk_buff *alloc_rxbuf_skb(struct net_device *dev,
- 	skb = netdev_alloc_skb(dev, RX_BUF_SIZE);
- 	if (!skb)
- 		return NULL;
--	*dma_handle = pci_map_single(hwdev, skb->data, RX_BUF_SIZE,
--				     PCI_DMA_FROMDEVICE);
--	if (pci_dma_mapping_error(hwdev, *dma_handle)) {
-+	*dma_handle = dma_map_single(&hwdev->dev, skb->data, RX_BUF_SIZE,
-+				     DMA_FROM_DEVICE);
-+	if (dma_mapping_error(&hwdev->dev, *dma_handle)) {
- 		dev_kfree_skb_any(skb);
- 		return NULL;
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index fec71229169e..964b5701688f 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -520,8 +520,11 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	memcpy(&r.text_buf[0], text, text_len);
+ 	if (trunc_msg_len)
+ 		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
+-	if (r.dict_buf)
++	r.info->text_len = text_len + trunc_msg_len;
++	if (r.dict_buf) {
+ 		memcpy(&r.dict_buf[0], dict, dict_len);
++		r.info->dict_len = dict_len;
++	}
+ 	r.info->facility = facility;
+ 	r.info->level = level & 7;
+ 	r.info->flags = flags & 0x1f;
+@@ -1069,10 +1072,11 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+ 	if (!prb_reserve(&e, rb, &dest_r))
+ 		return 0;
+ 
+-	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
++	memcpy(&dest_r.text_buf[0], &r->text_buf[0], r->info->text_len);
++	dest_r.info->text_len = r->info->text_len;
+ 	if (dest_r.dict_buf) {
+-		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
+-		       dest_r.dict_buf_size);
++		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0], r->info->dict_len);
++		dest_r.info->dict_len = r->info->dict_len;
  	}
-@@ -466,8 +466,8 @@ static struct sk_buff *alloc_rxbuf_skb(struct net_device *dev,
+ 	dest_r.info->facility = r->info->facility;
+ 	dest_r.info->level = r->info->level;
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 6ee5ebce1450..82347abb22a5 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -146,10 +146,13 @@
+  *
+  *	if (prb_reserve(&e, &test_rb, &r)) {
+  *		snprintf(r.text_buf, r.text_buf_size, "%s", textstr);
++ *		r.info->text_len = strlen(textstr);
+  *
+  *		// dictionary allocation may have failed
+- *		if (r.dict_buf)
++ *		if (r.dict_buf) {
+  *			snprintf(r.dict_buf, r.dict_buf_size, "%s", dictstr);
++ *			r.info->dict_len = strlen(dictstr);
++ *		}
+  *
+  *		r.info->ts_nsec = local_clock();
+  *
+@@ -1125,9 +1128,9 @@ static const char *get_data(struct prb_data_ring *data_ring,
+  * @dict_buf_size is set to 0. Writers must check this before writing to
+  * dictionary space.
+  *
+- * @info->text_len and @info->dict_len will already be set to @text_buf_size
+- * and @dict_buf_size, respectively. If dictionary space reservation fails,
+- * @info->dict_len is set to 0.
++ * Important: @info->text_len and @info->dict_len need to be set correctly by
++ *            the writer in order for data to be readable and/or extended.
++ *            Their values are initialized to 0.
+  */
+ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 		 struct printk_record *r)
+@@ -1135,6 +1138,7 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+ 	struct prb_desc *d;
+ 	unsigned long id;
++	u64 seq;
  
- static void free_rxbuf_skb(struct pci_dev *hwdev, struct sk_buff *skb, dma_addr_t dma_handle)
- {
--	pci_unmap_single(hwdev, dma_handle, RX_BUF_SIZE,
--			 PCI_DMA_FROMDEVICE);
-+	dma_unmap_single(&hwdev->dev, dma_handle, RX_BUF_SIZE,
-+			 DMA_FROM_DEVICE);
- 	dev_kfree_skb_any(skb);
- }
+ 	if (!data_check_size(&rb->text_data_ring, r->text_buf_size))
+ 		goto fail;
+@@ -1159,6 +1163,14 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
  
-@@ -876,9 +876,9 @@ tc35815_init_queues(struct net_device *dev)
- 		       sizeof(struct TxFD) * TX_FD_NUM >
- 		       PAGE_SIZE * FD_PAGE_NUM);
+ 	d = to_desc(desc_ring, id);
  
--		lp->fd_buf = pci_alloc_consistent(lp->pci_dev,
--						  PAGE_SIZE * FD_PAGE_NUM,
--						  &lp->fd_buf_dma);
-+		lp->fd_buf = dma_alloc_coherent(&lp->pci_dev->dev,
-+						PAGE_SIZE * FD_PAGE_NUM,
-+						&lp->fd_buf_dma, GFP_ATOMIC);
- 		if (!lp->fd_buf)
- 			return -ENOMEM;
- 		for (i = 0; i < RX_BUF_NUM; i++) {
-@@ -892,10 +892,9 @@ tc35815_init_queues(struct net_device *dev)
- 						       lp->rx_skbs[i].skb_dma);
- 					lp->rx_skbs[i].skb = NULL;
- 				}
--				pci_free_consistent(lp->pci_dev,
--						    PAGE_SIZE * FD_PAGE_NUM,
--						    lp->fd_buf,
--						    lp->fd_buf_dma);
-+				dma_free_coherent(&lp->pci_dev->dev,
-+						  PAGE_SIZE * FD_PAGE_NUM,
-+						  lp->fd_buf, lp->fd_buf_dma);
- 				lp->fd_buf = NULL;
- 				return -ENOMEM;
- 			}
-@@ -990,7 +989,9 @@ tc35815_clear_queues(struct net_device *dev)
- 		BUG_ON(lp->tx_skbs[i].skb != skb);
- #endif
- 		if (skb) {
--			pci_unmap_single(lp->pci_dev, lp->tx_skbs[i].skb_dma, skb->len, PCI_DMA_TODEVICE);
-+			dma_unmap_single(&lp->pci_dev->dev,
-+					 lp->tx_skbs[i].skb_dma, skb->len,
-+					 DMA_TO_DEVICE);
- 			lp->tx_skbs[i].skb = NULL;
- 			lp->tx_skbs[i].skb_dma = 0;
- 			dev_kfree_skb_any(skb);
-@@ -1022,7 +1023,9 @@ tc35815_free_queues(struct net_device *dev)
- 			BUG_ON(lp->tx_skbs[i].skb != skb);
- #endif
- 			if (skb) {
--				pci_unmap_single(lp->pci_dev, lp->tx_skbs[i].skb_dma, skb->len, PCI_DMA_TODEVICE);
-+				dma_unmap_single(&lp->pci_dev->dev,
-+						 lp->tx_skbs[i].skb_dma,
-+						 skb->len, DMA_TO_DEVICE);
- 				dev_kfree_skb(skb);
- 				lp->tx_skbs[i].skb = NULL;
- 				lp->tx_skbs[i].skb_dma = 0;
-@@ -1044,8 +1047,8 @@ tc35815_free_queues(struct net_device *dev)
- 		}
- 	}
- 	if (lp->fd_buf) {
--		pci_free_consistent(lp->pci_dev, PAGE_SIZE * FD_PAGE_NUM,
--				    lp->fd_buf, lp->fd_buf_dma);
-+		dma_free_coherent(&lp->pci_dev->dev, PAGE_SIZE * FD_PAGE_NUM,
-+				  lp->fd_buf, lp->fd_buf_dma);
- 		lp->fd_buf = NULL;
- 	}
- }
-@@ -1292,7 +1295,10 @@ tc35815_send_packet(struct sk_buff *skb, struct net_device *dev)
- 	BUG_ON(lp->tx_skbs[lp->tfd_start].skb);
- #endif
- 	lp->tx_skbs[lp->tfd_start].skb = skb;
--	lp->tx_skbs[lp->tfd_start].skb_dma = pci_map_single(lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
-+	lp->tx_skbs[lp->tfd_start].skb_dma = dma_map_single(&lp->pci_dev->dev,
-+							    skb->data,
-+							    skb->len,
-+							    DMA_TO_DEVICE);
++	/*
++	 * All @info fields (except @seq) are cleared and must be filled in
++	 * by the writer. Save @seq before clearing because it is used to
++	 * determine the new sequence number.
++	 */
++	seq = d->info.seq;
++	memset(&d->info, 0, sizeof(d->info));
++
+ 	/*
+ 	 * Set the @e fields here so that prb_commit() can be used if
+ 	 * text data allocation fails.
+@@ -1177,17 +1189,15 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	 * See the "Bootstrap" comment block in printk_ringbuffer.h for
+ 	 * details about how the initializer bootstraps the descriptors.
+ 	 */
+-	if (d->info.seq == 0 && DESC_INDEX(desc_ring, id) != 0)
++	if (seq == 0 && DESC_INDEX(desc_ring, id) != 0)
+ 		d->info.seq = DESC_INDEX(desc_ring, id);
+ 	else
+-		d->info.seq += DESCS_COUNT(desc_ring);
++		d->info.seq = seq + DESCS_COUNT(desc_ring);
  
- 	/*add to ring */
- 	txfd = &lp->tfd_base[lp->tfd_start];
-@@ -1500,9 +1506,9 @@ tc35815_rx(struct net_device *dev, int limit)
- 			skb = lp->rx_skbs[cur_bd].skb;
- 			prefetch(skb->data);
- 			lp->rx_skbs[cur_bd].skb = NULL;
--			pci_unmap_single(lp->pci_dev,
-+			dma_unmap_single(&lp->pci_dev->dev,
- 					 lp->rx_skbs[cur_bd].skb_dma,
--					 RX_BUF_SIZE, PCI_DMA_FROMDEVICE);
-+					 RX_BUF_SIZE, DMA_FROM_DEVICE);
- 			if (!HAVE_DMA_RXALIGN(lp) && NET_IP_ALIGN != 0)
- 				memmove(skb->data, skb->data - NET_IP_ALIGN,
- 					pkt_len);
-@@ -1756,7 +1762,9 @@ tc35815_txdone(struct net_device *dev)
- #endif
- 		if (skb) {
- 			dev->stats.tx_bytes += skb->len;
--			pci_unmap_single(lp->pci_dev, lp->tx_skbs[lp->tfd_end].skb_dma, skb->len, PCI_DMA_TODEVICE);
-+			dma_unmap_single(&lp->pci_dev->dev,
-+					 lp->tx_skbs[lp->tfd_end].skb_dma,
-+					 skb->len, DMA_TO_DEVICE);
- 			lp->tx_skbs[lp->tfd_end].skb = NULL;
- 			lp->tx_skbs[lp->tfd_end].skb_dma = 0;
- 			dev_kfree_skb_any(skb);
+ 	r->text_buf = data_alloc(rb, &rb->text_data_ring, r->text_buf_size,
+ 				 &d->text_blk_lpos, id);
+ 	/* If text data allocation fails, a data-less record is committed. */
+ 	if (r->text_buf_size && !r->text_buf) {
+-		d->info.text_len = 0;
+-		d->info.dict_len = 0;
+ 		prb_commit(e);
+ 		/* prb_commit() re-enabled interrupts. */
+ 		goto fail;
+@@ -1204,10 +1214,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 
+ 	r->info = &d->info;
+ 
+-	/* Set default values for the sizes. */
+-	d->info.text_len = r->text_buf_size;
+-	d->info.dict_len = r->dict_buf_size;
+-
+ 	/* Record full text space used by record. */
+ 	e->text_space = space_used(&rb->text_data_ring, &d->text_blk_lpos);
+ 
 -- 
-2.25.1
+2.20.1
 
