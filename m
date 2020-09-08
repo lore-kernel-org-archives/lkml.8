@@ -2,141 +2,94 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA15C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8339BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD67E2145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592227;
-	bh=JHLVLYmI8zY5PT20YbNvmKVzTXAxqKwjCnx+wA90X0g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPs83fMeUlhMqqxNcV84XguBKbGyNUEBCUIIP9ayfDk6AjKuGA8lML4r/TAr9dTYn
-	 ntdGgwdZ/CXfvanXW+/+uDG844m7fnLhNg3jj4z6lyFunpq/Ywv3pl5EU3D4f/+8OF
-	 /n9MRza7Q9pB2R9fa60nXY9j2EURvkbWgIMWrSNI=
+	by mail.kernel.org (Postfix) with ESMTP id 48C7B20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbgIHTKZ (ORCPT
+        id S1731692AbgIHTKh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:10:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731230AbgIHQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:24 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        Tue, 8 Sep 2020 15:10:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56356 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731421AbgIHTKY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:10:24 -0400
+Received: from kevin (unknown [IPv6:2607:fea8:55f:a950::68f4])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E78E229C6;
-        Tue,  8 Sep 2020 15:46:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579969;
-        bh=JHLVLYmI8zY5PT20YbNvmKVzTXAxqKwjCnx+wA90X0g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=isGxuOxIcdUzPRsVUe1yQjI0LGeqrIoSV7Szwf942acnCiyAaI0nlfITL80zjn8oc
-         TY8Bq59BlqQ2VIrdGwK0pYZ7m3ClUNNxC+zGgpcNUrXweU7BkrWD1bAYWEtd7vp+u6
-         lyr2ATFBDLtetCnpgUR/9982ONTMPC1yUT1f4qMM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 105/129] media: rc: uevent sysfs file races with rc_unregister_device()
-Date:   Tue,  8 Sep 2020 17:25:46 +0200
-Message-Id: <20200908152235.088505773@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: alyssa)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 93A0B295E47;
+        Tue,  8 Sep 2020 20:10:18 +0100 (BST)
+Date:   Tue, 8 Sep 2020 15:10:10 -0400
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     robh@kernel.org, tomeu.vizoso@collabora.com, steven.price@arm.com,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH 4/5] drm/panfrost: add amlogic reset quirk callback
+Message-ID: <20200908191010.GB10568@kevin>
+References: <20200908151853.4837-1-narmstrong@baylibre.com>
+ <20200908151853.4837-5-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Disposition: inline
+In-Reply-To: <20200908151853.4837-5-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
 
-commit 4f0835d6677dc69263f90f976524cb92b257d9f4 upstream.
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Only report uevent file contents if device still registered, else we
-might read freed memory.
+> Since the documentation of the GPU cores are not public, we do not know what does these
+> values, but they permit having a fully functional GPU running with Panfrost.
 
-Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Since this is Amlogic magic, not specifically GPU, I'd rephrase this as
+"Since the Amlogic's integration of the GPU cores with the SoC is not
+publicly documented..."
 
----
- drivers/media/rc/rc-main.c |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+> +	/*
+> +	 * The Amlogic integrated Mali-T820, Mali-G31 & Mali-G52 needs
+> +	 * these undocumented bits to be set in order to operate
+> +	 * correctly.
+> +	 * These GPU_PWR registers contains:
+> +	 * "device-specific power control value"
+> +	 */
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1577,25 +1577,25 @@ static void rc_dev_release(struct device
- 	kfree(dev);
- }
- 
--#define ADD_HOTPLUG_VAR(fmt, val...)					\
--	do {								\
--		int err = add_uevent_var(env, fmt, val);		\
--		if (err)						\
--			return err;					\
--	} while (0)
--
- static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
- {
- 	struct rc_dev *dev = to_rc_dev(device);
-+	int ret = 0;
- 
--	if (dev->rc_map.name)
--		ADD_HOTPLUG_VAR("NAME=%s", dev->rc_map.name);
--	if (dev->driver_name)
--		ADD_HOTPLUG_VAR("DRV_NAME=%s", dev->driver_name);
--	if (dev->device_name)
--		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
-+	mutex_lock(&dev->lock);
- 
--	return 0;
-+	if (!dev->registered)
-+		ret = -ENODEV;
-+	if (ret == 0 && dev->rc_map.name)
-+		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
-+	if (ret == 0 && dev->driver_name)
-+		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
-+	if (ret == 0 && dev->device_name)
-+		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
-+
-+	mutex_unlock(&dev->lock);
-+
-+	return ret;
- }
- 
- /*
-@@ -1987,14 +1987,14 @@ void rc_unregister_device(struct rc_dev
- 	del_timer_sync(&dev->timer_keyup);
- 	del_timer_sync(&dev->timer_repeat);
- 
--	rc_free_rx_device(dev);
--
- 	mutex_lock(&dev->lock);
- 	if (dev->users && dev->close)
- 		dev->close(dev);
- 	dev->registered = false;
- 	mutex_unlock(&dev->lock);
- 
-+	rc_free_rx_device(dev);
-+
- 	/*
- 	 * lirc device should be freed with dev->registered = false, so
- 	 * that userspace polling will get notified.
+PWR_OVERRIDE1 is the Amlogic specific value.
 
+Per the name, for PWR_KEY, I'd do add "#define GPU_PWR_KEY_UNLOCK
+0x2968A819" in panfrost-gpu.h so it's clear which value is which.
 
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl9X1woACgkQ/v5QWgr1
+WA0XAg//c9nGGJntvueFe8c6qd2IaRIMN3EM6NDls15z8sc2USz064lxnb0x5o15
+futnTLgG+9RPsMRDl3GmLwHyffyRWWIupoVPgMEu/RdWUai8d4yKyF76xVDpUOAD
+RnPBzvstwXzN3Wggj47fB6ajEZFFOI2erWqEgAY8UZARPkw3jP+lUbHpagmKdMVF
+SYrAuYXOZmOjdlHXeTM4jxAW1I76imu2iEnvm+/2bpgRUumypy3/K33/wICFL9W3
+RVC1/2Gw6zRrhT9Je9eVBLID7xoeJk5jFHAFss9xd+OtshquOBlapVXwJVcfEm+p
+gDFNrxG/pXgrJvkI6a8anp0cqyaixvIONfMt2fJwfTbqP5+K0QigQFVclGa6eXM3
+iLkfjlbgrCn8iiywRBx7BunsMqMWgHEt5K78PGczw2JmU+Ahp1O1vq9Az0s2yYIt
+X5nlp/iwUHRtPEnoNwqPFfasUnO3UAkObmax9oZVG3iBede/wMMWDOvm/J0Q8pEq
+jI/liFrKDPa7Qnkwara3B1hxAeMedig7Qi+RAFuRTUFlNCoBuD4TfCcvBGqH1cDX
+aupOBHrxmstHtZH5lnCcy7cXepJuCOmati2khQRvoOJolnRYI1HFyt2poZT3HQ+w
+K8zkmWUzKZZk/QwJn31i7zX7emvAvma0aO3dGzdT4+F3OMeJRf0=
+=eeWO
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
