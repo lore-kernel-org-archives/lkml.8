@@ -2,101 +2,156 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AB7C2D0E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99FBC20732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F2720732
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585161;
-	bh=6+P+TO1BauV6jNZ7yLmJJOENSCp0lJZ2QmNtEP9yGMA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=syeyD4ErBAourK1m5c9xbqEAvqjBXSj1FHa32qhvOl0Bwbj9+XdFRE7Xrg6dZj6qz
-	 epq/50DgamWbt23EmXLvk/Zvmv+EotI5jCfH7ogf66K7bgFtm+3jAtcNOENwiH9QJp
-	 w3BloAtJTyfTrRhze8HWRVOZn6PFmcPb+TuTqz3k=
+	s=default; t=1599585172;
+	bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DPo3VAeYZ5GKez0VQ6GfwUwTcio1RpS0EUNoioZrR+TNYFKPe4VaRXZiBfuCX7DFu
+	 IKPD3j1MVl620opGZ06nRVkJy/I6jA9PplqI3yc8zJ59ZmNE1BhHUpSK4oLlheeqI2
+	 irtZF1nB/OE8PKr1aRJglxEyBwY0UKRRdM/bjhsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731803AbgIHRMi (ORCPT
+        id S1731875AbgIHRMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59222 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731806AbgIHQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731796AbgIHQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:19:19 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1418123C90;
-        Tue,  8 Sep 2020 15:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FCBA2247F;
+        Tue,  8 Sep 2020 15:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579403;
-        bh=6+P+TO1BauV6jNZ7yLmJJOENSCp0lJZ2QmNtEP9yGMA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U0ApBhOyQMqWHDRTWicWpbVIrQvBKfG1tEiHgPpeYFYQF6XjTyIiWAfksLJUMoScX
-         JVeZZ9Ntk/rZQd9hC0U4BucEPIe9YzmvFHZvNCFWPzgOQtHsoJbs8X+IAQ5sV0Nsu/
-         4uyOCR0M4ssTJQGpZMzc4Cy+V35DUETJnAJ5dBDI=
-Date:   Tue, 8 Sep 2020 16:35:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org, enric.balletbo@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH] regmap: debugfs: potentially duplicate the name string
- of the config
-Message-ID: <20200908153559.GF5551@sirena.org.uk>
-References: <20200908152859.26279-1-dafna.hirschfeld@collabora.com>
+        s=default; t=1599579434;
+        bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YxIJyRCtlY4MNnRst8OYY2dYTwGpZ7LoSc4V55tFm2bwoBfQ9m53vUgJLF+9AK+wE
+         mSxBwjOx6clVcLKOhrhTzszp54jRNkAnaHbginG8GstvG7C+I/8FoTk2Sd08DgEkb9
+         dVehOFYlk+INAe2zSn+xr8L8jx8KLJO93NOWXWX0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 046/186] rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
+Date:   Tue,  8 Sep 2020 17:23:08 +0200
+Message-Id: <20200908152243.892478027@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tmoQ0UElFV5VgXgH"
-Content-Disposition: inline
-In-Reply-To: <20200908152859.26279-1-dafna.hirschfeld@collabora.com>
-X-Cookie: Vini, vidi, Linux!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: David Howells <dhowells@redhat.com>
 
---tmoQ0UElFV5VgXgH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 68528d937dcd675e79973061c1a314db598162d1 ]
 
-On Tue, Sep 08, 2020 at 05:28:59PM +0200, Dafna Hirschfeld wrote:
-> In function regmap_debugfs_init the name of the regmap_config is assigned
-> in a node of regmap_debugfs_early_list to be used later after regmap
-> is initialized. It is unknown how and when the name is allocated and freed.
-> Therefore the name should be copied to the node using 'kstrdup_const'.
+Keep the ACK serial number in a variable in rxrpc_input_ack() as it's used
+frequently.
 
-It does not follow that the name should be copied, it equally follows
-(and is expected by the API given that the common case is that the name
-is a static string assigned at build time) that the caller should not
-free the string while the regmap is active.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/rxrpc/input.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> This fixes an error
-> "debugfs: Directory 'dummy-' with parent 'regmap' already present!"
-> where the name was freed in function of_syscon_register before
-> it was accessed.
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 767579328a069..a7699e56eac88 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -843,7 +843,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 		struct rxrpc_ackinfo info;
+ 		u8 acks[RXRPC_MAXACKS];
+ 	} buf;
+-	rxrpc_serial_t acked_serial;
++	rxrpc_serial_t ack_serial, acked_serial;
+ 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
+ 	int nr_acks, offset, ioffset;
+ 
+@@ -856,6 +856,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	}
+ 	offset += sizeof(buf.ack);
+ 
++	ack_serial = sp->hdr.serial;
+ 	acked_serial = ntohl(buf.ack.serial);
+ 	first_soft_ack = ntohl(buf.ack.firstPacket);
+ 	prev_pkt = ntohl(buf.ack.previousPacket);
+@@ -864,31 +865,31 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
+ 			      buf.ack.reason : RXRPC_ACK__INVALID);
+ 
+-	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
++	trace_rxrpc_rx_ack(call, ack_serial, acked_serial,
+ 			   first_soft_ack, prev_pkt,
+ 			   summary.ack_reason, nr_acks);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
+ 		rxrpc_input_ping_response(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 	if (buf.ack.reason == RXRPC_ACK_REQUESTED)
+ 		rxrpc_input_requested_ack(call, skb->tstamp, acked_serial,
+-					  sp->hdr.serial);
++					  ack_serial);
+ 
+ 	if (buf.ack.reason == RXRPC_ACK_PING) {
+-		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
++		_proto("Rx ACK %%%u PING Request", ack_serial);
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ping);
+ 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
+ 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
+-				  sp->hdr.serial, true, true,
++				  ack_serial, true, true,
+ 				  rxrpc_propose_ack_respond_to_ack);
+ 	}
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		return;
+@@ -904,7 +905,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 
+ 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+ 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
+-		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
++		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
+ 					   first_soft_ack, call->ackr_first_seq,
+ 					   prev_pkt, call->ackr_prev_seq);
+ 		goto out;
+@@ -964,7 +965,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+ 	    RXRPC_TX_ANNO_LAST &&
+ 	    summary.nr_acks == call->tx_top - hard_ack &&
+ 	    rxrpc_is_client_call(call))
+-		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
++		rxrpc_propose_ACK(call, RXRPC_ACK_PING, ack_serial,
+ 				  false, true,
+ 				  rxrpc_propose_ack_ping_for_lost_reply);
+ 
+-- 
+2.25.1
 
-Fix the caller.  It is *very* much unclear to me why a syscon would be
-assigning a name for a regmap it creates in the first place.
 
---tmoQ0UElFV5VgXgH
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9XpN4ACgkQJNaLcl1U
-h9BEFwf9Fqw6ngG0E+iNBhzxtUcVba2A3PvcBrAUSxh/WzkJXrgNJx4n5l8vEvJs
-LHkGeeDOIYawjcoaQXJiKTFHDr6y0V1xi2aQdSD2SvRWWgRdJdMFVCDvU4A3yvBC
-5n/tG6V2Ko9R1ZjLUIrd9I/O75mDeY/ZgbycZHIpAwpqZaghhk6OxYr3Yzk5EP/H
-phjTMJoP1cd//+GlAoekgo2dUYLdni22HrZt0PfyhW2cemwWD23ULQsXma97RbgS
-Ab8lRAN4Ql9g+eBYsRCS1vvftd4ggy6vn/zls7iWXMEUOqcZ6u60dDASYPggedtT
-IRywQfMdoW0Axf0RYv9ayZHGIzp72w==
-=40MK
------END PGP SIGNATURE-----
-
---tmoQ0UElFV5VgXgH--
