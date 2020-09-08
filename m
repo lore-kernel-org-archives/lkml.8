@@ -2,95 +2,107 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8981C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3E3C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7842177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QUfq8M92"
+	by mail.kernel.org (Postfix) with ESMTP id 1E4302166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgIHJjX (ORCPT
+        id S1729169AbgIHJjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:39:23 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43632 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727995AbgIHJjU (ORCPT
+        Tue, 8 Sep 2020 05:39:55 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51895 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728886AbgIHJjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:39:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599557959;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0KEVHWP2GiLQz9DhPmZh/HeQE3DHcZKHvJrF/RegTIU=;
-        b=QUfq8M92LX7WvSdzzdvWIMmeoKsqcIvz+fQGzdV63UccYDv5SvGJzvo8OVGEldAXJCw4yv
-        bqJ3Vgf244u/ZXuXRvzBYn56BUB0awbalnHQSD3gxzhTzP+82Hp0x1WrM4Pdr7dtjQA4EO
-        H+lpTm6Sjv/V/FgMJJe/DPiFqSgSTTM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-119-FQLYQ8IjMDq3GhQpyAEKYw-1; Tue, 08 Sep 2020 05:39:18 -0400
-X-MC-Unique: FQLYQ8IjMDq3GhQpyAEKYw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 856CF802B61;
-        Tue,  8 Sep 2020 09:39:16 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 59DF060C15;
-        Tue,  8 Sep 2020 09:39:13 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 95CBC204AE; Tue,  8 Sep 2020 11:39:12 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] drm/qxl: handle shadow in primary destroy
-Date:   Tue,  8 Sep 2020 11:39:12 +0200
-Message-Id: <20200908093912.26792-4-kraxel@redhat.com>
-In-Reply-To: <20200908093912.26792-1-kraxel@redhat.com>
-References: <20200908093912.26792-1-kraxel@redhat.com>
+        Tue, 8 Sep 2020 05:39:53 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0E8EA24000F;
+        Tue,  8 Sep 2020 09:39:46 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 11:39:46 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>,
+        Andreas Kemnade <andreas@kemnade.info>,
+        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
+Subject: Re: [PATCH v2 07/10] rtc: Introduce RTC_TIMESTAMP_END_2255
+Message-ID: <20200908093946.GQ230586@piout.net>
+References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
+ <20200905133230.1014581-8-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200905133230.1014581-8-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qxl_primary_atomic_disable must check whenever the framebuffer bo has a
-shadow surface and in case it has check the shadow primary status.
+On 05/09/2020 15:32:27+0200, Jonathan Neuschäfer wrote:
+> Some RTCs store the year as an 8-bit number relative to the year 2000.
+> This results in a maximum timestamp of 2255-12-31 23:59:59.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> ---
+> 
+> v2:
+> - New patch
+> ---
+>  include/linux/rtc.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/rtc.h b/include/linux/rtc.h
+> index 22d1575e4991b..fcc086084a603 100644
+> --- a/include/linux/rtc.h
+> +++ b/include/linux/rtc.h
+> @@ -154,6 +154,7 @@ struct rtc_device {
+>  #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
+>  #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
+>  #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
+> +#define RTC_TIMESTAMP_END_2255		9025257599LL /* 2255-12-31 23:59:59 */
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_display.c | 2 ++
- 1 file changed, 2 insertions(+)
+Honestly, I wouldn't bother adding that one unless you have examples of
+other RTCs endng at the same date, I'm fine having the value and comment
+directly in the probe function.
 
-diff --git a/drivers/gpu/drm/qxl/qxl_display.c b/drivers/gpu/drm/qxl/qxl_display.c
-index 85dcb7fe56a9..3dcbb359e0f5 100644
---- a/drivers/gpu/drm/qxl/qxl_display.c
-+++ b/drivers/gpu/drm/qxl/qxl_display.c
-@@ -560,6 +560,8 @@ static void qxl_primary_atomic_disable(struct drm_plane *plane,
- 	if (old_state->fb) {
- 		struct qxl_bo *bo = gem_to_qxl_bo(old_state->fb->obj[0]);
- 
-+		if (bo->shadow)
-+			bo = bo->shadow;
- 		if (bo->is_primary) {
- 			qxl_io_destroy_primary(qdev);
- 			bo->is_primary = false;
+>  #define RTC_TIMESTAMP_END_9999		253402300799LL /* 9999-12-31 23:59:59 */
+> 
+>  extern struct rtc_device *devm_rtc_device_register(struct device *dev,
+> --
+> 2.28.0
+> 
+
 -- 
-2.27.0
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
