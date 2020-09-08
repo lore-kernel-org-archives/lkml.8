@@ -2,80 +2,82 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79DFC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 694792177B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Rb6G1CwM"
+	by mail.kernel.org (Postfix) with ESMTP id A72EE2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgIHJGB (ORCPT
+        id S1728909AbgIHJHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:06:01 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:27853 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728547AbgIHJGA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:06:00 -0400
-X-UUID: 61e2ee4daa7a43918bffebf8ccc80dda-20200908
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=SQD49d6hVayfxN4/ILoTkIw56AypoTBrgE49r+z4QKQ=;
-        b=Rb6G1CwMw8w/oVgKzg10L6RmdzueAkHYCWjyvEzegrUjIGTF2mpeWt3KiO6ScuHD8p956NB6HVa4xhia9VE1ZJ3W35tqrcikNJmKxrlNFW1hJttodOEsQ38MXkvvlez2B57sCyKHQQgytIxoRoj6HEYR7gZe5ES46UFq/fQjmjc=;
-X-UUID: 61e2ee4daa7a43918bffebf8ccc80dda-20200908
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <jing-ting.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 413739645; Tue, 08 Sep 2020 17:05:55 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 8 Sep 2020 17:05:46 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 8 Sep 2020 17:05:46 +0800
-From:   Jing-Ting Wu <jing-ting.wu@mediatek.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <wsd_upstream@mediatek.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Jing-Ting Wu <jing-ting.wu@mediatek.com>
-Subject: [PATCH 1/1] sched/rt: add rt throttled/unthrottled log
-Date:   Tue, 8 Sep 2020 17:05:46 +0800
-Message-ID: <1599555946-30802-1-git-send-email-jing-ting.wu@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 8 Sep 2020 05:07:52 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40598 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728490AbgIHJHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 05:07:49 -0400
+IronPort-SDR: 6D1Hjyo8La0sNx4diRSXocKqkARjruxqlJZu/KuNPdlMjnsJKkbb9bMRqX1MgDa6FwiFoWqrf8
+ HkUm37af6Ejw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="159071117"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="159071117"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 02:07:47 -0700
+IronPort-SDR: rHwojlhVW0dFkc/kb3riPBbvzthmB+nEUSNIYk5lH7YGRccxAgSKkZK7TtpFoIs7UrFOOSmafa
+ FIbPT+cfnJ6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="299721582"
+Received: from shiche4x-mobl.gar.corp.intel.com (HELO [10.254.211.164]) ([10.254.211.164])
+  by orsmga003.jf.intel.com with ESMTP; 08 Sep 2020 02:07:44 -0700
+Cc:     baolu.lu@linux.intel.com, Tom Murphy <murphyt7@tcd.ie>,
+        intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
+ dma-iommu
+To:     Christoph Hellwig <hch@infradead.org>
+References: <20200903201839.7327-1-murphyt7@tcd.ie>
+ <20200903201839.7327-6-murphyt7@tcd.ie>
+ <20200907070035.GA25114@infradead.org>
+ <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
+ <20200908053619.GA15418@infradead.org> <20200908055510.GA19078@infradead.org>
+ <9655fdc9-6ea0-e4c1-e104-a9a8981ecb1e@linux.intel.com>
+ <20200908062326.GB20774@infradead.org>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <fd4aef77-4ec6-da94-8508-49b1a21143dd@linux.intel.com>
+Date:   Tue, 8 Sep 2020 17:07:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200908062326.GB20774@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWx3YXlzIHByaW50IGxvZ3Mgd2hlbiBydCB0aHJvdHRsZS91bnRocm90dGxlLA0KaXQgaXMgbXVj
-aCBlYXNpZXIgdG8gbG9jYXRlIHRoZSB0aHJvdHRsZWQgcGVyaW9kLg0KDQpTaWduZWQtb2ZmLWJ5
-OiBKaW5nLVRpbmcgV3UgPGppbmctdGluZy53dUBtZWRpYXRlay5jb20+DQotLS0NCiBrZXJuZWwv
-c2NoZWQvcnQuYyB8ICAgIDUgKysrKy0NCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9rZXJuZWwvc2NoZWQvcnQuYyBiL2tlcm5l
-bC9zY2hlZC9ydC5jDQppbmRleCBmMjE1ZWVhLi41OTgwNDZjIDEwMDY0NA0KLS0tIGEva2VybmVs
-L3NjaGVkL3J0LmMNCisrKyBiL2tlcm5lbC9zY2hlZC9ydC5jDQpAQCAtOTAyLDYgKzkwMiw5IEBA
-IHN0YXRpYyBpbnQgZG9fc2NoZWRfcnRfcGVyaW9kX3RpbWVyKHN0cnVjdCBydF9iYW5kd2lkdGgg
-KnJ0X2IsIGludCBvdmVycnVuKQ0KIAkJCQlydF9ycS0+cnRfdGhyb3R0bGVkID0gMDsNCiAJCQkJ
-ZW5xdWV1ZSA9IDE7DQogDQorCQkJCXByaW50a19kZWZlcnJlZCgic2NoZWQ6IFJUIHRocm90dGxp
-bmcgaW5hY3RpdmF0ZWQgY3B1PSVkXG4iLA0KKwkJCQkJCWkpOw0KKw0KIAkJCQkvKg0KIAkJCQkg
-KiBXaGVuIHdlJ3JlIGlkbGUgYW5kIGEgd29rZW4gKHJ0KSB0YXNrIGlzDQogCQkJCSAqIHRocm90
-dGxlZCBjaGVja19wcmVlbXB0X2N1cnIoKSB3aWxsIHNldA0KQEAgLTk3MCw3ICs5NzMsNyBAQCBz
-dGF0aWMgaW50IHNjaGVkX3J0X3J1bnRpbWVfZXhjZWVkZWQoc3RydWN0IHJ0X3JxICpydF9ycSkN
-CiAJCSAqLw0KIAkJaWYgKGxpa2VseShydF9iLT5ydF9ydW50aW1lKSkgew0KIAkJCXJ0X3JxLT5y
-dF90aHJvdHRsZWQgPSAxOw0KLQkJCXByaW50a19kZWZlcnJlZF9vbmNlKCJzY2hlZDogUlQgdGhy
-b3R0bGluZyBhY3RpdmF0ZWRcbiIpOw0KKwkJCXByaW50a19kZWZlcnJlZCgic2NoZWQ6IFJUIHRo
-cm90dGxpbmcgYWN0aXZhdGVkXG4iKTsNCiAJCX0gZWxzZSB7DQogCQkJLyoNCiAJCQkgKiBJbiBj
-YXNlIHdlIGRpZCBhbnl3YXksIG1ha2UgaXQgZ28gYXdheSwNCi0tIA0KMS43LjkuNQ0K
+On 2020/9/8 14:23, Christoph Hellwig wrote:
+> On Tue, Sep 08, 2020 at 02:04:53PM +0800, Lu Baolu wrote:
+>> Do you mind telling where can I find Marek's series?
+> 
+> [PATCH v10 00/30] DRM: fix struct sg_table nents vs. orig_nents misuse
+> 
+> on various lists including the iommu one.
+> 
 
+Get it. Thank you!
+
+Best regards,
+baolu
