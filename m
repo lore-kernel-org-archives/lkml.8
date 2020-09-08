@@ -2,157 +2,209 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F40E9C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE61BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A81222EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 607DB22450
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:28:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWcCAVAT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqCUFpCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgIHP0W (ORCPT
+        id S1730303AbgIHP2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:26:22 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28526 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730355AbgIHPXr (ORCPT
+        Tue, 8 Sep 2020 11:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730379AbgIHPZG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:23:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599578581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=hbnNIZWqEW06Y/M1dAO1A10rHg4QLVi21IpBOCIS1PQ=;
-        b=IWcCAVATxl+GwNQ/7Fux6uY/Bc9y0FrxENsrkXux94mhfQt73IE3TWCfspbOlbHgyc4lRF
-        IsTCA4UTFjElUB8S4c6anAoB+wa/EJqDmC3w9uYwKKcSMbRxCWkiJU4azxCtZiobyQ7Mki
-        ax+KSrAHIN+APlvF9A+NgfaOhqbIBRI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-376WvPviMcuscuivDMC2dQ-1; Tue, 08 Sep 2020 11:02:25 -0400
-X-MC-Unique: 376WvPviMcuscuivDMC2dQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 189868015F6;
-        Tue,  8 Sep 2020 15:02:23 +0000 (UTC)
-Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B7A5E8092B;
-        Tue,  8 Sep 2020 15:02:19 +0000 (UTC)
-Subject: Re: [RFC PATCH 00/16] 1GB THP support on x86_64
-To:     Rik van Riel <riel@surriel.com>, Michal Hocko <mhocko@suse.com>,
-        Zi Yan <ziy@nvidia.com>
-Cc:     Roman Gushchin <guro@fb.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Nellans <dnellans@nvidia.com>,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-References: <20200902180628.4052244-1-zi.yan@sent.com>
- <20200903142300.bjq2um5y5nwocvar@box>
- <20200903163020.GG60440@carbon.dhcp.thefacebook.com>
- <8e677ead-206d-08dd-d73e-569bd3803e3b@redhat.com>
- <7E20392E-5ED7-4C22-9555-F3BAABF3CBE9@nvidia.com>
- <20200908143503.GE26850@dhcp22.suse.cz>
- <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <831ffb47-f44b-9640-0349-ad8884d5f713@redhat.com>
-Date:   Tue, 8 Sep 2020 17:02:18 +0200
+        Tue, 8 Sep 2020 11:25:06 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E566EC09B042
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:40:26 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id n2so5318550oij.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c9iLLuaBGWovpf3B0g/X+Be4Wvsv3eYnfu+1G59OB1k=;
+        b=kqCUFpCoTDDfSASaEJvIJAiAEk00ZBFZ9CsdE/srJCRow00E8MDGoB8oBrZE54OYh/
+         4nFJjUfqN8xQcdEfKqKPEoF4g8M4Wzow8qitAFWwwOaBE672WX9jxOelwbkYpWYuMMcB
+         woutcAdntjSHlOIhr26yIrod9d2kPfPyRge6tr+v+kjeqT+9Om0yAB2vcew/ReX7uk/5
+         Y0YvTP8lbYn9jjUszs3Bv3psYU3owl7VrvvJFHM/NEBXci9UMORNtaNj20x3lX+owa82
+         IXwj8zSvVqmavhqWreoRzSnuN/pnhBQtkOIJIcIEcX+uGb6+cxIhAhFI8oFcD1uEZvaP
+         Hffg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=c9iLLuaBGWovpf3B0g/X+Be4Wvsv3eYnfu+1G59OB1k=;
+        b=ILUQWWxR7BlrXIp/DO5YcuN1hNvoZ9Fi02R6Dec37MvSy4aikcsqlgqYkf8e7lG37Y
+         EX+6wBlSVS28yifF9qwwn6IHlAe3Z2RYHe6lfVX1b7YXjhDj11b83jvWrW5x75fywkzu
+         UCYLtRH8mxd6oZhJG64H/HQm7j37Pj/l5vqVVQU3hIUHstzET3LlcQgFzScZka6jYWbl
+         331ZZ3QxZo/XB7/gI1QNuGDIiqo6IzaRzvR6FEtvBOKOVr0cLu9zLlcvVVnb4WnPpG/T
+         I5zDAAcG1m5pKA7tUYclLN28RIn9SfQ0HpgtdGx/bPVW+e1MWD+0K6hV4IQayGhh5Hpw
+         fESw==
+X-Gm-Message-State: AOAM531QpnZE/e2guV0zuzuWeA9NpSstNxO2MdZPK3KPFeIQMrZeSEcw
+        z3zaS4buyuUf/UrE/Bk5PJY=
+X-Google-Smtp-Source: ABdhPJyRFkv2DLr9eFRB/EyD+tYxiBCuUluHuNErbQCpbxncj8+9WhrYhx8EXhKWhspz/O68K+V9ng==
+X-Received: by 2002:aca:52d6:: with SMTP id g205mr2947653oib.54.1599576025932;
+        Tue, 08 Sep 2020 07:40:25 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j20sm3501452ots.5.2020.09.08.07.40.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 07:40:25 -0700 (PDT)
+Subject: Re: [PATCH v2 10/11] lockdep: Only trace IRQ edges
+To:     peterz@infradead.org
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
+        npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
+        davem@davemloft.net
+References: <20200821084738.508092956@infradead.org>
+ <20200821085348.723775490@infradead.org>
+ <20200902042137.GA163925@roeck-us.net>
+ <20200902090935.GW1362448@hirez.programming.kicks-ass.net>
+ <20200902091247.GX35926@hirez.programming.kicks-ass.net>
+ <559ff09a-275b-21bf-15f1-daa0d02d1c76@roeck-us.net>
+ <20200908142215.GU1362448@hirez.programming.kicks-ass.net>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <b52cdc64-bb37-077a-eb8b-9615e341d069@roeck-us.net>
+Date:   Tue, 8 Sep 2020 07:40:23 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <7ed82cb06074b30c2956638082c515fb179f69a3.camel@surriel.com>
+In-Reply-To: <20200908142215.GU1362448@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08.09.20 16:41, Rik van Riel wrote:
-> On Tue, 2020-09-08 at 16:35 +0200, Michal Hocko wrote:
+On 9/8/20 7:22 AM, peterz@infradead.org wrote:
+> On Wed, Sep 02, 2020 at 06:48:30AM -0700, Guenter Roeck wrote:
+>> On 9/2/20 2:12 AM, peterz@infradead.org wrote:
+>>> On Wed, Sep 02, 2020 at 11:09:35AM +0200, peterz@infradead.org wrote:
+>>>> On Tue, Sep 01, 2020 at 09:21:37PM -0700, Guenter Roeck wrote:
+>>>>> [    0.000000] WARNING: CPU: 0 PID: 0 at kernel/locking/lockdep.c:4875 check_flags.part.39+0x280/0x2a0
+>>>>> [    0.000000] DEBUG_LOCKS_WARN_ON(lockdep_hardirqs_enabled())
+>>>>
+>>>>> [    0.000000] [<00000000004cff18>] lock_acquire+0x218/0x4e0
+>>>>> [    0.000000] [<0000000000d740c8>] _raw_spin_lock+0x28/0x40
+>>>>> [    0.000000] [<00000000009870f4>] p1275_cmd_direct+0x14/0x60
+>>>>
+>>>> Lol! yes, I can see that going side-ways... let me poke at that.
+>>>
+>>> I suspect this will do.
+>>>
+>>> diff --git a/arch/sparc/prom/p1275.c b/arch/sparc/prom/p1275.c
+>>> index 889aa602f8d8..7cfe88e30b52 100644
+>>> --- a/arch/sparc/prom/p1275.c
+>>> +++ b/arch/sparc/prom/p1275.c
+>>> @@ -38,7 +38,7 @@ void p1275_cmd_direct(unsigned long *args)
+>>>  	unsigned long flags;
+>>>
+>>>  	local_save_flags(flags);
+>>> -	local_irq_restore((unsigned long)PIL_NMI);
+>>> +	arch_local_irq_restore((unsigned long)PIL_NMI);
+>>>  	raw_spin_lock(&prom_entry_lock);
+>>>
+>>>  	prom_world(1);
+>>>
+>> No, that doesn't help. Even removing that line entirely doesn't help.
+>> The problem seems to be that interrupts are not enabled in the first
+>> place. But why wasn't this a problem before ?
 > 
->> A global knob is insufficient. 1G pages will become a very precious
->> resource as it requires a pre-allocation (reservation). So it really
->> has
->> to be an opt-in and the question is whether there is also some sort
->> of
->> access control needed.
+> Previously every interrupt opt would disable/enable things, now we only
+> update state when something actually changes.
 > 
-> The 1GB pages do not require that much in the way of
-> pre-allocation. The memory can be obtained through CMA,
-> which means it can be used for movable 4kB and 2MB
-> allocations when not
-> being used for 1GB pages.
-> 
-> That makes it relatively easy to set aside
-> some fraction
-> of system memory in every system for 1GB and movable
-> allocations, and use it for whatever way it is needed
-> depending on what workload(s) end up running on a system.
+> Anyway, I'm struggling with qemu-system-sparc64, I've got a sparc64
+> cross booting to mount, but I'm not seeing this, could you get me your
+> specific qemu cmdline please?
 > 
 
-Linking secretmem discussion
+initrd:
 
-https://lkml.kernel.org/r/fdda6ba7-9418-2b52-eee8-ce5e9bfdb6ad@redhat.com
+qemu-system-sparc64 -M sun4u -cpu "TI UltraSparc IIi" -m 512 \
+    -initrd rootfs.cpio \
+    -kernel arch/sparc/boot/image -no-reboot \
+    -append "panic=-1 slub_debug=FZPUA rdinit=/sbin/init console=ttyS0" \
+    -nographic -monitor none
 
--- 
-Thanks,
+root file system:
 
-David / dhildenb
+qemu-system-sparc64 -M sun4u -cpu "TI UltraSparc IIi" -m 512 \
+    -snapshot =drive file=rootfs.ext2,format=raw,if=ide \
+    -kernel arch/sparc/boot/image -no-reboot \
+    -append "panic=-1 slub_debug=FZPUA root=/dev/sda rootwait console=ttyS0" \
+    -nographic -monitor none
 
+Some of it, like the CPU, should not be needed. qemu version is v5.1,
+but v5.0 should do as well. Some older qemu versions won't accept the
+kernel from the command line.
+
+Did you enable lockdep debugging ? In my configuration I enable lots
+of debug options on top of defconfig. See [1], function __setup_fragment(),
+for details.
+
+Some root file systems are at [2] if needed. The complete script used
+to build and run the code is at [3].
+
+Guenter
+
+---
+[1] https://github.com/groeck/linux-build-test/blob/master/rootfs/scripts/common.sh
+[2] https://github.com/groeck/linux-build-test/tree/master/rootfs/sparc64
+[3] https://github.com/groeck/linux-build-test/blob/master/rootfs/sparc64/run-qemu-sparc64.sh
