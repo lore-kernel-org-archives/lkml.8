@@ -2,88 +2,94 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3587BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C42C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2A1204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2238204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:07:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sXhlasBH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kxjaxt2d"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H0x969PG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730189AbgIHUG6 (ORCPT
+        id S1731320AbgIHUHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:06:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48182 "EHLO
+        Tue, 8 Sep 2020 16:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730335AbgIHPUz (ORCPT
+        with ESMTP id S1730271AbgIHPTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:20:55 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0E2C0619ED;
-        Tue,  8 Sep 2020 08:14:33 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 17:12:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599577950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lIVgIxTyroQddql8kti9o3VE5bSiFWAwUPsPZehXs9o=;
-        b=sXhlasBHEKGmjbmZDMHbFD7Rsy2wjwblXmS7YU8lQi9EA9XqAewbLsZRFGt8nkjLTQXw8m
-        zvObdrZX72xqJ9q18VgC85vQRLzqaFJWuwz2NhTol9lsNMd5XUs2iHQyUndQPPfwe1ObYU
-        4hS0AhQaQjpwUDgEH4gdT/S5SMvdRK7QZIVkFX+y2/qH6NR7/iikQiqvY4tovuObzBVRfP
-        kU0j8vopuU9FkdMMkglSKe6aGOTRAbB+uqo3DB9QfD3RY04TkasmbP7xnB82T2Y2Fb/3lA
-        gJ5riSIi14Cl5GEhKWbT681B2G48wMlt4t2OKPPt5uXsePgIv+Zsq+1OyjmJjA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599577950;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lIVgIxTyroQddql8kti9o3VE5bSiFWAwUPsPZehXs9o=;
-        b=kxjaxt2dIjBlb5FiPBRsluID3bgNmV1B32kw3B0tymfXnJyo4JFDg6Dp5xE6ZrD035G1Al
-        trsnmHCEmRg6jCAw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Mike Galbraith <efault@gmx.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
-Message-ID: <20200908151229.g24j4n4fderlm2pe@linutronix.de>
-References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
- <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
- <b989e196a8b9cceda35152de9202d7a67ca32196.camel@gmx.de>
+        Tue, 8 Sep 2020 11:19:52 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 796D5C0A3BED;
+        Tue,  8 Sep 2020 07:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=RiAzaIm/dr+SqUNzkRGWaPTEPPycR0xtNLj0/t/BvYg=; b=H0x969PGygh0xFT8As+1SdAab4
+        7dTzLcqZS9aNhj2PskNHvp8w6D+cEieztIWQcwTxq14Pn7j51kwggzWDsdxnOdSMRhJD/01AVQEd4
+        yXb8OdLnjZD0FVPEfWYyXic07WSgJlaIATnHplGzCEwjX7aPhLvORMQiQwfPqAbH/PTWiWpoLeDZ6
+        HTym/4cidrk8j+woXhIAJQD6+ve4+ef6LBSpDl58i15OHtujoNXQODMOGPehhK/jesJSUrreEqRTP
+        l3IDDrhWM6+RY+z4qUIOaMcjBZNeHVeVNsmcIgfdvIMKd+1LCyT6BAz9ETQFUz6fw7s6ThzQpERHB
+        u1KxIYEg==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf10-0002yF-Ru; Tue, 08 Sep 2020 14:54:35 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 10/19] paride/pcd: use bdev_check_media_change
+Date:   Tue,  8 Sep 2020 16:53:38 +0200
+Message-Id: <20200908145347.2992670-11-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b989e196a8b9cceda35152de9202d7a67ca32196.camel@gmx.de>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-05 07:19:10 [+0200], Mike Galbraith wrote:
-> Lappy, which does not use bridge, boots clean... but lock leakage
-> pretty darn quickly inspires lockdep to craps its drawers.
-> 
-> [  209.001111] BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!
-> [  209.001113] turning off the locking correctness validator.
-> [  209.001114] CPU: 2 PID: 3773 Comm: Socket Thread Tainted: G S        I E     5.9.0.gc70672d-rt3-rt #8
-> [  209.001117] Hardware name: HP HP Spectre x360 Convertible/804F, BIOS F.47 11/22/2017
-> [  209.001118] Call Trace:
-> [  209.001123]  dump_stack+0x77/0x9b
-> [  209.001129]  validate_chain+0xf60/0x1230
+The pcd driver does not have a ->revalidate_disk method, so it can just
+use bdev_check_media_change without any additional changes.
 
-I have no idea how to debug this based on this report. Can you narrow
-it down to something?
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/block/paride/pcd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Is Lappy new, got a new something or has a new config switch? I'm just
-curious if this something or something that was always there but
-remained undetected.
-(Your other report was about something that was previously always "broken".)
+diff --git a/drivers/block/paride/pcd.c b/drivers/block/paride/pcd.c
+index 5124eca90e8337..70da8b86ce587d 100644
+--- a/drivers/block/paride/pcd.c
++++ b/drivers/block/paride/pcd.c
+@@ -233,7 +233,7 @@ static int pcd_block_open(struct block_device *bdev, fmode_t mode)
+ 	struct pcd_unit *cd = bdev->bd_disk->private_data;
+ 	int ret;
+ 
+-	check_disk_change(bdev);
++	bdev_check_media_change(bdev);
+ 
+ 	mutex_lock(&pcd_mutex);
+ 	ret = cdrom_open(&cd->info, bdev, mode);
+-- 
+2.28.0
 
-Sebastian
