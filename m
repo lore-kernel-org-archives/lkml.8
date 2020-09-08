@@ -2,55 +2,58 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FB6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE09C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54D512074D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5182D207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588309;
-	bh=K98OJv2GkRlivNz34fJtumK8rOF+TnINn+n3z1nP8KI=;
+	s=default; t=1599588317;
+	bh=oszbqs7PEBghjGCl+rJ3kmEUWpwsIgRPGgvaQAx0z2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9ZUGD02ULTGOag3uv0Ez8cCUJdsnbpi+ay3lzhtBGqBXW1RDLj0o/jkPTBoKUb7V
-	 QaGQxLKu/m0EgxyZRTRqz77sL5MKDSsaLw1LoSet4TPLofZuqTWpe3weYQuIkrvK5o
-	 GkHaMw+aGsnCsSHW04F5NtbhRlJfCu45QGB57ZDI=
+	b=k/gyCaz2+xArM1cpOkR0GtBsWF45iV4otwcCNnGgJtG0GpHfaQOG3ch2HxwcI/cZk
+	 0W0UnCK9sD+gxmi4NMcvsgcizoNo+AVOqNFj9LAjYyIJaCyeBB2PzurZeceaq/ZOlg
+	 eoSRWFfUGhn6xVtoT9OhlvU+1LTgQHaxTmF3xnso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732195AbgIHSFH (ORCPT
+        id S1732167AbgIHSFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731520AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731519AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F9724762;
-        Tue,  8 Sep 2020 15:50:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EE4E2478F;
+        Tue,  8 Sep 2020 15:51:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580258;
-        bh=K98OJv2GkRlivNz34fJtumK8rOF+TnINn+n3z1nP8KI=;
+        s=default; t=1599580279;
+        bh=oszbqs7PEBghjGCl+rJ3kmEUWpwsIgRPGgvaQAx0z2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycZEGvGvJXATZMaOroP/DtFEsSYuSrGh1qYNvarU7GPytliRm+ZgBmq2aVQwh4AYF
-         KyekqE9pSwEP9akgu0pMWC4SHpd/NTAzIfHPvnpb9BHtxaUPxHfLv3FZapA3FkGZY2
-         5CKOnJXb0BxvmiG6s8/8+lNjS44I4oNsIUJUsvik=
+        b=Ox286CfTG3JhqcfLgHnKI423JgvxtEtyu6fYRagF4ILGOWo/qrwR08LIn+a5Uh3aP
+         AW3sMHk9w2ol9IO9E/f8potJH4rZQZmLvV7WVqUhWAWs13oNRIyObwRPZAEQKDlMxH
+         kQvP1eV2hS1AgnDTmBk3ABDLLSi589SO9w+ELXSI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.19 81/88] KVM: arm64: Defer guest entry when an asynchronous exception is pending
-Date:   Tue,  8 Sep 2020 17:26:22 +0200
-Message-Id: <20200908152225.234291269@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com,
+        Sven Eckelmann <sven@narfation.org>,
+        Antonio Quartulli <a@unstable.cc>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 12/65] batman-adv: Avoid uninitialized chaddr when handling DHCP
+Date:   Tue,  8 Sep 2020 17:25:57 +0200
+Message-Id: <20200908152217.659257918@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,71 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Sven Eckelmann <sven@narfation.org>
 
-commit 5dcd0fdbb492d49dac6bf21c436dfcb5ded0a895 upstream.
+[ Upstream commit 303216e76dcab6049c9d42390b1032f0649a8206 ]
 
-SError that occur during world-switch's entry to the guest will be
-accounted to the guest, as the exception is masked until we enter the
-guest... but we want to attribute the SError as precisely as possible.
+The gateway client code can try to optimize the delivery of DHCP packets to
+avoid broadcasting them through the whole mesh. But also transmissions to
+the client can be optimized by looking up the destination via the chaddr of
+the DHCP packet.
 
-Reading DISR_EL1 before guest entry requires free registers, and using
-ESB+DISR_EL1 to consume and read back the ESR would leave KVM holding
-a host SError... We would rather leave the SError pending and let the
-host take it once we exit world-switch. To do this, we need to defer
-guest-entry if an SError is pending.
+But the chaddr is currently only done when chaddr is fully inside the
+non-paged area of the skbuff. Otherwise it will not be initialized and the
+unoptimized path should have been taken.
 
-Read the ISR to see if SError (or an IRQ) is pending. If so fake an
-exit. Place this check between __guest_enter()'s save of the host
-registers, and restore of the guest's. SError that occur between
-here and the eret into the guest must have affected the guest's
-registers, which we can naturally attribute to the guest.
+But the implementation didn't handle this correctly. It didn't retrieve the
+correct chaddr but still tried to perform the TT lookup with this
+uninitialized memory.
 
-The dsb is needed to ensure any previous writes have been done before
-we read ISR_EL1. On systems without the v8.2 RAS extensions this
-doesn't give us anything as we can't contain errors, and the ESR bits
-to describe the severity are all implementation-defined. Replace
-this with a nop for these systems.
-
-Cc: stable@vger.kernel.org # v4.19
-Signed-off-by: James Morse <james.morse@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: syzbot+ab16e463b903f5a37036@syzkaller.appspotmail.com
+Fixes: 6c413b1c22a2 ("batman-adv: send every DHCP packet as bat-unicast")
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Acked-by: Antonio Quartulli <a@unstable.cc>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/hyp/entry.S |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ net/batman-adv/gateway_client.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -17,6 +17,7 @@
+diff --git a/net/batman-adv/gateway_client.c b/net/batman-adv/gateway_client.c
+index c6a7341f05270..056af2eec4a2a 100644
+--- a/net/batman-adv/gateway_client.c
++++ b/net/batman-adv/gateway_client.c
+@@ -674,8 +674,10 @@ batadv_gw_dhcp_recipient_get(struct sk_buff *skb, unsigned int *header_len,
  
- #include <linux/linkage.h>
- 
-+#include <asm/alternative.h>
- #include <asm/asm-offsets.h>
- #include <asm/assembler.h>
- #include <asm/fpsimdmacros.h>
-@@ -62,6 +63,20 @@ ENTRY(__guest_enter)
- 	// Store the host regs
- 	save_callee_saved_regs x1
- 
-+	// Now the host state is stored if we have a pending RAS SError it must
-+	// affect the host. If any asynchronous exception is pending we defer
-+	// the guest entry. The DSB isn't necessary before v8.2 as any SError
-+	// would be fatal.
-+alternative_if ARM64_HAS_RAS_EXTN
-+	dsb	nshst
-+	isb
-+alternative_else_nop_endif
-+	mrs	x1, isr_el1
-+	cbz	x1,  1f
-+	mov	x0, #ARM_EXCEPTION_IRQ
-+	ret
+ 	chaddr_offset = *header_len + BATADV_DHCP_CHADDR_OFFSET;
+ 	/* store the client address if the message is going to a client */
+-	if (ret == BATADV_DHCP_TO_CLIENT &&
+-	    pskb_may_pull(skb, chaddr_offset + ETH_ALEN)) {
++	if (ret == BATADV_DHCP_TO_CLIENT) {
++		if (!pskb_may_pull(skb, chaddr_offset + ETH_ALEN))
++			return BATADV_DHCP_NO;
 +
-+1:
- 	add	x18, x0, #VCPU_CONTEXT
- 
- 	// Restore guest regs x0-x17
+ 		/* check if the DHCP packet carries an Ethernet DHCP */
+ 		p = skb->data + *header_len + BATADV_DHCP_HTYPE_OFFSET;
+ 		if (*p != BATADV_DHCP_HTYPE_ETHERNET)
+-- 
+2.25.1
+
 
 
