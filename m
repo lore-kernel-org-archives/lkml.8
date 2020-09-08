@@ -2,107 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 156E7C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46723C43461
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D39F221D43
+	by mail.kernel.org (Postfix) with ESMTP id 01C5221D6C
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594029;
-	bh=4u0pJ/Gs1vJAvB9/KtzVLob7u/TS+QyBVuy835xWRPY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JEzuh3Ss8qhPMqDtqSZGIdRe8a8sJWEXZREEVXUv+PZ6qIfKlk9wbzIdrO8oC4Xeo
-	 w8qofeSpyeDdwwFrAM7ySDtcijzOUxaiV13oNSX2XBKTOhcBlFiuw8prtu7X/9BWZX
-	 e4M7PDOOsrmHUqsQHS7P6ZLtm6XlXAmdpJ2bhmag=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="Gbr4FBBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgIHTkL (ORCPT
+        id S1731619AbgIHTkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730797AbgIHPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 15:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730939AbgIHPyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:54:44 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1378C23F5B;
-        Tue,  8 Sep 2020 15:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579490;
-        bh=4u0pJ/Gs1vJAvB9/KtzVLob7u/TS+QyBVuy835xWRPY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WmHyQgvzjeTTQul4+Z4lLj4KlD0g3EBDLAflQDu1bL3tem8a3PdAQQCI556H2F4AS
-         YDfBovxBrLNI6vRcRQa89/daDbbedOpEVelJ2ZdLuXX3W/sO+J2ogLKy8rR0yAMGDC
-         LengJKtiuKa20q3s1G8f+zgL54P7BXeL9nfPScLQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Louis Peens <louis.peens@netronome.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 099/186] nfp: flower: fix ABI mismatch between driver and firmware
-Date:   Tue,  8 Sep 2020 17:24:01 +0200
-Message-Id: <20200908152246.433714284@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CE64C06138A
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:33:14 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mm21so8212581pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=iDh5oerIwDKilwa4JO3Vp5i5/Awtl6AjVqpak4FAWc8=;
+        b=Gbr4FBBBQDv9ZAtzDnFOa+KkTbb0lywtPcVM6jMh7dHNvzODW30O5NBlRmaCwFHKyn
+         1axKQY2tHW6AeOingHWn2FQmItKgZ4NXXQgRucqrgi3lgZJVlW+4QX9TNlECVeYGwizT
+         hmdTDX1yap1u/4k4im5Xpwu7qkVi8ByuDoIFyOV3XWcjKMBHMEb7dRvX+d9pKyujloiL
+         W++OjYGQYtoZxvhTlDxmW7iQmuBwI/KtZ9zgL/YFq30w3BTXLmPotQZ9BEx4wzIiL/G9
+         sU0VqUXAmWPW3cPtyuvGXd1lQDPTQG4qKzsXp2vxhSIhZXyoHMaeC5h08bjdnzpDGJEC
+         MEfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=iDh5oerIwDKilwa4JO3Vp5i5/Awtl6AjVqpak4FAWc8=;
+        b=EQutY7tYPCdh9VmJk8Yfgrs3Ko4VJV9KCkY52+rR4dvuNeA684i4S8yMZ/KCzIdkTg
+         Bm2y1ou7cP7IZ+hBxGctZ7R1bE8CoqIuDWrjoLXUISmlMzUEqU3I3YlbxY2uhGPT4fFN
+         camXfBftigf75HGmzVTYnCqaJSf98G4KwZ1onwTGP0gAWDjCbQRdHNA88rwhTlHIA27A
+         RY6tPSP8DIYqsusldB+ZYA/9u668cLYhchYSIXrEHjaENKy3Khw4dAfneYx+DJNLLOeR
+         acMCHmjtzimHu9+dNCHQ1SNk8nRN41S6/7Kttc85y2Kn/7GNMGTvoZNx17DJeNpyUa0T
+         Qiwg==
+X-Gm-Message-State: AOAM531SkALw6ow2iBLRze01b5hc+B+DYpgKrDmT+b98ZxwhqLaD0Wgh
+        /yN6CamxVLbzsAaEASBKd8VIbCt9QZHONhmytEh7AA==
+X-Google-Smtp-Source: ABdhPJzisWqjC8V6say/8z120ClJ8mNkK3sLAFliQAtEk7eFToZXeLaQo6/FMzQPo0hM+if6DS5Fyz+HqMD0bqPrlrE=
+X-Received: by 2002:a17:90a:9292:: with SMTP id n18mr3950216pjo.159.1599568393391;
+ Tue, 08 Sep 2020 05:33:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Chris Chiu <chiu@endlessm.com>
+Date:   Tue, 8 Sep 2020 20:33:02 +0800
+Message-ID: <CAB4CAwfqbaR7_ypZDp=hi_3u_F2E5eYv5ExUoSPK97qcTxiWZQ@mail.gmail.com>
+Subject: mt7615: Fail to load firmware on AZWAVE-CB434NF module
+To:     sean.wang@mediatek.com, ryder.lee@mediatek.com,
+        Kalle Valo <kvalo@codeaurora.org>,
+        David Miller <davem@davemloft.net>, kuba@kernel.org,
+        nbd@nbd.name, lorenzo@kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Louis Peens <louis.peens@netronome.com>
+Hi Sean, Ryder,
+    We have an ASUS laptop X532EQ with the wifi module AZWAVE-CB434NF
+which fails to bring up the wifi interface on kernel 5.9.0-rc1. The
+dmesg shows the firmware load error.
 
-[ Upstream commit f614e536704d37326b0975da9cc33dd61d28c378 ]
+[   25.630850] mt7615e 0000:2d:00.0: Message -4294967280 (seq 1) timeout
+[   25.630851] mt7615e 0000:2d:00.0: Failed to get patch semaphore
+[   25.630853] mt7615e 0000:2d:00.0: mediatek/mt7663pr2h.bin not
+found, switching to mediatek/mt7663pr2h_rebb.bin
+[   46.111154] mt7615e 0000:2d:00.0: Message -4294967280 (seq 2) timeout
+[   46.111178] mt7615e 0000:2d:00.0: Failed to get patch semaphore
+[   46.111179] mt7615e 0000:2d:00.0: failed to load mediatek/mt7663pr2h_rebb.bin
 
-Fix an issue where the driver wrongly detected ipv6 neighbour updates
-from the NFP as corrupt. Add a reserved field on the kernel side so
-it is similar to the ipv4 version of the struct and has space for the
-extra bytes from the card.
+The lspci information for the device shows as follows
+0000:2d:00.0 Network controller [0280]: MEDIATEK Corp. Device [14c3:7663]
+        Subsystem: AzureWave Device [1a3b:4341]
+        Flags: bus master, fast devsel, latency 0, IRQ 177
+        Memory at 6032100000 (64-bit, prefetchable) [size=1M]
+        Memory at 6032200000 (64-bit, prefetchable) [size=16K]
+        Memory at 6032204000 (64-bit, prefetchable) [size=4K]
+        Capabilities: [80] Express Endpoint, MSI 1f
+        Capabilities: [e0] MSI: Enable+ Count=1/32 Maskable+ 64bit+
+        Capabilities: [f8] Power Management version 3
+        Capabilities: [100] Vendor Specific Information: ID=1556 Rev=1
+Len=008 <?>
+        Capabilities: [108] Latency Tolerance Reporting
+        Capabilities: [110] L1 PM Substates
+        Capabilities: [200] Advanced Error Reporting
+        Kernel driver in use: mt7615e
+        Kernel modules: mt7615e
 
-Fixes: 9ea9bfa12240 ("nfp: flower: support ipv6 tunnel keep-alive messages from fw")
-Signed-off-by: Louis Peens <louis.peens@netronome.com>
-Signed-off-by: Simon Horman <simon.horman@netronome.com>
-Acked-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c | 2 ++
- 1 file changed, 2 insertions(+)
+I also tried the latest linux-firmware with the most up to date
+mediatek firmware
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/commit/?id=7a237c6ee2c7af48723c356461ef80270a52d2c6.
+But still get the same error.
 
-diff --git a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-index 2df3deedf9fd8..7248d248f6041 100644
---- a/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-+++ b/drivers/net/ethernet/netronome/nfp/flower/tunnel_conf.c
-@@ -61,6 +61,7 @@ struct nfp_tun_active_tuns {
-  * @flags:		options part of the request
-  * @tun_info.ipv6:		dest IPv6 address of active route
-  * @tun_info.egress_port:	port the encapsulated packet egressed
-+ * @tun_info.extra:		reserved for future use
-  * @tun_info:		tunnels that have sent traffic in reported period
-  */
- struct nfp_tun_active_tuns_v6 {
-@@ -70,6 +71,7 @@ struct nfp_tun_active_tuns_v6 {
- 	struct route_ip_info_v6 {
- 		struct in6_addr ipv6;
- 		__be32 egress_port;
-+		__be32 extra[2];
- 	} tun_info[];
- };
- 
--- 
-2.25.1
+Any suggestions on what I can do here?
 
-
-
+Chris
