@@ -2,106 +2,242 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A527C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7D7F206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF56206DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oqb+Elph"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AFuz8Am3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731961AbgIHQiu (ORCPT
+        id S1732054AbgIHQjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:38:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60650 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732077AbgIHQhb (ORCPT
+        Tue, 8 Sep 2020 12:39:02 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35560 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731159AbgIHQib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:31 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12151C06123C;
-        Tue,  8 Sep 2020 06:29:43 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id a15so20117945ljk.2;
-        Tue, 08 Sep 2020 06:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Cq1prsdRfOht5c05daVafBXnW9LTyhWABmk1e7DFMIM=;
-        b=Oqb+Elphm0C2XxnZ9roaes0ld62J43TA45pqI7VsaHTAJ+AQ56X1jVAcE4hejh+V7D
-         x/pabrk7aD2myGe7XhaiRF6lRUpol3RpZlWzio7FPgLTWGphNd+nmHihC5FjM/HwcUmz
-         9xIWUMJ0FHG6lc/clAQa1WH8XXXjb/+QElA2InDqxdy9E4XNWuHLSnatBA7x3GFCsw4R
-         lZqH14bh83SeEVAQ4GpOZscGxrjOb9CPbPCtuUHQJ2WFum9WprPa/yFxCXQzR+IKavX/
-         K+1TojMS1JgGhD8QC7y0GZAaGjhyGtIyUKu4El9vUIDNo1yNnB57LlJlJkfveif+sDZ9
-         IoMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Cq1prsdRfOht5c05daVafBXnW9LTyhWABmk1e7DFMIM=;
-        b=Q8rxzUWnNslIZd8RRvfmiJQtAfb2P4aNhB5sBW+TOGOaKA2B+1V9IS3eacZKG8hoK5
-         kRfg0ET1irvLuFnoNrqCdSQgZU28KZuEhSfRoEAGyby6XNgIRfA2GdY0RvxqN5Ll569J
-         l8yWPKQaujf3YMecTbaD5M7fVOZOrGAirP/I4c2ExAJByYtv9pYI8WsYuCDKwHUxusbP
-         dD512BB2Fc68xnEsk8Br1uKQb7Jz+zGHgjfLF0YR5PMhlM/1dqE3sVkGgzFdsAvVhM6L
-         ut/kRaiTk768BaHHVl3ZWEiTiygKRLzv/18JSaxCxhzvCWJ7KFUzmDOHKidptuKoSAL4
-         mhlA==
-X-Gm-Message-State: AOAM531Zm3vCnwpTSCEFr0TVAyw8rTfkwJn0JXlfK1YzPB8mCe9VtsNA
-        uDK7mEf7VwoJEuG1LkwtYG4cN3UIopk=
-X-Google-Smtp-Source: ABdhPJy4vXFbbvEAcQndwdyrgn+ypU1IspP4I4QXUV1yNMXljRxJ+3oDr7pn8zcrYWvgXKdn7tlNzw==
-X-Received: by 2002:a2e:9b02:: with SMTP id u2mr4559039lji.303.1599571781360;
-        Tue, 08 Sep 2020 06:29:41 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id w4sm10392751lfq.75.2020.09.08.06.29.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 06:29:40 -0700 (PDT)
-Subject: Re: [PATCH v6 25/35] i2c: tegra: Factor out error recovery from
- tegra_i2c_xfer_msg()
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200908021021.9123-1-digetx@gmail.com>
- <20200908021021.9123-26-digetx@gmail.com>
- <CAHp75Vehn_19KA3DyshXd8ASWZN2CbyFdDiUHLMnB=qd7YpTaA@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <7aba3e7c-e641-acbd-07e9-e4d02c7ecf8b@gmail.com>
-Date:   Tue, 8 Sep 2020 16:29:40 +0300
+        Tue, 8 Sep 2020 12:38:31 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088GcK6r101294;
+        Tue, 8 Sep 2020 11:38:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599583100;
+        bh=Zy3z+/BHoA+oz6zF/b9ei0+HV/TBYphaUikRkWL2/KA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AFuz8Am3r+6XqaywOgD/QkP3/RGOPnYKfEgLMWcpyf8yCGS/ev3l4FmYhAb5SLxa7
+         /M0lO+YcyulTQ4SYbby/bS5M+B4y8Nxi/TRdXO1nYV4x6pIq8nyiLfesoLThIX7/oS
+         2uwsuGbqbtKF3d7ct4MD+f5xERh90YxGQ4USCJ+E=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088GcKYl016657
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 11:38:20 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 11:38:20 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 11:38:20 -0500
+Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088GcJUT113732;
+        Tue, 8 Sep 2020 11:38:19 -0500
+Subject: Re: [PATCH net-next 1/1] net: hsr/prp: add vlan support
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200901195415.4840-1-m-karicheri2@ti.com>
+ <20200901195415.4840-2-m-karicheri2@ti.com>
+ <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
+From:   Murali Karicheri <m-karicheri2@ti.com>
+Message-ID: <581a90d0-243e-f62e-1c2e-a9683807805c@ti.com>
+Date:   Tue, 8 Sep 2020 12:38:14 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75Vehn_19KA3DyshXd8ASWZN2CbyFdDiUHLMnB=qd7YpTaA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CA+FuTScPZ5sfHBwbFKQza6w4G1UcO8DaqrcpFuSvr9svgMEepw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.09.2020 11:49, Andy Shevchenko пишет:
-> On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+Hi Willem,
+
+Thanks for the response!
+On 9/4/20 11:45 AM, Willem de Bruijn wrote:
+> On Tue, Sep 1, 2020 at 9:54 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
 >>
->> Factor out error recovery code from tegra_i2c_xfer_msg() in order to
->> make this function easier to read and follow.
+>> This patch add support for creating vlan interfaces
+>> over hsr/prp interface.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>> ---
+>>   net/hsr/hsr_device.c  |  4 ----
+>>   net/hsr/hsr_forward.c | 16 +++++++++++++---
+>>   2 files changed, 13 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+>> index ab953a1a0d6c..e1951579a3ad 100644
+>> --- a/net/hsr/hsr_device.c
+>> +++ b/net/hsr/hsr_device.c
+>> @@ -477,10 +477,6 @@ void hsr_dev_setup(struct net_device *dev)
+>>
+>>          /* Prevent recursive tx locking */
+>>          dev->features |= NETIF_F_LLTX;
+>> -       /* VLAN on top of HSR needs testing and probably some work on
+>> -        * hsr_header_create() etc.
+>> -        */
+>> -       dev->features |= NETIF_F_VLAN_CHALLENGED;
+>>          /* Not sure about this. Taken from bridge code. netdev_features.h says
+>>           * it means "Does not change network namespaces".
+>>           */
+>> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+>> index cadfccd7876e..de21df30b0d9 100644
+>> --- a/net/hsr/hsr_forward.c
+>> +++ b/net/hsr/hsr_forward.c
+>> @@ -208,6 +208,7 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
+>>                                      struct hsr_port *port, u8 proto_version)
+>>   {
+>>          struct hsr_ethhdr *hsr_ethhdr;
+>> +       unsigned char *pc;
+>>          int lsdu_size;
+>>
+>>          /* pad to minimum packet size which is 60 + 6 (HSR tag) */
+>> @@ -218,7 +219,18 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
+>>          if (frame->is_vlan)
+>>                  lsdu_size -= 4;
+>>
+>> -       hsr_ethhdr = (struct hsr_ethhdr *)skb_mac_header(skb);
+>> +       pc = skb_mac_header(skb);
+>> +       if (frame->is_vlan)
+>> +               /* This 4-byte shift (size of a vlan tag) does not
+>> +                * mean that the ethhdr starts there. But rather it
+>> +                * provides the proper environment for accessing
+>> +                * the fields, such as hsr_tag etc., just like
+>> +                * when the vlan tag is not there. This is because
+>> +                * the hsr tag is after the vlan tag.
+>> +                */
+>> +               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
+>> +       else
+>> +               hsr_ethhdr = (struct hsr_ethhdr *)pc;
 > 
-> Ordering issue.
-> You have a patch that replaces int -> unsigned int or so, which
-> obviously has less impact (severity) than this one.
+> Instead, I would pass the header from the caller, which knows the
+> offset because it moves the previous headers to make space.
+> 
+So if I understood you correctly a diff for the above would like this
+where pass dst + movelen as  struct hsr_ethhdr *hsr_ethhdr
+pointer to hsr_fill_tag(), right?
 
-I guess you meant s/less/more/.
+a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
+diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
+index de21df30b0d9..4d9192c8bcf8 100644
+--- a/net/hsr/hsr_forward.c
++++ b/net/hsr/hsr_forward.c
+@@ -204,11 +204,10 @@ static void hsr_set_path_id(struct hsr_ethhdr 
+*hsr_ethhdr,
+  }
 
-> Can you revisit the entire series and rethink ordering one more time?
+  static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
++                                   struct hsr_ethhdr *hsr_ethhdr,
+                                     struct hsr_frame_info *frame,
+                                     struct hsr_port *port, u8 
+proto_version)
+  {
+-       struct hsr_ethhdr *hsr_ethhdr;
+-       unsigned char *pc;
+         int lsdu_size;
+
+         /* pad to minimum packet size which is 60 + 6 (HSR tag) */
+@@ -219,19 +218,6 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff 
+*skb,
+         if (frame->is_vlan)
+                 lsdu_size -= 4;
+
+-       pc = skb_mac_header(skb);
+-       if (frame->is_vlan)
+-               /* This 4-byte shift (size of a vlan tag) does not
+-                * mean that the ethhdr starts there. But rather it
+-                * provides the proper environment for accessing
+-                * the fields, such as hsr_tag etc., just like
+-                * when the vlan tag is not there. This is because
+-                * the hsr tag is after the vlan tag.
+-                */
+-               hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
+-       else
+-               hsr_ethhdr = (struct hsr_ethhdr *)pc;
+-
+         hsr_set_path_id(hsr_ethhdr, port);
+         set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
+         hsr_ethhdr->hsr_tag.sequence_nr = htons(frame->sequence_nr);
+@@ -280,10 +266,12 @@ struct sk_buff *hsr_create_tagged_frame(struct 
+hsr_frame_info *frame,
+         memmove(dst, src, movelen);
+         skb_reset_mac_header(skb);
+
+-       /* skb_put_padto free skb on error and hsr_fill_tag returns NULL in
+-        * that case
++       /* dst point to the start of hsr tag. So pass it to fill the
++        * hsr info. Also skb_put_padto free skb on error and hsr_fill_tag
++        * returns NULL in that case.
+          */
+-       return hsr_fill_tag(skb, frame, port, port->hsr->prot_version);
++       return hsr_fill_tag(skb, (struct hsr_ethhdr *)(dst + movelen),
++                           frame, port, port->hsr->prot_version);
+  }
+
+
+> Also, supporting VLAN probably also requires supporting 802.1ad QinQ,
+> which means code should parse the headers instead of hardcoding
+> VLAN_HLEN.
 > 
 
-I'll try to improve the ordering a bit more, thanks.
+iec-62439-3 standard only talks about VLAN (TPID 0x8100), not about
+QinQ. So what I could do is to check and bail out if 802.1ad frame is
+received at the interface from upper layer. Something like below and
+frame will get dropped.
+
+@@ -519,6 +507,8 @@ static int fill_frame_info(struct hsr_frame_info *frame,
+
+         if (proto == htons(ETH_P_8021Q))
+                 frame->is_vlan = true;
++       else if (proto == htons(ETH_P_8021AD))
++               return -1; /* Don't support 802.1ad */
+
+         if (frame->is_vlan) {
+                 vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
+
+What do you think?
+
+Thanks.
+>>          hsr_set_path_id(hsr_ethhdr, port);
+>>          set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
+>> @@ -511,8 +523,6 @@ static int fill_frame_info(struct hsr_frame_info *frame,
+>>          if (frame->is_vlan) {
+>>                  vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
+>>                  proto = vlan_hdr->vlanhdr.h_vlan_encapsulated_proto;
+>> -               /* FIXME: */
+>> -               netdev_warn_once(skb->dev, "VLAN not yet supported");
+>>          }
+>>
+>>          frame->is_from_san = false;
+>> --
+>> 2.17.1
+>>
+
+-- 
+Murali Karicheri
+Texas Instruments
