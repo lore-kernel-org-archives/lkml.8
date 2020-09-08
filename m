@@ -2,52 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F7AC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C100C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC0642087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536A82076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593085;
-	bh=i+H5koQax4E1xZlNxo71mIVDMgy5YRr0zxNBvBBJNNg=;
+	s=default; t=1599593095;
+	bh=n9s/jOZbYW0Ekwty0HM8fhEeOez3EOVRoh/+8XuIRAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H3ZSPalsKuSFlIPGsnqvX9rvmBVQCb/a9FDgBZUULT/xsCwONQdXTPBsYGnynBX82
-	 D3gW56IQY8iN+8ISmohTdInlde+2PLXsOqHe/pcMmuS6Su8idZv9yHAxiuLPD2ZaWb
-	 UiD8R2gT1TM2tZRco1etOk2kCrUFlm0XA3igyaCQ=
+	b=S5lRJ2m4YJRDeGgtQse27ILBBZMueczbF+V2+EifiG/1V6LC8LZ/JXPhs2S/6cX9o
+	 L6giyPLTD+YcrvQ5O7IOFgMNVoIFFjOT35YJMxjucEJ58MXxyPuiAPVk6GjPsTLrUR
+	 6Oi7KQOqBg0QwCO35gRc9p0R2ubT+E+WBpnuY3YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732103AbgIHTYn (ORCPT
+        id S1731862AbgIHTYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:24:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48726 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgIHQBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:24 -0400
+        id S1731067AbgIHQBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 075C723EF6;
-        Tue,  8 Sep 2020 15:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0305E2468F;
+        Tue,  8 Sep 2020 15:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579480;
-        bh=i+H5koQax4E1xZlNxo71mIVDMgy5YRr0zxNBvBBJNNg=;
+        s=default; t=1599579579;
+        bh=n9s/jOZbYW0Ekwty0HM8fhEeOez3EOVRoh/+8XuIRAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kaM9w2v1gsAeURcufYPUf+SnIdy+zcviQIauE7P5K0h3kKy9wSQeTbJXVVBEtOAAw
-         m8C4WhfcqY1FG67N/keyA10EMf7IouraDLS9DMSgcp0sAfI9omdz2LNrF8thcIHV2O
-         QARwxHKBSa+1rzR2GWqX4Lw8g3X+NzF/KUIfiwlM=
+        b=fWJta+6dappJaDZkU5ndtUorqTmrVSsPxdSwdXu8tpLDXRdH77zKWC6Fivpzhaq/I
+         M8UV4BB7AgtPcFzR6M81HuFgfEVu2sdickuI/xR9ypWnuSdgSkBLby57vfPD0KxkQC
+         z2l4jiwca5kIcCKNPrMQLrARNK6vhztKDjyccJZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 095/186] net: ethernet: mlx4: Fix memory allocation in mlx4_buddy_init()
-Date:   Tue,  8 Sep 2020 17:23:57 +0200
-Message-Id: <20200908152246.239084509@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Franti=C5=A1ek=20Ku=C4=8Dera?= <franta-linux@frantovo.cz>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 136/186] ALSA: usb-audio: Add basic capture support for Pioneer DJ DJM-250MK2
+Date:   Tue,  8 Sep 2020 17:24:38 +0200
+Message-Id: <20200908152248.241518695@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,44 +60,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+From: František Kučera <franta-linux@frantovo.cz>
 
-[ Upstream commit cbedcb044e9cc4e14bbe6658111224bb923094f4 ]
+commit 14335d8b9e1a2bf006f9d969a103f9731cabb210 upstream.
 
-On machines with much memory (> 2 TByte) and log_mtts_per_seg == 0, a
-max_order of 31 will be passed to mlx_buddy_init(), which results in
-s = BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
-kvmalloc_array() failure when it is converted to size_t.
+This patch extends support for DJM-250MK2 and allows recording.
+However, DVS is not possible yet (see the comment in code).
 
-  mlx4_core 0000:b1:00.0: Failed to initialize memory region table, aborting
-  mlx4_core: probe of 0000:b1:00.0 failed with error -12
+Signed-off-by: František Kučera <franta-linux@frantovo.cz>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200825153113.6352-1-konference@frantovo.cz
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fix this issue by changing the left shifting operand from a signed literal to
-an unsigned one.
-
-Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx4/mr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/pcm.c          |    1 
+ sound/usb/quirks-table.h |   60 +++++++++++++++++++++++++++++++++++++++++------
+ sound/usb/quirks.c       |    1 
+ 3 files changed, 55 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx4/mr.c b/drivers/net/ethernet/mellanox/mlx4/mr.c
-index d2986f1f2db02..d7444782bfdd0 100644
---- a/drivers/net/ethernet/mellanox/mlx4/mr.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/mr.c
-@@ -114,7 +114,7 @@ static int mlx4_buddy_init(struct mlx4_buddy *buddy, int max_order)
- 		goto err_out;
- 
- 	for (i = 0; i <= buddy->max_order; ++i) {
--		s = BITS_TO_LONGS(1 << (buddy->max_order - i));
-+		s = BITS_TO_LONGS(1UL << (buddy->max_order - i));
- 		buddy->bits[i] = kvmalloc_array(s, sizeof(long), GFP_KERNEL | __GFP_ZERO);
- 		if (!buddy->bits[i])
- 			goto err_out_free;
--- 
-2.25.1
-
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -374,6 +374,7 @@ static int set_sync_ep_implicit_fb_quirk
+ 		ifnum = 2;
+ 		goto add_sync_ep_from_ifnum;
+ 	case USB_ID(0x2b73, 0x000a): /* Pioneer DJ DJM-900NXS2 */
++	case USB_ID(0x2b73, 0x0017): /* Pioneer DJ DJM-250MK2 */
+ 		ep = 0x82;
+ 		ifnum = 0;
+ 		goto add_sync_ep_from_ifnum;
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3532,14 +3532,40 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ {
+ 	/*
+ 	 * Pioneer DJ DJM-250MK2
+-	 * PCM is 8 channels out @ 48 fixed (endpoints 0x01).
+-	 * The output from computer to the mixer is usable.
++	 * PCM is 8 channels out @ 48 fixed (endpoint 0x01)
++	 * and 8 channels in @ 48 fixed (endpoint 0x82).
+ 	 *
+-	 * The input (phono or line to computer) is not working.
+-	 * It should be at endpoint 0x82 and probably also 8 channels,
+-	 * but it seems that it works only with Pioneer proprietary software.
+-	 * Even on officially supported OS, the Audacity was unable to record
+-	 * and Mixxx to recognize the control vinyls.
++	 * Both playback and recording is working, even simultaneously.
++	 *
++	 * Playback channels could be mapped to:
++	 *  - CH1
++	 *  - CH2
++	 *  - AUX
++	 *
++	 * Recording channels could be mapped to:
++	 *  - Post CH1 Fader
++	 *  - Post CH2 Fader
++	 *  - Cross Fader A
++	 *  - Cross Fader B
++	 *  - MIC
++	 *  - AUX
++	 *  - REC OUT
++	 *
++	 * There is remaining problem with recording directly from PHONO/LINE.
++	 * If we map a channel to:
++	 *  - CH1 Control Tone PHONO
++	 *  - CH1 Control Tone LINE
++	 *  - CH2 Control Tone PHONO
++	 *  - CH2 Control Tone LINE
++	 * it is silent.
++	 * There is no signal even on other operating systems with official drivers.
++	 * The signal appears only when a supported application is started.
++	 * This needs to be investigated yet...
++	 * (there is quite a lot communication on the USB in both directions)
++	 *
++	 * In current version this mixer could be used for playback
++	 * and for recording from vinyls (through Post CH* Fader)
++	 * but not for DVS (Digital Vinyl Systems) like in Mixxx.
+ 	 */
+ 	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x0017),
+ 	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
+@@ -3561,6 +3587,26 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+ 					.rates = SNDRV_PCM_RATE_48000,
+ 					.rate_min = 48000,
+ 					.rate_max = 48000,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 48000 }
++					}
++			},
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 8, // inputs
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x82,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						USB_ENDPOINT_SYNC_ASYNC|
++						USB_ENDPOINT_USAGE_IMPLICIT_FB,
++					.rates = SNDRV_PCM_RATE_48000,
++					.rate_min = 48000,
++					.rate_max = 48000,
+ 					.nr_rates = 1,
+ 					.rate_table = (unsigned int[]) { 48000 }
+ 				}
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1493,6 +1493,7 @@ void snd_usb_set_format_quirk(struct snd
+ 		set_format_emu_quirk(subs, fmt);
+ 		break;
+ 	case USB_ID(0x2b73, 0x000a): /* Pioneer DJ DJM-900NXS2 */
++	case USB_ID(0x2b73, 0x0017): /* Pioneer DJ DJM-250MK2 */
+ 		pioneer_djm_set_format_quirk(subs);
+ 		break;
+ 	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
 
 
