@@ -2,140 +2,117 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5929BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55CCC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F81B2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:47:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587237;
-	bh=/vIG1zMFJk/KeFJS+Z9G8SFdIceA33cD0CMibgvpDHg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6EL0PNh46jKULDhTt8oqo61yJT6OZu6nDIStq75RTUEhObohIUtdwQd/0ybG38hi
-	 FH/ueX7usayi5AhIDQrMP7LVmAMJIuF42kVDZv0aMG0x7YWKK4cvYaYoye09/VtK/F
-	 RAMXfUFj5pDK2Vv6a3Wfyni3yawlbyWhoannvK8o=
+	by mail.kernel.org (Postfix) with ESMTP id 926682078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cCKtvMaw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731710AbgIHRrO (ORCPT
+        id S1731886AbgIHRr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:47:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731609AbgIHQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:13:59 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5C1248D9;
-        Tue,  8 Sep 2020 15:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580372;
-        bh=/vIG1zMFJk/KeFJS+Z9G8SFdIceA33cD0CMibgvpDHg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zDYqi30lhSSuQhKoY3G96MAtq4LETxVzDN7Wn+tSMwq6VNCPU4alS+h6yTO+kaEZ
-         Q+E5mwR5Ko/5hijRK+rorK3Aus4Pd+VWq+AWChxwNm2ot+dRFEibUwGhwZDwAiV2SB
-         Mvkh/5VupYOwR2/e36+OgLKPCh8s18uBDEKNM8zM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/65] netfilter: nf_tables: fix destination register zeroing
-Date:   Tue,  8 Sep 2020 17:26:05 +0200
-Message-Id: <20200908152218.074374714@linuxfoundation.org>
+        Tue, 8 Sep 2020 13:47:26 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:37114 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731272AbgIHRqO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:46:14 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088Hk88t100266;
+        Tue, 8 Sep 2020 12:46:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599587168;
+        bh=KE3LbvtjmHv/vDgNGPxvvQuZCln41PZaxww0wu2kX50=;
+        h=From:To:CC:Subject:Date;
+        b=cCKtvMawLshc8BLA6VAdfMZ0h2ASpYArAHqDGzX4fDE48Y8LJ5ECo+RiyNnuwDrOb
+         wqtm8VDL9coKFsocgV/reyIjVYv+DSIusFLvtKLUAZnLnEMTT5v7ZJHc0LazUFS0a5
+         l2ibPAklthcYfces9jFEdf/3IAW/Gaq6q5DPolvk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088Hk8m6099103
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 12:46:08 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 12:46:08 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 12:46:08 -0500
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088Hk8Ta065276;
+        Tue, 8 Sep 2020 12:46:08 -0500
+Received: from localhost ([10.250.34.59])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 088Hk89l097392;
+        Tue, 8 Sep 2020 12:46:08 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH v4 0/4] TI K3 R5F remoteproc support
+Date:   Tue, 8 Sep 2020 12:45:52 -0500
+Message-ID: <20200908174556.21277-1-s-anna@ti.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+Hi All,
 
-[ Upstream commit 1e105e6afa6c3d32bfb52c00ffa393894a525c27 ]
+The following is v4 of the TI K3 R5F remoteproc driver series supporting all
+the R5F processor clusters/subsystems on TI AM65x and J721E SoCs. Please
+see the v1 cover-letter [1] for the features supported on these R5F processors.
 
-Following bug was reported via irc:
-nft list ruleset
-   set knock_candidates_ipv4 {
-      type ipv4_addr . inet_service
-      size 65535
-      elements = { 127.0.0.1 . 123,
-                   127.0.0.1 . 123 }
-      }
- ..
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . 123 }
-   udp dport 123 add @knock_candidates_ipv4 { ip saddr . udp dport }
+This series is a rebased version on top of the latest v5.9-rc baseline and
+includes very minor fixes w.r.t v3. The previous K3 DSP dependencies are now
+available in mainline kernel. Please see the individual patches for the delta
+differences (Only patches 1 and 2 updated).
 
-It should not have been possible to add a duplicate set entry.
+Bjorn,
+This series is only waiting on bindings ack and the conclusion on the bindings
+discussion from v2 [4] on which I haven't seen any forward progress on this 
+despite all the clarifications. I do not expect any changes even w.r.t System DT,
+and we can't really have a common binding between TI and Xilinx R5Fs. How can we
+take this series forward? It is blocking us to get the various usecases that
+leverage the remoteprocs upstream.
 
-After some debugging it turned out that the problem is the immediate
-value (123) in the second-to-last rule.
+regards
+Suman
 
-Concatenations use 32bit registers, i.e. the elements are 8 bytes each,
-not 6 and it turns out the kernel inserted
+[1] R5F v1: https://patchwork.kernel.org/cover/11456367/
+[2] R5F v2: https://patchwork.kernel.org/cover/11632993/
+[3] R5F v3: https://patchwork.kernel.org/cover/11679327/
+[4] https://patchwork.kernel.org/patch/11632997/
 
-inet firewall @knock_candidates_ipv4
-        element 0100007f ffff7b00  : 0 [end]
-        element 0100007f 00007b00  : 0 [end]
+Suman Anna (4):
+  dt-bindings: remoteproc: Add bindings for R5F subsystem on TI K3 SoCs
+  remoteproc: k3-r5: Add a remoteproc driver for R5F subsystem
+  remoteproc: k3-r5: Initialize TCM memories for ECC
+  remoteproc: k3-r5: Add loading support for on-chip SRAM regions
 
-Note the non-zero upper bits of the first element.  It turns out that
-nft_immediate doesn't zero the destination register, but this is needed
-when the length isn't a multiple of 4.
+ .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  |  281 ++++
+ drivers/remoteproc/Kconfig                    |   13 +
+ drivers/remoteproc/Makefile                   |    1 +
+ drivers/remoteproc/ti_k3_r5_remoteproc.c      | 1395 +++++++++++++++++
+ 4 files changed, 1690 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+ create mode 100644 drivers/remoteproc/ti_k3_r5_remoteproc.c
 
-Furthermore, the zeroing in nft_payload is broken.  We can't use
-[len / 4] = 0 -- if len is a multiple of 4, index is off by one.
-
-Skip zeroing in this case and use a conditional instead of (len -1) / 4.
-
-Fixes: 49499c3e6e18 ("netfilter: nf_tables: switch registers to 32 bit addressing")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/net/netfilter/nf_tables.h | 2 ++
- net/netfilter/nft_payload.c       | 4 +++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/include/net/netfilter/nf_tables.h b/include/net/netfilter/nf_tables.h
-index a9704c57430db..3107895115c25 100644
---- a/include/net/netfilter/nf_tables.h
-+++ b/include/net/netfilter/nf_tables.h
-@@ -136,6 +136,8 @@ static inline u8 nft_reg_load8(u32 *sreg)
- static inline void nft_data_copy(u32 *dst, const struct nft_data *src,
- 				 unsigned int len)
- {
-+	if (len % NFT_REG32_SIZE)
-+		dst[len / NFT_REG32_SIZE] = 0;
- 	memcpy(dst, src, len);
- }
- 
-diff --git a/net/netfilter/nft_payload.c b/net/netfilter/nft_payload.c
-index 19446a89a2a81..b1a9f330a51fe 100644
---- a/net/netfilter/nft_payload.c
-+++ b/net/netfilter/nft_payload.c
-@@ -79,7 +79,9 @@ static void nft_payload_eval(const struct nft_expr *expr,
- 	u32 *dest = &regs->data[priv->dreg];
- 	int offset;
- 
--	dest[priv->len / NFT_REG32_SIZE] = 0;
-+	if (priv->len % NFT_REG32_SIZE)
-+		dest[priv->len / NFT_REG32_SIZE] = 0;
-+
- 	switch (priv->base) {
- 	case NFT_PAYLOAD_LL_HEADER:
- 		if (!skb_mac_header_was_set(skb))
 -- 
-2.25.1
-
-
+2.28.0
 
