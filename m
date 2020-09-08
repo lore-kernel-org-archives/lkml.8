@@ -5,54 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE9C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD05C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B82592080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883F42080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590378;
-	bh=DfpBBXKFxbSZcaADyxqB6NIFxY7gupVzqMBwKBYbKwk=;
+	s=default; t=1599590381;
+	bh=dHp68Ju7MZ8MzQV+IYA/UvzVLU+N3F3/x1koRgcbyjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o7KSdQNT65YavKo+NSJezzyBskHOKcTG8shtZZiWWNy9gXYzrlgOUysSmYip4CSkP
-	 3M5W2z9QqN9LiUQcGLSqz0L3nB0XJIZ7TR1ueKSrN6Rk7yKi3xrPA7C6i0LyKKIgk9
-	 drO+VHSbQ50LDcU1DWrc44QLgp2ueermCivQxPb4=
+	b=APN1+xU4GFoblp4oA842C9qbqPdz2j2YfN2/8dHtyNVV21H4+l8EJIf1Z//TWHkbi
+	 y4i4B8tR09ez67FbNUbi+zC8Hdl4Uo/n7YID99qBYk1TvA/UWxEZha6Hxx/t70L8eL
+	 qejUCfnxxDaSYDNw843mbfnnyPCCFlfqcYNCSQ8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731938AbgIHSjg (ORCPT
+        id S1731957AbgIHSjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731331AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 031752405F;
-        Tue,  8 Sep 2020 15:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A89B624059;
+        Tue,  8 Sep 2020 15:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580129;
-        bh=DfpBBXKFxbSZcaADyxqB6NIFxY7gupVzqMBwKBYbKwk=;
+        s=default; t=1599580116;
+        bh=dHp68Ju7MZ8MzQV+IYA/UvzVLU+N3F3/x1koRgcbyjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q7AMvSCXRWaRdUxphstQhn1hHtmEtc2qSSpmIiDo93QFd/RU97yvmsJtuWlDyP12M
-         UULC/FqJlvSquTBXQ7dcMaOqQ/udAvLuPAU0wWS4aU3l37GVH9SjcffPtcKpGR5ka0
-         DVWt1HjcNGvVr3e9X4b5PtoA/hy/zKG9tZfy6Y/Q=
+        b=FkovZfKCi8jHrdowVGRfMBwfHXkhPlvmwuyXrqhqtqDlVqsRX7zAJ81Oz5ChbOKUe
+         E9Ue+clJmLSf9Yd1299jwXb6Igtx66/MGj0d7HuPudEcwGxLhDrCx/Hk4GM4AM3BJc
+         M74qGmCx/NWWO09E1Jtrqzdz1qSVauTu/EH7nQuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Grant <al.grant@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 40/88] perf tools: Correct SNOOPX field offset
-Date:   Tue,  8 Sep 2020 17:25:41 +0200
-Message-Id: <20200908152223.128046647@linuxfoundation.org>
+Subject: [PATCH 4.19 37/88] selftests/bpf: Fix massive output from test_maps
+Date:   Tue,  8 Sep 2020 17:25:38 +0200
+Message-Id: <20200908152222.961572365@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -65,49 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Grant <al.grant@foss.arm.com>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 39c0a53b114d0317e5c4e76b631f41d133af5cb0 ]
+[ Upstream commit fa4505675e093e895b7ec49a76d44f6b5ad9602e ]
 
-perf_event.h has macros that define the field offsets in the data_src
-bitmask in perf records. The SNOOPX and REMOTE offsets were both 37.
+When stdout output from the selftests tool 'test_maps' gets redirected
+into e.g file or pipe, then the output lines increase a lot (from 21
+to 33949 lines).  This is caused by the printf that happens before the
+fork() call, and there are user-space buffered printf data that seems
+to be duplicated into the forked process.
 
-These are distinct fields, and the bitfield layout in perf_mem_data_src
-confirms that SNOOPX should be at offset 38.
+To fix this fflush() stdout before the fork loop in __run_parallel().
 
-Committer notes:
-
-This was extracted from a larger patch that also contained kernel
-changes.
-
-Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
-Signed-off-by: Al Grant <al.grant@arm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 1a97cf1fe503 ("selftests/bpf: speedup test_maps")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/159842985651.1050885.2154399297503372406.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_maps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index f35eb72739c09..a45e7b4f03163 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1079,7 +1079,7 @@ union perf_mem_data_src {
+diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
+index 9b552c0fc47db..4e202217fae10 100644
+--- a/tools/testing/selftests/bpf/test_maps.c
++++ b/tools/testing/selftests/bpf/test_maps.c
+@@ -1017,6 +1017,8 @@ static void __run_parallel(int tasks, void (*fn)(int task, void *data),
+ 	pid_t pid[tasks];
+ 	int i;
  
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
- /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT	37
-+#define PERF_MEM_SNOOPX_SHIFT	38
- 
- /* locked instruction */
- #define PERF_MEM_LOCK_NA	0x01 /* not available */
++	fflush(stdout);
++
+ 	for (i = 0; i < tasks; i++) {
+ 		pid[i] = fork();
+ 		if (pid[i] == 0) {
 -- 
 2.25.1
 
