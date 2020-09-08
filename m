@@ -2,272 +2,229 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EA5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FB4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2BF42098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378CD2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nM5g2y0L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732351AbgIHThx (ORCPT
+        id S1731969AbgIHTh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:37:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48792 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730849AbgIHPzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:55:45 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id E7EC8B603;
-        Tue,  8 Sep 2020 15:54:18 +0000 (UTC)
-Subject: Re: PROBLEM: Long Workqueue delays V2
-To:     Jim Baxter <jim_baxter@mentor.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-block@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org,
-        "Frkuska, Joshua" <Joshua_Frkuska@mentor.com>,
-        "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>,
-        "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>,
-        "Craske, Mark" <Mark_Craske@mentor.com>,
-        "Brown, Michael" <michael_brown@mentor.com>
-References: <625615f2-3a6b-3136-35f9-2f2fb3c110cf@mentor.com>
- <066753ec-eddc-d7f6-5cc8-fe282baba6ec@mentor.com>
- <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <335b22f6-e579-5ff1-5353-7ab14ca43662@suse.cz>
-Date:   Tue, 8 Sep 2020 17:54:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <bf3d7f89-e652-a26b-bb27-c6dbef08e28c@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 8 Sep 2020 15:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53400 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730865AbgIHPzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:55:44 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEC6C061360;
+        Tue,  8 Sep 2020 05:35:28 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id lo4so22255990ejb.8;
+        Tue, 08 Sep 2020 05:35:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=MEwhElLwva4aOBYmOf3kKKArhiciy+PPTlQ3gWLCNXI=;
+        b=nM5g2y0L5ufQzmEoJIi/gApeb09uu8iLUlcuACqTFv0e1u6jGb3Nn4WGKh+6V1ncro
+         UW86ZXQmGWk0ZkMvzOAZ0h7EQcs2aizEY+VFlAeGIWzC60KNkw6hCnFa4JrVdFV84ldG
+         jnN/CIR8ir2qBjYPdWk2uKesxYoIlPWAt3hBUVyv0OiyjDdyXIXBXTbsrQoWqAQ8HiBC
+         8zyPVsF3lPGmE6cRq7rVjXArvBJCx/Z0pLBll6PCfRrReHuVv4CcltCogFO8XuSavTxY
+         JPQlrOJhZ5+nMcn2jCCJnjiGKJcgy5e0AM1dpcNMVTkWg/VdeG6T8RjWwI0J8aXFr0EH
+         zFyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=MEwhElLwva4aOBYmOf3kKKArhiciy+PPTlQ3gWLCNXI=;
+        b=avsWIc4iqQ4yWzvuJxfEo8BZcjlxQE2F3MPvl6SHr82NQfe8B5Q+SC0OLS5YizxsoC
+         aeJuSMXqloJ3WgsCuiS+MPdEOYTYyBH1YRak/iPSULGgq5gfqI+/8mg9BXuOb5+u2uFZ
+         J81qpPH2ACNVayuugvJEEE4w8r9/70IuC8enF5/ImYqPrh486uDqC3MpbfS5qO8y/HbQ
+         PmtK5benqm/DbD2VDYxA1epACYTn5GkNnWDNAP6FHh1NTaZNz5LwzVFnJyzjfskmLLZ7
+         za6sV5PXFDAIW0p+7KTrOCnp3wd9U2VAg2Iw0vMpc4vIo56LhDw+/TDN6g/I5t3MS2N8
+         p0HA==
+X-Gm-Message-State: AOAM5335AGdSosxkIO/E/PwfwIsluL313ZcGIRP54haTHKy8H4hM1kdl
+        k2itOQxvD8uY/JH+w+FP5kA=
+X-Google-Smtp-Source: ABdhPJxlDVnQHP6V7S47v/si7qa/ANtphTNXDOm2Z/jI1W62qZvQo3UqiVG7lc/XrY6kmEtep6ksEg==
+X-Received: by 2002:a17:906:a24f:: with SMTP id bi15mr26418103ejb.379.1599568526869;
+        Tue, 08 Sep 2020 05:35:26 -0700 (PDT)
+Received: from felia.fritz.box ([2001:16b8:2d8b:1700:7cee:a9ea:bd04:6924])
+        by smtp.gmail.com with ESMTPSA id x6sm9399939ejf.59.2020.09.08.05.35.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 05:35:26 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Igor Russkikh <irusskikh@marvell.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-spdx@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH 5/5] net/qla3xxx: Convert to SPDX license identifiers
+Date:   Tue,  8 Sep 2020 14:34:51 +0200
+Message-Id: <20200908123451.7215-6-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
+References: <20200908123451.7215-1-lukas.bulwahn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 2:06 PM, Jim Baxter wrote:
-> Has anyone any ideas of how to investigate this delay further?
-> 
-> Comparing the perf output for unplugging the USB stick and using umount
-> which does not cause these delays in other workqueues the main difference
+From: Thomas Gleixner <tglx@linutronix.de>
 
-I don't have that much insight in this, but isn't it that in case of umount, the
-exactly same work is done in the umount process context and not workqueues? So
-it might take the same time and cpu, stress the same paths, but as it's
-attributed to the process, there are no workqueue delays reported? Or does your
-measurements suggest otherwise?
+All files related to this driver contain the following notice:
 
-> is that the problem case is executing the code in invalidate_mapping_pages()
-> and a large part of that arch_local_irq_restore() which is part of
-> releasing a lock, I would usually expect that requesting a lock would be
-> where delays may occur.
-> 
-> 	--94.90%--invalidate_partition
-> 	   __invalidate_device
-> 	   |          
-> 	   |--64.55%--invalidate_bdev
-> 	   |  |          
-> 	   |   --64.13%--invalidate_mapping_pages
-> 	   |     |          
-> 	   |     |--24.09%--invalidate_inode_page
-> 	   |     |   |          
-> 	   |     |   --23.44%--remove_mapping
-> 	   |     |     |          
-> 	   |     |      --23.20%--__remove_mapping
-> 	   |     |        |          
-> 	   |     |         --21.90%--arch_local_irq_restore
-> 	   |     |          
-> 	   |     |--22.44%--arch_local_irq_enable
-> 
-> Best regards,
-> Jim
-> 
-> -------- Original Message --------
-> Subject: Re: PROBLEM: Long Workqueue delays V2
-> From: Jim Baxter <jim_baxter@mentor.com>
-> To: 
-> Date: Wed Aug 19 2020 14:12:24 GMT+0100 (British Summer Time)
-> 
->> Added linux-block List which may also be relevant to this issue.
->> 
->> -------- Original Message --------
->> Subject: PROBLEM: Long Workqueue delays V2
->> From: Jim Baxter <jim_baxter@mentor.com>
->> To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
->> CC: "Resch Carsten (CM/ESO6)" <Carsten.Resch@de.bosch.com>, "Rosca, Eugeniu (ADITG/ESB)" <erosca@de.adit-jv.com>
->> Date: Tue, 18 Aug 2020 12:58:13 +0100
->> 
->>> I am asking this question again to include the fs-devel list.
->>>
->>>
->>> We have issues with the workqueue of the kernel overloading the CPU 0 
->>> when we we disconnect a USB stick.
->>>
->>> This results in other items on the shared workqueue being delayed by
->>> around 6.5 seconds with a default kernel configuration and 2.3 seconds
->>> on a config tailored for our RCar embedded platform.
->>>
->>>
->>>
->>> We first noticed this issue on custom hardware and we have recreated it
->>> on an RCar Starter Kit using a test module [1] to replicate the
->>> behaviour, the test module outputs any delays of greater then 9ms.
->>>
->>> To run the test we have a 4GB random file on a USB stick and perform
->>> the following test.
->>> The stick is mounted as R/O and we are copying data from the stick:
->>>
->>> - Mount the stick.
->>> mount -o ro,remount /dev/sda1
->>>
->>> - Load the Module:
->>> # taskset -c 0 modprobe latency-mon
->>>
->>> - Copy large amount of data from the stick:
->>> # dd if=/run/media/sda1/sample.txt of=/dev/zero
->>> [ 1437.517603] DELAY: 10
->>> 8388607+1 records in
->>> 8388607+1 records out
->>>
->>>
->>> - Disconnect the USB stick:
->>> [ 1551.796792] usb 2-1: USB disconnect, device number 2
->>> [ 1558.625517] DELAY: 6782
->>>
->>>
->>> The Delay output 6782 is in milliseconds.
->>>
->>>
->>>
->>> Using umount stops the issue occurring but is unfortunately not guaranteed
->>> in our particular system.
->>>
->>>
->>> From my analysis the hub_event workqueue kworker/0:1+usb thread uses around
->>> 98% of the CPU.
->>>
->>> I have traced the workqueue:workqueue_queue_work function while unplugging the USB
->>> and there is no particular workqueue function being executed a lot more then the 
->>> others for the kworker/0:1+usb thread.
->>>
->>>
->>> Using perf I identified the hub_events workqueue was spending a lot of time in
->>> invalidate_partition(), I have included a cut down the captured data from perf in
->>> [2] which shows the additional functions where the kworker spends most of its time.
->>>
->>>
->>> I am aware there will be delays on the shared workqueue, are the delays
->>> we are seeing considered normal?
->>>
->>>
->>> Is there any way to mitigate or identify where the delay is?
->>> I am unsure if this is a memory or filesystem subsystem issue.
->>>
->>>
->>> Thank you for you help.
->>>
->>> Thanks,
->>> Jim Baxter
->>>
->>> [1] Test Module:
->>> // SPDX-License-Identifier: GPL-2.0
->>> /*
->>>  * Simple WQ latency monitoring
->>>  *
->>>  * Copyright (C) 2020 Advanced Driver Information Technology.
->>>  */
->>>
->>> #include <linux/init.h>
->>> #include <linux/ktime.h>
->>> #include <linux/module.h>
->>>
->>> #define PERIOD_MS 100
->>>
->>> static struct delayed_work wq;
->>> static u64 us_save;
->>>
->>> static void wq_cb(struct work_struct *work)
->>> {
->>> 	u64 us = ktime_to_us(ktime_get());
->>> 	u64 us_diff = us - us_save;
->>> 	u64 us_print = 0;
->>>
->>> 	if (!us_save)
->>> 		goto skip_print;
->>>
->>>
->>> 	us_print = us_diff / 1000 - PERIOD_MS;
->>> 	if (us_print > 9)
->>> 		pr_crit("DELAY: %lld\n", us_print);
->>>
->>> skip_print:
->>> 	us_save = us;
->>> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->>> }
->>>
->>> static int latency_mon_init(void)
->>> {
->>> 	us_save = 0;
->>> 	INIT_DELAYED_WORK(&wq, wq_cb);
->>> 	schedule_delayed_work(&wq, msecs_to_jiffies(PERIOD_MS));
->>>
->>> 	return 0;
->>> }
->>>
->>> static void latency_mon_exit(void)
->>> {
->>> 	cancel_delayed_work_sync(&wq);
->>> 	pr_info("%s\n", __func__);
->>> }
->>>
->>> module_init(latency_mon_init);
->>> module_exit(latency_mon_exit);
->>> MODULE_AUTHOR("Eugeniu Rosca <erosca@de.adit-jv.com>");
->>> MODULE_LICENSE("GPL");
->>>
->>>
->>> [2] perf trace:
->>>     95.22%     0.00%  kworker/0:2-eve  [kernel.kallsyms]
->>>     |
->>>     ---ret_from_fork
->>>        kthread
->>>        worker_thread
->>>        |          
->>>         --95.15%--process_one_work
->>> 		  |          
->>> 		   --94.99%--hub_event
->>> 			 |          
->>> 			  --94.99%--usb_disconnect
->>> 			  <snip>
->>> 				|  
->>> 				--94.90%--invalidate_partition
->>> 				   __invalidate_device
->>> 				   |          
->>> 				   |--64.55%--invalidate_bdev
->>> 				   |  |          
->>> 				   |   --64.13%--invalidate_mapping_pages
->>> 				   |     |          
->>> 				   |     |--24.09%--invalidate_inode_page
->>> 				   |     |   |          
->>> 				   |     |   --23.44%--remove_mapping
->>> 				   |     |     |          
->>> 				   |     |      --23.20%--__remove_mapping
->>> 				   |     |        |          
->>> 				   |     |         --21.90%--arch_local_irq_restore
->>> 				   |     |          
->>> 				   |     |--22.44%--arch_local_irq_enable
->>> 				   |          
->>> 					--30.35%--shrink_dcache_sb 
->>> 					<snip>
->>> 					  |      
->>> 					  --30.17%--truncate_inode_pages_range
->>>
-> 
+  See LICENSE.qla3xxx for copyright and licensing details.
+
+LICENSE.qla3xxx can be found in
+Documentation/networking/device_drivers/qlogic/. The file contains:
+
+  - A copyright notice
+
+    This copyright notice is redundant as all files contain the same
+    copyright notice already
+
+  - A license notice
+
+    You may modify and redistribute the device driver code under the GNU
+    General Public License (a copy of which is attached hereto as Exhibit
+    A) published by the Free Software Foundation (version 2 or a later
+    version).
+
+    This can be replaced with the corresponding SPDX license identifier
+    (GPL-2.0-or-later) in the source files which reference this license
+    file.
+
+  - A license for the device firmware
+
+    This license is pointless in the context of the kernel as the firmware
+    is not distributed as part of the kernel.
+
+    LICENSE.qla2xxx contained exactly the same firmware license which was
+    removed with commit bc3f957c069f ("[SCSI] qla2xxx: Update
+    LICENSE.qla2xxx.").
+
+    The firmware license is there due to the fact that the out of tree
+    driver tarball which was available from the qlogic website contained
+    the firmware binary. The firmware license in the qla3xxx license file
+    got probably forgotten when the other qlogic license files were
+    updated.
+
+Remove the notices and add the SPDX license identifier GPL-2.0-or-later to
+the source files.
+
+Finally remove the now redundant LICENSE.qla3xxx file.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Richard Fontana <rfontana@redhat.com>
+Reviewed-by: Alexios Zavras <alexios.zavras@intel.com>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ .../device_drivers/qlogic/LICENSE.qla3xxx     | 46 -------------------
+ MAINTAINERS                                   |  1 -
+ drivers/net/ethernet/qlogic/qla3xxx.c         |  3 +-
+ drivers/net/ethernet/qlogic/qla3xxx.h         |  3 +-
+ 4 files changed, 2 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/networking/device_drivers/qlogic/LICENSE.qla3xxx
+
+diff --git a/Documentation/networking/device_drivers/qlogic/LICENSE.qla3xxx b/Documentation/networking/device_drivers/qlogic/LICENSE.qla3xxx
+deleted file mode 100644
+index 2f2077e34d81..000000000000
+--- a/Documentation/networking/device_drivers/qlogic/LICENSE.qla3xxx
++++ /dev/null
+@@ -1,46 +0,0 @@
+-Copyright (c)  2003-2006 QLogic Corporation
+-QLogic Linux Networking HBA Driver
+-
+-This program includes a device driver for Linux 2.6 that may be
+-distributed with QLogic hardware specific firmware binary file.
+-You may modify and redistribute the device driver code under the
+-GNU General Public License as published by the Free Software
+-Foundation (version 2 or a later version).
+-
+-You may redistribute the hardware specific firmware binary file
+-under the following terms:
+-
+-	1. Redistribution of source code (only if applicable),
+-	   must retain the above copyright notice, this list of
+-	   conditions and the following disclaimer.
+-
+-	2. Redistribution in binary form must reproduce the above
+-	   copyright notice, this list of conditions and the
+-	   following disclaimer in the documentation and/or other
+-	   materials provided with the distribution.
+-
+-	3. The name of QLogic Corporation may not be used to
+-	   endorse or promote products derived from this software
+-	   without specific prior written permission
+-
+-REGARDLESS OF WHAT LICENSING MECHANISM IS USED OR APPLICABLE,
+-THIS PROGRAM IS PROVIDED BY QLOGIC CORPORATION "AS IS'' AND ANY
+-EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+-PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR
+-BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+-EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+-TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-POSSIBILITY OF SUCH DAMAGE.
+-
+-USER ACKNOWLEDGES AND AGREES THAT USE OF THIS PROGRAM WILL NOT
+-CREATE OR GIVE GROUNDS FOR A LICENSE BY IMPLICATION, ESTOPPEL, OR
+-OTHERWISE IN ANY INTELLECTUAL PROPERTY RIGHTS (PATENT, COPYRIGHT,
+-TRADE SECRET, MASK WORK, OR OTHER PROPRIETARY RIGHT) EMBODIED IN
+-ANY OTHER QLOGIC HARDWARE OR SOFTWARE EITHER SOLELY OR IN
+-COMBINATION WITH THIS PROGRAM.
+-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 25bb79c28de0..434274804028 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14229,7 +14229,6 @@ QLOGIC QLA3XXX NETWORK DRIVER
+ M:	GR-Linux-NIC-Dev@marvell.com
+ L:	netdev@vger.kernel.org
+ S:	Supported
+-F:	Documentation/networking/device_drivers/ethernet/qlogic/LICENSE.qla3xxx
+ F:	drivers/net/ethernet/qlogic/qla3xxx.*
+ 
+ QLOGIC QLA4XXX iSCSI DRIVER
+diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
+index 569e2a7a64e5..27740c027681 100644
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -1,8 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
+ /*
+  * QLogic QLA3xxx NIC HBA Driver
+  * Copyright (c)  2003-2006 QLogic Corporation
+- *
+- * See LICENSE.qla3xxx for copyright and licensing details.
+  */
+ 
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+diff --git a/drivers/net/ethernet/qlogic/qla3xxx.h b/drivers/net/ethernet/qlogic/qla3xxx.h
+index 73e234366a82..fb4398303ae1 100644
+--- a/drivers/net/ethernet/qlogic/qla3xxx.h
++++ b/drivers/net/ethernet/qlogic/qla3xxx.h
+@@ -1,8 +1,7 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
+ /*
+  * QLogic QLA3xxx NIC HBA Driver
+  * Copyright (c)  2003-2006 QLogic Corporation
+- *
+- * See LICENSE.qla3xxx for copyright and licensing details.
+  */
+ #ifndef _QLA3XXX_H_
+ #define _QLA3XXX_H_
+-- 
+2.17.1
 
