@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EC1C2BB84
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B70C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 564ED215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6FCC21973
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:14:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZS2wWUW3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="je8zVeR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgIHCOm (ORCPT
+        id S1728948AbgIHCOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:14:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40116 "EHLO
+        Mon, 7 Sep 2020 22:14:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728341AbgIHCMD (ORCPT
+        with ESMTP id S1728332AbgIHCMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 22:12:03 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675C3C0613ED;
-        Mon,  7 Sep 2020 19:12:01 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id a22so11626101ljp.13;
-        Mon, 07 Sep 2020 19:12:01 -0700 (PDT)
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB0F3C061573;
+        Mon,  7 Sep 2020 19:11:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id s205so18039257lja.7;
+        Mon, 07 Sep 2020 19:11:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cjZeMOpLGKlggQ4Zf1tDxvKw367fZ+lczUYfx0tdRmw=;
-        b=ZS2wWUW3ORmz3Pv/f2ccJqJm93Xc67Hz0iyjcs1eleucmVVxZmL63LDdgzHIvah7js
-         aAe4YHVT1+dxpwKWiuXXMiYmn2FGid9a7gAzTJjpcfJ6RxRQsjroJ7vf/2MV4SadIN48
-         8bpIzhCHutRgl6Z/3QnWF0VwiXkEY8EqzDMUBRDrDQoKCKzbQ9fw0GwnPh2X0l8vn8Ai
-         cee07Y4DJXQmoK2HSSkn/uQZreK9yTOhYxmql/7H2Qnu0+RAqfGU3BL5dqRxIybjv48b
-         CJwsKajCjUS/g8MGDHokcXfdup85lDuJddMZn/QiJM/emi7sa1rjIK/n8NPF0dhTmbxM
-         FaYg==
+        bh=JgF3VVU7tFsmkskdQ6viyyo6sIhqDxq3DbAN2Y/3odY=;
+        b=je8zVeR4suUOynWJWNENTG/m1KI6DvGXWoGyQ9aX68bzvcGb1r65VP4glWVyFj8+Ze
+         RizTf7zA1XjS8Z6Kz/lwJJh7f+KQqxnoFCqYx3txqXDeK+DWo6ltwgb1blRDedOnQxX1
+         +dyIyWno3s7tQbQeIpE3B5Twfe66oBrCgYYEe1h0C9oXX/SruuvLB8l7sf84vRMIJzBj
+         vbkivMI1qj2IA6LNb3Yxnz5x5Tk1iwG4cgYzOq+ePXP8oh5+x/WL2QbUoJL9myl2/tMw
+         J/jbLCYHolVI+9qmew+cikm31UEczKpLRQOaCTANNZkLEfB4sDoWcFUWo0LbTCrM1sGj
+         3hQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cjZeMOpLGKlggQ4Zf1tDxvKw367fZ+lczUYfx0tdRmw=;
-        b=sxdVFZiK7p5drNOYpsxihS6VpfyxZ+Q4ayLUgvFeQg6VIW5GY8kw6J2WF2aR1N8FTS
-         xP7Rsoqo2nr5QarI4+pFfZahpi4d07pazltcnVX4fFtxV3LF90uuKAqc8S9XQAvqIwVK
-         70PPcQnhPzMCT4u8S7Wvl158/mEFafVlrDaWw0NCDbopRfV5JokBZ2g1YnPZkWdGtrhG
-         E6zYQwpuKnXdsKBXpBfv04U985VbAlpdY9qbt0WP9E9eM9Z0voOv1Z9O+AnKJrGba9TF
-         JnAzInvcLJ5ouMNFvRWb0xIAUeEdFh0dsLGn2f/hdRM7AhV/7c5RVWMNr+DCZA7GvFdz
-         U/sQ==
-X-Gm-Message-State: AOAM530yhOdJ7qq89LTBeK/sJQTvD2/cqOI+W28v3L/4J6iVZtpyStU9
-        9evpEqIRFnQQJ+FkvW7MrkU7Wx18PIs=
-X-Google-Smtp-Source: ABdhPJzLpPz57i5QJ2Z0Xg0STz0uvvWopocYTfYuguMnwUOaxzolVsa8KzdbmBGBnL98cfsC9DuaWA==
-X-Received: by 2002:a2e:9dc7:: with SMTP id x7mr11256502ljj.447.1599531119914;
-        Mon, 07 Sep 2020 19:11:59 -0700 (PDT)
+        bh=JgF3VVU7tFsmkskdQ6viyyo6sIhqDxq3DbAN2Y/3odY=;
+        b=uHdUyGGvQZdHnoD6MVTA9CG7E8hrOYEh0hFsM1rQ+Tm6Zw8/utquGc1iGwsEFvFU+n
+         HuG5cJBnbC6sBnw+iHTkbzBbKD+Gp45uI56HkB8jjo3UeitelAxtxXZHQ1LsRhnYtFpP
+         pSN7YaZe6JBK9oT+pUUBMmiL60yKBQkTyctAKa8KtNTJFysCmVoZJxsUjKSh3hsUUiDV
+         YefCf0xh5W7gCK7zPXMRp3qeq1J7FiKwR92Qg0LwMEzggmnFKyGRH66UliI8FIlQq4ap
+         93bJN/Hef00+oeey/++Vgoc8Qc5o4kaCYabXAIrnobNc1BIxvNXNc8SsX9bB2PuvYiNl
+         Myzg==
+X-Gm-Message-State: AOAM5303VSdD5hnLD2Afx/B2TrWlbSgJ2zxpbEVTQ8PvzTIofunsD4o6
+        cHxW0iftQ6fUXkyk+K1OJds=
+X-Google-Smtp-Source: ABdhPJzbpCynRifLlKBdg6XyNvORmkifbjjdQQOBwESWVKNdaR50R4AigmKhp7laAx0lfOouqB4DHQ==
+X-Received: by 2002:a2e:9057:: with SMTP id n23mr9596269ljg.411.1599531117389;
+        Mon, 07 Sep 2020 19:11:57 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.59
+        by smtp.gmail.com with ESMTPSA id j12sm9070085lfj.5.2020.09.07.19.11.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 19:11:59 -0700 (PDT)
+        Mon, 07 Sep 2020 19:11:56 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 27/35] i2c: tegra: Factor out register polling into separate function
-Date:   Tue,  8 Sep 2020 05:10:13 +0300
-Message-Id: <20200908021021.9123-28-digetx@gmail.com>
+Subject: [PATCH v6 24/35] i2c: tegra: Rename wait/poll functions
+Date:   Tue,  8 Sep 2020 05:10:10 +0300
+Message-Id: <20200908021021.9123-25-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200908021021.9123-1-digetx@gmail.com>
 References: <20200908021021.9123-1-digetx@gmail.com>
@@ -83,92 +83,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out register polling into a separate function in order to remove
-boilerplate code and make code cleaner.
+Drop '_timeout' postfix from the wait/poll completion function names in
+order to make the names shorter, making code cleaner a tad.
 
 Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 43 +++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 24 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 33 +++++++++++++++------------------
+ 1 file changed, 15 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 7d54b8b3ed9a..2e7beadd381f 100644
+index c16273c13291..0d823aae9eaf 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -518,10 +518,24 @@ static void tegra_i2c_vi_init(struct tegra_i2c_dev *i2c_dev)
- 	i2c_writel(i2c_dev, 0x0, I2C_TLOW_SEXT);
+@@ -1003,10 +1003,9 @@ static int tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev, size_t len)
+ 	return 0;
  }
  
-+static int tegra_i2c_poll_register(struct tegra_i2c_dev *i2c_dev,
-+				   u32 reg, u32 mask, u32 delay_us,
-+				   u32 timeout_us)
-+{
-+	void __iomem *addr = i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg);
-+	u32 val;
-+
-+	if (!i2c_dev->is_curr_atomic_xfer)
-+		return readl_relaxed_poll_timeout(addr, val, !(val & mask),
-+						  delay_us, timeout_us);
-+
-+	return readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
-+						 delay_us, timeout_us);
-+}
-+
- static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+-static unsigned long
+-tegra_i2c_poll_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+-				  struct completion *complete,
+-				  unsigned int timeout_ms)
++static unsigned long tegra_i2c_poll_completion(struct tegra_i2c_dev *i2c_dev,
++					       struct completion *complete,
++					       unsigned int timeout_ms)
  {
--	u32 mask, val, offset, reg_offset;
--	void __iomem *addr;
-+	u32 mask, val, offset;
- 	int err;
+ 	ktime_t ktime = ktime_get();
+ 	ktime_t ktimeout = ktime_add_ms(ktime, timeout_ms);
+@@ -1030,16 +1029,14 @@ tegra_i2c_poll_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+ 	return 0;
+ }
  
- 	if (i2c_dev->hw->has_mst_fifo) {
-@@ -538,16 +552,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
- 	val |= mask;
- 	i2c_writel(i2c_dev, val, offset);
- 
--	reg_offset = tegra_i2c_reg_addr(i2c_dev, offset);
--	addr = i2c_dev->base + reg_offset;
--
--	if (i2c_dev->is_curr_atomic_xfer)
--		err = readl_relaxed_poll_timeout_atomic(addr, val, !(val & mask),
--							1000, 1000000);
--	else
--		err = readl_relaxed_poll_timeout(addr, val, !(val & mask),
--						 1000, 1000000);
--
-+	err = tegra_i2c_poll_register(i2c_dev, offset, mask, 1000, 1000000);
- 	if (err) {
- 		dev_err(i2c_dev->dev, "failed to flush FIFO\n");
- 		return err;
-@@ -557,25 +562,15 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
- 
- static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
+-static unsigned long
+-tegra_i2c_wait_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+-				  struct completion *complete,
+-				  unsigned int timeout_ms)
++static unsigned long tegra_i2c_wait_completion(struct tegra_i2c_dev *i2c_dev,
++					       struct completion *complete,
++					       unsigned int timeout_ms)
  {
--	unsigned long reg_offset;
--	void __iomem *addr;
--	u32 val;
- 	int err;
+ 	unsigned long ret;
  
- 	if (!i2c_dev->hw->has_config_load_reg)
- 		return 0;
+ 	if (i2c_dev->is_curr_atomic_xfer) {
+-		ret = tegra_i2c_poll_completion_timeout(i2c_dev, complete,
+-							timeout_ms);
++		ret = tegra_i2c_poll_completion(i2c_dev, complete, timeout_ms);
+ 	} else {
+ 		enable_irq(i2c_dev->irq);
+ 		ret = wait_for_completion_timeout(complete,
+@@ -1057,8 +1054,7 @@ tegra_i2c_wait_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+ 		 * needs to be checked after timeout.
+ 		 */
+ 		if (ret == 0)
+-			ret = tegra_i2c_poll_completion_timeout(i2c_dev,
+-								complete, 0);
++			ret = tegra_i2c_poll_completion(i2c_dev, complete, 0);
+ 	}
  
--	reg_offset = tegra_i2c_reg_addr(i2c_dev, I2C_CONFIG_LOAD);
--	addr = i2c_dev->base + reg_offset;
- 	i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
+ 	return ret;
+@@ -1083,8 +1079,8 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
+ 	i2c_writel(i2c_dev, reg, I2C_BUS_CLEAR_CNFG);
+ 	tegra_i2c_unmask_irq(i2c_dev, I2C_INT_BUS_CLR_DONE);
  
--	if (i2c_dev->is_curr_atomic_xfer)
--		err = readl_relaxed_poll_timeout_atomic(addr, val, val == 0, 1000,
--							I2C_CONFIG_LOAD_TIMEOUT);
--	else
--		err = readl_relaxed_poll_timeout(addr, val, val == 0, 1000,
--						 I2C_CONFIG_LOAD_TIMEOUT);
--
-+	err = tegra_i2c_poll_register(i2c_dev, I2C_CONFIG_LOAD, 0xffffffff,
-+				      1000, I2C_CONFIG_LOAD_TIMEOUT);
- 	if (err) {
- 		dev_warn(i2c_dev->dev, "timeout waiting for config load\n");
- 		return err;
+-	time_left = tegra_i2c_wait_completion_timeout(
+-			i2c_dev, &i2c_dev->msg_complete, 50);
++	time_left = tegra_i2c_wait_completion(i2c_dev, &i2c_dev->msg_complete,
++					      50);
+ 	tegra_i2c_mask_irq(i2c_dev, I2C_INT_BUS_CLR_DONE);
+ 
+ 	if (time_left == 0) {
+@@ -1237,8 +1233,9 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		i2c_readl(i2c_dev, I2C_INT_MASK));
+ 
+ 	if (i2c_dev->is_curr_dma_xfer) {
+-		time_left = tegra_i2c_wait_completion_timeout(
+-				i2c_dev, &i2c_dev->dma_complete, xfer_time);
++		time_left = tegra_i2c_wait_completion(i2c_dev,
++						      &i2c_dev->dma_complete,
++						      xfer_time);
+ 
+ 		/*
+ 		 * Synchronize DMA first, since dmaengine_terminate_sync()
+@@ -1269,8 +1266,8 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		}
+ 	}
+ 
+-	time_left = tegra_i2c_wait_completion_timeout(
+-			i2c_dev, &i2c_dev->msg_complete, xfer_time);
++	time_left = tegra_i2c_wait_completion(i2c_dev, &i2c_dev->msg_complete,
++					      xfer_time);
+ 
+ 	tegra_i2c_mask_irq(i2c_dev, int_mask);
+ 
 -- 
 2.27.0
 
