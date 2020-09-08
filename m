@@ -2,96 +2,59 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35A6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBFEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0538224B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6GI9P1i"
+	by mail.kernel.org (Postfix) with ESMTP id 1B13122206
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730172AbgIHOjm (ORCPT
+        id S1729719AbgIHOmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 10:39:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48915 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729913AbgIHO0K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 10:42:51 -0400
+Received: from verein.lst.de ([213.95.11.211]:52978 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729721AbgIHO0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 10:26:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599575164;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iz+7zzBpkiJrIKI0XTqvxV8tNmeNS+Jw/qROZpGe5DE=;
-        b=A6GI9P1iwRsBLAln+b2QxzOslWVosILO9qj1Y5w7cMRQKFXrRRWIcijQ++pVhPTufP1Dgb
-        /lwjMWj9ffApYfWkW8GeSsvyj38OPHKewLxEIIRJ/Fp18b8Us0sKps9ngeno3C93psbTTJ
-        Yf8GgobsWzhDhM4OPkgD9Qo/J2raerc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-gbnLPucUPMqc6J3Xih0mPw-1; Tue, 08 Sep 2020 09:14:44 -0400
-X-MC-Unique: gbnLPucUPMqc6J3Xih0mPw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 259B51074644;
-        Tue,  8 Sep 2020 13:14:43 +0000 (UTC)
-Received: from treble (ovpn-117-163.rdu2.redhat.com [10.10.117.163])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CD5187D923;
-        Tue,  8 Sep 2020 13:14:41 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 08:14:39 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: linux-next: build warnings in Linus' tree
-Message-ID: <20200908131439.xj6nzi6nny3u5icb@treble>
-References: <20200908091102.4c2d7b37@canb.auug.org.au>
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 32A6668C65; Tue,  8 Sep 2020 16:23:35 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 16:23:34 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     antlists <antlists@youngman.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Denis Efremov <efremov@linux.com>,
+        Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 11/19] gdrom: use bdev_check_media_change
+Message-ID: <20200908142334.GA7344@lst.de>
+References: <20200902141218.212614-1-hch@lst.de> <20200902141218.212614-12-hch@lst.de> <0b8fa1fe-f2d5-bf18-2e8a-ad13e343629d@youngman.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908091102.4c2d7b37@canb.auug.org.au>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <0b8fa1fe-f2d5-bf18-2e8a-ad13e343629d@youngman.org.uk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:11:02AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Building Linus' tree, today's linux-next build (x86_64 allmodconfig)
-> produced these warnings:
-> 
-> arch/x86/kernel/cpu/mce/core.o: warning: objtool: mce_panic()+0x2a3: unreachable instruction
-> net/core/skbuff.o: warning: objtool: skb_push.cold()+0x1b: unreachable instruction
-> arch/x86/mm/mmio-mod.o: warning: objtool: pre()+0x21a: unreachable instruction
-> arch/x86/kvm/vmx/vmx.o: warning: objtool: vmx_handle_exit_irqoff()+0x142: unreachable instruction
-> kernel/exit.o: warning: objtool: __x64_sys_exit_group()+0x26: unreachable instruction
-> kernel/cred.o: warning: objtool: get_task_cred.cold()+0x19: unreachable instruction
-> drivers/misc/sgi-gru/grukservices.o: warning: objtool: gru_wait_abort_proc()+0x97: unreachable instruction
-> drivers/scsi/pcmcia/aha152x_core.o: warning: objtool: is_complete()+0x6c6: unreachable instruction
-> drivers/message/fusion/mptbase.o: warning: objtool: mpt_SoftResetHandler()+0x4a5: unreachable instruction
-> drivers/scsi/aic7xxx/aic79xx_core.o: warning: objtool: ahd_intr()+0x2a9: unreachable instruction
-> drivers/net/ethernet/marvell/octeontx2/nic/otx2_txrx.o: warning: objtool: otx2_sq_append_tso()+0xab6: unreachable instruction
-> fs/btrfs/extent_io.o: warning: objtool: __set_extent_bit.cold()+0x12: unreachable instruction
-> fs/btrfs/backref.o: warning: objtool: btrfs_backref_finish_upper_links()+0x818: unreachable instruction
-> fs/btrfs/relocation.o: warning: objtool: update_backref_cache.isra.0()+0x3bf: unreachable instruction
-> drivers/atm/horizon.o: warning: objtool: rx_data_av_handler()+0x452: unreachable instruction
+On Wed, Sep 02, 2020 at 11:00:05PM +0100, antlists wrote:
+> On 02/09/2020 15:12, Christoph Hellwig wrote:
+>> The GD-ROM driver does not have a ->revalidate_disk method, so it can
+>       ^^ (sic)
 
-I suspect these will all be fixed by this livepatching pull request:
-
-  https://lkml.kernel.org/r/20200907082036.GC8084@alley
-
--- 
-Josh
-
+No, this really is the GD-ROM and not the CD-ROM driver!
