@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 344DDC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4F1D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714552087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="bvw5sBCc"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n/3SFlur"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgIHVtJ (ORCPT
+        id S1730183AbgIHVtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:49:09 -0400
-Received: from mail-dm6nam08on2042.outbound.protection.outlook.com ([40.107.102.42]:3041
-        "EHLO NAM04-DM6-obe.outbound.protection.outlook.com"
+        Tue, 8 Sep 2020 17:49:31 -0400
+Received: from mail-dm6nam10on2079.outbound.protection.outlook.com ([40.107.93.79]:8416
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730136AbgIHVtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:49:08 -0400
+        id S1728463AbgIHVt1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 17:49:27 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jgIrk0GUve37BHkvCnTasv6U9U4/XcqfEuGpbzTUnAHyOq053GefZZBH11wkxR7s1AMKhmuxDmqL6Qb8NNVOToEuWBxBI68E+X1+PhjqMYHJux07zDyH1jRviViPTMj9jUjy6zwSX8c+RgVSx6HK/weyhDT2C4ETNjqpn9+i5Rk0Qw/PrGx93h6o5vK41S6NuCK2XQgsmGpqFQT0+jLNL4UUy5o8YOU7KVUlIKCYMlTlRaiYY4Ox7Dk7JWLRGQdpPm0cCyPCTkFm9k4jV1o2Sa5r5tQiLK6o4yRW+es7XZzIzxNWLVB5NrzkFoaMklJXVhT1SKsVPDo7wfFAV+s4/g==
+ b=Ooi7TOinq/hdKuf/i+mfhw/STSEEWP9ONVLzb7ReblA+9mDe7wxksspf5ZrzcSUroTztXn3ArH2dvmwZZIAIBAZNbGMmTLC9GsuaC5Uhls4kmdwXdWORfnR0P9xBWkwCVFVMub463vhmSRc3WP723TM3STt4GjIBf4JOmIm27N7JIGt7En8sAKC0hpHecfVfHhp+KjZaO11C8ooAZ+LG3uWPrUjDnjd1ypTO5cMQfMYqqZyCmF3Lj8b820cgxKkXFWXGvUds37ZYjkgN0KVrde2agxA0hVyNAj/7wWpCQpnGnc1lMw3VSIOsW2I9gFSLNuBTUB/zcivxeH18XXxNZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2wQty5KOW7ZcWvb/8JM/wQfWUXNSwh4q5Qg7UxChJ8U=;
- b=BAv1Y39XcqzgWuLTXGdeUiN9QFe7cLPxyJRxEKe61ZFvrPzGaiGUgQQ58gUdFpiLOKP06XCAqrTerHFBsyJ9U/THMr1rNLGR1Pclhg3yHcf5ErAhXTbZX2k6sfFSt3RbgHeFuss9WsPOLlNrRPCUf19jip7BI2WCC3RdK4X98SbiHP8HNzzyCEKZeK+E0kiLORqNDhRYNVTGcX/uNNs3NVWsUggR7Tr0+6DO/geHtxLhooYXu9KmnbLa1OQnl3wGXcc54ZRpN/PICcCptHihE7KIs2AZoLA0uEF85NDCYbpfAxfnXtqh4Q2ymgI2dUEBKZoZA7z9/fZBIP4SV6Obng==
+ bh=MEQnhvTlZWKFxSMxgKqVncBHmwMvbKWTYRskdjYXSbM=;
+ b=Ey7yRmMGOE8pFTVMl8UFsQ5ffMqNBuNlHGLI7dKltbvwnab47LnSG/vZdHqWMg/bXiFd8Im7zbqaTNVUp73hHSzuA5jL9wJVUkVcb4UWCGNv9OZ9TlMe1GRri/8521LpRM0sInNFSNJh4UGKq4LRGYghOQxZDJCSyuVrcQBgbwxck+gPZvZ2vHLZyJH64ht74lNaZx2F7r8CkKi14ULSSetep7ZRW3ki94T53Gwcvgv4ImpH9V+6PHeVV/jaN8pxGeUGb5uZ31doY6NpX3sUyXsNDRywbHYXuYSiAh6AKeedo2dLfpyUx/oa4xfUgwuVNYCZce4dx+woBfjQWRgUAg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2wQty5KOW7ZcWvb/8JM/wQfWUXNSwh4q5Qg7UxChJ8U=;
- b=bvw5sBCcv6wmlj2qT2g7fLEEYrjF3rN+D05Icv/UaSclyg4xPbDfSpLCAXTgqAnB7ppjK4ntmKImyd0+W7YAz5m4AdsMdEx9EROcwc7wEzRKrpzp/q/yz3F31okE38EwuXwRJcFKebQQbWfaGo3LsojhA+2TWsCCt/hxxrB4Jms=
+ bh=MEQnhvTlZWKFxSMxgKqVncBHmwMvbKWTYRskdjYXSbM=;
+ b=n/3SFlurFm/FsQhgz9lmBUTZdVlMCjM3QNsNut0r/onsZRq2hpennvHbCzJ4sPMvmqzt4FrwUfdu4aYx5Vzx6RqUJOuqILdwIWk3UbAx+jh8mAXkqhnp5aNsHJlWljASeB0UHHYHK2E3ge8Gu0SLG8w6yrVxfLdqSd4jR3zGc6E=
 Authentication-Results: alien8.de; dkim=none (message not signed)
  header.d=none;alien8.de; dmarc=none action=none header.from=amd.com;
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
  by BN8PR12MB2882.namprd12.prod.outlook.com (2603:10b6:408:96::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 21:49:03 +0000
+ 2020 21:49:17 +0000
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6]) by BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 21:49:03 +0000
+ 21:49:17 +0000
 From:   Kim Phillips <kim.phillips@amd.com>
 To:     Borislav Petkov <bp@alien8.de>, Borislav Petkov <bp@suse.de>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -61,67 +61,67 @@ Cc:     Stephane Eranian <eranian@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Michael Petlan <mpetlan@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        Stephane Eranian <stephane.eranian@google.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 5/7] perf/x86/amd/ibs: Fix raw sample data accumulation
-Date:   Tue,  8 Sep 2020 16:47:38 -0500
-Message-Id: <20200908214740.18097-6-kim.phillips@amd.com>
+        LKML <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: [PATCH v2 6/7] perf/x86/amd/ibs: Support 27-bit extended Op/cycle counter
+Date:   Tue,  8 Sep 2020 16:47:39 -0500
+Message-Id: <20200908214740.18097-7-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200908214740.18097-1-kim.phillips@amd.com>
 References: <20200908214740.18097-1-kim.phillips@amd.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: DM5PR16CA0033.namprd16.prod.outlook.com
- (2603:10b6:4:15::19) To BN8PR12MB2946.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM5PR04CA0032.namprd04.prod.outlook.com
+ (2603:10b6:3:12b::18) To BN8PR12MB2946.namprd12.prod.outlook.com
  (2603:10b6:408:9d::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from fritz.amd.com (165.204.77.11) by DM5PR16CA0033.namprd16.prod.outlook.com (2603:10b6:4:15::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Tue, 8 Sep 2020 21:49:00 +0000
+Received: from fritz.amd.com (165.204.77.11) by DM5PR04CA0032.namprd04.prod.outlook.com (2603:10b6:3:12b::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16 via Frontend Transport; Tue, 8 Sep 2020 21:49:15 +0000
 X-Mailer: git-send-email 2.27.0
 X-Originating-IP: [165.204.77.11]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8d637c6b-2862-45d5-4c05-08d854410085
+X-MS-Office365-Filtering-Correlation-Id: d67a78ef-d749-445c-ffca-08d8544108b9
 X-MS-TrafficTypeDiagnostic: BN8PR12MB2882:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB2882D191A6534AA7AE2CF3B387290@BN8PR12MB2882.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Microsoft-Antispam-PRVS: <BN8PR12MB288241A0D37C65E735FDBA0587290@BN8PR12MB2882.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MhSOAa+bg06MvNs0Tx7i2OHdP2USlViPa83WosRx4q43sCIhQYpzNsGaHgBlpH0vUEZlI8+/R1CHNx9cRgCSuTdpYaCXz+FN5MHEP9ovzRaqn6RgssXtN0P5R4Ym5b7ueuNHjjjnMXEipqZZf2FAqIv6NBaN3kmuwQZgdgOaYAoySqkQMyc6JuXsHdrgSYqPjTP2dyKrcAQQWZMNYmnS5g2ZgvNlJUE0SQ5DNzmvOqqvFtvjDF0Ak31Amf3uiFP7m7H86kBoAHxkEOAkvyXfe6++qCA/aHtppQU3FYo7B4M5VPScLhp2u7GCninGztoN7QyQKIqhcE99yBYB3jVwBw==
+X-Microsoft-Antispam-Message-Info: n02zRzL45Z37YESqtiNd7ozd3X8FdS/wEF8mmB2rLWJF8uieqkYD9CaCnv5wZzTqM1LxW1gT9etIrs8vZn0cYjboYbCinqxCbFKmaj1Gjnvur25sdC6EO9U9b4GC1MSEVuvp+w6pgRD6PTKy7MJlSQ1Al3i/PWi4ep4zdNtwS/wRYkkOsnqten5fvjGCJ2OiUnvbEQCm5nZaoU2kBrfQDDDpWgOfpE7IwGSnjvV4nSrYGDc5ri4orUfvN/lm7H2kpYu6nx9kf9K6pYcBTWYWj/6zV7MFiHpT/BdL7oPx63GaLLpEFxZjT8mco9Nxgu0+IdDETizh7V1OXpv8PP9lqA==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(136003)(376002)(39860400002)(396003)(54906003)(52116002)(7696005)(4326008)(26005)(186003)(110136005)(66556008)(66476007)(66946007)(5660300002)(2906002)(1076003)(36756003)(86362001)(6666004)(316002)(16526019)(44832011)(6486002)(478600001)(2616005)(8936002)(956004)(8676002)(83380400001)(7416002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: ynTrfuvzMaFshkT8PQu+QDqIjuuOXFduLnnZrKmzku9+mkD0QxXEyCCqaKTbImQtX4VU0cI4geoFMXhBTtTYEEu7qIygb+mfph4reavM7nLgAIoRX5oJgjoG6l9yIn8unZk33ck4SBEEoaQo8iJuS4bL1gD9CDh05GqTjGP9GWa1S4GVtqDwXstCB7iLwEWZ1o9wzbH7aKtHxQM3rTAhpu92yqgovcTVxRLIkOn5iHFNGtHZIN3Z2oNVsTZnvkDmFpm5Q1lyCsuRD9hoSdByPBB+g7VnmKHJm/R0azD1LYzWrPLGncpHePq6bCB8iv8pj+HqqCA/Mg0aqrDkPYwp303WWvLAj6cP8l6ilnAXR/ezsjCMWKO+Rj0GN8NUxaMwJ8RG1TCRJ7DUmB6NJtfrIMTh3GY9rXlNOvm/a1JQOXdGNsZKUdVcnNow9ztC4qplqHyqZWaa2x1Fvd+13rGORUgr7RQYopbcz9KkaxzCVcYN3v3Cl/69iyP+37T09fSyRPddXJvYdzSiYB1CvvWGEz4xa//dPVVmAxtdJJRqAHdiRc+qxPj3ZeySzkw6mx306sGwBJGpzMecWuPYJnQxqT3rf2CGHGGt3aOPvzjuBP35nkZ81zeK2XmD2PHsTC/ItQkEl7g6Pl8hkB+NJkCKAw==
+X-MS-Exchange-AntiSpam-MessageData: hhzVYQq8y5BHHMRjKsvucuyAJSE/yYVGJ9uKIjod5e+gOe6VLv6tqRGnme6dNkJOXwBAg2TS6nga7tFgSrqtAGA6NaygeawItEauql+xHC61jPkPmXD7mZsvqv3g/MSOWXK1nNX51RhDy844c4vJ5nUbDuvIFAkg4UIwlJUtwPiIafRvcaqFSKwDxZ55wzRc7JfYB1pBlrIh5QvKmlU/Id9K/Zn17MNjsFeMXRKrgNUDzCgJOJ1buZ7yiyAqxPHAODhtRhv6mCyJU04gbnv0AW6K2656vXL444gTg//eXJoTn5xCnCmvIgaS2t5UFZ0jF+tGooaAHoSW7JyNjkkx2R6OWdHy+KKZT6oxaVnltx4jQM3cOIxOmnc2QFu1PDK4lsLkleqPUQkVFYonag84NLv7uFs4bqFoqw9QHgKgIbBlyKrjcbUIZe0LVbgT73W8sT4pP293EYU7xzihNiZWWyoVumzXv+/qOkI0pdsHadigle9Qu5P39DJlEs2Q0haIStLCJc6UpXRpz3XyHKkN5RfFdYUqAFGsLQBeM+upqMPwCiVrLZ2WF/787p1s4gRRbNRMmMFuW9zhCQ+Cf1EdPjpDcAH69eD/8nrCnI5VLrLifabf8H+OZMEFWoA/HOFF119RQuOKt7IockFvvVRKbQ==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d637c6b-2862-45d5-4c05-08d854410085
+X-MS-Exchange-CrossTenant-Network-Message-Id: d67a78ef-d749-445c-ffca-08d8544108b9
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 21:49:03.3407
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 21:49:17.0948
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: euIG7QxHCvh8EaxZjtjVq9CFhNxLac6FJOEZSIAc7UfqGX7/8xFAMGHyVO2xFFQCRrtquV3++KZLusPUh48L5g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Yw3EHK49Lmlzav6uA9imPEJ2B4QkcLvZn9QXrbt7/fKTy0xIrVDXgsUAlOSNsGLQHs416yqPM+BC9k9K09wsA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2882
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neither IbsBrTarget nor OPDATA4 are populated in IBS Fetch mode.
-Don't accumulate them into raw sample user data in that case.
+IBS hardware with the OpCntExt feature gets a 7-bit wider internal
+counter.  Both the maximum and current count bitfields in the
+IBS_OP_CTL register are extended to support reading and writing it.
 
-Also, in Fetch mode, add saving the IBS Fetch Control Extended MSR.
+No changes are necessary to the driver for handling the extra
+contiguous current count bits (IbsOpCurCnt), as the driver already
+passes through 32 bits of that field.  However, the driver has to do
+some extra bit manipulation when converting from a period to the
+non-contiguous (although conveniently aligned) extra bits in the
+IbsOpMaxCnt bitfield.
 
-Technically, there is an ABI change here with respect to the IBS raw
-sample data format, but I don't see any perf driver version information
-being included in perf.data file headers, but, existing users can detect
-whether the size of the sample record has reduced by 8 bytes to
-determine whether the IBS driver has this fix.
+This decreases IBS Op interrupt overhead when the period is over
+1,048,560 (0xffff0), which would previously activate the driver's
+software counter.  That threshold is now 134,217,712 (0x7fffff0).
 
-Reported-by: Stephane Eranian <stephane.eranian@google.com>
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Fixes: 904cb3677f3a ("perf/x86/amd/ibs: Update IBS MSRs and feature definitions")
 Cc: Stephane Eranian <eranian@google.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@kernel.org>
@@ -137,65 +137,122 @@ Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>
 Cc: x86 <x86@kernel.org>
-Cc: stable@vger.kernel.org
 ---
 v2: no changes.
 
- arch/x86/events/amd/ibs.c        | 26 ++++++++++++++++----------
- arch/x86/include/asm/msr-index.h |  1 +
- 2 files changed, 17 insertions(+), 10 deletions(-)
+ arch/x86/events/amd/ibs.c         | 42 +++++++++++++++++++++++--------
+ arch/x86/include/asm/perf_event.h |  1 +
+ 2 files changed, 32 insertions(+), 11 deletions(-)
 
 diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 68776cc291a6..ace28be4cbda 100644
+index ace28be4cbda..2766a7763d38 100644
 --- a/arch/x86/events/amd/ibs.c
 +++ b/arch/x86/events/amd/ibs.c
-@@ -637,18 +637,24 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 				       perf_ibs->offset_max,
- 				       offset + 1);
- 	} while (offset < offset_max);
-+	/*
-+	 * Read IbsBrTarget, IbsOpData4, and IbsExtdCtl separately
-+	 * depending on their availability.
-+	 * Can't add to offset_max as they are staggered
-+	 */
- 	if (event->attr.sample_type & PERF_SAMPLE_RAW) {
--		/*
--		 * Read IbsBrTarget and IbsOpData4 separately
--		 * depending on their availability.
--		 * Can't add to offset_max as they are staggered
--		 */
--		if (ibs_caps & IBS_CAPS_BRNTRGT) {
--			rdmsrl(MSR_AMD64_IBSBRTARGET, *buf++);
--			size++;
+@@ -339,10 +339,13 @@ static u64 get_ibs_op_count(u64 config)
+ 	 * and the lower 7 bits of CurCnt are randomized.
+ 	 * Otherwise CurCnt has the full 27-bit current counter value.
+ 	 */
+-	if (config & IBS_OP_VAL)
++	if (config & IBS_OP_VAL) {
+ 		count = (config & IBS_OP_MAX_CNT) << 4;
+-	else if (ibs_caps & IBS_CAPS_RDWROPCNT)
++		if (ibs_caps & IBS_CAPS_OPCNTEXT)
++			count += config & IBS_OP_MAX_CNT_EXT_MASK;
++	} else if (ibs_caps & IBS_CAPS_RDWROPCNT) {
+ 		count = (config & IBS_OP_CUR_CNT) >> 32;
++	}
+ 
+ 	return count;
+ }
+@@ -405,7 +408,7 @@ static void perf_ibs_start(struct perf_event *event, int flags)
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	struct perf_ibs *perf_ibs = container_of(event->pmu, struct perf_ibs, pmu);
+ 	struct cpu_perf_ibs *pcpu = this_cpu_ptr(perf_ibs->pcpu);
+-	u64 period;
++	u64 period, config = 0;
+ 
+ 	if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+ 		return;
+@@ -414,13 +417,19 @@ static void perf_ibs_start(struct perf_event *event, int flags)
+ 	hwc->state = 0;
+ 
+ 	perf_ibs_set_period(perf_ibs, hwc, &period);
++	if (perf_ibs == &perf_ibs_op && (ibs_caps & IBS_CAPS_OPCNTEXT)) {
++		config |= period & IBS_OP_MAX_CNT_EXT_MASK;
++		period &= ~IBS_OP_MAX_CNT_EXT_MASK;
++	}
++	config |= period >> 4;
++
+ 	/*
+ 	 * Set STARTED before enabling the hardware, such that a subsequent NMI
+ 	 * must observe it.
+ 	 */
+ 	set_bit(IBS_STARTED,    pcpu->state);
+ 	clear_bit(IBS_STOPPING, pcpu->state);
+-	perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
++	perf_ibs_enable_event(perf_ibs, hwc, config); 
+ 
+ 	perf_event_update_userpage(event);
+ }
+@@ -588,7 +597,7 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 	struct perf_ibs_data ibs_data;
+ 	int offset, size, check_rip, offset_max, throttle = 0;
+ 	unsigned int msr;
+-	u64 *buf, *config, period;
++	u64 *buf, *config, period, new_config = 0;
+ 
+ 	if (!test_bit(IBS_STARTED, pcpu->state)) {
+ fail:
+@@ -683,13 +692,17 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
+ 	if (throttle) {
+ 		perf_ibs_stop(event, 0);
+ 	} else {
+-		period >>= 4;
+-
+-		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
+-		    (*config & IBS_OP_CNT_CTL))
+-			period |= *config & IBS_OP_CUR_CNT_RAND;
 +		if (perf_ibs == &perf_ibs_op) {
-+			if (ibs_caps & IBS_CAPS_BRNTRGT) {
-+				rdmsrl(MSR_AMD64_IBSBRTARGET, *buf++);
-+				size++;
++			if (ibs_caps & IBS_CAPS_OPCNTEXT) {
++				new_config = period & IBS_OP_MAX_CNT_EXT_MASK;
++				period &= ~IBS_OP_MAX_CNT_EXT_MASK;
 +			}
-+			if (ibs_caps & IBS_CAPS_OPDATA4) {
-+				rdmsrl(MSR_AMD64_IBSOPDATA4, *buf++);
-+				size++;
-+			}
- 		}
--		if (ibs_caps & IBS_CAPS_OPDATA4) {
--			rdmsrl(MSR_AMD64_IBSOPDATA4, *buf++);
-+		if (perf_ibs == &perf_ibs_fetch && (ibs_caps & IBS_CAPS_FETCHCTLEXTD)) {
-+			rdmsrl(MSR_AMD64_ICIBSEXTDCTL, *buf++);
- 			size++;
- 		}
++			if ((ibs_caps & IBS_CAPS_RDWROPCNT) && (*config & IBS_OP_CNT_CTL))
++				new_config |= *config & IBS_OP_CUR_CNT_RAND;
++		}
++		new_config |= period >> 4;
+ 
+-		perf_ibs_enable_event(perf_ibs, hwc, period);
++		perf_ibs_enable_event(perf_ibs, hwc, new_config);
  	}
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 2859ee4f39a8..b08c8a2afc0e 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -464,6 +464,7 @@
- #define MSR_AMD64_IBSOP_REG_MASK	((1UL<<MSR_AMD64_IBSOP_REG_COUNT)-1)
- #define MSR_AMD64_IBSCTL		0xc001103a
- #define MSR_AMD64_IBSBRTARGET		0xc001103b
-+#define MSR_AMD64_ICIBSEXTDCTL		0xc001103c
- #define MSR_AMD64_IBSOPDATA4		0xc001103d
- #define MSR_AMD64_IBS_REG_COUNT_MAX	8 /* includes MSR_AMD64_IBSBRTARGET */
- #define MSR_AMD64_SEV			0xc0010131
+ 
+ 	perf_event_update_userpage(event);
+@@ -756,6 +769,13 @@ static __init void perf_event_ibs_init(void)
+ 		perf_ibs_op.config_mask |= IBS_OP_CNT_CTL;
+ 		*attr++ = &format_attr_cnt_ctl.attr;
+ 	}
++
++	if (ibs_caps & IBS_CAPS_OPCNTEXT) {
++		perf_ibs_op.max_period  |= IBS_OP_MAX_CNT_EXT_MASK;
++		perf_ibs_op.config_mask	|= IBS_OP_MAX_CNT_EXT_MASK;
++		perf_ibs_op.cnt_mask    |= IBS_OP_MAX_CNT_EXT_MASK;
++	}
++
+ 	perf_ibs_pmu_init(&perf_ibs_op, "ibs_op");
+ 
+ 	register_nmi_handler(NMI_LOCAL, perf_ibs_nmi_handler, 0, "perf_ibs");
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 0c1b13720525..841b0006c74b 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -334,6 +334,7 @@ struct pebs_xmm {
+ #define IBS_OP_ENABLE		(1ULL<<17)
+ #define IBS_OP_MAX_CNT		0x0000FFFFULL
+ #define IBS_OP_MAX_CNT_EXT	0x007FFFFFULL	/* not a register bit mask */
++#define IBS_OP_MAX_CNT_EXT_MASK	(0x7FULL<<20)	/* separate upper 7 bits */
+ #define IBS_RIP_INVALID		(1ULL<<38)
+ 
+ #ifdef CONFIG_X86_LOCAL_APIC
 -- 
 2.27.0
 
