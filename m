@@ -2,210 +2,118 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1BDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB7DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6AF42087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:06:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592019;
-	bh=kgPCDWvhAEco8tlZ+2/+STwCLCvgsd5/VN08OJjgbsk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wTMrIjObAp9p+ujbq7bHgQuzXLK24D81dQRxSvs8V/tKVShIzb9sD8zrbozOZpVgh
-	 2gbgCEpJUPCne0XAvZovXns0XFloZwFxxpSDow1W34zPs4+WbErZnZoczVOEO5IVru
-	 8nPZnMfNcXq8dM4tEBX7boa0d3CSheiQhUtZUKz4=
+	by mail.kernel.org (Postfix) with ESMTP id 131A22087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:07:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="mCT551VG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbgIHTG5 (ORCPT
+        id S1726642AbgIHTHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730685AbgIHQHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:07:18 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4F4523E1E;
-        Tue,  8 Sep 2020 15:46:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580009;
-        bh=kgPCDWvhAEco8tlZ+2/+STwCLCvgsd5/VN08OJjgbsk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WjAUo5UavnpTEye5g8hOAs5a3+/tSTv/g1cMEejc5DQkQkiTsweSQcEZEe6C1lLLh
-         68vACWCkhKUwWOUvX5jh9PotX5Hz7SxuDMpFT7PTXS2CT7VSdcr13rSYaWQFQV4aIE
-         vynqcLz7MOZT2zWmxODnvT3g7MvfGcPnInZwM4bo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 124/129] sdhci: tegra: Add missing TMCLK for data timeout
-Date:   Tue,  8 Sep 2020 17:26:05 +0200
-Message-Id: <20200908152236.048302449@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 15:07:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731259AbgIHQHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:07:13 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57200C0619EE
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:58:38 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id 16so5985058qkf.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+0VeQsmoLvQuU6aBo8zkUNaslkMwNc2y2ovMYLqi8XU=;
+        b=mCT551VGMZB94T4mxoyukc4bwxgzEzUfWwL2NvOY75ZaeJdpVQG9CBGM1bGuJrJs2d
+         vIOmu8PzXYmtEsQLa/m2JAQSu0eJCPrcPkfvV9Ijc4QajjV3687zmTDPrqeSq1uJuG91
+         dsViQvLDQdy6yiU6PEXgnu4e/No+wesobtdBRKR8F3GKNMVVobwe4Q1QlOXue+A4zk2K
+         aYi1G2PgHsePs/N6bKyI3DvK2mxmNGCtZMk5tgCkOnw4yYsxg/YOAyvDPeqBTNZj0uyF
+         +N6GfQAzFQn/Ey3fK4fQ10k+G/OswU60JOly4rzK2N70fyiOx+Ce+/BJY+P/ccnOv329
+         b9ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+0VeQsmoLvQuU6aBo8zkUNaslkMwNc2y2ovMYLqi8XU=;
+        b=hTRc/w8zDLifilSN81DUUq/70NWbUQgwDVCQ3pH+mOjUjqflOaCYPyY4w9ZAgGAUyW
+         Jriyu2tHYpbQr56466RC50eqwemIrChRDKl3cjWdW4q90qUHta5QZniSSzuNL72sXhr8
+         TeOVgmLij73kX1XRvPwAVcI1LK3JQIYWi1ZYrIx/6ALJfLuDXIh7zv6KZy9W0s4/MrZW
+         BhTLfUCJpiETAqfzyI8e1ACfmN/acc62+NWmSQTtMUTR8/bQnm8AJBb/9TNLDjTvlEmz
+         a2s2SpWhKdWRe3iwWN/VJOAZ1C+wq4BhTnV2Pcaru+xBYwLexZNz0qcYCDMFyvI97/FM
+         PywQ==
+X-Gm-Message-State: AOAM5313MaSLxbNknQOWwFpbeV2mFCRU/1ZeruMP0xAA1b2hzyS4dWYu
+        a7TUPk5tz2acJTBB402DX4eUMA==
+X-Google-Smtp-Source: ABdhPJzENRkC0WQz6clGvHTyG+K0LCw8iXyZ0zOHXituNkpO4M4F4y2QK9X/EX38k0eqbQaYJJPsSw==
+X-Received: by 2002:a37:b201:: with SMTP id b1mr224085qkf.10.1599573517558;
+        Tue, 08 Sep 2020 06:58:37 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id m1sm10014629qkn.89.2020.09.08.06.58.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 06:58:36 -0700 (PDT)
+Subject: Re: [PATCH v2 3/4] soundwire: qcom: add support for mmio soundwire
+ master devices
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        linux-arm-msm@vger.kernel.org
+Cc:     "moderated list:SOUNDWIRE SUBSYSTEM" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+References: <20200905173905.16541-1-jonathan@marek.ca>
+ <20200905173905.16541-4-jonathan@marek.ca>
+ <ad39f109-bfc9-332e-adc2-355499db1ab7@linux.intel.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <4bf165c2-1458-442b-5c85-5cebabda7232@marek.ca>
+Date:   Tue, 8 Sep 2020 09:57:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <ad39f109-bfc9-332e-adc2-355499db1ab7@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-
-commit 8048822bac01936fda2c7b924a52131da81e6198 upstream.
-
-commit b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-
-Tegra210 and later has a separate sdmmc_legacy_tm (TMCLK) used by Tegra
-SDMMC hawdware for data timeout to achive better timeout than using
-SDCLK and using TMCLK is recommended.
-
-USE_TMCLK_FOR_DATA_TIMEOUT bit in Tegra SDMMC register
-SDHCI_TEGRA_VENDOR_SYS_SW_CTRL can be used to choose either TMCLK or
-SDCLK for data timeout.
-
-Default USE_TMCLK_FOR_DATA_TIMEOUT bit is set to 1 and TMCLK is used
-for data timeout by Tegra SDMMC hardware and having TMCLK not enabled
-is not recommended.
-
-So, this patch adds quirk NVQUIRK_HAS_TMCLK for SoC having separate
-timeout clock and keeps TMCLK enabled all the time.
-
-Fixes: b5a84ecf025a ("mmc: tegra: Add Tegra210 support")
-Cc: stable <stable@vger.kernel.org> # 5.4
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Link: https://lore.kernel.org/r/1598548861-32373-8-git-send-email-skomatineni@nvidia.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/mmc/host/sdhci-tegra.c |   53 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
-
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -100,6 +100,12 @@
- #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
- #define NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING		BIT(9)
- 
-+/*
-+ * NVQUIRK_HAS_TMCLK is for SoC's having separate timeout clock for Tegra
-+ * SDMMC hardware data timeout.
-+ */
-+#define NVQUIRK_HAS_TMCLK				BIT(10)
-+
- /* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
- #define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
- 
-@@ -130,6 +136,7 @@ struct sdhci_tegra_autocal_offsets {
- struct sdhci_tegra {
- 	const struct sdhci_tegra_soc_data *soc_data;
- 	struct gpio_desc *power_gpio;
-+	struct clk *tmclk;
- 	bool ddr_signaling;
- 	bool pad_calib_required;
- 	bool pad_control_available;
-@@ -1385,7 +1392,8 @@ static const struct sdhci_tegra_soc_data
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
--		    NVQUIRK_ENABLE_SDR104,
-+		    NVQUIRK_ENABLE_SDR104 |
-+		    NVQUIRK_HAS_TMCLK,
- 	.min_tap_delay = 106,
- 	.max_tap_delay = 185,
- };
-@@ -1422,6 +1430,7 @@ static const struct sdhci_tegra_soc_data
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
- 		    NVQUIRK_ENABLE_SDR104 |
-+		    NVQUIRK_HAS_TMCLK |
- 		    NVQUIRK_CQHCI_DCMD_R1B_CMD_TIMING,
- 	.min_tap_delay = 84,
- 	.max_tap_delay = 136,
-@@ -1434,7 +1443,8 @@ static const struct sdhci_tegra_soc_data
- 		    NVQUIRK_HAS_PADCALIB |
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
--		    NVQUIRK_ENABLE_SDR104,
-+		    NVQUIRK_ENABLE_SDR104 |
-+		    NVQUIRK_HAS_TMCLK,
- 	.min_tap_delay = 96,
- 	.max_tap_delay = 139,
- };
-@@ -1562,6 +1572,43 @@ static int sdhci_tegra_probe(struct plat
- 		goto err_power_req;
- 	}
- 
-+	/*
-+	 * Tegra210 has a separate SDMMC_LEGACY_TM clock used for host
-+	 * timeout clock and SW can choose TMCLK or SDCLK for hardware
-+	 * data timeout through the bit USE_TMCLK_FOR_DATA_TIMEOUT of
-+	 * the register SDHCI_TEGRA_VENDOR_SYS_SW_CTRL.
-+	 *
-+	 * USE_TMCLK_FOR_DATA_TIMEOUT bit default is set to 1 and SDMMC uses
-+	 * 12Mhz TMCLK which is advertised in host capability register.
-+	 * With TMCLK of 12Mhz provides maximum data timeout period that can
-+	 * be achieved is 11s better than using SDCLK for data timeout.
-+	 *
-+	 * So, TMCLK is set to 12Mhz and kept enabled all the time on SoC's
-+	 * supporting separate TMCLK.
-+	 */
-+
-+	if (soc_data->nvquirks & NVQUIRK_HAS_TMCLK) {
-+		clk = devm_clk_get(&pdev->dev, "tmclk");
-+		if (IS_ERR(clk)) {
-+			rc = PTR_ERR(clk);
-+			if (rc == -EPROBE_DEFER)
-+				goto err_power_req;
-+
-+			dev_warn(&pdev->dev, "failed to get tmclk: %d\n", rc);
-+			clk = NULL;
-+		}
-+
-+		clk_set_rate(clk, 12000000);
-+		rc = clk_prepare_enable(clk);
-+		if (rc) {
-+			dev_err(&pdev->dev,
-+				"failed to enable tmclk: %d\n", rc);
-+			goto err_power_req;
-+		}
-+
-+		tegra_host->tmclk = clk;
-+	}
-+
- 	clk = devm_clk_get(mmc_dev(host->mmc), NULL);
- 	if (IS_ERR(clk)) {
- 		rc = PTR_ERR(clk);
-@@ -1605,6 +1652,7 @@ err_add_host:
- err_rst_get:
- 	clk_disable_unprepare(pltfm_host->clk);
- err_clk_get:
-+	clk_disable_unprepare(tegra_host->tmclk);
- err_power_req:
- err_parse_dt:
- 	sdhci_pltfm_free(pdev);
-@@ -1622,6 +1670,7 @@ static int sdhci_tegra_remove(struct pla
- 	reset_control_assert(tegra_host->rst);
- 	usleep_range(2000, 4000);
- 	clk_disable_unprepare(pltfm_host->clk);
-+	clk_disable_unprepare(tegra_host->tmclk);
- 
- 	sdhci_pltfm_free(pdev);
- 
 
 
+On 9/8/20 9:56 AM, Pierre-Louis Bossart wrote:
+> 
+> 
+> 
+>> @@ -764,8 +786,11 @@ static int qcom_swrm_probe(struct platform_device 
+>> *pdev)
+>>           if (!ctrl->regmap)
+>>               return -EINVAL;
+>>       } else {
+>> -        /* Only WCD based SoundWire controller is supported */
+>> -        return -ENOTSUPP;
+>> +        ctrl->reg_read = qcom_swrm_cpu_reg_read;
+>> +        ctrl->reg_write = qcom_swrm_cpu_reg_write;
+>> +        ctrl->mmio = devm_platform_ioremap_resource(pdev, 0);
+>> +        if (IS_ERR(ctrl->mmio))
+>> +            return PTR_ERR(ctrl->mmio);
+> 
+> Shouldn't this be conditional on SLIMBUS being enabled, as done in your 
+> patch2?
+> 
+
+No, the case above is the SLIMBUS case. This patch is adding support for 
+the non-SLIMBUS case.
+
+>>       }
+>>       ctrl->irq = of_irq_get(dev->of_node, 0);
+>>
