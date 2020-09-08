@@ -2,113 +2,128 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE78C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6967AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C028D206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u5cgThpU"
+	by mail.kernel.org (Postfix) with ESMTP id 2271E206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:36:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599582992;
+	bh=+OrY6yic2b8j2M0/KDTR0UkjhKoGy5DZysMSvf4PNF8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jYueLZpr+hJY7gz+lxHWaIKaeQ8jo1yzEO1QAZJbcF3GCgoMwwV4Mxk1K64LpVa6O
+	 zOCDAL4DveEvgPQyfhlU4+bw2fmqtBtR6Cuifha6riCKzn45FPb3Fm/iN9mMpSk/Ru
+	 TB2bPnZr84kWQaRFuCVOp/lcB1GSkKYRUUOqABbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbgIHQgI (ORCPT
+        id S1731931AbgIHQg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:36:08 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51706 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732026AbgIHQcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:32:05 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088Ewtci011590;
-        Tue, 8 Sep 2020 09:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599577135;
-        bh=fKarsEyMOJcKTwtf5n0tGq73QBl/jjsYYqxZnKWLtfU=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=u5cgThpU3AlHzuETTDonZHqMfFUtNgZRBjQwQyWHhuJeOoNft0cOIeqIVbic0RiB7
-         JvMJ80lOItnioC30vw/zZJU6VnY303X8j/ZkIqIZ0T2otDT/oYoekdZHQJC3wYPGEa
-         UqbCO2fBUSWG8TEtgpZNpcBy843k6qnVy/gatlt8=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088EwtaO121227
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 8 Sep 2020 09:58:55 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 09:58:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 09:58:55 -0500
-Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088EwtuK053861;
-        Tue, 8 Sep 2020 09:58:55 -0500
-Subject: Re: [PATCH 2/2] ASoC: tlv320adcx140: Wake up codec before accessing
- register
-From:   Dan Murphy <dmurphy@ti.com>
-To:     Camel Guo <camel.guo@axis.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <tiwai@suse.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@axis.com>, Camel Guo <camelg@axis.com>
-References: <20200908083521.14105-1-camel.guo@axis.com>
- <20200908083521.14105-2-camel.guo@axis.com>
- <89f8cce0-2407-15f5-a8e5-0aa17a2eb2c4@ti.com>
-Message-ID: <8160bf81-a72d-2db0-0767-79b0509ff143@ti.com>
-Date:   Tue, 8 Sep 2020 09:58:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 12:36:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731825AbgIHQcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:32:03 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA85B22228;
+        Tue,  8 Sep 2020 14:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599575593;
+        bh=+OrY6yic2b8j2M0/KDTR0UkjhKoGy5DZysMSvf4PNF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YvT2gzuABobpfos/MY8/9MeUgl//rcFFIyJeM4wXqGoQbeswBnGzyCA6KjFlzB2DG
+         enukFSp6c9IAHivmEzHvglfK3yhERXFTnxfz/Q8XwhgtvdpK45iqPERkw8cvRZn/00
+         B0OMiWVQRB7OqLEMt6H38J4xs86RzFS4Vcmm3iH8=
+Date:   Tue, 8 Sep 2020 16:33:26 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Ajay Kaher <akaher@vmware.com>, sashal@kernel.org,
+        cohuck@redhat.com, peterx@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4.14.y 0/3] vfio: Fix for CVE-2020-12888
+Message-ID: <20200908143326.GA3451422@kroah.com>
+References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
+ <1599509828-23596-4-git-send-email-akaher@vmware.com>
+ <20200908082904.045ff744@w520.home>
 MIME-Version: 1.0
-In-Reply-To: <89f8cce0-2407-15f5-a8e5-0aa17a2eb2c4@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908082904.045ff744@w520.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Camel
+On Tue, Sep 08, 2020 at 08:29:04AM -0600, Alex Williamson wrote:
+> On Tue, 8 Sep 2020 01:47:08 +0530
+> Ajay Kaher <akaher@vmware.com> wrote:
+> 
+> > CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
+> > devices may lead to DoS scenario
+> >     
+> > The VFIO modules allow users (guest VMs) to enable or disable access to the
+> > devices' MMIO memory address spaces. If a user attempts to access (read/write)
+> > the devices' MMIO address space when it is disabled, some h/w devices issue an
+> > interrupt to the CPU to indicate a fatal error condition, crashing the system.
+> > This flaw allows a guest user or process to crash the host system resulting in
+> > a denial of service.
+> >     
+> > Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
+> > before user access.
+> >     
+> > Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
+> > remap_pfn_range(). Also provides a list of vmas actively mapping the area which
+> > can later use to invalidate those mappings.
+> >     
+> > Patch 3/ block the user from accessing memory spaces which is disabled by using
+> > new vma list support to zap, or invalidate, those memory mappings in order to
+> > force them to be faulted back in on access.
+> >     
+> > Upstreamed patches link:
+> > https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+> >         
+> > [PATCH v4.14.y 1/3]:
+> > Backporting of upsream commit 41311242221e:
+> > vfio/type1: Support faulting PFNMAP vmas
+> >         
+> > [PATCH v4.14.y 2/3]:
+> > Backporting of upsream commit 11c4cd07ba11:
+> > vfio-pci: Fault mmaps to enable vma tracking
+> >         
+> > [PATCH v4.14.y 3/3]:
+> > Backporting of upsream commit abafbc551fdd:
+> > vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+> > 
+> 
+> I'd recommend also including the following or else SR-IOV VFs will be
+> broken for DPDK:
+> 
+> commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21
+> Author: Alex Williamson <alex.williamson@redhat.com>
+> Date:   Thu Jun 25 11:04:23 2020 -0600
+> 
+>     vfio/pci: Fix SR-IOV VF handling with MMIO blocking
+>     
+>     SR-IOV VFs do not implement the memory enable bit of the command
+>     register, therefore this bit is not set in config space after
+>     pci_enable_device().  This leads to an unintended difference
+>     between PF and VF in hand-off state to the user.  We can correct
+>     this by setting the initial value of the memory enable bit in our
+>     virtualized config space.  There's really no need however to
+>     ever fault a user on a VF though as this would only indicate an
+>     error in the user's management of the enable bit, versus a PF
+>     where the same access could trigger hardware faults.
+>     
+>     Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
+>     Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 
-On 9/8/20 6:49 AM, Dan Murphy wrote:
-> Camel
->
-> On 9/8/20 3:35 AM, Camel Guo wrote:
->> From: Camel Guo <camelg@axis.com>
->>
->> According to its datasheet, after reset this codec goes into sleep
->> mode. In this mode, any register accessing should be avoided except for
->> exiting sleep mode. Hence this commit moves SLEEP_CFG access before any
->> register accessing.
->
-> This is interesting because our HW team suggested putting the device 
-> into sleep mode when doing register writes/reads because they were 
-> finding abnormalities in the register settings when the device is active.
->
-> I have a local patch that changes this as well that the HW team 
-> requested.
+Good catch, now queued up, thanks.
 
-
-OK I have clarification on this now.  Their original request was 
-incorrect they indicate the BIAS, ADC and PLLs be powered down during 
-writes and reads.
-
-
->
-> Mark
->
-> Let me run this by the HW team first before applying this patch.
-
-Mark
-
-Acked-by: Dan Murphy <dmurphy@ti.com>
-
-
->
-> Dan
->
+greg k-h
