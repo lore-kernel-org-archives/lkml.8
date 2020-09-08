@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966BCC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D810EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F21A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4A92080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590268;
-	bh=h6ks64jl06DbIv9dD4cgt72UfJdgdym0WvGOZh3FOfA=;
+	s=default; t=1599590275;
+	bh=s90aUzkvdM91NHGAnM48+ESinedEbs0jyCdCaIRERok=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yzHzptZ3/ABGh1NsLv7Gri4koeKoh5PAxnWb1d1OC2Fex41f89D8+goImCNq4NRFu
-	 tZo25FkjCoLWWgxnYkVg0KbUK1gRUYr+nIgwZ3nEDtXYgG9Nw8Xxhy9juSpefyfNt5
-	 sR20PGfN7XUauDO5GcPfty38cYPHlHxGG7Ubrzpw=
+	b=PHVYHMWwtSPC7UPgXTix7LbOzL9AVrmnUltyT40mOiZQqTi07z6nWg3xK9/NlCfWW
+	 dmhmiFKsad1cElplUuxYYjr2DTar3ADlN/uzFECRHAkw6KjSJRgK1pswLrVVGzkOSM
+	 sUvi0qmJMAzJhpHUsiD9CVKH0LeKTG2FKWSiQGjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbgIHShr (ORCPT
+        id S1731350AbgIHShu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731333AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731317AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB422409A;
-        Tue,  8 Sep 2020 15:48:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D37BA23F5C;
+        Tue,  8 Sep 2020 15:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580132;
-        bh=h6ks64jl06DbIv9dD4cgt72UfJdgdym0WvGOZh3FOfA=;
+        s=default; t=1599580096;
+        bh=s90aUzkvdM91NHGAnM48+ESinedEbs0jyCdCaIRERok=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gC3GUC+mTOhVpDzz30297+DD8SGmV7J2LLW//nnigTSUKBFlw1RerbEJhAj/12+0L
-         aBf1GCALSMw5xueJOmbJ8XxaWWwKfIgygGQ7uusGkinpYAcCEkdrj5RHEXRy4Nl1K5
-         xQjhLCML6HuGBmggicLFR4DFC1ENbjJqKmTIcSoU=
+        b=YyuOy2cFFZyqrqpr79N/j4+cCW2RlPWBwl2L2WrrzYvL3kiElL27ZS242BiS2rfSy
+         PYtSL//IyuQ6W6er0sesU5Hyw5rigb+OdG4K9Dyxt4Xea0Fk0/v1ndqyM5p3nj5Ozc
+         P3+UoA/cFczFAg97fi45lENFWMhK7D472yoFNd00=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Leiner <simon@leiner.me>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Gabriel Ganne <gabriel.ganne@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 14/88] xen/xenbus: Fix granting of vmallocd memory
-Date:   Tue,  8 Sep 2020 17:25:15 +0200
-Message-Id: <20200908152221.794207486@linuxfoundation.org>
+Subject: [PATCH 4.19 30/88] gtp: add GTPA_LINK info to msg sent to userspace
+Date:   Tue,  8 Sep 2020 17:25:31 +0200
+Message-Id: <20200908152222.580536629@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -61,45 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Leiner <simon@leiner.me>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit d742db70033c745e410523e00522ee0cfe2aa416 ]
+[ Upstream commit b274e47d9e3f4dcd4ad4028a316ec22dc4533ac7 ]
 
-On some architectures (like ARM), virt_to_gfn cannot be used for
-vmalloc'd memory because of its reliance on virt_to_phys. This patch
-introduces a check for vmalloc'd addresses and obtains the PFN using
-vmalloc_to_pfn in that case.
+During a dump, this attribute is essential, it enables the userspace to
+know on which interface the context is linked to.
 
-Signed-off-by: Simon Leiner <simon@leiner.me>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Link: https://lore.kernel.org/r/20200825093153.35500-1-simon@leiner.me
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Tested-by: Gabriel Ganne <gabriel.ganne@6wind.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/gtp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index e94a61eaeceb0..f7b553faadb10 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -365,8 +365,14 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
- 	int i, j;
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index d73850ebb671f..f2fecb6842209 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1187,6 +1187,7 @@ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+ 		goto nlmsg_failure;
  
- 	for (i = 0; i < nr_pages; i++) {
--		err = gnttab_grant_foreign_access(dev->otherend_id,
--						  virt_to_gfn(vaddr), 0);
-+		unsigned long gfn;
-+
-+		if (is_vmalloc_addr(vaddr))
-+			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
-+		else
-+			gfn = virt_to_gfn(vaddr);
-+
-+		err = gnttab_grant_foreign_access(dev->otherend_id, gfn, 0);
- 		if (err < 0) {
- 			xenbus_dev_fatal(dev, err,
- 					 "granting access to ring page");
+ 	if (nla_put_u32(skb, GTPA_VERSION, pctx->gtp_version) ||
++	    nla_put_u32(skb, GTPA_LINK, pctx->dev->ifindex) ||
+ 	    nla_put_be32(skb, GTPA_PEER_ADDRESS, pctx->peer_addr_ip4.s_addr) ||
+ 	    nla_put_be32(skb, GTPA_MS_ADDRESS, pctx->ms_addr_ip4.s_addr))
+ 		goto nla_put_failure;
 -- 
 2.25.1
 
