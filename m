@@ -2,52 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88801C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55B882078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335DC2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593344;
-	bh=1fxuIfBwAjEqiOizcTcWza3Cdoa0cViFmNnsCS2gGew=;
+	s=default; t=1599593364;
+	bh=MekHGvyuxks7mRtjZXsW9zksaxfXWlJYGDwuV95H3xE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5eXsPYgTnddNyp7gaGRIDIKej54FD/XGZNyl8aG6QuON8Sz+g2Ts6wohjmcBwyfi
-	 LCB2NCsslGQ/06y29Z4CJpRXmm8TJ+PzapvYHYz4CAMPJ1RAR2ldTJ/6IgKwN3HR4O
-	 mV9ABW+Ksod1W07S0Ye05sfo0mvjZ2OvZsdNYr0A=
+	b=jaV+DoMPtPeiK11WJ26780JGjuVJ4sxEZ47Hup11GAAKq+Coz91PYm2mic+D2SPHd
+	 DcZi9mSHL8pgtnakc/V6naSRlIoqi0LqjkAw/Z2J6E8lZX1RrrBSj0vBMlGHqQKzpN
+	 5ZFYsZx6Fv4KIxvZoXQ2eCa1k/RRhQZA4WnWsUHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731467AbgIHT3C (ORCPT
+        id S1731156AbgIHT3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731054AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E2FB23F58;
-        Tue,  8 Sep 2020 15:38:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5152024673;
+        Tue,  8 Sep 2020 15:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579487;
-        bh=1fxuIfBwAjEqiOizcTcWza3Cdoa0cViFmNnsCS2gGew=;
+        s=default; t=1599579567;
+        bh=MekHGvyuxks7mRtjZXsW9zksaxfXWlJYGDwuV95H3xE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNpqNSyMaz0n/CGIhcBjOtXBgocEl2mxDn26przAzSoM+sQStBr/pdlurdW826/wS
-         MZs9Q+ScPSA5NCJunbSFs9imIwJXX7pCGLXgFsjc+QS9SGliOfY9ywEaUDbQzINLgw
-         8obuCEFJJNUJHGBUzkp5Aq06hXdTy1QLWG8vO2qc=
+        b=Az1TgRO9oEYJTNKB1Ij0p5Ni3JrMYe7W8Ar9hy+S9hB2ho1DZmlGSz335UewkUgt6
+         niUa9IXu9rkL2LH1oGrUWxMtyGdDtdvuBGt4I+xnRjp0d5hn20NMSFHCkM7wZUIHi6
+         9Tu6+IrVMFP3DdLdZGbcJpJ0V6sLBhxn3ziYQ9hM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 098/186] net: gemini: Fix another missing clk_disable_unprepare() in probe
-Date:   Tue,  8 Sep 2020 17:24:00 +0200
-Message-Id: <20200908152246.385353745@linuxfoundation.org>
+        stable@vger.kernel.org, Tyler Richmond <t.d.richmond@gmail.com>,
+        Marcos Paulo de Souza <mpdesouza@suse.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 131/186] btrfs: tree-checker: fix the error message for transid error
+Date:   Tue,  8 Sep 2020 17:24:33 +0200
+Message-Id: <20200908152247.989688426@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,84 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit eb0f3bc463d59d86402f19c59aa44e82dc3fab6d ]
+commit f96d6960abbc52e26ad124e69e6815283d3e1674 upstream.
 
-We recently added some calls to clk_disable_unprepare() but we missed
-the last error path if register_netdev() fails.
+The error message for inode transid is the same as for inode generation,
+which makes us unable to detect the real problem.
 
-I made a couple cleanups so we avoid mistakes like this in the future.
-First I reversed the "if (!ret)" condition and pulled the code in one
-indent level.  Also, the "port->netdev = NULL;" is not required because
-"port" isn't used again outside this function so I deleted that line.
+Reported-by: Tyler Richmond <t.d.richmond@gmail.com>
+Fixes: 496245cac57e ("btrfs: tree-checker: Verify inode item")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cortina/gemini.c | 34 +++++++++++++--------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ fs/btrfs/tree-checker.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
-index 62e271aea4a50..ffec0f3dd9578 100644
---- a/drivers/net/ethernet/cortina/gemini.c
-+++ b/drivers/net/ethernet/cortina/gemini.c
-@@ -2446,8 +2446,8 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 	port->reset = devm_reset_control_get_exclusive(dev, NULL);
- 	if (IS_ERR(port->reset)) {
- 		dev_err(dev, "no reset\n");
--		clk_disable_unprepare(port->pclk);
--		return PTR_ERR(port->reset);
-+		ret = PTR_ERR(port->reset);
-+		goto unprepare;
+--- a/fs/btrfs/tree-checker.c
++++ b/fs/btrfs/tree-checker.c
+@@ -984,7 +984,7 @@ static int check_inode_item(struct exten
+ 	/* Note for ROOT_TREE_DIR_ITEM, mkfs could set its transid 0 */
+ 	if (btrfs_inode_transid(leaf, iitem) > super_gen + 1) {
+ 		inode_item_err(leaf, slot,
+-			"invalid inode generation: has %llu expect [0, %llu]",
++			"invalid inode transid: has %llu expect [0, %llu]",
+ 			       btrfs_inode_transid(leaf, iitem), super_gen + 1);
+ 		return -EUCLEAN;
  	}
- 	reset_control_reset(port->reset);
- 	usleep_range(100, 500);
-@@ -2502,25 +2502,25 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
- 					IRQF_SHARED,
- 					port_names[port->id],
- 					port);
--	if (ret) {
--		clk_disable_unprepare(port->pclk);
--		return ret;
--	}
-+	if (ret)
-+		goto unprepare;
- 
- 	ret = register_netdev(netdev);
--	if (!ret) {
-+	if (ret)
-+		goto unprepare;
-+
-+	netdev_info(netdev,
-+		    "irq %d, DMA @ 0x%pap, GMAC @ 0x%pap\n",
-+		    port->irq, &dmares->start,
-+		    &gmacres->start);
-+	ret = gmac_setup_phy(netdev);
-+	if (ret)
- 		netdev_info(netdev,
--			    "irq %d, DMA @ 0x%pap, GMAC @ 0x%pap\n",
--			    port->irq, &dmares->start,
--			    &gmacres->start);
--		ret = gmac_setup_phy(netdev);
--		if (ret)
--			netdev_info(netdev,
--				    "PHY init failed, deferring to ifup time\n");
--		return 0;
--	}
-+			    "PHY init failed, deferring to ifup time\n");
-+	return 0;
- 
--	port->netdev = NULL;
-+unprepare:
-+	clk_disable_unprepare(port->pclk);
- 	return ret;
- }
- 
--- 
-2.25.1
-
 
 
