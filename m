@@ -2,107 +2,102 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FB3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454B3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7DB0218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF0662177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLdfO9Rz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVFVXNTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgIHH5z (ORCPT
+        id S1729971AbgIHH6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729685AbgIHH5b (ORCPT
+        Tue, 8 Sep 2020 03:58:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37955 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729915AbgIHH5t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:57:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29772C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 00:57:31 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id x123so160312pfc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:57:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ITdkk36tx9oBNoeh+htptP26+GpLBLf3As2BXQ4eM1k=;
-        b=CLdfO9RzXJzpfk8lmE2Wst3FdItUkCfAYmuowNuE88a7a1WPiN6S9D5Z3S/rzKmDLM
-         haVL+hkxhNc+BfT6GpMVG4VRBJTFkKHn6vsyrMuSKCO241m+QripjjpGjtO8IABKQDI6
-         7T/IJbulr09PZ59rrhIa4yASomd9RbTXUD8b1R5Hw8orz8J8Q+Ella/jW9+o+LhszXYf
-         fhidD76Q8Tr+DXLcTeCxUj+F2HJJCXx1QmoYQokl+ziA+k0xaUrLEA96WofYQaS+xqG0
-         /ESezN1Pf0+wA6FkZrXvYkVYhUqZpzxHymCNtZuaoJiP8PjTI/ZflhvJ/f/AAcWSTz6I
-         mchg==
+        Tue, 8 Sep 2020 03:57:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599551860;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hjajqtvEuISTBRgRpPMUCH8ji6lbeHsCmX5hSQj+D2Q=;
+        b=HVFVXNTCn0P8hxdzDQkceEZE95e+2L8CyHiJGAdMFWyTELNh0rCS64n0hyDoSvB+uoXlC2
+        as/CK00hPloi+JHHZowUZJFtc47cjpZlZoTF/Q3Touz780mZnTcffk1thObxcy6ig6S2fb
+        O4I/8if0CXHx/UFEovyQOwhgHLa9o+Q=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-7Xnsz1lqMomrMpHZXNA5Tw-1; Tue, 08 Sep 2020 03:57:39 -0400
+X-MC-Unique: 7Xnsz1lqMomrMpHZXNA5Tw-1
+Received: by mail-ed1-f72.google.com with SMTP id l2so5838113ede.19
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:57:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ITdkk36tx9oBNoeh+htptP26+GpLBLf3As2BXQ4eM1k=;
-        b=nPa1QupKmOiGwMJbk5uKVeT8YQ2R1V3V2W5bIcxtRIY15fDvX0YZVE/kMDc943fk66
-         hRhu/yNTC3IC4DNXF2tE1MNLcYNIIbnGXrDyis/I7uwNqv7sMgFhFyngJUQDBYiQzO++
-         +lpc6MHvhylcO4f3n0S04r7PWD7rLsgXeDZJS9bfH8BxFKUM+BPcouW8XZrQrnelCUyn
-         ephRDBqoGqrlHV/kQXzG6/6fPkn/OZ9xPFph6/ro8NpanIeUDN5Mj7jRN41Q8WQp1pdB
-         y3q11KEpjWkOVx5x2I3naCCT1wuXnoML24dLN7Rgk98MpxEEhKw0ABCmwYzOXFY9P+ji
-         30LA==
-X-Gm-Message-State: AOAM530LqxYI4c/XCmr9GTpigJ8DCiIieS8Ndqu54tEFXHlzdvqDSgjg
-        4emR7XivlwocEP4gWzBtHHQS
-X-Google-Smtp-Source: ABdhPJxQqQutMxwbopIVDuWQ82nAqur0M9bIpK2rrrtnp1TxBVoi90q3P+vr1rg4AlMOCvDjvycO5Q==
-X-Received: by 2002:a17:902:6945:: with SMTP id k5mr2325037plt.131.1599551850609;
-        Tue, 08 Sep 2020 00:57:30 -0700 (PDT)
-Received: from localhost.localdomain ([103.59.133.81])
-        by smtp.googlemail.com with ESMTPSA id m21sm7560154pfo.13.2020.09.08.00.57.26
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hjajqtvEuISTBRgRpPMUCH8ji6lbeHsCmX5hSQj+D2Q=;
+        b=cQqy4lzol9nC4uKfWcOFGnLpn29/DfELVcYBjzgc603IsCWcsHleoEmP2+kn4PpUVv
+         BZlU4JYr8umgB/eBEHv0KL5FnubLgKQ1GkF8EywEKCZNWF0VtxLoKOouQK/ndVtihHpQ
+         ygbjP4fIMDWo+gkmlRsWirKawAjR5ZEKfUNCjqeL9EFSGCOr+l4lmz1r5hDHuqN6Krty
+         Rofey4IsrPy5y1Vwr6ujoXz+Y0R8VMkidh2hn6+ciogF3aWzhsNI9slQV/SJ9dkJH3Zg
+         Y7yzmNfz/cJc2eRAEG887/vEAY97uN2QFbIRSCwF1CaQA6RkjCKIjz7AM8wMAeLhtChu
+         N9Xw==
+X-Gm-Message-State: AOAM530Vxe3joNiTR3PLM1r3SRVDxqZro+6dqPemSRZJCPIt2Rr4e6va
+        fjAcSThm9OZEsvHeEVk0GBY2KPbvokBzMnZbCxPU/lHlQTl5zKXXV//bUhoSi90AHzB6EdQ7PN1
+        UwmkCVP5UsLhOtjuGHDt7M9L5
+X-Received: by 2002:a17:906:4cc6:: with SMTP id q6mr17306533ejt.201.1599551857520;
+        Tue, 08 Sep 2020 00:57:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxpDLRo1CVGFPV8s2mB7FGn6jr+cgUVgJN/ozC0WS4OAeawUnu+/98JbXILSr3J/Bhzu7egLw==
+X-Received: by 2002:a17:906:4cc6:: with SMTP id q6mr17306516ejt.201.1599551857341;
+        Tue, 08 Sep 2020 00:57:37 -0700 (PDT)
+Received: from redhat.com ([147.161.9.118])
+        by smtp.gmail.com with ESMTPSA id e4sm16024501edk.38.2020.09.08.00.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 00:57:29 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     amitk@kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
-        tdas@codeaurora.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/7] Add CPUFreq support for SM8250 SoC
-Date:   Tue,  8 Sep 2020 13:27:09 +0530
-Message-Id: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 08 Sep 2020 00:57:36 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 03:57:30 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
+Message-ID: <20200908035506-mutt-send-email-mst@kernel.org>
+References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
+ <20200908003951.233e47f3.pasic@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908003951.233e47f3.pasic@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Sep 08, 2020 at 12:39:51AM +0200, Halil Pasic wrote:
+> On Mon,  7 Sep 2020 11:39:05 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+> > Hi all,
+> > 
+> > The goal of the series is to give a chance to the architecture
+> > to validate VIRTIO device features.
+> 
+> Michael, is this going in via your tree?
 
-This series adds CPUFreq support for Qualcomm SM8250 SoC. The existing
-qcom-hw driver is reworked to support the EPSS block on this SoC which
-handles the CPUFreq duties.
-
-The EPSS block supports additional features for which incremental patches
-will be submitted on top of this series!
-
-Thanks,
-Mani
-
-Bjorn Andersson (1):
-  arm64: dts: qcom: sm8250: Add cpufreq hw node
-
-Manivannan Sadhasivam (6):
-  dt-bindings: cpufreq: cpufreq-qcom-hw: Document SM8250 compatible
-  cpufreq: qcom-hw: Make use of cpufreq driver_data for passing pdev
-  cpufreq: qcom-hw: Make use of of_match data for offsets and row size
-  cpufreq: qcom-hw: Use regmap for accessing hardware registers
-  cpufreq: qcom-hw: Add cpufreq support for SM8250 SoC
-  cpufreq: qcom-hw: Use devm_platform_ioremap_resource() to simplify
-    code
-
- .../bindings/cpufreq/cpufreq-qcom-hw.txt      |   2 +-
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |  22 +++
- drivers/cpufreq/qcom-cpufreq-hw.c             | 160 +++++++++++++-----
- 3 files changed, 143 insertions(+), 41 deletions(-)
+I guess so. Still not really happy about second-guessing
+the hypervisor, but this got acks from others
+so maybe I'm wrong in this instance. Won't be the first time.
 
 -- 
-2.17.1
+MST
 
