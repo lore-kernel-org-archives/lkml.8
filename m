@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 164DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A42C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9FCD21D43
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26EB02080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588538;
-	bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
+	s=default; t=1599588647;
+	bh=pRoLhKFzm2KRsyPIYH387aU7k/utkEo6JS8ZHWTEgD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wsqfa18K5IGzAySQ4ZkYaMO4Ce6e3DM38JPFY7GvcmjjWsAg2Z7gxD3qeeth5DQfR
-	 lrLbR6or6ZKQbTnBYy2U0URW5afgc7c8DwHIBgiJfZy3H3kQapRrVyo1Nq+8/NkucL
-	 fg+kKnbxIJzggGdQDlCTic0OUGaQzgrqI+y/KYL8=
+	b=BbCBXPIUHBNsh6DIoKnLJid10x6FCyMAmMj18EVSCI46dJUS/qJK83cIzVMpAtrU7
+	 7/Om2JMpCXSvEcN8anKwpbdwusmxi4QdbIjMlmqaZjWTLFDzjongEjXq+RrMGW759G
+	 J3xrfDXPCBQF71FizJdmPWEbSkjxhnksCHrp4HqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgIHSIp (ORCPT
+        id S1731741AbgIHSKp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:10:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731473AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:49 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A92D9247FC;
-        Tue,  8 Sep 2020 15:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB602247EA;
+        Tue,  8 Sep 2020 15:42:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579777;
-        bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
+        s=default; t=1599579762;
+        bh=pRoLhKFzm2KRsyPIYH387aU7k/utkEo6JS8ZHWTEgD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fUj+FBRRHzcxsjOhFWWvfH15EQMTkgJhf/qukBFpxAfFt5nUCCxZH2jtC0wHj6nFm
-         uMXqRI2eCKsNW+i+Ondsz9dZwx/YxV7DHsuxjYb594gEvRXLaxdPl7uTP8p9aYAaFO
-         DiEAE+0jVSMkzvtbsdDreZ5mobHkYK+0cHx65gAk=
+        b=tfaOSB9U6oPdb6luL8q5VSSdgEW1P4PEi4PDUI8V7grSsdlJBg3HRTbN985ee/Cqo
+         0CZg7UPSe2pjI6FUFQFxJEoyU0ZRuv5VsI8gVTSvdq1lmjZ2bvntQoque1aZOFKQcj
+         G7v4Ii8HxTz8ux2K0eVuPT9Elfk4hH7JpbDHzKnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/129] drm/omap: fix incorrect lock state
-Date:   Tue,  8 Sep 2020 17:24:13 +0200
-Message-Id: <20200908152230.311363985@linuxfoundation.org>
+Subject: [PATCH 5.4 024/129] batman-adv: Fix own OGM check in aggregated OGMs
+Date:   Tue,  8 Sep 2020 17:24:25 +0200
+Message-Id: <20200908152230.901849346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -60,73 +62,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-[ Upstream commit 7fd5b25499bcec157dd4de9a713425efcf4571cd ]
+[ Upstream commit d8bf0c01642275c7dca1e5d02c34e4199c200b1f ]
 
-After commit 92cc68e35863c1c61c449efa2b2daef6e9926048 ("drm/vblank: Use
-spin_(un)lock_irq() in drm_crtc_vblank_on()") omapdrm locking is broken:
+The own OGM check is currently misplaced and can lead to the following
+issues:
 
-WARNING: inconsistent lock state
-5.8.0-rc2-00483-g92cc68e35863 #13 Tainted: G        W
---------------------------------
-inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
-swapper/0/0 [HC1[1]:SC0[0]:HE0:SE1] takes:
-ea98222c (&dev->event_lock#2){?.+.}-{2:2}, at: drm_handle_vblank+0x4c/0x520 [drm]
-{HARDIRQ-ON-W} state was registered at:
-  trace_hardirqs_on+0x9c/0x1ec
-  _raw_spin_unlock_irq+0x20/0x58
-  omap_crtc_atomic_enable+0x54/0xa0 [omapdrm]
-  drm_atomic_helper_commit_modeset_enables+0x218/0x270 [drm_kms_helper]
-  omap_atomic_commit_tail+0x48/0xc4 [omapdrm]
-  commit_tail+0x9c/0x190 [drm_kms_helper]
-  drm_atomic_helper_commit+0x154/0x188 [drm_kms_helper]
-  drm_client_modeset_commit_atomic+0x228/0x268 [drm]
-  drm_client_modeset_commit_locked+0x60/0x1d0 [drm]
-  drm_client_modeset_commit+0x24/0x40 [drm]
-  drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa8 [drm_kms_helper]
-  drm_fb_helper_set_par+0x2c/0x5c [drm_kms_helper]
-  drm_fb_helper_hotplug_event.part.0+0xa0/0xbc [drm_kms_helper]
-  drm_kms_helper_hotplug_event+0x24/0x30 [drm_kms_helper]
-  output_poll_execute+0x1a8/0x1c0 [drm_kms_helper]
-  process_one_work+0x268/0x800
-  worker_thread+0x30/0x4e0
-  kthread+0x164/0x190
-  ret_from_fork+0x14/0x20
+For one thing we might receive an aggregated OGM from a neighbor node
+which has our own OGM in the first place. We would then not only skip
+our own OGM but erroneously also any other, following OGM in the
+aggregate.
 
-The reason for this is that omapdrm calls drm_crtc_vblank_on() while
-holding event_lock taken with spin_lock_irq().
+For another, we might receive an OGM aggregate which has our own OGM in
+a place other then the first one. Then we would wrongly not skip this
+OGM, leading to populating the orginator and gateway table with ourself.
 
-It is not clear why drm_crtc_vblank_on() and drm_crtc_vblank_get() are
-called while holding event_lock. I don't see any problem with moving
-those calls outside the lock, which is what this patch does.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200819103021.440288-1-tomi.valkeinen@ti.com
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/omap_crtc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/batman-adv/bat_v_ogm.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
-index 3c5ddbf30e974..f5e18802e7bc6 100644
---- a/drivers/gpu/drm/omapdrm/omap_crtc.c
-+++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
-@@ -451,11 +451,12 @@ static void omap_crtc_atomic_enable(struct drm_crtc *crtc,
- 	if (omap_state->manually_updated)
- 		return;
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index a9e7540c56918..3165f6ff8ee71 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -878,6 +878,12 @@ static void batadv_v_ogm_process(const struct sk_buff *skb, int ogm_offset,
+ 		   ntohl(ogm_packet->seqno), ogm_throughput, ogm_packet->ttl,
+ 		   ogm_packet->version, ntohs(ogm_packet->tvlv_len));
  
--	spin_lock_irq(&crtc->dev->event_lock);
- 	drm_crtc_vblank_on(crtc);
++	if (batadv_is_my_mac(bat_priv, ogm_packet->orig)) {
++		batadv_dbg(BATADV_DBG_BATMAN, bat_priv,
++			   "Drop packet: originator packet from ourself\n");
++		return;
++	}
 +
- 	ret = drm_crtc_vblank_get(crtc);
- 	WARN_ON(ret != 0);
+ 	/* If the throughput metric is 0, immediately drop the packet. No need
+ 	 * to create orig_node / neigh_node for an unusable route.
+ 	 */
+@@ -1005,11 +1011,6 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	if (batadv_is_my_mac(bat_priv, ethhdr->h_source))
+ 		goto free_skb;
  
-+	spin_lock_irq(&crtc->dev->event_lock);
- 	omap_crtc_arm_event(crtc);
- 	spin_unlock_irq(&crtc->dev->event_lock);
- }
+-	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
+-
+-	if (batadv_is_my_mac(bat_priv, ogm_packet->orig))
+-		goto free_skb;
+-
+ 	batadv_inc_counter(bat_priv, BATADV_CNT_MGMT_RX);
+ 	batadv_add_counter(bat_priv, BATADV_CNT_MGMT_RX_BYTES,
+ 			   skb->len + ETH_HLEN);
 -- 
 2.25.1
 
