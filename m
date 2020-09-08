@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3174BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4A2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3132087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 397F120768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585578;
-	bh=J9FPxSeDJRQW9rI2ktIJjNLgiwVam06bvp+vY+xw60U=;
+	s=default; t=1599585587;
+	bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HJ0z8JyGWzntM4DbSrcfsFo3gr3uO+3VEJ7MN7UHS8Z/7da9p/bTqX9t52hkCr4kh
-	 bnB2pbP6T2Dg7ziWZmhCjJAP7D85IWcuB6rAstYGJsG3ewkZgMOlnn+afGfcjohQDa
-	 UDu3YnRwExUDoifQSIuXtUudfW89VD4bo1XWUiMo=
+	b=OGT2ZIfliJngd0ge9UmeUxWx3u+vTDpMzW4dERUVy3JGlD8QbfD9QqS3LBjvS8aC1
+	 /nxIZwA6jTCBg513hSjnJKU5zN7zlQ+w5VDnRq4YeBufVSi7vxqDhYt/YVza0OyeRx
+	 xcYEiv379vSDwRNnecEL6tx8ZS8OETEaC3EpyFhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgIHRTg (ORCPT
+        id S1726484AbgIHRTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58440 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:19:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731690AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731744AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:03 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC5624834;
-        Tue,  8 Sep 2020 15:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 812AE24814;
+        Tue,  8 Sep 2020 15:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579872;
-        bh=J9FPxSeDJRQW9rI2ktIJjNLgiwVam06bvp+vY+xw60U=;
+        s=default; t=1599579817;
+        bh=5cTymgNOd6yMe07rM04lmyuuYPSuueVZ4FEQI/Htjg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lWoL67bnSa818wm0PfMDEsGNqi3fSZc8Bh9xb0iSocv+ClVX9p04QctMG3igncAwx
-         1AYbVn38ZLgzXpeUxdwn5Jlx/HlJgsFM1I+AkqB8Gox5FRl7cOXNc+mD568jy5hqju
-         fzIHFcwh2K+9a05scU6+LyL9ig2YPGHbPMT1CZL4=
+        b=R8knyMCJq7FdjCBsQ39TvJguCYn5MkZvnLrqOBqWZRAadZKSYCU8LkyeRWesWexzg
+         hulOIHpx5zc+sGxHbO1DfMY3yWQIQNPeSKUvc4gZvcF0mB21eo4lGVAx7bkHXMxwMa
+         TBZiNGP8YgLejN+5GQJHrnjgZh1irRA0FhY1u24k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 067/129] iommu/vt-d: Serialize IOMMU GCMD register modifications
-Date:   Tue,  8 Sep 2020 17:25:08 +0200
-Message-Id: <20200908152233.045852216@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 016/129] drm/amd/display: Reject overlay plane configurations in multi-display scenarios
+Date:   Tue,  8 Sep 2020 17:24:17 +0200
+Message-Id: <20200908152230.517905225@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -63,60 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
 
-[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
+[ Upstream commit 168f09cdadbd547c2b202246ef9a8183da725f13 ]
 
-The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
-Description) that:
+[Why]
+These aren't stable on some platform configurations when driving
+multiple displays, especially on higher resolution.
 
-If multiple control fields in this register need to be modified, software
-must serialize the modifications through multiple writes to this register.
+In particular the delay in asserting p-state and validating from
+x86 outweights any power or performance benefit from the hardware
+composition.
 
-However, in irq_remapping.c, modifications of IRE and CFI are done in one
-write. We need to do two separate writes with STS checking after each. It
-also checks the status register before writing command register to avoid
-unnecessary register write.
+Under some configurations this will manifest itself as extreme stutter
+or unresponsiveness especially when combined with cursor movement.
 
-Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+[How]
+Disable these for now. Exposing overlays to userspace doesn't guarantee
+that they'll be able to use them in any and all configurations and it's
+part of the DRM contract to have userspace gracefully handle validation
+failures when they occur.
+
+Valdiation occurs as part of DC and this in particular affects RV, so
+disable this in dcn10_global_validation.
+
+Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel_irq_remapping.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/iommu/intel_irq_remapping.c b/drivers/iommu/intel_irq_remapping.c
-index 6bfb283e6f287..f697f3a1d46bc 100644
---- a/drivers/iommu/intel_irq_remapping.c
-+++ b/drivers/iommu/intel_irq_remapping.c
-@@ -507,12 +507,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+index 1599bb9711111..e860ae05feda1 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_resource.c
+@@ -1151,6 +1151,7 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
+ 	bool video_large = false;
+ 	bool desktop_large = false;
+ 	bool dcc_disabled = false;
++	bool mpo_enabled = false;
  
- 	/* Enable interrupt-remapping */
- 	iommu->gcmd |= DMA_GCMD_IRE;
--	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
- 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
--
- 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
- 		      readl, (sts & DMA_GSTS_IRES), sts);
+ 	for (i = 0; i < context->stream_count; i++) {
+ 		if (context->stream_status[i].plane_count == 0)
+@@ -1159,6 +1160,9 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
+ 		if (context->stream_status[i].plane_count > 2)
+ 			return DC_FAIL_UNSUPPORTED_1;
  
-+	/* Block compatibility-format MSIs */
-+	if (sts & DMA_GSTS_CFIS) {
-+		iommu->gcmd &= ~DMA_GCMD_CFI;
-+		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-+		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-+			      readl, !(sts & DMA_GSTS_CFIS), sts);
-+	}
++		if (context->stream_status[i].plane_count > 1)
++			mpo_enabled = true;
++
+ 		for (j = 0; j < context->stream_status[i].plane_count; j++) {
+ 			struct dc_plane_state *plane =
+ 				context->stream_status[i].plane_states[j];
+@@ -1182,6 +1186,10 @@ static enum dc_status dcn10_validate_global(struct dc *dc, struct dc_state *cont
+ 		}
+ 	}
+ 
++	/* Disable MPO in multi-display configurations. */
++	if (context->stream_count > 1 && mpo_enabled)
++		return DC_FAIL_UNSUPPORTED_1;
 +
  	/*
- 	 * With CFI clear in the Global Command register, we should be
- 	 * protected from dangerous (i.e. compatibility) interrupts
+ 	 * Workaround: On DCN10 there is UMC issue that causes underflow when
+ 	 * playing 4k video on 4k desktop with video downscaled and single channel
 -- 
 2.25.1
 
