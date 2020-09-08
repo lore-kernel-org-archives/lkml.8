@@ -2,134 +2,159 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9144AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6780C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7122087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=trendmicro.com header.i=@trendmicro.com header.b="ScwUXwqB"
+	by mail.kernel.org (Postfix) with ESMTP id A0C712087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:24:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgIHLX6 (ORCPT
+        id S1729705AbgIHLY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:23:58 -0400
-Received: from sjdcvmout02.udc.trendmicro.com ([66.180.82.11]:54546 "EHLO
-        sjdcvmout02.udc.trendmicro.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729538AbgIHLPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:15:33 -0400
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87A2364061;
-        Tue,  8 Sep 2020 04:15:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trendmicro.com;
-        s=tmoutbound; t=1599563730;
-        bh=++mVKGI+xYg8x1TKt6F/Pb/EdbEZ8O0gXXZ5vJmBZu0=; h=From:To:Date;
-        b=ScwUXwqBSco0tRkelinqY4GPtVg+rsX8oV31jwrgdjPB2S2UlVi3RZJY6LIEi79GN
-         CF/OTrdcG3jUlDg9D7KfDHbl9bOVUOhza/5Fj0rMeDVgDn3eG7RVnilZsZj5yLP4GT
-         W1WGIZxw064mATbyVIUq3iW+OKv1mEZi3otGXSvQ=
-Received: from sjdcvmout02.udc.trendmicro.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7462864089;
-        Tue,  8 Sep 2020 04:15:19 -0700 (PDT)
-Received: from SJDC-EXNABU01.us.trendnet.org (unknown [10.45.175.97])
-        by sjdcvmout02.udc.trendmicro.com (Postfix) with ESMTPS;
-        Tue,  8 Sep 2020 04:15:19 -0700 (PDT)
-Received: from ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) by
- SJDC-EXNABU01.us.trendnet.org (10.45.175.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Tue, 8 Sep 2020 04:15:18 -0700
-Received: from ADC-EXAPAC11.tw.trendnet.org (10.28.2.228) by
- ADC-EXAPAC12.tw.trendnet.org (10.28.2.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1979.3; Tue, 8 Sep 2020 11:15:14 +0000
-Received: from ADC-EXAPAC11.tw.trendnet.org ([fe80::35d2:8fa6:df0c:6aae]) by
- ADC-EXAPAC11.tw.trendnet.org ([fe80::35d2:8fa6:df0c:6aae%18]) with mapi id
- 15.01.1979.003; Tue, 8 Sep 2020 11:15:14 +0000
-From:   "Eddy_Wu@trendmicro.com" <Eddy_Wu@trendmicro.com>
-To:     "peterz@infradead.org" <peterz@infradead.org>
-CC:     Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
-        "anil.s.keshavamurthy@intel.com" <anil.s.keshavamurthy@intel.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "cameron@moodycamel.com" <cameron@moodycamel.com>,
-        "oleg@redhat.com" <oleg@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        "systemtap@sourceware.org" <systemtap@sourceware.org>
-Subject: RE: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers and
- make kretprobe lockless
-Thread-Topic: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
- and make kretprobe lockless
-Thread-Index: AQHWfgRSCESp9PK2qEmaIhlcIgCeUqlUKmsAgABcEYCAAGuCAIAAFReAgAAV4YCAAD5dAIAABowAgADIVwCACHHjAIAACFxw
-Date:   Tue, 8 Sep 2020 11:15:14 +0000
-Message-ID: <dd1b7b1fdbd84d20ad06abf0c06b4747@trendmicro.com>
-References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
- <20200901190808.GK29142@worktop.programming.kicks-ass.net>
- <20200902093739.8bd13603380951eaddbcd8a5@kernel.org>
- <20200902070226.GG2674@hirez.programming.kicks-ass.net>
- <20200902171755.b126672093a3c5d1b3a62a4f@kernel.org>
- <20200902093613.GY1362448@hirez.programming.kicks-ass.net>
- <20200902221926.f5cae5b4ad00b8d8f9ad99c7@kernel.org>
- <20200902134252.GH1362448@hirez.programming.kicks-ass.net>
- <20200903103954.68f0c97da57b3679169ce3a7@kernel.org>
- <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200908103736.GP1362448@hirez.programming.kicks-ass.net>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.28.4.6]
-X-TM-AS-Product-Ver: IMSVA-9.1.0.1960-8.6.0.1013-25652.006
-X-TM-AS-Result: No--13.579-5.0-31-10
-X-TMASE-MatchedRID: fisHOP3cX1jUL3YCMmnG4vHkpkyUphL9+IfriO3cV8QviP3/DuH032lF
-        7OhYLlct0Rucqr17Y/YsrJ6YgF1+HBZRzAmpIJedwS8qUbQKOMihlQaHv8lv4KosuYcc0VWUa3A
-        6hcNu8nADh7qzot0BF+xeaIGweo11L3vAnkncsWmtBybNxXyi/BmyTBaqiJvc7649n0TgA4k7yU
-        iWtMo7o0SE6cDIXfLWysK+7TtkkV25UpxrNQf5nQD9gX5aXd4fQABNUkvqrhfLmsnRFz6pJtEYh
-        xNoldm1jqkhdl7xWKbGYTYwx24fmXj7PwsdQyXdiPIR0a1i6hdXgkPfc7vKCTUQfiU3MhlIJ+BT
-        0Y87Csa57ZGjIWPrVAd2m1cUUwTvx5913wav7nCeAiCmPx4NwMidYBYDjITpiaHgegYo0SFQSFb
-        L1bvQASAHAopEd76v+1E8TAkVzxP6hSgEB93zX1y02L/cQu0IFfJSa/VY7qoYCl8nGW1v6w==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--13.578500-10.000000
-X-TMASE-Version: IMSVA-9.1.0.1960-8.6.1013-25652.006
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-TM-SNTS-SMTP: AC371C619D3FD3B46CDA1403A38D828A0D8DCA31EB0E32DE45CA391C53DF4B872000:8
-X-TM-AS-GCONF: 00
-X-imss-scan-details: No--13.579-5.0-31-10
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-12:0,22:0,33:0,34:0-0
+        Tue, 8 Sep 2020 07:24:26 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:57358 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729851AbgIHLRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 07:17:19 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx+MQQaFdfRkgTAA--.2597S2;
+        Tue, 08 Sep 2020 19:16:33 +0800 (CST)
+From:   Zejiang Tang <tangzejiang@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Zejiang Tang <tangzejiang@loongson.cn>
+Subject: [PATCH v2] Improve perf option help information in perf.txt
+Date:   Tue,  8 Sep 2020 19:16:32 +0800
+Message-Id: <1599563792-20711-1-git-send-email-tangzejiang@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx+MQQaFdfRkgTAA--.2597S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF4xAw17Kr1UGryfWF47twb_yoW5Jw43pa
+        9xCry3tr1DJ343Awn5J3WIvFy3XrZ3ua1fG34Skr48Xr1DCrsFgryYkFyFqFy7Wry8AayU
+        Kr42qFy5Grs2yw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvE14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+        n2kIc2xKxwCY02Avz4vE14v_Gw4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjfUn1v3UUUUU
+X-CM-SenderInfo: pwdqw6phmlt03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: peterz@infradead.org <peterz@infradead.org>
->
-> I'm now trying and failing to reproduce.... I can't seem to make it use
-> int3 today. It seems to want to use ftrace or refuses everything. I'm
-> probably doing it wrong.
->
+Perf could use many options, such as:-vv, --exec-path,
+--html-path, -p, --paginate,--no-pager, --debugfs-dir,
+--buildid-dir, --list-cmds, --list-opts. Add these options
+in perf.txt.
 
-You can turn off CONFIG_KPROBES_ON_FTRACE (and also sysctl debug.kprobes-op=
-timization) to make it use int3 handler
+Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
+---
+ tools/perf/Documentation/perf.txt | 69 ++++++++++++++++++++++++++-------------
+ 1 file changed, 47 insertions(+), 22 deletions(-)
 
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index 3f37ded..5edb854 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -12,32 +12,57 @@ SYNOPSIS
+ 
+ OPTIONS
+ -------
+---debug::
+-	Setup debug variable (see list below) in value
+-	range (0, 10). Use like:
+-	  --debug verbose   # sets verbose = 1
+-	  --debug verbose=2 # sets verbose = 2
+-
+-	List of debug variables allowed to set:
+-	  verbose          - general debug messages
+-	  ordered-events   - ordered events object debug messages
+-	  data-convert     - data convert command debug messages
+-	  stderr           - write debug output (option -v) to stderr
+-	                     in browser mode
+-	  perf-event-open  - Print perf_event_open() arguments and
+-			     return value
+-
+---buildid-dir::
+-	Setup buildid cache directory. It has higher priority than
+-	buildid.dir config file option.
++-h::
++--help::
++        Run perf help command.
+ 
+ -v::
+ --version::
+-  Display perf version.
++        Display perf version.
+ 
+--h::
+---help::
+-  Run perf help command.
++-vv::
++        Print the compiled-in status of libraries.
++
++--exec-path::
++        Display or set exec path.
++
++--html-path::
++        Display absolute html path.
++
++-p::
++--paginate::
++        Set up pager.
++
++--no-pager::
++        Add or change the content of environment variables.
++
++--buildid-dir::
++        Setup buildid cache directory. It has higher priority
++        than buildid.dir config file option.
++
++--list-cmds::
++        List the most commonly used perf commands.
++
++--list-opts::
++        List available perf options.
++
++--debugfs-dir::
++        Set debugfs directory or set environment variable PERF_DEBUGFS_DIR.
++
++--debug::
++        Setup debug variable (see list below) in value
++        range (0, 10). Use like:
++          --debug verbose   # sets verbose = 1
++          --debug verbose=2 # sets verbose = 2
++
++        List of debug variables allowed to set:
++          verbose          - general debug messages
++          ordered-events   - ordered events object debug messages
++          data-convert     - data convert command debug messages
++          stderr           - write debug output (option -v) to stderr
++                             in browser mode
++          perf-event-open  - Print perf_event_open() arguments and
++                             return value
+ 
+ DESCRIPTION
+ -----------
+-- 
+2.1.0
 
-TREND MICRO EMAIL NOTICE
-
-The information contained in this email and any attachments is confidential=
- and may be subject to copyright or other intellectual property protection.=
- If you are not the intended recipient, you are not authorized to use or di=
-sclose this information, and we request that you notify us by reply mail or=
- telephone and delete the original message from your mail system.
-
-For details about what personal information we collect and why, please see =
-our Privacy Notice on our website at: Read privacy policy<http://www.trendm=
-icro.com/privacy>
