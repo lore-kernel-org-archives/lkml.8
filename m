@@ -2,110 +2,94 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DC3C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E24C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C263B2145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70272145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:23:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="J4Aozqdw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="sSoIlEK7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729912AbgIHVWi (ORCPT
+        id S1730159AbgIHVXE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
+        Tue, 8 Sep 2020 17:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbgIHVWh (ORCPT
+        with ESMTP id S1728390AbgIHVXD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:22:37 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4893FC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:22:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id nw23so479254ejb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:22:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oqOh6m3rLnlC8ajqd5NeDF4oaHEgZ3CJ+Z2OjKrzUuc=;
-        b=J4AozqdwEKhDUAF8qiC996g76KjEa+7fEqijzj1IFbCJEoXLhNG+Nrp0d50v6SzQzQ
-         0uMGM41XDzGUpPiQtyQbPJ0eME8YRxb1Cnjz2IE6qrdgGZYl1ejj6n2uUX6pmNj+8rqH
-         z0x+ZG76FWV/i42HQSlOGyd4mIfoB3DMKskJQMoYkyIA4qDxccFXw3QsJxJa7JJNdaJg
-         mRjXd9Dgsr1QqCoTmoxMC8l3Xd/GAJnafq2Gxr6w5P42JzdZY8kHj6qyZJ+pXhdWhIVE
-         jOXyBnV+6IKcft3XKG87pIdf6nyFg5pkYc2zr76bhSk6vtD7FJETscD3DmITNWD4nkPF
-         rbPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oqOh6m3rLnlC8ajqd5NeDF4oaHEgZ3CJ+Z2OjKrzUuc=;
-        b=fi2OjzGZ8eEacj8ji6ytg6HXczPI2p9FXCQsYR1Qu9R9PwupcpKWFAW5glCPzAy0+T
-         J1653BRbv+vN/vi/9iYH8h/cO2tT3T6vYi/NF5vm7n4N8dwgue7GErpWGKVjQ92udzHi
-         G348bC2ZUVGMtHim3RtHnMm7GewfrNl6tJWyqO9QddnXfbhUmTHJnDYQDv770LhbiP8z
-         vmAEYcyoESAyIVfiM2TSiUCNNN0v2boXbqBI7qRbpdQLzxwy1nC3kzkT5pe0he+x7G+6
-         qZDyyy22bDbcixy2HoLuf53oQ+4KFYuwm1O8/kLfygqlwqXWAsuFJOp364aub/JbBtVy
-         cm3w==
-X-Gm-Message-State: AOAM53078bsiGGBkacrRORLhEnIQYmpjGWuFejYkXxhvU57L9CPq54ee
-        mHbpRwe1FlAGMu0wueJ4JdO5jBdjIC2YLBcJj/Ak
-X-Google-Smtp-Source: ABdhPJyKvVm5mCUhxRz1wocuTCtuocuPD14pIldrj3Y3TUjT2RAvb0w0smMDFxSMcrS2qzG/vcpJ24LMokTS4CQ84OI=
-X-Received: by 2002:a17:906:a415:: with SMTP id l21mr375281ejz.431.1599600153969;
- Tue, 08 Sep 2020 14:22:33 -0700 (PDT)
+        Tue, 8 Sep 2020 17:23:03 -0400
+Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9D7CC061573;
+        Tue,  8 Sep 2020 14:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=x4KZwb/FXsI+W5RSvfofLnqf9p6+syUlpwRyvBj+dt4=; b=sSoIlEK7aXIN9zk9W8Eoqcsw8K
+        sVjtVhu+55fEVP/NoI65JZerblv50inuR5mgFV7tbfDq9VRHhEvZrYHEe/QLUoATRp1m354rbeypD
+        wMRv41MR5yWaXy+L6C7pFzZZ5esYwwlR+KokPJHXwkHq5hgaZOZVE59fb8az24qaKmuo=;
+Received: from p4ff13fcb.dip0.t-ipconnect.de ([79.241.63.203] helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1kFl4t-0002TF-MO; Tue, 08 Sep 2020 23:22:59 +0200
+Subject: Re: [PATCH -next] mt76: Convert to DEFINE_SHOW_ATTRIBUTE
+To:     Qinglang Miao <miaoqinglang@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200716085801.11220-1-miaoqinglang@huawei.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <b522f546-148f-2348-a627-2b19e1013d11@nbd.name>
+Date:   Tue, 8 Sep 2020 23:22:59 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200908135915.22039-1-wanghai38@huawei.com>
-In-Reply-To: <20200908135915.22039-1-wanghai38@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 8 Sep 2020 17:22:22 -0400
-Message-ID: <CAHC9VhTMmChHskO2K8GchSxX06C-XdAVVQu9Gfih1BH-=eb+uw@mail.gmail.com>
-Subject: Re: [PATCH net-next] cipso: fix 'audit_secid' kernel-doc warning in cipso_ipv4.c
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200716085801.11220-1-miaoqinglang@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 10:02 AM Wang Hai <wanghai38@huawei.com> wrote:
->
-> Fixes the following W=1 kernel build warning(s):
->
-> net/ipv4/cipso_ipv4.c:510: warning: Excess function parameter 'audit_secid' description in 'cipso_v4_doi_remove'
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> ---
->  net/ipv4/cipso_ipv4.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 2020-07-16 10:58, Qinglang Miao wrote:
+> Use DEFINE_SHOW_ATTRIBUTE macro to simplify the code.
+> 
+> Signed-off-by: Qinglang Miao <miaoqinglang@huawei.com>
+This does not seem to apply to the current tree, please rebase.
 
-Thanks for catching this and submitting the fix.
+Thanks,
 
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/net/ipv4/cipso_ipv4.c b/net/ipv4/cipso_ipv4.c
-> index 2eb71579f4d2..471d33a0d095 100644
-> --- a/net/ipv4/cipso_ipv4.c
-> +++ b/net/ipv4/cipso_ipv4.c
-> @@ -498,7 +498,7 @@ static void cipso_v4_doi_free_rcu(struct rcu_head *entry)
->  /**
->   * cipso_v4_doi_remove - Remove an existing DOI from the CIPSO protocol engine
->   * @doi: the DOI value
-> - * @audit_secid: the LSM secid to use in the audit message
-> + * @audit_info: NetLabel audit information
->   *
->   * Description:
->   * Removes a DOI definition from the CIPSO engine.  The NetLabel routines will
-> --
-> 2.17.1
->
-
-
--- 
-paul moore
-www.paul-moore.com
+- Felix
