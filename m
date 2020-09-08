@@ -2,101 +2,203 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD40C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FF9C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6634206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gck+FqS4"
+	by mail.kernel.org (Postfix) with ESMTP id 22608206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587635;
+	bh=tJeB+CAlsKIHOKpJcSG7HjtM4OMNYiYbT2EYatNwtKU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VUP5eOgT6PbYoDC976xjM6xUK2+6IbSIAC9KR5pnqyTLsOIcYfixZVhnfcDXEy5A8
+	 isPrezsqJPIyMxELqob9IGiltNpzusfqYe8KLMd4wwtBN/Mv5qirzm923HVFfdsKe7
+	 c2T6f+hAVF7H0aLG/YgO+se3z29yjS5vdY2yI6xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731769AbgIHRxU (ORCPT
+        id S1732199AbgIHRxw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731600AbgIHQNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:13:44 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D1C4C061290
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:01:33 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a15so19988558ljk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:01:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9ROFMex6SmeQcgvgfjI5Vchgvc+G2tj/iCxGO6nsxuo=;
-        b=gck+FqS4TFd5ioreMir7T2hmA8fOv7VmNt+UEdcoNlHpyopB61mqzfwAgUgzpnzI1M
-         awXeDvbGswaVG9tiaeMeWaU39z+IibLEQ+XqA6dnfa0fojUufDKdMMk1Cf3PgB6k6MD8
-         jr/nL7gXzFGPBVryCkZTzvftcp8o6uyy5VwP3T5/xlmEVZ0ICQT66jYZJ2dm0Qsu+KO4
-         OZANzsYGJ2FdjcMvOaH17vORAB6hK/dCqCiIA2790Wa7sTbCy6mb16uHiI7SK3HbLHxU
-         gGT61gn0NiPQwyQewP2S+WzKFszo3IFb/LbbilVCN7YK4fhSGXVMm1FM4hBkhd3sDSGz
-         OjZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9ROFMex6SmeQcgvgfjI5Vchgvc+G2tj/iCxGO6nsxuo=;
-        b=Ma6rvF8h2N2mLG9xSRek3Lr/xljgBJR/WyDitv5BZapVKuwK7zvRqA9tI/NXivvmtn
-         uz0d1EbkY88MsETKOAw7Va1XqHXgpHz91SYm0DUl4dHCuovQyaC4nsT/WkYmvuO7H6mq
-         UF2NIlYB/dVP5yBq3O8FvxfgCADJXbMeHCBbp/H5gbAcxs+9O1QrTZazPNrz0fGhenll
-         Jptvyi8qiWIgefP/DSpRwrbNatoQ/9yPrCUoxl48xOpPHwVoE1gxdCW6eeC46XwA2CCL
-         qtZ07B575Clz4G7G1BDGJ/kUsNKkk1VZaBl/sNK1gX81Tei8QwrkHC6VjEpLRsmF0dMS
-         3+tA==
-X-Gm-Message-State: AOAM531XHBnCnm8kRWU9MIFwyBJznQi/5QzksCdSYL8IMC3wNer5Szmu
-        93sMTJa7NzUL7CZp58qXeqnAhratogeW8W/UDGQ=
-X-Google-Smtp-Source: ABdhPJzNCPOWmmxsXcRfVxojDQus+EStgmwv1gk8/iTKXOq4a7uo6VFLWq6gOeHI82RqCdy4Fdrc7ekP8uPBAtxxulA=
-X-Received: by 2002:a2e:9899:: with SMTP id b25mr11694176ljj.178.1599570091951;
- Tue, 08 Sep 2020 06:01:31 -0700 (PDT)
+        Tue, 8 Sep 2020 13:53:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731587AbgIHQNJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:13:09 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B9842489F;
+        Tue,  8 Sep 2020 15:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580345;
+        bh=tJeB+CAlsKIHOKpJcSG7HjtM4OMNYiYbT2EYatNwtKU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=q+MvAT7UAP/GVADTsHF/e9Y6Tvj5ZcH9bpdy7DmS8XGb6y0KZhvhaiXZAnk1svUka
+         SCh5xvKpeNM8W+ZlCyQeukQDh3QhCTvV2DwygSIkklFTZHehz1WqficSjRLQ3sTcw3
+         PV0LhQiu/fPCSq1VrnGQyttPTKhmJCOf8ugFwaVk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 38/65] btrfs: drop path before adding new uuid tree entry
+Date:   Tue,  8 Sep 2020 17:26:23 +0200
+Message-Id: <20200908152218.999136573@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200908125558.256843-1-stefan@agner.ch>
-In-Reply-To: <20200908125558.256843-1-stefan@agner.ch>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 8 Sep 2020 10:01:20 -0300
-Message-ID: <CAOMZO5Amaxi-rU44b_q4+6k4vtOoCOmbKgiDJ0r3tEi4zkZB=w@mail.gmail.com>
-Subject: Re: [PATCH v2] drm: mxsfb: check framebuffer pitch
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Marek Vasut <marex@denx.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefan,
+From: Josef Bacik <josef@toxicpanda.com>
 
-On Tue, Sep 8, 2020 at 9:56 AM Stefan Agner <stefan@agner.ch> wrote:
->
-> The lcdif IP does not support a framebuffer pitch (stride) other than
-> framebuffer width. Check for equality and reject the framebuffer
-> otherwise.
->
-> This prevents a distorted picture when using 640x800 and running the
-> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
-> leads at that particular resolution to width != stride. Currently
-> Mesa has no fallback behavior, but rejecting this configuration allows
-> userspace to handle the issue correctly.
+commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
 
-What about adding a Fixes tag so that it can be backported to old
-stable kernels?
+With the conversion of the tree locks to rwsem I got the following
+lockdep splat:
 
-Thanks
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
+  ------------------------------------------------------
+  btrfs-uuid/7955 is trying to acquire lock:
+  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  but task is already holding lock:
+  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #1 (btrfs-uuid-00){++++}-{3:3}:
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_uuid_tree_add+0x89/0x2d0
+	 btrfs_uuid_scan_kthread+0x330/0x390
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  -> #0 (btrfs-root-00){++++}-{3:3}:
+	 __lock_acquire+0x1272/0x2310
+	 lock_acquire+0x9e/0x360
+	 down_read_nested+0x3e/0x140
+	 __btrfs_tree_read_lock+0x39/0x180
+	 __btrfs_read_lock_root_node+0x3a/0x50
+	 btrfs_search_slot+0x4bd/0x990
+	 btrfs_find_root+0x45/0x1b0
+	 btrfs_read_tree_root+0x61/0x100
+	 btrfs_get_root_ref.part.50+0x143/0x630
+	 btrfs_uuid_tree_iterate+0x207/0x314
+	 btrfs_uuid_rescan_kthread+0x12/0x50
+	 kthread+0x133/0x150
+	 ret_from_fork+0x1f/0x30
+
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(btrfs-uuid-00);
+				 lock(btrfs-root-00);
+				 lock(btrfs-uuid-00);
+    lock(btrfs-root-00);
+
+   *** DEADLOCK ***
+
+  1 lock held by btrfs-uuid/7955:
+   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+
+  stack backtrace:
+  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
+  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
+  Call Trace:
+   dump_stack+0x78/0xa0
+   check_noncircular+0x165/0x180
+   __lock_acquire+0x1272/0x2310
+   lock_acquire+0x9e/0x360
+   ? __btrfs_tree_read_lock+0x39/0x180
+   ? btrfs_root_node+0x1c/0x1d0
+   down_read_nested+0x3e/0x140
+   ? __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_tree_read_lock+0x39/0x180
+   __btrfs_read_lock_root_node+0x3a/0x50
+   btrfs_search_slot+0x4bd/0x990
+   btrfs_find_root+0x45/0x1b0
+   btrfs_read_tree_root+0x61/0x100
+   btrfs_get_root_ref.part.50+0x143/0x630
+   btrfs_uuid_tree_iterate+0x207/0x314
+   ? btree_readpage+0x20/0x20
+   btrfs_uuid_rescan_kthread+0x12/0x50
+   kthread+0x133/0x150
+   ? kthread_create_on_node+0x60/0x60
+   ret_from_fork+0x1f/0x30
+
+This problem exists because we have two different rescan threads,
+btrfs_uuid_scan_kthread which creates the uuid tree, and
+btrfs_uuid_tree_iterate that goes through and updates or deletes any out
+of date roots.  The problem is they both do things in different order.
+btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
+into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
+then does a btrfs_get_fs_root() which can read from the tree_root.
+
+It's actually easy enough to not be holding the path in
+btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
+it further down and re-start the search when we loop.  So simply move
+the path release before we add our entry to the uuid tree.
+
+This also fixes a problem where we're holding a path open after we do
+btrfs_end_transaction(), which has it's own problems.
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/volumes.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4174,6 +4174,7 @@ static int btrfs_uuid_scan_kthread(void
+ 			goto skip;
+ 		}
+ update_tree:
++		btrfs_release_path(path);
+ 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
+ 			ret = btrfs_uuid_tree_add(trans, fs_info,
+ 						  root_item.uuid,
+@@ -4199,6 +4200,7 @@ update_tree:
+ 		}
+ 
+ skip:
++		btrfs_release_path(path);
+ 		if (trans) {
+ 			ret = btrfs_end_transaction(trans);
+ 			trans = NULL;
+@@ -4206,7 +4208,6 @@ skip:
+ 				break;
+ 		}
+ 
+-		btrfs_release_path(path);
+ 		if (key.offset < (u64)-1) {
+ 			key.offset++;
+ 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
+
+
