@@ -2,140 +2,123 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC13C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF1DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F1A2145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594071;
-	bh=swgokmrnTIfOsKnO5zDupYh7iW9zIFCynPFPXgMegoM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sym8KT3r7df6F5B88J00oP2SGzl2ALt31mKJQK+85QR8Lwz1IVxpgJ/Fhro+o0w6h
-	 w2M6BguFmjAMyKS2wYhKriOA3dQHbWS3jT4obvr0bSihJ6OUGMs5Lh87eig77RqClP
-	 9wKiGH4YNN9HpSr+VWMTl8Ap9Xzu9Ysip1sNiMmI=
+	by mail.kernel.org (Postfix) with ESMTP id 9F19F20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732337AbgIHTlJ (ORCPT
+        id S1730923AbgIHTlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:41:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40018 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:41:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47732 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730780AbgIHPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:54:44 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 195F724196;
-        Tue,  8 Sep 2020 15:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579529;
-        bh=swgokmrnTIfOsKnO5zDupYh7iW9zIFCynPFPXgMegoM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMReatYe7+a/LYXrZtMC1E1v9UCRkJgaGxnJtvNOdeTg/Rihz29NK7x7xA/QvYSTf
-         u0ozrseB7Y8IkyZf3gu0i06VEK8o+oXP56vkPgyfAKUL4UDhIVwTIyu7wkL1sxJ3Kg
-         mIWluR0X7kl0/jNuZbg7pYFMHI8fT7wQ0OOGIpjw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Christensen <drc@linux.vnet.ibm.com>,
-        Baptiste Covolato <baptiste@arista.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 108/186] tg3: Fix soft lockup when tg3_reset_task() fails.
-Date:   Tue,  8 Sep 2020 17:24:10 +0200
-Message-Id: <20200908152246.869191422@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730872AbgIHPxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:53:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B9501AC6E;
+        Tue,  8 Sep 2020 15:31:24 +0000 (UTC)
+Subject: Re: [PATCH] mm/mmap: leave adjust_next as virtual address instead of
+ page frame number
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200828081031.11306-1-richard.weiyang@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <85daf46b-0d85-588a-2d6f-883afa6076dc@suse.cz>
+Date:   Tue, 8 Sep 2020 17:31:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828081031.11306-1-richard.weiyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+On 8/28/20 10:10 AM, Wei Yang wrote:
+> Instead of convert adjust_next between virtual address and page frame
+> number, let's just store the virtual address into adjust_next.
 
-[ Upstream commit 556699341efa98243e08e34401b3f601da91f5a3 ]
+IMHO more precisely/less confusing it's "bytes" and "pages" instead of "virtual
+address" (which is absolute address, but this variable holds a difference) and
+"page frame number" (which is related to absolute physical address, but what we
+have is difference in pages in virtual address space).
 
-If tg3_reset_task() fails, the device state is left in an inconsistent
-state with IFF_RUNNING still set but NAPI state not enabled.  A
-subsequent operation, such as ifdown or AER error can cause it to
-soft lock up when it tries to disable NAPI state.
+> Also, this patch fixes one typo in the comment of
+> vma_adjust_trans_huge().
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-Fix it by bringing down the device to !IFF_RUNNING state when
-tg3_reset_task() fails.  tg3_reset_task() running from workqueue
-will now call tg3_close() when the reset fails.  We need to
-modify tg3_reset_task_cancel() slightly to avoid tg3_close()
-calling cancel_work_sync() to cancel tg3_reset_task().  Otherwise
-cancel_work_sync() will wait forever for tg3_reset_task() to
-finish.
+Other than that, seems like it leads to less shifting, so
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-Reported-by: David Christensen <drc@linux.vnet.ibm.com>
-Reported-by: Baptiste Covolato <baptiste@arista.com>
-Fixes: db2199737990 ("tg3: Schedule at most one tg3_reset_task run")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/tg3.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index ebff1fc0d8cef..4515804d1ce4c 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -7221,8 +7221,8 @@ static inline void tg3_reset_task_schedule(struct tg3 *tp)
- 
- static inline void tg3_reset_task_cancel(struct tg3 *tp)
- {
--	cancel_work_sync(&tp->reset_task);
--	tg3_flag_clear(tp, RESET_TASK_PENDING);
-+	if (test_and_clear_bit(TG3_FLAG_RESET_TASK_PENDING, tp->tg3_flags))
-+		cancel_work_sync(&tp->reset_task);
- 	tg3_flag_clear(tp, TX_RECOVERY_PENDING);
- }
- 
-@@ -11209,18 +11209,27 @@ static void tg3_reset_task(struct work_struct *work)
- 
- 	tg3_halt(tp, RESET_KIND_SHUTDOWN, 0);
- 	err = tg3_init_hw(tp, true);
--	if (err)
-+	if (err) {
-+		tg3_full_unlock(tp);
-+		tp->irq_sync = 0;
-+		tg3_napi_enable(tp);
-+		/* Clear this flag so that tg3_reset_task_cancel() will not
-+		 * call cancel_work_sync() and wait forever.
-+		 */
-+		tg3_flag_clear(tp, RESET_TASK_PENDING);
-+		dev_close(tp->dev);
- 		goto out;
-+	}
- 
- 	tg3_netif_start(tp);
- 
--out:
- 	tg3_full_unlock(tp);
- 
- 	if (!err)
- 		tg3_phy_start(tp);
- 
- 	tg3_flag_clear(tp, RESET_TASK_PENDING);
-+out:
- 	rtnl_unlock();
- }
- 
--- 
-2.25.1
-
-
+> ---
+>  mm/huge_memory.c | 4 ++--
+>  mm/mmap.c        | 8 ++++----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 78c84bee7e29..2c633ba14440 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -2300,13 +2300,13 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
+>  
+>  	/*
+>  	 * If we're also updating the vma->vm_next->vm_start, if the new
+> -	 * vm_next->vm_start isn't page aligned and it could previously
+> +	 * vm_next->vm_start isn't hpage aligned and it could previously
+>  	 * contain an hugepage: check if we need to split an huge pmd.
+>  	 */
+>  	if (adjust_next > 0) {
+>  		struct vm_area_struct *next = vma->vm_next;
+>  		unsigned long nstart = next->vm_start;
+> -		nstart += adjust_next << PAGE_SHIFT;
+> +		nstart += adjust_next;
+>  		if (nstart & ~HPAGE_PMD_MASK &&
+>  		    (nstart & HPAGE_PMD_MASK) >= next->vm_start &&
+>  		    (nstart & HPAGE_PMD_MASK) + HPAGE_PMD_SIZE <= next->vm_end)
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 90b1298d4222..e4c9bbfd4103 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -758,7 +758,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>  			 * vma expands, overlapping part of the next:
+>  			 * mprotect case 5 shifting the boundary up.
+>  			 */
+> -			adjust_next = (end - next->vm_start) >> PAGE_SHIFT;
+> +			adjust_next = (end - next->vm_start);
+>  			exporter = next;
+>  			importer = vma;
+>  			VM_WARN_ON(expand != importer);
+> @@ -768,7 +768,7 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>  			 * split_vma inserting another: so it must be
+>  			 * mprotect case 4 shifting the boundary down.
+>  			 */
+> -			adjust_next = -((vma->vm_end - end) >> PAGE_SHIFT);
+> +			adjust_next = -(vma->vm_end - end);
+>  			exporter = vma;
+>  			importer = next;
+>  			VM_WARN_ON(expand != importer);
+> @@ -840,8 +840,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+>  	}
+>  	vma->vm_pgoff = pgoff;
+>  	if (adjust_next) {
+> -		next->vm_start += adjust_next << PAGE_SHIFT;
+> -		next->vm_pgoff += adjust_next;
+> +		next->vm_start += adjust_next;
+> +		next->vm_pgoff += adjust_next >> PAGE_SHIFT;
+>  	}
+>  
+>  	if (root) {
+> 
 
