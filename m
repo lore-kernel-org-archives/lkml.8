@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7B6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E30C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB26220757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CAE20C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591799;
-	bh=Uv3QwsGMoHyVMEuKla+iZaG5qKcNg//aHJvODaf0Cz8=;
+	s=default; t=1599591804;
+	bh=bmQdkNH3AtKy4aJrZ0hiO2G1mnDDEJjfOONUdQ49HW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZwUro8ihJuzAqJj8UGX2xxUq4E4JKVTI4V9OvX4cmBwk96fSD3ybKaduhGonJx+56
-	 J8F2AS/uzo6AjQGcHwsQBu0WC0GaU/w7zhhsn6ZZ7ff+MhGlsY53sDHnBMnySmll0B
-	 meGuJU/Gq7IdL00rQWqGbTZz/2NjAoETRWC1yBqI=
+	b=S0E8TMN9k8ZPnv0a3wfTZ8OomImpZn3O0MWxD+KuZ8V/R9sxbpUAVOhjFvyzlpA3g
+	 UP2H/8LVM+38BAlNNzjA5sY5uGLzEIPEP8mpE89mbuwGqexu/MY3G0XPrjP2KRFW8B
+	 PGnJIMiKQN+0exIhmhORRHWeGcKVbMhFh3tGKjdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731661AbgIHTDQ (ORCPT
+        id S1731684AbgIHTDW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:03:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51858 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:03:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731273AbgIHQH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:07:27 -0400
+        id S1731267AbgIHQH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:07:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83E6523EB1;
-        Tue,  8 Sep 2020 15:47:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6575E23E26;
+        Tue,  8 Sep 2020 15:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580041;
-        bh=Uv3QwsGMoHyVMEuKla+iZaG5qKcNg//aHJvODaf0Cz8=;
+        s=default; t=1599580028;
+        bh=bmQdkNH3AtKy4aJrZ0hiO2G1mnDDEJjfOONUdQ49HW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DCbXY2fNjubhQI/T2BcQ3D9uY7xWT6Cl0TWDCE290Dpah2GoLsrB/8ItgmD3m9pv8
-         cguI4Vnt/7kU8gwlGeH0/RvcdUyncHEVDFzLosqlP2Sf3DtisKGRyxeFJ38ncY7eRT
-         k+1d5vRdWAN0UegIHZ1b85lqvEHxtYliebV/ihlA=
+        b=EXMZs8fnm/ai3Eub59ODnLGc6FvEGfThXGFRqzEVPgXvS6xBr8vstD82wNsrmItCA
+         qsqyr+MPl6ImnJCZiiaeAMEkOUClB0fz1r50OKup/RtiOFR2xCY+FyHSdJXs6aMg77
+         O67hVln+oGa6ZYSDBqDP2J4HLYcilG3f87GekqRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 115/129] dm integrity: fix error reporting in bitmap mode after creation
-Date:   Tue,  8 Sep 2020 17:25:56 +0200
-Message-Id: <20200908152235.601883023@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 110/129] blk-iocost: ioc_pd_free() shouldnt assume irq disabled
+Date:   Tue,  8 Sep 2020 17:25:51 +0200
+Message-Id: <20200908152235.335513954@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,54 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit e27fec66f0a94e35a35548bd0b29ae616e62ec62 upstream.
+commit 5aeac7c4b16069aae49005f0a8d4526baa83341b upstream.
 
-The dm-integrity target did not report errors in bitmap mode just after
-creation. The reason is that the function integrity_recalc didn't clean up
-ic->recalc_bitmap as it proceeded with recalculation.
+ioc_pd_free() grabs irq-safe ioc->lock without ensuring that irq is disabled
+when it can be called with irq disabled or enabled. This has a small chance
+of causing A-A deadlocks and triggers lockdep splats. Use irqsave operations
+instead.
 
-Fix this by updating the bitmap accordingly -- the double shift serves
-to rounddown.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Fixes: 468dfca38b1a ("dm integrity: add a bitmap mode")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/dm-integrity.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ block/blk-iocost.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2365,6 +2365,7 @@ next_chunk:
- 	range.logical_sector = le64_to_cpu(ic->sb->recalc_sector);
- 	if (unlikely(range.logical_sector >= ic->provided_data_sectors)) {
- 		if (ic->mode == 'B') {
-+			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
- 			DEBUG_print("queue_delayed_work: bitmap_flush_work\n");
- 			queue_delayed_work(ic->commit_wq, &ic->bitmap_flush_work, 0);
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -2074,14 +2074,15 @@ static void ioc_pd_free(struct blkg_poli
+ {
+ 	struct ioc_gq *iocg = pd_to_iocg(pd);
+ 	struct ioc *ioc = iocg->ioc;
++	unsigned long flags;
+ 
+ 	if (ioc) {
+-		spin_lock(&ioc->lock);
++		spin_lock_irqsave(&ioc->lock, flags);
+ 		if (!list_empty(&iocg->active_list)) {
+ 			propagate_active_weight(iocg, 0, 0);
+ 			list_del_init(&iocg->active_list);
  		}
-@@ -2442,6 +2443,17 @@ next_chunk:
- 		goto err;
- 	}
+-		spin_unlock(&ioc->lock);
++		spin_unlock_irqrestore(&ioc->lock, flags);
  
-+	if (ic->mode == 'B') {
-+		sector_t start, end;
-+		start = (range.logical_sector >>
-+			 (ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit)) <<
-+			(ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit);
-+		end = ((range.logical_sector + range.n_sectors) >>
-+		       (ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit)) <<
-+			(ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit);
-+		block_bitmap_op(ic, ic->recalc_bitmap, start, end - start, BITMAP_OP_CLEAR);
-+	}
-+
- advance_and_next:
- 	cond_resched();
- 
+ 		hrtimer_cancel(&iocg->waitq_timer);
+ 		hrtimer_cancel(&iocg->delay_timer);
 
 
