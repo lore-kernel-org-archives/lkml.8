@@ -2,54 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE92C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 825F0207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059822078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588733;
-	bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
+	s=default; t=1599588747;
+	bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=on6xW6KRqLbgmAF65CXjEO6N6ax1gPeoz2KkxLOBP4GU5Qz9XLrADALbHbeoySO6n
-	 HrN2S98BBl9yd44rELo0eZmK3vkGigN3O1qhshyOKQVgjtIsILuGqvOU1A761vlSgF
-	 951Sz2Qc9Nf8I5zH1fWqjJAhJrWaOeLPmhM44kzA=
+	b=yom0d8yHGOtNPNQcK/bJ0i/U/2Y2rhwWSr/nAFeVggNoKOK5aFdqRzfhZJO6tF56K
+	 hGE9OUU9XX31lSYmunnKLA4o7efeZsi3cQUMN4FxZql3R2K60yitO9OIPP3VVOya7M
+	 nTnesAQjIAQavsNttEse74u8BhOAhwEyncqgSVAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731762AbgIHSML (ORCPT
+        id S1731768AbgIHSMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:12:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55070 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731489AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731483AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A610F2477C;
-        Tue,  8 Sep 2020 15:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 841C0247E0;
+        Tue,  8 Sep 2020 15:42:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579722;
-        bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
+        s=default; t=1599579754;
+        bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y97NaJXBabKNFxJnbbhZx2/8SAhDE4A22O9cxUMiNupkj8C0U6zIWdcR9//QSmmCa
-         s9RvQW468wsyvTH+hPMenmqMFttWl1jOrkoX/OEHIk2mxbPEFYE671s8oHOHXsUTBs
-         L6S5JspYgFU91sRTQFX0/i3CcE5FbjKzPlmSxM28=
+        b=J6CPdF6kq+7rFU7V5uOY2gb2duxAlWZQe7LzRMO/ih213GlxSm5h7Tr2U0Ki1QCUK
+         S4OYH0u/A619lTEUj7sYUD/O4ZBYfOQGrMkVu8tbFXq3wDIAamLq/8u4KcwbGLwSI7
+         oJDmtOEF5YmlIn8PrnZs0+B9UhMA+rsCPH8iZljY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.8 171/186] dm thin metadata: Fix use-after-free in dm_bm_set_read_only
-Date:   Tue,  8 Sep 2020 17:25:13 +0200
-Message-Id: <20200908152249.948684597@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 021/129] fsldma: fix very broken 32-bit ppc ioread64 functionality
+Date:   Tue,  8 Sep 2020 17:24:22 +0200
+Message-Id: <20200908152230.761315744@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,110 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ye Bin <yebin10@huawei.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 3a653b205f29b3f9827a01a0c88bfbcb0d169494 upstream.
+[ Upstream commit 0a4c56c80f90797e9b9f8426c6aae4c0cf1c9785 ]
 
-The following error ocurred when testing disk online/offline:
+Commit ef91bb196b0d ("kernel.h: Silence sparse warning in
+lower_32_bits") caused new warnings to show in the fsldma driver, but
+that commit was not to blame: it only exposed some very incorrect code
+that tried to take the low 32 bits of an address.
 
-[  301.798344] device-mapper: thin: 253:5: aborting current metadata transaction
-[  301.848441] device-mapper: thin: 253:5: failed to abort metadata transaction
-[  301.849206] Aborting journal on device dm-26-8.
-[  301.850489] EXT4-fs error (device dm-26) in __ext4_new_inode:943: Journal has aborted
-[  301.851095] EXT4-fs (dm-26): Delayed block allocation failed for inode 398742 at logical offset 181 with max blocks 19 with error 30
-[  301.854476] BUG: KASAN: use-after-free in dm_bm_set_read_only+0x3a/0x40 [dm_persistent_data]
+That made no sense for multiple reasons, the most notable one being that
+that code was intentionally limited to only 32-bit ppc builds, so "only
+low 32 bits of an address" was completely nonsensical.  There were no
+high bits to mask off to begin with.
 
-Reason is:
+But even more importantly fropm a correctness standpoint, turning the
+address into an integer then caused the subsequent address arithmetic to
+be completely wrong too, and the "+1" actually incremented the address
+by one, rather than by four.
 
- metadata_operation_failed
-    abort_transaction
-        dm_pool_abort_metadata
-	    __create_persistent_data_objects
-	        r = __open_or_format_metadata
-	        if (r) --> If failed will free pmd->bm but pmd->bm not set NULL
-		    dm_block_manager_destroy(pmd->bm);
-    set_pool_mode
-	dm_pool_metadata_read_only(pool->pmd);
-	dm_bm_set_read_only(pmd->bm);  --> use-after-free
+Which again was incorrect, since the code was reading two 32-bit values
+and trying to make a 64-bit end result of it all.  Surprisingly, the
+iowrite64() did not suffer from the same odd and incorrect model.
 
-Add checks to see if pmd->bm is NULL in dm_bm_set_read_only and
-dm_bm_set_read_write functions.  If bm is NULL it means creating the
-bm failed and so dm_bm_is_read_only must return true.
+This code has never worked, but it's questionable whether anybody cared:
+of the two users that actually read the 64-bit value (by way of some C
+preprocessor hackery and eventually the 'get_cdar()' inline function),
+one of them explicitly ignored the value, and the other one might just
+happen to work despite the incorrect value being read.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch at least makes it not fail the build any more, and makes the
+logic superficially sane.  Whether it makes any difference to the code
+_working_ or not shall remain a mystery.
 
+Compile-tested-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-thin-metadata.c                 |    2 +-
- drivers/md/persistent-data/dm-block-manager.c |   14 ++++++++------
- 2 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/dma/fsldma.h | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -958,7 +958,7 @@ int dm_pool_metadata_close(struct dm_poo
- 	}
- 
- 	pmd_write_lock_in_core(pmd);
--	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
-+	if (!pmd->fail_io && !dm_bm_is_read_only(pmd->bm)) {
- 		r = __commit_transaction(pmd);
- 		if (r < 0)
- 			DMWARN("%s: __commit_transaction() failed, error = %d",
---- a/drivers/md/persistent-data/dm-block-manager.c
-+++ b/drivers/md/persistent-data/dm-block-manager.c
-@@ -493,7 +493,7 @@ int dm_bm_write_lock(struct dm_block_man
- 	void *p;
- 	int r;
- 
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
- 
- 	p = dm_bufio_read(bm->bufio, b, (struct dm_buffer **) result);
-@@ -562,7 +562,7 @@ int dm_bm_write_lock_zero(struct dm_bloc
- 	struct buffer_aux *aux;
- 	void *p;
- 
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
- 
- 	p = dm_bufio_new(bm->bufio, b, (struct dm_buffer **) result);
-@@ -602,7 +602,7 @@ EXPORT_SYMBOL_GPL(dm_bm_unlock);
- 
- int dm_bm_flush(struct dm_block_manager *bm)
+diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
+index 56f18ae992332..308bed0a560ac 100644
+--- a/drivers/dma/fsldma.h
++++ b/drivers/dma/fsldma.h
+@@ -205,10 +205,10 @@ struct fsldma_chan {
+ #else
+ static u64 fsl_ioread64(const u64 __iomem *addr)
  {
--	if (bm->read_only)
-+	if (dm_bm_is_read_only(bm))
- 		return -EPERM;
+-	u32 fsl_addr = lower_32_bits(addr);
+-	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
++	u32 val_lo = in_le32((u32 __iomem *)addr);
++	u32 val_hi = in_le32((u32 __iomem *)addr + 1);
  
- 	return dm_bufio_write_dirty_buffers(bm->bufio);
-@@ -616,19 +616,21 @@ void dm_bm_prefetch(struct dm_block_mana
- 
- bool dm_bm_is_read_only(struct dm_block_manager *bm)
- {
--	return bm->read_only;
-+	return (bm ? bm->read_only : true);
+-	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
++	return ((u64)val_hi << 32) + val_lo;
  }
- EXPORT_SYMBOL_GPL(dm_bm_is_read_only);
  
- void dm_bm_set_read_only(struct dm_block_manager *bm)
+ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+@@ -219,10 +219,10 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
+ 
+ static u64 fsl_ioread64be(const u64 __iomem *addr)
  {
--	bm->read_only = true;
-+	if (bm)
-+		bm->read_only = true;
- }
- EXPORT_SYMBOL_GPL(dm_bm_set_read_only);
+-	u32 fsl_addr = lower_32_bits(addr);
+-	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
++	u32 val_hi = in_be32((u32 __iomem *)addr);
++	u32 val_lo = in_be32((u32 __iomem *)addr + 1);
  
- void dm_bm_set_read_write(struct dm_block_manager *bm)
- {
--	bm->read_only = false;
-+	if (bm)
-+		bm->read_only = false;
+-	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
++	return ((u64)val_hi << 32) + val_lo;
  }
- EXPORT_SYMBOL_GPL(dm_bm_set_read_write);
  
+ static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
+-- 
+2.25.1
+
 
 
