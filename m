@@ -2,88 +2,146 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DD1C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B58C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 678AA2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAC07207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:55:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oFmX/3NS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FaiKCfdB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbgIHQyk (ORCPT
+        id S1731931AbgIHQzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731946AbgIHQsR (ORCPT
+        Tue, 8 Sep 2020 12:55:06 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23205 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731968AbgIHQsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:48:17 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AEE4C061756;
-        Tue,  8 Sep 2020 09:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=fgyJ4ZABWJZTj7EJc7LH/kSnQv89OxFbc7jSvV77U8I=; b=oFmX/3NSSOEZg6Vq7bQMcIBLUk
-        JWXlC6td7jF2tESzThvQo06B/CWB4gLSJFO1NLu2AzaaJqTYZxJod3allRVzjZg4SAH0SCSMwp848
-        k9OWRr6hR2F7La4bbgnTPiCDAglGjzDzt7eJNYX5AEoZxS3aEcZbkkpX7q08ykyc5/YiVeivQYBY+
-        /Za4hFEcsoyTiP3Mt/TZ34Yxycs9q0b+K1WWimLplRJxvnG7c0pvdsLtvF4kFosPMUiDUDLCc+nAX
-        BDEJlUpYmKIXCHeHxxnUJW2saEFjAhGWPaqucs9SfLKyCdH6BFAk7GIW0YSE9LDZB9jDhoup3Ahi3
-        558Ztg1w==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFgmv-0001Sv-2X; Tue, 08 Sep 2020 16:48:10 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        iommu@lists.linux-foundation.org
-Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 08/12] dma-direct: use phys_to_dma_direct in dma_direct_alloc
-Date:   Tue,  8 Sep 2020 18:47:54 +0200
-Message-Id: <20200908164758.3177341-9-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908164758.3177341-1-hch@lst.de>
-References: <20200908164758.3177341-1-hch@lst.de>
+        Tue, 8 Sep 2020 12:48:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599583682;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kk/MzQpl2YW+BRjUs+jKB6CtH3juIQy3EW0uS3+0BVs=;
+        b=FaiKCfdB8+U66neeWsffP/LUV0GoQtx+Cy1IXNrbabf5j2Ukf6E+ySYzCTCgbItvaCgN+7
+        T8BEIHHxpjZDN/IVIejmPgJSLMH2fSCnk9XL6QqStg05DQQTcALlN0y3ipFKHy/FKYvqVo
+        l8y8MA2HTwN/4Uv+VVYEh5yHNXm5VU8=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-XRUQI1pMNHuYOvpsHNAFYQ-1; Tue, 08 Sep 2020 09:20:27 -0400
+X-MC-Unique: XRUQI1pMNHuYOvpsHNAFYQ-1
+Received: by mail-ej1-f72.google.com with SMTP id gt18so6654466ejb.16
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:20:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kk/MzQpl2YW+BRjUs+jKB6CtH3juIQy3EW0uS3+0BVs=;
+        b=CFtshIBx7OlaLgWfa+KTC9t1a1xZbwIYF2VdwYt53sgBMw0+A24LRHfYODryzZdJ1J
+         4JkyivphuW5tnav7Mo2/+ZQLfOfROEC71W33iysIFHTTLb95V99CmpzhnYrsjGPYnwtn
+         0cQnUN5x63iDEoYhWY6pNPp4Z1mPRuTaWffeG5tM2bO+WwktqLDw7pE3SFa1ZXotDp6B
+         Q8h4mejz1HwZgYFf6vfNEn8tEwwrN4LuHxrSgM2F6Zk/v1XMD70DE4qkpdbA+WIN9UWN
+         Wghv3KpHaaSCO+5EG88wtYRn/tr6MGKJ0spd7bCkuF+qXoyX1jWmaYZA8oyo1mS5ckJ8
+         eUTw==
+X-Gm-Message-State: AOAM530a6KpPVaexSdIrWzc7di/0M/kHEA+6aKas4PDIBDGLGFjIPOwM
+        OF+WywL2UEqBWluuDw2RuH8CsQ3XoPnsCJiiUKShZXa1OvpPc2QbymHg+s0c2s/uoJqdT0csQMc
+        Kvd30Y9K05mN4/rl7dYaGf2p6
+X-Received: by 2002:aa7:d697:: with SMTP id d23mr27729557edr.13.1599571225564;
+        Tue, 08 Sep 2020 06:20:25 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyJSCXKpUVVYMUY6y6pGIlWBQF6oylam73BShkdtH0Ngf5e1fkNihiTDrhP7Zi2Gs3qSlHKgQ==
+X-Received: by 2002:aa7:d697:: with SMTP id d23mr27729530edr.13.1599571225337;
+        Tue, 08 Sep 2020 06:20:25 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id n11sm14190638ejs.38.2020.09.08.06.20.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 06:20:24 -0700 (PDT)
+Subject: Re: linux-next: manual merge of the drm-intel tree with Linus' tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200908140022.67dd3801@canb.auug.org.au>
+ <db369f50-a3a0-2504-0628-ce5e6780d31b@redhat.com>
+ <20200908210449.1a4f8e52@canb.auug.org.au>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <d5c2cb83-8fc0-069e-7d4b-64a8ecf9a6b4@redhat.com>
+Date:   Tue, 8 Sep 2020 15:20:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200908210449.1a4f8e52@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace the currently open code copy.
+Hi,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- kernel/dma/direct.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+On 9/8/20 1:04 PM, Stephen Rothwell wrote:
+> Hi Hans,
+> 
+> On Tue, 8 Sep 2020 10:22:06 +0200 Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> On 9/8/20 6:00 AM, Stephen Rothwell wrote:
+>>>
+>>> Today's linux-next merge of the drm-intel tree got a conflict in:
+>>>
+>>>     drivers/gpu/drm/i915/display/intel_panel.c
+>>>
+>>> between commit:
+>>>
+>>>     f8bd54d21904 ("drm/i915: panel: Use atomic PWM API for devs with an external PWM controller")
+> 
+> This should have been
+> 
+>    899c537c25f9 ("drm/i915: Use 64-bit division macro")
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 12e9f5f75dfe4b..57a6e7d7cf8f16 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -240,10 +240,7 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 			goto out_encrypt_pages;
- 	}
- done:
--	if (force_dma_unencrypted(dev))
--		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
--	else
--		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-+	*dma_handle = phys_to_dma_direct(dev, page_to_phys(page));
- 	return ret;
- 
- out_encrypt_pages:
--- 
-2.28.0
+Yes that makes more sense.
+
+>>> from Linus' tree and commit:
+>>>
+>>>     6b51e7d23aa8 ("drm/i915: panel: Honor the VBT PWM frequency for devs with an external PWM controller")
+>>
+>> That doesn't sound correct, those are both commits from the drm-intel tree.
+>>
+>>> from the drm-intel tree.
+>>>
+>>> I fixed it up (I just used the latter)
+>>
+>> Just taking the drivers/gpu/drm/i915/display/intel_panel.c contents of:
+>>
+>> f8bd54d21904 ("drm/i915: panel: Use atomic PWM API for devs with an external PWM controller")
+>>
+>> Is the right thing to do, the problem is a difference in a line which gets
+>> removed in that commit.
+> 
+> Which is what I actually did, I guess :-)
+
+Yes, looks good.
+
+> Sorry about that.
+
+No problem and thank you for all the work you do on -next.
+
+Regards,
+
+Hans
 
