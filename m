@@ -2,57 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F72C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BE0C43461
 	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D793C2137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A54152137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593366;
-	bh=vh4m6CaLbtpp40lDB51brxmxZsrwDG93GpYL7BWbVNg=;
+	s=default; t=1599593367;
+	bh=8NdyMr0qdCkBqkHhbsdLzyk7q5G2WaeawI26KLzIdkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZQQ1t2C3GiqW5pSazvnTZkM5zUle8tEY0DjG8Y3xPaDpNNWRzwEFIpx2fC0L5XCZ
-	 sh6jb007E/xIIm2y7uhOWvVyhaAWd3eYr8CqXDI1AYLDEBhwjJniESyfAIbpny0r0I
-	 BuAh9xcPiOtD06V3WRT59GARAKOLMscLxuYn9tIs=
+	b=bIXXRX7cj8wjlxHtYEpTV9VyX2Lyx9t+BZUdikQm7PuJ/W/oYo+DOAnae6efmDrB9
+	 UQAgEW1qAd7qP0zYx5srPkTdxuBQ8KzS/9zLeF2sn/PavuXb5SWtHrz/PeA9tgaCnr
+	 zy16twypgXaE8zQWp6/LIclQ6Q1FfDfEt1e5vvuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732101AbgIHT3Z (ORCPT
+        id S1732151AbgIHT30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47744 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:29:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731057AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731048AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CBBA23ECE;
-        Tue,  8 Sep 2020 15:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CFF6246F0;
+        Tue,  8 Sep 2020 15:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579475;
-        bh=vh4m6CaLbtpp40lDB51brxmxZsrwDG93GpYL7BWbVNg=;
+        s=default; t=1599579626;
+        bh=8NdyMr0qdCkBqkHhbsdLzyk7q5G2WaeawI26KLzIdkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lFiF59wWneWQtDtADEjoN0zVbuJm0CsvdGkQC9V0A08TxWfhj9UQV2SQCK0ApPNpf
-         eB+fSP9QhnOAI55Nkgkg+ApHyn1r4ioskqDiUVko4+8fwR71VA5d0IUQPBm0CnmjXL
-         3l4Cp0auDca1Q1olKDHOMVZuW4K2RrmE1Z/kziQ8=
+        b=huTy24YQU8zcGoPGUQoPScqVn8Op+wxuPAAXxrrrOMdq8I7m+aGqRopuaj5za5GRr
+         2PP023RefNpy24tKPLzo8NYTG4V4EhAxCwTfLoPc5X9NsoBfSOuMv0KfM+f6b0AWxc
+         4Uo8QxipIVer/m447LdgLr2SsiQLpu4muxrqOQoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Grant <al.grant@arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 094/186] perf tools: Correct SNOOPX field offset
-Date:   Tue,  8 Sep 2020 17:23:56 +0200
-Message-Id: <20200908152246.190728340@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 5.8 156/186] s390: fix GENERIC_LOCKBREAK dependency typo in Kconfig
+Date:   Tue,  8 Sep 2020 17:24:58 +0200
+Message-Id: <20200908152249.222776843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -65,51 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Grant <al.grant@foss.arm.com>
+From: Eric Farman <farman@linux.ibm.com>
 
-[ Upstream commit 39c0a53b114d0317e5c4e76b631f41d133af5cb0 ]
+commit 114b9df419bf5db097b322ebb03fcf2f502f9380 upstream.
 
-perf_event.h has macros that define the field offsets in the data_src
-bitmask in perf records. The SNOOPX and REMOTE offsets were both 37.
+Commit fa686453053b ("sched/rt, s390: Use CONFIG_PREEMPTION")
+changed a bunch of uses of CONFIG_PREEMPT to _PREEMPTION.
+Except in the Kconfig it used two T's. That's the only place
+in the system where that spelling exists, so let's fix that.
 
-These are distinct fields, and the bitfield layout in perf_mem_data_src
-confirms that SNOOPX should be at offset 38.
+Fixes: fa686453053b ("sched/rt, s390: Use CONFIG_PREEMPTION")
+Cc: <stable@vger.kernel.org> # 5.6
+Signed-off-by: Eric Farman <farman@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Committer notes:
-
-This was extracted from a larger patch that also contained kernel
-changes.
-
-Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
-Signed-off-by: Al Grant <al.grant@arm.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h | 2 +-
+ arch/s390/Kconfig |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 7b2d6fc9e6ed7..bc8c4816ba386 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1155,7 +1155,7 @@ union perf_mem_data_src {
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -30,7 +30,7 @@ config GENERIC_BUG_RELATIVE_POINTERS
+ 	def_bool y
  
- #define PERF_MEM_SNOOPX_FWD	0x01 /* forward */
- /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT	37
-+#define PERF_MEM_SNOOPX_SHIFT	38
+ config GENERIC_LOCKBREAK
+-	def_bool y if PREEMPTTION
++	def_bool y if PREEMPTION
  
- /* locked instruction */
- #define PERF_MEM_LOCK_NA	0x01 /* not available */
--- 
-2.25.1
-
+ config PGSTE
+ 	def_bool y if KVM
 
 
