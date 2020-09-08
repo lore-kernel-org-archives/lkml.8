@@ -5,50 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D51FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CC8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04D6C2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1E52080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589337;
-	bh=FylbTEiD/DWhvOUoe0WCFuShSIlax8Y8+fievbYrx4M=;
+	s=default; t=1599589351;
+	bh=Q1MWV3QF384tQ47rClttc12k8j/Mj6/7MqE4HXzRMng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L4VI6P5NNMZ3EsWZ9zqdJW2eP+2BObbpUvJqVtJLHIoGMxlCd+wb629K7ad/tRHsC
-	 yPMvYXb6gAPWB2aNG5GuY+wxOWQ4SwDRIf1q6A8EF3LwmnKU4zlI7X71653h2Te0EV
-	 AZcStVqV53oqGldYvVtsUufxz8pQFaxZHKNxwQLU=
+	b=rnXszvBBXtA85tb+AMdFAmz9UrqnwXeTb1p9i2/fT4y6EikI10ez4znbZbR2QaTB0
+	 0FBEMkDa6S5cMZejmz/2w8uARL9gqdEgdGkq5+Ad7IAYokqdmGf3daBPQUzJSPgXlX
+	 2KucrjTfgooaMLoGw1Cmchsrm+YjhXxuTBEq73V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbgIHSWM (ORCPT
+        id S1732223AbgIHSW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731455AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731456AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E68024740;
-        Tue,  8 Sep 2020 15:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54F0A24756;
+        Tue,  8 Sep 2020 15:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579673;
-        bh=FylbTEiD/DWhvOUoe0WCFuShSIlax8Y8+fievbYrx4M=;
+        s=default; t=1599579687;
+        bh=Q1MWV3QF384tQ47rClttc12k8j/Mj6/7MqE4HXzRMng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PUR2Zo8f+LNjtOAuUzZ72jRVnkonmwrXthCThYJaH8SKjDHx58DgguGqkg5TwKzZF
-         tneh3+kVIsynF9b3TFF7ZcUP3a8Mygi5CJZVB0ND7nqNNsoFk92gGgliY6J3amg047
-         oKtVatKwDiBCLxXxsA1h5BnmvNVeqJdT3Ij/zTTk=
+        b=ZAF0fx/gI/8o6dHxvbWtxw/8ZoiMOLXgZvMQbMIyYD+UDjtlxpJCpska9Pm2c8/j0
+         EbfficM4DMfJPctPLhASMmNwXBvavXKA7BKfkmRxPL+2Qgv4Vwfpl89w0oOsOHxBbW
+         UPXKPtZqasPTEUhWBw7tcMwAhCkEcqY9cvbUcj8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 145/186] arm64: dts: mt7622: add reset node for mmc device
-Date:   Tue,  8 Sep 2020 17:24:47 +0200
-Message-Id: <20200908152248.692679781@linuxfoundation.org>
+        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Xu <peterx@redhat.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 181/186] mm/migrate: fixup setting UFFD_WP flag
+Date:   Tue,  8 Sep 2020 17:25:23 +0200
+Message-Id: <20200908152250.448253850@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,35 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenbin Mei <wenbin.mei@mediatek.com>
+From: Alistair Popple <alistair@popple.id.au>
 
-commit d6f6cbeee4e5ee6976792851e0461c19f1ede864 upstream.
+commit ebdf8321eeeb623aed60f7ed16f7445363230118 upstream.
 
-This commit adds reset node for mmc device.
+Commit f45ec5ff16a75 ("userfaultfd: wp: support swap and page migration")
+introduced support for tracking the uffd wp bit during page migration.
+However the non-swap PTE variant was used to set the flag for zone device
+private pages which are a type of swap page.
 
-Cc: <stable@vger.kernel.org> # v5.4+
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
-Link: https://lore.kernel.org/r/20200814014346.6496-3-wenbin.mei@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+This leads to corruption of the swap offset if the original PTE has the
+uffd_wp flag set.
+
+Fixes: f45ec5ff16a75 ("userfaultfd: wp: support swap and page migration")
+Signed-off-by: Alistair Popple <alistair@popple.id.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Cc: Jérôme Glisse <jglisse@redhat.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Link: https://lkml.kernel.org/r/20200825064232.10023-1-alistair@popple.id.au
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ mm/migrate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -686,6 +686,8 @@
- 		clocks = <&pericfg CLK_PERI_MSDC30_0_PD>,
- 			 <&topckgen CLK_TOP_MSDC50_0_SEL>;
- 		clock-names = "source", "hclk";
-+		resets = <&pericfg MT7622_PERI_MSDC0_SW_RST>;
-+		reset-names = "hrst";
- 		status = "disabled";
- 	};
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -251,7 +251,7 @@ static bool remove_migration_pte(struct
+ 				entry = make_device_private_entry(new, pte_write(pte));
+ 				pte = swp_entry_to_pte(entry);
+ 				if (pte_swp_uffd_wp(*pvmw.pte))
+-					pte = pte_mkuffd_wp(pte);
++					pte = pte_swp_mkuffd_wp(pte);
+ 			}
+ 		}
  
 
 
