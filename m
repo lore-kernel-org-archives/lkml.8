@@ -1,165 +1,114 @@
-Return-Path: <SRS0=/EmK=CQ=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EA9C2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7D7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0B520714
-	for <linux-kernel@archiver.kernel.org>; Mon,  7 Sep 2020 23:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221C92192A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="SZfogk/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgIGX6M (ORCPT
+        id S1728149AbgIHADF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 19:58:12 -0400
-Received: from mail-bn7nam10olkn2023.outbound.protection.outlook.com ([40.92.40.23]:2528
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727058AbgIGX6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 19:58:00 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nmgeMEy12WdIKnwMDH+F+R+TuQhNhaaxHGjaW66tKbvICCofJAjJnu+Y7O9q8+vxYJobSUC3EvY4ZwRT4TIAlyuXmWTSB7Qlw/8ZYBO6cz638z2yPehUyuRvdfkacwoDlNCZx6hbwDrLWvPMl3rvYJ+bZi/aLBItLnIGZnsuycTZ3NsUTx6h9er5bR+CIXyHC3QU9AQq6OaqyT6MMDCOeJIwKTmSlEOoXdLr4EYwsYlel9vb2F/yZHTivoyIA4ur46laxhK33gbrKbVFK3kaaSK8n2c5NyVrc6DBrSQFINblHeGY7Mhtrvs3J2wJR8ZdB/HbblJaOK9ob5BGTN/RJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HntvSMKcMp6nPWAeky7lX80zSyFz7+LuGIVDu9CmML0=;
- b=db251tpKrkv5do8WMNP5JS2zg8otRMQxsFR1bIiZgcRADPYF8eJTfa7Q0IN1U4UVKtlXKuvuqr3y4E9jG4rWVobRjQ2/d7EGGw6h0Y/GUVJBXLPzONxG+YEZI9HG+PBPKX4mHesIPU6vlC/4/W9SM7ZmvtpI+KsKO8rKZkMvUVYdVra6wIy7fYwQsbyyojhGvh4NN3rPPzxa+hgnjoHCJd1tkDNZN4CP5vzoIRjyH+yLYKFTXrQ+IlgNu83rBrf+1YuAG/aYdbNlPeTNmZIFBSOgQjtrMO5oGBn7A+VsKQ1qWx9Ba/WEfPLNraa8QiderfR7DGf2aQtPnzttl2Shaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from BN7NAM10FT047.eop-nam10.prod.protection.outlook.com
- (2a01:111:e400:7e8f::4f) by
- BN7NAM10HT056.eop-nam10.prod.protection.outlook.com (2a01:111:e400:7e8f::64)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Mon, 7 Sep
- 2020 23:57:58 +0000
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- (2a01:111:e400:7e8f::50) by BN7NAM10FT047.mail.protection.outlook.com
- (2a01:111:e400:7e8f::126) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
- Transport; Mon, 7 Sep 2020 23:57:58 +0000
-X-IncomingTopHeaderMarker: OriginalChecksum:8CF1001AE62D46DB815F46CE29B099155776B1E4525096109C9E4E312E0C574A;UpperCasedChecksum:DCF91870F4ED01B99357943FC49B92E139A22B7654A195535A21E478F9D2CA5A;SizeAsReceived:9289;Count:48
-Received: from BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04]) by BN6PR04MB0660.namprd04.prod.outlook.com
- ([fe80::303b:a75b:d03e:bd04%3]) with mapi id 15.20.3348.019; Mon, 7 Sep 2020
- 23:57:58 +0000
-Subject: Re: [PATCH 11/25] ARM: dts: s5pv210: add RTC 32 KHz clock in Aries
- family
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-12-krzk@kernel.org>
-From:   Jonathan Bakker <xc-racer2@live.ca>
-Message-ID: <BN6PR04MB0660939E010C3175CD0DF9D6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
-Date:   Mon, 7 Sep 2020 16:57:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200907161141.31034-12-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW2PR16CA0001.namprd16.prod.outlook.com (2603:10b6:907::14)
- To BN6PR04MB0660.namprd04.prod.outlook.com (2603:10b6:404:d9::21)
-X-Microsoft-Original-Message-ID: <c46752bf-7a1a-2a42-9f15-a504e5f9b7a2@live.ca>
+        Mon, 7 Sep 2020 20:03:05 -0400
+Received: from lists.nic.cz ([217.31.204.67]:51566 "EHLO mail.nic.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgIHADD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 20:03:03 -0400
+Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:8982:ed8c:62b1:c0c8])
+        by mail.nic.cz (Postfix) with ESMTP id 9A0D814004F;
+        Tue,  8 Sep 2020 02:03:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
+        t=1599523381; bh=KJLbvvPf3CNkGwBOxwMT2kh3dnbZ2rdGErRO9MBVcvw=;
+        h=From:To:Date;
+        b=SZfogk/yX5tpva+/dx/6CVc+cOfcMbn0cpy7z1Mh6ygUm2qLYfLvIUYmfvH3h3FRO
+         0SncuqXRqF2BrYNGOJGbZYJEa3hrtOznOoAFww76U+n8evuFXhAG6naVGlZ1wZUlTg
+         jFgem5HqWS9DgWs42yc/3HNKDk8pnoTeoMJ9hT/8=
+From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To:     netdev@vger.kernel.org
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>,
+        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH net-next v1 1/3] dt-bindings: net: ethernet-phy: add description for PHY LEDs
+Date:   Tue,  8 Sep 2020 02:02:58 +0200
+Message-Id: <20200908000300.6982-2-marek.behun@nic.cz>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200908000300.6982-1-marek.behun@nic.cz>
+References: <20200908000300.6982-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2001:569:fb68:9c00:8067:f823:1e15:7520] (2001:569:fb68:9c00:8067:f823:1e15:7520) by MW2PR16CA0001.namprd16.prod.outlook.com (2603:10b6:907::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Mon, 7 Sep 2020 23:57:55 +0000
-X-Microsoft-Original-Message-ID: <c46752bf-7a1a-2a42-9f15-a504e5f9b7a2@live.ca>
-X-TMN:  [k4tqjJgX5hGeluGZs9Q46AzGeJY0KK2EcLeTWBJjIjKPtuRSEtQPsVVoUj+QDr9L]
-X-MS-PublicTrafficType: Email
-X-IncomingHeaderCount: 48
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-Correlation-Id: 2c6f8427-16bd-4d0a-94f9-08d85389d84b
-X-MS-TrafficTypeDiagnostic: BN7NAM10HT056:
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aOmx1GuBX1LZwHQvBC4zaq+3nyAjmyWo+Clo/SAOAUedOdOOrLkCDL0HpFzFdTD53u+ZggMwrgXd5rekTGpNzcePHGhqKtTf/2BGLH73Bvn3Q5Hh+Py2oDzXhkdYTUJ/tREYGmAYaqFHLAN1pBfULtR4MWyQyVDkGBxjz9PDUdwbcBKL1eZ0xoTHygedrxrtWKjIFYJhLrKQRZBPt1DH3A==
-X-MS-Exchange-AntiSpam-MessageData: bEqoz062S9Zc1hB3Nwy2d/bMOhJE0AbRQJRtKCeonzebnhH7v/9hXoNSdj7zQvmfR0swX24z7WJoGOLjzrEcGYK9LtqBhLYcPwU7u7LuiM57E4Gc+wId3w/N5ZeigP3g4N0Mwp/u4A3Oc/yqHrfRSkjizVKhQ1VObzVvIUqnrpJ1LAacQ9SNdtHscDolUIzxBKet96sMxuh3y5yAavF41w==
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c6f8427-16bd-4d0a-94f9-08d85389d84b
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2020 23:57:58.0260
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-AuthSource: BN7NAM10FT047.eop-nam10.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: Internet
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7NAM10HT056
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: /
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Document binding for LEDs connected to and controlled by ethernet PHY
+chips.
 
-On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
-> However there is no such clock provider but rather a regulator driver
-> which registers the clock as a regulator.  This is an old driver which
-> will not be updated so add a workaround - a fixed-clock to fill missing
-> clock phandle reference in S3C RTC.
-> 
-> This fixes dtbs_check warnings:
-> 
->   rtc@e2800000: clocks: [[2, 145]] is too short
->   rtc@e2800000: clock-names: ['rtc'] is too short
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  arch/arm/boot/dts/s5pv210-aries.dtsi | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> index 6ba23562da46..86c3b26fd21e 100644
-> --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> @@ -47,6 +47,13 @@
->  		};
->  	};
->  
-> +	pmic_ap_clk: clock-0 {
-> +		/* Workaround for missing clock on PMIC */
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +	};
-> +
->  	bt_codec: bt_sco {
->  		compatible = "linux,bt-sco";
->  		#sound-dai-cells = <0>;
-> @@ -825,6 +832,11 @@
->  	samsung,pwm-outputs = <1>;
->  };
->  
-> +&rtc {
-> +	clocks = <&clocks CLK_RTC>, <&pmic_ap_clk>;
-> +	clock-names = "rtc", "rtc_src";
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Cc: Rob Herring <robh+dt@kernel.org>
+---
+ .../devicetree/bindings/net/ethernet-phy.yaml | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Missing a
+diff --git a/Documentation/devicetree/bindings/net/ethernet-phy.yaml b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+index a9e547ac79051..11839265cc2f9 100644
+--- a/Documentation/devicetree/bindings/net/ethernet-phy.yaml
++++ b/Documentation/devicetree/bindings/net/ethernet-phy.yaml
+@@ -174,6 +174,37 @@ properties:
+       PHY's that have configurable TX internal delays. If this property is
+       present then the PHY applies the TX delay.
+ 
++patternProperties:
++  "^led@[0-9a-f]+$":
++    type: object
++    description:
++      This node represents a LED device connected to the PHY chip.
++    $ref: /schemas/leds/common.yaml#
++
++    properties:
++      reg:
++        maxItems: 1
++
++      enable-active-high:
++        description:
++          Polarity of LED is active high. If missing, assumed default is active low.
++        type: boolean
++
++      led-open-drain:
++        description:
++          LED pin is open drain type. If missing, assumed false.
++        type: boolean
++
++      linux,default-hw-mode:
++        description:
++          This parameter, if present, specifies the default HW triggering mode of the LED
++          when LED trigger is set to `phydev-hw-mode`.
++          Available values are specific per PHY chip and per LED.
++        $ref: /schemas/types.yaml#definitions/string
++
++    required:
++      - reg
++
+ required:
+   - reg
+ 
+-- 
+2.26.2
 
-status = "okay";
-
-here, but with that it works fine for me.  Looks like it's also
-missing in the patches for the other devices as well.
-
-Thanks for the series of cleanups,
-Jonathan
-
-> +};
-> +
->  &sdhci1 {
->  	#address-cells = <1>;
->  	#size-cells = <0>;
-> 
