@@ -2,115 +2,156 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F27C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2423BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15FDD206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8ED2206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=agner.ch header.i=@agner.ch header.b="GpnxllrN"
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="NDNqSTa7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732117AbgIHQlk (ORCPT
+        id S1732039AbgIHQlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:41:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60566 "EHLO
+        Tue, 8 Sep 2020 12:41:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732032AbgIHQhO (ORCPT
+        with ESMTP id S1732042AbgIHQhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:14 -0400
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [IPv6:2a02:418:6a02::a2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B99C0612F1
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:56:02 -0700 (PDT)
-Received: from trochilidae.toradex.int (31-10-206-124.static.upc.ch [31.10.206.124])
-        by mail.kmu-office.ch (Postfix) with ESMTPSA id 6BFD55C4CAB;
-        Tue,  8 Sep 2020 14:56:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-        t=1599569760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=qxfcotVSiPgSlKPB5rZ5xXDXpnK6trtv7RzFevjZqVc=;
-        b=GpnxllrNBTG+jCZMxIjRiuwMkKDhmunZ5oYrsTtVr2FjWZ8FBeSR3aOGSCi7oxp+4zOEZD
-        YK2pCIkK0Kx+ZXHdzzFoKzQv6R7cIYiuV7+Ho/qw0lMc2tEpjklLwNUcVrnZ/1kNm0HRUQ
-        XuSQkc1BYcXovM4hqzcwycbL+krdrP0=
-From:   Stefan Agner <stefan@agner.ch>
-To:     marex@denx.de, stefan@agner.ch
-Cc:     laurent.pinchart@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, tomi.valkeinen@ti.com,
-        linux-imx@nxp.com, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] drm: mxsfb: check framebuffer pitch
-Date:   Tue,  8 Sep 2020 14:55:58 +0200
-Message-Id: <20200908125558.256843-1-stefan@agner.ch>
-X-Mailer: git-send-email 2.28.0
+        Tue, 8 Sep 2020 12:37:15 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02372C061A0E
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:04:14 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id t16so11314375edw.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:04:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pFSueD/PsgBNg5dRi4zohukePJNmnDKu8o6l7DjyJKo=;
+        b=NDNqSTa7fZTWmXjbEiT8n88ebqol0L6AQtiZu/8Oqe+mwkyHcxNQJF45p8QJ0vEHmj
+         7vURBe4Ohu2fjAEu7i/ry1GBIIfFl5TaPBxPz79QVbYcSu/nefGedb+ubeX8CBrtqttl
+         vRGrgNRtPpVQZ+TMKn4V+lOBfVl8T3XmT0sIYxxoJEu8HiVHdWijgtU1BxjViT0f9tcH
+         voD1jgHdPNU8GQLdGstctvcCBJ8Zt6MVhQfE/PW9Z+rDarmVbuJR0lGYHgfbnujN7om3
+         y37QDLUOfw5y6g0/x4GMg5xEeVirg0uNqjcdA2LuSj5fJgji6JndSYaglSRH3naDUxq7
+         R8/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pFSueD/PsgBNg5dRi4zohukePJNmnDKu8o6l7DjyJKo=;
+        b=JJCgCG5XR+x2Qasdzm1tAvGGvP7apT4KclppTUL/85VuzBZWRdAJhLTHaQzIsqdeKj
+         UXpxVptG+54YU5ijLuuK5LpI7HeNyfpaBFIOt+GCbtF8J7ZQvLywcQpUmoP/7VyU8Dfz
+         tlA1vvh7vKA9A6DJuPoCDM6wV1Y0CjpJsLK4w/XFtSEGWZDM2kiH90uIk/VLB8BaMGRb
+         XPJQ4QrRD6lRbqL1ZbTFDB5KRux9DqkRv5Irpxa25flMR6YYCn0mwbM5LNRN8ZHENyMS
+         BXA26wFdLEGb++S7Ff97NgKmqGo8picCjnJD8A03tqVpOC9QiiPQni8YrFEuZTtxTm3q
+         yg9g==
+X-Gm-Message-State: AOAM533siiGgx2fn95nv/AHbvv7gvv3eKdVLayfdIvpEnJzmOfvO6wz6
+        6uOYOSQMeMaP8UHWIZIFr0HgrQ==
+X-Google-Smtp-Source: ABdhPJyJCTFd0pn3p9yrebWEYoQaThaFvclLZLNU4bDenEbLK2WJOX0hyPvDit0IltNHfqOzyUsBQQ==
+X-Received: by 2002:a50:8e17:: with SMTP id 23mr26671696edw.42.1599573851439;
+        Tue, 08 Sep 2020 07:04:11 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id v4sm17839598eje.39.2020.09.08.07.04.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 07:04:10 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:04:09 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Ido Schimmel <idosch@idosch.org>
+Cc:     Aya Levin <ayal@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        Moshe Shemesh <moshe@mellanox.com>,
+        Eran Ben Elisha <eranbe@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v1 2/4] devlink: Add devlink traps under
+ devlink_ports context
+Message-ID: <20200908140409.GN2997@nanopsycho.orion>
+References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
+ <1599060734-26617-3-git-send-email-ayal@mellanox.com>
+ <20200906154428.GA2431016@shredder>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200906154428.GA2431016@shredder>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The lcdif IP does not support a framebuffer pitch (stride) other than
-framebuffer width. Check for equality and reject the framebuffer
-otherwise.
+Sun, Sep 06, 2020 at 05:44:28PM CEST, idosch@idosch.org wrote:
+>On Wed, Sep 02, 2020 at 06:32:12PM +0300, Aya Levin wrote:
 
-This prevents a distorted picture when using 640x800 and running the
-Mesa graphics stack. Mesa tires to use a cache aligned stride, which
-leads at that particular resolution to width != stride. Currently
-Mesa has no fallback behavior, but rejecting this configuration allows
-userspace to handle the issue correctly.
+[...]
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- drivers/gpu/drm/mxsfb/mxsfb_drv.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+>
+>I understand how this struct allows you to re-use a lot of code between
+>per-device and per-port traps, but it's mainly enabled by the fact that
+>you use the same netlink commands for both per-device and per-port
+>traps. Is this OK?
+>
+>I see this is already done for health reporters, but it's inconsistent
+>with the devlink-param API:
+>
+>DEVLINK_CMD_PARAM_GET
+>DEVLINK_CMD_PARAM_SET
+>DEVLINK_CMD_PARAM_NEW
+>DEVLINK_CMD_PARAM_DEL
+>
+>DEVLINK_CMD_PORT_PARAM_GET
+>DEVLINK_CMD_PORT_PARAM_SET
+>DEVLINK_CMD_PORT_PARAM_NEW
+>DEVLINK_CMD_PORT_PARAM_DEL
+>
+>And also with the general device/port commands:
+>
+>DEVLINK_CMD_GET
+>DEVLINK_CMD_SET
+>DEVLINK_CMD_NEW
+>DEVLINK_CMD_DEL
+>
+>DEVLINK_CMD_PORT_GET
+>DEVLINK_CMD_PORT_SET
+>DEVLINK_CMD_PORT_NEW
+>DEVLINK_CMD_PORT_DEL
+>
+>Wouldn't it be cleaner to add new commands?
+>
+>DEVLINK_CMD_PORT_TRAP_GET
+>DEVLINK_CMD_PORT_TRAP_SET
+>DEVLINK_CMD_PORT_TRAP_NEW
+>DEVLINK_CMD_PORT_TRAP_DEL
+>
+>I think the health API is the exception in this case and therefore might
+>not be the best thing to mimic. IIUC, existing per-port health reporters
+>were exposed as per-device and later moved to be exposed as per-port
+>[1]:
+>
+>"This patchset comes to fix a design issue as some health reporters
+>report on errors and run recovery on device level while the actual
+>functionality is on port level. As for the current implemented devlink
+>health reporters it is relevant only to Tx and Rx reporters of mlx5,
+>which has only one port, so no real effect on functionality, but this
+>should be fixed before more drivers will use devlink health reporters."
 
-diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-index 8c549c3931af..fa6798d21029 100644
---- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-+++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
-@@ -21,6 +21,7 @@
- #include <drm/drm_connector.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_fb_helper.h>
-+#include <drm/drm_fourcc.h>
- #include <drm/drm_gem_cma_helper.h>
- #include <drm/drm_gem_framebuffer_helper.h>
- #include <drm/drm_irq.h>
-@@ -81,8 +82,26 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb)
- 		clk_disable_unprepare(mxsfb->clk_axi);
- }
- 
-+static struct drm_framebuffer *
-+mxsfb_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-+		  const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	const struct drm_format_info *info;
-+
-+	info = drm_get_format_info(dev, mode_cmd);
-+	if (!info)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (mode_cmd->width * info->cpp[0] != mode_cmd->pitches[0]) {
-+		dev_dbg(dev->dev, "Invalid pitch: fb width must match pitch\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return drm_gem_fb_create(dev, file_priv, mode_cmd);
-+}
-+
- static const struct drm_mode_config_funcs mxsfb_mode_config_funcs = {
--	.fb_create		= drm_gem_fb_create,
-+	.fb_create		= mxsfb_fb_create,
- 	.atomic_check		= drm_atomic_helper_check,
- 	.atomic_commit		= drm_atomic_helper_commit,
- };
--- 
-2.28.0
+Yeah, this slipped trough my fingers unfortunatelly :/ But with
+introduction of per-port health reporters, we could introduce new
+commands, that would be no problem. Pity :/
 
+
+>
+>[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ac4cd4781eacd1fd185c85522e869bd5d3254b96
+>
+>Since we still don't have per-port traps, we can design it better from
+>the start.
+
+I agree. Let's have a separate commands for per-port.
+
+
+[...]
