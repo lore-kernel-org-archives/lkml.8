@@ -2,107 +2,75 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.3 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F24AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7882C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57C232087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:05:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jwwFp358"
+	by mail.kernel.org (Postfix) with ESMTP id 91C74208DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgIHLFh (ORCPT
+        id S1729912AbgIHLHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729479AbgIHLAc (ORCPT
+        Tue, 8 Sep 2020 07:07:35 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:38299 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729646AbgIHLGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:00:32 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48F0C061573;
-        Tue,  8 Sep 2020 04:00:29 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id l126so3630128pfd.5;
-        Tue, 08 Sep 2020 04:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7P+HyTNGtG0TbTo1ltjHRYMV5rgT/s2SfZTbcF+5SnY=;
-        b=jwwFp3586/x/n+b9Tn93XWRg6mQQyMXg/b3SxsHRQjc/SUTnyv8C7D9VHMKSQSw8iM
-         VvKKkKdG8IFdID9WKJjJdly5ue9AMZpfewGJvB8G5LzVgUw83+QzdYYhJFsfEgW0kKYR
-         EVrf432HRoksV34dRIrT8HwFU0autE4mdlWzJg6VxuxArB7YknY+eSdFE36N7zJ7nbZB
-         TUBTG7Htv+0fen0CfURZySfQiv9qy4VZyn2u0u93ko7dDvh/gerr6dxzAlc/kximIhcv
-         6c8YSF/5X+e7oq2fYr5FQC5J/YtPBrR7kI4gex/KVjMmOuuqsLjNixJHWtyLHm3bnF1v
-         vCUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7P+HyTNGtG0TbTo1ltjHRYMV5rgT/s2SfZTbcF+5SnY=;
-        b=G/73GfjTPnESJrGMCzeMy9GzUDeWKZS8dYtDlzeYpzntgHgnW/W0y+uMqCIkFiGS4p
-         02ql8AwUR/tQykuiervJ5BQb4+FDrF/UVxlRedzuJe9NuwSO1RNEf0dNhDvsJXBnq8py
-         tOKYvTn8baRC9NTaWqYNeZ50a1QNQBHZ/w6/FxzgwiwN+JVGTtkVCa4qNAgr0P55INBc
-         9tCKUV1ckAkIKx6Q6KkjVkYm4wdHz2MPJT0Ul6jIazxAXPYORxd2XE+OWbVWWwz+AhXO
-         MY3R2E+jMsbMCaXajrB/IJsZ2cwAAHc2v8wtawGaiwJFUv6vIAN6tybPh6F4QnY0IAfv
-         KNxA==
-X-Gm-Message-State: AOAM532blKO4nfeiOkoRj+FE2tO+sA35d4g7AR4mpltYB/4262ofoCVV
-        ojiuQNZ30QTts8Lcbjpf/sVJ72Q6dOO7a6Rd4u8=
-X-Google-Smtp-Source: ABdhPJwsEpXaiJLryhaI0pj5sh7Z33Qq5glUERK4QTaOGvBUWws8u2uEs+dNKUu13UyQHrVNBBqlhbRxW30vLrhFc90=
-X-Received: by 2002:a17:902:7083:b029:d0:cbe1:e7b5 with SMTP id
- z3-20020a1709027083b02900d0cbe1e7b5mr670449plk.38.1599562824414; Tue, 08 Sep
- 2020 04:00:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
- <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com>
- <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
- <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com> <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
-In-Reply-To: <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Tue, 8 Sep 2020 04:00:13 -0700
-Message-ID: <CAJht_EN7SXAex-1W49eY7q5p2UqLYvXA8D6hptJGquXdJULLcA@mail.gmail.com>
-Subject: Re: Question about dev_validate_header used in af_packet.c
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 8 Sep 2020 07:06:50 -0400
+X-IronPort-AV: E=Sophos;i="5.76,405,1592838000"; 
+   d="scan'208";a="56675400"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 08 Sep 2020 20:06:48 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 74377423AE53;
+        Tue,  8 Sep 2020 20:06:46 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH] dmaengine: Kconfig: Update description for RCAR_DMAC config
+Date:   Tue,  8 Sep 2020 12:06:40 +0100
+Message-Id: <20200908110640.5003-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 1:41 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> The intent is to bypass such validation to be able to test device
-> drivers. Note that removing that may cause someone's test to start
-> failing.
->
-> >  So there's no point in
-> > keeping the ability to test this, either.
->
-> I don't disagree in principle, but do note the failing tests. Bar any
-> strong reasons for change, I'd leave as is.
+rcar-dmac driver is used on Renesas R-Car Gen2 and Gen3 devices
+update the same to reflect the description for RCAR_DMAC config.
 
-OK. I got what you mean. You don't want to make people's test cases fail.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ drivers/dma/sh/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I was recently looking at some drivers, and I felt that if af_packet.c
-could help me filter out the invalid RAW frames, I didn't need to
-check the validity of the frames myself (in the driver when
-transmitting). But now I guess I still need to check that.
+diff --git a/drivers/dma/sh/Kconfig b/drivers/dma/sh/Kconfig
+index 54d5d0369d3c..5e8a8e122996 100644
+--- a/drivers/dma/sh/Kconfig
++++ b/drivers/dma/sh/Kconfig
+@@ -32,12 +32,12 @@ config SH_DMAE
+ 	  Enable support for the Renesas SuperH DMA controllers.
+ 
+ config RCAR_DMAC
+-	tristate "Renesas R-Car Gen2 DMA Controller"
++	tristate "Renesas R-Car Gen2/Gen3 DMA Controller"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+ 	select RENESAS_DMA
+ 	help
+ 	  This driver supports the general purpose DMA controller found in the
+-	  Renesas R-Car second generation SoCs.
++	  Renesas R-Car second and third generation SoCs.
+ 
+ config RENESAS_USB_DMAC
+ 	tristate "Renesas USB-DMA Controller"
+-- 
+2.17.1
 
-I feel this makes the dev_validate_header's variable-length header
-check not very useful, because drivers need to do this check again
-(when transmitting) anyway.
-
-I was thinking, after I saw dev_validate_header, that we could
-eventually make it completely take over the responsibility for a
-driver to validate the header when transmitting RAW frames. But now it
-seems we would not be able to do this.
