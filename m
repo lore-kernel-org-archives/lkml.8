@@ -2,199 +2,166 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02043C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46183C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5A0020658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165C1207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:42:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V9k77lhW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwAuRwk7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbgIHTlv (ORCPT
+        id S1731066AbgIHTl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:41:51 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7666 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730871AbgIHPxk (ORCPT
+        Tue, 8 Sep 2020 15:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731871AbgIHTlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:53:40 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088C1Q9K046161;
-        Tue, 8 Sep 2020 08:28:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=b2FT1Yp+l4dJYunaB80AnvbJt6l0uG5k65Skbsx6Sy8=;
- b=V9k77lhW3sb6csdZNpxIl9910mTpoiRoDp3MkEyld/e3fD02yY3g7sxiHE6/gzqLADC+
- Si+yZmClFZwJQqQNCKq8JAMFBokvbdMnISuehKADurb/l9JjG94mxWNvh0lDzzMq8fW+
- JLi4sbfAZz2qrDBW5U6Gclc/S0gRO4fiMBzMnLwsvMlMmo2G1vnFQcvUsTZse81XFv5O
- 6eE0LjwIorjL7Zh62uo3d1btbdUld6I9gjsYhoYG3YI30Hwh49T8NUm5rJ0XmZLmUBuz
- 5o7sB+/BBWEkHSJckKhWArL2nAqAnhKE6eLI9vE+A18yXbXhYeJp7sLz3ZdKQZCyZTyR Ag== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33e949j58w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 08:28:30 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088C1aYK046936;
-        Tue, 8 Sep 2020 08:28:30 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33e949j57e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 08:28:29 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088CM7eI018243;
-        Tue, 8 Sep 2020 12:28:27 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma06fra.de.ibm.com with ESMTP id 33e5gmr5e5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 12:28:27 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088CSPYM20709662
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 12:28:25 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D4D74203F;
-        Tue,  8 Sep 2020 12:28:25 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D98B42042;
-        Tue,  8 Sep 2020 12:28:16 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.24.202])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 12:28:16 +0000 (GMT)
-Message-ID: <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
- faccessat2(2)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+        Tue, 8 Sep 2020 15:41:49 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F687C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:41:49 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id q10so336519qvs.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B/dG9jEncAs6+nkD7fnq9LTKRpUa08FrYgm5ZlkQNI8=;
+        b=RwAuRwk7pxhQ71WROwODFBIcDmVLrtFl0k4TKuddGbNYLKtXCyJVW7iGhTVKCbMm8J
+         ZHUR5yyIANSRQavZ51djg7RpwpL4jgTpTwtH9K7i6UkX+2sfPPQxRyMBGGMgHXiXhWOs
+         Tsn+ij3jkLQjcJf5TUiY783q3O+DRSSdVVa8EjX4YywvBDDyRFi5F/VS7dXkmdlgkxv9
+         ZgPujixkqYDZGYJYzDBnnbRC5WdqeK/GekVsDgV4ldCkmUwDsT2R+1uEwn35kUngW19G
+         u4e6CmgzBddqfjG1MjBIrE1o0+Ww8ynFxNXEqXXijgXYWmbGOXi60+taUXszSgSqdrMq
+         7+NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B/dG9jEncAs6+nkD7fnq9LTKRpUa08FrYgm5ZlkQNI8=;
+        b=Z8jVYuD23p3bmIqn8Pxxh6Gi3a3vdSN/isow5I58k1hPdh7KuaxRJEDI6ydpQeOnrR
+         Sh+dCGrBofuJCOQ2j7+3GvXLS5ZoopSLtgwCmHEH0owcSZ525KhPxoOn1D7s2Ns+8Nkh
+         3riAL/L9HUEN3xkylAr8EVPutMTF6YOzauG+aKuAXaZYgBrT7X6RFf/VADRw8pcEWGak
+         sIsZezVMG4nRrEEzALyEjpcHckl675RvoceQBXEPmA61ot5jzmq2pAcUG+CPJXOcKDpy
+         eBx5V/VdWv6juNRI6oesRlII/lvnxegInL7pmO/yHoyWbQNkzzBooetlZLtV8Zax4xBi
+         viHQ==
+X-Gm-Message-State: AOAM530FiWpvan8l108pSQ3wsFjyc4kWh4QbzrBfqGH1Nv8wKvkdCZ9r
+        5TLEE92a3hQzQt3AEF2WaO/luuCprmp2LhJJxM6txhbCtLfSUw==
+X-Google-Smtp-Source: ABdhPJweWeyf717PpgPykMuyVWPBC3W6Y4joNnhd1reD3noCOLUGyDP8M6HMPX8xiAGrXbscRQKLaw5m96q5Wmvg+HI=
+X-Received: by 2002:a05:6214:bcf:: with SMTP id ff15mr784046qvb.39.1599594108271;
+ Tue, 08 Sep 2020 12:41:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1597425745.git.andreyknvl@google.com> <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+ <20200827103819.GE29264@gaia> <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com>
+ <20200827121604.GL29264@gaia> <CAAeHK+yYEFHAQMxhL=uwfgaejo3Ld0gp5=ss38CjW6wyYCaZFw@mail.gmail.com>
+ <20200908153910.GK25591@gaia>
+In-Reply-To: <20200908153910.GK25591@gaia>
+From:   Derrick McKee <derrick.mckee@gmail.com>
+Date:   Tue, 8 Sep 2020 15:41:37 -0400
+Message-ID: <CAJoBWHy9=hJ-GCCYjUm2=HKOiHbue2cXO1TBNx0LsCQKAqO02A@mail.gmail.com>
+Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Marco Elver <elver@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Alexander Potapenko <glider@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@linux.microsoft.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        John Johansen <john.johansen@canonical.com>
-Date:   Tue, 08 Sep 2020 08:28:15 -0400
-In-Reply-To: <20200908075956.1069018-2-mic@digikod.net>
-References: <20200908075956.1069018-1-mic@digikod.net>
-         <20200908075956.1069018-2-mic@digikod.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_06:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- adultscore=0 priorityscore=1501 suspectscore=0 clxscore=1011
- impostorscore=0 malwarescore=0 phishscore=0 mlxlogscore=725
- lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009080108
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mickael,
+Hello,
 
-On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
-> diff --git a/fs/open.c b/fs/open.c
-> index 9af548fb841b..879bdfbdc6fa 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -405,9 +405,13 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->  	if (mode & ~S_IRWXO)	/* where's F_OK, X_OK, W_OK, R_OK? */
->  		return -EINVAL;
->  
-> -	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH))
-> +	if (flags & ~(AT_EACCESS | AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH |
-> +				AT_INTERPRETED))
->  		return -EINVAL;
->  
-> +	/* Only allows X_OK with AT_INTERPRETED for now. */
-> +	if ((flags & AT_INTERPRETED) && !(mode & S_IXOTH))
-> +		return -EINVAL;
->  	if (flags & AT_SYMLINK_NOFOLLOW)
->  		lookup_flags &= ~LOOKUP_FOLLOW;
->  	if (flags & AT_EMPTY_PATH)
-> @@ -426,7 +430,30 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
->  
->  	inode = d_backing_inode(path.dentry);
->  
-> -	if ((mode & MAY_EXEC) && S_ISREG(inode->i_mode)) {
-> +	if ((flags & AT_INTERPRETED)) {
-> +		/*
-> +		 * For compatibility reasons, without a defined security policy
-> +		 * (via sysctl or LSM), using AT_INTERPRETED must map the
-> +		 * execute permission to the read permission.  Indeed, from
-> +		 * user space point of view, being able to execute data (e.g.
-> +		 * scripts) implies to be able to read this data.
-> +		 *
-> +		 * The MAY_INTERPRETED_EXEC bit is set to enable LSMs to add
-> +		 * custom checks, while being compatible with current policies.
-> +		 */
-> +		if ((mode & MAY_EXEC)) {
+Is the branch where the MTE patches currently are being applied
+for-net/mte?  It looks like that's the place, but I want to confirm.
 
-Why is the ISREG() test being dropped?   Without dropping it, there
-would be no reason for making the existing test an "else" clause.
+On Tue, Sep 8, 2020 at 11:42 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+>
+> On Tue, Sep 08, 2020 at 04:02:06PM +0200, Andrey Konovalov wrote:
+> > On Thu, Aug 27, 2020 at 2:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > On Thu, Aug 27, 2020 at 11:56:49AM +0100, Vincenzo Frascino wrote:
+> > > > On 8/27/20 11:38 AM, Catalin Marinas wrote:
+> > > > > On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
+> > > > >> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+> > > > >> index 7717ea9bc2a7..cfac7d02f032 100644
+> > > > >> --- a/arch/arm64/kernel/mte.c
+> > > > >> +++ b/arch/arm64/kernel/mte.c
+> > > > >> @@ -18,10 +18,14 @@
+> > > > >>
+> > > > >>  #include <asm/barrier.h>
+> > > > >>  #include <asm/cpufeature.h>
+> > > > >> +#include <asm/kasan.h>
+> > > > >> +#include <asm/kprobes.h>
+> > > > >>  #include <asm/mte.h>
+> > > > >>  #include <asm/ptrace.h>
+> > > > >>  #include <asm/sysreg.h>
+> > > > >>
+> > > > >> +u64 gcr_kernel_excl __read_mostly;
+> > > > >
+> > > > > Could we make this __ro_after_init?
+> > > >
+> > > > Yes, it makes sense, it should be updated only once through mte_init_tags().
+> > > >
+> > > > Something to consider though here is that this might not be the right approach
+> > > > if in future we want to add stack tagging. In such a case we need to know the
+> > > > kernel exclude mask before any C code is executed. Initializing the mask via
+> > > > mte_init_tags() it is too late.
+> > >
+> > > It depends on how stack tagging ends up in the kernel, whether it uses
+> > > ADDG/SUBG or not. If it's only IRG, I think it can cope with changing
+> > > the GCR_EL1.Excl in the middle of a function.
+> > >
+> > > > I was thinking to add a compilation define instead of having gcr_kernel_excl in
+> > > > place. This might not work if the kernel excl mask is meant to change during the
+> > > > execution.
+> > >
+> > > A macro with the default value works for me. That's what it basically is
+> > > currently, only that it ends up in a variable.
+> >
+> > Some thoughts on the topic: gcr_kernel_excl is currently initialized
+> > in mte_init_tags() and depends on the max_tag value dynamically
+> > provided to it, so it's not something that can be expressed with a
+> > define. In the case of KASAN the max_tag value is static, but if we
+> > rely on that we make core MTE code depend on KASAN, which doesn't seem
+> > right from the design perspective.
+>
+> The design is debatable. If we want MTE to run on production devices, we
+> either (1) optimise out some bits of KASAN (configurable) or (2) we
+> decouple MTE and KASAN completely and add new callbacks in the core code
+> (slab allocator etc.) specific to MTE.
+>
+> My first choice is (1), unless there is a strong technical argument why
+> it is not possible.
+>
+> --
+> Catalin
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-> +			mode |= MAY_INTERPRETED_EXEC;
-> +			/*
-> +			 * For compatibility reasons, if the system-wide policy
-> +			 * doesn't enforce file permission checks, then
-> +			 * replaces the execute permission request with a read
-> +			 * permission request.
-> +			 */
-> +			mode &= ~MAY_EXEC;
-> +			/* To be executed *by* user space, files must be readable. */
-> +			mode |= MAY_READ;
 
-After this change, I'm wondering if it makes sense to add a call to
-security_file_permission().  IMA doesn't currently define it, but
-could.
 
-Mimi
-
-> +		}
-> +	} else if ((mode & MAY_EXEC) && S_ISREG(inode->i_mode)) {
->  		/*
->  		 * MAY_EXEC on regular files is denied if the fs is mounted
->  		 * with the "noexec" flag.
-
+-- 
+Derrick McKee
+Phone: (703) 957-9362
+Email: derrick.mckee@gmail.com
