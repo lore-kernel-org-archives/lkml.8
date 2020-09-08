@@ -2,107 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D1CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A09C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08AD321973
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230C0218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:46:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="LQ89IYxK"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="J7ZoHHh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgIHGpr (ORCPT
+        id S1729165AbgIHGqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:45:47 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59518 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727898AbgIHGpR (ORCPT
+        Tue, 8 Sep 2020 02:46:36 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:55658 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727898AbgIHGqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:45:17 -0400
-X-UUID: a965ba27aa94406e81943227f5c7e258-20200908
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Bjomsp98M5COQp7hU2i9F3nHqul1illrMLuipZ67MYo=;
-        b=LQ89IYxKzSQVyLZ4NgSj+SZi5XEkCJPHTwrTZR27V5UoC2MDL8k4Vr06nvn8492Zele0qScmj4IcFU+lI2XlRvRQCXH/7IVwvSm7EAFtsjHpN6Vibdl1ed4pkr5MfFBpkkPw71tXg3ULA2C+oCa+56ZHRWYuwyL1OByJPLxe0hw=;
-X-UUID: a965ba27aa94406e81943227f5c7e258-20200908
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 66601205; Tue, 08 Sep 2020 14:45:13 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 8 Sep 2020 14:45:09 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 8 Sep 2020 14:45:10 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>
-CC:     <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, <chaotian.jing@mediatek.com>,
-        <cc.chou@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH 3/4] scsi: ufs-mediatek: Fix flag of unipro low-power mode
-Date:   Tue, 8 Sep 2020 14:45:06 +0800
-Message-ID: <20200908064507.30774-4-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200908064507.30774-1-stanley.chu@mediatek.com>
-References: <20200908064507.30774-1-stanley.chu@mediatek.com>
+        Tue, 8 Sep 2020 02:46:35 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0886f5q0009652;
+        Mon, 7 Sep 2020 23:46:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=aiBLXAOJu8QoseT7V/7qoKu8aO/6blc54o+Ujz+gE7A=;
+ b=J7ZoHHh1aZkPbkh4HDHz00gN/SEa2qjAjWwP+oalS5LgEjzQbV7bj8TWSnAu/8Q6Jqhv
+ ZJzjStNQaBHPc6OoI80N7Rw/COFu/vq/bu9u9Zb6hFrQ2+UnY9EgsxMKRQgW7iN9OPxL
+ pGIA67o+JcEC/ogmRpskzMQptPXdt+7kmh3n1mfyU08zaczTDdqPG3yx/G2ygSarMekx
+ poyn6mt4Zc0kvH45BN7LwkGnjU39z/G4aYsD+QeYuv6rjnkQu5uPMhnJAHV5smR/SDdG
+ Li/UYmJAk7TzBEgL3Yw1OIa08ikPASMNSOBAdRZMQP2QT4G+sdN1Wcfh7Pn/kfGMkN60 fg== 
+Received: from sc-exch03.marvell.com ([199.233.58.183])
+        by mx0a-0016f401.pphosted.com with ESMTP id 33c81ptg73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 07 Sep 2020 23:46:29 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
+ (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 7 Sep
+ 2020 23:46:28 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 7 Sep 2020 23:46:29 -0700
+Received: from irv1user01.caveonetworks.com (unknown [10.104.116.179])
+        by maili.marvell.com (Postfix) with ESMTP id A97363F703F;
+        Mon,  7 Sep 2020 23:46:28 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+        by irv1user01.caveonetworks.com (8.14.4/8.14.4/Submit) with ESMTP id 0886kSY3024215;
+        Mon, 7 Sep 2020 23:46:28 -0700
+X-Authentication-Warning: irv1user01.caveonetworks.com: aeasi owned process doing -bs
+Date:   Mon, 7 Sep 2020 23:46:27 -0700
+From:   Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@irv1user01.caveonetworks.com
+To:     Daniel Wagner <dwagner@suse.de>
+CC:     <linux-scsi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        "Nilesh Javali" <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>
+Subject: Re: [PATCH v2 3/4] qla2xxx: Drop unused function argument from
+ qla2x00_get_sp_from_handle()
+In-Reply-To: <20200831161854.70879-4-dwagner@suse.de>
+Message-ID: <alpine.LRH.2.21.9999.2009072343130.28578@irv1user01.caveonetworks.com>
+References: <20200831161854.70879-1-dwagner@suse.de>
+ <20200831161854.70879-4-dwagner@suse.de>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: A16BDD5A8366D066DA603CCA0A8A17BF6BFBBB21D4FA726657DD4C3FAA686DC52000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="US-ASCII"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_02:2020-09-08,2020-09-08 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yY2libHkgbGVhdmUgVW5pUHJvIGxvdy1wb3dlciBtb2RlIGlmIFVJQyBjb21tYW5kcyBpcyBm
-YWlsZWQuDQpUaGlzIG1ha2VzIGhiYV9lbmFibGVfZGVsYXlfdXMgYXMgY29ycmVjdCAoZGVmYXVs
-dCkgdmFsdWUgZm9yDQpyZS1lbmFibGluZyB0aGUgaG9zdC4NCg0KQXQgdGhlIHNhbWUgdGltZSwg
-Y2hhbmdlIHR5cGUgb2YgcGFyYW1ldGVyICJscG0iIGluIGZ1bmN0aW9uDQp1ZnNfbXRrX3VuaXBy
-b19zZXRfcG0oKSB0byAiYm9vbCIuDQoNClNpZ25lZC1vZmYtYnk6IFN0YW5sZXkgQ2h1IDxzdGFu
-bGV5LmNodUBtZWRpYXRlay5jb20+DQotLS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
-ay5jIHwgMjAgKysrKysrKysrKysrKystLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMTQgaW5zZXJ0
-aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvc2NzaS91ZnMv
-dWZzLW1lZGlhdGVrLmMgYi9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jDQppbmRleCA4
-ODdjMDNlOGJjYzAuLmZlYmE3NGE3MjMwOSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc2NzaS91ZnMv
-dWZzLW1lZGlhdGVrLmMNCisrKyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCkBA
-IC00MTksNyArNDE5LDcgQEAgc3RhdGljIGludCB1ZnNfbXRrX3B3cl9jaGFuZ2Vfbm90aWZ5KHN0
-cnVjdCB1ZnNfaGJhICpoYmEsDQogCXJldHVybiByZXQ7DQogfQ0KIA0KLXN0YXRpYyBpbnQgdWZz
-X210a191bmlwcm9fc2V0X3BtKHN0cnVjdCB1ZnNfaGJhICpoYmEsIHUzMiBscG0pDQorc3RhdGlj
-IGludCB1ZnNfbXRrX3VuaXByb19zZXRfcG0oc3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBscG0p
-DQogew0KIAlpbnQgcmV0Ow0KIAlzdHJ1Y3QgdWZzX210a19ob3N0ICpob3N0ID0gdWZzaGNkX2dl
-dF92YXJpYW50KGhiYSk7DQpAQCAtNDI3LDggKzQyNywxNCBAQCBzdGF0aWMgaW50IHVmc19tdGtf
-dW5pcHJvX3NldF9wbShzdHJ1Y3QgdWZzX2hiYSAqaGJhLCB1MzIgbHBtKQ0KIAlyZXQgPSB1ZnNo
-Y2RfZG1lX3NldChoYmEsDQogCQkJICAgICBVSUNfQVJHX01JQl9TRUwoVlNfVU5JUFJPUE9XRVJE
-T1dOQ09OVFJPTCwgMCksDQogCQkJICAgICBscG0pOw0KLQlpZiAoIXJldCkNCisJaWYgKCFyZXQg
-fHwgIWxwbSkgew0KKwkJLyoNCisJCSAqIEZvcmNpYmx5IHNldCBhcyBub24tTFBNIG1vZGUgaWYg
-VUlDIGNvbW1hbmRzIGlzIGZhaWxlZA0KKwkJICogdG8gdXNlIGRlZmF1bHQgaGJhX2VuYWJsZV9k
-ZWxheV91cyB2YWx1ZSBmb3IgcmUtZW5hYmxpbmcNCisJCSAqIHRoZSBob3N0Lg0KKwkJICovDQog
-CQlob3N0LT51bmlwcm9fbHBtID0gbHBtOw0KKwl9DQogDQogCXJldHVybiByZXQ7DQogfQ0KQEAg
-LTQzOCw3ICs0NDQsOSBAQCBzdGF0aWMgaW50IHVmc19tdGtfcHJlX2xpbmsoc3RydWN0IHVmc19o
-YmEgKmhiYSkNCiAJaW50IHJldDsNCiAJdTMyIHRtcDsNCiANCi0JdWZzX210a191bmlwcm9fc2V0
-X3BtKGhiYSwgMCk7DQorCXJldCA9IHVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIGZhbHNlKTsN
-CisJaWYgKHJldCkNCisJCXJldHVybiByZXQ7DQogDQogCS8qDQogCSAqIFNldHRpbmcgUEFfTG9j
-YWxfVFhfTENDX0VuYWJsZSB0byAwIGJlZm9yZSBsaW5rIHN0YXJ0dXANCkBAIC01NDYsNyArNTU0
-LDcgQEAgc3RhdGljIGludCB1ZnNfbXRrX2xpbmtfc2V0X2hwbShzdHJ1Y3QgdWZzX2hiYSAqaGJh
-KQ0KIAlpZiAoZXJyKQ0KIAkJcmV0dXJuIGVycjsNCiANCi0JZXJyID0gdWZzX210a191bmlwcm9f
-c2V0X3BtKGhiYSwgMCk7DQorCWVyciA9IHVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIGZhbHNl
-KTsNCiAJaWYgKGVycikNCiAJCXJldHVybiBlcnI7DQogDQpAQCAtNTY3LDEwICs1NzUsMTAgQEAg
-c3RhdGljIGludCB1ZnNfbXRrX2xpbmtfc2V0X2xwbShzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KIHsN
-CiAJaW50IGVycjsNCiANCi0JZXJyID0gdWZzX210a191bmlwcm9fc2V0X3BtKGhiYSwgMSk7DQor
-CWVyciA9IHVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIHRydWUpOw0KIAlpZiAoZXJyKSB7DQog
-CQkvKiBSZXN1bWUgVW5pUHJvIHN0YXRlIGZvciBmb2xsb3dpbmcgZXJyb3IgcmVjb3ZlcnkgKi8N
-Ci0JCXVmc19tdGtfdW5pcHJvX3NldF9wbShoYmEsIDApOw0KKwkJdWZzX210a191bmlwcm9fc2V0
-X3BtKGhiYSwgZmFsc2UpOw0KIAkJcmV0dXJuIGVycjsNCiAJfQ0KIA0KLS0gDQoyLjE4LjANCg==
+On Mon, 31 Aug 2020, 9:18am, Daniel Wagner wrote:
+> 
+> Commit 7c3df1320e5e ("[SCSI] qla2xxx: Code changes to support new
+> dynamic logging infrastructure.") removed the use of the func
+> argument.
+> 
+> Signed-off-by: Daniel Wagner <dwagner@suse.de>
+> ---
+>  drivers/scsi/qla2xxx/qla_gbl.h |  3 +--
+>  drivers/scsi/qla2xxx/qla_isr.c | 36 ++++++++++++------------------------
+>  drivers/scsi/qla2xxx/qla_mr.c  |  9 +++------
+>  3 files changed, 16 insertions(+), 32 deletions(-)
+> 
+--8<--
+> diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
+> index 5d278155e4e7..b787643f5031 100644
+> --- a/drivers/scsi/qla2xxx/qla_isr.c
+> +++ b/drivers/scsi/qla2xxx/qla_isr.c
+> @@ -1711,8 +1711,7 @@ qla2x00_process_completed_request(struct scsi_qla_host *vha,
+>  }
+>  
+>  srb_t *
+> -qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
+> -    struct req_que *req, void *iocb)
+> +qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, struct req_que *req, void *iocb)
+>  {
+>  	struct qla_hw_data *ha = vha->hw;
+>  	sts_entry_t *pkt = iocb;
 
+How about printing the "func", which gives an indication of the caller 
+function, in the ql_log-s, rather than removing it? At least in the cases 
+like you describe, it'd give an indication which handler the path was 
+taken.
+
+Regards,
+-Arun
