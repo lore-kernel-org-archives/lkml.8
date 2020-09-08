@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB7CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1249C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45A9A2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48712137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593324;
-	bh=rfQrTDsy7LmPQLr7yjcnM0Glk1dzh2rcpHJLjnpn68A=;
+	s=default; t=1599593328;
+	bh=edn9+vgDrAqCCTPZs+ZgSQk2FmR6x/hk3OiZaCaomh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TPkfmK4UjQWlC5j8rkEywC+nTEQO9NFbTeivB6PxNNtaDiWBoEjGeKpsp0L5AQZ0F
-	 3OwTldQxH3Ui8S5SSndZB4UXELOPjwpVC+5p9Qtk6L3Ws9A9LJusP3fCw/awPFM5uC
-	 2kow3KJMNwhT9iX/+ATOoYTHkXNoasy+CEJ+AGvc=
+	b=qoJ3GZno08Oy6+g5Tm7ANn/oCJwi17C7aYosYeh6iKchmQhLnpgY5d4QryyD0sD4w
+	 qWtFFW5ZWlS7UiiyTN42D1yUFo2lhuMOz2ezCUPapcSc0n2/KpOe7vqIj6ZrtsDovn
+	 au90E0NIPpZNFfkrFoSNdJOphtEsHizbM24roj7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbgIHT2l (ORCPT
+        id S1731947AbgIHT2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:28:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731050AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5154124692;
-        Tue,  8 Sep 2020 15:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7219C23C84;
+        Tue,  8 Sep 2020 15:36:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579581;
-        bh=rfQrTDsy7LmPQLr7yjcnM0Glk1dzh2rcpHJLjnpn68A=;
+        s=default; t=1599579388;
+        bh=edn9+vgDrAqCCTPZs+ZgSQk2FmR6x/hk3OiZaCaomh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rg2jF/u4Pixi3JW9ygKeW5V7eb2RpRTQgeXj3o48Rgmpge3Dyy3RlYrHJPkiBFpuc
-         KVTzmSemxKXIHfrQ3mvBdRMN/+90bih1VaNQS09Q3xEzwPxlpQiJPeYhayO6haDC5C
-         5NVzjnDXKu+iKwzJnjBmImlAzirtlO+ppQajA4gw=
+        b=f8SgMqQyvBr0o7Lgn/s0SYN6DYi5dhErau18dsm0mbpqK0aZY80OkvupfF/y21KqN
+         WP87YQLvrP2002zGSDskeXpW/XsbmbYrAlUt8ZiZs5VAduZAs/PY2DZ1LpZCH5ZPIQ
+         /jjQ0tLRqF57/vwFbE9qI9wUgaz2r+fOBtKUJf+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 110/186] iommu/vt-d: Serialize IOMMU GCMD register modifications
-Date:   Tue,  8 Sep 2020 17:24:12 +0200
-Message-Id: <20200908152246.966312595@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 058/186] net: systemport: Fix memleak in bcm_sysport_probe
+Date:   Tue,  8 Sep 2020 17:23:20 +0200
+Message-Id: <20200908152244.483464771@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -63,60 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 6e4e9ec65078093165463c13d4eb92b3e8d7b2e8 ]
+[ Upstream commit 7ef1fc57301f3cef7201497aa27e89ccb91737fe ]
 
-The VT-d spec requires (10.4.4 Global Command Register, GCMD_REG General
-Description) that:
+When devm_kcalloc() fails, dev should be freed just
+like what we've done in the subsequent error paths.
 
-If multiple control fields in this register need to be modified, software
-must serialize the modifications through multiple writes to this register.
-
-However, in irq_remapping.c, modifications of IRE and CFI are done in one
-write. We need to do two separate writes with STS checking after each. It
-also checks the status register before writing command register to avoid
-unnecessary register write.
-
-Fixes: af8d102f999a4 ("x86/intel/irq_remapping: Clean up x2apic opt-out security warning mess")
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: Kevin Tian <kevin.tian@intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Link: https://lore.kernel.org/r/20200828000615.8281-1-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: 7b78be48a8eb6 ("net: systemport: Dynamically allocate number of TX rings")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel/irq_remapping.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
-index aa096b333a991..4828f4fe09ab5 100644
---- a/drivers/iommu/intel/irq_remapping.c
-+++ b/drivers/iommu/intel/irq_remapping.c
-@@ -507,12 +507,18 @@ static void iommu_enable_irq_remapping(struct intel_iommu *iommu)
- 
- 	/* Enable interrupt-remapping */
- 	iommu->gcmd |= DMA_GCMD_IRE;
--	iommu->gcmd &= ~DMA_GCMD_CFI;  /* Block compatibility-format MSIs */
- 	writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
--
- 	IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
- 		      readl, (sts & DMA_GSTS_IRES), sts);
- 
-+	/* Block compatibility-format MSIs */
-+	if (sts & DMA_GSTS_CFIS) {
-+		iommu->gcmd &= ~DMA_GCMD_CFI;
-+		writel(iommu->gcmd, iommu->reg + DMAR_GCMD_REG);
-+		IOMMU_WAIT_OP(iommu, DMAR_GSTS_REG,
-+			      readl, !(sts & DMA_GSTS_CFIS), sts);
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index b25356e21a1ea..e6ccc2122573d 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2462,8 +2462,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+ 	priv->tx_rings = devm_kcalloc(&pdev->dev, txq,
+ 				      sizeof(struct bcm_sysport_tx_ring),
+ 				      GFP_KERNEL);
+-	if (!priv->tx_rings)
+-		return -ENOMEM;
++	if (!priv->tx_rings) {
++		ret = -ENOMEM;
++		goto err_free_netdev;
 +	}
-+
- 	/*
- 	 * With CFI clear in the Global Command register, we should be
- 	 * protected from dangerous (i.e. compatibility) interrupts
+ 
+ 	priv->is_lite = params->is_lite;
+ 	priv->num_rx_desc_words = params->num_rx_desc_words;
 -- 
 2.25.1
 
