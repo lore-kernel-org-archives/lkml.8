@@ -2,55 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E736FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71AFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00352080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8613B2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589602;
-	bh=LuqAQTUqtL6HFzAzTGMqWk172HN34Be2mNrwsMi8xN0=;
+	s=default; t=1599589603;
+	bh=OTh/b5DSp/Cu3k1D/l/21uMUst7u9uIT1VOgoac0tF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tm0C7zhi6Zdgdi2kMhdPssCm3JRRgyiVy36cTlDzEAn0G6iwgKk2lnmgWqLy93hfA
-	 YeszW2G6xPbFPzfTofs1sGSEWwfeW+i9vhUHO8Ty24ze8mV710z9yzYr4vDBhAYpGN
-	 FKFUuXGeHlA7N3T7BvMg22Dlg48jGxkuW5vs9Emg=
+	b=PYxyI1Uxa6Ze9BaW3ZZSTfAaHpVzFEBD5mgC4WRKFASvX/7KMdNP1MUXjyxm5o92O
+	 1/P5c0UAqEqdlr94x0MiQM7mn9q/p9/CAIkilrlGuljEaSY8CmvwbV4gw9LC7h6qJz
+	 i5czajnUedB6MNQNPtZFsFpUOfbirPmvdlWvklrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731510AbgIHS0k (ORCPT
+        id S1731575AbgIHS0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:26:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbgIHQKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:36 -0400
+        id S1731440AbgIHQKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 689E124807;
-        Tue,  8 Sep 2020 15:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F8842470C;
+        Tue,  8 Sep 2020 15:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579801;
-        bh=LuqAQTUqtL6HFzAzTGMqWk172HN34Be2mNrwsMi8xN0=;
+        s=default; t=1599579636;
+        bh=OTh/b5DSp/Cu3k1D/l/21uMUst7u9uIT1VOgoac0tF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IPt9hvXEUnR6jGKLceVAc7nZFc0r6nlLde3I1U16K+qnZirl0w+NcAOOoIpaITUWY
-         TgNJrD2oBPzT5+nBGCKXXEQSESpLCefNVqmSqQH5sZJlY9T6Bqkk1AyNVdLEgl1Xf1
-         /p7GaV9HCadl/lAT0/wk6Nw9L7URi9mRs2zCeVWM=
+        b=GMb1AC2e6ZOaFxIMBJa3Fzas2Q5tQtBCS1pydY3RyQOP61DV8dACicz1563871jDD
+         oEH1nn6SvCTF3ng/514qv60zyYZUc/PVqJw6+WTHbXQdWji+k6axyFuogOVKtW1iuE
+         aodrRrtLdHnVLncM2XvgWwiGfGvgToN7oyl3xLFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/129] dmaengine: pl330: Fix burst length if burst size is smaller than bus width
-Date:   Tue,  8 Sep 2020 17:24:40 +0200
-Message-Id: <20200908152231.630693284@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 159/186] blk-iocost: ioc_pd_free() shouldnt assume irq disabled
+Date:   Tue,  8 Sep 2020 17:25:01 +0200
+Message-Id: <20200908152249.370435259@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Tejun Heo <tj@kernel.org>
 
-[ Upstream commit 0661cef675d37e2c4b66a996389ebeae8568e49e ]
+commit 5aeac7c4b16069aae49005f0a8d4526baa83341b upstream.
 
-Move the burst len fixup after setting the generic value for it. This
-finally enables the fixup introduced by commit 137bd11090d8 ("dmaengine:
-pl330: Align DMA memcpy operations to MFIFO width"), which otherwise was
-overwritten by the generic value.
+ioc_pd_free() grabs irq-safe ioc->lock without ensuring that irq is disabled
+when it can be called with irq disabled or enabled. This has a small chance
+of causing A-A deadlocks and triggers lockdep splats. Use irqsave operations
+instead.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: 137bd11090d8 ("dmaengine: pl330: Align DMA memcpy operations to MFIFO width")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Link: https://lore.kernel.org/r/20200825064617.16193-1-m.szyprowski@samsung.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
+Cc: stable@vger.kernel.org # v5.4+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/dma/pl330.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/blk-iocost.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 6cce9ef61b294..cd81d10974a29 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2788,6 +2788,7 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	while (burst != (1 << desc->rqcfg.brst_size))
- 		desc->rqcfg.brst_size++;
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -2094,14 +2094,15 @@ static void ioc_pd_free(struct blkg_poli
+ {
+ 	struct ioc_gq *iocg = pd_to_iocg(pd);
+ 	struct ioc *ioc = iocg->ioc;
++	unsigned long flags;
  
-+	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	/*
- 	 * If burst size is smaller than bus width then make sure we only
- 	 * transfer one at a time to avoid a burst stradling an MFIFO entry.
-@@ -2795,7 +2796,6 @@ pl330_prep_dma_memcpy(struct dma_chan *chan, dma_addr_t dst,
- 	if (desc->rqcfg.brst_size * 8 < pl330->pcfg.data_bus_width)
- 		desc->rqcfg.brst_len = 1;
+ 	if (ioc) {
+-		spin_lock(&ioc->lock);
++		spin_lock_irqsave(&ioc->lock, flags);
+ 		if (!list_empty(&iocg->active_list)) {
+ 			propagate_active_weight(iocg, 0, 0);
+ 			list_del_init(&iocg->active_list);
+ 		}
+-		spin_unlock(&ioc->lock);
++		spin_unlock_irqrestore(&ioc->lock, flags);
  
--	desc->rqcfg.brst_len = get_burst_len(desc, len);
- 	desc->bytes_requested = len;
- 
- 	desc->txd.flags = flags;
--- 
-2.25.1
-
+ 		hrtimer_cancel(&iocg->waitq_timer);
+ 		hrtimer_cancel(&iocg->delay_timer);
 
 
