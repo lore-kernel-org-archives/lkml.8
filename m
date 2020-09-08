@@ -2,125 +2,86 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0414FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F06C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57782137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B642218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 05:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PwJlaz8Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgIHFxa (ORCPT
+        id S1728889AbgIHFzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 01:53:30 -0400
-Received: from mga17.intel.com ([192.55.52.151]:17184 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgIHFxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 01:53:18 -0400
-IronPort-SDR: 2XaLk+mjWZ5DuS87C2q0lQe53uKoo/zzOZ1OCyk0euURV2NJy5tgabicYsaNc3QUHWW01XJTMt
- tXelngwqPyqw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="138124886"
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="138124886"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2020 22:53:18 -0700
-IronPort-SDR: iIaTm/xG04FiHXFBG2FDVu3VgCQs6Qk6G+prta0oWRypwEPv+Jm8IzV/itDtDzQEVuhrItBErF
- HF65imq2lcig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,404,1592895600"; 
-   d="scan'208";a="504934392"
-Received: from yilunxu-optiplex-7050.sh.intel.com ([10.239.159.141])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Sep 2020 22:53:15 -0700
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, masahiroy@kernel.org
-Cc:     trix@redhat.com, lgoncalv@redhat.com,
-        Xu Yilun <yilun.xu@intel.com>, Wu Hao <hao.wu@intel.com>,
-        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
-        Russ Weight <russell.h.weight@intel.com>
-Subject: [PATCH 2/3] dfl: add dfl bus support to MODULE_DEVICE_TABLE()
-Date:   Tue,  8 Sep 2020 13:48:48 +0800
-Message-Id: <1599544129-17594-3-git-send-email-yilun.xu@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
-References: <1599544129-17594-1-git-send-email-yilun.xu@intel.com>
+        Tue, 8 Sep 2020 01:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728531AbgIHFzQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 01:55:16 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD299C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 22:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=S3ldECwV6aYVj8kFvW2tKZDE9/xw5MtcF6dMvAAzlgk=; b=PwJlaz8QSQA8PmEsdT/oEaZTXP
+        ybFVlLL+6NodzFFNNFhCkvJoI/2GqgQmwf0qU3lL9ljNCgMfVnL+9OubVVmnvsaKQGiXmaOCmfykA
+        6tyQ9TLS/LgF/mbnW8+YfiBKz8RdibDRYPaIdUsSX36o/zYxmUJijjHKll8nWoGOq6b0TD++EtI+j
+        0U4SS7my6/Cah3C7yLeF3v2knnA3X9WwbpTiRr0rW5bFYo3UxCSdWrtBdJO/lacNS0WCm9RGY8PEK
+        ZkEqbNlf9pFfq0IAtR3PK40VroF4oi20xKozo26cC8mqcPqXaqG/dDWKVgLzwIPQwgtnmJqgTXsE4
+        L3M7KigA==;
+Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFWb0-00057I-8N; Tue, 08 Sep 2020 05:55:10 +0000
+Date:   Tue, 8 Sep 2020 06:55:10 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     intel-gfx@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH V2 5/5] DO NOT MERGE: iommu: disable list appending in
+ dma-iommu
+Message-ID: <20200908055510.GA19078@infradead.org>
+References: <20200903201839.7327-1-murphyt7@tcd.ie>
+ <20200903201839.7327-6-murphyt7@tcd.ie>
+ <20200907070035.GA25114@infradead.org>
+ <CALQxJute8_y=JsW4UV1awSccOjxT_1OyPdymq=R_PurVQzENeQ@mail.gmail.com>
+ <20200908053619.GA15418@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908053619.GA15418@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device Feature List (DFL) is a linked list of feature headers within the
-device MMIO space. It is used by FPGA to enumerate multiple sub features
-within it. Each feature can be uniquely identified by DFL type and
-feature id, which can be read out from feature headers.
+On Tue, Sep 08, 2020 at 06:36:19AM +0100, Christoph Hellwig wrote:
+> On Mon, Sep 07, 2020 at 09:18:50PM +0100, Tom Murphy wrote:
+> > Yeah we talked about passing an attr to map_sg to disable merging at
+> > the following microconfernce:
+> > https://linuxplumbersconf.org/event/7/contributions/846/
+> > As far as I can remember everyone seemed happy with that solution. I
+> > won't be working on this though as I don't have any more time to
+> > dedicate to this. It seems Lu Baolu will take over this.
+> 
+> I'm absolutely again passing a flag.  Tha just invites further
+> abuse.  We need a PCI ID based quirk or something else that can't
+> be as easily abused.
 
-A dfl bus helps DFL framework modularize DFL device drivers for different
-sub features. The dfl bus matches its devices and drivers by DFL type and
-feature id.
-
-This patch add dfl bus support to MODULE_DEVICE_TABLE() by adding info
-about struct dfl_device_id in devicetable-offsets.c and add a dfl entry
-point in file2alias.c.
-
-Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-Signed-off-by: Wu Hao <hao.wu@intel.com>
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
----
- scripts/mod/devicetable-offsets.c |  4 ++++
- scripts/mod/file2alias.c          | 13 +++++++++++++
- 2 files changed, 17 insertions(+)
-
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-offsets.c
-index 27007c1..d8350ee 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -243,5 +243,9 @@ int main(void)
- 	DEVID(mhi_device_id);
- 	DEVID_FIELD(mhi_device_id, chan);
- 
-+	DEVID(dfl_device_id);
-+	DEVID_FIELD(dfl_device_id, type);
-+	DEVID_FIELD(dfl_device_id, feature_id);
-+
- 	return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 2417dd1..0753fc2 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1368,6 +1368,18 @@ static int do_mhi_entry(const char *filename, void *symval, char *alias)
- 	return 1;
- }
- 
-+/* Looks like: dfl:tNfN */
-+static int do_dfl_entry(const char *filename, void *symval, char *alias)
-+{
-+	DEF_FIELD(symval, dfl_device_id, type);
-+	DEF_FIELD(symval, dfl_device_id, feature_id);
-+
-+	sprintf(alias, "dfl:t%01Xf%03X", type, feature_id);
-+
-+	add_wildcard(alias);
-+	return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1442,6 +1454,7 @@ static const struct devtable devtable[] = {
- 	{"tee", SIZE_tee_client_device_id, do_tee_entry},
- 	{"wmi", SIZE_wmi_device_id, do_wmi_entry},
- 	{"mhi", SIZE_mhi_device_id, do_mhi_entry},
-+	{"dfl", SIZE_dfl_device_id, do_dfl_entry},
- };
- 
- /* Create MODULE_ALIAS() statements.
--- 
-2.7.4
-
+Also, I looked at i915 and there are just three dma_map_sg callers.
+The two dmabuf related ones are fixed by Marek in his series, leaving
+just the one in i915_gem_gtt_prepare_pages, which does indeed look
+very fishy.  But if that one is so hard to fix it can just be replaced
+by an open coded for_each_sg loop that contains manual dma_map_page
+calls.
