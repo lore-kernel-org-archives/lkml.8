@@ -2,194 +2,531 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8C3C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB09DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C943218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B29A207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fN6k5um7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729625AbgIHHhm (ORCPT
+        id S1729305AbgIHHlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:37:42 -0400
-Received: from mail-il1-f207.google.com ([209.85.166.207]:42874 "EHLO
-        mail-il1-f207.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729588AbgIHHhW (ORCPT
+        Tue, 8 Sep 2020 03:41:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729190AbgIHHlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:37:22 -0400
-Received: by mail-il1-f207.google.com with SMTP id f67so11429342ilf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:37:20 -0700 (PDT)
+        Tue, 8 Sep 2020 03:41:05 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E50BC061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 00:41:04 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a9so16124556wmm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=t8agpATIloVmTgcFNd5TB4FQfNWGSCtWVYOfLN6qNNE=;
+        b=fN6k5um7C7AEOqXC683HOyRmG3Vqp2EeqIFQe5kAmHijhbLW/SDbRfcq56VxgodvVx
+         ViDmHtHVu5eBPMxo34zE1elJFeak+N6V+8EYCujXtnhtt5o31TNoi36TRtAuGh8iDqVg
+         mSgTXX1v+wNvjeeKe3aMqohVkEwr3PZK7CRxNVT6bMmm3mrqmD23z6HEkTYMOAohTPcb
+         1MHr+No1n+Elm+9XzgT/JHObD1fosNNtgLNVgtVbakhw+qrSUDxUK9Wn1UZs56LwFbsY
+         T+eQXUpmDQ0QInM7yy0EdzMEAgUN90JbEUHmzN9ylehU+vd4qmzLGtGz3wuDItJVOuQC
+         jyQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=pvUpq/ObMmVwXiLGMlBpVNBtOI8dv6BvyLH9KNZA9N0=;
-        b=n9byARDZ7LTYwT9DhSUbO+m5/46SmcYj8sB63CxnHQufyRhSgdwh3EI7apQ/t/9Lbs
-         Kxv/Hh+CwUf0e4Ei+p9zQWCzfUNwsH1qkvClti/4KKKsIs0uVsxI0lBNcQCA61dDtKc6
-         tiQbWM8V4Yc4ThbWikGeeVdbP+Sm6dRLyijBsHo8fJCAhgDp85Zug98UhYnD3REd1itl
-         QL/pjg6tP3mIIgpPbTz34UFU2m1FLZHbQiYj+vVMGvZkOpfcxL2SexJHV3oPP4EllmI5
-         lzhwF78MXMfDUnYdLKZ31/3igvZAGifOPz6rqKwPH68CrXpSfMRnoK1buL36oRBJqtDt
-         lv/g==
-X-Gm-Message-State: AOAM532dVMmhPiQ5dC60ORNrP+NNlbWletmA3G+ke2eZPDYxNRxDPAa7
-        +8yWAJGFHawm16CESrg9IxJrIph9RycZnHftZKu5t/3Uwpps
-X-Google-Smtp-Source: ABdhPJyNd3NSua6L8GQ3Q4Q8tWC6ODQQfJOaxS5tGm3VR7clNd2DPJ0QiFKZyvKPPWEUd8uO/TS8mzvVmvKHSg+loASz3Bbsrduy
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=t8agpATIloVmTgcFNd5TB4FQfNWGSCtWVYOfLN6qNNE=;
+        b=El6PGnykwICBmDWhVw9XsmtQ1ecne/SAsTj6sbrqJ6RBA2TmQQuWnJEtQTdr4CQeHE
+         FY4Vb7xYiPGERLt1J3giaZGZq0+i594VaX6PaxbvENRvSEPchOGzPtFM9xkJkryaoRaj
+         w1w3ITaQb/w4WqBDQmAh8nPotiJsNxjxx0esoFFDIdxvQekUPccYFSRQeGG9HwqcWubk
+         Tqgh5Gv0xAe63c152bf2XHs/yVKyMGwVO8YrEF3b9u540RXLRSvV8zgv2KqBsElkF7fK
+         65rs49fkgQorgdLU12Z1gXWznMVyuViQnyToNHS/eb5u1i171jlbN69bVDGCJ7zNEjSj
+         Lzbw==
+X-Gm-Message-State: AOAM531Rcms9L5tLltx2n1tFTzcshdB7y5mGP/GrsuUUDRC0mDeiEztk
+        0JMT60FLaZLVcspf4E8KTueQpw==
+X-Google-Smtp-Source: ABdhPJy3zFZ43EifkQzD/C9vQhMtA+ZxauM+mN4GfwLHTtT5JHInKHBRrZK4DDZuRbFekWP8P1zEDw==
+X-Received: by 2002:a1c:4e08:: with SMTP id g8mr2928795wmh.53.1599550863030;
+        Tue, 08 Sep 2020 00:41:03 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac? ([2a01:e35:2ec0:82b0:5405:9623:e2f1:b2ac])
+        by smtp.gmail.com with ESMTPSA id d18sm32714069wrm.10.2020.09.08.00.41.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 00:41:02 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] drm: panel: add TDO tl070wsh30 panel driver
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     thierry.reding@gmail.com, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200907111027.21933-1-narmstrong@baylibre.com>
+ <20200907111027.21933-4-narmstrong@baylibre.com>
+ <20200907195244.GB558348@ravnborg.org>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwU0EVid/pAEQAND7AFhr
+ 5faf/EhDP9FSgYd/zgmb7JOpFPje3uw7jz9wFb28Cf0Y3CcncdElYoBNbRlesKvjQRL8mozV
+ 9RN+IUMHdUx1akR/A4BPXNdL7StfzKWOCxZHVS+rIQ/fE3Qz/jRmT6t2ZkpplLxVBpdu95qJ
+ YwSZjuwFXdC+A7MHtQXYi3UfCgKiflj4+/ITcKC6EF32KrmIRqamQwiRsDcUUKlAUjkCLcHL
+ CQvNsDdm2cxdHxC32AVm3Je8VCsH7/qEPMQ+cEZk47HOR3+Ihfn1LEG5LfwsyWE8/JxsU2a1
+ q44LQM2lcK/0AKAL20XDd7ERH/FCBKkNVzi+svYJpyvCZCnWT0TRb72mT+XxLWNwfHTeGALE
+ +1As4jIS72IglvbtONxc2OIid3tR5rX3k2V0iud0P7Hnz/JTdfvSpVj55ZurOl2XAXUpGbq5
+ XRk5CESFuLQV8oqCxgWAEgFyEapI4GwJsvfl/2Er8kLoucYO1Id4mz6N33+omPhaoXfHyLSy
+ dxD+CzNJqN2GdavGtobdvv/2V0wukqj86iKF8toLG2/Fia3DxMaGUxqI7GMOuiGZjXPt/et/
+ qeOySghdQ7Sdpu6fWc8CJXV2mOV6DrSzc6ZVB4SmvdoruBHWWOR6YnMz01ShFE49pPucyU1h
+ Av4jC62El3pdCrDOnWNFMYbbon3vABEBAAHCwn4EGAECAAkFAlYnf6QCGwICKQkQFpq3saTP
+ +K7BXSAEGQECAAYFAlYnf6QACgkQd9zb2sjISdGToxAAkOjSfGxp0ulgHboUAtmxaU3viucV
+ e2Hl1BVDtKSKmbIVZmEUvx9D06IijFaEzqtKD34LXD6fjl4HIyDZvwfeaZCbJbO10j3k7FJE
+ QrBtpdVqkJxme/nYlGOVzcOiKIepNkwvnHVnuVDVPcXyj2wqtsU7VZDDX41z3X4xTQwY3SO1
+ 9nRO+f+i4RmtJcITgregMa2PcB0LvrjJlWroI+KAKCzoTHzSTpCXMJ1U/dEqyc87bFBdc+DI
+ k8mWkPxsccdbs4t+hH0NoE3Kal9xtAl56RCtO/KgBLAQ5M8oToJVatxAjO1SnRYVN1EaAwrR
+ xkHdd97qw6nbg9BMcAoa2NMc0/9MeiaQfbgW6b0reIz/haHhXZ6oYSCl15Knkr4t1o3I2Bqr
+ Mw623gdiTzotgtId8VfLB2Vsatj35OqIn5lVbi2ua6I0gkI6S7xJhqeyrfhDNgzTHdQVHB9/
+ 7jnM0ERXNy1Ket6aDWZWCvM59dTyu37g3VvYzGis8XzrX1oLBU/tTXqo1IFqqIAmvh7lI0Se
+ gCrXz7UanxCwUbQBFjzGn6pooEHJYRLuVGLdBuoApl/I4dLqCZij2AGa4CFzrn9W0cwm3HCO
+ lR43gFyz0dSkMwNUd195FrvfAz7Bjmmi19DnORKnQmlvGe/9xEEfr5zjey1N9+mt3//geDP6
+ clwKBkq0JggA+RTEAELzkgPYKJ3NutoStUAKZGiLOFMpHY6KpItbbHjF2ZKIU1whaRYkHpB2
+ uLQXOzZ0d7x60PUdhqG3VmFnzXSztA4vsnDKk7x2xw0pMSTKhMafpxaPQJf494/jGnwBHyi3
+ h3QGG1RjfhQ/OMTX/HKtAUB2ct3Q8/jBfF0hS5GzT6dYtj0Ci7+8LUsB2VoayhNXMnaBfh+Q
+ pAhaFfRZWTjUFIV4MpDdFDame7PB50s73gF/pfQbjw5Wxtes/0FnqydfId95s+eej+17ldGp
+ lMv1ok7K0H/WJSdr7UwDAHEYU++p4RRTJP6DHWXcByVlpNQ4SSAiivmWiwOt490+Ac7ATQRN
+ WQbPAQgAvIoM384ZRFocFXPCOBir5m2J+96R2tI2XxMgMfyDXGJwFilBNs+fpttJlt2995A8
+ 0JwPj8SFdm6FBcxygmxBBCc7i/BVQuY8aC0Z/w9Vzt3Eo561r6pSHr5JGHe8hwBQUcNPd/9l
+ 2ynP57YTSE9XaGJK8gIuTXWo7pzIkTXfN40Wh5jeCCspj4jNsWiYhljjIbrEj300g8RUT2U0
+ FcEoiV7AjJWWQ5pi8lZJX6nmB0lc69Jw03V6mblgeZ/1oTZmOepkagwy2zLDXxihf0GowUif
+ GphBDeP8elWBNK+ajl5rmpAMNRoKxpN/xR4NzBg62AjyIvigdywa1RehSTfccQARAQABwsBf
+ BBgBAgAJBQJNWQbPAhsMAAoJEBaat7Gkz/iuteIH+wZuRDqK0ysAh+czshtG6JJlLW6eXJJR
+ Vi7dIPpgFic2LcbkSlvB8E25Pcfz/+tW+04Urg4PxxFiTFdFCZO+prfd4Mge7/OvUcwoSub7
+ ZIPo8726ZF5/xXzajahoIu9/hZ4iywWPAHRvprXaim5E/vKjcTeBMJIqZtS4u/UK3EpAX59R
+ XVxVpM8zJPbk535ELUr6I5HQXnihQm8l6rt9TNuf8p2WEDxc8bPAZHLjNyw9a/CdeB97m2Tr
+ zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <479e1299-740a-8a9e-1747-53a626f28d8e@baylibre.com>
+Date:   Tue, 8 Sep 2020 09:41:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:d482:: with SMTP id p2mr22776410ilg.9.1599550640600;
- Tue, 08 Sep 2020 00:37:20 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 00:37:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bbbbcf05aec86741@google.com>
-Subject: KASAN: slab-out-of-bounds Write in usb_hcd_poll_rh_status (2)
-From:   syzbot <syzbot+3ae6a2b06f131ab9849f@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, andreyknvl@google.com,
-        dvyukov@google.com, gregkh@linuxfoundation.org,
-        gustavoars@kernel.org, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        m.szyprowski@samsung.com, noring@nocrew.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200907195244.GB558348@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi,
 
-syzbot found the following issue on:
+On 07/09/2020 21:52, Sam Ravnborg wrote:
+> Hi Neil.
+> 
+> On Mon, Sep 07, 2020 at 01:10:27PM +0200, Neil Armstrong wrote:
+>> This adds support for the TDO TL070WSH30 TFT-LCD panel module.
+>> The panel has a 1024×600 resolution and uses 24 bit RGB per pixel.
+>> It provides a MIPI DSI interface to the host, a built-in LED backlight
+>> and touch controller.
+> 
+> Despite a nicely written driver I noticed a few things that needs to be
+> addressed.
 
-HEAD commit:    b51594df Merge tag 'docs-5.9-3' of git://git.lwn.net/linux
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=149d38ae900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ae6a2b06f131ab9849f
-compiler:       gcc (GCC) 10.1.0-syz 20200507
+Thanks for the review, indeed the remove/shutdown was wrong, and I aligned
+with panel-simple, which seems more logical.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> 
+> 	Sam
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  drivers/gpu/drm/panel/Kconfig                |  11 +
+>>  drivers/gpu/drm/panel/Makefile               |   1 +
+>>  drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c | 256 +++++++++++++++++++
+>>  3 files changed, 268 insertions(+)
+>>  create mode 100644 drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c
+>>
+>> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+>> index 8d97d07c5871..2d488a875b99 100644
+>> --- a/drivers/gpu/drm/panel/Kconfig
+>> +++ b/drivers/gpu/drm/panel/Kconfig
+>> @@ -433,6 +433,17 @@ config DRM_PANEL_SONY_ACX565AKM
+>>  	  Say Y here if you want to enable support for the Sony ACX565AKM
+>>  	  800x600 3.5" panel (found on the Nokia N900).
+>>  
+>> +config DRM_PANEL_TDO_TL070WSH30
+>> +	tristate "TDO TL070WSH30 DSI panel"
+>> +	depends on OF
+>> +	depends on DRM_MIPI_DSI
+>> +	depends on BACKLIGHT_CLASS_DEVICE
+>> +	help
+>> +	  Say Y here if you want to enable support for TDO TL070WSH30 TFT-LCD
+>> +	  panel module. The panel has a 1024×600 resolution and uses
+>> +	  24 bit RGB per pixel. It provides a MIPI DSI interface to
+>> +	  the host, a built-in LED backlight and touch controller.
+>> +
+>>  config DRM_PANEL_TPO_TD028TTEC1
+>>  	tristate "Toppoly (TPO) TD028TTEC1 panel driver"
+>>  	depends on OF && SPI
+>> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+>> index 15a4e7752951..35ee06a1b5c2 100644
+>> --- a/drivers/gpu/drm/panel/Makefile
+>> +++ b/drivers/gpu/drm/panel/Makefile
+>> @@ -45,6 +45,7 @@ obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7703) += panel-sitronix-st7703.o
+>>  obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) += panel-sitronix-st7789v.o
+>>  obj-$(CONFIG_DRM_PANEL_SONY_ACX424AKP) += panel-sony-acx424akp.o
+>>  obj-$(CONFIG_DRM_PANEL_SONY_ACX565AKM) += panel-sony-acx565akm.o
+>> +obj-$(CONFIG_DRM_PANEL_TDO_TL070WSH30) += panel-tdo-tl070wsh30.o
+>>  obj-$(CONFIG_DRM_PANEL_TPO_TD028TTEC1) += panel-tpo-td028ttec1.o
+>>  obj-$(CONFIG_DRM_PANEL_TPO_TD043MTEA1) += panel-tpo-td043mtea1.o
+>>  obj-$(CONFIG_DRM_PANEL_TPO_TPG110) += panel-tpo-tpg110.o
+>> diff --git a/drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c b/drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c
+>> new file mode 100644
+>> index 000000000000..c7a6c2c42c52
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/panel/panel-tdo-tl070wsh30.c
+>> @@ -0,0 +1,256 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (C) 2020 BayLibre, SAS
+>> + * Author: Neil Armstrong <narmstrong@baylibre.com>
+>> + */
+>> +
+>> +#include <linux/delay.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/regulator/consumer.h>
+>> +
+>> +#include <video/mipi_display.h>
+>> +
+>> +#include <drm/drm_crtc.h>
+>> +#include <drm/drm_device.h>
+>> +#include <drm/drm_mipi_dsi.h>
+>> +#include <drm/drm_modes.h>
+>> +#include <drm/drm_panel.h>
+>> +
+>> +struct tdo_tl070wsh30_panel {
+>> +	struct drm_panel base;
+>> +	struct mipi_dsi_device *link;
+>> +
+>> +	struct regulator *supply;
+>> +	struct gpio_desc *reset_gpio;
+>> +
+>> +	bool prepared;
+>> +};
+>> +
+>> +static inline
+>> +struct tdo_tl070wsh30_panel *to_tdo_tl070wsh30_panel(struct drm_panel *panel)
+>> +{
+>> +	return container_of(panel, struct tdo_tl070wsh30_panel, base);
+>> +}
+> 
+> bikeshedding - but my preference is to order the functions:
+> 
+> prepare
+> enable
+> disable
+> unprepare
+> 
+> As this is the natural order they are used.
+> Feel free to ignore!
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ae6a2b06f131ab9849f@syzkaller.appspotmail.com
+Ack, prepare before unprepare looks better !
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:406 [inline]
-BUG: KASAN: slab-out-of-bounds in usb_hcd_poll_rh_status+0x376/0x780 drivers/usb/core/hcd.c:775
-Write of size 2 at addr ffff88809f5ef480 by task syz-executor.4/6857
+> 
+>> +
+>> +static int tdo_tl070wsh30_panel_unprepare(struct drm_panel *panel)
+>> +{
+>> +	struct tdo_tl070wsh30_panel *tdo_tl070wsh30 = to_tdo_tl070wsh30_panel(panel);
+>> +	int err;
+>> +
+>> +	if (!tdo_tl070wsh30->prepared)
+>> +		return 0;
+>> +
+>> +	err = mipi_dsi_dcs_set_display_off(tdo_tl070wsh30->link);
+>> +	if (err < 0)
+>> +		dev_err(panel->dev, "failed to set display off: %d\n", err);
+>> +
+>> +	usleep_range(10000, 11000);
+>> +
+>> +	err = mipi_dsi_dcs_enter_sleep_mode(tdo_tl070wsh30->link);
+>> +	if (err < 0) {
+>> +		dev_err(panel->dev, "failed to enter sleep mode: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	usleep_range(10000, 11000);
+>> +
+>> +	tdo_tl070wsh30->prepared = false;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tdo_tl070wsh30_panel_prepare(struct drm_panel *panel)
+>> +{
+>> +	struct tdo_tl070wsh30_panel *tdo_tl070wsh30 = to_tdo_tl070wsh30_panel(panel);
+>> +	int err;
+>> +
+>> +	if (tdo_tl070wsh30->prepared)
+>> +		return 0;
+>> +
+>> +	err = mipi_dsi_dcs_exit_sleep_mode(tdo_tl070wsh30->link);
+>> +	if (err < 0) {
+>> +		dev_err(panel->dev, "failed to exit sleep mode: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	msleep(200);
+>> +
+>> +	err = mipi_dsi_dcs_set_display_on(tdo_tl070wsh30->link);
+>> +	if (err < 0) {
+>> +		dev_err(panel->dev, "failed to set display on: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	msleep(20);
+>> +
+>> +	tdo_tl070wsh30->prepared = true;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct drm_display_mode default_mode = {
+>> +	.clock = 47250,
+>> +	.hdisplay = 1024,
+>> +	.hsync_start = 1024 + 46,
+>> +	.hsync_end = 1024 + 46 + 80,
+>> +	.htotal = 1024 + 46 + 80 + 100,
+>> +	.vdisplay = 600,
+>> +	.vsync_start = 600 + 5,
+>> +	.vsync_end = 600 + 5 + 5,
+>> +	.vtotal = 600 + 5 + 5 + 20,
+>> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
+>> +};
+>> +
+>> +static int tdo_tl070wsh30_panel_get_modes(struct drm_panel *panel,
+>> +				       struct drm_connector *connector)
+>> +{
+>> +	struct drm_display_mode *mode;
+>> +
+>> +	mode = drm_mode_duplicate(connector->dev, &default_mode);
+>> +	if (!mode) {
+>> +		dev_err(panel->dev, "failed to add mode %ux%ux\n", default_mode.hdisplay,
+>> +			default_mode.vdisplay);
+> Here we often print the refresh rate too.
+> If there is no need for the refresh rate than at least drop the extra
+> 'x' at the end of the line.
 
-CPU: 1 PID: 6857 Comm: syz-executor.4 Not tainted 5.9.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x198/0x1fd lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- memcpy+0x39/0x60 mm/kasan/common.c:106
- memcpy include/linux/string.h:406 [inline]
- usb_hcd_poll_rh_status+0x376/0x780 drivers/usb/core/hcd.c:775
- call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1413
- expire_timers kernel/time/timer.c:1458 [inline]
- __run_timers.part.0+0x67c/0xaa0 kernel/time/timer.c:1755
- __run_timers kernel/time/timer.c:1736 [inline]
- run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1768
- __do_softirq+0x1f7/0xa91 kernel/softirq.c:298
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x9d/0xd0 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:393 [inline]
- __irq_exit_rcu kernel/softirq.c:423 [inline]
- irq_exit_rcu+0x235/0x280 kernel/softirq.c:435
- sysvec_apic_timer_interrupt+0x51/0xf0 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:770 [inline]
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0x4d/0x90 kernel/locking/spinlock.c:191
-Code: 48 c7 c0 48 3c b6 89 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 75 3c 48 83 3d 12 f5 bf 01 00 74 29 48 89 df 57 9d <0f> 1f 44 00 00 bf 01 00 00 00 e8 f4 6d 59 f9 65 8b 05 2d b7 0b 78
-RSP: 0018:ffffc90004e0f740 EFLAGS: 00000282
-RAX: 1ffffffff136c789 RBX: 0000000000000282 RCX: 1ffffffff1563f69
-RDX: dffffc0000000000 RSI: 0000000000000001 RDI: 0000000000000282
-RBP: ffffffff8cc156b8 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff888037a37270
-R13: 1ffff920009c1efa R14: ffffffff8cc156b8 R15: ffffffff8cc156b0
- __debug_object_init+0x401/0xce0 lib/debugobjects.c:580
- debug_object_init lib/debugobjects.c:595 [inline]
- debug_object_activate+0x32c/0x3e0 lib/debugobjects.c:681
- debug_rcu_head_queue kernel/rcu/rcu.h:176 [inline]
- __call_rcu kernel/rcu/tree.c:2880 [inline]
- call_rcu+0x2c/0x7b0 kernel/rcu/tree.c:2968
- destroy_inode+0x129/0x1b0 fs/inode.c:287
- iput_final fs/inode.c:1652 [inline]
- iput.part.0+0x424/0x850 fs/inode.c:1678
- iput+0x58/0x70 fs/inode.c:1668
- proc_invalidate_siblings_dcache+0x28d/0x600 fs/proc/inode.c:160
- release_task+0xc63/0x14d0 kernel/exit.c:221
- wait_task_zombie kernel/exit.c:1088 [inline]
- wait_consider_task+0x2fb3/0x3b20 kernel/exit.c:1315
- do_wait_thread kernel/exit.c:1378 [inline]
- do_wait+0x36a/0x9e0 kernel/exit.c:1449
- kernel_wait4+0x14c/0x260 kernel/exit.c:1621
- __do_sys_wait4+0x13f/0x150 kernel/exit.c:1649
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4171fb
-Code: 54 55 41 89 d4 53 48 89 f5 89 fb 48 83 ec 10 e8 1b f9 ff ff 45 31 d2 41 89 c0 49 63 d4 48 89 ee 48 63 fb b8 3d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 19 44 89 c7 89 44 24 0c e8 51 f9 ff ff 8b 44
-RSP: 002b:00007ffff8e9d6c0 EFLAGS: 00000246 ORIG_RAX: 000000000000003d
-RAX: ffffffffffffffda RBX: 00000000ffffffff RCX: 00000000004171fb
-RDX: 0000000040000001 RSI: 00007ffff8e9d720 RDI: ffffffffffffffff
-RBP: 00007ffff8e9d720 R08: 0000000000000000 R09: 000000000267c940
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000040000001
-R13: 00007ffff8e9d720 R14: 000000000012605c R15: 00007ffff8e9d730
+I forgot to remove it after vrefresh removal, but I'll prefer adding back
+drm_mode_vrefresh() and the refresh.
 
-Allocated by task 31714:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- __do_kmalloc mm/slab.c:3655 [inline]
- __kmalloc+0x1b0/0x310 mm/slab.c:3664
- kmalloc include/linux/slab.h:559 [inline]
- proc_do_submiturb+0x29a3/0x34d0 drivers/usb/core/devio.c:1733
- proc_submiturb drivers/usb/core/devio.c:1892 [inline]
- usbdev_do_ioctl drivers/usb/core/devio.c:2588 [inline]
- usbdev_ioctl+0x682/0x3360 drivers/usb/core/devio.c:2708
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl fs/ioctl.c:739 [inline]
- __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:739
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	drm_mode_set_name(mode);
+>> +
+>> +	drm_mode_probed_add(connector, mode);
+>> +
+>> +	connector->display_info.width_mm = 154;
+>> +	connector->display_info.height_mm = 85;
+>> +	connector->display_info.bpc = 8;
+>> +
+>> +	return 1;
+>> +}
+>> +
+>> +static const struct drm_panel_funcs tdo_tl070wsh30_panel_funcs = {
+>> +	.unprepare = tdo_tl070wsh30_panel_unprepare,
+>> +	.prepare = tdo_tl070wsh30_panel_prepare,
+>> +	.get_modes = tdo_tl070wsh30_panel_get_modes,
+>> +};
+>> +
+>> +static const struct of_device_id tdo_tl070wsh30_of_match[] = {
+>> +	{ .compatible = "tdo,tl070wsh30", },
+>> +	{ }
+> I often recommends
+> 	{ /* sentinel },
+> 
+> but thats just to be consistent with what I see in other drivers.
 
-The buggy address belongs to the object at ffff88809f5ef480
- which belongs to the cache kmalloc-32 of size 32
-The buggy address is located 0 bytes inside of
- 32-byte region [ffff88809f5ef480, ffff88809f5ef4a0)
-The buggy address belongs to the page:
-page:00000000686f7d13 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88809f5effc1 pfn:0x9f5ef
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00029f1e08 ffffea0002684648 ffff8880aa040100
-raw: ffff88809f5effc1 ffff88809f5ef000 000000010000003b 0000000000000000
-page dumped because: kasan: bad access detected
+Let it be consistent.
 
-Memory state around the buggy address:
- ffff88809f5ef380: fb fb fb fb fc fc fc fc fa fb fb fb fc fc fc fc
- ffff88809f5ef400: 00 00 00 fc fc fc fc fc 00 00 00 fc fc fc fc fc
->ffff88809f5ef480: 01 fc fc fc fc fc fc fc 00 00 00 fc fc fc fc fc
-                   ^
- ffff88809f5ef500: fa fb fb fb fc fc fc fc 00 00 fc fc fc fc fc fc
- ffff88809f5ef580: 00 00 fc fc fc fc fc fc 00 00 fc fc fc fc fc fc
-==================================================================
+> 
+>> +};
+>> +MODULE_DEVICE_TABLE(of, tdo_tl070wsh30_of_match);
+>> +
+>> +static int tdo_tl070wsh30_panel_add(struct tdo_tl070wsh30_panel *tdo_tl070wsh30)
+>> +{
+>> +	struct device *dev = &tdo_tl070wsh30->link->dev;
+>> +	int err;
+>> +
+>> +	tdo_tl070wsh30->supply = devm_regulator_get(dev, "power");
+>> +	if (IS_ERR(tdo_tl070wsh30->supply))
+>> +		return PTR_ERR(tdo_tl070wsh30->supply);
+>> +
+>> +	tdo_tl070wsh30->reset_gpio = devm_gpiod_get(dev, "reset",
+>> +						  GPIOD_OUT_LOW);
+>> +	if (IS_ERR(tdo_tl070wsh30->reset_gpio)) {
+>> +		err = PTR_ERR(tdo_tl070wsh30->reset_gpio);
+>> +		dev_dbg(dev, "failed to get reset gpio: %d\n", err);
+>> +		return err;
+>> +	}
+>> +
+>> +	drm_panel_init(&tdo_tl070wsh30->base, &tdo_tl070wsh30->link->dev,
+>> +		       &tdo_tl070wsh30_panel_funcs, DRM_MODE_CONNECTOR_DSI);
+>> +
+>> +	err = drm_panel_of_backlight(&tdo_tl070wsh30->base);
+>> +	if (err)
+>> +		return err;
+> 
+> 
+> 
+>> +
+>> +	err = regulator_enable(tdo_tl070wsh30->supply);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	usleep_range(10000, 11000);
+>> +
+>> +	gpiod_set_value_cansleep(tdo_tl070wsh30->reset_gpio, 1);
+>> +
+>> +	usleep_range(10000, 11000);
+>> +
+>> +	gpiod_set_value_cansleep(tdo_tl070wsh30->reset_gpio, 0);
+>> +
+>> +	msleep(200);
+>> +
+> 
+> It is the job of the prepare function to turn on the panel,
+> and likewise the unprepare to turn off the panel.
+> Please move the code above to the prepare function.
 
+Moved
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> 
+>> +	drm_panel_add(&tdo_tl070wsh30->base);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tdo_tl070wsh30_panel_del(struct tdo_tl070wsh30_panel *tdo_tl070wsh30)
+>> +{
+>> +	drm_panel_remove(&tdo_tl070wsh30->base);
+>> +}
+> This helper does not gain anything - call drm_panel_remove() direct.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Removed
+
+> 
+>> +
+>> +static int tdo_tl070wsh30_panel_probe(struct mipi_dsi_device *dsi)
+>> +{
+>> +	struct tdo_tl070wsh30_panel *tdo_tl070wsh30;
+>> +	int err;
+>> +
+>> +	dsi->lanes = 4;
+>> +	dsi->format = MIPI_DSI_FMT_RGB888;
+>> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST | MIPI_DSI_MODE_LPM;
+>> +
+>> +	tdo_tl070wsh30 = devm_kzalloc(&dsi->dev, sizeof(*tdo_tl070wsh30),
+>> +				    GFP_KERNEL);
+>> +	if (!tdo_tl070wsh30)
+>> +		return -ENOMEM;
+>> +
+>> +	mipi_dsi_set_drvdata(dsi, tdo_tl070wsh30);
+>> +	tdo_tl070wsh30->link = dsi;
+>> +
+>> +	err = tdo_tl070wsh30_panel_add(tdo_tl070wsh30);
+>> +	if (err < 0)
+>> +		return err;
+>> +
+>> +	return mipi_dsi_attach(dsi);
+>> +}
+>> +
+>> +static int tdo_tl070wsh30_panel_remove(struct mipi_dsi_device *dsi)
+>> +{
+>> +	struct tdo_tl070wsh30_panel *tdo_tl070wsh30 = mipi_dsi_get_drvdata(dsi);
+>> +	int err;
+>> +
+>> +	err = drm_panel_unprepare(&tdo_tl070wsh30->base);
+>> +	if (err < 0)
+>> +		dev_err(&dsi->dev, "failed to unprepare panel: %d\n", err);
+>> +
+>> +	err = drm_panel_disable(&tdo_tl070wsh30->base);
+>> +	if (err < 0)
+>> +		dev_err(&dsi->dev, "failed to disable panel: %d\n", err);
+>> +
+> In most panel drivers we just ignore the return results here.
+
+Ok
+
+> 
+>> +	err = mipi_dsi_detach(dsi);
+>> +	if (err < 0)
+>> +		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", err);
+>> +
+>> +	tdo_tl070wsh30_panel_del(tdo_tl070wsh30);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void tdo_tl070wsh30_panel_shutdown(struct mipi_dsi_device *dsi)
+>> +{
+>> +	struct tdo_tl070wsh30_panel *tdo_tl070wsh30 = mipi_dsi_get_drvdata(dsi);
+>> +
+>> +	drm_panel_unprepare(&tdo_tl070wsh30->base);
+>> +	drm_panel_disable(&tdo_tl070wsh30->base);
+> This is the wrong order. disable before unpreapre.
+> 
+> 
+> I am not sure what is right here - but I see some drivers that only have
+> the disable() + unprepare() in their shutdown() method and then the
+> remocal in their remove() function.
+> That makes sense with this split but I have not looked too deep into it.
+
+No prob, I aligned with panel-simple here.
+
+> 
+>> +}
+>> +
+>> +static struct mipi_dsi_driver tdo_tl070wsh30_panel_driver = {
+>> +	.driver = {
+>> +		.name = "panel-tdo-tl070wsh30",
+>> +		.of_match_table = tdo_tl070wsh30_of_match,
+>> +	},
+>> +	.probe = tdo_tl070wsh30_panel_probe,
+>> +	.remove = tdo_tl070wsh30_panel_remove,
+>> +	.shutdown = tdo_tl070wsh30_panel_shutdown,
+>> +};
+>> +module_mipi_dsi_driver(tdo_tl070wsh30_panel_driver);
+>> +
+>> +MODULE_AUTHOR("Neil Armstrong <narmstrong@baylibre.com>");
+>> +MODULE_DESCRIPTION("TDO TL070WSH30 panel driver");
+>> +MODULE_LICENSE("GPL v2");
+>> -- 
+>> 2.22.0
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+Thanks,
+Neil
