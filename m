@@ -2,30 +2,31 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2035FC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B8CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D561D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFDB62068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:00:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730655AbgIHS6x (ORCPT
+        id S1731449AbgIHTAH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:58:53 -0400
-Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:51744 "EHLO
+        Tue, 8 Sep 2020 15:00:07 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:51727 "EHLO
         EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729014AbgIHS6j (ORCPT
+        by vger.kernel.org with ESMTP id S1728585AbgIHS63 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:58:39 -0400
+        Tue, 8 Sep 2020 14:58:29 -0400
 Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
  EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
- 15.0.1156.6; Tue, 8 Sep 2020 11:58:37 -0700
+ 15.0.1156.6; Tue, 8 Sep 2020 11:58:24 -0700
 Received: from akaher-virtual-machine.eng.vmware.com (unknown [10.197.103.239])
-        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id C256E40B4F;
-        Tue,  8 Sep 2020 11:58:38 -0700 (PDT)
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 0EBA140B4E;
+        Tue,  8 Sep 2020 11:58:26 -0700 (PDT)
 From:   Ajay Kaher <akaher@vmware.com>
 To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
 CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
@@ -33,12 +34,10 @@ CC:     <alex.williamson@redhat.com>, <cohuck@redhat.com>,
         <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
         <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
         <vsirnapalli@vmware.com>, <akaher@vmware.com>
-Subject: [PATCH v2 v4.14.y 0/3] vfio: Fix for CVE-2020-12888
-Date:   Wed, 9 Sep 2020 00:24:23 +0530
-Message-ID: <1599591263-46520-4-git-send-email-akaher@vmware.com>
+Subject: [PATCH v2 v4.14.y 1/3] vfio/type1: Support faulting PFNMAP vmas
+Date:   Wed, 9 Sep 2020 00:24:20 +0530
+Message-ID: <1599591263-46520-1-git-send-email-akaher@vmware.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599591263-46520-1-git-send-email-akaher@vmware.com>
-References: <1599591263-46520-1-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Received-SPF: None (EX13-EDG-OU-001.vmware.com: akaher@vmware.com does not
@@ -48,41 +47,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-devices may lead to DoS scenario
-    
-The VFIO modules allow users (guest VMs) to enable or disable access to the
-devices' MMIO memory address spaces. If a user attempts to access (read/write)
-the devices' MMIO address space when it is disabled, some h/w devices issue an
-interrupt to the CPU to indicate a fatal error condition, crashing the system.
-This flaw allows a guest user or process to crash the host system resulting in
-a denial of service.
-    
-Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-before user access.
-    
-Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-can later use to invalidate those mappings.
-    
-Patch 3/ block the user from accessing memory spaces which is disabled by using
-new vma list support to zap, or invalidate, those memory mappings in order to
-force them to be faulted back in on access.
-    
-Upstreamed patches link:
-https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+From: Alex Williamson <alex.williamson@redhat.com>
 
-Diff from v1:
-Fixed build break problem.
+commit 41311242221e3482b20bfed10fa4d9db98d87016 upstream.
 
-[PATCH v2 v4.14.y 1/3]:
-Backporting of upsream commit 41311242221e:
-vfio/type1: Support faulting PFNMAP vmas
-        
-[PATCH v2 v4.14.y 2/3]:
-Backporting of upsream commit 11c4cd07ba11:
-vfio-pci: Fault mmaps to enable vma tracking
-        
-[PATCH v2 v4.14.y 3/3]:
-Backporting of upsream commit abafbc551fdd:
-vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+With conversion to follow_pfn(), DMA mapping a PFNMAP range depends on
+the range being faulted into the vma.  Add support to manually provide
+that, in the same way as done on KVM with hva_to_pfn_remapped().
+
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[Ajay: Regenerated the patch for v4.14]
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+---
+ drivers/vfio/vfio_iommu_type1.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 35a3750..150be10 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -336,6 +336,32 @@ static int put_pfn(unsigned long pfn, int prot)
+ 	return 0;
+ }
+ 
++static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
++			    unsigned long vaddr, unsigned long *pfn,
++			    bool write_fault)
++{
++	int ret;
++
++	ret = follow_pfn(vma, vaddr, pfn);
++	if (ret) {
++		bool unlocked = false;
++
++		ret = fixup_user_fault(NULL, mm, vaddr,
++				       FAULT_FLAG_REMOTE |
++				       (write_fault ?  FAULT_FLAG_WRITE : 0),
++				       &unlocked);
++		if (unlocked)
++			return -EAGAIN;
++
++		if (ret)
++			return ret;
++
++		ret = follow_pfn(vma, vaddr, pfn);
++	}
++
++	return ret;
++}
++
+ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 			 int prot, unsigned long *pfn)
+ {
+@@ -375,12 +401,16 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 
+ 	down_read(&mm->mmap_sem);
+ 
++retry:
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
+ 
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		if (!follow_pfn(vma, vaddr, pfn) &&
+-		    is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_fault_pfn(vma, mm, vaddr, pfn, prot & IOMMU_WRITE);
++		if (ret == -EAGAIN)
++			goto retry;
++
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EFAULT;
+ 	}
+ 
+ 	up_read(&mm->mmap_sem);
+-- 
+2.7.4
+
