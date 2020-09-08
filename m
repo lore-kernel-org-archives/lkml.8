@@ -2,55 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD97DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448ADC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFF7207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FADA207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599584826;
-	bh=3NIQKpGrIJmYovO0SrwS3UNQX7Lij3S5tXy78o/NcTg=;
+	s=default; t=1599584843;
+	bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7KqyAGbH+BVwlIEQfGEkEJ/hmtAAvdtECDV3YV01S1boGdM+7f/vfHnHW5k/TBLG
-	 Ng0B8KM8kj8ZgFgMKIEuj6l/Y3V4E1rNpg0t8EhqmjQFWDlZ0SMENO6JhQFBhhZtpT
-	 QOmHasmIYqRkBWk0uNm/0uRMW665lqHzWnNEJQfE=
+	b=YZgUiJUsvB2o0Zv9IpfSNpmaaZH4RZXfZVDXDodZVm2ApmxZdNpS2noW1M1URrr0r
+	 RXP/MVD4Jqe/0j7oFXx9+462aEJGn7DwewwPNhpeYGZtzwBYkMH8ewIRqQEZAmTSeT
+	 3ji/EtssDKi0e2aern/Iu0Gl2I24OStbBTIRl3rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbgIHRHC (ORCPT
+        id S1732064AbgIHRHU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57642 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:07:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731786AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731808AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:19:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9481524198;
-        Tue,  8 Sep 2020 15:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931C32245F;
+        Tue,  8 Sep 2020 15:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579539;
-        bh=3NIQKpGrIJmYovO0SrwS3UNQX7Lij3S5tXy78o/NcTg=;
+        s=default; t=1599579370;
+        bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e4VQrO5i3Qk8uEZZfz5Y/3h1d/ndgLyGTnKvU9EPiVsyPnFRQTuqK80vnirCC9JfR
-         3gU8KR3BbAPFeBNJOj0+WjDoj2w5ADslhGyq7TuhlaXjXcAjSMzYmBrUb2SV1J5SoI
-         F5NE6uVz4s7usE16ePMDW9MSmd1Tyx1u3fObYrdI=
+        b=lsb2Cdm5DaGdBQqqEApuMAvQfHQdgc0+OG5XJDw3dlUu+BZTD4HQ9dLqwyGCaR6Ry
+         YcPcm+6iM7T4YUWSxoBdxDL4JNKHh2+nG6k23x7ma+5PkfsWJJHsijz0g7I0Dqex/L
+         rhwu9qevz0A6Chy2P6TLHwtAaDke6SbSnRy+aeRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kyle Huey <me@kylehuey.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 5.8 120/186] x86/debug: Allow a single level of #DB recursion
-Date:   Tue,  8 Sep 2020 17:24:22 +0200
-Message-Id: <20200908152247.452358994@linuxfoundation.org>
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 010/186] drm/msm: enable vblank during atomic commits
+Date:   Tue,  8 Sep 2020 17:22:32 +0200
+Message-Id: <20200908152242.151110870@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -63,161 +60,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Rob Clark <robdclark@chromium.org>
 
-commit d5c678aed5eddb944b8e7ce451b107b39245962d upstream.
+[ Upstream commit 43906812eaab06423f56af5cca9a9fcdbb4ac454 ]
 
-Trying to clear DR7 around a #DB from usermode malfunctions if the tasks
-schedules when delivering SIGTRAP.
+This has roughly the same effect as drm_atomic_helper_wait_for_vblanks(),
+basically just ensuring that vblank accounting is enabled so that we get
+valid timestamp/seqn on pageflip events.
 
-Rather than trying to define a special no-recursion region, just allow a
-single level of recursion.  The same mechanism is used for NMI, and it
-hasn't caused any problems yet.
-
-Fixes: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling")
-Reported-by: Kyle Huey <me@kylehuey.com>
-Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org
-Link: https://lore.kernel.org/r/20200902133200.726584153@infradead.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/traps.c |   66 +++++++++++++++++++++++-------------------------
- 1 file changed, 32 insertions(+), 34 deletions(-)
+ drivers/gpu/drm/msm/msm_atomic.c | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -733,20 +733,9 @@ static bool is_sysenter_singlestep(struc
- #endif
+diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+index 5ccfad794c6a5..561bfa48841c3 100644
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@ -27,6 +27,34 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
+ 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
  }
  
--static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
-+static __always_inline unsigned long debug_read_clear_dr6(void)
++/*
++ * Helpers to control vblanks while we flush.. basically just to ensure
++ * that vblank accounting is switched on, so we get valid seqn/timestamp
++ * on pageflip events (if requested)
++ */
++
++static void vblank_get(struct msm_kms *kms, unsigned crtc_mask)
++{
++	struct drm_crtc *crtc;
++
++	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
++		if (!crtc->state->active)
++			continue;
++		drm_crtc_vblank_get(crtc);
++	}
++}
++
++static void vblank_put(struct msm_kms *kms, unsigned crtc_mask)
++{
++	struct drm_crtc *crtc;
++
++	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
++		if (!crtc->state->active)
++			continue;
++		drm_crtc_vblank_put(crtc);
++	}
++}
++
+ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
  {
--	/*
--	 * Disable breakpoints during exception handling; recursive exceptions
--	 * are exceedingly 'fun'.
--	 *
--	 * Since this function is NOKPROBE, and that also applies to
--	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
--	 * HW_BREAKPOINT_W on our stack)
--	 *
--	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
--	 * includes the entry stack is excluded for everything.
--	 */
--	*dr7 = local_db_save();
-+	unsigned long dr6;
+ 	unsigned crtc_mask = BIT(crtc_idx);
+@@ -44,6 +72,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
  
+ 	kms->funcs->enable_commit(kms);
+ 
++	vblank_get(kms, crtc_mask);
++
  	/*
- 	 * The Intel SDM says:
-@@ -759,15 +748,12 @@ static __always_inline void debug_enter(
- 	 *
- 	 * Keep it simple: clear DR6 immediately.
+ 	 * Flush hardware updates:
  	 */
--	get_debugreg(*dr6, 6);
-+	get_debugreg(dr6, 6);
- 	set_debugreg(0, 6);
- 	/* Filter out all the reserved bits which are preset to 1 */
--	*dr6 &= ~DR6_RESERVED;
--}
-+	dr6 &= ~DR6_RESERVED;
+@@ -58,6 +88,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
+ 	kms->funcs->wait_flush(kms, crtc_mask);
+ 	trace_msm_atomic_wait_flush_finish(crtc_mask);
  
--static __always_inline void debug_exit(unsigned long dr7)
--{
--	local_db_restore(dr7);
-+	return dr6;
- }
- 
- /*
-@@ -867,6 +853,19 @@ out:
- static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 					     unsigned long dr6)
- {
-+	/*
-+	 * Disable breakpoints during exception handling; recursive exceptions
-+	 * are exceedingly 'fun'.
-+	 *
-+	 * Since this function is NOKPROBE, and that also applies to
-+	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
-+	 * HW_BREAKPOINT_W on our stack)
-+	 *
-+	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
-+	 * includes the entry stack is excluded for everything.
-+	 */
-+	unsigned long dr7 = local_db_save();
++	vblank_put(kms, crtc_mask);
 +
- 	nmi_enter();
- 	instrumentation_begin();
- 	trace_hardirqs_off_finish();
-@@ -890,6 +889,8 @@ static __always_inline void exc_debug_ke
- 		trace_hardirqs_on_prepare();
- 	instrumentation_end();
- 	nmi_exit();
-+
-+	local_db_restore(dr7);
- }
- 
- static __always_inline void exc_debug_user(struct pt_regs *regs,
-@@ -901,6 +902,15 @@ static __always_inline void exc_debug_us
+ 	mutex_lock(&kms->commit_lock);
+ 	kms->funcs->complete_commit(kms, crtc_mask);
+ 	mutex_unlock(&kms->commit_lock);
+@@ -221,6 +253,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
  	 */
- 	WARN_ON_ONCE(!user_mode(regs));
+ 	kms->pending_crtc_mask &= ~crtc_mask;
  
-+	/*
-+	 * NB: We can't easily clear DR7 here because
-+	 * idtentry_exit_to_usermode() can invoke ptrace, schedule, access
-+	 * user memory, etc.  This means that a recursive #DB is possible.  If
-+	 * this happens, that #DB will hit exc_debug_kernel() and clear DR7.
-+	 * Since we're not on the IST stack right now, everything will be
-+	 * fine.
-+	 */
++	vblank_get(kms, crtc_mask);
 +
- 	idtentry_enter_user(regs);
- 	instrumentation_begin();
+ 	/*
+ 	 * Flush hardware updates:
+ 	 */
+@@ -235,6 +269,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	kms->funcs->wait_flush(kms, crtc_mask);
+ 	trace_msm_atomic_wait_flush_finish(crtc_mask);
  
-@@ -913,36 +923,24 @@ static __always_inline void exc_debug_us
- /* IST stack entry */
- DEFINE_IDTENTRY_DEBUG(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
--	exc_debug_kernel(regs, dr6);
--	debug_exit(dr7);
-+	exc_debug_kernel(regs, debug_read_clear_dr6());
- }
- 
- /* User entry, runs on regular task stack */
- DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
--	exc_debug_user(regs, dr6);
--	debug_exit(dr7);
-+	exc_debug_user(regs, debug_read_clear_dr6());
- }
- #else
- /* 32 bit does not have separate entry points. */
- DEFINE_IDTENTRY_RAW(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
-+	unsigned long dr6 = debug_read_clear_dr6();
- 
- 	if (user_mode(regs))
- 		exc_debug_user(regs, dr6);
- 	else
- 		exc_debug_kernel(regs, dr6);
--
--	debug_exit(dr7);
- }
- #endif
- 
++	vblank_put(kms, crtc_mask);
++
+ 	mutex_lock(&kms->commit_lock);
+ 	kms->funcs->complete_commit(kms, crtc_mask);
+ 	mutex_unlock(&kms->commit_lock);
+-- 
+2.25.1
+
 
 
