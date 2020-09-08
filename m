@@ -2,146 +2,148 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F82C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBA7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 413BE2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E362078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DtSotS3N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbgIHRjz (ORCPT
+        id S1731805AbgIHRkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:39:55 -0400
-Received: from mail-pj1-f80.google.com ([209.85.216.80]:40923 "EHLO
-        mail-pj1-f80.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731686AbgIHQOO (ORCPT
+        Tue, 8 Sep 2020 13:40:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46338 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731684AbgIHQOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:14:14 -0400
-Received: by mail-pj1-f80.google.com with SMTP id a8so2865347pjk.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:14:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=D/csrweqGrVkpEAZ5pplUNZ1TOwhSVEWpZDLuH0vrCo=;
-        b=q02fzQ48U9nqZk6gOXV1LKQ/j4Dj86ZiROq2MWI2oRzHjAz5nQqXoxCO1bTUrH/T/3
-         D52/hzCUeXYZyI7KBlFGKjQFbUOBRWWDk8PmWbIHWuemK9HPvhTFjcFeblZ0QMsKZ3K8
-         6HKokDohg/2qd55+4zBp5oqPvZXV2w4TxOY1UuRjz+l27b/axS4qY1EDlRBunME3LFNe
-         vaBUszyfvU8swl6kB2fzLIGJgtrg9vZffvEtnRf6B9FLIpAdPlpUgV/jxdynHhXkmdgn
-         fTgPchusHO2FGLA3/XgUY0rGdQCx5edZFo1npT5Wv3fWmyswa0WMxqbQDxfdmcHRtyJp
-         56Tg==
-X-Gm-Message-State: AOAM5320CXOHi8GE1R3YtlAKU2aYedl2UBrWkirOkR2uadpqvcM/3113
-        KfFNlT9iW1K/FW3ygW43FAkftcC5bPa8zv+9To3Htgnotw46
-X-Google-Smtp-Source: ABdhPJzrA5qcyYQg4o7/Izr1PNFz2CRZvSjZXQ0hheFIG88YJDqhJlLXftQMRM+cTsAhyWpq9Medsh/P1HjMX4PRpb8AIQS1cVl9
-MIME-Version: 1.0
-X-Received: by 2002:a6b:2b07:: with SMTP id r7mr21194679ior.181.1599574756014;
- Tue, 08 Sep 2020 07:19:16 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 07:19:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001fc64e05aece0537@google.com>
-Subject: BUG: unable to handle kernel paging request in __sb_start_write
-From:   syzbot <syzbot+4d428ef55ad3356698bf@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 8 Sep 2020 12:14:12 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088E2lYR090675;
+        Tue, 8 Sep 2020 10:03:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=qvtY3efdmKTycDkCx+zMSmoSNBQYkw3/GROUiRKGaAk=;
+ b=DtSotS3N2vNLQGr0szPGdp1w7Lox58FSAPolXeZjEjmYTcqAovLvnA8S30qKm7keSVK1
+ 46B1ujBG+IMiBxRqHK7zpVHVQuV4I145HZuuE7qMYWk0VAIH9RCbEn0JrFthAgm6GoAn
+ vkS8wf/uo+FiZEHRWnxl55OMvtYy3Pve/NOybUPYG4IvJS+0vkxkvRGzD0k4iUY8ZWhp
+ aKHIJTVkgQEeHtiFrpUZgEVJ/GsQGYIU+uxiPeiBxSoZXx8P2XFJBdNGMdgB8xrAmDel
+ o51sUJPzhVfrZF8TbsiuAQ5o1yQr8xC3RY3+bqSbcraTV5x1YTGSfm8dzdZUzwHkF2Y5 sw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb9886pf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:03:35 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088E32Y6092121;
+        Tue, 8 Sep 2020 10:03:35 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb9886n6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:03:35 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088E1cVf007112;
+        Tue, 8 Sep 2020 14:03:32 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma05fra.de.ibm.com with ESMTP id 33c2a8a53w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 14:03:32 +0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088E3UKl13369646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 14:03:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF0A9A405C;
+        Tue,  8 Sep 2020 14:03:29 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A4DBCA405F;
+        Tue,  8 Sep 2020 14:03:25 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.24.202])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  8 Sep 2020 14:03:25 +0000 (GMT)
+Message-ID: <d405bab0d262b32fd16e85444791b6c49d820aa2.camel@linux.ibm.com>
+Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Luke Hinds <lhinds@redhat.com>, "Dr. Greg" <greg@enjellic.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        krzysztof.struczynski@huawei.com, linux-integrity@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        containers@lists.linux-foundation.org,
+        linux-security-module@vger.kernel.org, stefanb@linux.vnet.ibm.com,
+        sunyuqiong1988@gmail.com, mkayaalp@cs.binghamton.edu,
+        dmitry.kasatkin@gmail.com, "Serge E. Hallyn" <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>, christian@brauner.io,
+        silviu.vlasceanu@huawei.com, roberto.sassu@huawei.com,
+        ebiederm@xmission.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, luto@amacapital.net,
+        jannh@google.com, nick.dusek@gmail.com
+Date:   Tue, 08 Sep 2020 10:03:24 -0400
+In-Reply-To: <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
+References: <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
+         <20200818164943.va3um7toztazcfud@wittgenstein>
+         <d77a6cd783319702fddd06783cb84fdeb86210a6.camel@linux.ibm.com>
+         <20200906171413.GA8305@wind.enjellic.com>
+         <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 clxscore=1011
+ phishscore=0 spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 2020-09-07 at 12:50 +0100, Luke Hinds wrote:
+> > Candidly, given the politics of security technology being viewed as
+> > 'constraining' user rights, I think that a lot of forthcoming security
+> > technology may end up being out of tree moving forward.
+> > 
+> 
+> I think it's prudent to look forward and plan diligently, but I would
+> not want perfect to be the enemy of good.
 
-syzbot found the following issue on:
+Agreed.  This isn't an abstract problem, but one that has already come
+up and, hopefully, has been addressed appropriately.
 
-HEAD commit:    e28f0104 Merge tag 'fixes-2020-09-03' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a6b859900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c5f6ce8d5b68299
-dashboard link: https://syzkaller.appspot.com/bug?extid=4d428ef55ad3356698bf
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13949019900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14fe9e3e900000
+> 
+> I approach this more from a user's perspective. We are using IMA in 
+> https://keylime.dev to measure a host and would like to measure
+> within a container too. It's the most common request we hear from our
+> users.
+> 
+> Perhaps we all collaborate on a proposal extending Stefans work here:
+> https://kernsec.org/wiki/index.php/IMA_Namespacing_design_considerati
+> ons
+> 
+> I have seen around 3-4 patches now get submitted, so work has been
+> done before, and as above, users are present too. We could then have
+> some consensus on how this should look and later patches might have
+> more success at landing.
+> 
+> Would anyone be interested in this and have recommendations on how we
+> could approach this?
 
-Bisection is inconclusive: the issue happens on the oldest tested release.
+When Roberto Sassu and Krzysztof Struczynski contacted me about the
+status of Stefan Berger's patch set, based on Yuqiong Sun's work, I was
+under the impression that they would be rebasing it on the latest
+kernel and going forward from there.   Obviously things changed.  I
+pointed out to them resolving the "IMA namespacing" issue would be the
+first thing that needs to be addressed.  So here we are.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12b6a5ae900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11b6a5ae900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b6a5ae900000
+Definitely, let's have this discussion.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4d428ef55ad3356698bf@syzkaller.appspotmail.com
+Mimi
 
-BUG: unable to handle page fault for address: ffffe8ffffc33c70
-#PF: supervisor write access in kernel mode
-#PF: error_code(0x0002) - not-present page
-PGD 77000000000000 P4D 77000000000000 
-Oops: 0002 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 10445 Comm: syz-executor899 Not tainted 5.9.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:percpu_down_read_trylock include/linux/percpu-rwsem.h:82 [inline]
-RIP: 0010:__sb_start_write+0x16e/0x470 fs/super.c:1674
-Code: 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e3 02 00 00 41 bd 01 00 00 00 bd 01 00 00 00 48 8b 43 68 <65> ff 00 e8 aa 6b b4 ff bf 01 00 00 00 e8 e0 d5 8f ff 31 ff 65 44
-RSP: 0018:ffffc9000a0bfab8 EFLAGS: 00010246
-RAX: 0000607f51633c70 RBX: ffff888098be2380 RCX: ffffffff81bfdf07
-RDX: 1ffff1101317c47d RSI: 0000000000000001 RDI: ffff888098be23e8
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: 0000000000000001 R14: 0000000000000000 R15: ffff8880854bc0b0
-FS:  00007fa632ef6700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffe8ffffc33c70 CR3: 000000000011b000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- sb_start_write_trylock include/linux/fs.h:1648 [inline]
- touch_atime+0x152/0x370 fs/inode.c:1831
- file_accessed include/linux/fs.h:2206 [inline]
- splice_direct_to_actor+0x762/0x980 fs/splice.c:989
- do_splice_direct+0x1b3/0x280 fs/splice.c:1059
- do_sendfile+0x55f/0xd40 fs/read_write.c:1540
- __do_sys_sendfile64 fs/read_write.c:1601 [inline]
- __se_sys_sendfile64 fs/read_write.c:1587 [inline]
- __x64_sys_sendfile64+0x1cc/0x210 fs/read_write.c:1587
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446ac9
-Code: Bad RIP value.
-RSP: 002b:00007fa632ef5d18 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000006dbc58 RCX: 0000000000446ac9
-RDX: 0000000000000000 RSI: 0000000000000005 RDI: 0000000000000004
-RBP: 00000000006dbc50 R08: 65732f636f72702f R09: 65732f636f72702f
-R10: 0800000080004101 R11: 0000000000000246 R12: 00000000006dbc5c
-R13: 00007fa632ef5d20 R14: 00007fa632ef5d20 R15: 20c49ba5e353f7cf
-Modules linked in:
-CR2: ffffe8ffffc33c70
----[ end trace 641e2e487fb96738 ]---
-RIP: 0010:percpu_down_read_trylock include/linux/percpu-rwsem.h:82 [inline]
-RIP: 0010:__sb_start_write+0x16e/0x470 fs/super.c:1674
-Code: 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 e3 02 00 00 41 bd 01 00 00 00 bd 01 00 00 00 48 8b 43 68 <65> ff 00 e8 aa 6b b4 ff bf 01 00 00 00 e8 e0 d5 8f ff 31 ff 65 44
-RSP: 0018:ffffc9000a0bfab8 EFLAGS: 00010246
-RAX: 0000607f51633c70 RBX: ffff888098be2380 RCX: ffffffff81bfdf07
-RDX: 1ffff1101317c47d RSI: 0000000000000001 RDI: ffff888098be23e8
-RBP: 0000000000000001 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000001
-R13: 0000000000000001 R14: 0000000000000000 R15: ffff8880854bc0b0
-FS:  00007fa632ef6700(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000446a9f CR3: 000000000011b000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
