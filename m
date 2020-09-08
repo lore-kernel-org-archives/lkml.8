@@ -2,167 +2,238 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711A7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7B1218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:18:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BeN69dOd"
+	by mail.kernel.org (Postfix) with ESMTP id 3A872218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgIHHSY (ORCPT
+        id S1729434AbgIHHSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729231AbgIHHSP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:18:15 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56ADEC061756;
-        Tue,  8 Sep 2020 00:18:13 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 7so9399432pgm.11;
-        Tue, 08 Sep 2020 00:18:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nu11smmO1MLPBr0YyFlQ7QMaiS4dHSCwCtOQC6QvghQ=;
-        b=BeN69dOd73In3yvux1bQOAJFhMWC1wLnRHaJvcHqUsJ+Q63UGjkBTdGZeqfu9OGxay
-         FNj8ecK/niHBS6Nnru8IExabjT20+zTvmH9KsgnL0n7FN9R86a45qN4Cb76Yfv4bJFXM
-         Quj3T9q+qOX+3vLEkVGOXUh70rXFCIDeKE2lhW0JN7hoshxbe66OecvCZ1BpipR0MtcS
-         EPJxBxSH1WCcmU/uMU5zP8WLFN4CFcFMAabSzZRhO/5kfoHwfAmlYTWWrBXNKA3LZKjc
-         xc7mJEm01rN6q1Y7COCC1W29ebbIMiRiEdEa4MU4OxhjQRVj2Wzg5RbiBr95GwcS9Mut
-         8YWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nu11smmO1MLPBr0YyFlQ7QMaiS4dHSCwCtOQC6QvghQ=;
-        b=iiDbcE4lzcklQmiqDbsxujv2Y5Q8Bt3qjQQTtVdSruqJK5H+e7ueLbRHFbMgzAH605
-         qBn9vIl+GZX2J54cEusvcxIedh3QNeYG4zFq1ujij6A0NPrfb06z6MxFX0XQAv5zLkKV
-         ev+R9sTWXDVcAhvCfHgD4EzV8ym3Kys39wUuir4ffWstoEtdl3U6dPlLcq0IK3XxQOx+
-         eKv2Yxtat97o+/LrUCqTl4rghRMvAtSQL6wlSHb6pCVVyw+NcuupxPiwgsy6Gf4xVszw
-         7rPqemPpdKU0kxEoUSV9PN+Kid/RSDbutNqL/SumJgcbYmQa2NAFZ9LHlzPQvwy9VJQM
-         3BHg==
-X-Gm-Message-State: AOAM533o0e6ava7FzYcLbqalJCsIf23CmmBjnBpjmNbFWpuz7l+U3AHe
-        LGT6B9iZz2UHkOYAWMqFa9wEpjCUrIU=
-X-Google-Smtp-Source: ABdhPJyKWwWgF5Vgs/ibNYf3Ni3RsyjIpiAKFC6RiuRkTQz3Mvi0yRcD1cg9VmpKa34bPVoWn+pQpw==
-X-Received: by 2002:a62:33c1:: with SMTP id z184mr23333624pfz.248.1599549492531;
-        Tue, 08 Sep 2020 00:18:12 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id gt11sm6437801pjb.48.2020.09.08.00.18.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2020 00:18:11 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v2] KVM: LAPIC: Reduce world switch latency caused by timer_advance_ns
-Date:   Tue,  8 Sep 2020 15:17:52 +0800
-Message-Id: <1599549472-26052-1-git-send-email-wanpengli@tencent.com>
+        Tue, 8 Sep 2020 03:18:39 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:51678 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729393AbgIHHSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:18:33 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 22C2B1A103C;
+        Tue,  8 Sep 2020 09:18:30 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7896E1A02A9;
+        Tue,  8 Sep 2020 09:18:25 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 999B8402D9;
+        Tue,  8 Sep 2020 09:18:19 +0200 (CEST)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        s.hauer@pengutronix.de, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH V3 1/3] pinctrl: imx: Use function callbacks for SCU related functions
+Date:   Tue,  8 Sep 2020 15:12:04 +0800
+Message-Id: <1599549126-17413-1-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Use function callbacks for SCU related functions in pinctrl-imx.c
+in order to support the scenario of PINCTRL_IMX is built in while
+PINCTRL_IMX_SCU is built as module, all drivers using SCU pinctrl
+driver need to initialize the SCU related function callback, and
+no need to check CONFIG_PINCTRL_IMX_SCU anymore, hence stub functions
+also can be removed.
 
-All the checks in lapic_timer_int_injected(), __kvm_wait_lapic_expire(), and 
-these function calls waste cpu cycles when the timer mode is not tscdeadline. 
-We can observe ~1.3% world switch time overhead by kvm-unit-tests/vmexit.flat 
-vmcall testing on AMD server. This patch reduces the world switch latency 
-caused by timer_advance_ns feature when the timer mode is not tscdeadline by 
-simpling move the check against apic->lapic_timer.expired_tscdeadline much 
-earlier.
-
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
-v1 -> v2:
- * move the check against apic->lapic_timer.expired_tscdeadline much earlier 
-   instead of reset timer_advance_ns
+Changes since V2:
+	- move the removal of #ifdef CONFIG_PINCTRL_IMX_SCU and #else block from
+	  patch #2 to this patch.
+---
+ drivers/pinctrl/freescale/pinctrl-imx.c     |  8 ++--
+ drivers/pinctrl/freescale/pinctrl-imx.h     | 57 +++++++++++------------------
+ drivers/pinctrl/freescale/pinctrl-imx8dxl.c |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qm.c  |  3 ++
+ drivers/pinctrl/freescale/pinctrl-imx8qxp.c |  3 ++
+ 5 files changed, 35 insertions(+), 39 deletions(-)
 
- arch/x86/kvm/lapic.c   | 11 +++++------
- arch/x86/kvm/svm/svm.c |  4 +---
- arch/x86/kvm/vmx/vmx.c |  4 +---
- 3 files changed, 7 insertions(+), 12 deletions(-)
-
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 3b32d3b..51ed4f0 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1582,9 +1582,6 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u64 guest_tsc, tsc_deadline;
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index 507e4af..b80c450 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -373,7 +373,7 @@ static int imx_pinconf_get(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
  
--	if (apic->lapic_timer.expired_tscdeadline == 0)
--		return;
--
- 	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
- 	apic->lapic_timer.expired_tscdeadline = 0;
- 	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-@@ -1599,7 +1596,10 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 
- void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- {
--	if (lapic_timer_int_injected(vcpu))
-+	if (lapic_in_kernel(vcpu) &&
-+	    vcpu->arch.apic->lapic_timer.expired_tscdeadline &&
-+	    vcpu->arch.apic->lapic_timer.timer_advance_ns &&
-+	    lapic_timer_int_injected(vcpu))
- 		__kvm_wait_lapic_expire(vcpu);
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_get_scu(pctldev, pin_id, config);
++		return info->imx_pinconf_get(pctldev, pin_id, config);
+ 	else
+ 		return imx_pinconf_get_mmio(pctldev, pin_id, config);
  }
- EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
-@@ -1635,8 +1635,7 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool from_timer_fn)
- 	}
+@@ -423,7 +423,7 @@ static int imx_pinconf_set(struct pinctrl_dev *pctldev,
+ 	const struct imx_pinctrl_soc_info *info = ipctl->info;
  
- 	if (kvm_use_posted_timer_interrupt(apic->vcpu)) {
--		if (apic->lapic_timer.timer_advance_ns)
--			__kvm_wait_lapic_expire(vcpu);
-+		kvm_wait_lapic_expire(vcpu);
- 		kvm_apic_inject_pending_timer_irqs(apic);
- 		return;
- 	}
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 0194336..19e622a 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3456,9 +3456,7 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct kvm_vcpu *vcpu)
- 	clgi();
- 	kvm_load_guest_xsave_state(vcpu);
+ 	if (info->flags & IMX_USE_SCU)
+-		return imx_pinconf_set_scu(pctldev, pin_id,
++		return info->imx_pinconf_set(pctldev, pin_id,
+ 					   configs, num_configs);
+ 	else
+ 		return imx_pinconf_set_mmio(pctldev, pin_id,
+@@ -440,7 +440,7 @@ static void imx_pinconf_dbg_show(struct pinctrl_dev *pctldev,
+ 	int ret;
  
--	if (lapic_in_kernel(vcpu) &&
--		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+	kvm_wait_lapic_expire(vcpu);
+ 	if (info->flags & IMX_USE_SCU) {
+-		ret = imx_pinconf_get_scu(pctldev, pin_id, &config);
++		ret = info->imx_pinconf_get(pctldev, pin_id, &config);
+ 		if (ret) {
+ 			dev_err(ipctl->dev, "failed to get %s pinconf\n",
+ 				pin_get_name(pctldev, pin_id));
+@@ -629,7 +629,7 @@ static int imx_pinctrl_parse_groups(struct device_node *np,
+ 	for (i = 0; i < grp->num_pins; i++) {
+ 		pin = &((struct imx_pin *)(grp->data))[i];
+ 		if (info->flags & IMX_USE_SCU)
+-			imx_pinctrl_parse_pin_scu(ipctl, &grp->pins[i],
++			info->imx_pinctrl_parse_pin(ipctl, &grp->pins[i],
+ 						  pin, &list);
+ 		else
+ 			imx_pinctrl_parse_pin_mmio(ipctl, &grp->pins[i],
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 333d32b..fd8c4b6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -75,6 +75,21 @@ struct imx_cfg_params_decode {
+ 	bool invert;
+ };
  
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a544351..d6e1656 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6800,9 +6800,7 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 	if (enable_preemption_timer)
- 		vmx_update_hv_timer(vcpu);
++/**
++ * @dev: a pointer back to containing device
++ * @base: the offset to the controller in virtual memory
++ */
++struct imx_pinctrl {
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++	void __iomem *base;
++	void __iomem *input_sel_base;
++	const struct imx_pinctrl_soc_info *info;
++	struct imx_pin_reg *pin_regs;
++	unsigned int group_index;
++	struct mutex mutex;
++};
++
+ struct imx_pinctrl_soc_info {
+ 	const struct pinctrl_pin_desc *pins;
+ 	unsigned int npins;
+@@ -98,21 +113,13 @@ struct imx_pinctrl_soc_info {
+ 				  struct pinctrl_gpio_range *range,
+ 				  unsigned offset,
+ 				  bool input);
+-};
+-
+-/**
+- * @dev: a pointer back to containing device
+- * @base: the offset to the controller in virtual memory
+- */
+-struct imx_pinctrl {
+-	struct device *dev;
+-	struct pinctrl_dev *pctl;
+-	void __iomem *base;
+-	void __iomem *input_sel_base;
+-	const struct imx_pinctrl_soc_info *info;
+-	struct imx_pin_reg *pin_regs;
+-	unsigned int group_index;
+-	struct mutex mutex;
++	int (*imx_pinconf_get)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *config);
++	int (*imx_pinconf_set)(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			       unsigned long *configs, unsigned int num_configs);
++	void (*imx_pinctrl_parse_pin)(struct imx_pinctrl *ipctl,
++				      unsigned int *pin_id, struct imx_pin *pin,
++				      const __be32 **list_p);
+ };
  
--	if (lapic_in_kernel(vcpu) &&
--		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+	kvm_wait_lapic_expire(vcpu);
+ #define IMX_CFG_PARAMS_DECODE(p, m, o) \
+@@ -137,7 +144,6 @@ struct imx_pinctrl {
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 			const struct imx_pinctrl_soc_info *info);
  
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+-#ifdef CONFIG_PINCTRL_IMX_SCU
+ #define BM_PAD_CTL_GP_ENABLE		BIT(30)
+ #define BM_PAD_CTL_IFMUX_ENABLE		BIT(31)
+ #define BP_PAD_CTL_IFMUX		27
+@@ -150,23 +156,4 @@ int imx_pinconf_set_scu(struct pinctrl_dev *pctldev, unsigned pin_id,
+ void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+ 			       unsigned int *pin_id, struct imx_pin *pin,
+ 			       const __be32 **list_p);
+-#else
+-static inline int imx_pinconf_get_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *config)
+-{
+-	return -EINVAL;
+-}
+-static inline int imx_pinconf_set_scu(struct pinctrl_dev *pctldev,
+-				      unsigned pin_id, unsigned long *configs,
+-				      unsigned num_configs)
+-{
+-	return -EINVAL;
+-}
+-static inline void imx_pinctrl_parse_pin_scu(struct imx_pinctrl *ipctl,
+-					    unsigned int *pin_id,
+-					    struct imx_pin *pin,
+-					    const __be32 **list_p)
+-{
+-}
+-#endif
+ #endif /* __DRIVERS_PINCTRL_IMX_H */
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+index 12b97da..d3020c0 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8dxl.c
+@@ -159,6 +159,9 @@ static struct imx_pinctrl_soc_info imx8dxl_pinctrl_info = {
+ 	.pins = imx8dxl_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8dxl_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8dxl_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qm.c b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+index 095acf4..8f46b940 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qm.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qm.c
+@@ -292,6 +292,9 @@ static const struct imx_pinctrl_soc_info imx8qm_pinctrl_info = {
+ 	.pins = imx8qm_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qm_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qm_pinctrl_of_match[] = {
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+index 81ebd4c..6776ad6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx8qxp.c
+@@ -198,6 +198,9 @@ static struct imx_pinctrl_soc_info imx8qxp_pinctrl_info = {
+ 	.pins = imx8qxp_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(imx8qxp_pinctrl_pads),
+ 	.flags = IMX_USE_SCU,
++	.imx_pinconf_get = imx_pinconf_get_scu,
++	.imx_pinconf_set = imx_pinconf_set_scu,
++	.imx_pinctrl_parse_pin = imx_pinctrl_parse_pin_scu,
+ };
+ 
+ static const struct of_device_id imx8qxp_pinctrl_of_match[] = {
 -- 
 2.7.4
 
