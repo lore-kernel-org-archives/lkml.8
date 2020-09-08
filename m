@@ -2,117 +2,171 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5980C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282082076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mungewell.org header.i=@mungewell.org header.b="jcfqXA0g"
+	by mail.kernel.org (Postfix) with ESMTP id 8FAC12075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592540;
+	bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QUNMajMObpkUxsAK9MtzWnK0D2kfFBy9x5VT6gltapwFAMlwTNv1kzzRgAqAZze6p
+	 63hWha+ph38SityHuzNgrdRIM4/kA+vJc8TjkKF7jG9xkWGf14VIP52kxmxva3DQxg
+	 SslK34Ohb9qjiDYfVgTVz0IBxEpCKAG6JeIJJC2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731928AbgIHTPb (ORCPT
+        id S1731918AbgIHTP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:15:31 -0400
-Received: from host18.canaca.com ([66.49.204.205]:47170 "EHLO
-        host18.canaca.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731770AbgIHTPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:15:12 -0400
-X-Greylist: delayed 1798 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 15:15:11 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=mungewell.org; s=default; h=Content-Transfer-Encoding:Content-Type:
-        Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0NuhWQcldBTxDdRHEdA5HQdXlMGQ0kB4cg2kzRhE4nU=; b=jcfqXA0g4BE3azXvQ6oOuI1222
-        MKa3Cexlprcf4yPE18W4BWQ0/DM5kytYj2gcp1NAW2c7KVyQZHd1s8YwT/QvoZFV2AWiRLHgteUz0
-        n9M6JxR5SelYuThhbU8G3H54pK9SdogEWfYxdNrWOJotqHpwcu//xjAjMx0LUYy6sIX8tOKlXiZZ1
-        GoZgq59T4eOo5GxSn5ab2xf56vGIlvdIr3EssbIwp7XOOdiwKkw9p2WEdMliUs9wsdae0BrvkkPma
-        qxRWpeGcYTvle+8Io5zd3NGGD2Z/arf+OchTKZeGg7RqUZM2avubca1m1SdGXL2InMctzgvDLTKO+
-        Fw1SStfA==;
-Received: from [::1] (port=54410 helo=host18.canaca.com)
-        by host18.canaca.com with esmtpa (Exim 4.93)
-        (envelope-from <simon@mungewell.org>)
-        id 1kFicC-0005pR-QJ; Tue, 08 Sep 2020 14:45:13 -0400
+        Tue, 8 Sep 2020 15:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731178AbgIHQEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:04:45 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3A3F2469A;
+        Tue,  8 Sep 2020 15:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579589;
+        bh=3KaYicKDGMNDnpLifiUlHK3tIkjkxgO2LtaIO+noLlg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jUojeToZA7efW5HSzBGuaOSbxI1VkcQKbRBx0Czv6mgidGAtTpg3pstxYvSZIxShJ
+         4+C1XdlyiODeLVidz8uiDkKdr+X2buwdaye3qNi2ey8XRIG/kYQkJTqlsW0nog/NMl
+         wFKO0ZC5Jf5YZ6toRk5m+1kH6b+f4gQMLhd3+4sg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 111/186] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
+Date:   Tue,  8 Sep 2020 17:24:13 +0200
+Message-Id: <20200908152247.014487473@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Date:   Tue, 08 Sep 2020 12:45:10 -0600
-From:   simon@mungewell.org
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 4.19 69/88] ALSA: firewire-digi00x: exclude Avid
- Adrenaline from detection
-In-Reply-To: <20200908152224.621006485@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
- <20200908152224.621006485@linuxfoundation.org>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <e214540d9645c4e285ee7f6475476973@mungewell.org>
-X-Sender: simon@mungewell.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-OutGoing-Spam-Status: No, score=-1.0
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - host18.canaca.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - mungewell.org
-X-Get-Message-Sender-Via: host18.canaca.com: authenticated_id: simon@mungewell.org
-X-Authenticated-Sender: host18.canaca.com: simon@mungewell.org
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-09-08 09:26, Greg Kroah-Hartman wrote:
-> From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-> 
-> commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
-> 
-> Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound 
-> to.
-> However, as long as he investigated, the design of this model is hardly
-> similar to the one of Digi 00x family. It's better to exclude the model
-> from modalias of ALSA firewire-digi00x driver.
-> 
-> This commit changes device entries so that the model is excluded.
-> 
+From: Tony Lindgren <tony@atomide.com>
 
-Just to add my 'ACK-BY'. Yes, the Avid Adrenaline seems to be based 
-around a totally different method of control and will likely need a 
-separate driver.
+[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
 
-I believe that this includes the following devices: AVID Adrenaline, 
-AVID Mojo, AVID Mojo SDI, AVID AV Option and others... from Windows 
-driver 'FlameThrower' inf.
---
-[AvidHardware.NTx86]
-%Avid_Gryphon%		= Flamethrower, 1394\Avid_Technology&Gryphon
-%Avid_Raven%		= Flamethrower, 1394\Avid_Technology&Raven
-%Avid_Adrenaline%	= Flamethrower, 1394\Avid_Technology&Adrenaline
-%Avid_FireBobPro%	= Flamethrower, 1394\Avid_Technology&FireBobPro
-%Avid_Mojo%		= Flamethrower, 1394\Avid_Technology&Mojo
-%Avid_FireBoB%		= Flamethrower, 1394\Avid_Technology&FireBoB
-%Avid_FireBoBV2%	= Flamethrower, 1394\Avid_Technology&FireBoBV2
-%Avid_DigiBoB%		= Flamethrower, 1394\Avid_Technology&DigiBoB
-%Avid_AVoptionV10%	= Flamethrower, 1394\Avid_Technology&AVoptionV10
---
+We can sometimes get bogus thermal shutdowns on omap4430 at least with
+droid4 running idle with a battery charger connected:
 
-There are some details in this thread, for anyone interested in 
-following up.
-https://sourceforge.net/p/ffado/mailman/message/37078754/
+thermal thermal_zone0: critical temperature reached (143 C), shutting down
 
-Cheers,
-Simon.
+Dumping out the register values shows we can occasionally get a 0x7f value
+that is outside the TRM listed values in the ADC conversion table. And then
+we get a normal value when reading again after that. Reading the register
+multiple times does not seem help avoiding the bogus values as they stay
+until the next sample is ready.
 
-PS. Have a Mojo SDI inbound, will confirm when it arrives.
+Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
+should have values from 13 to 107 listed with a total of 95 values. But
+looking at the omap4430_adc_to_temp array, the values are off, and the
+end values are missing. And it seems that the 4430 ADC table is similar
+to omap3630 rather than omap4460.
+
+Let's fix the issue by using values based on the omap3630 table and just
+ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
+the missing values added while the TRM table only shows every second
+value.
+
+Note that sometimes the ADC register values within the valid table can
+also be way off for about 1 out of 10 values. But it seems that those
+just show about 25 C too low values rather than too high values. So those
+do not cause a bogus thermal shutdown.
+
+Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
+ .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
+ 2 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+index 63b02bfb2adf6..fdb8a495ab69a 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
++++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+@@ -37,20 +37,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
+ 
+ /*
+  * Temperature values in milli degree celsius
+- * ADC code values from 530 to 923
++ * ADC code values from 13 to 107, see TRM
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
+  */
+ static const int
+ omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
+-	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
+-	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
+-	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
+-	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
+-	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
+-	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
+-	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
+-	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
+-	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
+-	117000, 118000, 120000, 122000, 123000,
++	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
++	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
++	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
++	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
++	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
++	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
++	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
++	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
++	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
++	115000, 117000, 118500, 120000, 122000, 123500, 125000,
+ };
+ 
+ /* OMAP4430 data */
+diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+index a453ff8eb313e..9a3955c3853ba 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+@@ -53,9 +53,13 @@
+  * and thresholds for OMAP4430.
+  */
+ 
+-/* ADC conversion table limits */
+-#define OMAP4430_ADC_START_VALUE			0
+-#define OMAP4430_ADC_END_VALUE				127
++/*
++ * ADC conversion table limits. Ignore values outside the TRM listed
++ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
++ */
++#define OMAP4430_ADC_START_VALUE			13
++#define OMAP4430_ADC_END_VALUE				107
+ /* bandgap clock limits (no control on 4430) */
+ #define OMAP4430_MAX_FREQ				32768
+ #define OMAP4430_MIN_FREQ				32768
+-- 
+2.25.1
+
+
+
