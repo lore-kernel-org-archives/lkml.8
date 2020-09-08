@@ -2,149 +2,115 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77855C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AA7C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F28520759
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0862078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588669;
-	bh=JHBaui2oYNsB+cpUjU0rdcQDgVUS16DZ10SJ3jdO2qQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCSFFH90ETyLT9MN1L51q47XO6Xui/lkq1sDuNpN5R9My2Q6+tIqPe9+WAEnXPGIq
-	 3jaLWP4LQBHhQCquhrnNHOyARzb+s1o0maxjvM/Nz2N5vWxMrsFuVI69PbFQp3kcxd
-	 2ZaJ4+7BymWt8aAqciB5PL8t2ROOtvLN4qn9OVTM=
+	s=default; t=1599588678;
+	bh=oUhxj8RBRcNvYEl5H/cZ5yM2IeSXqzhN73HTybZP49g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ep060nJc0fMUWoTMlHQlqaoUXnSxDIhkfK5v4MN7dfcXCxlAbA0+jdL3FWIDnHtfQ
+	 hjOMvuBi9IZxq3p5bGXOB3wUJeN/SMf8BrpDQ5PtxAjWPJ9U7ywpWa7fanm7qlLQNu
+	 STwmFU8O0Rv6oPdarRRap7hZMEoVikcM/6WKsAVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731975AbgIHSLC (ORCPT
+        id S1731634AbgIHSLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:11:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731475AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:43 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3609624766;
-        Tue,  8 Sep 2020 15:41:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579707;
-        bh=JHBaui2oYNsB+cpUjU0rdcQDgVUS16DZ10SJ3jdO2qQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/3iqFO9Hrk+VKpDTW/J9/Bjv+wvYOLGK1iP5EX3pq6p2dcHJHapoWv4rgESraA7p
-         BZlVRJjbg40YJMBkciRVvCpq65U7pJfYfhMwfwzDtl1tG5/5ovgn9UfjY3uBk9m1AL
-         Qn8NB8SJS1gbLl6BiCnDwKfw7lfcroJpbfNB8m5U=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alistair Popple <alistair@popple.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Xu <peterx@redhat.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 175/186] mm/rmap: fixup copying of soft dirty and uffd ptes
-Date:   Tue,  8 Sep 2020 17:25:17 +0200
-Message-Id: <20200908152250.151339235@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:11:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731558AbgIHSJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:09:52 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A783CC061573;
+        Tue,  8 Sep 2020 11:09:45 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id x14so144895wrl.12;
+        Tue, 08 Sep 2020 11:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6JZbDRelE0owW3x0j2stbMNrtJi1xeSDNJV+jIvcxok=;
+        b=gHO+xrMHUUdsCeckLxc7OvhA19uO0YUuTyw14LQYZAw/Mok/Go5mPTZnGc0CmXEh/3
+         LnXzLzY7AoE0qeBn3fuNt3eL0OkYisum5yLi37LrRewcoem9q1TePg13gK85R/LiyP2j
+         KFGY1sjkJ1f8BpKj92K6nHz/xsMFUl3X6GWYs81X3XvdLyWFmXAi279Pesty+FDWEI+7
+         sz0coyljwaKkOU3Ad0eBMOwaKXvkVEp97iUTZK3fTJ3TC3MT5ADLr/nzLqYzq5CrJU8f
+         HRpLJ5jfYu4F7FgwThKMs318mWjTqnSJkmB82svhz6tNXKbdpiNwl8/h0RhD/qayKfkA
+         z+1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=6JZbDRelE0owW3x0j2stbMNrtJi1xeSDNJV+jIvcxok=;
+        b=MqSeRxhdAswLsBiIuMWunWvvlseTD5XNPI6RUnCL7ia7Jl67HsxVgz/jjjEzysiJCK
+         hlyIAm2cJm3FDe32GbOPgfsq/5fxek4L/XmySvB/9I3961R6rlkHxYmwiNiUOp+8b50R
+         geNZR8QZqY2z4Qjojte8uAfNa9OzyMoVvRcN6WbVV2kN68VYxatAS75yi+CghZ5ZiRyJ
+         lqkEiyBbY7/gZkoiyZCYVAdoU7zV7wm3wXsL7R8AuormYorWGsaDnzqbl/4BlnCwCP62
+         l1IIqjWlDLtiQ+H4tYg63xG6FYjXo+9cQXRg/t/N8z62HVDyg6xhjuLiBhJChASxt4E/
+         t74Q==
+X-Gm-Message-State: AOAM530srLg9xZ19ByRhfk40jwdfBD3WpC/ZWXRpByu0gD9426JG+KRV
+        xyheWBfMmMql5879sNzqSEA=
+X-Google-Smtp-Source: ABdhPJyLCwvd4PQUlYNiGnEtDob4p7ltJumxZc9gJTkfDrpGEziRnHnF5z4CtY63hBWnE0JkGbGzZA==
+X-Received: by 2002:a05:6000:151:: with SMTP id r17mr798967wrx.311.1599588581741;
+        Tue, 08 Sep 2020 11:09:41 -0700 (PDT)
+Received: from gmail.com (54007801.dsl.pool.telekom.hu. [84.0.120.1])
+        by smtp.gmail.com with ESMTPSA id f19sm196652wmh.44.2020.09.08.11.09.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:09:41 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 20:09:39 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Will Deacon <will@kernel.org>
+Subject: Re: [GIT PULL] First batch of KVM changes for Linux 5.9
+Message-ID: <20200908180939.GA2378263@gmail.com>
+References: <20200805182606.12621-1-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805182606.12621-1-pbonzini@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alistair Popple <alistair@popple.id.au>
 
-commit ad7df764b7e1c7dc64e016da7ada2e3e1bb90700 upstream.
+hi,
 
-During memory migration a pte is temporarily replaced with a migration
-swap pte.  Some pte bits from the existing mapping such as the soft-dirty
-and uffd write-protect bits are preserved by copying these to the
-temporary migration swap pte.
+* Paolo Bonzini <pbonzini@redhat.com> wrote:
 
-However these bits are not stored at the same location for swap and
-non-swap ptes.  Therefore testing these bits requires using the
-appropriate helper function for the given pte type.
+> Paolo Bonzini (11):
+>       Merge branch 'kvm-async-pf-int' into HEAD
 
-Unfortunately several code locations were found where the wrong helper
-function is being used to test soft_dirty and uffd_wp bits which leads to
-them getting incorrectly set or cleared during page-migration.
+kvmtool broke in this merge window, hanging during bootup right after CPU bringup:
 
-Fix these by using the correct tests based on pte type.
+ [    1.289404]  #63
+ [    0.012468] kvm-clock: cpu 63, msr 6ff69fc1, secondary cpu clock
+ [    0.012468] [Firmware Bug]: CPU63: APIC id mismatch. Firmware: 3f APIC: 14
+ [    1.302320] kvm-guest: KVM setup async PF for cpu 63
+ [    1.302320] kvm-guest: stealtime: cpu 63, msr 1379d7600
 
-Fixes: a5430dda8a3a ("mm/migrate: support un-addressable ZONE_DEVICE page in migration")
-Fixes: 8c3328f1f36a ("mm/migrate: migrate_vma() unmap page from vma while collecting pages")
-Fixes: f45ec5ff16a7 ("userfaultfd: wp: support swap and page migration")
-Signed-off-by: Alistair Popple <alistair@popple.id.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Alistair Popple <alistair@popple.id.au>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200825064232.10023-2-alistair@popple.id.au
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Eventually trigger an RCU stall warning:
 
----
- mm/migrate.c |   15 +++++++++++----
- mm/rmap.c    |    9 +++++++--
- 2 files changed, 18 insertions(+), 6 deletions(-)
+ [   22.302392] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+ [   22.302392] rcu: 	1-...!: (68 GPs behind) idle=00c/0/0x0 softirq=0/0 fqs=0  (false positive?)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2330,10 +2330,17 @@ again:
- 			entry = make_migration_entry(page, mpfn &
- 						     MIGRATE_PFN_WRITE);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pte))
--				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pte))
--				swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			if (pte_present(pte)) {
-+				if (pte_soft_dirty(pte))
-+					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+				if (pte_uffd_wp(pte))
-+					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			} else {
-+				if (pte_swp_soft_dirty(pte))
-+					swp_pte = pte_swp_mksoft_dirty(swp_pte);
-+				if (pte_swp_uffd_wp(pte))
-+					swp_pte = pte_swp_mkuffd_wp(swp_pte);
-+			}
- 			set_pte_at(mm, addr, ptep, swp_pte);
- 
- 			/*
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1511,9 +1511,14 @@ static bool try_to_unmap_one(struct page
- 			 */
- 			entry = make_migration_entry(page, 0);
- 			swp_pte = swp_entry_to_pte(entry);
--			if (pte_soft_dirty(pteval))
-+
-+			/*
-+			 * pteval maps a zone device page and is therefore
-+			 * a swap pte.
-+			 */
-+			if (pte_swp_soft_dirty(pteval))
- 				swp_pte = pte_swp_mksoft_dirty(swp_pte);
--			if (pte_uffd_wp(pteval))
-+			if (pte_swp_uffd_wp(pteval))
- 				swp_pte = pte_swp_mkuffd_wp(swp_pte);
- 			set_pte_at(mm, pvmw.address, pvmw.pte, swp_pte);
- 			/*
+I've bisected this down to the above merge commit. The individual commit:
 
+   b1d405751cd5: ("KVM: x86: Switch KVM guest to using interrupts for page ready APF delivery")
 
+appears to be working fine standalone.
+
+I'm using x86-64 defconfig+kvmconfig on SVM. Can send more info on request.
+
+The kvmtool.git commit I've tested is 90b2d3adadf2.
+
+Thanks,
+
+	Ingo
