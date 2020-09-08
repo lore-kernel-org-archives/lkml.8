@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BEEC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D06C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5FF2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D47A207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589328;
-	bh=mGXVqNlMsEZaGyBVqwlJTei7oBHIO/a7GkgRWLH8YRg=;
+	s=default; t=1599589330;
+	bh=RVr8PcWE29fyPNXwUF/aGB4qkOtdGavpST2mHQkdMws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyD7pWJvj6pgN+BxAg0/23ad20SW+NEA99to2lxuOOTl5kDPJnwOoE+0+Gzbzd/7Q
-	 JKTOde4pprHgNPmKyGy4tjieNQrgnLtna432k4NmhgghctG0whNevT4XUDXmlwVfom
-	 ebnLWVNonHv4BMAMWe6GOoaKK1VPhKNUCMcWotIY=
+	b=hPeYUbkvzEp+LTCQAlnCZssmO5zhfZutpTp+5zNkjkoEhI9Kzy6BB+ab1rvCmp6jK
+	 es4Ww9SZ/lWrqrWpVAjZg0oZjIFav+WJduiHmCCp55wiIVh7ngPyU56kNguBDSIhcI
+	 y2BNnCeAShvLzbtWUTz9YNXkHItpZB0CWlrDdawg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbgIHSWG (ORCPT
+        id S1732034AbgIHSWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55374 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731313AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731454AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F0E72475D;
-        Tue,  8 Sep 2020 15:41:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F83624736;
+        Tue,  8 Sep 2020 15:41:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579697;
-        bh=mGXVqNlMsEZaGyBVqwlJTei7oBHIO/a7GkgRWLH8YRg=;
+        s=default; t=1599579660;
+        bh=RVr8PcWE29fyPNXwUF/aGB4qkOtdGavpST2mHQkdMws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQ7Gz1EBJdOxm4Od9+FV9rYjEL1fajisgOhsMiYMHo4KqLy3uYx+XoNICpedQ1Td6
-         iJ9Ah+mo+RXUzbdo/69az3AGDrKPQFgyt1w5f1UZ9VR1OuxUPRe/3ticx8chYN9jxz
-         Nx8ZRqf2Udef2rbR9ItawBFMin+mpxQ6AqFSy5QA=
+        b=bpRLfyUdIZBK8DxjYP/miDMT0BSxN2JWgsAAZYzqFZZYrl9PXgXwMZaGt8r5XGEIA
+         rXqVjynSGVR7bR6qH5+gubITv9hRnRQWJHPKfMc9VrPwx7EcutqSYaEYaJTasK4fg1
+         Z50jr0zcFgqZvrS11NQYQnHS6WSzLrr3zze4V8lM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.8 185/186] cfg80211: regulatory: reject invalid hints
-Date:   Tue,  8 Sep 2020 17:25:27 +0200
-Message-Id: <20200908152250.639747428@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 142/186] ALSA; firewire-tascam: exclude Tascam FE-8 from detection
+Date:   Tue,  8 Sep 2020 17:24:44 +0200
+Message-Id: <20200908152248.546056788@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,34 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 47caf685a6854593348f216e0b489b71c10cbe03 upstream.
+commit 0bd8bce897b6697bbc286b8ba473aa0705fe394b upstream.
 
-Reject invalid hints early in order to not cause a kernel
-WARN later if they're restored to or similar.
+Tascam FE-8 is known to support communication by asynchronous transaction
+only. The support can be implemented in userspace application and
+snd-firewire-ctl-services project has the support. However, ALSA
+firewire-tascam driver is bound to the model.
 
-Reported-by: syzbot+d451401ffd00a60677ee@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=d451401ffd00a60677ee
-Link: https://lore.kernel.org/r/20200819084648.13956-1-johannes@sipsolutions.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+This commit changes device entries so that the model is excluded. In a
+commit 53b3ffee7885 ("ALSA: firewire-tascam: change device probing
+processing"), I addressed to the concern that version field in
+configuration differs depending on installed firmware. However, as long
+as I checked, the version number is fixed. It's safe to return version
+number back to modalias.
+
+Fixes: 53b3ffee7885 ("ALSA: firewire-tascam: change device probing processing")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200823075537.56255-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/reg.c |    3 +++
- 1 file changed, 3 insertions(+)
+ sound/firewire/tascam/tascam.c |   33 +++++++++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 4 deletions(-)
 
---- a/net/wireless/reg.c
-+++ b/net/wireless/reg.c
-@@ -2944,6 +2944,9 @@ int regulatory_hint_user(const char *alp
- 	if (WARN_ON(!alpha2))
- 		return -EINVAL;
+--- a/sound/firewire/tascam/tascam.c
++++ b/sound/firewire/tascam/tascam.c
+@@ -39,9 +39,6 @@ static const struct snd_tscm_spec model_
+ 		.midi_capture_ports = 2,
+ 		.midi_playback_ports = 4,
+ 	},
+-	// This kernel module doesn't support FE-8 because the most of features
+-	// can be implemented in userspace without any specific support of this
+-	// module.
+ };
  
-+	if (!is_world_regdom(alpha2) && !is_an_alpha2(alpha2))
-+		return -EINVAL;
-+
- 	request = kzalloc(sizeof(struct regulatory_request), GFP_KERNEL);
- 	if (!request)
- 		return -ENOMEM;
+ static int identify_model(struct snd_tscm *tscm)
+@@ -211,11 +208,39 @@ static void snd_tscm_remove(struct fw_un
+ }
+ 
+ static const struct ieee1394_device_id snd_tscm_id_table[] = {
++	// Tascam, FW-1884.
++	{
++		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_SPECIFIER_ID |
++			       IEEE1394_MATCH_VERSION,
++		.vendor_id = 0x00022e,
++		.specifier_id = 0x00022e,
++		.version = 0x800000,
++	},
++	// Tascam, FE-8 (.version = 0x800001)
++	// This kernel module doesn't support FE-8 because the most of features
++	// can be implemented in userspace without any specific support of this
++	// module.
++	//
++	// .version = 0x800002 is unknown.
++	//
++	// Tascam, FW-1082.
++	{
++		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_SPECIFIER_ID |
++			       IEEE1394_MATCH_VERSION,
++		.vendor_id = 0x00022e,
++		.specifier_id = 0x00022e,
++		.version = 0x800003,
++	},
++	// Tascam, FW-1804.
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
+-			       IEEE1394_MATCH_SPECIFIER_ID,
++			       IEEE1394_MATCH_SPECIFIER_ID |
++			       IEEE1394_MATCH_VERSION,
+ 		.vendor_id = 0x00022e,
+ 		.specifier_id = 0x00022e,
++		.version = 0x800004,
+ 	},
+ 	{}
+ };
 
 
