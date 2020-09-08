@@ -7,98 +7,107 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8916C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A2DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A661220C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 240F6215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599560145;
-	bh=vW65TbwI8SwZiwFXgxSf5xZsxuSUgeC5F1theLDAloE=;
+	s=default; t=1599560158;
+	bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y+ijfy0hu8f4dNG4ENjBaFiAMXlPWnM5P57TFzFIx2igqdafk1mYpFC7/Fo/h1RME
-	 +dnZ5JbNk+Y+iy8ZQF8VDuqUcXwkd4uamtDcuWQ467tIsIrmSuzbP5MjTj0zIX4Eo2
-	 sYq840FebhRsBgVtwnqx3aMQIMsnKmlyum+lzERM=
+	b=KM04cvb5lOSXlfOA9D8/BKIL9CQXX0tuS8QETenQWWAUmKQDKMNUkD8nKdToikDiy
+	 c8ot7IdmYsx77fCiRoLOMIaMXgmrqnJ33Xm6awhOvuHNWFKRF75N7F6CsrMFv5C8Vb
+	 HRR0mL4whu9GDLNnmmbdgK3sjws50/PGytL/5ijE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgIHKPn (ORCPT
+        id S1729512AbgIHKPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:15:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59740 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 06:15:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgIHKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728828AbgIHKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 06:12:32 -0400
 Received: from mail.kernel.org (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6052177B;
+        by mail.kernel.org (Postfix) with ESMTPSA id AD899216C4;
         Tue,  8 Sep 2020 10:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599559951;
-        bh=vW65TbwI8SwZiwFXgxSf5xZsxuSUgeC5F1theLDAloE=;
+        bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XOTKlvG5RcCQyQUg8lIy9/a/rI0DPNURl0LHFw87QllN/YnsnO1dSvU2sO5+vmnIZ
-         yibeTs10ffagpvTOkXTtm1U9VSw1fqKzjSDLLfq9i8xvyBnfy6OIksjg2FNmjuSAfv
-         wdaHeNeoG8dk0Vo5jCikWEnmkGJywKXPyHnl9mIE=
+        b=gvLSkwfAcQ8V+/WodB5dkaMyFIcNgQ0c4wdSL3yhrGFVXRe5cofRHaIdQUSO9Pyvo
+         22LHFHkAi+tqdaOSBaLBqRm0HEf3OmJUsWx/Mwlq5tZ5/pVkZLdzjW1ge2Y2lp7kzR
+         fdQPz8NWeAdP4f1t4VTa+wDsS1nprFL483diKtFE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kFac1-00B3qb-1w; Tue, 08 Sep 2020 12:12:29 +0200
+        id 1kFac1-00B3qh-4u; Tue, 08 Sep 2020 12:12:29 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/5] media: atomisp: get rid of some cleanup leftovers
-Date:   Tue,  8 Sep 2020 12:12:22 +0200
-Message-ID: <1e7968e715e23b90ab4994b32301a6cf4faffca8.1599141140.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 4/5] media: atomisp: move a static constant out of a header file
+Date:   Tue,  8 Sep 2020 12:12:25 +0200
+Message-ID: <a3280622dd3c85360c789e156f7b9d03bc8b2de3.1599141140.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
 References: <cover.1599141140.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200908101222.GSM-30jtu6DDXu1JsF0PgFRlLlDaAPrs33-jtwpX2BA@z>
+Message-ID: <20200908101225.0t3IwQzyojisF31MYRw4LvTjENwdeOzzFtBcZMiBa6o@z>
 
-The code that used to check for ISP2400/2401 version were
-using the revision number in order to decide wheather
-version should be used. With the new version, the code
-doesn't need to check anymore for ISP version.
+Gcc reports that input_formatter_alignment is not used:
 
-Fixes: ca133c395f2f ("media: atomisp: improve device detection code")
+	In file included from ./drivers/staging/media/atomisp//pci/hive_isp_css_include/input_formatter.h:34,
+	                 from drivers/staging/media/atomisp//pci/runtime/debug/src/ia_css_debug.c:55:
+	./drivers/staging/media/atomisp//pci/hive_isp_css_common/host/input_formatter_local.h:118:27: warning: ‘input_formatter_alignment’ defined but not used [-Wunused-const-variable=]
+
+However, it is, but only inside input_formatter.c.
+
+So, move it out of the header file.
+
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/staging/media/atomisp/pci/atomisp_v4l2.c | 3 ---
- 1 file changed, 3 deletions(-)
+ .../atomisp/pci/hive_isp_css_common/host/input_formatter.c    | 4 ++++
+ .../pci/hive_isp_css_common/host/input_formatter_local.h      | 4 ----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-index 8c1d5a3b8f45..304857bffc6a 100644
---- a/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-+++ b/drivers/staging/media/atomisp/pci/atomisp_v4l2.c
-@@ -1429,7 +1429,6 @@ atomisp_load_firmware(struct atomisp_device *isp)
-  */
- static bool is_valid_device(struct pci_dev *pdev, const struct pci_device_id *id)
- {
--	unsigned int a0_max_id = 0;
- 	const char *name;
- 	const char *product;
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
+index 1b196cd265b9..5cd6136f21a2 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
+@@ -27,6 +27,10 @@
+ #include "input_formatter_private.h"
+ #endif /* __INLINE_INPUT_FORMATTER__ */
  
-@@ -1437,11 +1436,9 @@ static bool is_valid_device(struct pci_dev *pdev, const struct pci_device_id *id
++static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
++	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
++};
++
+ const hrt_address HIVE_IF_SRST_ADDRESS[N_INPUT_FORMATTER_ID] = {
+ 	INPUT_FORMATTER0_SRST_OFFSET,
+ 	INPUT_FORMATTER1_SRST_OFFSET,
+diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
+index 94fff77584f7..dfb593c109af 100644
+--- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
++++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
+@@ -115,8 +115,4 @@ struct input_formatter_bin_state_s {
+ 	u32	en_status_update;
+ };
  
- 	switch (id->device & ATOMISP_PCI_DEVICE_SOC_MASK) {
- 	case ATOMISP_PCI_DEVICE_SOC_MRFLD:
--		a0_max_id = ATOMISP_PCI_REV_MRFLD_A0_MAX;
- 		name = "Merrifield";
- 		break;
- 	case ATOMISP_PCI_DEVICE_SOC_BYT:
--		a0_max_id = ATOMISP_PCI_REV_BYT_A0_MAX;
- 		name = "Baytrail";
- 		break;
- 	case ATOMISP_PCI_DEVICE_SOC_ANN:
+-static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
+-	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
+-};
+-
+ #endif /* __INPUT_FORMATTER_LOCAL_H_INCLUDED__ */
 -- 
 2.26.2
 
