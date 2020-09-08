@@ -2,57 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8980C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51ECC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44A120936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA2120936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587387;
-	bh=EQzLbCske+JUTVpZbH8quPemw0u13djcyc3CyWwzxEA=;
+	s=default; t=1599587389;
+	bh=6Fez109ttIMLRmVVxANrHk+iYVZxm0H8XRvVFoMJ/EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DIdHWc/9P2RXN3E81imdEGKWPcJadH6i53cBfJ6WuGe1/yntV0Ead0maKLELPeEkE
-	 iM+T9IQy8iIZDgtxiBY7jPuiv/3AJc+fBZPGtdMO5LO2RNw6zY5iEAI+hktK4yfjeH
-	 f8T1QW714AD3lzcQUHDZFQEhPxoT2i37aozlncr0=
+	b=WpIPyIu6ZnOTETCeUvPHwXMzZnScEjLE0gWUNuBNcv9qV6IpKa1x6A6R1V+MPx9bK
+	 CVJFwUP2Xmug5Zk9mTPfiXewc4IleHFEQhbAN36nNWAh+Z9PUE0RC83AGcqEy1Ou6x
+	 fxdZ+HXSz/h3HIXdsq1tX68BPvJSFJj4Gxg16TTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731704AbgIHRtk (ORCPT
+        id S1731871AbgIHRtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731615AbgIHQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731612AbgIHQN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:59 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD7D248EF;
-        Tue,  8 Sep 2020 15:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2036248E5;
+        Tue,  8 Sep 2020 15:52:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580388;
-        bh=EQzLbCske+JUTVpZbH8quPemw0u13djcyc3CyWwzxEA=;
+        s=default; t=1599580379;
+        bh=6Fez109ttIMLRmVVxANrHk+iYVZxm0H8XRvVFoMJ/EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wbi1vQPkSMRzNox7uAbv+gwyhs18f8iLL+Q0Vg+Z5Dy8P1A/kEB8uA5T/uip5O8HI
-         OqHPLZA6UTQbU3r3jrXn9Jx+pqWpDsgb/YiFA3UTdh+BUKknQutkidct+57D/TE1h5
-         tdC4pnsgilizPJ2BX2AYXKQO2b1yDHYs96xhgg2A=
+        b=Lcm6zXRsbrxA3SoCFjmVGl6UNFw+wMJ9MA6VBZUWXwwBL81cVaaMJr7eQAASEHXUY
+         9Rgyl53O6dtB/SMy4JWFLJ2zti+kmGzT4XeVbiOj2akJi5DYN9nN442O2SU5BodKJo
+         TJVjDhXAYzsi1a4AqhwwQtYpO0r0NF6h399ZHC1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dongli Zhang <dongli.zhang@oracle.com>,
-        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 57/65] mm: slub: fix conversion of freelist_corrupted()
-Date:   Tue,  8 Sep 2020 17:26:42 +0200
-Message-Id: <20200908152220.035986942@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 13/65] batman-adv: Fix own OGM check in aggregated OGMs
+Date:   Tue,  8 Sep 2020 17:25:58 +0200
+Message-Id: <20200908152217.709656446@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -65,76 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
+[ Upstream commit d8bf0c01642275c7dca1e5d02c34e4199c200b1f ]
 
-Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
-deactivate_slab()") suffered an update when picked up from LKML [1].
+The own OGM check is currently misplaced and can lead to the following
+issues:
 
-Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
-created a no-op statement.  Fix it by sticking to the behavior intended
-in the original patch [1].  In addition, make freelist_corrupted()
-immune to passing NULL instead of &freelist.
+For one thing we might receive an aggregated OGM from a neighbor node
+which has our own OGM in the first place. We would then not only skip
+our own OGM but erroneously also any other, following OGM in the
+aggregate.
 
-The issue has been spotted via static analysis and code review.
+For another, we might receive an OGM aggregate which has our own OGM in
+a place other then the first one. Then we would wrongly not skip this
+OGM, leading to populating the orginator and gateway table with ourself.
 
-[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
-
-Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dongli Zhang <dongli.zhang@oracle.com>
-Cc: Joe Jin <joe.jin@oracle.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ net/batman-adv/bat_v_ogm.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -659,12 +659,12 @@ static void slab_fix(struct kmem_cache *
- }
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index f0abbbdafe07f..c49c48866a3fc 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -715,6 +715,12 @@ static void batadv_v_ogm_process(const struct sk_buff *skb, int ogm_offset,
+ 		   ntohl(ogm_packet->seqno), ogm_throughput, ogm_packet->ttl,
+ 		   ogm_packet->version, ntohs(ogm_packet->tvlv_len));
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
--	    !check_valid_pointer(s, page, nextfree)) {
--		object_err(s, page, freelist, "Freechain corrupt");
--		freelist = NULL;
-+	    !check_valid_pointer(s, page, nextfree) && freelist) {
-+		object_err(s, page, *freelist, "Freechain corrupt");
-+		*freelist = NULL;
- 		slab_fix(s, "Isolate corrupted freechain");
- 		return true;
- 	}
-@@ -1354,7 +1354,7 @@ static inline void dec_slabs_node(struct
- 							int objects) {}
++	if (batadv_is_my_mac(bat_priv, ogm_packet->orig)) {
++		batadv_dbg(BATADV_DBG_BATMAN, bat_priv,
++			   "Drop packet: originator packet from ourself\n");
++		return;
++	}
++
+ 	/* If the throughput metric is 0, immediately drop the packet. No need
+ 	 * to create orig_node / neigh_node for an unusable route.
+ 	 */
+@@ -842,11 +848,6 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	if (batadv_is_my_mac(bat_priv, ethhdr->h_source))
+ 		goto free_skb;
  
- static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
--			       void *freelist, void *nextfree)
-+			       void **freelist, void *nextfree)
- {
- 	return false;
- }
-@@ -2053,7 +2053,7 @@ static void deactivate_slab(struct kmem_
- 		 * 'freelist' is already corrupted.  So isolate all objects
- 		 * starting at 'freelist'.
- 		 */
--		if (freelist_corrupted(s, page, freelist, nextfree))
-+		if (freelist_corrupted(s, page, &freelist, nextfree))
- 			break;
- 
- 		do {
+-	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
+-
+-	if (batadv_is_my_mac(bat_priv, ogm_packet->orig))
+-		goto free_skb;
+-
+ 	batadv_inc_counter(bat_priv, BATADV_CNT_MGMT_RX);
+ 	batadv_add_counter(bat_priv, BATADV_CNT_MGMT_RX_BYTES,
+ 			   skb->len + ETH_HLEN);
+-- 
+2.25.1
+
 
 
