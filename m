@@ -2,52 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E8FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26019C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBC012137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE80E2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593660;
-	bh=4l/U46XanlA4DH8H4B0VrxArJ8T6qxn2PzfMC1WuoQw=;
+	s=default; t=1599593662;
+	bh=1N9jtClMjK3hPv7nNn/h5WjCJxPqjL1H9RBmw7JY+bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQrbTQqoJ4fDmm0z0o6Te5b0LYbtfFIYn8kNSxBYYsoU9bC5C7ZkZPX4trkPetikB
-	 mBOwKkV/Ng/k6p5JHWqddtGIwIG5CB7/VCl9kKRLvLi0YeGqL/xaaR1XxKOjv1KCFm
-	 67PnNNL1AYY97njJez6+Zo68VQTMI1eXAtiFAX2o=
+	b=Ie6ou4X7oOvPlK04IFKWaxladjiulei+62mrilNMq/Vi4CncRBnUNmyBG9287SASf
+	 1acit5j+7YFO2e+fyyOGWxcWAeApRkjSlclEs80xZfY3ZYif9AwtTs7sj5eIRlVl7i
+	 aRUb/M7SN1wNNOvICtv49MV8mecbQE+vOpWPt8pA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732206AbgIHTeS (ORCPT
+        id S1732294AbgIHTeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:34:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731018AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731008AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:58:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 709DA2405E;
-        Tue,  8 Sep 2020 15:38:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D209F246E5;
+        Tue,  8 Sep 2020 15:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579504;
-        bh=4l/U46XanlA4DH8H4B0VrxArJ8T6qxn2PzfMC1WuoQw=;
+        s=default; t=1599579613;
+        bh=1N9jtClMjK3hPv7nNn/h5WjCJxPqjL1H9RBmw7JY+bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vlls4VxWhXKYqRl13CjuNMVARoU4pImjO5smgp7704RYI10v05AHoYGzJRtB1J7m6
-         SuilgCUL8Xpmk046/KqUj116UzEcmn9xxKH1YlnZTcYpX7WDWhR/X0CBx5LeLWZ7LX
-         7c1shIL8fKsuNQ411h24nqr1Cx1KYx/FhSpL3OJE=
+        b=iIFbsidYLrS3mVTtN/3HRROVjnSDJbGcXPjC6brDkN4ysPBipXgzrIK7gap4gzFFt
+         Z+8BQYjb+Haj3ULw+WCAqC7fUDWyCEIJNT2secxxzbRhu8FRlSuUySLjJkHqZBQec1
+         b+0x5jhtPscofEyo3VJo4Cfyy81zENTgg+clthwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murali Karicheri <m-karicheri2@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 078/186] net: ethernet: ti: cpsw_new: fix error handling in cpsw_ndo_vlan_rx_kill_vid()
-Date:   Tue,  8 Sep 2020 17:23:40 +0200
-Message-Id: <20200908152245.429151911@linuxfoundation.org>
+        stable@vger.kernel.org, Max Staudt <max@enpas.org>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 151/186] affs: fix basic permission bits to actually work
+Date:   Tue,  8 Sep 2020 17:24:53 +0200
+Message-Id: <20200908152248.974034323@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,80 +59,171 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2@ti.com>
+From: Max Staudt <max@enpas.org>
 
-[ Upstream commit af8ea111134624855710a0ef5543b871d49b0162 ]
+commit d3a84a8d0dde4e26bc084b36ffcbdc5932ac85e2 upstream.
 
-This patch fixes a bunch of issues in cpsw_ndo_vlan_rx_kill_vid()
+The basic permission bits (protection bits in AmigaOS) have been broken
+in Linux' AFFS - it would only set bits, but never delete them.
+Also, contrary to the documentation, the Archived bit was not handled.
 
- - pm_runtime_get_sync() returns non zero value. This results in
-   non zero value return to caller which will be interpreted as error.
-   So overwrite ret with zero.
- - If VID matches with port VLAN VID, then set error code.
- - Currently when VLAN interface is deleted, all of the VLAN mc addresses
-   are removed from ALE table, however the return values from ale function
-   calls are not checked. These functions can return error code -ENOENT.
-   But that shouldn't happen in a normal case. So add error print to
-   catch the situations so that these can be investigated and addressed.
-   return zero in these cases as these are not real error case, but only
-   serve to catch ALE table update related issues and help address the
-   same in the driver.
+Let's fix this for good, and set the bits such that Linux and classic
+AmigaOS can coexist in the most peaceful manner.
 
-Fixes: ed3525eda4c4 ("net: ethernet: ti: introduce cpsw switchdev based driver part 1 - dual-emac")
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Also, update the documentation to represent the current state of things.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Max Staudt <max@enpas.org>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/ti/cpsw_new.c | 27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
+ Documentation/filesystems/affs.rst |   16 ++++++++++------
+ fs/affs/amigaffs.c                 |   27 +++++++++++++++++++++++++++
+ fs/affs/file.c                     |   26 +++++++++++++++++++++++++-
+ 3 files changed, 62 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/ti/cpsw_new.c b/drivers/net/ethernet/ti/cpsw_new.c
-index 8d0a2bc7128d4..8ed78577cdedf 100644
---- a/drivers/net/ethernet/ti/cpsw_new.c
-+++ b/drivers/net/ethernet/ti/cpsw_new.c
-@@ -1032,19 +1032,34 @@ static int cpsw_ndo_vlan_rx_kill_vid(struct net_device *ndev,
- 		return ret;
- 	}
+--- a/Documentation/filesystems/affs.rst
++++ b/Documentation/filesystems/affs.rst
+@@ -110,13 +110,15 @@ The Amiga protection flags RWEDRWEDHSPAR
  
-+	/* reset the return code as pm_runtime_get_sync() can return
-+	 * non zero values as well.
+   - R maps to r for user, group and others. On directories, R implies x.
+ 
+-  - If both W and D are allowed, w will be set.
++  - W maps to w.
+ 
+   - E maps to x.
+ 
+-  - H and P are always retained and ignored under Linux.
++  - D is ignored.
+ 
+-  - A is always reset when a file is written to.
++  - H, S and P are always retained and ignored under Linux.
++
++  - A is cleared when a file is written to.
+ 
+ User id and group id will be used unless set[gu]id are given as mount
+ options. Since most of the Amiga file systems are single user systems
+@@ -128,11 +130,13 @@ Linux -> Amiga:
+ 
+ The Linux rwxrwxrwx file mode is handled as follows:
+ 
+-  - r permission will set R for user, group and others.
++  - r permission will allow R for user, group and others.
++
++  - w permission will allow W for user, group and others.
+ 
+-  - w permission will set W and D for user, group and others.
++  - x permission of the user will allow E for plain files.
+ 
+-  - x permission of the user will set E for plain files.
++  - D will be allowed for user, group and others.
+ 
+   - All other flags (suid, sgid, ...) are ignored and will
+     not be retained.
+--- a/fs/affs/amigaffs.c
++++ b/fs/affs/amigaffs.c
+@@ -420,24 +420,51 @@ affs_mode_to_prot(struct inode *inode)
+ 	u32 prot = AFFS_I(inode)->i_protect;
+ 	umode_t mode = inode->i_mode;
+ 
++	/*
++	 * First, clear all RWED bits for owner, group, other.
++	 * Then, recalculate them afresh.
++	 *
++	 * We'll always clear the delete-inhibit bit for the owner, as that is
++	 * the classic single-user mode AmigaOS protection bit and we need to
++	 * stay compatible with all scenarios.
++	 *
++	 * Since multi-user AmigaOS is an extension, we'll only set the
++	 * delete-allow bit if any of the other bits in the same user class
++	 * (group/other) are used.
 +	 */
-+	ret = 0;
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		if (cpsw->slaves[i].ndev &&
--		    vid == cpsw->slaves[i].port_vlan)
-+		    vid == cpsw->slaves[i].port_vlan) {
-+			ret = -EINVAL;
- 			goto err;
-+		}
- 	}
++	prot &= ~(FIBF_NOEXECUTE | FIBF_NOREAD
++		  | FIBF_NOWRITE | FIBF_NODELETE
++		  | FIBF_GRP_EXECUTE | FIBF_GRP_READ
++		  | FIBF_GRP_WRITE   | FIBF_GRP_DELETE
++		  | FIBF_OTR_EXECUTE | FIBF_OTR_READ
++		  | FIBF_OTR_WRITE   | FIBF_OTR_DELETE);
++
++	/* Classic single-user AmigaOS flags. These are inverted. */
+ 	if (!(mode & 0100))
+ 		prot |= FIBF_NOEXECUTE;
+ 	if (!(mode & 0400))
+ 		prot |= FIBF_NOREAD;
+ 	if (!(mode & 0200))
+ 		prot |= FIBF_NOWRITE;
++
++	/* Multi-user extended flags. Not inverted. */
+ 	if (mode & 0010)
+ 		prot |= FIBF_GRP_EXECUTE;
+ 	if (mode & 0040)
+ 		prot |= FIBF_GRP_READ;
+ 	if (mode & 0020)
+ 		prot |= FIBF_GRP_WRITE;
++	if (mode & 0070)
++		prot |= FIBF_GRP_DELETE;
++
+ 	if (mode & 0001)
+ 		prot |= FIBF_OTR_EXECUTE;
+ 	if (mode & 0004)
+ 		prot |= FIBF_OTR_READ;
+ 	if (mode & 0002)
+ 		prot |= FIBF_OTR_WRITE;
++	if (mode & 0007)
++		prot |= FIBF_OTR_DELETE;
  
- 	dev_dbg(priv->dev, "removing vlanid %d from vlan filter\n", vid);
--	cpsw_ale_del_vlan(cpsw->ale, vid, 0);
--	cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
--			   HOST_PORT_NUM, ALE_VLAN, vid);
--	cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
--			   0, ALE_VLAN, vid);
-+	ret = cpsw_ale_del_vlan(cpsw->ale, vid, 0);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_vlan() failed: ret %d\n", ret);
-+	ret = cpsw_ale_del_ucast(cpsw->ale, priv->mac_addr,
-+				 HOST_PORT_NUM, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_ucast() failed: ret %d\n",
-+			ret);
-+	ret = cpsw_ale_del_mcast(cpsw->ale, priv->ndev->broadcast,
-+				 0, ALE_VLAN, vid);
-+	if (ret)
-+		dev_err(priv->dev, "cpsw_ale_del_mcast failed. ret %d\n",
-+			ret);
- 	cpsw_ale_flush_multicast(cpsw->ale, ALE_PORT_HOST, vid);
-+	ret = 0;
- err:
- 	pm_runtime_put(cpsw->dev);
+ 	AFFS_I(inode)->i_protect = prot;
+ }
+--- a/fs/affs/file.c
++++ b/fs/affs/file.c
+@@ -428,6 +428,24 @@ static int affs_write_begin(struct file
  	return ret;
--- 
-2.25.1
-
+ }
+ 
++static int affs_write_end(struct file *file, struct address_space *mapping,
++			  loff_t pos, unsigned int len, unsigned int copied,
++			  struct page *page, void *fsdata)
++{
++	struct inode *inode = mapping->host;
++	int ret;
++
++	ret = generic_write_end(file, mapping, pos, len, copied, page, fsdata);
++
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
++
++	return ret;
++}
++
+ static sector_t _affs_bmap(struct address_space *mapping, sector_t block)
+ {
+ 	return generic_block_bmap(mapping,block,affs_get_block);
+@@ -437,7 +455,7 @@ const struct address_space_operations af
+ 	.readpage = affs_readpage,
+ 	.writepage = affs_writepage,
+ 	.write_begin = affs_write_begin,
+-	.write_end = generic_write_end,
++	.write_end = affs_write_end,
+ 	.direct_IO = affs_direct_IO,
+ 	.bmap = _affs_bmap
+ };
+@@ -794,6 +812,12 @@ done:
+ 	if (tmp > inode->i_size)
+ 		inode->i_size = AFFS_I(inode)->mmu_private = tmp;
+ 
++	/* Clear Archived bit on file writes, as AmigaOS would do */
++	if (AFFS_I(inode)->i_protect & FIBF_ARCHIVED) {
++		AFFS_I(inode)->i_protect &= ~FIBF_ARCHIVED;
++		mark_inode_dirty(inode);
++	}
++
+ err_first_bh:
+ 	unlock_page(page);
+ 	put_page(page);
 
 
