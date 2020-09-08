@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C27C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C1A2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BF62087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592864;
-	bh=XaZSweeH6YaRj/4/7chvv0iwCB8mFC24aGi2uCz/AsI=;
+	s=default; t=1599592872;
+	bh=5HQkN1u01BKijaPr9cSXsQZwFQFxObonHNW4mRoT2+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTlfSOXpfDId2ExNI58q7DdazI7jn+44e2J0mpL0vm2NwavW7GTk1y/4kWwyhb6dV
-	 huTmnJXngYs3bCxpdM+cJHLvz5G1szmjuWPq/7KeQHz/0QfYqHZlbIxddGkSi4DWfd
-	 UFx3tuBJVgPG2M3+E6vxGeglh3fsAzphH+0Y7mtE=
+	b=PJxov/E8mowMz8iDufENHz4AGT+k9o2aiKYLZZeLx5J+vPrQKJU38oois89oawgRP
+	 +AENLLmEFYbAlYPfIObYtnJCvn6qgVyjDee8qGbv2NOyEsbgt3qqc3/NOP/g96YnGi
+	 G2rotrUH/SjxGT00HFnbQH7kMtEmr6ArEq/foC6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732078AbgIHTVD (ORCPT
+        id S1732085AbgIHTVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48752 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731112AbgIHQBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:01:46 -0400
+        id S1731110AbgIHQBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34AF423C8E;
-        Tue,  8 Sep 2020 15:36:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 392BF23D68;
+        Tue,  8 Sep 2020 15:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579398;
-        bh=XaZSweeH6YaRj/4/7chvv0iwCB8mFC24aGi2uCz/AsI=;
+        s=default; t=1599579454;
+        bh=5HQkN1u01BKijaPr9cSXsQZwFQFxObonHNW4mRoT2+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3rZSqAzHshD2+cXy67R3BDIwwhxChcngM1kGx9lnMY8v0jKNKmg8MM1P6Q+NjBsP
-         00rdLpfOAkR+nBbnTlQaCquuNXnINesyMHnrWlSlAYa1HaglU8Hmlj8hg7AbTYmctt
-         d0uQx+rL97Jqoe5Go8F8K8B4h47XqcQabwH/gidY=
+        b=wFwqxS3NXc87KqU6uSTUysl6JnV8fGsMfueDLJjncPHmgkZiQ0D1Mr5eoR4z0h9bS
+         Xocyxjbtost69ZTfm2DGk1YNhPQDJ7hfS65k78gV8YcfPFAHmdLZyhJvuIINAfr7l+
+         FuXKqu+FbxtsRBXVT6b8MetYLets+WJoHji+2TiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 044/186] dmaengine: at_hdmac: add missing put_device() call in at_dma_xlate()
-Date:   Tue,  8 Sep 2020 17:23:06 +0200
-Message-Id: <20200908152243.796562500@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 085/186] netfilter: conntrack: do not auto-delete clash entries on reply
+Date:   Tue,  8 Sep 2020 17:23:47 +0200
+Message-Id: <20200908152245.763167029@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,51 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit 3832b78b3ec2cf51e07102f9b4480e343459b20f ]
+[ Upstream commit c46172147ebbeb70094db48d76ab7945d96c638b ]
 
-If of_find_device_by_node() succeed, at_dma_xlate() doesn't have a
-corresponding put_device(). Thus add put_device() to fix the exception
-handling for this function implementation.
+Its possible that we have more than one packet with the same ct tuple
+simultaneously, e.g. when an application emits n packets on same UDP
+socket from multiple threads.
 
-Fixes: bbe89c8e3d59 ("at_hdmac: move to generic DMA binding")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Link: https://lore.kernel.org/r/20200817115728.1706719-3-yukuai3@huawei.com
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+NAT rules might be applied to those packets. With the right set of rules,
+n packets will be mapped to m destinations, where at least two packets end
+up with the same destination.
+
+When this happens, the existing clash resolution may merge the skb that
+is processed after the first has been received with the identical tuple
+already in hash table.
+
+However, its possible that this identical tuple is a NAT_CLASH tuple.
+In that case the second skb will be sent, but no reply can be received
+since the reply that is processed first removes the NAT_CLASH tuple.
+
+Do not auto-delete, this gives a 1 second window for replies to be passed
+back to originator.
+
+Packets that are coming later (udp stream case) will not be affected:
+they match the original ct entry, not a NAT_CLASH one.
+
+Also prevent NAT_CLASH entries from getting offloaded.
+
+Fixes: 6a757c07e51f ("netfilter: conntrack: allow insertion of clashing entries")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_hdmac.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/netfilter/nf_conntrack_proto_udp.c | 26 ++++++++++----------------
+ net/netfilter/nft_flow_offload.c       |  2 +-
+ 2 files changed, 11 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index 22c1c507055a3..c91642b5f1037 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -1657,8 +1657,10 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
- 	dma_cap_set(DMA_SLAVE, mask);
+diff --git a/net/netfilter/nf_conntrack_proto_udp.c b/net/netfilter/nf_conntrack_proto_udp.c
+index 760ca24228165..af402f458ee02 100644
+--- a/net/netfilter/nf_conntrack_proto_udp.c
++++ b/net/netfilter/nf_conntrack_proto_udp.c
+@@ -81,18 +81,6 @@ static bool udp_error(struct sk_buff *skb,
+ 	return false;
+ }
  
- 	atslave = kmalloc(sizeof(*atslave), GFP_KERNEL);
--	if (!atslave)
-+	if (!atslave) {
-+		put_device(&dmac_pdev->dev);
- 		return NULL;
-+	}
+-static void nf_conntrack_udp_refresh_unreplied(struct nf_conn *ct,
+-					       struct sk_buff *skb,
+-					       enum ip_conntrack_info ctinfo,
+-					       u32 extra_jiffies)
+-{
+-	if (unlikely(ctinfo == IP_CT_ESTABLISHED_REPLY &&
+-		     ct->status & IPS_NAT_CLASH))
+-		nf_ct_kill(ct);
+-	else
+-		nf_ct_refresh_acct(ct, ctinfo, skb, extra_jiffies);
+-}
+-
+ /* Returns verdict for packet, and may modify conntracktype */
+ int nf_conntrack_udp_packet(struct nf_conn *ct,
+ 			    struct sk_buff *skb,
+@@ -124,12 +112,15 @@ int nf_conntrack_udp_packet(struct nf_conn *ct,
  
- 	atslave->cfg = ATC_DST_H2SEL_HW | ATC_SRC_H2SEL_HW;
- 	/*
-@@ -1687,8 +1689,10 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
- 	atslave->dma_dev = &dmac_pdev->dev;
+ 		nf_ct_refresh_acct(ct, ctinfo, skb, extra);
  
- 	chan = dma_request_channel(mask, at_dma_filter, atslave);
--	if (!chan)
-+	if (!chan) {
-+		put_device(&dmac_pdev->dev);
- 		return NULL;
-+	}
++		/* never set ASSURED for IPS_NAT_CLASH, they time out soon */
++		if (unlikely((ct->status & IPS_NAT_CLASH)))
++			return NF_ACCEPT;
++
+ 		/* Also, more likely to be important, and not a probe */
+ 		if (!test_and_set_bit(IPS_ASSURED_BIT, &ct->status))
+ 			nf_conntrack_event_cache(IPCT_ASSURED, ct);
+ 	} else {
+-		nf_conntrack_udp_refresh_unreplied(ct, skb, ctinfo,
+-						   timeouts[UDP_CT_UNREPLIED]);
++		nf_ct_refresh_acct(ct, ctinfo, skb, timeouts[UDP_CT_UNREPLIED]);
+ 	}
+ 	return NF_ACCEPT;
+ }
+@@ -206,12 +197,15 @@ int nf_conntrack_udplite_packet(struct nf_conn *ct,
+ 	if (test_bit(IPS_SEEN_REPLY_BIT, &ct->status)) {
+ 		nf_ct_refresh_acct(ct, ctinfo, skb,
+ 				   timeouts[UDP_CT_REPLIED]);
++
++		if (unlikely((ct->status & IPS_NAT_CLASH)))
++			return NF_ACCEPT;
++
+ 		/* Also, more likely to be important, and not a probe */
+ 		if (!test_and_set_bit(IPS_ASSURED_BIT, &ct->status))
+ 			nf_conntrack_event_cache(IPCT_ASSURED, ct);
+ 	} else {
+-		nf_conntrack_udp_refresh_unreplied(ct, skb, ctinfo,
+-						   timeouts[UDP_CT_UNREPLIED]);
++		nf_ct_refresh_acct(ct, ctinfo, skb, timeouts[UDP_CT_UNREPLIED]);
+ 	}
+ 	return NF_ACCEPT;
+ }
+diff --git a/net/netfilter/nft_flow_offload.c b/net/netfilter/nft_flow_offload.c
+index 3b9b97aa4b32e..3a6c84fb2c90d 100644
+--- a/net/netfilter/nft_flow_offload.c
++++ b/net/netfilter/nft_flow_offload.c
+@@ -102,7 +102,7 @@ static void nft_flow_offload_eval(const struct nft_expr *expr,
+ 	}
  
- 	atchan = to_at_dma_chan(chan);
- 	atchan->per_if = dma_spec->args[0] & 0xff;
+ 	if (nf_ct_ext_exist(ct, NF_CT_EXT_HELPER) ||
+-	    ct->status & IPS_SEQ_ADJUST)
++	    ct->status & (IPS_SEQ_ADJUST | IPS_NAT_CLASH))
+ 		goto out;
+ 
+ 	if (!nf_ct_is_confirmed(ct))
 -- 
 2.25.1
 
