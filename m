@@ -2,476 +2,136 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEBEC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B3AC2BB84
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65FFB2192A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9617F2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="QWY/g8DB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkrDh/el"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgIHADg (ORCPT
+        id S1728302AbgIHADj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 20:03:36 -0400
-Received: from lists.nic.cz ([217.31.204.67]:51678 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728161AbgIHADN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 20:03:13 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:8982:ed8c:62b1:c0c8])
-        by mail.nic.cz (Postfix) with ESMTP id F0D8B14087C;
-        Tue,  8 Sep 2020 02:03:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1599523382; bh=f7Vmyv6xSzwV+8MY82mGpSsCAiNrFjxM9nldBqmL9JE=;
-        h=From:To:Date;
-        b=QWY/g8DBWru6ad+NWbj/3soYeUp+V0F8iNnaqNNIdSG8tK05Y4RGgVeD8gYuOkzO2
-         1QW2RaMyRcO3iFNxH4krUzZvyCXrkTIRrZz0wjhiiGGf8D7J2fTfS7HE29ORn6pjIC
-         UAlQl/MfB66QVjQVnJA5aHdVljhEOkBLA2wz6qQw=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?q?Ond=C5=99ej=20Jirman?= <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH net-next v1 3/3] net: phy: marvell: add support for LEDs controlled by Marvell PHYs
-Date:   Tue,  8 Sep 2020 02:03:00 +0200
-Message-Id: <20200908000300.6982-4-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200908000300.6982-1-marek.behun@nic.cz>
-References: <20200908000300.6982-1-marek.behun@nic.cz>
+        Mon, 7 Sep 2020 20:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728252AbgIHADc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 20:03:32 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF819C061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 17:03:30 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 60so519773otw.3
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 17:03:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L8oNMgR3V486OSRxon6NQEkiONwS5O4dd9QWGg4Xngc=;
+        b=YkrDh/elvp6AlfWLCCw41Cv611AXJ0pzoGq0h2OjJgSu7mW0RuIgIVq6z95Nwih60M
+         A6fnnBhd92YqOAzaTDKqS+GYrNwXvB5VfmeBlOEhmNWVkR05jkeO4mQZU9y/UE56nLst
+         0L49/h4RwACTfVWL35h9PJTCB0J9e35905HdScsCW/wBqiQFsJeV7lEsrtdJo7ZGioJd
+         obARRG4eFocg1zhdKlmkwkBIhrVvJfcGXLpaD1kg2cWA0S06WALmdka6VqDE0+t5GMsj
+         cQwuzYNC5fJc2GNihar2g7I0AQoaFAE/OS7lS3k03EWj4RKMykZBM44ilb8g1+/Uki4I
+         ITmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=L8oNMgR3V486OSRxon6NQEkiONwS5O4dd9QWGg4Xngc=;
+        b=pfbNvSiwTqyEMO2PazIddMJv6P8uLMAtTERj/eGINeGq3gN/FbrNMIndE87NnHfXwN
+         VroFMcH5pHNhHBiwjeE23Tw/2YSEyIoXCx6XTh+H9jPE4X3CtBTB3LUxGlmiBzHrkb91
+         krr5TgldyYN5ckfF1IHMb/+QlZMOeo/YsLnEDNa8B2dsR7a6i6U3mXLp7z42gp+F5KX9
+         amfD2gAZ+pyFvzeB8Osoza+ea6ucu7mFJq0x8/IlMpAgQwyVPajFzH6takQPLYUmuNzM
+         E9X0htvBNDNSTdWBpCH2AA+6jXbUg7D36LkdwqmwxpAC+FcC/4f1rryj4NSYSlIRe3Vb
+         bFcQ==
+X-Gm-Message-State: AOAM532+sGyAVFDez5zrf28ZDGVpThKs+Qpd/ppw3ZF+oCYmrlGTkiei
+        z9aHXwT5HvZb6cg1Gjx5dg==
+X-Google-Smtp-Source: ABdhPJx4xHUKZjAD0PXmb/o0pO/ou6m/g3Z/JN1DNQVsf5+MuZdVc/v6st5nCRnQuvMzYbhOogpweA==
+X-Received: by 2002:a9d:69c9:: with SMTP id v9mr15168348oto.90.1599523410109;
+        Mon, 07 Sep 2020 17:03:30 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id 91sm3291127otn.18.2020.09.07.17.03.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 17:03:29 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:84ed:77c1:d49f:5e6b])
+        by serve.minyard.net (Postfix) with ESMTPSA id E63F818003B;
+        Tue,  8 Sep 2020 00:03:27 +0000 (UTC)
+Date:   Mon, 7 Sep 2020 19:03:26 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Markus Boehme <markubo@amazon.com>
+Cc:     openipmi-developer@lists.sourceforge.net,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Stefan Nuernberger <snu@amazon.com>,
+        SeongJae Park <sjpark@amazon.com>, Amit Shah <aams@amazon.com>
+Subject: Re: [PATCH 1/3] ipmi: Reset response handler when failing to send
+ the command
+Message-ID: <20200908000326.GB15602@minyard.net>
+Reply-To: minyard@acm.org
+References: <1599495937-10654-1-git-send-email-markubo@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599495937-10654-1-git-send-email-markubo@amazon.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for controlling the LEDs connected to several
-families of Marvell PHYs via the PHY HW LED trigger API. These families
-are: 88E1112, 88E1121R, 88E1240, 88E1340S, 88E1510 and 88E1545. More can
-be added.
+On Mon, Sep 07, 2020 at 06:25:35PM +0200, Markus Boehme wrote:
+> When failing to send a command we don't expect a response. Clear the
+> `null_user_handler` like is done in the success path.
 
-This patch does not yet add support for compound LED modes. This could
-be achieved via the LED multicolor framework.
+This is correct.  I guess, from the next two patches, I know how you
+found this.
 
-Settings such as HW blink rate or pulse stretch duration are not yet
-supported.
+I can incude this, but I will ask some questions in the later patches.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
----
- drivers/net/phy/marvell.c | 309 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 307 insertions(+), 2 deletions(-)
+-corey
 
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index bb86ac0bd0920..e0293f309644a 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -148,6 +148,13 @@
- #define MII_88E1510_PHY_LED_DEF		0x1177
- #define MII_88E1510_PHY_LED0_LINK_LED1_ACTIVE	0x1040
- 
-+#define MII_PHY_LED_POLARITY_CTRL	17
-+#define MII_PHY_LED_TIMER_CTRL		18
-+#define MII_PHY_LED45_CTRL		19
-+
-+#define MII_PHY_LED_CTRL_FORCE_ON	0x9
-+#define MII_PHY_LED_CTRL_FORCE_OFF	0x8
-+
- #define MII_M1011_PHY_STATUS		0x11
- #define MII_M1011_PHY_STATUS_1000	0x8000
- #define MII_M1011_PHY_STATUS_100	0x4000
-@@ -252,6 +259,8 @@
- #define LPA_PAUSE_FIBER		0x180
- #define LPA_PAUSE_ASYM_FIBER	0x100
- 
-+#define MARVELL_PHY_MAX_LEDS	6
-+
- #define NB_FIBER_STATS	1
- 
- MODULE_DESCRIPTION("Marvell PHY driver");
-@@ -280,6 +289,7 @@ struct marvell_priv {
- 	u32 last;
- 	u32 step;
- 	s8 pair;
-+	u16 legacy_led_config_mask;
- };
- 
- static int marvell_read_page(struct phy_device *phydev)
-@@ -662,8 +672,295 @@ static int m88e1510_config_aneg(struct phy_device *phydev)
- 	return err;
- }
- 
-+#if IS_ENABLED(CONFIG_PHY_LEDS)
-+
-+enum {
-+	COMMON			= BIT(0),
-+	L1V0_RECV		= BIT(1),
-+	L1V0_COPPER		= BIT(2),
-+	L1V5_100_FIBER		= BIT(3),
-+	L1V5_100_10		= BIT(4),
-+	L2V2_INIT		= BIT(5),
-+	L2V2_PTP		= BIT(6),
-+	L2V2_DUPLEX		= BIT(7),
-+	L3V0_FIBER		= BIT(8),
-+	L3V0_LOS		= BIT(9),
-+	L3V5_TRANS		= BIT(10),
-+	L3V7_FIBER		= BIT(11),
-+	L3V7_DUPLEX		= BIT(12),
-+};
-+
-+struct marvell_led_mode_info {
-+	const char *name;
-+	s8 regval[MARVELL_PHY_MAX_LEDS];
-+	u32 flags;
-+};
-+
-+static const struct marvell_led_mode_info marvell_led_mode_info[] = {
-+	{ "link",			{ 0x0,  -1, 0x0,  -1,  -1,  -1, }, COMMON },
-+	{ "link/act",			{ 0x1, 0x1, 0x1, 0x1, 0x1, 0x1, }, COMMON },
-+	{ "1Gbps/100Mbps/10Mbps",	{ 0x2,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "act",			{ 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, }, COMMON },
-+	{ "blink-act",			{ 0x4, 0x4, 0x4, 0x4, 0x4, 0x4, }, COMMON },
-+	{ "tx",				{ 0x5,  -1, 0x5,  -1, 0x5, 0x5, }, COMMON },
-+	{ "tx",				{  -1,  -1,  -1, 0x5,  -1,  -1, }, L3V5_TRANS },
-+	{ "rx",				{  -1,  -1,  -1,  -1, 0x0, 0x0, }, COMMON },
-+	{ "rx",				{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_RECV },
-+	{ "copper",			{ 0x6,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "copper",			{  -1, 0x0,  -1,  -1,  -1,  -1, }, L1V0_COPPER },
-+	{ "1Gbps",			{ 0x7,  -1,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "link/rx",			{  -1, 0x2,  -1, 0x2, 0x2, 0x2, }, COMMON },
-+	{ "100Mbps-fiber",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_FIBER },
-+	{ "100Mbps-10Mbps",		{  -1, 0x5,  -1,  -1,  -1,  -1, }, L1V5_100_10 },
-+	{ "1Gbps-100Mbps",		{  -1, 0x6,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "1Gbps-10Mbps",		{  -1,  -1, 0x6, 0x6,  -1,  -1, }, COMMON },
-+	{ "100Mbps",			{  -1, 0x7,  -1,  -1,  -1,  -1, }, COMMON },
-+	{ "10Mbps",			{  -1,  -1, 0x7,  -1,  -1,  -1, }, COMMON },
-+	{ "fiber",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_FIBER },
-+	{ "fiber",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_FIBER },
-+	{ "FullDuplex",			{  -1,  -1,  -1, 0x7,  -1,  -1, }, L3V7_DUPLEX },
-+	{ "FullDuplex",			{  -1,  -1,  -1,  -1, 0x6, 0x6, }, COMMON },
-+	{ "FullDuplex/collision",	{  -1,  -1,  -1,  -1, 0x7, 0x7, }, COMMON },
-+	{ "FullDuplex/collision",	{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_DUPLEX },
-+	{ "ptp",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_PTP },
-+	{ "init",			{  -1,  -1, 0x2,  -1,  -1,  -1, }, L2V2_INIT },
-+	{ "los",			{  -1,  -1,  -1, 0x0,  -1,  -1, }, L3V0_LOS },
-+	{ "blink",			{ 0xb, 0xb, 0xb, 0xb, 0xb, 0xb, }, COMMON },
-+};
-+
-+struct marvell_leds_info {
-+	u32 family;
-+	int nleds;
-+	u32 flags;
-+};
-+
-+#define LED(fam, n, flg)							\
-+	{									\
-+		.family = MARVELL_PHY_FAMILY_ID(MARVELL_PHY_ID_88E##fam),	\
-+		.nleds = (n),							\
-+		.flags = (flg),							\
-+	}									\
-+
-+static const struct marvell_leds_info marvell_leds_info[] = {
-+	LED(1112,  4, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_INIT | L3V0_LOS | L3V5_TRANS |
-+		      L3V7_FIBER),
-+	LED(1121R, 3, COMMON | L1V5_100_10),
-+	LED(1240,  6, COMMON | L3V5_TRANS),
-+	LED(1340S, 6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L2V2_PTP | L3V0_FIBER | L3V7_DUPLEX),
-+	LED(1510,  3, COMMON | L1V0_RECV | L1V5_100_FIBER | L2V2_DUPLEX),
-+	LED(1545,  6, COMMON | L1V0_COPPER | L1V5_100_FIBER | L3V0_FIBER | L3V7_DUPLEX),
-+};
-+
-+static inline int marvell_led_reg(int led)
-+{
-+	switch (led) {
-+	case 0 ... 3:
-+		return MII_PHY_LED_CTRL;
-+	case 4 ... 5:
-+		return MII_PHY_LED45_CTRL;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int marvell_led_set_regval(struct phy_device *phydev, int led, u16 val)
-+{
-+	u16 mask;
-+	int reg;
-+
-+	reg = marvell_led_reg(led);
-+	if (reg < 0)
-+		return reg;
-+
-+	val <<= (led % 4) * 4;
-+	mask = 0xf << ((led % 4) * 4);
-+
-+	return phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, reg, mask, val);
-+}
-+
-+static int marvell_led_get_regval(struct phy_device *phydev, int led)
-+{
-+	int reg, val;
-+
-+	reg = marvell_led_reg(led);
-+	if (reg < 0)
-+		return reg;
-+
-+	val = phy_read_paged(phydev, MII_MARVELL_LED_PAGE, reg);
-+	if (val < 0)
-+		return val;
-+
-+	val >>= (led % 4) * 4;
-+	val &= 0xf;
-+
-+	return val;
-+}
-+
-+static int marvell_led_set_polarity(struct phy_device *phydev, int led, bool active_low,
-+				    bool open_drain)
-+{
-+	int reg, shift;
-+	u16 mask, val;
-+
-+	switch (led) {
-+	case 0 ... 3:
-+		reg = MII_PHY_LED_POLARITY_CTRL;
-+		break;
-+	case 4 ... 5:
-+		reg = MII_PHY_LED45_CTRL;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	val = 0;
-+	if (!active_low)
-+		val |= BIT(0);
-+	if (open_drain)
-+		val |= BIT(1);
-+
-+	shift = led * 2;
-+	val <<= shift;
-+	mask = 0x3 << shift;
-+
-+	return phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, reg, mask, val);
-+}
-+
-+static int marvell_led_brightness_set(struct phy_device *phydev, struct phy_device_led *led,
-+				      enum led_brightness brightness)
-+{
-+	u8 val;
-+
-+	/* don't do anything if HW control is enabled */
-+	if (led->cdev.trigger == &phy_hw_led_trig)
-+		return 0;
-+
-+	val = brightness ? MII_PHY_LED_CTRL_FORCE_ON : MII_PHY_LED_CTRL_FORCE_OFF;
-+
-+	return marvell_led_set_regval(phydev, led->addr, val);
-+}
-+
-+static inline bool is_valid_led_mode(struct phy_device_led *led,
-+				     const struct marvell_led_mode_info *mode)
-+{
-+	return mode->regval[led->addr] != -1 && (led->flags & mode->flags);
-+}
-+
-+static const char *marvell_led_iter_hw_mode(struct phy_device *phydev, struct phy_device_led *led,
-+					    void **iter)
-+{
-+	const struct marvell_led_mode_info *mode = *iter;
-+
-+	if (!mode)
-+		mode = marvell_led_mode_info;
-+
-+	if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
-+		goto end;
-+
-+	while (!is_valid_led_mode(led, mode)) {
-+		++mode;
-+		if (mode - marvell_led_mode_info == ARRAY_SIZE(marvell_led_mode_info))
-+			goto end;
-+	}
-+
-+	*iter = (void *)(mode + 1);
-+	return mode->name;
-+end:
-+	*iter = NULL;
-+	return NULL;
-+}
-+
-+static int marvell_led_set_hw_mode(struct phy_device *phydev, struct phy_device_led *led,
-+				   const char *name)
-+{
-+	const struct marvell_led_mode_info *mode;
-+	int i;
-+
-+	if (!name)
-+		return 0;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
-+		mode = &marvell_led_mode_info[i];
-+
-+		if (!is_valid_led_mode(led, mode))
-+			continue;
-+
-+		if (sysfs_streq(name, mode->name))
-+			return marvell_led_set_regval(phydev, led->addr, mode->regval[led->addr]);
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const char *marvell_led_get_hw_mode(struct phy_device *phydev, struct phy_device_led *led)
-+{
-+	const struct marvell_led_mode_info *mode;
-+	int i, regval;
-+
-+	regval = marvell_led_get_regval(phydev, led->addr);
-+	if (regval < 0)
-+		return NULL;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_led_mode_info); ++i) {
-+		mode = &marvell_led_mode_info[i];
-+
-+		if (!is_valid_led_mode(led, mode))
-+			continue;
-+
-+		if (mode->regval[led->addr] == regval)
-+			return mode->name;
-+	}
-+
-+	return NULL;
-+}
-+
-+static int marvell_led_init(struct phy_device *phydev, struct phy_device_led *led,
-+			    const struct phy_device_led_init_data *pdata)
-+{
-+	const struct marvell_leds_info *info = NULL;
-+	struct marvell_priv *priv = phydev->priv;
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(marvell_leds_info); ++i) {
-+		if (MARVELL_PHY_FAMILY_ID(phydev->phy_id) == marvell_leds_info[i].family) {
-+			info = &marvell_leds_info[i];
-+			break;
-+		}
-+	}
-+
-+	if (!info)
-+		return -EOPNOTSUPP;
-+
-+	if (led->addr >= info->nleds)
-+		return -EINVAL;
-+
-+	led->flags = info->flags;
-+	led->cdev.max_brightness = 1;
-+
-+	ret = marvell_led_set_polarity(phydev, led->addr, pdata->active_low, pdata->open_drain);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* ensure marvell_config_led below does not change settings we have set for this LED */
-+	if (led->addr < 3)
-+		priv->legacy_led_config_mask &= ~(0xf << (led->addr * 4));
-+
-+	return 0;
-+}
-+
-+static const struct phy_device_led_ops marvell_led_ops = {
-+	.led_init = marvell_led_init,
-+	.led_brightness_set = marvell_led_brightness_set,
-+	.led_iter_hw_mode = marvell_led_iter_hw_mode,
-+	.led_set_hw_mode = marvell_led_set_hw_mode,
-+	.led_get_hw_mode = marvell_led_get_hw_mode,
-+};
-+
-+#endif /* IS_ENABLED(CONFIG_PHY_LEDS) */
-+
- static void marvell_config_led(struct phy_device *phydev)
- {
-+	struct marvell_priv *priv = phydev->priv;
- 	u16 def_config;
- 	int err;
- 
-@@ -688,8 +985,9 @@ static void marvell_config_led(struct phy_device *phydev)
- 		return;
- 	}
- 
--	err = phy_write_paged(phydev, MII_MARVELL_LED_PAGE, MII_PHY_LED_CTRL,
--			      def_config);
-+	def_config &= priv->legacy_led_config_mask;
-+	err = phy_modify_paged(phydev, MII_MARVELL_LED_PAGE, MII_PHY_LED_CTRL,
-+			       priv->legacy_led_config_mask, def_config);
- 	if (err < 0)
- 		phydev_warn(phydev, "Fail to config marvell phy LED.\n");
- }
-@@ -2580,6 +2878,7 @@ static int marvell_probe(struct phy_device *phydev)
- 	if (!priv)
- 		return -ENOMEM;
- 
-+	priv->legacy_led_config_mask = 0xffff;
- 	phydev->priv = priv;
- 
- 	return 0;
-@@ -2656,6 +2955,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1011_get_tunable,
- 		.set_tunable = m88e1011_set_tunable,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1111,
-@@ -2717,6 +3017,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1011_get_tunable,
- 		.set_tunable = m88e1011_set_tunable,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1318S,
-@@ -2796,6 +3097,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_sset_count = marvell_get_sset_count,
- 		.get_strings = marvell_get_strings,
- 		.get_stats = marvell_get_stats,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1116R,
-@@ -2844,6 +3146,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.cable_test_start = marvell_vct7_cable_test_start,
- 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
- 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1540,
-@@ -2896,6 +3199,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.cable_test_start = marvell_vct7_cable_test_start,
- 		.cable_test_tdr_start = marvell_vct5_cable_test_tdr_start,
- 		.cable_test_get_status = marvell_vct7_cable_test_get_status,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E3016,
-@@ -2964,6 +3268,7 @@ static struct phy_driver marvell_drivers[] = {
- 		.get_stats = marvell_get_stats,
- 		.get_tunable = m88e1540_get_tunable,
- 		.set_tunable = m88e1540_set_tunable,
-+		.led_ops = phy_device_led_ops_ptr(&marvell_led_ops),
- 	},
- 	{
- 		.phy_id = MARVELL_PHY_ID_88E1548P,
--- 
-2.26.2
-
+> 
+> Signed-off-by: Markus Boehme <markubo@amazon.com>
+> ---
+>  drivers/char/ipmi/ipmi_msghandler.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
+> index 737c0b6..2b213c9 100644
+> --- a/drivers/char/ipmi/ipmi_msghandler.c
+> +++ b/drivers/char/ipmi/ipmi_msghandler.c
+> @@ -2433,7 +2433,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+>  
+>  	rv = send_get_device_id_cmd(intf);
+>  	if (rv)
+> -		return rv;
+> +		goto out_reset_handler;
+>  
+>  	wait_event(intf->waitq, bmc->dyn_id_set != 2);
+>  
+> @@ -2443,6 +2443,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
+>  	/* dyn_id_set makes the id data available. */
+>  	smp_rmb();
+>  
+> +out_reset_handler:
+>  	intf->null_user_handler = NULL;
+>  
+>  	return rv;
+> @@ -3329,6 +3330,7 @@ static int __scan_channels(struct ipmi_smi *intf, struct ipmi_device_id *id)
+>  			dev_warn(intf->si_dev,
+>  				 "Error sending channel information for channel 0, %d\n",
+>  				 rv);
+> +			intf->null_user_handler = NULL;
+>  			return -EIO;
+>  		}
+>  
+> -- 
+> 2.7.4
+> 
