@@ -2,137 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3FAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8FCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06D1420768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TA/yvZ0M"
+	by mail.kernel.org (Postfix) with ESMTP id CCCF820768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599585475;
+	bh=9fS+gp1OB/v9Y8ppj0uj2LVv8Pjm5fb9yaFt2SrECxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zxuyZIcvWMPazC4KU9/fhu7Mu8rqJCF6O6Dy+PBnp8wR9EUNvhGMbUBICjRg0ZLuL
+	 Rd3cWj0m6Gej0Awv2+MCT6dUHMX4+6vwBdZpvD3XMh9KuDqWa6dHUoBbrllmvdZIQM
+	 ytjEGmY3NABBdvO7kyxnstVexFiruTvVYCDn77ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbgIHRRU (ORCPT
+        id S1729097AbgIHRRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728442AbgIHRRN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:17:13 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B47D8C061573;
-        Tue,  8 Sep 2020 10:17:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=KwK6puEgj9NP5gmpV/xbCpyKRaytrseSrQAvZ5WVpEI=; b=TA/yvZ0MXlRBniY0HdhXhrQPhs
-        jvDKaReKcXRE6fAcJ3w1i58DQYsj+4mv1rDQYufzUOvZvkVpE3yg2mVCUolNXs+tzfVhvoWqQJuAh
-        Rl1pwbQs1dFS2FvsmKGyxHxm73ikshABMcWwk3tupNclclkC4raPnttp/N5MGQ6R7CKYNeMw6nf/L
-        cvg4CnTYIQaGIdOAU/TMH+KnVxbDJ7dGK/+DocyVb3fVdkfm/Q5dWXy8BlfIT7tpj+ieJRrSq5LKD
-        tl1SB94XEhVXUo1+KVeONK7rPgZGZzfstmy8oZylf1+qUVyCAMMcNfXreGwTAPxagbbpU+zv5R/Ht
-        FhnFAHVQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFhEx-0003eZ-Ux; Tue, 08 Sep 2020 17:17:08 +0000
-Subject: Re: linux-next: Tree for Sep 8 (sched/topology.c)
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-References: <20200908205659.361b0a1b@canb.auug.org.au>
- <ddc76403-4b00-66ba-43ea-7889b9a32bb5@infradead.org>
- <CAKfTPtB-br6iKAMnofbPEmPVF-fpQpjkbXtfTcNkNzbc1Kdtug@mail.gmail.com>
- <jhj4ko86zk4.mognet@arm.com>
- <b6e6f676-d61b-5109-759f-4b4f2c24bab1@infradead.org>
- <jhj363s6ylu.mognet@arm.com> <jhj1rjc6xn3.mognet@arm.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e6295346-0202-498a-d503-14f81022dbec@infradead.org>
-Date:   Tue, 8 Sep 2020 10:17:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 13:17:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731762AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:18:26 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85221224B2;
+        Tue,  8 Sep 2020 13:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599570122;
+        bh=9fS+gp1OB/v9Y8ppj0uj2LVv8Pjm5fb9yaFt2SrECxE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wxSDHEK/TrBNWz4OoTOCK9bIy6IduLZwMEj5pe2K03mjBgCId8jCNRZAFfO6aH12r
+         2dDr4W2G1relwqW98nPDMxz7RwIdju04V9frZS3KJer6mBfsB/jnKliAw4Dr//FQlH
+         +7Ytu1HGVBr36etShfo8o09w6B5L5lDOaaAT/Bbk=
+Date:   Tue, 8 Sep 2020 15:02:14 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
+        peterx@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4.14.y 0/3] vfio: Fix for CVE-2020-12888
+Message-ID: <20200908130214.GA3075407@kroah.com>
+References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
+ <1599509828-23596-4-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-In-Reply-To: <jhj1rjc6xn3.mognet@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599509828-23596-4-git-send-email-akaher@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 9:28 AM, Valentin Schneider wrote:
-> 
-> On 08/09/20 17:07, Valentin Schneider wrote:
->> On 08/09/20 16:50, Randy Dunlap wrote:
->>> Sure, here it is again.  And
->>> CONFIG_SMP=y
->>> CONFIG_SCHED_DEBUG=y
->>>
->>> thanks.
->>
->> Okay so I can reproduce that with GCC-10.1, now to figure out WTH is going on...
-> 
-> Yet another fail from my end, the declaration is conditioned by:
-> 
->   CONFIG_SCHED_DEBUG
->   CONFIG_SMP
->   CONFIG_SYSCTL
-> 
-> that last one being ofc stupid. Below lets me build; I'll go get
-> something with caffeine in it and double-check the shuffles I've done
-> before sending an actual patch.
-> 
-> Thanks for the report!
+On Tue, Sep 08, 2020 at 01:47:08AM +0530, Ajay Kaher wrote:
+> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
+> devices may lead to DoS scenario
+>     
+> The VFIO modules allow users (guest VMs) to enable or disable access to the
+> devices' MMIO memory address spaces. If a user attempts to access (read/write)
+> the devices' MMIO address space when it is disabled, some h/w devices issue an
+> interrupt to the CPU to indicate a fatal error condition, crashing the system.
+> This flaw allows a guest user or process to crash the host system resulting in
+> a denial of service.
+>     
+> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
+> before user access.
+>     
+> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
+> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
+> can later use to invalidate those mappings.
+>     
+> Patch 3/ block the user from accessing memory spaces which is disabled by using
+> new vma list support to zap, or invalidate, those memory mappings in order to
+> force them to be faulted back in on access.
+>     
+> Upstreamed patches link:
+> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+>         
+> [PATCH v4.14.y 1/3]:
+> Backporting of upsream commit 41311242221e:
+> vfio/type1: Support faulting PFNMAP vmas
+>         
+> [PATCH v4.14.y 2/3]:
+> Backporting of upsream commit 11c4cd07ba11:
+> vfio-pci: Fault mmaps to enable vma tracking
+>         
+> [PATCH v4.14.y 3/3]:
+> Backporting of upsream commit abafbc551fdd:
+> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
 
-Works for me.  Thanks.
+Now queued up, thanks.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-
-> 
-> ---
-> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
-> index 0d7896d2a0b2..0ca486aa296b 100644
-> --- a/kernel/sched/debug.c
-> +++ b/kernel/sched/debug.c
-> @@ -185,6 +185,12 @@ late_initcall(sched_init_debug);
-> 
->  #ifdef CONFIG_SMP
-> 
-> +#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
-> +const struct sd_flag_debug sd_flag_debug[] = {
-> +#include <linux/sched/sd_flags.h>
-> +};
-> +#undef SD_FLAG
-> +
->  #ifdef CONFIG_SYSCTL
-> 
->  static struct ctl_table sd_ctl_dir[] = {
-> @@ -245,12 +251,6 @@ set_table_entry(struct ctl_table *entry,
->         entry->proc_handler = proc_handler;
->  }
-> 
-> -#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
-> -const struct sd_flag_debug sd_flag_debug[] = {
-> -#include <linux/sched/sd_flags.h>
-> -};
-> -#undef SD_FLAG
-> -
->  static int sd_ctl_doflags(struct ctl_table *table, int write,
->                           void *buffer, size_t *lenp, loff_t *ppos)
->  {
-> ---
-> 
-
-
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+greg k-h
