@@ -2,54 +2,56 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BECFC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F27C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBCBE2078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 827192078E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588777;
-	bh=F+HJT3z47l9MMpYOM5nYzvVzHczYxmyGfAXOYLN7if0=;
+	s=default; t=1599588785;
+	bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OV6AZEnEqxd2tUSZP7hdWfq5nsS4c1/o7/fnYtfYVmw2hBakAG0F+EEicLw6KboHZ
-	 J2cCx6Y2mWz/3qagE2bNHazn9nKumN2ZTJZ8TOo2ptKD0vuJfvsio5trJ34CgBTjF3
-	 cX03QMFn6cLXkXjDSGK7neSC0kHUGd30WwkLyoLY=
+	b=uheeK3iAuOqmLAb9KgBowBTF8NCoTQRlWIxmfI9XSW+Q8ph09lE8mFP9JHPb2BAew
+	 i2HRdvNSYLVa8PEqoBrcFtUDXewvzHost8XadzjdvU57JfF2Pl3ELw91pdLS+yhEcz
+	 +HIySAVFO+soAtlFfmOkLCRtN8bXXp7kdLuXL/WM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732181AbgIHSMz (ORCPT
+        id S1732191AbgIHSNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:12:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56676 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731486AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731296AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99F824732;
-        Tue,  8 Sep 2020 15:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35BEE24795;
+        Tue,  8 Sep 2020 15:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579656;
-        bh=F+HJT3z47l9MMpYOM5nYzvVzHczYxmyGfAXOYLN7if0=;
+        s=default; t=1599579731;
+        bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vP3Srr8hsztz+7NGiKCQTpePtmcrR+DoRmRkwVnkDz6/nQQcMrQw/UzXx/R9x64Bw
-         M7vME6YA2MHkagu/7qP1KQkT+iMpE/VfTqJVYMLfyn7k+ZloDtNJl8MIMFC+X77JGu
-         i+xt4YQ1FsiXMzLWPm8cWL2SWV183mIMPKx/n97U=
+        b=jSvK7SGezbf7srG0WUuJZcAc96x9LmlPJoc1UrZmARj+c8NoUkMmfTOyclq2Wl4ru
+         0fZDqOukubet72wMHXYv9mMAOirseIM34vdgTi8Y27rRzMqWSW9NF3enTnQNuVOhkr
+         RZA0nrnWhxlckmiL+GSuBImKJ6RlGZwnQT7Khr4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.8 167/186] dm integrity: fix error reporting in bitmap mode after creation
-Date:   Tue,  8 Sep 2020 17:25:09 +0200
-Message-Id: <20200908152249.753474532@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Krishna Manikandan <mkrishn@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 004/129] drm/msm: add shutdown support for display platform_driver
+Date:   Tue,  8 Sep 2020 17:24:05 +0200
+Message-Id: <20200908152229.921165297@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,54 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Krishna Manikandan <mkrishn@codeaurora.org>
 
-commit e27fec66f0a94e35a35548bd0b29ae616e62ec62 upstream.
+[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
 
-The dm-integrity target did not report errors in bitmap mode just after
-creation. The reason is that the function integrity_recalc didn't clean up
-ic->recalc_bitmap as it proceeded with recalculation.
+Define shutdown callback for display drm driver,
+so as to disable all the CRTCS when shutdown
+notification is received by the driver.
 
-Fix this by updating the bitmap accordingly -- the double shift serves
-to rounddown.
+This change will turn off the timing engine so
+that no display transactions are requested
+while mmu translations are getting disabled
+during reboot sequence.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Fixes: 468dfca38b1a ("dm integrity: add a bitmap mode")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 
+Changes in v2:
+	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+	- Change commit text to reflect when this issue
+	  was uncovered (Sai Prakash Ranjan)
+
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-integrity.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -2487,6 +2487,7 @@ next_chunk:
- 	range.logical_sector = le64_to_cpu(ic->sb->recalc_sector);
- 	if (unlikely(range.logical_sector >= ic->provided_data_sectors)) {
- 		if (ic->mode == 'B') {
-+			block_bitmap_op(ic, ic->recalc_bitmap, 0, ic->provided_data_sectors, BITMAP_OP_CLEAR);
- 			DEBUG_print("queue_delayed_work: bitmap_flush_work\n");
- 			queue_delayed_work(ic->commit_wq, &ic->bitmap_flush_work, 0);
- 		}
-@@ -2564,6 +2565,17 @@ next_chunk:
- 		goto err;
- 	}
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index b73fbb65e14b2..4558d66761b3c 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1321,6 +1321,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
-+	if (ic->mode == 'B') {
-+		sector_t start, end;
-+		start = (range.logical_sector >>
-+			 (ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit)) <<
-+			(ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit);
-+		end = ((range.logical_sector + range.n_sectors) >>
-+		       (ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit)) <<
-+			(ic->sb->log2_sectors_per_block + ic->log2_blocks_per_bitmap_bit);
-+		block_bitmap_op(ic, ic->recalc_bitmap, start, end - start, BITMAP_OP_CLEAR);
-+	}
++static void msm_pdev_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
 +
- advance_and_next:
- 	cond_resched();
- 
++	drm_atomic_helper_shutdown(drm);
++}
++
+ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+ 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+@@ -1332,6 +1339,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
+ static struct platform_driver msm_platform_driver = {
+ 	.probe      = msm_pdev_probe,
+ 	.remove     = msm_pdev_remove,
++	.shutdown   = msm_pdev_shutdown,
+ 	.driver     = {
+ 		.name   = "msm",
+ 		.of_match_table = dt_match,
+-- 
+2.25.1
+
 
 
