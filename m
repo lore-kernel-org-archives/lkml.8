@@ -2,102 +2,106 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAF8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50752C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 795A220658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593520;
-	bh=iKePNMRyYjuk70vMsaDLL0LcdLKGJj7Qdt4/LFD3uuE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y2LuRhXT36H7VUrulFE2bhQPylqhaqsIlu6EZLPq690juy+ElQi0M5hUAIw3HM/b3
-	 +8DhIujc8uyg0GfzYdoG1/15mWy4ipPY5uN+B25Hxcfu3J2IRtj/PIFe7sA28AGV7F
-	 OPwus9q6S/a/xcvbENAwqD5TME5UFUjnGuBo2438=
+	by mail.kernel.org (Postfix) with ESMTP id 1C1622166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:32:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="Btgln1Dz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbgIHTb7 (ORCPT
+        id S1732172AbgIHTb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 15:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730999AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731019AbgIHP6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:58:05 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E9C923D3C;
-        Tue,  8 Sep 2020 15:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579449;
-        bh=iKePNMRyYjuk70vMsaDLL0LcdLKGJj7Qdt4/LFD3uuE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9qo7YP9qXUu2VLBiHWyBeTOkT0vDQqnTnlCFCRWmc1GMuIWe7EnmVhYyto06Dsbb
-         ksHQiSSmQibj3l7LdU9Eh4wQRS55HKvov3rcNzYvtdAUOR/nsbiZjsL5YRcaWxDb+b
-         r7fNkoZIbCN7Saa6NQsfb5qosScOu7tdWlPqjG98=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jussi Kivilinna <jussi.kivilinna@haltian.com>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 042/186] batman-adv: bla: use netif_rx_ni when not in interrupt context
-Date:   Tue,  8 Sep 2020 17:23:04 +0200
-Message-Id: <20200908152243.708000869@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC45FC061242
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:11:32 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id n10so11814325qtv.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=hUrb8SCFg6HulXICTWjB5J3dJa3WsyRvIUrd/Gj8E1A=;
+        b=Btgln1DzqOK0Ky5OmfZSVznH+IIFskFJhEUd/6L+2EzexX2xFdtpBjfG38nIjkpQK2
+         pmnstu3GxKex83ZqJBTGKEoxQOsaa9ej1y1DmAcjfKwb+0/WbK2LcBN7TCMlSvkpWo6l
+         4QtbYzWr29/ZV+fKFkKIj68KD1so+1Scelu9baU+Kvw3HAAudlLQf80AutQ5xanEeCsL
+         R4JT/89nxaVd+kfU/AIPwxL7uteIXQwOK3LtJdgLl82r3LjSyfuC3lv9Lh8VmS1z8q7H
+         +QwBvwk4vlWlHa85UZOoF69Ob9wSq9wKPzlP8O+GJkTsnX4Bf2jVdcigwybNlpnWXA/V
+         MdGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=hUrb8SCFg6HulXICTWjB5J3dJa3WsyRvIUrd/Gj8E1A=;
+        b=DvgB8FH60CmjLCIOqw1pSjFGJ7v2syPQIsx4D4XszmkZEkpegdbSUxbLpE/DNY+zNx
+         k8PontGg+ArTH5REJX9Z8F++PP1p13A13wf/MN6rN/rYCCpNM4Lj/gKOzheh/5RCKpVB
+         dDnwauaPL7QeU4STCNQGXgQVD9cxfiFs8WOZOjmgt8d7dftyoT8g7mjiLMBAgzo3MwAY
+         Mn+rwEKjvZkWqJpv7jcVXqSF1kBpzTaUO82MYNqOze7TPZTHJoR1BDXaKTCt26CdA5ml
+         pwzN8hXkL42gBD+tV3xTjyAGVeVlOUXRsWlQBJ5PgOlOjExih82uRaU2e5dISaI55uJu
+         JNUw==
+X-Gm-Message-State: AOAM531F/N/e6Y516k/50BkMZYCSTzENE14lT0Yborvrp6w/VfFSe/UC
+        Fik11On00ELK0FhEl08aThP60Q==
+X-Google-Smtp-Source: ABdhPJx3qjKvLLDxptFWyk2taGV4q+N24WetF6P4vAorl5llo7bW4K8NDUDihiwxftcYS6HUZPP72g==
+X-Received: by 2002:aed:39a1:: with SMTP id m30mr25310181qte.39.1599570690288;
+        Tue, 08 Sep 2020 06:11:30 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id m196sm13394069qke.87.2020.09.08.06.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 06:11:29 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/3] misc: fastrpc: fix indentation error in uapi header
+Date:   Tue,  8 Sep 2020 09:10:09 -0400
+Message-Id: <20200908131013.19630-2-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200908131013.19630-1-jonathan@marek.ca>
+References: <20200908131013.19630-1-jonathan@marek.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jussi Kivilinna <jussi.kivilinna@haltian.com>
+Use tabs instead of spaces.
 
-[ Upstream commit 279e89b2281af3b1a9f04906e157992c19c9f163 ]
+Fixes: 2419e55e532d ("misc: fastrpc: add mmap/unmap support")
 
-batadv_bla_send_claim() gets called from worker thread context through
-batadv_bla_periodic_work(), thus netif_rx_ni needs to be used in that
-case. This fixes "NOHZ: local_softirq_pending 08" log messages seen
-when batman-adv is enabled.
-
-Fixes: 23721387c409 ("batman-adv: add basic bridge loop avoidance code")
-Signed-off-by: Jussi Kivilinna <jussi.kivilinna@haltian.com>
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- net/batman-adv/bridge_loop_avoidance.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/uapi/misc/fastrpc.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/batman-adv/bridge_loop_avoidance.c b/net/batman-adv/bridge_loop_avoidance.c
-index 41cc87f06b142..cfb9e16afe38a 100644
---- a/net/batman-adv/bridge_loop_avoidance.c
-+++ b/net/batman-adv/bridge_loop_avoidance.c
-@@ -437,7 +437,10 @@ static void batadv_bla_send_claim(struct batadv_priv *bat_priv, u8 *mac,
- 	batadv_add_counter(bat_priv, BATADV_CNT_RX_BYTES,
- 			   skb->len + ETH_HLEN);
+diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
+index 07de2b7aac85..de31f0bd4779 100644
+--- a/include/uapi/misc/fastrpc.h
++++ b/include/uapi/misc/fastrpc.h
+@@ -10,8 +10,8 @@
+ #define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
+ #define FASTRPC_IOCTL_INIT_ATTACH	_IO('R', 4)
+ #define FASTRPC_IOCTL_INIT_CREATE	_IOWR('R', 5, struct fastrpc_init_create)
+-#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct fastrpc_req_mmap)
+-#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct fastrpc_req_munmap)
++#define FASTRPC_IOCTL_MMAP		_IOWR('R', 6, struct fastrpc_req_mmap)
++#define FASTRPC_IOCTL_MUNMAP		_IOWR('R', 7, struct fastrpc_req_munmap)
  
--	netif_rx(skb);
-+	if (in_interrupt())
-+		netif_rx(skb);
-+	else
-+		netif_rx_ni(skb);
- out:
- 	if (primary_if)
- 		batadv_hardif_put(primary_if);
+ struct fastrpc_invoke_args {
+ 	__u64 ptr;
 -- 
-2.25.1
-
-
+2.26.1
 
