@@ -2,286 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 685BBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF23C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3360620768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594717;
-	bh=B+THMT/KrhLC+I0rRLa1Y7RwoeheG+obqjCh+/v+jb4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvIM4Koz++1tG4enY8GkWVFQYNUG+VbdIIHLBiVMkHk6yndKKHhhCW/+G12tQvXG2
-	 wXaGkxv9QB3/N4dR6eiXhTPTbSWiE0bcoT6fwxcrZ8BEKA9Ww/Ue1+dxT1LJCe55kz
-	 SY7hHCD4olCyy2AQ4pD1hoQM0OBWT0YbFj3dixLc=
+	by mail.kernel.org (Postfix) with ESMTP id ADBB520658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjtH2eoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbgIHTvv (ORCPT
+        id S1732395AbgIHTwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:51:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730570AbgIHPt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:49:57 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC4A2485B;
-        Tue,  8 Sep 2020 15:45:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579919;
-        bh=B+THMT/KrhLC+I0rRLa1Y7RwoeheG+obqjCh+/v+jb4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BMIQsdH3OUhE4M25ml4cqvBNH4wnsRumqPw6zQ5b1hZ9f4Ef32JJX8CFfsXn+Z/2R
-         n/tUzXHWruU2VGIt3Lo3GBKA6jWwv4rZ0qakvuW1rgDzoNZYUfBmxcVueuILKCu+g2
-         6Mz15aBH67z/5BgjMkZ6/J9cFqAYB609k02dCG94=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/129] btrfs: fix potential deadlock in the search ioctl
-Date:   Tue,  8 Sep 2020 17:25:28 +0200
-Message-Id: <20200908152234.051441852@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 8 Sep 2020 15:52:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730727AbgIHPtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:49:39 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 055DEC061347
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:33:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id y1so2737977ejq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:33:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=U/ytzC+Xy3Xxbn3dWyObssuKdvhh3djXX6G5KrguHpw=;
+        b=MjtH2eoLRl2Yx7RGtVGNBFgZha7XbJDmTzJ4JjTcvphGudl1klnSeOMryTbu+Ily37
+         14AklWjovAy63brJ/GgEQIDkKrs/31qaZdDaaUTOc7blnCecsjH9LGMxMWo25+EQ/mJB
+         MXuU3RBSzuDcC/KTnmqaYkvIrQLkgDbd4vdBW+3YRA+66uX2cNSZNvUWsqWytxCyZRUc
+         XAK49sYqHBftaE3lz8/C8T5JtXldioVXGC78H2KCRFYlExr6qU/Co8K8+6dYMX3uXG8E
+         mbfvO6nTM6/YTMqq2Oyl5p2FVdLxtGH8nsY2MUNe1JuQxigIbKnx5yUlCMnhSVOp0PKr
+         yBTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=U/ytzC+Xy3Xxbn3dWyObssuKdvhh3djXX6G5KrguHpw=;
+        b=bbAD/Z3OaRl1zUikk2b4+So6Pc/ySjrjXksUwx5YYt77C6LKJsOymfuaPJXWMR8UYp
+         QYfzaulaP5uQ2WQY8qNDX7PmOdvDZQxNNADluFruRdaRQuroNWYyKwlMRxwJU4iwG3RV
+         FAmpon6xrrvQn77dSD6/K+81Uco7euIfyaNwv2xLll2gKmIsTe8BvSRQe2PIzkxEpe0o
+         GF+Qrk3dpKJzGVdhrC5Hs+LFhIIo2omaZlFNd2LQUezLeDhBWYO2kT4iNwVkpRLZGj6x
+         Hf8Taw3pOKFUoopUchiT3c0cdgqad1ciOdQCy3e5w9O0Qr7pAa1ZZrCZbbKi1YOc/SZE
+         /4gg==
+X-Gm-Message-State: AOAM5309WKMRjCLapelZRehciZA7uu6RueQpXzzU3ONo/q9CGjXQip5T
+        txtzdGoeRmKErTcEFWzIO6jT4CCpvKSlBki4
+X-Google-Smtp-Source: ABdhPJwP5Dtyk6XvdHyWoAeIATGo0/jTovJF2dUFA4ZnMyr0o1/OZvHbiVUU4RhBjHgXEBsTQ81vLg==
+X-Received: by 2002:a17:907:37b:: with SMTP id rs27mr27158410ejb.0.1599568408830;
+        Tue, 08 Sep 2020 05:33:28 -0700 (PDT)
+Received: from localhost.localdomain ([195.24.90.54])
+        by smtp.gmail.com with ESMTPSA id y9sm17499744edo.37.2020.09.08.05.33.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 05:33:28 -0700 (PDT)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        nicolas.dufresne@collabora.com,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v3 2/6] venus: hfi_helper: Add VP9 profile and levels
+Date:   Tue,  8 Sep 2020 15:32:17 +0300
+Message-Id: <20200908123221.2793-3-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908123221.2793-1-stanimir.varbanov@linaro.org>
+References: <20200908123221.2793-1-stanimir.varbanov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+Add HFI defines for VP9 codec profile and levels.
 
-[ Upstream commit a48b73eca4ceb9b8a4b97f290a065335dbcd8a04 ]
-
-With the conversion of the tree locks to rwsem I got the following
-lockdep splat:
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc7-00165-g04ec4da5f45f-dirty #922 Not tainted
-  ------------------------------------------------------
-  compsize/11122 is trying to acquire lock:
-  ffff889fabca8768 (&mm->mmap_lock#2){++++}-{3:3}, at: __might_fault+0x3e/0x90
-
-  but task is already holding lock:
-  ffff889fe720fe40 (btrfs-fs-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #2 (btrfs-fs-00){++++}-{3:3}:
-	 down_write_nested+0x3b/0x70
-	 __btrfs_tree_lock+0x24/0x120
-	 btrfs_search_slot+0x756/0x990
-	 btrfs_lookup_inode+0x3a/0xb4
-	 __btrfs_update_delayed_inode+0x93/0x270
-	 btrfs_async_run_delayed_root+0x168/0x230
-	 btrfs_work_helper+0xd4/0x570
-	 process_one_work+0x2ad/0x5f0
-	 worker_thread+0x3a/0x3d0
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  -> #1 (&delayed_node->mutex){+.+.}-{3:3}:
-	 __mutex_lock+0x9f/0x930
-	 btrfs_delayed_update_inode+0x50/0x440
-	 btrfs_update_inode+0x8a/0xf0
-	 btrfs_dirty_inode+0x5b/0xd0
-	 touch_atime+0xa1/0xd0
-	 btrfs_file_mmap+0x3f/0x60
-	 mmap_region+0x3a4/0x640
-	 do_mmap+0x376/0x580
-	 vm_mmap_pgoff+0xd5/0x120
-	 ksys_mmap_pgoff+0x193/0x230
-	 do_syscall_64+0x50/0x90
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  -> #0 (&mm->mmap_lock#2){++++}-{3:3}:
-	 __lock_acquire+0x1272/0x2310
-	 lock_acquire+0x9e/0x360
-	 __might_fault+0x68/0x90
-	 _copy_to_user+0x1e/0x80
-	 copy_to_sk.isra.32+0x121/0x300
-	 search_ioctl+0x106/0x200
-	 btrfs_ioctl_tree_search_v2+0x7b/0xf0
-	 btrfs_ioctl+0x106f/0x30a0
-	 ksys_ioctl+0x83/0xc0
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x50/0x90
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-  other info that might help us debug this:
-
-  Chain exists of:
-    &mm->mmap_lock#2 --> &delayed_node->mutex --> btrfs-fs-00
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(btrfs-fs-00);
-				 lock(&delayed_node->mutex);
-				 lock(btrfs-fs-00);
-    lock(&mm->mmap_lock#2);
-
-   *** DEADLOCK ***
-
-  1 lock held by compsize/11122:
-   #0: ffff889fe720fe40 (btrfs-fs-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  stack backtrace:
-  CPU: 17 PID: 11122 Comm: compsize Kdump: loaded Not tainted 5.8.0-rc7-00165-g04ec4da5f45f-dirty #922
-  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x165/0x180
-   __lock_acquire+0x1272/0x2310
-   lock_acquire+0x9e/0x360
-   ? __might_fault+0x3e/0x90
-   ? find_held_lock+0x72/0x90
-   __might_fault+0x68/0x90
-   ? __might_fault+0x3e/0x90
-   _copy_to_user+0x1e/0x80
-   copy_to_sk.isra.32+0x121/0x300
-   ? btrfs_search_forward+0x2a6/0x360
-   search_ioctl+0x106/0x200
-   btrfs_ioctl_tree_search_v2+0x7b/0xf0
-   btrfs_ioctl+0x106f/0x30a0
-   ? __do_sys_newfstat+0x5a/0x70
-   ? ksys_ioctl+0x83/0xc0
-   ksys_ioctl+0x83/0xc0
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x50/0x90
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The problem is we're doing a copy_to_user() while holding tree locks,
-which can deadlock if we have to do a page fault for the copy_to_user().
-This exists even without my locking changes, so it needs to be fixed.
-Rework the search ioctl to do the pre-fault and then
-copy_to_user_nofault for the copying.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
 ---
- fs/btrfs/extent_io.c |  8 ++++----
- fs/btrfs/extent_io.h |  6 +++---
- fs/btrfs/ioctl.c     | 27 ++++++++++++++++++++-------
- 3 files changed, 27 insertions(+), 14 deletions(-)
+ drivers/media/platform/qcom/venus/hfi_helper.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 5707bf0575d43..60c21cfb19480 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -5607,9 +5607,9 @@ void read_extent_buffer(const struct extent_buffer *eb, void *dstv,
- 	}
- }
+diff --git a/drivers/media/platform/qcom/venus/hfi_helper.h b/drivers/media/platform/qcom/venus/hfi_helper.h
+index 758c70ac26fd..60ee2479f7a6 100644
+--- a/drivers/media/platform/qcom/venus/hfi_helper.h
++++ b/drivers/media/platform/qcom/venus/hfi_helper.h
+@@ -364,6 +364,24 @@
+ #define HFI_HEVC_TIER_MAIN			0x1
+ #define HFI_HEVC_TIER_HIGH0			0x2
  
--int read_extent_buffer_to_user(const struct extent_buffer *eb,
--			       void __user *dstv,
--			       unsigned long start, unsigned long len)
-+int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
-+				       void __user *dstv,
-+				       unsigned long start, unsigned long len)
- {
- 	size_t cur;
- 	size_t offset;
-@@ -5630,7 +5630,7 @@ int read_extent_buffer_to_user(const struct extent_buffer *eb,
- 
- 		cur = min(len, (PAGE_SIZE - offset));
- 		kaddr = page_address(page);
--		if (copy_to_user(dst, kaddr + offset, cur)) {
-+		if (probe_user_write(dst, kaddr + offset, cur)) {
- 			ret = -EFAULT;
- 			break;
- 		}
-diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
-index cf3424d58fec7..bc858c8cef0a6 100644
---- a/fs/btrfs/extent_io.h
-+++ b/fs/btrfs/extent_io.h
-@@ -457,9 +457,9 @@ int memcmp_extent_buffer(const struct extent_buffer *eb, const void *ptrv,
- void read_extent_buffer(const struct extent_buffer *eb, void *dst,
- 			unsigned long start,
- 			unsigned long len);
--int read_extent_buffer_to_user(const struct extent_buffer *eb,
--			       void __user *dst, unsigned long start,
--			       unsigned long len);
-+int read_extent_buffer_to_user_nofault(const struct extent_buffer *eb,
-+				       void __user *dst, unsigned long start,
-+				       unsigned long len);
- void write_extent_buffer_fsid(struct extent_buffer *eb, const void *src);
- void write_extent_buffer_chunk_tree_uuid(struct extent_buffer *eb,
- 		const void *src);
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index 88745b5182126..775fd5975191b 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -2105,9 +2105,14 @@ static noinline int copy_to_sk(struct btrfs_path *path,
- 		sh.len = item_len;
- 		sh.transid = found_transid;
- 
--		/* copy search result header */
--		if (copy_to_user(ubuf + *sk_offset, &sh, sizeof(sh))) {
--			ret = -EFAULT;
-+		/*
-+		 * Copy search result header. If we fault then loop again so we
-+		 * can fault in the pages and -EFAULT there if there's a
-+		 * problem. Otherwise we'll fault and then copy the buffer in
-+		 * properly this next time through
-+		 */
-+		if (probe_user_write(ubuf + *sk_offset, &sh, sizeof(sh))) {
-+			ret = 0;
- 			goto out;
- 		}
- 
-@@ -2115,10 +2120,14 @@ static noinline int copy_to_sk(struct btrfs_path *path,
- 
- 		if (item_len) {
- 			char __user *up = ubuf + *sk_offset;
--			/* copy the item */
--			if (read_extent_buffer_to_user(leaf, up,
--						       item_off, item_len)) {
--				ret = -EFAULT;
-+			/*
-+			 * Copy the item, same behavior as above, but reset the
-+			 * * sk_offset so we copy the full thing again.
-+			 */
-+			if (read_extent_buffer_to_user_nofault(leaf, up,
-+						item_off, item_len)) {
-+				ret = 0;
-+				*sk_offset -= sizeof(sh);
- 				goto out;
- 			}
- 
-@@ -2206,6 +2215,10 @@ static noinline int search_ioctl(struct inode *inode,
- 	key.offset = sk->min_offset;
- 
- 	while (1) {
-+		ret = fault_in_pages_writeable(ubuf, *buf_size - sk_offset);
-+		if (ret)
-+			break;
++/* VP9 Profile 0, 8-bit */
++#define HFI_VP9_PROFILE_P0			0x00000001
++/* VP9 Profile 2, 10-bit */
++#define HFI_VP9_PROFILE_P2_10B			0x00000004
 +
- 		ret = btrfs_search_forward(root, &key, path, sk->min_transid);
- 		if (ret != 0) {
- 			if (ret > 0)
++#define HFI_VP9_LEVEL_1				0x00000001
++#define HFI_VP9_LEVEL_11			0x00000002
++#define HFI_VP9_LEVEL_2				0x00000004
++#define HFI_VP9_LEVEL_21			0x00000008
++#define HFI_VP9_LEVEL_3				0x00000010
++#define HFI_VP9_LEVEL_31			0x00000020
++#define HFI_VP9_LEVEL_4				0x00000040
++#define HFI_VP9_LEVEL_41			0x00000080
++#define HFI_VP9_LEVEL_5				0x00000100
++#define HFI_VP9_LEVEL_51			0x00000200
++#define HFI_VP9_LEVEL_6				0x00000400
++#define HFI_VP9_LEVEL_61			0x00000800
++
+ #define HFI_BUFFER_INPUT			0x1
+ #define HFI_BUFFER_OUTPUT			0x2
+ #define HFI_BUFFER_OUTPUT2			0x3
 -- 
-2.25.1
-
-
+2.17.1
 
