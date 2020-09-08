@@ -2,54 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07387C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C43C62087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D962076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592750;
-	bh=vVUbIAaF8nS4HhBla1LFbTBHh9PVarnAhW6u3l2IBSk=;
+	s=default; t=1599592760;
+	bh=IW5uSBcmOPPSkVi4qJhYfoEVWEe0kYakDz5/+FPWbEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jFG+tg2v2NFtkyjJO+QAHkZycKTRKE3zBz19MrHK7uF2+8hjXQHv5Ddcsz7sjQnJo
-	 UK5tT5iqnkQdw8IBzedTZBX4R8l4js7xI3669JHbeKlWD/gK7h8Qe83GAI5QtDddVX
-	 YFPhau7x57g5Qf/nX+XqnA3uuD6ASTNky4xj8oq0=
+	b=pHCXvt0qNp7AR344B4teAbUEKEL6J5Ml7ktlJiZydPb+DrVBVQ3QJUKJ62Q0RX7fE
+	 LKCKSmQ26aLUmvWDQmVN7w3PaxlRFQCeyUE7mWpGBr7StBXrvq5/7CN8qI3qfhnlOY
+	 YR/T96PPq0xmXc4SsNtd7i1RqfZkEnV6qhr0QZLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbgIHTTH (ORCPT
+        id S1731773AbgIHTTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731141AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731139AbgIHQCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:02:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 804A723C92;
-        Tue,  8 Sep 2020 15:36:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D7EF246E3;
+        Tue,  8 Sep 2020 15:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579406;
-        bh=vVUbIAaF8nS4HhBla1LFbTBHh9PVarnAhW6u3l2IBSk=;
+        s=default; t=1599579618;
+        bh=IW5uSBcmOPPSkVi4qJhYfoEVWEe0kYakDz5/+FPWbEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E1vvX6rV5GxUrz6gtOkjrceCG1OcriDWTl+NHbEvX/d60jNiyCJB5AypxqYf/Pdeq
-         zhztNT2QuK7z0MYxtjqdi9IiQ7nxId5nWmphfLpLowMhEfPtLNH35ldzFe5lPI57+m
-         DmR//BeKyXV8r78OAliX6qKqoH+cAi3bVLRMqEN4=
+        b=GqPHP/JxVfMST3bSXczU4rOuDyQqEeMnTrvWjzsfmLmk5SmJxvnwgV6/dcNd6falK
+         +yPi4IGWsWkFJrN88pyBUAkQZPPxQ+O2rAc+C3s2PMl+EfNjJ7AVqjwKt1KoC3N0SH
+         ZSVM4GvJR616JpoLXL7yv7vHM9WBSKMFsg6t9C1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Gabriel Ganne <gabriel.ganne@6wind.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 064/186] gtp: add GTPA_LINK info to msg sent to userspace
-Date:   Tue,  8 Sep 2020 17:23:26 +0200
-Message-Id: <20200908152244.762261214@linuxfoundation.org>
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 153/186] block: ensure bdi->io_pages is always initialized
+Date:   Tue,  8 Sep 2020 17:24:55 +0200
+Message-Id: <20200908152249.075194644@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,36 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit b274e47d9e3f4dcd4ad4028a316ec22dc4533ac7 ]
+commit de1b0ee490eafdf65fac9eef9925391a8369f2dc upstream.
 
-During a dump, this attribute is essential, it enables the userspace to
-know on which interface the context is linked to.
+If a driver leaves the limit settings as the defaults, then we don't
+initialize bdi->io_pages. This means that file systems may need to
+work around bdi->io_pages == 0, which is somewhat messy.
 
-Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Tested-by: Gabriel Ganne <gabriel.ganne@6wind.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Initialize the default value just like we do for ->ra_pages.
+
+Cc: stable@vger.kernel.org
+Fixes: 9491ae4aade6 ("mm: don't cap request size based on read-ahead setting")
+Reported-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/gtp.c | 1 +
+ block/blk-core.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
-index 21640a035d7df..8e47d0112e5dc 100644
---- a/drivers/net/gtp.c
-+++ b/drivers/net/gtp.c
-@@ -1179,6 +1179,7 @@ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
- 		goto nlmsg_failure;
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -526,6 +526,7 @@ struct request_queue *__blk_alloc_queue(
+ 		goto fail_stats;
  
- 	if (nla_put_u32(skb, GTPA_VERSION, pctx->gtp_version) ||
-+	    nla_put_u32(skb, GTPA_LINK, pctx->dev->ifindex) ||
- 	    nla_put_be32(skb, GTPA_PEER_ADDRESS, pctx->peer_addr_ip4.s_addr) ||
- 	    nla_put_be32(skb, GTPA_MS_ADDRESS, pctx->ms_addr_ip4.s_addr))
- 		goto nla_put_failure;
--- 
-2.25.1
-
+ 	q->backing_dev_info->ra_pages = VM_READAHEAD_PAGES;
++	q->backing_dev_info->io_pages = VM_READAHEAD_PAGES;
+ 	q->backing_dev_info->capabilities = BDI_CAP_CGROUP_WRITEBACK;
+ 	q->node = node_id;
+ 
 
 
