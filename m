@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D148AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA6BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975D020768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1BE20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585894;
-	bh=yQDsG4Dukt9Zl7PbICuxCz2UQrfZce1uCsChE6idIWQ=;
+	s=default; t=1599585907;
+	bh=vf6uV5E11+J3SooCKztpUUMOjfYjPpiT8i5gbUY2EeI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEL9u8+V/UPz/yWDIlT5rpslOSFkeK//jphxfqbQFYxlH/bC/irugM4AKglLsz/3Z
-	 jsku2u2aNcHkCzGEW987XbjNO7RmEzSm9EeBdPV7wOneOBWALnGOCifHt+yij41wPc
-	 /MNYMtU4/Dh8NNx2brQctcI4DzudopmAO2E+cs9I=
+	b=VIzwcOVuL6fvjgaalQMCnXh6eVG4B0gaeJHoXtufCyT7r1Y0smCfVpGUzXUwt3mNw
+	 K+4C0Xj1Hh3yJxL+omFwgk4hpmtxMspwuKUvWuDdqqyNb5MWv5xLoCVG9e6ABtGTcp
+	 053klr5cGLfx9dj2JI098bZLi85Mq7s7wrrPCKU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgIHRYm (ORCPT
+        id S1731742AbgIHRY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731740AbgIHQSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:18:02 -0400
+        id S1730976AbgIHQRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:17:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDCE247FE;
-        Tue,  8 Sep 2020 15:43:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E4A24829;
+        Tue,  8 Sep 2020 15:44:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579822;
-        bh=yQDsG4Dukt9Zl7PbICuxCz2UQrfZce1uCsChE6idIWQ=;
+        s=default; t=1599579867;
+        bh=vf6uV5E11+J3SooCKztpUUMOjfYjPpiT8i5gbUY2EeI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WghZCykpfBygmcevXnNI5n+paTBdt9qd3roSQIJtbsGHUM7KHc75qN95QOfwHNkFx
-         YBSbtvXSd3KgFox2J6+mRTr7P8AZGaUITAf0uEFplUJc/3+KMly25JWLXvP32hUYVp
-         TCiLWsy1SPkpYZy5UBhBwwgOrEdQaFXAZvhuAmf8=
+        b=josDkeNcWaNAz4xDK7NzPt5bEVTAkGw/FA7XdeqwxQ7J1CK5kFRCaMezRN0SiZBLA
+         vJvN7loIXonboEU9wQIs/hvstCE/CfxNsTsoIHF3tgcvvPnx8Oc70NcQB1MpatH8KK
+         JY0BBkWZ7ZqchQ2JFw8lR/8Wtbl4kwBy5oPu2DA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, David Christensen <drc@linux.vnet.ibm.com>,
+        Baptiste Covolato <baptiste@arista.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 018/129] drm/amd/display: Retry AUX write when fail occurs
-Date:   Tue,  8 Sep 2020 17:24:19 +0200
-Message-Id: <20200908152230.613105567@linuxfoundation.org>
+Subject: [PATCH 5.4 065/129] tg3: Fix soft lockup when tg3_reset_task() fails.
+Date:   Tue,  8 Sep 2020 17:25:06 +0200
+Message-Id: <20200908152232.939879067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -62,40 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit ef67d792a2fc578319399f605fbec2f99ecc06ea ]
+[ Upstream commit 556699341efa98243e08e34401b3f601da91f5a3 ]
 
-[Why]
-In dm_dp_aux_transfer() now, we forget to handle AUX_WR fail cases. We
-suppose every write wil get done successfully and hence some AUX
-commands might not sent out indeed.
+If tg3_reset_task() fails, the device state is left in an inconsistent
+state with IFF_RUNNING still set but NAPI state not enabled.  A
+subsequent operation, such as ifdown or AER error can cause it to
+soft lock up when it tries to disable NAPI state.
 
-[How]
-Check if AUX_WR success. If not, retry it.
+Fix it by bringing down the device to !IFF_RUNNING state when
+tg3_reset_task() fails.  tg3_reset_task() running from workqueue
+will now call tg3_close() when the reset fails.  We need to
+modify tg3_reset_task_cancel() slightly to avoid tg3_close()
+calling cancel_work_sync() to cancel tg3_reset_task().  Otherwise
+cancel_work_sync() will wait forever for tg3_reset_task() to
+finish.
 
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reported-by: David Christensen <drc@linux.vnet.ibm.com>
+Reported-by: Baptiste Covolato <baptiste@arista.com>
+Fixes: db2199737990 ("tg3: Schedule at most one tg3_reset_task run")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/tg3.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-index 28a6c7b2ef4bb..2f858507ca702 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-@@ -101,7 +101,7 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
- 	result = dc_link_aux_transfer_raw(TO_DM_AUX(aux)->ddc_service, &payload,
- 				      &operation_result);
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index e12ba81288e64..70bd79dc43f2e 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -7227,8 +7227,8 @@ static inline void tg3_reset_task_schedule(struct tg3 *tp)
  
--	if (payload.write)
-+	if (payload.write && result >= 0)
- 		result = msg->size;
+ static inline void tg3_reset_task_cancel(struct tg3 *tp)
+ {
+-	cancel_work_sync(&tp->reset_task);
+-	tg3_flag_clear(tp, RESET_TASK_PENDING);
++	if (test_and_clear_bit(TG3_FLAG_RESET_TASK_PENDING, tp->tg3_flags))
++		cancel_work_sync(&tp->reset_task);
+ 	tg3_flag_clear(tp, TX_RECOVERY_PENDING);
+ }
  
- 	if (result < 0)
+@@ -11219,18 +11219,27 @@ static void tg3_reset_task(struct work_struct *work)
+ 
+ 	tg3_halt(tp, RESET_KIND_SHUTDOWN, 0);
+ 	err = tg3_init_hw(tp, true);
+-	if (err)
++	if (err) {
++		tg3_full_unlock(tp);
++		tp->irq_sync = 0;
++		tg3_napi_enable(tp);
++		/* Clear this flag so that tg3_reset_task_cancel() will not
++		 * call cancel_work_sync() and wait forever.
++		 */
++		tg3_flag_clear(tp, RESET_TASK_PENDING);
++		dev_close(tp->dev);
+ 		goto out;
++	}
+ 
+ 	tg3_netif_start(tp);
+ 
+-out:
+ 	tg3_full_unlock(tp);
+ 
+ 	if (!err)
+ 		tg3_phy_start(tp);
+ 
+ 	tg3_flag_clear(tp, RESET_TASK_PENDING);
++out:
+ 	rtnl_unlock();
+ }
+ 
 -- 
 2.25.1
 
