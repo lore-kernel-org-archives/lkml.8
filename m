@@ -2,236 +2,163 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03327C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFDB9207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcpQncCg"
+	by mail.kernel.org (Postfix) with ESMTP id BA18621D40
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599584825;
+	bh=5lqjgR8g9+OBvNFISo9CIMaYPERA98kvgU95UhpC3E4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u/Sz97tvyBe8qAtB4WUEOXplRi5SizDXDmejdkOvdEnQDdpYUzBDk93gbpffudpx6
+	 2irZSFPffpQLkmuPz2e+BJTQW5hjeO4PFtUdGBRThtCOobc26JN8kCY0Qw9v4dyrl6
+	 40w/3Pg0rkktDTOLZk1Ni+stMp+XcRsfr+sti19o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731854AbgIHRGm (ORCPT
+        id S1731788AbgIHRHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:06:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731932AbgIHRGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:06:21 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE372C061755;
-        Tue,  8 Sep 2020 10:06:20 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id mm21so39894pjb.4;
-        Tue, 08 Sep 2020 10:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=AnfV4++qeYNOgdT0ROy0q1s9L3CrCi5xVMUzWVJilp4=;
-        b=kcpQncCg9k2mhH5jl/RiR2b3GZFmDxAcNV3VLPkKAglPHCCTivucamWHSZC/NKxc5O
-         aaA55gr7lvZfumQEQJQLqS3mUIws0vyF0hYM25P8HKpfbJnburAlI94mFx/5162MCU6+
-         /b54aZObkC6o0VfCmT3WPYf+yVeRgQAaat4iae3R2kSOdmdPie5Lq8RUk3lnWBL57dBx
-         fX0a/ubFHw6BU8hmyzvoAboekabmJX3tAI6cnpGXENYJ/il2EaR1pkkUoz8Ut7MP3O9N
-         H6t3AiyvR8PYxlmTM4XGS/oAlF8wMeTPyN6Rx2oco+zlPyhrkwCZkltNHuVcSdvLILw5
-         ttYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=AnfV4++qeYNOgdT0ROy0q1s9L3CrCi5xVMUzWVJilp4=;
-        b=FzODszaNLKz6CfJya9tTRHp60lOO1e9VhkAqALO5OnpQ9a1/1tseifFLwHncH2rFvr
-         VzW1+3+s+lOjcKkIVBr3X/Fne/DggtgIcbZDqmEzV07JGpJoymFUYX+gqho4A6EthXkM
-         4ETAAThOXIbDHq0tiM1bjCeka5EtVVKm5V3tCHwN0osOYnumQKBpqURd8N8orl3Y7GIA
-         nW7EESBTDaqa4oluU8s1ClW3VgvhXHIqh9kMd/jTkRGqmmuXVjghvGZAoS7Ew+WbMojo
-         7/Grk7c5Lz6IbA5clfQssY+6lcvYi7wm1l1qgwbYeVAkPingQuPPLTW8/9W1iicXW5Rw
-         QNJQ==
-X-Gm-Message-State: AOAM532+xsGPAFuW/rT/DXlQSMVdhb+1cjU5xilYKKpHR5pDVgRzol3W
-        Y/RBqNB2GWHUh09h6SM6fd6TSOxFk7ypy/Je
-X-Google-Smtp-Source: ABdhPJwyX8LocD+VxFqC4aQKnDsDammaHOlfIYOcVtg+NexiuZMaDsHgWMOePIj2lh7oNOLVT/bkFg==
-X-Received: by 2002:a17:90a:fcc:: with SMTP id 70mr85978pjz.220.1599584780350;
-        Tue, 08 Sep 2020 10:06:20 -0700 (PDT)
-Received: from gmail.com ([106.201.26.241])
-        by smtp.gmail.com with ESMTPSA id 25sm19066pfj.35.2020.09.08.10.06.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 10:06:19 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 22:34:27 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Adam Radford <aradford@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Bradley Grove <linuxdrivers@attotech.com>,
-        John Garry <john.garry@huawei.com>,
-        Don Brace <don.brace@microsemi.com>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Jack Wang <jinpu.wang@cloud.ionos.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
-Subject: Re: [PATCH v2 10/15] scsi: pm_8001: use generic power management
-Message-ID: <20200908170427.GK9948@gmail.com>
-References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
- <20200720133427.454400-11-vaibhavgupta40@gmail.com>
+        Tue, 8 Sep 2020 13:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731811AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:19:20 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95A1323C43;
+        Tue,  8 Sep 2020 15:36:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579377;
+        bh=5lqjgR8g9+OBvNFISo9CIMaYPERA98kvgU95UhpC3E4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v7vXP07hk5zBazan5uzyjz822JVO3M2usN7+82Ml9DcOeDNka2ZeQzrVLl+vWY7n5
+         JkB0aWObAq2VSWu6+kzjr5ry8q6ylexUiU2zTrfmAo56cN1at0JdDg5iQYMu8sroYw
+         ymJ36H31f0NK9d9ivzBxvoeJC1RAfIWUPHJIuaKE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 053/186] perf top: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
+Date:   Tue,  8 Sep 2020 17:23:15 +0200
+Message-Id: <20200908152244.243347192@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200720133427.454400-11-vaibhavgupta40@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jul 20, 2020 at 07:04:23PM +0530, Vaibhav Gupta wrote:
-> With legacy PM, drivers themselves were responsible for managing the
-> device's power states and takes care of register states.
-> 
-> After upgrading to the generic structure, PCI core will take care of
-> required tasks and drivers should do only device-specific operations.
-> 
-> The driver was calling pci_save/restore_state(), pci_choose_state(),
-> pci_enable/disable_device() and pci_set_power_state() which is no more
-> needed.
-> 
-> Compile-tested only.
-> 
-> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
-> ---
->  drivers/scsi/pm8001/pm8001_init.c | 46 ++++++++++++-------------------
->  1 file changed, 17 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
-> index 9e99262a2b9d..d7d664b87720 100644
-> --- a/drivers/scsi/pm8001/pm8001_init.c
-> +++ b/drivers/scsi/pm8001/pm8001_init.c
-> @@ -1178,23 +1178,21 @@ static void pm8001_pci_remove(struct pci_dev *pdev)
->  
->  /**
->   * pm8001_pci_suspend - power management suspend main entry point
-> - * @pdev: PCI device struct
-> - * @state: PM state change to (usually PCI_D3)
-> + * @dev: Device struct
->   *
->   * Returns 0 success, anything else error.
->   */
-> -static int pm8001_pci_suspend(struct pci_dev *pdev, pm_message_t state)
-> +static int __maybe_unused pm8001_pci_suspend(struct device *dev)
->  {
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
-> -	struct pm8001_hba_info *pm8001_ha;
-> +	struct pm8001_hba_info *pm8001_ha = sha->lldd_ha;
->  	int  i, j;
-> -	u32 device_state;
-> -	pm8001_ha = sha->lldd_ha;
->  	sas_suspend_ha(sha);
->  	flush_workqueue(pm8001_wq);
->  	scsi_block_requests(pm8001_ha->shost);
->  	if (!pdev->pm_cap) {
-> -		dev_err(&pdev->dev, " PCI PM not supported\n");
-> +		dev_err(dev, " PCI PM not supported\n");
->  		return -ENODEV;
->  	}
->  	PM8001_CHIP_DISP->interrupt_disable(pm8001_ha, 0xFF);
-> @@ -1217,24 +1215,21 @@ static int pm8001_pci_suspend(struct pci_dev *pdev, pm_message_t state)
->  		for (j = 0; j < PM8001_MAX_MSIX_VEC; j++)
->  			tasklet_kill(&pm8001_ha->tasklet[j]);
->  #endif
-> -	device_state = pci_choose_state(pdev, state);
->  	pm8001_printk("pdev=0x%p, slot=%s, entering "
-> -		      "operating state [D%d]\n", pdev,
-> -		      pm8001_ha->name, device_state);
-> -	pci_save_state(pdev);
-> -	pci_disable_device(pdev);
-> -	pci_set_power_state(pdev, device_state);
-> +		      "suspended state\n", pdev,
-> +		      pm8001_ha->name);
->  	return 0;
->  }
->  
->  /**
->   * pm8001_pci_resume - power management resume main entry point
-> - * @pdev: PCI device struct
-> + * @dev: Device struct
->   *
->   * Returns 0 success, anything else error.
->   */
-> -static int pm8001_pci_resume(struct pci_dev *pdev)
-> +static int __maybe_unused pm8001_pci_resume(struct device *dev)
->  {
-> +	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct sas_ha_struct *sha = pci_get_drvdata(pdev);
->  	struct pm8001_hba_info *pm8001_ha;
->  	int rc;
-> @@ -1247,17 +1242,8 @@ static int pm8001_pci_resume(struct pci_dev *pdev)
->  	pm8001_printk("pdev=0x%p, slot=%s, resuming from previous "
->  		"operating state [D%d]\n", pdev, pm8001_ha->name, device_state);
->  
-> -	pci_set_power_state(pdev, PCI_D0);
-> -	pci_enable_wake(pdev, PCI_D0, 0);
-> -	pci_restore_state(pdev);
-> -	rc = pci_enable_device(pdev);
-> -	if (rc) {
-> -		pm8001_printk("slot=%s Enable device failed during resume\n",
-> -			      pm8001_ha->name);
-> -		goto err_out_enable;
-> -	}
-> +	device_wakeup_disable(dev);
->  
-> -	pci_set_master(pdev);
->  	rc = pci_go_44(pdev);
->  	if (rc)
->  		goto err_out_disable;
-> @@ -1318,8 +1304,7 @@ static int pm8001_pci_resume(struct pci_dev *pdev)
->  
->  err_out_disable:
->  	scsi_remove_host(pm8001_ha->shost);
-> -	pci_disable_device(pdev);
-> -err_out_enable:
-> +
->  	return rc;
->  }
->  
-> @@ -1402,13 +1387,16 @@ static struct pci_device_id pm8001_pci_table[] = {
->  	{} /* terminate list */
->  };
->  
-> +static SIMPLE_DEV_PM_OPS(pm8001_pci_pm_ops,
-> +			 pm8001_pci_suspend,
-> +			 pm8001_pci_resume);
-> +
->  static struct pci_driver pm8001_pci_driver = {
->  	.name		= DRV_NAME,
->  	.id_table	= pm8001_pci_table,
->  	.probe		= pm8001_pci_probe,
->  	.remove		= pm8001_pci_remove,
-> -	.suspend	= pm8001_pci_suspend,
-> -	.resume		= pm8001_pci_resume,
-> +	.driver.pm	= &pm8001_pci_pm_ops,
->  };
->  
->  /**
-> -- 
-> 2.27.0
-> 
-.
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+
+[ Upstream commit 0c5f1acc2a14416bf30023f373558d369afdbfc8 ]
+
+When I execute 'perf top' without HAVE_LIBBPF_SUPPORT, there exists the
+following segmentation fault, skip the side-band event setup to fix it,
+this is similar with commit 1101c872c8c7 ("perf record: Skip side-band
+event setup if HAVE_LIBBPF_SUPPORT is not set").
+
+  [yangtiezhu@linux perf]$ ./perf top
+  <SNIP>
+  perf: Segmentation fault
+  Obtained 6 stack frames.
+  ./perf(sighandler_dump_stack+0x5c) [0x12011b604]
+  [0xffffffc010]
+  ./perf(perf_mmap__read_init+0x3e) [0x1201feeae]
+  ./perf() [0x1200d715c]
+  /lib64/libpthread.so.0(+0xab9c) [0xffee10ab9c]
+  /lib64/libc.so.6(+0x128f4c) [0xffedc08f4c]
+  Segmentation fault
+  [yangtiezhu@linux perf]$
+
+I use git bisect to find commit b38d85ef49cf ("perf bpf: Decouple
+creating the evlist from adding the SB event") is the first bad commit,
+so also add the Fixes tag.
+
+Committer testing:
+
+First build perf explicitely disabling libbpf:
+
+  $ make NO_LIBBPF=1 O=/tmp/build/perf -C tools/perf install-bin && perf test python
+
+Now make sure it isn't linked:
+
+  $ perf -vv | grep -w bpf
+                   bpf: [ OFF ]  # HAVE_LIBBPF_SUPPORT
+  $
+  $ nm ~/bin/perf | grep libbpf
+  $
+
+And now try to run 'perf top':
+
+  # perf top
+  perf: Segmentation fault
+  -------- backtrace --------
+  perf[0x5bcd6d]
+  /lib64/libc.so.6(+0x3ca6f)[0x7fd0f5a66a6f]
+  perf(perf_mmap__read_init+0x1e)[0x5e1afe]
+  perf[0x4cc468]
+  /lib64/libpthread.so.0(+0x9431)[0x7fd0f645a431]
+  /lib64/libc.so.6(clone+0x42)[0x7fd0f5b2b912]
+  #
+
+Applying this patch fixes the issue.
+
+Fixes: b38d85ef49cf ("perf bpf: Decouple creating the evlist from adding the SB event")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Xuefeng Li <lixuefeng@loongson.cn>
+Link: http://lore.kernel.org/lkml/1597753837-16222-1-git-send-email-yangtiezhu@loongson.cn
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/builtin-top.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 13889d73f8dd5..c665d69c0651d 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1746,6 +1746,7 @@ int cmd_top(int argc, const char **argv)
+ 		goto out_delete_evlist;
+ 	}
+ 
++#ifdef HAVE_LIBBPF_SUPPORT
+ 	if (!top.record_opts.no_bpf_event) {
+ 		top.sb_evlist = evlist__new();
+ 
+@@ -1759,6 +1760,7 @@ int cmd_top(int argc, const char **argv)
+ 			goto out_delete_evlist;
+ 		}
+ 	}
++#endif
+ 
+ 	if (perf_evlist__start_sb_thread(top.sb_evlist, target)) {
+ 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
+-- 
+2.25.1
+
+
+
