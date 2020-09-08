@@ -2,112 +2,63 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A2DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EED1C2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 240F6215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599560158;
-	bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KM04cvb5lOSXlfOA9D8/BKIL9CQXX0tuS8QETenQWWAUmKQDKMNUkD8nKdToikDiy
-	 c8ot7IdmYsx77fCiRoLOMIaMXgmrqnJ33Xm6awhOvuHNWFKRF75N7F6CsrMFv5C8Vb
-	 HRR0mL4whu9GDLNnmmbdgK3sjws50/PGytL/5ijE=
+	by mail.kernel.org (Postfix) with ESMTP id 3A2AD20C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729512AbgIHKPv (ORCPT
+        id S1729269AbgIHKRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:15:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59746 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 06:17:30 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56218 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728828AbgIHKMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:12:32 -0400
-Received: from mail.kernel.org (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD899216C4;
-        Tue,  8 Sep 2020 10:12:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599559951;
-        bh=68DNqEok2XhXHOmQ4/OhRUUJNNkVRuXHV71v+f39NZM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gvLSkwfAcQ8V+/WodB5dkaMyFIcNgQ0c4wdSL3yhrGFVXRe5cofRHaIdQUSO9Pyvo
-         22LHFHkAi+tqdaOSBaLBqRm0HEf3OmJUsWx/Mwlq5tZ5/pVkZLdzjW1ge2Y2lp7kzR
-         fdQPz8NWeAdP4f1t4VTa+wDsS1nprFL483diKtFE=
-Received: from mchehab by mail.kernel.org with local (Exim 4.94)
-        (envelope-from <mchehab@kernel.org>)
-        id 1kFac1-00B3qh-4u; Tue, 08 Sep 2020 12:12:29 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] media: atomisp: move a static constant out of a header file
-Date:   Tue,  8 Sep 2020 12:12:25 +0200
-Message-ID: <a3280622dd3c85360c789e156f7b9d03bc8b2de3.1599141140.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599141140.git.mchehab+huawei@kernel.org>
-References: <cover.1599141140.git.mchehab+huawei@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729341AbgIHKRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:17:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id F011BB6B7;
+        Tue,  8 Sep 2020 10:17:11 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+List-Id: <linux-firmware.lore.kernel.org>
+To:     linux-firmware@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH linux-firmware] brcm: Fix a stale symlink for RPi3 model b+
+Date:   Tue,  8 Sep 2020 12:16:56 +0200
+Message-Id: <20200908101656.27835-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20200908101225.0t3IwQzyojisF31MYRw4LvTjENwdeOzzFtBcZMiBa6o@z>
 
-Gcc reports that input_formatter_alignment is not used:
+The symlink for brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt
+was wrongly listed with the same subdirectory brcm, and this resulted
+in a stale symlink.  Fix it.
 
-	In file included from ./drivers/staging/media/atomisp//pci/hive_isp_css_include/input_formatter.h:34,
-	                 from drivers/staging/media/atomisp//pci/runtime/debug/src/ia_css_debug.c:55:
-	./drivers/staging/media/atomisp//pci/hive_isp_css_common/host/input_formatter_local.h:118:27: warning: ‘input_formatter_alignment’ defined but not used [-Wunused-const-variable=]
-
-However, it is, but only inside input_formatter.c.
-
-So, move it out of the header file.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- .../atomisp/pci/hive_isp_css_common/host/input_formatter.c    | 4 ++++
- .../pci/hive_isp_css_common/host/input_formatter_local.h      | 4 ----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ WHENCE | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
-index 1b196cd265b9..5cd6136f21a2 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter.c
-@@ -27,6 +27,10 @@
- #include "input_formatter_private.h"
- #endif /* __INLINE_INPUT_FORMATTER__ */
- 
-+static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
-+	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
-+};
-+
- const hrt_address HIVE_IF_SRST_ADDRESS[N_INPUT_FORMATTER_ID] = {
- 	INPUT_FORMATTER0_SRST_OFFSET,
- 	INPUT_FORMATTER1_SRST_OFFSET,
-diff --git a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
-index 94fff77584f7..dfb593c109af 100644
---- a/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
-+++ b/drivers/staging/media/atomisp/pci/hive_isp_css_common/host/input_formatter_local.h
-@@ -115,8 +115,4 @@ struct input_formatter_bin_state_s {
- 	u32	en_status_update;
- };
- 
--static const unsigned int input_formatter_alignment[N_INPUT_FORMATTER_ID] = {
--	ISP_VEC_ALIGN, ISP_VEC_ALIGN, HIVE_ISP_CTRL_DATA_BYTES
--};
--
- #endif /* __INPUT_FORMATTER_LOCAL_H_INCLUDED__ */
+diff --git a/WHENCE b/WHENCE
+index 4adac39e28eb..f4af5d01e2c8 100644
+--- a/WHENCE
++++ b/WHENCE
+@@ -2639,7 +2639,7 @@ File: "brcm/brcmfmac43430-sdio.Hampoo-D2D3_Vi8A1.txt"
+ File: "brcm/brcmfmac43430-sdio.MUR1DX.txt"
+ File: "brcm/brcmfmac43430-sdio.raspberrypi,3-model-b.txt"
+ File: "brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt"
+-Link: brcm/brcmfmac43455-sdio.raspberrypi,3-model-a-plus.txt -> brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt
++Link: brcm/brcmfmac43455-sdio.raspberrypi,3-model-a-plus.txt -> brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt
+ File: "brcm/brcmfmac43455-sdio.raspberrypi,4-model-b.txt"
+ File: "brcm/brcmfmac43455-sdio.MINIX-NEO Z83-4.txt"
+ File: "brcm/brcmfmac4356-pcie.gpd-win-pocket.txt"
 -- 
-2.26.2
+2.16.4
 
