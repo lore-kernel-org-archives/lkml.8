@@ -2,91 +2,91 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1E36C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AAF020732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:35:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="LHWjvoQU"
+	by mail.kernel.org (Postfix) with ESMTP id 8F5152177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599554334;
+	bh=9MbsarOq+P/4I79z3A+fJ+J72iGu7faVW8HMRIAC4yg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=GlyCQbohFEcTArPGzJhQGYN6I+a8qj5xIyD3jYbpw8MG7kNCyyypfZETHSNJTaCwN
+	 LMm5mzDOCai42GuZNUcSh1Y1dwnggUbTNLbv+peYc9viabILzgH8Xj9nXAvXQLHqkp
+	 pF2l2p+5AN9n23zTIjFFcVKA5UtOkajHZkqp4TgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbgIHIft (ORCPT
+        id S1729992AbgIHIix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:35:49 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:1668 "EHLO smtp1.axis.com"
+        Tue, 8 Sep 2020 04:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730124AbgIHIfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:35:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=1085; q=dns/txt; s=axis-central1;
-  t=1599554142; x=1631090142;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gTwpcPl1kFBU+63Hn6Z1DD9u9CbnXsIkdWpPX9XgDYw=;
-  b=LHWjvoQUotg/cbuEkbUiCPvR3N6r+x3AD4OM6qeqigim5J8SKEDrwQvv
-   64vIDOMEwarQI2I+ckDGZirF0ZWM5wa442O7NEeKaGPaYCUbfuDF/Gnmw
-   KV7eviTO3f+uDaQrm6GtACOdOfVG8WtSz11fjKqlFwDye0/AbHQhDh+rQ
-   bHnrr3tA2E9122sJs+7/kc/99ROEsHFkH+3/eeqHTKI9r/0ARhlJ4Y4HM
-   ds1O7F9YauR6qidF5EYA9KNQScau4GU0YaudEdRiIz2OfNwjQCXZTAQAp
-   kTlJ9kGYnWQHT/ipRvqky+GeoUf++O0HMn9QtIJOKlmA7nDvzTZujWh9z
-   A==;
-IronPort-SDR: A7seHGq6UizqtY69aiZX4KZ3Zu6mGxvUchvWKDjdzIPhdJ9OtVV/8Ul2TCAIemDAi/3aWCFDLh
- u2WJSVdU7ksbuH0Z3i/gSLQdZ3NQrh2zZRK3dElRCbP5PXWYdr0QWbATS+ihsP5DuwsXg7+JhW
- Aq7xV2pNpFWph5pzc8D9HbXOhAaj49SFJVdkBi4iYjP5/DbCOtIGQbBygKYNNPWOoBk6y1U5Hb
- kYjQBabhRKBIKtZ0+39/YVXRJgHV4pLGM1c/BoYuzVoVjoFWDitPWb8zjvqMK7Bwrz1ZZ+lm7c
- 0lo=
-X-IronPort-AV: E=Sophos;i="5.76,405,1592863200"; 
-   d="scan'208";a="12651999"
-From:   Camel Guo <camel.guo@axis.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <tiwai@suse.com>,
-        <dmurphy@ti.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@axis.com>, Camel Guo <camelg@axis.com>
-Subject: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid gpio_reset
-Date:   Tue, 8 Sep 2020 10:35:20 +0200
-Message-ID: <20200908083521.14105-1-camel.guo@axis.com>
-X-Mailer: git-send-email 2.20.1
+        id S1729564AbgIHIiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 04:38:51 -0400
+Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A582215A4;
+        Tue,  8 Sep 2020 08:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599554331;
+        bh=9MbsarOq+P/4I79z3A+fJ+J72iGu7faVW8HMRIAC4yg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ABlmjheudFWqMnnqN7fkj7Y8fpGWpqp+Q+5bztrxFGYwdt/wYgY/MV7PHBbVNqkon
+         YKpo8TUVTX6CKqR+9LMrE0vMFmrIIsUlMMIhexMaoFG+3MN9Tu7yuOd+G3uin4Mt/h
+         ku2dg3SQDqNkWUHQcVwN7jdxOTn9U8cssWk6hieU=
+Subject: Re: [RFT 09/25] ARM: dts: s5pv210: fix number of I2S DAI cells
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-10-krzk@kernel.org>
+ <BN6PR04MB0660D9B0D0B5FB4F40CF2769CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+ <20200908065321.GB24227@pi3>
+From:   Sylwester Nawrocki <snawrocki@kernel.org>
+Message-ID: <48aa966f-d3b8-7e4a-36aa-aed4630d331a@kernel.org>
+Date:   Tue, 8 Sep 2020 10:38:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+In-Reply-To: <20200908065321.GB24227@pi3>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Camel Guo <camelg@axis.com>
+On 9/8/20 08:53, Krzysztof Kozlowski wrote:
+> On Mon, Sep 07, 2020 at 04:55:26PM -0700, Jonathan Bakker wrote:
+>> Sadly, this is causing issues for me.  The machine driver is no longer probing correctly
+>> on the Galaxy S.
+>>
+>> The failing call in sound/soc/samsung/aries_wm8994.c is
+>>
+>> 	/* Set CPU of_node for BT DAI */
+>> 	aries_dai[2].cpus->of_node = of_parse_phandle(cpu,
+>> 			"sound-dai", 1);
+>>
+>> where cpus->of_node is not set properly.  Which is definitely weird because it doesn't
+>> look like this should affect that.
+>>
+>> Let me know if there's any specific test that you want me to do.
+> Thanks for the tests. I wonder now if this was working before because
+> really my change should not break it... I'll think more about it.
 
-When gpio_reset is not well defined in devicetree, the
-adcx140->gpio_reset is an error code instead of NULL. In this case,
-adcx140->gpio_reset should not be used by adcx140_reset. This commit
-sets it NULL to avoid accessing an invalid variable.
-
-Signed-off-by: Camel Guo <camelg@axis.com>
----
- sound/soc/codecs/tlv320adcx140.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 7ae6ec374be3..597dd1062943 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -984,8 +984,10 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
- 
- 	adcx140->gpio_reset = devm_gpiod_get_optional(adcx140->dev,
- 						      "reset", GPIOD_OUT_LOW);
--	if (IS_ERR(adcx140->gpio_reset))
-+	if (IS_ERR(adcx140->gpio_reset) || adcx140->gpio_reset == NULL) {
- 		dev_info(&i2c->dev, "Reset GPIO not defined\n");
-+		adcx140->gpio_reset = NULL;
-+	}
- 
- 	adcx140->supply_areg = devm_regulator_get_optional(adcx140->dev,
- 							   "areg");
--- 
-2.20.1
-
+I think of_parse_phandle_with_args() needs to be used instead of just
+of_parse_phandle() for that to work, as AFAICS the latter assumes the
+cells count == 0. We would need first to update the driver and then dts.
