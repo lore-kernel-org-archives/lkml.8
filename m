@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF08C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD37FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D8682087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB5FD20757
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591700;
-	bh=ObXwBHcpH2/Zv36wN1h9V35sVGYuyTclfNAs+hcl7B8=;
+	s=default; t=1599591707;
+	bh=ZRfatkYT7SOEsW5WgdoVBOIPUTMx9SUZVfoN5i8zkWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSzszB62iXe8hW1roGIZRVrkCluEzT0INweWYnwqYOLfUvmD9nc7ZFzCEFS7UIKFJ
-	 Yt45+DmTYN9dRar1JgmeqtrWdHqnEJ+hGsAgJy2jng04B/rqiqGXp890x+ZG5Fu2mg
-	 tXXzXwiRPtU6QUUXbO/e2OcQt+Ox7hi+q1OcYo9A=
+	b=qE9Xbn96QMNWQoGTvgMTLD0zurh/zYf6O8FrvlyGZcvBmn5cgM3m2C6lH+UMfMmrZ
+	 Y30P7mgBigYOEXs+SLMxah6A5NcHjmFbfMhZwPZcYmKTbhu2hfQ5TifSqsYZn3CyPs
+	 1WToi1qcnUPlYw0AUHJggmymNY+Bj3T2mXlYElDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgIHTBe (ORCPT
+        id S1731566AbgIHTBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:01:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731291AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731288AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:08:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD66123EF3;
-        Tue,  8 Sep 2020 15:47:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5655B23F27;
+        Tue,  8 Sep 2020 15:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580067;
-        bh=ObXwBHcpH2/Zv36wN1h9V35sVGYuyTclfNAs+hcl7B8=;
+        s=default; t=1599580074;
+        bh=ZRfatkYT7SOEsW5WgdoVBOIPUTMx9SUZVfoN5i8zkWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QHQGxcaFmV/woEpGy3x/xSSRVidJS2Ng9gtAxADnXaRgs4PeSgm+c2ZgzmpuX/GU4
-         ufDo3sOMoQKEbol+FMvGM0duBQwzOD8Xi4RPk/2YF72GykpNxFcd2lu6LujsuRsaxx
-         E32Cw0TCY3p2VVPlJFFFzz/Mu0iGCgchEKmHUw00=
+        b=e+t32ihiHJlVIMhRbaks317AtkjEWzExkxfW1HkR2SF+jMxR4CQNgeBav9ulP1H3V
+         TwST0dVCcoNCIpKjF5VCTL4OLNf8mcuQL6YshLGhDzKWTK9PTzwdsoul1d7DiWGadq
+         OLnmN3xkjhEGdgX2il1aHs9XsCQlMChC7yMGZSns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Engel <amit.engel@dell.com>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 09/88] nvmet: Disable keep-alive timer when kato is cleared to 0h
-Date:   Tue,  8 Sep 2020 17:25:10 +0200
-Message-Id: <20200908152221.558685264@linuxfoundation.org>
+Subject: [PATCH 4.19 21/88] MIPS: BMIPS: Also call bmips_cpu_setup() for secondary cores
+Date:   Tue,  8 Sep 2020 17:25:22 +0200
+Message-Id: <20200908152222.135718416@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,45 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amit Engel <amit.engel@dell.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 0d3b6a8d213a30387b5104b2fb25376d18636f23 ]
+[ Upstream commit e14f633b66902615cf7faa5d032b45ab8b6fb158 ]
 
-Based on nvme spec, when keep alive timeout is set to zero
-the keep-alive timer should be disabled.
+The initialization done by bmips_cpu_setup() typically affects both
+threads of a given core, on 7435 which supports 2 cores and 2 threads,
+logical CPU number 2 and 3 would not run this initialization.
 
-Signed-off-by: Amit Engel <amit.engel@dell.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 738a3f79027b ("MIPS: BMIPS: Add early CPU initialization code")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/mips/kernel/smp-bmips.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 776b7e9e23b9e..f28df233dfcd0 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -307,6 +307,9 @@ static void nvmet_keep_alive_timer(struct work_struct *work)
- 
- static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
+diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+index 5ec546b5eed1c..d16e6654a6555 100644
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
+@@ -240,6 +240,8 @@ static int bmips_boot_secondary(int cpu, struct task_struct *idle)
+  */
+ static void bmips_init_secondary(void)
  {
-+	if (unlikely(ctrl->kato == 0))
-+		return;
++	bmips_cpu_setup();
 +
- 	pr_debug("ctrl %d start keep-alive timer for %d secs\n",
- 		ctrl->cntlid, ctrl->kato);
- 
-@@ -316,6 +319,9 @@ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
- 
- static void nvmet_stop_keep_alive_timer(struct nvmet_ctrl *ctrl)
- {
-+	if (unlikely(ctrl->kato == 0))
-+		return;
-+
- 	pr_debug("ctrl %d stop keep-alive\n", ctrl->cntlid);
- 
- 	cancel_delayed_work_sync(&ctrl->ka_work);
+ 	switch (current_cpu_type()) {
+ 	case CPU_BMIPS4350:
+ 	case CPU_BMIPS4380:
 -- 
 2.25.1
 
