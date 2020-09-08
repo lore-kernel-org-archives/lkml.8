@@ -2,52 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7CB5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34943C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 841B32080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E75F72080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590240;
-	bh=YgEmgGLPuUW4I8j1gag94hXTFYWL8ZL/iKMTK9WHkEY=;
+	s=default; t=1599590249;
+	bh=BrSj8b/9ETBL3mpN9bmORNmq9DNsTUW8IFX8COqRVdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HZxH8Vka4XCym9bI/Ivwl30Hpx4NG3JAIEJ/IVXYaPvRh5PWMj6XDtPsPvfPdwd1T
-	 eN33U+LrE2l0HRZit6VQzsNgD/y19O5vHR5JKf2/H6GFjJtFuYdUt0DzmsWhvvIPPH
-	 aJEhvoF3rUop41eTZMNsKdna7k+Wlk4d0A08BWk0=
+	b=yjRvTSXQUzTkWeQ29mDz96MRaB1w+gROuKRyODISJB1hTeRcS1u289+5TDDllrV69
+	 jPpF9ALhFXZJsJdU5px81HfW1ZNy6WnIm2N9QBzyRS3JrPCKH8uW3DhOn7cSvCVwac
+	 GpshPGXdcZNaznd5V66Y5WFpLxqpyFIKE3BNK6QE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgIHSgx (ORCPT
+        id S1731348AbgIHSgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:36:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:36:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731321AbgIHQJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:03 -0400
+        id S1731345AbgIHQJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99C292415A;
-        Tue,  8 Sep 2020 15:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5966A2416F;
+        Tue,  8 Sep 2020 15:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580153;
-        bh=YgEmgGLPuUW4I8j1gag94hXTFYWL8ZL/iKMTK9WHkEY=;
+        s=default; t=1599580157;
+        bh=BrSj8b/9ETBL3mpN9bmORNmq9DNsTUW8IFX8COqRVdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WOBejxyoXxUAXsEtXqVQkb3S7mkgBlGsVH+85uK1YN3fBQOfOtXYXz/dypEOLpEb+
-         wTvbFTeROadQE/Ik1yGo2mkHD6qZ2JKToTea679SWzLP8LX0M9/1+t3aEey9QSQkkG
-         t17mNnQUGCC3yYW1gbURrJyU8VcY/aioo9CRb878=
+        b=D6h8C39Z/BhBcKvnIiWJhKsnkSxKRjED0ygg1zoNsDjaZgh+98LPZedMWQ3raF0lx
+         l9/2k2mbtbXfXVn5VB0XswIRc4aQihV5pav+V7lqx7pXpUqyuk6OxO1f7MG0Q7AOwd
+         YS3x09Y/UJS0f/w4re8ZPoKnKTyj4n2CfnCOX77A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 11/88] ceph: dont allow setlease on cephfs
-Date:   Tue,  8 Sep 2020 17:25:12 +0200
-Message-Id: <20200908152221.656418367@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 53/88] xfs: dont update mtime on COW faults
+Date:   Tue,  8 Sep 2020 17:25:54 +0200
+Message-Id: <20200908152223.776357408@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,39 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
+commit b17164e258e3888d376a7434415013175d637377 upstream.
 
-Leases don't currently work correctly on kcephfs, as they are not broken
-when caps are revoked. They could eventually be implemented similarly to
-how we did them in libcephfs, but for now don't allow them.
+When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+PROT_WRITE, the xfs filesystem would incorrectly update ctime and mtime
+when the user hits a COW fault.
 
-[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
-  ceph_snapdir_fops ]
+This breaks building of the Linux kernel.  How to reproduce:
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ 1. extract the Linux kernel tree on dax-mounted xfs filesystem
+ 2. run make clean
+ 3. run make -j12
+ 4. run make -j12
+
+at step 4, make would incorrectly rebuild the whole kernel (although it
+was already built in step 3).
+
+The reason for the breakage is that almost all object files depend on
+objtool.  When we run objtool, it takes COW page fault on its .data
+section, and these faults will incorrectly update the timestamp of the
+objtool binary.  The updated timestamp causes make to rebuild the whole
+tree.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ceph/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/xfs_file.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index faca455bd3c69..4ce2752c8b71c 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1819,6 +1819,7 @@ const struct file_operations ceph_file_fops = {
- 	.mmap = ceph_mmap,
- 	.fsync = ceph_fsync,
- 	.lock = ceph_lock,
-+	.setlease = simple_nosetlease,
- 	.flock = ceph_flock,
- 	.splice_read = generic_file_splice_read,
- 	.splice_write = iter_file_splice_write,
--- 
-2.25.1
-
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -1095,6 +1095,14 @@ __xfs_filemap_fault(
+ 	return ret;
+ }
+ 
++static inline bool
++xfs_is_write_fault(
++	struct vm_fault		*vmf)
++{
++	return (vmf->flags & FAULT_FLAG_WRITE) &&
++	       (vmf->vma->vm_flags & VM_SHARED);
++}
++
+ static vm_fault_t
+ xfs_filemap_fault(
+ 	struct vm_fault		*vmf)
+@@ -1102,7 +1110,7 @@ xfs_filemap_fault(
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, PE_SIZE_PTE,
+ 			IS_DAX(file_inode(vmf->vma->vm_file)) &&
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
+@@ -1115,7 +1123,7 @@ xfs_filemap_huge_fault(
+ 
+ 	/* DAX can shortcut the normal fault path on write faults! */
+ 	return __xfs_filemap_fault(vmf, pe_size,
+-			(vmf->flags & FAULT_FLAG_WRITE));
++			xfs_is_write_fault(vmf));
+ }
+ 
+ static vm_fault_t
 
 
