@@ -2,115 +2,137 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83F4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63172C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8552074D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KC+X7Vsw"
+	by mail.kernel.org (Postfix) with ESMTP id 14FC02074B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:01:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599588110;
+	bh=OYOtgndWecoxZwngBj2b+iEf7X5sIueE3Anj06XmutE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Xcr/WLVe8OeoTLwKOP772LxSgqb9tBtB3oy9s55jo5EWBfboFdJozgqwCtG8Iv5e4
+	 wzSnIDklFDhiWiqrjHWaBCPJfhO8E9iYRGBpH7l5VaWGJOi0ef+R6yE4krrxPtKGwr
+	 kQs1QpuEsZhlIHlj1+AfvvHIy8LuQbEFDW7l0DSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbgIHSBg (ORCPT
+        id S1726925AbgIHSBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:01:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731536AbgIHQMN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:13 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2C0C061376;
-        Tue,  8 Sep 2020 05:48:54 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id o20so10856464pfp.11;
-        Tue, 08 Sep 2020 05:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tWON0+1XdczHoZAJuQK9B5Y7ioXiOI58hC6mWgDZwPw=;
-        b=KC+X7VswXrScqirdxGrptiUf3sW5/V9eti0jfe/rQeuXOmuHl020tCgfg6WEgzkqoa
-         hhdPEQP/9JV0KpAN9nzQoEsl5H7c5w+VudjujLIi2sXPGQaEDOpGjDNQidZavdZflIyj
-         TFx3JhxQUVN/bJ9/3F0O1Eq6DJvWFDHeJYFBpDfcN+F6fwz57sMdk7tBoofKS64yL0AB
-         vyI5U1d6E4bB/SHZ5ioQp4uLZnzSKqicBI8h5m1sgy8+O4lRvyEp2ovdP9M8fk00Nd9Q
-         bi0+VJRa+A92OXPuX+Bw1GOFQUnV0Ta6Do8F9lRRXsfdDfnn9MNbcs3cVNgzsNq2/0iW
-         sF9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tWON0+1XdczHoZAJuQK9B5Y7ioXiOI58hC6mWgDZwPw=;
-        b=U7wMTtrH896d0xuhncd72HWm9rCHpOrfeSRzCpqDlkJkdCB8T3uv0vD43q5pV1LVbB
-         HIFTdgcGOVVK1piA0RG8CmBgbtXsCnAxr5Kw08KT+awirRnoDJLz0Czv23i0FQ0qUYc5
-         TKElk9bSNPr40qcQ9KONLIgV6ZiUKV0ukwVUzD05IILsScRJ7ZvlUtK7yfCn71d1qeA+
-         hXNZlyCZjaZ1uSlNEhfxGenL+aNb4hrDeNTfYwCy5hCT3Nk4I3SY5aT6KOC4F9GjOVDh
-         sf7YW/wrMlqk5/Zz50qu4cBCfaq+5rQSxCegvNG3FudYbyUA69KXnMchReSIazeWaS64
-         y4lA==
-X-Gm-Message-State: AOAM533edv0F6WYa3BUx1YSGAnTcR7C48U+MgvF92ZQ2fjNzrGwfzAOT
-        GfU6qQ8z7mIyehOwi2dlbiw=
-X-Google-Smtp-Source: ABdhPJyKo3dVVd+Yo+sf8G2x8Tmx0c5relINOmwxnl/0k72I0vC/4f4EjbDeoZbpxmRsByzEuV1YrQ==
-X-Received: by 2002:a63:a08:: with SMTP id 8mr18312731pgk.300.1599569334520;
-        Tue, 08 Sep 2020 05:48:54 -0700 (PDT)
-Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
-        by smtp.gmail.com with ESMTPSA id 131sm16406253pgh.67.2020.09.08.05.48.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 05:48:54 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 12:48:52 +0000
-From:   Hao Lee <haolee.swjtu@gmail.com>
-To:     tj@kernel.org
-Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup: Delete unnecessary if statement in css_visible()
-Message-ID: <20200908124852.GB22780@haolee.github.io>
-References: <20200829100202.GA855@haolee.github.io>
+        Tue, 8 Sep 2020 14:01:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731342AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:10 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 855C024786;
+        Tue,  8 Sep 2020 15:51:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580270;
+        bh=OYOtgndWecoxZwngBj2b+iEf7X5sIueE3Anj06XmutE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VMfLFyUcNw5Zt0lhkDT6yBD0xi/ewm+LlpHUU3oGe3fThvHmqLXkZamd3oPkNbYFZ
+         +CQJ2Bd2K4HxpZpsRsg9XdCg+4/CjZjm3E646z8QlyHvk3/w458NqR5eHmt0Kszj1i
+         RKhQSLHT86o3DAjcs7at2lhxdgXcpYaMBptMtEk8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Karthik Shivaram <karthikgs@fb.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 75/88] libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
+Date:   Tue,  8 Sep 2020 17:26:16 +0200
+Message-Id: <20200908152224.923995652@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829100202.GA855@haolee.github.io>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Tejun Heo <tj@kernel.org>
 
-ping
+commit 3b5455636fe26ea21b4189d135a424a6da016418 upstream.
 
-On Sat, Aug 29, 2020 at 10:03:16AM +0000, Hao Lee wrote:
-> css_visible() is called in either cgroup_apply_control_enable()
-> or cgroup_apply_control_disable().
-> In cgroup_apply_control_enable(), we have checked ss_mask before calling
-> css_visible(), so there is no need to do the same thing again.
-> In cgroup_apply_control_disable():
->  - If css->parent is not NULL, we have checked ss_mask in the
->    second condition, so there is no need to do the same thing again.
->  - If css->parent is NULL, dsct is root cgroup so the deleted if
->    statement is always false and there is no need to keep it.
-> 
-> Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
-> ---
->  kernel/cgroup/cgroup.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index dd247747ec14..b6714166106d 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -3023,8 +3023,6 @@ static bool css_visible(struct cgroup_subsys_state *css)
->  
->  	if (cgroup_control(cgrp) & (1 << ss->id))
->  		return true;
-> -	if (!(cgroup_ss_mask(cgrp) & (1 << ss->id)))
-> -		return false;
->  	return cgroup_on_dfl(cgrp) && ss->implicit_on_dfl;
->  }
->  
-> -- 
-> 2.24.1
-> 
+All three generations of Sandisk SSDs lock up hard intermittently.
+Experiments showed that disabling NCQ lowered the failure rate significantly
+and the kernel has been disabling NCQ for some models of SD7's and 8's,
+which is obviously undesirable.
+
+Karthik worked with Sandisk to root cause the hard lockups to trim commands
+larger than 128M. This patch implements ATA_HORKAGE_MAX_TRIM_128M which
+limits max trim size to 128M and applies it to all three generations of
+Sandisk SSDs.
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: Karthik Shivaram <karthikgs@fb.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/ata/libata-core.c |    5 ++---
+ drivers/ata/libata-scsi.c |    8 +++++++-
+ include/linux/libata.h    |    1 +
+ 3 files changed, 10 insertions(+), 4 deletions(-)
+
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4492,9 +4492,8 @@ static const struct ata_blacklist_entry
+ 	/* https://bugzilla.kernel.org/show_bug.cgi?id=15573 */
+ 	{ "C300-CTFDDAC128MAG",	"0001",		ATA_HORKAGE_NONCQ, },
+ 
+-	/* Some Sandisk SSDs lock up hard with NCQ enabled.  Reported on
+-	   SD7SN6S256G and SD8SN8U256G */
+-	{ "SanDisk SD[78]SN*G",	NULL,		ATA_HORKAGE_NONCQ, },
++	/* Sandisk SD7/8/9s lock up hard on large trims */
++	{ "SanDisk SD[789]*",	NULL,		ATA_HORKAGE_MAX_TRIM_128M, },
+ 
+ 	/* devices which puke on READ_NATIVE_MAX */
+ 	{ "HDS724040KLSA80",	"KFAOA20N",	ATA_HORKAGE_BROKEN_HPA, },
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2391,6 +2391,7 @@ static unsigned int ata_scsiop_inq_89(st
+ 
+ static unsigned int ata_scsiop_inq_b0(struct ata_scsi_args *args, u8 *rbuf)
+ {
++	struct ata_device *dev = args->dev;
+ 	u16 min_io_sectors;
+ 
+ 	rbuf[1] = 0xb0;
+@@ -2416,7 +2417,12 @@ static unsigned int ata_scsiop_inq_b0(st
+ 	 * with the unmap bit set.
+ 	 */
+ 	if (ata_id_has_trim(args->id)) {
+-		put_unaligned_be64(65535 * ATA_MAX_TRIM_RNUM, &rbuf[36]);
++		u64 max_blocks = 65535 * ATA_MAX_TRIM_RNUM;
++
++		if (dev->horkage & ATA_HORKAGE_MAX_TRIM_128M)
++			max_blocks = 128 << (20 - SECTOR_SHIFT);
++
++		put_unaligned_be64(max_blocks, &rbuf[36]);
+ 		put_unaligned_be32(1, &rbuf[28]);
+ 	}
+ 
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -439,6 +439,7 @@ enum {
+ 	ATA_HORKAGE_NO_DMA_LOG	= (1 << 23),	/* don't use DMA for log read */
+ 	ATA_HORKAGE_NOTRIM	= (1 << 24),	/* don't use TRIM */
+ 	ATA_HORKAGE_MAX_SEC_1024 = (1 << 25),	/* Limit max sects to 1024 */
++	ATA_HORKAGE_MAX_TRIM_128M = (1 << 26),	/* Limit max trim size to 128M */
+ 
+ 	 /* DMA mask for user DMA control: User visible values; DO NOT
+ 	    renumber */
+
+
