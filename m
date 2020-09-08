@@ -2,56 +2,55 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F27C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05E8C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 827192078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5BB2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588785;
-	bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
+	s=default; t=1599588806;
+	bh=gbyumvFlrTGeYAdvEwA8qyZf3hhTSQZBc/wWw/9Qi68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uheeK3iAuOqmLAb9KgBowBTF8NCoTQRlWIxmfI9XSW+Q8ph09lE8mFP9JHPb2BAew
-	 i2HRdvNSYLVa8PEqoBrcFtUDXewvzHost8XadzjdvU57JfF2Pl3ELw91pdLS+yhEcz
-	 +HIySAVFO+soAtlFfmOkLCRtN8bXXp7kdLuXL/WM=
+	b=dNOxa4m/tkYyjkB0q4qkmAg9z30vi0hKgWJTaugrxSmv/20ZN8sqYuKDblQmxT6o/
+	 eLb9Nci/0MKE5dPH2fsW1nP5qRaTF40sOerUssiRJv3gLmNA+eEk9gBw3liToEKnhN
+	 5e1YxlPnJzagma00umKJNEsJoMETB00TonbvJJL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732191AbgIHSNA (ORCPT
+        id S1731895AbgIHSNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731296AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731492AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35BEE24795;
-        Tue,  8 Sep 2020 15:42:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF0A9246DB;
+        Tue,  8 Sep 2020 15:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579731;
-        bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
+        s=default; t=1599579606;
+        bh=gbyumvFlrTGeYAdvEwA8qyZf3hhTSQZBc/wWw/9Qi68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jSvK7SGezbf7srG0WUuJZcAc96x9LmlPJoc1UrZmARj+c8NoUkMmfTOyclq2Wl4ru
-         0fZDqOukubet72wMHXYv9mMAOirseIM34vdgTi8Y27rRzMqWSW9NF3enTnQNuVOhkr
-         RZA0nrnWhxlckmiL+GSuBImKJ6RlGZwnQT7Khr4w=
+        b=AO+HtK2ovC4NaEPAjcfr1LoX4/2R2JEEMazjy+C502ezZQsVKAycDZ6gBKRJAV8EJ
+         bRgg3UvptG6tn3uUokxpY3R//FfmNqJoN1zWqLxlgID/BvVO3HxgafmSaZ3O8OzxUu
+         7ySedYlhUeGs48EJJ7vNqFTWg8d4KFGfZCaMDBZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Krishna Manikandan <mkrishn@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 004/129] drm/msm: add shutdown support for display platform_driver
-Date:   Tue,  8 Sep 2020 17:24:05 +0200
-Message-Id: <20200908152229.921165297@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.8 140/186] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
+Date:   Tue,  8 Sep 2020 17:24:42 +0200
+Message-Id: <20200908152248.444732663@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,60 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishna Manikandan <mkrishn@codeaurora.org>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
+commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
 
-Define shutdown callback for display drm driver,
-so as to disable all the CRTCS when shutdown
-notification is received by the driver.
+Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
+However, as long as he investigated, the design of this model is hardly
+similar to the one of Digi 00x family. It's better to exclude the model
+from modalias of ALSA firewire-digi00x driver.
 
-This change will turn off the timing engine so
-that no display transactions are requested
-while mmu translations are getting disabled
-during reboot sequence.
+This commit changes device entries so that the model is excluded.
 
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
+$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
+404  31333934  bus_name "1394"
+408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
+40c  00a07e01  company_id 00a07e     |
+410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
 
-Changes in v2:
-	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
-	- Change commit text to reflect when this issue
-	  was uncovered (Sai Prakash Ranjan)
+               root directory
+               -----------------------------------------------------------------
+414  0005d08c  directory_length 5, crc 53388
+418  0300a07e  vendor
+41c  8100000c  --> descriptor leaf at 44c
+420  0c008380  node capabilities
+424  8d000002  --> eui-64 leaf at 42c
+428  d1000004  --> unit directory at 438
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+               eui-64 leaf at 42c
+               -----------------------------------------------------------------
+42c  0002410f  leaf_length 2, crc 16655
+430  00a07e01  company_id 00a07e     |
+434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               unit directory at 438
+               -----------------------------------------------------------------
+438  0004d6c9  directory_length 4, crc 54985
+43c  1200a02d  specifier id: 1394 TA
+440  13014001  version: Vender Unique and AV/C
+444  17000001  model
+448  81000009  --> descriptor leaf at 46c
+
+               descriptor leaf at 44c
+               -----------------------------------------------------------------
+44c  00077205  leaf_length 7, crc 29189
+450  00000000  textual descriptor
+454  00000000  minimal ASCII
+458  41766964  "Avid"
+45c  20546563  " Tec"
+460  686e6f6c  "hnol"
+464  6f677900  "ogy"
+468  00000000
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  000599a5  leaf_length 5, crc 39333
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  41647265  "Adre"
+47c  6e616c69  "nali"
+480  6e650000  "ne"
+
+Reported-by: Simon Wood <simon@mungewell.org>
+Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/firewire/digi00x/digi00x.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index b73fbb65e14b2..4558d66761b3c 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1321,6 +1321,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
- 	return 0;
- }
+--- a/sound/firewire/digi00x/digi00x.c
++++ b/sound/firewire/digi00x/digi00x.c
+@@ -14,6 +14,7 @@ MODULE_LICENSE("GPL v2");
+ #define VENDOR_DIGIDESIGN	0x00a07e
+ #define MODEL_CONSOLE		0x000001
+ #define MODEL_RACK		0x000002
++#define SPEC_VERSION		0x000001
  
-+static void msm_pdev_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
-+
-+	drm_atomic_helper_shutdown(drm);
-+}
-+
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
- 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-@@ -1332,6 +1339,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
- static struct platform_driver msm_platform_driver = {
- 	.probe      = msm_pdev_probe,
- 	.remove     = msm_pdev_remove,
-+	.shutdown   = msm_pdev_shutdown,
- 	.driver     = {
- 		.name   = "msm",
- 		.of_match_table = dt_match,
--- 
-2.25.1
-
+ static int name_card(struct snd_dg00x *dg00x)
+ {
+@@ -175,14 +176,18 @@ static const struct ieee1394_device_id s
+ 	/* Both of 002/003 use the same ID. */
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_CONSOLE,
+ 	},
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_RACK,
+ 	},
+ 	{}
 
 
