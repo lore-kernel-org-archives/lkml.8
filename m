@@ -2,118 +2,118 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4564C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82503C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 929BA2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44B3F2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:53:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y9WdigwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgIHUxO (ORCPT
+        id S1730438AbgIHUxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:53:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729912AbgIHUxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:53:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 02C86ADC5;
-        Tue,  8 Sep 2020 20:53:12 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 22:53:10 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Julius Hemanth Pitti <jpitti@cisco.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        xe-linux-external@cisco.com
-Subject: Re: [PATCH v2] mm: memcg: yield cpu when we fail to charge pages
-Message-ID: <20200908205310.GF26850@dhcp22.suse.cz>
-References: <20200908201426.14837-1-jpitti@cisco.com>
- <CAHbLzkqYrkA6=RSBpwEQJ5WaLUWwdP=05BPE2F4pRgk98NuVTg@mail.gmail.com>
+        Tue, 8 Sep 2020 16:53:31 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60896 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730425AbgIHUx0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 16:53:26 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088KrNMu018749;
+        Tue, 8 Sep 2020 15:53:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599598403;
+        bh=pC5zpAJTBXlu/oSruNGiXQ+ayCSfyDddlcj1JxQybXE=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=y9WdigwF5wTvqtSVSdFyQlMn75eO2VnJq8Y9uCzkAUGOlk/lnvybpM8X9GddRWDoN
+         Og3o1fDSoCwKE8kvaup/lIMjg+8dhoYNgv6O7mPOwkiJDHaeYxgByzc7q9IEZwYTPu
+         LA6gf/escNXgdzgTYJpBrnGTXHn/UGsDNWDQpXk8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088KrNhO104076
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 15:53:23 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 15:53:23 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 15:53:23 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088KrNRO005070;
+        Tue, 8 Sep 2020 15:53:23 -0500
+Subject: Re: [PATCH 4/7] power: supply: bq27xxx: use BIT() for bit flags
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200908201319.3567-1-krzk@kernel.org>
+ <20200908201319.3567-4-krzk@kernel.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <af09a19d-3261-a1bb-4d38-e7f543648154@ti.com>
+Date:   Tue, 8 Sep 2020 15:53:23 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHbLzkqYrkA6=RSBpwEQJ5WaLUWwdP=05BPE2F4pRgk98NuVTg@mail.gmail.com>
+In-Reply-To: <20200908201319.3567-4-krzk@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 08-09-20 13:31:51, Yang Shi wrote:
-> On Tue, Sep 8, 2020 at 1:14 PM Julius Hemanth Pitti <jpitti@cisco.com> wrote:
-> >
-> > For non root CG, in try_charge(), we keep trying
-> > to charge until we succeed. On non-preemptive
-> > kernel, when we are OOM, this results in holding
-> > CPU forever.
-> >
-> > On SMP systems, this doesn't create a big problem
-> > because oom_reaper get a change to kill victim
-> > and make some free pages. However on a single-core
-> > CPU (or cases where oom_reaper pinned to same CPU
-> > where try_charge is executing), oom_reaper shall
-> > never get scheduled and we stay in try_charge forever.
-> >
-> > Steps to repo this on non-smp:
-> > 1. mount -t tmpfs none /sys/fs/cgroup
-> > 2. mkdir /sys/fs/cgroup/memory
-> > 3. mount -t cgroup none /sys/fs/cgroup/memory -o memory
-> > 4. mkdir /sys/fs/cgroup/memory/0
-> > 5. echo 40M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
-> > 6. echo $$ > /sys/fs/cgroup/memory/0/tasks
-> > 7. stress -m 5 --vm-bytes 10M --vm-hang 0
-> 
-> Isn't it the same problem solved by e3336cab2579 ("mm: memcg: fix
-> memcg reclaim soft lockup")? It has been in Linus's tree.
+Krzysztof
 
-Yes it should because it adds a scheduling point regardless
-of reclaimability.
- 
-> > Signed-off-by: Julius Hemanth Pitti <jpitti@cisco.com>
-> > Acked-by: Roman Gushchin <guro@fb.com>
-> > ---
-> >
-> > Changes in v2:
-> >  - Added comments.
-> >  - Added "Acked-by: Roman Gushchin <guro@fb.com>".
-> > ---
-> >  mm/memcontrol.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index cfa6cbad21d5..4f293bf8c7ed 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -2745,6 +2745,15 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> >         if (fatal_signal_pending(current))
-> >                 goto force;
-> >
-> > +       /*
-> > +        * We failed to charge even after retries, give oom_reaper or
-> > +        * other process a change to make some free pages.
-> > +        *
-> > +        * On non-preemptive, Non-SMP system, this is critical, else
-> > +        * we keep retrying with no success, forever.
-> > +        */
-> > +       cond_resched();
-> > +
-> >         /*
-> >          * keep retrying as long as the memcg oom killer is able to make
-> >          * a forward progress or bypass the charge if the oom killer
-> > --
-> > 2.17.1
-> >
-> >
+On 9/8/20 3:13 PM, Krzysztof Kozlowski wrote:
+> BIT() is a preferred way to toggle bit-like flags: no problems with 32/64
+> bit systems, less chances for mistakes.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   drivers/power/supply/bq27xxx_battery.c | 15 ++++++++-------
+>   1 file changed, 8 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/power/supply/bq27xxx_battery.c b/drivers/power/supply/bq27xxx_battery.c
+> index 2deac3fbb036..e971af43dd45 100644
+> --- a/drivers/power/supply/bq27xxx_battery.c
+> +++ b/drivers/power/supply/bq27xxx_battery.c
+> @@ -847,13 +847,14 @@ static struct bq27xxx_dm_reg bq27621_dm_regs[] = {
+>   
+>   #define bq27z561_dm_regs 0
+>   #define bq28z610_dm_regs 0
+> -
+> -#define BQ27XXX_O_ZERO	0x00000001
+> -#define BQ27XXX_O_OTDC	0x00000002 /* has OTC/OTD overtemperature flags */
+> -#define BQ27XXX_O_UTOT  0x00000004 /* has OT overtemperature flag */
+> -#define BQ27XXX_O_CFGUP	0x00000008
+> -#define BQ27XXX_O_RAM	0x00000010
+> -#define BQ27Z561_O_BITS	0x00000020
+> +#define bq34z100_dm_regs 0
+> +
+> +#define BQ27XXX_O_ZERO		BIT(0)
+> +#define BQ27XXX_O_OTDC		BIT(1) /* has OTC/OTD overtemperature flags */
+> +#define BQ27XXX_O_UTOT		BIT(2) /* has OT overtemperature flag */
+> +#define BQ27XXX_O_CFGUP		BIT(3)
+> +#define BQ27XXX_O_RAM		BIT(4)
+> +#define BQ27Z561_O_BITS		BIT(5)
+>   
 
--- 
-Michal Hocko
-SUSE Labs
+It seems you have added whitespaces that you submitted a patch to fix in 
+3/7.
+
+Also squash 3 and 4.
+
+Dan
+
