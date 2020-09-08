@@ -2,299 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F9AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8F0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0BE82074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D09206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:52:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DT4Xo32K"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GbC0SGU+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731737AbgIHRwU (ORCPT
+        id S1731692AbgIHRwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44020 "EHLO
+        Tue, 8 Sep 2020 13:52:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731669AbgIHRv7 (ORCPT
+        with ESMTP id S1731630AbgIHQNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:51:59 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D708AC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:51:58 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id v20so14488ual.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:51:58 -0700 (PDT)
+        Tue, 8 Sep 2020 12:13:44 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3B97C061388
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:30:11 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id j2so18912977wrx.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OBeaeAVUKiNmgW/DZzRv0moQ+dMhZppUu0mFG885ArY=;
-        b=DT4Xo32KwklPVgNpWLNHtnFChS+582tbkLEL3cAnCSBAWtaQDgdhSUB7nToQBmpLOT
-         UzX/8ljGUg9cUpYeCLnNp+cInPenpUYURZaDcZ1HC2siIyVn3RXMrumq54pYUTDyKC9U
-         LL+8whyVMZZepNtWOfUeEB75lVHJObHdS1MzmYtp036R7TXh9SeNvo5ViADSKL1vHnRb
-         5lsyHM2k5Yka8ePp8Y1OPAn/tGqxOLXDOxdC2nROSFwzl6cZ0gE+ExTaco1jG1nrr3lj
-         LeqWXMxmf8Ksj+GBuVLtEvDwMJxrbV05e0aM+AAXv4Azwu5KLwvEa6bvckz5h5nxFE/V
-         HLYg==
+         :cc:content-transfer-encoding;
+        bh=y/EkIKvR6iBw+zS5qhGZEpN1iwHB9TWxtJTSD07C3J4=;
+        b=GbC0SGU+jdHDgkoKWG2x4two8n4K73jUfxTdN6DtKPjGlsAaxh51FOkVE6YUzsr5dv
+         Cl/uPdJHLO81KjXKkjm2YvYdaTjNfEdMS/wT0FkZHVgd+Pl9rk9gtifJLHjIO7kvCaMA
+         eAQRJ0CKTL6XgI16ktwVj+sdsxZ4/ZT3SPRDRGEvgvV6Hem09VJQLjoYw52OOMtzAMRU
+         WuCUZ1D2FRKthW77L5ZYlhOGTOLDjUUdyuMHMJP1hLgQNmFOgLRHNQYsOxcYmxQXpWM3
+         Bpbvek41ZTKkov39peOcMfxY1Lf+7U5vKv199vZzovSFk/oQHLmzj0qS0PbV1iitF6qv
+         c+FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OBeaeAVUKiNmgW/DZzRv0moQ+dMhZppUu0mFG885ArY=;
-        b=qvbSkMIk6ZUdPVR3pD9PvVNzUZ8Jf7OlGUczTgPkepot/gurxDinhrUFOL6uqjmwci
-         C0Esb0x4GN+N1G4KGd1/HbokIt9PIaoGLGo55A/j14ToWd5XrrsyXutSdzrb8vx0NTZL
-         Ggz5TYngUDSiQpDHZevyTimeYy15l58MXZIo2jNHumRNsGfmv83PmjV2EXrLOBBriLeh
-         vAJbmcEKKifNqgtS0wuQzFqwz9KNFyS5lbaWaR346TnUq5q85KrnJt/Q+WJDRYaKSnz+
-         WhaXiZ+BKgD07d6NPnqGBlDU6/YmbnXgvP7SX9S0wZwyIvPNnyZSZd6vjpcTEj/NPfBo
-         RY4w==
-X-Gm-Message-State: AOAM533YEsRthOM9qxuRRRpqdSwkVh4Jc0evDX5rfcl/knm/auzIpNJZ
-        81xG5BursVCP8/9BhpzTO3cfLStWnju4TA==
-X-Google-Smtp-Source: ABdhPJzekTEeeTxS154ZBzBfBjeLVG5kpeOeoO82ryD58mi5+Q3AvEAOD63v+UgsaSgm5bh+844IQQ==
-X-Received: by 2002:ab0:ef:: with SMTP id 102mr192963uaj.142.1599587516275;
-        Tue, 08 Sep 2020 10:51:56 -0700 (PDT)
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
-        by smtp.gmail.com with ESMTPSA id 67sm1757vsl.13.2020.09.08.10.51.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 10:51:55 -0700 (PDT)
-Received: by mail-vs1-f47.google.com with SMTP id e23so3493168vsk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:51:55 -0700 (PDT)
-X-Received: by 2002:a05:6102:150:: with SMTP id a16mr172014vsr.99.1599587514844;
- Tue, 08 Sep 2020 10:51:54 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y/EkIKvR6iBw+zS5qhGZEpN1iwHB9TWxtJTSD07C3J4=;
+        b=KZ7jD41VewP7h0GqzDnE4T11ljwNjCnhQutxnF4T9kssNpjn/sk/7BbiJYDUngBMML
+         wNUFycdTYTW8ns4DLDcNOlGZEQkXq/jOjbckIZMERFlt+Ce89hh1yJigc8eV5hHIcy1/
+         CBf9xyvbva4ejB39x/EZHiRtoqXB6cPzgeKjYGRzwzsjriT8asdOeezUVMUmy1W6XbAC
+         H9O04oPyB9DZtyaVqtXnXyF50brGVE1QyceDKKkSCyi4360j6LFvWPTWKf4GSw2MAp6q
+         RfigGq48Dk2v6O9I4Tloh0X680nq5ov+60R0SuIOXidjpPq0Q73syUyh7ZLYUXywzj7k
+         FQhg==
+X-Gm-Message-State: AOAM532uDg7b8YZQJxFlc4D7i2VyrZoXutC9QlDU8X8rW2Btt/mbFjJW
+        WtI1aKq1sfTs9pvDxBgc3OQgWVlWKoLf8w40kfI3EA==
+X-Google-Smtp-Source: ABdhPJzcPzSvH+P8hTbAa6PCtKuOhme3NG7uL/ej8gWFNWQLmk0e0zNZlg/a/MBGYQeeUXoyAAxylIEsLLY0lkgdWbI=
+X-Received: by 2002:adf:ded0:: with SMTP id i16mr28452918wrn.372.1599568210306;
+ Tue, 08 Sep 2020 05:30:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200901195415.4840-1-m-karicheri2@ti.com> <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
- <15bbf7d2-627b-1d52-f130-5bae7b7889de@ti.com> <CA+FuTSeri93irC9eaQqrFrY2++d0zJ4-F0YAfCXfX6XVVqU6Pw@mail.gmail.com>
- <bf8a22c2-0ebe-7a52-2e79-7dde72d444ba@ti.com>
-In-Reply-To: <bf8a22c2-0ebe-7a52-2e79-7dde72d444ba@ti.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 8 Sep 2020 19:51:16 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
-Message-ID: <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/1] Support for VLAN interface over HSR/PRP
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nsekhar@ti.com,
-        Grygorii Strashko <grygorii.strashko@ti.com>
+References: <20200907134055.2878499-1-elver@google.com> <20200907134055.2878499-8-elver@google.com>
+ <20200908115316.GD25591@gaia>
+In-Reply-To: <20200908115316.GD25591@gaia>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Tue, 8 Sep 2020 14:29:59 +0200
+Message-ID: <CAG_fn=U8tv2tXdWPTakcpDKG253kHj0YdsSU46GA5WgMo46BWg@mail.gmail.com>
+Subject: Re: [PATCH RFC 07/10] kfence, kmemleak: make KFENCE compatible with KMEMLEAK
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Marco Elver <elver@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, paulmck@kernel.org,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Memory Management List <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 6:55 PM Murali Karicheri <m-karicheri2@ti.com> wrote:
+> Could you instead do:
 >
-> Hi Willem,
->
-> On 9/4/20 11:52 AM, Willem de Bruijn wrote:
-> > On Thu, Sep 3, 2020 at 12:30 AM Murali Karicheri <m-karicheri2@ti.com> wrote:
-> >>
-> >> All,
-> >>
-> >> On 9/2/20 12:14 PM, Murali Karicheri wrote:
-> >>> All,
-> >>>
-> >>> On 9/1/20 3:54 PM, Murali Karicheri wrote:
-> >>>> This series add support for creating VLAN interface over HSR or
-> >>>> PRP interface. Typically industrial networks uses VLAN in
-> >>>> deployment and this capability is needed to support these
-> >>>> networks.
-> >>>>
-> >>>> This is tested using two TI AM572x IDK boards connected back
-> >>>> to back over CPSW  ports (eth0 and eth1).
-> >>>>
-> >>>> Following is the setup
-> >>>>
-> >>>>                   Physical Setup
-> >>>>                   ++++++++++++++
-> >>>>    _______________    (CPSW)     _______________
-> >>>>    |              |----eth0-----|               |
-> >>>>    |TI AM572x IDK1|             | TI AM572x IDK2|
-> >>>>    |______________|----eth1-----|_______________|
-> >>>>
-> >>>>
-> >>>>                   Network Topolgy
-> >>>>                   +++++++++++++++
-> >>>>
-> >>>>                          TI AM571x IDK  TI AM572x IDK
-> >>>>
-> >>>> 192.168.100.10                 CPSW ports                 192.168.100.20
-> >>>>                IDK-1                                        IDK-2
-> >>>> hsr0/prp0.100--| 192.168.2.10  |--eth0--| 192.168.2.20 |--hsr0/prp0.100
-> >>>>                  |----hsr0/prp0--|        |---hsr0/prp0--|
-> >>>> hsr0/prp0.101--|               |--eth1--|              |--hsr0/prp0/101
-> >>>>
-> >>>> 192.168.101.10                                            192.168.101.20
-> >>>>
-> >>>> Following tests:-
-> >>>>    - create hsr or prp interface and ping the interface IP address
-> >>>>      and verify ping is successful.
-> >>>>    - Create 2 VLANs over hsr or prp interface on both IDKs (VID 100 and
-> >>>>      101). Ping between the IP address of the VLAN interfaces
-> >>>>    - Do iperf UDP traffic test with server on one IDK and client on the
-> >>>>      other. Do this using 100 and 101 subnet IP addresses
-> >>>>    - Dump /proc/net/vlan/{hsr|prp}0.100 and verify frames are transmitted
-> >>>>      and received at these interfaces.
-> >>>>    - Delete the vlan and hsr/prp interface and verify interfaces are
-> >>>>      removed cleanly.
-> >>>>
-> >>>> Logs for IDK-1 at https://pastebin.ubuntu.com/p/NxF83yZFDX/
-> >>>> Logs for IDK-2 at https://pastebin.ubuntu.com/p/YBXBcsPgVK/
-> >>>>
-> >>>> Murali Karicheri (1):
-> >>>>     net: hsr/prp: add vlan support
-> >>>>
-> >>>>    net/hsr/hsr_device.c  |  4 ----
-> >>>>    net/hsr/hsr_forward.c | 16 +++++++++++++---
-> >>>>    2 files changed, 13 insertions(+), 7 deletions(-)
-> >>>>
-> >>> I am not sure if the packet flow is right for this?
-> >>>
-> >>> VLAN over HSR frame format is like this.
-> >>>
-> >>> <Start of Frame><VLAN tag><HSR Tag><IP><CRC>
-> >>>
-> >>> My ifconfig stats shows both hsr and hsr0.100 interfaces receiving
-> >>> frames.
-> >>>
-> >>> So I did a WARN_ON() in HSR driver before frame is forwarded to upper
-> >>> layer.
-> >>>
-> >>> a0868495local@uda0868495:~/Projects/upstream-kernel$ git diff
-> >>> diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-> >>> index de21df30b0d9..545a3cd8c71b 100644
-> >>> --- a/net/hsr/hsr_forward.c
-> >>> +++ b/net/hsr/hsr_forward.c
-> >>> @@ -415,9 +415,11 @@ static void hsr_forward_do(struct hsr_frame_info
-> >>> *frame)
-> >>>                   }
-> >>>
-> >>>                   skb->dev = port->dev;
-> >>> -               if (port->type == HSR_PT_MASTER)
-> >>> +               if (port->type == HSR_PT_MASTER) {
-> >>> +                       if (skb_vlan_tag_present(skb))
-> >>> +                               WARN_ON(1);
-> >>>                           hsr_deliver_master(skb, port->dev,
-> >>> frame->node_src);
-> >>> -               else
-> >>> +               } else
-> >>>                           hsr_xmit(skb, port, frame);
-> >>>           }
-> >>>    }
-> >>>
-> >>> And I get the trace shown below.
-> >>>
-> >>> [  275.125431] WARNING: CPU: 0 PID: 0 at net/hsr/hsr_forward.c:420
-> >>> hsr_forward_skb+0x460/0x564
-> >>> [  275.133822] Modules linked in: snd_soc_omap_hdmi snd_soc_ti_sdma
-> >>> snd_soc_core snd_pcm_dmaengine snd_pcm snd_time4
-> >>> [  275.199705] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-> >>> 5.9.0-rc1-00658-g473e463812c2-dirty #8
-> >>> [  275.209573] Hardware name: Generic DRA74X (Flattened Device Tree)
-> >>> [  275.215703] [<c011177c>] (unwind_backtrace) from [<c010b6f0>]
-> >>> (show_stack+0x10/0x14)
-> >>> [  275.223487] [<c010b6f0>] (show_stack) from [<c055690c>]
-> >>> (dump_stack+0xc4/0xe4)
-> >>> [  275.230747] [<c055690c>] (dump_stack) from [<c01386ac>]
-> >>> (__warn+0xc0/0xf4)
-> >>> [  275.237656] [<c01386ac>] (__warn) from [<c0138a3c>]
-> >>> (warn_slowpath_fmt+0x58/0xb8)
-> >>> [  275.245177] [<c0138a3c>] (warn_slowpath_fmt) from [<c09564bc>]
-> >>> (hsr_forward_skb+0x460/0x564)
-> >>> [  275.253657] [<c09564bc>] (hsr_forward_skb) from [<c0955534>]
-> >>> (hsr_handle_frame+0x15c/0x190)
-> >>> [  275.262047] [<c0955534>] (hsr_handle_frame) from [<c07c6704>]
-> >>> (__netif_receive_skb_core+0x23c/0xc88)
-> >>> [  275.271223] [<c07c6704>] (__netif_receive_skb_core) from [<c07c7180>]
-> >>> (__netif_receive_skb_one_core+0x30/0x74)
-> >>> [  275.281266] [<c07c7180>] (__netif_receive_skb_one_core) from
-> >>> [<c07c72a4>] (netif_receive_skb+0x50/0x1c4)
-> >>> [  275.290793] [<c07c72a4>] (netif_receive_skb) from [<c071a55c>]
-> >>> (cpsw_rx_handler+0x230/0x308)
-> >>> [  275.299272] [<c071a55c>] (cpsw_rx_handler) from [<c0715ee8>]
-> >>> (__cpdma_chan_process+0xf4/0x188)
-> >>> [  275.307925] [<c0715ee8>] (__cpdma_chan_process) from [<c0717294>]
-> >>> (cpdma_chan_process+0x3c/0x5c)
-> >>> [  275.316754] [<c0717294>] (cpdma_chan_process) from [<c071dd14>]
-> >>> (cpsw_rx_mq_poll+0x44/0x98)
-> >>> [  275.325145] [<c071dd14>] (cpsw_rx_mq_poll) from [<c07c8ae0>]
-> >>> (net_rx_action+0xf0/0x400)
-> >>> [  275.333185] [<c07c8ae0>] (net_rx_action) from [<c0101370>]
-> >>> (__do_softirq+0xf0/0x3ac)
-> >>> [  275.340965] [<c0101370>] (__do_softirq) from [<c013f5ec>]
-> >>> (irq_exit+0xa8/0xe4)
-> >>> [  275.348224] [<c013f5ec>] (irq_exit) from [<c0199344>]
-> >>> (__handle_domain_irq+0x6c/0xe0)
-> >>> [  275.356093] [<c0199344>] (__handle_domain_irq) from [<c056f8fc>]
-> >>> (gic_handle_irq+0x4c/0xa8)
-> >>> [  275.364481] [<c056f8fc>] (gic_handle_irq) from [<c0100b6c>]
-> >>> (__irq_svc+0x6c/0x90)
-> >>> [  275.371996] Exception stack(0xc0e01f18 to 0xc0e01f60)
-> >>>
-> >>> Shouldn't it show vlan_do_receive() ?
-> >>>
-> >>>       if (skb_vlan_tag_present(skb)) {
-> >>>           if (pt_prev) {
-> >>>               ret = deliver_skb(skb, pt_prev, orig_dev);
-> >>>               pt_prev = NULL;
-> >>>           }
-> >>>           if (vlan_do_receive(&skb))
-> >>>               goto another_round;
-> >>>           else if (unlikely(!skb))
-> >>>               goto out;
-> >>>       }
-> >>>
-> >>> Thanks
-> >>>
-> >>
-> >> I did an ftrace today and I find vlan_do_receive() is called for the
-> >> incoming frames before passing SKB to hsr_handle_frame(). If someone
-> >> can review this, it will help. Thanks.
-> >>
-> >> https://pastebin.ubuntu.com/p/CbRzXjwjR5/
-> >
-> > hsr_handle_frame is an rx_handler called after
-> > __netif_receive_skb_core called vlan_do_receive and jumped back to
-> > another_round.
->
-> Yes. hsr_handle_frame() is a rx_handler() after the above code that
-> does vlan_do_receive(). The ftrace shows vlan_do_receive() is called
-> followed by call to hsr_handle_frame(). From ifconfig I can see both
-> hsr and vlan interface stats increments by same count. So I assume,
-> vlan_do_receive() is called initially and it removes the tag, update
-> stats and then return true and go for another round. Do you think that
-> is the case?
+> #if defined(CONFIG_KFENCE) && defined(CONFIG_HAVE_ARCH_KFENCE_STATIC_POOL=
+)
+>         delete_object_part((unsigned long)__kfence_pool, KFENCE_POOL_SIZE=
+);
+> #endif
 
-That was my understanding.
+Thanks, we'll apply this to v2!
 
-> vlan_do_receive() calls vlan_find_dev(skb->dev, vlan_proto, vlan_id)
-> to retrieve the real netdevice (real device). However VLAN device is
-> attached to hsr device (real device), but SKB will have HSR slave
-> Ethernet netdevice (in our case it is cpsw device) and vlan_find_dev()
-> would have failed since there is no vlan_info in cpsw netdev struct. So
-> below code  in vlan_do_receive() should have failed and return false.
->
->         vlan_dev = vlan_find_dev(skb->dev, vlan_proto, vlan_id);
->         if (!vlan_dev)
->                 return false;
->
-> So how does it goes for another_round ? May be vlan_find_dev is
-> finding the hsr netdevice?
+--=20
+Alexander Potapenko
+Software Engineer
 
-It's good to answer this through code inspection and/or
-instrumentation. I do not have the answer immediately either.
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-There certainly is prior art in having vlan with an rx_handler,
-judging from the netif_is_macvlan_port(vlan_dev) and
-netif_is_bridge_port(vlan_dev) helpers in vlan_do_receive.
-> I am not an expert and so the question. Probably I can put a
-> traceprintk() to confirm this, but if someone can clarify this
-> it will be great. But for that, I will spin v2 with the above comments
-> addressed as in my reply and post.
-
-Please don't send a patch before we understand this part.
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
