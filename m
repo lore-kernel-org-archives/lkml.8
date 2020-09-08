@@ -2,174 +2,118 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB28C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78921C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3078D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 392862080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:10:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a7GjBHoh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KT4g07Y+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730187AbgIHVIC (ORCPT
+        id S1730150AbgIHVKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:08:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbgIHVH4 (ORCPT
+        Tue, 8 Sep 2020 17:10:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25281 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725997AbgIHVKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:07:56 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CAFC061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:07:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l191so433728pgd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:07:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Wm1YZJP5IHcZuymW2XEKoD0pUveQe7CoNm7r9bi/W1k=;
-        b=a7GjBHohAGSJ4PnMwooOuv5ACDnGE0C26cMuDHZo5+wvUiXv0xO8J2AUkV5JHb2FOP
-         ldjjgjbqwFWCWq9Zw5W0LDK9PPh+xyYdY8hA2Wm743DJYsOoYFFThh9hJZBSdXRUCfFd
-         cvOqVo7OMhMtAPX/2sp6Mz72uNjnDoYA9p//eZpjffoGYl/RG2xg8YzDi7C2OcRP5Eml
-         H1IcomixFJ6jH0HEQSWDpcx4jVmZUZKnlbr7q8YvW0FORqPMCHn3losN4VKggIRBYbX6
-         PtF8QxirnS7Espc0n9SSG2KH2rmz6/CIoNi2jCnfqCKNNgM5GJGJNXvMfd4DY5Oii+fR
-         uTRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Wm1YZJP5IHcZuymW2XEKoD0pUveQe7CoNm7r9bi/W1k=;
-        b=nPPX6FIbvf++cmmqv4dYKm3bc8wo8o6XSNDmIWvdLepts9f4GBFEZp9xvSLZA2f17x
-         1Hz+hVZ4w3jZ1RyHqqT92m6Wi9smMHfYiXGwy4hrMDi5OMi6SeqUKFsidFXkmRy4bNSE
-         KpijM3N+Bibvlr4iS+72cZV2y+mmbodCaXTPn8kMeUzVFoPn6d686nmdAq+bYbvjBVtw
-         2wZd8EJQqD4KQh51KKTMjqEk5bkQrds3ioOK6YKvXOTiCG+a4cPI2ZWX2GVokrcC2ZxJ
-         bUH1SF+9FI0xmM+xmDYSm47GWMrhyztLBTRuC86TcK+zR1DPtQD9gITpqIsNEHeD8oRQ
-         wfTw==
-X-Gm-Message-State: AOAM5326i2FfnHEajmpi3kOdRzCvB6bbR+ctuF4gfXluShNAmz5v3bQL
-        s4cdC9hgjY9tIxrcDcoAUguumQ==
-X-Google-Smtp-Source: ABdhPJz6/bLvTnKJTjhD++qFUgr8FkqyQitq4tmijOh19Mp/UXDDqyF/xILPr1db4moWKg5d5d7hXA==
-X-Received: by 2002:a17:902:c38a:: with SMTP id g10mr511116plg.23.1599599275319;
-        Tue, 08 Sep 2020 14:07:55 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id m188sm323916pfd.56.2020.09.08.14.07.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 14:07:54 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 14:07:48 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH v2 13/28] kbuild: lto: merge module sections
-Message-ID: <20200908210748.GB1060586@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-14-samitolvanen@google.com>
- <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
+        Tue, 8 Sep 2020 17:10:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599599411;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=w3qjPuLO4+xc8/Vzemw4EOYS+UYAR8BKMfifYECLYS4=;
+        b=KT4g07Y+K0nugou1k5w7WuwOVFkhHGyASnUOAA8jzhwKxRYsgnjKQuhtpc+nCmUwslgm8t
+        kEYvmsmTRfnGd9bsw55dKa9vt3XSZZGHaiAZmSq77RL6sKyoeysMFHGgOMj5W3Iua10/BY
+        xXXaqn8k5IpeGE6XYwUN9D6pgVUdz2c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-e9gPun-IPwaPvPqs0LQ-NA-1; Tue, 08 Sep 2020 17:10:10 -0400
+X-MC-Unique: e9gPun-IPwaPvPqs0LQ-NA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61F178018A1;
+        Tue,  8 Sep 2020 21:10:08 +0000 (UTC)
+Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE4505D9F3;
+        Tue,  8 Sep 2020 21:10:02 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 15:10:02 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, kwankhede@nvidia.com, linux-fpga@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, trix@redhat.com,
+        lgoncalv@redhat.com,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>
+Subject: Re: [PATCH 3/3] Documentation: fpga: dfl: Add description for VFIO
+ Mdev support
+Message-ID: <20200908151002.553ed7ae@w520.home>
+In-Reply-To: <1599549212-24253-4-git-send-email-yilun.xu@intel.com>
+References: <1599549212-24253-1-git-send-email-yilun.xu@intel.com>
+        <1599549212-24253-4-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARnh-7a8Lq-y2u72cnk2uxSuWxjaZ8Y-JHCYu5gwt7Ekg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 12:25:54AM +0900, Masahiro Yamada wrote:
-> On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
-> >
-> > LLD always splits sections with LTO, which increases module sizes. This
-> > change adds a linker script that merges the split sections in the final
-> > module.
-> >
-> > Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> > ---
-> >  Makefile               |  2 ++
-> >  scripts/module-lto.lds | 26 ++++++++++++++++++++++++++
-> >  2 files changed, 28 insertions(+)
-> >  create mode 100644 scripts/module-lto.lds
-> >
-> > diff --git a/Makefile b/Makefile
-> > index c69e07bd506a..bb82a4323f1d 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -921,6 +921,8 @@ CC_FLAGS_LTO_CLANG += -fvisibility=default
-> >  # Limit inlining across translation units to reduce binary size
-> >  LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
-> >  KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
-> > +
-> > +KBUILD_LDS_MODULE += $(srctree)/scripts/module-lto.lds
-> >  endif
-> >
-> >  ifdef CONFIG_LTO
-> > diff --git a/scripts/module-lto.lds b/scripts/module-lto.lds
-> > new file mode 100644
-> > index 000000000000..cbb11dc3639a
-> > --- /dev/null
-> > +++ b/scripts/module-lto.lds
-> > @@ -0,0 +1,26 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * With CONFIG_LTO_CLANG, LLD always enables -fdata-sections and
-> > + * -ffunction-sections, which increases the size of the final module.
-> > + * Merge the split sections in the final binary.
-> > + */
-> > +SECTIONS {
-> > +       __patchable_function_entries : { *(__patchable_function_entries) }
-> > +
-> > +       .bss : {
-> > +               *(.bss .bss.[0-9a-zA-Z_]*)
-> > +               *(.bss..L*)
-> > +       }
-> > +
-> > +       .data : {
-> > +               *(.data .data.[0-9a-zA-Z_]*)
-> > +               *(.data..L*)
-> > +       }
-> > +
-> > +       .rodata : {
-> > +               *(.rodata .rodata.[0-9a-zA-Z_]*)
-> > +               *(.rodata..L*)
-> > +       }
-> > +
-> > +       .text : { *(.text .text.[0-9a-zA-Z_]*) }
-> > +}
-> > --
-> > 2.28.0.402.g5ffc5be6b7-goog
-> >
-> 
-> 
-> After I apply https://patchwork.kernel.org/patch/11757323/,
-> is it possible to do like this ?
-> 
-> 
-> #ifdef CONFIG_LTO
-> SECTIONS {
->      ...
-> };
-> #endif
-> 
-> in scripts/module.lds.S
+On Tue,  8 Sep 2020 15:13:32 +0800
+Xu Yilun <yilun.xu@intel.com> wrote:
 
-Yes, that should work. I'll change this in v3 after your change is
-applied.
+> This patch adds description for VFIO Mdev support for dfl devices on
+> dfl bus.
+> 
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+>  Documentation/fpga/dfl.rst | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+> index 0404fe6..f077754 100644
+> --- a/Documentation/fpga/dfl.rst
+> +++ b/Documentation/fpga/dfl.rst
+> @@ -502,6 +502,26 @@ FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
+>  could be a reference.
+>  
+>  
+> +VFIO Mdev support for DFL devices
+> +=================================
+> +As we introduced a dfl bus for private features, they could be added to dfl bus
+> +as independent dfl devices. There is a requirement to handle these devices
+> +either by kernel drivers or by direct access from userspace. Usually we bind
+> +the kernel drivers to devices which provide board management functions, and
+> +gives user direct access to devices which cooperate closely with user
+> +controlled Accelerated Function Unit (AFU). We realize this with a VFIO Mdev
+> +implementation. When we bind the vfio-mdev-dfl driver to a dfl device, it
+> +realizes a group of callbacks and registers to the Mdev framework as a
+> +parent (physical) device. It could then create one (available_instances == 1)
+> +mdev device.
+> +Since dfl devices are sub devices of FPGA DFL physical devices (e.g. PCIE
+> +device), which provide no DMA isolation for each sub device, this may leads to
+> +DMA isolation problem if a private feature is designed to be capable of DMA.
+> +The AFU user could potentially access the whole device addressing space and
+> +impact the private feature. So now the general HW design rule is, no DMA
+> +capability for private features. It eliminates the DMA isolation problem.
 
-Sami
+What's the advantage of entangling mdev/vfio in this approach versus
+simply exposing the MMIO region of the device via sysfs (similar to a
+resource file in pci-sysfs)?  This implementation doesn't support
+interrupts, it doesn't support multiplexing of a device, it doesn't
+perform any degree of mediation, it seems to simply say "please don't
+do DMA".  I don't think that's acceptable for an mdev driver.  If you
+want to play loose with isolation, do it somewhere else.  Thanks,
+
+Alex
+
