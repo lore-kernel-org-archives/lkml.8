@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23391C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BB2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0E81206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C271206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599581679;
-	bh=zuZmKb8WP9O1Bn85UWwWrQPriHdYTxy/O7xpjBrkROo=;
+	s=default; t=1599581684;
+	bh=gbyumvFlrTGeYAdvEwA8qyZf3hhTSQZBc/wWw/9Qi68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4WS2VOO5jgpByjr+UiZFstLMkAt150Ig1nHB0Qm0ulDw2183meO0l9rQZdZZ/Ugr
-	 IKJ3VIlOItJqaaQhF4Bjc3CwZr97Rf1RosEXLW4DeguhKq0pJ24xfiDrPdPuBVT/Ty
-	 Egk3tCpwQb7MI0aCGdKgGEd5vCIlAzbs5jwx3g4Q=
+	b=uC2rsbce4/sNFE4fNgD9blxxfNle8P3gywIa406l0SobS/e8KoPO4kDvpSasL1+dj
+	 vlMUzKBnO7ODcAtWhSJVi0+p6+2hw42iIEbNHXAcxLYfiKqHzqB6OcfoC8dqSILGNy
+	 QeD21EutpCgq2ipmDgYITKLDS5vPZuvsWsC7x3A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731424AbgIHQNG (ORCPT
+        id S1731701AbgIHQOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:13:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:14:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731214AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731167AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:05:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61C2A21D80;
-        Tue,  8 Sep 2020 15:45:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9926223BE;
+        Tue,  8 Sep 2020 15:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579937;
-        bh=zuZmKb8WP9O1Bn85UWwWrQPriHdYTxy/O7xpjBrkROo=;
+        s=default; t=1599579939;
+        bh=gbyumvFlrTGeYAdvEwA8qyZf3hhTSQZBc/wWw/9Qi68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9vd4PXsN4Sk+GRABeqtBOr1ySY3ikD02LNMrTLQ0sYfOmUO48arVZWjHxI4pF89X
-         AMXrejJoXNPpJXxlK9Uv0FUNEnR0q0hTmN3CO/rVQjwRb0zBTkjJn8xeitm4c8M4gt
-         krw9qyNTAuT2a7AStfYTRwzeR2Wd3t1j4XVTUvDw=
+        b=eXfuF7rzIzy2J+dq3OY1jX9dcAXrlG4fZQ5ySksWmAzTSKKM6PDPCMPy69R9Mhk1E
+         gpAGl0RJp/2wR2aKlWjHxV8NomWxCQiLpOoJx2F814ljjNYJscOh931G8IrL8VoPaF
+         sFIBOWlq9wbAC32xIuVUD8NSOWvdeRh/WoXu22Y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        James Sewart <jamessewart@arista.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.4 076/129] iommu/vt-d: Handle 36bit addressing for x86-32
-Date:   Tue,  8 Sep 2020 17:25:17 +0200
-Message-Id: <20200908152233.495213316@linuxfoundation.org>
+        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 094/129] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
+Date:   Tue,  8 Sep 2020 17:25:35 +0200
+Message-Id: <20200908152234.452706583@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -61,74 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 29aaebbca4abc4cceb38738483051abefafb6950 upstream.
+commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
 
-Beware that the address size for x86-32 may exceed unsigned long.
+Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
+However, as long as he investigated, the design of this model is hardly
+similar to the one of Digi 00x family. It's better to exclude the model
+from modalias of ALSA firewire-digi00x driver.
 
-[    0.368971] UBSAN: shift-out-of-bounds in drivers/iommu/intel/iommu.c:128:14
-[    0.369055] shift exponent 36 is too large for 32-bit type 'long unsigned int'
+This commit changes device entries so that the model is excluded.
 
-If we don't handle the wide addresses, the pages are mismapped and the
-device read/writes go astray, detected as DMAR faults and leading to
-device failure. The behaviour changed (from working to broken) in commit
-fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer"), but
-the error looks older.
+$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
+               ROM header and bus information block
+               -----------------------------------------------------------------
+400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
+404  31333934  bus_name "1394"
+408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
+40c  00a07e01  company_id 00a07e     |
+410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
 
-Fixes: fa954e683178 ("iommu/vt-d: Delegate the dma domain to upper layer")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: James Sewart <jamessewart@arista.com>
-Cc: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: <stable@vger.kernel.org> # v5.3+
-Link: https://lore.kernel.org/r/20200822160209.28512-1-chris@chris-wilson.co.uk
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+               root directory
+               -----------------------------------------------------------------
+414  0005d08c  directory_length 5, crc 53388
+418  0300a07e  vendor
+41c  8100000c  --> descriptor leaf at 44c
+420  0c008380  node capabilities
+424  8d000002  --> eui-64 leaf at 42c
+428  d1000004  --> unit directory at 438
+
+               eui-64 leaf at 42c
+               -----------------------------------------------------------------
+42c  0002410f  leaf_length 2, crc 16655
+430  00a07e01  company_id 00a07e     |
+434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+
+               unit directory at 438
+               -----------------------------------------------------------------
+438  0004d6c9  directory_length 4, crc 54985
+43c  1200a02d  specifier id: 1394 TA
+440  13014001  version: Vender Unique and AV/C
+444  17000001  model
+448  81000009  --> descriptor leaf at 46c
+
+               descriptor leaf at 44c
+               -----------------------------------------------------------------
+44c  00077205  leaf_length 7, crc 29189
+450  00000000  textual descriptor
+454  00000000  minimal ASCII
+458  41766964  "Avid"
+45c  20546563  " Tec"
+460  686e6f6c  "hnol"
+464  6f677900  "ogy"
+468  00000000
+
+               descriptor leaf at 46c
+               -----------------------------------------------------------------
+46c  000599a5  leaf_length 5, crc 39333
+470  00000000  textual descriptor
+474  00000000  minimal ASCII
+478  41647265  "Adre"
+47c  6e616c69  "nali"
+480  6e650000  "ne"
+
+Reported-by: Simon Wood <simon@mungewell.org>
+Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
+Cc: <stable@vger.kernel.org> # 4.4+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ sound/firewire/digi00x/digi00x.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -123,29 +123,29 @@ static inline unsigned int level_to_offs
- 	return (level - 1) * LEVEL_STRIDE;
- }
+--- a/sound/firewire/digi00x/digi00x.c
++++ b/sound/firewire/digi00x/digi00x.c
+@@ -14,6 +14,7 @@ MODULE_LICENSE("GPL v2");
+ #define VENDOR_DIGIDESIGN	0x00a07e
+ #define MODEL_CONSOLE		0x000001
+ #define MODEL_RACK		0x000002
++#define SPEC_VERSION		0x000001
  
--static inline int pfn_level_offset(unsigned long pfn, int level)
-+static inline int pfn_level_offset(u64 pfn, int level)
+ static int name_card(struct snd_dg00x *dg00x)
  {
- 	return (pfn >> level_to_offset_bits(level)) & LEVEL_MASK;
- }
- 
--static inline unsigned long level_mask(int level)
-+static inline u64 level_mask(int level)
- {
--	return -1UL << level_to_offset_bits(level);
-+	return -1ULL << level_to_offset_bits(level);
- }
- 
--static inline unsigned long level_size(int level)
-+static inline u64 level_size(int level)
- {
--	return 1UL << level_to_offset_bits(level);
-+	return 1ULL << level_to_offset_bits(level);
- }
- 
--static inline unsigned long align_to_level(unsigned long pfn, int level)
-+static inline u64 align_to_level(u64 pfn, int level)
- {
- 	return (pfn + level_size(level) - 1) & level_mask(level);
- }
- 
- static inline unsigned long lvl_to_nr_pages(unsigned int lvl)
- {
--	return  1 << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
-+	return 1UL << min_t(int, (lvl - 1) * LEVEL_STRIDE, MAX_AGAW_PFN_WIDTH);
- }
- 
- /* VT-d pages must always be _smaller_ than MM pages. Otherwise things
+@@ -175,14 +176,18 @@ static const struct ieee1394_device_id s
+ 	/* Both of 002/003 use the same ID. */
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_CONSOLE,
+ 	},
+ 	{
+ 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
++			       IEEE1394_MATCH_VERSION |
+ 			       IEEE1394_MATCH_MODEL_ID,
+ 		.vendor_id = VENDOR_DIGIDESIGN,
++		.version = SPEC_VERSION,
+ 		.model_id = MODEL_RACK,
+ 	},
+ 	{}
 
 
