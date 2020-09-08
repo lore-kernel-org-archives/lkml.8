@@ -2,80 +2,108 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC49C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A62C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74E60206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599583584;
-	bh=xS5gJ+BhArkAvUdVBgKONZGLYr7TFoMwwPM2bQMe1fM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1xerctknp5kV5QF3TTTzAzVlc1nZCiOKo2zrOk+qH1gwWlKEZ5JRSuhvWrhbapHd4
-	 P3dCWO1cnifqKJ7hVkFOQPTte321MmTeaLxiGWx6cyOHHHkpE3qmZedBf8TsYV+HAG
-	 gWQEsll15SXbITnGgwJbiK2O032uefQdbCxt+cCI=
+	by mail.kernel.org (Postfix) with ESMTP id 5A63A20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pRRFZdvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbgIHQqV (ORCPT
+        id S1731965AbgIHQqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731988AbgIHQac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:30:32 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6E123BDB;
-        Tue,  8 Sep 2020 13:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599571138;
-        bh=xS5gJ+BhArkAvUdVBgKONZGLYr7TFoMwwPM2bQMe1fM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PUs3C+/PKJ/CUL2BdGcA/LLybKfRgAq6QKYNgbjYeA2gAJ4H0dmU0dQ2xeYEhN+MS
-         9Uq/6ty0VpXNcTBHP8v4s3PwqVgqnLfnA+pHlMTZySoj8qiNmMc+04BzQwdAMUdQdT
-         nLWDjxgbJTbysxJ1Ts2JG9RIBQ+G4GQkivSUj1S4=
-Date:   Tue, 8 Sep 2020 15:19:11 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        matthieu.baerts@tessares.net, davem@davemloft.net
-Subject: Re: [PATCH 4.9 0/2] net: initialize fastreuse on inet_inherit_port
-Message-ID: <20200908131911.GC3173498@kroah.com>
-References: <20200902140545.867718-1-tim.froidcoeur@tessares.net>
+        Tue, 8 Sep 2020 12:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59016 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731949AbgIHQ1O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:27:14 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D52DC08EC65;
+        Tue,  8 Sep 2020 07:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=y4d0IpUN2yx9YRU65V5SiTPs5ZTZxBRK5kB3YxXQmEM=; b=pRRFZdvzJdD3AVoWZ9jUzrp/Q0
+        HKk1CID4JuLaYa0Mrj5PUoI6oQA5ciqJLBt5n5ag5rsIR1An2Ka5mAEm2114XrYmUFMhl45Xo5Tgw
+        1f/vNIsf9lGV3nxP8kEE6lE06fxMwHrKgMQu0pm3I0x/IyhLrqz+KKXAANGDWrG7AVVjPFzF5xi3j
+        b+2cyyoXEAUSsyUS34TeeH0WHmQnA7c49k8282aVWJL0Rr7DiG9/VGMMMa2l+P0T1l1zriMKbxZya
+        xNWqdb2Fviuue9DuvWQYMq8RKd6rulRyNI2IoQ+PtU88jlKEYqHk3sh4DyJcAunFrK+qy1HINMR77
+        ZUuxAv5A==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFeld-00026L-QW; Tue, 08 Sep 2020 14:39:04 +0000
+Subject: Re: linux-next: Tree for Sep 2 (lib/ubsan.c)
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>
+References: <20200902180950.4bc7c4de@canb.auug.org.au>
+ <3abfa193-a56e-66ba-1080-885906fa0196@infradead.org>
+ <fdf322d4-cc01-2c85-67cd-86b2d6f4ebff@infradead.org>
+ <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <84531c68-2ac8-924b-5e71-077f9abb2503@infradead.org>
+Date:   Tue, 8 Sep 2020 07:38:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902140545.867718-1-tim.froidcoeur@tessares.net>
+In-Reply-To: <CAFd5g44g6OrL3fxQNRZ1rR0PruAty8tBZr8JDzM-oonZJRDZyw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 04:05:43PM +0200, Tim Froidcoeur wrote:
-> Fix for TPROXY initialization of fastreuse flag.
-> upstream patch was backported by Greg K-H to 4.14 and higher stable version.
+On 9/4/20 12:59 AM, Brendan Higgins wrote:
+> On Thu, Sep 3, 2020 at 11:12 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>
+>> On 9/2/20 8:44 AM, Randy Dunlap wrote:
+>>> On 9/2/20 1:09 AM, Stephen Rothwell wrote:
+>>>> Hi all,
+>>>>
+>>>> Changes since 20200828:
+>>>>
+>>>
+>>>
+>>> on i386:
+>>>
+>>> ../lib/ubsan.c: In function ‘ubsan_prologue’:
+>>> ../lib/ubsan.c:141:2: error: implicit declaration of function ‘kunit_fail_current_test’; did you mean ‘kunit_init_test’? [-Werror=implicit-function-declaration]
+>>>   kunit_fail_current_test();
+>>>
+>>>
+>>> Full randconfig file is attached.
+>>>
+>>
+>> Hi Brendan,
+>>
+>> Do you know anything about this build error?
+>>
+>> I can't find kunit_fail_current_test() anywhere.
 > 
-> see also https://lore.kernel.org/stable/20200818072007.GA9254@kroah.com/
+> Yeah, this got applied for some reason without the prerequisite
+> patches. It is from a two patch series, the other being here:
 > 
-> code in inet_csk_get_port for 4.9 (and 4.4) is different from
-> the upstream version, so these backports had to be adapted (a bit)
+> https://lore.kernel.org/linux-kselftest/20200813205722.1384108-1-urielguajardojr@gmail.com/
 > 
-> Tim Froidcoeur (2):
->   net: refactor bind_bucket fastreuse into helper
->   net: initialize fastreuse on inet_inherit_port
+> which in turn depends on another patchset which didn't make it into 5.9.
 > 
->  include/net/inet_connection_sock.h |  4 ++++
->  net/ipv4/inet_connection_sock.c    | 37 ++++++++++++++++++++----------
->  net/ipv4/inet_hashtables.c         |  1 +
->  3 files changed, 30 insertions(+), 12 deletions(-)
+> Again, I don't know why this was applied without it's prereqs. Sorry about that.
 > 
-> --
-> 2.25.1
 
-Both now queued up, thanks.
+Well.  Who is responsible for this small mess?
+It is still killing linux-next builds for me (2020-0908).
 
-greg k-h
+-- 
+~Randy
+
