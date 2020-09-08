@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD32C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D96C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA982087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6321D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589752;
-	bh=MQc8Wj/iSwvEc0xqKu84iF1sHwPVVtPbYUR17fiYn58=;
+	s=default; t=1599589756;
+	bh=Z7fcGyBzWC/5EPyO4e2m3x70szWWlKx1AVC3oQn09dU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VHD/j/MjDFqIDH54zFpzXjmc5lnJ3ahFpegBioNXLmvlTU6VjOjNb2NaNeIrBR5n7
-	 7GJ4miIaOaLP6imI2nOj/iZYWhfRtRiMscQsSPHm9VqoRRnwHuyNdPloHiDBuKpzfJ
-	 2YZfOCn6j9ow8GczKfNQPWmfaMb+xRC0ez4trttQ=
+	b=BkjoDENez8XRp3zQ2RIUVOCbADPoNmSpBKmEfYaRq11uwb3Xqdd+0HHSNb3zr/pPv
+	 33t6k3uXvOrntwB3lhYVStiRpdQhJs98CyPv5DOFBMhp/oDhy7wWQiYCTx9CCHHph5
+	 tVSsdR0472Tx8H5GZO5vfSCmuXR5BBSHchkP4yUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbgIHS3J (ORCPT
+        id S1731775AbgIHS3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731412AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731416AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EDD424750;
-        Tue,  8 Sep 2020 15:41:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C657B24721;
+        Tue,  8 Sep 2020 15:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579680;
-        bh=MQc8Wj/iSwvEc0xqKu84iF1sHwPVVtPbYUR17fiYn58=;
+        s=default; t=1599579639;
+        bh=Z7fcGyBzWC/5EPyO4e2m3x70szWWlKx1AVC3oQn09dU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0LjcfkdAkIKqepeALdo4bHEIyEWx/fO9hXTNYyL8dNIapJY9U7MWNVWk1v3VwRSDP
-         z14NnsqAUiG+zikoh47OFBg02yS0GaI5zXwyKDUvW1Uh0Q+Q6W97QBOheZl1fw4gM6
-         xNflxrQtymWTliopgaZRBC8x0/8KYpbuNpLFas+c=
+        b=BHjQHO0aRQGxZEYVBixBXTXnlcLOqFBI63K5BoNjN1NFkzGHPApJpldRXDqiKOPV4
+         E7wUa2NvqzDwWsXznt+vkUO806jrZFprI+UINmFwykz7TieC0AkFJx0YUUY+ceyqYx
+         ZAOqYxET5SEaAc2D7W0MFc7Z34Y0jpTsP6nKM0mA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 148/186] mmc: sdhci-pci: Fix SDHCI_RESET_ALL for CQHCI for Intel GLK-based controllers
-Date:   Tue,  8 Sep 2020 17:24:50 +0200
-Message-Id: <20200908152248.836466906@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 160/186] blk-stat: make q->stats->lock irqsafe
+Date:   Tue,  8 Sep 2020 17:25:02 +0200
+Message-Id: <20200908152249.419945317@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,60 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit df57d73276b863af1debc48546b0e59e44998a55 upstream.
+commit e11d80a849e010f78243bb6f6af7dccef3a71a90 upstream.
 
-For Intel controllers, SDHCI_RESET_ALL resets also CQHCI registers.
-Normally, SDHCI_RESET_ALL is not used while CQHCI is enabled, but that can
-happen on the error path. e.g. if mmc_cqe_recovery() fails, mmc_blk_reset()
-is called which, for a eMMC that does not support HW Reset, will cycle the
-bus power and the driver will perform SDHCI_RESET_ALL.
+blk-iocost calls blk_stat_enable_accounting() while holding an irqsafe lock
+which triggers a lockdep splat because q->stats->lock isn't irqsafe. Let's
+make it irqsafe.
 
-So whenever performing SDHCI_RESET_ALL ensure CQHCI is deactivated.
-That will force the driver to reinitialize CQHCI when it is next used.
-
-A similar change was done already for sdhci-msm, and other drivers using
-CQHCI might benefit from a similar change, if they also have CQHCI reset
-by SDHCI_RESET_ALL.
-
-Fixes: 8ee82bda230fc9 ("mmc: sdhci-pci: Add CQHCI support for Intel GLK")
-Cc: stable@vger.kernel.org # 5.4.x: 0ffa6cfbd949: mmc: cqhci: Add cqhci_deactivate()
-Cc: stable@vger.kernel.org # 5.4+
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/20200819121848.16967-1-adrian.hunter@intel.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: cd006509b0a9 ("blk-iocost: account for IO size when testing latencies")
+Cc: stable@vger.kernel.org # v5.8+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-pci-core.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ block/blk-stat.c |   17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
---- a/drivers/mmc/host/sdhci-pci-core.c
-+++ b/drivers/mmc/host/sdhci-pci-core.c
-@@ -232,6 +232,14 @@ static void sdhci_pci_dumpregs(struct mm
- 	sdhci_dumpregs(mmc_priv(mmc));
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -137,6 +137,7 @@ void blk_stat_add_callback(struct reques
+ 			   struct blk_stat_callback *cb)
+ {
+ 	unsigned int bucket;
++	unsigned long flags;
+ 	int cpu;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -147,20 +148,22 @@ void blk_stat_add_callback(struct reques
+ 			blk_rq_stat_init(&cpu_stat[bucket]);
+ 	}
+ 
+-	spin_lock(&q->stats->lock);
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	list_add_tail_rcu(&cb->list, &q->stats->callbacks);
+ 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
  }
  
-+static void sdhci_cqhci_reset(struct sdhci_host *host, u8 mask)
-+{
-+	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL) &&
-+	    host->mmc->cqe_private)
-+		cqhci_deactivate(host->mmc);
-+	sdhci_reset(host, mask);
-+}
+ void blk_stat_remove_callback(struct request_queue *q,
+ 			      struct blk_stat_callback *cb)
+ {
+-	spin_lock(&q->stats->lock);
++	unsigned long flags;
 +
- /*****************************************************************************\
-  *                                                                           *
-  * Hardware specific quirk handling                                          *
-@@ -718,7 +726,7 @@ static const struct sdhci_ops sdhci_inte
- 	.set_power		= sdhci_intel_set_power,
- 	.enable_dma		= sdhci_pci_enable_dma,
- 	.set_bus_width		= sdhci_set_bus_width,
--	.reset			= sdhci_reset,
-+	.reset			= sdhci_cqhci_reset,
- 	.set_uhs_signaling	= sdhci_set_uhs_signaling,
- 	.hw_reset		= sdhci_pci_hw_reset,
- 	.irq			= sdhci_cqhci_irq,
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	list_del_rcu(&cb->list);
+ 	if (list_empty(&q->stats->callbacks) && !q->stats->enable_accounting)
+ 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
+ 
+ 	del_timer_sync(&cb->timer);
+ }
+@@ -183,10 +186,12 @@ void blk_stat_free_callback(struct blk_s
+ 
+ void blk_stat_enable_accounting(struct request_queue *q)
+ {
+-	spin_lock(&q->stats->lock);
++	unsigned long flags;
++
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	q->stats->enable_accounting = true;
+ 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(blk_stat_enable_accounting);
+ 
 
 
