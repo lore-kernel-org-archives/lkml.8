@@ -2,99 +2,156 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FCDC2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F49C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A24AF2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8B42087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDOnxu3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731858AbgIHRK4 (ORCPT
+        id S1731969AbgIHRLG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731756AbgIHQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:19:19 -0400
-Received: from gaia (unknown [46.69.195.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A062074B;
-        Tue,  8 Sep 2020 14:06:22 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 15:06:20 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Dmitry Vyukov <dvyukov@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 26/35] kasan, arm64: Enable TBI EL1
-Message-ID: <20200908140620.GE25591@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <518da1e5169a4e343caa3c37feed5ad551b77a34.1597425745.git.andreyknvl@google.com>
- <20200827104033.GF29264@gaia>
- <CAAeHK+x_B+R3VcXndaQ=rwOExyQeFZEKZX-33oStiDFu1qePyg@mail.gmail.com>
+        Tue, 8 Sep 2020 13:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731643AbgIHRK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:10:59 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733FAC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:10:59 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id d9so5207712pfd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:10:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+LDeT2lt9SUcFTCT7BGDtz2er/OFG3MBH42fF3G6h68=;
+        b=EDOnxu3/tWXDEbO6aDonCpKCXjFECgrh/c5YRnWtoQ+SHvbswr+J9cGbiv4XUvNfrd
+         Em65A52BYE3J8f195qPDI06udLHV8qdKzyftN/XsuICT3JOpkkrJjXA8SwRBW6SJFwIJ
+         EzxA2KlhnfS8sc+kRLjxSmT8aJqg9Kgl+vhsMjNmF1fUU2hFGI+XhHju5+YlFt8CwMyV
+         icqzwB0Hg81zggur22jiAbr8aGH6mP0aCauFgvoMG6dJURct0IpkkJdXcpVm7v0ecqQb
+         mRk0w7ZSMxbIICPrnpndkBSn/Os7FI8G732QR5xMmeo6/XrIMdRBOK6LfscZl2uqp309
+         p9Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+LDeT2lt9SUcFTCT7BGDtz2er/OFG3MBH42fF3G6h68=;
+        b=jTrNcSnvznCefNznsHb3qXauzENHm80mjn9KXEEfpDz/52iClrOSYxn5RCDQalo/at
+         sbaQihbezNJepOBYIcceYGb8kJBatEpiJkFaDD+bJHEMT3DGJcJTJq8ykwpLocYKF8Ze
+         Mmu7UA9OGsoNRNmeuiJg81blmUIW9S8d87UVL44oUotn4+cLYf4fAAbVx6IAcj2s4TC3
+         M1YG2gdCIsv38Izjzg5BsLJoltKuaSPVdAC8LipYK9EOWeQfhL4aji/uPshg3b5ZeSau
+         pCS8PeS6IObLc946GCbouMX0LlCkAp95NNfnduXAXn6h/bZqg1Vsy41Kxlt4fy4yTZPK
+         obbg==
+X-Gm-Message-State: AOAM533Qt2RIy0nknzrs6Xwi6iAE2+BiC/aD+ox5VkUtqKeCKiqOpnaj
+        fOVJ0vjKEDF/y1A1ErX1JynpYg==
+X-Google-Smtp-Source: ABdhPJzypUk2kaMSsozZWu2eOHXNN4ZkXvherqbpQHodcqeZRg4Fd5ulTMlytF6eoxCVBPUWtIX41g==
+X-Received: by 2002:a62:3812:0:b029:13e:d13d:a062 with SMTP id f18-20020a6238120000b029013ed13da062mr30916pfa.40.1599585058742;
+        Tue, 08 Sep 2020 10:10:58 -0700 (PDT)
+Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
+        by smtp.gmail.com with ESMTPSA id l141sm25676pfd.47.2020.09.08.10.10.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:10:57 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 10:10:52 -0700
+From:   Sami Tolvanen <samitolvanen@google.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-pci@vger.kernel.org, X86 ML <x86@kernel.org>
+Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
+Message-ID: <20200908171052.GB2743468@google.com>
+References: <20200624203200.78870-1-samitolvanen@google.com>
+ <20200903203053.3411268-1-samitolvanen@google.com>
+ <20200903203053.3411268-10-samitolvanen@google.com>
+ <CAK7LNAQ40LGvfjca9DASXjyUgRbjFNDWZXgFtMXJ54Xmi6vwkg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAeHK+x_B+R3VcXndaQ=rwOExyQeFZEKZX-33oStiDFu1qePyg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAK7LNAQ40LGvfjca9DASXjyUgRbjFNDWZXgFtMXJ54Xmi6vwkg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 03:18:04PM +0200, Andrey Konovalov wrote:
-> On Thu, Aug 27, 2020 at 12:40 PM Catalin Marinas
-> <catalin.marinas@arm.com> wrote:
+On Sun, Sep 06, 2020 at 04:36:32AM +0900, Masahiro Yamada wrote:
+> On Fri, Sep 4, 2020 at 5:31 AM Sami Tolvanen <samitolvanen@google.com> wrote:
 > >
-> > On Fri, Aug 14, 2020 at 07:27:08PM +0200, Andrey Konovalov wrote:
-> > > diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> > > index 152d74f2cc9c..6880ddaa5144 100644
-> > > --- a/arch/arm64/mm/proc.S
-> > > +++ b/arch/arm64/mm/proc.S
-> > > @@ -38,7 +38,7 @@
-> > >  /* PTWs cacheable, inner/outer WBWA */
-> > >  #define TCR_CACHE_FLAGS      TCR_IRGN_WBWA | TCR_ORGN_WBWA
-> > >
-> > > -#ifdef CONFIG_KASAN_SW_TAGS
-> > > +#if defined(CONFIG_KASAN_SW_TAGS) || defined(CONFIG_KASAN_HW_TAGS)
-> > >  #define TCR_KASAN_FLAGS TCR_TBI1
-> > >  #else
-> > >  #define TCR_KASAN_FLAGS 0
+> > This change adds build system support for Clang's Link Time
+> > Optimization (LTO). With -flto, instead of ELF object files, Clang
+> > produces LLVM bitcode, which is compiled into native code at link
+> > time, allowing the final binary to be optimized globally. For more
+> > details, see:
 > >
-> > I prefer to turn TBI1 on only if MTE is present. So on top of the v8
-> > user series, just do this in __cpu_setup.
+> >   https://llvm.org/docs/LinkTimeOptimization.html
+> >
+> > The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
+> > which defaults to LTO being disabled.
 > 
-> Started working on this, but realized that I don't understand what
-> exactly is suggested here. TCR_KASAN_FLAGS are used in __cpu_setup(),
-> so this already happens in __cpu_setup().
+> What is the reason for doing this in a choice?
+> To turn off LTO_CLANG for compile-testing?
 > 
-> Do you mean that TBI1 should be enabled when CONFIG_ARM64_MTE is
-> enabled, but CONFIG_KASAN_HW_TAGS is disabled?
+> I would rather want to give LTO_CLANG more chances
+> to be enabled/tested.
 
-What I meant is that we should turn TBI1 only when the MTE is present in
-hardware (and the ARM64_MTE option is on). But I probably missed the way
-MTE is used with KASAN.
+It's a choice to prevent LTO from being enabled by default with
+allyesconfig and allmodconfig. It would take hours to build these even on a
+fast computer, and probably days on older hardware.
 
-So what happens if CONFIG_KASAN_HW_TAGS and CONFIG_ARM64_MTE are both on
-but the hardware does not support MTE? Does KASAN still generate tagged
-pointers? If yes, then the current patch is fine, we should always set
-TBI1.
+> > +ifdef CONFIG_LTO_CLANG
+> > +ifdef CONFIG_THINLTO
+> > +CC_FLAGS_LTO_CLANG := -flto=thin -fsplit-lto-unit
+> > +KBUILD_LDFLAGS += --thinlto-cache-dir=.thinlto-cache
+> 
+> 
+> I think this would break external module builds
+> because it would create cache files in the
+> kernel source tree.
+> 
+> External module builds should never ever touch
+> the kernel tree, which is usually located under
+> the read-only /usr/src/ in distros.
+> 
+> 
+> .thinlto-cache should be created in the module tree
+> when it is built with M=.
 
--- 
-Catalin
+Thanks for pointing this out, I'll fix the path in v3.
+
+> >  # Directories & files removed with 'make distclean'
+> > -DISTCLEAN_FILES += tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
+> > +DISTCLEAN_FILES += tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS .thinlto-cache
+> 
+> 
+> 
+> This was suggested in v1, but I could not understand
+> why doing this in distclean was appropriate.
+> 
+> Is keeping cache files of kernel objects
+> useful for external module builds?
+
+No, the cache only speeds up incremental kernel builds.
+
+> Also, please clean up .thinlto-cache for external module builds.
+
+Ack.
+
+Sami
