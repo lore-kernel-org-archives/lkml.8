@@ -2,94 +2,131 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3657C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD32204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1AE2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PU5DnvnO"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="yJoNljIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731161AbgIHUGl (ORCPT
+        id S1730936AbgIHUGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:06:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
+        Tue, 8 Sep 2020 16:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730311AbgIHPVk (ORCPT
+        with ESMTP id S1730243AbgIHPVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:21:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0D0C0A3BEC;
-        Tue,  8 Sep 2020 07:55:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=lWxnm+FRJQ1gaOww4j+aWjmf7zJgAshxl0Y6TkF88gw=; b=PU5DnvnOhI/jzDLWv5bPiEmht7
-        DtGs0BC1+AbVGld+So7H0Kjyd79UEuZVbXLfm0vR9ggpH2LqKH9c6uMsb71etCW18xv1sXC/cDouV
-        FITlturAfZ0DcY1HdGLff+XauXrxep31o5JIlZ0Yr0I7gXkAc4va2lCOYjM54+wGYsQVQou9Hygrf
-        TkADJMAxq3vrJ1PTpsRMUdaHqIUcrbdhFiRPwYnf1RAiJS0mzZdAXHrBM5fk89BGE6XI7DRZzeI62
-        U/0kC2czTeIIQeyl8lVxt3v9+WsZ7egpPnITFSIFabYizej5kff/sKSbz9SFjzA8s27gdoQRo2o1A
-        7RQyPrGg==;
-Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFf0O-0002vr-1B; Tue, 08 Sep 2020 14:54:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Song Liu <song@kernel.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 02/19] amiflop: use bdev_check_media_change
-Date:   Tue,  8 Sep 2020 16:53:30 +0200
-Message-Id: <20200908145347.2992670-3-hch@lst.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
-References: <20200908145347.2992670-1-hch@lst.de>
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDD3AC0612F6
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:58:27 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a9so17082340wmm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:58:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nLn7MBojIPZBX1Cc0fte6bJy2zYPGF+0OvSOSKZTZQk=;
+        b=yJoNljIa9qlqXWuxKL1etUoPBbX1rvf2LnGB7dKBJ9r9JaiDrabh6nGL1BJ3LsQvqH
+         30ELXTFAi7IW9qjR3oYAyzwHxFMURLTJuY/bsyInF9Ja3sIV9hQ98k2ul+IyUVYV9AcB
+         hriqDEUIZxfsCVQXzh8HYZENCU+u3nykO1L232HxS6MQVmeG4jnL6BsnJNuW95FEI9+W
+         VnNzWEwTQSp82wWUt+DvVzP0H9mCix905ZS7D4JffHFa0McetsJrX2l4WnM5ty4GFFgR
+         tzhL8qo+FMnFFqBOCK8nJieJK7CyM2FzaO96jnHFpKPdNS28pxgac4yq8+FlXv4mY9lG
+         NvVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nLn7MBojIPZBX1Cc0fte6bJy2zYPGF+0OvSOSKZTZQk=;
+        b=XbLp37lGboxKL29ond/sVTKJ5av/clDx4ysGtYwYhxt5Yg4wWysEmH4iOQiIdciwnU
+         Re1jtkiqENGSVzAu2DDCMthyR8L+PmlCz3L9b6JCUn+2uj1H6Xqdg49j9WbVodagakaH
+         jIT4hMztyU3VehceMdmfAnGikTmuw6MTzHkc4joHatUy6ReWEco73v7mZkiFQo74GZFz
+         mL/6kYG9oxi9q38Q7xZoz+1UNgo+FnGR9Ir94QiFT/Zmc/DzN7Ecrf4lmoZDDJ/QTXJb
+         wHOSoaBS74ot7LCxpiaMdPYiHtm2s8JR4DazMnSDhH+1U8T1X70OxzSGDYqkb02wcmH9
+         QTnA==
+X-Gm-Message-State: AOAM533L7BdDOvVqafueIZhxYj6s6X7s7qRABWsNbcLO0K8AQ/D/tBLx
+        uHZX1CveGfb72mSay0tb66gduA==
+X-Google-Smtp-Source: ABdhPJw2UX4DwJ8uomQdKlEKGp4dWXgNPdYavMGcv8xNO/e3jRahH6Mfzl+E80OqSzYNL6Ct55Zkqw==
+X-Received: by 2002:a1c:7d0c:: with SMTP id y12mr4360474wmc.103.1599569906573;
+        Tue, 08 Sep 2020 05:58:26 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id y207sm34817875wmc.17.2020.09.08.05.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 05:58:26 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 1/3] device: property: add helpers to count items in string arrays
+Date:   Tue,  8 Sep 2020 14:58:11 +0200
+Message-Id: <20200908125813.8809-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200908125813.8809-1-brgl@bgdev.pl>
+References: <20200908125813.8809-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amiga floppy driver does not have a ->revalidate_disk method, so it
-can just use bdev_check_media_change without any additional changes.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Instead of doing the following:
+
+    count = device_property_read_string_array(dev, propname, NULL, 0);
+
+Let's provide inline helpers with hardcoded arguments for counting
+strings in property arrays.
+
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/block/amiflop.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/property.h | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/block/amiflop.c b/drivers/block/amiflop.c
-index 226219da3da6a7..71c2b156455860 100644
---- a/drivers/block/amiflop.c
-+++ b/drivers/block/amiflop.c
-@@ -1670,7 +1670,7 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
- 	}
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 9f805c442819..1fa5e250a8ea 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -170,6 +170,12 @@ static inline int device_property_count_u64(struct device *dev, const char *prop
+ 	return device_property_read_u64_array(dev, propname, NULL, 0);
+ }
  
- 	if (mode & (FMODE_READ|FMODE_WRITE)) {
--		check_disk_change(bdev);
-+		bdev_check_media_change(bdev);
- 		if (mode & FMODE_WRITE) {
- 			int wrprot;
++static inline int device_property_count_strings(struct device *dev,
++						const char *propname)
++{
++	return device_property_read_string_array(dev, propname, NULL, 0);
++}
++
+ static inline bool fwnode_property_read_bool(const struct fwnode_handle *fwnode,
+ 					     const char *propname)
+ {
+@@ -224,6 +230,13 @@ static inline int fwnode_property_count_u64(const struct fwnode_handle *fwnode,
+ 	return fwnode_property_read_u64_array(fwnode, propname, NULL, 0);
+ }
  
++static inline int
++fwnode_property_count_strings(const struct fwnode_handle *fwnode,
++			      const char *propname)
++{
++	return fwnode_property_read_string_array(fwnode, propname, NULL, 0);
++}
++
+ struct software_node;
+ 
+ /**
 -- 
-2.28.0
+2.26.1
 
