@@ -2,80 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DD9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA626C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E79F320708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6285720708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599583435;
-	bh=rAhOf0mRJyskwrDl5gDj7QgaO0r1xaO5XluFHRKoSoY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cTLVGhUhu3vrVSifHRPKW3TdDV6/m28BBdWiusl1sxqpnOvq+IORS7VCJ+yhwqwMq
-	 PuseAhu4/1E80Tzu8/L9IpTOe1PqY2HAvd5suyO0VwSiMhnsitwz6Btdl+xgc+tr4w
-	 Ivch0LIBp4rmQZD+uDxRzgMD7maVxtMq/U9YNlhQ=
+	s=default; t=1599583460;
+	bh=5e2FeFGeBsQ08Xbq+c6ro2JvZjXm8XuuPBlwX6Hax+g=;
+	h=From:To:Subject:Date:List-ID:From;
+	b=OnYDIgJ3j8PMO42AhIRy+WXB6ntxhWiTj/3JJPHrdAWPysPjEZwB7oMfDCj84uY7T
+	 pQmIZZ2AoMFpE2EZqwdLMjYl/06lw1S7PrXXLNuJcgJEv3lFialcagG5sDQcbZXwTp
+	 gyo/9O25EzgCWYs/wJaNidyx7uUnfs/5g83SZs7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbgIHQnr (ORCPT
+        id S1731980AbgIHQoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34080 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732018AbgIHQbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732022AbgIHQbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:31:38 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A26823BCF;
-        Tue,  8 Sep 2020 13:19:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5ED822C9C;
+        Tue,  8 Sep 2020 14:59:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599571196;
-        bh=rAhOf0mRJyskwrDl5gDj7QgaO0r1xaO5XluFHRKoSoY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t7gRwRrIsULY6aGaJXEZAMxnc9Tm2SfQJv7VhAnCVCgwT7wZka5S1dPv3WVG0wN0i
-         9aWAhEmn4WX5tcU+RBo3+0COQDnZviRPL72xBpidcTip1EEsszQvxYZ0ddcNXS3buR
-         7vF79m1SX7U/JEq/ohB/eY8v8IeUiZtqQ4PCYp/0=
-Date:   Tue, 8 Sep 2020 15:20:08 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        matthieu.baerts@tessares.net, davem@davemloft.net
-Subject: Re: [PATCH 4.4 0/2] net: initialize fastreuse on inet_inherit_port
-Message-ID: <20200908132008.GD3173498@kroah.com>
-References: <20200902140513.866712-1-tim.froidcoeur@tessares.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902140513.866712-1-tim.froidcoeur@tessares.net>
+        s=default; t=1599577202;
+        bh=5e2FeFGeBsQ08Xbq+c6ro2JvZjXm8XuuPBlwX6Hax+g=;
+        h=From:To:Subject:Date:From;
+        b=qgJeyzEPOC/OZb4p2XNSaZQ1LKhhDQM0wSLJswkbINraU//gjo2q3iNVapN3KlpoX
+         LD+GSH763ArX4beMKDc/0Nj2S3pV0mCEZWbQmWOXULN3x+JV5TJFK99hlwhsNBhvOo
+         gvUcAsfw4BUb54G+Juq4Zw3m4IWCuT7C6nZvAl08=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: net: Correct interrupt flags in examples
+Date:   Tue,  8 Sep 2020 16:59:39 +0200
+Message-Id: <20200908145939.4569-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 04:05:11PM +0200, Tim Froidcoeur wrote:
-> Fix for TPROXY initialization of fastreuse flag.
-> upstream patch was backported by Greg K-H to 4.14 and higher stable version.
-> 
-> see also https://lore.kernel.org/stable/20200818072007.GA9254@kroah.com
-> 
-> code in inet_csk_get_port for 4.4 (and 4.9) is different from
-> the upstream version, so these backports had to be adapted (a bit)
-> 
-> Tim Froidcoeur (2):
->   net: refactor bind_bucket fastreuse into helper
->   net: initialize fastreuse on inet_inherit_port
-> 
->  include/net/inet_connection_sock.h |  4 +++
->  net/ipv4/inet_connection_sock.c    | 46 ++++++++++++++++++------------
->  net/ipv4/inet_hashtables.c         |  1 +
->  3 files changed, 33 insertions(+), 18 deletions(-)
-> 
-> --
-> 2.25.1
+GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
+These are simple defines so they could be used in DTS but they will not
+have the same meaning:
+1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
+2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
 
-Now queued up, thanks.
+Correct the interrupt flags, assuming the author of the code wanted some
+logical behavior behind the name "ACTIVE_xxx", this is:
+  ACTIVE_LOW  => IRQ_TYPE_LEVEL_LOW
+  ACTIVE_HIGH => IRQ_TYPE_LEVEL_HIGH
 
-greg k-h
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ Documentation/devicetree/bindings/net/can/tcan4x5x.txt | 2 +-
+ Documentation/devicetree/bindings/net/nfc/nxp-nci.txt  | 2 +-
+ Documentation/devicetree/bindings/net/nfc/pn544.txt    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+index 3613c2c8f75d..0968b40aef1e 100644
+--- a/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
++++ b/Documentation/devicetree/bindings/net/can/tcan4x5x.txt
+@@ -33,7 +33,7 @@ tcan4x5x: tcan4x5x@0 {
+ 		spi-max-frequency = <10000000>;
+ 		bosch,mram-cfg = <0x0 0 0 32 0 0 1 1>;
+ 		interrupt-parent = <&gpio1>;
+-		interrupts = <14 GPIO_ACTIVE_LOW>;
++		interrupts = <14 IRQ_TYPE_LEVEL_LOW>;
+ 		device-state-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+ 		device-wake-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+ 		reset-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
+diff --git a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
+index cfaf88998918..9e4dc510a40a 100644
+--- a/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
++++ b/Documentation/devicetree/bindings/net/nfc/nxp-nci.txt
+@@ -25,7 +25,7 @@ Example (for ARM-based BeagleBone with NPC100 NFC controller on I2C2):
+ 		clock-frequency = <100000>;
+ 
+ 		interrupt-parent = <&gpio1>;
+-		interrupts = <29 GPIO_ACTIVE_HIGH>;
++		interrupts = <29 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		enable-gpios = <&gpio0 30 GPIO_ACTIVE_HIGH>;
+ 		firmware-gpios = <&gpio0 31 GPIO_ACTIVE_HIGH>;
+diff --git a/Documentation/devicetree/bindings/net/nfc/pn544.txt b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+index 92f399ec22b8..2bd82562ce8e 100644
+--- a/Documentation/devicetree/bindings/net/nfc/pn544.txt
++++ b/Documentation/devicetree/bindings/net/nfc/pn544.txt
+@@ -25,7 +25,7 @@ Example (for ARM-based BeagleBone with PN544 on I2C2):
+ 		clock-frequency = <400000>;
+ 
+ 		interrupt-parent = <&gpio1>;
+-		interrupts = <17 GPIO_ACTIVE_HIGH>;
++		interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 		enable-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+ 		firmware-gpios = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+-- 
+2.17.1
+
