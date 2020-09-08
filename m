@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9C8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C265C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0C5F207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6187C207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589352;
-	bh=KY2vcxFNoq1KroSzVSsQo4HQfEBCab7hchzMg52KxXY=;
+	s=default; t=1599589357;
+	bh=F1lQWl/0jYXZV2bIP2BOsS57eO2dM1Y/WBNo5R+pm8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x2tX9PsPw7jaTjOEWUD3XFXZcXD7MGkfuUzoM2Cn8S9M7REgN7TjgnXXysSkiFWm3
-	 RrkAH2vVHA+tns65DEKnX85cbe1LrfwxcKZzS1agn0qxLv9zvFevLcxRrve7CqIDNF
-	 0CdGscqQVTVzdWjGDnrV2nOVpja+PmDM7b/nOFSs=
+	b=gU8+XqtWxNz2fNYDLiBDdnfYaWgrTweJl91NeJ8o7P4rut8KBQV6ZE+x8kzVXRIdb
+	 l2uMOvTpjoZYhVxufKoY8JgHJUwXLGXvJSiLYdK9Cbn78C2K4GgqvFNR5pQ8/tBx3S
+	 J+PcaAMyDFOyq+tm8OwX/vhm5xTxBstgRnoP/fmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732163AbgIHSWa (ORCPT
+        id S1732268AbgIHSWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:22:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730920AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731444AbgIHQLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:11:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 028432474C;
-        Tue,  8 Sep 2020 15:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8AB2472B;
+        Tue,  8 Sep 2020 15:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579675;
-        bh=KY2vcxFNoq1KroSzVSsQo4HQfEBCab7hchzMg52KxXY=;
+        s=default; t=1599579644;
+        bh=F1lQWl/0jYXZV2bIP2BOsS57eO2dM1Y/WBNo5R+pm8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCIvLayGeNSvYRGD93c6+uHwAK6PURvSTcF2z9xVeczMW5cx+wo/qnK/PyCTgbboA
-         JKBDVR93ylfNaDhtdapZS0toZjTEn6YHWkIoMrvnFcmP9l86qC22iVID+sk9fxl7Ah
-         TjFLNXeOFt4K0WH6pjESgZESyXnqUfI3Iapk4G94=
+        b=HnTqPvycKcCijyVT9hz2m4WZZPpBjOGOBcxNPtArosS/uwUO966Pv8NmRC4GASln1
+         iQr48ARd7qDnVCIbKGfI2fG0zcIOBc05lJ0+tt5SgXsONHcrzwI/4TS1PKi3L09qar
+         KoDRabtyicxN09PJcTWz+yyGh1VTAXPdpAu27C48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.8 146/186] mmc: mediatek: add optional module reset property
-Date:   Tue,  8 Sep 2020 17:24:48 +0200
-Message-Id: <20200908152248.738325498@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Ramalingam C <ramalingam.c@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.8 162/186] drm/i915: Fix sha_text population code
+Date:   Tue,  8 Sep 2020 17:25:04 +0200
+Message-Id: <20200908152249.515624234@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -61,75 +66,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenbin Mei <wenbin.mei@mediatek.com>
+From: Sean Paul <seanpaul@chromium.org>
 
-commit 855d388df217989fbf1f18c781ae6490dbb48e86 upstream.
+commit 9ab57658a608f879469ffa22b723c4539c05a58f upstream.
 
-This patch fixs eMMC-Access on mt7622/Bpi-64.
-Before we got these Errors on mounting eMMC ion R64:
-[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
-flags 0x800 phys_seg 1 prio class 0
-[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
+This patch fixes a few bugs:
 
-This patch adds a optional reset management for msdc.
-Sometimes the bootloader does not bring msdc register
-to default state, so need reset the msdc controller.
+1- We weren't taking into account sha_leftovers when adding multiple
+   ksvs to sha_text. As such, we were or'ing the end of ksv[j - 1] with
+   the beginning of ksv[j]
 
-Cc: <stable@vger.kernel.org> # v5.4+
-Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
-Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Tested-by: Frank Wunderlich <frank-w@public-files.de>
-Link: https://lore.kernel.org/r/20200814014346.6496-4-wenbin.mei@mediatek.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+2- In the sha_leftovers == 2 and sha_leftovers == 3 case, bstatus was
+   being placed on the wrong half of sha_text, overlapping the leftover
+   ksv value
+
+3- In the sha_leftovers == 2 case, we need to manually terminate the
+   byte stream with 0x80 since the hardware doesn't have enough room to
+   add it after writing M0
+
+The upside is that all of the HDCP supported HDMI repeaters I could
+find on Amazon just strip HDCP anyways, so it turns out to be _really_
+hard to hit any of these cases without an MST hub, which is not (yet)
+supported. Oh, and the sha_leftovers == 1 case works perfectly!
+
+Fixes: ee5e5e7a5e0f ("drm/i915: Add HDCP framework + base implementation")
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Ramalingam C <ramalingam.c@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sean Paul <seanpaul@chromium.org>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org
+Cc: <stable@vger.kernel.org> # v4.17+
+Reviewed-by: Ramalingam C <ramalingam.c@intel.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Ramalingam C <ramalingam.c@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200818153910.27894-2-sean@poorly.run
+(cherry picked from commit 1f0882214fd0037b74f245d9be75c31516fed040)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/mtk-sd.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/gpu/drm/i915/display/intel_hdcp.c |   26 ++++++++++++++++++++------
+ include/drm/drm_hdcp.h                    |    3 +++
+ 2 files changed, 23 insertions(+), 6 deletions(-)
 
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
-+#include <linux/reset.h>
+--- a/drivers/gpu/drm/i915/display/intel_hdcp.c
++++ b/drivers/gpu/drm/i915/display/intel_hdcp.c
+@@ -336,8 +336,10 @@ int intel_hdcp_validate_v_prime(struct i
  
- #include <linux/mmc/card.h>
- #include <linux/mmc/core.h>
-@@ -414,6 +415,7 @@ struct msdc_host {
- 	struct pinctrl_state *pins_uhs;
- 	struct delayed_work req_timeout;
- 	int irq;		/* host interrupt */
-+	struct reset_control *reset;
+ 		/* Fill up the empty slots in sha_text and write it out */
+ 		sha_empty = sizeof(sha_text) - sha_leftovers;
+-		for (j = 0; j < sha_empty; j++)
+-			sha_text |= ksv[j] << ((sizeof(sha_text) - j - 1) * 8);
++		for (j = 0; j < sha_empty; j++) {
++			u8 off = ((sizeof(sha_text) - j - 1 - sha_leftovers) * 8);
++			sha_text |= ksv[j] << off;
++		}
  
- 	struct clk *src_clk;	/* msdc source clock */
- 	struct clk *h_clk;      /* msdc h_clk */
-@@ -1516,6 +1518,12 @@ static void msdc_init_hw(struct msdc_hos
- 	u32 val;
- 	u32 tune_reg = host->dev_comp->pad_tune_reg;
- 
-+	if (host->reset) {
-+		reset_control_assert(host->reset);
-+		usleep_range(10, 50);
-+		reset_control_deassert(host->reset);
-+	}
+ 		ret = intel_write_sha_text(dev_priv, sha_text);
+ 		if (ret < 0)
+@@ -435,7 +437,7 @@ int intel_hdcp_validate_v_prime(struct i
+ 		/* Write 32 bits of text */
+ 		intel_de_write(dev_priv, HDCP_REP_CTL,
+ 			       rep_ctl | HDCP_SHA1_TEXT_32);
+-		sha_text |= bstatus[0] << 24 | bstatus[1] << 16;
++		sha_text |= bstatus[0] << 8 | bstatus[1];
+ 		ret = intel_write_sha_text(dev_priv, sha_text);
+ 		if (ret < 0)
+ 			return ret;
+@@ -450,17 +452,29 @@ int intel_hdcp_validate_v_prime(struct i
+ 				return ret;
+ 			sha_idx += sizeof(sha_text);
+ 		}
 +
- 	/* Configure to MMC/SD mode, clock free running */
- 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
++		/*
++		 * Terminate the SHA-1 stream by hand. For the other leftover
++		 * cases this is appended by the hardware.
++		 */
++		intel_de_write(dev_priv, HDCP_REP_CTL,
++			       rep_ctl | HDCP_SHA1_TEXT_32);
++		sha_text = DRM_HDCP_SHA1_TERMINATOR << 24;
++		ret = intel_write_sha_text(dev_priv, sha_text);
++		if (ret < 0)
++			return ret;
++		sha_idx += sizeof(sha_text);
+ 	} else if (sha_leftovers == 3) {
+-		/* Write 32 bits of text */
++		/* Write 32 bits of text (filled from LSB) */
+ 		intel_de_write(dev_priv, HDCP_REP_CTL,
+ 			       rep_ctl | HDCP_SHA1_TEXT_32);
+-		sha_text |= bstatus[0] << 24;
++		sha_text |= bstatus[0];
+ 		ret = intel_write_sha_text(dev_priv, sha_text);
+ 		if (ret < 0)
+ 			return ret;
+ 		sha_idx += sizeof(sha_text);
  
-@@ -2273,6 +2281,11 @@ static int msdc_drv_probe(struct platfor
- 	if (IS_ERR(host->src_clk_cg))
- 		host->src_clk_cg = NULL;
+-		/* Write 8 bits of text, 24 bits of M0 */
++		/* Write 8 bits of text (filled from LSB), 24 bits of M0 */
+ 		intel_de_write(dev_priv, HDCP_REP_CTL,
+ 			       rep_ctl | HDCP_SHA1_TEXT_8);
+ 		ret = intel_write_sha_text(dev_priv, bstatus[1]);
+--- a/include/drm/drm_hdcp.h
++++ b/include/drm/drm_hdcp.h
+@@ -29,6 +29,9 @@
+ /* Slave address for the HDCP registers in the receiver */
+ #define DRM_HDCP_DDC_ADDR			0x3A
  
-+	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
-+								"hrst");
-+	if (IS_ERR(host->reset))
-+		return PTR_ERR(host->reset);
++/* Value to use at the end of the SHA-1 bytestream used for repeaters */
++#define DRM_HDCP_SHA1_TERMINATOR		0x80
 +
- 	host->irq = platform_get_irq(pdev, 0);
- 	if (host->irq < 0) {
- 		ret = -EINVAL;
+ /* HDCP register offsets for HDMI/DVI devices */
+ #define DRM_HDCP_DDC_BKSV			0x00
+ #define DRM_HDCP_DDC_RI_PRIME			0x08
 
 
