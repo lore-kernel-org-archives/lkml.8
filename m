@@ -2,120 +2,76 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A672C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4096C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD88A20658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599595268;
-	bh=lm+NnOQVayPnEfJs4iqkujWjjFvLWT5L8ziKCgTrRa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A/kOwGMOZRiKzRF13vFxkbvW+ROgWAXSkvzGyRj0GNd2MH9gXTLLFPJOyoHCJrNqo
-	 SOaV/y9s+FDW/4dCKc7MF5ms/zzDMofXU5iu0x5Uj7zupDnH6Ltn4UwW/6RaMIAKmZ
-	 S6SVmqsAm2+6jA9PPAc+V89Z537ynDgCpA5wGsQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 8747D20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:01:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ia2HCvqT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731696AbgIHUBF (ORCPT
+        id S1732578AbgIHUBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730368AbgIHPf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:35:26 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A767D20738;
-        Tue,  8 Sep 2020 15:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599578402;
-        bh=lm+NnOQVayPnEfJs4iqkujWjjFvLWT5L8ziKCgTrRa8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kFiZ8vv+V5Si6pCmglsYvIxWUSs2kqEP3hyv1GibXBVKbeok5rPxfU4KaqVQBVagW
-         tAho0j2ti8+0izDXZAIyHvZP2AEBCkbLAC/0d1Y/kBoKytrmcWBJR3k8v8MSbqEILh
-         NTCjWqLdGKoNU1xROt4RDGhngLQbBY7m3ab6Sy38=
-Date:   Tue, 8 Sep 2020 17:20:14 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mike Travis <mike.travis@hpe.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@suse.de>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Russ Anderson <russ.anderson@hpe.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH 00/12] x86/platform/uv: Updates for UV5
-Message-ID: <20200908152014.GB4114051@kroah.com>
-References: <20200907185430.363197758@hpe.com>
+        Tue, 8 Sep 2020 16:01:11 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48278 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729988AbgIHPfN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:35:13 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088C3VsW004198;
+        Tue, 8 Sep 2020 07:03:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599566611;
+        bh=nsqPY6o4grvE2pz2lannxuY5WsjPIahg4+RoCYp/mc4=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=ia2HCvqTdT2aSCL0/porgUy55z/i+UNq4fGm51IBwnjCi49OkizTxLE8QrQf5pLhG
+         tNYc8imMXyJknGPW8h8Bjtcf/u01AeRfbs9KUtXdyT/+siXEYWnKXnxY9GGFMd0Cgj
+         bZSQ1blN0Ra3RX6g1cY8xR/cDa84TcLT/G/RdfnA=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088C3V75118701
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 07:03:31 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 07:03:31 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 07:03:31 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088C3SxG114548;
+        Tue, 8 Sep 2020 07:03:29 -0500
+Subject: Re: [PATCH 1/2] ASoC: tlv320adcx140: Avoid accessing invalid
+ gpio_reset
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     Camel Guo <camel.guo@axis.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <tiwai@suse.com>, <dmurphy@ti.com>
+CC:     <alsa-devel@alsa-project.org>, <kernel@axis.com>,
+        <linux-kernel@vger.kernel.org>, Camel Guo <camelg@axis.com>
+References: <20200908083521.14105-1-camel.guo@axis.com>
+ <7bb93489-dbd5-d1a5-5df6-e62470bd2252@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <e791162b-1292-e1c4-3fca-b8936beeeb45@ti.com>
+Date:   Tue, 8 Sep 2020 15:03:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907185430.363197758@hpe.com>
+In-Reply-To: <7bb93489-dbd5-d1a5-5df6-e62470bd2252@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200908120328.0GwTc9xN2exQ5MQXyObT9dUPQWvSmNU-SxGn1gdrQyU@z>
 
-On Mon, Sep 07, 2020 at 01:54:30PM -0500, Mike Travis wrote:
-> Subject: [PATCH 00/12] x86/platform/uv: Updates for UV5
-> 
-> Add changes needed for new UV5 UV architecture.  Chief among the changes
-> are 52 bits of physical memory address and 57 bits of virtual address space.  
-> 
-> 0001 Remove UV BAU TLB Shootdown Handler
->     - removes BAU TLB code being replaced by BAU APIC driver
-> 
-> 0002 Remove SCIR built in driver
->     - removes System Controller (monitoring) code
-> 
-> 0003 Update UV kernel modules
->     - update loadable UV kernel modules prior to a clash of symbols
->       (is_uv) produced by auto-generated UV5 uv_mmrs.h file
-> 
-> 0004 Update UV MMRs for UV5
->     - update uv_mmrs.h file and fix resultant compiler errors
-> 
-> 0005 Add UV5 direct references
->     - add references to UV5 specific values
-> 
-> 0006 Decode and Use Arch Type in UVsystab
->     - add UV ArchType field to UVsystab to remove dependency on OEM_ID
-> 
-> 0007 Update MMIOH references
->     - display MMIOH mapping for each MMIOH region
-> 
-> 0008 Adjust GAM MMR references
->     - update GAM mapping for MMR accesses
-> 
-> 0009 Update UV GRU references
->     - update GRU mapping to include UV5
-> 
-> 0010 Update Node Present Counting
->     - UV5 changes method of counting nodes present
-> 
-> 0011 Update UV5 TSC Checking
->     - update TSC sync check of BIOS sync status
-> 
-> 0012 Update for UV5 NMI MMR changes
->     - update NMI handler
-> 
 
-No diffstat?  Did you use 'git format-patch' cover letter for this?
-
-thanks,
-
-greg k-h
