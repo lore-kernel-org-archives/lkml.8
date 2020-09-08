@@ -2,99 +2,131 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDC9C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998CDC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBD9C2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590342;
-	bh=X+pkzHAY+45DpjnBBnmun/XbamZy5ZEupPKNeiUbPqc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2MTmpQGX/DERkoHzgKvLOu9DeZmUEXdqkRF77UHKGBHo0miiQMc7L0SHavQYpxUa
-	 EqvdEA/2Mw4F7nAe0k8wNdzxVjPOnmg9a7RarNahWsBtTEI3cTRUYjjgVWEoARHAQ5
-	 zZ8GQwTGm9BI7p4OyWWwOWRNXfBR6P3X0oJEBUas=
+	by mail.kernel.org (Postfix) with ESMTP id 53F472098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ch5116YJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731701AbgIHSjB (ORCPT
+        id S1731453AbgIHSi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731325AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:00 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDA902404F;
-        Tue,  8 Sep 2020 15:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580101;
-        bh=X+pkzHAY+45DpjnBBnmun/XbamZy5ZEupPKNeiUbPqc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oZ5vSft4YlAR5RskaKNShZKuZ/zQ0Eoisxw+9nTLplzyWcSCF6jOr8hYxYQX20ccj
-         I/DEawDCl8JCLM0zoYu9cctAGPRyKv+G9CjxtGHNlFd989uLuzPQVMyULZI3E/I4lG
-         KERXZVH9M/Dny/GzIb/lYRuoei1PR0huKb7au6LI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavan Chebbi <pavan.chebbi@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/88] bnxt_en: Dont query FW when netif_running() is false.
-Date:   Tue,  8 Sep 2020 17:25:32 +0200
-Message-Id: <20200908152222.628631668@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 14:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731222AbgIHSiU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:38:20 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87A86C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:38:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n3so138456pjq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:38:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=DjkIx1P1Yaxa+Auz4Hv5F6fQbSDCX4zGHI1CORxsnvo=;
+        b=Ch5116YJyepkGpw+1UW17XG01LG/Pm90dnlvn725RqhqaU4K8logIxM79H9+sIUoQ8
+         OiB2hKqFTTb/CrA4MTXj0FA17E0hyz3kemhaxUxNt+kgpXnoSGgFoS2faieUZXeiearM
+         Bq3F/+1d+pj1Mc5PD3zu/eq5qxogXCWs0O71k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=DjkIx1P1Yaxa+Auz4Hv5F6fQbSDCX4zGHI1CORxsnvo=;
+        b=iOsSxZ21s6j8EpSoZPCDzK0pVqs9ZvpcyUdqkP745u8b8Re4Gc/MzMeadTwRkWeUyK
+         BkOi7apndZQ/2z/A5+Hhf3gGjhUdzhfRxNcjMqmXSvbUZIwzqBdugN9aOwhQoOa1XeqG
+         XgIw+E9d5Rb/aHX3NIXikU1AfgDHWEVaSp1nMpcE+TG8rvEOCPmWBKDItduNlLUVtw4m
+         V58scTg0UGv0NZ6pDkTy6T1R8OT1I1VhYWqtlMxAfof+VAI6zlO+rgT0uJ3V+jvGmE1N
+         orK17w55ITx57qj7wwa++4XusKZxnxTPac0733JRqWuiUJNtg46jVgXiLLCiKKGJpL8D
+         5S5g==
+X-Gm-Message-State: AOAM533Z0GXTOoUmYo46zM5Zon5pMl8bEwI6wrBVeKdG7Ij7v1ngJP7E
+        q6JxIAfpC6zSRYUMgcHL08ZgjFLGen+XRQ==
+X-Google-Smtp-Source: ABdhPJxQU7U8Qy5RDG4z+Rc6wVE9+Uj/BS7LyHlH3lOBzdg4vrt5MnIa+fMmuCRzZtHg0Ko5860+sw==
+X-Received: by 2002:a17:90a:930e:: with SMTP id p14mr171770pjo.49.1599590299498;
+        Tue, 08 Sep 2020 11:38:19 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id e123sm133688pfh.167.2020.09.08.11.38.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 11:38:19 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1599536678-4666-1-git-send-email-mansur@codeaurora.org>
+References: <1599536678-4666-1-git-send-email-mansur@codeaurora.org>
+Subject: Re: [PATCH 2/2] venus: core: vote for video-mem icc path and change avg, peak bw
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org,
+        Mansur Alisha Shaik <mansur@codeaurora.org>
+To:     Mansur Alisha Shaik <mansur@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Date:   Tue, 08 Sep 2020 11:38:17 -0700
+Message-ID: <159959029779.454335.10674172341529908104@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Quoting Mansur Alisha Shaik (2020-09-07 20:44:38)
+> Currently we are voting for venus0-ebi path during buffer processing
+> with an average bandwidth of all the instances and unvoting during
+> session release.
+>=20
+> While video streaming when we try to do XO-SD using the command
+> "echo mem > /sys/power/state command" , device is not entering
+> to suspend state and from interconnect summary seeing votes for venus0-ebi
+>=20
+> Corrected this by voting for venus0-ebi path in venus_runtime_resume
 
-[ Upstream commit c1c2d77408022a398a1a7c51cf20488c922629de ]
+venus_runtime_resume() please so we know it's a function.
 
-In rare conditions like two stage OS installation, the
-ethtool's get_channels function may be called when the
-device is in D3 state, leading to uncorrectable PCI error.
-Check netif_running() first before making any query to FW
-which involves writing to BAR.
+> and unvote during venus_runtime_suspend.
 
-Fixes: db4723b3cd2d ("bnxt_en: Check max_tx_scheduler_inputs value from firmware.")
-Signed-off-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+venus_runtime_suspend().
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 63730e449e088..14fe4f9f24b88 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -471,7 +471,7 @@ static void bnxt_get_channels(struct net_device *dev,
- 	int max_tx_sch_inputs;
- 
- 	/* Get the most up-to-date max_tx_sch_inputs. */
--	if (BNXT_NEW_RM(bp))
-+	if (netif_running(dev) && BNXT_NEW_RM(bp))
- 		bnxt_hwrm_func_resc_qcaps(bp, false);
- 	max_tx_sch_inputs = hw_resc->max_tx_sch_inputs;
- 
--- 
-2.25.1
+>=20
+> Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+> ---
 
+Any Fixes: tag?
 
+>  drivers/media/platform/qcom/venus/core.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/pla=
+tform/qcom/venus/core.c
+> index 4857bbd..79d8600 100644
+> --- a/drivers/media/platform/qcom/venus/core.c
+> +++ b/drivers/media/platform/qcom/venus/core.c
+> @@ -373,6 +373,10 @@ static __maybe_unused int venus_runtime_suspend(stru=
+ct device *dev)
+>         if (ret)
+>                 return ret;
+> =20
+> +       ret =3D icc_set_bw(core->video_path, 0, 0);
+> +       if (ret)
+> +               return ret;
+> +
+>         return ret;
+>  }
+> =20
+> @@ -382,7 +386,11 @@ static __maybe_unused int venus_runtime_resume(struc=
+t device *dev)
+>         const struct venus_pm_ops *pm_ops =3D core->pm_ops;
+>         int ret;
+> =20
+> -       ret =3D icc_set_bw(core->cpucfg_path, 0, kbps_to_icc(1000));
+> +       ret =3D icc_set_bw(core->video_path, kbps_to_icc(20000), 0);
 
+This also shows that the arguments to icc_set_bw() we're backwards? Can
+that be fixed in another patch instead of putting it in this one?
