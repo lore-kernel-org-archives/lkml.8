@@ -2,73 +2,141 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84C7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA15C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93F2F2137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD67E2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592227;
+	bh=JHLVLYmI8zY5PT20YbNvmKVzTXAxqKwjCnx+wA90X0g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wPs83fMeUlhMqqxNcV84XguBKbGyNUEBCUIIP9ayfDk6AjKuGA8lML4r/TAr9dTYn
+	 ntdGgwdZ/CXfvanXW+/+uDG844m7fnLhNg3jj4z6lyFunpq/Ywv3pl5EU3D4f/+8OF
+	 /n9MRza7Q9pB2R9fa60nXY9j2EURvkbWgIMWrSNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbgIHTKZ (ORCPT
+        id S1731817AbgIHTKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 15:10:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:11269 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731209AbgIHQFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:25 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7A12E37C5177444BBF63;
-        Tue,  8 Sep 2020 22:06:12 +0800 (CST)
-Received: from huawei.com (10.175.113.133) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 8 Sep 2020
- 22:06:12 +0800
-From:   Wang Hai <wanghai38@huawei.com>
-To:     <inaky.perez-gonzalez@intel.com>, <davem@davemloft.net>,
-        <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-wimax@intel.com>
-Subject: [PATCH net-next] net: wimax: i2400m: fix 'msg_skb' kernel-doc warning in i2400m_msg_to_dev()
-Date:   Tue, 8 Sep 2020 22:03:33 +0800
-Message-ID: <20200908140333.24434-1-wanghai38@huawei.com>
-X-Mailer: git-send-email 2.17.1
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731230AbgIHQFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:24 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E78E229C6;
+        Tue,  8 Sep 2020 15:46:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579969;
+        bh=JHLVLYmI8zY5PT20YbNvmKVzTXAxqKwjCnx+wA90X0g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=isGxuOxIcdUzPRsVUe1yQjI0LGeqrIoSV7Szwf942acnCiyAaI0nlfITL80zjn8oc
+         TY8Bq59BlqQ2VIrdGwK0pYZ7m3ClUNNxC+zGgpcNUrXweU7BkrWD1bAYWEtd7vp+u6
+         lyr2ATFBDLtetCnpgUR/9982ONTMPC1yUT1f4qMM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 105/129] media: rc: uevent sysfs file races with rc_unregister_device()
+Date:   Tue,  8 Sep 2020 17:25:46 +0200
+Message-Id: <20200908152235.088505773@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.113.133]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 kernel build warning(s):
+From: Sean Young <sean@mess.org>
 
-drivers/net/wimax/i2400m/control.c:709: warning: Excess function parameter 'msg_skb' description in 'i2400m_msg_to_dev'
+commit 4f0835d6677dc69263f90f976524cb92b257d9f4 upstream.
 
-This parameter is not in use. Remove it.
+Only report uevent file contents if device still registered, else we
+might read freed memory.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wimax/i2400m/control.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/media/rc/rc-main.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/wimax/i2400m/control.c b/drivers/net/wimax/i2400m/control.c
-index 9afed3b133d3..8df98757d901 100644
---- a/drivers/net/wimax/i2400m/control.c
-+++ b/drivers/net/wimax/i2400m/control.c
-@@ -656,8 +656,6 @@ void i2400m_msg_to_dev_cancel_wait(struct i2400m *i2400m, int code)
-  *
-  * @i2400m: device descriptor
-  *
-- * @msg_skb: an skb  *
-- *
-  * @buf: pointer to the buffer containing the message to be sent; it
-  *           has to start with a &struct i2400M_l3l4_hdr and then
-  *           followed by the payload. Once this function returns, the
--- 
-2.17.1
+--- a/drivers/media/rc/rc-main.c
++++ b/drivers/media/rc/rc-main.c
+@@ -1577,25 +1577,25 @@ static void rc_dev_release(struct device
+ 	kfree(dev);
+ }
+ 
+-#define ADD_HOTPLUG_VAR(fmt, val...)					\
+-	do {								\
+-		int err = add_uevent_var(env, fmt, val);		\
+-		if (err)						\
+-			return err;					\
+-	} while (0)
+-
+ static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
+ {
+ 	struct rc_dev *dev = to_rc_dev(device);
++	int ret = 0;
+ 
+-	if (dev->rc_map.name)
+-		ADD_HOTPLUG_VAR("NAME=%s", dev->rc_map.name);
+-	if (dev->driver_name)
+-		ADD_HOTPLUG_VAR("DRV_NAME=%s", dev->driver_name);
+-	if (dev->device_name)
+-		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
++	mutex_lock(&dev->lock);
+ 
+-	return 0;
++	if (!dev->registered)
++		ret = -ENODEV;
++	if (ret == 0 && dev->rc_map.name)
++		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
++	if (ret == 0 && dev->driver_name)
++		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
++	if (ret == 0 && dev->device_name)
++		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
++
++	mutex_unlock(&dev->lock);
++
++	return ret;
+ }
+ 
+ /*
+@@ -1987,14 +1987,14 @@ void rc_unregister_device(struct rc_dev
+ 	del_timer_sync(&dev->timer_keyup);
+ 	del_timer_sync(&dev->timer_repeat);
+ 
+-	rc_free_rx_device(dev);
+-
+ 	mutex_lock(&dev->lock);
+ 	if (dev->users && dev->close)
+ 		dev->close(dev);
+ 	dev->registered = false;
+ 	mutex_unlock(&dev->lock);
+ 
++	rc_free_rx_device(dev);
++
+ 	/*
+ 	 * lirc device should be freed with dev->registered = false, so
+ 	 * that userspace polling will get notified.
+
 
