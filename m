@@ -2,276 +2,799 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89AE7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9F6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A83A20738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="V43siraG";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="SlInk8QU"
+	by mail.kernel.org (Postfix) with ESMTP id D159120738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:26:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599585966;
+	bh=GiCL+SRfBy17sqWwsPky825z1qG3ba+/q+4cN27wLcg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d4h9q8mQw6qxuHcbODWjulqElnOe6ZFjhof29nXIzve08825idNx+AvLtFzsUBKIz
+	 YXv+2Rh6FUaXsgi4DZdS0spCwnsrtkoG8gQrnhXFmIGFXruwQ/kMT+dTcJ3lpiw3Rx
+	 Pi/67pVNRAXnRxjLvRsiaJjDGkReyVdjOTZ/PD3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbgIHRZf (ORCPT
+        id S1731833AbgIHR0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:25:35 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:60070 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731735AbgIHQRB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:17:01 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088EDhSd018505;
-        Tue, 8 Sep 2020 07:15:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=zq6IJp1chqPXNQso0m0Iaq8PoUvLabSrcB0GNY4gb3M=;
- b=V43siraGpT1giLgRrjxpOCQGMC+tEOleY9cMM3y0+9/d6hSAFMJKF8GU5N2sDMdTDrcQ
- 93yvOU69IlkEI+1LZ6QqWpWFKl5ftZxrCPBjv2fqMLxyTCrjWx3nZlexxECfSnv08l1J
- 9n3JUEP3mXqeQw3aPdITZbM8k0xw5kGz/cldLBeYw9CugUG9HgepVAtlJ5f6djjaZn9U
- 5m9Ylsx2kFykrf6TZDmwJg6Ot5kU56VVi832M73KQzXCB4XXqkqXUrJxfNcbVytaXzqd
- xb+Ktgli6QDzehTtQCzIV9OKxgkK1FEDdih2V4u118iDyu2xLi97aq0VWRYuDTz9UG3Q QQ== 
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2107.outbound.protection.outlook.com [104.47.55.107])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 33c68whs4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 07:15:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UjpYSvCf1RQ+NDdtmR1XM7LYV+1vxp0riZGgww4Zs6APu2LjyvaDRpFn13qp1vds24ByXw29P1Ldtr/yv/ulYFhNXuDrZusb2hNqwP3MM9/nHA/7lz+EVNQzmo5I2tFMGzTu83a715V1FQZ1hSbr2LuBmHHbGnblA71GMNvkGhtjWFkS9HiGFYoJDSLFcLm3nLTfgcU+Ebmubv/rIT4+WK5x4/5qpsssxLiWeTfWGDP9K+5OZZkxwrdrZH5Pg/0GIJj1n/3D8Nw1yIBEDjmUfSnTm1kx7ZxZGA8isq2RDA856VjZhqJ6EbA5xEPr67nxqs7sHmTrPnxZPaxPdoTk4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zq6IJp1chqPXNQso0m0Iaq8PoUvLabSrcB0GNY4gb3M=;
- b=iUSY5CBqEsoRi3T+q5ZylFT/QYZoToJh030ZVpS+jXwUnBbe8hSadkVyBXm6DiZndkxBlu3s7gFTD/naNpgombCQpt8Iek4mBN/XvFTA1YDvJZe5UesQYiY7Q44Y+h+FF1Cs1hoahg2Y0Faf2zoWPR215DJSPxAb24jH82uDq2cD/9Z9bHn/O409CNuaEg5O5cS/aeCCCQ2pAC32sHO67RkdA4j6u8A1mu8x5jc1j5em+vOLzReHL2oiN+NZKdshzJDHwl+YIQBGIKRo3EJqYs0qLzhEnmgVRpX7rBWf/F/OKE/Kh2XAC8wIlFyOy0zmKsZB+jWbYW+9I0LP4d95jA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zq6IJp1chqPXNQso0m0Iaq8PoUvLabSrcB0GNY4gb3M=;
- b=SlInk8QUgp+ADqz48nkxA3nIcV2Ay7Kh1DojhyHeXq/QBUkn2Jqp5n5EBlVclyGOyh3PinAMDGLa5vEYXgorw+U3yuiFTQordctCGaBGDgKJJa7MSrjJOcrPF3rVKaVTuYKvNI/qlY0bj8GqN6+TD4vW5YpqzLzuqekaZNvaQjM=
-Received: from DM6PR07MB5531.namprd07.prod.outlook.com (2603:10b6:5:76::15) by
- DM5PR0701MB3655.namprd07.prod.outlook.com (2603:10b6:4:76::33) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3370.16; Tue, 8 Sep 2020 14:15:52 +0000
-Received: from DM6PR07MB5531.namprd07.prod.outlook.com
- ([fe80::c451:7f79:5f49:d9f2]) by DM6PR07MB5531.namprd07.prod.outlook.com
- ([fe80::c451:7f79:5f49:d9f2%4]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 14:15:52 +0000
-From:   Milind Parab <mparab@cadence.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        Yuti Suresh Amonkar <yamonkar@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>,
-        "jsarha@ti.com" <jsarha@ti.com>,
-        "praneeth@ti.com" <praneeth@ti.com>
-Subject: RE: [PATCH v5 2/2] phy: cadence-torrent: Use kernel PHY API to set
- PHY attributes
-Thread-Topic: [PATCH v5 2/2] phy: cadence-torrent: Use kernel PHY API to set
- PHY attributes
-Thread-Index: AQHWekRj5YsNfufc2UCQ3GhxFz8KCqlUi9QAgABvmYCAAFYPAIABfJmAgAAIkACAAELzgIAHxI8w
-Date:   Tue, 8 Sep 2020 14:15:52 +0000
-Message-ID: <DM6PR07MB55314937E004DCB2BCF9BEB8D3290@DM6PR07MB5531.namprd07.prod.outlook.com>
-References: <1598293711-23362-1-git-send-email-sjakhade@cadence.com>
- <1598293711-23362-3-git-send-email-sjakhade@cadence.com>
- <20200902002956.GE14351@pendragon.ideasonboard.com>
- <DM6PR07MB6154CC4A67BC3568A7339CC9C52F0@DM6PR07MB6154.namprd07.prod.outlook.com>
- <20200902121722.GA16811@pendragon.ideasonboard.com>
- <DM6PR07MB6154F54322C38E6D864C7797C52C0@DM6PR07MB6154.namprd07.prod.outlook.com>
- <b7903295-6482-53a5-2f08-3da17ced0c87@ti.com>
- <20200903152951.GE6492@pendragon.ideasonboard.com>
-In-Reply-To: <20200903152951.GE6492@pendragon.ideasonboard.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ideasonboard.com; dkim=none (message not signed)
- header.d=none;ideasonboard.com; dmarc=none action=none
- header.from=cadence.com;
-x-originating-ip: [14.142.6.124]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 606f7e2e-3eae-4f7d-6a3a-08d85401b186
-x-ms-traffictypediagnostic: DM5PR0701MB3655:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR0701MB3655AA8A2E6CF5EB9FD2E908D3290@DM5PR0701MB3655.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OaDLNnot2tCYtab/ZiPN8gkeM59mUgirKMaQquR6CqYZe0bRntKJUfp3Ith904W3hP+yRPa3B9juYc+n84rBol9v1vlu0qcgdkokiQncrws4bdwAzJFX6B/vprFyZ7NKY1xu3US2R7z6MSoly9NyM2HvCjp5x4Y8Uwd73iJOE1WeT4AweT4J44H73sWTqnCgzJOFt1o9zgXsIIANpN4YsLsbmEZDEHeTUERmRlNltzHT/Ja9K16zf5rtZLojBomtRakXa3yVttgNjWmQjSMPe4W7goCX3TAPIEpktVnoGgikP83KpftMhPdVnuQMsXF681T4CFqlQwk7bofPGA18BUxN0hnVxP8+n6vuCTaGNLy1onNkWPz3r07MukZy8TyTxzp+M1cTJSqQoWDe80RgH3Oca3kaU3gXrjD9a4C9cTXQY0NcnzQ/wqbJTs4XV2e+aeWdwcDChN5YyBkw3rpig/QtuIV5Nvd7NOV79QAUlrg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR07MB5531.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(136003)(366004)(36092001)(66476007)(66556008)(110136005)(83380400001)(54906003)(71200400001)(53546011)(6506007)(7696005)(4326008)(966005)(55236004)(316002)(2906002)(52536014)(9686003)(33656002)(76116006)(66946007)(478600001)(64756008)(55016002)(66446008)(8936002)(5660300002)(86362001)(8676002)(26005)(186003)(309714004);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: fmxzwWjRqCOCeWCntSF+uKQuYXGGtLZgq8bg2XQIWsvAp67JqcdXkkx4CrvYaWhGviSeqFyBq5DQUunVp2OlW/4xp4RxTdrEisodyX8g6N1lk9nSYsYSK0muIBsymy+OsxAeIjgpxA16l6CLQr3nhPZ8Uq8l5rOF2e6QLQW7w+SOYKi16t3Cd4x1TKnieKQVCenFLzlROOAiNgmhaDhUNBT5L0lshK9dyXKUT4KqoF4xFNjOs60T9+finiVTgwl2W1AcdU9YPxafeyIZiK2EHDE7MuR9BWlXNK8SRn18b8vB4FHYoeq6gcIFvmR/kDRb38Oz5RiokuAsCwcZiVjgxX0m5Sb0CezjkfFKI6Or1u7Ng8Esawn+ep/rZeuIsEGAGXtevhWLn5KjR2RkZNW3VnvY3LN1YW2HhTmfAgAjsqNa34xQ6eCrFllKonCQrV5mrryoPdfiNWzEPyCCJ8NGOCxgksXhYeOohFeuVyyyw1bzOmYG9c+03Jl7RQq1YPaFTiCUfyK41h2dgj2omwP5+QzLJTdBtNJvxRRaVIrlOBDW64hHSUAvORt5tyZxRoev3gW8blHWNDL6eXtiLaenSP7ctDSCxi/kzi8nPKtpmOKj0lkC8Hz0dbxWxV3SXWvj1+++m9MOSitufxm/2eaY8Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 8 Sep 2020 13:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731732AbgIHQRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:17:00 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC23924844;
+        Tue,  8 Sep 2020 15:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579910;
+        bh=GiCL+SRfBy17sqWwsPky825z1qG3ba+/q+4cN27wLcg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RexhAKhLK+IIr6RPaV0Xc78Qh2cG6on/5VL6SXDjaWtRm+KBJXM0WPQILnGhYIfIg
+         5FySV9HdEvz9Lr1StR8BXoDJdRKAkWJ9bPlXloEDhvAz3fCj3uSiIOOMJehtnIIWOV
+         +vgfly6TAtjqgQKn84fM0dYnW3+fhKIDSYoyqVf4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peter Xu <peterx@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 075/129] vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+Date:   Tue,  8 Sep 2020 17:25:16 +0200
+Message-Id: <20200908152233.446372274@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR07MB5531.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 606f7e2e-3eae-4f7d-6a3a-08d85401b186
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 14:15:52.1192
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5dNVpb0vAiw7CBs8ODLwP1AKNfUHwuBP2M2cPK3ZhadIJ5L/KCYmT2tnLK5rILpfGLSSwlEfoSPLDr8ptSNxKk/hVmKZMVnbj4NA8qsuB6Y=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR0701MB3655
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011
- phishscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2009080136
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBMYXVyZW50
-IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+U2VudDogVGh1
-cnNkYXksIFNlcHRlbWJlciAzLCAyMDIwIDk6MDAgUE0NCj5UbzogS2lzaG9uIFZpamF5IEFicmFo
-YW0gSSA8a2lzaG9uQHRpLmNvbT4NCj5DYzogU3dhcG5pbCBLYXNoaW5hdGggSmFraGFkZSA8c2ph
-a2hhZGVAY2FkZW5jZS5jb20+OyB2a291bEBrZXJuZWwub3JnOw0KPmxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmc7IG1heGltZUBjZXJuby50ZWNoOyBNaWxpbmQgUGFyYWINCj48bXBhcmFiQGNh
-ZGVuY2UuY29tPjsgWXV0aSBTdXJlc2ggQW1vbmthciA8eWFtb25rYXJAY2FkZW5jZS5jb20+Ow0K
-Pm5zZWtoYXJAdGkuY29tOyB0b21pLnZhbGtlaW5lbkB0aS5jb207IGpzYXJoYUB0aS5jb207IHBy
-YW5lZXRoQHRpLmNvbQ0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMi8yXSBwaHk6IGNhZGVuY2Ut
-dG9ycmVudDogVXNlIGtlcm5lbCBQSFkgQVBJIHRvIHNldA0KPlBIWSBhdHRyaWJ1dGVzDQo+DQo+
-RVhURVJOQUwgTUFJTA0KPg0KPg0KPkhpIEtpc2hvbiwNCj4NCj5PbiBUaHUsIFNlcCAwMywgMjAy
-MCBhdCAwNTowMDoxNFBNICswNTMwLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJIHdyb3RlOg0KPj4g
-T24gOS8zLzIwMjAgNDoyOSBQTSwgU3dhcG5pbCBLYXNoaW5hdGggSmFraGFkZSB3cm90ZToNCj4+
-ID4gT24gV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMiwgMjAyMCA1OjQ3IFBNLCBMYXVyZW50IFBpbmNo
-YXJ0IHdyb3RlOg0KPj4gPj4gT24gV2VkLCBTZXAgMDIsIDIwMjAgYXQgMDc6MDk6MjFBTSArMDAw
-MCwgU3dhcG5pbCBLYXNoaW5hdGggSmFraGFkZQ0KPndyb3RlOg0KPj4gPj4+IE9uIFdlZG5lc2Rh
-eSwgU2VwdGVtYmVyIDIsIDIwMjAgNjowMCBBTSBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOg0KPj4g
-Pj4+PiBPbiBNb24sIEF1ZyAyNCwgMjAyMCBhdCAwODoyODozMVBNICswMjAwLCBTd2FwbmlsIEph
-a2hhZGUgd3JvdGU6DQo+PiA+Pj4+PiBVc2UgZ2VuZXJpYyBQSFkgZnJhbWV3b3JrIGZ1bmN0aW9u
-IHBoeV9zZXRfYXR0cnMoKSB0byBzZXQgbnVtYmVyDQo+PiA+Pj4+PiBvZiBsYW5lcyBhbmQgbWF4
-aW11bSBsaW5rIHJhdGUgc3VwcG9ydGVkIGJ5IFBIWS4NCj4+ID4+Pj4+DQo+PiA+Pj4+PiBTaWdu
-ZWQtb2ZmLWJ5OiBTd2FwbmlsIEpha2hhZGUgPHNqYWtoYWRlQGNhZGVuY2UuY29tPg0KPj4gPj4+
-Pj4gQWNrZWQtYnk6IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+PiA+
-Pj4+PiAtLS0NCj4+ID4+Pj4+ICBkcml2ZXJzL3BoeS9jYWRlbmNlL3BoeS1jYWRlbmNlLXRvcnJl
-bnQuYyB8IDcgKysrKysrKw0KPj4gPj4+Pj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMo
-KykNCj4+ID4+Pj4+DQo+PiA+Pj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkvY2FkZW5jZS9w
-aHktY2FkZW5jZS10b3JyZW50LmMNCj4+ID4+Pj4+IGIvZHJpdmVycy9waHkvY2FkZW5jZS9waHkt
-Y2FkZW5jZS10b3JyZW50LmMNCj4+ID4+Pj4+IGluZGV4IDcxMTYxMjczNThlZS4uZWNhNzE0Njdj
-NGE4IDEwMDY0NA0KPj4gPj4+Pj4gLS0tIGEvZHJpdmVycy9waHkvY2FkZW5jZS9waHktY2FkZW5j
-ZS10b3JyZW50LmMNCj4+ID4+Pj4+ICsrKyBiL2RyaXZlcnMvcGh5L2NhZGVuY2UvcGh5LWNhZGVu
-Y2UtdG9ycmVudC5jDQo+PiA+Pj4+PiBAQCAtMTcxMCw2ICsxNzEwLDcgQEAgc3RhdGljIGludCBj
-ZG5zX3RvcnJlbnRfcGh5X3Byb2JlKHN0cnVjdA0KPnBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+
-ID4+Pj4+ICAJc3RydWN0IGNkbnNfdG9ycmVudF9waHkgKmNkbnNfcGh5Ow0KPj4gPj4+Pj4gIAlz
-dHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPj4gPj4+Pj4gIAlzdHJ1Y3QgcGh5X3By
-b3ZpZGVyICpwaHlfcHJvdmlkZXI7DQo+PiA+Pj4+PiArCXN0cnVjdCBwaHlfYXR0cnMgdG9ycmVu
-dF9hdHRyOw0KPj4gPj4+Pj4gIAljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaDsNCj4+
-ID4+Pj4+ICAJc3RydWN0IGNkbnNfdG9ycmVudF9kYXRhICpkYXRhOw0KPj4gPj4+Pj4gIAlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKmNoaWxkOw0KPj4gPj4+Pj4gQEAgLTE4NTIsNiArMTg1MywxMiBAQCBz
-dGF0aWMgaW50IGNkbnNfdG9ycmVudF9waHlfcHJvYmUoc3RydWN0DQo+cGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQ0KPj4gPj4+Pj4gIAkJCQkgY2Ruc19waHktPnBoeXNbbm9kZV0ubnVtX2xhbmVzLA0K
-Pj4gPj4+Pj4gIAkJCQkgY2Ruc19waHktPm1heF9iaXRfcmF0ZSAvIDEwMDAsDQo+PiA+Pj4+PiAg
-CQkJCSBjZG5zX3BoeS0+bWF4X2JpdF9yYXRlICUgMTAwMCk7DQo+PiA+Pj4+PiArDQo+PiA+Pj4+
-PiArCQkJdG9ycmVudF9hdHRyLmJ1c193aWR0aCA9IGNkbnNfcGh5LQ0KPj5waHlzW25vZGVdLm51
-bV9sYW5lczsNCj4+ID4+Pj4+ICsJCQl0b3JyZW50X2F0dHIubWF4X2xpbmtfcmF0ZSA9IGNkbnNf
-cGh5LQ0KPj5tYXhfYml0X3JhdGU7DQo+PiA+Pj4+PiArCQkJdG9ycmVudF9hdHRyLm1vZGUgPSBQ
-SFlfTU9ERV9EUDsNCj4+ID4+Pj4+ICsNCj4+ID4+Pj4+ICsJCQlwaHlfc2V0X2F0dHJzKGdwaHks
-ICZ0b3JyZW50X2F0dHIpOw0KPj4gPj4+Pg0KPj4gPj4+PiBXaHkgaXMgdGhpcyBiZXR0ZXIgdGhh
-biBhY2Nlc3NpbmcgdGhlIGF0dHJpYnV0ZXMgbWFudWFsbHkgYXMgZm9sbG93cyA/DQo+PiA+Pj4+
-DQo+PiA+Pj4+IAkJCWdwaHktPmF0dHJzLmJ1c193aWR0aCA9IGNkbnNfcGh5LQ0KPj5waHlzW25v
-ZGVdLm51bV9sYW5lczsNCj4+ID4+Pj4gCQkJZ3BoeS0+YXR0cnMubWF4X2xpbmtfcmF0ZSA9IGNk
-bnNfcGh5LQ0KPj5tYXhfYml0X3JhdGU7DQo+PiA+Pj4+IAkJCWdwaHktPmF0dHJzLm1vZGUgPSBQ
-SFlfTU9ERV9EUDsNCj4+ID4+Pj4NCj4+ID4+Pj4gVGhpcyBpcyBjYWxsZWQgaW4gY2Ruc190b3Jy
-ZW50X3BoeV9wcm9iZSgpLCBiZWZvcmUgdGhlIFBIWQ0KPj4gPj4+PiBwcm92aWRlciBpcyByZWdp
-c3RlcmVkLCBzbyBub3RoaW5nIGNhbiBhY2Nlc3MgdGhlIFBIWSB5ZXQuIFdoYXQNCj4+ID4+Pj4g
-cmFjZSBjb25kaXRpb24gYXJlIHlvdSB0cnlpbmcgdG8gcHJvdGVjdCBhZ2FpbnN0IHdpdGggdXNh
-Z2Ugb2YNCj5waHlfc2V0X2F0dHJzKCkgPw0KPj4gPj4+DQo+PiA+Pj4gSSBhZ3JlZSB0aGF0IGZv
-ciBDYWRlbmNlIERQIGJyaWRnZSBkcml2ZXIgYW5kIFRvcnJlbnQgUEhZIGRyaXZlcg0KPj4gPj4+
-IHVzZSBjYXNlLCBpdCB3b3VsZCBub3QgbWF0dGVyIGV2ZW4gaWYgd2Ugc2V0IHRoZSBhdHRyaWJ1
-dGVzIGluDQo+PiA+Pj4gVG9ycmVudCBQSFkgZHJpdmVyIGluIGEgd2F5IHlvdSBzdWdnZXN0ZWQg
-YWJvdmUuDQo+PiA+Pj4gQnV0IGFzIHBlciB0aGUgZGlzY3Vzc2lvbiBpbiBbMV0sIHBoeV9zZXRf
-YXR0cnMvcGh5X2dldF9hdHRycyBBUElzDQo+PiA+Pj4gaW4gZnV0dXJlIGNvdWxkIG1heWJlIHVz
-ZWQgYnkgb3RoZXIgZHJpdmVycyByZXBsYWNpbmcgZXhpc3RpbmcNCj4+ID4+PiBpbmRpdmlkdWFs
-IGZ1bmN0aW9ucyBmb3IgYXR0cmlidXRlcyBidXNfd2lkdGggYW5kIG1vZGUgd2hpY2ggYXJlDQo+
-PiA+Pj4gcGh5X3NldF9idXNfd2lkdGgvcGh5X2dldF9idXNfd2lkdGggYW5kDQo+cGh5X3NldF9t
-b2RlL3BoeV9nZXRfbW9kZS4NCj4+ID4+PiBTbyB0aGlzIHVzYWdlIGluIFRvcnJlbnQgUEhZIGRy
-aXZlciBpcyBhbiBleGFtcGxlIGltcGxlbWVudGF0aW9uIG9mIHRoZQ0KPkFQSS4NCj4+ID4+Pg0K
-Pj4gPj4+IFsxXQ0KPj4gPj4+IGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xr
-bWwub3JnL2xrbWwvMjAyMC81LzE4LzQ3Ml9fOw0KPj4gPj4+ICEhRUgNCj4+ID4+PiBzY21TMXln
-aVUxbEEhUUtUVEk3QlMxUjM1YV96b01mSnNZNEE0eUN0RUtyUU50aUFYVHlJWi0NCj5TWUlFRWli
-WWRwQk0NCj4+ID4+PiBKVGxsDQo+PiA+Pj4gWXJkLTAwJA0KPj4gPj4NCj4+ID4+IFRoaXMgZG9l
-c24ndCBzZWVtIGEgdmVyeSBnb29kIEFQSSB0byBtZSA6LVMgSXQgd2lsbCByZXF1aXJlIGNhbGxl
-cnMNCj4+ID4+IHRvIGFsd2F5cyBjYWxsIHBoeV9nZXRfYXR0cnMoKSBmaXJzdCwgbW9kaWZ5IHRo
-ZSBhdHRyaWJ1dGVzIHRoZXkNCj4+ID4+IHdhbnQgdG8gc2V0LCBhbmQgdGhlbiBjYWxsIHBoeV9z
-ZXRfYXR0cnMoKS4gTm90IG9ubHkgd2lsbCBiZSBjb3B5DQo+PiA+PiB0aGUgd2hvbGUgcGh5X2F0
-dHJzIHN0cnVjdHVyZSBuZWVkbGVzc2x5LCBpdCB3aWxsIGFsc28gbm90IGJlIGFuDQo+PiA+PiBh
-dG9taWMgb3BlcmF0aW9uIGFzIHNvbWVvbmUgZWxzZSBjb3VsZCBtb2RpZnkgYXR0cmlidXRlcyBi
-ZXR3ZWVuIHRoZQ0KPmdldCBhbmQgc2V0IGNhbGxzLg0KPj4gPj4gVGhlIGxhY2sgb2YgYXRvbWlj
-aXR5IG1heSBub3QgYmUgYW4gaXNzdWUgaW4gcHJhY3RpY2UgaWYgdGhlcmUncyBhDQo+PiA+PiBz
-aW5nbGUgdXNlciBvZiB0aGUgUEhZIGF0IGFsbCB0aW1lcywgYnV0IGluIHRoYXQgY2FzZSBubyBt
-dXRleCBpcyBuZWVkZWQuDQo+Pg0KPj4gV2hhdCBpZiB0aGUgY29uc3VtZXIgdHJpZXMgdG8gc2V0
-IGFuIGF0dHJpYnV0ZSBhdCB0aGUgbWlkZGxlIG9mIGENCj4+IHBoeV9wb3dlcl9vbigpIG9wZXJh
-dGlvbj8gVGhhdCBpcyBzdGlsbCBhIHZhbGlkIG9wZXJhdGlvbiBhbmQgcGh5IGNvcmUNCj4+IGxh
-eWVyIHNob3VsZCB0cnkgdG8gcHJldmVudCBpdCBubz8NCj4NCj5JIHNlZSBtdWx0aXBsZSBxdWVz
-dGlvbnMgaGVyZS4NCj4NCj5GaXJzdCBvZiBhbGwsIHVubGVzcyBJJ20gbWlzdGFrZW4sIHRoZSBh
-dHRyaWJ1dGVzIHNldCBoZXJlIGFyZSBzdGF0aWMgcHJvcGVydGllcywNCj5zZXQgYnkgdGhlIFBI
-WSBkcml2ZXIgYXQgcHJvYmUgdGltZSwgYW5kIG9ubHkgcmVhZCBieSBQSFkgY29uc3VtZXJzLiBU
-aGVyZQ0KPnNob3VsZCBiZSBubyBuZWVkIGZvciBhbnkga2luZCBvZiBwcm90ZWN0aW9uIG9yIHNw
-ZWNpYWwgQVBJIHRvIGFjY2VzcyB0aGVtLg0KPg0KPlRoZW4sIHRoZXJlJ3MgdGhlIHF1ZXN0aW9u
-IG9mIGhvdyB0byBoYW5kbGUgZHluYW1pYyBhdHRyaWJ1dGVzLiBJbiB0aGVvcnkgYQ0KPmR5bmFt
-aWMgYXR0cmlidXRlIGNvdWxkIGJlIGNoYW5nZWQgYXQgYW55IHRpbWUsIGFuZCB0aHVzIHJhY2Ug
-d2l0LCBmb3INCj5pbnN0YW5jZSBwaHlfcG93ZXJfb24oKS4gSG93ZXZlciwgdGhlIHByb3Bvc2Vk
-IEFQSSB3b24ndCBoZWxwIG11Y2gNCj5hZGRyZXNzIHRoaXMgaXNzdWUuIFVzaW5nIGEgbXV0ZXgg
-d2lsbCBpbmRlZWQgZW5zdXJlIHRoYXQgdGhlIGF0dHJpYnV0ZSBjaGFuZ2UNCj53aWxsIGJlIHNl
-cmlhbGl6ZWQgd2l0aCBvdGhlciBvcGVyYXRpb25zLCBidXQgaXQgd29uJ3QgZ2l2ZSBhbnkgZ3Vh
-cmFudGVlIHRvIHRoZQ0KPlBIWSBjb25zdW1lciBvbiB3aGV0aGVyIHRoZSBhdHRyaWJ1dGUgd2ls
-bCBiZSBzZXQgYmVmb3JlIG9yIGFmdGVyDQo+cGh5X3Bvd2VyX29uKCkgaXMgcHJvY2Vzc2VkLiBU
-aGUgY29uc3VtZXIgd2lsbCBub3Qga25vdyBpZiB0aGUgbmV3IHZhbHVlDQo+b2YgdGhlIGF0dHJp
-YnV0ZSBoYXMgYmVlbiB0YWtlbiBpbnRvIGFjY291bnQuDQo+DQo+VGhlIHF1ZXN0aW9uIGlzIHRo
-dXMgd2hldGhlciB3ZSB3YW50IHRvIG1ha2UgdGhlIFBIWSBjb25zdW1lciBBUEkgdGhyZWFkLQ0K
-PnNhZmUgKG5vdGUgdGhhdCBkdWUgdG8gdGhlIHVzYWdlIG9mIGEgbXV0ZXgsIHdlIGRvbid0IHN1
-cHBvcnQgY2FsbGluZyBtb3N0IG9mDQo+dGhlIEFQSSBmdW5jdGlvbnMgZnJvbSBhbiBpbnRlcnJ1
-cHQgaGFuZGxlciwgc28gaXQgcmVhbGx5IHJlcXVpcmVzIHRoZSBjb25zdW1lcg0KPnRvIHVzZSBh
-IHdvcmsgcXVldWUsIGEgdGhyZWFkLCBvciBwb3NzaWJseSBhIHRocmVhZGVkIGludGVycnVwdCku
-IElmIHRoZSBhbnN3ZXINCj5pcyB5ZXMsIHRoZSBBUEkgc2hvdWxkIGRlZmluZSB3aGF0IHVzZSBj
-YXNlcyBhcmUgdmFsaWQsIGFuZCBob3cgdGhlIFBIWSBoYXMgdG8NCj5iZWhhdmUuIFRoaXMgaW5j
-bHVkZXMgZG9jdW1lbnRpbmcgd2hlbiBuZXcgYXR0cmlidXRlIHZhbHVlcyBjYW4gYmUgc2V0LCBh
-bmQNCj53aGVuIHRoZXkgYXJlIHRha2VuIGludG8gYWNjb3VudC4gSWYgd2UgaGFkIHRvIGRvY3Vt
-ZW50IHRoaXMgYXMgcGFydCBvZiB0aGlzDQo+cGF0Y2ggc2VyaWVzLCB3ZSB3b3VsZCBoYXZlIHRv
-IHN0YXRlIHRoYXQgdGhlIG5ldyB2YWx1ZXMgYXJlIHRha2VuIGludG8NCj5hY2NvdW50IGF0IGFu
-IHVuZGVmaW5lZCBwb2ludCBvZiB0aW1lIGlmIHRoZSBhdHRyaWJ1dGUgc2V0IGNhbGwgaXMgY29u
-Y3VycmVudA0KPndpdGggb3RoZXIgQVBJIGNhbGxzLCB3aGljaCBtYWtlcyB0aGUgQVBJIGlsbC1k
-ZWZpbmVkIGluIG15IG9waW5pb24uIEkgZXhwZWN0DQo+dGhhdCB3ZSB3b3VsZCBuZWVkIHRvIHR1
-cm4gYXR0cmlidXRlIHNldHRpbmcgaW50byBhIGNhbGxiYWNrIHRvIHRoZSBQSFkgZHJpdmVyDQo+
-aW4gdGhhdCBjYXNlLCBvciBhdCBsZWFzdCBtYWtlIGl0IGEgbW9yZSBjb21wbGV4IG9wZXJhdGlv
-biBoYW5kbGVkIGJ5IHRoZSBQSFkNCj5jb3JlIHRoYXQgd291bGQgdXNlIHRoZSBleGlzdGluZyBQ
-SFkgb3BzIHRvIHJlY29uZmlndXJlIHRoZSBQSFkuDQo+DQo+SXMgaXQgd29ydGggaXQgYWxsb3dp
-bmcgZHJpdmVycyB0byBjYWxsIHRoZSBQSFkgQVBJIGZyb20gZGlmZmVyZW50IHRocmVhZHMgYXMN
-Cj5vcHBvc2VkIHRvIHJlcXVpcmluZyBjb25zdW1lcnMgdG8gc2VyaWFsaXplIGNhbGxzIGlmIHRo
-ZWlyIHVzZSBjYXNlcyByZXF1aXJlIHNvID8NCj5JIHdvdWxkIGV4cGVjdCBtb3N0IGNvbnN1bWVy
-cyB0byBvbmx5IHRyeSB0byByZWNvbmZpZ3VyZSBhIFBIWSB3aGVuIGl0J3MNCj5zdG9wcGVkLCBv
-ciB0byBtYW51YWxseSBzdG9wLCByZWNvbmZpZ3VyZSBhbmQgcmVzdGFydCB0aGUgUEhZLg0KPg0K
-Pj4gPj4gSSB0aGluayB0aGlzIHNlcmllcyB0cmllcyB0byBmaXggYSBwcm9ibGVtIHRoYXQgZG9l
-c24ndCBleGlzdC4NCj4+ID4NCj4+ID4gVGhhbmtzIExhdXJlbnQgZm9yIHlvdXIgY29tbWVudHMu
-DQo+PiA+DQo+PiA+IEhpIEtpc2hvbiwNCj4+ID4NCj4+ID4gQ291bGQgeW91IHBsZWFzZSBzdWdn
-ZXN0IHdoYXQgd291bGQgYmUgdGhlIGJldHRlciBhcHByb2FjaCByZWdhcmRpbmcNCj4+ID4gdGhp
-cyBQSFkgYXR0cmlidXRlcyBzZXJpZXMuIFNob3VsZCB3ZSBhZGQgaW5kaXZpZHVhbCBnZXQvc2V0
-DQo+PiA+IGZ1bmN0aW9ucyBmb3IgbmV3IGF0dHJpYnV0ZSBtYXhfbGlua19yYXRlIGp1c3QgbGlr
-ZSBtb2RlIGFuZA0KPj4gPiBidXNfd2lkdGgsIG9yIHNob3VsZCB3ZSB1c2UgcGh5X2dldF9hdHRy
-cygpIGFuZCBwaHlfc2V0X2F0dHJzKCkNCj5mdW5jdGlvbnMgcmVtb3ZpbmcgbXV0ZXguICBZb3Vy
-IHN1Z2dlc3Rpb25zIHdvdWxkIHJlYWxseSBoZWxwLg0KPj4NCj4+IEkgdGhpbmsgTGF1cmVudCdz
-IHBvaW50IGlzIG5vdCBoYXZpbmcgYW4gQVBJIGF0IGFsbCBmb3IgY29uZmlndXJpbmcNCj4+IGF0
-dHJpYnV0ZXMgYW5kIGFjY2VzcyB0aGVtIG1hbnVhbGx5Pw0KPg0KPklmIHRoZSBhbnN3ZXIgdG8g
-dGhlIGFib3ZlIHF1ZXN0aW9uIGlzIHRoYXQgYSB0aHJlYWQtc2FmZSBBUEkgaXNuJ3Qgd29ydGgg
-aXQgYXMNCj53ZSB3b3VsZG4ndCBoYXZlIGdvb2QgdXNlIGNhc2VzIGZvciBpdCwgdGhlbiBJIHRo
-aW5rIGFjY2Vzc2luZyB0aGUgYXR0cmlidXRlcw0KPm1hbnVhbGx5IGlzIGFsbCB3ZSBuZWVkLg0K
-Pg0KDQpTaG91bGQgd2UgcHJvY2VlZCBhY2Nlc3NpbmcgYXR0cmlidXRlIG1hbnVhbGx5DQoNCj4+
-ID4+Pj4+ICAJCX0gZWxzZSB7DQo+PiA+Pj4+PiAgCQkJZGV2X2VycihkZXYsICJEcml2ZXIgc3Vw
-cG9ydHMgb25seQ0KPlBIWV9UWVBFX0RQXG4iKTsNCj4+ID4+Pj4+ICAJCQlyZXQgPSAtRU5PVFNV
-UFA7DQo+DQo+LS0NCj5SZWdhcmRzLA0KPg0KPkxhdXJlbnQgUGluY2hhcnQNCg==
+From: Ajay Kaher <akaher@vmware.com>
+
+commit abafbc551fddede3e0a08dee1dcde08fc0eb8476 upstream.
+
+Accessing the disabled memory space of a PCI device would typically
+result in a master abort response on conventional PCI, or an
+unsupported request on PCI express.  The user would generally see
+these as a -1 response for the read return data and the write would be
+silently discarded, possibly with an uncorrected, non-fatal AER error
+triggered on the host.  Some systems however take it upon themselves
+to bring down the entire system when they see something that might
+indicate a loss of data, such as this discarded write to a disabled
+memory space.
+
+To avoid this, we want to try to block the user from accessing memory
+spaces while they're disabled.  We start with a semaphore around the
+memory enable bit, where writers modify the memory enable state and
+must be serialized, while readers make use of the memory region and
+can access in parallel.  Writers include both direct manipulation via
+the command register, as well as any reset path where the internal
+mechanics of the reset may both explicitly and implicitly disable
+memory access, and manipulation of the MSI-X configuration, where the
+MSI-X vector table resides in MMIO space of the device.  Readers
+include the read and write file ops to access the vfio device fd
+offsets as well as memory mapped access.  In the latter case, we make
+use of our new vma list support to zap, or invalidate, those memory
+mappings in order to force them to be faulted back in on access.
+
+Our semaphore usage will stall user access to MMIO spaces across
+internal operations like reset, but the user might experience new
+behavior when trying to access the MMIO space while disabled via the
+PCI command register.  Access via read or write while disabled will
+return -EIO and access via memory maps will result in a SIGBUS.  This
+is expected to be compatible with known use cases and potentially
+provides better error handling capabilities than present in the
+hardware, while avoiding the more readily accessible and severe
+platform error responses that might otherwise occur.
+
+Fixes: CVE-2020-12888
+Reviewed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Ajay Kaher <akaher@vmware.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/vfio/pci/vfio_pci.c         | 291 ++++++++++++++++++++++++----
+ drivers/vfio/pci/vfio_pci_config.c  |  36 +++-
+ drivers/vfio/pci/vfio_pci_intrs.c   |  14 ++
+ drivers/vfio/pci/vfio_pci_private.h |   8 +
+ drivers/vfio/pci/vfio_pci_rdwr.c    |  24 ++-
+ 5 files changed, 330 insertions(+), 43 deletions(-)
+
+diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+index da1d1eac0def1..0d16f9806655f 100644
+--- a/drivers/vfio/pci/vfio_pci.c
++++ b/drivers/vfio/pci/vfio_pci.c
+@@ -27,6 +27,7 @@
+ #include <linux/vfio.h>
+ #include <linux/vgaarb.h>
+ #include <linux/nospec.h>
++#include <linux/sched/mm.h>
+ 
+ #include "vfio_pci_private.h"
+ 
+@@ -177,6 +178,7 @@ no_mmap:
+ 
+ static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev);
+ static void vfio_pci_disable(struct vfio_pci_device *vdev);
++static int vfio_pci_try_zap_and_vma_lock_cb(struct pci_dev *pdev, void *data);
+ 
+ /*
+  * INTx masking requires the ability to disable INTx signaling via PCI_COMMAND
+@@ -688,6 +690,12 @@ int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
+ 	return 0;
+ }
+ 
++struct vfio_devices {
++	struct vfio_device **devices;
++	int cur_index;
++	int max_index;
++};
++
+ static long vfio_pci_ioctl(void *device_data,
+ 			   unsigned int cmd, unsigned long arg)
+ {
+@@ -761,7 +769,7 @@ static long vfio_pci_ioctl(void *device_data,
+ 		{
+ 			void __iomem *io;
+ 			size_t size;
+-			u16 orig_cmd;
++			u16 cmd;
+ 
+ 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
+ 			info.flags = 0;
+@@ -781,10 +789,7 @@ static long vfio_pci_ioctl(void *device_data,
+ 			 * Is it really there?  Enable memory decode for
+ 			 * implicit access in pci_map_rom().
+ 			 */
+-			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
+-			pci_write_config_word(pdev, PCI_COMMAND,
+-					      orig_cmd | PCI_COMMAND_MEMORY);
+-
++			cmd = vfio_pci_memory_lock_and_enable(vdev);
+ 			io = pci_map_rom(pdev, &size);
+ 			if (io) {
+ 				info.flags = VFIO_REGION_INFO_FLAG_READ;
+@@ -792,8 +797,8 @@ static long vfio_pci_ioctl(void *device_data,
+ 			} else {
+ 				info.size = 0;
+ 			}
++			vfio_pci_memory_unlock_and_restore(vdev, cmd);
+ 
+-			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
+ 			break;
+ 		}
+ 		case VFIO_PCI_VGA_REGION_INDEX:
+@@ -936,8 +941,16 @@ static long vfio_pci_ioctl(void *device_data,
+ 		return ret;
+ 
+ 	} else if (cmd == VFIO_DEVICE_RESET) {
+-		return vdev->reset_works ?
+-			pci_try_reset_function(vdev->pdev) : -EINVAL;
++		int ret;
++
++		if (!vdev->reset_works)
++			return -EINVAL;
++
++		vfio_pci_zap_and_down_write_memory_lock(vdev);
++		ret = pci_try_reset_function(vdev->pdev);
++		up_write(&vdev->memory_lock);
++
++		return ret;
+ 
+ 	} else if (cmd == VFIO_DEVICE_GET_PCI_HOT_RESET_INFO) {
+ 		struct vfio_pci_hot_reset_info hdr;
+@@ -1017,8 +1030,9 @@ reset_info_exit:
+ 		int32_t *group_fds;
+ 		struct vfio_pci_group_entry *groups;
+ 		struct vfio_pci_group_info info;
++		struct vfio_devices devs = { .cur_index = 0 };
+ 		bool slot = false;
+-		int i, count = 0, ret = 0;
++		int i, group_idx, mem_idx = 0, count = 0, ret = 0;
+ 
+ 		minsz = offsetofend(struct vfio_pci_hot_reset, count);
+ 
+@@ -1070,9 +1084,9 @@ reset_info_exit:
+ 		 * user interface and store the group and iommu ID.  This
+ 		 * ensures the group is held across the reset.
+ 		 */
+-		for (i = 0; i < hdr.count; i++) {
++		for (group_idx = 0; group_idx < hdr.count; group_idx++) {
+ 			struct vfio_group *group;
+-			struct fd f = fdget(group_fds[i]);
++			struct fd f = fdget(group_fds[group_idx]);
+ 			if (!f.file) {
+ 				ret = -EBADF;
+ 				break;
+@@ -1085,8 +1099,9 @@ reset_info_exit:
+ 				break;
+ 			}
+ 
+-			groups[i].group = group;
+-			groups[i].id = vfio_external_user_iommu_id(group);
++			groups[group_idx].group = group;
++			groups[group_idx].id =
++					vfio_external_user_iommu_id(group);
+ 		}
+ 
+ 		kfree(group_fds);
+@@ -1105,13 +1120,63 @@ reset_info_exit:
+ 		ret = vfio_pci_for_each_slot_or_bus(vdev->pdev,
+ 						    vfio_pci_validate_devs,
+ 						    &info, slot);
+-		if (!ret)
+-			/* User has access, do the reset */
+-			ret = pci_reset_bus(vdev->pdev);
++		if (ret)
++			goto hot_reset_release;
++
++		devs.max_index = count;
++		devs.devices = kcalloc(count, sizeof(struct vfio_device *),
++				       GFP_KERNEL);
++		if (!devs.devices) {
++			ret = -ENOMEM;
++			goto hot_reset_release;
++		}
++
++		/*
++		 * We need to get memory_lock for each device, but devices
++		 * can share mmap_sem, therefore we need to zap and hold
++		 * the vma_lock for each device, and only then get each
++		 * memory_lock.
++		 */
++		ret = vfio_pci_for_each_slot_or_bus(vdev->pdev,
++					    vfio_pci_try_zap_and_vma_lock_cb,
++					    &devs, slot);
++		if (ret)
++			goto hot_reset_release;
++
++		for (; mem_idx < devs.cur_index; mem_idx++) {
++			struct vfio_pci_device *tmp;
++
++			tmp = vfio_device_data(devs.devices[mem_idx]);
++
++			ret = down_write_trylock(&tmp->memory_lock);
++			if (!ret) {
++				ret = -EBUSY;
++				goto hot_reset_release;
++			}
++			mutex_unlock(&tmp->vma_lock);
++		}
++
++		/* User has access, do the reset */
++		ret = pci_reset_bus(vdev->pdev);
+ 
+ hot_reset_release:
+-		for (i--; i >= 0; i--)
+-			vfio_group_put_external_user(groups[i].group);
++		for (i = 0; i < devs.cur_index; i++) {
++			struct vfio_device *device;
++			struct vfio_pci_device *tmp;
++
++			device = devs.devices[i];
++			tmp = vfio_device_data(device);
++
++			if (i < mem_idx)
++				up_write(&tmp->memory_lock);
++			else
++				mutex_unlock(&tmp->vma_lock);
++			vfio_device_put(device);
++		}
++		kfree(devs.devices);
++
++		for (group_idx--; group_idx >= 0; group_idx--)
++			vfio_group_put_external_user(groups[group_idx].group);
+ 
+ 		kfree(groups);
+ 		return ret;
+@@ -1192,8 +1257,126 @@ static ssize_t vfio_pci_write(void *device_data, const char __user *buf,
+ 	return vfio_pci_rw(device_data, (char __user *)buf, count, ppos, true);
+ }
+ 
+-static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
+-			    struct vm_area_struct *vma)
++/* Return 1 on zap and vma_lock acquired, 0 on contention (only with @try) */
++static int vfio_pci_zap_and_vma_lock(struct vfio_pci_device *vdev, bool try)
++{
++	struct vfio_pci_mmap_vma *mmap_vma, *tmp;
++
++	/*
++	 * Lock ordering:
++	 * vma_lock is nested under mmap_sem for vm_ops callback paths.
++	 * The memory_lock semaphore is used by both code paths calling
++	 * into this function to zap vmas and the vm_ops.fault callback
++	 * to protect the memory enable state of the device.
++	 *
++	 * When zapping vmas we need to maintain the mmap_sem => vma_lock
++	 * ordering, which requires using vma_lock to walk vma_list to
++	 * acquire an mm, then dropping vma_lock to get the mmap_sem and
++	 * reacquiring vma_lock.  This logic is derived from similar
++	 * requirements in uverbs_user_mmap_disassociate().
++	 *
++	 * mmap_sem must always be the top-level lock when it is taken.
++	 * Therefore we can only hold the memory_lock write lock when
++	 * vma_list is empty, as we'd need to take mmap_sem to clear
++	 * entries.  vma_list can only be guaranteed empty when holding
++	 * vma_lock, thus memory_lock is nested under vma_lock.
++	 *
++	 * This enables the vm_ops.fault callback to acquire vma_lock,
++	 * followed by memory_lock read lock, while already holding
++	 * mmap_sem without risk of deadlock.
++	 */
++	while (1) {
++		struct mm_struct *mm = NULL;
++
++		if (try) {
++			if (!mutex_trylock(&vdev->vma_lock))
++				return 0;
++		} else {
++			mutex_lock(&vdev->vma_lock);
++		}
++		while (!list_empty(&vdev->vma_list)) {
++			mmap_vma = list_first_entry(&vdev->vma_list,
++						    struct vfio_pci_mmap_vma,
++						    vma_next);
++			mm = mmap_vma->vma->vm_mm;
++			if (mmget_not_zero(mm))
++				break;
++
++			list_del(&mmap_vma->vma_next);
++			kfree(mmap_vma);
++			mm = NULL;
++		}
++		if (!mm)
++			return 1;
++		mutex_unlock(&vdev->vma_lock);
++
++		if (try) {
++			if (!down_read_trylock(&mm->mmap_sem)) {
++				mmput(mm);
++				return 0;
++			}
++		} else {
++			down_read(&mm->mmap_sem);
++		}
++		if (mmget_still_valid(mm)) {
++			if (try) {
++				if (!mutex_trylock(&vdev->vma_lock)) {
++					up_read(&mm->mmap_sem);
++					mmput(mm);
++					return 0;
++				}
++			} else {
++				mutex_lock(&vdev->vma_lock);
++			}
++			list_for_each_entry_safe(mmap_vma, tmp,
++						 &vdev->vma_list, vma_next) {
++				struct vm_area_struct *vma = mmap_vma->vma;
++
++				if (vma->vm_mm != mm)
++					continue;
++
++				list_del(&mmap_vma->vma_next);
++				kfree(mmap_vma);
++
++				zap_vma_ptes(vma, vma->vm_start,
++					     vma->vm_end - vma->vm_start);
++			}
++			mutex_unlock(&vdev->vma_lock);
++		}
++		up_read(&mm->mmap_sem);
++		mmput(mm);
++	}
++}
++
++void vfio_pci_zap_and_down_write_memory_lock(struct vfio_pci_device *vdev)
++{
++	vfio_pci_zap_and_vma_lock(vdev, false);
++	down_write(&vdev->memory_lock);
++	mutex_unlock(&vdev->vma_lock);
++}
++
++u16 vfio_pci_memory_lock_and_enable(struct vfio_pci_device *vdev)
++{
++	u16 cmd;
++
++	down_write(&vdev->memory_lock);
++	pci_read_config_word(vdev->pdev, PCI_COMMAND, &cmd);
++	if (!(cmd & PCI_COMMAND_MEMORY))
++		pci_write_config_word(vdev->pdev, PCI_COMMAND,
++				      cmd | PCI_COMMAND_MEMORY);
++
++	return cmd;
++}
++
++void vfio_pci_memory_unlock_and_restore(struct vfio_pci_device *vdev, u16 cmd)
++{
++	pci_write_config_word(vdev->pdev, PCI_COMMAND, cmd);
++	up_write(&vdev->memory_lock);
++}
++
++/* Caller holds vma_lock */
++static int __vfio_pci_add_vma(struct vfio_pci_device *vdev,
++			      struct vm_area_struct *vma)
+ {
+ 	struct vfio_pci_mmap_vma *mmap_vma;
+ 
+@@ -1202,10 +1385,7 @@ static int vfio_pci_add_vma(struct vfio_pci_device *vdev,
+ 		return -ENOMEM;
+ 
+ 	mmap_vma->vma = vma;
+-
+-	mutex_lock(&vdev->vma_lock);
+ 	list_add(&mmap_vma->vma_next, &vdev->vma_list);
+-	mutex_unlock(&vdev->vma_lock);
+ 
+ 	return 0;
+ }
+@@ -1239,15 +1419,32 @@ static vm_fault_t vfio_pci_mmap_fault(struct vm_fault *vmf)
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	struct vfio_pci_device *vdev = vma->vm_private_data;
++	vm_fault_t ret = VM_FAULT_NOPAGE;
++
++	mutex_lock(&vdev->vma_lock);
++	down_read(&vdev->memory_lock);
++
++	if (!__vfio_pci_memory_enabled(vdev)) {
++		ret = VM_FAULT_SIGBUS;
++		mutex_unlock(&vdev->vma_lock);
++		goto up_out;
++	}
++
++	if (__vfio_pci_add_vma(vdev, vma)) {
++		ret = VM_FAULT_OOM;
++		mutex_unlock(&vdev->vma_lock);
++		goto up_out;
++	}
+ 
+-	if (vfio_pci_add_vma(vdev, vma))
+-		return VM_FAULT_OOM;
++	mutex_unlock(&vdev->vma_lock);
+ 
+ 	if (remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
+ 			    vma->vm_end - vma->vm_start, vma->vm_page_prot))
+-		return VM_FAULT_SIGBUS;
++		ret = VM_FAULT_SIGBUS;
+ 
+-	return VM_FAULT_NOPAGE;
++up_out:
++	up_read(&vdev->memory_lock);
++	return ret;
+ }
+ 
+ static const struct vm_operations_struct vfio_pci_mmap_ops = {
+@@ -1399,6 +1596,7 @@ static int vfio_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	INIT_LIST_HEAD(&vdev->ioeventfds_list);
+ 	mutex_init(&vdev->vma_lock);
+ 	INIT_LIST_HEAD(&vdev->vma_list);
++	init_rwsem(&vdev->memory_lock);
+ 
+ 	ret = vfio_add_group_dev(&pdev->dev, &vfio_pci_ops, vdev);
+ 	if (ret) {
+@@ -1588,12 +1786,6 @@ static void vfio_pci_reflck_put(struct vfio_pci_reflck *reflck)
+ 	kref_put_mutex(&reflck->kref, vfio_pci_reflck_release, &reflck_lock);
+ }
+ 
+-struct vfio_devices {
+-	struct vfio_device **devices;
+-	int cur_index;
+-	int max_index;
+-};
+-
+ static int vfio_pci_get_unused_devs(struct pci_dev *pdev, void *data)
+ {
+ 	struct vfio_devices *devs = data;
+@@ -1624,6 +1816,39 @@ static int vfio_pci_get_unused_devs(struct pci_dev *pdev, void *data)
+ 	return 0;
+ }
+ 
++static int vfio_pci_try_zap_and_vma_lock_cb(struct pci_dev *pdev, void *data)
++{
++	struct vfio_devices *devs = data;
++	struct vfio_device *device;
++	struct vfio_pci_device *vdev;
++
++	if (devs->cur_index == devs->max_index)
++		return -ENOSPC;
++
++	device = vfio_device_get_from_dev(&pdev->dev);
++	if (!device)
++		return -EINVAL;
++
++	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
++		vfio_device_put(device);
++		return -EBUSY;
++	}
++
++	vdev = vfio_device_data(device);
++
++	/*
++	 * Locking multiple devices is prone to deadlock, runaway and
++	 * unwind if we hit contention.
++	 */
++	if (!vfio_pci_zap_and_vma_lock(vdev, true)) {
++		vfio_device_put(device);
++		return -EBUSY;
++	}
++
++	devs->devices[devs->cur_index++] = device;
++	return 0;
++}
++
+ /*
+  * If a bus or slot reset is available for the provided device and:
+  *  - All of the devices affected by that bus or slot reset are unused
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index d6359c37c9e55..e8646873dadb1 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -395,6 +395,14 @@ static inline void p_setd(struct perm_bits *p, int off, u32 virt, u32 write)
+ 	*(__le32 *)(&p->write[off]) = cpu_to_le32(write);
+ }
+ 
++/* Caller should hold memory_lock semaphore */
++bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
++{
++	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
++
++	return cmd & PCI_COMMAND_MEMORY;
++}
++
+ /*
+  * Restore the *real* BARs after we detect a FLR or backdoor reset.
+  * (backdoor = some device specific technique that we didn't catch)
+@@ -554,13 +562,18 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
+ 
+ 		new_cmd = le32_to_cpu(val);
+ 
++		phys_io = !!(phys_cmd & PCI_COMMAND_IO);
++		virt_io = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_IO);
++		new_io = !!(new_cmd & PCI_COMMAND_IO);
++
+ 		phys_mem = !!(phys_cmd & PCI_COMMAND_MEMORY);
+ 		virt_mem = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_MEMORY);
+ 		new_mem = !!(new_cmd & PCI_COMMAND_MEMORY);
+ 
+-		phys_io = !!(phys_cmd & PCI_COMMAND_IO);
+-		virt_io = !!(le16_to_cpu(*virt_cmd) & PCI_COMMAND_IO);
+-		new_io = !!(new_cmd & PCI_COMMAND_IO);
++		if (!new_mem)
++			vfio_pci_zap_and_down_write_memory_lock(vdev);
++		else
++			down_write(&vdev->memory_lock);
+ 
+ 		/*
+ 		 * If the user is writing mem/io enable (new_mem/io) and we
+@@ -577,8 +590,11 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
+ 	}
+ 
+ 	count = vfio_default_config_write(vdev, pos, count, perm, offset, val);
+-	if (count < 0)
++	if (count < 0) {
++		if (offset == PCI_COMMAND)
++			up_write(&vdev->memory_lock);
+ 		return count;
++	}
+ 
+ 	/*
+ 	 * Save current memory/io enable bits in vconfig to allow for
+@@ -589,6 +605,8 @@ static int vfio_basic_config_write(struct vfio_pci_device *vdev, int pos,
+ 
+ 		*virt_cmd &= cpu_to_le16(~mask);
+ 		*virt_cmd |= cpu_to_le16(new_cmd & mask);
++
++		up_write(&vdev->memory_lock);
+ 	}
+ 
+ 	/* Emulate INTx disable */
+@@ -826,8 +844,11 @@ static int vfio_exp_config_write(struct vfio_pci_device *vdev, int pos,
+ 						 pos - offset + PCI_EXP_DEVCAP,
+ 						 &cap);
+ 
+-		if (!ret && (cap & PCI_EXP_DEVCAP_FLR))
++		if (!ret && (cap & PCI_EXP_DEVCAP_FLR)) {
++			vfio_pci_zap_and_down_write_memory_lock(vdev);
+ 			pci_try_reset_function(vdev->pdev);
++			up_write(&vdev->memory_lock);
++		}
+ 	}
+ 
+ 	/*
+@@ -905,8 +926,11 @@ static int vfio_af_config_write(struct vfio_pci_device *vdev, int pos,
+ 						pos - offset + PCI_AF_CAP,
+ 						&cap);
+ 
+-		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP))
++		if (!ret && (cap & PCI_AF_CAP_FLR) && (cap & PCI_AF_CAP_TP)) {
++			vfio_pci_zap_and_down_write_memory_lock(vdev);
+ 			pci_try_reset_function(vdev->pdev);
++			up_write(&vdev->memory_lock);
++		}
+ 	}
+ 
+ 	return count;
+diff --git a/drivers/vfio/pci/vfio_pci_intrs.c b/drivers/vfio/pci/vfio_pci_intrs.c
+index 2056f3f85f59b..1d9fb25929459 100644
+--- a/drivers/vfio/pci/vfio_pci_intrs.c
++++ b/drivers/vfio/pci/vfio_pci_intrs.c
+@@ -249,6 +249,7 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
+ 	struct pci_dev *pdev = vdev->pdev;
+ 	unsigned int flag = msix ? PCI_IRQ_MSIX : PCI_IRQ_MSI;
+ 	int ret;
++	u16 cmd;
+ 
+ 	if (!is_irq_none(vdev))
+ 		return -EINVAL;
+@@ -258,13 +259,16 @@ static int vfio_msi_enable(struct vfio_pci_device *vdev, int nvec, bool msix)
+ 		return -ENOMEM;
+ 
+ 	/* return the number of supported vectors if we can't get all: */
++	cmd = vfio_pci_memory_lock_and_enable(vdev);
+ 	ret = pci_alloc_irq_vectors(pdev, 1, nvec, flag);
+ 	if (ret < nvec) {
+ 		if (ret > 0)
+ 			pci_free_irq_vectors(pdev);
++		vfio_pci_memory_unlock_and_restore(vdev, cmd);
+ 		kfree(vdev->ctx);
+ 		return ret;
+ 	}
++	vfio_pci_memory_unlock_and_restore(vdev, cmd);
+ 
+ 	vdev->num_ctx = nvec;
+ 	vdev->irq_type = msix ? VFIO_PCI_MSIX_IRQ_INDEX :
+@@ -287,6 +291,7 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+ 	struct pci_dev *pdev = vdev->pdev;
+ 	struct eventfd_ctx *trigger;
+ 	int irq, ret;
++	u16 cmd;
+ 
+ 	if (vector < 0 || vector >= vdev->num_ctx)
+ 		return -EINVAL;
+@@ -295,7 +300,11 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+ 
+ 	if (vdev->ctx[vector].trigger) {
+ 		irq_bypass_unregister_producer(&vdev->ctx[vector].producer);
++
++		cmd = vfio_pci_memory_lock_and_enable(vdev);
+ 		free_irq(irq, vdev->ctx[vector].trigger);
++		vfio_pci_memory_unlock_and_restore(vdev, cmd);
++
+ 		kfree(vdev->ctx[vector].name);
+ 		eventfd_ctx_put(vdev->ctx[vector].trigger);
+ 		vdev->ctx[vector].trigger = NULL;
+@@ -323,6 +332,7 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+ 	 * such a reset it would be unsuccessful. To avoid this, restore the
+ 	 * cached value of the message prior to enabling.
+ 	 */
++	cmd = vfio_pci_memory_lock_and_enable(vdev);
+ 	if (msix) {
+ 		struct msi_msg msg;
+ 
+@@ -332,6 +342,7 @@ static int vfio_msi_set_vector_signal(struct vfio_pci_device *vdev,
+ 
+ 	ret = request_irq(irq, vfio_msihandler, 0,
+ 			  vdev->ctx[vector].name, trigger);
++	vfio_pci_memory_unlock_and_restore(vdev, cmd);
+ 	if (ret) {
+ 		kfree(vdev->ctx[vector].name);
+ 		eventfd_ctx_put(trigger);
+@@ -376,6 +387,7 @@ static void vfio_msi_disable(struct vfio_pci_device *vdev, bool msix)
+ {
+ 	struct pci_dev *pdev = vdev->pdev;
+ 	int i;
++	u16 cmd;
+ 
+ 	for (i = 0; i < vdev->num_ctx; i++) {
+ 		vfio_virqfd_disable(&vdev->ctx[i].unmask);
+@@ -384,7 +396,9 @@ static void vfio_msi_disable(struct vfio_pci_device *vdev, bool msix)
+ 
+ 	vfio_msi_set_block(vdev, 0, vdev->num_ctx, NULL, msix);
+ 
++	cmd = vfio_pci_memory_lock_and_enable(vdev);
+ 	pci_free_irq_vectors(pdev);
++	vfio_pci_memory_unlock_and_restore(vdev, cmd);
+ 
+ 	/*
+ 	 * Both disable paths above use pci_intx_for_msi() to clear DisINTx
+diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+index 898844894ed85..987b4d311fde9 100644
+--- a/drivers/vfio/pci/vfio_pci_private.h
++++ b/drivers/vfio/pci/vfio_pci_private.h
+@@ -129,6 +129,7 @@ struct vfio_pci_device {
+ 	struct list_head	ioeventfds_list;
+ 	struct mutex		vma_lock;
+ 	struct list_head	vma_list;
++	struct rw_semaphore	memory_lock;
+ };
+ 
+ #define is_intx(vdev) (vdev->irq_type == VFIO_PCI_INTX_IRQ_INDEX)
+@@ -171,6 +172,13 @@ extern int vfio_pci_register_dev_region(struct vfio_pci_device *vdev,
+ extern int vfio_pci_set_power_state(struct vfio_pci_device *vdev,
+ 				    pci_power_t state);
+ 
++extern bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev);
++extern void vfio_pci_zap_and_down_write_memory_lock(struct vfio_pci_device
++						    *vdev);
++extern u16 vfio_pci_memory_lock_and_enable(struct vfio_pci_device *vdev);
++extern void vfio_pci_memory_unlock_and_restore(struct vfio_pci_device *vdev,
++					       u16 cmd);
++
+ #ifdef CONFIG_VFIO_PCI_IGD
+ extern int vfio_pci_igd_init(struct vfio_pci_device *vdev);
+ #else
+diff --git a/drivers/vfio/pci/vfio_pci_rdwr.c b/drivers/vfio/pci/vfio_pci_rdwr.c
+index 0120d8324a402..83f81d24df78e 100644
+--- a/drivers/vfio/pci/vfio_pci_rdwr.c
++++ b/drivers/vfio/pci/vfio_pci_rdwr.c
+@@ -162,6 +162,7 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 	size_t x_start = 0, x_end = 0;
+ 	resource_size_t end;
+ 	void __iomem *io;
++	struct resource *res = &vdev->pdev->resource[bar];
+ 	ssize_t done;
+ 
+ 	if (pci_resource_start(pdev, bar))
+@@ -177,6 +178,14 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 
+ 	count = min(count, (size_t)(end - pos));
+ 
++	if (res->flags & IORESOURCE_MEM) {
++		down_read(&vdev->memory_lock);
++		if (!__vfio_pci_memory_enabled(vdev)) {
++			up_read(&vdev->memory_lock);
++			return -EIO;
++		}
++	}
++
+ 	if (bar == PCI_ROM_RESOURCE) {
+ 		/*
+ 		 * The ROM can fill less space than the BAR, so we start the
+@@ -184,13 +193,17 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 		 * filling large ROM BARs much faster.
+ 		 */
+ 		io = pci_map_rom(pdev, &x_start);
+-		if (!io)
+-			return -ENOMEM;
++		if (!io) {
++			done = -ENOMEM;
++			goto out;
++		}
+ 		x_end = end;
+ 	} else {
+ 		int ret = vfio_pci_setup_barmap(vdev, bar);
+-		if (ret)
+-			return ret;
++		if (ret) {
++			done = ret;
++			goto out;
++		}
+ 
+ 		io = vdev->barmap[bar];
+ 	}
+@@ -207,6 +220,9 @@ ssize_t vfio_pci_bar_rw(struct vfio_pci_device *vdev, char __user *buf,
+ 
+ 	if (bar == PCI_ROM_RESOURCE)
+ 		pci_unmap_rom(pdev, io);
++out:
++	if (res->flags & IORESOURCE_MEM)
++		up_read(&vdev->memory_lock);
+ 
+ 	return done;
+ }
+-- 
+2.25.1
+
+
+
