@@ -2,58 +2,60 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFDCC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3986C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24DE22080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AECD82080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:28:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589691;
-	bh=+6AfGjqpcz6AUoTPPYTG7JZKiXihcM5oveKaLtMH5hk=;
+	s=default; t=1599589697;
+	bh=i/iSAcRSNQtgeSaHtVlew7ecZjdIBqe0JatNzf05h4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eItYoZuMC8wdKEg5mlW0VvNWT3NpsLX+xzil8+uJxDn/rtEh6/IwX3EEFPbIQB3u
-	 /9Xxme198NJNGIhTWCeulKnia1T8OIJ2Ydt+maxkStUVz9CvL4CP0/x2GKkeRErzQC
-	 fqnnGKCIwGTFaVVIv8bLBb9EIzOBQ/NUzvg72TVI=
+	b=ZbbPhhj1A82SW18kwvB8lS+4Z9UVcpXOLUVUdJiDZbucHVCMVfX2CsN6KIYiBsVjo
+	 pqQOzEiF0rDThgAelyERfw9S7h8AIXjyA2v1Xa1jz4YaXAprPRVAeso+bRVaAaK7ZN
+	 sq2odRVyXK0TN8Wh5Uc/XaObyKP/am+ike9qKs1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbgIHS2J (ORCPT
+        id S1731685AbgIHS2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:28:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56658 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731402AbgIHQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731418AbgIHQK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:10:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4418F2468A;
-        Tue,  8 Sep 2020 15:50:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1C3D24753;
+        Tue,  8 Sep 2020 15:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580224;
-        bh=+6AfGjqpcz6AUoTPPYTG7JZKiXihcM5oveKaLtMH5hk=;
+        s=default; t=1599579685;
+        bh=i/iSAcRSNQtgeSaHtVlew7ecZjdIBqe0JatNzf05h4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jUN5u1i9nvhyP7tiW/+wTWTbOB9J2GxzY0zdOjLrOHfZ89tGDhPfXACVxSt3nEsGi
-         O3X8Ckdx/k/Y6dOitdj4WIpnlCQmIsR0QZFCBzlUdBmAJ+JW3ZHZBp96msZglWSk2i
-         tIOiyxhwmaY9Ntmi1kypzCd+yXRj6Gy4NaMrR6A8=
+        b=hbz5pEKcaq8aVk5ob2/Z0fHikWzT22V9nTtXeVULOc68K3PcFtsj/IqO+wtNw6w92
+         KwrNNI66+uAAbA3JEelS1bJ1j/NsxJDRjmCQDOXcEmaLk9i+ZkbLQXAIVPrSVyvuER
+         SM761YsugavnGJ9lsk/z8h9OERHz+buyQbkUboAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/88] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
-Date:   Tue,  8 Sep 2020 17:25:51 +0200
-Message-Id: <20200908152223.628314736@linuxfoundation.org>
+        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 172/186] mm: slub: fix conversion of freelist_corrupted()
+Date:   Tue,  8 Sep 2020 17:25:14 +0200
+Message-Id: <20200908152249.997094184@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,110 +65,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
+commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
 
-We can sometimes get bogus thermal shutdowns on omap4430 at least with
-droid4 running idle with a battery charger connected:
+Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
+deactivate_slab()") suffered an update when picked up from LKML [1].
 
-thermal thermal_zone0: critical temperature reached (143 C), shutting down
+Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
+created a no-op statement.  Fix it by sticking to the behavior intended
+in the original patch [1].  In addition, make freelist_corrupted()
+immune to passing NULL instead of &freelist.
 
-Dumping out the register values shows we can occasionally get a 0x7f value
-that is outside the TRM listed values in the ADC conversion table. And then
-we get a normal value when reading again after that. Reading the register
-multiple times does not seem help avoiding the bogus values as they stay
-until the next sample is ready.
+The issue has been spotted via static analysis and code review.
 
-Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
-should have values from 13 to 107 listed with a total of 95 values. But
-looking at the omap4430_adc_to_temp array, the values are off, and the
-end values are missing. And it seems that the 4430 ADC table is similar
-to omap3630 rather than omap4460.
+[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
 
-Let's fix the issue by using values based on the omap3630 table and just
-ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
-the missing values added while the TRM table only shows every second
-value.
+Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Joe Jin <joe.jin@oracle.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that sometimes the ADC register values within the valid table can
-also be way off for about 1 out of 10 values. But it seems that those
-just show about 25 C too low values rather than too high values. So those
-do not cause a bogus thermal shutdown.
-
-Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
- .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ mm/slub.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-index c12211eaaac4d..0b9f835d931f0 100644
---- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-+++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
-@@ -46,20 +46,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -680,12 +680,12 @@ static void slab_fix(struct kmem_cache *
+ }
  
- /*
-  * Temperature values in milli degree celsius
-- * ADC code values from 530 to 923
-+ * ADC code values from 13 to 107, see TRM
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-  */
- static const int
- omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
--	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
--	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
--	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
--	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
--	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
--	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
--	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
--	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
--	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
--	117000, 118000, 120000, 122000, 123000,
-+	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
-+	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
-+	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
-+	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
-+	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
-+	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
-+	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
-+	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
-+	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
-+	115000, 117000, 118500, 120000, 122000, 123500, 125000,
- };
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+-	    !check_valid_pointer(s, page, nextfree)) {
+-		object_err(s, page, freelist, "Freechain corrupt");
+-		freelist = NULL;
++	    !check_valid_pointer(s, page, nextfree) && freelist) {
++		object_err(s, page, *freelist, "Freechain corrupt");
++		*freelist = NULL;
+ 		slab_fix(s, "Isolate corrupted freechain");
+ 		return true;
+ 	}
+@@ -1425,7 +1425,7 @@ static inline void dec_slabs_node(struct
+ 							int objects) {}
  
- /* OMAP4430 data */
-diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-index b87c8659ec608..8a081abce4b5f 100644
---- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-+++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
-@@ -67,9 +67,13 @@
-  * and thresholds for OMAP4430.
-  */
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	return false;
+ }
+@@ -2117,7 +2117,7 @@ static void deactivate_slab(struct kmem_
+ 		 * 'freelist' is already corrupted.  So isolate all objects
+ 		 * starting at 'freelist'.
+ 		 */
+-		if (freelist_corrupted(s, page, freelist, nextfree))
++		if (freelist_corrupted(s, page, &freelist, nextfree))
+ 			break;
  
--/* ADC conversion table limits */
--#define OMAP4430_ADC_START_VALUE			0
--#define OMAP4430_ADC_END_VALUE				127
-+/*
-+ * ADC conversion table limits. Ignore values outside the TRM listed
-+ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
-+ * "18.4.10.2.3 ADC Codes Versus Temperature".
-+ */
-+#define OMAP4430_ADC_START_VALUE			13
-+#define OMAP4430_ADC_END_VALUE				107
- /* bandgap clock limits (no control on 4430) */
- #define OMAP4430_MAX_FREQ				32768
- #define OMAP4430_MIN_FREQ				32768
--- 
-2.25.1
-
+ 		do {
 
 
