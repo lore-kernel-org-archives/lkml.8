@@ -2,100 +2,108 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8FCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482EFC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCF820768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C8A20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585475;
-	bh=9fS+gp1OB/v9Y8ppj0uj2LVv8Pjm5fb9yaFt2SrECxE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zxuyZIcvWMPazC4KU9/fhu7Mu8rqJCF6O6Dy+PBnp8wR9EUNvhGMbUBICjRg0ZLuL
-	 Rd3cWj0m6Gej0Awv2+MCT6dUHMX4+6vwBdZpvD3XMh9KuDqWa6dHUoBbrllmvdZIQM
-	 ytjEGmY3NABBdvO7kyxnstVexFiruTvVYCDn77ps=
+	s=default; t=1599585502;
+	bh=r+iOPiiCSkXns7k2RkP8i4/NmDfyYnNqQ4In2aeIt3Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=FfbRPHvlKC3Zo+jAUtiyWIIJlZJZ25zFaXxKwB7mvMK82TkccEenHIWbFGmNGUQ45
+	 SdCsIR0l+cxPHw3uJePUM+Xi19Hp8l0xz3mzjrGAUtIAyjxBuxwAVf4FmoWlgBVY2u
+	 JS5vbCz63LACXtanYyFA1JunOlGL+VEIGodrYU04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgIHRRw (ORCPT
+        id S1731800AbgIHRST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:17:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57344 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731762AbgIHQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:18:26 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731701AbgIHQSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:18:03 -0400
+Received: from localhost.localdomain (unknown [194.230.155.174])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85221224B2;
-        Tue,  8 Sep 2020 13:02:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5700723CCD;
+        Tue,  8 Sep 2020 15:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599570122;
-        bh=9fS+gp1OB/v9Y8ppj0uj2LVv8Pjm5fb9yaFt2SrECxE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wxSDHEK/TrBNWz4OoTOCK9bIy6IduLZwMEj5pe2K03mjBgCId8jCNRZAFfO6aH12r
-         2dDr4W2G1relwqW98nPDMxz7RwIdju04V9frZS3KJer6mBfsB/jnKliAw4Dr//FQlH
-         +7Ytu1HGVBr36etShfo8o09w6B5L5lDOaaAT/Bbk=
-Date:   Tue, 8 Sep 2020 15:02:14 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
-        peterx@redhat.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v4.14.y 0/3] vfio: Fix for CVE-2020-12888
-Message-ID: <20200908130214.GA3075407@kroah.com>
-References: <1599509828-23596-1-git-send-email-akaher@vmware.com>
- <1599509828-23596-4-git-send-email-akaher@vmware.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599509828-23596-4-git-send-email-akaher@vmware.com>
+        s=default; t=1599577457;
+        bh=r+iOPiiCSkXns7k2RkP8i4/NmDfyYnNqQ4In2aeIt3Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jJHkf7usnzFhyUf/Fa5vOLIFVRp2+pRE6BGupDSAWWzz+DSInpH5BCytIfrTFGo0Q
+         vx/aeXNSevkKQNd2DIv3WBOUOUD92maIqkcwcrrzBEP+w6EJTxRQTzY4Cwr/omuHNC
+         ygi6WNQsotLEetkIwpcPi3Vk+CjEr2ASBaPLKfzA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Adam Ford <aford173@gmail.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Alifer Moraes <alifer.wsdm@gmail.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Vitor Massaru Iha <vitor@massaru.org>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 7/8] arm64: dts: zynqmp-zcu100-revC: Correct interrupt flags in examples
+Date:   Tue,  8 Sep 2020 17:02:40 +0200
+Message-Id: <20200908150241.5771-7-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908150241.5771-1-krzk@kernel.org>
+References: <20200908150241.5771-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 01:47:08AM +0530, Ajay Kaher wrote:
-> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-> devices may lead to DoS scenario
->     
-> The VFIO modules allow users (guest VMs) to enable or disable access to the
-> devices' MMIO memory address spaces. If a user attempts to access (read/write)
-> the devices' MMIO address space when it is disabled, some h/w devices issue an
-> interrupt to the CPU to indicate a fatal error condition, crashing the system.
-> This flaw allows a guest user or process to crash the host system resulting in
-> a denial of service.
->     
-> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-> before user access.
->     
-> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-> can later use to invalidate those mappings.
->     
-> Patch 3/ block the user from accessing memory spaces which is disabled by using
-> new vma list support to zap, or invalidate, those memory mappings in order to
-> force them to be faulted back in on access.
->     
-> Upstreamed patches link:
-> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
->         
-> [PATCH v4.14.y 1/3]:
-> Backporting of upsream commit 41311242221e:
-> vfio/type1: Support faulting PFNMAP vmas
->         
-> [PATCH v4.14.y 2/3]:
-> Backporting of upsream commit 11c4cd07ba11:
-> vfio-pci: Fault mmaps to enable vma tracking
->         
-> [PATCH v4.14.y 3/3]:
-> Backporting of upsream commit abafbc551fdd:
-> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
+GPIO_ACTIVE_x flags are not correct in the context of interrupt flags.
+These are simple defines so they could be used in DTS but they will not
+have the same meaning:
+1. GPIO_ACTIVE_HIGH = 0 = IRQ_TYPE_NONE
+2. GPIO_ACTIVE_LOW  = 1 = IRQ_TYPE_EDGE_RISING
 
-Now queued up, thanks.
+Correct the interrupt flags, assuming the author of the code wanted some
+logical behavior behind the name "ACTIVE_xxx", this is:
+  ACTIVE_LOW => IRQ_TYPE_LEVEL_LOW
 
-greg k-h
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+Not tested on HW.
+---
+ arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+index d60110ad8367..c9460693f4e9 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
+@@ -186,7 +186,7 @@
+ 				compatible = "ti,tps65086";
+ 				reg = <0x5e>;
+ 				interrupt-parent = <&gpio>;
+-				interrupts = <77 GPIO_ACTIVE_LOW>;
++				interrupts = <77 IRQ_TYPE_LEVEL_LOW>;
+ 				#gpio-cells = <2>;
+ 				gpio-controller;
+ 			};
+-- 
+2.17.1
+
