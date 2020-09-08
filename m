@@ -2,89 +2,86 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77540C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895EAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:54:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2CC2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F662067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731561AbgIHSvv (ORCPT
+        id S1730764AbgIHSnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53230 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731211AbgIHSvK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:51:10 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D900C061573;
-        Tue,  8 Sep 2020 11:51:10 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFihG-00CnM8-KF; Tue, 08 Sep 2020 18:50:26 +0000
-Date:   Tue, 8 Sep 2020 19:50:26 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 8 Sep 2020 14:43:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45334 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731306AbgIHSmj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:42:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id E4510AD39;
+        Tue,  8 Sep 2020 18:42:38 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 20:42:34 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Joerg Roedel <joro@8bytes.org>, x86@kernel.org, hpa@zytor.com,
         Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
         Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?iso-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH v8 0/3] Add support for AT_INTERPRETED (was O_MAYEXEC)
-Message-ID: <20200908185026.GU1236603@ZenIV.linux.org.uk>
-References: <20200908075956.1069018-1-mic@digikod.net>
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v7 67/72] x86/smpboot: Load TSS and getcpu GDT entry
+ before loading IDT
+Message-ID: <20200908184234.GE23826@suse.de>
+References: <20200907131613.12703-1-joro@8bytes.org>
+ <20200907131613.12703-68-joro@8bytes.org>
+ <20200908172042.GF25236@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200908075956.1069018-1-mic@digikod.net>
+In-Reply-To: <20200908172042.GF25236@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 09:59:53AM +0200, Mickaël Salaün wrote:
-> Hi,
+On Tue, Sep 08, 2020 at 07:20:42PM +0200, Borislav Petkov wrote:
+> On Mon, Sep 07, 2020 at 03:16:08PM +0200, Joerg Roedel wrote:
+> > +void cpu_init_exception_handling(void)
+> > +{
+> > +	struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
+> > +	int cpu = raw_smp_processor_id();
+> > +
+> > +	/* paranoid_entry() gets the CPU number from the GDT */
+> > +	setup_getcpu(cpu);
+> > +
+> > +	/* IST vectors need TSS to be set up. */
+> > +	tss_setup_ist(tss);
+> > +	tss_setup_io_bitmap(tss);
+> > +	set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+> > +
+> > +	load_TR_desc();
 > 
-> This height patch series rework the previous O_MAYEXEC series by not
-> adding a new flag to openat2(2) but to faccessat2(2) instead.  As
-> suggested, this enables to perform the access check on a file descriptor
-> instead of on a file path (while opening it).  This may require two
-> checks (one on open and then with faccessat2) but it is a more generic
-> approach [8].
+> Aha, this is what you mean here in your 0th message. I'm guessing it is
+> ok to do those things twice in start_secondary...
 
-Again, why is that folded into lookup/open/whatnot, rather than being
-an operation applied to a file (e.g. O_PATH one)?
+Yes, I think its best to do it twice, so that cpu_init() stays the CPU
+state barrier it should be, independent of what happens before.
+
+
+	Joerg
