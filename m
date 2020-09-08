@@ -2,112 +2,348 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EC5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FAAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AC320708
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599583763;
-	bh=GC58VD0aHC2+QqxNhQJV7DDEZXLDOWxd0dJJGbYPoSI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yeuLz+BAuIGnZ4z1oppHQF1myXcrsnG/R0S1al4ZcrS/mnO5MBd+uU4VNPm2XAAZS
-	 3CW5sv61dE5fcdogZNC6YaXxSA7SZlm4hb1Cos6sLRFsuWeEUzTOH4OVhnzDxlIjFA
-	 6NgEkd4yMuWYaYQUsRmlkhd2JWWvBj67WMVFKdVQ=
+	by mail.kernel.org (Postfix) with ESMTP id 527D0206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ncdkLudI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732131AbgIHQtH (ORCPT
+        id S1732050AbgIHQtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40772 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731994AbgIHQsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:48:17 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 726BC206E6;
-        Tue,  8 Sep 2020 16:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599583691;
-        bh=GC58VD0aHC2+QqxNhQJV7DDEZXLDOWxd0dJJGbYPoSI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BnjHYP6kFg8ov7KH+qVef3jZYg6LadGxGOb+OUPPTTKVecZL2DA2Pz13dXaaOlgF7
-         CV/4RJEHCcHPJMxN/4+SilQis3g1gv4D6/bfTau1H/efVfdB6cNdSFBuUb6Fyy6gIf
-         rvB6wMYm8jwgKBb0X3y6rXxefvt0vYKOO30/0tN4=
-Date:   Tue, 8 Sep 2020 17:47:26 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org, enric.balletbo@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com
-Subject: Re: [PATCH] regmap: debugfs: potentially duplicate the name string
- of the config
-Message-ID: <20200908164726.GG5551@sirena.org.uk>
-References: <20200908152859.26279-1-dafna.hirschfeld@collabora.com>
- <20200908153559.GF5551@sirena.org.uk>
- <455274f0-718c-9247-da29-6122687720eb@collabora.com>
+        Tue, 8 Sep 2020 12:49:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732010AbgIHQs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:48:26 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C013C061757;
+        Tue,  8 Sep 2020 09:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=4o2si/GzuWPaLaRjglpUNsqRIp4cS1Q0WLZVAVWUbes=; b=ncdkLudIWK4yzKcOUuk3oLuDZ1
+        JBV/WbikMTxjQdVQSSFkk3kLSoWdC9gC4ECvvcot5zbsEHStPRaE/W5WhmNUk3INs8lARSGVw6tzx
+        ILJ+Mm4BbN0CVUnfguY7tQOKFcxgk83/UuY0F+G3CEcMFwVSIUxmQPvJE/D92XKCB8/Xei/mjPcZs
+        42ztRSxlbN4DfABGO+B1IGGGIcQ+YzHTM5h2yV2o9G2WoFdG0P7IAmWzc+/6MO4O3ZXr/eoWPsPjA
+        pvJITOG+j/2WWIBUBmJC+lxUYj69Ou7KTms8IeFB+zYpoMbqeuj5rVr2kiNW3xjkRIqKX5JgSDKTU
+        1x2YV8ag==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFgmz-0001TQ-29; Tue, 08 Sep 2020 16:48:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        iommu@lists.linux-foundation.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org
+Subject: [PATCH 10/12] dma-direct: rename and cleanup __phys_to_dma
+Date:   Tue,  8 Sep 2020 18:47:56 +0200
+Message-Id: <20200908164758.3177341-11-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908164758.3177341-1-hch@lst.de>
+References: <20200908164758.3177341-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tvOENZuN7d6HfOWU"
-Content-Disposition: inline
-In-Reply-To: <455274f0-718c-9247-da29-6122687720eb@collabora.com>
-X-Cookie: Vini, vidi, Linux!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The __phys_to_dma vs phys_to_dma distinction isn't exactly obvious.  Try
+to improve the situation by renaming __phys_to_dma to
+phys_to_dma_unencryped, and not forcing architectures that want to
+override phys_to_dma to actually provide __phys_to_dma.
 
---tvOENZuN7d6HfOWU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/arm/include/asm/dma-direct.h      |  2 +-
+ arch/mips/bmips/dma.c                  |  2 +-
+ arch/mips/cavium-octeon/dma-octeon.c   |  2 +-
+ arch/mips/include/asm/dma-direct.h     |  2 +-
+ arch/mips/loongson2ef/fuloong-2e/dma.c |  2 +-
+ arch/mips/loongson2ef/lemote-2f/dma.c  |  2 +-
+ arch/mips/loongson64/dma.c             |  2 +-
+ arch/mips/pci/pci-ar2315.c             |  2 +-
+ arch/mips/pci/pci-xtalk-bridge.c       |  2 +-
+ arch/mips/sgi-ip32/ip32-dma.c          |  2 +-
+ arch/powerpc/include/asm/dma-direct.h  |  2 +-
+ drivers/iommu/intel/iommu.c            |  2 +-
+ include/linux/dma-direct.h             | 28 +++++++++++++++-----------
+ kernel/dma/direct.c                    |  8 ++++----
+ kernel/dma/swiotlb.c                   |  4 ++--
+ 15 files changed, 34 insertions(+), 30 deletions(-)
 
-On Tue, Sep 08, 2020 at 06:07:56PM +0200, Dafna Hirschfeld wrote:
-> Am 08.09.20 um 17:35 schrieb Mark Brown:
+diff --git a/arch/arm/include/asm/dma-direct.h b/arch/arm/include/asm/dma-direct.h
+index a8cee87a93e8ab..bca0de56753439 100644
+--- a/arch/arm/include/asm/dma-direct.h
++++ b/arch/arm/include/asm/dma-direct.h
+@@ -2,7 +2,7 @@
+ #ifndef ASM_ARM_DMA_DIRECT_H
+ #define ASM_ARM_DMA_DIRECT_H 1
+ 
+-static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	unsigned int offset = paddr & ~PAGE_MASK;
+ 	return pfn_to_dma(dev, __phys_to_pfn(paddr)) + offset;
+diff --git a/arch/mips/bmips/dma.c b/arch/mips/bmips/dma.c
+index ba2a5d33dfd3fa..49061b870680b9 100644
+--- a/arch/mips/bmips/dma.c
++++ b/arch/mips/bmips/dma.c
+@@ -40,7 +40,7 @@ static struct bmips_dma_range *bmips_dma_ranges;
+ 
+ #define FLUSH_RAC		0x100
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t pa)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t pa)
+ {
+ 	struct bmips_dma_range *r;
+ 
+diff --git a/arch/mips/cavium-octeon/dma-octeon.c b/arch/mips/cavium-octeon/dma-octeon.c
+index 388b13ba2558c2..232fa1017b1ec9 100644
+--- a/arch/mips/cavium-octeon/dma-octeon.c
++++ b/arch/mips/cavium-octeon/dma-octeon.c
+@@ -168,7 +168,7 @@ void __init octeon_pci_dma_init(void)
+ }
+ #endif /* CONFIG_PCI */
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ #ifdef CONFIG_PCI
+ 	if (dev && dev_is_pci(dev))
+diff --git a/arch/mips/include/asm/dma-direct.h b/arch/mips/include/asm/dma-direct.h
+index 8e178651c638c2..9a640118316c9d 100644
+--- a/arch/mips/include/asm/dma-direct.h
++++ b/arch/mips/include/asm/dma-direct.h
+@@ -2,7 +2,7 @@
+ #ifndef _MIPS_DMA_DIRECT_H
+ #define _MIPS_DMA_DIRECT_H 1
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr);
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr);
+ phys_addr_t dma_to_phys(struct device *dev, dma_addr_t daddr);
+ 
+ #endif /* _MIPS_DMA_DIRECT_H */
+diff --git a/arch/mips/loongson2ef/fuloong-2e/dma.c b/arch/mips/loongson2ef/fuloong-2e/dma.c
+index 83fadeb3fd7d56..cea167d8aba8db 100644
+--- a/arch/mips/loongson2ef/fuloong-2e/dma.c
++++ b/arch/mips/loongson2ef/fuloong-2e/dma.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/dma-direct.h>
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	return paddr | 0x80000000;
+ }
+diff --git a/arch/mips/loongson2ef/lemote-2f/dma.c b/arch/mips/loongson2ef/lemote-2f/dma.c
+index 302b43a14eee74..3c9e994563578c 100644
+--- a/arch/mips/loongson2ef/lemote-2f/dma.c
++++ b/arch/mips/loongson2ef/lemote-2f/dma.c
+@@ -1,7 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/dma-direct.h>
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	return paddr | 0x80000000;
+ }
+diff --git a/arch/mips/loongson64/dma.c b/arch/mips/loongson64/dma.c
+index b3dc5d0bd2b113..364f2f27c8723f 100644
+--- a/arch/mips/loongson64/dma.c
++++ b/arch/mips/loongson64/dma.c
+@@ -4,7 +4,7 @@
+ #include <linux/swiotlb.h>
+ #include <boot_param.h>
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	/* We extract 2bit node id (bit 44~47, only bit 44~45 used now) from
+ 	 * Loongson-3's 48bit address space and embed it into 40bit */
+diff --git a/arch/mips/pci/pci-ar2315.c b/arch/mips/pci/pci-ar2315.c
+index d88395684f487d..cef4a47ab06311 100644
+--- a/arch/mips/pci/pci-ar2315.c
++++ b/arch/mips/pci/pci-ar2315.c
+@@ -170,7 +170,7 @@ static inline dma_addr_t ar2315_dev_offset(struct device *dev)
+ 	return 0;
+ }
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	return paddr + ar2315_dev_offset(dev);
+ }
+diff --git a/arch/mips/pci/pci-xtalk-bridge.c b/arch/mips/pci/pci-xtalk-bridge.c
+index f1b37f32b55395..50f7d42cca5a78 100644
+--- a/arch/mips/pci/pci-xtalk-bridge.c
++++ b/arch/mips/pci/pci-xtalk-bridge.c
+@@ -25,7 +25,7 @@
+ /*
+  * Common phys<->dma mapping for platforms using pci xtalk bridge
+  */
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct bridge_controller *bc = BRIDGE_CONTROLLER(pdev->bus);
+diff --git a/arch/mips/sgi-ip32/ip32-dma.c b/arch/mips/sgi-ip32/ip32-dma.c
+index 160317294d97a9..20c6da9d76bc5e 100644
+--- a/arch/mips/sgi-ip32/ip32-dma.c
++++ b/arch/mips/sgi-ip32/ip32-dma.c
+@@ -18,7 +18,7 @@
+ 
+ #define RAM_OFFSET_MASK 0x3fffffffUL
+ 
+-dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	dma_addr_t dma_addr = paddr & RAM_OFFSET_MASK;
+ 
+diff --git a/arch/powerpc/include/asm/dma-direct.h b/arch/powerpc/include/asm/dma-direct.h
+index 95b09313d2a4cf..128304cbee1d87 100644
+--- a/arch/powerpc/include/asm/dma-direct.h
++++ b/arch/powerpc/include/asm/dma-direct.h
+@@ -2,7 +2,7 @@
+ #ifndef ASM_POWERPC_DMA_DIRECT_H
+ #define ASM_POWERPC_DMA_DIRECT_H 1
+ 
+-static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	return paddr + dev->archdata.dma_offset;
+ }
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index f8177c59d229a6..7983c13b9eef7d 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3736,7 +3736,7 @@ bounce_map_single(struct device *dev, phys_addr_t paddr, size_t size,
+ 	 */
+ 	if (!IS_ALIGNED(paddr | size, VTD_PAGE_SIZE)) {
+ 		tlb_addr = swiotlb_tbl_map_single(dev,
+-				__phys_to_dma(dev, io_tlb_start),
++				phys_to_dma_unencrypted(dev, io_tlb_start),
+ 				paddr, size, aligned_size, dir, attrs);
+ 		if (tlb_addr == DMA_MAPPING_ERROR) {
+ 			goto swiotlb_error;
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index f00e262ab6b154..805010ea5346f9 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -16,14 +16,29 @@ extern unsigned int zone_dma_bits;
+ 
+ #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+ #include <asm/dma-direct.h>
++#ifndef phys_to_dma_unencrypted
++#define phys_to_dma_unencrypted		phys_to_dma
++#endif
+ #else
+-static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++static inline dma_addr_t phys_to_dma_unencrypted(struct device *dev,
++		phys_addr_t paddr)
+ {
+ 	dma_addr_t dev_addr = (dma_addr_t)paddr;
+ 
+ 	return dev_addr - ((dma_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+ }
+ 
++/*
++ * If memory encryption is supported, phys_to_dma will set the memory encryption
++ * bit in the DMA address, and dma_to_phys will clear it.
++ * phys_to_dma_unencrypted is for use on special unencrypted memory like swiotlb
++ * buffers.
++ */
++static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
++{
++	return __sme_set(phys_to_dma_unencrypted(dev, paddr));
++}
++
+ static inline phys_addr_t dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+ {
+ 	phys_addr_t paddr = (phys_addr_t)dev_addr +
+@@ -42,17 +57,6 @@ static inline bool force_dma_unencrypted(struct device *dev)
+ }
+ #endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ 
+-/*
+- * If memory encryption is supported, phys_to_dma will set the memory encryption
+- * bit in the DMA address, and dma_to_phys will clear it.  The raw __phys_to_dma
+- * version should only be used on non-encrypted memory for
+- * special occasions like DMA coherent buffers.
+- */
+-static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+-{
+-	return __sme_set(__phys_to_dma(dev, paddr));
+-}
+-
+ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size,
+ 		bool is_ram)
+ {
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index bfb479c8a370fa..54db9cfdaecc6d 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -25,7 +25,7 @@ static inline dma_addr_t phys_to_dma_direct(struct device *dev,
+ 		phys_addr_t phys)
+ {
+ 	if (force_dma_unencrypted(dev))
+-		return __phys_to_dma(dev, phys);
++		return phys_to_dma_unencrypted(dev, phys);
+ 	return phys_to_dma(dev, phys);
+ }
+ 
+@@ -438,13 +438,13 @@ int dma_direct_supported(struct device *dev, u64 mask)
+ 		return 1;
+ 
+ 	/*
+-	 * This check needs to be against the actual bit mask value, so
+-	 * use __phys_to_dma() here so that the SME encryption mask isn't
++	 * This check needs to be against the actual bit mask value, so use
++	 * phys_to_dma_unencrypted() here so that the SME encryption mask isn't
+ 	 * part of the check.
+ 	 */
+ 	if (IS_ENABLED(CONFIG_ZONE_DMA))
+ 		min_mask = min_t(u64, min_mask, DMA_BIT_MASK(zone_dma_bits));
+-	return mask >= __phys_to_dma(dev, min_mask);
++	return mask >= phys_to_dma_unencrypted(dev, min_mask);
+ }
+ 
+ size_t dma_direct_max_mapping_size(struct device *dev)
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index c19379fabd200e..4ea72d145cd27d 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -670,13 +670,13 @@ dma_addr_t swiotlb_map(struct device *dev, phys_addr_t paddr, size_t size,
+ 			      swiotlb_force);
+ 
+ 	swiotlb_addr = swiotlb_tbl_map_single(dev,
+-			__phys_to_dma(dev, io_tlb_start),
++			phys_to_dma_unencrypted(dev, io_tlb_start),
+ 			paddr, size, size, dir, attrs);
+ 	if (swiotlb_addr == (phys_addr_t)DMA_MAPPING_ERROR)
+ 		return DMA_MAPPING_ERROR;
+ 
+ 	/* Ensure that the address returned is DMA'ble */
+-	dma_addr = __phys_to_dma(dev, swiotlb_addr);
++	dma_addr = phys_to_dma_unencrypted(dev, swiotlb_addr);
+ 	if (unlikely(!dma_capable(dev, dma_addr, size, true))) {
+ 		swiotlb_tbl_unmap_single(dev, swiotlb_addr, size, size, dir,
+ 			attrs | DMA_ATTR_SKIP_CPU_SYNC);
+-- 
+2.28.0
 
-> > It does not follow that the name should be copied, it equally follows
-> > (and is expected by the API given that the common case is that the name
-> > is a static string assigned at build time) that the caller should not
-> > free the string while the regmap is active.
-
-> I see that the same copy is already done in function __regmap_init in drivers/base/regmap/regmap.c
-> added in patch 8253bb3f82554 "regmap: potentially duplicate the name string stored in regmap"
-> so I thought I'll do the same.
-
-Hrm, right.  In that case why not just use that copy we've already
-taken?
-
-> > > This fixes an error
-> > > "debugfs: Directory 'dummy-' with parent 'regmap' already present!"
-> > > where the name was freed in function of_syscon_register before
-> > > it was accessed.
-
-> > Fix the caller.  It is *very* much unclear to me why a syscon would be
-> > assigning a name for a regmap it creates in the first place.
-
-> I'll have a deeper look.
-
-Whatever happens that caller looks like it shouldn't be creating an
-additional name unless I'm missing something about the context.
-
---tvOENZuN7d6HfOWU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9XtZ0ACgkQJNaLcl1U
-h9BiRwf+MfaQsN9ucmS7s5wsCpCqOGHkER22A2d9L5nmFg+9Qpsl3A6J4c/gHHxD
-679P1H6vt751AjZqZuk2auaA2lHNGjiKqasbLKejZfTE2CA0jYnN+iX8WyjOhNNI
-uW622IE/rYs4IvS8yM9qBipZJH1KRuljzI3db++GAnYuoJjjhxGM7Dcs2Lwk4om4
-LU6DGItxpbuMhfWugzBiaLKkK7mhulUT6bKM0ZacLCVQFVlAAkeMgDm1B2XtVYUA
-UX5of4ulw0YZnX5yF3oI76s7X1CV60RvnUM1YVGJuy3Ur8oNERkL8GVp5f0RdgUw
-LCnfChUpRu5ppYdO2DwBtn2wtNVA7A==
-=vkzj
------END PGP SIGNATURE-----
-
---tvOENZuN7d6HfOWU--
