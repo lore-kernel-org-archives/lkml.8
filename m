@@ -2,105 +2,158 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48287C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE800206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B2CC20708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QsMtBJA4"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="BdIE51BM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731908AbgIHQdq (ORCPT
+        id S1732054AbgIHQeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:33:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59774 "EHLO
+        Tue, 8 Sep 2020 12:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731941AbgIHQcQ (ORCPT
+        with ESMTP id S1732036AbgIHQc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:32:16 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8295C061260;
-        Tue,  8 Sep 2020 06:18:40 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id t13so15292398ile.9;
-        Tue, 08 Sep 2020 06:18:40 -0700 (PDT)
+        Tue, 8 Sep 2020 12:32:56 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BE9C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:32:56 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so11407462pfi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6lehgm/Rq7isVWXVQNzNLtCDwhCMjbkLID23x9t0QSo=;
-        b=QsMtBJA4wDAM0+eNZBCS8AAytf2a8zJ4Bvi/ltiQqSzkq0OI68bxVecEgPnXVQ3DKa
-         SPxgWdvgTmvK/3vG7R75MyQupY6kSTWR3GZk6jgK3sLW6FdBsmz9mheY/wmEdJEjtzcb
-         klBrXzYmpDE6aE7OcNF+QFyxcO0e5IdwUsBOZJBWFgBuo0u7rqOvMzscyNQG5zD6mfku
-         wRxVRXMqjvN/xHLRDdZ9f6QSVVNIaw1vJyCgoa7XfIEAq3KCbmvfXId6Fxa5O+JUOY61
-         337DeOi3ymFN+mzxUBQ+iHDz/8AxWBYN0Oj+iNlN50EuOf48TQw8qDtVnXSbQ8qVhHO0
-         3KFg==
+        d=broadcom.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=D+6OKvAnkUtzzW2cGDkKOGH7rrKsaKBarDqPQyHhqbY=;
+        b=BdIE51BMbD2vJPVe5LWf9jcMVph9ArF3q5hwypOuhEoStuB4LfOeegz+pdZT9WDnvZ
+         cU/VWPGrrEhR6rSHH8usFXpyne27RVDIe99CaJmtzJgMELgiHBZKACItfGUg35zziM3Y
+         mO9ONKxuAfaqEDw88bCqSZOJEHamIcH0lVx0U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6lehgm/Rq7isVWXVQNzNLtCDwhCMjbkLID23x9t0QSo=;
-        b=VAthukq15bBOzs9EYft4xkaTiE61MxFXBlefxRCIAkGvKXvX6zoyk3igvCQ1e+aVp0
-         cmKKDD1P4IFq2SJyt7JIDHfbOIx8fuRkRaTlbRQPGfgi1+3aUqC/WOuqaiPexZfyYJ88
-         2ylyQDfhtY5UHhmfK25WXXapjRLER/Jj/cE4bFkMZjU14KYlUjxdMvV1gvvyHNTobJPL
-         tMLvyyztUUo/EP2DCqf7ZFdg1q4NICLzjnv3RRxiecuqWLTOA9orvhdX9qwxj0RPrzb6
-         eME74XHABNi0oHgmp/lcxZo12U0y1qKOJcmLuGt6dE/U+IbgMw+sjqZRI3d/Yme3edsD
-         wnIA==
-X-Gm-Message-State: AOAM530SZ6SYAVzvj08VB1H26HOMy1PtgHwXdXYy5YhK3vQ3fRdzSuyY
-        OZd5L+dhie2jjXF4D68BZoyxHuJv7RdXMe9Lkwb1/MMX
-X-Google-Smtp-Source: ABdhPJwFwQYkncfI9eCpCYuGm9Uout+XFJS9CaqWfrNxMgGxaQgK6+Z0VCKrVf5xph6x30PSKENhBgFbkfQv7frQWbk=
-X-Received: by 2002:a05:6e02:685:: with SMTP id o5mr23165007ils.72.1599571120307;
- Tue, 08 Sep 2020 06:18:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <25817189-49a7-c64f-26ee-78d4a27496b6@huawei.com>
- <CAOQ4uxhejJzjKLZCt=b87KAX0sC3RAZ2FHEZbu4188Ar-bkmOg@mail.gmail.com> <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com>
-In-Reply-To: <e399cd17-e95e-def4-e03b-5cc2ae1f9708@huawei.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 8 Sep 2020 16:18:29 +0300
-Message-ID: <CAOQ4uxgvodepq2ZhmGEpkZYj017tH_pk2AgV=pUhWiONnxOQjw@mail.gmail.com>
-Subject: Re: Question: Why is there no notification when a file is opened
- using filp_open()?
-To:     Xiaoming Ni <nixiaoming@huawei.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        wangle6@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=D+6OKvAnkUtzzW2cGDkKOGH7rrKsaKBarDqPQyHhqbY=;
+        b=Dzz2FtkPLj2pMMf2/YS7shxlI0r+GWBLqT26ISmYim+/BzT7VwNxM27M2BzxdvKMo6
+         VDuks+ZBR+jfsVJVstnyk9JDtlaWeP645+rUUgC08rA3N7gWJLArk/xiE58JBCLuOzgP
+         iwVX4fAqcO0tP8OVp0NNojphkvP7lLTGk0SLhSUqG714eurnqTWQTjBrTQi5yeXirGLg
+         4prp+3oS6xX1hdHmLW7kxMlfx1mlygDAR9KKpqCmrs0IIY6kentXooVzwKoh1aHUUwAk
+         jk1AIGfewFVectqhzI/k5LLTozrAvnpI6fnP/mf8vwXmwMCy4EVVnV/zZELg1LSoeHxJ
+         76Wg==
+X-Gm-Message-State: AOAM532ZzbMDjMIZtJOLuQ0QZrJoDNirOkxyfiwBcYrZ1KdZ2QJZ6rwU
+        QKg1WDKv9UOVj5qPAQSbssDtoA==
+X-Google-Smtp-Source: ABdhPJy/MwLs61JfBGoh37V+yP2UwAlE3gV9saHhDANE/meQtBZQtzbPVViRwvgkDgq95jo5/4KEow==
+X-Received: by 2002:a63:d216:: with SMTP id a22mr11107158pgg.339.1599582775184;
+        Tue, 08 Sep 2020 09:32:55 -0700 (PDT)
+Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id b24sm15079186pjp.22.2020.09.08.09.32.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 09:32:54 -0700 (PDT)
+From:   Jim Quinlan <james.quinlan@broadcom.com>
+To:     linux-pci@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        james.quinlan@broadcom.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [RESEND PATCH v1] PCI: pcie_bus_config can be set at build time
+Date:   Tue,  8 Sep 2020 12:32:48 -0400
+Message-Id: <20200908163248.14330-1-james.quinlan@broadcom.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 3:53 PM Xiaoming Ni <nixiaoming@huawei.com> wrote:
->
-> On 2020/9/8 18:06, Amir Goldstein wrote:
-> > On Tue, Sep 8, 2020 at 11:02 AM Xiaoming Ni <nixiaoming@huawei.com> wrote:
-> >>
-> >> The file opening action on the system may be from user-mode sys_open()
-> >> or kernel-mode filp_open().
-> >> Currently, fsnotify_open() is invoked in do_sys_openat2().
-> >> But filp_open() is not notified. Why? Is this an omission?
-> >>
-> >> Do we need to call fsnotify_open() in filp_open() or  do_filp_open() to
-> >> ensure that both user-mode and kernel-mode file opening operations can
-> >> be notified?
-> >>
-> >
-> > Do you have a specific use case of kernel filp_open() in mind?
-> >
->
-> For example, in fs/coredump.c, do_coredump() calls filp_open() to
-> generate core files.
-> In this scenario, the fsnotify_open() notification is missing.
->
+The Kconfig is modified so that the pcie_bus_config setting can be done at
+build time in the same manner as the CONFIG_PCIEASPM_XXXX choice.  The
+pci_bus_config setting may still be overridden by the bootline param.
 
-I am not convinced that we should generate an event.
-You will have to explain in what is the real world use case that requires this
-event to be generated.
+Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
+---
+ drivers/pci/Kconfig | 40 ++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.c   | 12 ++++++++++++
+ 2 files changed, 52 insertions(+)
 
-Thanks,
-Amir.
+diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+index 4bef5c2bae9f..efe69b0d9f7f 100644
+--- a/drivers/pci/Kconfig
++++ b/drivers/pci/Kconfig
+@@ -187,6 +187,46 @@ config PCI_HYPERV
+ 	  The PCI device frontend driver allows the kernel to import arbitrary
+ 	  PCI devices from a PCI backend to support PCI driver domains.
+ 
++choice
++	prompt "PCIE default bus config setting"
++	default PCIE_BUS_DEFAULT
++	depends on PCI
++	help
++	  One of the following choices will set the pci_bus_config at
++	  compile time.  This will still be overridden by the appropriate
++	  pci bootline parameter.
++
++config PCIE_BUS_TUNE_OFF
++	bool "Tune Off"
++	depends on PCI
++	help
++	  Use the BIOS defaults; doesn't touch MPS at all.
++
++config PCIE_BUS_DEFAULT
++	bool "Default"
++	depends on PCI
++	help
++	  Ensure MPS matches upstream bridge.
++
++config PCIE_BUS_SAFE
++	bool "Safe"
++	depends on PCI
++	help
++	  Use largest MPS boot-time devices support.
++
++config PCIE_BUS_PERFORMANCE
++	bool "Performance"
++	depends on PCI
++	help
++	  Use MPS and MRRS for best performance.
++
++config PCIE_BUS_PEER2PEER
++	bool "Peer2peer"
++	depends on PCI
++	help
++	  Set MPS = 128 for all devices.
++endchoice
++
+ source "drivers/pci/hotplug/Kconfig"
+ source "drivers/pci/controller/Kconfig"
+ source "drivers/pci/endpoint/Kconfig"
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index e39c5499770f..dfb52ed4a931 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -101,7 +101,19 @@ unsigned long pci_hotplug_mmio_pref_size = DEFAULT_HOTPLUG_MMIO_PREF_SIZE;
+ #define DEFAULT_HOTPLUG_BUS_SIZE	1
+ unsigned long pci_hotplug_bus_size = DEFAULT_HOTPLUG_BUS_SIZE;
+ 
++
++/* PCIE bus config, can be overridden by bootline param */
++#ifdef CONFIG_PCIE_BUS_TUNE_OFF
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_TUNE_OFF;
++#elif defined CONFIG_PCIE_BUS_SAFE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_SAFE;
++#elif defined CONFIG_PCIE_BUS_PERFORMANCE
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PERFORMANCE;
++#elif defined CONFIG_PCIE_BUS_PEER2PEER
++enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_PEER2PEER;
++#else
+ enum pcie_bus_config_types pcie_bus_config = PCIE_BUS_DEFAULT;
++#endif
+ 
+ /*
+  * The default CLS is used if arch didn't set CLS explicitly and not
+-- 
+2.17.1
+
