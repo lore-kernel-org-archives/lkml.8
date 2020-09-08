@@ -2,96 +2,97 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17413C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B367C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C263220757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1576520757
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599604737;
-	bh=MA8vSrb2t66hlFTJXejAAYOGW3HFutbux6iXh1CMimw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tBoP09Gxgk5sv7GGYa17TvpGDaIMImmcRxBibmJBSZuocqLFgrICsP3Lqo66XBRs3
-	 xWNcvgnXjnylgwbzEf8H32UqRSNu8K0mq2AFRHeyGnhAl/LNihghO3snl0O996MwEq
-	 eOGAhtMGeCgfQ3Um+JRxZCBfeQT7CcFx/0ckmnmI=
+	s=default; t=1599604773;
+	bh=p3SCNQSZriSpfsmnFhDYpZyKCKZix6tZbg5PzqvY3yc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Ul9r/9Lf+eTwxkvD6KH4QUXezTSkFETBLHFD5ysey21/oGmUUV7SekFCHbM1MhDTl
+	 9v1BVKQwoiQbx2rS0ROnGROgkJ9Lb4Jl+vPB6yqul3OB1GRjyPw/fKDOhXxKLBSqrL
+	 s9rvUASFJYlJbf1nAovOQ5rDvWpB1Rt/Xsk4aMRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729048AbgIHWi4 (ORCPT
+        id S1729413AbgIHWjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:38:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46708 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgIHWiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:38:54 -0400
-Received: by mail-io1-f68.google.com with SMTP id d18so1078397iop.13;
-        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=p/1hHUSbtL14Ax0at2DUeNcr9Ny+Csoyhco21r35crE=;
-        b=cX9WwNRZsr5luGMsQG022wzXhNe0wv90a/nTbkgq2zxifC4HdfOxCbuy8lALVy1B8G
-         IM8irwkLf8EysjKOrpPGqsREoR6U3/LEN3SmgV06kYM0eohvaHM1HXI4ocRuye3/NVdP
-         OOboCnQbsy92B4jqu94PzbuFmbmzX/rvleEYVWTwn3+6qgnakBvq5bvlcLhosprm0nMU
-         q/ZGm+vSfBvxtKDqh0GCJb25MtCqmZlhqqLN51A6IOVr7x6n29x9tN2JWZd5cYUtPtbL
-         Ee6rhFnprkXwr6vCZIhiQg6NBq6Z3u8UVxCJQs+ypdvVXSdcDIrQBwOOm8cExODcLFkc
-         C4nw==
-X-Gm-Message-State: AOAM530swKCR+ZBLRNX5jvSACVROQbJnLxnIQGRvIUbPfVcK1xCXdMD+
-        FDhKMatJfcqpcvkdJN5P5A==
-X-Google-Smtp-Source: ABdhPJwocbAoceUdBVjvP517IFwXFz5vHn3glVCmHqzqVj0ZPDFrK4R2n3DaoP4Yy/j/0jNShnsB/g==
-X-Received: by 2002:a6b:3e06:: with SMTP id l6mr1023062ioa.160.1599604733487;
-        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id a21sm337527ioh.12.2020.09.08.15.38.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 15:38:52 -0700 (PDT)
-Received: (nullmailer pid 1066114 invoked by uid 1000);
-        Tue, 08 Sep 2020 22:38:46 -0000
-Date:   Tue, 8 Sep 2020 16:38:46 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
- support
-Message-ID: <20200908223846.GA1066007@bogus>
-References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Tue, 8 Sep 2020 18:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51824 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbgIHWj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:39:29 -0400
+Received: from localhost (35.sub-72-107-115.myvzw.com [72.107.115.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6D9120757;
+        Tue,  8 Sep 2020 22:39:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599604769;
+        bh=p3SCNQSZriSpfsmnFhDYpZyKCKZix6tZbg5PzqvY3yc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ABOcrC3EhkUg45HI4mWN4wDVv6kiMsASU52p1/lQoSqTnausqYnFGQZPfXOyqzJTx
+         rkr/Q4fP/yZAtT3nyMb9bOOkECya3pel1+lS65Zkdt6fPo93rKLuSr1f/uUPhQ3jgi
+         gcP7YWCgkoxQSlL+o8nsP42/f4sKyqjve2OkLljM=
+Date:   Tue, 8 Sep 2020 17:39:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Hongtao Wu <wuht06@gmail.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
+Subject: Re: [PATCH v2 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe
+ controller
+Message-ID: <20200908223927.GA647146@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <1599572841-2652-3-git-send-email-wuht06@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 11:44:54 +0100, Lad Prabhakar wrote:
-> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+On Tue, Sep 08, 2020 at 09:47:21PM +0800, Hongtao Wu wrote:
+> From: Billows Wu <billows.wu@unisoc.com>
 > 
-> Document RZ/G2H (R8A774E1) SoC bindings.
+> This series adds PCIe controller driver for Unisoc SoCs.
+> This controller is based on DesignWare PCIe IP.
 > 
-> No driver change is needed due to the fallback compatible value
-> "renesas,pwm-rcar".
-> 
-> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Last signed-off must be from developer submitting the patch, i.e.,
+Hongtao Wu; see https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n560
+
+> +config PCIE_SPRD
+> +	tristate "Unisoc PCIe controller - RC mode"
+
+s/RC mode/Host mode/ to follow convention of other drivers.
+
+> +	depends on ARCH_SPRD || COMPILE_TEST
+> +	depends on PCI_MSI_IRQ_DOMAIN
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Unisoc PCIe controller uses the Designware core. It can be configured
+
+s/Designware/DesignWare/
+
+> +	  as an Endpoint (EP) or a Root complex (RC). In order to enable RC
+> +	  mode, PCIE_SPRD must be selected.
+> +	  Say Y or M here if you want to PCIe RC controller support on Unisoc
+> +	  SoCs.
+
+> +		dev_dbg(&pdev->dev,
+
+dev_dbg(dev, ...
+
+> +			"%2d:reg[0x%8x] mask[0x%8x] val[0x%8x] result[0x%8x]\n",
+> +			i, reg, mask, val, tmp_val);
