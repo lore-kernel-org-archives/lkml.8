@@ -2,130 +2,140 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9910DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E195C20732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55A9920732
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730212AbgIHU4t (ORCPT
+        id S1729622AbgIHU7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:56:49 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:48199 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730067AbgIHU4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:56:38 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MNbtD-1jv3QV27kh-00P7vm; Tue, 08 Sep 2020 22:56:36 +0200
-Received: by mail-qt1-f182.google.com with SMTP id y11so310649qtn.9;
-        Tue, 08 Sep 2020 13:56:36 -0700 (PDT)
-X-Gm-Message-State: AOAM531ldlojCKnKAwLQ24gQISKK4G7TWR3/GMzc7tHxusKf4pKC95Vk
-        ftZeSB4wfPlosy0ynS5vYU3ScinZlkfb5XT/qgc=
-X-Google-Smtp-Source: ABdhPJw01K4SmzGcD/b5sCr5TVIohl7CD4hX2My20XCnkE0ssRILx71GeRB7UxQ0ChxMfJ5jNEb1Xhh9GXXfgpFYgXA=
-X-Received: by 2002:aed:2414:: with SMTP id r20mr314758qtc.304.1599598594985;
- Tue, 08 Sep 2020 13:56:34 -0700 (PDT)
+        Tue, 8 Sep 2020 16:59:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:50044 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbgIHU7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 16:59:44 -0400
+IronPort-SDR: yZeAniWVEx7njJKXmSX/giRFOck3OuhhcdWjDzjpgywznAFAjZ+zNNKhZT84GV9E3v+1uFPJFA
+ JqQ3mzqCRofw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222430064"
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="222430064"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 13:59:43 -0700
+IronPort-SDR: y6hZDRdeztSDI9qEbOW7puJWdEwvMxonv1KDJltNB5uCftszS+MGKmKHSNxRlJQ8kXrPsfdSYF
+ rHqN8Ota+BTQ==
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="504506013"
+Received: from mschen-mobl2.amr.corp.intel.com (HELO [10.213.174.122]) ([10.213.174.122])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 13:59:42 -0700
+Subject: Re: [PATCH V3] ASoC: Intel: boards: Use FS as nau8825 sysclk in
+ nau88125_* machine
+To:     Radoslaw Biernacki <rad@semihalf.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     Lech Betlej <Lech.Betlej@intel.com>, alsa-devel@alsa-project.org,
+        Todd Broch <tbroch@google.com>,
+        Harshapriya <harshapriya.n@intel.com>,
+        John Hsu <KCHSU0@nuvoton.com>, linux-kernel@vger.kernel.org,
+        michal.sienkiewicz@intel.com, Ben Zhang <benzh@chromium.org>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>, Marcin Wojtas <mw@semihalf.com>,
+        Vamshi Krishna <vamshi.krishna.gopal@intel.com>,
+        Alex Levin <levinale@google.com>
+References: <20200908200314.22771-1-rad@semihalf.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <50db252a-1274-f681-d5e7-e7fba839c0ee@linux.intel.com>
+Date:   Tue, 8 Sep 2020 15:59:40 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200907153701.2981205-1-arnd@arndb.de> <20200907153701.2981205-6-arnd@arndb.de>
- <20200908062002.GD13930@lst.de>
-In-Reply-To: <20200908062002.GD13930@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 8 Sep 2020 22:56:19 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a30Ezn9MhN6YG+c_eCedo=HGp2-uUN6fC218f96TBFK=Q@mail.gmail.com>
-Message-ID: <CAK8P3a30Ezn9MhN6YG+c_eCedo=HGp2-uUN6fC218f96TBFK=Q@mail.gmail.com>
-Subject: Re: [PATCH 5/9] ARM: oabi-compat: rework epoll_wait/epoll_pwait emulation
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux- <kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ONFItD4L9ZUfs9c7cyDdLEcuWb4tDmr1dxAFxBmlvQBgCY+AyBQ
- 5yGSNs4HcpwVXao6W8rKb/wo5lHk9sJbaBaAfKu5QOfmlkdNU9s6H/Fxvyf6/zlZlgm+6x4
- 7sWLlUIXP+Y+4lL7FIOvAUEa9CSUbtRv8UQHr+Aq3qrcpgslls4Zz7TuaRttakGwoVBeobp
- SzdOKPKVLMh57itI2U2sg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Amv1wSt9wms=:C2yWf5pqS1J9wAPWLAOJ7j
- HhNwC4qRElRzIhaA+gd5scasCJXkPld8HiJ2TSEzEO+4Dp/GHK1Eypfu9Vy6BybgIzyd7bG7N
- cegJjIW4JPs5rf5rCE0QGgvDaxcXJIisxn5T/3IXCediq6LRceDzetvkx/5bEnpFR9M3GkMnK
- wTPaJSOJqlfed1H2/oVVjwVY0lOZxGeIqOBlCXZh+sbbi4V0AUm0sgBUcoQMon+Jce1wKeJiK
- tRGtvRy4dzY/ERLhqYbSZ/NTkONkqymgra/Qxn/3JeewSw0ysFhCUcX5LIZ8SleK4HhdziLOI
- O5PvGeVmO1s8MGJMUONT/LdTqEdNB50R8NQy/ayko39jvAsQ/PWnkaRarutKCpm9u8WNC9EgH
- Tz7WBdIA5JTOAk+e4jyhxzC0PMa+iL9BSR96ej0joNhju1DDIWEp7HR/EVitVBsWyrRRc6oVC
- iZXzSmGR2tMYqohqopENFWD5m4HLI6OdLf4ijbdjo6Y6P/PU2Dm4NZ3PInxD2UC3JxjVs/KMV
- v+L+TpevMIRFiLPJpbe5MwusY5KpfZ6rI1XEAmfGVyGBqVJ4T22Dx9KDwxVeAYFIKVSLrGUxz
- ANVdU87H21c/aaEBJnBbvmYOVQPKwh2O89Xnp1frGYti+Ack2YiFxpXdpwPs4wYrs7tAjqY7g
- yBt7G+0ibJyVmymcDIAuk0caY2Y2l6XxJ9FuLW8y+2nKUlD5i/V2ri/Aj7E9sbWmT5IjUu+oM
- FJzrxU2kTN27lh8KVxZIQfpbg/rLRFtQ0XKVdyC+libWL+LcIgPmIP+rk2SJGi/LMEiNT3vP2
- St6zRYGlHJ94IXl1rq5pHefT0zoBNZVL/rffsL/xVBujOv+7T0d8iIDfnK0WFA27SvDbLQn
+In-Reply-To: <20200908200314.22771-1-rad@semihalf.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 8:20 AM Christoph Hellwig <hch@lst.de> wrote:
-> > @@ -264,68 +266,24 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
-> >       return do_epoll_ctl(epfd, op, fd, &kernel, false);
-> >  }
-> >
-> > -static long do_oabi_epoll_wait(int epfd, struct oabi_epoll_event __user *events,
-> > -                            int maxevents, int timeout)
-> > +struct epoll_event __user *
-> > +epoll_put_uevent(__poll_t revents, __u64 data, struct epoll_event __user *uevent)
-> >  {
-> > +     if (in_oabi_syscall()) {
-> > +             struct oabi_epoll_event *oevent = (void __user *)uevent;
-> >
-> > +             if (__put_user(revents, &oevent->events) ||
-> > +                 __put_user(data, &oevent->data))
-> > +                     return NULL;
-> >
-> > +             return (void __user *)uevent+1;
+Sorry, I couldn't resist adding three more comments to improve further:
 
-FWIW, this line needs to be
+> -static int skylake_nau8825_hw_params(struct snd_pcm_substream *substream,
+> -	struct snd_pcm_hw_params *params)
+> +static int skylake_nau8825_trigger(struct snd_pcm_substream *substream, int cmd)
+>   {
+>   	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +	struct snd_pcm_runtime *runtime = substream->runtime;
+>   	struct snd_soc_dai *codec_dai = asoc_rtd_to_codec(rtd, 0);
+> -	int ret;
+> -
+> -	ret = snd_soc_dai_set_sysclk(codec_dai,
+> -			NAU8825_CLK_MCLK, 24000000, SND_SOC_CLOCK_IN);
+> +	int ret = 0;
+>   
+> -	if (ret < 0)
+> -		dev_err(rtd->dev, "snd_soc_dai_set_sysclk err = %d\n", ret);
+> +	switch (cmd) {
+> +	case SNDRV_PCM_TRIGGER_START:
+> +		ret = snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
+> +					     SND_SOC_CLOCK_IN);
 
-         return (void __user *)(oevent+1);
+Maybe a simple comment to explain what this does?
 
-It turns out that while I thought I had tested this already, my earlier
-tests were on the EABI Debian 5 instead of the OABI version of the
-same distro. I reproduced it both ways now and LTP successfully
-found that bug ;-)
+> +		if (ret < 0) {
+> +			dev_err(codec_dai->dev, "can't set FS clock %d\n", ret);
+> +			break;
+> +		}
+> +		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
+> +					  runtime->rate * 256);
+> +		if (ret < 0)
+> +			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
+> +		break;
 
-> I wonder if we'd be better off doing the in_oabi_syscall() branch in
-> the common code.  E.g. rename in_oabi_syscall to in_legacy_syscall and
-> stub it out for all other architectures.  Then just do
->
->         if (in_oabi_syscall()
->                 legacy_syscall_foo_bit();
->         else
->                 normal_syscall_foo_bit();
->
-> in common code, where so far only arm provides
-> legacy_syscall_foo_bit().
+You could replace this by a /* fallthrough */ statement?
 
-I tried out different ways, the first one I had was with an #ifdef in the
-C code that I did not like much.
+> +	case SNDRV_PCM_TRIGGER_RESUME:
+> +		ret = snd_soc_dai_set_pll(codec_dai, 0, 0, runtime->rate,
+> +					  runtime->rate * 256);
+> +		if (ret < 0)
+> +			dev_err(codec_dai->dev, "can't set FLL: %d\n", ret);
+> +		break;
+> +	}
 
-Moving the different code path into common code would avoid that
-#ifdef but also put the rather obscure oabi-compat code into a
-much more prominent location. I'd prefer to keep it out of there
-as much as possible and hope we don't need to do this anywhere
-else. x86-32 has some similar issues with struct layout, but that
-already goes through the normal compat layer on 64-bit kernels.
+> +static int __maybe_unused skylake_nau8825_resume_post(struct snd_soc_card *card)
+> +{
+> +	struct snd_soc_dai *codec_dai;
+> +
+> +	codec_dai = snd_soc_card_get_codec_dai(card, SKL_NUVOTON_CODEC_DAI);
+> +	if (!codec_dai) {
+> +		dev_err(card->dev, "Codec dai not found\n");
+> +		return -EIO;
+> +	}
+> +
+> +	dev_dbg(codec_dai->dev, "playback_active:%d playback_widget->active:%d codec_dai->rate:%d\n",
+> +		codec_dai->stream_active[SNDRV_PCM_STREAM_PLAYBACK],
+> +		codec_dai->playback_widget->active,
+> +		codec_dai->rate);
+> +
+> +	if (codec_dai->stream_active[SNDRV_PCM_STREAM_PLAYBACK] &&
+> +	    codec_dai->playback_widget->active)
+> +		snd_soc_dai_set_sysclk(codec_dai, NAU8825_CLK_FLL_FS, 0,
+> +				       SND_SOC_CLOCK_IN);
 
-> Tons of long lines again in this patch..
+And that part is also worthy of a comment, e.g. why not do this as part 
+of the TRIGGER_RESUME and why only for playback?
 
-Fixed now.
 
-       Arnd
+> --- a/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
+> +++ b/sound/soc/intel/boards/skl_nau88l25_ssm4567.c
+
+same comments for this other machine driver.
+
