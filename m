@@ -2,106 +2,207 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38629C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F840C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22FF2087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BA02080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ia4CnDqc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="acYgkvgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgIHRAw (ORCPT
+        id S1731883AbgIHRA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:00:52 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54858 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731843AbgIHRAM (ORCPT
+        Tue, 8 Sep 2020 13:00:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36010 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731857AbgIHRAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:00:12 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088H09L0044873;
-        Tue, 8 Sep 2020 12:00:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599584409;
-        bh=uXZMCP36lOtJZX1b2XkDr6j9kDkZTjkNJiSHuJFdBJs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ia4CnDqcIX6sj3iaKAVh5DGFks7W9LnxsOhJrTu0F3X6dN+t1BYeFG08uGCza96t4
-         I3wCJcfIysf03yF7SGTUH4hufmi7XHVQWnjJmf7tqCoaJQDvY6XagUkwFEbdDsOoS2
-         o5QFAnCTVu3raAUKaYutCOfcgxlrI/ZdSMCm9a1o=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088H09iC115505;
-        Tue, 8 Sep 2020 12:00:09 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
- 2020 12:00:09 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 8 Sep 2020 12:00:09 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088H078A033059;
-        Tue, 8 Sep 2020 12:00:08 -0500
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Sekhar Nori <nsekhar@ti.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Suman Anna <s-anna@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [PATCH v2 2/4] arm64: dts: ti: k3-j7200-main: add main navss cpts node
-Date:   Tue, 8 Sep 2020 19:59:40 +0300
-Message-ID: <20200908165942.32368-3-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200908165942.32368-1-grygorii.strashko@ti.com>
-References: <20200908165942.32368-1-grygorii.strashko@ti.com>
+        Tue, 8 Sep 2020 13:00:13 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12AFC061573;
+        Tue,  8 Sep 2020 10:00:12 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t7so32935pjd.3;
+        Tue, 08 Sep 2020 10:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iKuzfMMNhC5TJ+c7Fua7oTap7vymNcWtBzASKBpHXMA=;
+        b=acYgkvgABuHjEKMgfiqkimbPBka+X6yG3/OejaxPCBtLpcyAcsbqyhwvQqlgjDZOA0
+         8EvIyY76gDQcmL5FSdZTxH08ZQQCdkoO/ZPM/5KPHr3sL8UoAUz/fAko3p2UsI2wtPDZ
+         xo3WEQ66kj9+ies/7OFNVu6Q/CpoW3KVz9IekekMO/3U6YNDz2yLRJMAC06qLPjFe4Qs
+         TnFKKIn4TYbvJTMUAtOOJTHYbQA+w9lb3ARvzD4YtpDkyb/1J8kVHIokOFxMa1JeG8Mt
+         mb7yzlkuWQ4ia5lDgklbNZmvq/8y3I5Q07XiOGjiA9XzIaQzj3LpsUBtOFYFySK1FvN4
+         NiLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iKuzfMMNhC5TJ+c7Fua7oTap7vymNcWtBzASKBpHXMA=;
+        b=mhiq/4pKYeJsNNqIDR9+lxXtMDLk4ZH6sn+stGajsuxh9RIDYetwYyv6Y9yIsK8/wc
+         TU4ZuwKdFOQLetUBRgnWx5CfiostX/DtdfIv4X2yJFP966XESnaJRPHxO37R5AOYPmd1
+         9Edn6I3YgGKa31JQUc/txv1jbaaRegjP8cc0NB6qHOsFNZkVjkYv70gu+WCr6s7dGe4e
+         tbHTGrpsdvX2h7QMk/mWWZx6Mwn1M7wq/XC2ft+XkmRixbw2jX144eT0SJWusNRdnglq
+         g7s4U43gXslG/XotuWHWdWny64o8dgn0PaVomK6HG4kHlnshtuhkUAtPI1YFjrikjqX9
+         l2XA==
+X-Gm-Message-State: AOAM531nswP5pcZpgtdPzc7GTZyRwMBpf0qjVWAPUVSc4c7iIwirNlQr
+        +9wWjr8TzqMbWzAAVuPN89E=
+X-Google-Smtp-Source: ABdhPJxDDiTHs3utTJZoGKbwiCgqc0v2PDE0cUAb7ZeCzLBsKSuvjEX8RF0+OmgJJ14cK7JfUAlf+w==
+X-Received: by 2002:a17:90a:ed8e:: with SMTP id k14mr73895pjy.178.1599584412423;
+        Tue, 08 Sep 2020 10:00:12 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id a10sm18845942pfn.219.2020.09.08.09.59.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:00:11 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:28:04 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 02/15] scsi: aacraid: use generic power management
+Message-ID: <20200908165804.GC9948@gmail.com>
+References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+ <20200720133427.454400-3-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200720133427.454400-3-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for Main NAVSS CPTS module.
-
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-index cc4ff380a7bc..822c062e25c8 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-@@ -117,6 +117,18 @@
- 						<0x0c>; /* RX_UHCHAN */
- 			ti,sci-rm-range-rflow = <0x00>; /* GP RFLOW */
- 		};
-+
-+		cpts@310d0000 {
-+			compatible = "ti,j721e-cpts";
-+			reg = <0x0 0x310d0000 0x0 0x400>;
-+			reg-names = "cpts";
-+			clocks = <&k3_clks 201 1>;
-+			clock-names = "cpts";
-+			interrupts-extended = <&main_navss_intr 391>;
-+			interrupt-names = "cpts";
-+			ti,cpts-periodic-outputs = <6>;
-+			ti,cpts-ext-ts-inputs = <8>;
-+		};
- 	};
- 
- 	main_pmx0: pinmux@11c000 {
--- 
-2.17.1
-
+On Mon, Jul 20, 2020 at 07:04:15PM +0530, Vaibhav Gupta wrote:
+> With legacy PM hooks, it was the responsibility of a driver to manage PCI
+> states and also the device's power state. The generic approach is to let
+> the PCI core handle the work.
+> 
+> PCI core passes "struct device*" as an argument to the .suspend() and
+> .resume() callbacks.
+> 
+> Driver was using PCI helper functions like pci_save/restore_state(),
+> pci_disable/enable_device(), pci_set_power_state() and pci_enable_wake().
+> They should not be invoked by the driver.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/scsi/aacraid/linit.c | 34 ++++++++--------------------------
+>  1 file changed, 8 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+> index a308e86a97f1..1e44868ee953 100644
+> --- a/drivers/scsi/aacraid/linit.c
+> +++ b/drivers/scsi/aacraid/linit.c
+> @@ -1910,11 +1910,9 @@ static int aac_acquire_resources(struct aac_dev *dev)
+>  
+>  }
+>  
+> -#if (defined(CONFIG_PM))
+> -static int aac_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused aac_suspend(struct device *dev)
+>  {
+> -
+> -	struct Scsi_Host *shost = pci_get_drvdata(pdev);
+> +	struct Scsi_Host *shost = dev_get_drvdata(dev);
+>  	struct aac_dev *aac = (struct aac_dev *)shost->hostdata;
+>  
+>  	scsi_host_block(shost);
+> @@ -1923,29 +1921,16 @@ static int aac_suspend(struct pci_dev *pdev, pm_message_t state)
+>  
+>  	aac_release_resources(aac);
+>  
+> -	pci_set_drvdata(pdev, shost);
+> -	pci_save_state(pdev);
+> -	pci_disable_device(pdev);
+> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+> -
+>  	return 0;
+>  }
+>  
+> -static int aac_resume(struct pci_dev *pdev)
+> +static int __maybe_unused aac_resume(struct device *dev)
+>  {
+> -	struct Scsi_Host *shost = pci_get_drvdata(pdev);
+> +	struct Scsi_Host *shost = dev_get_drvdata(dev);
+>  	struct aac_dev *aac = (struct aac_dev *)shost->hostdata;
+> -	int r;
+>  
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	pci_enable_wake(pdev, PCI_D0, 0);
+> -	pci_restore_state(pdev);
+> -	r = pci_enable_device(pdev);
+> +	device_wakeup_disable(dev);
+>  
+> -	if (r)
+> -		goto fail_device;
+> -
+> -	pci_set_master(pdev);
+>  	if (aac_acquire_resources(aac))
+>  		goto fail_device;
+>  	/*
+> @@ -1960,10 +1945,8 @@ static int aac_resume(struct pci_dev *pdev)
+>  fail_device:
+>  	printk(KERN_INFO "%s%d: resume failed.\n", aac->name, aac->id);
+>  	scsi_host_put(shost);
+> -	pci_disable_device(pdev);
+>  	return -ENODEV;
+>  }
+> -#endif
+>  
+>  static void aac_shutdown(struct pci_dev *dev)
+>  {
+> @@ -2108,15 +2091,14 @@ static struct pci_error_handlers aac_pci_err_handler = {
+>  	.resume			= aac_pci_resume,
+>  };
+>  
+> +static SIMPLE_DEV_PM_OPS(aac_pm_ops, aac_suspend, aac_resume);
+> +
+>  static struct pci_driver aac_pci_driver = {
+>  	.name		= AAC_DRIVERNAME,
+>  	.id_table	= aac_pci_tbl,
+>  	.probe		= aac_probe_one,
+>  	.remove		= aac_remove_one,
+> -#if (defined(CONFIG_PM))
+> -	.suspend	= aac_suspend,
+> -	.resume		= aac_resume,
+> -#endif
+> +	.driver.pm	= &aac_pm_ops,
+>  	.shutdown	= aac_shutdown,
+>  	.err_handler    = &aac_pci_err_handler,
+>  };
+> -- 
+> 2.27.0
+> 
+.
