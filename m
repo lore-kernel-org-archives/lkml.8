@@ -2,128 +2,131 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7900FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E13B2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B696B2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592784;
+	bh=mNk6PcyeburpkrV3oRT9xxEI/Yh8NvPvsVWjMvkdACs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PUqZtcnvFF8lkZJJ/qnbqQow4iIjbN4mHsu5NcbvoLnI9C+OYvfz5rzqnr6d0meHQ
+	 caGEKK9H9/2mxq5Ehwl7AEtgTeKhe/yOCxW2PXH5nA4SsA9izSRjdIaEC2qYW0y5nZ
+	 i/RU8Al9Bli/1eQGTsN4WS9Qv1+yBSLvMREj5yxk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732038AbgIHTTZ (ORCPT
+        id S1732014AbgIHTSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:19:25 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43863 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732010AbgIHTSn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 15:18:43 -0400
-Received: by mail-pf1-f193.google.com with SMTP id f18so11772425pfa.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:18:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VNtUGfwNy6biI3vtFA0ivt71Ld8XhVWKn22zfdXb+l4=;
-        b=pyeRjrZIXM6e61vVvzDZFenxEdI48BbaYXEu7vnlzALHjuA8GrQC9FOyUDKI1UADtV
-         MkDjbRLe8C49NNU+5OoblHtXE+iy0LzTjHlLMYtmZJ7cQxyMbJRxABAV0bbJa3c89z6w
-         aIW3pQkOM6585xLTdPfTZB2MgWo5iLOruJGEThZUeaXBUu7yT/HlDGvolwdz3Dw3d3RH
-         ClrozoSXB+t4Fjk4W3udQlbVbQ98sNrkJn+ZMf/Gn4iEtK9OUdsHxFurqFo0HhER+70C
-         vlCJ2SXVaRxMpNDl2iohMkmkzyGNidW3aE2mFcdSsFIOFMg5y9Qm6RW3nDl/hyxXGpU4
-         w07A==
-X-Gm-Message-State: AOAM530U/NCtNl4/MT2I45sFgparDMTvjzZgyZt0TH90w22TnO86JUTq
-        +/biiC4jw2qglWpfxvp+F/2gDPNCGwQ=
-X-Google-Smtp-Source: ABdhPJzlx+4x/a9RJHeCc3UiL9N681GCAlZUOZI9zdgDvmujeGHrJ3xK8y0f/xMsO+5xcoHEGPkkcQ==
-X-Received: by 2002:a62:f904:: with SMTP id o4mr285777pfh.14.1599592723078;
-        Tue, 08 Sep 2020 12:18:43 -0700 (PDT)
-Received: from sultan-box.localdomain ([2607:fb90:80c7:1f9e:6b7e:e1b1:f946:74e])
-        by smtp.gmail.com with ESMTPSA id 194sm201124pfy.44.2020.09.08.12.18.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 12:18:42 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 12:18:38 -0700
-From:   Sultan Alsawaf <sultan@kerneltoast.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-Message-ID: <20200908191838.GA2014@sultan-box.localdomain>
-References: <20200907094843.1949-1-Jason@zx2c4.com>
- <20200907100647.GB10657@zn.tnic>
- <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
- <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
- <20200908172558.GG25236@zn.tnic>
- <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
- <20200908173656.GI25236@zn.tnic>
- <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
- <20200908180112.GK25236@zn.tnic>
+Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731136AbgIHQCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:02:52 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8552824631;
+        Tue,  8 Sep 2020 15:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579556;
+        bh=mNk6PcyeburpkrV3oRT9xxEI/Yh8NvPvsVWjMvkdACs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UDDZfNgQqAOUrvzKdfMWaJJKl+vrb8+egSGtdeSbG7Xxx7gZMaxD3Vd1bM1w5JHX8
+         L1ZrUS/2hgjpfyj09wOw5+J9EhpcjsBD27K90wE+XG7Z/aL9AdgewIpYQpU15Gz5+j
+         7Cw30OXmSySrQ0dMS0v7QNhmSepCFizPtPwNWUBg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 109/186] x86, fakenuma: Fix invalid starting node ID
+Date:   Tue,  8 Sep 2020 17:24:11 +0200
+Message-Id: <20200908152246.918394281@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908180112.GK25236@zn.tnic>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 08:01:12PM +0200, Borislav Petkov wrote:
-> On Tue, Sep 08, 2020 at 07:42:12PM +0200, Jason A. Donenfeld wrote:
-> > Are you prepared to track down all the MSRs that might maybe do
-> > something naughty?
-> 
-> I'm not prepared - that's why this MSR filtering. To block *all* direct
-> MSR accesses from userspace in the future.
-> 
-> > Does `dd` warn when you run `dd if=/dev/zero of=/dev/sda`?
-> 
-> Yah, because that's the same as bricking your hardware. Geez.
-> 
-> > Probably not possible. Optimal values are related to the "silicon
-> > lottery" that occurs when you buy a new CPU. Different optimal values
-> > for different individual chips.
-> 
-> Let's wait for what Srinivas finds out. I'd let Intel decide what they
-> wanna do.
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
+From: Huang Ying <ying.huang@intel.com>
 
-I'd like to point out that on Intel's recent 14nm parts, undervolting is not so
-much for squeezing every last drop of performance out of the SoC as it is for
-necessity.
+[ Upstream commit ccae0f36d500aef727f98acd8d0601e6b262a513 ]
 
-I have an i9-9880H laptop which, at 4000 MHz on all CPUs while compiling a
-kernel, uses 107W with the stock configuration. Upon undervolting, this figure
-goes down to 88W, a ~22% reduction in power consumption at the maximum pstate.
-The point of this is not primarily to reduce the power footprint of my machine,
-but to get the thermals of this CPU under control. Without undervolting, my
-i9-9880H is quite useless, and quickly reaches 100 degC with the fans at max
-speed when placed under load.
+Commit:
 
-The 22% reduction in power consumption also makes it clear that these parts use
-very heavy-handed voltages out-of-the-box. I consider this to be a defect in the
-part; I've never encountered any other CPUs that run, by default, at a voltage
-so high that I could achieve a 22% reduction in power consumption by
-undervolting.
+  cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
 
-I've tested multiple 14nm Intel CPUs, 8th gen and above, and they all exhibit
-this behavior. On my i5-8265U laptop, compiling a kernel causes the CPU to hit
-its 35W power limit and run at about 3300 MHz instead of its maximum all-core
-frequency of 3700 MHz. After undervolting, when compiling a kernel, my i5-8265U
-runs at 3700 MHz and uses 27W; not only was power consumption reduced by ~30%,
-but also performance was improved. Not to mention, my i5-8265U laptop's thermal
-design cannot dissipate 35W for very long, but it can sustain 27W without
-reaching 100 degC quite well.
+uses "-1" as the starting node ID, which causes the strange kernel log as
+follows, when "numa=fake=32G" is added to the kernel command line:
 
-If Intel's recent 14nm CPUs didn't guzzle power, then we would have no need to
-undervolt. But they do, and here we are.
+    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
+    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
+    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
+    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
+    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
 
-Sultan
+And finally the kernel crashes:
+
+    BUG: Bad page state in process swapper  pfn:00011
+    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
+    failed to read mapping contents, not a valid kernel address?
+    flags: 0x5(locked|uptodate)
+    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
+    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
+    page dumped because: page still charged to cgroup
+    page->mem_cgroup:000055cd7e44b510
+    Modules linked in:
+    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
+    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+    Call Trace:
+     dump_stack+0x57/0x80
+     bad_page.cold+0x63/0x94
+     __free_pages_ok+0x33f/0x360
+     memblock_free_all+0x127/0x195
+     mem_init+0x23/0x1f5
+     start_kernel+0x219/0x4f5
+     secondary_startup_64+0xb6/0xc0
+
+Fix this bug via using 0 as the starting node ID.  This restores the
+original behavior before cc9aec03e58f.
+
+[ mingo: Massaged the changelog. ]
+
+Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
+Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200904061047.612950-1-ying.huang@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/mm/numa_emulation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
+index c5174b4e318b4..683cd12f47938 100644
+--- a/arch/x86/mm/numa_emulation.c
++++ b/arch/x86/mm/numa_emulation.c
+@@ -321,7 +321,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
+ 					      u64 addr, u64 max_addr, u64 size)
+ {
+ 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
+-			0, NULL, NUMA_NO_NODE);
++			0, NULL, 0);
+ }
+ 
+ static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+-- 
+2.25.1
+
+
+
