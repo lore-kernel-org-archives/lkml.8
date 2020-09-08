@@ -2,148 +2,140 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73278C2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC6EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D19B2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBB02137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="N+Mcjpgu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XuW99k4d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbgIHTfB (ORCPT
+        id S1732330AbgIHTfG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54232 "EHLO
+        Tue, 8 Sep 2020 15:35:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730898AbgIHP5a (ORCPT
+        with ESMTP id S1730900AbgIHP5a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:57:30 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA59C0610E4
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:12:46 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id z23so22701851ejr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:12:46 -0700 (PDT)
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9412C0612A5;
+        Tue,  8 Sep 2020 06:06:59 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mm21so8257754pjb.4;
+        Tue, 08 Sep 2020 06:06:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3sHaSQTtEpVgxZUhYIXCbmOjlv1gJeOQFw7S/Ryj3Pc=;
-        b=N+McjpguiDc1n2EPL915Ma7152SAViSTeH5vg+8E2QpOulQuWlPUZ3LyTfQVBU+7m6
-         +M9vLe8Pja0QusLmo+vTDbDgyyLzhiOiEypL8xPNu6N3QXXgG3MrnudvKDgVjprnS0Hm
-         QCzY2WSk02O3OpNLKbcRu6PBeXb1bqiUtfIPErkmpkBjggnmbeJCXAwk/9J8LEGHiZ0o
-         QfRVvy6MUF4lPe/vMD8uXnFrvsoq+0iADzFL+EOuwtcNnRrwblYGBN2ZDZUda4lWArS7
-         +4e+KhcoqGkTtd6H3/OcOsFq7Ahnhb0q1JCtMoBoQ4E31Yirm4gnEqXYhX4EyIPuIGOB
-         FHmg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=HhJcpAM1sVTshyBaZ8DqM82F52ye06r+Vvl0X2hVcWg=;
+        b=XuW99k4dYGsFdgmEUUEsLFwx1KigPLt2dJlA7ZkVksTOQQy22ILceeLCzANYHRnNIU
+         7leZtuDfb1Ts3bg0g2Df1SQw2lLMQvu0mIy84RxNiRGYVStyZiv+KiQKTp+AoUOPOZQU
+         lfuEL8MyBMJCUO2rIluMXL8lWslBK2HnPxQD4v9sxuia0/xXiYcKa/3K78xmzxn6h2dp
+         QAyMt5JR0Vs1VUf5S6nSoFo0uCah2siU9L0RG63uURRc2XyL/I0DIOWn+I8Ki5OiAt/1
+         Ybzc4/rm8+T77s9rLeIQHUhVe9peVJrPvkEtyo2BSX26WVEOpdcpfucvbiv/LPE0EU7D
+         IdQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3sHaSQTtEpVgxZUhYIXCbmOjlv1gJeOQFw7S/Ryj3Pc=;
-        b=VQXWL3h+zTeChTSEhnKkzDAwAGNfrPzelcihCZhT58+h0uXUGoU+aeNGuP6iW3iy6l
-         g5ALsg03ZDRS9Wn6AR7ZM+23j/TR8gVTsLEO512RXRTQcVY4bt5JnMTbovbMolhhHBgX
-         rMvE+xom0B7ibf20TLZf9m8rZbTqctGyIZDDwkH1dVL6P44S0i1OWrVgRefqK+X46drR
-         wGcttDb8zQj4AntGnBHjLjQIIReoitpvAkCVxLFPRcTq87Z3AVMAN9kKAJnwCGQ2YVjk
-         ZQ8N1p9Zz6poMXz8ZNFPq0iTHTt8zgXiMA5IYA3DW5w2LRy/sKJl4aTpONECTuTxHuoT
-         H4Vw==
-X-Gm-Message-State: AOAM532cn7obhTB7dEOeGqz8nnuP3gMINTm54wstYl3wE74gY1/9lEw+
-        os8NF+bmgp8FYX7VVCXhe2bBtQpm0GMUY5P3
-X-Google-Smtp-Source: ABdhPJz+/Ym87EdWBFw9jeyyDYLiDue8fyg2iZF9/6qckGGEuWKGDmW4AoA72uFBjuToGO5yEP8i5Q==
-X-Received: by 2002:a17:906:2b06:: with SMTP id a6mr25615230ejg.209.1599574365078;
-        Tue, 08 Sep 2020 07:12:45 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id w14sm17826958ejn.36.2020.09.08.07.12.44
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HhJcpAM1sVTshyBaZ8DqM82F52ye06r+Vvl0X2hVcWg=;
+        b=NH2ZmAzkYzh2gRegwVfNlZ02D/jsJ8LHjJkXF+SDlCee/7p3u7itVavFwfG6TC/JtO
+         k0xYFyqDlDEKuu/3Ijx5JcJg/4hLFC4jKAk/Za5FckKf1uZIAxykAinU0UxZn+Pi7s0R
+         WvymA2yyATyEHUvN0SB5kmOJmC81JiztxOalVNah6cH3UV5XNhKSgOeRjF0kFGZazn5I
+         AVqjomb1Knuf39g4XcuJObEhfotx5HgwROsDxy0gj2fYN0rdc52DmFFTtjeLkMhjTv5q
+         pVkxhkzjh43rh3xRsg43va1Klq6rv29oxGXV1jc1fGjo9f75N/sK6GAkepW+d9CEi1zJ
+         F/Sw==
+X-Gm-Message-State: AOAM532lUYzCKqwYV/TZcq0ANGqwFDXNSwcrngQO3jS0JSMGbEOv3nwR
+        QiO422eGPE3tAbI+Gk49KggFLwnKAu0OFG8R
+X-Google-Smtp-Source: ABdhPJzvwq5L6QdMnyzEAjubzxihNYyRFloIuvT+kbZTTjPyszhhTLEBecg0Q+TjP/DLjV1G3oemFw==
+X-Received: by 2002:a17:90b:208:: with SMTP id fy8mr3958774pjb.153.1599570418913;
+        Tue, 08 Sep 2020 06:06:58 -0700 (PDT)
+Received: from haolee.github.io ([2600:3c01::f03c:91ff:fe02:b162])
+        by smtp.gmail.com with ESMTPSA id 13sm18498146pfp.3.2020.09.08.06.06.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 07:12:44 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 16:12:43 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Aya Levin <ayal@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        Moshe Shemesh <moshe@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v1 1/4] devlink: Wrap trap related lists and
- ops in trap_mngr
-Message-ID: <20200908141243.GO2997@nanopsycho.orion>
-References: <1599060734-26617-1-git-send-email-ayal@mellanox.com>
- <1599060734-26617-2-git-send-email-ayal@mellanox.com>
+        Tue, 08 Sep 2020 06:06:58 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:06:56 +0000
+From:   Hao Lee <haolee.swjtu@gmail.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs: Eliminate a local variable to make the code more
+ clear
+Message-ID: <20200908130656.GC22780@haolee.github.io>
+References: <20200729151740.GA3430@haolee.github.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1599060734-26617-2-git-send-email-ayal@mellanox.com>
+In-Reply-To: <20200729151740.GA3430@haolee.github.io>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wed, Sep 02, 2020 at 05:32:11PM CEST, ayal@mellanox.com wrote:
->Bundle the trap related lists: trap_list, trap_group_list and
->trap_policer_list and trap ops like: trap_init, trap_fini,
->trap_action_set... together in trap_mngr. This will be handy in the
->coming patches in the set introducing traps in devlink port context.
->With trap_mngr, code reuse is much simpler.
->
->Signed-off-by: Aya Levin <ayal@mellanox.com>
->---
-> drivers/net/ethernet/mellanox/mlxsw/core.c |   4 +
-> include/net/devlink.h                      |  59 ++++---
-> net/core/devlink.c                         | 255 +++++++++++++++++------------
+ping
 
-You need to split this. You do at least 2 separate things in one patch.
-Please check it.
-
-
-> 3 files changed, 188 insertions(+), 130 deletions(-)
->
->diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
->index 08d101138fbe..97460f47e537 100644
->--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
->+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
->@@ -1285,6 +1285,9 @@ static const struct devlink_ops mlxsw_devlink_ops = {
-> 	.sb_occ_tc_port_bind_get	= mlxsw_devlink_sb_occ_tc_port_bind_get,
-> 	.info_get			= mlxsw_devlink_info_get,
-> 	.flash_update			= mlxsw_devlink_flash_update,
->+};
->+
->+static const struct devlink_trap_ops mlxsw_devlink_traps_ops = {
-> 	.trap_init			= mlxsw_devlink_trap_init,
-> 	.trap_fini			= mlxsw_devlink_trap_fini,
-> 	.trap_action_set		= mlxsw_devlink_trap_action_set,
->@@ -1321,6 +1324,7 @@ __mlxsw_core_bus_device_register(const struct mlxsw_bus_info *mlxsw_bus_info,
-> 			err = -ENOMEM;
-> 			goto err_devlink_alloc;
-> 		}
->+		devlink_traps_ops(devlink, &mlxsw_devlink_traps_ops);
-> 	}
+On Wed, Jul 29, 2020 at 03:21:28PM +0000, Hao Lee wrote:
+> The dentry local variable is introduced in 'commit 84d17192d2afd ("get
+> rid of full-hash scan on detaching vfsmounts")' to reduce the length of
+> some long statements for example
+> mutex_lock(&path->dentry->d_inode->i_mutex). We have already used
+> inode_lock(dentry->d_inode) to do the same thing now, and its length is
+> acceptable. Furthermore, it seems not concise that assign path->dentry
+> to local variable dentry in the statement before goto. So, this function
+> would be more clear if we eliminate the local variable dentry.
 > 
-> 	mlxsw_core = devlink_priv(devlink);
->diff --git a/include/net/devlink.h b/include/net/devlink.h
->index 8f3c8a443238..d387ea5518c3 100644
->--- a/include/net/devlink.h
->+++ b/include/net/devlink.h
->@@ -21,6 +21,13 @@
-> #include <linux/xarray.h>
+> The function logic is not changed.
 > 
-> struct devlink_ops;
->+struct devlink_trap_ops;
->+struct devlink_trap_mngr {
-
-"Mngr" is odd. This is not a manager. Just a common place to store
-trap-related things. Perhaps just "devlink_traps"?
-
-
->+	struct list_head trap_list;
->+	struct list_head trap_group_list;
->+	struct list_head trap_policer_list;
->+	const struct devlink_trap_ops *trap_ops;
->+};
-
-[...]
-
+> Signed-off-by: Hao Lee <haolee.swjtu@gmail.com>
+> ---
+>  fs/namespace.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 4a0f600a3328..fcb93586fcc9 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2187,20 +2187,19 @@ static int attach_recursive_mnt(struct mount *source_mnt,
+>  static struct mountpoint *lock_mount(struct path *path)
+>  {
+>  	struct vfsmount *mnt;
+> -	struct dentry *dentry = path->dentry;
+>  retry:
+> -	inode_lock(dentry->d_inode);
+> -	if (unlikely(cant_mount(dentry))) {
+> -		inode_unlock(dentry->d_inode);
+> +	inode_lock(path->dentry->d_inode);
+> +	if (unlikely(cant_mount(path->dentry))) {
+> +		inode_unlock(path->dentry->d_inode);
+>  		return ERR_PTR(-ENOENT);
+>  	}
+>  	namespace_lock();
+>  	mnt = lookup_mnt(path);
+>  	if (likely(!mnt)) {
+> -		struct mountpoint *mp = get_mountpoint(dentry);
+> +		struct mountpoint *mp = get_mountpoint(path->dentry);
+>  		if (IS_ERR(mp)) {
+>  			namespace_unlock();
+> -			inode_unlock(dentry->d_inode);
+> +			inode_unlock(path->dentry->d_inode);
+>  			return mp;
+>  		}
+>  		return mp;
+> @@ -2209,7 +2208,7 @@ static struct mountpoint *lock_mount(struct path *path)
+>  	inode_unlock(path->dentry->d_inode);
+>  	path_put(path);
+>  	path->mnt = mnt;
+> -	dentry = path->dentry = dget(mnt->mnt_root);
+> +	path->dentry = dget(mnt->mnt_root);
+>  	goto retry;
+>  }
+>  
+> -- 
+> 2.24.1
+> 
