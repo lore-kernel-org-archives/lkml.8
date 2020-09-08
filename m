@@ -2,78 +2,152 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9F4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D21C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AEAB207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BECF4207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="h7N4rGvP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zsrVpoXo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yqWIqRbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731729AbgIHUJy (ORCPT
+        id S1730851AbgIHUKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:09:54 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:4303 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729457AbgIHPSh (ORCPT
+        Tue, 8 Sep 2020 16:10:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729785AbgIHPQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:18:37 -0400
-X-UUID: 51970f2d630042fabf15de668d72185e-20200908
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=ZedMZfUFgLvexz8GKyj+hsZdPazQ9EjrZfeYaT0ZaBc=;
-        b=h7N4rGvPg3n4HrBGWAOOsN+Y5SXtHE+F+IhfvmOdQ45i60texspG7e/jP7W7Vod49lsgfaTq9VXBFo24W8gPR+W7MMYF5bdB9ZnHGAfDTNrLYeiYO+ZlYCK/2R/ZcVPADF1mHnUYTkXAqhrdBnzK8/oA+yA2CPc3c9ips0asMfg=;
-X-UUID: 51970f2d630042fabf15de668d72185e-20200908
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <fengping.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.14 Build 0819 with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1609223649; Tue, 08 Sep 2020 20:08:27 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 8 Sep 2020 20:08:24 +0800
-Received: from localhost.localdomain (10.15.20.246) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 8 Sep 2020 20:08:23 +0800
-From:   Fengping Yu <fengping.yu@mediatek.com>
-To:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-input@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v18] Add matrix keypad driver support for Mediatek SoCs 
-Date:   Tue, 8 Sep 2020 20:03:46 +0800
-Message-ID: <20200908120349.1685-1-fengping.yu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 8 Sep 2020 11:16:22 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73D0AC00459A;
+        Tue,  8 Sep 2020 08:06:16 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 17:06:12 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1599577574;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t0xWEdkJYmjRskXLYyHk2uavdx98cfyorxmAk0N3TxQ=;
+        b=zsrVpoXooUj5pWkLJvETQqtS6gTvhVilchXveVcnplPj50R4uAEX5pC2mbFAZ9NVwPwWYn
+        3OGhIozIaVwaskUDb05DiWjSbkcAex40rGFmrDdRst++XuYWd5GMl/r8OD/WUNbMJg7E8I
+        UK1gxthhAepVtZgD0mb9232T+RxhIfSQMLvgEiK5AoTrp5SAbEiCeW6auHdjDprjlV7HP0
+        fWXWiY1Drc8xXESZ3vW9MpFbO07qG7RdDsDML5I1OpUbweFfRwC2u8fVovKY4rrGlOZTJr
+        3pQe82IGnXAfM1UaINcsrwINDxOuptk4T/mK0W0t0ELYuHeNblEuSIJxtG9+9A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1599577574;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=t0xWEdkJYmjRskXLYyHk2uavdx98cfyorxmAk0N3TxQ=;
+        b=yqWIqRbNY6439Nztjozsb47laPF1yKXWv3y43MElehArGG8Q8xTaCwqoOO6QO8pjXaa1V7
+        XRGXAbKkISg6jZBg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Mike Galbraith <efault@gmx.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: v5.9-rc3-rt3 boot time networking lockdep splat
+Message-ID: <20200908150612.6qlygag7e7pzhr22@linutronix.de>
+References: <20200902155557.h2wl2qpfn2rwsofw@linutronix.de>
+ <46a2b89ec8d953a4be18c7389c7d8c66310a7ff0.camel@gmx.de>
+ <20200908121902.zlfd3balosnu7ies@linutronix.de>
+ <3471761a379062a474ba32f9d0157eb3020244cf.camel@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3471761a379062a474ba32f9d0157eb3020244cf.camel@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDaGFuZ2Ugc2luY2UgdjE3Og0KLSBtb2RpZnkgaG93IHRvIGdldCBrZXljb2RlIGluIGtleXBh
-ZCBpbnRlcnJ1cHQgaGFuZGxlcg0KLSByZXBsYWNlIHZhcmlhYmxlIHJldCBhcyBlcnJvciBpbiBw
-cm9iZSBmdW5jdGlvbg0KLSB1cGRhdGUga2V5cGFkLCBudW0tY29sdW1ucyBhbmQga2V5cGFkLCBu
-dW0tcm93cyBkZXNjcmlwdGlvaW4NCg0KZmVuZ3BpbmcueXUgKDMpOg0KICBkdC1iaW5kaW5nczog
-QWRkIGJpbmRpbmdzIGZvciBNZWRpYXRlayBtYXRyaXgga2V5cGFkDQogIGRyaXZlcnM6IGlucHV0
-OmtleWJvYXJkOiBBZGQgbXRrIGtleXBhZCBkcml2ZXINCiAgY29uZmlnczogZGVmY29uZmlnOiBB
-ZGQgQ09ORklHX0tFWUJPQVJEX01US19LUEQ9bQ0KDQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aW5wdXQvbXRrLWtwZC55YW1sICAgIHwgIDgzICsrKysrKysNCiBhcmNoL2FybTY0L2NvbmZpZ3Mv
-ZGVmY29uZmlnICAgICAgICAgICAgICAgICAgfCAgIDEgKw0KIGRyaXZlcnMvaW5wdXQva2V5Ym9h
-cmQvS2NvbmZpZyAgICAgICAgICAgICAgICB8ICAxMSArDQogZHJpdmVycy9pbnB1dC9rZXlib2Fy
-ZC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICAxICsNCiBkcml2ZXJzL2lucHV0L2tleWJvYXJk
-L210ay1rcGQuYyAgICAgICAgICAgICAgfCAyMTggKysrKysrKysrKysrKysrKysrDQogNSBmaWxl
-cyBjaGFuZ2VkLCAzMTQgaW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvbXRrLWtwZC55YW1sDQogY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGRyaXZlcnMvaW5wdXQva2V5Ym9hcmQvbXRrLWtwZC5jDQoNCi0tDQoyLjE4LjAN
-Cg0K
+On 2020-09-08 16:56:20 [+0200], Mike Galbraith wrote:
+> On Tue, 2020-09-08 at 14:19 +0200, Sebastian Andrzej Siewior wrote:
+> >
+> > This has nothing to do with the bridge but with the fact that you use a
+> > non standard queue class (something else than pfifo_fast).
+> 
+> That must be SUSE, I don't muck about in network land.  I downloaded a
+> whole library of RFCs decades ago, but turns out that one of those is
+> all the bedtime story you'll ever need.  Huge waste of bandwidth :)
 
+I see.
+This should cure it:
+
+Subject: [PATCH] net: Properly annotate the try-lock for the seqlock
+
+In patch
+   ("net/Qdisc: use a seqlock instead seqcount")
+
+the seqcount has been replaced with a seqlock to allow to reader to
+boost the preempted writer.
+The try_write_seqlock() acquired the lock with a try-lock but the
+seqcount annotation was "lock".
+
+Opencode write_seqcount_t_begin() and use the try-lock annotation for
+lockdep.
+
+Reported-by: Mike Galbraith <efault@gmx.de>
+Cc: stable-rt@vger.kernel.org
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/net/net_seq_lock.h |  9 ---------
+ include/net/sch_generic.h  | 10 +++++++++-
+ 2 files changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/include/net/net_seq_lock.h b/include/net/net_seq_lock.h
+index 95a497a72e511..67710bace7418 100644
+--- a/include/net/net_seq_lock.h
++++ b/include/net/net_seq_lock.h
+@@ -6,15 +6,6 @@
+ # define net_seq_begin(__r)		read_seqbegin(__r)
+ # define net_seq_retry(__r, __s)	read_seqretry(__r, __s)
+ 
+-static inline int try_write_seqlock(seqlock_t *sl)
+-{
+-	if (spin_trylock(&sl->lock)) {
+-		write_seqcount_begin(&sl->seqcount);
+-		return 1;
+-	}
+-	return 0;
+-}
+-
+ #else
+ # define net_seqlock_t			seqcount_t
+ # define net_seq_begin(__r)		read_seqcount_begin(__r)
+diff --git a/include/net/sch_generic.h b/include/net/sch_generic.h
+index 796ac453d9519..40be4443b6bdb 100644
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -168,8 +168,16 @@ static inline bool qdisc_run_begin(struct Qdisc *qdisc)
+ 		return false;
+ 	}
+ #ifdef CONFIG_PREEMPT_RT
+-	if (try_write_seqlock(&qdisc->running))
++	if (spin_trylock(&qdisc->running.lock)) {
++		seqcount_t *s = &qdisc->running.seqcount.seqcount;
++		/*
++		 * Variant of write_seqcount_t_begin() telling lockdep that a
++		 * trylock was attempted.
++		 */
++		raw_write_seqcount_t_begin(s);
++		seqcount_acquire(&s->dep_map, 0, 1, _RET_IP_);
+ 		return true;
++	}
+ 	return false;
+ #else
+ 	/* Variant of write_seqcount_begin() telling lockdep a trylock
+-- 
+2.28.0
+
+
+> 	-Mike
+
+Sebastian
