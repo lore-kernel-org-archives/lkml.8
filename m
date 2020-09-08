@@ -2,109 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FF6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60357C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9520E206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003F620759
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:41:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="YC5Px98t";
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="gWQcRQfw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUJqw5Q5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgIHQkn (ORCPT
+        id S1732046AbgIHQlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:40:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60630 "EHLO
+        Tue, 8 Sep 2020 12:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732065AbgIHQhZ (ORCPT
+        with ESMTP id S1732052AbgIHQhR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:37:25 -0400
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [IPv6:2001:67c:2050::465:202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8E8C06125F
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:18:32 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4Bm5Lk486wzQlQN;
-        Tue,  8 Sep 2020 15:18:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mailbox.org; h=
-        content-disposition:content-type:content-type:mime-version
-        :message-id:subject:subject:from:from:date:date:received; s=
-        mail20150812; t=1599571097; bh=ubvOJcIFKGPENL3Obyw3VCwL5f9wX0uXs
-        ncDj/8C6DY=; b=YC5Px98tIOe3edNX/+M8QphLzqvgNrPgyt4UBsWIINeGWY2dj
-        Z/qv+KLEhdv2oNWdFXDTNCEoqhp0Qa3RShwqAJwYFQT67B3apuB+bihcAQ/TrSJf
-        OdlV8EV6kFEBPhYkD4Z0hN5mMddSPULv9Zk1KJib1urUB9s+W06ccr2o3Xs4eXvh
-        +xzCVrdnw7CNvd32xdiDyI3k0WT5JynUBbVuY6bXRmSyzzeRDsqPC80a2vDeVZjV
-        QHG8qR0jxMZRqWaIQtSSqla+2zjGIsMOx8jizpxtWMhwiX8O7pQXaferH0knboTR
-        +APSLJzly9xJ3JOd673g5OgR7tQmPgMki/Ugg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-        t=1599571100;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=SKp5ZDHQ9MIbdi3QU3eOPS0Z+8Dc9dwteGuJYkPA53k=;
-        b=gWQcRQfwZNxKlejbS0JekUOiTjLnHV5z7ZGv9HjIw3Xm8T+l45s9BPW+qLSLDstXqc5BLJ
-        L+2hqPncY7po/zgNbXs5HNXGCMh/mAesFvE2pxUN8au50lKanTGTw+2+Y/rJ0sChsyMl7R
-        Rg5Kd+8jjRqcZ0HZUMmmL0H0RkuQD4HZe7+5qIU7JWBBSh7VxOg4a2fdRwZsVuz3ReU1T1
-        e1Og2mj68qXSlrAghH8dfJYNpadnPTZUYHKi1TGod99Q1R0BTl0SBPAkrD+up5PHJYsMbC
-        kUoOtAVu3C6Im0AcmQ5L1DWtwh5KWfzTuMk3kD8+vlzubt1XVuVGgiAAJvxCHg==
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id PDb37bZMjMCv; Tue,  8 Sep 2020 15:18:17 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 15:18:08 +0200
-From:   Wilken Gottwalt <wilken.gottwalt@mailbox.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH] documentation: arm: sunxi: Allwinner H2+/H3 update
-Message-ID: <20200908131808.GA65247@monster.powergraphx.local>
+        Tue, 8 Sep 2020 12:37:17 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5406C061A12
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:04:19 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id s12so867986wrw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:04:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=8M8FQZb2HgpFZLZz+2kHkv7PQ6hJJGgLuAcXeYJHXoc=;
+        b=AUJqw5Q5yIKjjHv+TlphEapfGqGOE84LTkY2zdyRmrMCZc4UN5YC2gkzDw8k0vGBgc
+         Cs7Qk83LMgV1TESF82VJ5kAJMn0dMUMkUDY+W7j02XikANSGY+Q5vMIg1bXFdpVU702p
+         JpMtWNealLQk01KqN+ZWJF9EN7XmeVpCS4XuBlniZDTYtXI3FFvIfpE7OunsxJOYAvkj
+         OKfewt829N5WohHh7McC0bRqVQDay13XKTzmxsGafZIAawYUqLmaZ0ivQKWBlUoAMXEo
+         4D0NcBfydlPrudfK8LsP0K4eh5sKjdtBeSEV/jsf0BCwLordxeK93nP6TJ6FV7R5+i8w
+         tvVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=8M8FQZb2HgpFZLZz+2kHkv7PQ6hJJGgLuAcXeYJHXoc=;
+        b=ssYlj6hz13l6HtrgdAL3IkaWPIGcpM+KGnJb474hxuUgVYf7+U9sVFIKb1FbdV00QR
+         BUPkazMT3pEd7JWW+kypO0lSqNOZg9uJnf4Pw4iMwoo1o9C+aOeZ4n3W9QdsAuqPrU9z
+         WTo4trlERz9TBQcWo3Fp5XuVOZKmMs1M7ZIPV8cLf37v3i8d894SzKbXC8kowjksG5q2
+         5c090IRUi8XFq8DMpaZ2w/ajfXGkpxxRsRNomNwM2MFEvQhHhhBYT3Kf0yUhbmcpj7QB
+         3qhmzF21Mbn+T78Q10ghMiH+WHOQoIbcu6ejtMMDoFlN/0cpBCQqTCGuHnAwYPocNpfv
+         3Pcg==
+X-Gm-Message-State: AOAM5326chP3HDfw9HC0EeL3blj/zdVyPZoMBF9LLJ5x3k+8r5h4OG4B
+        HoISqOLCJ62bUHUOxK0VgPKCTw==
+X-Google-Smtp-Source: ABdhPJzm2yDttST5j8TaF3B2Cm917dhqrg3b0B96Ye1IYiXRwc7ozDdXKCLbFqn5vdgCfieZFk4ipw==
+X-Received: by 2002:adf:e8ce:: with SMTP id k14mr28758614wrn.394.1599573858090;
+        Tue, 08 Sep 2020 07:04:18 -0700 (PDT)
+Received: from dell ([91.110.221.179])
+        by smtp.gmail.com with ESMTPSA id i11sm11288646wre.32.2020.09.08.07.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 07:04:17 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 15:04:15 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     dillon.minfei@gmail.com
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH: V2  2/2] gpio: tc35894: Disable Direct KBD interrupts to
+ enable gpio irq
+Message-ID: <20200908140415.GW4400@dell>
+References: <1599118222-18990-1-git-send-email-dillon.minfei@gmail.com>
+ <1599118222-18990-3-git-send-email-dillon.minfei@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-MBO-SPAM-Probability: 
-X-Rspamd-Score: -4.85 / 15.00 / 15.00
-X-Rspamd-Queue-Id: 2FCD3274
-X-Rspamd-UID: 3fa5e3
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1599118222-18990-3-git-send-email-dillon.minfei@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updated information about H2+ and H3 difference and added a link to a
-slightly newer datasheet.
+On Thu, 03 Sep 2020, dillon.minfei@gmail.com wrote:
 
-Signed-off-by: Wilken Gottwalt <wilken.gottwalt@mailbox.org>
----
- Documentation/arm/sunxi.rst | 3 +++
- 1 file changed, 3 insertions(+)
+> From: dillon min <dillon.minfei@gmail.com>
+> 
+> On tc35894, have to disable direct keypad interrupts to make
+> it as general purpose interrupts functionality work.
+> if not, after chip reset, IRQST(0x91) will always 0x20,
+> IRQN always low level, can't be clear.
+> 
+> Configure DIRECTx to enable general purpose gpio mode,
+> else read GPIOMISx register always zero in irq routine.
+> 
+> verified on tc35894, need more test on other tc3589x.
+> 
+> Signed-off-by: dillon min <dillon.minfei@gmail.com>
+> ---
+>  
+> V1 -> V2:
+> Add DIRECTx register configuration to active general purpose gpio mode.
+> 
+>  drivers/gpio/gpio-tc3589x.c | 18 ++++++++++++++++--
 
-diff --git a/Documentation/arm/sunxi.rst b/Documentation/arm/sunxi.rst
-index b037428aee98..50b9199d929d 100644
---- a/Documentation/arm/sunxi.rst
-+++ b/Documentation/arm/sunxi.rst
-@@ -103,12 +103,15 @@ SunXi family
- 
-         * No document available now, but is known to be working properly with
-           H3 drivers and memory map.
-+        * It is basically a H3 where the GMAC block was replaced by a 100 MBit only MAC block.
- 
-       - Allwinner H3 (sun8i)
- 
-         * Datasheet
- 
-           http://dl.linux-sunxi.org/H3/Allwinner_H3_Datasheet_V1.0.pdf
-+          or a slightly more up to date version
-+          https://linux-sunxi.org/images/4/4b/Allwinner_H3_Datasheet_V1.2.pdf
- 
-       - Allwinner R40 (sun8i)
- 
+>  include/linux/mfd/tc3589x.h |  6 ++++++
+
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.28.0
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
