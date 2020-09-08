@@ -2,235 +2,205 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BDFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAEDC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F961207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34C04207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="h24MOzIw"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Y3BnknTT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgIHUG1 (ORCPT
+        id S1730455AbgIHUG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:06:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        Tue, 8 Sep 2020 16:06:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729719AbgIHPVk (ORCPT
+        with ESMTP id S1730211AbgIHPVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:21:40 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F11AC0612FB
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:58:29 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id w5so19005842wrp.8
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:58:29 -0700 (PDT)
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06726C061A24
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:11:23 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id m1so15480372ilj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:11:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ikPWUVajWpPhi7pSm8HDj7BsQ12e/VRbizs3Bl5cmps=;
-        b=h24MOzIws0owVLCP26G8p4TfyQNkcA9CMUdzjx/1FD/NuKFbPRZAdjmyVpOGHeC52G
-         l4287SGB/RoIq/KGngRwJ2c5tvGgq18w5bwZpE5TC8PMPvIOrpWvPLAXOK7pmpuEMMwm
-         2sEFg7DcTLrf2TqbHdyDw/kPRqYVYywzWS3ixv9mKN+qWVNavk4UA8J0coLwWfngQFZS
-         1c5w/U6CHN+IcIaNaPBgN54KggRnflv8e7lAePrD1QKI+i93TOHLmv6oIhp63/YqPmsZ
-         m4Qx8OHyMCzzHHgDB/JyeGBU2OAFmeFzE9XPGwgIzAkH7G6+ISJQQlPX+qrOHzKDi/Z5
-         LgkA==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OHvbRXVoAlbH+nZ+Ry+bppsZ5cArVjRBIq20J5epYZE=;
+        b=Y3BnknTTxzpYWeOtvKafu8jhQPpfUlqvx84mybYPLVuHDu1yLTAECelCsX1psLQFIx
+         Sh/+QRM/+/ZY7xXfxEeb7hgmABXo/n5adplQ9f6siP93pnJTUT+lk0bdQUp+U2rteGoS
+         N6foPSUl0Xg9ddDiUQdyoXQ3YabQwnR5vcphkw7Id7k0HTran54Irdk6LSJRFUh1Wg5I
+         qn6lmTuat2tkdLH/FigmvHhlTwqBee+GypFKn8UL1H+9eNu57gzIByWYl0RfUqtxeBQm
+         9NwtKKqU8TQgpyVglyQ+NyxfrBF5AD2DKW0aFBaDtVbufFiNw4vPM3644rlFpV/8HgMy
+         cdiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ikPWUVajWpPhi7pSm8HDj7BsQ12e/VRbizs3Bl5cmps=;
-        b=eLh0QTmfKGwM2NzubIDwXHR/Ehos2nCpQjXkyrfknORQ68jR5NDKubKEr2kyN7zZvt
-         z9dDATSZ/bGu+/820J64Di0OBG22P8NZbDAwu1rQxZVJzm6uj2vDEOfy9gTZ9sRU3xRx
-         KyDZUc8FgzUbfB/jHQa2sfzoHzoPNh949xrC7Z2uIwa1Dmut482dORfbdYX9xmVwhEVk
-         vf5uenYqxYB4r1dwagA+QlfxIvIOumw7MkYMZaEUF3YMQxYQ2ih4J1paBA5k9QNiR7VM
-         KeSJOWAzsKKwd913rhJpcr6jhAkJDZmWYZFeG5vL6/+bTRk+yHqu0raLXgB0xABBMvXG
-         js0A==
-X-Gm-Message-State: AOAM531qonp3aZIQehNXwS09G69RGh7K4yD+n4vPzLHMfisUiGbZfS60
-        r+XMnaFeh/5HoSFuxdXfR5IvNw==
-X-Google-Smtp-Source: ABdhPJwHjgDUtqRBB/g2d8wiJyug79CxIptyIXQB/lJ1EwW+nOgQ4NMwQLw+Ld4+xyg8DQrXp4w50w==
-X-Received: by 2002:adf:b306:: with SMTP id j6mr25583555wrd.279.1599569908453;
-        Tue, 08 Sep 2020 05:58:28 -0700 (PDT)
-Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id y207sm34817875wmc.17.2020.09.08.05.58.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 05:58:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/3] gpiolib: generalize devprop_gpiochip_set_names() for device properties
-Date:   Tue,  8 Sep 2020 14:58:12 +0200
-Message-Id: <20200908125813.8809-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200908125813.8809-1-brgl@bgdev.pl>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OHvbRXVoAlbH+nZ+Ry+bppsZ5cArVjRBIq20J5epYZE=;
+        b=o7Z86KzIvEfU4T//YKdRFxNRtmmbrL18Z32pFqgmunAfbojmhefcWddj8f1cmMir54
+         Q+oysQChdtiDDoBien2EXAEVfaR99lebai153QGHxnhjNoJP5Kbj8ZthV18G+a6JBzb0
+         ylQBrkhnALN87ag3Bf8grphrs1ixqBaJqS+6G+/wnBtJrmOkiP6FS4gv0TSxRJe5CDs3
+         HCHNM9WXsBJ9ceTlLxLB+su5I42+HgE5INW6hkTxyFJRIApwa7/xjoz9F1E6WsLiz++a
+         S8ShOBAvatg6GBJyBfzC/FXxqFn6yuUZvdaYAonhPTJ+GnEcWOXkFiAyOj7zztgDnsK3
+         jqWA==
+X-Gm-Message-State: AOAM533IYmhZqRelZ6CjlZKLhISj5VEYYuE2Tn/c/i1fp2laxrBpO5dv
+        AlSLu4bwLeXQJFto/ALF/8owew==
+X-Google-Smtp-Source: ABdhPJxf2DetGDc5OpRwh1PWzzjmhhvDX1ykRrlBHRxnWPaAZeZPvEJQeaCdQUV6c70rXXNN8w2Etw==
+X-Received: by 2002:a92:77d4:: with SMTP id s203mr22574147ilc.136.1599574282270;
+        Tue, 08 Sep 2020 07:11:22 -0700 (PDT)
+Received: from [192.168.1.10] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c14sm10398940ill.15.2020.09.08.07.11.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 07:11:21 -0700 (PDT)
+Subject: Re: [PATCH v6 3/3] io_uring: allow disabling rings during the
+ creation
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Moyer <jmoyer@redhat.com>,
+        Aleksa Sarai <asarai@suse.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20200827145831.95189-1-sgarzare@redhat.com>
+ <20200827145831.95189-4-sgarzare@redhat.com>
+ <20200908134448.sg7evdrfn6xa67sn@steredhat>
+ <045e0907-4771-0b7f-d52a-4af8197e6954@kernel.dk>
+ <20200908141003.wsm6pclfj6tsaffr@steredhat>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d1b18bdb-e718-3285-cfb3-0e2b73f03554@kernel.dk>
+Date:   Tue, 8 Sep 2020 08:11:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200908141003.wsm6pclfj6tsaffr@steredhat>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On 9/8/20 8:10 AM, Stefano Garzarella wrote:
+> On Tue, Sep 08, 2020 at 07:57:08AM -0600, Jens Axboe wrote:
+>> On 9/8/20 7:44 AM, Stefano Garzarella wrote:
+>>> Hi Jens,
+>>>
+>>> On Thu, Aug 27, 2020 at 04:58:31PM +0200, Stefano Garzarella wrote:
+>>>> This patch adds a new IORING_SETUP_R_DISABLED flag to start the
+>>>> rings disabled, allowing the user to register restrictions,
+>>>> buffers, files, before to start processing SQEs.
+>>>>
+>>>> When IORING_SETUP_R_DISABLED is set, SQE are not processed and
+>>>> SQPOLL kthread is not started.
+>>>>
+>>>> The restrictions registration are allowed only when the rings
+>>>> are disable to prevent concurrency issue while processing SQEs.
+>>>>
+>>>> The rings can be enabled using IORING_REGISTER_ENABLE_RINGS
+>>>> opcode with io_uring_register(2).
+>>>>
+>>>> Suggested-by: Jens Axboe <axboe@kernel.dk>
+>>>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>>>> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+>>>> ---
+>>>> v4:
+>>>>  - fixed io_uring_enter() exit path when ring is disabled
+>>>>
+>>>> v3:
+>>>>  - enabled restrictions only when the rings start
+>>>>
+>>>> RFC v2:
+>>>>  - removed return value of io_sq_offload_start()
+>>>> ---
+>>>>  fs/io_uring.c                 | 52 ++++++++++++++++++++++++++++++-----
+>>>>  include/uapi/linux/io_uring.h |  2 ++
+>>>>  2 files changed, 47 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>>> index 5f62997c147b..b036f3373fbe 100644
+>>>> --- a/fs/io_uring.c
+>>>> +++ b/fs/io_uring.c
+>>>> @@ -226,6 +226,7 @@ struct io_restriction {
+>>>>  	DECLARE_BITMAP(sqe_op, IORING_OP_LAST);
+>>>>  	u8 sqe_flags_allowed;
+>>>>  	u8 sqe_flags_required;
+>>>> +	bool registered;
+>>>>  };
+>>>>  
+>>>>  struct io_ring_ctx {
+>>>> @@ -7497,8 +7498,8 @@ static int io_init_wq_offload(struct io_ring_ctx *ctx,
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> -static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>>>> -			       struct io_uring_params *p)
+>>>> +static int io_sq_offload_create(struct io_ring_ctx *ctx,
+>>>> +				struct io_uring_params *p)
+>>>>  {
+>>>>  	int ret;
+>>>>  
+>>>> @@ -7532,7 +7533,6 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>>>>  			ctx->sqo_thread = NULL;
+>>>>  			goto err;
+>>>>  		}
+>>>> -		wake_up_process(ctx->sqo_thread);
+>>>>  	} else if (p->flags & IORING_SETUP_SQ_AFF) {
+>>>>  		/* Can't have SQ_AFF without SQPOLL */
+>>>>  		ret = -EINVAL;
+>>>> @@ -7549,6 +7549,12 @@ static int io_sq_offload_start(struct io_ring_ctx *ctx,
+>>>>  	return ret;
+>>>>  }
+>>>>  
+>>>> +static void io_sq_offload_start(struct io_ring_ctx *ctx)
+>>>> +{
+>>>> +	if ((ctx->flags & IORING_SETUP_SQPOLL) && ctx->sqo_thread)
+>>>> +		wake_up_process(ctx->sqo_thread);
+>>>> +}
+>>>> +
+>>>>  static inline void __io_unaccount_mem(struct user_struct *user,
+>>>>  				      unsigned long nr_pages)
+>>>>  {
+>>>> @@ -8295,6 +8301,9 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+>>>>  	if (!percpu_ref_tryget(&ctx->refs))
+>>>>  		goto out_fput;
+>>>>  
+>>>> +	if (ctx->flags & IORING_SETUP_R_DISABLED)
+>>>> +		goto out_fput;
+>>>> +
+>>>
+>>> While writing the man page paragraph, I discovered that if the rings are
+>>> disabled I returned ENXIO error in io_uring_enter(), coming from the previous
+>>> check.
+>>>
+>>> I'm not sure it is the best one, maybe I can return EBADFD or another
+>>> error.
+>>>
+>>> What do you suggest?
+>>
+>> EBADFD seems indeed the most appropriate - the fd is valid, but not in the
+>> right state to do this.
+> 
+> Yeah, the same interpretation as mine!
+> 
+> Also, in io_uring_register() I'm returning EINVAL if the rings are not
+> disabled and the user wants to register restrictions.
+> Maybe also in this case I can return EBADFD.
 
-devprop_gpiochip_set_names() is overly complicated with taking the
-fwnode argument (which requires using dev_fwnode() & of_fwnode_handle()
-in ACPI and OF GPIO code respectively). Let's just switch to using the
-generic device properties.
+Yes let's do that, EINVAL is always way too overloaded, and it makes sense
+to use EBADFD consistently for any operation related to that.
 
-This allows us to pull the code setting line names directly into
-gpiochip_add_data_with_key() instead of handling it separately for
-ACPI and OF.
-
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpiolib-acpi.c    |  3 ---
- drivers/gpio/gpiolib-devprop.c | 20 ++++++++++----------
- drivers/gpio/gpiolib-of.c      |  5 -----
- drivers/gpio/gpiolib.c         |  8 ++++----
- include/linux/gpio/driver.h    |  3 +--
- 5 files changed, 15 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 54ca3c18b291..834a12f3219e 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1221,9 +1221,6 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
- 		return;
- 	}
- 
--	if (!chip->names)
--		devprop_gpiochip_set_names(chip, dev_fwnode(chip->parent));
--
- 	acpi_gpiochip_request_regions(acpi_gpio);
- 	acpi_gpiochip_scan_gpios(acpi_gpio);
- 	acpi_walk_dep_device_list(handle);
-diff --git a/drivers/gpio/gpiolib-devprop.c b/drivers/gpio/gpiolib-devprop.c
-index 26741032fa9e..29ee00d7730e 100644
---- a/drivers/gpio/gpiolib-devprop.c
-+++ b/drivers/gpio/gpiolib-devprop.c
-@@ -17,25 +17,23 @@
- /**
-  * devprop_gpiochip_set_names - Set GPIO line names using device properties
-  * @chip: GPIO chip whose lines should be named, if possible
-- * @fwnode: Property Node containing the gpio-line-names property
-  *
-  * Looks for device property "gpio-line-names" and if it exists assigns
-  * GPIO line names for the chip. The memory allocated for the assigned
-- * names belong to the underlying firmware node and should not be released
-+ * names belong to the underlying software node and should not be released
-  * by the caller.
-  */
--void devprop_gpiochip_set_names(struct gpio_chip *chip,
--				const struct fwnode_handle *fwnode)
-+int devprop_gpiochip_set_names(struct gpio_chip *chip)
- {
- 	struct gpio_device *gdev = chip->gpiodev;
-+	struct device *dev = chip->parent;
- 	const char **names;
- 	int ret, i;
- 	int count;
- 
--	count = fwnode_property_read_string_array(fwnode, "gpio-line-names",
--						  NULL, 0);
-+	count = device_property_count_strings(dev, "gpio-line-names");
- 	if (count < 0)
--		return;
-+		return 0;
- 
- 	if (count > gdev->ngpio) {
- 		dev_warn(&gdev->dev, "gpio-line-names is length %d but should be at most length %d",
-@@ -45,19 +43,21 @@ void devprop_gpiochip_set_names(struct gpio_chip *chip,
- 
- 	names = kcalloc(count, sizeof(*names), GFP_KERNEL);
- 	if (!names)
--		return;
-+		return -ENOMEM;
- 
--	ret = fwnode_property_read_string_array(fwnode, "gpio-line-names",
-+	ret = device_property_read_string_array(dev, "gpio-line-names",
- 						names, count);
- 	if (ret < 0) {
- 		dev_warn(&gdev->dev, "failed to read GPIO line names\n");
- 		kfree(names);
--		return;
-+		return ret;
- 	}
- 
- 	for (i = 0; i < count; i++)
- 		gdev->descs[i].name = names[i];
- 
- 	kfree(names);
-+
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(devprop_gpiochip_set_names);
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index bd31dd3b6a75..2f895a2b8411 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -1026,11 +1026,6 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (ret)
- 		return ret;
- 
--	/* If the chip defines names itself, these take precedence */
--	if (!chip->names)
--		devprop_gpiochip_set_names(chip,
--					   of_fwnode_handle(chip->of_node));
--
- 	of_node_get(chip->of_node);
- 
- 	ret = of_gpiochip_scan_gpios(chip);
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 80137c1b3cdc..0d390f0ec32c 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -340,9 +340,6 @@ static int gpiochip_set_desc_names(struct gpio_chip *gc)
- 	struct gpio_device *gdev = gc->gpiodev;
- 	int i;
- 
--	if (!gc->names)
--		return 0;
--
- 	/* First check all names if they are unique */
- 	for (i = 0; i != gc->ngpio; ++i) {
- 		struct gpio_desc *gpio;
-@@ -621,7 +618,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	INIT_LIST_HEAD(&gdev->pin_ranges);
- #endif
- 
--	ret = gpiochip_set_desc_names(gc);
-+	if (gc->names)
-+		ret = gpiochip_set_desc_names(gc);
-+	else
-+		ret = devprop_gpiochip_set_names(gc);
- 	if (ret)
- 		goto err_remove_from_list;
- 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index d1cef5c2715c..56485a040b82 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -756,8 +756,7 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    enum gpiod_flags dflags);
- void gpiochip_free_own_desc(struct gpio_desc *desc);
- 
--void devprop_gpiochip_set_names(struct gpio_chip *gc,
--				const struct fwnode_handle *fwnode);
-+int devprop_gpiochip_set_names(struct gpio_chip *gc);
- 
- #ifdef CONFIG_GPIOLIB
- 
 -- 
-2.26.1
+Jens Axboe
 
