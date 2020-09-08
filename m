@@ -2,56 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F64C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D80EC20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946C62087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730179AbgIHWDT (ORCPT
+        id S1728483AbgIHWIh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55488 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726002AbgIHWDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:03:12 -0400
-X-Greylist: delayed 79203 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 08 Sep 2020 15:03:11 PDT
-Received: from mail.nic.cz (mail.nic.cz [IPv6:2001:1488:800:400::400])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61F5AC061573;
-        Tue,  8 Sep 2020 15:03:11 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a0e:b107:ae1:0:3e97:eff:fe61:c680])
-        by mail.nic.cz (Postfix) with ESMTPSA id E27F7140BBD;
-        Wed,  9 Sep 2020 00:03:05 +0200 (CEST)
-Date:   Wed, 9 Sep 2020 00:03:05 +0200
-From:   Marek Behun <marek.behun@nic.cz>
-To:     netdev@vger.kernel.org
-Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Dan Murphy <dmurphy@ti.com>,
-        =?UTF-8?B?T25kxZllag==?= Jirman <megous@megous.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH net-next v1 1/3] dt-bindings: net: ethernet-phy: add
- description for PHY LEDs
-Message-ID: <20200909000305.69cdfdd6@nic.cz>
-In-Reply-To: <20200908000300.6982-2-marek.behun@nic.cz>
-References: <20200908000300.6982-1-marek.behun@nic.cz>
-        <20200908000300.6982-2-marek.behun@nic.cz>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 8 Sep 2020 18:08:37 -0400
+Received: from mga07.intel.com ([134.134.136.100]:56112 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbgIHWIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:08:36 -0400
+IronPort-SDR: 7cn6yonKJx9eGFYWYrpRUlas6gfSx/Kz5qKUC90bncyqxqVvJobyXoc8FeMHT9Q+naZOTcEShp
+ 8aduVjc+sCdA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222438979"
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="222438979"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 15:08:35 -0700
+IronPort-SDR: iD9INV+cK10hvjNf5wcoCWfECqjkvPJqs+NlqjOxlQIBOkqvk9Fz6c3A70SJlr4O8fPg3Hqkn0
+ ARgq+EuH9Tew==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="317340286"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga002.jf.intel.com with ESMTP; 08 Sep 2020 15:08:34 -0700
+Received: from shsmsx605.ccr.corp.intel.com (10.109.6.215) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Sep 2020 15:08:32 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ SHSMSX605.ccr.corp.intel.com (10.109.6.215) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 9 Sep 2020 06:08:30 +0800
+Received: from fmsmsx610.amr.corp.intel.com ([10.18.126.90]) by
+ fmsmsx610.amr.corp.intel.com ([10.18.126.90]) with mapi id 15.01.1713.004;
+ Tue, 8 Sep 2020 15:08:28 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     "trix@redhat.com" <trix@redhat.com>,
+        "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "rric@kernel.org" <rric@kernel.org>,
+        "natechancellor@gmail.com" <natechancellor@gmail.com>,
+        "ndesaulniers@google.com" <ndesaulniers@google.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "clang-built-linux@googlegroups.com" 
+        <clang-built-linux@googlegroups.com>
+Subject: RE: [PATCH] EDAC: sb_edac: simplify switch statement
+Thread-Topic: [PATCH] EDAC: sb_edac: simplify switch statement
+Thread-Index: AQHWhSwd2aPyoNmgw0mlzN1Re9AsfalfTkog
+Date:   Tue, 8 Sep 2020 22:08:28 +0000
+Message-ID: <7525690b6aaa4e539989b9c2e5703a56@intel.com>
+References: <20200907153225.7294-1-trix@redhat.com>
+In-Reply-To: <20200907153225.7294-1-trix@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.102.2 at mail
-X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore this series, still refactoring...
+> However by initializing the type to DEV_UNKNOWN the 3 case can be
+> removed from the switch, saving a comparison and jump.
+>
+> Signed-off-by: Tom Rix <trix@redhat.com>
+
+Applied. Thanks.
+
+-Tony
+
+[Boris: Pushed to edac-misc and edac-for-next branches in RAS tree]
