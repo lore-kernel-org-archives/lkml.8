@@ -2,111 +2,197 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A203FC2D0E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D6FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70ED820768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="vEAvtJV1"
+	by mail.kernel.org (Postfix) with ESMTP id 9843B20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599585343;
+	bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GKah8HeCpf7ZG7TJ5QoOWvqk+8VxdLJEq6N0acG8ROBmsX0/uKmwOcrOuaKkoRmIV
+	 Q+nydEuIB0ksQtW9E6xshzGCH28mjvoN4OGdSXqGBGF5w/XOu02M1jyBDhk4w5vHmm
+	 zAW9ILSMc2D3LSYnv9VAhSSG5QQq41XXH0qIyUIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730555AbgIHRPk (ORCPT
+        id S1731769AbgIHRPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:15:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731778AbgIHQSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731776AbgIHQSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:18:53 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53400C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:18:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 125so7062731ybg.12
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=x95DT5jtosgYGGefTlj6NP8d+p2HyfRsrJ4ad9R8zWg=;
-        b=vEAvtJV1mZC5g6CtNtuc1RMBhTCoauFGpyTyKhAUJ/l8U7+S+jFND8ivZyM0HZUL9G
-         /K9GAkbQLWDrN9HBiVaizvVbEzzg8FhH/GvHRzPAXOT+ZgfwOsr2nHH/ogS+8LoaNkQ7
-         hjEISner+UeNA1r568bv4fUydN5RrUGAQ4NwK1YlfwF4LRI1HpywGTt/FQ7HsOnBloI/
-         mv26PTYzLSGrfOBj32MRiM6h/m+UutV/K+Ozm70tXcvvC1ZgGRBUWSS4csaJY1IWW12W
-         modcc45TYxK1F54JrtcofO+RXmszyvRGpkgJ0NHsU/ge2bFKPE+N2ZX9vbpaeM7qMWDI
-         1GuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=x95DT5jtosgYGGefTlj6NP8d+p2HyfRsrJ4ad9R8zWg=;
-        b=Mg1IATS1Rh75kP4TddJ8y91vkMUmMaP3Rngut5x2OMAsv4GhSgps8PC8OhnWxqWx6t
-         gupdb9+X6cVB8Ij7lZESE+qaMJolGF1HUvnnlW/SjDcygrIMsnxy+hdGVGojHXbd2yo1
-         sSFcv59FdvqmO8HwzJc9TuOKPL92vu48zDEV/8qmyyB02u+2P0LngQtJ8XgJq9P0yiwm
-         yT8QomFBJt62O75IsLbuJy4mIjGYNyyrWRMqTwpkCZ19YY2F8vh3BndpHa4tF1BaJpli
-         py/oCvlHtrXQ8JM21xtDfGIz/7M3JZ9RJ32deXtwAcNq3uIxgUh3PgZweVrtGkd7gxwt
-         QLwA==
-X-Gm-Message-State: AOAM533441vAECggFDR+nUE4UZaFQe2aDkvzAmU/kI7hMRHSID9tHmA1
-        lK05hfu5vh34ygwDhk4wNhaBW/Hg1eip
-X-Google-Smtp-Source: ABdhPJySE73XVegcNqbVF+9mab6MmrRL1nEIcLINZ2tVaa7rCwF8UXgmoVqBCwlx6WA3rld8VdOhhWvOkzMl
-X-Received: from brianvv.svl.corp.google.com ([2620:15c:2c4:201:a28c:fdff:fee1:c370])
- (user=brianvv job=sendgmr) by 2002:a25:e0d5:: with SMTP id
- x204mr554925ybg.57.1599581931886; Tue, 08 Sep 2020 09:18:51 -0700 (PDT)
-Date:   Tue,  8 Sep 2020 09:18:12 -0700
-Message-Id: <20200908161812.723044-1-brianvv@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
-Subject: [PATCH] fib: fix fib_rule_ops indirect call wrappers when CONFIG_IPV6=m
-From:   Brian Vazquez <brianvv@google.com>
-To:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        Brian Vazquez <brianvv@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Sven Joachim <svenjoac@gmx.de>,
-        Randy Dunlap <rdunlap@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB23524813;
+        Tue,  8 Sep 2020 15:43:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579814;
+        bh=9xF3pCnhJDst3nnSSl/WT0nA5l0CMHpfotCF6C81O0s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p0Ys7pcb0ubYNFV4AXTAscpPRTJfFE1X2tBBdCazkwRB3nveHyL7LlAO4Vqs221Tz
+         HjBi2s5Wi9UQg/m8aLeejTdKtnYtLPb6OjDrSsYHdYBop0onHNUJsSl/N9mB4KaBfW
+         1v/KTLyb/bfebsNgRvDRIqgwyal2JKENP8vOvft4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 015/129] s390: dont trace preemption in percpu macros
+Date:   Tue,  8 Sep 2020 17:24:16 +0200
+Message-Id: <20200908152230.456715774@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_IPV6=m, the IPV6 functions won't be found by the linker:
+From: Sven Schnelle <svens@linux.ibm.com>
 
-ld: net/core/fib_rules.o: in function `fib_rules_lookup':
-fib_rules.c:(.text+0x606): undefined reference to `fib6_rule_match'
-ld: fib_rules.c:(.text+0x611): undefined reference to `fib6_rule_match'
-ld: fib_rules.c:(.text+0x68c): undefined reference to `fib6_rule_action'
-ld: fib_rules.c:(.text+0x693): undefined reference to `fib6_rule_action'
-ld: fib_rules.c:(.text+0x6aa): undefined reference to `fib6_rule_suppress'
-ld: fib_rules.c:(.text+0x6bc): undefined reference to `fib6_rule_suppress'
-make: *** [Makefile:1166: vmlinux] Error 1
+[ Upstream commit 1196f12a2c960951d02262af25af0bb1775ebcc2 ]
 
-Reported-by: Sven Joachim <svenjoac@gmx.de>
-Fixes: b9aaec8f0be5 ("fib: use indirect call wrappers in the most common fib_rules_ops")
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-Signed-off-by: Brian Vazquez <brianvv@google.com>
+Since commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context}
+to per-cpu variables") the lockdep code itself uses percpu variables. This
+leads to recursions because the percpu macros are calling preempt_enable()
+which might call trace_preempt_on().
+
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/fib_rules.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/net/core/fib_rules.c b/net/core/fib_rules.c
-index 51678a528f85..7bcfb16854cb 100644
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -16,7 +16,7 @@
- #include <net/ip_tunnels.h>
- #include <linux/indirect_call_wrapper.h>
+diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
+index 50b4ce8cddfdc..918f0ba4f4d20 100644
+--- a/arch/s390/include/asm/percpu.h
++++ b/arch/s390/include/asm/percpu.h
+@@ -29,7 +29,7 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ old__, new__, prev__;				\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	prev__ = *ptr__;						\
+ 	do {								\
+@@ -37,7 +37,7 @@
+ 		new__ = old__ op (val);					\
+ 		prev__ = cmpxchg(ptr__, old__, new__);			\
+ 	} while (prev__ != old__);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	new__;								\
+ })
  
--#ifdef CONFIG_IPV6_MULTIPLE_TABLES
-+#if defined(CONFIG_IPV6) && defined(CONFIG_IPV6_MULTIPLE_TABLES)
- #ifdef CONFIG_IP_MULTIPLE_TABLES
- #define INDIRECT_CALL_MT(f, f2, f1, ...) \
- 	INDIRECT_CALL_INET(f, f2, f1, __VA_ARGS__)
+@@ -68,7 +68,7 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
+ 	if (__builtin_constant_p(val__) &&				\
+ 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
+@@ -84,7 +84,7 @@
+ 			: [val__] "d" (val__)				\
+ 			: "cc");					\
+ 	}								\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ }
+ 
+ #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
+@@ -95,14 +95,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();						\
+ 	old__ + val__;							\
+ })
+ 
+@@ -114,14 +114,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ }
+ 
+ #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
+@@ -136,10 +136,10 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ ret__;						\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = cmpxchg(ptr__, oval, nval);				\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+@@ -152,10 +152,10 @@
+ ({									\
+ 	typeof(pcp) *ptr__;						\
+ 	typeof(pcp) ret__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = xchg(ptr__, nval);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+@@ -171,11 +171,11 @@
+ 	typeof(pcp1) *p1__;						\
+ 	typeof(pcp2) *p2__;						\
+ 	int ret__;							\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	p1__ = raw_cpu_ptr(&(pcp1));					\
+ 	p2__ = raw_cpu_ptr(&(pcp2));					\
+ 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
 -- 
-2.28.0.526.ge36021eeef-goog
+2.25.1
+
+
 
