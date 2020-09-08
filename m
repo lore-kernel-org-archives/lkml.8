@@ -2,96 +2,147 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 789D5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B1FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D404520936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7926220936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PbmFBP4Y"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dxJgIEMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732175AbgIHRvI (ORCPT
+        id S1732177AbgIHRvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732159AbgIHRuw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:50:52 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6500C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Bt5XfXEwClw+tcHLXQSYRDHiN3930ztsk0AmpBMXPHw=; b=PbmFBP4YXNaoOsWN2J/oR/DhUn
-        z/nFeSn49r23Kgm2Tssm5488Seqmb6Txwo7xppp9EK165g99bX80HpZFchB+CxjPCGCtOwyew/iTO
-        1l40CLAl23AEBfLKPt7Z2CpwRDhfrgwahSlcE2O4xX95qGuulCe/V4NJYLxY2+cZHaepxtzux1YXv
-        U8NQ6S+r7dpmkDWqZ3/LWq8SzTgYXBFztLrylGbELhWsp2xSOIAfXC36vOAT3cLChT0FgC5jk/RbI
-        vB0iBp06Ct1iP0xwzxETg3oUNuQ4+ujNJ9vk0+AadMAxPTsKOdtdNsE2oWvtrPenqNXUiadrUegdB
-        AN+2WQtw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFhlS-00061f-Vf; Tue, 08 Sep 2020 17:50:43 +0000
-Subject: Re: [PATCH v1] x86/defconfigs: Unbreak 32-bit defconfig builds
-To:     Ingo Molnar <mingo@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        linux-kernel@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200908100018.50188-1-andriy.shevchenko@linux.intel.com>
- <20200908121354.GA3848343@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <f96a76a0-1ecb-aa3b-0f8a-d978bb1b1787@infradead.org>
-Date:   Tue, 8 Sep 2020 10:50:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 13:51:19 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:6073 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731588AbgIHQNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:13:47 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f57ad970000>; Wed, 09 Sep 2020 00:13:11 +0800
+Received: from HKMAIL101.nvidia.com ([10.18.16.10])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 08 Sep 2020 09:13:11 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Tue, 08 Sep 2020 09:13:11 -0700
+Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL101.nvidia.com
+ (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
+ 2020 16:13:11 +0000
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.100)
+ by HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 8 Sep 2020 16:13:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C8RzttGyJlM5VaxhqdqsPEhDsVhuZAdmzi6s8W8ksQHyV93i2E+6FgJozn2pe90VNkKt5zsIy6kwpyaa58d+9zmm3NoKoGfK/zR1rvur8WFMby1TAfK5dSw4rWtN22YqQOVc24Zu/6CDJjv6ygMmqQfv8O+a/D6+sucPn8dAVZ2pQTlW3ZkayZ+ZAP9mXRKE8V/Sgh2IzjcwzWpr5ZLxFgUvfK2+6x0IpfD81Wt7Dz7TlpZh5V0NBu1LwoehPNcjxPRca0PvaNCZYaUHejCx40ko8tROrfuIdlkqjfkzKXkoizlkLh0l3yvuRqThm03J6T6GCzq8Sue337b5yxcVIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9BH+qo5FLwIl+MFCi9JnZx6U86aiU5cTBYcGWMB5yPs=;
+ b=nsKuM5+lzVEVSvGJrOcuJS2tKH+eFjwuYx6t35MhOUENYfeFVwhGwCIIAoM8QC7yYdXwElwZx8o3F/FRDxMgmNNb8/k2GfJzJGv3GM3xFd8ElKV5kJaSX6gxPzEsAlF83wQ5TjDS6fpVxeKOju+bKqjKxCg9JCZTVsy660+5Tu3XcFGt2jZu91kL6MaZSxgelQnVjk67abdYBbz8l97fEZ9srrEw4gMbujpZ/MZlV+b0E4EFOlUhG/jqxrcJJ7MlNqTXWyNvk+9qK/tMB4J0uZFJf1nu7x2TK1myzsTajNKRENKM0sLaCS8DdOYExIy84tErR1y6eynmctaPVG7VwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com (2603:10b6:a03:1ab::16)
+ by BYAPR12MB3046.namprd12.prod.outlook.com (2603:10b6:a03:aa::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16; Tue, 8 Sep
+ 2020 16:13:09 +0000
+Received: from BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::445b:111e:a091:66f9]) by BY5PR12MB3827.namprd12.prod.outlook.com
+ ([fe80::445b:111e:a091:66f9%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 16:13:09 +0000
+Date:   Tue, 8 Sep 2020 13:13:07 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Maor Gottlieb <maorg@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Doug Ledford <dledford@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH rdma-next 3/4] lib/scatterlist: Add support in dynamic
+ allocation of SG table from pages
+Message-ID: <20200908161307.GL9166@nvidia.com>
+References: <20200903121853.1145976-1-leon@kernel.org>
+ <20200903121853.1145976-4-leon@kernel.org> <20200907072921.GC19875@lst.de>
+ <15552707-c9ae-b76b-f6ff-7fedd5b02aed@nvidia.com>
+ <20200908155409.GB13593@lst.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200908155409.GB13593@lst.de>
+X-ClientProxiedBy: BL0PR1501CA0001.namprd15.prod.outlook.com
+ (2603:10b6:207:17::14) To BY5PR12MB3827.namprd12.prod.outlook.com
+ (2603:10b6:a03:1ab::16)
 MIME-Version: 1.0
-In-Reply-To: <20200908121354.GA3848343@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (156.34.48.30) by BL0PR1501CA0001.namprd15.prod.outlook.com (2603:10b6:207:17::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.16 via Frontend Transport; Tue, 8 Sep 2020 16:13:09 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kFgF1-0032Uf-OU; Tue, 08 Sep 2020 13:13:07 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 8c9c331d-d3ae-4f0c-329a-08d8541213e6
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3046:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR12MB304681E112D5CAD306EE363BC2290@BYAPR12MB3046.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NZJA1ulTl6Ry73kbrTKJ8VlxaV0g+T+BBjDCWrlUHRvjd3M8hAPDSdEDR2BW0yXW1fFhmWA186CgLMP8GL2VzpwlwH6NSoHn8rDsaz03d8v8dQDIdot0w7qbodU3pT/t/SHmGl+MwR3JQ1agljW/0UG2m2lm2FA9nGTH4uFU0LL6V18bPx+I/4FX1N4/obG0H6n2Yha+HtCbGKb8S/ZBtfvkNK67ewQZUG/B04ttM/rL5Fxwy+S2NsRE2gGF1Hx432iRAzw93h9qsM1x1axYsYaVqWVPDbPXmTAXRNqzWPjfxbAH6XRGMuAEJszEDGqshVwy76/DlU0IJIEuuuvHGQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB3827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(426003)(6916009)(4744005)(8936002)(66556008)(66476007)(66946007)(2616005)(33656002)(9746002)(9786002)(5660300002)(316002)(26005)(36756003)(186003)(2906002)(8676002)(4326008)(478600001)(86362001)(1076003)(54906003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: q227uxBi3BWMnPnoGG4I6H0UbD8d4bSdlqx3ssX5vEt4409HcygwlUNblejGOnrOLEmeMNuUFSStG2bdFt6Tgq5XA7zCARdlIMLUrb2rMfg5yavpFQHIdTWf0EbKU5W9XT5CiS+bcTMzxvQiUCv50vn7ReYvOTdUQNWgKLehjKM9K+R1pESYnD1CYz4TRx1UjJeNeZ2l6aRxa6tT/Z/uTrwVxx1rOXx5fvzSv2vnylkXpSXo5PmdpnqC8pox4nBjuz9eAg0I52AnU35xbq4Mk2QEt+DY9iDoIDXfbR5wCkqPSm89zHZYaNvWd1/OijSM74843g0EHVO/sDKjX+y7zjgSSzQyPLsRlheV9FYEylYZhXQAAwBbZyeeQwd/qQVNxdVF8MV1bpn2m7V3cWXFFeLu5yBqGjnxIcu4ETIzADe8LWUMfFfH9TbkZrBqqaRFk+AYDxYvbrZkgqde1j5xmxVBTYvCNScLxM8uo8i2FNrDVGgGekbxkh3zs2bkVllRRmZ7MyxR/66BPUa6gKao+65GGDQ/PPGMxOyLgB976+lAQdlqTmY40mVi/hcpJPQ0ngB4k8bOAmdgZJXA8A1SQw0fXuhYwSkxRKMRaCbHTrhbycc/d5nIwzMHtK4m8IeMCWq4jHTcPvn3BepmsXbt1Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c9c331d-d3ae-4f0c-329a-08d8541213e6
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3827.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 16:13:09.4901
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: g+u4gb4oho9+1HLKaBRWPPJ10aAZA1GN2mp/pz5VzyFg+pDxSHseK5n1VLdphfAz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3046
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599581591; bh=9BH+qo5FLwIl+MFCi9JnZx6U86aiU5cTBYcGWMB5yPs=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-MS-Exchange-Transport-Forked:
+         X-Microsoft-Antispam-PRVS:X-MS-Oob-TLC-OOBClassifiers:
+         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
+         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
+         X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=dxJgIEMRC7RwathNT4K88+W3reCXGMyzWKI4oqDGEiZhZJUCVuzzSyxgsTAbXoMFG
+         rij3NjjZpKxWDwLW8xpxtuZ0ts3kPwdJ0HkXJzdmuw/kStSOufs82kIeF0Rje7gYgo
+         giuO+wClAT2ip9kogWqn6+wpdpU5BZUdGsc+/jBxRDXfylztXV3Brcu5bNuvlDdg68
+         g/MdNbNNLmQgy+AhPfm8JfKUa0BxCmic1GcbdWPBNOKbPoP6km3p/lJwHsnocVdfbF
+         t1TPXTCossSPPPO8ptrkY0tOh2MxTp923F+xJ7Wmknq4kMcwSuZZbm6YgPg5tzreJu
+         L1d3c6m4v5ClQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/20 5:13 AM, Ingo Molnar wrote:
-> 
-> * Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
->> After the commit 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
->> 32-bit builds using defconfig become broken because on x86_64 build host
->> with no ARCH provided the default behaviour is to assume 64-bit independently
->> on the configuration file name. The crucial part is CONFIG_64BIT option
->> that used to be explicit. Let restore the latter option in order to unbreak
->> 32-bit builds.
-> 
-> So exactly which build method broke due to this? The typical way to do a defconfig build is:
-> 
->   make ARCH=i386 defconfig
-> 
-> which still works fine AFAICS.
-> 
-> Thanks,
-> 
-> 	Ingo
-> 
+On Tue, Sep 08, 2020 at 05:54:09PM +0200, Christoph Hellwig wrote:
+> Given that ARCH_NO_SG_CHAIN is only true for alpha, parisc and a few
+> arm subarchitectures I think just not supporting umem is probably
+> cleared.  And eventually we'll need to drop ARCH_NO_SG_CHAIN entirely.
 
-Here is a previous patch from someone else:
+It would be fine to make INFINIBAND_USER_MEM depend on
+!ARCH_NO_SG_CHAIN. alpha and parisc are not supported in rdma-core,
+and the non-multiplatform ARM sub-arches are probably also the kind
+that don't work with the userspace DMA model anyhow.
 
-https://lore.kernel.org/lkml/20200810155943.2583275-1-daniel.diaz@linaro.org/
-
-
--- 
-~Randy
-
+Jason
