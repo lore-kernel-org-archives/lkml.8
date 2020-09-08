@@ -2,148 +2,128 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90497C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2819DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 518AB20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rnVd4cTb"
+	by mail.kernel.org (Postfix) with ESMTP id F104C2137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbgIHWnX (ORCPT
+        id S1730439AbgIHWnb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:43:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730073AbgIHWky (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:40:54 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5995AC061796;
-        Tue,  8 Sep 2020 15:40:53 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id n25so991600ljj.4;
-        Tue, 08 Sep 2020 15:40:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=cXVjQ8tBGvi88Q3dqadI+S4l2h32UDxPkNgdMyWN/ps=;
-        b=rnVd4cTbVh+Phcmm/EYwb9cJVGctt7NC8DOpLYHkyc1borSEi69laZ1mriUqX8djX7
-         Sc0PYukYR6x+s+ja5IjDNwcXL+tnRdYzEnX/kBXSnfMRteZt/En0WnXL0LtSg+bd+7yn
-         Q6p6APAe5wQlNg1q1xaqewY+xmfVTZRAZr7b4mOfY7xWKjYfovBbcB5gvnybj0BY7N4W
-         ZVlphs36JksqqVhWMv7euMetE6U2bqCz0x5m9d/GYJ1izka0rjz7vI/s2Dsdi9vmbnXz
-         p9uY2g0GGiYeHJrxW8pHQdtEL2wAy+tfc9AcdCCfQJqps5/Fz+wW5AM6nToMYGIou+rT
-         GYSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=cXVjQ8tBGvi88Q3dqadI+S4l2h32UDxPkNgdMyWN/ps=;
-        b=Txl6qqnBw5GLWgKunmQKXzFeNwYwGsGEE6X6HytpJZFw//sZYivLC/Y13C+TPIrAO7
-         JiXu0rCVaOS2d7xj85chDNUAU8sNSS2v9/S2FZRyL7h053d/fibGRe1/BRq5JKLaQbHP
-         HQ2UILD0xEq/3AKVoeeaxTwBHNc3Y99pOM1ekUGspnSfpGgnL0iHUp9RkkqAA+Ue9ANr
-         BpxbLFRuXOJ+dclscagBn47xrcYG4R/6tH5A3ZxhF3BFNmUbBJcKCLbefpcRUqY/JGiT
-         jFfIfIkSB85c7AG7277/PSe4XT4bCBK3Lq92DxYYXYb5cNLoP3CqadfcLzUh8XK77N8j
-         7CPA==
-X-Gm-Message-State: AOAM530zSgr/tNC4zdG/M2Ey76MGAjNiTgYRi8Ekx9/hjCUmVlaIWyay
-        aUVnWv4RM2H8mvCUM5DtyFA=
-X-Google-Smtp-Source: ABdhPJy3yGatK4uH7DrsKjp72dQFgAXBSdPTKTAcfPVTfHIiN54fn/KrFv5JgZthCrJsELBBKQUxlg==
-X-Received: by 2002:a2e:b5d9:: with SMTP id g25mr319707ljn.335.1599604851862;
-        Tue, 08 Sep 2020 15:40:51 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id s15sm268311ljp.25.2020.09.08.15.40.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 15:40:51 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 21/34] i2c: tegra: Don't fall back to PIO mode if DMA configuration fails
-Date:   Wed,  9 Sep 2020 01:39:53 +0300
-Message-Id: <20200908224006.25636-22-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200908224006.25636-1-digetx@gmail.com>
-References: <20200908224006.25636-1-digetx@gmail.com>
+        Tue, 8 Sep 2020 18:43:31 -0400
+Received: from mga04.intel.com ([192.55.52.120]:10153 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730092AbgIHWnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:43:15 -0400
+IronPort-SDR: GJRUn/ojALcYr1RnQwXtJb4vfVpIM+iMYhTKEsRJJmSuR0QCKvnU2/cEV6emdqRBBj42WeNm51
+ +cj9GQRzvnnA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="155638268"
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="155638268"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 15:43:14 -0700
+IronPort-SDR: VZ4y8B/AwjLCLGKaGQt4gPJzvJIQTGKkkJh64Q92xroDBsUYzh0IFoEFRHaEMVDh+kwPWDc2xS
+ 2lnl8/38qWWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
+   d="scan'208";a="341345209"
+Received: from orsmsx606.amr.corp.intel.com ([10.22.229.19])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Sep 2020 15:43:13 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Sep 2020 15:43:13 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 8 Sep 2020 15:43:12 -0700
+Received: from orsmsx611.amr.corp.intel.com ([10.22.229.24]) by
+ ORSMSX611.amr.corp.intel.com ([10.22.229.24]) with mapi id 15.01.1713.004;
+ Tue, 8 Sep 2020 15:43:12 -0700
+From:   "Christopherson, Sean J" <sean.j.christopherson@intel.com>
+To:     Ingo Molnar <mingo@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: RE: [GIT PULL] First batch of KVM changes for Linux 5.9
+Thread-Topic: [GIT PULL] First batch of KVM changes for Linux 5.9
+Thread-Index: AQHWa1ww4KOzvmpD9UyaU7UPqtFMUqlftQ+A///WEpA=
+Date:   Tue, 8 Sep 2020 22:43:12 +0000
+Message-ID: <6a83e6f1e9c34e44ae818ef88ec185a7@intel.com>
+References: <20200805182606.12621-1-pbonzini@redhat.com>
+ <20200908180939.GA2378263@gmail.com>
+In-Reply-To: <20200908180939.GA2378263@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.5.1.3
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+x-originating-ip: [10.1.200.100]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DMA code path has been tested well enough and the DMA configuration
-performed by tegra_i2c_config_fifo_trig() shouldn't ever fail in practice.
-Hence let's remove the obscure transfer-mode switching in order to have a
-cleaner and simpler code. Now I2C transfer will be failed if DMA
-configuration fails.
+Ingo Molnar wrote:
+> * Paolo Bonzini <pbonzini@redhat.com> wrote:
+> 
+> > Paolo Bonzini (11):
+> >       Merge branch 'kvm-async-pf-int' into HEAD
+> 
+> kvmtool broke in this merge window, hanging during bootup right after CPU bringup:
+> 
+>  [    1.289404]  #63
+>  [    0.012468] kvm-clock: cpu 63, msr 6ff69fc1, secondary cpu clock
+>  [    0.012468] [Firmware Bug]: CPU63: APIC id mismatch. Firmware: 3f APIC: 14
+>  [    1.302320] kvm-guest: KVM setup async PF for cpu 63
+>  [    1.302320] kvm-guest: stealtime: cpu 63, msr 1379d7600
+> 
+> Eventually trigger an RCU stall warning:
+> 
+>  [   22.302392] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+>  [   22.302392] rcu: 	1-...!: (68 GPs behind) idle=00c/0/0x0 softirq=0/0 fqs=0  (false positive?)
+> 
+> I've bisected this down to the above merge commit. The individual commit:
+> 
+>    b1d405751cd5: ("KVM: x86: Switch KVM guest to using interrupts for page ready APF delivery")
+> 
+> appears to be working fine standalone.
+> 
+> I'm using x86-64 defconfig+kvmconfig on SVM. Can send more info on request.
+> 
+> The kvmtool.git commit I've tested is 90b2d3adadf2.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Looks a lot like the lack of APIC EOI issue that Vitaly reported[*].
+
 ---
- drivers/i2c/busses/i2c-tegra.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ arch/x86/kernel/kvm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 76d3a05b10fc..574b59a8b2a2 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -940,8 +940,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index d45f34cbe1ef..9663ba31347c 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -271,6 +271,8 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_asyncpf_interrupt)
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	u32 token;
  
--static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
--				       size_t len)
-+static int tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev, size_t len)
- {
- 	u32 val, reg;
- 	u8 dma_burst;
-@@ -992,12 +991,10 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
- 		if (ret < 0) {
- 			dev_err(i2c_dev->dev, "DMA slave config failed: %d\n",
- 				ret);
--			dev_err(i2c_dev->dev, "falling back to PIO\n");
--			tegra_i2c_release_dma(i2c_dev);
--			i2c_dev->is_curr_dma_xfer = false;
--		} else {
--			goto out;
-+			return ret;
- 		}
++	ack_APIC_irq();
 +
-+		goto out;
- 	}
+ 	inc_irq_stat(irq_hv_callback_count);
  
- 	if (i2c_dev->hw->has_mst_fifo)
-@@ -1008,6 +1005,8 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
- 		      I2C_FIFO_CONTROL_RX_TRIG(1);
- out:
- 	i2c_writel(i2c_dev, val, reg);
-+
-+	return 0;
- }
- 
- static unsigned long
-@@ -1141,7 +1140,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 	i2c_dev->is_curr_dma_xfer = (xfer_size > I2C_PIO_MODE_PREFERRED_LEN) &&
- 				    i2c_dev->dma_buf &&
- 				    !i2c_dev->is_curr_atomic_xfer;
--	tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
-+
-+	err = tegra_i2c_config_fifo_trig(i2c_dev, xfer_size);
-+	if (err)
-+		return err;
- 
- 	/*
- 	 * Transfer time in mSec = Total bits / transfer rate
--- 
-2.27.0
+ 	if (__this_cpu_read(apf_reason.enabled)) {
+--
 
+[*] https://lkml.kernel.org/r/20200908135350.355053-1-vkuznets@redhat.com
