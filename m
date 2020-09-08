@@ -2,150 +2,241 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A603C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2742207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30E02087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:04:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pKJ8j7uK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZ179g5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbgIHRDZ (ORCPT
+        id S1731911AbgIHREC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
+        Tue, 8 Sep 2020 13:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731873AbgIHRDD (ORCPT
+        with ESMTP id S1732071AbgIHRDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:03:03 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C110C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 10:03:03 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id m8so5175460pgi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 10:03:03 -0700 (PDT)
+        Tue, 8 Sep 2020 13:03:39 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A66C061573;
+        Tue,  8 Sep 2020 10:03:38 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id k15so11450435pfc.12;
+        Tue, 08 Sep 2020 10:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=TS+pFAf+gXvyICCIZ7exDi0/Gxg54q8UJXDvRO7l168=;
-        b=pKJ8j7uKJcb7uVWaQ5j/SnvkaAx4KCY55KCie8OQaygCpy1OPF8cDgeNH1qrPaLMvG
-         8srfgOOgbosqJmTceeQvjWZChA+6j/LEIRcay7cMsXtBzLKxqoBwUcyD/WziBOgMhTht
-         H95mhfOyXrIvUmREbH1YWzNRx8qhfoLUnK6vxg72nBJz4Zsryt8ZJJ5SgRHKxhMkN6NG
-         dtOewrVFqRwrzOeM6o0lzzlRd9V3/io+BfvvategCuZpFKOLhdC7d/WJPglYjH7skxA9
-         mFBhEsZ3kh8WuUPDicHPjHktAGiGpoaEUWzf67bzqCSOGx192KG66jA3O0NwWTFIar6q
-         WtYA==
+        bh=xuJFXsSZhLTn4QTt9AYHjV/t9mROTn+fOq6waSMNYSs=;
+        b=oZ179g5DtG+h+chAplPBrXJjuj638S0FCpKhCEGhpvm9VvsWXQPUwYI8HDc1UEmWi6
+         a+j/vWhh9LqAWZTjUz/2hFCLZm54OTaNusV/I5bixoPh7ekshrIVMT/Bu+/HRtWu6KQV
+         X81IZvECksxQEzu7rN2jEhRFk/b/yV5bkZhAq0MfzLlKM2GB8EFvukwEfbiFoBEONeHa
+         unzBJIdc9g/SuIv56GyM9BCmwc5l8hSjJVzWJMzwcY5JPx/MKw9ymT3JNzxYET6VJbH5
+         DbCFSsPONl3pp8ucslMne8kOtAS2SaJv8VKckKyYqFXrRjHx87+r6juf0xC6e6A92aOW
+         sAXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=TS+pFAf+gXvyICCIZ7exDi0/Gxg54q8UJXDvRO7l168=;
-        b=DJbSeoz9+qaU8zazsVulREvCd4Suhd1kNsB7ohYwYxKanPQ/oCI9gqBg7ZAx/muvHX
-         fp2k5YYA9UeBFt18ZqBK7gygfHlm0e8yOZD9ehVjUxElYD+eRclYSXaAetvk4cPpb+Aa
-         RXWaroNQbRIZ31+xOHfyF3PZBpsEs5wWXYn1Bv6nFhOFqkEkvn6YKtf2tpcwdfVCRZAX
-         v7Svzm8p5AYE7j+5XAvswRJ/pCKISwo1rcl8DCFG2QwpQNA3p1zenCV3jmaOLd7mi/25
-         hZmieGo4oL8+lnWOj6dBCafvvX1xUMPP5iI43mpe+fkwXnot0x+QimJ9/2Qxs6j83hpw
-         Ka3w==
-X-Gm-Message-State: AOAM533i546oCeSsMdtyl5x4m0sISFp1PwSHOa/X1KRQ1keGgvHq/YAi
-        1NGJ64kGvHacAmGNQsRcfFjEmJ7t3l/U2g==
-X-Google-Smtp-Source: ABdhPJypTa9m8baYyH7KtZLmA6Dhp5bWpLPg7YpbRm1G9HK65/WnGTkmsSsfgelDtI+oA1WrmQRR/g==
-X-Received: by 2002:a17:902:d714:b029:d0:cbe1:e738 with SMTP id w20-20020a170902d714b02900d0cbe1e738mr2106530ply.19.1599584582581;
-        Tue, 08 Sep 2020 10:03:02 -0700 (PDT)
-Received: from google.com ([2620:15c:201:2:f693:9fff:fef4:1b6d])
-        by smtp.gmail.com with ESMTPSA id t15sm19413909pfl.175.2020.09.08.10.03.01
+        bh=xuJFXsSZhLTn4QTt9AYHjV/t9mROTn+fOq6waSMNYSs=;
+        b=lV7MUvUKKrzZMJA4P9B3gp1l5kbwrQ2BdeZmRwyhy3IJ0WBP/pNRo5qg0qozVjsdo/
+         8LLpTNPJeVXrwmqQ0Oz1OY3ybE14Yn1SpGbmzpdTwdWcw/zft/Ob+7SmnxUuDj/9nEwg
+         /bhxreCQka8f3w0Fso9ZACZdHy1PIDwj1yKwsq02q43/eB5MgMmCBt9QNZN0w/VbFiPW
+         ck5W0+HSIw8ulmIq8HuW4h50n2boyJMLC7Tiu15VcCEtdWx+1WKhV7Di2RCN4YBqrwQb
+         /VwF3E957OwQtSj7jJ3VT4DXNY+KfpjfBfFxr0ukL/tvAlEa3EmHU7CwRqWrhcKT6ewx
+         wRog==
+X-Gm-Message-State: AOAM533aNZnBbGkaAf2KNbutONlrD9lQ4+JTN7RYxszWsAyYLvaGtv3O
+        lCLpvbyhtbHb3q/j4OHsodA=
+X-Google-Smtp-Source: ABdhPJyGcJoQNTrFi39eSyTpTCIiBnDYR1AtM61vOqpau6HB++g0/IWCmYOD3BVolI2a/79HX5yPGQ==
+X-Received: by 2002:a05:6a00:1356:b029:13e:d13d:a084 with SMTP id k22-20020a056a001356b029013ed13da084mr64321pfu.27.1599584618337;
+        Tue, 08 Sep 2020 10:03:38 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id ie13sm42824pjb.5.2020.09.08.10.03.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 10:03:01 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 10:02:56 -0700
-From:   Sami Tolvanen <samitolvanen@google.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 09/28] kbuild: add support for Clang LTO
-Message-ID: <20200908170256.GA2743468@google.com>
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200903203053.3411268-1-samitolvanen@google.com>
- <20200903203053.3411268-10-samitolvanen@google.com>
- <202009031504.07098D6F8@keescook>
+        Tue, 08 Sep 2020 10:03:37 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:31:44 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 06/15] scsi: esas2r: use generic power management
+Message-ID: <20200908170058.GG9948@gmail.com>
+References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+ <20200720133427.454400-7-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202009031504.07098D6F8@keescook>
+In-Reply-To: <20200720133427.454400-7-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 03, 2020 at 03:08:59PM -0700, Kees Cook wrote:
-> On Thu, Sep 03, 2020 at 01:30:34PM -0700, Sami Tolvanen wrote:
-> > This change adds build system support for Clang's Link Time
-> > Optimization (LTO). With -flto, instead of ELF object files, Clang
-> > produces LLVM bitcode, which is compiled into native code at link
-> > time, allowing the final binary to be optimized globally. For more
-> > details, see:
-> > 
-> >   https://llvm.org/docs/LinkTimeOptimization.html
-> > 
-> > The Kconfig option CONFIG_LTO_CLANG is implemented as a choice,
-> > which defaults to LTO being disabled. To use LTO, the architecture
-> > must select ARCH_SUPPORTS_LTO_CLANG and support:
-> > 
-> >   - compiling with Clang,
-> >   - compiling inline assembly with Clang's integrated assembler,
-> >   - and linking with LLD.
-> > 
-> > While using full LTO results in the best runtime performance, the
-> > compilation is not scalable in time or memory. CONFIG_THINLTO
-> > enables ThinLTO, which allows parallel optimization and faster
-> > incremental builds. ThinLTO is used by default if the architecture
-> > also selects ARCH_SUPPORTS_THINLTO:
-> > 
-> >   https://clang.llvm.org/docs/ThinLTO.html
-> > 
-> > To enable LTO, LLVM tools must be used to handle bitcode files. The
-> > easiest way is to pass the LLVM=1 option to make:
-> > 
-> >   $ make LLVM=1 defconfig
-> >   $ scripts/config -e LTO_CLANG
-> >   $ make LLVM=1
-> > 
-> > Alternatively, at least the following LLVM tools must be used:
-> > 
-> >   CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm
-> > 
-> > To prepare for LTO support with other compilers, common parts are
-> > gated behind the CONFIG_LTO option, and LTO can be disabled for
-> > specific files by filtering out CC_FLAGS_LTO.
-> > 
-> > Note that support for DYNAMIC_FTRACE and MODVERSIONS are added in
-> > follow-up patches.
-> > 
-> > Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+On Mon, Jul 20, 2020 at 07:04:19PM +0530, Vaibhav Gupta wrote:
+> With legacy PM, drivers themselves were responsible for managing the
+> device's power states and takes care of register states.
 > 
-> I remain crazy excited about being able to use this in upstream. :)
+> After upgrading to the generic structure, PCI core will take care of
+> required tasks and drivers should do only device-specific operations.
 > 
-> The only suggestion I have here, if it might help with clarity, would be
-> to remove DISABLE_LTO globally as a separate patch, since it's entirely
-> unused in the kernel right now. This series removes it as it goes, which
-> I think is fine, but it might cause some reviewers to ponder "what's
-> this DISABLE_LTO thing? Don't we need that?" without realizing currently
-> unused in the kernel.
-
-Sure, that makes sense. I'll add a patch to remove DISABLE_LTO treewide
-in v3.
-
-Sami
+> The driver was calling pci_save/restore_state(), pci_choose_state(),
+> pci_enable/disable_device() and pci_set_power_state() which is no more
+> needed.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/scsi/esas2r/esas2r.h      |  5 ++--
+>  drivers/scsi/esas2r/esas2r_init.c | 48 +++++++++----------------------
+>  drivers/scsi/esas2r/esas2r_main.c |  3 +-
+>  3 files changed, 18 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/scsi/esas2r/esas2r.h b/drivers/scsi/esas2r/esas2r.h
+> index 7f43b95f4e94..6ad3e0871ef0 100644
+> --- a/drivers/scsi/esas2r/esas2r.h
+> +++ b/drivers/scsi/esas2r/esas2r.h
+> @@ -996,8 +996,9 @@ void esas2r_adapter_tasklet(unsigned long context);
+>  irqreturn_t esas2r_interrupt(int irq, void *dev_id);
+>  irqreturn_t esas2r_msi_interrupt(int irq, void *dev_id);
+>  void esas2r_kickoff_timer(struct esas2r_adapter *a);
+> -int esas2r_suspend(struct pci_dev *pcid, pm_message_t state);
+> -int esas2r_resume(struct pci_dev *pcid);
+> +
+> +extern const struct dev_pm_ops esas2r_pm_ops;
+> +
+>  void esas2r_fw_event_off(struct esas2r_adapter *a);
+>  void esas2r_fw_event_on(struct esas2r_adapter *a);
+>  bool esas2r_nvram_write(struct esas2r_adapter *a, struct esas2r_request *rq,
+> diff --git a/drivers/scsi/esas2r/esas2r_init.c b/drivers/scsi/esas2r/esas2r_init.c
+> index eb7d139ffc00..6c5854969791 100644
+> --- a/drivers/scsi/esas2r/esas2r_init.c
+> +++ b/drivers/scsi/esas2r/esas2r_init.c
+> @@ -640,53 +640,31 @@ void esas2r_kill_adapter(int i)
+>  	}
+>  }
+>  
+> -int esas2r_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused esas2r_suspend(struct device *dev)
+>  {
+> -	struct Scsi_Host *host = pci_get_drvdata(pdev);
+> -	u32 device_state;
+> +	struct Scsi_Host *host = dev_get_drvdata(dev);
+>  	struct esas2r_adapter *a = (struct esas2r_adapter *)host->hostdata;
+>  
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev), "suspending adapter()");
+> +	esas2r_log_dev(ESAS2R_LOG_INFO, dev, "suspending adapter()");
+>  	if (!a)
+>  		return -ENODEV;
+>  
+>  	esas2r_adapter_power_down(a, 1);
+> -	device_state = pci_choose_state(pdev, state);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_save_state() called");
+> -	pci_save_state(pdev);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_disable_device() called");
+> -	pci_disable_device(pdev);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_set_power_state() called");
+> -	pci_set_power_state(pdev, device_state);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev), "esas2r_suspend(): 0");
+> +	esas2r_log_dev(ESAS2R_LOG_INFO, dev, "esas2r_suspend(): 0");
+>  	return 0;
+>  }
+>  
+> -int esas2r_resume(struct pci_dev *pdev)
+> +static int __maybe_unused esas2r_resume(struct device *dev)
+>  {
+> -	struct Scsi_Host *host = pci_get_drvdata(pdev);
+> +	struct Scsi_Host *host = dev_get_drvdata(dev);
+>  	struct esas2r_adapter *a = (struct esas2r_adapter *)host->hostdata;
+> -	int rez;
+> +	int rez = 0;
+>  
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev), "resuming adapter()");
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_set_power_state(PCI_D0) "
+> +	esas2r_log_dev(ESAS2R_LOG_INFO, dev, "resuming adapter()");
+> +	esas2r_log_dev(ESAS2R_LOG_INFO, dev,
+> +		       "device_wakeup_disable() "
+>  		       "called");
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_enable_wake(PCI_D0, 0) "
+> -		       "called");
+> -	pci_enable_wake(pdev, PCI_D0, 0);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_restore_state() called");
+> -	pci_restore_state(pdev);
+> -	esas2r_log_dev(ESAS2R_LOG_INFO, &(pdev->dev),
+> -		       "pci_enable_device() called");
+> -	rez = pci_enable_device(pdev);
+> -	pci_set_master(pdev);
+> +	device_wakeup_disable(dev);
+>  
+>  	if (!a) {
+>  		rez = -ENODEV;
+> @@ -730,11 +708,13 @@ int esas2r_resume(struct pci_dev *pdev)
+>  	}
+>  
+>  error_exit:
+> -	esas2r_log_dev(ESAS2R_LOG_CRIT, &(pdev->dev), "esas2r_resume(): %d",
+> +	esas2r_log_dev(ESAS2R_LOG_CRIT, dev, "esas2r_resume(): %d",
+>  		       rez);
+>  	return rez;
+>  }
+>  
+> +SIMPLE_DEV_PM_OPS(esas2r_pm_ops, esas2r_suspend, esas2r_resume);
+> +
+>  bool esas2r_set_degraded_mode(struct esas2r_adapter *a, char *error_str)
+>  {
+>  	set_bit(AF_DEGRADED_MODE, &a->flags);
+> diff --git a/drivers/scsi/esas2r/esas2r_main.c b/drivers/scsi/esas2r/esas2r_main.c
+> index 7b49e2e9fcde..aab3ea580e6b 100644
+> --- a/drivers/scsi/esas2r/esas2r_main.c
+> +++ b/drivers/scsi/esas2r/esas2r_main.c
+> @@ -346,8 +346,7 @@ static struct pci_driver
+>  	.id_table	= esas2r_pci_table,
+>  	.probe		= esas2r_probe,
+>  	.remove		= esas2r_remove,
+> -	.suspend	= esas2r_suspend,
+> -	.resume		= esas2r_resume,
+> +	.driver.pm	= &esas2r_pm_ops,
+>  };
+>  
+>  static int esas2r_probe(struct pci_dev *pcid,
+> -- 
+> 2.27.0
+> 
+.
