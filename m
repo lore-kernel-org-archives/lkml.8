@@ -2,88 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C13EAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0828DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84F5E20768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594454;
-	bh=IjecBUMNsGMpOyrwu++8aLByHfqCkW2ag00jaPPJmvU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eB1iPG50Gb5aJ8Wxrr6mYZ6aUB8pp2u7+CWBPOZMWtNNVC+fee78u6ixDQIJsdXyd
-	 L7vGE5qinpK4oiiMrGIyrsrRBTaLaIfOJjfdpxpohaTE/ktH1VjTwQyu8CEGH5CEcD
-	 /4gSldvkh4zbZvkfaAmbS45HYLMJ4IeCu292TYm8=
+	by mail.kernel.org (Postfix) with ESMTP id C917B20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732382AbgIHTrb (ORCPT
+        id S1732469AbgIHTrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:47:31 -0400
-Received: from mail-il1-f195.google.com ([209.85.166.195]:41278 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732466AbgIHTqZ (ORCPT
+        Tue, 8 Sep 2020 15:47:36 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:46044 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732210AbgIHTr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:46:25 -0400
-Received: by mail-il1-f195.google.com with SMTP id w8so64366ilj.8;
-        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mxfloW/du0FtuXMc7fb1vC2lzA6jvn4y8s0XgOBsOH8=;
-        b=joOjemVdVg0rGYRBaxijCTLyXC1ABGQPRe2gGbBUAEeW+XdFTLbfsLdUrHUAMbqeHa
-         oANjBrc104blQkYAqloN0iea2d/qzIolkNLff/850DXgQqsWxBWc4IJltjG8eJtdFJnr
-         r2ujezMXMyzaIX2441IwVKZADWUpknZb1nzX/FhKUZ0kEZC21ZfwsqXhNAZ56z87SRrf
-         5OLc3+muMIirACPQfYHEIdXptd7YkCBrlMP4TZCLmd7LK2Be+aSPMy0bk7Qorm6r2Qvi
-         5lUIYdMA+4HtZpjmgLTkKZIoKjZ3g2jSrCUyoYwbz2XC5w5vz81wSDG4aJAPtwFXX5Z+
-         t2kQ==
-X-Gm-Message-State: AOAM531BCW2pmni1AlM7C/nchenW/oiYV+XC2M3LTPBLTN4NkzS9kRmQ
-        PCLP2GLl9vlSj2/KfFoyBw==
-X-Google-Smtp-Source: ABdhPJwfXlbhewMkiRkSXUg2HnOofi1QqFbxJeOtWC0GyonQWdvBxG98pU6ZFKLbPgzI9eeJYtTL3A==
-X-Received: by 2002:a92:6b04:: with SMTP id g4mr376411ilc.192.1599594384637;
-        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id t10sm135379iog.49.2020.09.08.12.46.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
-Received: (nullmailer pid 788543 invoked by uid 1000);
-        Tue, 08 Sep 2020 19:46:22 -0000
-Date:   Tue, 8 Sep 2020 13:46:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        linux-leds@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: Add ENE KB930 Embedded
- Controller binding
-Message-ID: <20200908194622.GA788479@bogus>
-References: <20200906195103.1347-1-digetx@gmail.com>
- <20200906195103.1347-2-digetx@gmail.com>
+        Tue, 8 Sep 2020 15:47:28 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 194181C0B87; Tue,  8 Sep 2020 21:47:24 +0200 (CEST)
+Date:   Tue, 8 Sep 2020 21:47:23 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marc Smith <msmith626@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 34/88] bnxt_en: fix HWRM error when querying VF
+ temperature
+Message-ID: <20200908194723.GB6758@duo.ucw.cz>
+References: <20200908152221.082184905@linuxfoundation.org>
+ <20200908152222.792503974@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="8P1HSweYDcXXzwPJ"
 Content-Disposition: inline
-In-Reply-To: <20200906195103.1347-2-digetx@gmail.com>
+In-Reply-To: <20200908152222.792503974@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 06 Sep 2020 22:50:59 +0300, Dmitry Osipenko wrote:
-> Add binding document for the ENE KB930 Embedded Controller.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.yaml
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+--8P1HSweYDcXXzwPJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> Firmware returns RESOURCE_ACCESS_DENIED for HWRM_TEMP_MONITORY_QUERY for
+> VFs. This produces unpleasing error messages in the log when temp1_input
+> is queried via the hwmon sysfs interface from a VF.
+>=20
+> The error is harmless and expected, so silence it and return unknown as
+> the value. Since the device temperature is not particularly sensitive
+> information, provide flexibility to change this policy in future by
+> silencing the error rather than avoiding the HWRM call entirely for VFs.
+>=20
+> Fixes: cde49a42a9bb ("bnxt_en: Add hwmon sysfs support to read
+> temperature")
+
+Is this new interface described somewhere?
+
+> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+> @@ -6836,16 +6836,19 @@ static ssize_t bnxt_show_temp(struct device *dev,
+=2E..
+> -	return sprintf(buf, "%u\n", temp);
+> +	if (len)
+> +		return len;
+> +
+> +	return sprintf(buf, "unknown\n");
+>  }
+
+We normally just do return -EIO (or other error code) in such cases.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--8P1HSweYDcXXzwPJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1ffywAKCRAw5/Bqldv6
+8sXIAJ9BSVZ2KXHsgjvUYGiaxLJKhy8r7ACfQV6tWW2ZhZfSs4Nji2Stw5c2MYM=
+=fB9W
+-----END PGP SIGNATURE-----
+
+--8P1HSweYDcXXzwPJ--
