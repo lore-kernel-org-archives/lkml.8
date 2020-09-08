@@ -2,119 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF130C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A675CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC81E2145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:23:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="OynqUYlb"
+	by mail.kernel.org (Postfix) with ESMTP id 7095320708
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 21:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599600653;
+	bh=OKC0y0PzTETPj/Vs8Ki0VGaux+hUiez7y4QoH1YPpuo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gs9nOk9191rWkWtbw6TO1ugaxcbL255ydyXmKAaIXBKfOuywhMX5NnjmKVsmXy7IW
+	 ANCVExVQXZAmG4PONHrOPilWBt7kziAtam9SMVb4yTn44C1wpeF85pXtcUbu9XNgk5
+	 vMcx+Lf2XekVMbeqh1GNzyEGkfySYMDHRDvoq0MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgIHVXi (ORCPT
+        id S1729753AbgIHVav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 17:23:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728617AbgIHVXf (ORCPT
+        Tue, 8 Sep 2020 17:30:51 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36202 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728164AbgIHVau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 17:23:35 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53626C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 14:23:35 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id gr14so508227ejb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 14:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=br7kqX/EdOL7Dtz4xbsGL/PqgcQRS1tChb51PYcN8dE=;
-        b=OynqUYlbUs7iBeqSmkGzesj47qaR8oT14XhnS7OUMJ8ajmWM6PyfFHscblZlW8coxp
-         gusIhiL4efHs5JVE1NoJTZVljm3SPUoWS14ie7DFYGj1mb9rZ2nAe36PaSY0JTCZf/No
-         Y+awcP6yavDk5i99+yoIn9LGQcWj606RFY3pzc2hlVH6e+m1CsNU7n2ajDLCgcUGwSm2
-         5kja8Q74WbHcBLAqdE/RJi/nBeyDwd7eLXb1kJvFb8QR7QSRYft0FNWZmChgQ/hYLWQf
-         eA8xAaAx6fkB5F2/o1J2+c+LxWW98Ye0c3ibHpjqrkeCTkZb7P+gXpcL6qQMU7dqN9bm
-         UalQ==
+        Tue, 8 Sep 2020 17:30:50 -0400
+Received: by mail-io1-f66.google.com with SMTP id d190so974820iof.3;
+        Tue, 08 Sep 2020 14:30:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=br7kqX/EdOL7Dtz4xbsGL/PqgcQRS1tChb51PYcN8dE=;
-        b=OKrJA68lhqOI8VlfefLUojk3MENxiDIcjKL5dVVx1Je0erwf2QQozetgb79wrMNeiv
-         UeyShh6J35r+Na8jH0LEzqrVHv75togJ0vIa8wWcTV0u4j2biTQPMV1Oniqw4PsE5soP
-         5zKBcvSZ9qvT2w/5Lavwos7kpOJZXOFyCI/QrNYeJzDAEXjsrFvLziCCICAIKcEC6y/6
-         ibzDfZKp7CENQAWF2NgOGPo3tmleqbCEka2g4FtX45CBbtuOatjivXAxPT8glj+ibBlg
-         6s0Eb0qYXQRIC0km+LI9+BiGt0AxwSgkDCcKokGqu0Ut6W2mbgaexKvcnj4N5NuZg8NH
-         CXPA==
-X-Gm-Message-State: AOAM533TlS3Wv/B+3eaa8E+Qd/T7abfk0IODLs7nz8eNn2U4Eu8Zd4X5
-        pYXWt7Zls2FD7mllDFnfxp6z40FkhdTbhwHQ56DJ
-X-Google-Smtp-Source: ABdhPJw0uILieaMH3Md5pDW6MLvdTIEjLkaUHI8McMxvysOSsWSpCu7dFxVboDb/ZbuayzuGCaPRAGD9wnbbUoyVsfI=
-X-Received: by 2002:a17:906:8c8:: with SMTP id o8mr419310eje.91.1599600213831;
- Tue, 08 Sep 2020 14:23:33 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=tZ2tqeTxfdvHhXI4fYGCLG+ZG+/0E7uL33/3l5leCNU=;
+        b=i7zspWjDwFOU9ZdSsftLdoVhxt0DuIrjaUYJ5Y07vB2qcjgWLXxiZLn/d/sutKrulB
+         ePXx/BodmKDhvIO6fTJ0Ixoui7jDJikPfMZvm6vQeVzeqDnU5aSWGEuMr42AoJfSbLGT
+         ILq6FADYl17bMOWwGIShcpK75et9OXUlqwzEwJdLAoYet3/sbBWmApY7/upIB07r+3rg
+         H8xsTRmTFfLKncKs3qm95uYvpfuaoaVYDsliY2SOvm4dQe1szO8u5EOz4UMlTIMBJUsr
+         y5jEwTJHwAZ5I6IqBiA8D2PXWIX945s5Y0h2sExvs0EeyphfB2ENKSi64yKUFIxQ7t9T
+         wbkg==
+X-Gm-Message-State: AOAM530gUoMC76IY6qK+p/dYo+GDZkVHFeZFVLjMExY/WhwLRLsNByZB
+        gJCVgxvNunKiFc4nwYJD/EAsP5AfBk3P
+X-Google-Smtp-Source: ABdhPJwbYpkWxvkS0JzZDhjXoVmIf3BcFupaddawmTGlHFebiItQ6YyIOv77w6zWGeepGibLLVoAwA==
+X-Received: by 2002:a6b:700f:: with SMTP id l15mr780998ioc.168.1599600649372;
+        Tue, 08 Sep 2020 14:30:49 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id k14sm280985ioa.7.2020.09.08.14.30.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 14:30:48 -0700 (PDT)
+Received: (nullmailer pid 959278 invoked by uid 1000);
+        Tue, 08 Sep 2020 21:30:47 -0000
+Date:   Tue, 8 Sep 2020 15:30:47 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        ssantosh@kernel.org, devicetree@vger.kernel.org, praneeth@ti.com,
+        santosh.shilimkar@oracle.com, s-anna@ti.com, robh+dt@kernel.org,
+        tony@atomide.com, linux-omap@vger.kernel.org, lee.jones@linaro.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/7] dt-bindings: soc: ti: Add TI PRUSS bindings
+Message-ID: <20200908213047.GA959249@bogus>
+References: <1598020964-29877-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <1598020964-29877-2-git-send-email-grzegorz.jaszczyk@linaro.org>
 MIME-Version: 1.0
-References: <20200908140543.25514-1-wanghai38@huawei.com>
-In-Reply-To: <20200908140543.25514-1-wanghai38@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 8 Sep 2020 17:23:22 -0400
-Message-ID: <CAHC9VhRGzWd+SSQvMqapzLwo3dAJGShJOq-3Wyx0SNZ+TvmjqQ@mail.gmail.com>
-Subject: Re: [PATCH net-next] netlabel: Fix some kernel-doc warnings
-To:     Wang Hai <wanghai38@huawei.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598020964-29877-2-git-send-email-grzegorz.jaszczyk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 10:09 AM Wang Hai <wanghai38@huawei.com> wrote:
->
-> Fixes the following W=1 kernel build warning(s):
->
-> net/netlabel/netlabel_calipso.c:438: warning: Excess function parameter 'audit_secid' description in 'calipso_doi_remove'
-> net/netlabel/netlabel_calipso.c:605: warning: Excess function parameter 'reg' description in 'calipso_req_delattr'
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+On Fri, 21 Aug 2020 16:42:38 +0200, Grzegorz Jaszczyk wrote:
+> This patch adds the bindings for the Programmable Real-Time Unit
+> and Industrial Communication Subsystem (PRU-ICSS) present on various
+> TI SoCs. The IP is present on multiple TI SoC architecture families
+> including the OMAP architecture SoCs such as AM33xx, AM437x and
+> AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is
+> also present on the Davinci based OMAPL138 SoCs and K3 architecture
+> based AM65x and J721E SoCs as well.
+> 
+> The IP has a number of sub-modules some of which are represented as
+> their own devices. This binding covers only the top-level sub-system
+> devices, and some sub-modules like MDIO, MII_RT (Ethernet MII_RT module
+> with MII ports) and IEP (Industrial Ethernet Peripheral). The remaining
+> sub-modules bindings shall be defined in the respective driver
+> subsystem bindings folders. Couple of full examples have also been
+> added demonstrating the devices on AM335x and AM437x SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 > ---
->  net/netlabel/netlabel_calipso.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v1-v2 (requested by Rob):
+> - Add unit address pattern for all sub-nodes.
+> - Add "additionalProperties: false" to all sub-nodes and entire
+>   description. This allow to catch and fix some issues like missing
+>   "#address-cells" property description.
+> - Drop ranges description.
+> - Fix compatible name in example binding for AM43xx.
+> - Drop the *.yaml references from description as they are not merged yet
+>   and therefore they can't be converted to $ref.
+> - Drop reviewed-by tag due to introduced changes.
+> ---
+>  .../devicetree/bindings/soc/ti/ti,pruss.yaml       | 320 +++++++++++++++++++++
+>  1 file changed, 320 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml
+> 
 
-Looks good to me, thanks.
-
-Acked-by: Paul Moore <paul@paul-moore.com>
-
-> diff --git a/net/netlabel/netlabel_calipso.c b/net/netlabel/netlabel_calipso.c
-> index 249da67d50a2..1a98247ab148 100644
-> --- a/net/netlabel/netlabel_calipso.c
-> +++ b/net/netlabel/netlabel_calipso.c
-> @@ -426,7 +426,7 @@ void calipso_doi_free(struct calipso_doi *doi_def)
->  /**
->   * calipso_doi_remove - Remove an existing DOI from the CALIPSO protocol engine
->   * @doi: the DOI value
-> - * @audit_secid: the LSM secid to use in the audit message
-> + * @audit_info: NetLabel audit information
->   *
->   * Description:
->   * Removes a DOI definition from the CALIPSO engine.  The NetLabel routines will
-> @@ -595,7 +595,7 @@ int calipso_req_setattr(struct request_sock *req,
->
->  /**
->   * calipso_req_delattr - Delete the CALIPSO option from a request socket
-> - * @reg: the request socket
-> + * @req: the request socket
->   *
->   * Description:
->   * Removes the CALIPSO option from a request socket, if present.
-> --
-> 2.17.1
->
-
-
--- 
-paul moore
-www.paul-moore.com
+Reviewed-by: Rob Herring <robh@kernel.org>
