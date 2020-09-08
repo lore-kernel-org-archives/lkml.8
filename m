@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0669C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:51:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9302C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 853B02080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:51:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B70D2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="c2ZnrSe2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IQ7sGbx+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbgIHQu7 (ORCPT
+        id S1731952AbgIHQvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34166 "EHLO
+        Tue, 8 Sep 2020 12:51:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732034AbgIHQsj (ORCPT
+        with ESMTP id S1732044AbgIHQsj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:48:39 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694DDC061796;
-        Tue,  8 Sep 2020 09:48:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4187C061799;
+        Tue,  8 Sep 2020 09:48:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
         References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
         Content-Type:Content-ID:Content-Description;
-        bh=al0ag1j1mhlnjNfR7j4kD7CUfxxYaZBiv73JAkyo30Q=; b=c2ZnrSe2X6va8zAfelp2V/exIM
-        hwcLDaVgsRkmxTApT2R4WKPdHTn4Y/Cx6BoSPvMrqulcKzxOqOEroLmrZCoG5GV619Ou5t0p24Ap5
-        FzWUe07Ff/CQ2GwhhWYzbSioLNbsUHlkM+NxA0akLBhY/BPykuDhR3iy9VNWZ4DPsNKXhPPM6kGWj
-        12Pr6pX8v5s9wMnaYEmMRivjZy6GdSa40AE5ko0P7gIC4cf3pBnGb40zeSHSUESoil3jeaXYAKhev
-        I4/VinsIgOcWeaROvSrTabkj0eCQ3IgG8kUVFdsLNt14IFi+2f0P+OHbK/sRYXOpxGeKeH8tLRr5v
-        HR5eHbvA==;
+        bh=+nOSLIs9LkSjQJt0Q5qAmk8nkbWCQbovg2Llv5RLZtk=; b=IQ7sGbx+t6W2URYGAOKZfn6yYh
+        JWIo9H8+pwAdOUvhjhfUAs2ggnOgWWcNDVAkixK61nw59vUUoSHBtr8ci/p/CkiVEZdX3lqJpc6md
+        jCjTOziJO4l5EWDap3Wct/xQUY+QqWAoBNMLBc8/rDE3iqX1WQZwiYECBzvVAsUQ9APLCrlkKiLlF
+        6dktr7vivViBBmsenA50pIFoJ5de5v0CWB7/r84SPvhv2j5JdzZNmwn/fBawbYUvcOmD0+shnGlaO
+        dEbh3gNu0J03xzwCCQtqqSTZPiAVTwKUib9PmEV3i6T6ESrjW11KLyCKDzjHow+Wrg8IsaatI+N2i
+        eaa0CdKQ==;
 Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
         by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFgmt-0001Sf-Qe; Tue, 08 Sep 2020 16:48:08 +0000
+        id 1kFgmm-0001Qz-8R; Tue, 08 Sep 2020 16:48:00 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
@@ -47,9 +47,9 @@ Cc:     Tomasz Figa <tfiga@chromium.org>, Joerg Roedel <joro@8bytes.org>,
         Robin Murphy <robin.murphy@arm.com>, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
         linux-mips@vger.kernel.org
-Subject: [PATCH 07/12] dma-direct: lift gfp_t manipulation out of__dma_direct_alloc_pages
-Date:   Tue,  8 Sep 2020 18:47:53 +0200
-Message-Id: <20200908164758.3177341-8-hch@lst.de>
+Subject: [PATCH 01/12] MIPS: make dma_sync_*_for_cpu a little less overzealous
+Date:   Tue,  8 Sep 2020 18:47:47 +0200
+Message-Id: <20200908164758.3177341-2-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908164758.3177341-1-hch@lst.de>
 References: <20200908164758.3177341-1-hch@lst.de>
@@ -61,58 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the detailed gfp_t setup from __dma_direct_alloc_pages into the
-caller to clean things up a little.
+When transferring DMA ownership back to the CPU there should never
+be any writeback from the cache, as the buffer was owned by the
+device until now.  Instead it should just be invalidated for the
+mapping directions where the device could have written data.
+Note that the changes rely on the fact that kmap_atomic is stubbed
+out for the !HIGHMEM case to simplify the code a bit.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- kernel/dma/direct.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ arch/mips/mm/dma-noncoherent.c | 44 +++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 1d564bea58571b..12e9f5f75dfe4b 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -108,7 +108,7 @@ static inline bool dma_should_free_from_pool(struct device *dev,
+diff --git a/arch/mips/mm/dma-noncoherent.c b/arch/mips/mm/dma-noncoherent.c
+index 563c2c0d0c8193..97a14adbafc99c 100644
+--- a/arch/mips/mm/dma-noncoherent.c
++++ b/arch/mips/mm/dma-noncoherent.c
+@@ -55,22 +55,34 @@ void *arch_dma_set_uncached(void *addr, size_t size)
+ 	return (void *)(__pa(addr) + UNCAC_BASE);
  }
  
- static struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
--		gfp_t gfp, unsigned long attrs)
-+		gfp_t gfp)
+-static inline void dma_sync_virt(void *addr, size_t size,
++static inline void dma_sync_virt_for_device(void *addr, size_t size,
+ 		enum dma_data_direction dir)
  {
- 	int node = dev_to_node(dev);
- 	struct page *page = NULL;
-@@ -116,11 +116,6 @@ static struct page *__dma_direct_alloc_pages(struct device *dev, size_t size,
- 
- 	WARN_ON_ONCE(!PAGE_ALIGNED(size));
- 
--	if (attrs & DMA_ATTR_NO_WARN)
--		gfp |= __GFP_NOWARN;
+ 	switch (dir) {
+ 	case DMA_TO_DEVICE:
+ 		dma_cache_wback((unsigned long)addr, size);
+ 		break;
 -
--	/* we always manually zero the memory once we are done: */
--	gfp &= ~__GFP_ZERO;
- 	gfp |= dma_direct_optimal_gfp_mask(dev, dev->coherent_dma_mask,
- 					   &phys_limit);
- 	page = dma_alloc_contiguous(dev, size, gfp);
-@@ -164,6 +159,8 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 		return arch_dma_alloc(dev, size, dma_handle, gfp, attrs);
+ 	case DMA_FROM_DEVICE:
+ 		dma_cache_inv((unsigned long)addr, size);
+ 		break;
+-
+ 	case DMA_BIDIRECTIONAL:
+ 		dma_cache_wback_inv((unsigned long)addr, size);
+ 		break;
++	default:
++		BUG();
++	}
++}
  
- 	size = PAGE_ALIGN(size);
-+	if (attrs & DMA_ATTR_NO_WARN)
-+		gfp |= __GFP_NOWARN;
- 
- 	if (dma_should_alloc_from_pool(dev, gfp, attrs)) {
- 		u64 phys_mask;
-@@ -177,7 +174,8 @@ void *dma_direct_alloc(struct device *dev, size_t size,
- 		goto done;
++static inline void dma_sync_virt_for_cpu(void *addr, size_t size,
++		enum dma_data_direction dir)
++{
++	switch (dir) {
++	case DMA_TO_DEVICE:
++		break;
++	case DMA_FROM_DEVICE:
++	case DMA_BIDIRECTIONAL:
++		dma_cache_inv((unsigned long)addr, size);
++		break;
+ 	default:
+ 		BUG();
  	}
+@@ -82,7 +94,7 @@ static inline void dma_sync_virt(void *addr, size_t size,
+  * configured then the bulk of this loop gets optimized out.
+  */
+ static inline void dma_sync_phys(phys_addr_t paddr, size_t size,
+-		enum dma_data_direction dir)
++		enum dma_data_direction dir, bool for_device)
+ {
+ 	struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
+ 	unsigned long offset = paddr & ~PAGE_MASK;
+@@ -90,18 +102,20 @@ static inline void dma_sync_phys(phys_addr_t paddr, size_t size,
  
--	page = __dma_direct_alloc_pages(dev, size, gfp, attrs);
-+	/* we always manually zero the memory once we are done */
-+	page = __dma_direct_alloc_pages(dev, size, gfp & ~__GFP_ZERO);
- 	if (!page)
- 		return NULL;
+ 	do {
+ 		size_t len = left;
++		void *addr;
  
+ 		if (PageHighMem(page)) {
+-			void *addr;
+-
+ 			if (offset + len > PAGE_SIZE)
+ 				len = PAGE_SIZE - offset;
++		}
++
++		addr = kmap_atomic(page);
++		if (for_device)
++			dma_sync_virt_for_device(addr + offset, len, dir);
++		else
++			dma_sync_virt_for_cpu(addr + offset, len, dir);
++		kunmap_atomic(addr);
+ 
+-			addr = kmap_atomic(page);
+-			dma_sync_virt(addr + offset, len, dir);
+-			kunmap_atomic(addr);
+-		} else
+-			dma_sync_virt(page_address(page) + offset, size, dir);
+ 		offset = 0;
+ 		page++;
+ 		left -= len;
+@@ -111,7 +125,7 @@ static inline void dma_sync_phys(phys_addr_t paddr, size_t size,
+ void arch_sync_dma_for_device(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir)
+ {
+-	dma_sync_phys(paddr, size, dir);
++	dma_sync_phys(paddr, size, dir, true);
+ }
+ 
+ #ifdef CONFIG_ARCH_HAS_SYNC_DMA_FOR_CPU
+@@ -119,16 +133,14 @@ void arch_sync_dma_for_cpu(phys_addr_t paddr, size_t size,
+ 		enum dma_data_direction dir)
+ {
+ 	if (cpu_needs_post_dma_flush())
+-		dma_sync_phys(paddr, size, dir);
++		dma_sync_phys(paddr, size, dir, false);
+ }
+ #endif
+ 
+ void arch_dma_cache_sync(struct device *dev, void *vaddr, size_t size,
+ 		enum dma_data_direction direction)
+ {
+-	BUG_ON(direction == DMA_NONE);
+-
+-	dma_sync_virt(vaddr, size, direction);
++	dma_sync_virt_for_device(vaddr, size, direction);
+ }
+ 
+ #ifdef CONFIG_DMA_PERDEV_COHERENT
 -- 
 2.28.0
 
