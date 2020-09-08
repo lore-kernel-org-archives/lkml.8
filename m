@@ -2,245 +2,122 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B37D5C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D68BC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6550B20578
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3A8206B5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:45:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T63IxB0p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O86Gx79j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbgIHTpR (ORCPT
+        id S1731845AbgIHTph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:45:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
+        Tue, 8 Sep 2020 15:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730834AbgIHPvk (ORCPT
+        with ESMTP id S1730785AbgIHPux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:51:40 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A77C06136D
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:39:15 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id z1so4042361ooj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:39:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=vBukYCVJ0dPzfynBSfYWtIL6LfPb6kYIege12EwUKjA=;
-        b=T63IxB0puDzrheBenrRjLNYbacMf7qUkmO6Wfuaj8oGyxkHKI2Ye9T3wzxtikbG/jv
-         bYhDh5/q9/kOp2VwZTF/Fa+HzHT7Hya0h+bcAL5ImpauE2zGkAojSCjj21OJTR//7Q/0
-         j1PWQHX8n8/94B8wnCuCCyvhZ61MLKOU2o37GoeFmaAiH05bqEVTVId5tffG7X1PdkeO
-         YalM3Vy47YGexvYGu2gW0OnbauxBLxm5oIqibh7TeGfsEHtNiO28E3CkvjSARq97Bl8L
-         eOMfiEIa5ndBEAKQoPzqSoCuvvH8Ytm8xjgBVw/2PVE9cwepw3+xua9f4ehIGz5Sj7lq
-         0ukA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vBukYCVJ0dPzfynBSfYWtIL6LfPb6kYIege12EwUKjA=;
-        b=fcaiSZ4euMGV2IG5b7dI7XfD9K+rbS4dsfrEVlhKOimo2pOrKYROdOl/KBEUCKKS78
-         xVI1lVOU3YZ0a0E3z+7m3Q6o8KCi/+nZwLRZbYHFFLi32y6EJf3CyaZauNPGm3T04+BB
-         PzdjB3OFMyK/zWgYTO/scxLzQafabI1eI4wl1nyZSiBqxeIVKZeihRQIH8fxfIkM5xZY
-         DieM7ipB2EVvHk5Fa8BxKtYDNLJkAzM7K4e5cUAxUEwQUAVvCPh0y++e4/mjvO3xM3oB
-         5FPIyoMyD+ab+FYwcwEIkiMhatt6St6PM6GALexvm7a9eCshg9sgIMdeuXH9wSgRMKm2
-         bXTQ==
-X-Gm-Message-State: AOAM531iezV+gh6/Rlh9iWIKnmwefNYjsu8tO5VUFTA6/riwgAvee9C1
-        RFfsroWuTldmFpdY5PqLy5o4Kw==
-X-Google-Smtp-Source: ABdhPJyBfKsVbBZmtm2xq52k9JBNoPkKHfWeqCb/fyPZs+uEZF3BunlkPpOYAXIIG71UjOJYDRIimA==
-X-Received: by 2002:a4a:d8ce:: with SMTP id c14mr18642612oov.90.1599579554861;
-        Tue, 08 Sep 2020 08:39:14 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id 34sm1219242otg.23.2020.09.08.08.39.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 08:39:14 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 10:39:11 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, amitk@kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
-        tdas@codeaurora.org
-Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware
- registers
-Message-ID: <20200908153911.GR3715@yoga>
-References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
- <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
+        Tue, 8 Sep 2020 11:50:53 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B47C0A3BF3;
+        Tue,  8 Sep 2020 07:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=2GZkfuA3+QyfRSiQ2N97BGanWRbnzEKE1BjaKC2IVN0=; b=O86Gx79j7ucuqz3TrvYr5EhBje
+        C/oXMrJ4WKO+yXmV5+sEymlVehTXk5/DJHhU56HU8sZwFYJkVImwpqAIkpHP+4EWRYPElWZiHYOM6
+        JTZMo9BmExshb9Jf6gNZS9KtEWre2XgSZfWpPVMZiBKs6/L5nAKx7wUjaCgd0ReBO4AGXHH3GPk+g
+        Yz+CuWAi3DCOsLerWzlAbZQl8BRFgPaDjM/RU99uFzag9/3bWPk0BA7PL1ADUFQSlb4n4zKqFMNm8
+        9AkDGdP+jy2+m0yoDmziq8oEchHj71jWkTkYxD1oRD5cXAhb772Yh2Q2AyPOONiMgMtwmoVZ165dU
+        ycWvFAhw==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf17-0002yr-30; Tue, 08 Sep 2020 14:54:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 13/19] ide-cd: remove idecd_revalidate_disk
+Date:   Tue,  8 Sep 2020 16:53:41 +0200
+Message-Id: <20200908145347.2992670-14-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 08 Sep 02:57 CDT 2020, Manivannan Sadhasivam wrote:
+Just merge the trivial function into its only caller.
 
-> Use regmap for accessing cpufreq registers in hardware.
-> 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+---
+ drivers/ide/ide-cd.c | 17 +++++------------
+ 1 file changed, 5 insertions(+), 12 deletions(-)
 
-The content of the patch looks good, but in itself I don't see the
-reason for migrating to regmap.
+diff --git a/drivers/ide/ide-cd.c b/drivers/ide/ide-cd.c
+index 6a38cbc80aea0d..25d2d88e82ada0 100644
+--- a/drivers/ide/ide-cd.c
++++ b/drivers/ide/ide-cd.c
+@@ -56,7 +56,6 @@ static DEFINE_MUTEX(ide_cd_mutex);
+ static DEFINE_MUTEX(idecd_ref_mutex);
+ 
+ static void ide_cd_release(struct device *);
+-static int idecd_revalidate_disk(struct gendisk *disk);
+ 
+ static struct cdrom_info *ide_cd_get(struct gendisk *disk)
+ {
+@@ -1612,8 +1611,11 @@ static int idecd_open(struct block_device *bdev, fmode_t mode)
+ 	struct cdrom_info *info;
+ 	int rc = -ENXIO;
+ 
+-	if (bdev_check_media_change(bdev))
+-		idecd_revalidate_disk(bdev->bd_disk);
++	if (bdev_check_media_change(bdev)) {
++		info = ide_drv_g(bdev->bd_disk, cdrom_info);
++
++		ide_cd_read_toc(info->drive);
++	}
+ 
+ 	mutex_lock(&ide_cd_mutex);
+ 	info = ide_cd_get(bdev->bd_disk);
+@@ -1755,15 +1757,6 @@ static unsigned int idecd_check_events(struct gendisk *disk,
+ 	return cdrom_check_events(&info->devinfo, clearing);
+ }
+ 
+-static int idecd_revalidate_disk(struct gendisk *disk)
+-{
+-	struct cdrom_info *info = ide_drv_g(disk, cdrom_info);
+-
+-	ide_cd_read_toc(info->drive);
+-
+-	return  0;
+-}
+-
+ static const struct block_device_operations idecd_ops = {
+ 	.owner			= THIS_MODULE,
+ 	.open			= idecd_open,
+-- 
+2.28.0
 
-If you have subsequent patches, that would benefit from describing the
-hardware differences using reg_fields then it might be a good idea, but
-I would suggest that you postpone this patch until there's an actual
-beneficiary.
-
-Regards,
-Bjorn
-
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 55 ++++++++++++++++++++++++++-----
->  1 file changed, 47 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index 41853db7c9b8..de816bcafd33 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -12,6 +12,7 @@
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
->  #include <linux/pm_opp.h>
-> +#include <linux/regmap.h>
->  #include <linux/slab.h>
->  
->  #define LUT_MAX_ENTRIES			40U
-> @@ -32,6 +33,7 @@ struct qcom_cpufreq_soc_data {
->  
->  struct qcom_cpufreq_data {
->  	void __iomem *base;
-> +	struct regmap *regmap;
->  	const struct qcom_cpufreq_soc_data *soc_data;
->  };
->  
-> @@ -85,8 +87,11 @@ static int qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->  	struct qcom_cpufreq_data *data = policy->driver_data;
->  	const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
->  	unsigned long freq = policy->freq_table[index].frequency;
-> +	int ret;
->  
-> -	writel_relaxed(index, data->base + soc_data->reg_perf_state);
-> +	ret = regmap_write(data->regmap, soc_data->reg_perf_state, index);
-> +	if (ret)
-> +		return ret;
->  
->  	if (icc_scaling_enabled)
->  		qcom_cpufreq_set_bw(policy, freq);
-> @@ -102,6 +107,7 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->  	const struct qcom_cpufreq_soc_data *soc_data;
->  	struct cpufreq_policy *policy;
->  	unsigned int index;
-> +	int ret;
->  
->  	policy = cpufreq_cpu_get_raw(cpu);
->  	if (!policy)
-> @@ -110,7 +116,10 @@ static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->  	data = policy->driver_data;
->  	soc_data = data->soc_data;
->  
-> -	index = readl_relaxed(data->base + soc_data->reg_perf_state);
-> +	ret = regmap_read(data->regmap, soc_data->reg_perf_state, &index);
-> +	if (ret)
-> +		return 0;
-> +
->  	index = min(index, LUT_MAX_ENTRIES - 1);
->  
->  	return policy->freq_table[index].frequency;
-> @@ -123,9 +132,12 @@ static unsigned int qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->  	const struct qcom_cpufreq_soc_data *soc_data = data->soc_data;
->  	unsigned int index;
->  	unsigned long freq;
-> +	int ret;
->  
->  	index = policy->cached_resolved_idx;
-> -	writel_relaxed(index, data->base + soc_data->reg_perf_state);
-> +	ret = regmap_write(data->regmap, soc_data->reg_perf_state, index);
-> +	if (ret)
-> +		return 0;
->  
->  	freq = policy->freq_table[index].frequency;
->  	arch_set_freq_scale(policy->related_cpus, freq,
-> @@ -171,14 +183,24 @@ static int qcom_cpufreq_hw_read_lut(struct device *cpu_dev,
->  	}
->  
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> -		data = readl_relaxed(drv_data->base + soc_data->reg_freq_lut +
-> -				      i * soc_data->lut_row_size);
-> +		ret = regmap_read(drv_data->regmap, soc_data->reg_freq_lut +
-> +				  i * soc_data->lut_row_size, &data);
-> +		if (ret) {
-> +			kfree(table);
-> +			return ret;
-> +		}
-> +
->  		src = FIELD_GET(LUT_SRC, data);
->  		lval = FIELD_GET(LUT_L_VAL, data);
->  		core_count = FIELD_GET(LUT_CORE_COUNT, data);
->  
-> -		data = readl_relaxed(drv_data->base + soc_data->reg_volt_lut +
-> -				      i * soc_data->lut_row_size);
-> +		ret = regmap_read(drv_data->regmap, soc_data->reg_volt_lut +
-> +				  i * soc_data->lut_row_size, &data);
-> +		if (ret) {
-> +			kfree(table);
-> +			return ret;
-> +		}
-> +
->  		volt = FIELD_GET(LUT_VOLT, data) * 1000;
->  
->  		if (src)
-> @@ -248,6 +270,13 @@ static void qcom_get_related_cpus(int index, struct cpumask *m)
->  	}
->  }
->  
-> +static struct regmap_config qcom_cpufreq_regmap = {
-> +	.reg_bits = 32,
-> +	.reg_stride = 4,
-> +	.val_bits = 32,
-> +	.fast_io = true,
-> +};
-> +
->  static const struct qcom_cpufreq_soc_data qcom_soc_data = {
->  	.reg_enable = 0x0,
->  	.reg_freq_lut = 0x110,
-> @@ -274,6 +303,7 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  	struct qcom_cpufreq_data *data;
->  	const struct of_device_id *match;
->  	int ret, index;
-> +	u32 val;
->  
->  	cpu_dev = get_cpu_device(policy->cpu);
->  	if (!cpu_dev) {
-> @@ -316,9 +346,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  
->  	data->soc_data = match->data;
->  	data->base = base;
-> +	data->regmap = devm_regmap_init_mmio(dev, base, &qcom_cpufreq_regmap);
-> +	if (IS_ERR(data->regmap)) {
-> +		ret = PTR_ERR(data->regmap);
-> +		goto error;
-> +	}
->  
->  	/* HW should be in enabled state to proceed */
-> -	if (!(readl_relaxed(base + data->soc_data->reg_enable) & 0x1)) {
-> +	ret = regmap_read(data->regmap, data->soc_data->reg_enable, &val);
-> +	if (ret)
-> +		goto error;
-> +
-> +	if (!(val & 0x1)) {
->  		dev_err(dev, "Domain-%d cpufreq hardware not enabled\n", index);
->  		ret = -ENODEV;
->  		goto error;
-> -- 
-> 2.17.1
-> 
