@@ -2,119 +2,98 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9531FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F22C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6444023C2D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630F720732
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 13:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="keMQtUX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgIHN2p (ORCPT
+        id S1729789AbgIHNgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 09:28:45 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:17809 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729799AbgIHLOX (ORCPT
+        Tue, 8 Sep 2020 09:36:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38028 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729701AbgIHLMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:14:23 -0400
-X-Greylist: delayed 906 seconds by postgrey-1.27 at vger.kernel.org; Tue, 08 Sep 2020 07:14:23 EDT
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 8 Sep 2020
- 18:58:43 +0800
-Received: from tony-HX002EA.zhaoxin.com (10.32.56.38) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Tue, 8 Sep 2020
- 18:58:42 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <x86@kernel.org>, <hpa@zytor.com>,
-        <sean.j.christopherson@intel.com>, <liam.merwick@oracle.com>,
-        <mlevitsk@redhat.com>, <linux-kernel@vger.kernel.org>
-CC:     <TimGuo-oc@zhaoxin.com>, <CooperYan@zhaoxin.com>,
-        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>,
-        <CobeChen@zhaoxin.com>
-Subject: [PATCH v1 1/2] x86/cpu: replace two-condition switch-case with if statement
-Date:   Tue, 8 Sep 2020 18:57:45 +0800
-Message-ID: <1599562666-31351-2-git-send-email-TonyWWang-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599562666-31351-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-References: <1599562666-31351-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+        Tue, 8 Sep 2020 07:12:24 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E634C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:12:23 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id 34so382501pgo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:12:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=b/dTSd0VySeqdw+oHH5saZdOjvictxCnAIOYaR0Fqfc=;
+        b=keMQtUX2wYyK30rfR8xpSOFfmhiSDRRt6wNACCYY/bHebJ2IS8ScWKmh+wC5k/8sxI
+         rJlpOGcY0yJ5FN+48B4SOsfJ6oxMA1ZJ7WO5eMjwXsDoYtZojnjoqRKCUdxhnCYSkCzG
+         PHc3jcTIEUmYl7da7nyqMXcMehURkFBW1BovUnvGODJWVYfdefdFaw3OCtYO/BDztTts
+         0Xkep27byHQXJYoRKxvuwox+A74K80Te1/z1jZAVn5RM819HV1pmylHzc8P4APtlry54
+         nyqNt3knlrBfx4nyNNUV5nE6WSlJkiPhqea0bWoVmI6h/b1mPlSfk0SN9rMpdhSVvdrb
+         AzGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b/dTSd0VySeqdw+oHH5saZdOjvictxCnAIOYaR0Fqfc=;
+        b=LICruZZoyl7soi10rrXGkNdqdDhoE11bEJ/nLdEa2QToLpLDBkN65lrbFEMCL0XKBV
+         0xzh+UkjbqMg4SEWihGZYuBToyuuo1I+ohjNYAOp4Ea0/lwNt0RH3i069h+M8BQeBU7A
+         t8/Kvxi5EcFrarjhdxrqD/7D3nh160WY3QBCcNPjpLV+WPlXAN7T3oJgYSXhZCJFvdA9
+         +oYPa8BUTqNJKYEa/+iBOPj7NwFFlA1I0y4Ds96zzs/7mI7FWRRsZetBPH9N51kyEfxE
+         AMg8a15Pf4mvPA0vvp65V3FZhf+TlPwgWh1+IQzorTNUrTYtibLzq5MQaXBjoXd2INkV
+         ctKA==
+X-Gm-Message-State: AOAM533e6anhhYUTGnbqXnozszx02a9NQmroxh/tQVwdbd665YS/7Kkj
+        1Fk9eI3V6wMpLMyB9b3Hn0rhwQ==
+X-Google-Smtp-Source: ABdhPJyNPwtjuZnW2qpkxc76UJcL07jTHomxfIocwdxp/SV8hx2SqxnFPK0uIWSB5rloKJlZyVEK2w==
+X-Received: by 2002:aa7:961b:0:b029:13e:d13d:a140 with SMTP id q27-20020aa7961b0000b029013ed13da140mr654781pfg.40.1599563543192;
+        Tue, 08 Sep 2020 04:12:23 -0700 (PDT)
+Received: from localhost ([122.181.54.133])
+        by smtp.gmail.com with ESMTPSA id b15sm17466608pft.84.2020.09.08.04.12.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 08 Sep 2020 04:12:22 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 16:42:15 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     rjw@rjwysocki.net, robh+dt@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, amitk@kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dmitry.baryshkov@linaro.org, tdas@codeaurora.org
+Subject: Re: [PATCH 2/7] arm64: dts: qcom: sm8250: Add cpufreq hw node
+Message-ID: <20200908111215.hqrenh4gvo6otkdp@vireshk-i7>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+ <20200908075716.30357-3-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.32.56.38]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- zxbjmbx1.zhaoxin.com (10.29.252.163)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908075716.30357-3-manivannan.sadhasivam@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use if-case instead two-condition switch-case.
+On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
+> From: Bjorn Andersson <bjorn.andersson@linaro.org>
+> 
+> Add cpufreq HW device node to scale 4-Silver/3-Gold/1-Gold+ cores
+> on SM8250 SoCs.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8250.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
- arch/x86/kernel/cpu/centaur.c | 23 ++++++++---------------
- 1 file changed, 8 insertions(+), 15 deletions(-)
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-diff --git a/arch/x86/kernel/cpu/centaur.c b/arch/x86/kernel/cpu/centaur.c
-index c5cf336..5f811586 100644
---- a/arch/x86/kernel/cpu/centaur.c
-+++ b/arch/x86/kernel/cpu/centaur.c
-@@ -90,18 +90,14 @@ enum {
- 
- static void early_init_centaur(struct cpuinfo_x86 *c)
- {
--	switch (c->x86) {
- #ifdef CONFIG_X86_32
--	case 5:
--		/* Emulate MTRRs using Centaur's MCR. */
-+	/* Emulate MTRRs using Centaur's MCR. */
-+	if (c->x86 == 5)
- 		set_cpu_cap(c, X86_FEATURE_CENTAUR_MCR);
--		break;
- #endif
--	case 6:
--		if (c->x86_model >= 0xf)
--			set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
--		break;
--	}
-+	if (c->x86 == 6 && c->x86_model >= 0xf)
-+		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
-+
- #ifdef CONFIG_X86_64
- 	set_cpu_cap(c, X86_FEATURE_SYSENTER32);
- #endif
-@@ -145,9 +141,8 @@ static void init_centaur(struct cpuinfo_x86 *c)
- 			set_cpu_cap(c, X86_FEATURE_ARCH_PERFMON);
- 	}
- 
--	switch (c->x86) {
- #ifdef CONFIG_X86_32
--	case 5:
-+	if (c->x86 == 5) {
- 		switch (c->x86_model) {
- 		case 4:
- 			name = "C6";
-@@ -207,12 +202,10 @@ static void init_centaur(struct cpuinfo_x86 *c)
- 			c->x86_cache_size = (cc>>24)+(dd>>24);
- 		}
- 		sprintf(c->x86_model_id, "WinChip %s", name);
--		break;
-+	}
- #endif
--	case 6:
-+	if (c->x86 == 6)
- 		init_c3(c);
--		break;
--	}
- #ifdef CONFIG_X86_64
- 	set_cpu_cap(c, X86_FEATURE_LFENCE_RDTSC);
- #endif
 -- 
-2.7.4
-
+viresh
