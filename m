@@ -2,52 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391DDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897E1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE3E82080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B0E42080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590190;
-	bh=8zvpcl6toyUsWQBCfpbR+A65ytO5PdnPF2ek3AtYh+g=;
+	s=default; t=1599590211;
+	bh=XWk1HoF0lhbxsTbo9IgLLT/T2qnTbrihCczZJYn8KKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RsOs35Rzjc65wXObyFJSs7Oe7ExjnTPGPmVzH4A5KIb+KPaHhy9LIajfAhK4rd1D5
-	 TmJsHARiZdqoQ3Q7UpL46XMODNWlL91OCyMlYknks/n0XohTyv98dAJzitiEgA0n+U
-	 Gl6kXKX0jIyF+vUIHNP0DY8tysT2SMOtaQP8o48M=
+	b=BUwhMsUNZuWSHO6Hlc8gwjnROvSPdi74Uo6QK2T5xXO+NG6l5wM1pESBm4iGwt5fC
+	 iJmK0H/sBv4rAgq6Zg048gDQpoQ+2junhB/mPPJLRJ9dHTfwuAVQbca4JF78ynGTzi
+	 88slYN9TBs7YEEW+9lGD0emzbEpEhxzqee69D/Gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbgIHSg1 (ORCPT
+        id S1731847AbgIHSgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:36:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:36:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731351AbgIHQJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:13 -0400
+        id S1731346AbgIHQJE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A49A224171;
-        Tue,  8 Sep 2020 15:49:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9BE2415F;
+        Tue,  8 Sep 2020 15:49:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580160;
-        bh=8zvpcl6toyUsWQBCfpbR+A65ytO5PdnPF2ek3AtYh+g=;
+        s=default; t=1599580155;
+        bh=XWk1HoF0lhbxsTbo9IgLLT/T2qnTbrihCczZJYn8KKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W9n15n7qymnBxDNi9369KAsGIZzBf+L8W7RVf0BUi4wwwwfnhUHDGHY74Ds3LXVDS
-         c2uKWChjTSe3xU44htN/nu5luidHjMr1sN9aIZxgM1IkMPPAFoGL4w/zT9yQmnfC7r
-         AiPNjsfPLHThLqKa/qO4ZYZIjbRkmitmrhwKSwp8=
+        b=WXauMrpdl8TH6MQDdTZ+2qRh1JT2L0Iv1VQoNd0Y7h68Pm5sIV/UfuAVjRUVLwyAp
+         R+CemYSxFZbmJtEz2rTvP012pJbMHsPloeQOofV/QOlHjqA/JEvzte5VS9iBfAXff4
+         zwg8hYzyi3X3eyAMH3edS0fBsYKzrH2WZTP71LgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 54/88] btrfs: drop path before adding new uuid tree entry
-Date:   Tue,  8 Sep 2020 17:25:55 +0200
-Message-Id: <20200908152223.825528369@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 44/88] drm/radeon: Prefer lower feedback dividers
+Date:   Tue,  8 Sep 2020 17:25:45 +0200
+Message-Id: <20200908152223.324574445@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -60,145 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
+[ Upstream commit fc8c70526bd30733ea8667adb8b8ffebea30a8ed ]
 
-With the conversion of the tree locks to rwsem I got the following
-lockdep splat:
+Commit 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
+fixed screen flicker for HP Compaq nx9420 but breaks other laptops like
+Asus X50SL.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
-  ------------------------------------------------------
-  btrfs-uuid/7955 is trying to acquire lock:
-  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+Turns out we also need to favor lower feedback dividers.
 
-  but task is already holding lock:
-  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
+Users confirmed this change fixes the regression and doesn't regress the
+original fix.
 
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #1 (btrfs-uuid-00){++++}-{3:3}:
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_uuid_tree_add+0x89/0x2d0
-	 btrfs_uuid_scan_kthread+0x330/0x390
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  -> #0 (btrfs-root-00){++++}-{3:3}:
-	 __lock_acquire+0x1272/0x2310
-	 lock_acquire+0x9e/0x360
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_find_root+0x45/0x1b0
-	 btrfs_read_tree_root+0x61/0x100
-	 btrfs_get_root_ref.part.50+0x143/0x630
-	 btrfs_uuid_tree_iterate+0x207/0x314
-	 btrfs_uuid_rescan_kthread+0x12/0x50
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  other info that might help us debug this:
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(btrfs-uuid-00);
-				 lock(btrfs-root-00);
-				 lock(btrfs-uuid-00);
-    lock(btrfs-root-00);
-
-   *** DEADLOCK ***
-
-  1 lock held by btrfs-uuid/7955:
-   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  stack backtrace:
-  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
-  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x165/0x180
-   __lock_acquire+0x1272/0x2310
-   lock_acquire+0x9e/0x360
-   ? __btrfs_tree_read_lock+0x39/0x180
-   ? btrfs_root_node+0x1c/0x1d0
-   down_read_nested+0x3e/0x140
-   ? __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_read_lock_root_node+0x3a/0x50
-   btrfs_search_slot+0x4bd/0x990
-   btrfs_find_root+0x45/0x1b0
-   btrfs_read_tree_root+0x61/0x100
-   btrfs_get_root_ref.part.50+0x143/0x630
-   btrfs_uuid_tree_iterate+0x207/0x314
-   ? btree_readpage+0x20/0x20
-   btrfs_uuid_rescan_kthread+0x12/0x50
-   kthread+0x133/0x150
-   ? kthread_create_on_node+0x60/0x60
-   ret_from_fork+0x1f/0x30
-
-This problem exists because we have two different rescan threads,
-btrfs_uuid_scan_kthread which creates the uuid tree, and
-btrfs_uuid_tree_iterate that goes through and updates or deletes any out
-of date roots.  The problem is they both do things in different order.
-btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
-into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
-then does a btrfs_get_fs_root() which can read from the tree_root.
-
-It's actually easy enough to not be holding the path in
-btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
-it further down and re-start the search when we loop.  So simply move
-the path release before we add our entry to the uuid tree.
-
-This also fixes a problem where we're holding a path open after we do
-btrfs_end_transaction(), which has it's own problems.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 2e26ccb119bd ("drm/radeon: prefer lower reference dividers")
+BugLink: https://bugs.launchpad.net/bugs/1791312
+BugLink: https://bugs.launchpad.net/bugs/1861554
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4172,6 +4172,7 @@ static int btrfs_uuid_scan_kthread(void
- 			goto skip;
- 		}
- update_tree:
-+		btrfs_release_path(path);
- 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
- 			ret = btrfs_uuid_tree_add(trans, root_item.uuid,
- 						  BTRFS_UUID_KEY_SUBVOL,
-@@ -4196,6 +4197,7 @@ update_tree:
- 		}
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 3f0f3a578ddf0..c28d76d898fdb 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -926,7 +926,7 @@ static void avivo_get_fb_ref_div(unsigned nom, unsigned den, unsigned post_div,
  
- skip:
-+		btrfs_release_path(path);
- 		if (trans) {
- 			ret = btrfs_end_transaction(trans);
- 			trans = NULL;
-@@ -4203,7 +4205,6 @@ skip:
- 				break;
- 		}
+ 	/* get matching reference and feedback divider */
+ 	*ref_div = min(max(den/post_div, 1u), ref_div_max);
+-	*fb_div = DIV_ROUND_CLOSEST(nom * *ref_div * post_div, den);
++	*fb_div = max(nom * *ref_div * post_div / den, 1u);
  
--		btrfs_release_path(path);
- 		if (key.offset < (u64)-1) {
- 			key.offset++;
- 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
+ 	/* limit fb divider to its maximum */
+ 	if (*fb_div > fb_div_max) {
+-- 
+2.25.1
+
 
 
