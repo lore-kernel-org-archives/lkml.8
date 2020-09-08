@@ -2,91 +2,166 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F64C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1355C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3931D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:08:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69DD2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:08:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZOW49ACb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgIHXIR (ORCPT
+        id S1729781AbgIHXIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:08:17 -0400
-Received: from mga09.intel.com ([134.134.136.24]:23747 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbgIHXIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:08:15 -0400
-IronPort-SDR: sunMVXiPIPkrUCoeesjT0POax4bf/8cq5LhTphUSeEGL7/ZFjsjM9mF2O5HNMCFZ1n9k6jBNJt
- 4MU+NrHooI0w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="159206845"
-X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
-   d="scan'208";a="159206845"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 16:08:15 -0700
-IronPort-SDR: q6UN51X7VenEz3Y+y9fnqJfyw2upWD6sBpx2dbHg3eq05fLuIxX7yuYHKeoUTUns8a49ddqubt
- c/Rr13/4I6EA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
-   d="scan'208";a="504537182"
-Received: from sgsxdev004.isng.intel.com (HELO localhost) ([10.226.88.13])
-  by fmsmga006.fm.intel.com with ESMTP; 08 Sep 2020 16:08:11 -0700
-From:   Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
-To:     dmaengine@vger.kernel.org, vkoul@kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        chuanhua.lei@linux.intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, mallikarjunax.reddy@linux.intel.com,
-        malliamireddy009@gmail.com, peter.ujfalusi@ti.com
-Subject: [PATCH v6 0/2] Add Intel LGM soc DMA support
-Date:   Wed,  9 Sep 2020 07:07:32 +0800
-Message-Id: <cover.1599605765.git.mallikarjunax.reddy@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
+        Tue, 8 Sep 2020 19:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726683AbgIHXIw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 19:08:52 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B6B4C061573;
+        Tue,  8 Sep 2020 16:08:52 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id t7so360875pjd.3;
+        Tue, 08 Sep 2020 16:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=nhMCTOALn672JsDL84Wj+xI2dlHy5wjJXdxUYt7OHzg=;
+        b=ZOW49ACbJzMum5GJrno6aQTnVf5c1Et9rUJClK9Ttk7wQgxb2pga35evfHcF18WRBn
+         +moz19JmlvB5Mh7QSN00gt+CfpENnZC0SuliDKIWc0zFWzKUUQoawqHDlyl7XCI0Y+3y
+         zty2iR0WJTY47Thx5XORc/PDpTfvwJMnyg9JB8tN5edKgNUC1yx8al287X9cGG9CLPLG
+         srNNomnxVWx+th5pnOPoW6uQVmVZIj3d0opjPhI59JTSrLi26Cp4uS0goOjNwd2su19E
+         ewuv3VWbcoJplrT6AaXul62aeMa7iGcvXAAjkqknCLFFctkdL5FE4/LYZ2zrMAusTZ4f
+         3XnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=nhMCTOALn672JsDL84Wj+xI2dlHy5wjJXdxUYt7OHzg=;
+        b=rekloVaCkf2Q3GHZ82NtZ5aIUTmwPmErpXCl+8FYsR8updtjcRTsLeISdeER3PpeZt
+         tD+JDV0XKhk8mQhrWOydVGDZUWKbUg8OTSxoJxBMXJ4AYgWd95JsooA/Chj21PW8G0PY
+         BL7V8jwqyjzgtlZw52J9zO6z1qefo7mDelcIHWiM5XmgXxDQHciyRjFCgSXSBvVkS3WC
+         a9HftW2fk+32RToZsHleZVj0Rkch77oxb3h6+mjlmtDie/HBon4NbglHsqBLqvsI1L+K
+         gJWRL8TIJxo+t+LKCXvW7JuYpYNIJ+TmHt+AXkuLBZsDo8RV3/vV3yRppwBamL/tbIJ/
+         MJSg==
+X-Gm-Message-State: AOAM532ddRHnBAh7kPNLEpKGrFvivKdtfInFlt50btyId2r7RJZ9NZqb
+        TJxym449ItauE+qxJuUVjJ0iIxmbYxlv1Q==
+X-Google-Smtp-Source: ABdhPJz23MFGOATYEMVraf03YziCv4dF3U9WbMysUq3I3GzsltCXa+NL7T4xkSSXR4i0b/yXWbX2pg==
+X-Received: by 2002:a17:90a:e391:: with SMTP id b17mr988444pjz.127.1599606531764;
+        Tue, 08 Sep 2020 16:08:51 -0700 (PDT)
+Received: from Gentoo (sau-ff5be-or.servercontrol.com.au. [43.250.207.3])
+        by smtp.gmail.com with ESMTPSA id 64sm439142pfz.204.2020.09.08.16.08.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 16:08:50 -0700 (PDT)
+Date:   Wed, 9 Sep 2020 04:38:33 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz, "David S. Miller" <davem@davemloft.net>,
+        guido.gunther@puri.sm, konradybcio@gmail.com, arnd@arndb.de,
+        martin.botka1@gmail.com
+Subject: Re: Mailing list about low levels of Linux on cellphones
+Message-ID: <20200908230833.GA27644@Gentoo>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz, "David S. Miller" <davem@davemloft.net>,
+        guido.gunther@puri.sm, konradybcio@gmail.com, arnd@arndb.de,
+        martin.botka1@gmail.com
+References: <20200908225610.GA25399@duo.ucw.cz>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Content-Disposition: inline
+In-Reply-To: <20200908225610.GA25399@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DMA controller driver for Lightning Mountain(LGM) family of SoCs.
 
-The main function of the DMA controller is the transfer of data from/to any
-DPlus compliant peripheral to/from the memory. A memory to memory copy
-capability can also be configured.
-This ldma driver is used for configure the device and channnels for data
-and control paths.
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-These controllers provide DMA capabilities for a variety of on-chip
-devices such as SSC, HSNAND and GSWIP.
+On 00:56 Wed 09 Sep 2020, Pavel Machek wrote:
+>Hi!
+>
+>It seems there is quite a lot of efforts porting kernel to various
+>cellphones.
+>
+>Librem 5 and PinePhone have their own hardware, people around Maemo
+>Leste work with Nokia N900 and Droid 4, there's group working with
+>Sony cellphones, there are postmarketOS people and there are probably
+>groups I don't know about.
+>
+>I believe some coordination would be useful, so we end up with
+>compatible solutions for various problems.
+>
+>It would be also good to know how ther hardware is progressing. I'd
+>really like to have phone I could use as a _phone_, running mainline
+>kernel. So far N900 with original Maemo is closest I could get.=20
+>
+>Would it be possible to create a mailing list on vger.kernel.org?
+>Probably phones@ or phone-devel@? I believe it would be useful to
+>cover hardware-dependend pieces of the phone stack (ofono,
+>modemmanager) as well as kernel.
+>
+>Best regards,
+>
+>									Pavel
+>
 
--------------
-Future Plans:
--------------
-LGM SOC also supports Hardware Memory Copy engine.
-The role of the HW Memory copy engine is to offload memory copy operations
-from the CPU.
+That's sounds good and people will have clutter free mailing list of specif=
+ic
+thing. The other side would be to have little maintenance headache to maint=
+ain
+that list.=20
 
-Amireddy Mallikarjuna reddy (2):
-  dt-bindings: dma: Add bindings for intel LGM SOC
-  Add Intel LGM soc DMA support.
+But , it is a good thought!
 
- .../devicetree/bindings/dma/intel,ldma.yaml        |  154 ++
- drivers/dma/Kconfig                                |    2 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/lgm/Kconfig                            |    9 +
- drivers/dma/lgm/Makefile                           |    2 +
- drivers/dma/lgm/lgm-dma.c                          | 1809 ++++++++++++++++++++
- include/linux/dma/lgm_dma.h                        |   27 +
- 7 files changed, 2004 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/intel,ldma.yaml
- create mode 100644 drivers/dma/lgm/Kconfig
- create mode 100644 drivers/dma/lgm/Makefile
- create mode 100644 drivers/dma/lgm/lgm-dma.c
- create mode 100644 include/linux/dma/lgm_dma.h
+Thanks,
+Bhaskar
+>--=20
+>(english) http://www.livejournal.com/~pavelmachek
+>(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/bl=
+og.html
+>
 
--- 
-2.11.0
+>-----BEGIN PGP SIGNATURE-----
+>
+>iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1gMCgAKCRAw5/Bqldv6
+>8hCjAJ0UUeO25TWORFOuDeLu9eryN7BzAACfeQaxgX1aqhy1aTcgrIOawZWdz6w=3D
+>=3D63wl
+>-----END PGP SIGNATURE-----
 
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl9YDu4ACgkQsjqdtxFL
+KRXinggAiI7J6DlsPHBgxYGdKNikkcZEkiCiMkA+fkgtSOwO3xbfedPyjXgTOMfx
+b9nhdRpooEieEtOog88dsCD5j/CMD3PUR+j99zoFoJxoDN6yTrhgPhL8HMYGt1+a
+DRPAhuJ0v9i4cXPevDYtXUO5Uh8ipwHgl0KPTxp/TzfImEsZZMBB9KmFA28uyEam
+BmMvxfpF93TgXA/phnupsvPk8FzhZl7y049VecjJtvi1IumsbeV9MdeLInDuW/8i
+Z/J1qbqVNNrmuWBEeDtX+Xz8vhFIcIxVbrFIsCANdh7yiDsuAtWcJ+NjLv4xa28Z
+RLwQjagUgOEepJRB7lprN9MokT+0sw==
+=qhhi
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
