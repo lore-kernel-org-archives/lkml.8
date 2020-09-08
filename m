@@ -2,169 +2,293 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353DAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:43:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5802DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC17421941
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBBE2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 02:44:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="V1R6gFR2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epDLSiQG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgIHCn4 (ORCPT
+        id S1728430AbgIHCoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 22:43:56 -0400
-Received: from mail-eopbgr130084.outbound.protection.outlook.com ([40.107.13.84]:61604
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728188AbgIHCnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 22:43:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jvEN1dWAX5CGUihMd7DpjZ0XUN4tfKFFw0zcdpsVXf74Q9nirxPspnJ8NdhMOT33W9riwwnOjKaUzsULKG20anWyCRcjcOZmK8X9GBobgqAm3VrWLwFYpWajF/48YfwNQ9y4kYwa3U6SMy4FYWhgKIQRbE0N1OsbV/Uzvdbne7I1Cx4sgDE7FZJkDSAj+QAVANLGDhfPgc1xDQZA3ucDojfr9qtLqvsFcNYEAKIIRpkKO7bApoHs8rOPX25Z120qh5tNN4gk+CKsO0ApzNnkh6YjNnOaOcoVEzY1DKphz+cD8RKgpGvezhphyNgV9BvdKIQ527ctUdD24ro/GT18uA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KXKZs2pR9s9bxVO/tatzrZ50T4IjwNAWmc/s7+ZJd1A=;
- b=TEsB5pUDNWtB0T8YbNRiLhzmDqW+wSh9TwmshLblZscO12737lbyHyfSnJrJ4ZhxTvoSyHlslnySiokuDzg+AO+C+bqx63TuqLpBwy1LeNCCIsrHduDpcds88kLxNgbC3PTsWyaShwPzicSfwbDTtDKUPCifdz7AQrFRi/6aWmJ6my2xJLHS/Of8tn3JjlsEYJwXZCvgUqBDOj2zRxf6Asaomb0SVI2VI/Q/6wS74TnifmROCFIX0URA4tO9O0IXix+/OXNo+06OVJbTsBvN5aY3S0TJEh8vmpNLjI3aLTz04gMwEqySVinUzUxoCuvUcSKixDVZzlDzdR3JaLFZzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KXKZs2pR9s9bxVO/tatzrZ50T4IjwNAWmc/s7+ZJd1A=;
- b=V1R6gFR2vuij/9wN8fLuLZrNTjBhv+4WJ+d28ijZ7G6uzjkWf/FbV5lGS9iDg1+BJQNElhGrCFYN5FhVlmAEuvNgJxsm0a2RtbP3NSwOoJBEVAm6KQIO6oTwRHFKDjL8u7wRki+8KP3XdgZDJ3mjNtnm7V/3vseumhUIqJ8Xf+I=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM7PR04MB6821.eurprd04.prod.outlook.com (2603:10a6:20b:105::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
- 2020 02:43:47 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::99b5:145d:16cc:78ca%3]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 02:43:47 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 2/3] pinctrl: imx: Support building SCU pinctrl core
- driver as module
-Thread-Topic: [PATCH V2 2/3] pinctrl: imx: Support building SCU pinctrl core
- driver as module
-Thread-Index: AQHWhRQRANo5Q/NVp0mcSaeF3naEKqleCRNA
-Date:   Tue, 8 Sep 2020 02:43:47 +0000
-Message-ID: <AM6PR04MB49662633660DBC477DD2432D80290@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1599481953-32704-1-git-send-email-Anson.Huang@nxp.com>
- <1599481953-32704-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1599481953-32704-2-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: d7f4636e-6a3a-4730-8a73-08d853a102e2
-x-ms-traffictypediagnostic: AM7PR04MB6821:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM7PR04MB68213E5460E955F073D9C99A80290@AM7PR04MB6821.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:356;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SCJhgQLpmRQVrkTimd4GNW07aQn/3FBhDgL4MPh6dOa4Mxbr+UHVAtkjwPq3cYSaA04XP7wxoYLuQi8Adt4n7kbfG8CTXzEgIXBPU0rAXFva//mATALWZjButu1jw+NkBaHfpaok2tmKOFx2PRgaEuWbk7oAcU8Ney4D7Ie5HJtj2WrsIwIAxjZqQBITgL/V2Uyh5zdAajx5+FUCjM0P0JrPcOl2xCx22ivYL5DjwcyXlu4nGULpbRARxEf4Da9LACJPgdT6Hb21/KEEI7Dov7h1Yl5gEVlNGmaM4HnrcDfPE5l+9ovDseqJfy+fuA8yCHUfUfspZexBaxfSIc8SxJoUWV4XCz4gRNoG142Uk40jEtx6GFtP8bRMo5muwW+r
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(396003)(366004)(346002)(39860400002)(55016002)(478600001)(52536014)(76116006)(66946007)(71200400001)(86362001)(83380400001)(6506007)(33656002)(7696005)(8676002)(9686003)(26005)(186003)(44832011)(2906002)(5660300002)(8936002)(110136005)(66446008)(64756008)(66556008)(66476007)(316002)(4326008)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2Rp3hcUgTzlF+i50TcqEWbleeJ9taTFyFFD/+170MldKRrD4fvIYQXTA1U+Dlvg4I0/iC/cT7aTdKlTAw85a1WcmNU6hFUuQOnDov3jitwoKw2Sgk+HkPjSdlpaIU6/qJ/NdZimrIifBfF2y/gM+P0VbAQampzVNFxxYxH0KGy+Hkv5uKUJ6RYpUyQ4f2LFiJR4BOJcW6u3HWYXPYCJ0yyAam9EawoPjkbU71XTSP7PBukcFjDf4YYPwb8IjX9uBReVdiEa4olQ04+lsRR1iZyK0n9a3tnK7hT6dRGBUVa6OfFdfKDAR/IfmDgh8LvBBD5ZOb/p9eci9YQ+uv/43srFUzA3R5I0N2JkL7fKuA96MWJVjHCtLfP2O1+tDRlKdgdczgAg2xJt1ySTQJLCWqZw0H70sX8mK5JDmSbbW7GF0ZKrlDajHPWd771E0QRbev5ejPVAkVfRrUmQooPJEP3rX/bkjhxNrpPva8QVVI8D561TEnn041Rfv9K+g1az8qigOzHbywQuU9wfml51eoESYE88wkK6nhyoIFK4UpjZtplg+fMmdq6P2OB7nz+QTePw89dIYge++KknNKs0L6dx8OQSeLrJdFpj0wfvgx7TkcgKvXMuK3CjdJ+FgBsXAOJLl6Og9wmgLS4fqZOnG3A==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 7 Sep 2020 22:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbgIHCoU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 7 Sep 2020 22:44:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CFAC061573
+        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 19:44:19 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id v15so9004275pgh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 19:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uyIb8kUMY8DJ99Mz9wl8Y+7UFHI10JP2O3HyXXLiNng=;
+        b=epDLSiQGwIFoyGNw3Whmj8GwHhv+9u9qRdqbSXpCKUSjBHR7bQF2QDdNcpKnvP0i71
+         1kdtwXP4HDtjhRIl96iWCK8Y/+vJ7sNQQwgd6lmfSS1xLh8sJNQYUBARXiNHY75bS0mZ
+         zFQsAIzIFo1AAyQkiUuMcjJeUzp3MPSKOvwY4pIW3gpar/00YSgFcKcs/dyqO8pZd+t4
+         gPJb/f46UghYuXc35HDVtS9gkG9QPhyuk0z8Xh4a9FGz7RSvnSwkJt9wJXU+cHQ8zVnq
+         M0AC6f+zpCfUKhLJ4hWlPnm7YfZrDaOsSy+7Ns7H1sdCHakEqTLaHOmkmBZjJf4VHoPw
+         e3bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uyIb8kUMY8DJ99Mz9wl8Y+7UFHI10JP2O3HyXXLiNng=;
+        b=aY80hWi/NteVq46CsLom4bNL7U57JsHWjwKg9Kwqauv+cZGT4DLiw/5ivNb1xQMPk7
+         wbizJ/eAd1Pjc2FpoZ/sUvfJxEgLehZDCzZVaB05XzxKowzSpPg2aTRZajwL4ZJ/bMs6
+         HQovha/NlQ3nqnZjOb/NYcRr6k2b+v4UNxxHdTjvLMwLxsD2totslW8ZKzgmxLvWv64+
+         ur0FCzkAYkgH9rm9tyurwHfyFTk1arK4Mg7kYILD3jfr26KmZE+9W8IwDEDmcq1r/tjM
+         HDQ6ovo6CfnclR1w8WJRxs3J0jd0qXnjdfoVVlN4I5rWeyx/opjcv4nGujNtI0MdIZSb
+         HcqA==
+X-Gm-Message-State: AOAM533x/1JTbu0dPf5iyNDgaQsRXhuWfs6PTdj93EZmzMJXPZgJM6d0
+        4M0UnbbbFXRYtdfZ7UV8zu2SKaaWZ8I=
+X-Google-Smtp-Source: ABdhPJxGHsQ76hm+ReEOCRqG6aTZvmVLsH5cxN9pg3XVPJYJR9LYAW9OIjXajjtmue3LMl24X7zgFw==
+X-Received: by 2002:a63:7e4c:: with SMTP id o12mr18295834pgn.270.1599533058699;
+        Mon, 07 Sep 2020 19:44:18 -0700 (PDT)
+Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
+        by smtp.gmail.com with ESMTPSA id k24sm16237390pfg.148.2020.09.07.19.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 19:44:17 -0700 (PDT)
+From:   Daeho Jeong <daeho43@gmail.com>
+To:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Cc:     Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH v3 1/2] f2fs: change i_compr_blocks of inode to atomic value
+Date:   Tue,  8 Sep 2020 11:44:10 +0900
+Message-Id: <20200908024411.2692388-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d7f4636e-6a3a-4730-8a73-08d853a102e2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 02:43:47.5346
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zv84UA6r/hb8G48eyynNV20OWmjv7VBSPowVcVdd5APmZgPOBQ9pxsUF3CzzZq9iiCs0Xh6jFkmXsOYBc8yQMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB6821
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
-LCBTZXB0ZW1iZXIgNywgMjAyMCA4OjMzIFBNDQo+IA0KPiBDaGFuZ2UgUElOQ1RSX0lNWF9TQ1Ug
-dG8gdHJpc3RhdGUsIHJlbW92ZSB1bm5lY2Vzc2FyeSAjaWZkZWYgYW5kIGFkZA0KPiBtb2R1bGUg
-YXV0aG9yLCBkZXNjcmlwdGlvbiBhbmQgbGljZW5zZSB0byBzdXBwb3J0IGJ1aWxkaW5nIFNDVSBw
-aW5jdHJsIGNvcmUNCj4gZHJpdmVyIGFzIG1vZHVsZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEFu
-c29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiAtLS0NCj4gQ2hhbmdlcyBzaW5jZSBW
-MToNCj4gCS0gc3BsaXQgVjEgWzEvMl0gcGF0Y2ggdG8gMiBwYXRjaGVzLCB0aGlzIHBhdGNoIHN1
-cHBvcnRzIGJ1aWxkaW5nIFNDVSBwaW5jdHJsDQo+IGNvcmUNCj4gCSAgZHJpdmVyIGFzIG1vZHVs
-ZTsNCj4gCS0gcmVtb3ZlIHVubmVjZXNzYXJ5ICNpZmRlZiBjaGVjayBhbmQgI2Vsc2UgYmxvY2su
-DQo+IC0tLQ0KPiAgZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9LY29uZmlnICAgICAgIHwgIDIg
-Ky0NCj4gIGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaCB8IDIwIC0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+IGRyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1zY3Uu
-YyB8ICA1ICsrKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgMjEgZGVs
-ZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9L
-Y29uZmlnIGIvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9LY29uZmlnDQo+IGluZGV4IDA4ZmNm
-NWMuLjQ1MmM0OTkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvS2Nv
-bmZpZw0KPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL0tjb25maWcNCj4gQEAgLTcs
-NyArNyw3IEBAIGNvbmZpZyBQSU5DVFJMX0lNWA0KPiAgCXNlbGVjdCBSRUdNQVANCj4gDQo+ICBj
-b25maWcgUElOQ1RSTF9JTVhfU0NVDQo+IC0JYm9vbA0KPiArCXRyaXN0YXRlICJJTVggU0NVIHBp
-bmN0cmwgY29yZSBkcml2ZXIiDQo+ICAJZGVwZW5kcyBvbiBJTVhfU0NVDQo+ICAJc2VsZWN0IFBJ
-TkNUUkxfSU1YDQo+IA0KDQpbLi4uXQ0KDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwv
-ZnJlZXNjYWxlL3BpbmN0cmwtaW14LmgNCj4gYi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3Bp
-bmN0cmwtaW14LmgNCj4gaW5kZXggNDA5MjdjYS4uZmQ4YzRiNiAxMDA2NDQNCj4gLS0tIGEvZHJp
-dmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5jdHJsLWlteC5oDQo+ICsrKyBiL2RyaXZlcnMvcGlu
-Y3RybC9mcmVlc2NhbGUvcGluY3RybC1pbXguaA0KPiBAQCAtMTQ0LDcgKzE0NCw2IEBAIHN0cnVj
-dCBpbXhfcGluY3RybF9zb2NfaW5mbyB7ICBpbnQNCj4gaW14X3BpbmN0cmxfcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldiwNCj4gIAkJCWNvbnN0IHN0cnVjdCBpbXhfcGluY3RybF9z
-b2NfaW5mbyAqaW5mbyk7DQo+IA0KPiAtI2lmZGVmIENPTkZJR19QSU5DVFJMX0lNWF9TQ1UNCj4g
-ICNkZWZpbmUgQk1fUEFEX0NUTF9HUF9FTkFCTEUJCUJJVCgzMCkNCj4gICNkZWZpbmUgQk1fUEFE
-X0NUTF9JRk1VWF9FTkFCTEUJCUJJVCgzMSkNCj4gICNkZWZpbmUgQlBfUEFEX0NUTF9JRk1VWAkJ
-MjcNCj4gQEAgLTE1NywyMyArMTU2LDQgQEAgaW50IGlteF9waW5jb25mX3NldF9zY3Uoc3RydWN0
-IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiB1bnNpZ25lZCBwaW5faWQsICB2b2lkIGlteF9waW5j
-dHJsX3BhcnNlX3Bpbl9zY3Uoc3RydWN0IGlteF9waW5jdHJsICppcGN0bCwNCj4gIAkJCSAgICAg
-ICB1bnNpZ25lZCBpbnQgKnBpbl9pZCwgc3RydWN0IGlteF9waW4gKnBpbiwNCj4gIAkJCSAgICAg
-ICBjb25zdCBfX2JlMzIgKipsaXN0X3ApOw0KPiAtI2Vsc2UNCj4gLXN0YXRpYyBpbmxpbmUgaW50
-IGlteF9waW5jb25mX2dldF9zY3Uoc3RydWN0IHBpbmN0cmxfZGV2ICpwY3RsZGV2LA0KPiAtCQkJ
-CSAgICAgIHVuc2lnbmVkIHBpbl9pZCwgdW5zaWduZWQgbG9uZyAqY29uZmlnKQ0KPiAtew0KPiAt
-CXJldHVybiAtRUlOVkFMOw0KPiAtfQ0KPiAtc3RhdGljIGlubGluZSBpbnQgaW14X3BpbmNvbmZf
-c2V0X3NjdShzdHJ1Y3QgcGluY3RybF9kZXYgKnBjdGxkZXYsDQo+IC0JCQkJICAgICAgdW5zaWdu
-ZWQgcGluX2lkLCB1bnNpZ25lZCBsb25nICpjb25maWdzLA0KPiAtCQkJCSAgICAgIHVuc2lnbmVk
-IG51bV9jb25maWdzKQ0KPiAtew0KPiAtCXJldHVybiAtRUlOVkFMOw0KPiAtfQ0KPiAtc3RhdGlj
-IGlubGluZSB2b2lkIGlteF9waW5jdHJsX3BhcnNlX3Bpbl9zY3Uoc3RydWN0IGlteF9waW5jdHJs
-ICppcGN0bCwNCj4gLQkJCQkJICAgIHVuc2lnbmVkIGludCAqcGluX2lkLA0KPiAtCQkJCQkgICAg
-c3RydWN0IGlteF9waW4gKnBpbiwNCj4gLQkJCQkJICAgIGNvbnN0IF9fYmUzMiAqKmxpc3RfcCkN
-Cj4gLXsNCj4gLX0NCj4gLSNlbmRpZg0KPiAgI2VuZGlmIC8qIF9fRFJJVkVSU19QSU5DVFJMX0lN
-WF9IICovDQoNClNob3VsZCB0aGlzIHBhcnQgb2YgY2hhbmdlcyBnbyB0byBQYXRjaCAxPw0KDQo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtc2N1LmMNCj4g
-Yi9kcml2ZXJzL3BpbmN0cmwvZnJlZXNjYWxlL3BpbmN0cmwtc2N1LmMNCj4gaW5kZXggOWRmNDVk
-My4uNTliNWY4YSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL2ZyZWVzY2FsZS9waW5j
-dHJsLXNjdS5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9mcmVlc2NhbGUvcGluY3RybC1zY3Uu
-Yw0KPiBAQCAtNyw2ICs3LDcgQEANCj4gDQo+ICAjaW5jbHVkZSA8bGludXgvZXJyLmg+DQo+ICAj
-aW5jbHVkZSA8bGludXgvZmlybXdhcmUvaW14L3NjaS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L21v
-ZHVsZS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L29mX2FkZHJlc3MuaD4NCj4gICNpbmNsdWRlIDxs
-aW51eC9waW5jdHJsL3BpbmN0cmwuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZp
-Y2UuaD4NCj4gQEAgLTEyMywzICsxMjQsNyBAQCB2b2lkIGlteF9waW5jdHJsX3BhcnNlX3Bpbl9z
-Y3Uoc3RydWN0IGlteF9waW5jdHJsDQo+ICppcGN0bCwNCj4gIAkJcGluX3NjdS0+bXV4X21vZGUs
-IHBpbl9zY3UtPmNvbmZpZyk7DQo+ICB9DQo+ICBFWFBPUlRfU1lNQk9MX0dQTChpbXhfcGluY3Ry
-bF9wYXJzZV9waW5fc2N1KTsNCj4gKw0KPiArTU9EVUxFX0FVVEhPUigiRG9uZyBBaXNoZW5nIDxh
-aXNoZW5nLmRvbmdAbnhwLmNvbT4iKTsNCj4gK01PRFVMRV9ERVNDUklQVElPTigiTlhQIGkuTVgg
-U0NVIGNvbW1vbiBwaW5jdHJsIGRyaXZlciIpOw0KPiArTU9EVUxFX0xJQ0VOU0UoIkdQTCB2MiIp
-Ow0KPiAtLQ0KPiAyLjcuNA0KDQo=
+From: Daeho Jeong <daehojeong@google.com>
+
+writepages() can be concurrently invoked for the same file by different
+threads such as a thread fsyncing the file and a kworker kernel thread.
+So, changing i_compr_blocks without protection is racy and we need to
+protect it by changing it with atomic type value. Plus, we don't need
+a 64bit value for i_compr_blocks, so just we will use a atomic value,
+not atomic64.
+
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+Changes in v3:
+ - Roll back to the original flow except changing atomic64 to atomic
+Changes in v2:
+ - Change atomic64 to atomic and remove unnecessary part
+
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fs/f2fs/f2fs.h  | 17 ++++++++++-------
+ fs/f2fs/file.c  | 22 ++++++++++++----------
+ fs/f2fs/inode.c | 11 +++++++----
+ fs/f2fs/super.c |  1 +
+ 4 files changed, 30 insertions(+), 21 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index f60414805e05..c615e75c82fd 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -801,7 +801,7 @@ struct f2fs_inode_info {
+ 	struct timespec64 i_disk_time[4];/* inode disk times */
+ 
+ 	/* for file compress */
+-	u64 i_compr_blocks;			/* # of compressed blocks */
++	atomic_t i_compr_blocks;		/* # of compressed blocks */
+ 	unsigned char i_compress_algorithm;	/* algorithm type */
+ 	unsigned char i_log_cluster_size;	/* log of cluster size */
+ 	unsigned int i_cluster_size;		/* cluster size */
+@@ -3930,17 +3930,19 @@ static inline void set_compress_context(struct inode *inode)
+ 	f2fs_mark_inode_dirty_sync(inode, true);
+ }
+ 
+-static inline u64 f2fs_disable_compressed_file(struct inode *inode)
++static inline u32 f2fs_disable_compressed_file(struct inode *inode)
+ {
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
++	u32 i_compr_blocks;
+ 
+ 	if (!f2fs_compressed_file(inode))
+ 		return 0;
+ 	if (S_ISREG(inode->i_mode)) {
+ 		if (get_dirty_pages(inode))
+ 			return 1;
+-		if (fi->i_compr_blocks)
+-			return fi->i_compr_blocks;
++		i_compr_blocks = atomic_read(&fi->i_compr_blocks);
++		if (i_compr_blocks)
++			return i_compr_blocks;
+ 	}
+ 
+ 	fi->i_flags &= ~F2FS_COMPR_FL;
+@@ -4057,16 +4059,17 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+ 						u64 blocks, bool add)
+ {
+ 	int diff = F2FS_I(inode)->i_cluster_size - blocks;
++	struct f2fs_inode_info *fi = F2FS_I(inode);
+ 
+ 	/* don't update i_compr_blocks if saved blocks were released */
+-	if (!add && !F2FS_I(inode)->i_compr_blocks)
++	if (!add && !atomic_read(&fi->i_compr_blocks))
+ 		return;
+ 
+ 	if (add) {
+-		F2FS_I(inode)->i_compr_blocks += diff;
++		atomic_add(diff, &fi->i_compr_blocks);
+ 		stat_add_compr_blocks(inode, diff);
+ 	} else {
+-		F2FS_I(inode)->i_compr_blocks -= diff;
++		atomic_sub(diff, &fi->i_compr_blocks);
+ 		stat_sub_compr_blocks(inode, diff);
+ 	}
+ 	f2fs_mark_inode_dirty_sync(inode, true);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index cc7f5670390f..adc4acad488a 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -564,7 +564,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+ 	bool compressed_cluster = false;
+ 	int cluster_index = 0, valid_blocks = 0;
+ 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+-	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
++	bool released = !atomic_read(&F2FS_I(dn->inode)->i_compr_blocks);
+ 
+ 	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+ 		base = get_extra_isize(dn->inode);
+@@ -3436,7 +3436,7 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+ 	if (!f2fs_compressed_file(inode))
+ 		return -EINVAL;
+ 
+-	blocks = F2FS_I(inode)->i_compr_blocks;
++	blocks = atomic_read(&F2FS_I(inode)->i_compr_blocks);
+ 	return put_user(blocks, (u64 __user *)arg);
+ }
+ 
+@@ -3535,7 +3535,7 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		goto out;
+ 
+-	if (!F2FS_I(inode)->i_compr_blocks)
++	if (!atomic_read(&F2FS_I(inode)->i_compr_blocks))
+ 		goto out;
+ 
+ 	F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+@@ -3588,14 +3588,15 @@ static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+ 
+ 	if (ret >= 0) {
+ 		ret = put_user(released_blocks, (u64 __user *)arg);
+-	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
++	} else if (released_blocks &&
++			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+ 		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+-			"iblocks=%llu, released=%u, compr_blocks=%llu, "
++			"iblocks=%llu, released=%u, compr_blocks=%u, "
+ 			"run fsck to fix.",
+ 			__func__, inode->i_ino, inode->i_blocks,
+ 			released_blocks,
+-			F2FS_I(inode)->i_compr_blocks);
++			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+ 	}
+ 
+ 	return ret;
+@@ -3683,7 +3684,7 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (F2FS_I(inode)->i_compr_blocks)
++	if (atomic_read(&F2FS_I(inode)->i_compr_blocks))
+ 		goto out;
+ 
+ 	f2fs_balance_fs(F2FS_I_SB(inode), true);
+@@ -3747,14 +3748,15 @@ static int f2fs_reserve_compress_blocks(struct file *filp, unsigned long arg)
+ 
+ 	if (ret >= 0) {
+ 		ret = put_user(reserved_blocks, (u64 __user *)arg);
+-	} else if (reserved_blocks && F2FS_I(inode)->i_compr_blocks) {
++	} else if (reserved_blocks &&
++			atomic_read(&F2FS_I(inode)->i_compr_blocks)) {
+ 		set_sbi_flag(sbi, SBI_NEED_FSCK);
+ 		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
+-			"iblocks=%llu, reserved=%u, compr_blocks=%llu, "
++			"iblocks=%llu, reserved=%u, compr_blocks=%u, "
+ 			"run fsck to fix.",
+ 			__func__, inode->i_ino, inode->i_blocks,
+ 			reserved_blocks,
+-			F2FS_I(inode)->i_compr_blocks);
++			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+ 	}
+ 
+ 	return ret;
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 66969ae852b9..2ed935c13aed 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -442,7 +442,8 @@ static int do_read_inode(struct inode *inode)
+ 					(fi->i_flags & F2FS_COMPR_FL)) {
+ 		if (F2FS_FITS_IN_INODE(ri, fi->i_extra_isize,
+ 					i_log_cluster_size)) {
+-			fi->i_compr_blocks = le64_to_cpu(ri->i_compr_blocks);
++			atomic_set(&fi->i_compr_blocks,
++					le64_to_cpu(ri->i_compr_blocks));
+ 			fi->i_compress_algorithm = ri->i_compress_algorithm;
+ 			fi->i_log_cluster_size = ri->i_log_cluster_size;
+ 			fi->i_cluster_size = 1 << fi->i_log_cluster_size;
+@@ -460,7 +461,7 @@ static int do_read_inode(struct inode *inode)
+ 	stat_inc_inline_inode(inode);
+ 	stat_inc_inline_dir(inode);
+ 	stat_inc_compr_inode(inode);
+-	stat_add_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
++	stat_add_compr_blocks(inode, atomic_read(&fi->i_compr_blocks));
+ 
+ 	return 0;
+ }
+@@ -619,7 +620,8 @@ void f2fs_update_inode(struct inode *inode, struct page *node_page)
+ 			F2FS_FITS_IN_INODE(ri, F2FS_I(inode)->i_extra_isize,
+ 							i_log_cluster_size)) {
+ 			ri->i_compr_blocks =
+-				cpu_to_le64(F2FS_I(inode)->i_compr_blocks);
++				cpu_to_le64(atomic_read(
++					&F2FS_I(inode)->i_compr_blocks));
+ 			ri->i_compress_algorithm =
+ 				F2FS_I(inode)->i_compress_algorithm;
+ 			ri->i_log_cluster_size =
+@@ -768,7 +770,8 @@ void f2fs_evict_inode(struct inode *inode)
+ 	stat_dec_inline_dir(inode);
+ 	stat_dec_inline_inode(inode);
+ 	stat_dec_compr_inode(inode);
+-	stat_sub_compr_blocks(inode, F2FS_I(inode)->i_compr_blocks);
++	stat_sub_compr_blocks(inode,
++			atomic_read(&F2FS_I(inode)->i_compr_blocks));
+ 
+ 	if (likely(!f2fs_cp_error(sbi) &&
+ 				!is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 83bf9a02f83f..813aa207824c 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1011,6 +1011,7 @@ static struct inode *f2fs_alloc_inode(struct super_block *sb)
+ 
+ 	/* Initialize f2fs-specific inode info */
+ 	atomic_set(&fi->dirty_pages, 0);
++	atomic_set(&fi->i_compr_blocks, 0);
+ 	init_rwsem(&fi->i_sem);
+ 	spin_lock_init(&fi->i_size_lock);
+ 	INIT_LIST_HEAD(&fi->dirty_list);
+-- 
+2.28.0.526.ge36021eeef-goog
+
