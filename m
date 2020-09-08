@@ -2,115 +2,178 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4746AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F241C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0204D23C41
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:04:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYKxTMjh"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE7D21D80
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:09:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599574165;
+	bh=mbfauGX7l3Y8qQxNiJqadv/7s6SZLaKEn9FW9X7d8FI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2ptoDHdFoUO65/UQ0AJXVjNoBLoEo2dQhN52cDddVk7arYaLHZBgIICbo4QWhoNAo
+	 jEkDMAQj1WZ+5hZIPAEk8YewdmmmcYUfTZMkDsNcGgISla0zfhuz173oNvAizATiHa
+	 H7zFWYmFh16CeuGSnqCBIIe1VKYpgZrgd9TPRcDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgIHOCp (ORCPT
+        id S1729026AbgIHOFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 10:02:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbgIHN7d (ORCPT
+        Tue, 8 Sep 2020 10:05:39 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42124 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729622AbgIHN6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 09:59:33 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC261C061374;
-        Tue,  8 Sep 2020 05:45:38 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id b16so8234990pjp.0;
-        Tue, 08 Sep 2020 05:45:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jhHypeLTRA4WXxhhuo6Z6j83RXXSW7eZ7o0xAUpwRko=;
-        b=WYKxTMjhCEq3m5vySflh4N7bV6WzAwoHVDwnzWmDuvMlUJQQTYUjRRQrQ1HRFyImD6
-         ARHK1Gga6jFz0A0tT9XZCQOyxKpp2fSboNAWVfGB7Fc9x5CDDDVQTESefH43SmG5Ubag
-         0O7upG16zrl5k74HF5oKkZlLqAYvSAv9dK2XPLZSOC6w1xowlI4LXHsW1Z7CqsmB03Vh
-         +3OTgSWBIMK36QOK71xW0sjXtkESECjQEqIycmMsrjdzZc/+KT54hSVfaOj0R6Aro5Mb
-         2ZXppdSSRwH+2qL2ZJqr6KHK4j8mLTt5Dh19wFsqNl5SjHS542eBkah5tHd30rej+n+7
-         uwHw==
+        Tue, 8 Sep 2020 09:58:35 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k25so20123765ljg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:57:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jhHypeLTRA4WXxhhuo6Z6j83RXXSW7eZ7o0xAUpwRko=;
-        b=r+4yPV9ulkUASdNbZ3E6zAO5hYQ6kobKbCu6LKqhgAiZc+tnCm+3GxZNs7EkPjLTsJ
-         4heTHCTF97pUsCZfdjKo9TJFMnlcYw+GLI4IbIukRAvPimrWT9n4698Rb3XIkIjjm2WU
-         Nstaqd/qUV7+MK4IOHDWHHTYOLSEk4is8U4X8RgcmedKZF4ceIvzjaRHjV6UbJJ8zBhZ
-         ukPRjJPpCoY4AmsR57L613auaQDKqmccStMP7jhsJvWHrCfs1uHcD+DbjLr8NJTYjfop
-         NP5n1iQPRgRVnntY9ZkdwXtmnIQ975Ooj3lJyZlSg7orjwSNyRlxvDNf2xB35X1GwTa9
-         Fq3Q==
-X-Gm-Message-State: AOAM533UOHS4nPtWAp7ePBuOz8Zx9YTMgoUYFCf+OYu30lDW3uDF7q4r
-        7STX9k/9fw8vi8zkozGbj9iezMbJbej068VC21Y=
-X-Google-Smtp-Source: ABdhPJw8LTt+XXaAgFIKLhZcvCAflJODmJdMFXBFRgAFnhCwPcvxTBBWUsyrjeSl3fonexRUaflNzJYkjYk5w6tS5WE=
-X-Received: by 2002:a17:90a:bd02:: with SMTP id y2mr3900886pjr.66.1599569138277;
- Tue, 08 Sep 2020 05:45:38 -0700 (PDT)
+        bh=DRy3SRSuusmtp8hsLZEtIL6pPGQ6A3wyEibwbW07K/I=;
+        b=eLniuopSwS2QSW49fS4p20Kk/0QbAWns/5Lffj7yf4148IcE7VKwZAsL8lWbkG/KYn
+         xb5Db6KN5/yHNKtojo83jNWUtvvGCVL5lkZas++BBMaLNeuZe66Ffq/Y+WpM/CvwUKua
+         qIC4zsKUHP906W7H3bV6xFqDKnTlrRx31Y4lVZXQMUlyKm28OHxRDJvq1iVY4YLcwFIL
+         iQ0AGgPKR1n3B2kBNR5ffDhfv35y3p6uh6BkYtK2/0NACH02e5STcofaKWhBUXLBe7pq
+         CVD5umK3TjS8fmAHQRQids1+uZ23ZqIAlhN3po5ObFd09gaHPqTScNUXOF+KSBEdAAEb
+         tH5A==
+X-Gm-Message-State: AOAM530CD+71O2KprEJZ375+RoioLM5QHdnGoAtTPsHsGLH350oVzdOe
+        B3S0c3PAxofb01uXJoiCVQDkUTFz104+Tcx7Qlb8MXPoaHw=
+X-Google-Smtp-Source: ABdhPJyIWW+D5eWfj47c1+pq5A02Y/jUZ0zoKOIBtqsfqrJ+9jCo9ypO3LZcu/nZO+l+BbJvNtjU2PvQjzJKoJjr+aU=
+X-Received: by 2002:adf:8b48:: with SMTP id v8mr26923909wra.21.1599572669813;
+ Tue, 08 Sep 2020 06:44:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAJht_EOu8GKvdTAeF_rHsaKu7iYOmW8C64bQA21bgKuiANE5Zw@mail.gmail.com>
- <CAJht_EP=g02o2ygihNo=EWd1OuL3HSjmhqgGiwUGrMde=urSUA@mail.gmail.com>
- <CA+FuTSdm35x9nA259JgOWcCWJto9MVMHGGgamPPsgnpsTmPO8g@mail.gmail.com>
- <CAJht_EPEqUMXNdQLL9d5OtzbZ92Jms7nSUR8bS+cw2Ah5mv6cQ@mail.gmail.com>
- <CA+FuTSeJS22R2VYSzcEVvXiUhX79RYE0o3G6V3NKGzQ4UGaJQg@mail.gmail.com>
- <CAJht_EN7SXAex-1W49eY7q5p2UqLYvXA8D6hptJGquXdJULLcA@mail.gmail.com> <CA+FuTSfgxt6uqcxy=wnOXo8HxMJ3J0HAqQNiDJBLCs22Ukb_gQ@mail.gmail.com>
-In-Reply-To: <CA+FuTSfgxt6uqcxy=wnOXo8HxMJ3J0HAqQNiDJBLCs22Ukb_gQ@mail.gmail.com>
-From:   Xie He <xie.he.0141@gmail.com>
-Date:   Tue, 8 Sep 2020 05:45:27 -0700
-Message-ID: <CAJht_EN-aBo8rfHAxYxwW2Jb38S2PW3WtxhWuHn5HS1fAWeA1w@mail.gmail.com>
-Subject: Re: Question about dev_validate_header used in af_packet.c
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <1599563792-20711-1-git-send-email-tangzejiang@loongson.cn>
+In-Reply-To: <1599563792-20711-1-git-send-email-tangzejiang@loongson.cn>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 8 Sep 2020 22:44:18 +0900
+Message-ID: <CAM9d7ch+AvG=NetiEjT6qmewhCy6+QEBS4sr1J7qikYnmQPDZg@mail.gmail.com>
+Subject: Re: [PATCH v2] Improve perf option help information in perf.txt
+To:     Zejiang Tang <tangzejiang@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 4:53 AM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
+On Tue, Sep 8, 2020 at 8:16 PM Zejiang Tang <tangzejiang@loongson.cn> wrote:
 >
-> On Tue, Sep 8, 2020 at 1:04 PM Xie He <xie.he.0141@gmail.com> wrote:
-> >
-> > I was recently looking at some drivers, and I felt that if af_packet.c
-> > could help me filter out the invalid RAW frames, I didn't need to
-> > check the validity of the frames myself (in the driver when
-> > transmitting). But now I guess I still need to check that.
-> >
-> > I feel this makes the dev_validate_header's variable-length header
-> > check not very useful, because drivers need to do this check again
-> > (when transmitting) anyway.
-> >
-> > I was thinking, after I saw dev_validate_header, that we could
-> > eventually make it completely take over the responsibility for a
-> > driver to validate the header when transmitting RAW frames. But now it
-> > seems we would not be able to do this.
+> Perf could use many options, such as:-vv, --exec-path,
+> --html-path, -p, --paginate,--no-pager, --debugfs-dir,
+> --buildid-dir, --list-cmds, --list-opts. Add these options
+> in perf.txt.
 >
-> Agreed. As is, it is mainly useful to block users who are ns_capable,
-> but not capable.
+> Signed-off-by: Zejiang Tang <tangzejiang@loongson.cn>
+> ---
+>  tools/perf/Documentation/perf.txt | 69 ++++++++++++++++++++++++++-------------
+>  1 file changed, 47 insertions(+), 22 deletions(-)
 >
-> A third option is to move it behind a sysctl (with static_branch). Your
-> point is valid that there really is no need for testing of drivers against
-> bad packets if the data is validated directly on kernel entry.
+> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+> index 3f37ded..5edb854 100644
+> --- a/tools/perf/Documentation/perf.txt
+> +++ b/tools/perf/Documentation/perf.txt
+> @@ -12,32 +12,57 @@ SYNOPSIS
+>
+>  OPTIONS
+>  -------
+> ---debug::
+> -       Setup debug variable (see list below) in value
+> -       range (0, 10). Use like:
+> -         --debug verbose   # sets verbose = 1
+> -         --debug verbose=2 # sets verbose = 2
+> -
+> -       List of debug variables allowed to set:
+> -         verbose          - general debug messages
+> -         ordered-events   - ordered events object debug messages
+> -         data-convert     - data convert command debug messages
+> -         stderr           - write debug output (option -v) to stderr
+> -                            in browser mode
+> -         perf-event-open  - Print perf_event_open() arguments and
+> -                            return value
+> -
+> ---buildid-dir::
+> -       Setup buildid cache directory. It has higher priority than
+> -       buildid.dir config file option.
+> +-h::
+> +--help::
+> +        Run perf help command.
+>
+>  -v::
+>  --version::
+> -  Display perf version.
+> +        Display perf version.
+>
+> --h::
+> ---help::
+> -  Run perf help command.
+> +-vv::
+> +        Print the compiled-in status of libraries.
+> +
+> +--exec-path::
+> +        Display or set exec path.
+> +
+> +--html-path::
+> +        Display absolute html path.
 
-I was thinking about this again and it came to me that maybe sometimes
-people actually wanted to send invalid frames on wire (for testing the
-network device on the other end of the wire)? Having thought about
-this possibility I think it might be good to keep the ability for
-people to have 2 choices (either having their RAW frames validated, or
-not validated) through "capability" or through "sysctl" as you
-mentioned. We can keep the default to be not validating the RAW frames
-because RAW sockets are already intended for very special use and are
-not for normal use.
+I doubt if we ever used this html man pages.
+
+> +
+> +-p::
+> +--paginate::
+> +        Set up pager.
+> +
+> +--no-pager::
+> +        Add or change the content of environment variables.
+
+It's too vague and incorrect.  Maybe just "Do not set up pager" ?
+
+Thanks
+Namhyung
+
+
+> +
+> +--buildid-dir::
+> +        Setup buildid cache directory. It has higher priority
+> +        than buildid.dir config file option.
+> +
+> +--list-cmds::
+> +        List the most commonly used perf commands.
+> +
+> +--list-opts::
+> +        List available perf options.
+> +
+> +--debugfs-dir::
+> +        Set debugfs directory or set environment variable PERF_DEBUGFS_DIR.
+> +
+> +--debug::
+> +        Setup debug variable (see list below) in value
+> +        range (0, 10). Use like:
+> +          --debug verbose   # sets verbose = 1
+> +          --debug verbose=2 # sets verbose = 2
+> +
+> +        List of debug variables allowed to set:
+> +          verbose          - general debug messages
+> +          ordered-events   - ordered events object debug messages
+> +          data-convert     - data convert command debug messages
+> +          stderr           - write debug output (option -v) to stderr
+> +                             in browser mode
+> +          perf-event-open  - Print perf_event_open() arguments and
+> +                             return value
+>
+>  DESCRIPTION
+>  -----------
+> --
+> 2.1.0
+>
