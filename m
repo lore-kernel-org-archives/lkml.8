@@ -2,108 +2,152 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E03C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1055C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDAF22228
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:29:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1Aw0Yd/"
+	by mail.kernel.org (Postfix) with ESMTP id 65598221E5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 14:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgIHO3O (ORCPT
+        id S1729275AbgIHOai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 10:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729305AbgIHOYv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 10:24:51 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4CDC0619C7;
-        Tue,  8 Sep 2020 06:47:29 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o68so11006871pfg.2;
-        Tue, 08 Sep 2020 06:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=desmngMEhq+Bl6GRnZjRLKp5/Ig6cW8Nd4zeE2+dVOc=;
-        b=l1Aw0Yd/TChtCxJhjaAzLpudFcBidJhdzobIQBiONKCPU+qpeJhWJQLTI/tFIrhokQ
-         QgDtTJ5YTFZ0xB0l0tZRQNSXwV9Mrtnezr8alEj0OqEWxEsrZ/SbPMVRVzy40DqqkzpJ
-         eCBtZQnkOEaTfYPHAFVed2pAJHqLcjcLcZX9NI3BjpIzAD8AvhFM5BePPYVjq+GsSPUe
-         JfXqOJ1pgh4VH6RzJ3DZ0fyzP9+j0dLKPP5dWVusN0GWz69IdCnPwKzB1WAcq4ztmKtK
-         aE3PHF/ni+0jVEpqMy8HcaS3mv3YI/mqb/+70C8flGcHqaKiSG2Oq9gImD7zTStyLEkC
-         18Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=desmngMEhq+Bl6GRnZjRLKp5/Ig6cW8Nd4zeE2+dVOc=;
-        b=mS5ZZarigDYGOPbuyzdD5d5DAtElRjkrLrEl8iCMmFvKEsLR7RqvZqRJ7/hj8cVSEH
-         uiHaXQr0tyjPSm1bJo3trt68s4Nyofi6ricxLMdWLuS17gwZ3X6t+osF+p3LG2z1iPQF
-         cPx0OWwt5DBOg5e3xupJlS3jm9jpT1nKtwFSxxTZEOMTnY4MZXVs5YaQeqSzcyyx1qG1
-         lhLhWAMKv6orPveTeEby75kVLKOL4dMiC9rQfFiPttjHiKh7OmJLKpC3VMyEyPU33L69
-         pHB1VDNABkf167CZeKlwR6sJeNF8bgCxKRK7xVJyyMIYXKVjDR450Y2yJomhHO8p6E2Y
-         E1wA==
-X-Gm-Message-State: AOAM532WqkvJjf3/xWu2XlmK4tmOOOfEJ9a0yCyc/UyfJVCHgevK0gdd
-        Cgf1F3Gsz6JTsvtMwmM0JqsIgYg0csM=
-X-Google-Smtp-Source: ABdhPJxSvaO2jI1NLiCtPBZfROkieHeDyd8FUtXyfbKpJq3gy9asID9vNMGjM7NxOcmigxIi/LQ6dw==
-X-Received: by 2002:a63:64c2:: with SMTP id y185mr13694809pgb.125.1599572849347;
-        Tue, 08 Sep 2020 06:47:29 -0700 (PDT)
-Received: from sh05419pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id j35sm14852313pgi.91.2020.09.08.06.47.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 08 Sep 2020 06:47:28 -0700 (PDT)
-From:   Hongtao Wu <wuht06@gmail.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
-Subject: [PATCH v2 0/2] PCI: Add new Unisoc PCIe driver
-Date:   Tue,  8 Sep 2020 21:47:19 +0800
-Message-Id: <1599572841-2652-1-git-send-email-wuht06@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 8 Sep 2020 10:30:38 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:35692 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729725AbgIHOY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 10:24:56 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bm4Vr1mvXz9tysg;
+        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id cIMhaNVcmlrN; Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bm4Vr0fBLz9tysZ;
+        Tue,  8 Sep 2020 14:40:20 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5BBAE8B7C1;
+        Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id xwRqAZ7QC05H; Tue,  8 Sep 2020 14:40:21 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B7AA88B7BE;
+        Tue,  8 Sep 2020 14:40:18 +0200 (CEST)
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+ <82fbe8f9-f199-5fc2-4168-eb43ad0b0346@csgroup.eu>
+ <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <96b80926-cf5b-1afa-9b7a-949a2188e61f@csgroup.eu>
+Date:   Tue, 8 Sep 2020 14:40:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <70a3dcb5-5ed1-6efa-6158-d0573d6927da@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Billows Wu <billows.wu@unisoc.com>
 
-This series adds PCIe controller driver for Unisoc SoCs.
-This controller is based on DesignWare PCIe IP.
 
-Changes from v1:
-1) Test this patch on top of Rob Herring's 40 part series of DWC clean-ups:
-   https://lore.kernel.org/linux-pci/20200821035420.380495-1-robh@kernel.org/
+Le 08/09/2020 à 14:09, Christian Borntraeger a écrit :
+> 
+> 
+> On 08.09.20 07:06, Christophe Leroy wrote:
+>>
+>>
+>> Le 07/09/2020 à 20:00, Gerald Schaefer a écrit :
+>>> From: Alexander Gordeev <agordeev@linux.ibm.com>
+>>>
+>>> Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
+>>> code") introduced a subtle but severe bug on s390 with gup_fast, due to
+>>> dynamic page table folding.
+>>>
+>>> The question "What would it require for the generic code to work for s390"
+>>> has already been discussed here
+>>> https://lkml.kernel.org/r/20190418100218.0a4afd51@mschwideX1
+>>> and ended with a promising approach here
+>>> https://lkml.kernel.org/r/20190419153307.4f2911b5@mschwideX1
+>>> which in the end unfortunately didn't quite work completely.
+>>>
+>>> We tried to mimic static level folding by changing pgd_offset to always
+>>> calculate top level page table offset, and do nothing in folded pXd_offset.
+>>> What has been overlooked is that PxD_SIZE/MASK and thus pXd_addr_end do
+>>> not reflect this dynamic behaviour, and still act like static 5-level
+>>> page tables.
+>>>
+>>
+>> [...]
+>>
+>>>
+>>> Fix this by introducing new pXd_addr_end_folded helpers, which take an
+>>> additional pXd entry value parameter, that can be used on s390
+>>> to determine the correct page table level and return corresponding
+>>> end / boundary. With that, the pointer iteration will always
+>>> happen in gup_pgd_range for s390. No change for other architectures
+>>> introduced.
+>>
+>> Not sure pXd_addr_end_folded() is the best understandable name, allthough I don't have any alternative suggestion at the moment.
+>> Maybe could be something like pXd_addr_end_fixup() as it will disappear in the next patch, or pXd_addr_end_gup() ?
+>>
+>> Also, if it happens to be acceptable to get patch 2 in stable, I think you should switch patch 1 and patch 2 to avoid the step through pXd_addr_end_folded()
+> 
+> given that this fixes a data corruption issue, wouldnt it be the best to go forward
+> with this patch ASAP and then handle the other patches on top with all the time that
+> we need?
 
-2) Delete empty function
+I have no strong opinion on this, but I feel rather tricky to have to 
+change generic part of GUP to use a new fonction then revert that change 
+in the following patch, just because you want the first patch in stable 
+and not the second one.
 
-3) Document property "sprd,pcie-poweron-syscons" and
-   'sprd,pcie-poweroff-syscons'
+Regardless, I was wondering, why do we need a reference to the pXd at 
+all when calling pXd_addr_end() ?
 
-4) Delete runtime suspend/resume function
+Couldn't S390 retrieve the pXd by using the pXd_offset() dance with the 
+passed addr ?
 
-5) Add COMPILE_TEST which CONFIG_PCIE_SPRD depends on
-
-Billows Wu (2):
-  dt-bindings: PCI: sprd: Document Unisoc PCIe RC host controller
-  PCI: sprd: Add support for Unisoc SoCs' PCIe controller
-
- .../devicetree/bindings/pci/sprd-pcie.yaml         | 101 +++++++++
- drivers/pci/controller/dwc/Kconfig                 |  13 ++
- drivers/pci/controller/dwc/Makefile                |   1 +
- drivers/pci/controller/dwc/pcie-sprd.c             | 231 +++++++++++++++++++++
- 4 files changed, 346 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/sprd-pcie.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
-
--- 
-2.7.4
-
+Christophe
