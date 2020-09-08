@@ -2,137 +2,132 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 249D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 551C6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9BD220936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A75B20936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:09:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A+mn5tT0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GQwzOH8J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbgIHWJ3 (ORCPT
+        id S1729781AbgIHWJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgIHWJY (ORCPT
+        Tue, 8 Sep 2020 18:09:31 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48508 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729337AbgIHWJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:09:24 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B63C061755
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 15:09:23 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id q21so660908edv.1
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 15:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aCABmvNiwq5ZzfEtzfLCEjA/nFkGi01QovzZcJzwaW4=;
-        b=A+mn5tT0iNNPItEfp6i6CyIrTFkG0NTDtOtusAoO6RvzmJ6S7GwZ3JTNz/XEbKNCy8
-         R3IdrVuR0TLbgToZtxM9QBvlDNtS/V5zHhf63UnS30JQ1fnWNEr/52hRzIpxztKcs7Gx
-         kdUdVheSz3d8PH6bPF1U7x7gh5HRx4MHu2JFk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aCABmvNiwq5ZzfEtzfLCEjA/nFkGi01QovzZcJzwaW4=;
-        b=QyDyxQFIcwRI8OU07/iZJppWrxj6lOf28J7WVDXe2UDoUfz/7sMaMMeYFmRcSb5FZz
-         GylBx9SIKch4UruNbjEq8wbgvM0muzl6qNwEIvmEavGQysRO+0I2in8juMVCdJFMrSjZ
-         NFwiv8Urtou9mDPtBqRd8Xir3D6CLMKuzeXsW2CSAeh7bAtt6a456pKAtUlqiItqLOfp
-         +Xd0UrZZLbKY/BMyjqKG2UjRMjfA7iF5Rrb/qaCzGFvJOyurCv4FlPoxgr20384e/Obe
-         av1eyX7BZGgHsnbbjlqnuQrFlUdqPanHk+dJP77WlG0YAYgy9O/n4uWX7q4aB9vezhNN
-         WcnQ==
-X-Gm-Message-State: AOAM531pRX4AWcFSAfCUJbSzgRwouaxCrI3wODThlUrqeFa7OCKr09Jr
-        ctl6rwLdmbd/YY8lZ4fyQZgadWurZi+ty5SA
-X-Google-Smtp-Source: ABdhPJwUOqPslho3mhbgYPE34sLEUM7GZem3Ne8zvC4UFUTy7/JaYxsHVsxJYf62PXf0ti/SflGuFg==
-X-Received: by 2002:a50:d78e:: with SMTP id w14mr1162865edi.229.1599602961818;
-        Tue, 08 Sep 2020 15:09:21 -0700 (PDT)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id j15sm443345eds.33.2020.09.08.15.09.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 15:09:20 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id k15so760599wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 15:09:20 -0700 (PDT)
-X-Received: by 2002:adf:ff90:: with SMTP id j16mr611132wrr.105.1599602960207;
- Tue, 08 Sep 2020 15:09:20 -0700 (PDT)
+        Tue, 8 Sep 2020 18:09:27 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088M9JeA058562;
+        Tue, 8 Sep 2020 17:09:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599602959;
+        bh=c76Fh+YN+6Q0rzgsOkb/+idzlg929BikhIc1MZmA4rc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GQwzOH8JMhl/j1lMEkRPtQYbD+jZ5aZyBrTZkB4lDdrmehPuW9k5Dk5JdLLLSi9hd
+         t52T0gS4Ry9bddlW2YLxD8YDT3re/+sg2sXD/lvgHttRfse0+d4HYzAJpwHfVP4MXi
+         jBumuqYs+4cw+i1elF9S/O97qHUDVWMt23bmG54s=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 088M9J9t083780
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 8 Sep 2020 17:09:19 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 17:09:18 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 17:09:18 -0500
+Received: from [10.250.34.59] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088M9IBC007150;
+        Tue, 8 Sep 2020 17:09:18 -0500
+Subject: Re: [PATCH next v2 0/3] soc: ti: k3: ringacc: add am65x sr2.0 support
+To:     <santosh.shilimkar@oracle.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>
+CC:     Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200829184139.15547-1-grygorii.strashko@ti.com>
+ <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <1661043e-15a3-b8de-b16c-ef6ff88f18e5@ti.com>
+Date:   Tue, 8 Sep 2020 17:09:17 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de>
- <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
- <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
- <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
- <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
- <20200820165407.GD12693@lst.de> <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
- <20200901110617.GA13232@lst.de> <CAAFQd5CmPVSxmZJVn7HnNUn8srZbAbnfzpNMYw3KcDzn7xD2cg@mail.gmail.com>
- <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
-In-Reply-To: <CAAFQd5BDh05DNPShr54opY2GyY-FcH7g8=V2t4xBwz0OwRu9xQ@mail.gmail.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 9 Sep 2020 00:09:09 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5BiHa2ziZuJPwbzKzqaziJfmNDo6YL1NviuppVSQ6YbVQ@mail.gmail.com>
-Message-ID: <CAAFQd5BiHa2ziZuJPwbzKzqaziJfmNDo6YL1NviuppVSQ6YbVQ@mail.gmail.com>
-Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b9310d10-46c5-2c63-a921-88be23363d44@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 11:58 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> Hi Hans, Mauro,
->
-> On Tue, Sep 1, 2020 at 5:02 PM Tomasz Figa <tfiga@chromium.org> wrote:
-> >
-> > On Tue, Sep 1, 2020 at 1:06 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > On Thu, Aug 20, 2020 at 07:33:48PM +0200, Tomasz Figa wrote:
-> > > > > It wasn't meant to be too insulting, but I found this out when trying
-> > > > > to figure out how to just disable it.  But it also ends up using
-> > > > > the actual dma attr flags for it's own consistency checks, so just
-> > > > > not setting the flag did not turn out to work that easily.
-> > > > >
-> > > >
-> > > > Yes, sadly the videobuf2 ended up becoming quite counterintuitive
-> > > > after growing for the long years and that is reflected in the design
-> > > > of this feature as well. I think we need to do something about it.
-> > >
-> > > So I'm about to respin the series and wonder how we should proceed.
-> > > I've failed to come up with a clean patch to keep the flag and make
-> > > it a no-op.  Can you or your team give it a spin?
-> > >
-> >
-> > Okay, I'll take a look.
-> >
-> > > Also I wonder if the flag should be renamed from NON_CONSISTENT
-> > > to NON_COHERENT - the consistent thing is a weird wart from the times
-> > > the old PCI DMA API that is mostly gone now.
-> >
-> > It originated from the DMA_ATTR_NON_CONSISTENT flag, but agreed that
-> > NON_COHERENT would be more consistent (pun not intended) with the rest
-> > of the DMA API given the removal of that flag. Let me see if we can
-> > still change it.
->
-> Given the above, we would like to make changes that affect the UAPI.
-> Would you still be able to revert this series?
+Hi Santosh,
 
-Sorry, I just realized that this isn't the original series that
-introduced the thing, but rather a patch that does a partial revert. I
-think it could be also applied as an alternative for the revert, but
-perhaps a full series revert is just safer at this point?
+On 8/31/20 1:34 PM, santosh.shilimkar@oracle.com wrote:
+> On 8/29/20 11:41 AM, Grygorii Strashko wrote:
+>> Hi Santosh,
+>>
+>> I've rebased on top of  linux-next and identified merge conflict of patch 3
+>> with commit 6da45875fa17 ("arm64: dts: k3-am65: Update the RM resource types")
+>> in -next.
+>>
+>> ---
+>> This series adds support for the TI AM65x SR2.0 SoC Ringacc which has fixed
+>> errata i2023 "RINGACC, UDMA: RINGACC and UDMA Ring State Interoperability
+>> Issue after Channel Teardown". This errata also fixed for J271E SoC.
+>> The SOC bus chipinfo data is used to identify the SoC and configure
+>> i2023 errata W/A.
+>>
+>> This changes made "ti,dma-ring-reset-quirk" DT property obsolete, so it's
+>> removed.
+>>
+>> Changes in v2:
+>>   - no functional changes
+>>   - rebased on top of linux-next
+>>   - added ask from Rob Herring
+>>
+> Thanks. Can you please followup DT acks for PRUSS series so that I can
+> apply PRUSS + $subject series.
 
-For reference, the series in question is:
-https://patchwork.linuxtv.org/project/linux-media/cover/20200514160153.3646-1-sergey.senozhatsky@gmail.com/
+PRUSS dt binding is acked now, so can you pick up the PRUSS v2 series for 5.10
+merge window.
 
-Best regards,
-tomasz
+regards,
+Suman
+
+> 
+>> v1:
+>> https://urldefense.com/v3/__https://lore.kernel.org/patchwork/cover/1284233/__;!!GqivPVa7Brio!PCmZ-nZZ6YQak-0T43bPZYI0gHsYL9k6N7S2gZEFbIr8BRKtv2BK01VejQzlBPBBgcfvCQ$
+>>
+>>      Grygorii Strashko (3):
+>>    soc: ti: k3: ringacc: add am65x sr2.0 support
+>>    bindings: soc: ti: soc: ringacc: remove ti,dma-ring-reset-quirk
+>>    arm64: dts: ti: k3-am65: ringacc: drop ti,dma-ring-reset-quirk
+>>
+>>   .../bindings/soc/ti/k3-ringacc.yaml           |  6 ----
+>>   arch/arm64/boot/dts/ti/k3-am65-main.dtsi      |  1 -
+>>   arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi       |  1 -
+>>   drivers/soc/ti/k3-ringacc.c                   | 33 +++++++++++++++++--
+>>   4 files changed, 30 insertions(+), 11 deletions(-)
+>>
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
