@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6561EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C430C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2487F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E2D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590319;
-	bh=BAqN8JJndhY6Fdr1OaQLHcokT17ApQzyCPPyy0UCFjw=;
+	s=default; t=1599590323;
+	bh=pTmyHVYbSXnA+BdUOOxYUNHxES5DQpQjSmwTw2AziGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sM5LRkHOGzynzsOtnImn0Ef7L5aycJo7jGhIwLE1Jcl0e2Y2YxKX/itt4kN2p8RAJ
-	 A/Jn/vWRMEBPXgMHHxC4IGYBtxS7jHESAkUM+KVq7MqCYL1t84z6XNkuFZ93Scc7nm
-	 gtvOvctV+ijs8KSfCHHS4jigay+lDbSGSnd/MBeU=
+	b=SgqZ7uHiP0lx1HJtAnwkUtcRm/lX1ATcw4KCT0jp1OPVi1JXFgBhidZ0l4o/KnN7n
+	 hmodfSefPC8FTCddjvyHtLmQ9/+riDeVV/u+2ld3HvIsLTiewoIUVmacAb/LOCK5cS
+	 3SgRX70Y0+9jQCAeOGQ2O8uKIL8VM195F7gGW9BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731910AbgIHSih (ORCPT
+        id S1731897AbgIHSih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 8 Sep 2020 14:38:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:53536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731329AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731320AbgIHQJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C3962405D;
-        Tue,  8 Sep 2020 15:48:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B49824053;
+        Tue,  8 Sep 2020 15:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580127;
-        bh=BAqN8JJndhY6Fdr1OaQLHcokT17ApQzyCPPyy0UCFjw=;
+        s=default; t=1599580108;
+        bh=pTmyHVYbSXnA+BdUOOxYUNHxES5DQpQjSmwTw2AziGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oS8qM3cwoW8ha+xaHgqZH6K7PGcidSiOtnX3maGVXHffLmwtFICB9dGuimv3TYCwb
-         D2KxDw48X+Cve/9Vgr6j0NUxwfy3CsYgVio0nHGfxou0xCPMSsX/T/NEG6MOWwDNCG
-         9LhcgFjOJ3kH0E41ld8OAEmNdc4qG+65I+fQNKgE=
+        b=eUtI3dSSCNEdiCDb4RojO042YOsaVLRCtLRLlh+l5wGSvisZ8PmsjSXv9e9kCs/Gs
+         580Js7xm4IwOmvZ1kAGlRUBA7PKC8v3NdPWcfctgMId+lvMUCDgrFcdgY41FVhFfCc
+         ps9rgtmzFlKLA0QjMzhjdFRugLnVkWqs4GM5MAek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Marc Smith <msmith626@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/88] nvmet-fc: Fix a missed _irqsave version of spin_lock in nvmet_fc_fod_op_done()
-Date:   Tue,  8 Sep 2020 17:25:40 +0200
-Message-Id: <20200908152223.077799986@linuxfoundation.org>
+Subject: [PATCH 4.19 34/88] bnxt_en: fix HWRM error when querying VF temperature
+Date:   Tue,  8 Sep 2020 17:25:35 +0200
+Message-Id: <20200908152222.792503974@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -62,41 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Edwin Peer <edwin.peer@broadcom.com>
 
-[ Upstream commit 70e37988db94aba607d5491a94f80ba08e399b6b ]
+[ Upstream commit 12cce90b934bf2b0ed9c339b4d5503e69954351a ]
 
-The way 'spin_lock()' and 'spin_lock_irqsave()' are used is not consistent
-in this function.
+Firmware returns RESOURCE_ACCESS_DENIED for HWRM_TEMP_MONITORY_QUERY for
+VFs. This produces unpleasing error messages in the log when temp1_input
+is queried via the hwmon sysfs interface from a VF.
 
-Use 'spin_lock_irqsave()' also here, as there is no guarantee that
-interruptions are disabled at that point, according to surrounding code.
+The error is harmless and expected, so silence it and return unknown as
+the value. Since the device temperature is not particularly sensitive
+information, provide flexibility to change this policy in future by
+silencing the error rather than avoiding the HWRM call entirely for VFs.
 
-Fixes: a97ec51b37ef ("nvmet_fc: Rework target side abort handling")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Fixes: cde49a42a9bb ("bnxt_en: Add hwmon sysfs support to read temperature")
+Cc: Marc Smith <msmith626@gmail.com>
+Reported-by: Marc Smith <msmith626@gmail.com>
+Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/target/fc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
-index 29b4b236afd85..77e4d184bc995 100644
---- a/drivers/nvme/target/fc.c
-+++ b/drivers/nvme/target/fc.c
-@@ -1986,9 +1986,9 @@ nvmet_fc_fod_op_done(struct nvmet_fc_fcp_iod *fod)
- 			return;
- 		if (fcpreq->fcp_error ||
- 		    fcpreq->transferred_length != fcpreq->transfer_length) {
--			spin_lock(&fod->flock);
-+			spin_lock_irqsave(&fod->flock, flags);
- 			fod->abort = true;
--			spin_unlock(&fod->flock);
-+			spin_unlock_irqrestore(&fod->flock, flags);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7047f4237ceaf..df3514503dee9 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -6836,16 +6836,19 @@ static ssize_t bnxt_show_temp(struct device *dev,
+ 	struct hwrm_temp_monitor_query_input req = {0};
+ 	struct hwrm_temp_monitor_query_output *resp;
+ 	struct bnxt *bp = dev_get_drvdata(dev);
+-	u32 temp = 0;
++	u32 len = 0;
  
- 			nvmet_req_complete(&fod->req, NVME_SC_INTERNAL);
- 			return;
+ 	resp = bp->hwrm_cmd_resp_addr;
+ 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_TEMP_MONITOR_QUERY, -1, -1);
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+-	if (!_hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
+-		temp = resp->temp * 1000; /* display millidegree */
++	if (!_hwrm_send_message_silent(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
++		len = sprintf(buf, "%u\n", resp->temp * 1000); /* display millidegree */
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
+ 
+-	return sprintf(buf, "%u\n", temp);
++	if (len)
++		return len;
++
++	return sprintf(buf, "unknown\n");
+ }
+ static SENSOR_DEVICE_ATTR(temp1_input, 0444, bnxt_show_temp, NULL, 0);
+ 
 -- 
 2.25.1
 
