@@ -2,161 +2,88 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0B5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13EAC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 898642166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKu/N0u3"
+	by mail.kernel.org (Postfix) with ESMTP id 84F5E20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599594454;
+	bh=IjecBUMNsGMpOyrwu++8aLByHfqCkW2ag00jaPPJmvU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eB1iPG50Gb5aJ8Wxrr6mYZ6aUB8pp2u7+CWBPOZMWtNNVC+fee78u6ixDQIJsdXyd
+	 L7vGE5qinpK4oiiMrGIyrsrRBTaLaIfOJjfdpxpohaTE/ktH1VjTwQyu8CEGH5CEcD
+	 /4gSldvkh4zbZvkfaAmbS45HYLMJ4IeCu292TYm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732325AbgIHTrP (ORCPT
+        id S1732382AbgIHTrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731941AbgIHTqK (ORCPT
+        Tue, 8 Sep 2020 15:47:31 -0400
+Received: from mail-il1-f195.google.com ([209.85.166.195]:41278 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732466AbgIHTqZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:46:10 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB5D3C061573;
-        Tue,  8 Sep 2020 12:46:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id y5so255943otg.5;
-        Tue, 08 Sep 2020 12:46:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ppa+VFlA0URsOyfSfA/7zkYsruytaIg7Y/lMhDsaJoU=;
-        b=eKu/N0u39OquTX3D0Rgot+H8qc5szZqDlLFTyc4nK3vUUd8pr6x2qm3jQL/X/viA0t
-         0iZ+KXureb+iNlUdW/u6Iyq1PW/BflC85aHLXV4MDeQtZuvdU4p1Tnn4ocV6YJfXly68
-         YltOIb5Hjnth3FAvlb/JUxV6WJkkKPM33MQu/B3dGs9+h3reiqzH8ixsHAaJex1PI4kP
-         WQ5IPRyhWWdoaLgIGxxkqCL6m1udEAV36KLfV+2yomWGGsCJiDjFOFoBf+3xxT97nXjZ
-         IK22HxxA0sMR6xD6MgN5x153onZ8+7nKr8bL72u0TX3dN19SNIBUUTMTzvZIH9lJFI69
-         Rj8w==
+        Tue, 8 Sep 2020 15:46:25 -0400
+Received: by mail-il1-f195.google.com with SMTP id w8so64366ilj.8;
+        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=Ppa+VFlA0URsOyfSfA/7zkYsruytaIg7Y/lMhDsaJoU=;
-        b=jKbP9e1WVKkR5ooyMV+wS1i2BMUcjlaF/F/KIPSk6QL/y4/VPJoBgRC74pDBScc1io
-         RTJ6W4fB0hssKO5kMMuC3uxtbRwdcV1kk2HGGN0/eyB16zvR2foo6vthhztgQ5to99Gg
-         itRnlHISpFzqvVXyA9hQ7+CgBCbHLJgVWvkVtnwUZ+LoUtkQQUzLOxJwLJf/Qh0HzjBk
-         6o+d4Dloq8h+p2nqG3vJrmqPhwhKJbGbXf0umberNf3yF0mIi6CQCv9nWTqUJlhAcEOH
-         2TQzj1VOdOr+xNaOOCSZBkhzPc21jc3UFHBCtt1uD80B5VEE83OGc4M2owJULoi/WvsM
-         rgAQ==
-X-Gm-Message-State: AOAM533Mo3afKOHuVRZWiCZqAhh2vo5+x5oYxpwJoL1XwSi4iEon9gNA
-        nfBXlRy55LwnoGGv9udXcVs=
-X-Google-Smtp-Source: ABdhPJyEpajpIfdBDo4ccv6sfhyDIcoUR1YDEdSFH0ObeXczmyOux4lumesGfNl663FjvCdM+TS1Ew==
-X-Received: by 2002:a9d:850:: with SMTP id 74mr501171oty.29.1599594369252;
-        Tue, 08 Sep 2020 12:46:09 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 92sm31995ota.38.2020.09.08.12.46.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Sep 2020 12:46:08 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        linux-uvc-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH v2 4/5] media: uvcvideo: Protect uvc queue file operations against disconnect
-Date:   Tue,  8 Sep 2020 12:45:56 -0700
-Message-Id: <20200908194557.198335-5-linux@roeck-us.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200908194557.198335-1-linux@roeck-us.net>
-References: <20200908194557.198335-1-linux@roeck-us.net>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mxfloW/du0FtuXMc7fb1vC2lzA6jvn4y8s0XgOBsOH8=;
+        b=joOjemVdVg0rGYRBaxijCTLyXC1ABGQPRe2gGbBUAEeW+XdFTLbfsLdUrHUAMbqeHa
+         oANjBrc104blQkYAqloN0iea2d/qzIolkNLff/850DXgQqsWxBWc4IJltjG8eJtdFJnr
+         r2ujezMXMyzaIX2441IwVKZADWUpknZb1nzX/FhKUZ0kEZC21ZfwsqXhNAZ56z87SRrf
+         5OLc3+muMIirACPQfYHEIdXptd7YkCBrlMP4TZCLmd7LK2Be+aSPMy0bk7Qorm6r2Qvi
+         5lUIYdMA+4HtZpjmgLTkKZIoKjZ3g2jSrCUyoYwbz2XC5w5vz81wSDG4aJAPtwFXX5Z+
+         t2kQ==
+X-Gm-Message-State: AOAM531BCW2pmni1AlM7C/nchenW/oiYV+XC2M3LTPBLTN4NkzS9kRmQ
+        PCLP2GLl9vlSj2/KfFoyBw==
+X-Google-Smtp-Source: ABdhPJwfXlbhewMkiRkSXUg2HnOofi1QqFbxJeOtWC0GyonQWdvBxG98pU6ZFKLbPgzI9eeJYtTL3A==
+X-Received: by 2002:a92:6b04:: with SMTP id g4mr376411ilc.192.1599594384637;
+        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id t10sm135379iog.49.2020.09.08.12.46.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 12:46:24 -0700 (PDT)
+Received: (nullmailer pid 788543 invoked by uid 1000);
+        Tue, 08 Sep 2020 19:46:22 -0000
+Date:   Tue, 8 Sep 2020 13:46:22 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+        linux-leds@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: Add ENE KB930 Embedded
+ Controller binding
+Message-ID: <20200908194622.GA788479@bogus>
+References: <20200906195103.1347-1-digetx@gmail.com>
+ <20200906195103.1347-2-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200906195103.1347-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-uvc queue file operations have no mutex protection against USB
-disconnect. This is questionable at least for the poll operation,
-which has to wait for the uvc queue mutex. By the time that mutex
-has been acquired, is it possible that the video device has been
-unregistered.
+On Sun, 06 Sep 2020 22:50:59 +0300, Dmitry Osipenko wrote:
+> Add binding document for the ENE KB930 Embedded Controller.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/ene-kb930.yaml    | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ene-kb930.yaml
+> 
 
-Protect all file operations by using the queue mutex to avoid
-possible race conditions. After acquiring the mutex, check if
-the video device is still registered, and bail out if not.
-
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2: Return EPOLLERR instead of -ENODEV on poll errors
-
- drivers/media/usb/uvc/uvc_queue.c | 32 +++++++++++++++++++++++++++++--
- 1 file changed, 30 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-index cd60c6c1749e..b2c59ce38008 100644
---- a/drivers/media/usb/uvc/uvc_queue.c
-+++ b/drivers/media/usb/uvc/uvc_queue.c
-@@ -358,24 +358,52 @@ int uvc_queue_streamoff(struct uvc_video_queue *queue, enum v4l2_buf_type type)
- 
- int uvc_queue_mmap(struct uvc_video_queue *queue, struct vm_area_struct *vma)
- {
--	return vb2_mmap(&queue->queue, vma);
-+	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
-+	int ret;
-+
-+	mutex_lock(&queue->mutex);
-+	if (!video_is_registered(&stream->vdev)) {
-+		ret = -ENODEV;
-+		goto unlock;
-+	}
-+	ret = vb2_mmap(&queue->queue, vma);
-+unlock:
-+	mutex_unlock(&queue->mutex);
-+	return ret;
- }
- 
- #ifndef CONFIG_MMU
- unsigned long uvc_queue_get_unmapped_area(struct uvc_video_queue *queue,
- 		unsigned long pgoff)
- {
--	return vb2_get_unmapped_area(&queue->queue, 0, 0, pgoff, 0);
-+	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
-+	unsigned long ret;
-+
-+	mutex_lock(&queue->mutex);
-+	if (!video_is_registered(&stream->vdev)) {
-+		ret = -ENODEV;
-+		goto unlock;
-+	}
-+	ret = vb2_get_unmapped_area(&queue->queue, 0, 0, pgoff, 0);
-+unlock:
-+	mutex_unlock(&queue->mutex);
-+	return ret;
- }
- #endif
- 
- __poll_t uvc_queue_poll(struct uvc_video_queue *queue, struct file *file,
- 			    poll_table *wait)
- {
-+	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
- 	__poll_t ret;
- 
- 	mutex_lock(&queue->mutex);
-+	if (!video_is_registered(&stream->vdev)) {
-+		ret = EPOLLERR;
-+		goto unlock;
-+	}
- 	ret = vb2_poll(&queue->queue, file, wait);
-+unlock:
- 	mutex_unlock(&queue->mutex);
- 
- 	return ret;
--- 
-2.17.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
