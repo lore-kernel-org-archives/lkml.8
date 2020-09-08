@@ -2,51 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70572C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A653C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18E3B206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E167206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599581378;
-	bh=bCYj+CVTtz6pdLbobrnZ0A1auravAHZ1ELgrs5yFnkg=;
+	s=default; t=1599581464;
+	bh=d1dOWNwTkDijp3GMUZDPpfqytkJ2953rqyrjte5Ltl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EvE0yAkUHN8JgLpwvlAsa7ntreGhARXVmX4v1IjQIxgFxw5UY3mFw4nVGcYCuwt2n
-	 irrqy5BqdKfY57uhu+YIh5EnsuOJAkCs1qeKmGTE2o7iHBbO2Zcd8nZrtPqbyQNZpk
-	 a06MqeY2In9P71GSMMZEuStr31sT70iGb4BCY5Pw=
+	b=2IeLWQJKl1rLrFBDOBCyyvZryGRc/uaxUia10UixxqOjyHY4s4gPPAHllivChQ29s
+	 7WDNwey0QnPq6IWf7JyBAsWTsGSQ77gD7Dx2YB9KJRVnRLftAxst4WaQYrbLcMfmuJ
+	 a/lOv9QE270aCZhGo6sG8Q1SLNJ5jZqzAUB485zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbgIHQJ2 (ORCPT
+        id S1730701AbgIHQKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731052AbgIHQAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:00:04 -0400
+        id S1730990AbgIHQBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:01:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 548FB24686;
-        Tue,  8 Sep 2020 15:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D0E422B3F;
+        Tue,  8 Sep 2020 15:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579574;
-        bh=bCYj+CVTtz6pdLbobrnZ0A1auravAHZ1ELgrs5yFnkg=;
+        s=default; t=1599579353;
+        bh=d1dOWNwTkDijp3GMUZDPpfqytkJ2953rqyrjte5Ltl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l0ALHnyEjtvcm4AzGlDhgOqJDQ0H55flsjIiFcNXjaHF9OGMf6g2xRTB17Q5fTXO+
-         Z3slVYk8kR8MqGY4vPe2CTo2y0TVXreL0ukk9TCAOsMOrdPIIy3gaY0YSMN15yBQOA
-         b6P2zIcfFP8EgODQzjb2ZTsrxI78TLyGyDZh6dk0=
+        b=djxyW0Kqb9KnRXZcOiqkM+Heqxa9jTN9mrOX8SPC0D5ja5psUi0JBW/9+t4IHrlWJ
+         4kxiG4YHcs0DXGhf5pTOXHGIg5A6OOXpN6iSXuza1kwLkPnQeedx3ruyEJnq/l7QT0
+         40IevtDNahHQr//tr/7FH1YXXgNuAkiyg21U7als=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.8 134/186] Revert "ALSA: hda: Add support for Loongson 7A1000 controller"
-Date:   Tue,  8 Sep 2020 17:24:36 +0200
-Message-Id: <20200908152248.140892075@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>,
+        Sven Eckelmann <sven@narfation.org>,
+        Simon Wunderlich <sw@simonwunderlich.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 041/186] batman-adv: Fix own OGM check in aggregated OGMs
+Date:   Tue,  8 Sep 2020 17:23:03 +0200
+Message-Id: <20200908152243.657501406@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,67 +62,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Linus Lüssing <linus.luessing@c0d3.blue>
 
-commit eed8f88b109aa927fbf0d0c80ff9f8d00444ca7f upstream.
+[ Upstream commit d8bf0c01642275c7dca1e5d02c34e4199c200b1f ]
 
-This reverts commit 61eee4a7fc40 ("ALSA: hda: Add support for Loongson
-7A1000 controller") to fix the following error on the Loongson LS7A
-platform:
+The own OGM check is currently misplaced and can lead to the following
+issues:
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-<SNIP>
-NMI backtrace for cpu 0
-CPU: 0 PID: 68 Comm: kworker/0:2 Not tainted 5.8.0+ #3
-Hardware name:  , BIOS
-Workqueue: events azx_probe_work [snd_hda_intel]
-<SNIP>
-Call Trace:
-[<ffffffff80211a64>] show_stack+0x9c/0x130
-[<ffffffff8065a740>] dump_stack+0xb0/0xf0
-[<ffffffff80665774>] nmi_cpu_backtrace+0x134/0x140
-[<ffffffff80665910>] nmi_trigger_cpumask_backtrace+0x190/0x200
-[<ffffffff802b1abc>] rcu_dump_cpu_stacks+0x12c/0x190
-[<ffffffff802b08cc>] rcu_sched_clock_irq+0xa2c/0xfc8
-[<ffffffff802b91d4>] update_process_times+0x2c/0xb8
-[<ffffffff802cad80>] tick_sched_timer+0x40/0xb8
-[<ffffffff802ba5f0>] __hrtimer_run_queues+0x118/0x1d0
-[<ffffffff802bab74>] hrtimer_interrupt+0x12c/0x2d8
-[<ffffffff8021547c>] c0_compare_interrupt+0x74/0xa0
-[<ffffffff80296bd0>] __handle_irq_event_percpu+0xa8/0x198
-[<ffffffff80296cf0>] handle_irq_event_percpu+0x30/0x90
-[<ffffffff8029d958>] handle_percpu_irq+0x88/0xb8
-[<ffffffff80296124>] generic_handle_irq+0x44/0x60
-[<ffffffff80b3cfd0>] do_IRQ+0x18/0x28
-[<ffffffff8067ace4>] plat_irq_dispatch+0x64/0x100
-[<ffffffff80209a20>] handle_int+0x140/0x14c
-[<ffffffff802402e8>] irq_exit+0xf8/0x100
+For one thing we might receive an aggregated OGM from a neighbor node
+which has our own OGM in the first place. We would then not only skip
+our own OGM but erroneously also any other, following OGM in the
+aggregate.
 
-Because AZX_DRIVER_GENERIC can not work well for Loongson LS7A HDA
-controller, it needs some workarounds which are not merged into the
-upstream kernel at this time, so it should revert this patch now.
+For another, we might receive an OGM aggregate which has our own OGM in
+a place other then the first one. Then we would wrongly not skip this
+OGM, leading to populating the orginator and gateway table with ourself.
 
-Fixes: 61eee4a7fc40 ("ALSA: hda: Add support for Loongson 7A1000 controller")
-Cc: <stable@vger.kernel.org> # 5.9-rc1+
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Link: https://lore.kernel.org/r/1598348388-2518-1-git-send-email-yangtiezhu@loongson.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 9323158ef9f4 ("batman-adv: OGMv2 - implement originators logic")
+Signed-off-by: Linus Lüssing <linus.luessing@c0d3.blue>
+Signed-off-by: Sven Eckelmann <sven@narfation.org>
+Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/hda_intel.c |    2 --
- 1 file changed, 2 deletions(-)
+ net/batman-adv/bat_v_ogm.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2747,8 +2747,6 @@ static const struct pci_device_id azx_id
- 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
- 	/* Zhaoxin */
- 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
--	/* Loongson */
--	{ PCI_DEVICE(0x0014, 0x7a07), .driver_data = AZX_DRIVER_GENERIC },
- 	{ 0, }
- };
- MODULE_DEVICE_TABLE(pci, azx_ids);
+diff --git a/net/batman-adv/bat_v_ogm.c b/net/batman-adv/bat_v_ogm.c
+index 18028b9f95f01..65b1280cf2fc1 100644
+--- a/net/batman-adv/bat_v_ogm.c
++++ b/net/batman-adv/bat_v_ogm.c
+@@ -874,6 +874,12 @@ static void batadv_v_ogm_process(const struct sk_buff *skb, int ogm_offset,
+ 		   ntohl(ogm_packet->seqno), ogm_throughput, ogm_packet->ttl,
+ 		   ogm_packet->version, ntohs(ogm_packet->tvlv_len));
+ 
++	if (batadv_is_my_mac(bat_priv, ogm_packet->orig)) {
++		batadv_dbg(BATADV_DBG_BATMAN, bat_priv,
++			   "Drop packet: originator packet from ourself\n");
++		return;
++	}
++
+ 	/* If the throughput metric is 0, immediately drop the packet. No need
+ 	 * to create orig_node / neigh_node for an unusable route.
+ 	 */
+@@ -1001,11 +1007,6 @@ int batadv_v_ogm_packet_recv(struct sk_buff *skb,
+ 	if (batadv_is_my_mac(bat_priv, ethhdr->h_source))
+ 		goto free_skb;
+ 
+-	ogm_packet = (struct batadv_ogm2_packet *)skb->data;
+-
+-	if (batadv_is_my_mac(bat_priv, ogm_packet->orig))
+-		goto free_skb;
+-
+ 	batadv_inc_counter(bat_priv, BATADV_CNT_MGMT_RX);
+ 	batadv_add_counter(bat_priv, BATADV_CNT_MGMT_RX_BYTES,
+ 			   skb->len + ETH_HLEN);
+-- 
+2.25.1
+
 
 
