@@ -2,428 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FF5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFA3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67684206DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22F820759
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:43:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GiZ9PzKV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbgIHQms (ORCPT
+        id S1732021AbgIHQm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33138 "EHLO
+        Tue, 8 Sep 2020 12:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731979AbgIHQmO (ORCPT
+        with ESMTP id S1731977AbgIHQmO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:42:14 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69DE2C06136F;
-        Tue,  8 Sep 2020 05:43:21 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A7309455; Tue,  8 Sep 2020 14:38:17 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 14:38:16 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     x86@kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v7.2 40/74] x86/sev-es: Setup GHCB based boot #VC handler
-Message-ID: <20200908123816.GB3764@8bytes.org>
-References: <20200907131613.12703-1-joro@8bytes.org>
- <20200907131613.12703-41-joro@8bytes.org>
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D92DC06121A;
+        Tue,  8 Sep 2020 06:26:12 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id w3so20009263ljo.5;
+        Tue, 08 Sep 2020 06:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wicnMiUF8IEAES1mOlASJ6pW21feYULj1hQyoGrNJ8o=;
+        b=GiZ9PzKVv0xGowTjcuBelk0nGAZ8CNmZN/XNDian8GYz4cI/nhyIrzfg5djb3hrXdz
+         7PHWVVB+jqmk8PCgYa6B6KraG2PWOYMx/cMRuj/EUQ+4uFfEwUZ9PK1wGRFN7+Ef6xr+
+         4p3doArdXHjHfRfs9E4UM1Xjxi4qDH31CQL4BOrB+YFyQ4ueEmgWLOsEHscdiwkhOs/h
+         8aGKHHtueftJ3VdvIFmKxKUGbF3bn2fb7yh3aPQPYePP/7G2cpB+ESP0vziXunwo9rZH
+         mwhp+aCvv10iIFtnuXcBozQr6E/wiRKekyR20WtaKBx9PeJ/be57LpV0L9kDeYT3l0XV
+         7hlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wicnMiUF8IEAES1mOlASJ6pW21feYULj1hQyoGrNJ8o=;
+        b=ALlzctXCaLClZETmR0rHrbqeAw1lMwg6hmsuSQyXBCTLbT8k9wB2jO5QXjZSra9IkU
+         WqRJ37SK/iMgDhuyF2CRkOuFU1PYeklbQSMW9L6d+PWnozAq+tzAqgNb7bKxjJF9mZ9r
+         1o1T6fXQRt5dCgKGcCFkrF6o57xXsTDliCcka3a5hGBf4hLUUz6uoQyiVrLNqI4H7xnh
+         pTdK5qG5Cx+77P9Vy4YqdGJvGlYbUPdd6iRjh17YPTFTy0pmrC2kh/MMpAuOuMdn+OfX
+         W0F+Zcgto1Qp+/6AxXOsYA5GoV3q1rE0X18pGGghcZzx99167NqOBnUs4YD9LETy3HKn
+         NdSA==
+X-Gm-Message-State: AOAM530pkyRkhOLTqfP3v2jmD3EJCD5v1cuooO3g4brOUE4Lzln2nHww
+        alZjhOCDVkGMbYAR1QNYgq+RTVHNdeo=
+X-Google-Smtp-Source: ABdhPJwjRn28tbrlSjSLqpSujxV7U3nOFGzuTsHVr0VCdjEwgObVmN3TH0rgRnEnaZVM9uFZ/tb30A==
+X-Received: by 2002:a05:651c:1253:: with SMTP id h19mr9789853ljh.55.1599571570543;
+        Tue, 08 Sep 2020 06:26:10 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id l15sm10196755lje.16.2020.09.08.06.26.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 06:26:09 -0700 (PDT)
+Subject: Re: [PATCH v6 24/35] i2c: tegra: Rename wait/poll functions
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200908021021.9123-1-digetx@gmail.com>
+ <20200908021021.9123-25-digetx@gmail.com>
+ <CAHp75VeVckiwqDpu8Qt+7Zh+YGiD2q4C6RrANTf5uF4gE99hPA@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <29a288f6-3a78-8006-b457-a6ce766d1358@gmail.com>
+Date:   Tue, 8 Sep 2020 16:26:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907131613.12703-41-joro@8bytes.org>
+In-Reply-To: <CAHp75VeVckiwqDpu8Qt+7Zh+YGiD2q4C6RrANTf5uF4gE99hPA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+08.09.2020 11:45, Andy Shevchenko пишет:
+> On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
+>>
+>> Drop '_timeout' postfix from the wait/poll completion function names in
+>> order to make the names shorter, making code cleaner a tad.
+> 
+> ...
+> 
+>> +       time_left = tegra_i2c_wait_completion(i2c_dev, &i2c_dev->msg_complete,
+>> +                                             50);
+> 
+> Why not one line?
+> 
 
-Add the infrastructure to handle #VC exceptions when the kernel runs
-on virtual addresses and has a GHCB mapped. This handler will be used
-until the runtime #VC handler takes over.
+It goes over 80 chars, which is still a preferred max-length, although
+it's not a mandatory limit anymore. For example I have a code editor
+setup that is tuned for 80 chars, allowing to have multiple files viewed
+and edited simultaneously.
 
-Since the handler runs very early, disable instrumentation for sev-es.c.
-
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
----
- arch/x86/include/asm/realmode.h |   3 +
- arch/x86/include/asm/segment.h  |   2 +-
- arch/x86/include/asm/sev-es.h   |   2 +
- arch/x86/kernel/Makefile        |   2 +
- arch/x86/kernel/head64.c        |   8 +++
- arch/x86/kernel/head_64.S       |  36 ++++++++++
- arch/x86/kernel/sev-es-shared.c |  14 ++--
- arch/x86/kernel/sev-es.c        | 116 ++++++++++++++++++++++++++++++++
- arch/x86/mm/extable.c           |   1 +
- 9 files changed, 176 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index b35030eeec36..96118fb041b8 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -57,6 +57,9 @@ extern unsigned char real_mode_blob_end[];
- extern unsigned long initial_code;
- extern unsigned long initial_gs;
- extern unsigned long initial_stack;
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+extern unsigned long initial_vc_handler;
-+#endif
- 
- extern unsigned char real_mode_blob[];
- extern unsigned char real_mode_relocs[];
-diff --git a/arch/x86/include/asm/segment.h b/arch/x86/include/asm/segment.h
-index 517920928989..7fdd4facfce7 100644
---- a/arch/x86/include/asm/segment.h
-+++ b/arch/x86/include/asm/segment.h
-@@ -226,7 +226,7 @@
- #define NUM_EXCEPTION_VECTORS		32
- 
- /* Bitmask of exception vectors which push an error code on the stack: */
--#define EXCEPTION_ERRCODE_MASK		0x00027d00
-+#define EXCEPTION_ERRCODE_MASK		0x20027d00
- 
- #define GDT_SIZE			(GDT_ENTRIES*8)
- #define GDT_ENTRY_TLS_ENTRIES		3
-diff --git a/arch/x86/include/asm/sev-es.h b/arch/x86/include/asm/sev-es.h
-index 7175d432ebfe..9fbeedaa66ee 100644
---- a/arch/x86/include/asm/sev-es.h
-+++ b/arch/x86/include/asm/sev-es.h
-@@ -75,5 +75,7 @@ static inline u64 lower_bits(u64 val, unsigned int bits)
- 
- /* Early IDT entry points for #VC handler */
- extern void vc_no_ghcb(void);
-+extern void vc_boot_ghcb(void);
-+extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
- 
- #endif
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3bcdd8d2bbdd..04ceea8f4a89 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -20,6 +20,7 @@ CFLAGS_REMOVE_kvmclock.o = -pg
- CFLAGS_REMOVE_ftrace.o = -pg
- CFLAGS_REMOVE_early_printk.o = -pg
- CFLAGS_REMOVE_head64.o = -pg
-+CFLAGS_REMOVE_sev-es.o = -pg
- endif
- 
- KASAN_SANITIZE_head$(BITS).o				:= n
-@@ -27,6 +28,7 @@ KASAN_SANITIZE_dumpstack.o				:= n
- KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
- KASAN_SANITIZE_stacktrace.o				:= n
- KASAN_SANITIZE_paravirt.o				:= n
-+KASAN_SANITIZE_sev-es.o					:= n
- 
- # With some compiler versions the generated code results in boot hangs, caused
- # by several compilation units. To be safe, disable all instrumentation.
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index fc55cc9ccb0f..4199f25c0063 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -406,6 +406,10 @@ void __init do_early_exception(struct pt_regs *regs, int trapnr)
- 	    early_make_pgtable(native_read_cr2()))
- 		return;
- 
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT) &&
-+	    trapnr == X86_TRAP_VC && handle_vc_boot_ghcb(regs))
-+		return;
-+
- 	early_fixup_exception(regs, trapnr);
- }
- 
-@@ -575,6 +579,10 @@ static void startup_64_load_idt(unsigned long physbase)
- /* This is used when running on kernel addresses */
- void early_setup_idt(void)
- {
-+	/* VMM Communication Exception */
-+	if (IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT))
-+		set_bringup_idt_handler(bringup_idt_table, X86_TRAP_VC, vc_boot_ghcb);
-+
- 	bringup_idt_descr.address = (unsigned long)bringup_idt_table;
- 	native_load_idt(&bringup_idt_descr);
- }
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 6e68bca64ae4..1a71d0d4d575 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -279,6 +279,39 @@ SYM_CODE_START(start_cpu0)
- 	movq	initial_stack(%rip), %rsp
- 	jmp	.Ljump_to_C_code
- SYM_CODE_END(start_cpu0)
-+#endif
-+
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+/*
-+ * VC Exception handler used during early boot when running on kernel
-+ * addresses, but before the switch to the idt_table can be made.
-+ * The early_idt_handler_array can't be used here because it calls into a lot
-+ * of __init code and this handler is also used during CPU offlining/onlining.
-+ * Therefore this handler ends up in the .text section so that it stays around
-+ * when .init.text is freed.
-+ */
-+SYM_CODE_START_NOALIGN(vc_boot_ghcb)
-+	UNWIND_HINT_IRET_REGS offset=8
-+
-+	/* Build pt_regs */
-+	PUSH_AND_CLEAR_REGS
-+
-+	/* Call C handler */
-+	movq    %rsp, %rdi
-+	movq	ORIG_RAX(%rsp), %rsi
-+	movq	initial_vc_handler(%rip), %rax
-+	ANNOTATE_RETPOLINE_SAFE
-+	call	*%rax
-+
-+	/* Unwind pt_regs */
-+	POP_REGS
-+
-+	/* Remove Error Code */
-+	addq    $8, %rsp
-+
-+	/* Pure iret required here - don't use INTERRUPT_RETURN */
-+	iretq
-+SYM_CODE_END(vc_boot_ghcb)
- #endif
- 
- 	/* Both SMP bootup and ACPI suspend change these variables */
-@@ -286,6 +319,9 @@ SYM_CODE_END(start_cpu0)
- 	.balign	8
- SYM_DATA(initial_code,	.quad x86_64_start_kernel)
- SYM_DATA(initial_gs,	.quad INIT_PER_CPU_VAR(fixed_percpu_data))
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+SYM_DATA(initial_vc_handler,	.quad handle_vc_boot_ghcb)
-+#endif
- 
- /*
-  * The SIZEOF_PTREGS gap is a convention which helps the in-kernel unwinder
-diff --git a/arch/x86/kernel/sev-es-shared.c b/arch/x86/kernel/sev-es-shared.c
-index 18619279a46f..aa77f2eb8d88 100644
---- a/arch/x86/kernel/sev-es-shared.c
-+++ b/arch/x86/kernel/sev-es-shared.c
-@@ -9,7 +9,7 @@
-  * and is included directly into both code-bases.
-  */
- 
--static void __maybe_unused sev_es_terminate(unsigned int reason)
-+static void sev_es_terminate(unsigned int reason)
- {
- 	u64 val = GHCB_SEV_TERMINATE;
- 
-@@ -27,7 +27,7 @@ static void __maybe_unused sev_es_terminate(unsigned int reason)
- 		asm volatile("hlt\n" : : : "memory");
- }
- 
--static bool __maybe_unused sev_es_negotiate_protocol(void)
-+static bool sev_es_negotiate_protocol(void)
- {
- 	u64 val;
- 
-@@ -46,7 +46,7 @@ static bool __maybe_unused sev_es_negotiate_protocol(void)
- 	return true;
- }
- 
--static void __maybe_unused vc_ghcb_invalidate(struct ghcb *ghcb)
-+static void vc_ghcb_invalidate(struct ghcb *ghcb)
- {
- 	memset(ghcb->save.valid_bitmap, 0, sizeof(ghcb->save.valid_bitmap));
- }
-@@ -58,9 +58,9 @@ static bool vc_decoding_needed(unsigned long exit_code)
- 		 exit_code <= SVM_EXIT_LAST_EXCP);
- }
- 
--static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
--						     struct pt_regs *regs,
--						     unsigned long exit_code)
-+static enum es_result vc_init_em_ctxt(struct es_em_ctxt *ctxt,
-+				      struct pt_regs *regs,
-+				      unsigned long exit_code)
- {
- 	enum es_result ret = ES_OK;
- 
-@@ -73,7 +73,7 @@ static enum es_result __maybe_unused vc_init_em_ctxt(struct es_em_ctxt *ctxt,
- 	return ret;
- }
- 
--static void __maybe_unused vc_finish_insn(struct es_em_ctxt *ctxt)
-+static void vc_finish_insn(struct es_em_ctxt *ctxt)
- {
- 	ctxt->regs->ip += ctxt->insn.length;
- }
-diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-index 0b698b653c0b..bb3e702a71eb 100644
---- a/arch/x86/kernel/sev-es.c
-+++ b/arch/x86/kernel/sev-es.c
-@@ -7,7 +7,9 @@
-  * Author: Joerg Roedel <jroedel@suse.de>
-  */
- 
-+#include <linux/sched/debug.h>	/* For show_regs() */
- #include <linux/kernel.h>
-+#include <linux/printk.h>
- #include <linux/mm.h>
- 
- #include <asm/sev-es.h>
-@@ -18,6 +20,18 @@
- #include <asm/trapnr.h>
- #include <asm/svm.h>
- 
-+/* For early boot hypervisor communication in SEV-ES enabled guests */
-+static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
-+
-+/*
-+ * Needs to be in the .data section because we need it NULL before bss is
-+ * cleared
-+ */
-+static struct ghcb __initdata *boot_ghcb;
-+
-+/* Needed in vc_early_forward_exception */
-+void do_early_exception(struct pt_regs *regs, int trapnr);
-+
- static inline u64 sev_es_rd_ghcb_msr(void)
- {
- 	return native_read_msr(MSR_AMD64_SEV_ES_GHCB);
-@@ -161,3 +175,105 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
- 
- /* Include code shared with pre-decompression boot stage */
- #include "sev-es-shared.c"
-+
-+/*
-+ * This function runs on the first #VC exception after the kernel
-+ * switched to virtual addresses.
-+ */
-+static bool __init sev_es_setup_ghcb(void)
-+{
-+	/* First make sure the hypervisor talks a supported protocol. */
-+	if (!sev_es_negotiate_protocol())
-+		return false;
-+
-+	/*
-+	 * Clear the boot_ghcb. The first exception comes in before the bss
-+	 * section is cleared.
-+	 */
-+	memset(&boot_ghcb_page, 0, PAGE_SIZE);
-+
-+	/* Alright - Make the boot-ghcb public */
-+	boot_ghcb = &boot_ghcb_page;
-+
-+	return true;
-+}
-+
-+static void __init vc_early_forward_exception(struct es_em_ctxt *ctxt)
-+{
-+	int trapnr = ctxt->fi.vector;
-+
-+	if (trapnr == X86_TRAP_PF)
-+		native_write_cr2(ctxt->fi.cr2);
-+
-+	ctxt->regs->orig_ax = ctxt->fi.error_code;
-+	do_early_exception(ctxt->regs, trapnr);
-+}
-+
-+static enum es_result vc_handle_exitcode(struct es_em_ctxt *ctxt,
-+					 struct ghcb *ghcb,
-+					 unsigned long exit_code)
-+{
-+	enum es_result result;
-+
-+	switch (exit_code) {
-+	default:
-+		/*
-+		 * Unexpected #VC exception
-+		 */
-+		result = ES_UNSUPPORTED;
-+	}
-+
-+	return result;
-+}
-+
-+bool __init handle_vc_boot_ghcb(struct pt_regs *regs)
-+{
-+	unsigned long exit_code = regs->orig_ax;
-+	struct es_em_ctxt ctxt;
-+	enum es_result result;
-+
-+	/* Do initial setup or terminate the guest */
-+	if (unlikely(boot_ghcb == NULL && !sev_es_setup_ghcb()))
-+		sev_es_terminate(GHCB_SEV_ES_REASON_GENERAL_REQUEST);
-+
-+	vc_ghcb_invalidate(boot_ghcb);
-+
-+	result = vc_init_em_ctxt(&ctxt, regs, exit_code);
-+	if (result == ES_OK)
-+		result = vc_handle_exitcode(&ctxt, boot_ghcb, exit_code);
-+
-+	/* Done - now check the result */
-+	switch (result) {
-+	case ES_OK:
-+		vc_finish_insn(&ctxt);
-+		break;
-+	case ES_UNSUPPORTED:
-+		early_printk("PANIC: Unsupported exit-code 0x%02lx in early #VC exception (IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_VMM_ERROR:
-+		early_printk("PANIC: Failure in communication with VMM (exit-code 0x%02lx IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_DECODE_FAILED:
-+		early_printk("PANIC: Failed to decode instruction (exit-code 0x%02lx IP: 0x%lx)\n",
-+				exit_code, regs->ip);
-+		goto fail;
-+	case ES_EXCEPTION:
-+		vc_early_forward_exception(&ctxt);
-+		break;
-+	case ES_RETRY:
-+		/* Nothing to do */
-+		break;
-+	default:
-+		BUG();
-+	}
-+
-+	return true;
-+
-+fail:
-+	show_regs(regs);
-+
-+	while (true)
-+		halt();
-+}
-diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
-index 1d6cb07f4f86..3966749d07ac 100644
---- a/arch/x86/mm/extable.c
-+++ b/arch/x86/mm/extable.c
-@@ -5,6 +5,7 @@
- #include <xen/xen.h>
- 
- #include <asm/fpu/internal.h>
-+#include <asm/sev-es.h>
- #include <asm/traps.h>
- #include <asm/kdebug.h>
- 
--- 
-2.28.0
-
+But I think in the case of this particular hunk of the code, the
+indentation improvement would indeed overweight the code-length. I'll
+change it in v6, thanks!
