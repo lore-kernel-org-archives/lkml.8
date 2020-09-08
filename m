@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC97BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B839C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A01821741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1700F2075A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588345;
-	bh=JX2kilKKBcvyhJkEQEFgJfEBkZ/dMrYMbbmMWJU6YEQ=;
+	s=default; t=1599588358;
+	bh=5zwf0lJoGSus3xa+k3O/lcGB+3+GBcqvPyP2gBB40vE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EgeoNsrnBKILi0MQcnh2V73b5PUwkt3IcUBF7Ym6RNUdaggb+WmcfUPzSEA7bGy41
-	 w00lZ8LU4jAiPA9AM3iUOsP0rwsLvk9iNvxVMZo8JLmROP4y7i9X+YwCTal4160jG2
-	 jgCdtEKBao3aM+ibCZg/q6YAiI1KELycZMCKGRc0=
+	b=efeNVdbQFX8ebZszF2Jr9020Pk5pDrAsTzEgXacYpgwpDjsPZ8iDQQZt/Fny5d9f5
+	 QAAqk8EduVbFK3bpPd4ZtJdqUvGrpS9ODom6Sar7WlFpSz7WhJXEHQUGmBzInXkT7L
+	 yMSAG9Z6IHctvXR6nGY0CVKSvCmm6hhux+HXWCek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732213AbgIHSFn (ORCPT
+        id S1731585AbgIHSFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:05:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:05:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731523AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731524AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5E8A2476D;
-        Tue,  8 Sep 2020 15:51:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0DDF2478B;
+        Tue,  8 Sep 2020 15:51:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580265;
-        bh=JX2kilKKBcvyhJkEQEFgJfEBkZ/dMrYMbbmMWJU6YEQ=;
+        s=default; t=1599580272;
+        bh=5zwf0lJoGSus3xa+k3O/lcGB+3+GBcqvPyP2gBB40vE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zsKDIVaBc+04kOa7Rie0YHWnc3tWsP0cEoO7ZC+tnvdKsjAkiJ51dn+lmg8m6NKlx
-         HtW3gB/nN139TznzNQDOwCZGixhyBOtKlBdrVnI2V8F/NAABJp8bC2i58dqmaV7mA8
-         64ijTBNubKLWRsuYxVg9XgBLHMgBZbVMqUnPeMtc=
+        b=ImssrnECkxG1lQ+23UwetayfVqhCm3GzgDx+10sjC09kWBPpUnXVvWa0YldE3pkn7
+         YbWAJkOrQevzg6IF8n5c7p38jbp6R7SAJMKGCAZU2rZobuIzfDRIVWSdJehzyHqmpi
+         Z9tG6H2ezRbz92MD1YccH/eekpddnSb/Og2b4lZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH 4.19 83/88] KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-Date:   Tue,  8 Sep 2020 17:26:24 +0200
-Message-Id: <20200908152225.344680239@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: [PATCH 4.14 01/65] HID: core: Correctly handle ReportSize being zero
+Date:   Tue,  8 Sep 2020 17:25:46 +0200
+Message-Id: <20200908152217.094197289@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,57 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Marc Zyngier <maz@kernel.org>
 
-commit 71a7f8cb1ca4ca7214a700b1243626759b6c11d4 upstream.
+commit bce1305c0ece3dc549663605e567655dd701752c upstream.
 
-AT instructions do a translation table walk and return the result, or
-the fault in PAR_EL1. KVM uses these to find the IPA when the value is
-not provided by the CPU in HPFAR_EL1.
+It appears that a ReportSize value of zero is legal, even if a bit
+non-sensical. Most of the HID code seems to handle that gracefully,
+except when computing the total size in bytes. When fed as input to
+memset, this leads to some funky outcomes.
 
-If a translation table walk causes an external abort it is taken as an
-exception, even if it was due to an AT instruction. (DDI0487F.a's D5.2.11
-"Synchronous faults generated by address translation instructions")
+Detect the corner case and correctly compute the size.
 
-While we previously made KVM resilient to exceptions taken due to AT
-instructions, the device access causes mismatched attributes, and may
-occur speculatively. Prevent this, by forbidding a walk through memory
-described as device at stage2. Now such AT instructions will report a
-stage2 fault.
-
-Such a fault will cause KVM to restart the guest. If the AT instructions
-always walk the page tables, but guest execution uses the translation cached
-in the TLB, the guest can't make forward progress until the TLB entry is
-evicted. This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64:
-Defer guest entry when an asynchronous exception is pending"), KVM will
-return to the host to process IRQs allowing the rest of the system to keep
-running.
-
-Cc: stable@vger.kernel.org # v4.19
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/include/asm/kvm_arm.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -83,11 +83,12 @@
-  * IMO:		Override CPSR.I and enable signaling with VI
-  * FMO:		Override CPSR.F and enable signaling with VF
-  * SWIO:	Turn set/way invalidates into set/way clean+invalidate
-+ * PTW:		Take a stage2 fault if a stage1 walk steps in device memory
+---
+ drivers/hid/hid-core.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1427,6 +1427,17 @@ static void hid_output_field(const struc
+ }
+ 
+ /*
++ * Compute the size of a report.
++ */
++static size_t hid_compute_report_size(struct hid_report *report)
++{
++	if (report->size)
++		return ((report->size - 1) >> 3) + 1;
++
++	return 0;
++}
++
++/*
+  * Create a report. 'data' has to be allocated using
+  * hid_alloc_report_buf() so that it has proper size.
   */
- #define HCR_GUEST_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
- 			 HCR_TVM | HCR_BSU_IS | HCR_FB | HCR_TAC | \
- 			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
--			 HCR_FMO | HCR_IMO)
-+			 HCR_FMO | HCR_IMO | HCR_PTW )
- #define HCR_VIRT_EXCP_MASK (HCR_VSE | HCR_VI | HCR_VF)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK)
- #define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H)
+@@ -1438,7 +1449,7 @@ void hid_output_report(struct hid_report
+ 	if (report->id > 0)
+ 		*data++ = report->id;
+ 
+-	memset(data, 0, ((report->size - 1) >> 3) + 1);
++	memset(data, 0, hid_compute_report_size(report));
+ 	for (n = 0; n < report->maxfield; n++)
+ 		hid_output_field(report->device, report->field[n], data);
+ }
+@@ -1565,7 +1576,7 @@ int hid_report_raw_event(struct hid_devi
+ 		csize--;
+ 	}
+ 
+-	rsize = ((report->size - 1) >> 3) + 1;
++	rsize = hid_compute_report_size(report);
+ 
+ 	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
+ 		rsize = HID_MAX_BUFFER_SIZE - 1;
 
 
