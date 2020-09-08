@@ -2,119 +2,189 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37342C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A109BC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E23652080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhGN0zBc"
+	by mail.kernel.org (Postfix) with ESMTP id 658CA2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599590450;
+	bh=HIels2xaM95JxAYzkcpSe0vmR3lhNMI/XaUw8mYvcQ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y4KBAAMusKku+q6fsahifGMqpNICUfOk/03vw/GJs5WDV0DQ4axX0DmO7EU1Nf0VZ
+	 H7rjR2nHuqRmWySeLeoRjghAx+iPdiDwGtI8THAwOvy9WlvxTQmghUN080FcBUwbdp
+	 kF7iaGVNQksOR1B17jhLtbyy+dfzoLKbiTDiflbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731886AbgIHSkP (ORCPT
+        id S1731968AbgIHSkt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51506 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726229AbgIHSkH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:40:07 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50ADC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:40:06 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id 16so72002qkf.4
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:40:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TQ1kE8zjkXsEOKgpDnRJ81WMBnwwGE+DuFfJR40oSM0=;
-        b=bhGN0zBcrt+gY4WhwAYlKbNe6tCr4xWwY834aSV6x/szEYoQAY2wkX1Kmcarwrsbox
-         VhiPpze+0fXPoctJ9RfCtojWm91ejXN+5kmBHEElPQ7FHwcqYU5si8dGh7Av5XN2WxRn
-         W1Ex1oiSgFRWDGg6BW80oGpueWsz3AS2yD6cMsXN9Ejn9kMjJQcHOIKJ2EGpVHs2zSBU
-         Lp67or52EMsd4GXQqvAlDnuRUP2BFPXgIIRpA3OaJ6XTBnmmlGIghsPldqOOngVNfdJx
-         Mf9BqBpIVWso3ngDStmV/SwT2WA5ITIJdvPKKxTb0P0DC0Abq9syvi9JwueWMvrAkiPq
-         XfnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=TQ1kE8zjkXsEOKgpDnRJ81WMBnwwGE+DuFfJR40oSM0=;
-        b=WsgqkU2F6oJs4n2Hz77/yxNnzcNqVuQt9qM1MzLzwxygunXyVbxYZbIblO3GzcfFvy
-         oN4gee4p9oTre+1Uj58Cx4YMSWu5+UxX7ualWdSjspqqh4eTLjq2fL9fUKBiM5mkwg55
-         gKTlqUBjt8o2O58BhuHLv/4aWVa1FQ87Q3OReXirb+ofZJbXmQK8pADM201PKU3siW97
-         Lx/z+ReGIfj1Zq0rC+90ImNDlxtdDzgVXla7hMc/yZbVHxY4otIZu9xarDXO2mRmFgyv
-         QUSC4Ob7o3ZKB6VfFVW7OuaQI65lahTkAmKRo71MQR2oKsLCM0wvEUmzimXxdTKIWGgG
-         TGcg==
-X-Gm-Message-State: AOAM530g6KdLo3JPZBFt4CbO+7vJmFuCP2kbTSzffPnhSLxcaxdnDECj
-        RdWBbwZr672RkiYsWWnT05EKvOi2qo4=
-X-Google-Smtp-Source: ABdhPJw9hZ68TKspDaznWaiE8D8rNtb1pS0+MfxRiAwVeiuYnWi8sLqhkmCW4VMGFP2IT9vOagYuIw==
-X-Received: by 2002:a37:d41:: with SMTP id 62mr1323744qkn.444.1599590405983;
-        Tue, 08 Sep 2020 11:40:05 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id k72sm45511qke.121.2020.09.08.11.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 11:40:05 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 8 Sep 2020 14:40:03 -0400
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Marco Elver <elver@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [RFC PATCH 1/2] lib/string: Disable instrumentation
-Message-ID: <20200908184003.GA4164124@rani.riverdale.lan>
-References: <20200905222323.1408968-1-nivedita@alum.mit.edu>
- <20200905222323.1408968-2-nivedita@alum.mit.edu>
- <CANpmjNMnU03M0UJiLaHPkRipDuOZht0c9S3d40ZupQVNZLR+RA@mail.gmail.com>
- <202009081021.8E5957A1F@keescook>
+        Tue, 8 Sep 2020 14:40:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52176 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731211AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:08:02 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8DE523ECF;
+        Tue,  8 Sep 2020 15:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580050;
+        bh=HIels2xaM95JxAYzkcpSe0vmR3lhNMI/XaUw8mYvcQ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BR2kI9up5OadJTQMnCiqhjV5p9ZTCVtwB8FKzCQnRjqPCCPSrX7gklsIrUHmccjfL
+         BII3jzVC9gbj4BEXLYUVWBFHDZt2+59WivJ/dRdcR1F+YiVoeyHWhvP9PN3m5NTGyw
+         XXVdTPGMWM/FvXU4smmKdP1BZae6n9RLZISC1E48=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Subject: [PATCH 4.19 02/88] HID: core: Sanitize event code and type when mapping input
+Date:   Tue,  8 Sep 2020 17:25:03 +0200
+Message-Id: <20200908152221.209662874@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202009081021.8E5957A1F@keescook>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:21:32AM -0700, Kees Cook wrote:
-> On Tue, Sep 08, 2020 at 11:39:11AM +0200, Marco Elver wrote:
-> > On Sun, 6 Sep 2020 at 00:23, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > String functions can be useful in early boot, but using instrumented
-> > > versions can be problematic: eg on x86, some of the early boot code is
-> > > executing out of an identity mapping rather than the kernel virtual
-> > > addresses. Accessing any global variables at this point will lead to a
-> > > crash.
-> > >
-> > 
-> > Ouch.
-> > 
-> > We have found manifestations of bugs in lib/string.c functions, e.g.:
-> >   https://groups.google.com/forum/#!msg/syzkaller-bugs/atbKWcFqE9s/x7AtoVoBAgAJ
-> >   https://groups.google.com/forum/#!msg/syzkaller-bugs/iGBUm-FDhkM/chl05uEgBAAJ
-> > 
-> > Is there any way this can be avoided?
-> 
-> Agreed: I would like to keep this instrumentation; it's a common place
-> to find bugs, security issues, etc.
-> 
-> -- 
-> Kees Cook
+From: Marc Zyngier <maz@kernel.org>
 
-Ok, understood. I'll revise to open-code the strscpy instead.
+commit 35556bed836f8dc07ac55f69c8d17dce3e7f0e25 upstream.
 
-Is instrumentation supported on x86-32? load_ucode_bsp() on 32-bit is
-called before paging is enabled, and load_ucode_bsp() itself, along with
-eg lib/earlycpio and lib/string that it uses, don't have anything to
-disable instrumentation. kcov, kasan, kcsan are unsupported already on
-32-bit, but the others like gcov and PROFILE_ALL_BRANCHES look like they
-would just cause a crash if microcode loading is enabled.
+When calling into hid_map_usage(), the passed event code is
+blindly stored as is, even if it doesn't fit in the associated bitmap.
+
+This event code can come from a variety of sources, including devices
+masquerading as input devices, only a bit more "programmable".
+
+Instead of taking the event code at face value, check that it actually
+fits the corresponding bitmap, and if it doesn't:
+- spit out a warning so that we know which device is acting up
+- NULLify the bitmap pointer so that we catch unexpected uses
+
+Code paths that can make use of untrusted inputs can now check
+that the mapping was indeed correct and bail out if not.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/hid/hid-input.c      |    4 ++++
+ drivers/hid/hid-multitouch.c |    2 ++
+ include/linux/hid.h          |   42 +++++++++++++++++++++++++++++-------------
+ 3 files changed, 35 insertions(+), 13 deletions(-)
+
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1125,6 +1125,10 @@ static void hidinput_configure_usage(str
+ 	}
+ 
+ mapped:
++	/* Mapping failed, bail out */
++	if (!bit)
++		return;
++
+ 	if (device->driver->input_mapped &&
+ 	    device->driver->input_mapped(device, hidinput, field, usage,
+ 					 &bit, &max) < 0) {
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -841,6 +841,8 @@ static int mt_touch_input_mapping(struct
+ 			code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
+ 
+ 		hid_map_usage(hi, usage, bit, max, EV_KEY, code);
++		if (!*bit)
++			return -1;
+ 		input_set_capability(hi->input, EV_KEY, code);
+ 		return 1;
+ 
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -956,34 +956,49 @@ static inline void hid_device_io_stop(st
+  * @max: maximal valid usage->code to consider later (out parameter)
+  * @type: input event type (EV_KEY, EV_REL, ...)
+  * @c: code which corresponds to this usage and type
++ *
++ * The value pointed to by @bit will be set to NULL if either @type is
++ * an unhandled event type, or if @c is out of range for @type. This
++ * can be used as an error condition.
+  */
+ static inline void hid_map_usage(struct hid_input *hidinput,
+ 		struct hid_usage *usage, unsigned long **bit, int *max,
+-		__u8 type, __u16 c)
++		__u8 type, unsigned int c)
+ {
+ 	struct input_dev *input = hidinput->input;
+-
+-	usage->type = type;
+-	usage->code = c;
++	unsigned long *bmap = NULL;
++	unsigned int limit = 0;
+ 
+ 	switch (type) {
+ 	case EV_ABS:
+-		*bit = input->absbit;
+-		*max = ABS_MAX;
++		bmap = input->absbit;
++		limit = ABS_MAX;
+ 		break;
+ 	case EV_REL:
+-		*bit = input->relbit;
+-		*max = REL_MAX;
++		bmap = input->relbit;
++		limit = REL_MAX;
+ 		break;
+ 	case EV_KEY:
+-		*bit = input->keybit;
+-		*max = KEY_MAX;
++		bmap = input->keybit;
++		limit = KEY_MAX;
+ 		break;
+ 	case EV_LED:
+-		*bit = input->ledbit;
+-		*max = LED_MAX;
++		bmap = input->ledbit;
++		limit = LED_MAX;
+ 		break;
+ 	}
++
++	if (unlikely(c > limit || !bmap)) {
++		pr_warn_ratelimited("%s: Invalid code %d type %d\n",
++				    input->name, c, type);
++		*bit = NULL;
++		return;
++	}
++
++	usage->type = type;
++	usage->code = c;
++	*max = limit;
++	*bit = bmap;
+ }
+ 
+ /**
+@@ -997,7 +1012,8 @@ static inline void hid_map_usage_clear(s
+ 		__u8 type, __u16 c)
+ {
+ 	hid_map_usage(hidinput, usage, bit, max, type, c);
+-	clear_bit(c, *bit);
++	if (*bit)
++		clear_bit(usage->code, *bit);
+ }
+ 
+ /**
+
+
