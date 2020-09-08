@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8208C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A67C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D9920658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A407F20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594037;
-	bh=jNp12BpVLlboRufCqZwC2stiu59XQ7lAaXdsZyV1Goo=;
+	s=default; t=1599594044;
+	bh=sC/pvJDDeet3Ha/GqvpnS3F62bLdQE5Ay7fgjWIf91E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5S8wzinqJEFEL8hLII9utGLgvYSzhv9bgi/tgVrnU5CDNhBWvQ4giZkgIkSyuMjT
-	 HfmNzKjU6Co6jCP2JI73nwU1YwrXLc0mPi1L3EigZtqXyXdnfKECDr/udSjVkHuHNR
-	 sM7gV2c7tK2SDXS2VmH70Ngn2p2BffN8a7vepmzE=
+	b=W/HV4FVPQntoRrf/BeYKiXhoWzLFAl8LT6G4zFarwL67tivxkdAuhhIDwPHXgCOFH
+	 tca6X9BgmS+58aJ9UyOYsUWqI4ltarzAAfisuxNTaf48FecpHquoV15I35mk7A4rzf
+	 uSqkvDwooKmVEoG7dXZyokwV6jvaEXnau00CU5Go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgIHTkJ (ORCPT
+        id S1731869AbgIHTkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:40:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730699AbgIHPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730791AbgIHPyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:54:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 155C42415E;
-        Tue,  8 Sep 2020 15:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1498820738;
+        Tue,  8 Sep 2020 15:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579514;
-        bh=jNp12BpVLlboRufCqZwC2stiu59XQ7lAaXdsZyV1Goo=;
+        s=default; t=1599579339;
+        bh=sC/pvJDDeet3Ha/GqvpnS3F62bLdQE5Ay7fgjWIf91E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=htEINggwhnnGHKf0h8A0DjC5rO1arlOiL9CkLekTT/JPDZO6xPkF/D71ikc7CmxUu
-         lCu9sDaqpguy8HY2199f3epZYvl/bIOBiwzS9qWJHgz6fcFU+nyorLfcRHRtQa2qkG
-         ejSvgxuO417xwv2jBHWewGqYPXyIeIQHP0t/8oQk=
+        b=ZKOznwzqffhxGKLFhChVDSWNQn8Z7Mh2muymlFrbEspNKDgh6e2MDQ2EocsLGXtn1
+         IVcGFlNRsPjhTzggZOOh6dVDmfaXJQIxZy7hrr6GLZl2nyHi8VfmOf5LJzcAbVXlQx
+         tB8DLl7AjAmi55Jv2y0PFp5tlLySC4czEKO+2hac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 080/186] selftests/bpf: Fix massive output from test_maps
-Date:   Tue,  8 Sep 2020 17:23:42 +0200
-Message-Id: <20200908152245.525432915@linuxfoundation.org>
+Subject: [PATCH 5.8 036/186] drm/amd/display: Fix memleak in amdgpu_dm_mode_config_init
+Date:   Tue,  8 Sep 2020 17:22:58 +0200
+Message-Id: <20200908152243.426255581@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -60,40 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit fa4505675e093e895b7ec49a76d44f6b5ad9602e ]
+[ Upstream commit b67a468a4ccef593cd8df6a02ba3d167b77f0c81 ]
 
-When stdout output from the selftests tool 'test_maps' gets redirected
-into e.g file or pipe, then the output lines increase a lot (from 21
-to 33949 lines).  This is caused by the printf that happens before the
-fork() call, and there are user-space buffered printf data that seems
-to be duplicated into the forked process.
+When amdgpu_display_modeset_create_props() fails, state and
+state->context should be freed to prevent memleak. It's the
+same when amdgpu_dm_audio_init() fails.
 
-To fix this fflush() stdout before the fork loop in __run_parallel().
-
-Fixes: 1a97cf1fe503 ("selftests/bpf: speedup test_maps")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/159842985651.1050885.2154399297503372406.stgit@firesoul
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_maps.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_maps.c b/tools/testing/selftests/bpf/test_maps.c
-index 754cf611723ee..0d92ebcb335d1 100644
---- a/tools/testing/selftests/bpf/test_maps.c
-+++ b/tools/testing/selftests/bpf/test_maps.c
-@@ -1274,6 +1274,8 @@ static void __run_parallel(unsigned int tasks,
- 	pid_t pid[tasks];
- 	int i;
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 7ec810ebf4ce4..3f7eced92c0c8 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2822,12 +2822,18 @@ static int amdgpu_dm_mode_config_init(struct amdgpu_device *adev)
+ 				    &dm_atomic_state_funcs);
  
-+	fflush(stdout);
-+
- 	for (i = 0; i < tasks; i++) {
- 		pid[i] = fork();
- 		if (pid[i] == 0) {
+ 	r = amdgpu_display_modeset_create_props(adev);
+-	if (r)
++	if (r) {
++		dc_release_state(state->context);
++		kfree(state);
+ 		return r;
++	}
+ 
+ 	r = amdgpu_dm_audio_init(adev);
+-	if (r)
++	if (r) {
++		dc_release_state(state->context);
++		kfree(state);
+ 		return r;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
