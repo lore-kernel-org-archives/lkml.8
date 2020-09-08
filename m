@@ -2,90 +2,130 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72422C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 311DB20732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599598605;
-	bh=pYo35JiaNcZMuL8vZ7AtSkgG/jNrI3ubDn9xCJSrOvQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=G8X+owoYTUJ3TzjA6F1AtvQgtkKInI1SvVBQQwoe1n8G1bdMyRS9RFRByzmcFCwcW
-	 QuOzhCksFvQ+3vMn1IYcBVedeJ2QkdjMR4R6g5HuwNBf7L7TWf2bzlKcA0muMEkbH/
-	 IJ580VVRIDfmWcj8KMsRt2OgvHo9DfqbXIOXiGhY=
+	by mail.kernel.org (Postfix) with ESMTP id E195C20732
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbgIHU4m (ORCPT
+        id S1730212AbgIHU4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:56:42 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:32333 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729941AbgIHU4i (ORCPT
+        Tue, 8 Sep 2020 16:56:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:48199 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730067AbgIHU4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 16:56:38 -0400
-Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 088Ku0N4015321;
-        Wed, 9 Sep 2020 05:56:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 088Ku0N4015321
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1599598561;
-        bh=LX+XJs0yGQNfGdRdOODWn2d8GyxE3kmbFFKuth+1obY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=c13f+fwghiGlkOh/iS+d87XXylCY1v40ms1Bi3rnW2Y42HlCZQbVDcZ2lYSmCS9/3
-         E9k8Jum3BUAqWqYh/EymQCGWPXbtobclHxwLqdGIDOJ/RM654+nmCEvinbKDtG+miv
-         LhGMzA39jvrOEj2ceix01rJB+djf9mNBa2ReO6UNjJJ/iE2bHybGgADZn2+zxbFEm7
-         2F/3mEQq7JxDvBO8RudfxYdFaIOYOsL4f0/j8C290DCjDX33Hwjk8A0fk09/Ynwhy9
-         OoatrKPPo7wZQ3WJH4oM3uTwwRoDVfwvSk6udWwlBVHQgiwdnq0ja3T7xFHvLxhaCy
-         HnZ1QKWhlZkRw==
-X-Nifty-SrcIP: [126.90.211.135]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: do not create built-in objects for external module builds
-Date:   Wed,  9 Sep 2020 05:55:57 +0900
-Message-Id: <20200908205557.2746352-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+Received: from mail-qt1-f182.google.com ([209.85.160.182]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MNbtD-1jv3QV27kh-00P7vm; Tue, 08 Sep 2020 22:56:36 +0200
+Received: by mail-qt1-f182.google.com with SMTP id y11so310649qtn.9;
+        Tue, 08 Sep 2020 13:56:36 -0700 (PDT)
+X-Gm-Message-State: AOAM531ldlojCKnKAwLQ24gQISKK4G7TWR3/GMzc7tHxusKf4pKC95Vk
+        ftZeSB4wfPlosy0ynS5vYU3ScinZlkfb5XT/qgc=
+X-Google-Smtp-Source: ABdhPJw01K4SmzGcD/b5sCr5TVIohl7CD4hX2My20XCnkE0ssRILx71GeRB7UxQ0ChxMfJ5jNEb1Xhh9GXXfgpFYgXA=
+X-Received: by 2002:aed:2414:: with SMTP id r20mr314758qtc.304.1599598594985;
+ Tue, 08 Sep 2020 13:56:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200907153701.2981205-1-arnd@arndb.de> <20200907153701.2981205-6-arnd@arndb.de>
+ <20200908062002.GD13930@lst.de>
+In-Reply-To: <20200908062002.GD13930@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 8 Sep 2020 22:56:19 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a30Ezn9MhN6YG+c_eCedo=HGp2-uUN6fC218f96TBFK=Q@mail.gmail.com>
+Message-ID: <CAK8P3a30Ezn9MhN6YG+c_eCedo=HGp2-uUN6fC218f96TBFK=Q@mail.gmail.com>
+Subject: Re: [PATCH 5/9] ARM: oabi-compat: rework epoll_wait/epoll_pwait emulation
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Russell King <rmk@arm.linux.org.uk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux- <kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:ONFItD4L9ZUfs9c7cyDdLEcuWb4tDmr1dxAFxBmlvQBgCY+AyBQ
+ 5yGSNs4HcpwVXao6W8rKb/wo5lHk9sJbaBaAfKu5QOfmlkdNU9s6H/Fxvyf6/zlZlgm+6x4
+ 7sWLlUIXP+Y+4lL7FIOvAUEa9CSUbtRv8UQHr+Aq3qrcpgslls4Zz7TuaRttakGwoVBeobp
+ SzdOKPKVLMh57itI2U2sg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Amv1wSt9wms=:C2yWf5pqS1J9wAPWLAOJ7j
+ HhNwC4qRElRzIhaA+gd5scasCJXkPld8HiJ2TSEzEO+4Dp/GHK1Eypfu9Vy6BybgIzyd7bG7N
+ cegJjIW4JPs5rf5rCE0QGgvDaxcXJIisxn5T/3IXCediq6LRceDzetvkx/5bEnpFR9M3GkMnK
+ wTPaJSOJqlfed1H2/oVVjwVY0lOZxGeIqOBlCXZh+sbbi4V0AUm0sgBUcoQMon+Jce1wKeJiK
+ tRGtvRy4dzY/ERLhqYbSZ/NTkONkqymgra/Qxn/3JeewSw0ysFhCUcX5LIZ8SleK4HhdziLOI
+ O5PvGeVmO1s8MGJMUONT/LdTqEdNB50R8NQy/ayko39jvAsQ/PWnkaRarutKCpm9u8WNC9EgH
+ Tz7WBdIA5JTOAk+e4jyhxzC0PMa+iL9BSR96ej0joNhju1DDIWEp7HR/EVitVBsWyrRRc6oVC
+ iZXzSmGR2tMYqohqopENFWD5m4HLI6OdLf4ijbdjo6Y6P/PU2Dm4NZ3PInxD2UC3JxjVs/KMV
+ v+L+TpevMIRFiLPJpbe5MwusY5KpfZ6rI1XEAmfGVyGBqVJ4T22Dx9KDwxVeAYFIKVSLrGUxz
+ ANVdU87H21c/aaEBJnBbvmYOVQPKwh2O89Xnp1frGYti+Ack2YiFxpXdpwPs4wYrs7tAjqY7g
+ yBt7G+0ibJyVmymcDIAuk0caY2Y2l6XxJ9FuLW8y+2nKUlD5i/V2ri/Aj7E9sbWmT5IjUu+oM
+ FJzrxU2kTN27lh8KVxZIQfpbg/rLRFtQ0XKVdyC+libWL+LcIgPmIP+rk2SJGi/LMEiNT3vP2
+ St6zRYGlHJ94IXl1rq5pHefT0zoBNZVL/rffsL/xVBujOv+7T0d8iIDfnK0WFA27SvDbLQn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'make M=/path/to/your/external/module' creates a pointless built-in.a
-in the top of the external module directory because KBUILD_BUILTIN is
-set to 1.
+On Tue, Sep 8, 2020 at 8:20 AM Christoph Hellwig <hch@lst.de> wrote:
+> > @@ -264,68 +266,24 @@ asmlinkage long sys_oabi_epoll_ctl(int epfd, int op, int fd,
+> >       return do_epoll_ctl(epfd, op, fd, &kernel, false);
+> >  }
+> >
+> > -static long do_oabi_epoll_wait(int epfd, struct oabi_epoll_event __user *events,
+> > -                            int maxevents, int timeout)
+> > +struct epoll_event __user *
+> > +epoll_put_uevent(__poll_t revents, __u64 data, struct epoll_event __user *uevent)
+> >  {
+> > +     if (in_oabi_syscall()) {
+> > +             struct oabi_epoll_event *oevent = (void __user *)uevent;
+> >
+> > +             if (__put_user(revents, &oevent->events) ||
+> > +                 __put_user(data, &oevent->data))
+> > +                     return NULL;
+> >
+> > +             return (void __user *)uevent+1;
 
-Clear KBUILD_BUILTIN when we are building external modules so that
-'make M=...' and 'make M=... modules' work equivalently.
+FWIW, this line needs to be
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+         return (void __user *)(oevent+1);
 
- Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+It turns out that while I thought I had tested this already, my earlier
+tests were on the EABI Debian 5 instead of the OABI version of the
+same distro. I reproduced it both ways now and LTP successfully
+found that bug ;-)
 
-diff --git a/Makefile b/Makefile
-index ec2330ce0fc5..29878033f9d6 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1692,7 +1692,8 @@ else # KBUILD_EXTMOD
- #                      Install the modules built in the module directory
- #                      Assumes install directory is already created
- 
--# We are always building modules
-+# We are always building only modules.
-+KBUILD_BUILTIN :=
- KBUILD_MODULES := 1
- 
- build-dirs := $(KBUILD_EXTMOD)
--- 
-2.25.1
+> I wonder if we'd be better off doing the in_oabi_syscall() branch in
+> the common code.  E.g. rename in_oabi_syscall to in_legacy_syscall and
+> stub it out for all other architectures.  Then just do
+>
+>         if (in_oabi_syscall()
+>                 legacy_syscall_foo_bit();
+>         else
+>                 normal_syscall_foo_bit();
+>
+> in common code, where so far only arm provides
+> legacy_syscall_foo_bit().
 
+I tried out different ways, the first one I had was with an #ifdef in the
+C code that I did not like much.
+
+Moving the different code path into common code would avoid that
+#ifdef but also put the rather obscure oabi-compat code into a
+much more prominent location. I'd prefer to keep it out of there
+as much as possible and hope we don't need to do this anywhere
+else. x86-32 has some similar issues with struct layout, but that
+already goes through the normal compat layer on 64-bit kernels.
+
+> Tons of long lines again in this patch..
+
+Fixed now.
+
+       Arnd
