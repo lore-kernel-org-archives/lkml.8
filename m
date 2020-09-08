@@ -2,214 +2,101 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72205C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318C4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C30D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pYExEl4G"
+	by mail.kernel.org (Postfix) with ESMTP id E83402080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:36:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599590173;
+	bh=jDSbv5dX7L39+Ejl5LHT933mtJgdBYU7wC7mfEi5hDk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=unMwbZEtN4PSbqGE4/K4EtkTPYWYBB4ZhBxAg2RP2HmjXGcYHNw+DuREOahHaSxOc
+	 eEsqkPhSB1xFRd+0BuW3gx1re9/wNWG+QWOxMl9r0vNqCx/QBQ9bthFxtdy9ZyZTKK
+	 7UQUYsI7cOpvpEV3NTcPobQomrRJUUkoHHMgXRhQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731732AbgIHSgG (ORCPT
+        id S1731735AbgIHSgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:36:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731363AbgIHQJ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731367AbgIHQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:09:28 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088FV4J6007885;
-        Tue, 8 Sep 2020 11:38:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=O7XJu38SFyTf1J7F17Pgsezh+TcCF29rZjjKnS09FC4=;
- b=pYExEl4GEir85/Swt3pY2PU9iGqB8dcyGYsI82ZJjGwQGRLzF9mkEp53MznyY4r4vDmx
- /sX1HujoahyPL9VqjGnWudxMPW9mI1xs/37j5Y2bTk9wnGlFZ7ekTMXxwdVAw4CkMXCW
- RwSLMCm/4GRxExwvGpwnQvMiABZjDGYjB6X91q8R3lkYbBCJjWCyzRvAvxBUbfHCMDCd
- hB5w/QLMPlGTxAx6lu8hPwArF6/igmizfH0NSxE5PMYZHUvDtuB8Mn8dSb46R/NmD4GJ
- t5X5Mz4miQWpT3g6A/G6hVqZVqxuH90bSxYBcSJwCeKBdhK4ien0Hk0/cYwrsa4QlOpp Aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnbmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 11:38:44 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088FVCaN008753;
-        Tue, 8 Sep 2020 11:38:43 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 33earbnbkh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 11:38:43 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088FbHIt023938;
-        Tue, 8 Sep 2020 15:38:40 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma05fra.de.ibm.com with ESMTP id 33c2a8a6j1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 15:38:39 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088FcbWi18153774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 15:38:37 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59CBF4C04E;
-        Tue,  8 Sep 2020 15:38:37 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1125C4C04A;
-        Tue,  8 Sep 2020 15:38:29 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.24.202])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 15:38:28 +0000 (GMT)
-Message-ID: <4ba95bc2071185a7819261c4e008ec9aa452b30e.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
- faccessat2(2)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        Philippe =?ISO-8859-1?Q?Tr=E9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        =?ISO-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@linux.microsoft.com>,
-        John Johansen <john.johansen@canonical.com>
-Date:   Tue, 08 Sep 2020 11:38:28 -0400
-In-Reply-To: <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
-References: <20200908075956.1069018-1-mic@digikod.net>
-         <20200908075956.1069018-2-mic@digikod.net>
-         <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
-         <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
-         <CAEjxPJ49_BgGX50ZAhHh79Qy3OMN6sssnUHT_2yXqdmgyt==9w@mail.gmail.com>
-         <CAEjxPJ6ZTKeunzJvWf_kS3QYjca6v1yJq=ad-jCCuDSgG6n60g@mail.gmail.com>
-         <bdc10ab89cf9197e104f02a751009cf0d549ddf5.camel@linux.ibm.com>
-         <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
-         <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 622EE2417E;
+        Tue,  8 Sep 2020 15:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580171;
+        bh=jDSbv5dX7L39+Ejl5LHT933mtJgdBYU7wC7mfEi5hDk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n4PecVXHtdlimn0GfRSHzE85wcTgBWXriepyUSln61M7yyYu6PuUPTtjxUKlnY8sv
+         onKwlr6SaFYV3eaeZkhBm4mL2b32scqZzbTSRWVJYHB+Tj0G0DTQgpieJMN1Fk2P4u
+         RTIFp8sexBTdmeZ8zGDJLoqRRvm0sftHq0y5ritE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 59/88] btrfs: Remove extraneous extent_buffer_get from tree_mod_log_rewind
+Date:   Tue,  8 Sep 2020 17:26:00 +0200
+Message-Id: <20200908152224.080631751@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Casey]
+From: Nikolay Borisov <nborisov@suse.com>
 
-On Tue, 2020-09-08 at 16:14 +0200, Mickaël Salaün wrote:
-> On 08/09/2020 15:42, Stephen Smalley wrote:
-> > On Tue, Sep 8, 2020 at 9:29 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >>
-> >> On Tue, 2020-09-08 at 08:52 -0400, Stephen Smalley wrote:
-> >>> On Tue, Sep 8, 2020 at 8:50 AM Stephen Smalley
-> >>> <stephen.smalley.work@gmail.com> wrote:
-> >>>>
-> >>>> On Tue, Sep 8, 2020 at 8:43 AM Mickaël Salaün <mic@digikod.net> wrote:
-> >>>>>
-> >>>>>
-> >>>>> On 08/09/2020 14:28, Mimi Zohar wrote:
-> >>>>>> Hi Mickael,
-> >>>>>>
-> >>>>>> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
-> >>>>>>> +                    mode |= MAY_INTERPRETED_EXEC;
-> >>>>>>> +                    /*
-> >>>>>>> +                     * For compatibility reasons, if the system-wide policy
-> >>>>>>> +                     * doesn't enforce file permission checks, then
-> >>>>>>> +                     * replaces the execute permission request with a read
-> >>>>>>> +                     * permission request.
-> >>>>>>> +                     */
-> >>>>>>> +                    mode &= ~MAY_EXEC;
-> >>>>>>> +                    /* To be executed *by* user space, files must be readable. */
-> >>>>>>> +                    mode |= MAY_READ;
-> >>>>>>
-> >>>>>> After this change, I'm wondering if it makes sense to add a call to
-> >>>>>> security_file_permission().  IMA doesn't currently define it, but
-> >>>>>> could.
-> >>>>>
-> >>>>> Yes, that's the idea. We could replace the following inode_permission()
-> >>>>> with file_permission(). I'm not sure how this will impact other LSMs though.
-> >>
-> >> I wasn't suggesting replacing the existing security_inode_permission
-> >> hook later, but adding a new security_file_permission hook here.
-> >>
-> >>>>
-> >>>> They are not equivalent at least as far as SELinux is concerned.
-> >>>> security_file_permission() was only to be used to revalidate
-> >>>> read/write permissions previously checked at file open to support
-> >>>> policy changes and file or process label changes.  We'd have to modify
-> >>>> the SELinux hook if we wanted to have it check execute access even if
-> >>>> nothing has changed since open time.
-> >>>
-> >>> Also Smack doesn't appear to implement file_permission at all, so it
-> >>> would skip Smack checking.
-> >>
-> >> My question is whether adding a new security_file_permission call here
-> >> would break either SELinux or Apparmor?
-> > 
-> > selinux_inode_permission() has special handling for MAY_ACCESS so we'd
-> > need to duplicate that into selinux_file_permission() ->
-> > selinux_revalidate_file_permission().  Also likely need to adjust
-> > selinux_file_permission() to explicitly check whether the mask
-> > includes any permissions not checked at open time.  So some changes
-> > would be needed here.  By default, it would be a no-op unless there
-> > was a policy reload or the file was relabeled between the open(2) and
-> > the faccessat(2) call.
-> > 
-> 
-> We could create a new hook path_permission(struct path *path, int mask)
-> as a superset of inode_permission(). To be more convenient, his new hook
-> could then just call inode_permission() for every LSMs not implementing
-> path_permission().
+[ Upstream commit 24cee18a1c1d7c731ea5987e0c99daea22ae7f4a ]
 
-The LSM maintainers need to chime in here on this suggestion.  In terms
-of the name, except for one hook, all the security_path_XXXX() hooks
-are dependent on CONFIG_SECURITY_PATH being configured.
+When a rewound buffer is created it already has a ref count of 1 and the
+dummy flag set. Then another ref is taken bumping the count to 2.
+Finally when this buffer is released from btrfs_release_path the extra
+reference is decremented by the special handling code in
+free_extent_buffer.
 
-Mimi
+However, this special code is in fact redundant sinca ref count of 1 is
+still correct since the buffer is only accessed via btrfs_path struct.
+This paves the way forward of removing the special handling in
+free_extent_buffer.
+
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/ctree.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/btrfs/ctree.c b/fs/btrfs/ctree.c
+index 6c13d7d83f5ca..12b1a1c80c1b3 100644
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -1347,7 +1347,6 @@ tree_mod_log_rewind(struct btrfs_fs_info *fs_info, struct btrfs_path *path,
+ 	btrfs_tree_read_unlock_blocking(eb);
+ 	free_extent_buffer(eb);
+ 
+-	extent_buffer_get(eb_rewin);
+ 	btrfs_tree_read_lock(eb_rewin);
+ 	__tree_mod_log_rewind(fs_info, eb_rewin, time_seq, tm);
+ 	WARN_ON(btrfs_header_nritems(eb_rewin) >
+-- 
+2.25.1
+
+
 
