@@ -2,136 +2,207 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B3AC2BB84
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61B0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9617F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9922137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 00:07:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YkrDh/el"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="adQfRvGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbgIHADj (ORCPT
+        id S1728113AbgIHAHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 20:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48780 "EHLO
+        Mon, 7 Sep 2020 20:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728252AbgIHADc (ORCPT
+        with ESMTP id S1727058AbgIHAHa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 7 Sep 2020 20:03:32 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF819C061573
-        for <linux-kernel@vger.kernel.org>; Mon,  7 Sep 2020 17:03:30 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 60so519773otw.3
-        for <linux-kernel@vger.kernel.org>; Mon, 07 Sep 2020 17:03:30 -0700 (PDT)
+        Mon, 7 Sep 2020 20:07:30 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D5FC061573;
+        Mon,  7 Sep 2020 17:07:29 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id c196so3993066pfc.0;
+        Mon, 07 Sep 2020 17:07:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=L8oNMgR3V486OSRxon6NQEkiONwS5O4dd9QWGg4Xngc=;
-        b=YkrDh/elvp6AlfWLCCw41Cv611AXJ0pzoGq0h2OjJgSu7mW0RuIgIVq6z95Nwih60M
-         A6fnnBhd92YqOAzaTDKqS+GYrNwXvB5VfmeBlOEhmNWVkR05jkeO4mQZU9y/UE56nLst
-         0L49/h4RwACTfVWL35h9PJTCB0J9e35905HdScsCW/wBqiQFsJeV7lEsrtdJo7ZGioJd
-         obARRG4eFocg1zhdKlmkwkBIhrVvJfcGXLpaD1kg2cWA0S06WALmdka6VqDE0+t5GMsj
-         cQwuzYNC5fJc2GNihar2g7I0AQoaFAE/OS7lS3k03EWj4RKMykZBM44ilb8g1+/Uki4I
-         ITmQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vz3cuK28svOZPnhCoZFGAJ1iHJ+oq8uAsj8UZuAV9AQ=;
+        b=adQfRvGujXsDFIcFGwS50H+CpaFf0MLimM2eCW9xUsWsgQsgxIe41lCs/JRVVtqgge
+         szKv3a7YjI+rVqujsQ8wIqpC/qiPTNE8H2K7sU+MhMOaGEuajhd+9Z38KOLnKnXpKxZn
+         gLwnmBm8SjjwHMoA0sio3dJ5g3NTVAPSRFB3A7WOeXgshisiOvhXJDAEo+6QUAXlOU8A
+         OK+tbbTrekEjvB4RfElpNUsKcbElpouA7mRU0gwYUayCBnzgBGCim7pTsY5Ll9UAuR+z
+         kyUU/MiPo1G2cVBJcEq3fvTIvJnN9K5Lau5f9l93wYcOMMdAvrieXZO65LZXZloNRuYz
+         L3Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=L8oNMgR3V486OSRxon6NQEkiONwS5O4dd9QWGg4Xngc=;
-        b=pfbNvSiwTqyEMO2PazIddMJv6P8uLMAtTERj/eGINeGq3gN/FbrNMIndE87NnHfXwN
-         VroFMcH5pHNhHBiwjeE23Tw/2YSEyIoXCx6XTh+H9jPE4X3CtBTB3LUxGlmiBzHrkb91
-         krr5TgldyYN5ckfF1IHMb/+QlZMOeo/YsLnEDNa8B2dsR7a6i6U3mXLp7z42gp+F5KX9
-         amfD2gAZ+pyFvzeB8Osoza+ea6ucu7mFJq0x8/IlMpAgQwyVPajFzH6takQPLYUmuNzM
-         E9X0htvBNDNSTdWBpCH2AA+6jXbUg7D36LkdwqmwxpAC+FcC/4f1rryj4NSYSlIRe3Vb
-         bFcQ==
-X-Gm-Message-State: AOAM532+sGyAVFDez5zrf28ZDGVpThKs+Qpd/ppw3ZF+oCYmrlGTkiei
-        z9aHXwT5HvZb6cg1Gjx5dg==
-X-Google-Smtp-Source: ABdhPJx4xHUKZjAD0PXmb/o0pO/ou6m/g3Z/JN1DNQVsf5+MuZdVc/v6st5nCRnQuvMzYbhOogpweA==
-X-Received: by 2002:a9d:69c9:: with SMTP id v9mr15168348oto.90.1599523410109;
-        Mon, 07 Sep 2020 17:03:30 -0700 (PDT)
-Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
-        by smtp.gmail.com with ESMTPSA id 91sm3291127otn.18.2020.09.07.17.03.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 17:03:29 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:84ed:77c1:d49f:5e6b])
-        by serve.minyard.net (Postfix) with ESMTPSA id E63F818003B;
-        Tue,  8 Sep 2020 00:03:27 +0000 (UTC)
-Date:   Mon, 7 Sep 2020 19:03:26 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Markus Boehme <markubo@amazon.com>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, Stefan Nuernberger <snu@amazon.com>,
-        SeongJae Park <sjpark@amazon.com>, Amit Shah <aams@amazon.com>
-Subject: Re: [PATCH 1/3] ipmi: Reset response handler when failing to send
- the command
-Message-ID: <20200908000326.GB15602@minyard.net>
-Reply-To: minyard@acm.org
-References: <1599495937-10654-1-git-send-email-markubo@amazon.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vz3cuK28svOZPnhCoZFGAJ1iHJ+oq8uAsj8UZuAV9AQ=;
+        b=UEC94F+aYEgo7NSr8wAUUM7SZVLwDpPlYfnUFcGvvMgF6KwUgmhm0Z2aX43Glop8nv
+         403O/RmCeKzL76ZgBbQWedtcsxu5LTzxXySM3n1k6aBxPbL5AuLmjE8JpqDhfXAibkU7
+         Zlnbu66TkJdQjFj00dm965vsiVub6YNkWCLZUmqPk2OJfrqmY3Cfx6mPLiFAXILH2r1R
+         xFiBFN3UmqQ2JPId7y/MYUJPfipvl1ifPzXHp1A81yKu2deVe5+7+YaMsN37O3q7GO3d
+         aqHsi7A03aX4XxhGxxV6AgVii/dcv/MUyx9jF94D43Nsy9oMGRomsrGXoZ7T969Xc2vb
+         nH8Q==
+X-Gm-Message-State: AOAM530ZXrRJc0HGDdIpKRqTnHZYuEDWRjliVUddyXq0x5chJVT4ntrv
+        irIN5uAnPfNvwUE5Y98WAjGbcWVebssdmnMMKR0=
+X-Google-Smtp-Source: ABdhPJzj5PB769OQ1za3X5AWPdeDF3Md+vAq8OR4nXR6wAMUVBkJWNg6Nck6ycmE6wRdV2YKCSUCP/trOcyViMhR/x8=
+X-Received: by 2002:a63:4923:: with SMTP id w35mr17818837pga.368.1599523648346;
+ Mon, 07 Sep 2020 17:07:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1599495937-10654-1-git-send-email-markubo@amazon.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200906031827.16819-1-xie.he.0141@gmail.com> <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
+In-Reply-To: <CA+FuTSfOeMB7Wv1t12VCTOqPYcTLq2WKdG4AJUO=gxotVRZiQw@mail.gmail.com>
+From:   Xie He <xie.he.0141@gmail.com>
+Date:   Mon, 7 Sep 2020 17:07:17 -0700
+Message-ID: <CAJht_EO13aYPXBV7sEgOTuUhuHFTFFfdg7NBN2cEKAo6LK0DMQ@mail.gmail.com>
+Subject: Re: [PATCH net] net/packet: Fix a comment about hard_header_len and
+ headroom allocation
+To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Eric Dumazet <edumazet@google.com>,
+        Or Cohen <orcohen@paloaltonetworks.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Network Development <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 06:25:35PM +0200, Markus Boehme wrote:
-> When failing to send a command we don't expect a response. Clear the
-> `null_user_handler` like is done in the success path.
+Thank you for your comment!
 
-This is correct.  I guess, from the next two patches, I know how you
-found this.
+On Mon, Sep 7, 2020 at 2:41 AM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> On Sun, Sep 6, 2020 at 5:18 AM Xie He <xie.he.0141@gmail.com> wrote:
+> >
+> > This comment is outdated and no longer reflects the actual implementation
+> > of af_packet.c.
+>
+> If it was previously true, can you point to a commit that changes the behavior?
 
-I can incude this, but I will ask some questions in the later patches.
+This is my understanding about the history of "af_packet.c":
 
--corey
+1. Pre git history
 
-> 
-> Signed-off-by: Markus Boehme <markubo@amazon.com>
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index 737c0b6..2b213c9 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -2433,7 +2433,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
->  
->  	rv = send_get_device_id_cmd(intf);
->  	if (rv)
-> -		return rv;
-> +		goto out_reset_handler;
->  
->  	wait_event(intf->waitq, bmc->dyn_id_set != 2);
->  
-> @@ -2443,6 +2443,7 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
->  	/* dyn_id_set makes the id data available. */
->  	smp_rmb();
->  
-> +out_reset_handler:
->  	intf->null_user_handler = NULL;
->  
->  	return rv;
-> @@ -3329,6 +3330,7 @@ static int __scan_channels(struct ipmi_smi *intf, struct ipmi_device_id *id)
->  			dev_warn(intf->si_dev,
->  				 "Error sending channel information for channel 0, %d\n",
->  				 rv);
-> +			intf->null_user_handler = NULL;
->  			return -EIO;
->  		}
->  
-> -- 
-> 2.7.4
-> 
+At first, before "needed_headroom" was introduced, "hard_header_len"
+was the only way for a driver to request headroom. However,
+"hard_header_len" was also used in "af_packet.c" for processing the
+header. There was a confusion / disagreement between "af_packet.c"
+developers and driver developers about the use of "hard_header_len".
+"af_packet.c" developers would assume that all headers were visible to
+them through dev->header_ops (called dev->hard_header at that time?).
+But the developers of some drivers were not able to expose all their
+headers to "af_packet.c" through header_ops (for example, in tunnel
+drivers). These drivers still requested the headroom via
+"hard_header_len" but this created bugs for "af_packet.c" because
+"af_packet.c" would assume "hard_header_len" was the length of the
+header visible to them through header_ops.
+
+Therefore, in Linux version 2.1.43pre1, the FIXME comment was added.
+In this comment, "af_packet.c" developers clearly stated that not
+exposing the header through header_ops was a bug that needed to be
+fixed in the drivers. But I think driver developers were not able to
+agree because some drivers really had a need to add their own header
+without using header_ops (for example in tunnel drivers).
+
+In Linux version 2.1.68, the developer of "af_packet.c" compromised
+and recognized the use of "hard_header_len" even when there is no
+header_ops, by adding the comment I'm trying to change now. But I
+guess some other developers of "af_packet.c" continued to treat
+"hard_header_len" to be the length of header of header_ops and created
+a lot of problems.
+
+2. Introduction of "needed_headroom"
+
+Because this issue has troubled for developers for long, in 2008,
+developers introduced "needed_headroom" to solve this problem.
+"needed_headroom" has only one purpose - reserve headroom. It is not
+used in af_packet.c for processing so drivers can safely use it to
+request headroom without exposing the header via header_ops.
+
+The commit was:
+commit f5184d267c1a ("net: Allow netdevices to specify needed head/tailroom")
+
+After "needed_headroom" was introduced, all drivers that needed to
+reserve the headroom but didn't want "af_packet.c" to interfere should
+change to "needed_headroom".
+
+From this point on, "af_packet.c" developers were able to assume
+"hard_header_len" was only used for header processing purposes in
+"af_packet.c".
+
+3. Not reserving the headroom of hard_header_len for RAW sockets
+
+Another very important point in history is these two commits in 2018:
+commit b84bbaf7a6c8 ("packet: in packet_snd start writing at link
+layer allocation")
+commit 9aad13b087ab ("packet: fix reserve calculation")
+
+These two commits changed packet_snd to the present state and made it
+no long reserve the headroom of hard_header_len for RAW sockets. This
+made drivers' switching from hard_header_len to needed_headroom became
+urgent because otherwise they might have a kernel panic when used with
+RAW sockets.
+
+> > In this file, the function packet_snd first reserves a headroom of
+> > length (dev->hard_header_len + dev->needed_headroom).
+> > Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+> > which calls dev->header_ops->create, to create the link layer header.
+> > If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+> > length (dev->hard_header_len), and checks if the user has provided a
+> > header of length (dev->hard_header_len) (in dev_validate_header).
+>
+> Not entirely, a header greater than dev->min_header_len that passes
+> dev_validate_header.
+
+Yes, I understand. The function checks both hard_header_len and
+min_header_len. I want to explain the role of hard_header_len in
+dev_validate_header. But I feel a little hard to concisely explain
+this without simplifying a little bit.
+
+> >  /*
+> >     Assumptions:
+> > -   - if device has no dev->hard_header routine, it adds and removes ll header
+> > -     inside itself. In this case ll header is invisible outside of device,
+> > -     but higher levels still should reserve dev->hard_header_len.
+> > -     Some devices are enough clever to reallocate skb, when header
+> > -     will not fit to reserved space (tunnel), another ones are silly
+> > -     (PPP).
+> > +   - If the device has no dev->header_ops, there is no LL header visible
+> > +     outside of the device. In this case, its hard_header_len should be 0.
+>
+> Such a constraint is more robustly captured with a compile time
+> BUILD_BUG_ON check. Please do add a comment that summarizes why the
+> invariant holds.
+
+I'm not sure how to do this. I guess both header_ops and
+hard_header_len are assigned at runtime. (Right?) I guess we are not
+able to check this at compile-time.
+
+> More about the older comment, but if reusing: it's not entirely clear
+> to me what "outside of the device" means. The upper layers that
+> receive data from the device and send data to it, including
+> packet_snd, I suppose? Not the lower layers, clearly. Maybe that can
+> be more specific.
+
+Yes, right. If a header is visible "outside of the device", it means
+the header is exposed to upper layers via "header_ops". If a header is
+not visible "outside of the device" and is only used "internally", it
+means the header is not exposed to upper layers via "header_ops".
+Maybe we can change it to "outside of the device driver"? We can
+borrow the idea of encapsulation in object-oriented programming - some
+things that happen inside a software component should not be visible
+outside of that software component.
