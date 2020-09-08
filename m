@@ -2,138 +2,88 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E4BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 523A1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D295A21532
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599548109;
-	bh=DETA+0KrLFGYn+ConUVH+45tfhX9j4ZSY1Mr5Bili0s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rUTJJgx/HuJmgd/V9akGxkyxbALGbFV04PfBxMEiduipIYOpn7mC6+NcdwT0DuQL+
-	 fU+H38ijr+rtc0+Lr0C0BakWjocujbuLM6OSATQVjVxq/9UD2cZFJR6t7ncrxpddZu
-	 7UVghmO08Du3lH6C+5iFS30Cdfury1m/QE4OozD8=
+	by mail.kernel.org (Postfix) with ESMTP id E7BBA2068D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:55:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QstJdR7A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgIHGzJ (ORCPT
+        id S1729200AbgIHGzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:55:09 -0400
-Received: from mail-ej1-f66.google.com ([209.85.218.66]:43690 "EHLO
-        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgIHGzF (ORCPT
+        Tue, 8 Sep 2020 02:55:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:40198 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729118AbgIHGzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:55:05 -0400
-Received: by mail-ej1-f66.google.com with SMTP id o8so7724897ejb.10;
-        Mon, 07 Sep 2020 23:55:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Z8F+J0dpPaiXwn0OwzuDM1BFUxGBJiTwV0EOyF8yDGs=;
-        b=XVeM8rqWwz4lWbvONRX7NrXSwWogaWtzDZYoOEdikHQOBKYS2bHDFGshhlmHHR/1//
-         kGalxlQfWRB5nrjZXEZ8PCwq6uuzlsKDEw0FhMNVRFTA9GRJUDZBuOEO5b5MqPmxEIrp
-         I6qD17yECB229Dz98CV7zsqcy5F8j9Oo5l+atqXLAS4WG9FxbkGwVUpE58VVhU/Adr0B
-         wJKfYZKkAbQu1RM7Kayi4tal0wt+2qO2gZKKvu7NDdgPxRskTBkbakgVLmPa8+sA4pU8
-         X0EQiFlsoSQlrFVFe1DyZ2ErzjrmAPHY1rYeavaf5IRPufkTEWUhuAObCTmKJAjdI+uw
-         i1DQ==
-X-Gm-Message-State: AOAM533b/hqmuXUgJShWcz3A/wVf9lBYBTuY1TuIdFfHKbqES6tTPLHY
-        dvmXNCfiyFiKF+Ak4ZekLEl57QNBCgI=
-X-Google-Smtp-Source: ABdhPJwqcrsoBbvXyOtx/zQlu89AL3rfhHav4wMeQ17ElFc0uWvFvkR65vNYNv3eRpa34TVxqpdFcA==
-X-Received: by 2002:a17:906:faec:: with SMTP id lu44mr23959522ejb.527.1599548102559;
-        Mon, 07 Sep 2020 23:55:02 -0700 (PDT)
-Received: from pi3 ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id 16sm3865463edx.72.2020.09.07.23.55.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 23:55:01 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 08:54:59 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 11/25] ARM: dts: s5pv210: add RTC 32 KHz clock in Aries
- family
-Message-ID: <20200908065459.GC24227@pi3>
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-12-krzk@kernel.org>
- <BN6PR04MB0660939E010C3175CD0DF9D6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 8 Sep 2020 02:55:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599548139;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZJLwkK7lK8i/QhLFQOeO0BZqdoTLdZuycajPAvv67h8=;
+        b=QstJdR7A9rYMG9mmN+KVQfcxR9bO/D92hGRY4YllNH5kJoIoYUW+dNz87VBmsRqOhItJUX
+        3FRFm0wDYCQq3gXIArE89QY9ac3ryYoT9tTtcBb/cJSZeZZHPjz17y5NPMEqv6ZfXjjz2g
+        7fVEdXvMu2yqKNTv3AU5h2fXxpSNiFU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-256-TwQ8Aw_uOUmrRmno2GWVaA-1; Tue, 08 Sep 2020 02:55:35 -0400
+X-MC-Unique: TwQ8Aw_uOUmrRmno2GWVaA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A4F7801AC2;
+        Tue,  8 Sep 2020 06:55:32 +0000 (UTC)
+Received: from gondolin (ovpn-112-243.ams2.redhat.com [10.36.112.243])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93DDC838A6;
+        Tue,  8 Sep 2020 06:55:25 +0000 (UTC)
+Date:   Tue, 8 Sep 2020 08:55:21 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH v11 0/2] s390: virtio: let arch validate VIRTIO features
+Message-ID: <20200908085521.4db22680.cohuck@redhat.com>
+In-Reply-To: <20200908003951.233e47f3.pasic@linux.ibm.com>
+References: <1599471547-28631-1-git-send-email-pmorel@linux.ibm.com>
+        <20200908003951.233e47f3.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB0660939E010C3175CD0DF9D6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 04:57:53PM -0700, Jonathan Bakker wrote:
-> Hi Krzysztof,
-> 
-> On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> > The S3C RTC requires 32768 Hz clock as input which is provided by PMIC.
-> > However there is no such clock provider but rather a regulator driver
-> > which registers the clock as a regulator.  This is an old driver which
-> > will not be updated so add a workaround - a fixed-clock to fill missing
-> > clock phandle reference in S3C RTC.
-> > 
-> > This fixes dtbs_check warnings:
-> > 
-> >   rtc@e2800000: clocks: [[2, 145]] is too short
-> >   rtc@e2800000: clock-names: ['rtc'] is too short
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  arch/arm/boot/dts/s5pv210-aries.dtsi | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> > index 6ba23562da46..86c3b26fd21e 100644
-> > --- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-> > +++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-> > @@ -47,6 +47,13 @@
-> >  		};
-> >  	};
-> >  
-> > +	pmic_ap_clk: clock-0 {
-> > +		/* Workaround for missing clock on PMIC */
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <32768>;
-> > +	};
-> > +
-> >  	bt_codec: bt_sco {
-> >  		compatible = "linux,bt-sco";
-> >  		#sound-dai-cells = <0>;
-> > @@ -825,6 +832,11 @@
-> >  	samsung,pwm-outputs = <1>;
-> >  };
-> >  
-> > +&rtc {
-> > +	clocks = <&clocks CLK_RTC>, <&pmic_ap_clk>;
-> > +	clock-names = "rtc", "rtc_src";
-> 
-> Missing a
-> 
-> status = "okay";
-> 
-> here, but with that it works fine for me.  Looks like it's also
-> missing in the patches for the other devices as well.
+On Tue, 8 Sep 2020 00:39:51 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-It wasn't there on purpose - I did not want to enable the RTC, just fix
-the DTS with the dtschema. However a separate patch could be to actually
-enable it.
+> On Mon,  7 Sep 2020 11:39:05 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+> > Hi all,
+> > 
+> > The goal of the series is to give a chance to the architecture
+> > to validate VIRTIO device features.  
+> 
+> Michael, is this going in via your tree?
+> 
 
-I'll add your tested-by to this patch.
+I believe Michael's tree is the right place for this, but I can also
+queue it if I get an ack on patch 1.
 
-Best regards,
-Krzysztof
