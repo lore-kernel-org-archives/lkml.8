@@ -2,126 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19D0C2D0A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7EBC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C585721D46
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1698D21D43
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wfT5YyvY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oVZ2dDz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgIHHmu (ORCPT
+        id S1729455AbgIHHoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:42:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33956 "EHLO
+        Tue, 8 Sep 2020 03:44:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729453AbgIHHm2 (ORCPT
+        with ESMTP id S1728479AbgIHHoG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 03:42:28 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50657C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 00:42:26 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id x14so17942356wrl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:42:26 -0700 (PDT)
+        Tue, 8 Sep 2020 03:44:06 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E340C061573;
+        Tue,  8 Sep 2020 00:44:05 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id d6so3209906pfn.9;
+        Tue, 08 Sep 2020 00:44:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
-        b=wfT5YyvYowSvPxHb+0/UENzgICebO//M3d0DIDWTaHQEJ5O8uHUUoMmrKzjeIMQqhp
-         NitiIv7XdDmxggV4H52sZ8GTfO2gx/qw5l/KSDtQ5k7j01HmFi8cILzZZTc1QulK7jLs
-         FJR7s1cQa4ABR9jisaKM+w4K4OH7nPjdA5yySjFdvPdEhKp9Pdb2E5jOhpoKyKzqADtF
-         9rvVG8SDZqY9Gexgx+Opxsg3NCd1mxoMtmv0mYlisOhyCFfTItVkvffAfsv2qI5glIoD
-         p6y8pTSLFo/DJ8Z8ql+PhihvnyiwtfryLTFJeF/3iqnz5513istkaHH5GvpZtlkejkLV
-         tDYw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IVVptDGcawqgCuuuuSn+C2jXTROtX0l06oj8pxRbmDQ=;
+        b=oVZ2dDz61KRGBUGd9CGEgxF82wuH/rzVX+9OLfCTI861b+hiYaJpaQ/FpLrdz3i2Zz
+         BAen+xFFQex3W9/zOZLw3jIDHCgQPCsaMnYuM6wLgEgvEMKeCy3T2uszHuB8NzbQtuUH
+         I0lnBx6aplXO78W76+Jicp8hUG94cqe7qhSC86RwjrmTY9X8RoOOqf16/EkoQNI9meQW
+         DFsu95xxQ5WuHU4Th1hZA+JJXolMAX7NJI9d48U5X7TOqMlDYRH8Q+BDGeQrxaTujsLP
+         kQPPj67kOpJIytiLMg3d5twjYk1iugvpH4k5Pvh0xz61RjEuKqfhcMVyPzWnUJV7P4yy
+         KXzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=uLUFK28IISjx23/D2ml5l6aSZkYLMgDiXFORqFH61rQ=;
-        b=Y2U00AX0cAcdxDshNyK0KVRIGvwAVd0Wim61V27e9vgN3uMHMjIbWYMwTg3ecJvLIB
-         w4JRpUgrh97bfxVJ1JxK04l0dweyGgaHnmQTKgQpCCkS7rS+wlWOwRn7KmFOxduA7TUA
-         dHOqLNof7v4Ru6Vv5bXO+YGKFUBrRpdDjwKBUtBkFoV6DW7fVcvgZArzUz0K5JPzfrx8
-         8MvKGY7GfYlfQcEBya1TwsEoBOZI60dSNQmXs7GqmwZiYcgsx7+PVHdzXLol3GrJDljf
-         s8DoRFUrG5QUcL2mB0sq0Bv6Mdo4t0E0ri8EPhWthuAIg8vrv4wfQQwFKag3ZFinTLUR
-         tRWA==
-X-Gm-Message-State: AOAM531ucAjRGB+lst+Mic0jhxwKZwk5vp6gh98htWun7uCsbLpQfEw6
-        2N1YP9GCrY2uT0l02qscGrI0tQ==
-X-Google-Smtp-Source: ABdhPJwKj9M+NROzity0wbbtarhMYD1iO1A/RCqJwJa4QnCTCrNVQ7+USV3LfuKpabL5+WM8PcwegQ==
-X-Received: by 2002:adf:e6c2:: with SMTP id y2mr27381258wrm.117.1599550944553;
-        Tue, 08 Sep 2020 00:42:24 -0700 (PDT)
-Received: from dell ([91.110.221.204])
-        by smtp.gmail.com with ESMTPSA id i6sm36336964wra.1.2020.09.08.00.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 00:42:23 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 08:42:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 00/13] Add support for Kontron sl28cpld
-Message-ID: <20200908074221.GA4400@dell>
-References: <20200907213802.26745-1-michael@walle.cc>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IVVptDGcawqgCuuuuSn+C2jXTROtX0l06oj8pxRbmDQ=;
+        b=PLM9/DdBFtOXqSSCzKkg9PoDRcTCEXj3PAmfcesP0WPVyltDktHW9H8e0MYsUE6jXL
+         PfbIP4Lh6+8Q8SNe1lLySFzULGSUaksavigSBLCgpG1plSIn21U5VXXKD2I3kVoqpG+a
+         OBlmZ5F5rNSy5uJDw+mas4khnYSneoYZU4lBHze3Ud0njipQjsbT70ztNCG+CQMfE00X
+         lSH85g7OMK1X4oH0WcG8LB2d6b4pC0G5YbXrjfPnlkAQ8AO46a7Ol9WraHPZ6DpNx2QE
+         atBD+lSX4ZRqga0IyTi6rcBfgi9xajkFx2VEGavO3Yr+jWOt+Q559EbWEawMOuibkrBJ
+         Hgvw==
+X-Gm-Message-State: AOAM532wzY8eNNyWXr7sM04oWiLZlaXYsNHXpZAFd7a8/84uTv3PRPFJ
+        JRsT97CfuMiAPEzmUB9zsGwY0jQlmTha7oFK3gJ7PIqbyTLbHg==
+X-Google-Smtp-Source: ABdhPJxllos9y1Gn8EfWASnfyzEMYZqQ9haDoiwp/plzKOAUA/WuFCjJRj8iGwXbCw/UjhJ9hb3DRxl5t3F8B7XcfEI=
+X-Received: by 2002:a62:838a:: with SMTP id h132mr23492945pfe.72.1599551045021;
+ Tue, 08 Sep 2020 00:44:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200907213802.26745-1-michael@walle.cc>
+References: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1598259985-12517-2-git-send-email-gene.chen.richtek@gmail.com>
+ <20200829181157.1b653a88@archlinux> <CAE+NS36j4a6k-JSUbjxzpfbqtE-xMW7qxUUhHPAnc_9V-Lv7LQ@mail.gmail.com>
+In-Reply-To: <CAE+NS36j4a6k-JSUbjxzpfbqtE-xMW7qxUUhHPAnc_9V-Lv7LQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Sep 2020 10:43:47 +0300
+Message-ID: <CAHp75VcX6P9LOw=1=UgX4tWaxa2_PYPvanpDLG0TE2XzPBatAg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] iio: adc: mt6360: Add ADC driver for MT6360
+To:     Gene Chen <gene.chen.richtek@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 07 Sep 2020, Michael Walle wrote:
+On Tue, Sep 8, 2020 at 9:19 AM Gene Chen <gene.chen.richtek@gmail.com> wrot=
+e:
+> Jonathan Cameron <jic23@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8830=
+=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=881:12=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+> > On Mon, 24 Aug 2020 17:06:24 +0800
+> > Gene Chen <gene.chen.richtek@gmail.com> wrote:
 
-> The Kontron sl28cpld is a board management chip providing gpio, pwm, fan
-> monitoring and an interrupt controller. For now this controller is used on
-> the Kontron SMARC-sAL28 board. But because of its flexible nature, it
-> might also be used on other boards in the future. The individual blocks
-> (like gpio, pwm, etc) are kept intentionally small. The MFD core driver
-> then instantiates different (or multiple of the same) blocks. It also
-> provides the register layout so it might be updated in the future without a
-> device tree change; and support other boards with a different layout or
-> functionalities.
-> 
-> See also [1] for more information.
-> 
-> This is my first take of a MFD driver. I don't know whether the subsystem
-> maintainers should only be CCed on the patches which affect the subsystem
-> or on all patches for this series. I've chosen the latter so you can get a
-> more complete picture.
-> 
-> [1] https://lore.kernel.org/linux-devicetree/0e3e8204ab992d75aa07fc36af7e4ab2@walle.cc/
+> > A few comments inline.  The big one centres on why we can't
+> > expose the channels as _raw, _offset and _scale?
+> >
+>
+> I think i have 3 reason for use real value,
+> ADC is used to get real value rather than raw data which is not meaningfu=
+l.
+> And I can decide which formula needs apply according to different conditi=
+on.
+> Also the junction temperature channel _scale is floating point 1.05
+> which is not easy to express.
 
-I'll take all of the non-ARM patches later this week.
+It's easy to express. Like other values in IIO subsystem which are float.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--=20
+With Best Regards,
+Andy Shevchenko
