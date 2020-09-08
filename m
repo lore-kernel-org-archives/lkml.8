@@ -2,362 +2,79 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD64C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 681992087C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C342087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599584739;
+	bh=vLaUN9zRc4TCVPRchoos4WMZYnabeJYrgfEpXzOtFxk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=RdUljv92Vz7JG9+iOQqXwKsxUycZPYsG+XOssC/Qo3MDGLm+8YEqTRLIKRNwNI/TM
+	 T49HkQqJPCbSNpOJBkJ45krymnzsTmGP4rH05/cecaDWJg64/63D4kM4wgdjJMAOyP
+	 aom9lahreEPGpJH553IE4mAxOVKfJAotpsWUkM9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731968AbgIHRFd (ORCPT
+        id S1732011AbgIHRFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:05:33 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2796 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731859AbgIHRFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:05:07 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 2D9084A06B02F02DB517;
-        Tue,  8 Sep 2020 14:00:06 +0100 (IST)
-Received: from localhost (10.52.124.38) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1913.5; Tue, 8 Sep 2020
- 14:00:04 +0100
-Date:   Tue, 8 Sep 2020 13:58:30 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        "Gene Chen" <gene_chen@richtek.com>, <Wilma.Wu@mediatek.com>,
-        <shufan_lee@richtek.com>, <cy_huang@richtek.com>,
-        <benjamin.chao@mediatek.com>
-Subject: Re: [PATCH v3 1/2] iio: adc: mt6360: Add ADC driver for MT6360
-Message-ID: <20200908135830.00007b13@Huawei.com>
-In-Reply-To: <CAE+NS35aQ3k2auYA+bmf6kMhm192oyg8_j5j=zzK0sn_NS6HoA@mail.gmail.com>
-References: <1598259985-12517-1-git-send-email-gene.chen.richtek@gmail.com>
-        <1598259985-12517-2-git-send-email-gene.chen.richtek@gmail.com>
-        <20200829181157.1b653a88@archlinux>
-        <CAE+NS36j4a6k-JSUbjxzpfbqtE-xMW7qxUUhHPAnc_9V-Lv7LQ@mail.gmail.com>
-        <20200908100712.00007a7b@Huawei.com>
-        <CAE+NS35aQ3k2auYA+bmf6kMhm192oyg8_j5j=zzK0sn_NS6HoA@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 8 Sep 2020 13:05:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731830AbgIHQTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:19:38 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 218AA23C2E;
+        Tue,  8 Sep 2020 13:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599573264;
+        bh=vLaUN9zRc4TCVPRchoos4WMZYnabeJYrgfEpXzOtFxk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=0ZFAritFLs9rFGY7zAgtDNSztLI6xOA5Fn52R4tYSrj9HW7UwtNYznmOGLjvyvoOO
+         y2UqdowraycAeL++ZM3YqjsHdlmGroa/Jdsgk7lH425/ftxV+X3YpEtlw0k8In0jxE
+         sDOkBoSJLesPs0O47vpOljPp1Rjz0hNl8s7acMVY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id D2C2E352162B; Tue,  8 Sep 2020 06:54:23 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 06:54:23 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rcu tree
+Message-ID: <20200908135423.GD29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200908153830.0a23e401@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.124.38]
-X-ClientProxiedBy: lhreml709-chm.china.huawei.com (10.201.108.58) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908153830.0a23e401@canb.auug.org.au>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...
+On Tue, Sep 08, 2020 at 03:38:30PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the rcu tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
+> 
+> ERROR: modpost: "resched_cpu" [kernel/scftorture.ko] undefined!
+> 
+> Caused by commit
+> 
+>   20c881d0592c ("scftorture: Add an alternative IPI vector")
+> 
+> I have reverted that commit for today.
 
-> > > > > +#include <linux/completion.h>
-> > > > > +#include <linux/interrupt.h>
-> > > > > +#include <linux/iio/buffer.h>
-> > > > > +#include <linux/iio/iio.h>
-> > > > > +#include <linux/iio/trigger_consumer.h>
-> > > > > +#include <linux/iio/triggered_buffer.h>
-> > > > > +#include <linux/irq.h>
-> > > > > +#include <linux/kernel.h>
-> > > > > +#include <linux/ktime.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/mutex.h>
-> > > > > +#include <linux/platform_device.h>
-> > > > > +#include <linux/regmap.h>
-> > > > > +
-> > > > > +#define MT6360_REG_PMUCHGCTRL3       0x313
-> > > > > +#define MT6360_REG_PMUADCCFG 0x356
-> > > > > +#define MT6360_REG_PMUADCRPT1        0x35A
-> > > > > +
-> > > > > +/* PMUCHGCTRL3 0x313 */
-> > > > > +#define MT6360_AICR_MASK     0xFC
-> > > > > +#define MT6360_AICR_SHFT     2
-> > > > > +#define MT6360_AICR_400MA    0x6
-> > > > > +/* PMUADCCFG 0x356 */
-> > > > > +#define MT6360_ADCEN_MASK    0x8000
-> > > > > +/* PMUADCRPT1 0x35A */
-> > > > > +#define MT6360_PREFERCH_MASK 0xF0
-> > > > > +#define MT6360_PREFERCH_SHFT 4
-> > > > > +#define MT6360_RPTCH_MASK    0x0F
-> > > > > +
-> > > > > +enum {
-> > > > > +     MT6360_CHAN_USBID = 0,
-> > > > > +     MT6360_CHAN_VBUSDIV5,
-> > > > > +     MT6360_CHAN_VBUSDIV2,
-> > > > > +     MT6360_CHAN_VSYS,
-> > > > > +     MT6360_CHAN_VBAT,
-> > > > > +     MT6360_CHAN_IBUS,
-> > > > > +     MT6360_CHAN_IBAT,
-> > > > > +     MT6360_CHAN_CHG_VDDP,
-> > > > > +     MT6360_CHAN_TEMP_JC,
-> > > > > +     MT6360_CHAN_VREF_TS,
-> > > > > +     MT6360_CHAN_TS,
-> > > > > +     MT6360_CHAN_MAX,
-> > > > > +};
-> > > > > +
-> > > > > +struct mt6360_adc_data {
-> > > > > +     struct device *dev;
-> > > > > +     struct regmap *regmap;
-> > > > > +     struct completion adc_complete;
-> > > > > +     struct mutex adc_lock;
-> > > > > +     ktime_t last_off_timestamps[MT6360_CHAN_MAX];
-> > > > > +     int irq;
-> > > > > +};
-> > > > > +
-> > > > > +static inline int mt6360_adc_val_converter(int val, int multiplier, int offset, int divisor)
-> > > > > +{
-> > > > > +     return ((val * multiplier) + offset) / divisor;  
-> > > >
-> > > > Why could we not report these values to userspace or consumer drivers and let
-> > > > them deal with the conversion if they actually needed it?
-> > > > Mapping this to
-> > > >
-> > > > (val + new_offset) * multiplier would be a little messy, but not too bad.
-> > > >
-> > > > The advantage would be that we would then be providing the data needed
-> > > > to get real units for values read from the buffers without having to
-> > > > do all the maths in kernel (without access to floating point).
-> > > >
-> > > >  
-> > >
-> > > As above, if I use formula "(val + new_offset) * multiplier",
-> > > the junction temperature channel multiplier will be floating point
-> > > 1.05, i don't know how to express.  
-> >
-> > As Andy mentioned, we do this all over the place.
-> > IIO_VAL_INT_PLUS_MICRO
-> >
-> > The key is that we want to push the burden of doing this maths to the user
-> > not the source.  
-> 
-> ACK.
-> Can I keep IIO_CHAN_INFO_PROCESSED function be reserved for user in
-> kernel space?
-> 
+Good catch, (crudely) fixed by 007d16a07735 ("scftorture: Add an
+alternative IPI vector") in the new rcu/next branch.
 
-No. We have utility functions that will apply the multiplier as needed so
-there is no significant advantage in doing this and it won't be consistent
-with the majority of other drivers. 
-
-> >
-> > Often what is actually of interest is whether a temperature passed a threshold.
-> > In that case, you can transform the threshold into the units of the ADC (so the
-> > reverse directly to you would do with processed data) and only have to do the
-> > maths once per change of the threshold instead of for every sample.
-> >
-> > There are helper functions to do the maths for you, should you actually
-> > need SI units.
-> >  
-> 
-> ACK
-> 
-> > >  
-> > > > > +}
-> > > > > +
-> > > > > +static int mt6360_adc_convert_processed_val(struct mt6360_adc_data *info, int chan_idx, int *val)
-> > > > > +{
-> > > > > +     unsigned int regval = 0;
-> > > > > +     const struct converter {
-> > > > > +             int multiplier;
-> > > > > +             int offset;
-> > > > > +             int divisor;
-> > > > > +     } adc_converter[MT6360_CHAN_MAX] = {
-> > > > > +             { 1250, 0, 1}, /* USBID */
-> > > > > +             { 6250, 0, 1}, /* VBUSDIV5 */
-> > > > > +             { 2500, 0, 1}, /* VBUSDIV2 */
-> > > > > +             { 1250, 0, 1}, /* VSYS */
-> > > > > +             { 1250, 0, 1}, /* VBAT */
-> > > > > +             { 2500, 0, 1}, /* IBUS */
-> > > > > +             { 2500, 0, 1}, /* IBAT */
-> > > > > +             { 1250, 0, 1}, /* CHG_VDDP */
-> > > > > +             { 105, -8000, 100}, /* TEMP_JC */
-> > > > > +             { 1250, 0, 1}, /* VREF_TS */
-> > > > > +             { 1250, 0, 1}, /* TS */
-> > > > > +     }, sp_ibus_adc_converter = { 1900, 0, 1 }, *sel_converter;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     sel_converter = adc_converter + chan_idx;
-> > > > > +     if (chan_idx == MT6360_CHAN_IBUS) {
-> > > > > +             /* ibus chan will be affected by aicr config */
-> > > > > +             /* if aicr < 400, apply the special ibus converter */
-> > > > > +             ret = regmap_read(info->regmap, MT6360_REG_PMUCHGCTRL3, &regval);
-> > > > > +             if (ret)
-> > > > > +                     return ret;
-> > > > > +
-> > > > > +             regval = (regval & MT6360_AICR_MASK) >> MT6360_AICR_SHFT;
-> > > > > +             if (regval < MT6360_AICR_400MA)
-> > > > > +                     sel_converter = &sp_ibus_adc_converter;
-> > > > > +     }
-> > > > > +
-> > > > > +     *val = mt6360_adc_val_converter(*val, sel_converter->multiplier, sel_converter->offset,
-> > > > > +                                     sel_converter->divisor);
-> > > > > +
-> > > > > +     return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static int mt6360_adc_read_processed(struct mt6360_adc_data *mad, int channel, int *val)
-> > > > > +{
-> > > > > +     u16 adc_enable;
-> > > > > +     u8 rpt[3];
-> > > > > +     ktime_t start_t, predict_end_t;
-> > > > > +     long timeout;
-> > > > > +     int value, ret;
-> > > > > +
-> > > > > +     mutex_lock(&mad->adc_lock);
-> > > > > +
-> > > > > +     /* select preferred channel that we want */
-> > > > > +     ret = regmap_update_bits(mad->regmap, MT6360_REG_PMUADCRPT1, MT6360_PREFERCH_MASK,
-> > > > > +                              channel << MT6360_PREFERCH_SHFT);
-> > > > > +     if (ret)
-> > > > > +             goto out_adc;
-> > > > > +
-> > > > > +     /* enable adc channel we want and adc_en */
-> > > > > +     adc_enable = MT6360_ADCEN_MASK | BIT(channel);
-> > > > > +     adc_enable = cpu_to_be16(adc_enable);  
-> > > >
-> > > > Use a local be16 to store that. It will make it a little clearer
-> > > > that we are doing something 'unusual' here.  Perhaps a comment on
-> > > > why this odd code exists would also help?
-> > > >  
-> > >
-> > > ACK
-> > >  
-> > > > > +     ret = regmap_raw_write(mad->regmap, MT6360_REG_PMUADCCFG, (void *)&adc_enable, sizeof(u16));
-> > > > > +     if (ret)
-> > > > > +             goto out_adc;
-> > > > > +
-> > > > > +     start_t = ktime_get();
-> > > > > +     predict_end_t = ktime_add_ms(mad->last_off_timestamps[channel], 50);
-> > > > > +
-> > > > > +     if (ktime_after(start_t, predict_end_t))
-> > > > > +             predict_end_t = ktime_add_ms(start_t, 25);
-> > > > > +     else
-> > > > > +             predict_end_t = ktime_add_ms(start_t, 75);
-> > > > > +
-> > > > > +     enable_irq(mad->irq);
-> > > > > +adc_retry:
-> > > > > +     reinit_completion(&mad->adc_complete);
-> > > > > +
-> > > > > +     /* wait for conversion to complete */
-> > > > > +     timeout = wait_for_completion_timeout(&mad->adc_complete, msecs_to_jiffies(200));
-> > > > > +     if (timeout == 0) {
-> > > > > +             ret = -ETIMEDOUT;
-> > > > > +             goto out_adc_conv;
-> > > > > +     } else if (timeout < 0) {
-> > > > > +             ret = -EINTR;
-> > > > > +             goto out_adc_conv;
-> > > > > +     }
-> > > > > +
-> > > > > +     ret = regmap_raw_read(mad->regmap, MT6360_REG_PMUADCRPT1, rpt, sizeof(rpt));
-> > > > > +     if (ret)
-> > > > > +             goto out_adc_conv;
-> > > > > +
-> > > > > +     /* check the current reported channel */
-> > > > > +     if ((rpt[0] & MT6360_RPTCH_MASK) != channel) {
-> > > > > +             dev_dbg(mad->dev, "not wanted channel report [%02x]\n", rpt[0]);  
-> > > >
-> > > > This and the one below feel like error messages rather than debug ones.
-> > > >  
-> > >
-> > > We have two function "battery zero current voltage(ZCV)" and "TypeC
-> > > OTP" will auto run ADC at background.
-> > > ZCV_EN will run VBAT_ADC when TA plug in, TypeC OTP will run TS_ADC
-> > > when TypeC attach.
-> > > We need to check report channel for ADC report data match is our desire channel.  
-> >
-> > So there is firmware messing with it underneath?  Oh goody.
-> > Add a comment explaining this.
-> >  
-> 
-> ACK, I try to write a comment as below
-> 
->         /*
->          * There are two functions, ZCV and TypeC OTP, running ADC
-> VBAT and TS in background,
->          * and ADC samples are taken on a fixed frequency no matter
-> read the previous one or not.
->          * To avoid conflict need set minimum time threshold after
-> enable ADC and check report
->          * channel is the same.
->          * The worst case is run the same ADC twice and background
-> function is also running,
->          * ADC conversion sequence is desire channel before start ADC,
-> background ADC, desire
->          * channel after start ADC. So the minimum correct data is
-> three times of typical
->          * conversion time.
->          */
-
-Looks good.
-
-> 
-> > >  
-> > > > > +             goto adc_retry;
-> > > > > +     }
-> > > > > +
-> > > > > +     if (!ktime_after(ktime_get(), predict_end_t)) {
-> > > > > +             dev_dbg(mad->dev, "time is not after one adc_conv_t\n");  
-> > > >
-> > > > Does this actually happen? If feels like we are being a bit over protective
-> > > > here.  I'd definitely like to see a comment saying why this protection
-> > > > might be needed.
-> > > >  
-> > >
-> > > When ADC_EN and MT6360_CHANx_EN is enable, the channel x will keep
-> > > running again and again
-> > > I supposed to get immediate data which is generated after I start it.  
-> >
-> > Just to check my understanding.
-> >
-> > This is an edge triggered interrupt and it triggers every time a new sample
-> > is taken.  Those samples are taken on a fixed frequency irrespective of whether
-> > we have read the previous one?
-> >  
-> 
-> Yes.
-> I use LEVEL_LOW trigger in latest review MFD patch.
-
-I'm not sure I follow that comment.  How can you do that if it's a repeating
-edge trigger? 
-
-> 
-> > >
-> > > When I disable ADC_CHANx_EN, the H/W logical ADC is still running.
-> > > If I run the same ADC immediately, I may get the old result about this channel.
-> > > MT6360 ADC typical conversation time is about 25ms.
-> > > So We need ignore which irq trigger below 25ms.  
-> >
-> > Normal trick for this sort of case is to just not use the interrupt.
-> > Just read after 25+delta msecs and you are guaranteed to get the right answer.
-> >
-> >  
-> 
-> ACK, I will try to use polling
-> Is the pseudocode correct?
-> 
-> mdelay(predict_end_t);
-> while (true) {
->     read adc event is occured
->     check report channel is the same
->     if the same, read report ADC data and break while loop
->     else msleep(per ADC conversion time)
-> }
-
-Looks correct to me.  We should 'know' the event has happened but
-still need to check the channel is the expected one.
-
-...
-
+							Thanx, Paul
