@@ -2,93 +2,141 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD06C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF82C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02C1320658
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fJqbIq7w"
+	by mail.kernel.org (Postfix) with ESMTP id BD32320658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:31:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593513;
+	bh=Zrta8asgImS4Hpgo1V9zLaLLHHYj8NOiLwkbHAizcAI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nm3fQtFQ0jNDphUUdbZPHWPA1WHCKxovjvaaaLjSClsS/VCqtB/IsleL/+TpEPVWm
+	 A2adL2rnGl7J3EUOW2LvebGggU7r+hgHhyUAVxQda2L2DdIedqjbOxDRcij7PkCUv4
+	 eM44DZIZry4fstnrpCpnnOskc0J62cpvihXs/J80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731458AbgIHTb3 (ORCPT
+        id S1731973AbgIHTbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731130AbgIHTae (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:30:34 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E892C0613ED
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 12:30:32 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f10bf0059bdf9fa8e813382.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:59bd:f9fa:8e81:3382])
+        Tue, 8 Sep 2020 15:31:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731002AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:58:05 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CCA7C1EC02B9;
-        Tue,  8 Sep 2020 21:30:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599593429;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=4Z3SaY9hLpwpb++kP8jU/6wRFeEbV6IvS5RvGnja5vE=;
-        b=fJqbIq7w2ddlu/9gyzcdM/lrAC98pbJDH8w43vlzuiRzeH8tDGn+iS/Wwhpuem/QKtktet
-        Lcp4IKgOPSiwcOymgS4CF5fkP1iz3n8CG25n1wPaW36aRz1xDTSneNF/+bMJk5GTjWYxlB
-        3+zMUho5DQXOn61YCkaVmRyYCemlHiQ=
-Date:   Tue, 8 Sep 2020 21:30:29 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-Message-ID: <20200908193029.GM25236@zn.tnic>
-References: <20200907094843.1949-1-Jason@zx2c4.com>
- <20200907100647.GB10657@zn.tnic>
- <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
- <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
- <20200908172558.GG25236@zn.tnic>
- <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
- <20200908173656.GI25236@zn.tnic>
- <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
- <20200908180112.GK25236@zn.tnic>
- <20200908191838.GA2014@sultan-box.localdomain>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E26C246E2;
+        Tue,  8 Sep 2020 15:40:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579610;
+        bh=Zrta8asgImS4Hpgo1V9zLaLLHHYj8NOiLwkbHAizcAI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wM74pc7XPB3qFecZSbutkDnk/Q7VV+9oEkSy/A57hkZnxw+pGrie/24O6O6/0EHiH
+         VT+V7JehnyBhUnlW4HDgv5TlunlnaUzetDmlmccQL0xJxa5MwJhgd8NzlsV7jvbzXx
+         nCKSEFnmQzXunasdpxjKInqzOQb+T3IpF2oPY78c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com,
+        Hillf Danton <hdanton@sina.com>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.8 150/186] media: rc: uevent sysfs file races with rc_unregister_device()
+Date:   Tue,  8 Sep 2020 17:24:52 +0200
+Message-Id: <20200908152248.929464358@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200908191838.GA2014@sultan-box.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 12:18:38PM -0700, Sultan Alsawaf wrote:
-> I'd like to point out that on Intel's recent 14nm parts, undervolting
-> is not so much for squeezing every last drop of performance out of the
-> SoC as it is for necessity.
+From: Sean Young <sean@mess.org>
 
-<snip interesting examples>
+commit 4f0835d6677dc69263f90f976524cb92b257d9f4 upstream.
 
-Sounds to me that this undervolting functionality should be part of
-the kernel and happen automatically. I have no clue, though, whether
-people who do it, just get lucky and undervolting doesn't cause any
-other hardware issues, or there's a real reason for this power madness
-and if not done, power-related failures happen only on some boxes so
-they decided to do them on all.
+Only report uevent file contents if device still registered, else we
+might read freed memory.
 
-Or maybe BIOS is nuts, which is not a stretch.
+Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Srinivas, what's the story here?
+---
+ drivers/media/rc/rc-main.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
--- 
-Regards/Gruss,
-    Boris.
+--- a/drivers/media/rc/rc-main.c
++++ b/drivers/media/rc/rc-main.c
+@@ -1613,25 +1613,25 @@ static void rc_dev_release(struct device
+ 	kfree(dev);
+ }
+ 
+-#define ADD_HOTPLUG_VAR(fmt, val...)					\
+-	do {								\
+-		int err = add_uevent_var(env, fmt, val);		\
+-		if (err)						\
+-			return err;					\
+-	} while (0)
+-
+ static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
+ {
+ 	struct rc_dev *dev = to_rc_dev(device);
++	int ret = 0;
+ 
+-	if (dev->rc_map.name)
+-		ADD_HOTPLUG_VAR("NAME=%s", dev->rc_map.name);
+-	if (dev->driver_name)
+-		ADD_HOTPLUG_VAR("DRV_NAME=%s", dev->driver_name);
+-	if (dev->device_name)
+-		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
++	mutex_lock(&dev->lock);
+ 
+-	return 0;
++	if (!dev->registered)
++		ret = -ENODEV;
++	if (ret == 0 && dev->rc_map.name)
++		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
++	if (ret == 0 && dev->driver_name)
++		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
++	if (ret == 0 && dev->device_name)
++		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
++
++	mutex_unlock(&dev->lock);
++
++	return ret;
+ }
+ 
+ /*
+@@ -2023,14 +2023,14 @@ void rc_unregister_device(struct rc_dev
+ 	del_timer_sync(&dev->timer_keyup);
+ 	del_timer_sync(&dev->timer_repeat);
+ 
+-	rc_free_rx_device(dev);
+-
+ 	mutex_lock(&dev->lock);
+ 	if (dev->users && dev->close)
+ 		dev->close(dev);
+ 	dev->registered = false;
+ 	mutex_unlock(&dev->lock);
+ 
++	rc_free_rx_device(dev);
++
+ 	/*
+ 	 * lirc device should be freed with dev->registered = false, so
+ 	 * that userspace polling will get notified.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
