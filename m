@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD94C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C09C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B58E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD922208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599589866;
-	bh=dSgfDF7A+7Ljbs8JZpiJIeXcJxK9p0Odimxqp23FnoM=;
+	s=default; t=1599589870;
+	bh=d6cW1362UUvBQmj+ryx5yQSEiJ9hRL5OR5ltO0kSPYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H92cXbRerPwCUfsuLK6B7WtwaZt4h4mdFnf10xGTASOXscKBJhOE5vHjnwN4R+iLO
-	 tIYuruPNFmFXCSYi5Kk7fOvbS5+FFGFkM3u2/zdnDWSZd8Ds7+w34Cd4U/2dhC2bRT
-	 wFTXPKFtq+9Gnu+TMlHM/fPoc76UzE+bSeNn2fxc=
+	b=Pk8gZxcFiWGHmgG0Ny+OH0JjoL88XsvN6jZnhp/e+sm2GDdq2nhhuR9klPMK/CsGi
+	 bkNwBCl5SQhu+0GE7AVxBIgZOTDQ/MbPFWzeMDw1zr31mSlQExJMQIrc1dZ7CmYIdE
+	 VBzg6BvTZOscMyuLO2M9EMp4vgNHIEaKToIztgTg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731781AbgIHSbE (ORCPT
+        id S1731791AbgIHSbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:31:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbgIHQJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:09:38 -0400
+        id S1730710AbgIHQJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:09:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02D2E24641;
-        Tue,  8 Sep 2020 15:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 571992463E;
+        Tue,  8 Sep 2020 15:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580206;
-        bh=dSgfDF7A+7Ljbs8JZpiJIeXcJxK9p0Odimxqp23FnoM=;
+        s=default; t=1599580201;
+        bh=d6cW1362UUvBQmj+ryx5yQSEiJ9hRL5OR5ltO0kSPYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kg+314HE8WH2lxtTDmsYluclG0oTPnCTB0c80VymJEw3ki87hEqyRL+RrlWZn6JlY
-         778QuF3NIG4dCkb/jEXkWnoj4deXhWMna19IAvxakGDzNCcstV+VEIgjMa29PWqiKi
-         UTe2XglTx1A+hsHNBlFD0qiYt6qdJv7dz8KjAsWY=
+        b=eLADgTgfsM019pr9UGH2FiZaPyN8sH6huce0KXgSzGNvNdza828z2ScjPYyMUp8gS
+         RXbQyDMUJmRcO7+Dh76pc5bheN6bTbsoOsk5o+p14v/amp6NoNQ01Jstfff9+6sDBh
+         VSk09dqKOZlHZ11OHrhTQvqi2Q42nZroAeD/aqQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 72/88] media: rc: uevent sysfs file races with rc_unregister_device()
-Date:   Tue,  8 Sep 2020 17:26:13 +0200
-Message-Id: <20200908152224.785231848@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Crawford <dnlcrwfrd@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 70/88] ALSA: hda - Fix silent audio output and corrupted input on MSI X570-A PRO
+Date:   Tue,  8 Sep 2020 17:26:11 +0200
+Message-Id: <20200908152224.673016973@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -61,82 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Dan Crawford <dnlcrwfrd@gmail.com>
 
-commit 4f0835d6677dc69263f90f976524cb92b257d9f4 upstream.
+commit 15cbff3fbbc631952c346744f862fb294504b5e2 upstream.
 
-Only report uevent file contents if device still registered, else we
-might read freed memory.
+Following Christian Lachner's patch for Gigabyte X570-based motherboards,
+also patch the MSI X570-A PRO motherboard; the ALC1220 codec requires the
+same workaround for Clevo laptops to enforce the DAC/mixer connection
+path. Set up a quirk entry for that.
 
-Reported-by: syzbot+ceef16277388d6f24898@syzkaller.appspotmail.com
-Cc: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org> # 4.16+
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+I suspect most if all X570 motherboards will require similar patches.
+
+[ The entries reordered in the SSID order -- tiwai ]
+
+Related buglink: https://bugzilla.kernel.org/show_bug.cgi?id=205275
+Signed-off-by: Dan Crawford <dnlcrwfrd@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200829024946.5691-1-dnlcrwfrd@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/rc/rc-main.c |   32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+ sound/pci/hda/patch_realtek.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1568,25 +1568,25 @@ static void rc_dev_release(struct device
- 	kfree(dev);
- }
- 
--#define ADD_HOTPLUG_VAR(fmt, val...)					\
--	do {								\
--		int err = add_uevent_var(env, fmt, val);		\
--		if (err)						\
--			return err;					\
--	} while (0)
--
- static int rc_dev_uevent(struct device *device, struct kobj_uevent_env *env)
- {
- 	struct rc_dev *dev = to_rc_dev(device);
-+	int ret = 0;
- 
--	if (dev->rc_map.name)
--		ADD_HOTPLUG_VAR("NAME=%s", dev->rc_map.name);
--	if (dev->driver_name)
--		ADD_HOTPLUG_VAR("DRV_NAME=%s", dev->driver_name);
--	if (dev->device_name)
--		ADD_HOTPLUG_VAR("DEV_NAME=%s", dev->device_name);
-+	mutex_lock(&dev->lock);
- 
--	return 0;
-+	if (!dev->registered)
-+		ret = -ENODEV;
-+	if (ret == 0 && dev->rc_map.name)
-+		ret = add_uevent_var(env, "NAME=%s", dev->rc_map.name);
-+	if (ret == 0 && dev->driver_name)
-+		ret = add_uevent_var(env, "DRV_NAME=%s", dev->driver_name);
-+	if (ret == 0 && dev->device_name)
-+		ret = add_uevent_var(env, "DEV_NAME=%s", dev->device_name);
-+
-+	mutex_unlock(&dev->lock);
-+
-+	return ret;
- }
- 
- /*
-@@ -1970,14 +1970,14 @@ void rc_unregister_device(struct rc_dev
- 	del_timer_sync(&dev->timer_keyup);
- 	del_timer_sync(&dev->timer_repeat);
- 
--	rc_free_rx_device(dev);
--
- 	mutex_lock(&dev->lock);
- 	if (dev->users && dev->close)
- 		dev->close(dev);
- 	dev->registered = false;
- 	mutex_unlock(&dev->lock);
- 
-+	rc_free_rx_device(dev);
-+
- 	/*
- 	 * lirc device should be freed with dev->registered = false, so
- 	 * that userspace polling will get notified.
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2452,6 +2452,7 @@ static const struct snd_pci_quirk alc882
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1293, "MSI-GP65", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x7350, "MSI-7350", ALC889_FIXUP_CD),
++	SND_PCI_QUIRK(0x1462, 0x9c37, "MSI X570-A PRO", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0xda57, "MSI Z270-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK_VENDOR(0x1462, "MSI", ALC882_FIXUP_GPIO3),
+ 	SND_PCI_QUIRK(0x147b, 0x107a, "Abit AW9D-MAX", ALC882_FIXUP_ABIT_AW9D_MAX),
 
 
