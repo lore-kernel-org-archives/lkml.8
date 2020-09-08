@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B53C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27BDFC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF9B20757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0B9320757
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599591728;
-	bh=SnhMWmzmg7U2wHICGhftKux9B8t0eujT1pzZztDxgMY=;
+	s=default; t=1599591731;
+	bh=6fg3I0O5pVXO6oJlRe9nFt8co8urfsIetV2PvPyC4mA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zs6tIUiwExPtofZTG4X9AiJrA3gW25sW5Ntbow4HI6aSmXzFTM+VEZ+Hrh+lIPcXy
-	 L6AH/EFestFgBrhykXxoXg2BGomVT+1NCAsCiEbkaCcj9Ie8WKZAhhBncGNwsmU7NT
-	 9UvsaKGucS6cE55uahGVhhxoZoU0QFbF+aux5z1g=
+	b=sK2z9u9yw6nFUbKRF4DtYUI4voaWa7vzBSQ/cc4QP7q7TmdWOp9bTFvKwdXQGPH4B
+	 3nq0YuXqxVyMuFEbs4toi9ojgII8NDDPHBzcLWrY2xjCMgk1ny+8bDWNg9cC8VoFs+
+	 s7ksUgThblT3euam17P8SJ9zXfatqMhsnxDF8EsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731641AbgIHTCG (ORCPT
+        id S1731629AbgIHTCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:02:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731300AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731287AbgIHQIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:08:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A08A923F59;
-        Tue,  8 Sep 2020 15:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E228C23F28;
+        Tue,  8 Sep 2020 15:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580089;
-        bh=SnhMWmzmg7U2wHICGhftKux9B8t0eujT1pzZztDxgMY=;
+        s=default; t=1599580079;
+        bh=6fg3I0O5pVXO6oJlRe9nFt8co8urfsIetV2PvPyC4mA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EEj1sgAF7OX9JMCgVOwClYSfH8eNMdTAIJ46Veo4z1cFrKRNoj5ZQMlvw56JsTECF
-         KPdDt4gD6fLwy+L3b4Uc6HrFW2VbcxgdtaXyrcjLTyPyS9D1Zt010EuBLNd97w5G3e
-         ii9MOT1AWgl4pjUq/uZ2a/OUlea2rAypte4qNQU8=
+        b=rO/abIxoCn1uZI7MMLtB/aKByZdNDtgN2NQjLQrrTkjteR6YqIXY3qIX1SPmT6qbi
+         KyTDQ1NuWBjrmkHdoVz9YASmLWEf7qWyHnvu+aXxaklzTRwMpz0y0TFzpR5M5l1J1K
+         41Kr50G1bhDDy+np4mhCNLhv10S+vtlS7ctul754=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuusuke Ashizuka <ashiduka@fujitsu.com>,
-        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 27/88] ravb: Fixed to be able to unload modules
-Date:   Tue,  8 Sep 2020 17:25:28 +0200
-Message-Id: <20200908152222.433250000@linuxfoundation.org>
+Subject: [PATCH 4.19 23/88] netfilter: nf_tables: incorrect enum nft_list_attributes definition
+Date:   Tue,  8 Sep 2020 17:25:24 +0200
+Message-Id: <20200908152222.232140166@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
 References: <20200908152221.082184905@linuxfoundation.org>
@@ -61,206 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuusuke Ashizuka <ashiduka@fujitsu.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 1838d6c62f57836639bd3d83e7855e0ee4f6defc ]
+[ Upstream commit da9125df854ea48a6240c66e8a67be06e2c12c03 ]
 
-When this driver is built as a module, I cannot rmmod it after insmoding
-it.
-This is because that this driver calls ravb_mdio_init() at the time of
-probe, and module->refcnt is incremented by alloc_mdio_bitbang() called
-after that.
-Therefore, even if ifup is not performed, the driver is in use and rmmod
-cannot be performed.
+This should be NFTA_LIST_UNSPEC instead of NFTA_LIST_UNPEC, all other
+similar attribute definitions are postfixed with _UNSPEC.
 
-$ lsmod
-Module                  Size  Used by
-ravb                   40960  1
-$ rmmod ravb
-rmmod: ERROR: Module ravb is in use
-
-Call ravb_mdio_init() at open and free_mdio_bitbang() at close, thereby
-rmmod is possible in the ifdown state.
-
-Fixes: c156633f1353 ("Renesas Ethernet AVB driver proper")
-Signed-off-by: Yuusuke Ashizuka <ashiduka@fujitsu.com>
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/ravb_main.c | 110 +++++++++++------------
- 1 file changed, 55 insertions(+), 55 deletions(-)
+ include/uapi/linux/netfilter/nf_tables.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 569e698b5c807..b5066cf86c856 100644
---- a/drivers/net/ethernet/renesas/ravb_main.c
-+++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -1337,6 +1337,51 @@ static inline int ravb_hook_irq(unsigned int irq, irq_handler_t handler,
- 	return error;
- }
- 
-+/* MDIO bus init function */
-+static int ravb_mdio_init(struct ravb_private *priv)
-+{
-+	struct platform_device *pdev = priv->pdev;
-+	struct device *dev = &pdev->dev;
-+	int error;
-+
-+	/* Bitbang init */
-+	priv->mdiobb.ops = &bb_ops;
-+
-+	/* MII controller setting */
-+	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
-+	if (!priv->mii_bus)
-+		return -ENOMEM;
-+
-+	/* Hook up MII support for ethtool */
-+	priv->mii_bus->name = "ravb_mii";
-+	priv->mii_bus->parent = dev;
-+	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
-+		 pdev->name, pdev->id);
-+
-+	/* Register MDIO bus */
-+	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
-+	if (error)
-+		goto out_free_bus;
-+
-+	return 0;
-+
-+out_free_bus:
-+	free_mdio_bitbang(priv->mii_bus);
-+	return error;
-+}
-+
-+/* MDIO bus release function */
-+static int ravb_mdio_release(struct ravb_private *priv)
-+{
-+	/* Unregister mdio bus */
-+	mdiobus_unregister(priv->mii_bus);
-+
-+	/* Free bitbang info */
-+	free_mdio_bitbang(priv->mii_bus);
-+
-+	return 0;
-+}
-+
- /* Network device open function for Ethernet AVB */
- static int ravb_open(struct net_device *ndev)
- {
-@@ -1345,6 +1390,13 @@ static int ravb_open(struct net_device *ndev)
- 	struct device *dev = &pdev->dev;
- 	int error;
- 
-+	/* MDIO bus init */
-+	error = ravb_mdio_init(priv);
-+	if (error) {
-+		netdev_err(ndev, "failed to initialize MDIO\n");
-+		return error;
-+	}
-+
- 	napi_enable(&priv->napi[RAVB_BE]);
- 	napi_enable(&priv->napi[RAVB_NC]);
- 
-@@ -1422,6 +1474,7 @@ out_free_irq:
- out_napi_off:
- 	napi_disable(&priv->napi[RAVB_NC]);
- 	napi_disable(&priv->napi[RAVB_BE]);
-+	ravb_mdio_release(priv);
- 	return error;
- }
- 
-@@ -1721,6 +1774,8 @@ static int ravb_close(struct net_device *ndev)
- 	ravb_ring_free(ndev, RAVB_BE);
- 	ravb_ring_free(ndev, RAVB_NC);
- 
-+	ravb_mdio_release(priv);
-+
- 	return 0;
- }
- 
-@@ -1867,51 +1922,6 @@ static const struct net_device_ops ravb_netdev_ops = {
- 	.ndo_set_features	= ravb_set_features,
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index 5eac62e1b68d5..cc00be102b9fb 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -132,7 +132,7 @@ enum nf_tables_msg_types {
+  * @NFTA_LIST_ELEM: list element (NLA_NESTED)
+  */
+ enum nft_list_attributes {
+-	NFTA_LIST_UNPEC,
++	NFTA_LIST_UNSPEC,
+ 	NFTA_LIST_ELEM,
+ 	__NFTA_LIST_MAX
  };
- 
--/* MDIO bus init function */
--static int ravb_mdio_init(struct ravb_private *priv)
--{
--	struct platform_device *pdev = priv->pdev;
--	struct device *dev = &pdev->dev;
--	int error;
--
--	/* Bitbang init */
--	priv->mdiobb.ops = &bb_ops;
--
--	/* MII controller setting */
--	priv->mii_bus = alloc_mdio_bitbang(&priv->mdiobb);
--	if (!priv->mii_bus)
--		return -ENOMEM;
--
--	/* Hook up MII support for ethtool */
--	priv->mii_bus->name = "ravb_mii";
--	priv->mii_bus->parent = dev;
--	snprintf(priv->mii_bus->id, MII_BUS_ID_SIZE, "%s-%x",
--		 pdev->name, pdev->id);
--
--	/* Register MDIO bus */
--	error = of_mdiobus_register(priv->mii_bus, dev->of_node);
--	if (error)
--		goto out_free_bus;
--
--	return 0;
--
--out_free_bus:
--	free_mdio_bitbang(priv->mii_bus);
--	return error;
--}
--
--/* MDIO bus release function */
--static int ravb_mdio_release(struct ravb_private *priv)
--{
--	/* Unregister mdio bus */
--	mdiobus_unregister(priv->mii_bus);
--
--	/* Free bitbang info */
--	free_mdio_bitbang(priv->mii_bus);
--
--	return 0;
--}
--
- static const struct of_device_id ravb_match_table[] = {
- 	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
- 	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
-@@ -2138,13 +2148,6 @@ static int ravb_probe(struct platform_device *pdev)
- 		eth_hw_addr_random(ndev);
- 	}
- 
--	/* MDIO bus init */
--	error = ravb_mdio_init(priv);
--	if (error) {
--		dev_err(&pdev->dev, "failed to initialize MDIO\n");
--		goto out_dma_free;
--	}
--
- 	netif_napi_add(ndev, &priv->napi[RAVB_BE], ravb_poll, 64);
- 	netif_napi_add(ndev, &priv->napi[RAVB_NC], ravb_poll, 64);
- 
-@@ -2166,8 +2169,6 @@ static int ravb_probe(struct platform_device *pdev)
- out_napi_del:
- 	netif_napi_del(&priv->napi[RAVB_NC]);
- 	netif_napi_del(&priv->napi[RAVB_BE]);
--	ravb_mdio_release(priv);
--out_dma_free:
- 	dma_free_coherent(ndev->dev.parent, priv->desc_bat_size, priv->desc_bat,
- 			  priv->desc_bat_dma);
- 
-@@ -2199,7 +2200,6 @@ static int ravb_remove(struct platform_device *pdev)
- 	unregister_netdev(ndev);
- 	netif_napi_del(&priv->napi[RAVB_NC]);
- 	netif_napi_del(&priv->napi[RAVB_BE]);
--	ravb_mdio_release(priv);
- 	pm_runtime_disable(&pdev->dev);
- 	free_netdev(ndev);
- 	platform_set_drvdata(pdev, NULL);
 -- 
 2.25.1
 
