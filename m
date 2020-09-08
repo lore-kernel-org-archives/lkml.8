@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E678205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88477205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599582192;
-	bh=xEyKS4E47yTjH2Bua1sZXek4xDKW+5vOh+n8Igii48E=;
+	s=default; t=1599582219;
+	bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ikch0fpSP0Qc9PN19zcu9jTW96HHSKAgebFyzOq7FH2g182Zi0qkNAbsuI3/PTAzf
-	 BfFJpsoVXacyDeXzmLv9YJY+sDrn2P4wfEl+a+vhWfhIAl/LiIsHnEaHH70eambzY4
-	 bBDggH04Ic5FdqKpMvXZTe1lhcmtxK4FL9B6S634=
+	b=d+1hXIHgN7FBLeTUeAvqMLNY0CAe5B+U2NRuC+jiQFpd4FoTX1/tpdvPbP1BOplYL
+	 K/sP4vz51Jri5LUSfu2fYIvdABNgZgYLPIFQvzntDeYepB2wHN8HsvhLpa3OTC2SP+
+	 eM1cttm+Wr3Q9r9CY2Br794Q3BOA1AU+JseLATdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbgIHQXJ (ORCPT
+        id S1731914AbgIHQXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:23:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731438AbgIHQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:32 -0400
+        id S1731485AbgIHQLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25780247FF;
-        Tue,  8 Sep 2020 15:43:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 894AA247A3;
+        Tue,  8 Sep 2020 15:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579784;
-        bh=xEyKS4E47yTjH2Bua1sZXek4xDKW+5vOh+n8Igii48E=;
+        s=default; t=1599579739;
+        bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fz6WrSVxn8SmjBbSVC3OKg/hPzyK3PgYiCyrpJ4vs/WLjSm3OcugPHR7Kcs3sGJis
-         YOWJbs7NgQ/F/tT+9rGT9pur6aFqePbI9eZ64QRomEp1LRLuW+gawM23GUhKJkVZmN
-         1SwBU130CDy/TtccRM5ZCJ0KL3TYgA7PfMAZ6n5Q=
+        b=Ws5DnOlIOoIvbUczQ2QFsJi6AHcq+vCfISQDAR2iUyqWlmmoe6hbeNazqUbk+Q1b4
+         TOeADYni0+w8zJ8gd/vrycDrz5i/MmUGAQ1j/Rf55vw4hqqKPPhnKblyMLbQOgNyEX
+         Bim1LfOSor736yoUgrR3OiBRQ+FiEKzCT/WFI3b0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/129] netfilter: nf_tables: add NFTA_SET_USERDATA if not null
-Date:   Tue,  8 Sep 2020 17:24:33 +0200
-Message-Id: <20200908152231.300051626@linuxfoundation.org>
+Subject: [PATCH 5.4 007/129] drm/msm: enable vblank during atomic commits
+Date:   Tue,  8 Sep 2020 17:24:08 +0200
+Message-Id: <20200908152230.064825517@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,34 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit 6f03bf43ee05b31d3822def2a80f11b3591c55b3 ]
+[ Upstream commit 43906812eaab06423f56af5cca9a9fcdbb4ac454 ]
 
-Kernel sends an empty NFTA_SET_USERDATA attribute with no value if
-userspace adds a set with no NFTA_SET_USERDATA attribute.
+This has roughly the same effect as drm_atomic_helper_wait_for_vblanks(),
+basically just ensuring that vblank accounting is enabled so that we get
+valid timestamp/seqn on pageflip events.
 
-Fixes: e6d8ecac9e68 ("netfilter: nf_tables: Add new attributes into nft_set to store user data.")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/msm_atomic.c | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index f7129232c8250..c1920adb27e62 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3353,7 +3353,8 @@ static int nf_tables_fill_set(struct sk_buff *skb, const struct nft_ctx *ctx,
- 			goto nla_put_failure;
- 	}
+diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
+index 5ccfad794c6a5..561bfa48841c3 100644
+--- a/drivers/gpu/drm/msm/msm_atomic.c
++++ b/drivers/gpu/drm/msm/msm_atomic.c
+@@ -27,6 +27,34 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
+ 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
+ }
  
--	if (nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
-+	if (set->udata &&
-+	    nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
- 		goto nla_put_failure;
++/*
++ * Helpers to control vblanks while we flush.. basically just to ensure
++ * that vblank accounting is switched on, so we get valid seqn/timestamp
++ * on pageflip events (if requested)
++ */
++
++static void vblank_get(struct msm_kms *kms, unsigned crtc_mask)
++{
++	struct drm_crtc *crtc;
++
++	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
++		if (!crtc->state->active)
++			continue;
++		drm_crtc_vblank_get(crtc);
++	}
++}
++
++static void vblank_put(struct msm_kms *kms, unsigned crtc_mask)
++{
++	struct drm_crtc *crtc;
++
++	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
++		if (!crtc->state->active)
++			continue;
++		drm_crtc_vblank_put(crtc);
++	}
++}
++
+ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
+ {
+ 	unsigned crtc_mask = BIT(crtc_idx);
+@@ -44,6 +72,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
  
- 	desc = nla_nest_start_noflag(skb, NFTA_SET_DESC);
+ 	kms->funcs->enable_commit(kms);
+ 
++	vblank_get(kms, crtc_mask);
++
+ 	/*
+ 	 * Flush hardware updates:
+ 	 */
+@@ -58,6 +88,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
+ 	kms->funcs->wait_flush(kms, crtc_mask);
+ 	trace_msm_atomic_wait_flush_finish(crtc_mask);
+ 
++	vblank_put(kms, crtc_mask);
++
+ 	mutex_lock(&kms->commit_lock);
+ 	kms->funcs->complete_commit(kms, crtc_mask);
+ 	mutex_unlock(&kms->commit_lock);
+@@ -221,6 +253,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	 */
+ 	kms->pending_crtc_mask &= ~crtc_mask;
+ 
++	vblank_get(kms, crtc_mask);
++
+ 	/*
+ 	 * Flush hardware updates:
+ 	 */
+@@ -235,6 +269,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
+ 	kms->funcs->wait_flush(kms, crtc_mask);
+ 	trace_msm_atomic_wait_flush_finish(crtc_mask);
+ 
++	vblank_put(kms, crtc_mask);
++
+ 	mutex_lock(&kms->commit_lock);
+ 	kms->funcs->complete_commit(kms, crtc_mask);
+ 	mutex_unlock(&kms->commit_lock);
 -- 
 2.25.1
 
