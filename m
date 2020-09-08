@@ -2,130 +2,105 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEA4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7970C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1BA20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A50CA208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:16:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LnUUniRS"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LDlIF57Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgIHUQh (ORCPT
+        id S1730068AbgIHUQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:16:37 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49058 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730061AbgIHPKC (ORCPT
+        Tue, 8 Sep 2020 16:16:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbgIHPKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:10:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599577783;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2cueM2qypxC5hhXald83yr234ALXWJo20T0dOc3djUg=;
-        b=LnUUniRSYJBfa8Jyyl9fPZ41sNN+oEDAg7wiDcegXKuHvxCSkUi9u8fD5pRTY1rC5wSIj7
-        CxjCsj+bx9VpO/vBjyi0PXIMUbMm+hG0pjZMXL+mBzXvAGULTQTgwwKPZENcn3Q6phHDZO
-        wG2QTI1LkxsT9pycQZK52Whk3EbIhlI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-dkNnVODiN-qgsJcFfHIZvg-1; Tue, 08 Sep 2020 10:29:33 -0400
-X-MC-Unique: dkNnVODiN-qgsJcFfHIZvg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E3E01008552;
-        Tue,  8 Sep 2020 14:29:31 +0000 (UTC)
-Received: from w520.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73CB510013C4;
-        Tue,  8 Sep 2020 14:29:27 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 08:29:06 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>,
-        <cohuck@redhat.com>, <peterx@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <srivatsab@vmware.com>, <srivatsa@csail.mit.edu>,
-        <vsirnapalli@vmware.com>
-Subject: Re: [PATCH v4.9.y 0/3] vfio: Fix for CVE-2020-12888
-Message-ID: <20200908082906.6ceaa0b9@w520.home>
-In-Reply-To: <1599510917-23734-4-git-send-email-akaher@vmware.com>
-References: <1599510917-23734-1-git-send-email-akaher@vmware.com>
-        <1599510917-23734-4-git-send-email-akaher@vmware.com>
+        Tue, 8 Sep 2020 11:10:01 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 680CBC0619ED
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 06:58:19 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id jw11so2175289pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 06:58:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xfiGgLfl6xBSxCvQGQIeZLhg6EqD8qTgC7ENKGicg+c=;
+        b=LDlIF57Z6gkV3MrqfZIfCLnhf8F5yjfc1yJBhx2bdIN5a5XgB/V7XTL+ga5NXCd/qZ
+         2VGOlNA45XJrJMyum81fLgD4T1RTIx79vn8NhzsHCEDllluRnwA9PC9nn6P1ksavwRCB
+         IgA6kLxgf2XJsn+yAjnBbjp8qn27H9sdXsQewnZw8m1CTaPRSPFp0Y2tZpbSgLQn4pyh
+         1NHmJmv9zLqnontXUFeV+QLXvWDIRv7MHOq/GTF2hAwjyG20EaYI+SCDfqNBH7cddnBm
+         K4dkupJQ3dIXhNKwAwdAS7qabyhepDoofVJnhkpiF+heUMmOPJt2cQHbacS+py52G6Tv
+         BNww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xfiGgLfl6xBSxCvQGQIeZLhg6EqD8qTgC7ENKGicg+c=;
+        b=fWJO/7bTLkiHx5l1RY3nNm4XyB3FA48oq7X6H9kk1GYLWPuw93Nsp3KHpg8skGFnc9
+         fLf4YehkUYoSa0btwDjl1931y0+vMSYrhr1e9GyVvIV6N2x8Ez02UatxcmcKmwhO2V2O
+         qMOjKiP/vsciOBIZeG6VSDxDPDVzRMrXcCYvX8O55Cn9LZuY6sRY3nYh+rDgL7AD5b0l
+         AZ5J62kDQsbrU5MEqsbsu0mxNFn8OfyEQL6VC73tPZmyunVBi7OwgLydqsE0MofWrlNQ
+         t6YUfnsw3hvo9+lSrNGYsVZ3X/5D1s1xwrlwtep/0wKT+J8mArM1Com46ui5REXjHDsS
+         INPQ==
+X-Gm-Message-State: AOAM5304lUFgkPQfct2QqbTpEm3pCY8GxEVvBR5TxzDgaVLpuTCebxwh
+        UDfX55SkMbiMTLlxzYJ20FFgNC4LrLr0/M52pROhAw==
+X-Google-Smtp-Source: ABdhPJw07BDHsbBTDLIPmsUv1zZtOHUHA9N56e0pfTrdGItIGZC4D81LXYIMuWA4y2byBNnUAzkvFqrm6CoRO/YjQwI=
+X-Received: by 2002:a17:90a:81:: with SMTP id a1mr3972154pja.136.1599573498717;
+ Tue, 08 Sep 2020 06:58:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <cover.1597425745.git.andreyknvl@google.com> <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
+ <20200827103819.GE29264@gaia>
+In-Reply-To: <20200827103819.GE29264@gaia>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 8 Sep 2020 15:58:07 +0200
+Message-ID: <CAAeHK+wX-8=tCrn_Tx7NAhC4wVSvooB=CUZ9rS22mcGmkLa8cw@mail.gmail.com>
+Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Evgenii Stepanov <eugenis@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Branislav Rankov <Branislav.Rankov@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 8 Sep 2020 02:05:17 +0530
-Ajay Kaher <akaher@vmware.com> wrote:
+On Thu, Aug 27, 2020 at 12:38 PM Catalin Marinas
+<catalin.marinas@arm.com> wrote:
+>
+> On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
+> > @@ -957,6 +984,7 @@ SYM_FUNC_START(cpu_switch_to)
+> >       mov     sp, x9
+> >       msr     sp_el0, x1
+> >       ptrauth_keys_install_kernel x1, x8, x9, x10
+> > +     mte_restore_gcr 1, x1, x8, x9
+> >       scs_save x0, x8
+> >       scs_load x1, x8
+> >       ret
+>
+> Since we set GCR_EL1 on exception entry and return, why is this needed?
+> We don't have a per-kernel thread GCR_EL1, it's global to all threads,
+> so I think cpu_switch_to() should not be touched.
 
-> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
-> devices may lead to DoS scenario
->     
-> The VFIO modules allow users (guest VMs) to enable or disable access to the
-> devices' MMIO memory address spaces. If a user attempts to access (read/write)
-> the devices' MMIO address space when it is disabled, some h/w devices issue an
-> interrupt to the CPU to indicate a fatal error condition, crashing the system.
-> This flaw allows a guest user or process to crash the host system resulting in
-> a denial of service.
->     
-> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
-> before user access.
->     
-> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
-> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
-> can later use to invalidate those mappings.
->     
-> Patch 3/ block the user from accessing memory spaces which is disabled by using
-> new vma list support to zap, or invalidate, those memory mappings in order to
-> force them to be faulted back in on access.
->     
-> Upstreamed patches link:
-> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
->         
-> [PATCH v4.9.y 1/3]:
-> Backporting of upsream commit 41311242221e:
-> vfio/type1: Support faulting PFNMAP vmas
->         
-> [PATCH v4.9.y 2/3]:
-> Backporting of upsream commit 11c4cd07ba11:
-> vfio-pci: Fault mmaps to enable vma tracking
->         
-> [PATCH v4.9.y 3/3]:
-> Backporting of upsream commit abafbc551fdd:
-> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
-> 
-
-I'd recommend also including the following or else SR-IOV VFs will be
-broken for DPDK:
-
-commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21
-Author: Alex Williamson <alex.williamson@redhat.com>
-Date:   Thu Jun 25 11:04:23 2020 -0600
-
-    vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-    
-    SR-IOV VFs do not implement the memory enable bit of the command
-    register, therefore this bit is not set in config space after
-    pci_enable_device().  This leads to an unintended difference
-    between PF and VF in hand-off state to the user.  We can correct
-    this by setting the initial value of the memory enable bit in our
-    virtualized config space.  There's really no need however to
-    ever fault a user on a VF though as this would only indicate an
-    error in the user's management of the enable bit, versus a PF
-    where the same access could trigger hardware faults.
-    
-    Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-    Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-
+Dropping this line from the diff leads to many false-positives... I'll
+leave this to Vincenzo.
