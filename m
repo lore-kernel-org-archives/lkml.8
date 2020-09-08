@@ -2,160 +2,134 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE1AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BADE12074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="QGa30Zxm"
+	by mail.kernel.org (Postfix) with ESMTP id B66FF206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587597;
+	bh=Vxf8thUXD9HDmFrlefoNCGBHtvxhE+QvMWyMaGEiawk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LaYZjFUdcOuInR1bg1N/kYm/U4qUQmLjOwdln3KgG3CMma1pdhJv6MOCRzm4U1lYb
+	 WI7HUea8nX43yzvxP4nepFh8um/VDzBIKQH+jlyVR1JamksqWT2a+/Y2G+56tZCQyE
+	 tizKfBxBGdJFcDqajinHieATKZ8k8aZ4+jGIBcxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731860AbgIHRw5 (ORCPT
+        id S1731647AbgIHQNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731626AbgIHQNo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:44 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3813C0617A4
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:13:00 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF77339;
-        Tue,  8 Sep 2020 14:07:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1599566866;
-        bh=gVQ6vV1AXzJOgjJLHm9N/dNNMo5x6er9J7+iF8u+AkI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QGa30ZxmFOr8fkWU2OJpI/toSpG6N4iUhztpdHqegiOWw5o0Y4gQ0PfCRvN8uHsWi
-         P6a2E3nLv3IjzpbAfep3BTCZivEbImsehfIgwob+5ckDFvUMf7nv9nKRkiWfmUuynp
-         YePkjknL80Di8J06EJlpqK5ZMTdw6XEDGiVIQTF0=
-Date:   Tue, 8 Sep 2020 15:07:19 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Stefan Agner <stefan@agner.ch>, jsarha@ti.com, marex@denx.de,
-        airlied@linux.ie, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: mxsfb: check framebuffer pitch
-Message-ID: <20200908120719.GD6047@pendragon.ideasonboard.com>
-References: <20200907160343.124405-1-stefan@agner.ch>
- <20200907161712.GF6047@pendragon.ideasonboard.com>
- <20200907181855.GE2352366@phenom.ffwll.local>
- <86615b4b1551d4a6f1cfcc13b38e616c@agner.ch>
- <dc5a16d0-4d2a-366a-7716-29dd8db1a12a@ti.com>
- <20200908084855.GH2352366@phenom.ffwll.local>
+Received: from mail.kernel.org ([198.145.29.99]:52186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731217AbgIHQFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:22 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 008B8224B0;
+        Tue,  8 Sep 2020 15:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579954;
+        bh=Vxf8thUXD9HDmFrlefoNCGBHtvxhE+QvMWyMaGEiawk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HpIPdnIos3VGvS250go4Qjo0QZDovh2FGPm2ffxiJxFCFuAwQBtrW8IC/Dd+wtQev
+         6MhIr0hCsAxsPrRKKx9Riyh1YDLJFCk2+Wj1Gbg4o+94UrDZkeSOXeZuJbiqib2uVX
+         I6VP+LoprjKypMoCfD7new4S6ptNUyCzgS14JkLQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Wenbin Mei <wenbin.mei@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 100/129] mmc: mediatek: add optional module reset property
+Date:   Tue,  8 Sep 2020 17:25:41 +0200
+Message-Id: <20200908152234.812316496@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200908084855.GH2352366@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 10:48:55AM +0200, Daniel Vetter wrote:
-> On Tue, Sep 08, 2020 at 11:18:25AM +0300, Tomi Valkeinen wrote:
-> > On 08/09/2020 10:55, Stefan Agner wrote:
-> > > On 2020-09-07 20:18, Daniel Vetter wrote:
-> > >> On Mon, Sep 07, 2020 at 07:17:12PM +0300, Laurent Pinchart wrote:
-> > >>> Hi Stefan,
-> > >>>
-> > >>> Thank you for the patch.
-> > >>>
-> > >>> On Mon, Sep 07, 2020 at 06:03:43PM +0200, Stefan Agner wrote:
-> > >>>> The lcdif IP does not support a framebuffer pitch (stride) other than
-> > >>>> the CRTC width. Check for equality and reject the state otherwise.
-> > >>>>
-> > >>>> This prevents a distorted picture when using 640x800 and running the
-> > >>>> Mesa graphics stack. Mesa tires to use a cache aligned stride, which
-> > >>>
-> > >>> s/tires/tries/
-> > >>>
-> > >>>> leads at that particular resolution to width != stride. Currently
-> > >>>> Mesa has no fallback behavior, but rejecting this configuration allows
-> > >>>> userspace to handle the issue correctly.
-> > >>>
-> > >>> I'm increasingly impressed by how featureful this IP core is :-)
-> > >>>
-> > >>>> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> > >>>> ---
-> > >>>>  drivers/gpu/drm/mxsfb/mxsfb_kms.c | 22 ++++++++++++++++++----
-> > >>>>  1 file changed, 18 insertions(+), 4 deletions(-)
-> > >>>>
-> > >>>> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_kms.c b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-> > >>>> index b721b8b262ce..79aa14027f91 100644
-> > >>>> --- a/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-> > >>>> +++ b/drivers/gpu/drm/mxsfb/mxsfb_kms.c
-> > >>>> @@ -403,14 +403,28 @@ static int mxsfb_plane_atomic_check(struct drm_plane *plane,
-> > >>>>  {
-> > >>>>  	struct mxsfb_drm_private *mxsfb = to_mxsfb_drm_private(plane->dev);
-> > >>>>  	struct drm_crtc_state *crtc_state;
-> > >>>> +	unsigned int pitch;
-> > >>>> +	int ret;
-> > >>>>
-> > >>>>  	crtc_state = drm_atomic_get_new_crtc_state(plane_state->state,
-> > >>>>  						   &mxsfb->crtc);
-> > >>>>
-> > >>>> -	return drm_atomic_helper_check_plane_state(plane_state, crtc_state,
-> > >>>> -						   DRM_PLANE_HELPER_NO_SCALING,
-> > >>>> -						   DRM_PLANE_HELPER_NO_SCALING,
-> > >>>> -						   false, true);
-> > >>>> +	ret = drm_atomic_helper_check_plane_state(plane_state, crtc_state,
-> > >>>> +						  DRM_PLANE_HELPER_NO_SCALING,
-> > >>>> +						  DRM_PLANE_HELPER_NO_SCALING,
-> > >>>> +						  false, true);
-> > >>>> +	if (ret || !plane_state->visible)
-> > >>>
-> > >>> Would it be more explict to check for !plane_state->fb ? Otherwise I'll
-> > >>> have to verify that !fb always implies !visible :-)
-> > >>>
-> > >>>> +		return ret;
-> > >>>> +
-> > >>>> +	pitch = crtc_state->mode.hdisplay *
-> > >>>> +		plane_state->fb->format->cpp[0];
-> > >>>
-> > >>> This holds on a single line.
-> > >>>
-> > >>>> +	if (plane_state->fb->pitches[0] != pitch) {
-> > >>>> +		dev_err(plane->dev->dev,
-> > >>>> +			"Invalid pitch: fb and crtc widths must be the same");
-> > >>>
-> > >>> I'd turn this into a dev_dbg(), printing error messages to the kernel
-> > >>> log in response to user-triggered conditions is a bit too verbose and
-> > >>> could flood the log.
-> > >>>
-> > >>> Wouldn't it be best to catch this issue when creating the framebuffer ?
-> > >>
-> > >> Yeah this should be verified at addfb time. We try to validate as early as
-> > >> possible.
-> > > 
-> > > Sounds sensible. From what I can tell fb_create is the proper callback
-> > > to implement this at addfb time. Will give this a try.
-> > > 
-> > > FWIW, I got the idea from drivers/gpu/drm/tilcdc/tilcdc_plane.c. Maybe
-> > > should be moved to addfb there too?
-> > 
-> > But you don't know the crtc width when creating the framebuffer.
-> 
-> Hm right this is a different check. What we could check in fb_create for
-> both is that the logical fb size matches exactly the pitch. That's not
-> sufficient criteria, but it will at least catch some of them already.
-> 
-> But yeah we'd need both here.
+From: Wenbin Mei <wenbin.mei@mediatek.com>
 
-Correct. At addfb time we can check the pitch, and at atomic check time
-we should check that the plane spans the whole CRTC.
+commit 855d388df217989fbf1f18c781ae6490dbb48e86 upstream.
 
--- 
-Regards,
+This patch fixs eMMC-Access on mt7622/Bpi-64.
+Before we got these Errors on mounting eMMC ion R64:
+[   48.664925] blk_update_request: I/O error, dev mmcblk0, sector 204800 op 0x1:(WRITE)
+flags 0x800 phys_seg 1 prio class 0
+[   48.676019] Buffer I/O error on dev mmcblk0p1, logical block 0, lost sync page write
 
-Laurent Pinchart
+This patch adds a optional reset management for msdc.
+Sometimes the bootloader does not bring msdc register
+to default state, so need reset the msdc controller.
+
+Cc: <stable@vger.kernel.org> # v5.4+
+Fixes: 966580ad236e ("mmc: mediatek: add support for MT7622 SoC")
+Signed-off-by: Wenbin Mei <wenbin.mei@mediatek.com>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+Link: https://lore.kernel.org/r/20200814014346.6496-4-wenbin.mei@mediatek.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/mmc/host/mtk-sd.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -22,6 +22,7 @@
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
++#include <linux/reset.h>
+ 
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/core.h>
+@@ -412,6 +413,7 @@ struct msdc_host {
+ 	struct pinctrl_state *pins_uhs;
+ 	struct delayed_work req_timeout;
+ 	int irq;		/* host interrupt */
++	struct reset_control *reset;
+ 
+ 	struct clk *src_clk;	/* msdc source clock */
+ 	struct clk *h_clk;      /* msdc h_clk */
+@@ -1474,6 +1476,12 @@ static void msdc_init_hw(struct msdc_hos
+ 	u32 val;
+ 	u32 tune_reg = host->dev_comp->pad_tune_reg;
+ 
++	if (host->reset) {
++		reset_control_assert(host->reset);
++		usleep_range(10, 50);
++		reset_control_deassert(host->reset);
++	}
++
+ 	/* Configure to MMC/SD mode, clock free running */
+ 	sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPDN);
+ 
+@@ -2232,6 +2240,11 @@ static int msdc_drv_probe(struct platfor
+ 	if (IS_ERR(host->src_clk_cg))
+ 		host->src_clk_cg = NULL;
+ 
++	host->reset = devm_reset_control_get_optional_exclusive(&pdev->dev,
++								"hrst");
++	if (IS_ERR(host->reset))
++		return PTR_ERR(host->reset);
++
+ 	host->irq = platform_get_irq(pdev, 0);
+ 	if (host->irq < 0) {
+ 		ret = -EINVAL;
+
+
