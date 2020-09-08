@@ -2,104 +2,88 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEBFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4403021D7A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rgN9WNfs"
+	by mail.kernel.org (Postfix) with ESMTP id 24C1321D7A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgIHJ7e (ORCPT
+        id S1729142AbgIHKAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbgIHJ7a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:59:30 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D90C061573;
-        Tue,  8 Sep 2020 02:59:28 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id s2so7765049pjr.4;
-        Tue, 08 Sep 2020 02:59:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PQg9eVQV0B9Lm6jeMoc6uXGoshaI/xJEXEEmohkfSoM=;
-        b=rgN9WNfsDxisbDvGyY8i6+CQHQlG5FF22yiWG6ndBt1M6Mh6OCBKxEV2ppnLczz5Hc
-         Rzaxv0wZgpKb4Duvwkmx18+xADlczn5HKJz6Qa5JhGHdKb9h2DlPMDqyVTY6BmlnIEcj
-         jjD3eWa1eyY7B8iuArm1I8LZxpP714HssoNr+DpTGlEwMagBKy0pxnfIcAQq9XoHDQlE
-         k3UlfxmN2EYYSB/4c/1nAxfPZ9Iqdlz59HFlOGm8ZnrdhbpeggeWW9UzZ25qM5kifHjS
-         jYsfHKxEhGqjUho7T5p2wx8ORCKQ6mcXyO4jjGxQCxCQRjVk2cU+yf4JJ6T5rwK7C6gU
-         ECkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PQg9eVQV0B9Lm6jeMoc6uXGoshaI/xJEXEEmohkfSoM=;
-        b=Zv0nugOcjyNn4R6iXdZOt+2xFCui3ou2tNfXlH/xBf3fZV3j2bOLwuYk6hGaP6PzQ8
-         liqvZBpxn9+H98FOgwjC73xb478q2dQSNk/+Lj00xapvNIR8OlSIRsWMnrrekW4NI0gL
-         OVYspEzEdOTD9WenFlOWp+f1zw01bv1KkybSOlkarEUNjeQ06/8zPpyWlW8eHb38eRWt
-         642HtOZXxIBiqfPrdsBPj9j/jXi3bHNgIRQ1dQe7S0LmmRal5U2EVrxUjqRyazUTAG+W
-         v0oGGm9Kq+PGlFDuqT7uOY70PJrWl39v/5gL6O1ewextea/hdyOzu3cAtKykAtMnsP0i
-         57Ow==
-X-Gm-Message-State: AOAM5327lDqQqmJWakt/S0IwVwLZiHRltmb9SlikZV6zTJmzxPEG7he4
-        hzBup7Id+YHHn/Em3g9dLhh2Yw4q5C4=
-X-Google-Smtp-Source: ABdhPJypY1ZWkw/zpjg++SXqQq35X+DjtyhCd2pmzg+3p/NykE1cvX3rDLapKctnBGWOzLmL24GQRA==
-X-Received: by 2002:a17:90b:4a47:: with SMTP id lb7mr3243837pjb.196.1599559168036;
-        Tue, 08 Sep 2020 02:59:28 -0700 (PDT)
-Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
-        by smtp.gmail.com with ESMTPSA id gn24sm1700897pjb.8.2020.09.08.02.59.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 02:59:26 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 18:59:24 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the printk tree
-Message-ID: <20200908095924.GA74028@jagdpanzerIV.localdomain>
-References: <20200905121827.22fb4037@canb.auug.org.au>
- <20200908074601.GA3864@alley>
+        Tue, 8 Sep 2020 06:00:25 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31813 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726801AbgIHKAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:00:24 -0400
+IronPort-SDR: 1nEawPwz0tfvWK/lq5ls1DeOvNbpOzXuay8knPjb3+CfhhhyGinjESDCSNuiXB4e/HXtUESwsa
+ GhTyjCbZJq0w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="176157417"
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="176157417"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 03:00:23 -0700
+IronPort-SDR: DSMyosH8hh3BdOlwoY3feITQQKoaPKBFI1pLYFCPuYT90lIDgcmFSuSnYZHOvd9lRzj24LXD5O
+ 0QOAjwKnvOVA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
+   d="scan'208";a="505005949"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 08 Sep 2020 03:00:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5D00EDE; Tue,  8 Sep 2020 13:00:19 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v1] x86/defconfigs: Unbreak 32-bit defconfig builds
+Date:   Tue,  8 Sep 2020 13:00:18 +0300
+Message-Id: <20200908100018.50188-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908074601.GA3864@alley>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/09/08 09:46), Petr Mladek wrote:
-> On Sat 2020-09-05 12:18:27, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Commit
-> > 
-> >   4c31ead75f41 ("printk: ringbuffer: support dataless records")
-> > 
-> > is missing a Signed-off-by from its committer.
-> 
-> Thanks for catching this. It should be fixed now.
-> 
-> It has been originally committed by Sergey. I rebased it to add the
-> missing SHA1[0] and suddenly became committer, see
+After the commit 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
+32-bit builds using defconfig become broken because on x86_64 build host
+with no ARCH provided the default behaviour is to assume 64-bit independently
+on the configuration file name. The crucial part is CONFIG_64BIT option
+that used to be explicit. Let restore the latter option in order to unbreak
+32-bit builds.
 
-Oh.
-I missed it somehow that b4/git-am didn't add all the required fields.
-That wasn't the only patch that I applied. So, well.. Sorry and thanks
-for catching and fixing this up.
+Fixes: 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
+Reported-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+---
+ arch/x86/configs/i386_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-	-ss
+diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defconfig
+index d66078fc94a4..0b75c4291748 100644
+--- a/arch/x86/configs/i386_defconfig
++++ b/arch/x86/configs/i386_defconfig
+@@ -19,6 +19,7 @@ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_COMPAT_BRK is not set
+ CONFIG_PROFILING=y
++# CONFIG_64BIT is not set
+ CONFIG_SMP=y
+ CONFIG_X86_GENERIC=y
+ CONFIG_HPET_TIMER=y
+-- 
+2.28.0
+
