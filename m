@@ -2,128 +2,110 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5411EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CC7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1246620738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6615A2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586205;
-	bh=aPvRp2GFGXKWnxLSh/2v5G+RNreiEk74ofFsmRYx6yc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kE1DXRXzykgTCrzoPJiEE/AeodJIDWuPHxdz2uk0RiJPSVY4l0rKS8iPAxGEP4qcS
-	 1lGT5Iw+yfwwqRgMHP+EDSw4KpN6g0OqDV1sIzBg++ybA5DNbvJ2pJq+/znhFbLety
-	 hSIFkN+oWWtycHbwObuj6JdBiBmVC0qdLgHeqHlE=
+	s=default; t=1599586239;
+	bh=oGTEDsIfTJdVk8O2q/FQavYlusM9/mf0yOcnMB6oJJ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dUZcvjBR4O+DalxgzoVdCwObAYJ3FhOEo9vplGoXkAZwMJrjA4ZPbndnI6Q5Y1nnQ
+	 etJDZc7nqTBMUiSrCMTxvbnQGsdRj5FAC7k4SJb4o72pSEYk/5P2vH0nFjtMhKzCFN
+	 4Iys1DnP7ZLnewW8+YgxRsc6PwahNV5khH7kxfDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbgIHR30 (ORCPT
+        id S1731864AbgIHRab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:29:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731542AbgIHQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:16:09 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD87F24835;
-        Tue,  8 Sep 2020 15:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579885;
-        bh=aPvRp2GFGXKWnxLSh/2v5G+RNreiEk74ofFsmRYx6yc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TtoN4sLipymub9CwWq/7u8m6CLWFP5C7JvgdX1p/jq82ARqNnv44+aAnWHxo8UI4/
-         OYM04a0KXKYOrtN3EXd0Yd5OoUN9DegQsiwSW6FRgzZizJ+VGLoQNr2hZJGh42iJ3o
-         JGwCMtxF7B4m9rK/xMM8TppvOoyFPtpBu+ZMnqow=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 045/129] bnxt_en: Fix possible crash in bnxt_fw_reset_task().
-Date:   Tue,  8 Sep 2020 17:24:46 +0200
-Message-Id: <20200908152231.953636248@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:30:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50916 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731226AbgIHQPZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:15:25 -0400
+Received: by mail-wm1-f66.google.com with SMTP id e17so17877786wme.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:15:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=L+q7scp9xjjgch+ap+Le4uzp4lwNvS0O3pZwHfl5AC4=;
+        b=CQpOhgW0ov+Z/z0/hp1B5vMcPv7wLdAiUFbOlwbL6RYTK+RTFZqhCkyI22C/6aU8bI
+         D3gaiz8g8KLfokBBJj56hPUr766q00Od49BVUkiTFNk7bRHuCtAywvp4dEYxdRvuYNH1
+         QFbOTLNKVvcypQ7uYRMKIRzOkkOjdUAu7YvDOPQ4a/02wyMEdXYVUvTBC3lCO0fZQ0R+
+         zpCDovWPaG8CWa9dQ2b3tt/ZIw1VBxBxJgsRzIdfVLwQHds2GMGvZrHSPVzv65+iHGfG
+         p8hJ9G2AeTEdobu8kdfcGlKM542JTD6WsWMoC1C8N3gLwFsK6QmkC2uH3a/ZFkQYIet8
+         xHTw==
+X-Gm-Message-State: AOAM530lndzUbKB3u4336qA1pgrapAQKtfaKaj2BZe0mLhw93zqo1Gfe
+        pBb7dNmGtzGkqc+OBJYsQpBQNI/OfVkxQw==
+X-Google-Smtp-Source: ABdhPJzYi9ehfaPBVSXymEhhuH1GTRlLQTD8B0hsU4d7EUccdQ6mwISG5Qg1ixAsK4hgy2OnnuC5uw==
+X-Received: by 2002:a7b:c2aa:: with SMTP id c10mr4463133wmk.86.1599572119661;
+        Tue, 08 Sep 2020 06:35:19 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p18sm14414596wrx.47.2020.09.08.06.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 06:35:18 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 13:35:17 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 14/46] x86/ioapic: Consolidate IOAPIC allocation
+Message-ID: <20200908133517.nrqweaycr2erqscd@liuwe-devbox-debian-v2>
+References: <20200826111628.794979401@linutronix.de>
+ <20200826112332.054367732@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826112332.054367732@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+On Wed, Aug 26, 2020 at 01:16:42PM +0200, Thomas Gleixner wrote:
+...
+> --- a/drivers/iommu/hyperv-iommu.c
+> +++ b/drivers/iommu/hyperv-iommu.c
+> @@ -101,7 +101,7 @@ static int hyperv_irq_remapping_alloc(st
+>  	 * in the chip_data and hyperv_irq_remapping_activate()/hyperv_ir_set_
+>  	 * affinity() set vector and dest_apicid directly into IO-APIC entry.
+>  	 */
+> -	irq_data->chip_data = info->ioapic_entry;
+> +	irq_data->chip_data = info->ioapic.entry;
 
-[ Upstream commit b148bb238c02f0c7797efed026e9bba5892d2172 ]
+Not sure if it is required for such a trivial change but here you go:
 
-bnxt_fw_reset_task() is run from a delayed workqueue.  The current
-code is not cancelling the workqueue in the driver's .remove()
-method and it can potentially crash if the device is removed with
-the workqueue still pending.
-
-The fix is to clear the BNXT_STATE_IN_FW_RESET flag and then cancel
-the delayed workqueue in bnxt_remove_one().  bnxt_queue_fw_reset_work()
-also needs to check that this flag is set before scheduling.  This
-will guarantee that no rescheduling will be done after it is cancelled.
-
-Fixes: 230d1f0de754 ("bnxt_en: Handle firmware reset.")
-Reviewed-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 7cb74d7a78e3c..16462d21fea38 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1143,6 +1143,9 @@ static int bnxt_discard_rx(struct bnxt *bp, struct bnxt_cp_ring_info *cpr,
- 
- static void bnxt_queue_fw_reset_work(struct bnxt *bp, unsigned long delay)
- {
-+	if (!(test_bit(BNXT_STATE_IN_FW_RESET, &bp->state)))
-+		return;
-+
- 	if (BNXT_PF(bp))
- 		queue_delayed_work(bnxt_pf_wq, &bp->fw_reset_task, delay);
- 	else
-@@ -1159,10 +1162,12 @@ static void bnxt_queue_sp_work(struct bnxt *bp)
- 
- static void bnxt_cancel_sp_work(struct bnxt *bp)
- {
--	if (BNXT_PF(bp))
-+	if (BNXT_PF(bp)) {
- 		flush_workqueue(bnxt_pf_wq);
--	else
-+	} else {
- 		cancel_work_sync(&bp->sp_task);
-+		cancel_delayed_work_sync(&bp->fw_reset_task);
-+	}
- }
- 
- static void bnxt_sched_reset(struct bnxt *bp, struct bnxt_rx_ring_info *rxr)
-@@ -11386,6 +11391,7 @@ static void bnxt_remove_one(struct pci_dev *pdev)
- 	unregister_netdev(dev);
- 	bnxt_dl_unregister(bp);
- 	bnxt_shutdown_tc(bp);
-+	clear_bit(BNXT_STATE_IN_FW_RESET, &bp->state);
- 	bnxt_cancel_sp_work(bp);
- 	bp->sp_event = 0;
- 
--- 
-2.25.1
-
-
-
+Acked-by: Wei Liu <wei.liu@kernel.org>
