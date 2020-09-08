@@ -2,131 +2,100 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B756BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8173820738
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42AE820738
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586159;
-	bh=KzG/T3Soqo1YupOU7YWJJa7dc0wh1hTNzVJEFlGPp1g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5GUByKosdULs24ecRz6ImvJLKyLbg05mhbhDgEMwci4Mg8nOCt4FRiodG9S/Gol6
-	 aDApicbifxRDMmgV+AbcKWXJaEdEsowhU6vCrABdIHUXwAvkTH8unGoqNK1Y9LV5jV
-	 MgbOUcc2Tz8kudnYf6GygvszJa8PaWttj+LgSTkU=
+	s=default; t=1599586179;
+	bh=Mjj6isNwDffeAOtdV0P2jtlwiRjss5m7SJ9I3ziDE20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MyEL7KwTVX4dQ8PVv67WaqnoawB5zRZADDEXlaroNQOgex9qx1hrE2uAEptrVa9Zn
+	 YF4tI1z3lnAD2yEvb7ZSJU54AmC9MNJfeD0bQj0tilzDkx4+ompN5uKsngi39laEJj
+	 LoiBECoO5XSWCvmtNm1QBEcUwJ1HPL18P2d0dsf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbgIHR3H (ORCPT
+        id S1732047AbgIHR3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:29:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730655AbgIHQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731548AbgIHQQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:16:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CACC524833;
-        Tue,  8 Sep 2020 15:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE40222597;
+        Tue,  8 Sep 2020 13:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579870;
-        bh=KzG/T3Soqo1YupOU7YWJJa7dc0wh1hTNzVJEFlGPp1g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MW7d5q0R/TEYJpu+z4TfjhSx/uVsfUamiKjVaO5n14TOLeUE4RcVBWrChCsqCZqV7
-         DWVA0hMCjjG5E3Tj3qjA2m0J2zzY2Qu3Q3h6DRlPnOszQZR1CHav0wyOLU6+tEoQt1
-         TPd/ZwDsIAiD87c2RXD6Tk95iIAq0pfMRdT/csZE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Huang, Ying" <ying.huang@intel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/129] x86, fakenuma: Fix invalid starting node ID
-Date:   Tue,  8 Sep 2020 17:25:07 +0200
-Message-Id: <20200908152232.993279347@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
-References: <20200908152229.689878733@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1599570205;
+        bh=Mjj6isNwDffeAOtdV0P2jtlwiRjss5m7SJ9I3ziDE20=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tYB4yF899rvv7EuFVWA4A63efOaGo9YF6nOXNCWrneHHV+LlFHuwCpjtJNa/3tPLP
+         mYVqIC/HBmH9ce9qyRQMgITuyG1GepgzcxT/XXbGDNgAOhojhyPcsMAZnVYZopJqK/
+         WYdl2OUrhmAhqd5BR+BEx/6/uKR8OVoajwV9XOWQ=
+Date:   Tue, 8 Sep 2020 15:03:37 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     sashal@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
+        peterx@redhat.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4.9.y 0/3] vfio: Fix for CVE-2020-12888
+Message-ID: <20200908130337.GB3075407@kroah.com>
+References: <1599510917-23734-1-git-send-email-akaher@vmware.com>
+ <1599510917-23734-4-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1599510917-23734-4-git-send-email-akaher@vmware.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+On Tue, Sep 08, 2020 at 02:05:17AM +0530, Ajay Kaher wrote:
+> CVE-2020-12888 Kernel: vfio: access to disabled MMIO space of some
+> devices may lead to DoS scenario
+>     
+> The VFIO modules allow users (guest VMs) to enable or disable access to the
+> devices' MMIO memory address spaces. If a user attempts to access (read/write)
+> the devices' MMIO address space when it is disabled, some h/w devices issue an
+> interrupt to the CPU to indicate a fatal error condition, crashing the system.
+> This flaw allows a guest user or process to crash the host system resulting in
+> a denial of service.
+>     
+> Patch 1/ is to force the user fault if PFNMAP vma might be DMA mapped
+> before user access.
+>     
+> Patch 2/ setup a vm_ops handler to support dynamic faulting instead of calling
+> remap_pfn_range(). Also provides a list of vmas actively mapping the area which
+> can later use to invalidate those mappings.
+>     
+> Patch 3/ block the user from accessing memory spaces which is disabled by using
+> new vma list support to zap, or invalidate, those memory mappings in order to
+> force them to be faulted back in on access.
+>     
+> Upstreamed patches link:
+> https://lore.kernel.org/kvm/158871401328.15589.17598154478222071285.stgit@gimli.home
+>         
+> [PATCH v4.9.y 1/3]:
+> Backporting of upsream commit 41311242221e:
+> vfio/type1: Support faulting PFNMAP vmas
+>         
+> [PATCH v4.9.y 2/3]:
+> Backporting of upsream commit 11c4cd07ba11:
+> vfio-pci: Fault mmaps to enable vma tracking
+>         
+> [PATCH v4.9.y 3/3]:
+> Backporting of upsream commit abafbc551fdd:
+> vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
 
-[ Upstream commit ccae0f36d500aef727f98acd8d0601e6b262a513 ]
+All now queued up, thanks.
 
-Commit:
-
-  cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
-
-uses "-1" as the starting node ID, which causes the strange kernel log as
-follows, when "numa=fake=32G" is added to the kernel command line:
-
-    Faking node -1 at [mem 0x0000000000000000-0x0000000893ffffff] (35136MB)
-    Faking node 0 at [mem 0x0000001840000000-0x000000203fffffff] (32768MB)
-    Faking node 1 at [mem 0x0000000894000000-0x000000183fffffff] (64192MB)
-    Faking node 2 at [mem 0x0000002040000000-0x000000283fffffff] (32768MB)
-    Faking node 3 at [mem 0x0000002840000000-0x000000303fffffff] (32768MB)
-
-And finally the kernel crashes:
-
-    BUG: Bad page state in process swapper  pfn:00011
-    page:(____ptrval____) refcount:0 mapcount:1 mapping:(____ptrval____) index:0x55cd7e44b270 pfn:0x11
-    failed to read mapping contents, not a valid kernel address?
-    flags: 0x5(locked|uptodate)
-    raw: 0000000000000005 000055cd7e44af30 000055cd7e44af50 0000000100000006
-    raw: 000055cd7e44b270 000055cd7e44b290 0000000000000000 000055cd7e44b510
-    page dumped because: page still charged to cgroup
-    page->mem_cgroup:000055cd7e44b510
-    Modules linked in:
-    CPU: 0 PID: 0 Comm: swapper Not tainted 5.9.0-rc2 #1
-    Hardware name: Intel Corporation S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
-    Call Trace:
-     dump_stack+0x57/0x80
-     bad_page.cold+0x63/0x94
-     __free_pages_ok+0x33f/0x360
-     memblock_free_all+0x127/0x195
-     mem_init+0x23/0x1f5
-     start_kernel+0x219/0x4f5
-     secondary_startup_64+0xb6/0xc0
-
-Fix this bug via using 0 as the starting node ID.  This restores the
-original behavior before cc9aec03e58f.
-
-[ mingo: Massaged the changelog. ]
-
-Fixes: cc9aec03e58f ("x86/numa_emulation: Introduce uniform split capability")
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20200904061047.612950-1-ying.huang@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/mm/numa_emulation.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
-index abffa0be80da1..87282258d5bea 100644
---- a/arch/x86/mm/numa_emulation.c
-+++ b/arch/x86/mm/numa_emulation.c
-@@ -321,7 +321,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
- 					      u64 addr, u64 max_addr, u64 size)
- {
- 	return split_nodes_size_interleave_uniform(ei, pi, addr, max_addr, size,
--			0, NULL, NUMA_NO_NODE);
-+			0, NULL, 0);
- }
- 
- int __init setup_emu2phys_nid(int *dfl_phys_nid)
--- 
-2.25.1
-
-
-
+greg k-h
