@@ -2,52 +2,52 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD826C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC66C2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786412087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586782;
-	bh=Y5Swf/4pKnGZ9O4qJuYRRHDMaCKKDZ9ukoJvF9CpBjc=;
+	s=default; t=1599586786;
+	bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeVL/unqU3KmpJEZHsjs33g5LdIed0QZOIEqJm6DHX/+Ypo4vliqx1kG8RrKNc1Lc
-	 ttzbaFK7Z2GbNIOMbaUjqn+mDCyg5YkubRuMT0EdKkxyBcxsrOVby2/GYymmPkP55p
-	 IqeEJv4QJwXyqiLRl3zP3S66IC9ckh1TI+Huwgf4=
+	b=X6xYBz/u0Z1cXBclZVf5rttkx8aXIwCAM3CawRvlutH/+6JGXORThe3qbRIKbfOX0
+	 r51C3+EAuyXrX1pRnZqrRcBIvX3Yuh3HkvZ3d1YHRW/+e+Ove1Ap1hwH4p6znXmtjB
+	 L2+yUYFAabBb5z3tD/ymBUTGe6uHLiWj2POPgA44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729860AbgIHRjk (ORCPT
+        id S1731761AbgIHRjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57568 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57345 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731694AbgIHQOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731689AbgIHQOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:14:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E344724905;
-        Tue,  8 Sep 2020 15:53:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68D3E24904;
+        Tue,  8 Sep 2020 15:53:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580416;
-        bh=Y5Swf/4pKnGZ9O4qJuYRRHDMaCKKDZ9ukoJvF9CpBjc=;
+        s=default; t=1599580413;
+        bh=ClG/J2D28CSekcsEzvDrVhqfY9dWzpT8JjtNaDePcb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4xKpHCW9gHLDIowi+kEQEmT5+Au/n1a5E+AX+rVg3VpCVRb9MsKFNq8iDGfZaGbK
-         k1hJZR+4R0bdiDlsVh/zrYZYXSKJvZ5/e3y8kQt/xlBxxB72Ky1Sklo0TKwhOvqMuh
-         W1+6V8khZAsVKVOs6FBSXVsrBiAM+NKYa3krmpLQ=
+        b=1fq5yaRCI+cqK1sg5blx/2Bg2z/Vk22EMH/uarutCOeuarA6DHzzQcDFicnuaY8VL
+         6LwAZg3OGb9C3XTLHZJxVlBQttPBdcYHCrk+MvqB+I/tR0bfe+4QWvHimnOzvujzJw
+         McJmVm3nwYwqZFlj43ywCMviNF6kA3P5lZcZ9V/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 49/65] ALSA: hda/hdmi: always check pin power status in i915 pin fixup
-Date:   Tue,  8 Sep 2020 17:26:34 +0200
-Message-Id: <20200908152219.570655832@linuxfoundation.org>
+Subject: [PATCH 4.14 48/65] ALSA: pcm: oss: Remove superfluous WARN_ON() for mulaw sanity check
+Date:   Tue,  8 Sep 2020 17:26:33 +0200
+Message-Id: <20200908152219.520509097@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -60,44 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 858e0ad9301d1270c02b5aca97537d2d6ee9dd68 upstream.
+commit 949a1ebe8cea7b342085cb6a4946b498306b9493 upstream.
 
-When system is suspended with active audio playback to HDMI/DP, two
-alternative sequences can happen at resume:
-  a) monitor is detected first and ALSA prepare follows normal
-     stream setup sequence, or
-  b) ALSA prepare is called first, but monitor is not yet detected,
-     so PCM is restarted without a pin,
+The PCM OSS mulaw plugin has a check of the format of the counter part
+whether it's a linear format.  The check is with snd_BUG_ON() that
+emits WARN_ON() when the debug config is set, and it confuses
+syzkaller as if it were a serious issue.  Let's drop snd_BUG_ON() for
+avoiding that.
 
-In case of (b), on i915 systems, haswell_verify_D0() is not called at
-resume and the pin power state may be incorrect. Result is lack of audio
-after resume with no error reported back to user-space.
+While we're at it, correct the error code to a more suitable, EINVAL.
 
-Fix the problem by always verifying converter and pin state in the
-i915_pin_cvt_fixup().
-
-BugLink: https://github.com/thesofproject/linux/issues/2388
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reported-by: syzbot+23b22dc2e0b81cbfcc95@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200826170306.701566-1-kai.vehmanen@linux.intel.com
+Link: https://lore.kernel.org/r/20200901131802.18157-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/core/oss/mulaw.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -2546,6 +2546,7 @@ static void i915_pin_cvt_fixup(struct hd
- 			       hda_nid_t cvt_nid)
- {
- 	if (per_pin) {
-+		haswell_verify_D0(codec, per_pin->cvt_nid, per_pin->pin_nid);
- 		snd_hda_set_dev_select(codec, per_pin->pin_nid,
- 			       per_pin->dev_id);
- 		intel_verify_pin_cvt_connect(codec, per_pin);
+--- a/sound/core/oss/mulaw.c
++++ b/sound/core/oss/mulaw.c
+@@ -329,8 +329,8 @@ int snd_pcm_plugin_build_mulaw(struct sn
+ 		snd_BUG();
+ 		return -EINVAL;
+ 	}
+-	if (snd_BUG_ON(!snd_pcm_format_linear(format->format)))
+-		return -ENXIO;
++	if (!snd_pcm_format_linear(format->format))
++		return -EINVAL;
+ 
+ 	err = snd_pcm_plugin_build(plug, "Mu-Law<->linear conversion",
+ 				   src_format, dst_format,
 
 
