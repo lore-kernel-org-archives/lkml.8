@@ -2,152 +2,119 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B42DC2BC11
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00EEC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:44:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0CE208FE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8F92078E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599597663;
-	bh=ZBnLqQXUDUlPYMCF3YpMXyyslNWcYsHiCcgLu+l3GO4=;
+	s=default; t=1599597881;
+	bh=WITvV8xVuKVPulU439R+wmkEf+SCGd/2QyMIg8BA710=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wN/iptrvCr8XTK1K4jFzBir5rQdemC0ruOe6QrT/fW3yHZSXMrSzo+hnOmJ/CfFEC
-	 kdD93yxXaN7Sv0maNNTLWugg6d9zPGUA8js5UFc20fbSVhrz3F82wmhgx3RhqXaK/3
-	 A65vMigBTuaD7CMavh7k0eUWCwSCwVTV/zx3TKuk=
+	b=bu4KpYL5RHlJXpD3rNG5tEV/vvGxg4CQxo/c6Hg3q6j0Qo8XzkkDkAQfX3SNhKNcq
+	 8Eh6rceWCKB+yFmqakZ+ogR4byYvmMpXdr9PQddk8ZsTAFFcXoLuHfV++XESLHp1eU
+	 p4azjq5EPXUWuIScADR7yHS4MqbHsUNaIbUPy8qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgIHUlC (ORCPT
+        id S1728647AbgIHUok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:41:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726484AbgIHUlA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:41:00 -0400
-Received: from localhost (p5486cc72.dip0.t-ipconnect.de [84.134.204.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3343F2078E;
-        Tue,  8 Sep 2020 20:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599597659;
-        bh=ZBnLqQXUDUlPYMCF3YpMXyyslNWcYsHiCcgLu+l3GO4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lmsOjBes32X3TWdJGF24xlfXkf0qQfz0GJ8xy3LbxJUgwN6SuOMWy8qAn1cBLFs/a
-         OaPms8VG5VDug9HTt4NNty4Zw+Jia9Hd9t6g8QmcsM0m51y0CFTtcnoPYDphK4K5Nk
-         ebRLfSyiyhskW5cbP34dXOG7s/KaASIdZgosxUuA=
-Date:   Tue, 8 Sep 2020 22:40:51 +0200
-From:   wsa@kernel.org
+        Tue, 8 Sep 2020 16:44:40 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38349 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgIHUoj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 16:44:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id h4so828819ioe.5;
+        Tue, 08 Sep 2020 13:44:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ajf53tOcW4h9HqH0tzLtcpYfSl5aT0+OKeWkDGG+Cw0=;
+        b=Cal/2nd98OmGs50KzJYOPV0phCITAlLdG9KblTX9OX1NTwmA4N6PPkrNSkYsBAKg6d
+         CL71vhiKKzxpzzS5s1oibV8Fx9RtBiQclZhmEpTPV0GppJ5/EYkhM12gkmxZQjaGuB3C
+         t3ACgy4iq8zeQLPGgFD4wjqmqLWZNtsopHMQg9BbKQ9UqK40thoutgE+785oikqwj7F4
+         klUBEUCFadoXXNWESi/AXC6humv87gtSWLPtiguvJz/zJU8Y721F3aYJHxhr/JgMMiWo
+         /cgNGS11tjDKbhXVAHk9nvBdN+m48guiXmcrUhUYSrkuqr0RTFdWKHtZ84GN8t24Z5Lq
+         FcEg==
+X-Gm-Message-State: AOAM531C5Gnxe0pzVLmGfVPad1F/U/0hXeym5d7TnoxEHx3GzFMCrF+A
+        kGhwnuFt7YwQuIhBzYMY3g==
+X-Google-Smtp-Source: ABdhPJxkEjT7yo67ONl2IkJXtFX410muPLz902ugA8W007oN+uLmHRDGr+aG7PgsTEkbL/otvBfoiQ==
+X-Received: by 2002:a6b:da19:: with SMTP id x25mr652494iob.12.1599597877923;
+        Tue, 08 Sep 2020 13:44:37 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id a11sm177608ilh.20.2020.09.08.13.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:44:37 -0700 (PDT)
+Received: (nullmailer pid 886305 invoked by uid 1000);
+        Tue, 08 Sep 2020 20:44:35 -0000
+Date:   Tue, 8 Sep 2020 14:44:35 -0600
+From:   Rob Herring <robh@kernel.org>
 To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        benh@kernel.crashing.org, brendanhiggins@google.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        rentao.bupt@gmail.com, ryan_chen@aspeedtech.com
-Subject: Re: [PATCH v2 2/5] input: misc: Add IBM Operation Panel driver
-Message-ID: <20200908204051.GA46393@kunai>
-Mail-Followup-To: wsa@kernel.org, Eddie James <eajames@linux.ibm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-i2c@vger.kernel.org, joel@jms.id.au, andrew@aj.id.au,
-        benh@kernel.crashing.org, brendanhiggins@google.com,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        rentao.bupt@gmail.com, ryan_chen@aspeedtech.com
-References: <20200908200101.64974-1-eajames@linux.ibm.com>
- <20200908200101.64974-3-eajames@linux.ibm.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, joel@jms.id.au,
+        bradleyb@fuzziesquirrel.com, broonie@kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted
+ property
+Message-ID: <20200908204435.GA875620@bogus>
+References: <20200820170228.42053-1-eajames@linux.ibm.com>
+ <20200820170228.42053-5-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200908200101.64974-3-eajames@linux.ibm.com>
+In-Reply-To: <20200820170228.42053-5-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 12:02:25PM -0500, Eddie James wrote:
+> Add documentation for the "fsi2spi,restricted" property which indicates
+> a controller shouldn't sequence loops and therefore has a smaller
+> transfer size.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Acked-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> ---
+>  Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+> index b26d4b4be743..0d2fb071fd00 100644
+> --- a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+> +++ b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+> @@ -24,6 +24,16 @@ properties:
+>      items:
+>        - description: FSI slave address
+>  
+> +patternProperties:
+> +  "^spi(@.*|-[0-9a-f])*$":
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Doesn't FSI define the unit-address format already? No need to do it 
+again here. Plus the form 'spi-[0-9a-f]' isn't valid. Just "^spi@" 
+should be enough.
 
-Hi Eddie,
+> +    type: object
+> +
+> +    properties:
+> +      fsi2spi,restricted:
 
-> +	switch (event) {
-> +	case I2C_SLAVE_STOP:
-> +		command_size = panel->idx;
-> +		fallthrough;
-> +	case I2C_SLAVE_WRITE_REQUESTED:
-> +		panel->idx = 0;
-> +		break;
-> +	case I2C_SLAVE_WRITE_RECEIVED:
-> +		if (panel->idx < sizeof(panel->command))
-> +			panel->command[panel->idx++] = *val;
-> +		else
-> +			/*
-> +			 * The command is too long and therefore invalid, so set the index
-> +			 * to it's largest possible value. When a STOP is finally received,
-> +			 * the command will be rejected upon processing.
-> +			 */
-> +			panel->idx = U8_MAX;
-> +		break;
-> +	default:
-> +		break;
-> +	}
+[<vendor>],<property-name>
 
-Sorry, I missed this in my last review. READ states are mandatory, so
-you will need something like this:
+fsi2spi is not a vendor.
 
-+	case I2C_SLAVE_READ_REQUESTED:
-+	case I2C_SLAVE_READ_PROCESSED:
-+		*val = 0xff;
-+		break;
-
-
-> +	if (command_size)
-> +		ibm_panel_process_command(panel, command_size);
-
-I wondered if you could check for the correct command_size here, so no
-need to call into the function when the size doesn't match?
-
-> +       rc = i2c_slave_register(client, ibm_panel_i2c_slave_cb);
-> +       if (rc) {
-> +               input_unregister_device(panel->input);
-> +               dev_err(&client->dev,
-> +                       "Failed to register I2C slave device: %d\n", rc);
-
-This dev_err can go. The core will print messages if something goes
-wrong.
-
-The rest looks good from an I2C point of view.
-
-I'd think this all should go via the input tree?
-
-Kind regards,
-
-   Wolfram
-
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9X7E8ACgkQFA3kzBSg
-KbZZlw//fDqtIYCmNJjyZM2EgNZ/ONjnWdFRKtGBTVcqUcsVUARK908eeGg71Faa
-mgV79t2WGoNcBlNNemyEYhdAawTvU6bVxMJ6HF1pEOUBz27xm9LuPQSJvPs4bk1K
-mYOB6h+mW7n0hQ+W8a6QrWf6kcjxsHl1ElkzcysK+pxMWFzMkzk70jIQpqiYZYO9
-kU/s8Fik4c7rRBTfqz61FyRz/kr2f+bkKaMByvedVDlrU2ZRT5B62hvYqsNvuen8
-oFCyIf26/GgjQCDH/lzQsSQZNYEX2wkN9RrL/7BlNN2eL8XXPt9eGdmXVE1UxbV4
-c6bN7xQSAsh7Buc0yK1x+yxZEU6RidGA7NRK0cheWcewui8VB6kCyPHNJgEo/5HC
-jfBOG81k1Sb+sIzmkf5agjWq/G1Xak1ZNjVPcITfqzV23mfSLGasUyzeuT5QPMUp
-DTHdptphhgvQ+mA63EA6dJI8Isz5qh18HxWOrX5xRsRUHbhbZjg2PDesPGKmw5jr
-05rnIGRgz9ntZxpdNhOqqQTUDVZ/+7WDHRkveDtQgrpzWu1eWf/1ku6GJcHyFViX
-eZCYEO8Yo5yFU6JLIqa1T5NzoKJJd/TqU03y1iEKADDhynobjssrZ3IJ4+fy5zaO
-PCA+oP+CiEcScDLN6LEnj1YZxJUiwo4o88sfbUOEPPy5qqxtXXI=
-=KIvm
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+> +        description: indicates the controller should not use looping in the
+> +          sequencer and therefore has a smaller maximum transfer size
+> +        type: boolean
+> +
+>  required:
+>    - compatible
+>    - reg
+> -- 
+> 2.26.2
+> 
