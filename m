@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D6EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F9AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C38CB206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21460206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587944;
-	bh=wdS4fBLK+athXA0QhuToTvmSHH48ZTcWyd0d89xX9pM=;
+	s=default; t=1599587972;
+	bh=EgAZVoJkcU9g96Eq+0GmQBlRdDPDI1IYhg6F0CWfoUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3PxGUt29JX6iCRFMcnlFlhOw01pvorydRYSDsqepN61ngQWGTJjpg3RtZiTFvIrt
-	 pcjxCb8Lnnvf1VWvqK6SqoX4mc8QNbkHRzqNggONhC9OUCbdHmDLduedzse5GV24mY
-	 /8SjEaenuuV+zkkUuoO05xOhSSVmcb+wx/6YGMeE=
+	b=wBa+Xu/ssnMjWk4b5DiBmpVeuqosN49isp8PGO5IlhQRucawkJYtBup9VO1Lc3+fg
+	 POP6737br2V+nDN03GI2hM4S793CfmEiRJTmpkqVP4avxLwRllfMy8MCEzHzO6PSgg
+	 EXXngtowfUq8np4zuQMzdXJDazhkSNVWd6EKml8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732287AbgIHR66 (ORCPT
+        id S1731566AbgIHR73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731562AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:47 -0400
+        id S1731561AbgIHQMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:46 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C1DE24866;
-        Tue,  8 Sep 2020 15:51:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6872824864;
+        Tue,  8 Sep 2020 15:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580315;
-        bh=wdS4fBLK+athXA0QhuToTvmSHH48ZTcWyd0d89xX9pM=;
+        s=default; t=1599580312;
+        bh=EgAZVoJkcU9g96Eq+0GmQBlRdDPDI1IYhg6F0CWfoUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHYl+k3XWeDQoXqn5xUXRYPbehZjmPcWlJMX3/Yc7iT64SX6mUUZQA2IIZbQLZ6n2
-         wnLFNkERpRf4dwGSZgFrdmqG311l25fYTCmjGL9OBcR9H4R3f3Wx6JmKmTM0hAb4+t
-         BM9P+JhcIEWIuPfvxMX+miZvqCBt6ceqktKbryPI=
+        b=QfQ9ih5TvlEbQ69io4lFKbLlpmedTSMgpDQG05W9Ez1s/Tc7w0rtdP44MJhymKh6+
+         WW2I0UL9CVJvNRIwYIwGIYa5Tmd51Q+weZH700IVNNOEx7LTzuObcbWiyrdEveDTwp
+         pF8eu5ugegZ1cvn7+1I+s5xsNQkaAZw64m7saETA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Gabriel Ganne <gabriel.ganne@6wind.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/65] bnxt_en: Check for zero dir entries in NVRAM.
-Date:   Tue,  8 Sep 2020 17:26:12 +0200
-Message-Id: <20200908152218.446272147@linuxfoundation.org>
+Subject: [PATCH 4.14 26/65] gtp: add GTPA_LINK info to msg sent to userspace
+Date:   Tue,  8 Sep 2020 17:26:11 +0200
+Message-Id: <20200908152218.387702883@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -62,37 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-[ Upstream commit dbbfa96ad920c50d58bcaefa57f5f33ceef9d00e ]
+[ Upstream commit b274e47d9e3f4dcd4ad4028a316ec22dc4533ac7 ]
 
-If firmware goes into unstable state, HWRM_NVM_GET_DIR_INFO firmware
-command may return zero dir entries. Return error in such case to
-avoid zero length dma buffer request.
+During a dump, this attribute is essential, it enables the userspace to
+know on which interface the context is linked to.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Tested-by: Gabriel Ganne <gabriel.ganne@6wind.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/gtp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-index 6edbbfc1709a2..a38433cb9015d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
-@@ -1761,6 +1761,9 @@ static int bnxt_get_nvram_directory(struct net_device *dev, u32 len, u8 *data)
- 	if (rc != 0)
- 		return rc;
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 090607e725a24..d3ccd6929579a 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1187,6 +1187,7 @@ static int gtp_genl_fill_info(struct sk_buff *skb, u32 snd_portid, u32 snd_seq,
+ 		goto nlmsg_failure;
  
-+	if (!dir_entries || !entry_length)
-+		return -EIO;
-+
- 	/* Insert 2 bytes of directory info (count and size of entries) */
- 	if (len < 2)
- 		return -EINVAL;
+ 	if (nla_put_u32(skb, GTPA_VERSION, pctx->gtp_version) ||
++	    nla_put_u32(skb, GTPA_LINK, pctx->dev->ifindex) ||
+ 	    nla_put_be32(skb, GTPA_PEER_ADDRESS, pctx->peer_addr_ip4.s_addr) ||
+ 	    nla_put_be32(skb, GTPA_MS_ADDRESS, pctx->ms_addr_ip4.s_addr))
+ 		goto nla_put_failure;
 -- 
 2.25.1
 
