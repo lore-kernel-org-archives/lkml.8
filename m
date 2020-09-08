@@ -2,107 +2,66 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3E3C2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D736C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E4302166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C712080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgIHJjz (ORCPT
+        id S1729210AbgIHJkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:39:55 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51895 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728886AbgIHJjx (ORCPT
+        Tue, 8 Sep 2020 05:40:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52186 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728490AbgIHJkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:39:53 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 0E8EA24000F;
-        Tue,  8 Sep 2020 09:39:46 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 11:39:46 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Arnd Bergmann <arnd@arndb.de>, Daniel Palmer <daniel@0x0f.com>
-Subject: Re: [PATCH v2 07/10] rtc: Introduce RTC_TIMESTAMP_END_2255
-Message-ID: <20200908093946.GQ230586@piout.net>
-References: <20200905133230.1014581-1-j.neuschaefer@gmx.net>
- <20200905133230.1014581-8-j.neuschaefer@gmx.net>
+        Tue, 8 Sep 2020 05:40:46 -0400
+Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02A2C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:40:45 -0700 (PDT)
+Received: from [2a02:fe0:c700:2:687c:e90d:da70:b07d] (port=59960)
+        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <Yw_Carl@bit-cube.eu>)
+        id 1kFa76-0006bx-LM
+        for linux-kernel@vger.kernel.org; Tue, 08 Sep 2020 11:40:32 +0200
+To:     linux-kernel@vger.kernel.org
+From:   =?UTF-8?Q?Ywe_C=c3=a6rlyn?= <Yw_Carl@bit-cube.eu>
+Subject: Fair Pay..
+Message-ID: <f738c34a-5c9e-8350-4096-7b64b70885fb@bit-cube.eu>
+Date:   Tue, 8 Sep 2020 11:40:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200905133230.1014581-8-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/09/2020 15:32:27+0200, Jonathan Neuschäfer wrote:
-> Some RTCs store the year as an 8-bit number relative to the year 2000.
-> This results in a maximum timestamp of 2255-12-31 23:59:59.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> ---
-> 
-> v2:
-> - New patch
-> ---
->  include/linux/rtc.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/rtc.h b/include/linux/rtc.h
-> index 22d1575e4991b..fcc086084a603 100644
-> --- a/include/linux/rtc.h
-> +++ b/include/linux/rtc.h
-> @@ -154,6 +154,7 @@ struct rtc_device {
->  #define RTC_TIMESTAMP_END_2079		3471292799LL /* 2079-12-31 23:59:59 */
->  #define RTC_TIMESTAMP_END_2099		4102444799LL /* 2099-12-31 23:59:59 */
->  #define RTC_TIMESTAMP_END_2199		7258118399LL /* 2199-12-31 23:59:59 */
-> +#define RTC_TIMESTAMP_END_2255		9025257599LL /* 2255-12-31 23:59:59 */
+People. Another update to the name - why not go all muslim? A solid 
+basis for fair pay, is The Quran, and it has the background all the way 
+to the adam-prophetic ban on amanita.
 
-Honestly, I wouldn't bother adding that one unless you have examples of
-other RTCs endng at the same date, I'm fine having the value and comment
-directly in the probe function.
+Both The Kaba and this are solid symbols for all we want in computing space.
 
->  #define RTC_TIMESTAMP_END_9999		253402300799LL /* 9999-12-31 23:59:59 */
-> 
->  extern struct rtc_device *devm_rtc_device_register(struct device *dev,
-> --
-> 2.28.0
-> 
+And since myths of Tor still haunts here, we can replace it with a 
+correct term NUR, arabic for light, keeping all developments, and 
+rejecting the nonsensical.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Even E D M can use political principles like Maruf not Munkar ("good not 
+bad") and be best!
+
+And so - NUR X, a nix with a solid base in fair pay principles and a 
+whole abrahamic background if needed, in the now scholars script Arabic.
+
+Prepared for the ongoing developments, and the new millennium!
+
+Serenity!
+Ywe CÃ¦rlyn
+https://www.youtube.com/channel/UCR3gmLVjHS5A702wo4bol_Q
