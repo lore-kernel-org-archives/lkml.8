@@ -2,130 +2,211 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E66C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E84320768
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9356E20768
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:58:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohS68j1Q"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NJ3URzpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732566AbgIHT6H (ORCPT
+        id S1732570AbgIHT6L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50098 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730223AbgIHPfq (ORCPT
+        Tue, 8 Sep 2020 15:58:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730355AbgIHPfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:35:46 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8372C0612EF;
-        Tue,  8 Sep 2020 05:55:34 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id u21so9639277ljl.6;
-        Tue, 08 Sep 2020 05:55:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2ehLwXNK3WBwCU+2CN9jFbvN8+npPBE1XX1ZSoVrUTA=;
-        b=ohS68j1Qosw8sk+DbiaADlMklzrZcqzn+IrJkLUf5OKRiKa6DdhU0QJxMHJV2Xu4d1
-         3YEV8DE5gN07uNXvfX+YuIigPks3hFtW5ZFFVB8w0ZpiIQqHxI3Q8xbbXrorA8zVp58m
-         XpDpv9QTXT3XEeyLDikG1rG4DzZ9sJHbR+zzkfiehV1WRjfuDu3/UypVIMIpK3+OrPAO
-         jNqQPdRbatlNKaUvClzx5+aSFofLgubH8Bidc0fAVZJpQ4K8PmU2n2vh16AFKW9uXSbB
-         Qvnk79kTMAmkNbl6jdABjNXLGdmZleuoS11k5CoE7bXVxO0fhxGISkiNnw1PBHRRjs20
-         3Wmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2ehLwXNK3WBwCU+2CN9jFbvN8+npPBE1XX1ZSoVrUTA=;
-        b=Wh4Pq1TZvJY1QWZih8YDpO4q+cHdex90CVkXO5wjlpYo3wG81O2sofGcFCdSYB4ZYj
-         1rKYzqLB2sa8lAN4OH7CM1ssjlje4Qeejs7jMLK1pKVgArdqF4VRXp82LEstertX+fLL
-         jQjBPNsBE/P1MRW8m0jstX5Gtto+MswutXkiJ8p1eOzdT02EiFaV/EGrhDihLURQMlaF
-         XMk3JhzvE713nIl6IVo/N2sJio0bPIg95rgvD4wAkffBR6DUX4lyjM2wlEobJp11B0Ko
-         MKk5MMfi4TZwItilFoN4lyMQa25ZGwRjJI6bs2i+/pRKCIkr3mxxnj4PFq9FUVkkR5f5
-         g0CA==
-X-Gm-Message-State: AOAM531ECdHdIRIR/aEXpCkDWMtJmNcnMxa23lPzS2J1PSvThz1R1Aib
-        nFpLcqOaErKHxl1uwh5VyuopN7y4g9w=
-X-Google-Smtp-Source: ABdhPJy25Zmvv8ZSp1nEAFAtHswk2JSRcw6OzDPS5ICaqEVMzyPELa9Qi30aAs4QWFaZHKS3aReLxw==
-X-Received: by 2002:a2e:4e09:: with SMTP id c9mr13415557ljb.283.1599569732057;
-        Tue, 08 Sep 2020 05:55:32 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id n20sm10553687lfh.1.2020.09.08.05.55.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 05:55:31 -0700 (PDT)
-Subject: Re: [PATCH v6 16/35] i2c: tegra: Reorder location of functions in the
- code
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200908021021.9123-1-digetx@gmail.com>
- <20200908021021.9123-17-digetx@gmail.com>
- <CAHp75VefU+iXpngPnzQRBfrg3OgLUBqhOCJpPo8natfCBr6Q5w@mail.gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3fce58d0-eac6-bbea-74e3-098cb079e9b5@gmail.com>
-Date:   Tue, 8 Sep 2020 15:55:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088E5HaY155667;
+        Tue, 8 Sep 2020 10:16:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=JMbH8samJLb5sy2XzpgZzo3gwfoR4Or5sHtVMIqHhLs=;
+ b=NJ3URzpdswVooPaI2LHOaXu6ju+Ngmf2INx7IYktjmTAF583iqpKuti7BeOKDXf5dvjb
+ DFU6oNAIttt5W97m8sP5q85mhtK8i+n1ItawNxhKl5O2wjjq4k9mXoPw5SqlXxavUX61
+ DbY/EivnZmwZCJBJpbRxTSf59ig7WVFjsDjsZEQGKPiRyE8MJKsL2Z3Am3we93opJ+Lg
+ jn3JNhFff4CDPtZ//sFEUOiYHH8m3x+zIMXGVLVBJKTIpwCGjvScInnPzqoa6ADDieUI
+ XzPpVgnJ/wbqjo+1fcfB9iO+uJ5ZVGEMnbTIksPgteUtaZ/IE90vq4p07FXbR5xH1s/v Vg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb5wh4vq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:16:06 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088E5rqF157526;
+        Tue, 8 Sep 2020 10:16:06 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb5wh4sn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 10:16:06 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088EDg8b007449;
+        Tue, 8 Sep 2020 14:16:01 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04fra.de.ibm.com with ESMTP id 33cm5hhqvk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 14:16:01 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088EFwKF37814660
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 14:15:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FB7CA4069;
+        Tue,  8 Sep 2020 14:15:58 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DB9EA406D;
+        Tue,  8 Sep 2020 14:15:56 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.58.21])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  8 Sep 2020 14:15:56 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 16:15:55 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mike Rapoport <rppt@kernel.org>
+Subject: Re: [RFC PATCH v2 2/3] mm: make pXd_addr_end() functions page-table
+ entry aware
+Message-ID: <20200908141554.GA20558@oc3871087118.ibm.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+ <20200907180058.64880-3-gerald.schaefer@linux.ibm.com>
+ <31dfb3ed-a0cc-3024-d389-ab9bd19e881f@csgroup.eu>
+ <20200908074638.GA19099@oc3871087118.ibm.com>
+ <5d4f5546-afd0-0b8f-664d-700ae346b9ec@csgroup.eu>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VefU+iXpngPnzQRBfrg3OgLUBqhOCJpPo8natfCBr6Q5w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5d4f5546-afd0-0b8f-664d-700ae346b9ec@csgroup.eu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-08.09.2020 11:43, Andy Shevchenko пишет:
-> On Tue, Sep 8, 2020 at 5:11 AM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> Reorder location of functions in the code in order to have definition
->> of functions closer to the place of the invocation. This change makes
->> easier to navigate around the code and removes the need to have a
->> prototype for tegra_i2c_init().
+On Tue, Sep 08, 2020 at 10:16:49AM +0200, Christophe Leroy wrote:
+> >Yes, and also two more sources :/
+> >	arch/powerpc/mm/kasan/8xx.c
+> >	arch/powerpc/mm/kasan/kasan_init_32.c
+> >
+> >But these two are not quite obvious wrt pgd_addr_end() used
+> >while traversing pmds. Could you please clarify a bit?
+> >
+> >
+> >diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
+> >index 2784224..89c5053 100644
+> >--- a/arch/powerpc/mm/kasan/8xx.c
+> >+++ b/arch/powerpc/mm/kasan/8xx.c
+> >@@ -15,8 +15,8 @@
+> >  	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
+> >  		pte_basic_t *new;
+> >-		k_next = pgd_addr_end(k_cur, k_end);
+> >-		k_next = pgd_addr_end(k_next, k_end);
+> >+		k_next = pmd_addr_end(k_cur, k_end);
+> >+		k_next = pmd_addr_end(k_next, k_end);
 > 
-> Still seems to have ordering issues (it moves pieces you actually
-> change in the next patches).
-
-It's unavoidable that this patch either touches previous or next
-changes. You actually had an opposite complaint to v5.
-
-This diver has a long overdue for the refactoring. I think it's a good
-time to do it right now because driver works stable and it's quite
-unlikely that there will ever be fixes for the older code. Hence it
-should be good to have the code reordered now, so that we could have a
-nicer code base for the future changes.
-
-> Have you considered which one looks neat this variant or if you move
-> it closer to the end of the series?
+> No, I don't think so.
+> On powerpc32 we have only two levels, so pgd and pmd are more or
+> less the same.
+> But pmd_addr_end() as defined in include/asm-generic/pgtable-nopmd.h
+> is a no-op, so I don't think it will work.
 > 
+> It is likely that this function should iterate on pgd, then you get
+> pmd = pmd_offset(pud_offset(p4d_offset(pgd)));
 
-This variant should be more logical because changes have this order:
+It looks like the code iterates over single pmd table while using
+pgd_addr_end() only to skip all the middle levels and bail out
+from the loop.
 
-1. fixes
-2. features
-3. code reorder
-4. more important cleanups
-5. less important cleanups
+I would be wary for switching from pmds to pgds, since we are
+trying to minimize impact (especially functional) and the
+rework does not seem that obvious.
 
-The 3 merely shuffles code around without any changes to the code, hence
-it's a safe change.
+Assuming pmd and pgd are the same would actually such approach
+work for now?
 
-The 4 has a potential danger since there are cleanups of the outdated
-features and some changes may change semantic in a case of a bug. Hence,
-if in the future we'll happen to find a problem in one of the 4 patches,
-then there is a better chance that the problem could be fixed with a
-simple revert. If 3 is placed after 4, then the chance is completely gone.
+diff --git a/arch/powerpc/mm/kasan/8xx.c b/arch/powerpc/mm/kasan/8xx.c
+index 2784224..94466cc 100644
+--- a/arch/powerpc/mm/kasan/8xx.c
++++ b/arch/powerpc/mm/kasan/8xx.c
+@@ -15,8 +15,8 @@
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd += 2, block += SZ_8M) {
+ 		pte_basic_t *new;
+ 
+-		k_next = pgd_addr_end(k_cur, k_end);
+-		k_next = pgd_addr_end(k_next, k_end);
++		k_next = pgd_addr_end(__pgd(pmd_val(*pmd)), k_cur, k_end);
++		k_next = pgd_addr_end(__pgd(pmd_val(*(pmd + 1))), k_next, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
+ 
+diff --git a/arch/powerpc/mm/kasan/kasan_init_32.c b/arch/powerpc/mm/kasan/kasan_init_32.c
+index fb29404..c0bcd64 100644
+--- a/arch/powerpc/mm/kasan/kasan_init_32.c
++++ b/arch/powerpc/mm/kasan/kasan_init_32.c
+@@ -38,7 +38,7 @@ int __init kasan_init_shadow_page_tables(unsigned long k_start, unsigned long k_
+ 	for (k_cur = k_start; k_cur != k_end; k_cur = k_next, pmd++) {
+ 		pte_t *new;
+ 
+-		k_next = pgd_addr_end(k_cur, k_end);
++		k_next = pgd_addr_end(__pgd(pmd_val(*pmd)), k_cur, k_end);
+ 		if ((void *)pmd_page_vaddr(*pmd) != kasan_early_shadow_pte)
+ 			continue;
+ 
+@@ -196,7 +196,7 @@ void __init kasan_early_init(void)
+ 	kasan_populate_pte(kasan_early_shadow_pte, PAGE_KERNEL);
+ 
+ 	do {
+-		next = pgd_addr_end(addr, end);
++		next = pgd_addr_end(__pgd(pmd_val(*pmd)), addr, end);
+ 		pmd_populate_kernel(&init_mm, pmd, kasan_early_shadow_pte);
+ 	} while (pmd++, addr = next, addr != end);
+ 
+
+Alternatively we could pass invalid pgd to keep the code structure
+intact, but that of course is less nice.
+
+Thanks!
+
+> Christophe
