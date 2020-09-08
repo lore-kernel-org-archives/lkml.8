@@ -2,173 +2,70 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C983C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3D5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 327ED20672
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641C3206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599560745;
+	bh=4T4cYsTAaTqqTeL5uR3DM9l9gqIARL465lh/lL0fACc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PEhyEjIY1qHS8lPs/3d3vKg1OTdaozj9LlHpS5a3VUoilsdf5Eu/YslfyLPn8zXex
+	 X++EsPuX2m66i1uXyatgSfxfRja9aqpZrtIdgCbe9cZIy6S/f6YBVYAHfLgQWo+unQ
+	 D/3BwC3iKvotilSKUUH+9ZUfMWBuTl3zA5Q7Fjlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729365AbgIHKZf (ORCPT
+        id S1729397AbgIHKZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:25:35 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:48595 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729031AbgIHKZ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:25:29 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U8IvCd8_1599560724;
-Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U8IvCd8_1599560724)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 08 Sep 2020 18:25:25 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org
-Subject: [PATCH] mm/memcg: rename watermark as max_usage
-Date:   Tue,  8 Sep 2020 18:25:21 +0800
-Message-Id: <1599560721-68915-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 8 Sep 2020 06:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729372AbgIHKZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:25:39 -0400
+Received: from localhost (unknown [122.182.239.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B2D920672;
+        Tue,  8 Sep 2020 10:25:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599560739;
+        bh=4T4cYsTAaTqqTeL5uR3DM9l9gqIARL465lh/lL0fACc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ePNFowFNixmF8ZqwqAQXMzElSQMOtja5FWVPZ49+BR6FsDwrC6UFWr9rHa5etZdBy
+         4X+mKMCPddxC9uShvvU02I40sVD47SYS+z06RFQXxd3EEHEjPIH4YFDvR0mK/p3nkM
+         mrQYi1B9KD7L/t1eKdCDidAsRhZX2V7Lh1HwcyRU=
+Date:   Tue, 8 Sep 2020 15:55:31 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] phy: ti: gmii-sel: update to support multiport k3
+ devices
+Message-ID: <20200908102531.GC77521@vkoul-mobl>
+References: <20200828201943.29155-1-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828201943.29155-1-grygorii.strashko@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The page_counter's watermark used to show as max_usage_in_bytes in memory
-cgroup. named as watermark is a kind of misleadking. So, let's rename it
-as it usage.
+On 28-08-20, 23:19, Grygorii Strashko wrote:
+> Hi Kishon,
+> 
+> This series introduces support for multiport K3 CPSW devices like one, which
+> can be found on J721E SoC (MAIN CPSW).
+> The first two patches are preparation changes. The Patch 3 add support for
+> retrieving number of ports and base registers offset from DT.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org> 
-Cc: Johannes Weiner <hannes@cmpxchg.org> 
-Cc: Michal Hocko <mhocko@kernel.org> 
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com> 
-Cc: linux-kernel@vger.kernel.org 
-Cc: linux-mm@kvack.org 
-Cc: cgroups@vger.kernel.org 
----
- include/linux/page_counter.h |  6 +++---
- mm/hugetlb_cgroup.c          |  8 ++++----
- mm/memcontrol.c              |  4 ++--
- mm/page_counter.c            | 12 ++++++------
- 4 files changed, 15 insertions(+), 15 deletions(-)
+Applied all, thanks
 
-diff --git a/include/linux/page_counter.h b/include/linux/page_counter.h
-index 85bd413e784e..813f2da26c36 100644
---- a/include/linux/page_counter.h
-+++ b/include/linux/page_counter.h
-@@ -25,7 +25,7 @@ struct page_counter {
- 	atomic_long_t children_low_usage;
- 
- 	/* legacy */
--	unsigned long watermark;
-+	unsigned long max_usage;	/* max_usage_in_bytes */
- 	unsigned long failcnt;
- };
- 
-@@ -67,9 +67,9 @@ static inline void page_counter_set_high(struct page_counter *counter,
- int page_counter_memparse(const char *buf, const char *max,
- 			  unsigned long *nr_pages);
- 
--static inline void page_counter_reset_watermark(struct page_counter *counter)
-+static inline void page_counter_reset_max_usage(struct page_counter *counter)
- {
--	counter->watermark = page_counter_read(counter);
-+	counter->max_usage = page_counter_read(counter);
- }
- 
- #endif /* _LINUX_PAGE_COUNTER_H */
-diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
-index 1f87aec9ab5c..c7484f5eb8ef 100644
---- a/mm/hugetlb_cgroup.c
-+++ b/mm/hugetlb_cgroup.c
-@@ -437,9 +437,9 @@ static u64 hugetlb_cgroup_read_u64(struct cgroup_subsys_state *css,
- 	case RES_RSVD_LIMIT:
- 		return (u64)rsvd_counter->max * PAGE_SIZE;
- 	case RES_MAX_USAGE:
--		return (u64)counter->watermark * PAGE_SIZE;
-+		return (u64)counter->max_usage * PAGE_SIZE;
- 	case RES_RSVD_MAX_USAGE:
--		return (u64)rsvd_counter->watermark * PAGE_SIZE;
-+		return (u64)rsvd_counter->max_usage * PAGE_SIZE;
- 	case RES_FAILCNT:
- 		return counter->failcnt;
- 	case RES_RSVD_FAILCNT:
-@@ -553,10 +553,10 @@ static ssize_t hugetlb_cgroup_reset(struct kernfs_open_file *of,
- 
- 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
- 	case RES_MAX_USAGE:
--		page_counter_reset_watermark(counter);
-+		page_counter_reset_max_usage(counter);
- 		break;
- 	case RES_RSVD_MAX_USAGE:
--		page_counter_reset_watermark(rsvd_counter);
-+		page_counter_reset_max_usage(rsvd_counter);
- 		break;
- 	case RES_FAILCNT:
- 		counter->failcnt = 0;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 8c74f1200261..21b73de53073 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3559,7 +3559,7 @@ static u64 mem_cgroup_read_u64(struct cgroup_subsys_state *css,
- 	case RES_LIMIT:
- 		return (u64)counter->max * PAGE_SIZE;
- 	case RES_MAX_USAGE:
--		return (u64)counter->watermark * PAGE_SIZE;
-+		return (u64)counter->max_usage * PAGE_SIZE;
- 	case RES_FAILCNT:
- 		return counter->failcnt;
- 	case RES_SOFT_LIMIT:
-@@ -3839,7 +3839,7 @@ static ssize_t mem_cgroup_reset(struct kernfs_open_file *of, char *buf,
- 
- 	switch (MEMFILE_ATTR(of_cft(of)->private)) {
- 	case RES_MAX_USAGE:
--		page_counter_reset_watermark(counter);
-+		page_counter_reset_max_usage(counter);
- 		break;
- 	case RES_FAILCNT:
- 		counter->failcnt = 0;
-diff --git a/mm/page_counter.c b/mm/page_counter.c
-index afe22ad335cc..d88ee074f4a6 100644
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -75,10 +75,10 @@ void page_counter_charge(struct page_counter *counter, unsigned long nr_pages)
- 		propagate_protected_usage(c, new);
- 		/*
- 		 * This is indeed racy, but we can live with some
--		 * inaccuracy in the watermark.
-+		 * inaccuracy in the max_usage.
- 		 */
--		if (new > READ_ONCE(c->watermark))
--			WRITE_ONCE(c->watermark, new);
-+		if (new > READ_ONCE(c->max_usage))
-+			WRITE_ONCE(c->max_usage, new);
- 	}
- }
- 
-@@ -129,10 +129,10 @@ bool page_counter_try_charge(struct page_counter *counter,
- 		propagate_protected_usage(c, new);
- 		/*
- 		 * Just like with failcnt, we can live with some
--		 * inaccuracy in the watermark.
-+		 * inaccuracy in the max_usage.
- 		 */
--		if (new > READ_ONCE(c->watermark))
--			WRITE_ONCE(c->watermark, new);
-+		if (new > READ_ONCE(c->max_usage))
-+			WRITE_ONCE(c->max_usage, new);
- 	}
- 	return true;
- 
 -- 
-1.8.3.1
-
+~Vinod
