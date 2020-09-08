@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1919C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F995C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFF502087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8B42087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592581;
-	bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
+	s=default; t=1599592591;
+	bh=aX/T//x1amBJx3NMDymbydpLmjyMzPOQPyzS9kFjhUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAwf83q1+WtCoiJozxxKgnMiWfZofFPphsjbPnebp0GYb6PLs9OL4tLzm9BizI+vd
-	 AOkpCsB1Shrs3v+UiS7EnBpQEPGTlBI/I36iVo64WcEvho1e2J4+fSUMXs3fjlzDp8
-	 iVqSCxJghyve1Pvrd8f9a2lvtvb+oqaea8f0/Hqs=
+	b=FMqNM+xcRW3p3bB0jsArzqaC89NQo3WL8y6TRLj54uQUMewSDEQzEfjQLrb+L/rDh
+	 2lYEWedsOdkPBrdtyxh22ygzyQfcdOjxrUB8KF3QMMVQakXuaXY2427JC30teU8o9X
+	 LBpQ1kU34dNLKvJiKoUHPJeieQkdjWAgRDmmz9Ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731939AbgIHTQR (ORCPT
+        id S1731957AbgIHTQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52184 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731175AbgIHQEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:04:40 -0400
+        id S1730910AbgIHQEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:04:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A652E21D6C;
-        Tue,  8 Sep 2020 15:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6B7E22470;
+        Tue,  8 Sep 2020 15:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579337;
-        bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
+        s=default; t=1599579420;
+        bh=aX/T//x1amBJx3NMDymbydpLmjyMzPOQPyzS9kFjhUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qX94xWNCzPSX5hL27A+CCLLfpI30PkGPAmXNAdRN1L01AwtsSy/LJDu7r187cNI/6
-         VWIDB1lQ0cfBQpdcGo1K2ktQBFlNmuzN21r/wEt3QOf0fVPbTJkSIkyNIJ90a+fk+P
-         wDflmVXrkuz4Nb8Nqg0Ugkr11gelYn+UuhFEIkyE=
+        b=ipcQXslFFP4gRN+9C13TkWftsAwqB0dALffIGEcFXYb9kKL85YYE8mraXeV2XskVe
+         j7GL4kloSWrDwo95wVuydpa8t7qlLel2Zt+ql6sCMpB9OUBVdmCqj0V6b0I6FLu2Zj
+         ytPEcvB5RVpYHpXX9sWDxUq4AHUumXnQ23OElIg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
-        Hersen Wu <hersenxs.wu@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 035/186] drm/amd/display: Retry AUX write when fail occurs
-Date:   Tue,  8 Sep 2020 17:22:57 +0200
-Message-Id: <20200908152243.377818644@linuxfoundation.org>
+Subject: [PATCH 5.8 070/186] bnxt_en: Fix PCI AER error recovery flow
+Date:   Tue,  8 Sep 2020 17:23:32 +0200
+Message-Id: <20200908152245.052297495@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,40 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit ef67d792a2fc578319399f605fbec2f99ecc06ea ]
+[ Upstream commit df3875ec550396974b1d8a518bd120d034738236 ]
 
-[Why]
-In dm_dp_aux_transfer() now, we forget to handle AUX_WR fail cases. We
-suppose every write wil get done successfully and hence some AUX
-commands might not sent out indeed.
+When a PCI error is detected the PCI state could be corrupt, save
+the PCI state after initialization and restore it after the slot
+reset.
 
-[How]
-Check if AUX_WR success. If not, retry it.
-
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: 6316ea6db93d ("bnxt_en: Enable AER support.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-index e5ecc5affa1eb..5098fc98cc255 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-@@ -67,7 +67,7 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
- 	result = dc_link_aux_transfer_raw(TO_DM_AUX(aux)->ddc_service, &payload,
- 				      &operation_result);
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 7463a1847cebd..e71a99555b4bc 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -12065,6 +12065,7 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		    (long)pci_resource_start(pdev, 0), dev->dev_addr);
+ 	pcie_print_link_status(pdev);
  
--	if (payload.write)
-+	if (payload.write && result >= 0)
- 		result = msg->size;
++	pci_save_state(pdev);
+ 	return 0;
  
- 	if (result < 0)
+ init_err_cleanup:
+@@ -12260,6 +12261,8 @@ static pci_ers_result_t bnxt_io_slot_reset(struct pci_dev *pdev)
+ 			"Cannot re-enable PCI device after reset.\n");
+ 	} else {
+ 		pci_set_master(pdev);
++		pci_restore_state(pdev);
++		pci_save_state(pdev);
+ 
+ 		err = bnxt_hwrm_func_reset(bp);
+ 		if (!err) {
 -- 
 2.25.1
 
