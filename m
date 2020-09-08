@@ -2,70 +2,73 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16520C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3469AC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C30702080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E52852080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vodQIQAK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F8sNOyr1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="l21Kp+H0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730269AbgIHU3k (ORCPT
+        id S1728936AbgIHUb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41026 "EHLO
+        Tue, 8 Sep 2020 16:31:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729670AbgIHU3E (ORCPT
+        with ESMTP id S1728347AbgIHUby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:29:04 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFCDC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 13:29:03 -0700 (PDT)
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1599596942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9eH+JYde9zpX06tIDLSAmyFfU5Jfnagpj3Shueijavc=;
-        b=vodQIQAKiZhdgt453F7C5py7aFqeXAy7oy8ay76FAZ+ZPCbChG0nrn84IRZ22LqbC6Na05
-        e8k7GmxdKRrJMxjTV2BbJO+/X0T8ndZbTTmevi8sje5Aw40MPJSeEjMScpduT/CWoVOR9f
-        s3gf8rLrdB8r+0wcCFp9vHiv06tBAGab38fUE7RffJuzUFZ2IN8kANYEmF9JeH4Ffry5nB
-        h3jSBDL9iqRcLgXAqeUGq3b3e/fk8cQjzuTCJiQUZ+vG7ym2wAn3RI5FYEcvQUUtgh5poR
-        Kk1xRQgLaG93FwPFBcl0VdfssHNzTLBx6+SJ0Ckg5Hhd2sLaY9hDekiTgaT38A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1599596942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9eH+JYde9zpX06tIDLSAmyFfU5Jfnagpj3Shueijavc=;
-        b=F8sNOyr1mPXuRkzg0hNIwyppp2YCpCMPj3qW4Q1ZRxaiSXD+gmDNlgTvz5DauSlQRtZ7eh
-        Qj1656ttiMq111BQ==
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH printk v4 4/6] printk: ringbuffer: change representation of states
-Date:   Tue,  8 Sep 2020 22:34:57 +0206
-Message-Id: <20200908202859.2736-5-john.ogness@linutronix.de>
-In-Reply-To: <20200908202859.2736-1-john.ogness@linutronix.de>
-References: <20200908202859.2736-1-john.ogness@linutronix.de>
+        Tue, 8 Sep 2020 16:31:54 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE224C061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 13:31:53 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id z19so119480pfn.8
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 13:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GinH/+WlUUwJ7OA+sMknkcAQqYifytKaKvguzz2CVE8=;
+        b=l21Kp+H0v8uAYf7toyEqNp3Cy4s11aUKhZNJtNGZTVsWzEe+4XQnEK6SNIaJHitQmE
+         gu0LHt6kxnMPygob8IiXd9ep45Ga6YVhpp9KCxHz+aHqmSm9f2FmAGW0zjo7cscXts8Q
+         ngeAx0qvGqsdpZhohbQBiqI0ba9dNBOtJO8tY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GinH/+WlUUwJ7OA+sMknkcAQqYifytKaKvguzz2CVE8=;
+        b=mBjUJKl0reW3RuBxcUbEVbe8jJ6YwbOumCGuwkBA8kW2xSKfOyBsax9EPd5xLrViMW
+         LpEHtdjAZfnfgKtrR54tsfHtvSXg413Gn5S3Vo11p5OXSoi3qNjm1PwLQo9FEQaXQhb+
+         jlf64tE9qB3pLZ+yqupHr6rWfcTrBMxwVytkolGKvS/4MewhZhrdQfm+Tg5hbs9zn2lC
+         JNbgnHAqS76cJB3tz0lbgrm+waKU0OIFUu0PKulDgLCSM12pr0M8q1k0lAAq5M7Satrt
+         0pbeCAIVSu9Shxi9qT1J2jZjx7jfDiYKrHoyJw55gip+loRzMULOoK3W7bFu9oGIV8lS
+         Zs7g==
+X-Gm-Message-State: AOAM5338ICQLYZCpLjmFtUSGsesRDxG2o5GYPGWUv8vuCaRDuqSCTw/o
+        yhnN05Kr4+lkv3ZjAJ20e4/8qg==
+X-Google-Smtp-Source: ABdhPJxR1cfQbHMi4YHouw7fFkCUEVsDqRPvLhAz8c9yVtVO2T5nIYTRtwU1uGRh8JQFx6b5KMCvSg==
+X-Received: by 2002:a17:902:d206:b029:d0:cbe1:e711 with SMTP id t6-20020a170902d206b02900d0cbe1e711mr793068ply.31.1599597113155;
+        Tue, 08 Sep 2020 13:31:53 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id y7sm113620pjn.54.2020.09.08.13.31.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 13:31:52 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     mka@chromium.org, swboyd@chromium.org,
+        Philip Chen <philipchen@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: qcom: Add sc7180-lazor sku2
+Date:   Tue,  8 Sep 2020 13:31:17 -0700
+Message-Id: <20200908133037.1.Ia98a6b938453254e360c4a9fa253d2d6807dff3f@changeid>
+X-Mailer: git-send-email 2.28.0.526.ge36021eeef-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,212 +76,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than deriving the state by evaluating bits within the flags
-area of the state variable, assign the states explicit values and
-set those values in the flags area. Introduce macros to make it
-simple to read and write state values for the state variable.
+Add a new SKU variant.  This is a pick from the downstream tree that
+is the current source of truth for this platform.
 
-Although the functionality is preserved, the binary representation
-for the states is changed.
-
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Link: https://crrev.com/c/2386997
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- Documentation/admin-guide/kdump/gdbmacros.txt | 12 ++++---
- kernel/printk/printk_ringbuffer.c             | 28 +++++------------
- kernel/printk/printk_ringbuffer.h             | 31 ++++++++++++-------
- scripts/gdb/linux/dmesg.py                    | 11 ++++---
- 4 files changed, 41 insertions(+), 41 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
-index 7adece30237e..8f533b751c46 100644
---- a/Documentation/admin-guide/kdump/gdbmacros.txt
-+++ b/Documentation/admin-guide/kdump/gdbmacros.txt
-@@ -295,9 +295,12 @@ document dump_record
- end
- 
- define dmesg
--	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
--	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
--	set var $id_mask = ~$flags_mask
-+	# definitions from kernel/printk/printk_ringbuffer.h
-+	set var $desc_committed = 1
-+	set var $desc_sv_bits = sizeof(long) * 8
-+	set var $desc_flags_shift = $desc_sv_bits - 2
-+	set var $desc_flags_mask = 3 << $desc_flags_shift
-+	set var $id_mask = ~$desc_flags_mask
- 
- 	set var $desc_count = 1U << prb->desc_ring.count_bits
- 	set var $prev_flags = 0
-@@ -309,7 +312,8 @@ define dmesg
- 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
- 
- 		# skip non-committed record
--		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
-+		set var $state = 3 & ($desc->state_var.counter >> $desc_flags_shift)
-+		if ($state == $desc_committed)
- 			dump_record $desc $prev_flags
- 			set var $prev_flags = $desc->info.flags
- 		end
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 82347abb22a5..911fbe150e9a 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -348,14 +348,6 @@ static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
- 	return true;
- }
- 
--/* The possible responses of a descriptor state-query. */
--enum desc_state {
--	desc_miss,	/* ID mismatch */
--	desc_reserved,	/* reserved, in use by writer */
--	desc_committed, /* committed, writer is done */
--	desc_reusable,	/* free, not yet used by any writer */
--};
--
- /* Query the state of a descriptor. */
- static enum desc_state get_desc_state(unsigned long id,
- 				      unsigned long state_val)
-@@ -363,13 +355,7 @@ static enum desc_state get_desc_state(unsigned long id,
- 	if (id != DESC_ID(state_val))
- 		return desc_miss;
- 
--	if (state_val & DESC_REUSE_MASK)
--		return desc_reusable;
--
--	if (state_val & DESC_COMMITTED_MASK)
--		return desc_committed;
--
--	return desc_reserved;
-+	return DESC_STATE(state_val);
- }
- 
- /*
-@@ -467,8 +453,8 @@ static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
- static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- 			       unsigned long id)
- {
--	unsigned long val_committed = id | DESC_COMMITTED_MASK;
--	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
-+	unsigned long val_committed = DESC_SV(id, desc_committed);
-+	unsigned long val_reusable = DESC_SV(id, desc_reusable);
- 	struct prb_desc *desc = to_desc(desc_ring, id);
- 	atomic_long_t *state_var = &desc->state_var;
- 
-@@ -904,7 +890,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 */
- 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
- 	if (prev_state_val &&
--	    prev_state_val != (id_prev_wrap | DESC_COMMITTED_MASK | DESC_REUSE_MASK)) {
-+	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-@@ -918,7 +904,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 * This pairs with desc_read:D.
- 	 */
- 	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
--				     id | 0)) { /* LMM(desc_reserve:F) */
-+			DESC_SV(id, desc_reserved))) { /* LMM(desc_reserve:F) */
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-@@ -1237,7 +1223,7 @@ void prb_commit(struct prb_reserved_entry *e)
- {
- 	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
- 	struct prb_desc *d = to_desc(desc_ring, e->id);
--	unsigned long prev_state_val = e->id | 0;
-+	unsigned long prev_state_val = DESC_SV(e->id, desc_reserved);
- 
- 	/* Now the writer has finished all writing: LMM(prb_commit:A) */
- 
-@@ -1250,7 +1236,7 @@ void prb_commit(struct prb_reserved_entry *e)
- 	 * this. This pairs with desc_read:B.
- 	 */
- 	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
--				     e->id | DESC_COMMITTED_MASK)) { /* LMM(prb_commit:B) */
-+			DESC_SV(e->id, desc_committed))) { /* LMM(prb_commit:B) */
- 		WARN_ON_ONCE(1);
- 	}
- 
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index e6302da041f9..a9d85a6727b1 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -112,16 +112,25 @@ struct prb_reserved_entry {
- 	unsigned int			text_space;
- };
- 
--#define _DATA_SIZE(sz_bits)		(1UL << (sz_bits))
--#define _DESCS_COUNT(ct_bits)		(1U << (ct_bits))
--#define DESC_SV_BITS			(sizeof(unsigned long) * 8)
--#define DESC_COMMITTED_MASK		(1UL << (DESC_SV_BITS - 1))
--#define DESC_REUSE_MASK			(1UL << (DESC_SV_BITS - 2))
--#define DESC_FLAGS_MASK			(DESC_COMMITTED_MASK | DESC_REUSE_MASK)
--#define DESC_ID_MASK			(~DESC_FLAGS_MASK)
--#define DESC_ID(sv)			((sv) & DESC_ID_MASK)
--#define FAILED_LPOS			0x1
--#define NO_LPOS				0x3
-+/* The possible responses of a descriptor state-query. */
-+enum desc_state {
-+	desc_miss	=  -1,	/* ID mismatch (pseudo state) */
-+	desc_reserved	= 0x0,	/* reserved, in use by writer */
-+	desc_committed	= 0x1,	/* committed by writer */
-+	desc_reusable	= 0x3,	/* free, not yet used by any writer */
+ arch/arm64/boot/dts/qcom/Makefile               |  1 +
+ .../dts/qcom/sc7180-trogdor-lazor-r1-kb.dts     | 17 +++++++++++++++++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
+
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 5899101526a7..af5ff84889cb 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -21,6 +21,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r0.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r1.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r1-kb.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-lazor-r1-lte.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-r1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-r1-lte.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
+new file mode 100644
+index 000000000000..c3f426c3c30a
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor-lazor-r1-kb.dts
+@@ -0,0 +1,17 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Google Lazor board device tree source
++ *
++ * Copyright 2020 Google LLC.
++ */
++
++#include "sc7180-trogdor-lazor-r1.dts"
++
++/ {
++	model = "Google Lazor (rev1+) with KB Backlight";
++	compatible = "google,lazor-sku2", "qcom,sc7180";
 +};
 +
-+#define _DATA_SIZE(sz_bits)	(1UL << (sz_bits))
-+#define _DESCS_COUNT(ct_bits)	(1U << (ct_bits))
-+#define DESC_SV_BITS		(sizeof(unsigned long) * 8)
-+#define DESC_FLAGS_SHIFT	(DESC_SV_BITS - 2)
-+#define DESC_FLAGS_MASK		(3UL << DESC_FLAGS_SHIFT)
-+#define DESC_STATE(sv)		(3UL & (sv >> DESC_FLAGS_SHIFT))
-+#define DESC_SV(id, state)	(((unsigned long)state << DESC_FLAGS_SHIFT) | id)
-+#define DESC_ID_MASK		(~DESC_FLAGS_MASK)
-+#define DESC_ID(sv)		((sv) & DESC_ID_MASK)
-+#define FAILED_LPOS		0x1
-+#define NO_LPOS			0x3
- 
- #define FAILED_BLK_LPOS	\
- {				\
-@@ -213,7 +222,7 @@ struct prb_reserved_entry {
-  */
- #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
- #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
--#define DESC0_SV(ct_bits)	(DESC_COMMITTED_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
-+#define DESC0_SV(ct_bits)	DESC_SV(DESC0_ID(ct_bits), desc_reusable)
- 
- /*
-  * Define a ringbuffer with an external text data buffer. The same as
-diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
-index 6c6022012ea8..dd8c0b95063a 100644
---- a/scripts/gdb/linux/dmesg.py
-+++ b/scripts/gdb/linux/dmesg.py
-@@ -78,10 +78,10 @@ class LxDmesg(gdb.Command):
-         len_off = off + printk_info_type.get_type()['text_len'].bitpos // 8
- 
-         # definitions from kernel/printk/printk_ringbuffer.h
-+        desc_committed = 1
-         desc_sv_bits = utils.get_long_type().sizeof * 8
--        desc_committed_mask = 1 << (desc_sv_bits - 1)
--        desc_reuse_mask = 1 << (desc_sv_bits - 2)
--        desc_flags_mask = desc_committed_mask | desc_reuse_mask
-+        desc_flags_shift = desc_sv_bits - 2
-+        desc_flags_mask = 3 << desc_flags_shift
-         desc_id_mask = ~desc_flags_mask
- 
-         # read in tail and head descriptor ids
-@@ -96,8 +96,9 @@ class LxDmesg(gdb.Command):
-             desc_off = desc_sz * ind
- 
-             # skip non-committed record
--            state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
--            if state != desc_committed_mask:
-+            state = 3 & (utils.read_u64(descs, desc_off + sv_off +
-+                                        counter_off) >> desc_flags_shift)
-+            if state != desc_committed:
-                 if did == head_id:
-                     break
-                 did = (did + 1) & desc_id_mask
++&keyboard_backlight {
++	status = "okay";
++};
 -- 
-2.20.1
+2.28.0.526.ge36021eeef-goog
 
