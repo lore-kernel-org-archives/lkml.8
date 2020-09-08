@@ -2,87 +2,186 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F272C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FF5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3F652074D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0B32074D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:02:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ls4q+gxq"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BjLNfTKY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732157AbgIHSCh (ORCPT
+        id S1732140AbgIHSCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:02:37 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:38970 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731663AbgIHSBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:01:18 -0400
-Received: from zn.tnic (p200300ec2f10bf0059bdf9fa8e813382.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:bf00:59bd:f9fa:8e81:3382])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C9511EC0489;
-        Tue,  8 Sep 2020 20:01:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1599588077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=72WG1McxFqIGqR0+XMVCYnaTg8/Pu4r+S87nI13px98=;
-        b=ls4q+gxq01ufyfWCGaDIr4cX0hDa7QQPPRNqrHWOp9VTyGguOSzHrsGSotlWrzuk+CGZSV
-        jte8+0fkjQm1FsAfuFrt0UUtL9edHhcws3KnwZDKIplufTwJYPvkwwvLyNm59pc4yax0aq
-        O6Ogqmuru1rmAYWqsFZHp9hSMNGeyDQ=
-Date:   Tue, 8 Sep 2020 20:01:12 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
+        Tue, 8 Sep 2020 14:02:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731574AbgIHSAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:00:31 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088HaqH0157903;
+        Tue, 8 Sep 2020 13:59:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=9vA8/AJsGG0zJ8yywQHukKRgSAWG6O3CqIKPsfzZe8o=;
+ b=BjLNfTKYlNEEc2uStg8DiatoJq2c8F1l7LCfltGYE12PF61BhosKLmVMhzQWKFic7DjB
+ ODOQ4Ab7V0OMAwEaC30qGbwq1qp1T1sQo51pCTWKzreipRU6hiEWQxJmQe5KclxEt0E5
+ EBuUZCeG2aSeNd5qvxhpE8RDWX35jy6XCZslgOkkR8DkDFWEAobN/09andvUhXdwhHlx
+ wsQizFZosh34pdmvFLO4JDQmopAvtfmKsdHT4+nBXtmkS4cUtLhcGG8Z3chJIJWEkkxr
+ AQqz2pmQMasv2p8pBrjFZXu8KdUi6V75qyQ/ZhRV9ub4Y3a9IRQg1Y8uS9bNduFJGmeX OQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33edub1q6f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 13:59:53 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088Hc2Al163051;
+        Tue, 8 Sep 2020 13:59:52 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33edub1q5e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 13:59:52 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088HwJR5021149;
+        Tue, 8 Sep 2020 17:59:49 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma02fra.de.ibm.com with ESMTP id 33c2a828hk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 17:59:49 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088HxkQm32244068
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 17:59:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9951211C050;
+        Tue,  8 Sep 2020 17:59:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55EC911C04A;
+        Tue,  8 Sep 2020 17:59:45 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.25.197])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue,  8 Sep 2020 17:59:45 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 19:59:44 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
         LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-Message-ID: <20200908180112.GK25236@zn.tnic>
-References: <20200907094843.1949-1-Jason@zx2c4.com>
- <20200907100647.GB10657@zn.tnic>
- <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
- <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
- <20200908172558.GG25236@zn.tnic>
- <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
- <20200908173656.GI25236@zn.tnic>
- <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
+        Russell King <linux@armlinux.org.uk>,
+        Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        linux-x86 <x86@kernel.org>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: Re: [RFC PATCH v2 1/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200908195944.1a25d1bb@thinkpad>
+In-Reply-To: <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+        <20200907180058.64880-2-gerald.schaefer@linux.ibm.com>
+        <0dbc6ec8-45ea-0853-4856-2bc1e661a5a5@intel.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_09:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 priorityscore=1501 mlxscore=0 malwarescore=0
+ bulkscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 adultscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 07:42:12PM +0200, Jason A. Donenfeld wrote:
-> Are you prepared to track down all the MSRs that might maybe do
-> something naughty?
+On Tue, 8 Sep 2020 07:30:50 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-I'm not prepared - that's why this MSR filtering. To block *all* direct
-MSR accesses from userspace in the future.
+> On 9/7/20 11:00 AM, Gerald Schaefer wrote:
+> > Commit 1a42010cdc26 ("s390/mm: convert to the generic get_user_pages_fast
+> > code") introduced a subtle but severe bug on s390 with gup_fast, due to
+> > dynamic page table folding.
+> 
+> Would it be fair to say that the "fake" page table entries s390
+> allocates on the stack are what's causing the trouble here?  That might
+> be a nice thing to open up with here.  "Dynamic page table folding"
+> really means nothing to me.
 
-> Does `dd` warn when you run `dd if=/dev/zero of=/dev/sda`?
+We do not really allocate anything on the stack, it is the generic logic
+from gup_fast that passes over pXd values (read once before), and using
+pointers to such (stack) variables instead of real pXd pointers.
+That, combined with the fact that we just return the passed in pointer in
+pXd_offset() for folded levels.
 
-Yah, because that's the same as bricking your hardware. Geez.
+That works similar on x86 IIUC, but with static folding, and thus also
+proper pXd_addr_end() results because of statically (and correspondingly)
+defined Pxd_INDEX/SHIFT. We always have static 5-level PxD_INDEX/SHIFT, and
+that cannot really be made dynamic, so we just make pXd_addr_end()
+dynamic instead, and that requires the pXd value to determine the correct
+pagetable level.
 
-> Probably not possible. Optimal values are related to the "silicon
-> lottery" that occurs when you buy a new CPU. Different optimal values
-> for different individual chips.
+Still makes my head spin when trying to explain, sorry. It is a very
+special s390 oddity, or lets call it "feature", because I don't think any
+other architecture has "dynamic pagetable folding" capability, depending
+on process requirements, for whatever it is worth...
 
-Let's wait for what Srinivas finds out. I'd let Intel decide what they
-wanna do.
+> 
+> > @@ -2521,7 +2521,7 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+> >  	do {
+> >  		pmd_t pmd = READ_ONCE(*pmdp);
+> >  
+> > -		next = pmd_addr_end(addr, end);
+> > +		next = pmd_addr_end_folded(pmd, addr, end);
+> >  		if (!pmd_present(pmd))
+> >  			return 0;
+> 
+> It looks like you fix this up later, but this would be a problem if left
+> this way.  There's no documentation for whether I use
+> pmd_addr_end_folded() or pmd_addr_end() when writing a page table walker.
 
--- 
-Regards/Gruss,
-    Boris.
+Yes, that is very unfortunate. We did have some lengthy comment in
+include/linux/pgtable.h where the pXd_addr_end(_folded) were defined.
+But that was moved to arch/s390/include/asm/pgtable.h in this version,
+probably because we already had the generalization in mind, where we
+would not need such explanation in common header any more.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+So, it might help better understand the issue that we have with
+dynamic page table folding and READ_ONCE-style pagetable walkers
+when looking at that comment.
+
+Thanks for pointing out, that comment should definitely go into
+include/linux/pgtable.h again. At least if we would still go for
+that "s390 fix first, generalization second" approach, but it
+seems we have other / better options now.
