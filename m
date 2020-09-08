@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2885C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A970C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B474E207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF15C20658
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599594777;
-	bh=T/kkUQEE7+ok0kqx2oPASSM9vF53iFJ2MbQnnJfEleM=;
+	s=default; t=1599594791;
+	bh=sP1EMyZ8HKx512ZxO6MKvWKyrmUmqk1KbcTSd+MmQWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQsJJgzbNIdAdPR0w9H41KghCAmdK83erWStPDEUSQMQrsRDVKeeK+6tcLAiVyXhr
-	 DTgeprBN8+0UUjmiQXA4wkuUBou+vpdGXAqXiB70HufkKQhzug/gVp/oIbkbeOF3/U
-	 n8EjAEWf2ftW5fJLv5zlfleXS0XbTfxE8x0o309U=
+	b=zGTmPKcoS2IIwr81cUALD67VBkFeF7VSnu+polaU5aUGQyvRUr1gPwchf2m0gOKOS
+	 zkbOemzY/vnm349GT5CxcoXZuLaNsO4yWsxMRiaMTFCoscj2DBG/PsQN8ghNZq59xO
+	 TsnAwUNEcaJU5wxMFwpYtLq3NPGRhbK3XY4L+tsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732425AbgIHTwz (ORCPT
+        id S1732435AbgIHTxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:52:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40018 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:53:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgIHPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730677AbgIHPsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:48:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D741E24828;
-        Tue,  8 Sep 2020 15:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7331E24822;
+        Tue,  8 Sep 2020 15:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579865;
-        bh=T/kkUQEE7+ok0kqx2oPASSM9vF53iFJ2MbQnnJfEleM=;
+        s=default; t=1599579852;
+        bh=sP1EMyZ8HKx512ZxO6MKvWKyrmUmqk1KbcTSd+MmQWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6pgKb6yLsPGxv3A7zW4WlE0OjSwnGYdDn0Atr1uLzyUOa7d8Cw+RL1YCUVfjvltl
-         Plbx69nKAo136+A50dXFP1lLzP+YPOHXgvWehpskw2JL9yrKz0foAzvwuSD65Yb1z2
-         Zd3tz+JbOmRK1+WHFq7Q6EFXCuqPowpJcCeXXZjk=
+        b=o0Z0iPYysRDqFHaJbOO1CWlL3H+yX/CoBhS2AfORmr5zsiDLFZxW1FgYxpW37DTbU
+         BNCmdbv/DtXkVRLxjuCUpCwoYz/eIzFwfdppzH1FfV5WPD/ypUqsvfH6iSmU3fqtxs
+         ui2dWy7T16962B6YMONuV3gWr8OSPv4h4cRIxk9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <andi@firstfloor.org>, Jiri Olsa <jolsa@redhat.com>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        William Cohen <wcohen@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 064/129] perf jevents: Fix suspicious code in fixregex()
-Date:   Tue,  8 Sep 2020 17:25:05 +0200
-Message-Id: <20200908152232.892355478@linuxfoundation.org>
+Subject: [PATCH 5.4 060/129] net: gemini: Fix another missing clk_disable_unprepare() in probe
+Date:   Tue,  8 Sep 2020 17:25:01 +0200
+Message-Id: <20200908152232.701073723@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -69,44 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e62458e3940eb3dfb009481850e140fbee183b04 ]
+[ Upstream commit eb0f3bc463d59d86402f19c59aa44e82dc3fab6d ]
 
-The new string should have enough space for the original string and the
-back slashes IMHO.
+We recently added some calls to clk_disable_unprepare() but we missed
+the last error path if register_netdev() fails.
 
-Fixes: fbc2844e84038ce3 ("perf vendor events: Use more flexible pattern matching for CPU identification for mapfile.csv")
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Reviewed-by: Ian Rogers <irogers@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: John Garry <john.garry@huawei.com>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: William Cohen <wcohen@redhat.com>
-Link: http://lore.kernel.org/lkml/20200903152510.489233-1-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+I made a couple cleanups so we avoid mistakes like this in the future.
+First I reversed the "if (!ret)" condition and pulled the code in one
+indent level.  Also, the "port->netdev = NULL;" is not required because
+"port" isn't used again outside this function so I deleted that line.
+
+Fixes: 4d5ae32f5e1e ("net: ethernet: Add a driver for Gemini gigabit ethernet")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cortina/gemini.c | 34 +++++++++++++--------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 99e3fd04a5cb3..d36ae65ae3330 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -137,7 +137,7 @@ static char *fixregex(char *s)
- 		return s;
+diff --git a/drivers/net/ethernet/cortina/gemini.c b/drivers/net/ethernet/cortina/gemini.c
+index 28d4c54505f9a..c9fb1ec625d8b 100644
+--- a/drivers/net/ethernet/cortina/gemini.c
++++ b/drivers/net/ethernet/cortina/gemini.c
+@@ -2445,8 +2445,8 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 	port->reset = devm_reset_control_get_exclusive(dev, NULL);
+ 	if (IS_ERR(port->reset)) {
+ 		dev_err(dev, "no reset\n");
+-		clk_disable_unprepare(port->pclk);
+-		return PTR_ERR(port->reset);
++		ret = PTR_ERR(port->reset);
++		goto unprepare;
+ 	}
+ 	reset_control_reset(port->reset);
+ 	usleep_range(100, 500);
+@@ -2501,25 +2501,25 @@ static int gemini_ethernet_port_probe(struct platform_device *pdev)
+ 					IRQF_SHARED,
+ 					port_names[port->id],
+ 					port);
+-	if (ret) {
+-		clk_disable_unprepare(port->pclk);
+-		return ret;
+-	}
++	if (ret)
++		goto unprepare;
  
- 	/* allocate space for a new string */
--	fixed = (char *) malloc(len + 1);
-+	fixed = (char *) malloc(len + esc_count + 1);
- 	if (!fixed)
- 		return NULL;
+ 	ret = register_netdev(netdev);
+-	if (!ret) {
++	if (ret)
++		goto unprepare;
++
++	netdev_info(netdev,
++		    "irq %d, DMA @ 0x%pap, GMAC @ 0x%pap\n",
++		    port->irq, &dmares->start,
++		    &gmacres->start);
++	ret = gmac_setup_phy(netdev);
++	if (ret)
+ 		netdev_info(netdev,
+-			    "irq %d, DMA @ 0x%pap, GMAC @ 0x%pap\n",
+-			    port->irq, &dmares->start,
+-			    &gmacres->start);
+-		ret = gmac_setup_phy(netdev);
+-		if (ret)
+-			netdev_info(netdev,
+-				    "PHY init failed, deferring to ifup time\n");
+-		return 0;
+-	}
++			    "PHY init failed, deferring to ifup time\n");
++	return 0;
+ 
+-	port->netdev = NULL;
++unprepare:
++	clk_disable_unprepare(port->pclk);
+ 	return ret;
+ }
  
 -- 
 2.25.1
