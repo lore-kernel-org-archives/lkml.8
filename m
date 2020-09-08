@@ -2,253 +2,150 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA30AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB6FA2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:10:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kvtUP+uo"
+	by mail.kernel.org (Postfix) with ESMTP id 9A998207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 10:13:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599559992;
+	bh=JRCHmfWSpGS/adPTYfUKHsn7RfTWRGVyO5P/nq3YOkc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QCxmFfbiJYB53EUXYTdltkGcceavEF0XrRcUYqG3wcbcWiL9Sq2PXbpuZmMlEcoBm
+	 x3JDb3d48GmsVhU78PR9EFo9Y/s6CFUMaC1HtvZg2NXSrkVjEl/HTk5zqiUv+RAX2i
+	 6NZ4K10f7h6bLuWk5h3E/xiWsQgtlEjwcWasQHxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgIHKKF (ORCPT
+        id S1729285AbgIHKMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 06:10:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbgIHKJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 06:09:58 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79922C061573;
-        Tue,  8 Sep 2020 03:09:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 8 Sep 2020 06:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbgIHKMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 06:12:35 -0400
+Received: from mail.kernel.org (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bm19C57rzz9sSn;
-        Tue,  8 Sep 2020 20:09:51 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1599559795;
-        bh=lZRo1AJe7NLghAYxOdxi4cCYXbYQD+UNnbH2B1wnMj0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=kvtUP+uoKjyjyJARJFVxeb0aD7q+MFWOU5DWMkgCceUDlPDvEfMysVBzqe/2GnT/z
-         DhqwqIqhlMs87rWP1PC+upmkLhVKB00lkveXP/ze6H4DOeOO/PJPecZpVDh+mksOB4
-         TjIvtYunH+2QZhpc5EJsfrYZkiJQhhOR93CxSndYNx9Sbcpu0LdbQGFxVJJzanto2s
-         ZK0WJEXTVAMbInCFXJDxtoRathJV9Vlr6Fiz6st42hI4ZtP2p/YcrwP8E0yvHUYTXz
-         mOMkVIdQlfdWl1nIheTSawvQ/mSeHQJljDzR4SRlQCHxye0Rx1arnsbxuzBmV/Rfrt
-         YHINsBKoq8oMQ==
-Date:   Tue, 8 Sep 2020 20:09:50 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Roger Pau Monne <roger.pau@citrix.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Sebastien Boeuf <sebastien.boeuf@intel.com>,
-        Liu Bo <bo.liu@linux.alibaba.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20200908200950.1368e71b@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 80CD021D7A;
+        Tue,  8 Sep 2020 10:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599559952;
+        bh=JRCHmfWSpGS/adPTYfUKHsn7RfTWRGVyO5P/nq3YOkc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Jpfve9Etd0fsu8gR2oYSjeceLDPIOfQkQhBvKUJZG1FrvlB7XS+B25yFGawucZKLl
+         p4zafcUzajhImk1hWjlA0VGUqguI7aQ2Wj9NYVqtlbrffg56WAlNMi8vmkpzgVXaQa
+         O77dsFQlUIPLiT8clIylK04BKgSny8PdCN0ycxAw=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1kFac1-00B3qZ-0q; Tue, 08 Sep 2020 12:12:29 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devel@driverdev.osuosl.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org,
+        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] address W=1 warnings at staging/media/atomisp
+Date:   Tue,  8 Sep 2020 12:12:21 +0200
+Message-ID: <cover.1599141140.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/463AYpVOlzwrXrwSpvMOZun";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200908101221.6c_rlM9c4kykpyeWfxBelthlkLn_7g2jWmH0qtb_tmM@z>
 
---Sig_/463AYpVOlzwrXrwSpvMOZun
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The linux-media policy is to have zero warnings with W=1. However, when
+I started using a Jenkins instance at https://builder.linuxtv.org to automate
+such tests, I didn't notice that a bug at the scripts were just ignoring
+warnings.
 
-Hi all,
+Now that this is fixed, we need to get rid of the warnings that got
+re-introduced when the atomisp driver was reverted, as otherwise,
+every time a common header is touched, we'll see messages like
+those:
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+  Error/warnings:
 
-drivers/xen/unpopulated-alloc.c: In function 'fill_list':
-drivers/xen/unpopulated-alloc.c:30:9: error: 'struct dev_pagemap' has no me=
-mber named 'res'; did you mean 'ref'?
-   30 |  pgmap->res.name =3D "Xen scratch";
-      |         ^~~
-      |         ref
-drivers/xen/unpopulated-alloc.c:31:9: error: 'struct dev_pagemap' has no me=
-mber named 'res'; did you mean 'ref'?
-   31 |  pgmap->res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
-      |         ^~~
-      |         ref
-drivers/xen/unpopulated-alloc.c:33:51: error: 'struct dev_pagemap' has no m=
-ember named 'res'; did you mean 'ref'?
-   33 |  ret =3D allocate_resource(&iomem_resource, &pgmap->res,
-      |                                                   ^~~
-      |                                                   ref
-In file included from include/asm-generic/memory_model.h:5,
-                 from arch/x86/include/asm/page.h:76,
-                 from arch/x86/include/asm/thread_info.h:12,
-                 from include/linux/thread_info.h:38,
-                 from arch/x86/include/asm/preempt.h:7,
-                 from include/linux/preempt.h:78,
-                 from include/linux/spinlock.h:51,
-                 from include/linux/mmzone.h:8,
-                 from include/linux/gfp.h:6,
-                 from drivers/xen/unpopulated-alloc.c:3:
-drivers/xen/unpopulated-alloc.c:53:35: error: 'struct dev_pagemap' has no m=
-ember named 'res'; did you mean 'ref'?
-   53 |   xen_pfn_t pfn =3D PFN_DOWN(pgmap->res.start);
-      |                                   ^~~
-include/linux/pfn.h:20:23: note: in definition of macro 'PFN_DOWN'
-   20 | #define PFN_DOWN(x) ((x) >> PAGE_SHIFT)
-      |                       ^
-drivers/xen/unpopulated-alloc.c:58:30: error: 'struct dev_pagemap' has no m=
-ember named 'res'; did you mean 'ref'?
-   58 |     release_resource(&pgmap->res);
-      |                              ^~~
-      |                              ref
-drivers/xen/unpopulated-alloc.c:69:28: error: 'struct dev_pagemap' has no m=
-ember named 'res'; did you mean 'ref'?
-   69 |   release_resource(&pgmap->res);
-      |                            ^~~
-      |                            ref
-fs/fuse/virtio_fs.c: In function 'virtio_fs_setup_dax':
-fs/fuse/virtio_fs.c:838:9: error: 'struct dev_pagemap' has no member named =
-'res'; did you mean 'ref'?
-  838 |  pgmap->res =3D (struct resource){
-      |         ^~~
-      |         ref
+  patches/0001-media-mxl5xx-remove-unused-including-linux-version.h.patch:
 
-Caused by commit
+    allyesconfig: return code #0:
+	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:164:2: warning: function ‘atomisp_css2_dbg_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:170:2: warning: function ‘atomisp_css2_dbg_ftrace_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	../drivers/staging/media/atomisp/pci/atomisp_compat_css20.c:176:2: warning: function ‘atomisp_css2_err_print’ might be a candidate for ‘gnu_printf’ format attribute [-Wsuggest-attribute=format]
+	../drivers/staging/media/atomisp/pci/atomisp_cmd.c:2814:31: warning: variable ‘stream_config’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/atomisp_cmd.c:2893:31: warning: variable ‘stream_config’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/atomisp_v4l2.c:1432:15: warning: variable ‘a0_max_id’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css_mipi.c:410:27: warning: variable ‘mipi_intermediate_info’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:1366:24: warning: variable ‘stream’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:2702:22: warning: variable ‘capture_pipe’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:2831:7: warning: variable ‘continuous’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:3534:15: warning: variable ‘num_output_pins’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:3937:55: warning: variable ‘vf_pp_binary’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:3937:38: warning: variable ‘preview_binary’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:3937:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:3936:26: warning: variable ‘me’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:5749:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:6013:7: warning: variable ‘continuous’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:6012:7: warning: variable ‘memory’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:7329:24: warning: variable ‘copy_binary’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:7459:26: warning: variable ‘num_vf_pp_stage’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css.c:10420:22: warning: variable ‘pipe_id’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css_param_shading.c:239:4: warning: variable ‘padded_width’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/sh_css_params.c:1099:36: warning: variable ‘row_padding’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c:237:31: warning: variable ‘isp_data_ptr’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c:119:28: warning: variable ‘ver_num_isp’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/isp/kernels/sdis/sdis_2/ia_css_sdis2.host.c:119:15: warning: variable ‘hor_num_isp’ set but not used [-Wunused-but-set-variable]
+	../drivers/staging/media/atomisp/pci/isp/kernels/vf/vf_1.0/ia_css_vf.host.c:127:6: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
+	In file included from ../drivers/staging/media/atomisp//pci/hive_isp_css_include/input_formatter.h:34,
+	                 from ../drivers/staging/media/atomisp/pci/runtime/debug/src/ia_css_debug.c:55:
+	../drivers/staging/media/atomisp//pci/hive_isp_css_common/host/input_formatter_local.h:118:27: warning: ‘input_formatter_alignment’ defined but not used [-Wunused-const-variable=]
+	../drivers/staging/media/atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c:244:7: warning: variable ‘succes’ set but not used [-Wunused-but-set-variable]
 
-  b3e022c5a68c ("mm/memremap_pages: convert to 'struct range'")
+    allyesconfig: return code #0:
+	../drivers/media/v4l2-core/v4l2-ioctl.c: ../drivers/media/v4l2-core/v4l2-ioctl.c:3204 video_put_user() warn: check that 'ev32' doesn't leak information (struct has a hole after 'type')
+	../drivers/media/v4l2-core/v4l2-ioctl.c: ../drivers/media/v4l2-core/v4l2-ioctl.c:3229 video_put_user() warn: check that 'vb32' doesn't leak information (struct has a hole after 'memory')
+	../drivers/media/usb/em28xx/em28xx-video.c: ../drivers/media/usb/em28xx/em28xx-video.c:2841 em28xx_v4l2_init() parse error: turning off implications after 60 seconds
+	../drivers/media/test-drivers/vivid/vivid-core.c: ../drivers/media/test-drivers/vivid/vivid-core.c:1200 vivid_create_instance() parse error: turning off implications after 60 seconds
+	../drivers/media/test-drivers/vivid/vivid-core.c: ../drivers/media/test-drivers/vivid/vivid-core.c:1531 vivid_create_instance() parse error: __split_smt: function too hairy.  Giving up after 301 seconds
 
-interacting with commit
+This series solve all atomisp W=1 warnings.
 
-  9e2369c06c8a ("xen: add helpers to allocate unpopulated memory")
+Mauro Carvalho Chehab (5):
+  media: atomisp: get rid of some cleanup leftovers
+  media: atomisp: print a warning if error while setting downscaler
+  media: atomisp: get rid of unused vars
+  media: atomisp: move a static constant out of a header file
+  media: atomisp: get rid of -Wsuggest-attribute=format warnings
 
-from Linus' tree (in v5.9-rc4) and commit
+ .../staging/media/atomisp/pci/atomisp_cmd.c   |  6 ---
+ .../media/atomisp/pci/atomisp_compat_css20.c  | 20 ++------
+ .../staging/media/atomisp/pci/atomisp_v4l2.c  |  3 --
+ .../host/input_formatter.c                    |  4 ++
+ .../host/input_formatter_local.h              |  4 --
+ .../staging/media/atomisp/pci/ia_css_env.h    |  4 +-
+ .../isp/kernels/dvs/dvs_1.0/ia_css_dvs.host.c |  3 --
+ .../kernels/sdis/sdis_2/ia_css_sdis2.host.c   |  3 --
+ .../isp/kernels/vf/vf_1.0/ia_css_vf.host.c    |  5 ++
+ .../atomisp/pci/runtime/rmgr/src/rmgr_vbuf.c  |  4 +-
+ drivers/staging/media/atomisp/pci/sh_css.c    | 47 ++-----------------
+ .../staging/media/atomisp/pci/sh_css_mipi.c   | 12 -----
+ .../media/atomisp/pci/sh_css_param_shading.c  | 25 +++-------
+ .../staging/media/atomisp/pci/sh_css_params.c |  3 +-
+ 14 files changed, 29 insertions(+), 114 deletions(-)
 
-  7e833303db20 ("virtiofs: set up virtio_fs dax_device")
+-- 
+2.26.2
 
-from the fuse tree.
 
-I have added the following patch which may require more work but at
-least makes it all build.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Tue, 8 Sep 2020 20:00:20 +1000
-Subject: [PATCH] merge fix up for "mm/memremap_pages: convert to 'struct
- range'"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/xen/unpopulated-alloc.c | 15 +++++++++------
- fs/fuse/virtio_fs.c             |  3 +--
- 2 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-allo=
-c.c
-index 3b98dc921426..9fa7ce330628 100644
---- a/drivers/xen/unpopulated-alloc.c
-+++ b/drivers/xen/unpopulated-alloc.c
-@@ -18,6 +18,7 @@ static unsigned int list_count;
- static int fill_list(unsigned int nr_pages)
- {
- 	struct dev_pagemap *pgmap;
-+	struct resource res;
- 	void *vaddr;
- 	unsigned int i, alloc_pages =3D round_up(nr_pages, PAGES_PER_SECTION);
- 	int ret;
-@@ -27,10 +28,10 @@ static int fill_list(unsigned int nr_pages)
- 		return -ENOMEM;
-=20
- 	pgmap->type =3D MEMORY_DEVICE_GENERIC;
--	pgmap->res.name =3D "Xen scratch";
--	pgmap->res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
-+	res.name =3D "Xen scratch";
-+	res.flags =3D IORESOURCE_MEM | IORESOURCE_BUSY;
-=20
--	ret =3D allocate_resource(&iomem_resource, &pgmap->res,
-+	ret =3D allocate_resource(&iomem_resource, &res,
- 				alloc_pages * PAGE_SIZE, 0, -1,
- 				PAGES_PER_SECTION * PAGE_SIZE, NULL, NULL);
- 	if (ret < 0) {
-@@ -38,6 +39,8 @@ static int fill_list(unsigned int nr_pages)
- 		kfree(pgmap);
- 		return ret;
- 	}
-+	pgmap->range.start =3D res.start;
-+	pgmap->range.end =3D res.end;
-=20
- #ifdef CONFIG_XEN_HAVE_PVMMU
-         /*
-@@ -50,12 +53,12 @@ static int fill_list(unsigned int nr_pages)
-          * conflict with any devices.
-          */
- 	if (!xen_feature(XENFEAT_auto_translated_physmap)) {
--		xen_pfn_t pfn =3D PFN_DOWN(pgmap->res.start);
-+		xen_pfn_t pfn =3D PFN_DOWN(res.start);
-=20
- 		for (i =3D 0; i < alloc_pages; i++) {
- 			if (!set_phys_to_machine(pfn + i, INVALID_P2M_ENTRY)) {
- 				pr_warn("set_phys_to_machine() failed, no memory added\n");
--				release_resource(&pgmap->res);
-+				release_resource(&res);
- 				kfree(pgmap);
- 				return -ENOMEM;
- 			}
-@@ -66,7 +69,7 @@ static int fill_list(unsigned int nr_pages)
- 	vaddr =3D memremap_pages(pgmap, NUMA_NO_NODE);
- 	if (IS_ERR(vaddr)) {
- 		pr_err("Cannot remap memory range\n");
--		release_resource(&pgmap->res);
-+		release_resource(&res);
- 		kfree(pgmap);
- 		return PTR_ERR(vaddr);
- 	}
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index da3ede268604..8f27478497fa 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -835,8 +835,7 @@ static int virtio_fs_setup_dax(struct virtio_device *vd=
-ev, struct virtio_fs *fs)
- 	 * initialize a struct resource from scratch (only the start
- 	 * and end fields will be used).
- 	 */
--	pgmap->res =3D (struct resource){
--		.name =3D "virtio-fs dax window",
-+	pgmap->range =3D (struct range){
- 		.start =3D (phys_addr_t) cache_reg.addr,
- 		.end =3D (phys_addr_t) cache_reg.addr + cache_reg.len - 1,
- 	};
---=20
-2.28.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/463AYpVOlzwrXrwSpvMOZun
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9XWG4ACgkQAVBC80lX
-0Gxhmwf+NLeJukOXVPVJpQjC16HWxFr2fVzBlL1BbTvwoJu2+SdA3yB8sSNMuaCN
-qiQG4Kh85SCiy5yMOcUTr2Jz7L8Zifngm+D/dElX+h4Tofx1x3Ns5aE+JA6cH16T
-KUIyJ1FbuEKAVloc8IGTDxrZUk7nr8dYFbix6riC4lbAtka6REz8uvZP1p0wgruu
-D3cvcZJ1DlOBG7B6Lk02HxocnajBZIm6VO6ASy6h4oDq8coC456VaXc+7CEdw1CI
-xkbO9T+d01AGKKSN5NjPvUbAZFFVKnL64TuUmRq4CLbfbusYWwbdKXHv4SIt4h5J
-guVYTeALpDbTndVVOiPuJ/YtedtdZw==
-=l7Y1
------END PGP SIGNATURE-----
-
---Sig_/463AYpVOlzwrXrwSpvMOZun--
