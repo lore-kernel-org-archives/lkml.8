@@ -2,299 +2,268 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D1C1C2D0E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CABE3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0751C21741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9469E208FE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsuLnoHi"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="acApmdF4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgIHULL (ORCPT
+        id S1732100AbgIHULZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:11:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730225AbgIHULD (ORCPT
+        Tue, 8 Sep 2020 16:11:25 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:33176 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730625AbgIHULK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:11:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C0FDC061573;
-        Tue,  8 Sep 2020 13:11:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e11so354047wme.0;
-        Tue, 08 Sep 2020 13:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yzHMC2S9hw3LivUK+L9xHHI0BFCPx/rS6YcunGqWP+Q=;
-        b=AsuLnoHid63keqb3a3aAiVm40YhHvd24VUZswDdiiAfMYTidoHne/V2fdoapvvIgtt
-         zPREkN98Jc4XFhA9nvH3Wffp1ZhAySVVBUskS8NPIHh+qKpPPL1KuOhuJ6Y1qh2t6S87
-         g+S/rFxDzTlE/ZLz5SZ5Swzj+5EivrHWE191c39OE1DWN739YU7XduuwyHRVuPS9iyak
-         QErFakO41kP+GsHOy5R8XCGx6Y7x3HHptma0RqeAo9Avgl7sH6sUWLWMkAa2hIzGUT2z
-         zV1f2jsoKmb4vTBiNlTQtdIO1lwY4WMk9PaWC3nbm/HXCQftiwMh4bMoiLDU1d/iEv4Q
-         Lalg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yzHMC2S9hw3LivUK+L9xHHI0BFCPx/rS6YcunGqWP+Q=;
-        b=SKukoDG12rF0LclSrbp6iIAllJCxyx0Fl3l1I6WNXbfJHRFLFJqYWGlt7OJd7Zt6J6
-         NELVcdyI1X1dWxh2h5EbkMX9PEiie0M3X44BXmtX/+NZLoBIn68amxosjhiM70mlZHjp
-         TDCKhEil9Odls0YJJTDpsSFApnJWH+FlKb88zPT3WF36v7e6wKgGWYr+tXvHbpkyn359
-         EVvNUZIeHuU6FePGeSBtJw5o3iIGLHdPwlOGhQ57l9ym817w9dU4LbOJCKDasbLmmZRW
-         4ETHiHBK8MZWhJlLe6RNoJKyp0wd8pMNpilGGiXcz4z2sP9gMdoQBYgSgYaDOdnSSG+S
-         Kz2w==
-X-Gm-Message-State: AOAM530NPjQxNMxM1NpIBvNiNH1+CyvQyYfabymZCPUgVZryMaNxhs3F
-        VKBB37wMKmWX7aG2LY3DtxDYyOsle2fC27Wf808=
-X-Google-Smtp-Source: ABdhPJyS31lmD0DlhCHYxY2dbCD2oBLGMebc9qboBKCALDZlzN9qcXDpegy/Dq/ciwr/yp7T7nYsBF6XxhchLVOVS7Q=
-X-Received: by 2002:a1c:105:: with SMTP id 5mr87698wmb.175.1599595860788; Tue,
- 08 Sep 2020 13:11:00 -0700 (PDT)
+        Tue, 8 Sep 2020 16:11:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599595869;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XWGa3qSfN9Odfx6sHlIPwO9T/8fSKtz1FdQi3pBhRQ0=;
+        b=acApmdF4HrL1KRu+DanHpNpi8eKYTu+veqXHlm6Oc5IElhReHICP4I2E/eXlDUUAk/9B0O
+        epPVB6rlFss0K56/tpFjJN1vS197ZUgu+vnxkRciQfwkgupV32Bn3/rBGWVrxYPf7Uc66M
+        bc2xdY+eQESgd+vaJAvW2wj9c39BNfQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-ugEopWE8Oy6O8LRJQsXXwg-1; Tue, 08 Sep 2020 16:11:07 -0400
+X-MC-Unique: ugEopWE8Oy6O8LRJQsXXwg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4701F1007465;
+        Tue,  8 Sep 2020 20:11:04 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E9B75D9E8;
+        Tue,  8 Sep 2020 20:10:56 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH v2 4/7] mm/memory_hotplug: MEMHP_MERGE_RESOURCE to specify merging of System RAM resources
+Date:   Tue,  8 Sep 2020 22:10:09 +0200
+Message-Id: <20200908201012.44168-5-david@redhat.com>
+In-Reply-To: <20200908201012.44168-1-david@redhat.com>
+References: <20200908201012.44168-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20200907170450.370122-1-robdclark@gmail.com> <20200907170450.370122-2-robdclark@gmail.com>
- <010101746f3f7667-5ee2e9e4-9b10-41e0-8bbc-65219583cb86-000000@us-west-2.amazonses.com>
-In-Reply-To: <010101746f3f7667-5ee2e9e4-9b10-41e0-8bbc-65219583cb86-000000@us-west-2.amazonses.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 8 Sep 2020 13:11:56 -0700
-Message-ID: <CAF6AEGsETZxbPEneBycbNBjGD7_OU7V=T8J0TByC_ZTv40q-Og@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/msm/dpu: clean up some impossibilities
-To:     Abhinav Kumar <abhinavk@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Drew Davenport <ddavenport@chromium.org>,
-        Kalyan Thota <kalyan_t@codeaurora.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Hongbo Yao <yaohongbo@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm-owner@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 12:44 PM <abhinavk@codeaurora.org> wrote:
->
-> On 2020-09-07 10:04, Rob Clark wrote:
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 81 ++++--------------------
-> >  1 file changed, 12 insertions(+), 69 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > index 89c0245b5de5..ad49b0e17fcb 100644
-> > --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-> > @@ -265,11 +265,6 @@ enum dpu_intf_mode dpu_crtc_get_intf_mode(struct
-> > drm_crtc *crtc)
-> >  {
-> >       struct drm_encoder *encoder;
-> >
-> > -     if (!crtc) {
-> > -             DPU_ERROR("invalid crtc\n");
-> > -             return INTF_MODE_NONE;
-> > -     }
-> > -
-> >       /*
-> >        * TODO: This function is called from dpu debugfs and as part of
-> > atomic
-> >        * check. When called from debugfs, the crtc->mutex must be held to
-> > @@ -500,12 +495,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc
-> > *crtc,
-> >       struct dpu_crtc_state *cstate;
-> >       struct drm_encoder *encoder;
-> >       struct drm_device *dev;
-> > -     unsigned long flags;
-> > -
-> > -     if (!crtc) {
-> > -             DPU_ERROR("invalid crtc\n");
-> > -             return;
-> > -     }
-> >
-> >       if (!crtc->state->enable) {
-> >               DPU_DEBUG("crtc%d -> enable %d, skip atomic_begin\n",
-> > @@ -521,15 +510,6 @@ static void dpu_crtc_atomic_begin(struct drm_crtc
-> > *crtc,
-> >
-> >       _dpu_crtc_setup_lm_bounds(crtc, crtc->state);
-> >
-> > -     if (dpu_crtc->event) {
-> > -             WARN_ON(dpu_crtc->event);
-> > -     } else {
-> > -             spin_lock_irqsave(&dev->event_lock, flags);
-> > -             dpu_crtc->event = crtc->state->event;
-> > -             crtc->state->event = NULL;
-> > -             spin_unlock_irqrestore(&dev->event_lock, flags);
-> > -     }
-> > -
-> >       /* encoder will trigger pending mask now */
-> >       drm_for_each_encoder_mask(encoder, crtc->dev,
-> > crtc->state->encoder_mask)
-> >               dpu_encoder_trigger_kickoff_pending(encoder);
-> > @@ -583,14 +563,11 @@ static void dpu_crtc_atomic_flush(struct drm_crtc
-> > *crtc,
-> >               return;
-> >       }
-> >
-> > -     if (dpu_crtc->event) {
-> > -             DPU_DEBUG("already received dpu_crtc->event\n");
-> > -     } else {
-> > -             spin_lock_irqsave(&dev->event_lock, flags);
-> > -             dpu_crtc->event = crtc->state->event;
-> > -             crtc->state->event = NULL;
-> > -             spin_unlock_irqrestore(&dev->event_lock, flags);
-> > -     }
-> > +     WARN_ON(dpu_crtc->event);
-> before the patch "move vblank events to complete_commit()", the dpu_crtc
-> events
-> were consumed in the _dpu_crtc_complete_flip(). So there was a chance
-> that if the vblank event
-> did not come in time before the next commit, dpu_crtc->event will not be
-> consumed.
->
-> But after the patch, _dpu_crtc_complete_flip() is being signaled in
-> dpu_crtc_complete_commit()
-> which will always happen, so is there any case where we will hit this
-> warning at all or will this
-> catch some other condition?
+Some add_memory*() users add memory in small, contiguous memory blocks.
+Examples include virtio-mem, hyper-v balloon, and the XEN balloon.
 
-The core drm-atomic bits will reject an incoming atomic update if the
-previous one has not completed, so other than a coding bug, this
-WARN_ON() should not be hit..  it's only purpose is to make it very
-obvious if someone breaks something :-)
+This can quickly result in a lot of memory resources, whereby the actual
+resource boundaries are not of interest (e.g., it might be relevant for
+DIMMs, exposed via /proc/iomem to user space). We really want to merge
+added resources in this scenario where possible.
 
-BR,
--R
+Let's provide a flag (MEMHP_MERGE_RESOURCE) to specify that a resource
+either created within add_memory*() or passed via add_memory_resource()
+shall be marked mergeable and merged with applicable siblings.
 
->
-> > +     spin_lock_irqsave(&dev->event_lock, flags);
-> > +     dpu_crtc->event = crtc->state->event;
-> > +     crtc->state->event = NULL;
-> > +     spin_unlock_irqrestore(&dev->event_lock, flags);
-> >
-> >       /*
-> >        * If no mixers has been allocated in dpu_crtc_atomic_check(),
-> > @@ -635,14 +612,7 @@ static void dpu_crtc_atomic_flush(struct drm_crtc
-> > *crtc,
-> >  static void dpu_crtc_destroy_state(struct drm_crtc *crtc,
-> >               struct drm_crtc_state *state)
-> >  {
-> > -     struct dpu_crtc_state *cstate;
-> > -
-> > -     if (!crtc || !state) {
-> > -             DPU_ERROR("invalid argument(s)\n");
-> > -             return;
-> > -     }
-> > -
-> > -     cstate = to_dpu_crtc_state(state);
-> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
-> >
-> >       DPU_DEBUG("crtc%d\n", crtc->base.id);
-> >
-> > @@ -731,14 +701,8 @@ static void dpu_crtc_reset(struct drm_crtc *crtc)
-> >   */
-> >  static struct drm_crtc_state *dpu_crtc_duplicate_state(struct drm_crtc
-> > *crtc)
-> >  {
-> > -     struct dpu_crtc_state *cstate, *old_cstate;
-> > -
-> > -     if (!crtc || !crtc->state) {
-> > -             DPU_ERROR("invalid argument(s)\n");
-> > -             return NULL;
-> > -     }
-> > +     struct dpu_crtc_state *cstate, *old_cstate =
-> > to_dpu_crtc_state(crtc->state);
-> >
-> > -     old_cstate = to_dpu_crtc_state(crtc->state);
-> >       cstate = kmemdup(old_cstate, sizeof(*old_cstate), GFP_KERNEL);
-> >       if (!cstate) {
-> >               DPU_ERROR("failed to allocate state\n");
-> > @@ -754,19 +718,12 @@ static struct drm_crtc_state
-> > *dpu_crtc_duplicate_state(struct drm_crtc *crtc)
-> >  static void dpu_crtc_disable(struct drm_crtc *crtc,
-> >                            struct drm_crtc_state *old_crtc_state)
-> >  {
-> > -     struct dpu_crtc *dpu_crtc;
-> > -     struct dpu_crtc_state *cstate;
-> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(crtc->state);
-> >       struct drm_encoder *encoder;
-> >       unsigned long flags;
-> >       bool release_bandwidth = false;
-> >
-> > -     if (!crtc || !crtc->state) {
-> > -             DPU_ERROR("invalid crtc\n");
-> > -             return;
-> > -     }
-> > -     dpu_crtc = to_dpu_crtc(crtc);
-> > -     cstate = to_dpu_crtc_state(crtc->state);
-> > -
-> >       DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
-> >
-> >       /* Disable/save vblank irq handling */
-> > @@ -825,19 +782,13 @@ static void dpu_crtc_disable(struct drm_crtc
-> > *crtc,
-> >  static void dpu_crtc_enable(struct drm_crtc *crtc,
-> >               struct drm_crtc_state *old_crtc_state)
-> >  {
-> > -     struct dpu_crtc *dpu_crtc;
-> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> >       struct drm_encoder *encoder;
-> >       bool request_bandwidth = false;
-> >
-> > -     if (!crtc) {
-> > -             DPU_ERROR("invalid crtc\n");
-> > -             return;
-> > -     }
-> > -
-> >       pm_runtime_get_sync(crtc->dev->dev);
-> >
-> >       DRM_DEBUG_KMS("crtc%d\n", crtc->base.id);
-> > -     dpu_crtc = to_dpu_crtc(crtc);
-> >
-> >       drm_for_each_encoder_mask(encoder, crtc->dev,
-> > crtc->state->encoder_mask) {
-> >               /* in video mode, we hold an extra bandwidth reference
-> > @@ -873,9 +824,9 @@ struct plane_state {
-> >  static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
-> >               struct drm_crtc_state *state)
-> >  {
-> > -     struct dpu_crtc *dpu_crtc;
-> > +     struct dpu_crtc *dpu_crtc = to_dpu_crtc(crtc);
-> > +     struct dpu_crtc_state *cstate = to_dpu_crtc_state(state);
-> >       struct plane_state *pstates;
-> > -     struct dpu_crtc_state *cstate;
-> >
-> >       const struct drm_plane_state *pstate;
-> >       struct drm_plane *plane;
-> > @@ -889,16 +840,8 @@ static int dpu_crtc_atomic_check(struct drm_crtc
-> > *crtc,
-> >       int left_zpos_cnt = 0, right_zpos_cnt = 0;
-> >       struct drm_rect crtc_rect = { 0 };
-> >
-> > -     if (!crtc) {
-> > -             DPU_ERROR("invalid crtc\n");
-> > -             return -EINVAL;
-> > -     }
-> > -
-> >       pstates = kzalloc(sizeof(*pstates) * DPU_STAGE_MAX * 4, GFP_KERNEL);
-> >
-> > -     dpu_crtc = to_dpu_crtc(crtc);
-> > -     cstate = to_dpu_crtc_state(state);
-> > -
-> >       if (!state->enable || !state->active) {
-> >               DPU_DEBUG("crtc%d -> enable %d, active %d, skip atomic_check\n",
-> >                               crtc->base.id, state->enable, state->active);
+To implement that, we need a kernel/resource interface to mark selected
+System RAM resources mergeable (IORESOURCE_SYSRAM_MERGEABLE) and trigger
+merging.
+
+Note: We really want to merge after the whole operation succeeded, not
+directly when adding a resource to the resource tree (it would break
+add_memory_resource() and require splitting resources again when the
+operation failed - e.g., due to -ENOMEM).
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Roger Pau Monné <roger.pau@citrix.com>
+Cc: Julien Grall <julien@xen.org>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ include/linux/ioport.h         |  4 +++
+ include/linux/memory_hotplug.h |  9 +++++
+ kernel/resource.c              | 60 ++++++++++++++++++++++++++++++++++
+ mm/memory_hotplug.c            |  7 ++++
+ 4 files changed, 80 insertions(+)
+
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index d7620d7c941a0..7e61389dcb017 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -60,6 +60,7 @@ struct resource {
+ 
+ /* IORESOURCE_SYSRAM specific bits. */
+ #define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
++#define IORESOURCE_SYSRAM_MERGEABLE		0x04000000 /* Resource can be merged. */
+ 
+ #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
+ 
+@@ -253,6 +254,9 @@ extern void __release_region(struct resource *, resource_size_t,
+ extern void release_mem_region_adjustable(struct resource *, resource_size_t,
+ 					  resource_size_t);
+ #endif
++#ifdef CONFIG_MEMORY_HOTPLUG
++extern void merge_system_ram_resource(struct resource *res);
++#endif
+ 
+ /* Wrappers for managed devices */
+ struct device;
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 5cd48332ce119..feb4aac03f2eb 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -68,6 +68,15 @@ struct mhp_params {
+ 	pgprot_t pgprot;
+ };
+ 
++/* Flags used for add_memory() and friends. */
++
++/*
++ * Allow merging of the added System RAM resource with adjacent, mergeable
++ * resources. After a successful call to add_memory_resource() with this flag
++ * set, the resource pointer must no longer be used as it might be stale.
++ */
++#define MEMHP_MERGE_RESOURCE		1
++
+ /*
+  * Zone resizing functions
+  *
+diff --git a/kernel/resource.c b/kernel/resource.c
+index 36b3552210120..7a91b935f4c20 100644
+--- a/kernel/resource.c
++++ b/kernel/resource.c
+@@ -1363,6 +1363,66 @@ void release_mem_region_adjustable(struct resource *parent,
+ }
+ #endif	/* CONFIG_MEMORY_HOTREMOVE */
+ 
++#ifdef CONFIG_MEMORY_HOTPLUG
++static bool system_ram_resources_mergeable(struct resource *r1,
++					   struct resource *r2)
++{
++	/* We assume either r1 or r2 is IORESOURCE_SYSRAM_MERGEABLE. */
++	return r1->flags == r2->flags && r1->end + 1 == r2->start &&
++	       r1->name == r2->name && r1->desc == r2->desc &&
++	       !r1->child && !r2->child;
++}
++
++/*
++ * merge_system_ram_resource - mark the System RAM resource mergeable and try to
++ * merge it with adjacent, mergeable resources
++ * @res: resource descriptor
++ *
++ * This interface is intended for memory hotplug, whereby lots of contiguous
++ * system ram resources are added (e.g., via add_memory*()) by a driver, and
++ * the actual resource boundaries are not of interest (e.g., it might be
++ * relevant for DIMMs). Only resources that are marked mergeable, that have the
++ * same parent, and that don't have any children are considered. All mergeable
++ * resources must be immutable during the request.
++ *
++ * Note:
++ * - The caller has to make sure that no pointers to resources that are
++ *   marked mergeable are used anymore after this call - the resource might
++ *   be freed and the pointer might be stale!
++ * - release_mem_region_adjustable() will split on demand on memory hotunplug
++ */
++void merge_system_ram_resource(struct resource *res)
++{
++	const unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
++	struct resource *cur;
++
++	if (WARN_ON_ONCE((res->flags & flags) != flags))
++		return;
++
++	write_lock(&resource_lock);
++	res->flags |= IORESOURCE_SYSRAM_MERGEABLE;
++
++	/* Try to merge with next item in the list. */
++	cur = res->sibling;
++	if (cur && system_ram_resources_mergeable(res, cur)) {
++		res->end = cur->end;
++		res->sibling = cur->sibling;
++		free_resource(cur);
++	}
++
++	/* Try to merge with previous item in the list. */
++	cur = res->parent->child;
++	while (cur && cur->sibling != res)
++		cur = cur->sibling;
++	if (cur && system_ram_resources_mergeable(cur, res)) {
++		cur->end = res->end;
++		cur->sibling = res->sibling;
++		free_resource(res);
++	}
++	write_unlock(&resource_lock);
++}
++#endif	/* CONFIG_MEMORY_HOTPLUG */
++
+ /*
+  * Managed region resource
+  */
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 64b07f006bc10..f62c2a46df8b1 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1103,6 +1103,13 @@ int __ref add_memory_resource(int nid, struct resource *res,
+ 	/* device_online() will take the lock when calling online_pages() */
+ 	mem_hotplug_done();
+ 
++	/*
++	 * In case we're allowed to merge the resource, flag it and trigger
++	 * merging now that adding succeeded.
++	 */
++	if (flags & MEMHP_MERGE_RESOURCE)
++		merge_system_ram_resource(res);
++
+ 	/* online pages if requested */
+ 	if (memhp_default_online_type != MMOP_OFFLINE)
+ 		walk_memory_blocks(start, size, NULL, online_memory_block);
+-- 
+2.26.2
+
