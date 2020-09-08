@@ -2,69 +2,111 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C024C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E18AC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17336218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE8182177B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 07:58:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0sh0hRg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730043AbgIHH6k (ORCPT
+        id S1730012AbgIHH6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 03:58:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54036 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbgIHH54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 03:58:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729964AbgIHH54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 03:57:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 41CD8B6CD;
-        Tue,  8 Sep 2020 07:57:55 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 09:57:53 +0200
-From:   Daniel Wagner <dwagner@suse.de>
-To:     Arun Easi <aeasi@marvell.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nilesh Javali <njavali@marvell.com>,
-        Martin Wilck <mwilck@suse.com>
-Subject: Re: [PATCH v2 4/4] qla2xxx: Handle incorrect entry_type entries
-Message-ID: <20200908075753.ov64u2rmhet3jmlu@beryllium.lan>
-References: <20200831161854.70879-1-dwagner@suse.de>
- <20200831161854.70879-5-dwagner@suse.de>
- <alpine.LRH.2.21.9999.2009072346360.28578@irv1user01.caveonetworks.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.21.9999.2009072346360.28578@irv1user01.caveonetworks.com>
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34661C061798
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 00:57:55 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id x123so161096pfc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 00:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YZg1jgAyMAGcUdolyBPogn5Fs274mLtu0TxITODgyQk=;
+        b=X0sh0hRgOfNg6g6Xs/xBHAHfJOKoFUGTKrA8N/PRUCbDA5OGQYT9QFu9MczM7BHeYW
+         dKetHdiNtPV55KRI7+iG12BJLSvyS77vmoF/tlfBjw65+nRwP97HVgffaKfv5pdr3PoP
+         YzRxeqAD20aA0ip3uUtYxRamNQmTgTw6oCl3DEDb/1qT/MA3dpoysDDlRnj8zOUzETbt
+         Ihn2+zKFhOlK6RGx48GQuqZXXkaq8lT/Sqws01yFY/f8tMxUy+FFCub+ryjdOR39P0oQ
+         jhqfDbeM9ob1v9CBWfDSQ6K1HvZoINDQd24uvOzGtS0naRDkEnPFuUw2frp4VncmuA0F
+         /4yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=YZg1jgAyMAGcUdolyBPogn5Fs274mLtu0TxITODgyQk=;
+        b=rjBWnDajdt4inWlXhjIoLv+umG4QOYMMO/XzQ5UOjY5bVdCnVQ9ZSnZOhJP2YR/73E
+         0oP9rrLWlGsLj4NnBLkGYMogwzOfXd4pifgj7nqO9nffx8F9sm7/E1PDA2r+P9KXrGl+
+         oJShdEwBxvjCvhgYmUroBiCWJ0O6si+RQ3xkIQF0pTEqDC6cPwrrvxTCy07jP9/zqUdh
+         Zlcqqnsm5w7I7e2okGSWH56s64pOtfsJDp34RnyoMVBLTklOpVCqptkR2ryV3egYhszm
+         1wsLyZgshEvDosu1pMaAsvgW2oBMWGdYoJZksyhNgwtPhvXQAO9nd/LFctE+YhqsyfWL
+         +6+A==
+X-Gm-Message-State: AOAM533anDuleeAHdz6BsM0EG8ASP05U8aaDfIPI+E2yVfUkC8bFzaaq
+        BzpewKny8Fb81dilXwwQDi1M
+X-Google-Smtp-Source: ABdhPJzDpHdcubpXgfdewiKO7WW8WbmfYSSgPQIYuc63xX5GYQC3Nvkd146IpnByx3u5Kopy5Tgpog==
+X-Received: by 2002:aa7:9ab0:0:b029:13c:1611:66bb with SMTP id x16-20020aa79ab00000b029013c161166bbmr21708900pfi.6.1599551874706;
+        Tue, 08 Sep 2020 00:57:54 -0700 (PDT)
+Received: from localhost.localdomain ([103.59.133.81])
+        by smtp.googlemail.com with ESMTPSA id m21sm7560154pfo.13.2020.09.08.00.57.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 00:57:54 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org,
+        agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     amitk@kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dmitry.baryshkov@linaro.org,
+        tdas@codeaurora.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 6/7] cpufreq: qcom-hw: Add cpufreq support for SM8250 SoC
+Date:   Tue,  8 Sep 2020 13:27:15 +0530
+Message-Id: <20200908075716.30357-7-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
+References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arun,
+SM8250 SoC uses EPSS block for carrying out the cpufreq duties. Hence, add
+support for it in the driver with relevant of_match data.
 
-On Mon, Sep 07, 2020 at 11:47:48PM -0700, Arun Easi wrote:
-> Could you drop the above comment about firmware, as it is speculation at
-> this point?
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/cpufreq/qcom-cpufreq-hw.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Sure, no problem.
+diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+index de816bcafd33..c3c397cc3dc6 100644
+--- a/drivers/cpufreq/qcom-cpufreq-hw.c
++++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+@@ -285,8 +285,17 @@ static const struct qcom_cpufreq_soc_data qcom_soc_data = {
+ 	.lut_row_size = 32,
+ };
+ 
++static const struct qcom_cpufreq_soc_data sm8250_soc_data = {
++	.reg_enable = 0x0,
++	.reg_freq_lut = 0x100,
++	.reg_volt_lut = 0x200,
++	.reg_perf_state = 0x320,
++	.lut_row_size = 4,
++};
++
+ static const struct of_device_id qcom_cpufreq_hw_match[] = {
+ 	{ .compatible = "qcom,cpufreq-hw", .data = &qcom_soc_data },
++	{ .compatible = "qcom,sm8250-epss", .data = &sm8250_soc_data },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, qcom_cpufreq_hw_match);
+-- 
+2.17.1
 
-> It'd be best to take a chip reset path, rather than assuming the
-> packet is good and having the appropriate handler called (hacky).
-> An approach similar to the one done at the beginning of
-> qla2x00_get_sp_from_handle() is what I had in mind.
-
-Ok, agreed a reset is probably the safest choice.
-
-> I'd have preferred a common approach across the different IOCB types
-> as an attempt to harden the code, but that will be a little more
-> involved work. This looks ok.
-
-Yes, I was pondering on it but I don't know enough to really come up
-with something reasonable. Currently our customers report only this
-hickup. So this is really only a partial workaround.
-
-Thanks,
-Daniel
