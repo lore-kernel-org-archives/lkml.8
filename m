@@ -2,235 +2,157 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595C8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7B1C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 296092166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC0B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 09:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGlRdYkT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cW7Y71ai"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgIHJNr (ORCPT
+        id S1728876AbgIHJPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 05:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48062 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727995AbgIHJNo (ORCPT
+        Tue, 8 Sep 2020 05:15:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:57897 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728556AbgIHJPH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 05:13:44 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF94C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 02:13:44 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id w186so9594807pgb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 02:13:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=w+fgoFgrvub+PVRBQAqPAVJ0vJ5KWjyrTSwEc7m3Tac=;
-        b=VGlRdYkT+u84u3Y6Kjvu8qHXN3TW1XyiJ+KOLZEjSJ5tEz1ZmoqFnTL7tM859f6NfT
-         BdSeby2ktDOTnLqHtsjBLtOtDf7DBioZPYsJYDACD0+jKLWjnLDLqD6OeITQ9gl9K4WT
-         j9II5uAli4pvZKiluAWuUKzG2ECNFoJ6Mv83A01XZhJk9FKWdpkG8ekvXBfPUZ51Zt2e
-         G9u1lgB5oXrcz9v7Ltcd3aN3QqumGn5P8ONfN9SYqi2QLMQ5ZlCA+pQWmZFQdAMMDtxI
-         ERSsOQ4uuml18R8UR1VgtJg98TEJFsPfgwbLjxZYTaAQ5GuZQPPsNGS8xU1HwgA/bLen
-         OiSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=w+fgoFgrvub+PVRBQAqPAVJ0vJ5KWjyrTSwEc7m3Tac=;
-        b=Dbk/n5tJ2ef8khhKaoGMQv8torun+WJZTL+P85qm1PaUeAQf5Vw7dJJzDB/RjPCywU
-         OD8i0OHnZp/5jcbzKNMBxDFQZXw/74lg4jyb0SCB5K1XWVtOtWgeu6zh8XrUvVNltv3V
-         9lZlGNoD0CFI9XRtFmBZpH0S7Tvx2D2rWOHRk+S+wQZPjjivjAsToyeyikiIfiMRABng
-         r/LvGMwsCxKN3wvBwg5cukQ0VQ68MAgptD11dsing7fXUpKtCxVEnRvQvpsOhC4Z+MA9
-         zY9fSqsE1I2kW4weR13D6wexg+jf56F0aU90YgbgEeLdn/UKUYDTtFXBKXJ0TGpK6PV2
-         KbxA==
-X-Gm-Message-State: AOAM531RHjafE90kA/Lknkp7yFNJzweq6Erm67E4DTUFGNv/LsRFhPKA
-        urz/Bhs+lgVyt2dhZpv+A2g=
-X-Google-Smtp-Source: ABdhPJwd4muQSZj47jYzjoWHw0sLP9vUqRC+sbt0sjdS5yOxhOJAjexMEe+LdHqfY09BJ08YufwJXQ==
-X-Received: by 2002:a62:7c82:0:b029:13c:1611:6532 with SMTP id x124-20020a627c820000b029013c16116532mr22326829pfc.4.1599556424068;
-        Tue, 08 Sep 2020 02:13:44 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id f12sm3178494pjm.5.2020.09.08.02.13.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 02:13:43 -0700 (PDT)
-Date:   Tue, 08 Sep 2020 19:13:37 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v1 5/5] powerpc/fault: Perform exception fixup in
- do_page_fault()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
-        <5748c8f5cf0a9b3686169e2c7709107e6aaec408.1596734105.git.christophe.leroy@csgroup.eu>
-In-Reply-To: <5748c8f5cf0a9b3686169e2c7709107e6aaec408.1596734105.git.christophe.leroy@csgroup.eu>
+        Tue, 8 Sep 2020 05:15:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599556506;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=ZNSdKcawKsFr0qylYAU5Lf8VCO0esIICRd8nQrkHMj4=;
+        b=cW7Y71aiGqzw1nJAI05ou6y9EexzqdqudxURO5Pc99Xaospq4ppSJu0JBPZ8YThrEkP7dv
+        KCM0DnYZqzvYxf5ahlxBtKZTuTQqp7KP3WKk0/RV1kxLgJkhqfghtU1A2/Jj7DuADVJgHY
+        xFiQmjiSaA9cnaxtJX0W++oL6PnbkcA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-ALN8d0JLOa2GjrMmfOyngg-1; Tue, 08 Sep 2020 05:15:02 -0400
+X-MC-Unique: ALN8d0JLOa2GjrMmfOyngg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 595811084D72;
+        Tue,  8 Sep 2020 09:15:01 +0000 (UTC)
+Received: from [10.36.115.46] (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B2457ED90;
+        Tue,  8 Sep 2020 09:14:59 +0000 (UTC)
+Subject: Re: [PATCH v2 02/10] mm/memory_hotplug: enforce section granularity
+ when onlining/offlining
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        Oscar Salvador <osalvador@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Baoquan He <bhe@redhat.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+References: <20200819175957.28465-1-david@redhat.com>
+ <20200819175957.28465-3-david@redhat.com> <20200824103917.GB6315@linux>
+ <20200825021129.GA78808@L-31X9LVDL-1304.local>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <96fd5d6c-a6e3-648b-6d3e-ebfd2d3969d8@redhat.com>
+Date:   Tue, 8 Sep 2020 11:14:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Message-Id: <1599555291.xys33gyt02.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200825021129.GA78808@L-31X9LVDL-1304.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
-> Exception fixup doesn't require the heady full regs saving,
-                                      heavy
+On 25.08.20 04:11, Wei Yang wrote:
+> On Mon, Aug 24, 2020 at 12:39:18PM +0200, Oscar Salvador wrote:
+>> On Wed, Aug 19, 2020 at 07:59:49PM +0200, David Hildenbrand wrote:
+>>> Already two people (including me) tried to offline subsections, because
+>>> the function looks like it can deal with it. But we really can only
+>>> online/offline full sections that are properly aligned (e.g., we can only
+>>> mark full sections online/offline via SECTION_IS_ONLINE).
+>>>
+>>> Add a simple safety net to document the restriction now. Current users
+>>> (core and powernv/memtrace) respect these restrictions.
+>>
+>> It's been a while since I looked at sub-section handling stuff so sorry to ask
+>> this, but was it true that we can hot-{remove,add} sub-section granularity, while
+>> we can only online /offline on section granularity?
+>>
 
-> do it from do_page_fault() directly.
->=20
-> For that, split bad_page_fault() in two parts.
->=20
-> As bad_page_fault() can also be called from other places than
-> handle_page_fault(), it will still perform exception fixup and
-> fallback on __bad_page_fault().
->=20
-> handle_page_fault() directly calls __bad_page_fault() as the
-> exception fixup will now be done by do_page_fault()
+Yes, we can hot-{remove,add} sub-section granularity ZONE_DEVICE memory,
+but not memory to be managed by the buddy.
 
-Looks good. We can probably get rid of bad_page_fault completely after=20
-this too.
+Examples are
+- Memory block devices span 1..X sections and can either be
+  online/offline
+- We can only mark full sections to be online/offline in sparsemem
+- Besides section handling, current onlining/offlining code could only
+  work in MAX_ORDER - 1 granularity, not necessarily sub-section
+  granularity.
 
-Hmm, the alignment exception might(?) hit user copies if the user points=20
-it to CI memory. Then you could race and the memory gets unmapped. In=20
-that case the exception table check might be better to be explicit there
-with comments.
+Thanks for having a look.
 
-The first call in do_hash_fault is not required (copy user will never
-be in nmi context). The second one and the one in slb_fault could be
-made explicit too. Anyway for now this is fine.
+> 
+> Seems you are right.
 
+
+-- 
 Thanks,
-Nick
 
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+David / dhildenb
 
-
->=20
-> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-> ---
->  arch/powerpc/kernel/entry_32.S       |  2 +-
->  arch/powerpc/kernel/exceptions-64e.S |  2 +-
->  arch/powerpc/kernel/exceptions-64s.S |  2 +-
->  arch/powerpc/mm/fault.c              | 33 ++++++++++++++++++++--------
->  4 files changed, 27 insertions(+), 12 deletions(-)
->=20
-> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_3=
-2.S
-> index f4d0af8e1136..c198786591f9 100644
-> --- a/arch/powerpc/kernel/entry_32.S
-> +++ b/arch/powerpc/kernel/entry_32.S
-> @@ -678,7 +678,7 @@ handle_page_fault:
->  	mr	r5,r3
->  	addi	r3,r1,STACK_FRAME_OVERHEAD
->  	lwz	r4,_DAR(r1)
-> -	bl	bad_page_fault
-> +	bl	__bad_page_fault
->  	b	ret_from_except_full
-> =20
->  #ifdef CONFIG_PPC_BOOK3S_32
-> diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/e=
-xceptions-64e.S
-> index d9ed79415100..dd9161ea5da8 100644
-> --- a/arch/powerpc/kernel/exceptions-64e.S
-> +++ b/arch/powerpc/kernel/exceptions-64e.S
-> @@ -1024,7 +1024,7 @@ storage_fault_common:
->  	mr	r5,r3
->  	addi	r3,r1,STACK_FRAME_OVERHEAD
->  	ld	r4,_DAR(r1)
-> -	bl	bad_page_fault
-> +	bl	__bad_page_fault
->  	b	ret_from_except
-> =20
->  /*
-> diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/e=
-xceptions-64s.S
-> index f7d748b88705..2cb3bcfb896d 100644
-> --- a/arch/powerpc/kernel/exceptions-64s.S
-> +++ b/arch/powerpc/kernel/exceptions-64s.S
-> @@ -3254,7 +3254,7 @@ handle_page_fault:
->  	mr	r5,r3
->  	addi	r3,r1,STACK_FRAME_OVERHEAD
->  	ld	r4,_DAR(r1)
-> -	bl	bad_page_fault
-> +	bl	__bad_page_fault
->  	b	interrupt_return
-> =20
->  /* We have a data breakpoint exception - handle it */
-> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> index edde169ba3a6..bd6e397eb84a 100644
-> --- a/arch/powerpc/mm/fault.c
-> +++ b/arch/powerpc/mm/fault.c
-> @@ -542,10 +542,20 @@ NOKPROBE_SYMBOL(__do_page_fault);
->  int do_page_fault(struct pt_regs *regs, unsigned long address,
->  		  unsigned long error_code)
->  {
-> +	const struct exception_table_entry *entry;
->  	enum ctx_state prev_state =3D exception_enter();
->  	int rc =3D __do_page_fault(regs, address, error_code);
->  	exception_exit(prev_state);
-> -	return rc;
-> +	if (likely(!rc))
-> +		return 0;
-> +
-> +	entry =3D search_exception_tables(regs->nip);
-> +	if (unlikely(!entry))
-> +		return rc;
-> +
-> +	instruction_pointer_set(regs, extable_fixup(entry));
-> +
-> +	return 0;
->  }
->  NOKPROBE_SYMBOL(do_page_fault);
-> =20
-> @@ -554,17 +564,10 @@ NOKPROBE_SYMBOL(do_page_fault);
->   * It is called from the DSI and ISI handlers in head.S and from some
->   * of the procedures in traps.c.
->   */
-> -void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig=
-)
-> +void __bad_page_fault(struct pt_regs *regs, unsigned long address, int s=
-ig)
->  {
-> -	const struct exception_table_entry *entry;
->  	int is_write =3D page_fault_is_write(regs->dsisr);
-> =20
-> -	/* Are we prepared to handle this fault?  */
-> -	if ((entry =3D search_exception_tables(regs->nip)) !=3D NULL) {
-> -		regs->nip =3D extable_fixup(entry);
-> -		return;
-> -	}
-> -
->  	/* kernel has accessed a bad area */
-> =20
->  	switch (TRAP(regs)) {
-> @@ -598,3 +601,15 @@ void bad_page_fault(struct pt_regs *regs, unsigned l=
-ong address, int sig)
-> =20
->  	die("Kernel access of bad area", regs, sig);
->  }
-> +
-> +void bad_page_fault(struct pt_regs *regs, unsigned long address, int sig=
-)
-> +{
-> +	const struct exception_table_entry *entry;
-> +
-> +	/* Are we prepared to handle this fault?  */
-> +	entry =3D search_exception_tables(instruction_pointer(regs));
-> +	if (entry)
-> +		instruction_pointer_set(regs, extable_fixup(entry));
-> +	else
-> +		__bad_page_fault(regs, address, sig);
-> +}
-> --=20
-> 2.25.0
->=20
->=20
