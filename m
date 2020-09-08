@@ -2,283 +2,144 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E853C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE3EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:43:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271552166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF400215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 08:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wQHmFTHg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVzWZ0PL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbgIHIlh (ORCPT
+        id S1729912AbgIHIn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 04:41:37 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:50043 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729564AbgIHIld (ORCPT
+        Tue, 8 Sep 2020 04:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43482 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729390AbgIHInz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 04:41:33 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id FZBvkWMsNMeQuFZBwkfEso; Tue, 08 Sep 2020 10:41:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1599554490; bh=AQvpE90imbtcIDG4V2WxYb2iJCg77f2qjbgyPSUlRuc=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wQHmFTHgMsA1Jy62WHxzFpV1f5P1aa6rhXG7umxaWThv8UoIZLvBI/cVyTm2RdjN5
-         USYsZoojECcbBPWeRhbjr0GuUNBGQMk44nd0O8CByqLA6pYZBlt+dBKDASBXctzMch
-         as57Zp+wsvRvvQFIAQPepjj5jPSfC968TpwvtJFmc/uwnqx+wiABRgIQu+6Kr20JCm
-         FwjlQM8SfAnTLpD47rhXDGRGgEWyBkQaKc1NzGWm+rkcEAfZuYpU7Nw/Ba+U4jS8xg
-         QhkdkekNaRB/3i9lC4omE6p6QCdoLEaWPYy6Dm8Ea0otyvi8WOXxrpEKyUt7BGJW0c
-         lx9o1h9WNwBBA==
-Subject: Re: [PATCH 4/5] drm_dp_cec: add plumbing in preparation for MST
- support
-To:     Sam McNally <sammc@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, nouveau@lists.freedesktop.org,
-        =?UTF-8?Q?Jos=c3=a9_Roberto_de_Souza?= <jose.souza@intel.com>,
-        David Francis <David.Francis@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        amd-gfx@lists.freedesktop.org, Ben Skeggs <bskeggs@redhat.com>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Leo Li <sunpeng.li@amd.com>,
-        Lucas De Marchi <lucas.demarchi@intel.com>,
-        intel-gfx@lists.freedesktop.org,
-        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        dri-devel@lists.freedesktop.org,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-References: <20200901162133.1.I8693156f555875e5c8342e86ab37ce968dfdd277@changeid>
- <20200901162133.4.I900b1b80709b7632a47d0ddb4cd375b4a3616c9e@changeid>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <2f1e64e4-bb37-0cfb-6b3b-3f51fd5faca3@xs4all.nl>
-Date:   Tue, 8 Sep 2020 10:41:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 8 Sep 2020 04:43:55 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFA9C061573
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 01:43:55 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id jw11so1772761pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 01:43:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=OXlcroGke2HNevojS8gO7AGdbKr5HayaXxgh0v0a9Rw=;
+        b=VVzWZ0PLhoBOyRnLqIhBP8KlfFI1wesE/ceDJIN6T0dgy7xPyIv2MSxmQkM/5WqrTI
+         CFU0k8luUZ6jx5bUjXraLG3G3v1aUp5DWnYzAckklhZatgNFvBRMP8G1bzLRwmUMQ/M0
+         PYyMPqh2IN0GJ0D6oJTzBd42wd9VCjv+SxeubQlPrU8G6nL2DQlHoxGas0g2MmPNJuYf
+         jNUkMDi95Xfdu5HXwvf/SFKXlsv4hdCtz4HZ8itfx96TewzGNl5b32ilpqFKNr97eC44
+         EWfDRmXwk+OGeJhaEDqBuHIlDO4cI5awDYMI2K0bmd5V6Oned79/6dnQ+TEbTTg+rtwM
+         +wQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=OXlcroGke2HNevojS8gO7AGdbKr5HayaXxgh0v0a9Rw=;
+        b=gnyw7Tz1a9Ozl7aympS95cv1UpSK2ZBTVaK+mnokKhmZuHZGFECuYE3ZhBRbb9onv1
+         DPLcu//+dJ5DGRN/v9iKZUSufQegEcJR1RIzQhwtbuU+2aBBGuqvea6x+bXGKm9QQzLq
+         4hTRGI8gZsck5LTZY+GcBRjDsL5/2eK/q8crFV1KSca4y2LKtEZrBl43krsWMjtnMfMd
+         yE/90XzqEALxhUAHjic/hIig7p9VHyTG++k0i8Qynl585Rkd5ebvCuyr0RKq31811hm+
+         U3DWxwaQ7Yeuy3cZgUTQC8QpvXP42BszaHfjcVjNrOp+mbVY+6qWPiBa+iLOq0RAeHcy
+         MB9Q==
+X-Gm-Message-State: AOAM5333lNpLIlsrwfTm8sgrQqlktpUqJqdsIn5hx/sy9qd+3MoqQxB+
+        sG4g8KITiTvNevJ7eSTxvghWtolZzrc=
+X-Google-Smtp-Source: ABdhPJxzyS9TfAzWvwCFoho2mIVMNDIB0pBbFX9ag1Dk5md5II1gAiOC+3ef0morgOeUwDCSINndIw==
+X-Received: by 2002:a17:90a:e795:: with SMTP id iz21mr2979053pjb.8.1599554634620;
+        Tue, 08 Sep 2020 01:43:54 -0700 (PDT)
+Received: from localhost ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id b10sm16891473pff.85.2020.09.08.01.43.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 01:43:54 -0700 (PDT)
+Date:   Tue, 08 Sep 2020 18:43:48 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v1 1/5] powerpc/mm: sanity_check_fault() should work for
+ all, not only BOOK3S
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
+In-Reply-To: <7baae4086cbb9ffb08c933b065ff7d29dbc03dd6.1596734104.git.christophe.leroy@csgroup.eu>
 MIME-Version: 1.0
-In-Reply-To: <20200901162133.4.I900b1b80709b7632a47d0ddb4cd375b4a3616c9e@changeid>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHz6rVM5/ECaUJ5Mt6JfyH8yYyfdOz7LyjzrGRpN5U8iJI039Wq60UxQJCQ82NhNMgJB9bQLpG24tbwI9XbmBkSFKkunPEEJscayJNaAJxeoArKYTOut
- uPlnlCkBz3xHnsmrgSm1EbaB+j2jU1DP6KrF1DJGI8skOO8/xNnSytrGpMKOVVZSqEs59oxNTgRAP71WCFeWLOv4QFqf6jJiDv/E2vMHdJsmwlIIn/vu2Pzv
- ClXAlwwB/bUtrBguK8ghXQ2yWwp5c+bHkaoGkSV1YYlb2BBZp0eL51+MDz2MQj5BIpyglkYhvIYWSelLQ+i5AB36nNOpG3Tt8Lg5O/wvTpFkTDD1TT+hzrNB
- 7WdTNViEGmmJ3AzbTxKTRG5xURNFWTcKLaSJXHdotkvGYOA9x4+EiGCWWwHa1AanUOuN9G0YAJffpBrd6BJZRj1mgjaB09N11xW01TpBthJDCx7SsvsvRVn4
- aY07xj62VhLn2RHLG3YX1rKb3zJ0zjc4aq19wIrYLf8abiZfUTT75hcfRxaVk1kPN63UdDpzKcyoasvjtmNuOIaKyLssWvoi/GPcfVHhmSk/PpPeck69fANr
- HYZtxUVryhbu9vKE4gvYhoPnAk16u9QO9dMtIjnSJtNCBBTTwGV4EW/1AR3f23ti3HQLwiRRpDZhFaO+TFy8iLJy6BmLwthPe6gw+z7c6Mu2Poh5ehj8UuFY
- y8khoQXwdG20S94epeVNtbelVC9D9vzUcO9RCGTZaz6iB6y+EVh5+G+SajyooLMbsfKV6LniY+npUwB+p1OtEqXJ9salkXcX1pqzwvu13N3r27A+2vCp/qon
- wD79o3oHfehxc6cOKBz05xy5wuxdwMVSLBxtx5Dyi6pNV5pr4+METtFiobqobQ/vTboFh8PRRvRlUpUd5ktJrlANDXSNmr2OveNYb2sd1MZ8RrtT3sWxWTFF
- AjneWsnF5xQ/6Ba2iJcZ6Ec8SV7cinwz+N7QtBSNDANeJI4RqSAXrVxRA3tQB6gNOklzXAo6ogbmPBnA7R/cW0F5+oHhDBytM+NyPc5hW71nHfIr
+Message-Id: <1599554359.m174sr2fhg.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/09/2020 08:22, Sam McNally wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> [sammc@chromium.org:
->  - rebased
->  - removed polling-related changes
->  - moved the calls to drm_dp_cec_(un)set_edid() into the next patch
-> ]
-> Signed-off-by: Sam McNally <sammc@chromium.org>
+Excerpts from Christophe Leroy's message of August 7, 2020 3:15 am:
+> The verification and message introduced by commit 374f3f5979f9
+> ("powerpc/mm/hash: Handle user access of kernel address gracefully")
+> applies to all platforms, it should not be limited to BOOK3S.
+>=20
+> Make the BOOK3S version of sanity_check_fault() the one for all,
+> and bail out earlier if not BOOK3S.
+>=20
+> Fixes: 374f3f5979f9 ("powerpc/mm/hash: Handle user access of kernel addre=
+ss gracefully")
+> Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 > ---
-> 
->  .../display/amdgpu_dm/amdgpu_dm_mst_types.c   |  2 +-
->  drivers/gpu/drm/drm_dp_cec.c                  | 22 ++++++++++---------
->  drivers/gpu/drm/i915/display/intel_dp.c       |  2 +-
->  drivers/gpu/drm/nouveau/nouveau_connector.c   |  2 +-
->  include/drm/drm_dp_helper.h                   |  6 +++--
->  5 files changed, 19 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> index 461fa4da0a34..6e7075893ec9 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
-> @@ -419,7 +419,7 @@ void amdgpu_dm_initialize_dp_connector(struct amdgpu_display_manager *dm,
->  
->  	drm_dp_aux_init(&aconnector->dm_dp_aux.aux);
->  	drm_dp_cec_register_connector(&aconnector->dm_dp_aux.aux,
-> -				      &aconnector->base);
-> +				      &aconnector->base, false);
->  
->  	if (aconnector->base.connector_type == DRM_MODE_CONNECTOR_eDP)
+>  arch/powerpc/mm/fault.c | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
+> index 925a7231abb3..2efa34d7e644 100644
+> --- a/arch/powerpc/mm/fault.c
+> +++ b/arch/powerpc/mm/fault.c
+> @@ -303,7 +303,6 @@ static inline void cmo_account_page_fault(void)
+>  static inline void cmo_account_page_fault(void) { }
+>  #endif /* CONFIG_PPC_SMLPAR */
+> =20
+> -#ifdef CONFIG_PPC_BOOK3S
+>  static void sanity_check_fault(bool is_write, bool is_user,
+>  			       unsigned long error_code, unsigned long address)
+>  {
+> @@ -320,6 +319,9 @@ static void sanity_check_fault(bool is_write, bool is=
+_user,
 >  		return;
-> diff --git a/drivers/gpu/drm/drm_dp_cec.c b/drivers/gpu/drm/drm_dp_cec.c
-> index 3ab2609f9ec7..04ab7b88055c 100644
-> --- a/drivers/gpu/drm/drm_dp_cec.c
-> +++ b/drivers/gpu/drm/drm_dp_cec.c
-> @@ -14,6 +14,7 @@
->  #include <drm/drm_connector.h>
->  #include <drm/drm_device.h>
->  #include <drm/drm_dp_helper.h>
-> +#include <drm/drm_dp_mst_helper.h>
->  
+>  	}
+> =20
+> +	if (!IS_ENABLED(CONFIG_PPC_BOOK3S))
+> +		return;
+
+Seems okay. Why is address =3D=3D -1 special though? I guess it's because=20
+it may not be an exploit kernel reference but a buggy pointer underflow?=20
+In that case -1 doesn't seem like it would catch very much. Would it be=20
+better to test for high bit set for example ((long)address < 0) ?
+
+Anyway for your patch
+
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+
+> +
+>  	/*
+>  	 * For hash translation mode, we should never get a
+>  	 * PROTFAULT. Any update to pte to reduce access will result in us
+> @@ -354,10 +356,6 @@ static void sanity_check_fault(bool is_write, bool i=
+s_user,
+> =20
+>  	WARN_ON_ONCE(error_code & DSISR_PROTFAULT);
+>  }
+> -#else
+> -static void sanity_check_fault(bool is_write, bool is_user,
+> -			       unsigned long error_code, unsigned long address) { }
+> -#endif /* CONFIG_PPC_BOOK3S */
+> =20
 >  /*
->   * Unfortunately it turns out that we have a chicken-and-egg situation
-> @@ -338,8 +339,6 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->  	if (aux->cec.adap) {
->  		if (aux->cec.adap->capabilities == cec_caps &&
->  		    aux->cec.adap->available_log_addrs == num_las) {
-> -			/* Unchanged, so just set the phys addr */
-> -			cec_s_phys_addr_from_edid(aux->cec.adap, edid);
->  			goto unlock;
->  		}
->  		/*
-> @@ -364,15 +363,16 @@ void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid)
->  	if (cec_register_adapter(aux->cec.adap, connector->dev->dev)) {
->  		cec_delete_adapter(aux->cec.adap);
->  		aux->cec.adap = NULL;
-> -	} else {
-> -		/*
-> -		 * Update the phys addr for the new CEC adapter. When called
-> -		 * from drm_dp_cec_register_connector() edid == NULL, so in
-> -		 * that case the phys addr is just invalidated.
-> -		 */
-> -		cec_s_phys_addr_from_edid(aux->cec.adap, edid);
->  	}
->  unlock:
-> +	/*
-> +	 * Update the phys addr for the new CEC adapter. When called
-> +	 * from drm_dp_cec_register_connector() edid == NULL, so in
-> +	 * that case the phys addr is just invalidated.
-> +	 */
-
-The comment is no longer in sync with the code: if EDID == NULL, then
-nothing is done due to the edid check in the 'if' below.
-
-> +	if (aux->cec.adap && edid) {
-
-I think this should just be: if (aux->cec.adap)
-
-Also, the {} aren't necessary here.
-
-> +		cec_s_phys_addr_from_edid(aux->cec.adap, edid);
-> +	}
->  	mutex_unlock(&aux->cec.lock);
->  }
->  EXPORT_SYMBOL(drm_dp_cec_set_edid);
-
-Frankly, the changes to this function should be dropped completely, from
-what I can see they are not necessary. It was done in my original patch
-because of the way I handled mst, but you did it differently (and I think
-better), so these changes are no longer needed.
-
-I know I am actually commenting on my old patch, but that patch was from a
-work-in-progress git branch and was never meant as a 'proper' patch.
-
-However, what complicates matters is that after digging a bit more I discovered
-that commit 732300154980 ("drm: Do not call drm_dp_cec_set_edid() while registering
-DP connectors") changed drm_dp_cec_register_connector() so that it no longer
-calls drm_dp_cec_set_edid(), but the comments there and in this function were
-not updated. It would be nice if you can add a patch fixing these outdated
-comments.
-
-Regardless of that change in commit 732300154980, the edid pointer can still be
-NULL and the existing behavior should be kept (i.e. create a CEC device, but with
-an invalid physical address since there is no EDID for some reason).
-
-Regards,
-
-	Hans
-
-> @@ -418,6 +418,7 @@ EXPORT_SYMBOL(drm_dp_cec_unset_edid);
->   * drm_dp_cec_register_connector() - register a new connector
->   * @aux: DisplayPort AUX channel
->   * @connector: drm connector
-> + * @is_mst: set to true if this is an MST branch
->   *
->   * A new connector was registered with associated CEC adapter name and
->   * CEC adapter parent device. After registering the name and parent
-> @@ -425,12 +426,13 @@ EXPORT_SYMBOL(drm_dp_cec_unset_edid);
->   * CEC and to register a CEC adapter if that is the case.
->   */
->  void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> -				   struct drm_connector *connector)
-> +				   struct drm_connector *connector, bool is_mst)
->  {
->  	WARN_ON(aux->cec.adap);
->  	if (WARN_ON(!aux->transfer))
->  		return;
->  	aux->cec.connector = connector;
-> +	aux->cec.is_mst = is_mst;
->  	INIT_DELAYED_WORK(&aux->cec.unregister_work,
->  			  drm_dp_cec_unregister_work);
->  }
-> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-> index 82b9de274f65..744cb55572f9 100644
-> --- a/drivers/gpu/drm/i915/display/intel_dp.c
-> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-> @@ -6261,7 +6261,7 @@ intel_dp_connector_register(struct drm_connector *connector)
->  	intel_dp->aux.dev = connector->kdev;
->  	ret = drm_dp_aux_register(&intel_dp->aux);
->  	if (!ret)
-> -		drm_dp_cec_register_connector(&intel_dp->aux, connector);
-> +		drm_dp_cec_register_connector(&intel_dp->aux, connector, false);
->  	return ret;
->  }
->  
-> diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> index 49dd0cbc332f..671a70e95cd1 100644
-> --- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-> +++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-> @@ -1414,7 +1414,7 @@ nouveau_connector_create(struct drm_device *dev,
->  	switch (type) {
->  	case DRM_MODE_CONNECTOR_DisplayPort:
->  	case DRM_MODE_CONNECTOR_eDP:
-> -		drm_dp_cec_register_connector(&nv_connector->aux, connector);
-> +		drm_dp_cec_register_connector(&nv_connector->aux, connector, false);
->  		break;
->  	}
->  
-> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-> index 85513eeb2196..12bca1b9512b 100644
-> --- a/include/drm/drm_dp_helper.h
-> +++ b/include/drm/drm_dp_helper.h
-> @@ -1495,12 +1495,14 @@ struct drm_connector;
->   * @lock: mutex protecting this struct
->   * @adap: the CEC adapter for CEC-Tunneling-over-AUX support.
->   * @connector: the connector this CEC adapter is associated with
-> + * @is_mst: this is an MST branch
->   * @unregister_work: unregister the CEC adapter
->   */
->  struct drm_dp_aux_cec {
->  	struct mutex lock;
->  	struct cec_adapter *adap;
->  	struct drm_connector *connector;
-> +	bool is_mst;
->  	struct delayed_work unregister_work;
->  };
->  
-> @@ -1746,7 +1748,7 @@ drm_dp_has_quirk(const struct drm_dp_desc *desc, u32 edid_quirks,
->  #ifdef CONFIG_DRM_DP_CEC
->  void drm_dp_cec_irq(struct drm_dp_aux *aux);
->  void drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> -				   struct drm_connector *connector);
-> +				   struct drm_connector *connector, bool is_mst);
->  void drm_dp_cec_unregister_connector(struct drm_dp_aux *aux);
->  void drm_dp_cec_set_edid(struct drm_dp_aux *aux, const struct edid *edid);
->  void drm_dp_cec_unset_edid(struct drm_dp_aux *aux);
-> @@ -1757,7 +1759,7 @@ static inline void drm_dp_cec_irq(struct drm_dp_aux *aux)
->  
->  static inline void
->  drm_dp_cec_register_connector(struct drm_dp_aux *aux,
-> -			      struct drm_connector *connector)
-> +			      struct drm_connector *connector, bool is_mst)
->  {
->  }
->  
-> 
-
+>   * Define the correct "is_write" bit in error_code based
+> --=20
+> 2.25.0
+>=20
+>=20
