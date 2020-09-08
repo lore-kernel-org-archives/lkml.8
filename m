@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98901C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBD2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA342078E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDB5207DE
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588492;
-	bh=aOapCg8Fs1QO/aVSI3dHbCrCilxDYbrwYv0hJDimFW4=;
+	s=default; t=1599588517;
+	bh=WWUFRvVm63sridH9DWhEF65wgBmab3+NJaLSarX73Fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1jt50YKBFcQU5l5n0+ijB0LnZAmeUlIlE3YmFZVtc5jmrK0vopW/PyUD5yiMEjJU
-	 wGaOEYoavx7UBSdpQKRM0TUtU7igLemaOjyleBAK5rNDffRb+Z+QRObCctQnKC7uzC
-	 xJ04DM+PBIZ21xFsJRovaaMhokBgPym545YbBmQA=
+	b=W9GYJP15eqSpE4VkU2fMFbat/BjDpN+eSySHmImhXuoK8d7dK9ov5g5Pv58dzV3pH
+	 ROjN8LLpl41oTu9yUJcSTjak8uWE7sFnNnqexicr5hoFYxlV37y2ohIHVLgmAmSL0a
+	 FU9u6t1uFxAO/mMiJ5vDe/b0L+x1/BmzeLspG+Mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732300AbgIHSH7 (ORCPT
+        id S1731717AbgIHSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:07:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56674 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731500AbgIHQLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:11:50 -0400
+        id S1731439AbgIHQLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:11:49 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E484F2472F;
-        Tue,  8 Sep 2020 15:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407A124759;
+        Tue,  8 Sep 2020 15:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579651;
-        bh=aOapCg8Fs1QO/aVSI3dHbCrCilxDYbrwYv0hJDimFW4=;
+        s=default; t=1599579692;
+        bh=WWUFRvVm63sridH9DWhEF65wgBmab3+NJaLSarX73Fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+CleQUMk0NF4lVwjUi+CPaQubOTbG1rSNwHBZlvEfBi/QOubvmn8jrFjn0FZQTRj
-         ZPVz1xPNGb9mXHFATp1afPX38zna3hQGcr36KphIgfNeph+Ppket5D0aj91wbmhU8N
-         jWme6CH0HwR1WT8KOqvMTIqKkjrp4XN3jxOumMHY=
+        b=nfXzklkxr3MEM5OKBVqVhmJPb+MwY7uKDIfZTLJSzi6mcKLrtwJ4dwdGOzsP29SxF
+         k+bC0/EQQHxlFWInmtFBNlzbf+1ZyauDkQ1ZzNTBbNuHG7CR6hPG7nzxCV/zPSdkqN
+         cletb/y4S8SPoyaMNZtGEVSLq3hIbBye7tvyp9D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.8 165/186] dm writecache: handle DAX to partitions on persistent memory correctly
-Date:   Tue,  8 Sep 2020 17:25:07 +0200
-Message-Id: <20200908152249.661695677@linuxfoundation.org>
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 183/186] mm/hugetlb: fix a race between hugetlb sysctl handlers
+Date:   Tue,  8 Sep 2020 17:25:25 +0200
+Message-Id: <20200908152250.544112761@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,62 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-commit f9e040efcc28309e5c592f7e79085a9a52e31f58 upstream.
+commit 17743798d81238ab13050e8e2833699b54e15467 upstream.
 
-The function dax_direct_access doesn't take partitions into account,
-it always maps pages from the beginning of the device. Therefore,
-persistent_memory_claim() must get the partition offset using
-get_start_sect() and add it to the page offsets passed to
-dax_direct_access().
+There is a race between the assignment of `table->data` and write value
+to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
+the other thread.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+  CPU0:                                 CPU1:
+                                        proc_sys_write
+  hugetlb_sysctl_handler                  proc_sys_call_handler
+  hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
+    table->data = &tmp;                       hugetlb_sysctl_handler_common
+                                                table->data = &tmp;
+      proc_doulongvec_minmax
+        do_proc_doulongvec_minmax           sysctl_head_finish
+          __do_proc_doulongvec_minmax         unuse_table
+            i = table->data;
+            *i = val;  // corrupt CPU1's stack
+
+Fix this by duplicating the `table`, and only update the duplicate of
+it.  And introduce a helper of proc_hugetlb_doulongvec_minmax() to
+simplify the code.
+
+The following oops was seen:
+
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor instruction fetch in kernel mode
+    #PF: error_code(0x0010) - not-present page
+    Code: Bad RIP value.
+    ...
+    Call Trace:
+     ? set_max_huge_pages+0x3da/0x4f0
+     ? alloc_pool_huge_page+0x150/0x150
+     ? proc_doulongvec_minmax+0x46/0x60
+     ? hugetlb_sysctl_handler_common+0x1c7/0x200
+     ? nr_hugepages_store+0x20/0x20
+     ? copy_fd_bitmaps+0x170/0x170
+     ? hugetlb_sysctl_handler+0x1e/0x20
+     ? proc_sys_call_handler+0x2f1/0x300
+     ? unregister_sysctl_table+0xb0/0xb0
+     ? __fd_install+0x78/0x100
+     ? proc_sys_write+0x14/0x20
+     ? __vfs_write+0x4d/0x90
+     ? vfs_write+0xef/0x240
+     ? ksys_write+0xc0/0x160
+     ? __ia32_sys_read+0x50/0x50
+     ? __close_fd+0x129/0x150
+     ? __x64_sys_write+0x43/0x50
+     ? do_syscall_64+0x6c/0x200
+     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20200828031146.43035-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |   12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ mm/hugetlb.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -231,6 +231,7 @@ static int persistent_memory_claim(struc
- 	pfn_t pfn;
- 	int id;
- 	struct page **pages;
-+	sector_t offset;
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3480,6 +3480,22 @@ static unsigned int cpuset_mems_nr(unsig
+ }
  
- 	wc->memory_vmapped = false;
- 
-@@ -245,9 +246,16 @@ static int persistent_memory_claim(struc
- 		goto err1;
- 	}
- 
-+	offset = get_start_sect(wc->ssd_dev->bdev);
-+	if (offset & (PAGE_SIZE / 512 - 1)) {
-+		r = -EINVAL;
-+		goto err1;
-+	}
-+	offset >>= PAGE_SHIFT - 9;
+ #ifdef CONFIG_SYSCTL
++static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
++					  void *buffer, size_t *length,
++					  loff_t *ppos, unsigned long *out)
++{
++	struct ctl_table dup_table;
 +
- 	id = dax_read_lock();
++	/*
++	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
++	 * can duplicate the @table and alter the duplicate of it.
++	 */
++	dup_table = *table;
++	dup_table.data = out;
++
++	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
++}
++
+ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
+ 			 struct ctl_table *table, int write,
+ 			 void *buffer, size_t *length, loff_t *ppos)
+@@ -3491,9 +3507,8 @@ static int hugetlb_sysctl_handler_common
+ 	if (!hugepages_supported())
+ 		return -EOPNOTSUPP;
  
--	da = dax_direct_access(wc->ssd_dev->dax_dev, 0, p, &wc->memory_map, &pfn);
-+	da = dax_direct_access(wc->ssd_dev->dax_dev, offset, p, &wc->memory_map, &pfn);
- 	if (da < 0) {
- 		wc->memory_map = NULL;
- 		r = da;
-@@ -269,7 +277,7 @@ static int persistent_memory_claim(struc
- 		i = 0;
- 		do {
- 			long daa;
--			daa = dax_direct_access(wc->ssd_dev->dax_dev, i, p - i,
-+			daa = dax_direct_access(wc->ssd_dev->dax_dev, offset + i, p - i,
- 						NULL, &pfn);
- 			if (daa <= 0) {
- 				r = daa ? daa : -EINVAL;
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -3536,9 +3551,8 @@ int hugetlb_overcommit_handler(struct ct
+ 	if (write && hstate_is_gigantic(h))
+ 		return -EINVAL;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
 
 
