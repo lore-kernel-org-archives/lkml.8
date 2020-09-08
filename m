@@ -2,134 +2,107 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283BAC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7D9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D97B320936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B470E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gD/1uUIj"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="u11P+PRu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbgIHXdz (ORCPT
+        id S1729738AbgIHXeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:33:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41218 "EHLO
+        Tue, 8 Sep 2020 19:34:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbgIHXdx (ORCPT
+        with ESMTP id S1728971AbgIHXea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:33:53 -0400
+        Tue, 8 Sep 2020 19:34:30 -0400
 Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96A79C061573;
-        Tue,  8 Sep 2020 16:33:53 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d9so500301pfd.3;
-        Tue, 08 Sep 2020 16:33:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DF8C061756
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:34:30 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d6so478074pfn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DY5gbi/kg3mlXEWhK+AT4noIdeJ5tpruTcO86qQV2fw=;
-        b=gD/1uUIjxxvndXA66bjpe84ydOX7OCQ6pi8H39SCb1WcPm9hzkQBnoZFpEvLIgTf6B
-         oAOvXXy3rXuK0i4ORtK7eJJFZNYcD9cD/HIOKI+ioF69hJKgSwlOZ9hlW0hsOlbCtXKu
-         WoMBhlib6KwG6qMtjiXjXPPka8kCdQNheTBjyeSlzLe0i+GfJJvCObe8WRNFsDW/G0eb
-         7gEu970QLGJlhG9fc6NdH/sL7yN94Lr784NdQN+UKXs7sG2FC3dpzjpAuxl1E55ZBPdB
-         qguXxEEs1ocql+7X/dMt4av1HnCsEPFTjLADZLIIof6W5BbyfDBNZvbjE9b3oMEE1802
-         bRdw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4HrkVBDdSztaoOjJqy3mdmyRFgVANQWzA+9waayHCYA=;
+        b=u11P+PRulRREYp/VsWb5uscxyszxeRv3edudPvEJ16z5O0KJ+DqMft5CjoH4uAUCOp
+         TJc6T4MV7I4tgySi9haP/Vv1D0k7rnZRV8fXRLYytt34NIAC4FImrcJ8/nYuUq1sU1hA
+         emWB2khEQwWZl6niP9PUJWCYR0KxKtkqsfW/n+2iWGduPjSQvU+VPi0tDXRSGdyGojO2
+         CVlT9pWzMOjhxEMYHE7zcZIMDB/CrJFMj5FvcxiGJAuW9Jq5TrZNsT0b8mGoWkbrGoKx
+         18tyICJ/AxXiGLv/JV/d0jI7L+wVX3e8nKWItWY4aw7F9Bwp/YkTMgQXHFLO4ht3wg94
+         Idew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=DY5gbi/kg3mlXEWhK+AT4noIdeJ5tpruTcO86qQV2fw=;
-        b=diDXYBLo/yZHmj2Tl4yu8j8aKcMo1lhnn/S1BSHiRuJTHB1s5GoXqN6hEOdA7c3AW1
-         M7df9XXZNwWhFG9TPEzO0ISw08shS+DiPmds9Q5nws63S50Yh0Fk1PdeIgqZQz5bQ7xP
-         PoecTQ0Yj0Mt4VHElJaZwSgPWW8HEkF9tv4Delm4QQPCzK9HDWxER9TuXfqLNaT+mDeE
-         hTmDcyFswmVfhPwPvdhJqJIlNWKmCViUdzCivQxFizYm5TuDw+oYif61za9QyA/TVy/l
-         3wAT6gkzmRG4Mc+k2hwap8QN4yHofna7K9hU/GDFSyXnLDtkhOQ8/8bjE5SGsmA1Hbth
-         pcSQ==
-X-Gm-Message-State: AOAM531fAyeliN0iW5KlOLLsDf5btQ0DkcmlTVSVauWkA3sFKv0yZJ3C
-        FTWV2oP1hGBFaJ8MZmyJ51I=
-X-Google-Smtp-Source: ABdhPJyb8T9C7v1d33kdgNugE+3TPB7VCXh6XyWU6MplW7h01SgEPXkLa6ESccu35w5loo09tNI3iA==
-X-Received: by 2002:a17:902:b088:b029:d1:8388:e6f8 with SMTP id p8-20020a170902b088b02900d18388e6f8mr71790plr.40.1599608032937;
-        Tue, 08 Sep 2020 16:33:52 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.193.206])
-        by smtp.gmail.com with ESMTPSA id c7sm473216pfj.100.2020.09.08.16.33.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 16:33:52 -0700 (PDT)
-From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
-Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
-        Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com,
-        syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com,
-        syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com,
-        syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Masahiro Yamada <masahiroy@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: qrtr: Reintroduce ARCH_QCOM as a dependency for QRTR
-Date:   Wed,  9 Sep 2020 05:03:28 +0530
-Message-Id: <20200908233329.200473-1-anant.thazhemadam@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        bh=4HrkVBDdSztaoOjJqy3mdmyRFgVANQWzA+9waayHCYA=;
+        b=CSrjti/J8p1/wqM6lcc3GGAKr1zqTo3B4WXlgmlO2vhBRq+9sLM0VHov3NDVCwZqe+
+         DnixyAtGzK0mW1G/XELk7Ngq87hrzfG2fScJpBgVX7rZ0fHHC2i643jrt50K7APTQLz8
+         DxjtNT+Cee0vmJ/pilAkkffOscJlQcoo7+wilbm2Yq/7rRC6U9p0mohjEK9lHBUQISr9
+         Q1JLdqQDUd8epiuT9eY8CveDY9yD+8w6BuolSM9igigyPAwQ7DrIFK5lLgQHKDIJ6vgb
+         3BKWyxxLhXaUt3dfbJKj0e9nBHspwzbXliLpgPJkog1Pl1aZk6zGpFT476xybM+kAo+8
+         SrrQ==
+X-Gm-Message-State: AOAM531RiApccbaLiqT21cRoa9khwJVyqH4czLNCBihZYq/xXxM+82UK
+        AFBG2mJzxbwcWaXVM8TbVxKRGw==
+X-Google-Smtp-Source: ABdhPJwaXBjoCop88KqOTK4/ZX75q6XE+iMB1mJmEx1t0iV2J3qqVqngBHzQB1rtrKx/odO06oQP2w==
+X-Received: by 2002:a63:ff5d:: with SMTP id s29mr892130pgk.442.1599608069307;
+        Tue, 08 Sep 2020 16:34:29 -0700 (PDT)
+Received: from ?IPv6:2620:10d:c085:21c8::1926? ([2620:10d:c090:400::5:4e45])
+        by smtp.gmail.com with ESMTPSA id c127sm458986pfa.165.2020.09.08.16.34.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2020 16:34:28 -0700 (PDT)
+Subject: Re: [PATCH next] io_uring: fix task hung in io_uring_setup
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Kees Cook <keescook@chromium.org>
+References: <20200903132119.14564-1-hdanton@sina.com>
+ <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
+ <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
+ <20200908000339.2260-1-hdanton@sina.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c7a4b985-6f22-96b7-d84c-cf3c91ddf79c@kernel.dk>
+Date:   Tue, 8 Sep 2020 17:34:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20200908000339.2260-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Removing ARCH_QCOM, as a dependency for QRTR begins to give rise to
-issues with respect to maintaining reference count integrity and
-suspicious rcu usage.
+On 9/7/20 6:03 PM, Hillf Danton wrote:
+> 
+> On Mon, 7 Sep 2020 06:55:04 Jens Axboe wrote:
+>> On 9/7/20 2:50 AM, Pavel Begunkov wrote:
+>>>
+>>> BTW, I don't see the patch itself, and it's neither in io_uring, block
+>>> nor fs mailing lists. Hillf, could you please CC proper lists next time?
+> 
+> Yes, I can. So will I send io_uring patches with Pavel Cced.
 
-The bugs resolved by making QRTR dependent on ARCH_QCOM include:
+While that is nice, it should not be necessary. We need to ensure that your
+emails reach the list, that's more important than needing to CC a specific
+person, because it still means that everyone else doesn't see it.
 
-* WARNING: refcount bug in qrtr_node_lookup
-Reported-by: syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com
-* WARNING: refcount bug in qrtr_recvmsg
-Reported-by: syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com
-* WARNING: suspicious RCU usage in ctrl_cmd_new_lookup
-Reported-by: syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com
-* WARNING: suspicious RCU usage in qrtr_ns_worker
-Reported-by: syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com
+Do you get an error from vger, or does it simply not show up?
 
-Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
----
-As I understand it, QRTR was initially dependent upon ARCH_QCOM, but was 
-removed since not all modems using IPC Router protocol required the 
-support provided for Qualcomm platforms. 
-However, wouldn't ARCH_QCOM be required by the modems that require the 
-support provided for Qualcomm platforms?
-The configuration ARCH_QCOM isn't exactly the easiest to find, especially, 
-for those who don't know what they're looking for (syzbot included, I 
-guess).
-I don't feel like the tradeoff of not depending on ARCH_QCOM over giving 
-rise to potential bugs is worth it. 
-Is NOT having QRTR depend on ARCH_QCOM so critical that it supersedes the 
-priority of not giving rise to potential bugs?
-
- net/qrtr/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-index b4020b84760f..8156d0f3656b 100644
---- a/net/qrtr/Kconfig
-+++ b/net/qrtr/Kconfig
-@@ -4,6 +4,7 @@
- 
- config QRTR
- 	tristate "Qualcomm IPC Router support"
-+	depends on ARCH_QCOM
- 	help
- 	  Say Y if you intend to use Qualcomm IPC router protocol.  The
- 	  protocol is used to communicate with services provided by other
 -- 
-2.25.1
+Jens Axboe
 
