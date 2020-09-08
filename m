@@ -2,232 +2,96 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB699C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17413C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB6420757
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C263220757
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599604737;
+	bh=MA8vSrb2t66hlFTJXejAAYOGW3HFutbux6iXh1CMimw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tBoP09Gxgk5sv7GGYa17TvpGDaIMImmcRxBibmJBSZuocqLFgrICsP3Lqo66XBRs3
+	 xWNcvgnXjnylgwbzEf8H32UqRSNu8K0mq2AFRHeyGnhAl/LNihghO3snl0O996MwEq
+	 eOGAhtMGeCgfQ3Um+JRxZCBfeQT7CcFx/0ckmnmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbgIHWic (ORCPT
+        id S1729048AbgIHWi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:38:32 -0400
-Received: from mga07.intel.com ([134.134.136.100]:58461 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726434AbgIHWib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:38:31 -0400
-IronPort-SDR: gGTx1zFnlbVTQgogQieISYxkDCBZuJp8F+KaV36ediwAjjKhgkbLbWQpsh9lttXhCG1Lp4qArD
- wCGIDUpn9bsg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9738"; a="222442279"
-X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
-   d="scan'208";a="222442279"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 15:38:30 -0700
-IronPort-SDR: EXbna6K539fSGhwY4i7HUSEKvHAbnLBaGp+NlajOVbjBbB2b1zZiXoBoI2SL6vgpSZ/TdFOEFl
- bN3NCBaz0Efw==
-X-IronPort-AV: E=Sophos;i="5.76,407,1592895600"; 
-   d="scan'208";a="448970957"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 15:38:30 -0700
-Date:   Tue, 8 Sep 2020 15:40:28 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Jacob Pan <jacob.pan.linux@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Wu Hao <hao.wu@intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 5/9] iommu/ioasid: Introduce ioasid_set private ID
-Message-ID: <20200908154028.0ec5abba@jacob-builder>
-In-Reply-To: <8fe449f7-606e-e90a-28d5-9c29cac5a9c3@redhat.com>
-References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1598070918-21321-6-git-send-email-jacob.jun.pan@linux.intel.com>
-        <8fe449f7-606e-e90a-28d5-9c29cac5a9c3@redhat.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 8 Sep 2020 18:38:56 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46708 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgIHWiy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 18:38:54 -0400
+Received: by mail-io1-f68.google.com with SMTP id d18so1078397iop.13;
+        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=p/1hHUSbtL14Ax0at2DUeNcr9Ny+Csoyhco21r35crE=;
+        b=cX9WwNRZsr5luGMsQG022wzXhNe0wv90a/nTbkgq2zxifC4HdfOxCbuy8lALVy1B8G
+         IM8irwkLf8EysjKOrpPGqsREoR6U3/LEN3SmgV06kYM0eohvaHM1HXI4ocRuye3/NVdP
+         OOboCnQbsy92B4jqu94PzbuFmbmzX/rvleEYVWTwn3+6qgnakBvq5bvlcLhosprm0nMU
+         q/ZGm+vSfBvxtKDqh0GCJb25MtCqmZlhqqLN51A6IOVr7x6n29x9tN2JWZd5cYUtPtbL
+         Ee6rhFnprkXwr6vCZIhiQg6NBq6Z3u8UVxCJQs+ypdvVXSdcDIrQBwOOm8cExODcLFkc
+         C4nw==
+X-Gm-Message-State: AOAM530swKCR+ZBLRNX5jvSACVROQbJnLxnIQGRvIUbPfVcK1xCXdMD+
+        FDhKMatJfcqpcvkdJN5P5A==
+X-Google-Smtp-Source: ABdhPJwocbAoceUdBVjvP517IFwXFz5vHn3glVCmHqzqVj0ZPDFrK4R2n3DaoP4Yy/j/0jNShnsB/g==
+X-Received: by 2002:a6b:3e06:: with SMTP id l6mr1023062ioa.160.1599604733487;
+        Tue, 08 Sep 2020 15:38:53 -0700 (PDT)
+Received: from xps15 ([64.188.179.251])
+        by smtp.gmail.com with ESMTPSA id a21sm337527ioh.12.2020.09.08.15.38.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 15:38:52 -0700 (PDT)
+Received: (nullmailer pid 1066114 invoked by uid 1000);
+        Tue, 08 Sep 2020 22:38:46 -0000
+Date:   Tue, 8 Sep 2020 16:38:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: renesas,pwm-rcar: Add r8a774e1
+ support
+Message-ID: <20200908223846.GA1066007@bogus>
+References: <20200825104455.18000-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825104455.18000-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 17:38:44 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Jacob,
-> On 8/22/20 6:35 AM, Jacob Pan wrote:
-> > When an IOASID set is used for guest SVA, each VM will acquire its
-> > ioasid_set for IOASID allocations. IOASIDs within the VM must have a
-> > host/physical IOASID backing, mapping between guest and host
-> > IOASIDs can be non-identical. IOASID set private ID (SPID) is
-> > introduced in this patch to be used as guest IOASID. However, the
-> > concept of ioasid_set specific namespace is generic, thus named
-> > SPID.
-> > 
-> > As SPID namespace is within the IOASID set, the IOASID core can
-> > provide lookup services at both directions. SPIDs may not be
-> > allocated when its IOASID is allocated, the mapping between SPID
-> > and IOASID is usually established when a guest page table is bound
-> > to a host PASID.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/iommu/ioasid.c | 54
-> > ++++++++++++++++++++++++++++++++++++++++++++++++++
-> > include/linux/ioasid.h | 12 +++++++++++ 2 files changed, 66
-> > insertions(+)
-> > 
-> > diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> > index 5f31d63c75b1..c0aef38a4fde 100644
-> > --- a/drivers/iommu/ioasid.c
-> > +++ b/drivers/iommu/ioasid.c
-> > @@ -21,6 +21,7 @@ enum ioasid_state {
-> >   * struct ioasid_data - Meta data about ioasid
-> >   *
-> >   * @id:		Unique ID
-> > + * @spid:	Private ID unique within a set
-> >   * @users	Number of active users
-> >   * @state	Track state of the IOASID
-> >   * @set		Meta data of the set this IOASID belongs to
-> > @@ -29,6 +30,7 @@ enum ioasid_state {
-> >   */
-> >  struct ioasid_data {
-> >  	ioasid_t id;
-> > +	ioasid_t spid;
-> >  	struct ioasid_set *set;
-> >  	refcount_t users;
-> >  	enum ioasid_state state;
-> > @@ -326,6 +328,58 @@ int ioasid_attach_data(ioasid_t ioasid, void
-> > *data) EXPORT_SYMBOL_GPL(ioasid_attach_data);
-> >  
-> >  /**
-> > + * ioasid_attach_spid - Attach ioasid_set private ID to an IOASID
-> > + *
-> > + * @ioasid: the ID to attach
-> > + * @spid:   the ioasid_set private ID of @ioasid
-> > + *
-> > + * For IOASID that is already allocated, private ID within the set
-> > can be
-> > + * attached via this API. Future lookup can be done via
-> > ioasid_find.  
-> I would remove "For IOASID that is already allocated, private ID
-> within the set can be attached via this API"
-I guess it is implied. Will remove.
-
-> > + */
-> > +int ioasid_attach_spid(ioasid_t ioasid, ioasid_t spid)
-> > +{
-> > +	struct ioasid_data *ioasid_data;
-> > +	int ret = 0;
-> > +
-> > +	spin_lock(&ioasid_allocator_lock);  
-> We keep on saying the SPID is local to an IOASID set but we don't
-> check any IOASID set contains this ioasid. It looks a bit weird to me.
-We store ioasid_set inside ioasid_data when an IOASID is allocated, so
-we don't need to search all the ioasid_sets. Perhaps I missed your
-point?
-
-> > +	ioasid_data = xa_load(&active_allocator->xa, ioasid);
-> > +
-> > +	if (!ioasid_data) {
-> > +		pr_err("No IOASID entry %d to attach SPID %d\n",
-> > +			ioasid, spid);
-> > +		ret = -ENOENT;
-> > +		goto done_unlock;
-> > +	}
-> > +	ioasid_data->spid = spid;  
-> is there any way/need to remove an spid binding?
-For guest SVA, we attach SPID as a guest PASID during bind guest page
-table. Unbind does the opposite, ioasid_attach_spid() with
-spid=INVALID_IOASID clears the binding.
-
-Perhaps add more symmetric functions? i.e.
-ioasid_detach_spid(ioasid_t ioasid)
-ioasid_attach_spid(struct ioasid_set *set, ioasid_t ioasid)
-
-> > +
-> > +done_unlock:
-> > +	spin_unlock(&ioasid_allocator_lock);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_attach_spid);
-> > +
-> > +ioasid_t ioasid_find_by_spid(struct ioasid_set *set, ioasid_t spid)
-> > +{
-> > +	struct ioasid_data *entry;
-> > +	unsigned long index;
-> > +
-> > +	if (!xa_load(&ioasid_sets, set->sid)) {
-> > +		pr_warn("Invalid set\n");
-> > +		return INVALID_IOASID;
-> > +	}
-> > +
-> > +	xa_for_each(&set->xa, index, entry) {
-> > +		if (spid == entry->spid) {
-> > +			pr_debug("Found ioasid %lu by spid %u\n",
-> > index, spid);
-> > +			refcount_inc(&entry->users);
-> > +			return index;
-> > +		}
-> > +	}
-> > +	return INVALID_IOASID;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_find_by_spid);
-> > +
-> > +/**
-> >   * ioasid_alloc - Allocate an IOASID
-> >   * @set: the IOASID set
-> >   * @min: the minimum ID (inclusive)
-> > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> > index 310abe4187a3..d4b3e83672f6 100644
-> > --- a/include/linux/ioasid.h
-> > +++ b/include/linux/ioasid.h
-> > @@ -73,6 +73,8 @@ bool ioasid_is_active(ioasid_t ioasid);
-> >  
-> >  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, bool
-> > (*getter)(void *)); int ioasid_attach_data(ioasid_t ioasid, void
-> > *data); +int ioasid_attach_spid(ioasid_t ioasid, ioasid_t spid);
-> > +ioasid_t ioasid_find_by_spid(struct ioasid_set *set, ioasid_t
-> > spid); int ioasid_register_allocator(struct ioasid_allocator_ops
-> > *allocator); void ioasid_unregister_allocator(struct
-> > ioasid_allocator_ops *allocator); void ioasid_is_in_set(struct
-> > ioasid_set *set, ioasid_t ioasid); @@ -136,5 +138,15 @@ static
-> > inline int ioasid_attach_data(ioasid_t ioasid, void *data) return
-> > -ENOTSUPP; }
-> >  
-> > +staic inline int ioasid_attach_spid(ioasid_t ioasid, ioasid_t spid)
-> > +{
-> > +	return -ENOTSUPP;
-> > +}
-> > +
-> > +static inline ioasid_t ioasid_find_by_spid(struct ioasid_set *set,
-> > ioasid_t spid) +{
-> > +	return -ENOTSUPP;
-> > +}
-> > +
-> >  #endif /* CONFIG_IOASID */
-> >  #endif /* __LINUX_IOASID_H */
-> >   
-> Thanks
+On Tue, 25 Aug 2020 11:44:54 +0100, Lad Prabhakar wrote:
+> From: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
 > 
-> Eric
+> Document RZ/G2H (R8A774E1) SoC bindings.
 > 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> No driver change is needed due to the fallback compatible value
+> "renesas,pwm-rcar".
+> 
+> Signed-off-by: Marian-Cristian Rotariu <marian-cristian.rotariu.rb@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/pwm/renesas,pwm-rcar.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-[Jacob Pan]
+Acked-by: Rob Herring <robh@kernel.org>
