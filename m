@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B527C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D6EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C72E2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38CB206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587935;
-	bh=+MrB/epwZGnWNjliNYOnomMJj4dTtuCW5Vy/7/WAXYo=;
+	s=default; t=1599587944;
+	bh=wdS4fBLK+athXA0QhuToTvmSHH48ZTcWyd0d89xX9pM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a6gVduWT48fcq7uWK/Lcuzexy+4unCYczCaXelWOmiCRUBMb3VprTf1Dg4b/cWSY4
-	 QpSIzKTCWEZHXvgKn9Vdmgwt+MlMRoSrwj4SB4hblT/4DDneYCIHjJYtgMaik7odmS
-	 vWwuAPAQKa7IRnTmhAs/AkrS6O53CJV8EFUAmytY=
+	b=C3PxGUt29JX6iCRFMcnlFlhOw01pvorydRYSDsqepN61ngQWGTJjpg3RtZiTFvIrt
+	 pcjxCb8Lnnvf1VWvqK6SqoX4mc8QNbkHRzqNggONhC9OUCbdHmDLduedzse5GV24mY
+	 /8SjEaenuuV+zkkUuoO05xOhSSVmcb+wx/6YGMeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732280AbgIHR6w (ORCPT
+        id S1732287AbgIHR66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:58:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731563AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731562AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:47 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1456F2488D;
-        Tue,  8 Sep 2020 15:52:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C1DE24866;
+        Tue,  8 Sep 2020 15:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580335;
-        bh=+MrB/epwZGnWNjliNYOnomMJj4dTtuCW5Vy/7/WAXYo=;
+        s=default; t=1599580315;
+        bh=wdS4fBLK+athXA0QhuToTvmSHH48ZTcWyd0d89xX9pM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1xH9X7+pNO9fLRdWHF8M9+dusD8Eru2AdOXrqy1YMhtqUP4k0QLRbIpkAPac0Y1N
-         KKNzODmJ6084ERJLQJEgrApydMx16DaTzfPu6l5vvWO366CavVnHfq4LrX3h4krY+S
-         H67/6j5VxM7SNG55xMC+k3e5OkUKqlh/6ohX7J2M=
+        b=EHYl+k3XWeDQoXqn5xUXRYPbehZjmPcWlJMX3/Yc7iT64SX6mUUZQA2IIZbQLZ6n2
+         wnLFNkERpRf4dwGSZgFrdmqG311l25fYTCmjGL9OBcR9H4R3f3Wx6JmKmTM0hAb4+t
+         BM9P+JhcIEWIuPfvxMX+miZvqCBt6ceqktKbryPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Christensen <drc@linux.vnet.ibm.com>,
-        Baptiste Covolato <baptiste@arista.com>,
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
         Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/65] tg3: Fix soft lockup when tg3_reset_task() fails.
-Date:   Tue,  8 Sep 2020 17:26:19 +0200
-Message-Id: <20200908152218.805421265@linuxfoundation.org>
+Subject: [PATCH 4.14 27/65] bnxt_en: Check for zero dir entries in NVRAM.
+Date:   Tue,  8 Sep 2020 17:26:12 +0200
+Message-Id: <20200908152218.446272147@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -62,78 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 556699341efa98243e08e34401b3f601da91f5a3 ]
+[ Upstream commit dbbfa96ad920c50d58bcaefa57f5f33ceef9d00e ]
 
-If tg3_reset_task() fails, the device state is left in an inconsistent
-state with IFF_RUNNING still set but NAPI state not enabled.  A
-subsequent operation, such as ifdown or AER error can cause it to
-soft lock up when it tries to disable NAPI state.
+If firmware goes into unstable state, HWRM_NVM_GET_DIR_INFO firmware
+command may return zero dir entries. Return error in such case to
+avoid zero length dma buffer request.
 
-Fix it by bringing down the device to !IFF_RUNNING state when
-tg3_reset_task() fails.  tg3_reset_task() running from workqueue
-will now call tg3_close() when the reset fails.  We need to
-modify tg3_reset_task_cancel() slightly to avoid tg3_close()
-calling cancel_work_sync() to cancel tg3_reset_task().  Otherwise
-cancel_work_sync() will wait forever for tg3_reset_task() to
-finish.
-
-Reported-by: David Christensen <drc@linux.vnet.ibm.com>
-Reported-by: Baptiste Covolato <baptiste@arista.com>
-Fixes: db2199737990 ("tg3: Schedule at most one tg3_reset_task run")
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index e40d31b405253..480179ddc45b6 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -7204,8 +7204,8 @@ static inline void tg3_reset_task_schedule(struct tg3 *tp)
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+index 6edbbfc1709a2..a38433cb9015d 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c
+@@ -1761,6 +1761,9 @@ static int bnxt_get_nvram_directory(struct net_device *dev, u32 len, u8 *data)
+ 	if (rc != 0)
+ 		return rc;
  
- static inline void tg3_reset_task_cancel(struct tg3 *tp)
- {
--	cancel_work_sync(&tp->reset_task);
--	tg3_flag_clear(tp, RESET_TASK_PENDING);
-+	if (test_and_clear_bit(TG3_FLAG_RESET_TASK_PENDING, tp->tg3_flags))
-+		cancel_work_sync(&tp->reset_task);
- 	tg3_flag_clear(tp, TX_RECOVERY_PENDING);
- }
- 
-@@ -11182,18 +11182,27 @@ static void tg3_reset_task(struct work_struct *work)
- 
- 	tg3_halt(tp, RESET_KIND_SHUTDOWN, 0);
- 	err = tg3_init_hw(tp, true);
--	if (err)
-+	if (err) {
-+		tg3_full_unlock(tp);
-+		tp->irq_sync = 0;
-+		tg3_napi_enable(tp);
-+		/* Clear this flag so that tg3_reset_task_cancel() will not
-+		 * call cancel_work_sync() and wait forever.
-+		 */
-+		tg3_flag_clear(tp, RESET_TASK_PENDING);
-+		dev_close(tp->dev);
- 		goto out;
-+	}
- 
- 	tg3_netif_start(tp);
- 
--out:
- 	tg3_full_unlock(tp);
- 
- 	if (!err)
- 		tg3_phy_start(tp);
- 
- 	tg3_flag_clear(tp, RESET_TASK_PENDING);
-+out:
- 	rtnl_unlock();
- }
- 
++	if (!dir_entries || !entry_length)
++		return -EIO;
++
+ 	/* Insert 2 bytes of directory info (count and size of entries) */
+ 	if (len < 2)
+ 		return -EINVAL;
 -- 
 2.25.1
 
