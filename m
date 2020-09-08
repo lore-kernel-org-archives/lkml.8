@@ -7,35 +7,34 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8455FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E232DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B4C20C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFA021941
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 03:03:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgIHDDF (ORCPT
+        id S1728705AbgIHDDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 7 Sep 2020 23:03:05 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47872 "EHLO huawei.com"
+        Mon, 7 Sep 2020 23:03:02 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47866 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728241AbgIHDCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728411AbgIHDCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 7 Sep 2020 23:02:30 -0400
 Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CC0E3FF86FAEEF52E2C4;
+        by Forcepoint Email with ESMTP id C73517F4414749013AF6;
         Tue,  8 Sep 2020 11:02:27 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 8 Sep 2020 11:02:20 +0800
+ 14.3.487.0; Tue, 8 Sep 2020 11:02:19 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <kuba@kernel.org>,
-        Guojia Liao <liaoguojia@huawei.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 7/7] net: hns3: remove some unused function hns3_update_promisc_mode()
-Date:   Tue, 8 Sep 2020 10:59:54 +0800
-Message-ID: <1599533994-32744-8-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 1/7] net: hns3: narrow two local variable range in hclgevf_reset_prepare_wait()
+Date:   Tue, 8 Sep 2020 10:59:48 +0800
+Message-ID: <1599533994-32744-2-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
 References: <1599533994-32744-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,54 +47,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guojia Liao <liaoguojia@huawei.com>
+Since variable send_msg and ret only used in if branch, so move
+their definition into the if branch.
 
-hns3_update_promisc_mode is defined, but not be used, so remove it.
-
-Signed-off-by: Guojia Liao <liaoguojia@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 14 --------------
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.h |  1 -
- 2 files changed, 15 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 1d66f84..93825a4 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -623,20 +623,6 @@ void hns3_request_update_promisc_mode(struct hnae3_handle *handle)
- 		ops->request_update_promisc_mode(handle);
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+index e972138..20dd04c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
+@@ -1788,10 +1788,10 @@ static int hclgevf_reset_prepare_wait(struct hclgevf_dev *hdev)
+ {
+ #define HCLGEVF_RESET_SYNC_TIME 100
+ 
+-	struct hclge_vf_to_pf_msg send_msg;
+-	int ret = 0;
+-
+ 	if (hdev->reset_type == HNAE3_VF_FUNC_RESET) {
++		struct hclge_vf_to_pf_msg send_msg;
++		int ret;
++
+ 		hclgevf_build_send_msg(&send_msg, HCLGE_MBX_RESET, 0);
+ 		ret = hclgevf_send_mbx_msg(hdev, &send_msg, true, NULL, 0);
+ 		if (ret) {
+@@ -1806,10 +1806,10 @@ static int hclgevf_reset_prepare_wait(struct hclgevf_dev *hdev)
+ 	/* inform hardware that preparatory work is done */
+ 	msleep(HCLGEVF_RESET_SYNC_TIME);
+ 	hclgevf_reset_handshake(hdev, true);
+-	dev_info(&hdev->pdev->dev, "prepare reset(%d) wait done, ret:%d\n",
+-		 hdev->reset_type, ret);
++	dev_info(&hdev->pdev->dev, "prepare reset(%d) wait done\n",
++		 hdev->reset_type);
+ 
+-	return ret;
++	return 0;
  }
  
--int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags)
--{
--	struct hns3_nic_priv *priv = netdev_priv(netdev);
--	struct hnae3_handle *h = priv->ae_handle;
--
--	if (h->ae_algo->ops->set_promisc_mode) {
--		return h->ae_algo->ops->set_promisc_mode(h,
--						promisc_flags & HNAE3_UPE,
--						promisc_flags & HNAE3_MPE);
--	}
--
--	return 0;
--}
--
- void hns3_enable_vlan_filter(struct net_device *netdev, bool enable)
- {
- 	struct hns3_nic_priv *priv = netdev_priv(netdev);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-index cef6f9a..98ca6ea 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.h
-@@ -601,7 +601,6 @@ void hns3_set_vector_coalesce_rl(struct hns3_enet_tqp_vector *tqp_vector,
- 				 u32 rl_value);
- 
- void hns3_enable_vlan_filter(struct net_device *netdev, bool enable);
--int hns3_update_promisc_mode(struct net_device *netdev, u8 promisc_flags);
- void hns3_request_update_promisc_mode(struct hnae3_handle *handle);
- 
- #ifdef CONFIG_HNS3_DCB
+ static void hclgevf_dump_rst_info(struct hclgevf_dev *hdev)
 -- 
 2.7.4
 
