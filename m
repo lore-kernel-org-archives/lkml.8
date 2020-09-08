@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C559BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3F2C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 818B82137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C652137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599593754;
-	bh=R8jaWjAyQ+yI0TtsogPIEPznYFmbRymeMiijpJN2YFE=;
+	s=default; t=1599593759;
+	bh=9R4Lb8/rS3PyMG8TzFaJ1uD6D9wLNRMWS/lo3IlBBOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJyba3nlf+r8gJnkVRZqspjmWROSSY73eSKxu3275Hb4NeNzk9X93hrXNUqtZuq7D
-	 OD9xHFzcmL7/npI6YsoP52Pqp58vkPg+FxuH50Lkebaz4YooeNi362B3AmloS1sB+W
-	 iFPL7Q6DpAZfVqD639Q72pljAlPSoLJ36T2QfJd4=
+	b=bk/flCL3zQ6zWsjwFsAZO3o4QURCvb051yb1oR94KyzgM2q5HbjuyAHu92TDJwwAh
+	 4WfQSH6nLOI9eMsIKsiZHjGD4AF7wpRaAUyua0dng8RfegPhviBZkrYcM3rI0LIKxw
+	 9RGL78qN0dSHpG3uLBsAqxwQJ5OrBxcu9Y0YLO+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732329AbgIHTfp (ORCPT
+        id S1732007AbgIHTf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:35:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730967AbgIHP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730966AbgIHP5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:57:16 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E97E23C91;
-        Tue,  8 Sep 2020 15:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205E623BDF;
+        Tue,  8 Sep 2020 15:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579403;
-        bh=R8jaWjAyQ+yI0TtsogPIEPznYFmbRymeMiijpJN2YFE=;
+        s=default; t=1599579360;
+        bh=9R4Lb8/rS3PyMG8TzFaJ1uD6D9wLNRMWS/lo3IlBBOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nu4QlNVLFEIeHVCfYXVjUTA4RMAAVokKIiTm6Av7cHRjhIv/Tt/m30BsFRbHCmegK
-         Nh2BXmbNeojfTNf9V1Mqj/jqm/NJdO59R5k2ownke7LyXQwuySseO8PwhV+KqKnPbX
-         aetyFA5SC69vn1nYBDfmbiEloraMxJMTLhnBNgdI=
+        b=DpNha34I89FLUauhi0Iqh8j415bLp9YuP2+oCLPwjQlqcT10uMmouqfxdLWYBIbYn
+         yOo6KCzqZmFns8KlCcyLU6vDmrlYP5sbR7BqplXpOpIQcRLgtblATgSdl2Ikh9ATvG
+         90eoAspeQ0SAfP0Jk9mmURA0Ofp20tMxWHEqshBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 063/186] dmaengine: ti: k3-udma: Fix the TR initialization for prep_slave_sg
-Date:   Tue,  8 Sep 2020 17:23:25 +0200
-Message-Id: <20200908152244.714205354@linuxfoundation.org>
+        stable@vger.kernel.org, Ofir Bitton <obitton@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 016/186] habanalabs: validate FW file size
+Date:   Tue,  8 Sep 2020 17:22:38 +0200
+Message-Id: <20200908152242.450358041@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,42 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Ofir Bitton <obitton@habana.ai>
 
-[ Upstream commit 33ebffa105990c43bf336cabe26c77384f59fe70 ]
+[ Upstream commit bce382a8bb080ed5f2f3a06754526dc58b91cca2 ]
 
-The TR which needs to be initialized for the next sg entry is indexed by
-tr_idx and not by the running i counter.
+We must validate FW size in order not to corrupt memory in case
+a malicious FW file will be present in system.
 
-In case any sub element in the SG needs more than one TR, the code would
-corrupt an already configured TR.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/20200824120108.9178-1-peter.ujfalusi@ti.com
-Fixes: 6cf668a4ef829 ("dmaengine: ti: k3-udma: Use the TR counter helper for slave_sg and cyclic")
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/k3-udma.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/habanalabs/firmware_if.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
-index 6c879a7343604..3e488d963f246 100644
---- a/drivers/dma/ti/k3-udma.c
-+++ b/drivers/dma/ti/k3-udma.c
-@@ -2109,9 +2109,9 @@ udma_prep_slave_sg_tr(struct udma_chan *uc, struct scatterlist *sgl,
- 			return NULL;
- 		}
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index d27841cb5bcb3..345c228a7971e 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -13,6 +13,7 @@
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/slab.h>
  
--		cppi5_tr_init(&tr_req[i].flags, CPPI5_TR_TYPE1, false, false,
--			      CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
--		cppi5_tr_csf_set(&tr_req[i].flags, CPPI5_TR_CSF_SUPR_EVT);
-+		cppi5_tr_init(&tr_req[tr_idx].flags, CPPI5_TR_TYPE1, false,
-+			      false, CPPI5_TR_EVENT_SIZE_COMPLETION, 0);
-+		cppi5_tr_csf_set(&tr_req[tr_idx].flags, CPPI5_TR_CSF_SUPR_EVT);
++#define FW_FILE_MAX_SIZE	0x1400000 /* maximum size of 20MB */
+ /**
+  * hl_fw_load_fw_to_device() - Load F/W code to device's memory.
+  * @hdev: pointer to hl_device structure.
+@@ -45,6 +46,14 @@ int hl_fw_load_fw_to_device(struct hl_device *hdev, const char *fw_name,
  
- 		tr_req[tr_idx].addr = sg_addr;
- 		tr_req[tr_idx].icnt0 = tr0_cnt0;
+ 	dev_dbg(hdev->dev, "%s firmware size == %zu\n", fw_name, fw_size);
+ 
++	if (fw_size > FW_FILE_MAX_SIZE) {
++		dev_err(hdev->dev,
++			"FW file size %zu exceeds maximum of %u bytes\n",
++			fw_size, FW_FILE_MAX_SIZE);
++		rc = -EINVAL;
++		goto out;
++	}
++
+ 	fw_data = (const u64 *) fw->data;
+ 
+ 	memcpy_toio(dst, fw_data, fw_size);
 -- 
 2.25.1
 
