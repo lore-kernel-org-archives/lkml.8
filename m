@@ -2,463 +2,204 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEDCC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6807FC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4EDD2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:40:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599590455;
-	bh=2Wjnz3P/XCLgDB40ETcYyOIlwJ2kmKTYwPl6UrNybBc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=kqb+8SvD8ravN+JAXMxnrODx6ZftoN9bKUeW6jP8u4wY+19TnK3F8s+RdvsRDiB9d
-	 ywQkYC+/C5fXETfHIX7cas+16SzqBw3gTlqQsfx5B1C3caSKzjAtFxzmKJZJw5hihW
-	 QkrhYZa+/D6fDJolBQRVRCX4K56b2c7w+u76Qb84=
+	by mail.kernel.org (Postfix) with ESMTP id 075292080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:41:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uBKGiRCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731784AbgIHSks (ORCPT
+        id S1731767AbgIHSko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731286AbgIHQID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731311AbgIHQID (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:08:03 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 579CE23EF4;
-        Tue,  8 Sep 2020 15:47:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580069;
-        bh=2Wjnz3P/XCLgDB40ETcYyOIlwJ2kmKTYwPl6UrNybBc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=o4ALjGMj109EJpMVzwZwdbcPb+yl5tIr8WOsgmtaEdSKhqkuoDHJqVwqZWsVuJ1js
-         vBWWKfoghF81YFNFXvUu1aJmVQxg3PpRnis0xbF8kLcaXwOqtuyJpTF2oE9xNHsoRH
-         jnQXJvpvQdbkn52H6Wn975dvwhksNg8/vJUQSkYI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 00/88] 4.19.144-rc1 review
-Date:   Tue,  8 Sep 2020 17:25:01 +0200
-Message-Id: <20200908152221.082184905@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6623EC061755
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:08:02 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id gr14so22220263ejb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b83ebFqRYcRhQMUoBny7VrK/w8/3rX5McYpuAfGB4mo=;
+        b=uBKGiRCBAUcXiZe6KjvW8veA6mBHm5VFt7ivszqCnVZRismSNIYRjUVQ8pmaaGscMa
+         3XihnP3ER4lw3sOMFpoGAON1afkzfS8TMZnyQqK9ECVsBMzt8k1zJf4N1jHSRyzVC6Ks
+         YAxyWluRhsln1OUVRd3lSAZD30T/5fUvDJDLWlUkT9tPUZDaqNO2nVjXqUlVaIkxX93Y
+         G0V4rz+bpnsHGitXCkGPfAkPIAeQeGSeTyZJQyTNvo9E0JFnnR1RFUXqenpKqvQQ7zIl
+         mFQFbwjtfQBS4nq8qv6kTocYKdvci05IltOHy5zLYPUdrqgFkzZ8LRf674NZDgjRZgPZ
+         1UHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b83ebFqRYcRhQMUoBny7VrK/w8/3rX5McYpuAfGB4mo=;
+        b=CEAzyTgSy3wTlo7RV/NYwgYMhiHQ+2flUqS2f+aK3U6Bhr9uKWkqAMzV5znteYLcIt
+         5Dr5nIK4eV8av+emOu4P9AE++/8cA0TcEtnpGxsccj4arI5sagh5J0gJ2xlDP09Oiw+L
+         KrXQ0mQhhP0hbiVcUiLv4EDeC7gF7/tZcPm2IhlpD2/BfuvtyONr48hOh2aMawW/TYIW
+         OYa/2B2Yxxxxejl+RDuD0A4rFDSXXsmTcT1WppYOvUjfOf9l2srjd7b1jogGPY1mKsz1
+         k1IYnbnXTmeEcTr7JSSzM62WktwMcEhTrhAmk+qo55RHMa5FUjv8nXCHpTB/ZBGyq2tX
+         Kg0g==
+X-Gm-Message-State: AOAM531UlKmqT9rp1saI/ka1Yf5/I5wGCCYAhhwrooRO0D5szFcJVo7N
+        FfB3WIP1q4xBCXptWSC6M0526W8+IILyUYQUIWXbgQ==
+X-Google-Smtp-Source: ABdhPJy/RregNsYzCyTwu4urXWA7E91Gc3e0PzZIrHy1he7Etcg4uawBqFaT8rYNk1TVNoTj2V4kWLOklM1+MFMGjBA=
+X-Received: by 2002:a17:906:7f15:: with SMTP id d21mr27487893ejr.470.1599581280525;
+ Tue, 08 Sep 2020 09:08:00 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.144-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.144-rc1
-X-KernelTest-Deadline: 2020-09-10T15:22+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200905133549.24606-1-warthog618@gmail.com>
+In-Reply-To: <20200905133549.24606-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 8 Sep 2020 18:07:49 +0200
+Message-ID: <CAMpxmJUhTp=KHy_MU7feNDvM+A43u0o0Jjfc3SmSSBh98jjdyQ@mail.gmail.com>
+Subject: Re: [PATCH v7 00/20] gpio: cdev: add uAPI v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.19.144 release.
-There are 88 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 10 Sep 2020 15:21:57 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.144-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.19.144-rc1
-
-Himadri Pandya <himadrispandya@gmail.com>
-    net: usb: Fix uninit-was-stored issue in asix_read_phy_addr()
-
-Johannes Berg <johannes.berg@intel.com>
-    cfg80211: regulatory: reject invalid hints
-
-Muchun Song <songmuchun@bytedance.com>
-    mm/hugetlb: fix a race between hugetlb sysctl handlers
-
-Mrinal Pandey <mrinalmni@gmail.com>
-    checkpatch: fix the usage of capture group ( ... )
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Survive synchronous exceptions caused by AT instructions
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Defer guest entry when an asynchronous exception is pending
-
-James Morse <james.morse@arm.com>
-    KVM: arm64: Add kvm_extable for vaxorcism code
-
-Eugeniu Rosca <erosca@de.adit-jv.com>
-    mm: slub: fix conversion of freelist_corrupted()
-
-Ye Bin <yebin10@huawei.com>
-    dm thin metadata: Avoid returning cmd->bm wild pointer on error
-
-Ye Bin <yebin10@huawei.com>
-    dm cache metadata: Avoid returning cmd->bm wild pointer on error
-
-Mikulas Patocka <mpatocka@redhat.com>
-    dm writecache: handle DAX to partitions on persistent memory correctly
-
-Tejun Heo <tj@kernel.org>
-    libata: implement ATA_HORKAGE_MAX_TRIM_128M and apply to Sandisks
-
-Ming Lei <ming.lei@redhat.com>
-    block: allow for_each_bvec to support zero len bvec
-
-Max Staudt <max@enpas.org>
-    affs: fix basic permission bits to actually work
-
-Sean Young <sean@mess.org>
-    media: rc: uevent sysfs file races with rc_unregister_device()
-
-Sean Young <sean@mess.org>
-    media: rc: do not access device via sysfs after rc_unregister_device()
-
-Dan Crawford <dnlcrwfrd@gmail.com>
-    ALSA: hda - Fix silent audio output and corrupted input on MSI X570-A PRO
-
-Takashi Sakamoto <o-takashi@sakamocchi.jp>
-    ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
-
-Kai Vehmanen <kai.vehmanen@linux.intel.com>
-    ALSA: hda/hdmi: always check pin power status in i915 pin fixup
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: pcm: oss: Remove superfluous WARN_ON() for mulaw sanity check
-
-Tong Zhang <ztong0001@gmail.com>
-    ALSA: ca0106: fix error code handling
-
-Rogan Dawes <rogan@dawes.za.net>
-    usb: qmi_wwan: add D-Link DWM-222 A2 device ID
-
-Daniele Palmas <dnlplm@gmail.com>
-    net: usb: qmi_wwan: add Telit 0x1050 composition
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: fix potential deadlock in the search ioctl
-
-Daniel Borkmann <daniel@iogearbox.net>
-    uaccess: Add non-pagefault user-space write function
-
-Masami Hiramatsu <mhiramat@kernel.org>
-    uaccess: Add non-pagefault user-space read functions
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: set the lockdep class for log tree extent buffers
-
-Nikolay Borisov <nborisov@suse.com>
-    btrfs: Remove extraneous extent_buffer_get from tree_mod_log_rewind
-
-Nikolay Borisov <nborisov@suse.com>
-    btrfs: Remove redundant extent_buffer_get in get_old_root
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio-pci: Invalidate mmaps and block MMIO access on disabled memory
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio-pci: Fault mmaps to enable vma tracking
-
-Alex Williamson <alex.williamson@redhat.com>
-    vfio/type1: Support faulting PFNMAP vmas
-
-Josef Bacik <josef@toxicpanda.com>
-    btrfs: drop path before adding new uuid tree entry
-
-Mikulas Patocka <mpatocka@redhat.com>
-    xfs: don't update mtime on COW faults
-
-Mikulas Patocka <mpatocka@redhat.com>
-    ext2: don't update mtime on COW faults
-
-Jason Gunthorpe <jgg@nvidia.com>
-    include/linux/log2.h: add missing () around n in roundup_pow_of_two()
-
-Tony Lindgren <tony@atomide.com>
-    thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
-
-Lu Baolu <baolu.lu@linux.intel.com>
-    iommu/vt-d: Serialize IOMMU GCMD register modifications
-
-Huang Ying <ying.huang@intel.com>
-    x86, fakenuma: Fix invalid starting node ID
-
-Michael Chan <michael.chan@broadcom.com>
-    tg3: Fix soft lockup when tg3_reset_task() fails.
-
-Namhyung Kim <namhyung@kernel.org>
-    perf jevents: Fix suspicious code in fixregex()
-
-Darrick J. Wong <darrick.wong@oracle.com>
-    xfs: fix xfs_bmap_validate_extent_raw when checking attr fork of rt files
-
-Kai-Heng Feng <kai.heng.feng@canonical.com>
-    drm/radeon: Prefer lower feedback dividers
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    net: gemini: Fix another missing clk_disable_unprepare() in probe
-
-Al Viro <viro@zeniv.linux.org.uk>
-    fix regression in "epoll: Keep a reference on files added to the check list"
-
-Shung-Hsi Yu <shung-hsi.yu@suse.com>
-    net: ethernet: mlx4: Fix memory allocation in mlx4_buddy_init()
-
-Al Grant <al.grant@foss.arm.com>
-    perf tools: Correct SNOOPX field offset
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    nvmet-fc: Fix a missed _irqsave version of spin_lock in 'nvmet_fc_fod_op_done()'
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nfnetlink: nfnetlink_unicast() reports EAGAIN instead of ENOBUFS
-
-Jesper Dangaard Brouer <brouer@redhat.com>
-    selftests/bpf: Fix massive output from test_maps
-
-Jakub Kicinski <kuba@kernel.org>
-    bnxt: don't enable NAPI until rings are ready
-
-Eric Sandeen <sandeen@redhat.com>
-    xfs: fix boundary test in xfs_attr_shortform_verify
-
-Edwin Peer <edwin.peer@broadcom.com>
-    bnxt_en: fix HWRM error when querying VF temperature
-
-Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-    bnxt_en: Fix PCI AER error recovery flow
-
-Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-    bnxt_en: Check for zero dir entries in NVRAM.
-
-Pavan Chebbi <pavan.chebbi@broadcom.com>
-    bnxt_en: Don't query FW when netif_running() is false.
-
-Nicolas Dichtel <nicolas.dichtel@6wind.com>
-    gtp: add GTPA_LINK info to msg sent to userspace
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    dmaengine: pl330: Fix burst length if burst size is smaller than bus width
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: arc_emac: Fix memleak in arc_mdio_probe
-
-Yuusuke Ashizuka <ashiduka@fujitsu.com>
-    ravb: Fixed to be able to unload modules
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: systemport: Fix memleak in bcm_sysport_probe
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    net: hns: Fix memleak in hns_nic_dev_probe
-
-Florian Westphal <fw@strlen.de>
-    netfilter: nf_tables: fix destination register zeroing
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: incorrect enum nft_list_attributes definition
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: add NFTA_SET_USERDATA if not null
-
-Florian Fainelli <f.fainelli@gmail.com>
-    MIPS: BMIPS: Also call bmips_cpu_setup() for secondary cores
-
-Florian Fainelli <f.fainelli@gmail.com>
-    MIPS: mm: BMIPS5000 has inclusive physical caches
-
-Yu Kuai <yukuai3@huawei.com>
-    dmaengine: at_hdmac: check return value of of_find_device_by_node() in at_dma_xlate()
-
-Jussi Kivilinna <jussi.kivilinna@haltian.com>
-    batman-adv: bla: use netif_rx_ni when not in interrupt context
-
-Linus Lüssing <linus.luessing@c0d3.blue>
-    batman-adv: Fix own OGM check in aggregated OGMs
-
-Sven Eckelmann <sven@narfation.org>
-    batman-adv: Avoid uninitialized chaddr when handling DHCP
-
-Peter Ujfalusi <peter.ujfalusi@ti.com>
-    dmaengine: of-dma: Fix of_dma_router_xlate's of_dma_xlate handling
-
-Simon Leiner <simon@leiner.me>
-    xen/xenbus: Fix granting of vmalloc'd memory
-
-Sven Schnelle <svens@linux.ibm.com>
-    s390: don't trace preemption in percpu macros
-
-Peter Zijlstra <peterz@infradead.org>
-    cpuidle: Fixup IRQ state
-
-Jeff Layton <jlayton@kernel.org>
-    ceph: don't allow setlease on cephfs
-
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-    drm/msm/a6xx: fix gmu start on newer firmware
-
-Amit Engel <amit.engel@dell.com>
-    nvmet: Disable keep-alive timer when kato is cleared to 0h
-
-Tom Rix <trix@redhat.com>
-    hwmon: (applesmc) check status earlier.
-
-Krishna Manikandan <mkrishn@codeaurora.org>
-    drm/msm: add shutdown support for display platform_driver
-
-John Stultz <john.stultz@linaro.org>
-    tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Optimize use of flush_dcache_page
-
-Bodo Stroesser <bstroesser@ts.fujitsu.com>
-    scsi: target: tcmu: Fix size in calls to tcmu_flush_dcache_range
-
-Kim Phillips <kim.phillips@amd.com>
-    perf record/stat: Explicitly call out event modifiers in the documentation
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Sanitize event code and type when mapping input
-
-Marc Zyngier <maz@kernel.org>
-    HID: core: Correctly handle ReportSize being zero
-
-
--------------
-
-Diffstat:
-
- Documentation/filesystems/affs.txt                 |  16 +-
- Makefile                                           |   4 +-
- arch/arm64/include/asm/kvm_arm.h                   |   3 +-
- arch/arm64/include/asm/kvm_asm.h                   |  43 +++
- arch/arm64/kernel/vmlinux.lds.S                    |   8 +
- arch/arm64/kvm/hyp/entry.S                         |  31 +-
- arch/arm64/kvm/hyp/hyp-entry.S                     |  63 ++--
- arch/arm64/kvm/hyp/switch.c                        |  39 ++-
- arch/mips/kernel/smp-bmips.c                       |   2 +
- arch/mips/mm/c-r4k.c                               |   4 +
- arch/s390/include/asm/percpu.h                     |  28 +-
- arch/x86/mm/numa_emulation.c                       |   2 +-
- drivers/ata/libata-core.c                          |   5 +-
- drivers/ata/libata-scsi.c                          |   8 +-
- drivers/cpuidle/cpuidle.c                          |   3 +-
- drivers/dma/at_hdmac.c                             |   2 +
- drivers/dma/of-dma.c                               |   8 +-
- drivers/dma/pl330.c                                |   2 +-
- drivers/gpu/drm/msm/adreno/a6xx_gmu.c              |  12 +-
- drivers/gpu/drm/msm/msm_drv.c                      |   8 +
- drivers/gpu/drm/radeon/radeon_display.c            |   2 +-
- drivers/hid/hid-core.c                             |  15 +-
- drivers/hid/hid-input.c                            |   4 +
- drivers/hid/hid-multitouch.c                       |   2 +
- drivers/hwmon/applesmc.c                           |  31 +-
- drivers/iommu/intel_irq_remapping.c                |  10 +-
- drivers/md/dm-cache-metadata.c                     |   8 +-
- drivers/md/dm-thin-metadata.c                      |   8 +-
- drivers/md/dm-writecache.c                         |  12 +-
- drivers/media/rc/rc-main.c                         |  44 ++-
- drivers/net/ethernet/arc/emac_mdio.c               |   1 +
- drivers/net/ethernet/broadcom/bcmsysport.c         |   6 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  26 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |   5 +-
- drivers/net/ethernet/broadcom/tg3.c                |  17 +-
- drivers/net/ethernet/cortina/gemini.c              |  34 +-
- drivers/net/ethernet/hisilicon/hns/hns_enet.c      |   9 +-
- drivers/net/ethernet/mellanox/mlx4/mr.c            |   2 +-
- drivers/net/ethernet/renesas/ravb_main.c           | 110 +++----
- drivers/net/gtp.c                                  |   1 +
- drivers/net/usb/asix_common.c                      |   2 +-
- drivers/net/usb/qmi_wwan.c                         |   2 +
- drivers/nvme/target/core.c                         |   6 +
- drivers/nvme/target/fc.c                           |   4 +-
- drivers/target/target_core_user.c                  |  15 +-
- .../thermal/ti-soc-thermal/omap4-thermal-data.c    |  23 +-
- drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h  |  10 +-
- drivers/tty/serial/qcom_geni_serial.c              |   2 +-
- drivers/vfio/pci/vfio_pci.c                        | 349 +++++++++++++++++++--
- drivers/vfio/pci/vfio_pci_config.c                 |  51 ++-
- drivers/vfio/pci/vfio_pci_intrs.c                  |  14 +
- drivers/vfio/pci/vfio_pci_private.h                |  16 +
- drivers/vfio/pci/vfio_pci_rdwr.c                   |  24 +-
- drivers/vfio/vfio_iommu_type1.c                    |  36 ++-
- drivers/xen/xenbus/xenbus_client.c                 |  10 +-
- fs/affs/amigaffs.c                                 |  27 ++
- fs/affs/file.c                                     |  26 +-
- fs/btrfs/ctree.c                                   |   8 +-
- fs/btrfs/extent_io.c                               |   8 +-
- fs/btrfs/extent_io.h                               |   6 +-
- fs/btrfs/ioctl.c                                   |  27 +-
- fs/btrfs/volumes.c                                 |   3 +-
- fs/ceph/file.c                                     |   1 +
- fs/eventpoll.c                                     |   6 +-
- fs/ext2/file.c                                     |   6 +-
- fs/xfs/libxfs/xfs_attr_leaf.c                      |   4 +-
- fs/xfs/libxfs/xfs_bmap.c                           |   2 +-
- fs/xfs/xfs_file.c                                  |  12 +-
- include/linux/bvec.h                               |   9 +-
- include/linux/hid.h                                |  42 ++-
- include/linux/libata.h                             |   1 +
- include/linux/log2.h                               |   2 +-
- include/linux/netfilter/nfnetlink.h                |   3 +-
- include/linux/uaccess.h                            |  26 ++
- include/net/netfilter/nf_tables.h                  |   2 +
- include/uapi/linux/netfilter/nf_tables.h           |   2 +-
- mm/hugetlb.c                                       |  26 +-
- mm/maccess.c                                       | 167 +++++++++-
- mm/slub.c                                          |  12 +-
- net/batman-adv/bat_v_ogm.c                         |  11 +-
- net/batman-adv/bridge_loop_avoidance.c             |   5 +-
- net/batman-adv/gateway_client.c                    |   6 +-
- net/netfilter/nf_tables_api.c                      |  64 ++--
- net/netfilter/nfnetlink.c                          |  11 +-
- net/netfilter/nfnetlink_log.c                      |   3 +-
- net/netfilter/nfnetlink_queue.c                    |   2 +-
- net/netfilter/nft_payload.c                        |   4 +-
- net/wireless/reg.c                                 |   3 +
- scripts/checkpatch.pl                              |   4 +-
- sound/core/oss/mulaw.c                             |   4 +-
- sound/firewire/digi00x/digi00x.c                   |   5 +
- sound/pci/ca0106/ca0106_main.c                     |   3 +-
- sound/pci/hda/patch_hdmi.c                         |   1 +
- sound/pci/hda/patch_realtek.c                      |   1 +
- tools/include/uapi/linux/perf_event.h              |   2 +-
- tools/perf/Documentation/perf-record.txt           |   4 +
- tools/perf/Documentation/perf-stat.txt             |   4 +
- tools/perf/pmu-events/jevents.c                    |   2 +-
- tools/testing/selftests/bpf/test_maps.c            |   2 +
- 99 files changed, 1379 insertions(+), 392 deletions(-)
-
-
+On Sat, Sep 5, 2020 at 3:36 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> This patchset defines and implements a new version of the
+> GPIO CDEV uAPI to address existing 32/64-bit alignment issues, add
+> support for debounce, event sequence numbers, and allow for requested
+> lines with different configurations.
+> It provides some future proofing by adding optional configuration fields
+> and padding reserved for future use.
+>
+> The series can be partitioned into three blocks; the first two patches
+> are minor fixes that impact later patches, the next eleven contain the
+> v2 uAPI definition and implementation, and the final seven port the GPIO
+> tools to the v2 uAPI and extend them to use new uAPI features.
+>
+> The more complicated patches include their own commentary where
+> appropriate.
+>
+> Cheers,
+> Kent.
+>
+> Changes for v7:
+>  - use _BITULL for ULL flag definitions (patch 04)
+>  - add check on kmalloc_array return value in linereq_get_values()
+>    (patch 07) and linereq_set_values_unlocked() (patch 11)
+>  - restore v1 functions used by gpio-mockup selftests (patch 17)
+>
+> Changes for v6:
+>  - flags variable in linereq_create() should be u64 not unsigned long
+>    (patch 07)
+>  - remove restrictions on configuration changes - any change from one
+>    valid state to another valid state is allowed. (patches 09, 10, 12)
+>
+> Changes for v5:
+>
+> All changes for v5 fix issues with the gpiolib-cdev.c implementation,
+> in patches 07-12.
+> The uAPI is unchanged from v4, as is the port of the tools.
+>
+>  - use IS_ALIGNED in BUILD_BUG_ON checks (patch 07)
+>  - relocate BUILD_BUG_ON checks to gpiolib_cdev_register (patch 07)
+>  - s/requies/requires/ (patch 07)
+>  - use unsigned int for variables that are never negative
+>  - change lineinfo_get() parameter from cmd to bool watch (patch 08)
+>  - flagsv2 in gpio_v2_line_info_to_v1() should be u64, not int (patch 08)
+>  - change "_locked" suffixed function names to "_unlocked" (patch 10 and
+>    11)
+>  - be less eager breaking long lines
+>  - move commentary into checkin comment where appropriate - particularly
+>    patch 12
+>  - restructure the request/line split - rename struct line to
+>    struct linereq, and struct edge_detector to struct line, and relocate
+>    the desc field from linereq to line.  The linereq name was selected
+>    over line_request as function names such as linereq_set_values() are
+>    more clearly associated with requests than line_request_set_values(),
+>    particularly as there is also a struct line.  And linereq is as
+>    informative as linerequest, so I went with the shortened form.
+>
+> Changes for v4:
+>  - bitmap width clarification in gpiod.h (patch 04)
+>  - fix info offset initialisation bug (patch 08 and inserting patch 01)
+>  - replace strncpy with strscpy to remove compiler warnings
+>    (patch 08 and inserting patch 02)
+>  - fix mask handling in line_get_values (patch 07)
+>
+> Changes for v3:
+>  - disabling the character device from the build requires EXPERT
+>  - uAPI revisions (see patch 02)
+>  - replace padding_not_zeroed with calls to memchr_inv
+>  - don't use bitops on 64-bit flags as that doesn't work on BE-32
+>  - accept first attribute matching a line in gpio_v2_line_config.attrs
+>    rather than the last
+>  - rework lsgpio port to uAPI v2 as flags reverted to v1 like layout
+>    (since patch v2)
+>  - swapped patches 17 and 18 to apply debounce to multiple monitored
+>    lines
+>
+> Changes for v2:
+>  - split out cleanup patches into a separate series.
+>  - split implementation patch into a patch for each ioctl or major feature.
+>  - split tool port patch into a patch per tool.
+>  - rework uAPI to allow requested lines with different configurations.
+>
+> Kent Gibson (20):
+>   gpiolib: cdev: desc_to_lineinfo should set info offset
+>   gpiolib: cdev: replace strncpy with strscpy
+>   gpio: uapi: define GPIO_MAX_NAME_SIZE for array sizes
+>   gpio: uapi: define uAPI v2
+>   gpiolib: make cdev a build option
+>   gpiolib: add build option for CDEV v1 ABI
+>   gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and
+>     GPIO_V2_LINE_GET_VALUES_IOCTL
+>   gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and
+>     GPIO_V2_GET_LINEINFO_WATCH_IOCTL
+>   gpiolib: cdev: support edge detection for uAPI v2
+>   gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL
+>   gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL
+>   gpiolib: cdev: support setting debounce
+>   gpio: uapi: document uAPI v1 as deprecated
+>   tools: gpio: port lsgpio to v2 uAPI
+>   tools: gpio: port gpio-watch to v2 uAPI
+>   tools: gpio: rename nlines to num_lines
+>   tools: gpio: port gpio-hammer to v2 uAPI
+>   tools: gpio: port gpio-event-mon to v2 uAPI
+>   tools: gpio: add multi-line monitoring to gpio-event-mon
+>   tools: gpio: add debounce support to gpio-event-mon
+>
+>  drivers/gpio/Kconfig        |   29 +-
+>  drivers/gpio/Makefile       |    2 +-
+>  drivers/gpio/gpiolib-cdev.c | 1277 +++++++++++++++++++++++++++++++++--
+>  drivers/gpio/gpiolib-cdev.h |   15 +
+>  drivers/gpio/gpiolib.c      |    5 +
+>  drivers/gpio/gpiolib.h      |    6 +
+>  include/uapi/linux/gpio.h   |  317 ++++++++-
+>  tools/gpio/gpio-event-mon.c |  146 ++--
+>  tools/gpio/gpio-hammer.c    |   56 +-
+>  tools/gpio/gpio-utils.c     |  176 ++++-
+>  tools/gpio/gpio-utils.h     |   48 +-
+>  tools/gpio/gpio-watch.c     |   16 +-
+>  tools/gpio/lsgpio.c         |   60 +-
+>  13 files changed, 1948 insertions(+), 205 deletions(-)
+>
+>
+> base-commit: feeaefd378cae2f6840f879d6123ef265f8aee79
+> --
+> 2.28.0
+>
+
+To me this looks good enough to queue for v5.10. I think you'll need
+to resend the selftests patches and get an ack from selftests
+maintainer. Once that's done we can get this series into next.
+
+Bart
