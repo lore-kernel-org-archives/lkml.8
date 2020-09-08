@@ -2,167 +2,196 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F540C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B370DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35EA92078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599586713;
-	bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFnrs0te69N4MZ3Mi5rjAK9WsqeuMg19Vll4Z0NIPue6/55oV7O6+9rc/FWGZ0giG
-	 OylolTjnRtsXvFLhyLdRvaJ+fdz7hmfbfwaFHf6efU4qvkrbgsDSFEnNLsbvjawtNC
-	 +aV3OtDqhga7T1xDajBgfN87VlFCaKwAQ8fYtzw0=
+	by mail.kernel.org (Postfix) with ESMTP id 706E52087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:38:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CpOXYrIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbgIHRiR (ORCPT
+        id S1732024AbgIHRio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:38:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57572 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731691AbgIHQOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:14:25 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7919524909;
-        Tue,  8 Sep 2020 15:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580419;
-        bh=be8mms4bynzjUv3v7/LKZ5ue6Mbiq6Mt8ONefCp1C8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/18ivLSqFoQtk/oUVIU5LivBUcw56yYUqcI7YO7fR6+UwNEY5HdpW9bD29ogQQT9
-         rmpNPyP0j536X2+Uxk/7a6hC2oLqPvjVmSz/UmvZJTSGLnYoWiqm5BIJdnRnlOX0Mm
-         VR4Tt7mIdGxapdrUbP4rKGce6gxnwplxM7yKbtfQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Wood <simon@mungewell.org>,
-        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 50/65] ALSA: firewire-digi00x: exclude Avid Adrenaline from detection
-Date:   Tue,  8 Sep 2020 17:26:35 +0200
-Message-Id: <20200908152219.619119508@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:38:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728264AbgIHRiD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:38:03 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088HX91w193873;
+        Tue, 8 Sep 2020 13:37:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=zTcPf30MWc1o3sVkuFOlszFjBszv6mbPeKxPdnXhSzU=;
+ b=CpOXYrIzNqgah+XmLK3ao2p1ye9+BqkrW/W1vkBKNJnKCOWAruPC38o1UqN5H0fatOAw
+ XumWZzfaC1TZGPFsow6W/myGfJbHhaD2OvuzQU0oxh2EDzoXjNHyJvsUt1Te4q4rOnxP
+ hoH4fPXZ42JeutQXvPzj1LuseK96o+mcemAbZdpCDekWLg7A2PFNwMito9+ERwk99PLx
+ nzqwnuOOTkECp7JT3Dm1gwXmzW5zTGO/Ua5IgYtQHrsvmvB5+rmFFLnzfuN/57SIWYYH
+ vzeOQxBeZZr7qbY/CEExQHgWB8KAC0wqCkDbM8R27TiIV4YWSm2aGi/j8+grRA00NWav SA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33edqq1kx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 13:37:01 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088HYuZt002693;
+        Tue, 8 Sep 2020 13:36:58 -0400
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33edqq1kvx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 13:36:58 -0400
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088Hauxr003944;
+        Tue, 8 Sep 2020 17:36:56 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma02fra.de.ibm.com with ESMTP id 33c2a828a3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 08 Sep 2020 17:36:55 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088Haql029163968
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 8 Sep 2020 17:36:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B279352063;
+        Tue,  8 Sep 2020 17:36:52 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.25.197])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with SMTP id 89AD352050;
+        Tue,  8 Sep 2020 17:36:51 +0000 (GMT)
+Date:   Tue, 8 Sep 2020 19:36:50 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-mm <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
+        linux-sparc <sparclinux@vger.kernel.org>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-x86 <x86@kernel.org>, Russell King <linux@armlinux.org.uk>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        linux-um <linux-um@lists.infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm <linux-arm-kernel@lists.infradead.org>,
+        linux-power <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [RFC PATCH v2 0/3] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200908193650.1c1511d0@thinkpad>
+In-Reply-To: <9bde9857-fdfd-e384-ea27-a14e5a06f1e6@csgroup.eu>
+References: <20200907180058.64880-1-gerald.schaefer@linux.ibm.com>
+        <20200907201256.GC1976319@kernel.org>
+        <9bde9857-fdfd-e384-ea27-a14e5a06f1e6@csgroup.eu>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-08_09:2020-09-08,2020-09-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 bulkscore=0 malwarescore=0 phishscore=0 impostorscore=0
+ clxscore=1015 mlxscore=0 spamscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=884 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009080165
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+On Tue, 8 Sep 2020 07:22:39 +0200
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-commit acd46a6b6de88569654567810acad2b0a0a25cea upstream.
+>=20
+>=20
+> Le 07/09/2020 =C3=A0 22:12, Mike Rapoport a =C3=A9crit=C2=A0:
+> > On Mon, Sep 07, 2020 at 08:00:55PM +0200, Gerald Schaefer wrote:
+> >> This is v2 of an RFC previously discussed here:
+> >> https://lore.kernel.org/lkml/20200828140314.8556-1-gerald.schaefer@lin=
+ux.ibm.com/
+> >>
+> >> Patch 1 is a fix for a regression in gup_fast on s390, after our conve=
+rsion
+> >> to common gup_fast code. It will introduce special helper functions
+> >> pXd_addr_end_folded(), which have to be used in places where pagetable=
+ walk
+> >> is done w/o lock and with READ_ONCE, so currently only in gup_fast.
+> >>
+> >> Patch 2 is an attempt to make that more generic, i.e. change pXd_addr_=
+end()
+> >> themselves by adding an extra pXd value parameter. That was suggested =
+by
+> >> Jason during v1 discussion, because he is already thinking of some oth=
+er
+> >> places where he might want to switch to the READ_ONCE logic for pageta=
+ble
+> >> walks. In general, that would be the cleanest / safest solution, but t=
+here
+> >> is some impact on other architectures and common code, hence the new a=
+nd
+> >> greatly enlarged recipient list.
+> >>
+> >> Patch 3 is a "nice to have" add-on, which makes pXd_addr_end() inline
+> >> functions instead of #defines, so that we get some type checking for t=
+he
+> >> new pXd value parameter.
+> >>
+> >> Not sure about Fixes/stable tags for the generic solution. Only patch 1
+> >> fixes a real bug on s390, and has Fixes/stable tags. Patches 2 + 3 mig=
+ht
+> >> still be nice to have in stable, to ease future backports, but I guess
+> >> "nice to have" does not really qualify for stable backports.
+> >=20
+> > I also think that adding pXd parameter to pXd_addr_end() is a cleaner
+> > way and with this patch 1 is not really required. I would even merge
+> > patches 2 and 3 into a single patch and use only it as the fix.
+>=20
+> Why not merging patches 2 and 3, but I would keep patch 1 separate but=20
+> after the generic changes, so that we first do the generic changes, then=
+=20
+> we do the specific S390 use of it.
 
-Avid Adrenaline is reported that ALSA firewire-digi00x driver is bound to.
-However, as long as he investigated, the design of this model is hardly
-similar to the one of Digi 00x family. It's better to exclude the model
-from modalias of ALSA firewire-digi00x driver.
+Yes, we thought about that approach too. It would at least allow to
+get all into stable, more or less nicely, as prerequisite for the s390
+fix.
 
-This commit changes device entries so that the model is excluded.
+Two concerns kept us from going that way. For once, it might not be
+the nicest way to get it all in stable, and we would not want to risk
+further objections due to the imminent and rather scary data corruption
+issue that we want to fix asap.
 
-$ python3 crpp < ~/git/am-config-rom/misc/avid-adrenaline.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-400  04203a9c  bus_info_length 4, crc_length 32, crc 15004
-404  31333934  bus_name "1394"
-408  e064a002  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 10 (2048)
-40c  00a07e01  company_id 00a07e     |
-410  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
+For the same reason, we thought that the generalization part might
+need more time and agreement from various people, so that we could at
+least get the first patch as short-term solution.
 
-               root directory
-               -----------------------------------------------------------------
-414  0005d08c  directory_length 5, crc 53388
-418  0300a07e  vendor
-41c  8100000c  --> descriptor leaf at 44c
-420  0c008380  node capabilities
-424  8d000002  --> eui-64 leaf at 42c
-428  d1000004  --> unit directory at 438
+It seems now that the generalization is very well accepted so far,
+apart from some apparent issues on arm. Also, merging 2 + 3 and
+putting them first seems to be acceptable, so we could do that for
+v3, if there are no objections.
 
-               eui-64 leaf at 42c
-               -----------------------------------------------------------------
-42c  0002410f  leaf_length 2, crc 16655
-430  00a07e01  company_id 00a07e     |
-434  00085257  device_id 0100085257  | EUI-64 00a07e0100085257
-
-               unit directory at 438
-               -----------------------------------------------------------------
-438  0004d6c9  directory_length 4, crc 54985
-43c  1200a02d  specifier id: 1394 TA
-440  13014001  version: Vender Unique and AV/C
-444  17000001  model
-448  81000009  --> descriptor leaf at 46c
-
-               descriptor leaf at 44c
-               -----------------------------------------------------------------
-44c  00077205  leaf_length 7, crc 29189
-450  00000000  textual descriptor
-454  00000000  minimal ASCII
-458  41766964  "Avid"
-45c  20546563  " Tec"
-460  686e6f6c  "hnol"
-464  6f677900  "ogy"
-468  00000000
-
-               descriptor leaf at 46c
-               -----------------------------------------------------------------
-46c  000599a5  leaf_length 5, crc 39333
-470  00000000  textual descriptor
-474  00000000  minimal ASCII
-478  41647265  "Adre"
-47c  6e616c69  "nali"
-480  6e650000  "ne"
-
-Reported-by: Simon Wood <simon@mungewell.org>
-Fixes: 9edf723fd858 ("ALSA: firewire-digi00x: add skeleton for Digi 002/003 family")
-Cc: <stable@vger.kernel.org> # 4.4+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20200823075545.56305-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/firewire/digi00x/digi00x.c |    5 +++++
- 1 file changed, 5 insertions(+)
-
---- a/sound/firewire/digi00x/digi00x.c
-+++ b/sound/firewire/digi00x/digi00x.c
-@@ -15,6 +15,7 @@ MODULE_LICENSE("GPL v2");
- #define VENDOR_DIGIDESIGN	0x00a07e
- #define MODEL_CONSOLE		0x000001
- #define MODEL_RACK		0x000002
-+#define SPEC_VERSION		0x000001
- 
- static int name_card(struct snd_dg00x *dg00x)
- {
-@@ -185,14 +186,18 @@ static const struct ieee1394_device_id s
- 	/* Both of 002/003 use the same ID. */
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_CONSOLE,
- 	},
- 	{
- 		.match_flags = IEEE1394_MATCH_VENDOR_ID |
-+			       IEEE1394_MATCH_VERSION |
- 			       IEEE1394_MATCH_MODEL_ID,
- 		.vendor_id = VENDOR_DIGIDESIGN,
-+		.version = SPEC_VERSION,
- 		.model_id = MODEL_RACK,
- 	},
- 	{}
-
-
+Of course, we first need to address the few remaining issues for
+arm(32?), which do look quite confusing to me so far. BTW, sorry for
+the compile error with patch 3, I guess we did the cross-compile only
+for 1 + 2 applied, to see the bloat-o-meter changes. But I guess
+patch 3 already proved its usefulness by that :-)
