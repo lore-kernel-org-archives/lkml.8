@@ -2,92 +2,139 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC8DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85777C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D38352087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="osadIcsx"
+	by mail.kernel.org (Postfix) with ESMTP id 4BEF921741
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599592100;
+	bh=dj+JlPWcOYv/4IzGZrhVLfRcyUyafVH/z9iYdjU8iy8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eZ9i9E/2bVvbfaGZgGs/G++34G8eTunHFJeFkRkQ84Tqogud0MGVEqwQQ48lNTfXV
+	 ICkmVw5Ae2kAOu97fmw/QBLgf2E+rmZBdQdk4lYwVgFdjyZSH/UU+XMjXZF1neIxUq
+	 MB9LbNPshK/TU5C/SjGlteIWtyX6gc5V+L5llWv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731545AbgIHTIE (ORCPT
+        id S1731674AbgIHTIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:08:04 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:52273 "EHLO mail.zx2c4.com"
+        Tue, 8 Sep 2020 15:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731444AbgIHTHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:07:35 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 087a7bc0
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 8 Sep 2020 18:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=v+IaKqTzajthwRuBeL8SUc47y/0=; b=osadIc
-        sxEsxJYoLQkcN8ueOwsO2hJkvpqCKOEKAetdJO2vr8+7hIO81q1YJelVd6yrdZbh
-        F2oyKFJcfsL4tkB7sJYYbIL4pkfW5gVPJ/iWoI3L27IS6RHJD7WrJhuSpf0gh2zs
-        wucK7kLHGhK2zfOiA7x4YcQ5CoDk0Tdbd9QkyIoyDKMJRpsxWK5MBSRONoTuXydg
-        0kz438jbR0QrrsM9kuB1Ixy5IgwCiA+UjSW/4+D1+nnBIcdIpAu9gei253gy75Lk
-        9gvGw6SO0YcgsMxbl5hYviBpX+gTkYMMt07/6Tp0r3lHFXEOLRCUg3esykz+o0Xb
-        /Q1iQR0hvs6+3jwg==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 21954bbc (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 8 Sep 2020 18:38:37 +0000 (UTC)
-Received: by mail-il1-f177.google.com with SMTP id y2so16470169ilp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 12:07:32 -0700 (PDT)
-X-Gm-Message-State: AOAM533hJYeVwg71o1R1f8uQFbzUQS6qp9FsEkfcnhjmXq4yHCIpb3IX
-        sQl7eOZ0vM1v3rpqGGSbMZe/ZFKJpmMQvk3TFAA=
-X-Google-Smtp-Source: ABdhPJyoPSCQWdVbTbi2jdo1d14h4gnPzGryAJ/aLbRzniVKIRbBl7Okl4RY5iR6bRxaG0EmnhV1ziz/3OTjzv0lGNI=
-X-Received: by 2002:a92:58cd:: with SMTP id z74mr226562ilf.224.1599592051270;
- Tue, 08 Sep 2020 12:07:31 -0700 (PDT)
+        id S1731248AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:06:58 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61FDB23DC2;
+        Tue,  8 Sep 2020 15:46:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580000;
+        bh=dj+JlPWcOYv/4IzGZrhVLfRcyUyafVH/z9iYdjU8iy8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rNEacWKBaMj5R5gWbHb9RFXWQwBzC0vWc9qtyC8ohFQHOwLsvQn1evEltBKDL+zIi
+         sGTdT3UkbDZ5ZW4V/rIdetcHRLoLpA9PUy3kMWLDcRn4PwLNhEaHga0QFsmfxHPvY3
+         ofNxKjY4Y/EB268bb/xzTPpbRpEV74KjfSXgNjLc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 120/129] mm: slub: fix conversion of freelist_corrupted()
+Date:   Tue,  8 Sep 2020 17:26:01 +0200
+Message-Id: <20200908152235.845154178@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200907094843.1949-1-Jason@zx2c4.com> <20200907100647.GB10657@zn.tnic>
- <22617e57e541e460fac09db04fdb370f8e96e8ef.camel@linux.intel.com>
- <CAHmME9rh8N-Qui2KVxGP33Aar5tao_obA70XKwR2x5Qp1AytTw@mail.gmail.com>
- <20200908172558.GG25236@zn.tnic> <CAHmME9pKfvPGf97BM1=VdUL1uU_8aOoc4+QOu6b51XnPz3SkRA@mail.gmail.com>
- <20200908173656.GI25236@zn.tnic> <CAHmME9pVO01mj8vgKPEX7a6pZDRSfX62e2Ow8R=L79hLSJoaMA@mail.gmail.com>
- <20200908180112.GK25236@zn.tnic>
-In-Reply-To: <20200908180112.GK25236@zn.tnic>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 8 Sep 2020 21:07:20 +0200
-X-Gmail-Original-Message-ID: <CAHmME9rMbuXfR+eNhopX8FyeXerUrPo4vaWpF6Dx-u3NnTmrVg@mail.gmail.com>
-Message-ID: <CAHmME9rMbuXfR+eNhopX8FyeXerUrPo4vaWpF6Dx-u3NnTmrVg@mail.gmail.com>
-Subject: Re: [PATCH] x86/msr: do not warn on writes to OC_MAILBOX
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        kitsunyan <kitsunyan@airmail.cc>,
-        "Brown, Len" <len.brown@intel.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sultan Alsawaf <sultan@kerneltoast.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 8, 2020 at 8:01 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Sep 08, 2020 at 07:42:12PM +0200, Jason A. Donenfeld wrote:
-> > Are you prepared to track down all the MSRs that might maybe do
-> > something naughty?
->
-> I'm not prepared - that's why this MSR filtering. To block *all* direct
-> MSR accesses from userspace in the future.
->
-> > Does `dd` warn when you run `dd if=/dev/zero of=/dev/sda`?
->
-> Yah, because that's the same as bricking your hardware. Geez.
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-Nobody is talking about bricking any hardware. Sorry if I seemed to
-imply that before. In my experience, undervolting improperly results
-in the CPU calculating things wrong and eventually crashing, and
-overclocking usually will trip some thermal limits where the CPU
-powers down. I've never experienced bricked hardware as a result of
-this.
+commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
 
-Jason
+Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
+deactivate_slab()") suffered an update when picked up from LKML [1].
+
+Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
+created a no-op statement.  Fix it by sticking to the behavior intended
+in the original patch [1].  In addition, make freelist_corrupted()
+immune to passing NULL instead of &freelist.
+
+The issue has been spotted via static analysis and code review.
+
+[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
+
+Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Joe Jin <joe.jin@oracle.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/slub.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -645,12 +645,12 @@ static void slab_fix(struct kmem_cache *
+ }
+ 
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+-	    !check_valid_pointer(s, page, nextfree)) {
+-		object_err(s, page, freelist, "Freechain corrupt");
+-		freelist = NULL;
++	    !check_valid_pointer(s, page, nextfree) && freelist) {
++		object_err(s, page, *freelist, "Freechain corrupt");
++		*freelist = NULL;
+ 		slab_fix(s, "Isolate corrupted freechain");
+ 		return true;
+ 	}
+@@ -1394,7 +1394,7 @@ static inline void dec_slabs_node(struct
+ 							int objects) {}
+ 
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	return false;
+ }
+@@ -2086,7 +2086,7 @@ static void deactivate_slab(struct kmem_
+ 		 * 'freelist' is already corrupted.  So isolate all objects
+ 		 * starting at 'freelist'.
+ 		 */
+-		if (freelist_corrupted(s, page, freelist, nextfree))
++		if (freelist_corrupted(s, page, &freelist, nextfree))
+ 			break;
+ 
+ 		do {
+
+
