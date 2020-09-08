@@ -2,120 +2,198 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABF5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1532CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEA22137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70F32137B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599593595;
+	bh=ddQcpMnvAZGtTHFiyyqUjbjAJDkGs5EZL3Y+Zd5nYRc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l8KIs5uFldbPFCMBWKwSMq53uYvaFqJwtdMq35JTcOP17PJnhnpIKUVRRt1fD0FtS
+	 HHfqyrrbHVU9tIiIvPsMaKK5CuJoQ2NVmBcGYZBEd3ctw7uOd6qoLf3229L1DW0T5O
+	 miBks0r+Mp9vw4r5DGm01ikjDxkzRGimlc+Bh04Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732233AbgIHTdL (ORCPT
+        id S1732266AbgIHTdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47724 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731014AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731011AbgIHP6F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 11:58:05 -0400
-Received: from gaia (unknown [46.69.195.48])
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6EA92463B;
-        Tue,  8 Sep 2020 15:39:13 +0000 (UTC)
-Date:   Tue, 8 Sep 2020 16:39:11 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>,
-        Evgenii Stepanov <eugenis@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Branislav Rankov <Branislav.Rankov@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 24/35] arm64: mte: Switch GCR_EL1 in kernel entry and exit
-Message-ID: <20200908153910.GK25591@gaia>
-References: <cover.1597425745.git.andreyknvl@google.com>
- <ec314a9589ef8db18494d533b6eaf1fd678dc010.1597425745.git.andreyknvl@google.com>
- <20200827103819.GE29264@gaia>
- <8affcfbe-b8b4-0914-1651-368f669ddf85@arm.com>
- <20200827121604.GL29264@gaia>
- <CAAeHK+yYEFHAQMxhL=uwfgaejo3Ld0gp5=ss38CjW6wyYCaZFw@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id DF336246A6;
+        Tue,  8 Sep 2020 15:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599579596;
+        bh=ddQcpMnvAZGtTHFiyyqUjbjAJDkGs5EZL3Y+Zd5nYRc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1Ta4w3eCcXTrmKK9d4vRJabW8tgLY2CSr+mBTO7EDt6X/9uQSayt1yB5rLZG4rQcc
+         uoZ1Qpu1NcII2VOTVw8VF0mTLLrKpayCE8XvhzfelnObWpn7uFXvFovNnsyDTNOFzD
+         lQ3k+vKH5M8ciszdidj5vTDsX+VREfdBc8kE0nNc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sean Osborne <sean.m.osborne@oracle.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Erik Rockstrom <erik.rockstrom@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 114/186] iommu/amd: Use cmpxchg_double() when updating 128-bit IRTE
+Date:   Tue,  8 Sep 2020 17:24:16 +0200
+Message-Id: <20200908152247.161016479@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
+References: <20200908152241.646390211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+yYEFHAQMxhL=uwfgaejo3Ld0gp5=ss38CjW6wyYCaZFw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 04:02:06PM +0200, Andrey Konovalov wrote:
-> On Thu, Aug 27, 2020 at 2:16 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Thu, Aug 27, 2020 at 11:56:49AM +0100, Vincenzo Frascino wrote:
-> > > On 8/27/20 11:38 AM, Catalin Marinas wrote:
-> > > > On Fri, Aug 14, 2020 at 07:27:06PM +0200, Andrey Konovalov wrote:
-> > > >> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> > > >> index 7717ea9bc2a7..cfac7d02f032 100644
-> > > >> --- a/arch/arm64/kernel/mte.c
-> > > >> +++ b/arch/arm64/kernel/mte.c
-> > > >> @@ -18,10 +18,14 @@
-> > > >>
-> > > >>  #include <asm/barrier.h>
-> > > >>  #include <asm/cpufeature.h>
-> > > >> +#include <asm/kasan.h>
-> > > >> +#include <asm/kprobes.h>
-> > > >>  #include <asm/mte.h>
-> > > >>  #include <asm/ptrace.h>
-> > > >>  #include <asm/sysreg.h>
-> > > >>
-> > > >> +u64 gcr_kernel_excl __read_mostly;
-> > > >
-> > > > Could we make this __ro_after_init?
-> > >
-> > > Yes, it makes sense, it should be updated only once through mte_init_tags().
-> > >
-> > > Something to consider though here is that this might not be the right approach
-> > > if in future we want to add stack tagging. In such a case we need to know the
-> > > kernel exclude mask before any C code is executed. Initializing the mask via
-> > > mte_init_tags() it is too late.
-> >
-> > It depends on how stack tagging ends up in the kernel, whether it uses
-> > ADDG/SUBG or not. If it's only IRG, I think it can cope with changing
-> > the GCR_EL1.Excl in the middle of a function.
-> >
-> > > I was thinking to add a compilation define instead of having gcr_kernel_excl in
-> > > place. This might not work if the kernel excl mask is meant to change during the
-> > > execution.
-> >
-> > A macro with the default value works for me. That's what it basically is
-> > currently, only that it ends up in a variable.
-> 
-> Some thoughts on the topic: gcr_kernel_excl is currently initialized
-> in mte_init_tags() and depends on the max_tag value dynamically
-> provided to it, so it's not something that can be expressed with a
-> define. In the case of KASAN the max_tag value is static, but if we
-> rely on that we make core MTE code depend on KASAN, which doesn't seem
-> right from the design perspective.
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 
-The design is debatable. If we want MTE to run on production devices, we
-either (1) optimise out some bits of KASAN (configurable) or (2) we
-decouple MTE and KASAN completely and add new callbacks in the core code
-(slab allocator etc.) specific to MTE.
+[ Upstream commit e52d58d54a321d4fe9d0ecdabe4f8774449f0d6e ]
 
-My first choice is (1), unless there is a strong technical argument why
-it is not possible.
+When using 128-bit interrupt-remapping table entry (IRTE) (a.k.a GA mode),
+current driver disables interrupt remapping when it updates the IRTE
+so that the upper and lower 64-bit values can be updated safely.
 
+However, this creates a small window, where the interrupt could
+arrive and result in IO_PAGE_FAULT (for interrupt) as shown below.
+
+  IOMMU Driver            Device IRQ
+  ============            ===========
+  irte.RemapEn=0
+       ...
+   change IRTE            IRQ from device ==> IO_PAGE_FAULT !!
+       ...
+  irte.RemapEn=1
+
+This scenario has been observed when changing irq affinity on a system
+running I/O-intensive workload, in which the destination APIC ID
+in the IRTE is updated.
+
+Instead, use cmpxchg_double() to update the 128-bit IRTE at once without
+disabling the interrupt remapping. However, this means several features,
+which require GA (128-bit IRTE) support will also be affected if cmpxchg16b
+is not supported (which is unprecedented for AMD processors w/ IOMMU).
+
+Fixes: 880ac60e2538 ("iommu/amd: Introduce interrupt remapping ops structure")
+Reported-by: Sean Osborne <sean.m.osborne@oracle.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Tested-by: Erik Rockstrom <erik.rockstrom@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Link: https://lore.kernel.org/r/20200903093822.52012-3-suravee.suthikulpanit@amd.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/iommu/Kconfig     |  2 +-
+ drivers/iommu/amd/init.c  | 21 +++++++++++++++++++--
+ drivers/iommu/amd/iommu.c | 17 +++++++++++++----
+ 3 files changed, 33 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+index b0f308cb7f7c2..201b2718f0755 100644
+--- a/drivers/iommu/Kconfig
++++ b/drivers/iommu/Kconfig
+@@ -143,7 +143,7 @@ config AMD_IOMMU
+ 	select IOMMU_API
+ 	select IOMMU_IOVA
+ 	select IOMMU_DMA
+-	depends on X86_64 && PCI && ACPI
++	depends on X86_64 && PCI && ACPI && HAVE_CMPXCHG_DOUBLE
+ 	help
+ 	  With this option you can enable support for AMD IOMMU hardware in
+ 	  your system. An IOMMU is a hardware component which provides
+diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+index 6ebd4825e3206..bf45f8e2c7edd 100644
+--- a/drivers/iommu/amd/init.c
++++ b/drivers/iommu/amd/init.c
+@@ -1518,7 +1518,14 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
+ 			iommu->mmio_phys_end = MMIO_REG_END_OFFSET;
+ 		else
+ 			iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
+-		if (((h->efr_attr & (0x1 << IOMMU_FEAT_GASUP_SHIFT)) == 0))
++
++		/*
++		 * Note: GA (128-bit IRTE) mode requires cmpxchg16b supports.
++		 * GAM also requires GA mode. Therefore, we need to
++		 * check cmpxchg16b support before enabling it.
++		 */
++		if (!boot_cpu_has(X86_FEATURE_CX16) ||
++		    ((h->efr_attr & (0x1 << IOMMU_FEAT_GASUP_SHIFT)) == 0))
+ 			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
+ 		break;
+ 	case 0x11:
+@@ -1527,8 +1534,18 @@ static int __init init_iommu_one(struct amd_iommu *iommu, struct ivhd_header *h)
+ 			iommu->mmio_phys_end = MMIO_REG_END_OFFSET;
+ 		else
+ 			iommu->mmio_phys_end = MMIO_CNTR_CONF_OFFSET;
+-		if (((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0))
++
++		/*
++		 * Note: GA (128-bit IRTE) mode requires cmpxchg16b supports.
++		 * XT, GAM also requires GA mode. Therefore, we need to
++		 * check cmpxchg16b support before enabling them.
++		 */
++		if (!boot_cpu_has(X86_FEATURE_CX16) ||
++		    ((h->efr_reg & (0x1 << IOMMU_EFR_GASUP_SHIFT)) == 0)) {
+ 			amd_iommu_guest_ir = AMD_IOMMU_GUEST_IR_LEGACY;
++			break;
++		}
++
+ 		/*
+ 		 * Note: Since iommu_update_intcapxt() leverages
+ 		 * the IOMMU MMIO access to MSI capability block registers
+diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+index d7b037891fb7e..200ee948f6ec1 100644
+--- a/drivers/iommu/amd/iommu.c
++++ b/drivers/iommu/amd/iommu.c
+@@ -3283,6 +3283,7 @@ out:
+ static int modify_irte_ga(u16 devid, int index, struct irte_ga *irte,
+ 			  struct amd_ir_data *data)
+ {
++	bool ret;
+ 	struct irq_remap_table *table;
+ 	struct amd_iommu *iommu;
+ 	unsigned long flags;
+@@ -3300,10 +3301,18 @@ static int modify_irte_ga(u16 devid, int index, struct irte_ga *irte,
+ 
+ 	entry = (struct irte_ga *)table->table;
+ 	entry = &entry[index];
+-	entry->lo.fields_remap.valid = 0;
+-	entry->hi.val = irte->hi.val;
+-	entry->lo.val = irte->lo.val;
+-	entry->lo.fields_remap.valid = 1;
++
++	ret = cmpxchg_double(&entry->lo.val, &entry->hi.val,
++			     entry->lo.val, entry->hi.val,
++			     irte->lo.val, irte->hi.val);
++	/*
++	 * We use cmpxchg16 to atomically update the 128-bit IRTE,
++	 * and it cannot be updated by the hardware or other processors
++	 * behind us, so the return value of cmpxchg16 should be the
++	 * same as the old value.
++	 */
++	WARN_ON(!ret);
++
+ 	if (data)
+ 		data->ref = entry;
+ 
 -- 
-Catalin
+2.25.1
+
+
+
