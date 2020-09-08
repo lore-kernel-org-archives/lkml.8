@@ -2,99 +2,93 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C5AEC2D0A8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC22DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:56:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61DE92075A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599605561;
-	bh=aXN6jjdeqlD5W0BGStPbvgnaRYjVZ3BcFOqRUdz6Pp8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j69htq/tw0a5VluRmXQLN8uHPO11BEfGzZ2c5eRZ8vuZxpBOFn/3/NGU8vwxqh8Lm
-	 fbMCbC3DyHjAWbo1qBUO1BEkYaTelRQ4l5RSG797lqJ1JgakXOp6Vd8rJ/9ELfnboi
-	 Aj3LFNQWOvd6g6VU1j3AQS27xYY38mhFnmkwRCOo=
+	by mail.kernel.org (Postfix) with ESMTP id 8037A2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 22:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgIHWwk (ORCPT
+        id S1728458AbgIHW4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 18:52:40 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45708 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726660AbgIHWwk (ORCPT
+        Tue, 8 Sep 2020 18:56:14 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:34084 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbgIHW4N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 18:52:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id u126so1103827iod.12;
-        Tue, 08 Sep 2020 15:52:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DUYMnk7PRl3sB9Bca/Be0LywxiUDpv8Bgnx3Ft4Wtmo=;
-        b=TNv9MDaEkWbznO0oTupeD1itQZB601AF49VxjF+AzVeicPj3M0g74Kh7+ApdVfJEP3
-         zq9ztXfUZSKCfdmqFMtHDypJYGwerHEPh65imoztmKHKdiVgvWwJjbYZEWFQ+8lqlNkb
-         T+9Klxezd3PbFth9F4mpPZo0Hvd2aV7cDPhSmmJHY/GjMBjxNuD9qsORMsYm2Bgp8gig
-         mXaR27nF6wP/oYA7MiSwvPqxy4HQDgcn9UKGtrIjhxc7/Nxtet4DOUo2cjl4znhDDoKg
-         uZlD4kdzapW0D6xRjqnlXWR6s5FspHERkrrqJWKrWdxndCQYSxNoC121LOJEQuShP0Jg
-         0T/w==
-X-Gm-Message-State: AOAM533iHBRQhHDZp+mkFgbV2uznBNIr/jxjSt8ec/UAuqwYjliW28HM
-        VC+kd+CdMGbUrjiW/nPQVIMcPollJ77Z
-X-Google-Smtp-Source: ABdhPJyLN1DM+y0pUvY2QC8gx3izn1RfXVEGuNZM0Hvtj4/2y0eMlPyTtpv68XKJRfspgZdLudDhvQ==
-X-Received: by 2002:a05:6638:3ea:: with SMTP id s10mr1302143jaq.2.1599605558989;
-        Tue, 08 Sep 2020 15:52:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id 137sm394681ioc.20.2020.09.08.15.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Sep 2020 15:52:38 -0700 (PDT)
-Received: (nullmailer pid 1088092 invoked by uid 1000);
-        Tue, 08 Sep 2020 22:52:34 -0000
-Date:   Tue, 8 Sep 2020 16:52:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Josh Cartwright <joshc@codeaurora.org>,
-        mauro.chehab@huawei.com, Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linuxarm@huawei.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: convert spmi.txt to spmi.yaml
-Message-ID: <20200908225234.GA1088015@bogus>
-References: <20200826061150.3eb96ab3@coco.lan>
- <ee4c4ca9f29a39f6af772b3a526a996176499da3.1598415179.git.mchehab+huawei@kernel.org>
+        Tue, 8 Sep 2020 18:56:13 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id B0DBA1C0B7A; Wed,  9 Sep 2020 00:56:10 +0200 (CEST)
+Date:   Wed, 9 Sep 2020 00:56:10 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, tony@atomide.com, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        martin_rysavy@centrum.cz, "David S. Miller" <davem@davemloft.net>,
+        guido.gunther@puri.sm, konradybcio@gmail.com, arnd@arndb.de,
+        martin.botka1@gmail.com
+Subject: Mailing list about low levels of Linux on cellphones
+Message-ID: <20200908225610.GA25399@duo.ucw.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
 Content-Disposition: inline
-In-Reply-To: <ee4c4ca9f29a39f6af772b3a526a996176499da3.1598415179.git.mchehab+huawei@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Aug 2020 06:36:49 +0200, Mauro Carvalho Chehab wrote:
-> Convert the SPMI bus documentation to JSON/yaml.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
-> 
-> v2:
-> - addressed issues pointed by Rob;
-> - made clear that group ID is a future extension, that it is not
->   currently supported.
-> 
->  .../bindings/mfd/qcom,spmi-pmic.txt           |  2 +-
->  .../bindings/spmi/qcom,spmi-pmic-arb.txt      |  4 +-
->  .../devicetree/bindings/spmi/spmi.txt         | 41 ----------
->  .../devicetree/bindings/spmi/spmi.yaml        | 75 +++++++++++++++++++
->  4 files changed, 78 insertions(+), 44 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/spmi/spmi.txt
->  create mode 100644 Documentation/devicetree/bindings/spmi/spmi.yaml
-> 
 
-Applied, thanks!
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+It seems there is quite a lot of efforts porting kernel to various
+cellphones.
+
+Librem 5 and PinePhone have their own hardware, people around Maemo
+Leste work with Nokia N900 and Droid 4, there's group working with
+Sony cellphones, there are postmarketOS people and there are probably
+groups I don't know about.
+
+I believe some coordination would be useful, so we end up with
+compatible solutions for various problems.
+
+It would be also good to know how ther hardware is progressing. I'd
+really like to have phone I could use as a _phone_, running mainline
+kernel. So far N900 with original Maemo is closest I could get.=20
+
+Would it be possible to create a mailing list on vger.kernel.org?
+Probably phones@ or phone-devel@? I believe it would be useful to
+cover hardware-dependend pieces of the phone stack (ofono,
+modemmanager) as well as kernel.
+
+Best regards,
+
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX1gMCgAKCRAw5/Bqldv6
+8hCjAJ0UUeO25TWORFOuDeLu9eryN7BzAACfeQaxgX1aqhy1aTcgrIOawZWdz6w=
+=63wl
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
