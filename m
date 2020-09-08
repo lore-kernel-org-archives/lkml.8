@@ -2,159 +2,115 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B8DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B32C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A30E1206E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A17206A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:30:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gEjB2PVR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbgIHQaX (ORCPT
+        id S1731989AbgIHQad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:30:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
+        Tue, 8 Sep 2020 12:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731929AbgIHQ1O (ORCPT
+        with ESMTP id S1731963AbgIHQ1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:27:14 -0400
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [IPv6:2001:1600:3:17::190f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D25C0610EA
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:14:47 -0700 (PDT)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Bm6bc3HDJzlhTgZ;
-        Tue,  8 Sep 2020 16:14:36 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Bm6bY253dzlh8TH;
-        Tue,  8 Sep 2020 16:14:33 +0200 (CEST)
-Subject: Re: [RFC PATCH v8 1/3] fs: Introduce AT_INTERPRETED flag for
- faccessat2(2)
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christian Heimes <christian@python.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Deven Bowers <deven.desai@linux.microsoft.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Eric Chiang <ericchiang@google.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        James Morris <jmorris@namei.org>, Jan Kara <jack@suse.cz>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>,
-        Scott Shell <scottsh@microsoft.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Steve Dower <steve.dower@python.org>,
-        Steve Grubb <sgrubb@redhat.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@linux.microsoft.com>,
-        John Johansen <john.johansen@canonical.com>
-References: <20200908075956.1069018-1-mic@digikod.net>
- <20200908075956.1069018-2-mic@digikod.net>
- <d216615b48c093ebe9349a9dab3830b646575391.camel@linux.ibm.com>
- <75451684-58f3-b946-dca4-4760fa0d7440@digikod.net>
- <CAEjxPJ49_BgGX50ZAhHh79Qy3OMN6sssnUHT_2yXqdmgyt==9w@mail.gmail.com>
- <CAEjxPJ6ZTKeunzJvWf_kS3QYjca6v1yJq=ad-jCCuDSgG6n60g@mail.gmail.com>
- <bdc10ab89cf9197e104f02a751009cf0d549ddf5.camel@linux.ibm.com>
- <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <532eefa8-49ca-1c23-1228-d5a4e2d8af90@digikod.net>
-Date:   Tue, 8 Sep 2020 16:14:32 +0200
-User-Agent: 
+        Tue, 8 Sep 2020 12:27:32 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767F8C0A3BE2
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 07:54:55 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id t76so16682101oif.7
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 07:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=w5WD7mYu1UZ17o5IwyM77lKheQXm/FoO3alEWArs8d8=;
+        b=gEjB2PVRSfcdabC2to0ytgzJqyIE1We/Z9N99i/QXWyfZI29q9ILSekgH2UoRUTGo1
+         mTSM6e38qq85pZ/1eQaDy5C9Ri71lBuFgqahCU3dDMEpfMcdod4JVa9HEaInoH/SEQwl
+         Vh+EggBAgwVJ02di4FQXo38idBxXJArYd4VMOiIOZLi0ViL4a5UwDGnd0P5ZZiwoK6Ce
+         IVuzaRE6dO5Er+fpuifC/1vBBr848mgts7QN0VCcqSs/Uf8+mrE8pvTPpMphF6Y6rwxu
+         Ld+/jSsFye84Q/SxKreWOUnNkIEfxQWleKPBpMSNTFUHQVum/1MC+NmkLK4MmJsI7COx
+         fgWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=w5WD7mYu1UZ17o5IwyM77lKheQXm/FoO3alEWArs8d8=;
+        b=tBocdiL9EC+bIKz9INx2f5rFUhsbamYdW7LyLjfwrzXzzB5ksTwFD1e0sSv6HexReK
+         QmT2v2/s9k2lcmkrGEShoFMJ2lpX4wHvzW370efQ3mprXC6k+tjDYFctGCoFFslzEFr5
+         2hwWwKSN3kIjrSJGlCmyj1wThWkwlRcnTGKO/FGJoeXXB1nxGPv8R2gf1T5TJnWLG2Sa
+         z02hhJhOXrOyx+HxhK3uqqCZB0tvCq2h2pJRC9/tXNq5b63X84mTx6Y9mOSxBkZqM/Rd
+         DHkzR2pN8Vq+//K5CUiINyZkiYO5UA0qxOak519SzLZkcMbsk+8HuHHLcFJF8f3NOkLL
+         lRMQ==
+X-Gm-Message-State: AOAM530JR2ozl3xIYi8x4wBDH6Kbr6JV6rdsc9t4tlnunTPTT0ydybZV
+        SxMKs+2g3FChJVQmx1/qZxinjg==
+X-Google-Smtp-Source: ABdhPJwfgX5hiHCKByDlCicvW5Vmn/1mu2VuOJ8ql9YPirRsdRzLX51mj7XJnCv+3+D49GSpE6m/uA==
+X-Received: by 2002:aca:df84:: with SMTP id w126mr1740500oig.103.1599576894821;
+        Tue, 08 Sep 2020 07:54:54 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id l5sm3498342otj.40.2020.09.08.07.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 07:54:54 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 09:54:50 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jonathan Marek <jonathan@marek.ca>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        "moderated list:SOUNDWIRE SUBSYSTEM" <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] soundwire: qcom: fix SLIBMUS/SLIMBUS typo
+Message-ID: <20200908145450.GM3715@yoga>
+References: <20200908140818.28373-1-jonathan@marek.ca>
 MIME-Version: 1.0
-In-Reply-To: <CAEjxPJ5evWDSv-T-p=4OX29Pr584ZRAsnYoxSRd4qFDoryB+fQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200908140818.28373-1-jonathan@marek.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 08 Sep 09:08 CDT 2020, Jonathan Marek wrote:
 
-On 08/09/2020 15:42, Stephen Smalley wrote:
-> On Tue, Sep 8, 2020 at 9:29 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
->>
->> On Tue, 2020-09-08 at 08:52 -0400, Stephen Smalley wrote:
->>> On Tue, Sep 8, 2020 at 8:50 AM Stephen Smalley
->>> <stephen.smalley.work@gmail.com> wrote:
->>>>
->>>> On Tue, Sep 8, 2020 at 8:43 AM Mickaël Salaün <mic@digikod.net> wrote:
->>>>>
->>>>>
->>>>> On 08/09/2020 14:28, Mimi Zohar wrote:
->>>>>> Hi Mickael,
->>>>>>
->>>>>> On Tue, 2020-09-08 at 09:59 +0200, Mickaël Salaün wrote:
->>>>>>> +                    mode |= MAY_INTERPRETED_EXEC;
->>>>>>> +                    /*
->>>>>>> +                     * For compatibility reasons, if the system-wide policy
->>>>>>> +                     * doesn't enforce file permission checks, then
->>>>>>> +                     * replaces the execute permission request with a read
->>>>>>> +                     * permission request.
->>>>>>> +                     */
->>>>>>> +                    mode &= ~MAY_EXEC;
->>>>>>> +                    /* To be executed *by* user space, files must be readable. */
->>>>>>> +                    mode |= MAY_READ;
->>>>>>
->>>>>> After this change, I'm wondering if it makes sense to add a call to
->>>>>> security_file_permission().  IMA doesn't currently define it, but
->>>>>> could.
->>>>>
->>>>> Yes, that's the idea. We could replace the following inode_permission()
->>>>> with file_permission(). I'm not sure how this will impact other LSMs though.
->>
->> I wasn't suggesting replacing the existing security_inode_permission
->> hook later, but adding a new security_file_permission hook here.
->>
->>>>
->>>> They are not equivalent at least as far as SELinux is concerned.
->>>> security_file_permission() was only to be used to revalidate
->>>> read/write permissions previously checked at file open to support
->>>> policy changes and file or process label changes.  We'd have to modify
->>>> the SELinux hook if we wanted to have it check execute access even if
->>>> nothing has changed since open time.
->>>
->>> Also Smack doesn't appear to implement file_permission at all, so it
->>> would skip Smack checking.
->>
->> My question is whether adding a new security_file_permission call here
->> would break either SELinux or Apparmor?
+> Fix slimbus case being broken thanks to a typo.
 > 
-> selinux_inode_permission() has special handling for MAY_ACCESS so we'd
-> need to duplicate that into selinux_file_permission() ->
-> selinux_revalidate_file_permission().  Also likely need to adjust
-> selinux_file_permission() to explicitly check whether the mask
-> includes any permissions not checked at open time.  So some changes
-> would be needed here.  By default, it would be a no-op unless there
-> was a policy reload or the file was relabeled between the open(2) and
-> the faccessat(2) call.
+> Fixes: 5bd773242f75 ("soundwire: qcom: avoid dependency on CONFIG_SLIMBUS")
 > 
 
-We could create a new hook path_permission(struct path *path, int mask)
-as a superset of inode_permission(). To be more convenient, his new hook
-could then just call inode_permission() for every LSMs not implementing
-path_permission().
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> ---
+> This should be squashed into the problematic patch if possible,
+> but I'm not sure if that's possible since its already in linux-next?
+> 
+>  drivers/soundwire/qcom.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/soundwire/qcom.c b/drivers/soundwire/qcom.c
+> index 100af93a5eab..c406a079d237 100644
+> --- a/drivers/soundwire/qcom.c
+> +++ b/drivers/soundwire/qcom.c
+> @@ -780,7 +780,7 @@ static int qcom_swrm_probe(struct platform_device *pdev)
+>  	if (!ctrl)
+>  		return -ENOMEM;
+>  
+> -#if IS_ENABLED(CONFIG_SLIBMUS)
+> +#if IS_ENABLED(CONFIG_SLIMBUS)
+>  	if (dev->parent->bus == &slimbus_bus) {
+>  #else
+>  	if (false) {
+> -- 
+> 2.26.1
+> 
