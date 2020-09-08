@@ -7,61 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A29C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF56C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 994C22074D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCA820936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599588295;
-	bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+	s=default; t=1599588306;
+	bh=BbyJh1YWmYG+BtsB02KdlQHd3Tz+oemTvp3DOyv01mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZtkhjfBdKViyAbBVi6Urns3+CweNjBhUzLLy8SkjZIhdj+MK9gx2vCSrlKB8LzS7
-	 8keaypU2yvWypYXvflgl32GPR20FPe8TMCi0POHcR2P+IA5q9FrnLZvdWZnirORiyZ
-	 Kmg+HXfi1lkaR0EYN5KxB4BNHSRb1PdDjaj09utA=
+	b=awOG+U42j9FpRKitEgrIkCUNql0L/ASDDIU+dC1O/2WkTrizb5FMyT65qBfH8iZDk
+	 mXqMVGCye8GTUO1khORwnNC0w/pHt2glX8Wm0XMxJPTZM3eEh3HrPJFJukT3bF+zTs
+	 Kro05MZkUx1PFkehm7RrDVh8RTqSFt2WFESIZfXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731384AbgIHSEx (ORCPT
+        id S1732165AbgIHSFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:04:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 14:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731525AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731517AbgIHQMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:12:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39A2247BD;
-        Tue,  8 Sep 2020 15:51:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA83824754;
+        Tue,  8 Sep 2020 15:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580284;
-        bh=Qoayjoiq0uSKgxLGXmLIhulkMjEAiiCj6O1lrgz1Tlc=;
+        s=default; t=1599580252;
+        bh=BbyJh1YWmYG+BtsB02KdlQHd3Tz+oemTvp3DOyv01mY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vHczBkCd87lGh72ECWimUP+jO0BpRQL7NKLePr0ZdKGmZ7BOpHP0Pb8kmXnvI3ogb
-         yMESldtRKXZhViwMskFO40FR618A4TIZxS8EhfYaQHOaYnFMl26bTAV5VtyGR1pBhU
-         9GWD58rEL7Jz1z64GRx+IX2gFAnVD+31GW5Tuohk=
+        b=ILPdYj3PlDoxsaHRqsp3PO6GejzgBSSbeUZJaWT1YKrIYqmkQEWhz+PwbtDWHIJ2g
+         TDuLzy96Y3GZCyn6hw19elvFAToLWC0matu8PO2rPkGl6BmyF1MVI75dDFAwInpUHK
+         ejzPLhOFfKbxzlNTlH3jhnck1x0mYqSBtMl052WI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paul Clarke <pc@us.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Tony Jones <tonyj@suse.de>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 03/65] perf record/stat: Explicitly call out event modifiers in the documentation
-Date:   Tue,  8 Sep 2020 17:25:48 +0200
-Message-Id: <20200908152217.194473530@linuxfoundation.org>
+        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Joe Jin <joe.jin@oracle.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 79/88] mm: slub: fix conversion of freelist_corrupted()
+Date:   Tue,  8 Sep 2020 17:26:20 +0200
+Message-Id: <20200908152225.132339027@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
-References: <20200908152217.022816723@linuxfoundation.org>
+In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
+References: <20200908152221.082184905@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -71,63 +65,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@amd.com>
+From: Eugeniu Rosca <erosca@de.adit-jv.com>
 
-commit e48a73a312ebf19cc3d72aa74985db25c30757c1 upstream.
+commit dc07a728d49cf025f5da2c31add438d839d076c0 upstream.
 
-Event modifiers are not mentioned in the perf record or perf stat
-manpages.  Add them to orient new users more effectively by pointing
-them to the perf list manpage for details.
+Commit 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in
+deactivate_slab()") suffered an update when picked up from LKML [1].
 
-Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Paul Clarke <pc@us.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Tony Jones <tonyj@suse.de>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200901215853.276234-1-kim.phillips@amd.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Specifically, relocating 'freelist = NULL' into 'freelist_corrupted()'
+created a no-op statement.  Fix it by sticking to the behavior intended
+in the original patch [1].  In addition, make freelist_corrupted()
+immune to passing NULL instead of &freelist.
+
+The issue has been spotted via static analysis and code review.
+
+[1] https://lore.kernel.org/linux-mm/20200331031450.12182-1-dongli.zhang@oracle.com/
+
+Fixes: 52f23478081ae0 ("mm/slub.c: fix corrupted freechain in deactivate_slab()")
+Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Joe Jin <joe.jin@oracle.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200824130643.10291-1-erosca@de.adit-jv.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/Documentation/perf-record.txt |    4 ++++
- tools/perf/Documentation/perf-stat.txt   |    4 ++++
- 2 files changed, 8 insertions(+)
+ mm/slub.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -33,6 +33,10 @@ OPTIONS
-         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -646,12 +646,12 @@ static void slab_fix(struct kmem_cache *
+ }
  
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
- 	  'param1', 'param2', etc are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*.
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -39,6 +39,10 @@ report::
- 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	if ((s->flags & SLAB_CONSISTENCY_CHECKS) &&
+-	    !check_valid_pointer(s, page, nextfree)) {
+-		object_err(s, page, freelist, "Freechain corrupt");
+-		freelist = NULL;
++	    !check_valid_pointer(s, page, nextfree) && freelist) {
++		object_err(s, page, *freelist, "Freechain corrupt");
++		*freelist = NULL;
+ 		slab_fix(s, "Isolate corrupted freechain");
+ 		return true;
+ 	}
+@@ -1343,7 +1343,7 @@ static inline void dec_slabs_node(struct
+ 							int objects) {}
  
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
- 	  param1 and param2 are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
+ static bool freelist_corrupted(struct kmem_cache *s, struct page *page,
+-			       void *freelist, void *nextfree)
++			       void **freelist, void *nextfree)
+ {
+ 	return false;
+ }
+@@ -2037,7 +2037,7 @@ static void deactivate_slab(struct kmem_
+ 		 * 'freelist' is already corrupted.  So isolate all objects
+ 		 * starting at 'freelist'.
+ 		 */
+-		if (freelist_corrupted(s, page, freelist, nextfree))
++		if (freelist_corrupted(s, page, &freelist, nextfree))
+ 			break;
+ 
+ 		do {
 
 
