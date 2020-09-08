@@ -2,187 +2,246 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA29C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACFCC2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0468C2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05BD92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="bJMAz+KA";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="AhLEyyJE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tBb9RkBT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbgIHT3b (ORCPT
+        id S1732240AbgIHT3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:29:31 -0400
-Received: from rcdn-iport-3.cisco.com ([173.37.86.74]:19756 "EHLO
-        rcdn-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731061AbgIHT27 (ORCPT
+        Tue, 8 Sep 2020 15:29:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54198 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730944AbgIHP7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 15:28:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2748; q=dns/txt; s=iport;
-  t=1599593337; x=1600802937;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=BTJKt78EdgO0ivA536SV09mU6sGZ7cdyg15qZByn8W0=;
-  b=bJMAz+KA0vemHfcrLJV2JffpQFIVyrq2edxK3HR2c2x/GN2arTgQz2z5
-   dalydJFn0Y47OOfaDy8dtyd1wtH6KRpEU1TDF3YEEjDMS/0/EnzCmwiLD
-   mCadTSxWSIhTrLi1buIn4m58JcnXdvAZ07CyzqGrMz1AFlwFfrh1lAzMT
-   0=;
-IronPort-PHdr: =?us-ascii?q?9a23=3Abxz0VRGgLsthYWVon8EVBp1GYnJ96bzpIg4Y7I?=
- =?us-ascii?q?YmgLtSc6Oluo7vJ1Hb+e401A+bU4+d4PVB2KLasKHlDGoH55vJ8HUPa4dFWB?=
- =?us-ascii?q?JNj8IK1xchD8iIBQyeTrbqYiU2Ed4EWApj+He2YkZfXs35Yg6arni79zVHHB?=
- =?us-ascii?q?L5OEJ8Lfj0HYiHicOx2qiy9pTfbh8OiiC6ZOZ5LQ69qkPascxFjA=3D=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0DRBQA02ldf/4wNJK1fHAEBAQEBAQc?=
- =?us-ascii?q?BARIBAQQEAQFAgU+BUlEHgUkvLIQ4g0YDjXKYcYJTA1ULAQEBDAEBLQIEAQG?=
- =?us-ascii?q?ESwIXgXoCJDgTAgMBAQsBAQUBAQECAQYEbYVcAQuFcgEBAQECARIREQwBATc?=
- =?us-ascii?q?BDwIBCBgCAiYCAgIwFRACBA4FIoVQAw4gAad+AoE5iGF2gTKDAQEBBYUQGII?=
- =?us-ascii?q?QCRR6KoJxg2iGURuBQT+EIT6EPAEXgwCCYJJeATyjUwqCZZoyIYMJiW+TXpJ?=
- =?us-ascii?q?Rn1cCBAIEBQIOAQEFgWsjgVdwFYMkUBcCDVeNSAkag06KVnQ3AgYKAQEDCXy?=
- =?us-ascii?q?NcAEB?=
-X-IronPort-AV: E=Sophos;i="5.76,406,1592870400"; 
-   d="scan'208";a="801563527"
-Received: from alln-core-7.cisco.com ([173.36.13.140])
-  by rcdn-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 08 Sep 2020 19:28:55 +0000
-Received: from XCH-ALN-003.cisco.com (xch-aln-003.cisco.com [173.36.7.13])
-        by alln-core-7.cisco.com (8.15.2/8.15.2) with ESMTPS id 088JStxG026530
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Tue, 8 Sep 2020 19:28:55 GMT
-Received: from xhs-rtp-001.cisco.com (64.101.210.228) by XCH-ALN-003.cisco.com
- (173.36.7.13) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Sep
- 2020 14:28:54 -0500
-Received: from xhs-rtp-003.cisco.com (64.101.210.230) by xhs-rtp-001.cisco.com
- (64.101.210.228) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 8 Sep
- 2020 15:28:54 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (64.101.32.56) by
- xhs-rtp-003.cisco.com (64.101.210.230) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Tue, 8 Sep 2020 15:28:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MwKXAo0Nwkx65UPVvfOx4ztqdUcRlQ4XQfqsbDP75+LN7gOBLwVfooV1i+9gL3mlu0+FoG85mPrY17sPNub2SOfG6gO9519EP1Wrneo1fUwtpTq9bhIFwj0JQjndYzRWHzb0UzsZjf5omTKYS5SlSw/zXaxh7GuqUubxDdVgCvT6GRleAkRKjTrOGcspIEkrKnWw6j6LCZZLhA0ZCdyEeNTf6adxWLns+6Iep5jcHWCqMsH1eqCRmO05sWHXGRF11yo5D1ZuozSjLyULlT4pvol/2TiCfZj7DLxy/zweNeHbYyIUWHmEDNjMa6xxHtB67c4d4gGF1It8oKxsLkz3Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BTJKt78EdgO0ivA536SV09mU6sGZ7cdyg15qZByn8W0=;
- b=QGoDutPOwFXqVggz1WuO19SdV+myCZ7Ghu2fF4ojC9uc8eyfURAmCyZbHyzr7VhZ62olh1GGbOScV4OzfsA77DvT4U/ubUQKZhvssgiFwUYGZBoJc4fXIaKk2yY2F91aYn9eYA5hSuflVP2dJukmaT/MABK30NqmsO/mGQfnZZKhSnHNngi8srULjh5n3Tx5nD3H/U+DjPQ5ZJYFJflyL1ZBZbFwFJPc8RSajNbxjOrt32nMCGkKwT0uOvuDa/ECyo+8wWXdiCN/6lLtinEuPGaX4v7wDrDk9ra6Fe4iPc7tD6523KrhhAwAe5PKDfM/Ks0nagzkGHRTqoqm1VF9Qw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cisco.com; dmarc=pass action=none header.from=cisco.com;
- dkim=pass header.d=cisco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector2-cisco-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BTJKt78EdgO0ivA536SV09mU6sGZ7cdyg15qZByn8W0=;
- b=AhLEyyJEpDXk8F8Qm7k7MysDmIgRDYoqznOqyt326+kE7hHTeyl+BG0ylCLKN2XzSU3uJCUxtOym+SRCR/1H2Toss7+RcObdkFRBt7f61fFo3abyx4HUTPjVCoATUSA+8p86bj1docfRpBxiEUM1YDi2LTzFQ604gdMM2/EWAgg=
-Received: from BY5PR11MB4182.namprd11.prod.outlook.com (2603:10b6:a03:183::10)
- by BYAPR11MB3765.namprd11.prod.outlook.com (2603:10b6:a03:f6::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Tue, 8 Sep
- 2020 19:28:51 +0000
-Received: from BY5PR11MB4182.namprd11.prod.outlook.com
- ([fe80::1d4e:2269:63d7:f2d6]) by BY5PR11MB4182.namprd11.prod.outlook.com
- ([fe80::1d4e:2269:63d7:f2d6%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 19:28:51 +0000
-From:   "Julius Hemanth Pitti (jpitti)" <jpitti@cisco.com>
-To:     "guro@fb.com" <guro@fb.com>
-CC:     "vdavydov.dev@gmail.com" <vdavydov.dev@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>
-Subject: Re: [PATCH] mm: memcg: yield cpu when we fail to charge pages
-Thread-Topic: [PATCH] mm: memcg: yield cpu when we fail to charge pages
-Thread-Index: AQHWhhEa7koixvCA0Eesx63uX92KqalfHoKAgAAB6gA=
-Date:   Tue, 8 Sep 2020 19:28:51 +0000
-Message-ID: <38c678cac5794cb647ba73799bcaf6df5ff6dc3e.camel@cisco.com>
-References: <20200908185051.62420-1-jpitti@cisco.com>
-         <20200908192159.GB567128@carbon.DHCP.thefacebook.com>
-In-Reply-To: <20200908192159.GB567128@carbon.DHCP.thefacebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-authentication-results: fb.com; dkim=none (message not signed)
- header.d=none;fb.com; dmarc=none action=none header.from=cisco.com;
-x-originating-ip: [2001:420:c0c8:1005::83d]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 81c133fe-a051-4371-80b6-08d8542d6aea
-x-ms-traffictypediagnostic: BYAPR11MB3765:
-x-ld-processed: 5ae1af62-9505-4097-a69a-c1553ef7840e,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB37659B7A1E7168000DB6218ADA290@BYAPR11MB3765.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vUbv4ysbRWki7aaH/D5BKy9OA3vKlkThw5yaDvPvcXpDEVrFbwS0YMIwihonca15qG065YH0gNiBKKgkeh9X92iBGeX9rZG/Ib3rPA1IKSl4XDoThKFMQA55W5l/7mRH5LzUJnDGPtM0Am67uOXEX1UtoDngFHH5OyGY6F0gmodIbD7Nwnn6NXldtQU9Fc3fMAouLAQRzWr6EU6spLPoEL9N18TbV56Xnljz4eTYzI2RXAz5i2B/7e4BrNbsCvQaKR10sq1iHcNj9FAqkXdSVJzbtGAg+7SYvYCerYGYP4Gkjefb/hC+JF6XNDyNgERerOlK94GpDwMRB739uNiyXag5iRiMdOMppSAHOdDmCkNAzpuxJ8mscH1RHQ6U5O2F
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4182.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(366004)(136003)(396003)(39860400002)(346002)(4326008)(6506007)(66476007)(66446008)(66556008)(64756008)(6916009)(2616005)(478600001)(6486002)(66946007)(186003)(316002)(76116006)(54906003)(71200400001)(5660300002)(83380400001)(8676002)(86362001)(8936002)(2906002)(36756003)(6512007)(99106002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 6y1+1ZxLO4YiDJUf8krRbjjblLlPWPNU6efJSyGWpIT4VBqU9O4eeLzKKqq/gW7PWvp3OmlxPyWSg6+JAYfEPn37ezYS4Imvbmp6L5kXeDQkyjzPXWZ+T6rcwg4i1CS1KYOccm0SSO4yzOeXoDTwxFKXYNno3h70SZWFa4jwW3AUUDJZEW+Ta6wqE33R1MwYJ4cVVXTebgreVWvQG7ENAjs+R3iztXujLbgU4oTJfGjoHRqKJwc0U3xgF8c0SHoBxdUYIh1erW3CL/f1oa88nb+iqy2/Lki+SKO4CIcwmEt+4+2OY3qE/cWqLeGj4scAMefpiewcK25Y0EzcKt41JB/XmzJYilq7BENthHJw6foD1Ih49V/9B28y0dVo+AZpRi0RMaxEAGNPLnIt1wRU6xjn5SkHdsY7tW4iL2eoHZHr80f8UZ+7Tk1l+f9r/F6Cl0+XslfCKHLq0QK3tptxO9Mf2ey7GAWTARvFy+kuFzY6sOtt7e2kuJD/4IOd4Ly72rdls71IVHPTm+Vuje61drfxzhj1LYq32VcfFnoTrWJhvr3O4VTguGRCCUJMO8jEk32HkknW1icEkrVSlf/qmCCweaeg3RVbTbFoUYADisshxyQ2l6ovVpUZOIkffDQi81khSl+P0gDjZMW6Fl+bE8S2HWdFiwMcsosLJRAgW6g=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <305EB9137EE72C40BBD18F012D23A2FB@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 8 Sep 2020 11:59:53 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4C1C061797
+        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:53:55 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id x10so11526081ybj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 08:53:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WMKNLrzDF7/sPPEU8y1v2n71gknBmnCmkI9dRZPe674=;
+        b=tBb9RkBT7PkAZehXVkxlLKQ2DjH/kenKlBga9GRbuu7F0OeOyC+9Zl11tM2QpNlVDB
+         xI4fS0ucuz3JCcJSUuTBaAJdW4RCLW505trAdJp59wF2jThAwWora+hTDxyPcoTpFZA3
+         mp5Q0KhKBXV9HPDb7cZWgGxhDeIBIuwjqUBlHcoHraklkr09Psgr5q+9dutdu1sHtyHy
+         rxGY79ETynm25Hc3tDaWsx+STSN8YCyXo9ho28BRnrS986TZduTIuYYvV14dD55EhWSu
+         En3xhVaHbWkPOSCLBs6TxGq2Mn1RQvCFnsuA1vKfwzzmNPnmAvQ7AT5Q8GVIrHMLu2eL
+         fhWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WMKNLrzDF7/sPPEU8y1v2n71gknBmnCmkI9dRZPe674=;
+        b=sfAeJIZduI6LvuIfp2U6VBRudPOBiCbpGa6MnRq4npT/1mzsXsAPTYDEnv9h3B8BKo
+         kcelWbIHgPG/DXdWHGPe1OirrQbrUiSVSBYiK14eIvYePzIStXG91y7TMT0k+3Q3jMNJ
+         n9IEeGuQ9GyjQyZGMEGNrdU1arrbYsuCmtErnXo/C2q8GxMW3pH77WhpaGIeifNvKyij
+         hPYJzfmFpRCWvjcqArbjh9vVQnWQxfqy+wnnhv7j8Ie4lykDM8dHli0dlRSmOy+ed8XT
+         Tia2k+sWfyyStNg2HGmIn4tS3U4ALHxd43lk3PLRZlo93E9uMs31pDoYhicHYSwE/sld
+         4/Tw==
+X-Gm-Message-State: AOAM533+JKKwFJnxG1GvLw6AdXVtt2pBFaAvZ8gzesTVtN8Sj1xIRnQe
+        F7Mbc3KL/c4DEl/8lGEYtigshD0u8h7c5771CNXyUA==
+X-Google-Smtp-Source: ABdhPJzdMvfsa/IlOorKdDsqGAkDpoCCXep7yMjMOixUz2SkSrRlufjMRSvxarr/is9WvT0a5ZfKEk54011eZf6t4Po=
+X-Received: by 2002:a25:5f4c:: with SMTP id h12mr364293ybm.97.1599580434228;
+ Tue, 08 Sep 2020 08:53:54 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4182.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81c133fe-a051-4371-80b6-08d8542d6aea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 19:28:51.5400
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JxSPc/Xfe/aSEeao5xiYZ7AUMl+q5+H4yTJhTt7xYIHldh9wk5iUlxgR6FMzz7LkAI8YbmXSOMmY1Qz8wwqZww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB3765
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.36.7.13, xch-aln-003.cisco.com
-X-Outbound-Node: alln-core-7.cisco.com
+References: <20200828032752.3229698-1-agoode@google.com> <20200902200617.1720599-1-agoode@google.com>
+ <20200904030336.GG9369@pendragon.ideasonboard.com>
+In-Reply-To: <20200904030336.GG9369@pendragon.ideasonboard.com>
+From:   Adam Goode <agoode@google.com>
+Date:   Tue, 8 Sep 2020 11:53:15 -0400
+Message-ID: <CAOf41NnpkXATUNay+EPucFg7Nx8=rfLta+TZsRrknZiq3Gegxg@mail.gmail.com>
+Subject: Re: [PATCH v3] media: uvcvideo: Convey full colorspace information to V4L2
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTA5LTA4IGF0IDEyOjIxIC0wNzAwLCBSb21hbiBHdXNoY2hpbiB3cm90ZToN
-Cj4gT24gVHVlLCBTZXAgMDgsIDIwMjAgYXQgMTE6NTA6NTFBTSAtMDcwMCwgSnVsaXVzIEhlbWFu
-dGggUGl0dGkgd3JvdGU6DQo+ID4gRm9yIG5vbiByb290IENHLCBpbiB0cnlfY2hhcmdlKCksIHdl
-IGtlZXAgdHJ5aW5nDQo+ID4gdG8gY2hhcmdlIHVudGlsIHdlIHN1Y2NlZWQuIE9uIG5vbi1wcmVl
-bXB0aXZlDQo+ID4ga2VybmVsLCB3aGVuIHdlIGFyZSBPT00sIHRoaXMgcmVzdWx0cyBpbiBob2xk
-aW5nDQo+ID4gQ1BVIGZvcmV2ZXIuDQo+ID4gDQo+ID4gT24gU01QIHN5c3RlbXMsIHRoaXMgZG9l
-c24ndCBjcmVhdGUgYSBiaWcgcHJvYmxlbQ0KPiA+IGJlY2F1c2Ugb29tX3JlYXBlciBnZXQgYSBj
-aGFuZ2UgdG8ga2lsbCB2aWN0aW0NCj4gPiBhbmQgbWFrZSBzb21lIGZyZWUgcGFnZXMuIEhvd2V2
-ZXIgb24gYSBzaW5nbGUtY29yZQ0KPiA+IENQVSAob3IgY2FzZXMgd2hlcmUgb29tX3JlYXBlciBw
-aW5uZWQgdG8gc2FtZSBDUFUNCj4gPiB3aGVyZSB0cnlfY2hhcmdlIGlzIGV4ZWN1dGluZyksIG9v
-bV9yZWFwZXIgc2hhbGwNCj4gPiBuZXZlciBnZXQgc2NoZWR1bGVkIGFuZCB3ZSBzdGF5IGluIHRy
-eV9jaGFyZ2UgZm9yZXZlci4NCj4gPiANCj4gPiBTdGVwcyB0byByZXBvIHRoaXMgb24gbm9uLXNt
-cDoNCj4gPiAxLiBtb3VudCAtdCB0bXBmcyBub25lIC9zeXMvZnMvY2dyb3VwDQo+ID4gMi4gbWtk
-aXIgL3N5cy9mcy9jZ3JvdXAvbWVtb3J5DQo+ID4gMy4gbW91bnQgLXQgY2dyb3VwIG5vbmUgL3N5
-cy9mcy9jZ3JvdXAvbWVtb3J5IC1vIG1lbW9yeQ0KPiA+IDQuIG1rZGlyIC9zeXMvZnMvY2dyb3Vw
-L21lbW9yeS8wDQo+ID4gNS4gZWNobyA0ME0gPiAvc3lzL2ZzL2Nncm91cC9tZW1vcnkvMC9tZW1v
-cnkubGltaXRfaW5fYnl0ZXMNCj4gPiA2LiBlY2hvICQkID4gL3N5cy9mcy9jZ3JvdXAvbWVtb3J5
-LzAvdGFza3MNCj4gPiA3LiBzdHJlc3MgLW0gNSAtLXZtLWJ5dGVzIDEwTSAtLXZtLWhhbmcgMA0K
-PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IEp1bGl1cyBIZW1hbnRoIFBpdHRpIDxqcGl0dGlAY2lz
-Y28uY29tPg0KPiA+IC0tLQ0KPiA+ICBtbS9tZW1jb250cm9sLmMgfCAyICsrDQo+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvbW0vbWVt
-Y29udHJvbC5jIGIvbW0vbWVtY29udHJvbC5jDQo+ID4gaW5kZXggMGQ2ZjNlYTg2NzM4Li40NjIw
-ZDcwMjY3Y2IgMTAwNjQ0DQo+ID4gLS0tIGEvbW0vbWVtY29udHJvbC5jDQo+ID4gKysrIGIvbW0v
-bWVtY29udHJvbC5jDQo+ID4gQEAgLTI2NTIsNiArMjY1Miw4IEBAIHN0YXRpYyBpbnQgdHJ5X2No
-YXJnZShzdHJ1Y3QgbWVtX2Nncm91cA0KPiA+ICptZW1jZywgZ2ZwX3QgZ2ZwX21hc2ssDQo+ID4g
-IAlpZiAoZmF0YWxfc2lnbmFsX3BlbmRpbmcoY3VycmVudCkpDQo+ID4gIAkJZ290byBmb3JjZTsN
-Cj4gPiAgDQo+ID4gKwljb25kX3Jlc2NoZWQoKTsNCj4gPiArDQo+IA0KPiBDYW4geW91LCBwbGVh
-c2UsIGFkZCBhIHNob3J0IGNvbW1lbnQgaGVyZT8NCj4gU29tZXRoaW5nIGxpa2UgImdpdmUgb29t
-X3JlYXBlciBhIGNoYW5jZSBvbiBhIG5vbi1TTVAgc3lzdGVtIj8NClN1cmUuDQoNCj4gDQo+ID4g
-IAkvKg0KPiA+ICAJICoga2VlcCByZXRyeWluZyBhcyBsb25nIGFzIHRoZSBtZW1jZyBvb20ga2ls
-bGVyIGlzIGFibGUgdG8NCj4gPiBtYWtlDQo+ID4gIAkgKiBhIGZvcndhcmQgcHJvZ3Jlc3Mgb3Ig
-YnlwYXNzIHRoZSBjaGFyZ2UgaWYgdGhlIG9vbSBraWxsZXINCj4gPiAtLSANCj4gPiAyLjE3LjEN
-Cj4gPiANCj4gDQo+IFRoZSBwYXRjaCBtYWtlcyB0b3RhbCBzZW5zZSB0byBtZS4gUGxlYXNlLCBm
-ZWVsIGZyZWUgdG8gYWRkDQo+IEFja2VkLWJ5OiBSb21hbiBHdXNoY2hpbiA8Z3Vyb0BmYi5jb20+
-IGFmdGVyIGFkZGluZyBhIGNvbW1lbnQuDQpUaGFua3MsIEkgc2hhbGwgYWRkLg0KDQo+IA0KPiBU
-aGFuayB5b3UhDQo=
+On Thu, Sep 3, 2020 at 11:04 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Adam,
+>
+> Thank you for the patch.
+>
+> On Wed, Sep 02, 2020 at 04:06:17PM -0400, Adam Goode wrote:
+> > The Color Matching Descriptor has been present in USB cameras since
+> > the original version of UVC, but it has never been fully exposed
+> > in Linux.
+> >
+> > This change informs V4L2 of all of the UVC colorspace parameters:
+> > color primaries, transfer characteristics, and YCbCr encoding.
+> > videodev2.h doesn't have values for all the possible UVC color settings,
+> > so it is mapped as closely as possible.
+> >
+> > Signed-off-by: Adam Goode <agoode@google.com>
+> > ---
+> >
+> > Changes in v3:
+> >  - Remove quantization changes completely.
+> >
+> >  drivers/media/usb/uvc/uvc_driver.c | 64 ++++++++++++++++++++++++++++--
+> >  drivers/media/usb/uvc/uvc_v4l2.c   |  4 ++
+> >  drivers/media/usb/uvc/uvcvideo.h   |  4 +-
+> >  3 files changed, 67 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> > index 431d86e1c94b..8682c7ad6949 100644
+> > --- a/drivers/media/usb/uvc/uvc_driver.c
+> > +++ b/drivers/media/usb/uvc/uvc_driver.c
+> > @@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
+> >       return NULL;
+> >  }
+> >
+> > -static u32 uvc_colorspace(const u8 primaries)
+> > +static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
+> >  {
+> > -     static const u8 colorprimaries[] = {
+> > -             0,
+> > +     static const enum v4l2_colorspace colorprimaries[] = {
+> > +             V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
+> >               V4L2_COLORSPACE_SRGB,
+> >               V4L2_COLORSPACE_470_SYSTEM_M,
+> >               V4L2_COLORSPACE_470_SYSTEM_BG,
+> > @@ -262,7 +262,61 @@ static u32 uvc_colorspace(const u8 primaries)
+> >       if (primaries < ARRAY_SIZE(colorprimaries))
+> >               return colorprimaries[primaries];
+> >
+> > -     return 0;
+> > +     return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
+> > +}
+> > +
+> > +static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
+> > +{
+> > +     /* V4L2 currently does not currently have definitions for all
+>
+> A single "currently" should be enough :-) I'll fix this when applying.
+
+Thank you! I was fixating too much on the present :)
+
+
+>
+> > +      * possible values of UVC transfer characteristics. If
+> > +      * v4l2_xfer_func is extended with new values, the mapping
+> > +      * below should be updated.
+> > +      *
+> > +      * Substitutions are taken from the mapping given for
+> > +      * V4L2_XFER_FUNC_DEFAULT documented in videodev2.h.
+> > +      */
+> > +     static const enum v4l2_xfer_func xfer_funcs[] = {
+> > +             V4L2_XFER_FUNC_DEFAULT,    /* Unspecified */
+> > +             V4L2_XFER_FUNC_709,
+> > +             V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 M */
+> > +             V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 B, G */
+> > +             V4L2_XFER_FUNC_709,        /* Substitution for SMPTE 170M */
+> > +             V4L2_XFER_FUNC_SMPTE240M,
+> > +             V4L2_XFER_FUNC_NONE,
+> > +             V4L2_XFER_FUNC_SRGB,
+> > +     };
+> > +
+> > +     if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
+> > +             return xfer_funcs[transfer_characteristics];
+> > +
+> > +     return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
+> > +}
+> > +
+> > +static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
+> > +{
+> > +     /* V4L2 currently does not currently have definitions for all
+>
+> Same here.
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +      * possible values of UVC matrix coefficients. If
+> > +      * v4l2_ycbcr_encoding is extended with new values, the
+> > +      * mapping below should be updated.
+> > +      *
+> > +      * Substitutions are taken from the mapping given for
+> > +      * V4L2_YCBCR_ENC_DEFAULT documented in videodev2.h.
+> > +      *
+> > +      * FCC is assumed to be close enough to 601.
+> > +      */
+> > +     static const enum v4l2_ycbcr_encoding ycbcr_encs[] = {
+> > +             V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
+> > +             V4L2_YCBCR_ENC_709,
+> > +             V4L2_YCBCR_ENC_601,      /* Substitution for FCC */
+> > +             V4L2_YCBCR_ENC_601,      /* Substitution for BT.470-2 B, G */
+> > +             V4L2_YCBCR_ENC_601,
+> > +             V4L2_YCBCR_ENC_SMPTE240M,
+> > +     };
+> > +
+> > +     if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
+> > +             return ycbcr_encs[matrix_coefficients];
+> > +
+> > +     return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
+> >  }
+> >
+> >  /* Simplify a fraction using a simple continued fraction decomposition. The
+> > @@ -704,6 +758,8 @@ static int uvc_parse_format(struct uvc_device *dev,
+> >               }
+> >
+> >               format->colorspace = uvc_colorspace(buffer[3]);
+> > +             format->xfer_func = uvc_xfer_func(buffer[4]);
+> > +             format->ycbcr_enc = uvc_ycbcr_enc(buffer[5]);
+> >
+> >               buflen -= buffer[0];
+> >               buffer += buffer[0];
+> > diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> > index 0335e69b70ab..dee65e89d6c2 100644
+> > --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> > +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> > @@ -253,6 +253,8 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
+> >       fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+> >       fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
+> >       fmt->fmt.pix.colorspace = format->colorspace;
+> > +     fmt->fmt.pix.xfer_func = format->xfer_func;
+> > +     fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
+> >
+> >       if (uvc_format != NULL)
+> >               *uvc_format = format;
+> > @@ -289,6 +291,8 @@ static int uvc_v4l2_get_format(struct uvc_streaming *stream,
+> >       fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+> >       fmt->fmt.pix.sizeimage = stream->ctrl.dwMaxVideoFrameSize;
+> >       fmt->fmt.pix.colorspace = format->colorspace;
+> > +     fmt->fmt.pix.xfer_func = format->xfer_func;
+> > +     fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
+> >
+> >  done:
+> >       mutex_unlock(&stream->mutex);
+> > diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> > index 6ab972c643e3..eb5f3ffc0222 100644
+> > --- a/drivers/media/usb/uvc/uvcvideo.h
+> > +++ b/drivers/media/usb/uvc/uvcvideo.h
+> > @@ -370,7 +370,9 @@ struct uvc_format {
+> >       u8 type;
+> >       u8 index;
+> >       u8 bpp;
+> > -     u8 colorspace;
+> > +     enum v4l2_colorspace colorspace;
+> > +     enum v4l2_xfer_func xfer_func;
+> > +     enum v4l2_ycbcr_encoding ycbcr_enc;
+> >       u32 fcc;
+> >       u32 flags;
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
