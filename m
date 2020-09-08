@@ -2,145 +2,171 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBE8C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5392AC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409CF2074B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9zDN/x1"
+	by mail.kernel.org (Postfix) with ESMTP id 20929206E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599587852;
+	bh=8wi9nywhbSkGTfU+a+4Vcq/jZKF7T4biVH1GEefgsu8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SnFTd3V4k/FF2JxZsNpdFU/94ZeSKW0mw4Es5PhojYzF+P6yHPZ0IsvZ7wEWMpPjF
+	 gx7cqYSIce9VnVLvMONGcU/JFMV3w9nBA3vkXskYUJv+oy0ZqUrLp/u+aqp6gkHghy
+	 Q87ZCZqQN3RLJJDhkI5MSGB99ZhL6LFiZm3ItmyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbgIHR5N (ORCPT
+        id S1732151AbgIHR5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:57:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731573AbgIHQMs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:12:48 -0400
-Received: from mail-oo1-xc43.google.com (mail-oo1-xc43.google.com [IPv6:2607:f8b0:4864:20::c43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44A5C061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 09:12:12 -0700 (PDT)
-Received: by mail-oo1-xc43.google.com with SMTP id h9so4047128ooo.10
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 09:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=f/2x/fmPr0smlalUj9WhY0K+GufBhz4BVPOjlENKkeE=;
-        b=r9zDN/x1VgO7tRlqs8hVGaKVeOFIy0nhvuPHrKzZQZKJJT8b89ViSfMbkDKHjRYYIw
-         hPIw6wEFqmkrxIoNKvcdfUUMdAgkQWVvBWxwzxEgAv656m7oEwL9DSHzlLSbaPjf3Ohx
-         JEMLp0MUckl2NhlA8Fw6JVaHWFrEZxkgJO9Oue+W9dKe27M0hPicZUQhRDFSuV4gxrSw
-         /CwzAjAaArQO+QCxjS+xmKOnWWPrihVvbeYVTgSh0m78/U1jxZgAQY7g9Enf69NfiCZo
-         cMSlamAQ5/SsD6jWZBkvxhNanp/H8WSuXwz11c8B1owRdV+SpGQlwbAuCNNqcefUnujX
-         gxhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=f/2x/fmPr0smlalUj9WhY0K+GufBhz4BVPOjlENKkeE=;
-        b=qhbKRnL4Vg8HWjSDBdgv3rcRvSlZD5eju2JbYrYQ127MUHNRyHjHw4beS40yIEl/US
-         mfj4ugoPX9dfMbVPeMU1BNSEBCYwqK7Zu4C58j1f+ydewPuCXAdPsWYs1uSYO09il9zx
-         2p2rDzGDeefiTh4cwB3+d1T7znDJfPuLv/5BKumxwe7MmvKqRTfbsSDk0n+iY+CQgDPX
-         LaBZq0ihQAKPCgwPtnnIDVsLn5rna7VjpPBxzNnLGznu4uhAoVO3qwfI0y+9UAQ0/4X/
-         mKuJaWH7HvJJ20cPtPhhakXf9MIDoxHjU63Gogf+4uqD8Fjy39Advaly5K6Wvdd0JtxC
-         malA==
-X-Gm-Message-State: AOAM532xOGI6O02wlvfSXgfF8bKCz73VAR1mhD5nJAyF5M2JWk+sjnTR
-        9cY1yFM39b4UgUzoGyAmbZI=
-X-Google-Smtp-Source: ABdhPJxzSmYe1beFIi9sv6U85nczxcVbjcNA6tiUtQUUxSp0dqUSuLx7NHwwOP04JlHABwgjp7oJfw==
-X-Received: by 2002:a4a:b601:: with SMTP id z1mr6288105oon.83.1599581532142;
-        Tue, 08 Sep 2020 09:12:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m1sm3298044oih.3.2020.09.08.09.12.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Sep 2020 09:12:11 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 09:12:10 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
-        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
-        davem@davemloft.net
-Subject: Re: [PATCH] sparc64: Fix irqtrace warnings on Ultra-S
-Message-ID: <20200908161210.GA167915@roeck-us.net>
+        Tue, 8 Sep 2020 13:57:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731567AbgIHQMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:12:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2570124894;
+        Tue,  8 Sep 2020 15:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580340;
+        bh=8wi9nywhbSkGTfU+a+4Vcq/jZKF7T4biVH1GEefgsu8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gJ9zdUND9vP6X31P0njy32+5TK60RQVJoyKh7vM97McSWKn2ZdFDtOuR0G9vsWfLJ
+         dVJ7gc1yQ0GEyepjbQdmWm1pQwqkJnwwCmYZVJsKC/xtPVA9Wgfz4eg0F+IrdMLXSc
+         zC7uLcWOzYQuniZR6gsXeeCbViSlPUFyLttIPUGI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 36/65] thermal: ti-soc-thermal: Fix bogus thermal shutdowns for omap4430
+Date:   Tue,  8 Sep 2020 17:26:21 +0200
+Message-Id: <20200908152218.895634697@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 05:41:57PM +0200, peterz@infradead.org wrote:
-> On Tue, Sep 08, 2020 at 07:40:23AM -0700, Guenter Roeck wrote:
-> > qemu-system-sparc64 -M sun4u -cpu "TI UltraSparc IIi" -m 512 \
-> >     -initrd rootfs.cpio \
-> >     -kernel arch/sparc/boot/image -no-reboot \
-> >     -append "panic=-1 slub_debug=FZPUA rdinit=/sbin/init console=ttyS0" \
-> >     -nographic -monitor none
-> 
-> Thanks I got it. Also enabling DEBUG_LOCKDEP helps (-:
-> 
-> ---
-> Subject: sparc64: Fix irqtrace warnings on Ultra-S
-> 
-> Recent changes in Lockdep's IRQTRACE broke Ultra-S.
-> 
-> In order avoid redundant IRQ state changes, local_irq_restore() lost the
-> ability to trace a disable. Change the code to use local_irq_save() to
-> disable IRQs and then use arch_local_irq_restore() to further disable
-> NMIs.
-> 
-> This result in slightly suboptimal code, but given this code uses a
-> global spinlock, performance cannot be its primary purpose.
-> 
-> Fixes: 044d0d6de9f5 ("lockdep: Only trace IRQ edges")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+From: Tony Lindgren <tony@atomide.com>
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+[ Upstream commit 30d24faba0532d6972df79a1bf060601994b5873 ]
 
-> ---
-> A possible alternative would be:
-> 
-> 	local_save_flags(flags);
-> 	arch_local_irq_restore((unsigned long)PIL_NMI);
-> 	if (IS_ENABLED(CONFIG_TRACE_IRQFLAGS))
-> 		trace_hardirqs_off();
-> 
-> which generates optimal code, but is more verbose.
-> 
->  arch/sparc/prom/p1275.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/sparc/prom/p1275.c b/arch/sparc/prom/p1275.c
-> index 889aa602f8d8..e22233fcf741 100644
-> --- a/arch/sparc/prom/p1275.c
-> +++ b/arch/sparc/prom/p1275.c
-> @@ -37,16 +37,15 @@ void p1275_cmd_direct(unsigned long *args)
->  {
->  	unsigned long flags;
->  
-> -	local_save_flags(flags);
-> -	local_irq_restore((unsigned long)PIL_NMI);
-> +	local_irq_save(flags);
-> +	arch_local_irq_restore((unsigned long)PIL_NMI);
->  	raw_spin_lock(&prom_entry_lock);
->  
->  	prom_world(1);
->  	prom_cif_direct(args);
->  	prom_world(0);
->  
-> -	raw_spin_unlock(&prom_entry_lock);
-> -	local_irq_restore(flags);
-> +	raw_spin_unlock_irqrestore(&prom_entry_lock, flags);
->  }
->  
->  void prom_cif_init(void *cif_handler, void *cif_stack)
+We can sometimes get bogus thermal shutdowns on omap4430 at least with
+droid4 running idle with a battery charger connected:
+
+thermal thermal_zone0: critical temperature reached (143 C), shutting down
+
+Dumping out the register values shows we can occasionally get a 0x7f value
+that is outside the TRM listed values in the ADC conversion table. And then
+we get a normal value when reading again after that. Reading the register
+multiple times does not seem help avoiding the bogus values as they stay
+until the next sample is ready.
+
+Looking at the TRM chapter "18.4.10.2.3 ADC Codes Versus Temperature", we
+should have values from 13 to 107 listed with a total of 95 values. But
+looking at the omap4430_adc_to_temp array, the values are off, and the
+end values are missing. And it seems that the 4430 ADC table is similar
+to omap3630 rather than omap4460.
+
+Let's fix the issue by using values based on the omap3630 table and just
+ignoring invalid values. Compared to the 4430 TRM, the omap3630 table has
+the missing values added while the TRM table only shows every second
+value.
+
+Note that sometimes the ADC register values within the valid table can
+also be way off for about 1 out of 10 values. But it seems that those
+just show about 25 C too low values rather than too high values. So those
+do not cause a bogus thermal shutdown.
+
+Fixes: 1a31270e54d7 ("staging: omap-thermal: add OMAP4 data structures")
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200706183338.25622-1-tony@atomide.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../ti-soc-thermal/omap4-thermal-data.c       | 23 ++++++++++---------
+ .../thermal/ti-soc-thermal/omap4xxx-bandgap.h | 10 +++++---
+ 2 files changed, 19 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+index fd11133606038..0c3141746edfe 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
++++ b/drivers/thermal/ti-soc-thermal/omap4-thermal-data.c
+@@ -49,20 +49,21 @@ static struct temp_sensor_data omap4430_mpu_temp_sensor_data = {
+ 
+ /*
+  * Temperature values in milli degree celsius
+- * ADC code values from 530 to 923
++ * ADC code values from 13 to 107, see TRM
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
+  */
+ static const int
+ omap4430_adc_to_temp[OMAP4430_ADC_END_VALUE - OMAP4430_ADC_START_VALUE + 1] = {
+-	-38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000, -22000,
+-	-20000, -18000, -17000, -15000, -13000, -12000, -10000, -8000, -6000,
+-	-5000, -3000, -1000, 0, 2000, 3000, 5000, 6000, 8000, 10000, 12000,
+-	13000, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28000, 30000,
+-	32000, 33000, 35000, 37000, 38000, 40000, 42000, 43000, 45000, 47000,
+-	48000, 50000, 52000, 53000, 55000, 57000, 58000, 60000, 62000, 64000,
+-	66000, 68000, 70000, 71000, 73000, 75000, 77000, 78000, 80000, 82000,
+-	83000, 85000, 87000, 88000, 90000, 92000, 93000, 95000, 97000, 98000,
+-	100000, 102000, 103000, 105000, 107000, 109000, 111000, 113000, 115000,
+-	117000, 118000, 120000, 122000, 123000,
++	-40000, -38000, -35000, -34000, -32000, -30000, -28000, -26000, -24000,
++	-22000,	-20000, -18500, -17000, -15000, -13500, -12000, -10000, -8000,
++	-6500, -5000, -3500, -1500, 0, 2000, 3500, 5000, 6500, 8500, 10000,
++	12000, 13500, 15000, 17000, 19000, 21000, 23000, 25000, 27000, 28500,
++	30000, 32000, 33500, 35000, 37000, 38500, 40000, 42000, 43500, 45000,
++	47000, 48500, 50000, 52000, 53500, 55000, 57000, 58500, 60000, 62000,
++	64000, 66000, 68000, 70000, 71500, 73500, 75000, 77000, 78500, 80000,
++	82000, 83500, 85000, 87000, 88500, 90000, 92000, 93500, 95000, 97000,
++	98500, 100000, 102000, 103500, 105000, 107000, 109000, 111000, 113000,
++	115000, 117000, 118500, 120000, 122000, 123500, 125000,
+ };
+ 
+ /* OMAP4430 data */
+diff --git a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+index 6f2de3a3356d4..86850082b24b9 100644
+--- a/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
++++ b/drivers/thermal/ti-soc-thermal/omap4xxx-bandgap.h
+@@ -67,9 +67,13 @@
+  * and thresholds for OMAP4430.
+  */
+ 
+-/* ADC conversion table limits */
+-#define OMAP4430_ADC_START_VALUE			0
+-#define OMAP4430_ADC_END_VALUE				127
++/*
++ * ADC conversion table limits. Ignore values outside the TRM listed
++ * range to avoid bogus thermal shutdowns. See omap4430 TRM chapter
++ * "18.4.10.2.3 ADC Codes Versus Temperature".
++ */
++#define OMAP4430_ADC_START_VALUE			13
++#define OMAP4430_ADC_END_VALUE				107
+ /* bandgap clock limits (no control on 4430) */
+ #define OMAP4430_MAX_FREQ				32768
+ #define OMAP4430_MIN_FREQ				32768
+-- 
+2.25.1
+
+
+
