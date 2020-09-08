@@ -2,161 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1674C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F6BC2BBD0
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2582065E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X1NxVGll"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE412065E
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599547713;
+	bh=NO/usNhy16yhSKDVyBRRSAZoxSAHHglvXKFbsXtLhrk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GWzRaUyt0I1WflVMFFRrDguoCOOeMZ9C6SFTFskrBWhinCMCiU8xIoQ2Jhd+Wk/ZA
+	 wTC70EwlTBw94WUPPDZve5PeMSrFL4pKHnL3h8lapDsm4UiXs1UfUv2faJpGyhS3ER
+	 Y6igfh334YW2QtpmXriORdA0oRTjqua3ItGrhTD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729124AbgIHGsE (ORCPT
+        id S1729189AbgIHGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:48:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35233 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728998AbgIHGsC (ORCPT
+        Tue, 8 Sep 2020 02:48:32 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:44654 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgIHGsR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:48:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1599547677;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Ckw515ta8REsEdxquaA8IU0vybCs7EFBcYj3MOI/Ego=;
-        b=X1NxVGllFYDfOVGn6tLuon1i0uaGRN1BwKaWIP0xnNdCs1fqdZhIK6mrWGw7ay8vVs3lpE
-        ZXy6ZnF3//QoQbFNUMXFHIsBAJi9WSqLoBhbPDxBt+78m3rxIuKAYXu0l5buxnQ2h6xh/M
-        r2N9TmISvsbZGZgLfqxHlLkqeJuwJGU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-d1ZJMMipORavez-AKH4mzQ-1; Tue, 08 Sep 2020 02:47:53 -0400
-X-MC-Unique: d1ZJMMipORavez-AKH4mzQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7355418BE160;
-        Tue,  8 Sep 2020 06:47:52 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-112-56.ams2.redhat.com [10.36.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A36B727BD8;
-        Tue,  8 Sep 2020 06:47:48 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B0F2C9D78; Tue,  8 Sep 2020 08:47:47 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: drop quirks handling
-Date:   Tue,  8 Sep 2020 08:47:41 +0200
-Message-Id: <20200908064741.1010-1-kraxel@redhat.com>
+        Tue, 8 Sep 2020 02:48:17 -0400
+Received: by mail-ej1-f65.google.com with SMTP id r7so7546601ejs.11;
+        Mon, 07 Sep 2020 23:48:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VyiVf+Mq59UC5ZzKMYrAjFhEEKe4orUQbv2Dw6ICisQ=;
+        b=Qt2OvcNIVdt78UW4jLDz6nktC9mUQL/abkGCyd41iCFp1dO1iDhVQgQ9KQRsFJIqP/
+         +cAXGjR8GXm/R8n8bNtHgtid78nlHpKhGzuVnXWukF1nyeyh+YVqzUegEZsPibxnna8y
+         xW4SDv7DnqzXfBVK1RDpg19qGRllqHBskRWEmUsYZNbsFmSLjRqDtNw2IyDhbFw/6vGT
+         roUdrWvMHfSgUc4Jv9/LEie8dJt8SPHrDQJ8bo6ZszAysLFS0cL/2qPDDv7BQRHCKSRc
+         p8U0APQR6BqN0cqC1jphrNDbPejCgFwzVXKk29H97WHEJSEQ0jm9xFwT9ANcaKCMnBtT
+         OCpg==
+X-Gm-Message-State: AOAM531vjY+lOC8/Xan29LgR+bvW9Qr6t7j52kfPWy/zg9i5PKIygj1X
+        Qg8hInokSXw5h9zxQWLtLDA=
+X-Google-Smtp-Source: ABdhPJy61y/aCX2qNyKljrz5UJOWH8ADbK1AwDDzicWB2lQYIWTkbWIYURrKncOKjTAbVcUMp5Tlaw==
+X-Received: by 2002:a17:906:455:: with SMTP id e21mr25591439eja.170.1599547694870;
+        Mon, 07 Sep 2020 23:48:14 -0700 (PDT)
+Received: from pi3 ([194.230.155.174])
+        by smtp.googlemail.com with ESMTPSA id j8sm16697525edp.58.2020.09.07.23.48.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Sep 2020 23:48:13 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 08:48:11 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Bakker <xc-racer2@live.ca>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH 03/25] dt-bindings: iio: adc: exynos-adc: do not require
+ syscon on S5Pv210
+Message-ID: <20200908064811.GA24227@pi3>
+References: <20200907161141.31034-1-krzk@kernel.org>
+ <20200907161141.31034-4-krzk@kernel.org>
+ <BN6PR04MB06601B8D0B7F1E51953024E6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BN6PR04MB06601B8D0B7F1E51953024E6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These days dma ops can be overridden per device, and the virtio core
-uses that to handle the dma quirks transparently for the rest of the
-kernel.  So we can drop the virtio_has_dma_quirk() checks, just use
-the dma api unconditionally and depend on the virtio core having setup
-dma_ops as needed.
+On Mon, Sep 07, 2020 at 02:49:49PM -0700, Jonathan Bakker wrote:
+> Looking at this again, it appears that there is actually control for
+> it at offset 0x6818 of pmu_syscon (0xe0108000) [1].  However, it defaults to
+> enabled so it's not required for proper use of the block.  Whether it should
+> be present in the schema/DTS is up to you.
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_object.c | 19 ++++++-------------
- drivers/gpu/drm/virtio/virtgpu_vq.c     | 16 ++++++----------
- 2 files changed, 12 insertions(+), 23 deletions(-)
+Indeed the driver could turn off the ADC phy via syscon however bindings
+(before YAML conversion) explicitly were saying that it is not needed. I
+am not going to add it as I am not able to test the change and also
+adding such requirement would be a break of ABI (described by first TXT
+bindings).
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-index 729f98ad7c02..9c35ce64ff9e 100644
---- a/drivers/gpu/drm/virtio/virtgpu_object.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-@@ -141,7 +141,6 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 					struct virtio_gpu_mem_entry **ents,
- 					unsigned int *nents)
- {
--	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
- 	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
- 	struct scatterlist *sg;
- 	int si, ret;
-@@ -162,15 +161,11 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 		return -EINVAL;
- 	}
- 
--	if (use_dma_api) {
--		shmem->mapped = dma_map_sg(vgdev->vdev->dev.parent,
--					   shmem->pages->sgl,
--					   shmem->pages->nents,
--					   DMA_TO_DEVICE);
--		*nents = shmem->mapped;
--	} else {
--		*nents = shmem->pages->nents;
--	}
-+	shmem->mapped = dma_map_sg(vgdev->vdev->dev.parent,
-+				   shmem->pages->sgl,
-+				   shmem->pages->nents,
-+				   DMA_TO_DEVICE);
-+	*nents = shmem->mapped;
- 
- 	*ents = kmalloc_array(*nents, sizeof(struct virtio_gpu_mem_entry),
- 			      GFP_KERNEL);
-@@ -180,9 +175,7 @@ static int virtio_gpu_object_shmem_init(struct virtio_gpu_device *vgdev,
- 	}
- 
- 	for_each_sg(shmem->pages->sgl, sg, *nents, si) {
--		(*ents)[si].addr = cpu_to_le64(use_dma_api
--					       ? sg_dma_address(sg)
--					       : sg_phys(sg));
-+		(*ents)[si].addr = cpu_to_le64(sg_dma_address(sg));
- 		(*ents)[si].length = cpu_to_le32(sg->length);
- 		(*ents)[si].padding = 0;
- 	}
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index c93c2db35aaf..1c1d2834547d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -599,13 +599,11 @@ void virtio_gpu_cmd_transfer_to_host_2d(struct virtio_gpu_device *vgdev,
- 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
- 	struct virtio_gpu_transfer_to_host_2d *cmd_p;
- 	struct virtio_gpu_vbuffer *vbuf;
--	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
- 	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
- 
--	if (use_dma_api)
--		dma_sync_sg_for_device(vgdev->vdev->dev.parent,
--				       shmem->pages->sgl, shmem->pages->nents,
--				       DMA_TO_DEVICE);
-+	dma_sync_sg_for_device(vgdev->vdev->dev.parent,
-+			       shmem->pages->sgl, shmem->pages->nents,
-+			       DMA_TO_DEVICE);
- 
- 	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
- 	memset(cmd_p, 0, sizeof(*cmd_p));
-@@ -1015,13 +1013,11 @@ void virtio_gpu_cmd_transfer_to_host_3d(struct virtio_gpu_device *vgdev,
- 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(objs->objs[0]);
- 	struct virtio_gpu_transfer_host_3d *cmd_p;
- 	struct virtio_gpu_vbuffer *vbuf;
--	bool use_dma_api = !virtio_has_dma_quirk(vgdev->vdev);
- 	struct virtio_gpu_object_shmem *shmem = to_virtio_gpu_shmem(bo);
- 
--	if (use_dma_api)
--		dma_sync_sg_for_device(vgdev->vdev->dev.parent,
--				       shmem->pages->sgl, shmem->pages->nents,
--				       DMA_TO_DEVICE);
-+	dma_sync_sg_for_device(vgdev->vdev->dev.parent,
-+			       shmem->pages->sgl, shmem->pages->nents,
-+			       DMA_TO_DEVICE);
- 
- 	cmd_p = virtio_gpu_alloc_cmd(vgdev, &vbuf, sizeof(*cmd_p));
- 	memset(cmd_p, 0, sizeof(*cmd_p));
--- 
-2.27.0
+Best regards,
+Krzysztof
 
+
+> 
+> Thanks,
+> Jonathan
+> 
+> [1] https://android.googlesource.com/kernel/samsung/+/refs/heads/android-samsung-3.0-jb-mr0/arch/arm/mach-s5pv210/include/mach/regs-clock.h#325
+> 
+> On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
+> > The ADC in S5Pv210 does not have ADC phy registers in separate block for
+> > which syscon would be needed.  Remove this requirement to fix dtbs_check
+> > warnings like:
+> > 
+> >   arch/arm/boot/dts/s5pv210-fascinate4g.dt.yaml: adc@e1700000: 'samsung,syscon-phandle' is a required property
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml          | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > index 89b4f9c252a6..75174af72288 100644
+> > --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
+> > @@ -81,7 +81,6 @@ allOf:
+> >                - samsung,exynos-adc-v2
+> >                - samsung,exynos3250-adc
+> >                - samsung,exynos4212-adc
+> > -              - samsung,s5pv210-adc
+> >      then:
+> >        required:
+> >          - samsung,syscon-phandle
+> > 
