@@ -2,148 +2,179 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBA7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDFDC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7E362078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DtSotS3N"
+	by mail.kernel.org (Postfix) with ESMTP id E735C2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:40:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599586835;
+	bh=2/EZfOMfZSXsfmCfmlwhpwTJKIm0HRK1uYuSw88X5b4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ro1ERQEpAh2/5UcQQCL4HYJIMgR/ibzunvkvnH45NslP8p67GAAbIp6izNOPoET2r
+	 iXJYCjcy79z2ujmGKik70bNtdOphapilB2NuRaLNN/mN4oDx81VxpJ4OVMCybrQEz0
+	 9dyAFBsqVo/QvYc0emZiDIkuemk0DVYDSYKlQYVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731805AbgIHRkH (ORCPT
+        id S1732055AbgIHRkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:40:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46338 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731684AbgIHQOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:14:12 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 088E2lYR090675;
-        Tue, 8 Sep 2020 10:03:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=qvtY3efdmKTycDkCx+zMSmoSNBQYkw3/GROUiRKGaAk=;
- b=DtSotS3N2vNLQGr0szPGdp1w7Lox58FSAPolXeZjEjmYTcqAovLvnA8S30qKm7keSVK1
- 46B1ujBG+IMiBxRqHK7zpVHVQuV4I145HZuuE7qMYWk0VAIH9RCbEn0JrFthAgm6GoAn
- vkS8wf/uo+FiZEHRWnxl55OMvtYy3Pve/NOybUPYG4IvJS+0vkxkvRGzD0k4iUY8ZWhp
- aKHIJTVkgQEeHtiFrpUZgEVJ/GsQGYIU+uxiPeiBxSoZXx8P2XFJBdNGMdgB8xrAmDel
- o51sUJPzhVfrZF8TbsiuAQ5o1yQr8xC3RY3+bqSbcraTV5x1YTGSfm8dzdZUzwHkF2Y5 sw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb9886pf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 10:03:35 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 088E32Y6092121;
-        Tue, 8 Sep 2020 10:03:35 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33eb9886n6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 10:03:35 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 088E1cVf007112;
-        Tue, 8 Sep 2020 14:03:32 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 33c2a8a53w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 08 Sep 2020 14:03:32 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 088E3UKl13369646
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 8 Sep 2020 14:03:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF0A9A405C;
-        Tue,  8 Sep 2020 14:03:29 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4DBCA405F;
-        Tue,  8 Sep 2020 14:03:25 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.24.202])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  8 Sep 2020 14:03:25 +0000 (GMT)
-Message-ID: <d405bab0d262b32fd16e85444791b6c49d820aa2.camel@linux.ibm.com>
-Subject: Re: [RFC PATCH 00/30] ima: Introduce IMA namespace
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Luke Hinds <lhinds@redhat.com>, "Dr. Greg" <greg@enjellic.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        krzysztof.struczynski@huawei.com, linux-integrity@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        containers@lists.linux-foundation.org,
-        linux-security-module@vger.kernel.org, stefanb@linux.vnet.ibm.com,
-        sunyuqiong1988@gmail.com, mkayaalp@cs.binghamton.edu,
-        dmitry.kasatkin@gmail.com, "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>, christian@brauner.io,
-        silviu.vlasceanu@huawei.com, roberto.sassu@huawei.com,
-        ebiederm@xmission.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, luto@amacapital.net,
-        jannh@google.com, nick.dusek@gmail.com
-Date:   Tue, 08 Sep 2020 10:03:24 -0400
-In-Reply-To: <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
-References: <20200818152037.11869-1-krzysztof.struczynski@huawei.com>
-         <20200818164943.va3um7toztazcfud@wittgenstein>
-         <d77a6cd783319702fddd06783cb84fdeb86210a6.camel@linux.ibm.com>
-         <20200906171413.GA8305@wind.enjellic.com>
-         <CAKrSGQR3Pw=Rad2RgUuCHqr0r2Nc6x2nLoo2cVAkD+_8Vbmd7A@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-08_07:2020-09-08,2020-09-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 clxscore=1011
- phishscore=0 spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009080129
+        Tue, 8 Sep 2020 13:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731678AbgIHQOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:14:08 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06BC424900;
+        Tue,  8 Sep 2020 15:53:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599580403;
+        bh=2/EZfOMfZSXsfmCfmlwhpwTJKIm0HRK1uYuSw88X5b4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=b6jsNqu1vspBZAkOxqCzT+kydojGb9MS3fEp19oGaI0b2Tc8IRV7s0AyUJ7qW69m+
+         Akves4ok1zx2cNa9lSFtTgZX32WHRdIoibKMv6QqxnLaYm2Sxba+tMlhwMAI2/7FTy
+         8sfbzXU/ekdrBugXlauamGb2S7cGc/MjyL0259Gg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Muchun Song <songmuchun@bytedance.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 63/65] mm/hugetlb: fix a race between hugetlb sysctl handlers
+Date:   Tue,  8 Sep 2020 17:26:48 +0200
+Message-Id: <20200908152220.353480920@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
+References: <20200908152217.022816723@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-09-07 at 12:50 +0100, Luke Hinds wrote:
-> > Candidly, given the politics of security technology being viewed as
-> > 'constraining' user rights, I think that a lot of forthcoming security
-> > technology may end up being out of tree moving forward.
-> > 
-> 
-> I think it's prudent to look forward and plan diligently, but I would
-> not want perfect to be the enemy of good.
+From: Muchun Song <songmuchun@bytedance.com>
 
-Agreed.  This isn't an abstract problem, but one that has already come
-up and, hopefully, has been addressed appropriately.
+commit 17743798d81238ab13050e8e2833699b54e15467 upstream.
 
-> 
-> I approach this more from a user's perspective. We are using IMA in 
-> https://keylime.dev to measure a host and would like to measure
-> within a container too. It's the most common request we hear from our
-> users.
-> 
-> Perhaps we all collaborate on a proposal extending Stefans work here:
-> https://kernsec.org/wiki/index.php/IMA_Namespacing_design_considerati
-> ons
-> 
-> I have seen around 3-4 patches now get submitted, so work has been
-> done before, and as above, users are present too. We could then have
-> some consensus on how this should look and later patches might have
-> more success at landing.
-> 
-> Would anyone be interested in this and have recommendations on how we
-> could approach this?
+There is a race between the assignment of `table->data` and write value
+to the pointer of `table->data` in the __do_proc_doulongvec_minmax() on
+the other thread.
 
-When Roberto Sassu and Krzysztof Struczynski contacted me about the
-status of Stefan Berger's patch set, based on Yuqiong Sun's work, I was
-under the impression that they would be rebasing it on the latest
-kernel and going forward from there.   Obviously things changed.  I
-pointed out to them resolving the "IMA namespacing" issue would be the
-first thing that needs to be addressed.  So here we are.
+  CPU0:                                 CPU1:
+                                        proc_sys_write
+  hugetlb_sysctl_handler                  proc_sys_call_handler
+  hugetlb_sysctl_handler_common             hugetlb_sysctl_handler
+    table->data = &tmp;                       hugetlb_sysctl_handler_common
+                                                table->data = &tmp;
+      proc_doulongvec_minmax
+        do_proc_doulongvec_minmax           sysctl_head_finish
+          __do_proc_doulongvec_minmax         unuse_table
+            i = table->data;
+            *i = val;  // corrupt CPU1's stack
 
-Definitely, let's have this discussion.
+Fix this by duplicating the `table`, and only update the duplicate of
+it.  And introduce a helper of proc_hugetlb_doulongvec_minmax() to
+simplify the code.
 
-Mimi
+The following oops was seen:
+
+    BUG: kernel NULL pointer dereference, address: 0000000000000000
+    #PF: supervisor instruction fetch in kernel mode
+    #PF: error_code(0x0010) - not-present page
+    Code: Bad RIP value.
+    ...
+    Call Trace:
+     ? set_max_huge_pages+0x3da/0x4f0
+     ? alloc_pool_huge_page+0x150/0x150
+     ? proc_doulongvec_minmax+0x46/0x60
+     ? hugetlb_sysctl_handler_common+0x1c7/0x200
+     ? nr_hugepages_store+0x20/0x20
+     ? copy_fd_bitmaps+0x170/0x170
+     ? hugetlb_sysctl_handler+0x1e/0x20
+     ? proc_sys_call_handler+0x2f1/0x300
+     ? unregister_sysctl_table+0xb0/0xb0
+     ? __fd_install+0x78/0x100
+     ? proc_sys_write+0x14/0x20
+     ? __vfs_write+0x4d/0x90
+     ? vfs_write+0xef/0x240
+     ? ksys_write+0xc0/0x160
+     ? __ia32_sys_read+0x50/0x50
+     ? __close_fd+0x129/0x150
+     ? __x64_sys_write+0x43/0x50
+     ? do_syscall_64+0x6c/0x200
+     ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: e5ff215941d5 ("hugetlb: multiple hstates for multiple page sizes")
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Link: http://lkml.kernel.org/r/20200828031146.43035-1-songmuchun@bytedance.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/hugetlb.c |   26 ++++++++++++++++++++------
+ 1 file changed, 20 insertions(+), 6 deletions(-)
+
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -2911,6 +2911,22 @@ static unsigned int cpuset_mems_nr(unsig
+ }
+ 
+ #ifdef CONFIG_SYSCTL
++static int proc_hugetlb_doulongvec_minmax(struct ctl_table *table, int write,
++					  void *buffer, size_t *length,
++					  loff_t *ppos, unsigned long *out)
++{
++	struct ctl_table dup_table;
++
++	/*
++	 * In order to avoid races with __do_proc_doulongvec_minmax(), we
++	 * can duplicate the @table and alter the duplicate of it.
++	 */
++	dup_table = *table;
++	dup_table.data = out;
++
++	return proc_doulongvec_minmax(&dup_table, write, buffer, length, ppos);
++}
++
+ static int hugetlb_sysctl_handler_common(bool obey_mempolicy,
+ 			 struct ctl_table *table, int write,
+ 			 void __user *buffer, size_t *length, loff_t *ppos)
+@@ -2922,9 +2938,8 @@ static int hugetlb_sysctl_handler_common
+ 	if (!hugepages_supported())
+ 		return -EOPNOTSUPP;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -2968,9 +2983,8 @@ int hugetlb_overcommit_handler(struct ct
+ 	if (write && hstate_is_gigantic(h))
+ 		return -EINVAL;
+ 
+-	table->data = &tmp;
+-	table->maxlen = sizeof(unsigned long);
+-	ret = proc_doulongvec_minmax(table, write, buffer, length, ppos);
++	ret = proc_hugetlb_doulongvec_minmax(table, write, buffer, length, ppos,
++					     &tmp);
+ 	if (ret)
+ 		goto out;
+ 
+
 
