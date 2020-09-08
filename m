@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 114A4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01887C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBEDC206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE65206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599587432;
-	bh=SlflZwfzLGm1NFeN72JoU45rJ298TLBZ6Fy5S6Z/YG0=;
+	s=default; t=1599587439;
+	bh=EfFMKUnQT7gcogjxEmAwuFcSjOPw42eHWHrJ99Oy9mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYdZj55+5PWHVGBemovFWEmzUn3ziZux6toekfJy0gVfcCV10IEPXoWsaiF1EH11N
-	 4T+fwPlrVAOMQc5UYzw6kk2fgnMPOcnJGrt609T8ZFBDtKWzKevswQHIRJiyx1lpCS
-	 adyy/GK+QgPRgVTstFPtT7kfcmNwMjmy43gQSo3Q=
+	b=p9krS3tdcUAGxakrtLsDDV5H635Jc+pI8t/louFdIfCAMSHdEGeF9nO2SQD0hd36g
+	 SpA+qETtq3HsMXoHjJVK7LzMVpZWCXMK99b1Gw9b3MDxcCCqd/2lgCs/2XwXGluqDq
+	 Y4L/lhAqYrXgJXHiUGho4gvyUW7hLZiiA/Uw+eMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbgIHRub (ORCPT
+        id S1732145AbgIHRuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56080 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:50:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731617AbgIHQN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731614AbgIHQN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:13:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A51F9248E0;
-        Tue,  8 Sep 2020 15:52:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DCD4248D3;
+        Tue,  8 Sep 2020 15:52:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580377;
-        bh=SlflZwfzLGm1NFeN72JoU45rJ298TLBZ6Fy5S6Z/YG0=;
+        s=default; t=1599580369;
+        bh=EfFMKUnQT7gcogjxEmAwuFcSjOPw42eHWHrJ99Oy9mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zS9//ggMQqfFUIADbIBa7kOgG1R7RonZtI4bRe7YQRc0nIUHjiZJ7pHjPzXX2CBDd
-         FhEpc3hEqgDUFHeHwxVgP+WOtXwZWGt44JwUyb3BtjpJEKnNPJKro++mDNLYztkx7W
-         eUI93eTNXVGkHpYgnqjgQ1F6EvNcLV9f63zcS6tE=
+        b=fueYge/6+O9B0mPRl1dPeEqbwXN7Q3Ew/tHv2/9+YPgOZ2FLHKnWzUjbV0nlXbqS1
+         aN01zGDr6Ujqs/7U+IqFwyIy4lfAVUgaiBHcJ3AtR5bzgCjb9HzHdOb3ArKmKoB5Zc
+         +jRwfnCMPphq47DOT48L4la2YbYUXF3eVSTtIvTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/65] net: systemport: Fix memleak in bcm_sysport_probe
-Date:   Tue,  8 Sep 2020 17:26:07 +0200
-Message-Id: <20200908152218.172158675@linuxfoundation.org>
+Subject: [PATCH 4.14 19/65] netfilter: nf_tables: incorrect enum nft_list_attributes definition
+Date:   Tue,  8 Sep 2020 17:26:04 +0200
+Message-Id: <20200908152218.024319876@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152217.022816723@linuxfoundation.org>
 References: <20200908152217.022816723@linuxfoundation.org>
@@ -60,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 7ef1fc57301f3cef7201497aa27e89ccb91737fe ]
+[ Upstream commit da9125df854ea48a6240c66e8a67be06e2c12c03 ]
 
-When devm_kcalloc() fails, dev should be freed just
-like what we've done in the subsequent error paths.
+This should be NFTA_LIST_UNSPEC instead of NFTA_LIST_UNPEC, all other
+similar attribute definitions are postfixed with _UNSPEC.
 
-Fixes: 7b78be48a8eb6 ("net: systemport: Dynamically allocate number of TX rings")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/uapi/linux/netfilter/nf_tables.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
-index 123ee5c11bc0c..11eb393497a2a 100644
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2087,8 +2087,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
- 	priv->tx_rings = devm_kcalloc(&pdev->dev, txq,
- 				      sizeof(struct bcm_sysport_tx_ring),
- 				      GFP_KERNEL);
--	if (!priv->tx_rings)
--		return -ENOMEM;
-+	if (!priv->tx_rings) {
-+		ret = -ENOMEM;
-+		goto err_free_netdev;
-+	}
- 
- 	priv->is_lite = params->is_lite;
- 	priv->num_rx_desc_words = params->num_rx_desc_words;
+diff --git a/include/uapi/linux/netfilter/nf_tables.h b/include/uapi/linux/netfilter/nf_tables.h
+index a3ee277b17a17..49b6997c32550 100644
+--- a/include/uapi/linux/netfilter/nf_tables.h
++++ b/include/uapi/linux/netfilter/nf_tables.h
+@@ -125,7 +125,7 @@ enum nf_tables_msg_types {
+  * @NFTA_LIST_ELEM: list element (NLA_NESTED)
+  */
+ enum nft_list_attributes {
+-	NFTA_LIST_UNPEC,
++	NFTA_LIST_UNSPEC,
+ 	NFTA_LIST_ELEM,
+ 	__NFTA_LIST_MAX
+ };
 -- 
 2.25.1
 
