@@ -2,150 +2,112 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD4AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA18DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5263F2080A
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asMCyCbl"
+	by mail.kernel.org (Postfix) with ESMTP id 8BEE42080A
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 18:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbgIHSvr (ORCPT
+        id S1731591AbgIHSvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 14:51:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730168AbgIHSvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 14:51:09 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C6ADC061573
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 11:51:08 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id e14so9574717vsa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:51:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zOlhJ759ELcXKOOqGfeV77lWnqUEXIcww3cWbaCaKkc=;
-        b=asMCyCblUJ33Hh1IyVh0VZu7tMxhHYb406jcoN65/Ckc5Cy3HmZxaGc0l3YM2bM6ZS
-         7vuWk/QUhenCg2yMvFRCoESv3ihcogVS4LwbQZeaUpckhZQmDueM/rWLsXoGdHU4bDTH
-         bQfqdBpWSrdeiCNhpGCiHj/vNPk/xDZ4QGTXiRLdR618sMBpoS7HEFfmgqZmGsMLDK48
-         S8Hb29RJnLYz1jUUekIIgDiQufX1Gqo3nz73aWI7EkBdhySBUP17SoGbxQdhX1PNhtyH
-         137QcCqMVVx92Ej8bRIugQs6Bv5StdTuPOajKPLbZNwHIfFyh9386HCNfNYLOCtUenIA
-         L2YA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zOlhJ759ELcXKOOqGfeV77lWnqUEXIcww3cWbaCaKkc=;
-        b=LfLqZ329HeeHuEikxAu1MgYIlGe21rN82Z7DSDI0FdNE5HJGfi2oGkxOXSupvkTw45
-         jedPE0lb9y/od4CFeK5wQzBJMsuPc9avW4SWakT6sbT6e+DadzhN3El2yb2cmNikxLC4
-         pcxZb0hSdJrFLGtrunHUG0tZPGvzANDwL4etaRBbswO6IN6JQGNobPTnH4/bcYRyHzIL
-         34CRlayvWAedPTcjahhBuba5DQEvisAZCF44gYRKHGLEPnXBSOs0fPL1XrLab0RD15Py
-         c/C0mQC54jrN6aqkM4/67S9ncNYEUJYzLsDc1rtjB1SFUMlF8sH0IQ1qunoHxm2WJiUf
-         H29A==
-X-Gm-Message-State: AOAM531xS5816QctRyjSuy3PZHqO85u83urM58iWlmxSjwA0urpVnyG9
-        Fi4lggvKXHgzIC9vDqrfEocWokYLoPfqeA==
-X-Google-Smtp-Source: ABdhPJw98GBSMOkYPltUs3srQGr5Eumbm4ddvK+9PfDnfNephM6uYqG+zAlHSbQLUG/Gj7fnEHvfaw==
-X-Received: by 2002:a67:7fd6:: with SMTP id a205mr402989vsd.8.1599591066880;
-        Tue, 08 Sep 2020 11:51:06 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id 67sm7767vkr.24.2020.09.08.11.51.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 11:51:05 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id g16so68703uan.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 11:51:05 -0700 (PDT)
-X-Received: by 2002:ab0:24cd:: with SMTP id k13mr348997uan.92.1599591064900;
- Tue, 08 Sep 2020 11:51:04 -0700 (PDT)
+        Tue, 8 Sep 2020 14:51:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:33472 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726479AbgIHSuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 14:50:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEDFB1045;
+        Tue,  8 Sep 2020 11:50:12 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A7E103F73C;
+        Tue,  8 Sep 2020 11:50:11 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, mingo@kernel.org,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH] sched/topology: Move sd_flag_debug out of #ifdef CONFIG_SYSCTL
+Date:   Tue,  8 Sep 2020 19:49:56 +0100
+Message-Id: <20200908184956.23369-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200901195415.4840-1-m-karicheri2@ti.com> <d93fbc54-1721-ebec-39ca-dc8b45e6e534@ti.com>
- <15bbf7d2-627b-1d52-f130-5bae7b7889de@ti.com> <CA+FuTSeri93irC9eaQqrFrY2++d0zJ4-F0YAfCXfX6XVVqU6Pw@mail.gmail.com>
- <bf8a22c2-0ebe-7a52-2e79-7dde72d444ba@ti.com> <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
-In-Reply-To: <CA+FuTSeE_O_XozfnzDED_S4of-NwtRCN+oWr=O3JPpByfCz3Vg@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 8 Sep 2020 20:50:26 +0200
-X-Gmail-Original-Message-ID: <CA+FuTSde4fAiy6t-Q4o1C8wdU4ZYqNt0Qd2F8PsrnXvA8q03=A@mail.gmail.com>
-Message-ID: <CA+FuTSde4fAiy6t-Q4o1C8wdU4ZYqNt0Qd2F8PsrnXvA8q03=A@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/1] Support for VLAN interface over HSR/PRP
-To:     Murali Karicheri <m-karicheri2@ti.com>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>, nsekhar@ti.com,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > >>>
-> > >>> Shouldn't it show vlan_do_receive() ?
-> > >>>
-> > >>>       if (skb_vlan_tag_present(skb)) {
-> > >>>           if (pt_prev) {
-> > >>>               ret = deliver_skb(skb, pt_prev, orig_dev);
-> > >>>               pt_prev = NULL;
-> > >>>           }
-> > >>>           if (vlan_do_receive(&skb))
-> > >>>               goto another_round;
-> > >>>           else if (unlikely(!skb))
-> > >>>               goto out;
-> > >>>       }
-> > >>>
-> > >>> Thanks
-> > >>>
-> > >>
-> > >> I did an ftrace today and I find vlan_do_receive() is called for the
-> > >> incoming frames before passing SKB to hsr_handle_frame(). If someone
-> > >> can review this, it will help. Thanks.
-> > >>
-> > >> https://pastebin.ubuntu.com/p/CbRzXjwjR5/
-> > >
-> > > hsr_handle_frame is an rx_handler called after
-> > > __netif_receive_skb_core called vlan_do_receive and jumped back to
-> > > another_round.
-> >
-> > Yes. hsr_handle_frame() is a rx_handler() after the above code that
-> > does vlan_do_receive(). The ftrace shows vlan_do_receive() is called
-> > followed by call to hsr_handle_frame(). From ifconfig I can see both
-> > hsr and vlan interface stats increments by same count. So I assume,
-> > vlan_do_receive() is called initially and it removes the tag, update
-> > stats and then return true and go for another round. Do you think that
-> > is the case?
->
-> That was my understanding.
->
-> > vlan_do_receive() calls vlan_find_dev(skb->dev, vlan_proto, vlan_id)
-> > to retrieve the real netdevice (real device). However VLAN device is
-> > attached to hsr device (real device), but SKB will have HSR slave
-> > Ethernet netdevice (in our case it is cpsw device) and vlan_find_dev()
-> > would have failed since there is no vlan_info in cpsw netdev struct. So
-> > below code  in vlan_do_receive() should have failed and return false.
-> >
-> >         vlan_dev = vlan_find_dev(skb->dev, vlan_proto, vlan_id);
-> >         if (!vlan_dev)
-> >                 return false;
-> >
-> > So how does it goes for another_round ? May be vlan_find_dev is
-> > finding the hsr netdevice?
->
-> It's good to answer this through code inspection and/or
-> instrumentation. I do not have the answer immediately either.
+The last sd_flag_debug shuffle inadvertently moved its definition within
+an #ifdef CONFIG_SYSCTL region. While CONFIG_SYSCTL is indeed required to
+produce the sched domain ctl interface (which uses sd_flag_debug to output
+flag names), it isn't required to run any assertion on the sched_domain
+hierarchy itself.
 
-Agreed that from reading the code I would vlan_do_receive to not find
-a vlan dev associated with the physical nic, then passes the packet
-unmodified to hsr_handle_frame.
+Move the definition of sd_flag_debug to a CONFIG_SCHED_DEBUG region of
+topology.c.
 
-Perhaps this seems to work because skb_vlan_untag has already
-pulled the tag out of the packet?
+Now at long last we have:
+o sd_flag_debug declared in include/linux/sched/topology.h iff
+  CONFIG_SCHED_DEBUG=y
+o sd_flag_debug defined in kernel/sched/topology.c, conditioned by:
+  o CONFIG_SCHED_DEBUG, with an explicit #ifdef block
+  o CONFIG_SMP, as a requirement to compile topology.c
 
-But then you should not see counters increased on the vlan dev.
+With this change, all symbols pertaining to SD flag metadata (with the
+exception of __SD_FLAG_CNT) are now defined exclusively within topology.c
+
+Fixes: 8fca9494d4b4 ("sched/topology: Move sd_flag_debug out of linux/sched/topology.h")
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+@Randy I didn't keep your Acked-by given that this is a slightly different
+shuffle.
+---
+ kernel/sched/debug.c    | 6 ------
+ kernel/sched/topology.c | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 0d7896d2a0b2..0655524700d2 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -245,12 +245,6 @@ set_table_entry(struct ctl_table *entry,
+ 	entry->proc_handler = proc_handler;
+ }
+ 
+-#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
+-const struct sd_flag_debug sd_flag_debug[] = {
+-#include <linux/sched/sd_flags.h>
+-};
+-#undef SD_FLAG
+-
+ static int sd_ctl_doflags(struct ctl_table *table, int write,
+ 			  void *buffer, size_t *lenp, loff_t *ppos)
+ {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index da3cd60e4b78..55c453d140e9 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -25,6 +25,12 @@ static inline bool sched_debug(void)
+ 	return sched_debug_enabled;
+ }
+ 
++#define SD_FLAG(_name, mflags) [__##_name] = { .meta_flags = mflags, .name = #_name },
++const struct sd_flag_debug sd_flag_debug[] = {
++#include <linux/sched/sd_flags.h>
++};
++#undef SD_FLAG
++
+ static int sched_domain_debug_one(struct sched_domain *sd, int cpu, int level,
+ 				  struct cpumask *groupmask)
+ {
+-- 
+2.27.0
+
