@@ -2,107 +2,149 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3634AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B470E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5AFA20936
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 23:40:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="u11P+PRu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCKvxLSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIHXeg (ORCPT
+        id S1728647AbgIHXkO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 19:34:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
+        Tue, 8 Sep 2020 19:40:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728971AbgIHXea (ORCPT
+        with ESMTP id S1726340AbgIHXkN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 19:34:30 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DF8C061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 16:34:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d6so478074pfn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 16:34:30 -0700 (PDT)
+        Tue, 8 Sep 2020 19:40:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75EAC061573;
+        Tue,  8 Sep 2020 16:40:12 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id gf14so388558pjb.5;
+        Tue, 08 Sep 2020 16:40:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4HrkVBDdSztaoOjJqy3mdmyRFgVANQWzA+9waayHCYA=;
-        b=u11P+PRulRREYp/VsWb5uscxyszxeRv3edudPvEJ16z5O0KJ+DqMft5CjoH4uAUCOp
-         TJc6T4MV7I4tgySi9haP/Vv1D0k7rnZRV8fXRLYytt34NIAC4FImrcJ8/nYuUq1sU1hA
-         emWB2khEQwWZl6niP9PUJWCYR0KxKtkqsfW/n+2iWGduPjSQvU+VPi0tDXRSGdyGojO2
-         CVlT9pWzMOjhxEMYHE7zcZIMDB/CrJFMj5FvcxiGJAuW9Jq5TrZNsT0b8mGoWkbrGoKx
-         18tyICJ/AxXiGLv/JV/d0jI7L+wVX3e8nKWItWY4aw7F9Bwp/YkTMgQXHFLO4ht3wg94
-         Idew==
+        d=gmail.com; s=20161025;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=hlDVAxiOXkRKboZyuXLRZYuEvx2EuGrMs+4z282NJ3Y=;
+        b=QCKvxLSP+l1V9OAeyZI/eFqDi+o8xjfqGqlnLNw2npgUS4C+jvj4OFa8mylIOnw3Ya
+         6XQ4b+YzF5X9xeqEUid7qQRjOB9Dem84hWXdxpsGL8sjROMTUh3iAWiNrNF9M3+rWL7n
+         n9sok6QaHG4mV+vLLGOTzpaidSM9QmP8YgreeIXtxitNsKvIN0/6QDYW8gmYt1rVuZIk
+         WvUvncHViZB02CafjeKUSYsZvHB0/zVBwTC8G0NsLQOQ9JjvpVBi/P7vIRRDy2di+afK
+         mnWtbJTUj/fdx2pcCy+yHdsQp4kGxuuMSzg54VuGNCehCOYmakULd1OvB5Hkwwss6Liw
+         Za5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4HrkVBDdSztaoOjJqy3mdmyRFgVANQWzA+9waayHCYA=;
-        b=CSrjti/J8p1/wqM6lcc3GGAKr1zqTo3B4WXlgmlO2vhBRq+9sLM0VHov3NDVCwZqe+
-         DnixyAtGzK0mW1G/XELk7Ngq87hrzfG2fScJpBgVX7rZ0fHHC2i643jrt50K7APTQLz8
-         DxjtNT+Cee0vmJ/pilAkkffOscJlQcoo7+wilbm2Yq/7rRC6U9p0mohjEK9lHBUQISr9
-         Q1JLdqQDUd8epiuT9eY8CveDY9yD+8w6BuolSM9igigyPAwQ7DrIFK5lLgQHKDIJ6vgb
-         3BKWyxxLhXaUt3dfbJKj0e9nBHspwzbXliLpgPJkog1Pl1aZk6zGpFT476xybM+kAo+8
-         SrrQ==
-X-Gm-Message-State: AOAM531RiApccbaLiqT21cRoa9khwJVyqH4czLNCBihZYq/xXxM+82UK
-        AFBG2mJzxbwcWaXVM8TbVxKRGw==
-X-Google-Smtp-Source: ABdhPJwaXBjoCop88KqOTK4/ZX75q6XE+iMB1mJmEx1t0iV2J3qqVqngBHzQB1rtrKx/odO06oQP2w==
-X-Received: by 2002:a63:ff5d:: with SMTP id s29mr892130pgk.442.1599608069307;
-        Tue, 08 Sep 2020 16:34:29 -0700 (PDT)
-Received: from ?IPv6:2620:10d:c085:21c8::1926? ([2620:10d:c090:400::5:4e45])
-        by smtp.gmail.com with ESMTPSA id c127sm458986pfa.165.2020.09.08.16.34.27
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=hlDVAxiOXkRKboZyuXLRZYuEvx2EuGrMs+4z282NJ3Y=;
+        b=pyXsQ7zneQFFktdLUplpSJsluXHGNejYsTI58rdJmhi6vyK9XsHtICP4mNMtf2ggIH
+         I+0o8K/d0mQczrzKAU2V8kNYkyPvLV78OPewoUtzCFkDCVWt6QZiJC9DGreCYxgNIre+
+         YnLCN6Ryrb9Pl1uNMjIzPwKiNODXsq3ak1EkTYpGRxoUYPwcUFCOLu2bwe6hU4VR8Df6
+         0p+QOSwZBtNrFrP/cjPHkpfWvHwbmrPOI/U0kuHTmFF/Aanl3r6/7jYMeZrq/Z5ylUzl
+         PNJMoMEZ/P60e8XM1a7kGkemNjl398eHBxxGjhztbCo5LXHJoqZBAhHO2BaIedG1jDPt
+         s2Tg==
+X-Gm-Message-State: AOAM530bvBgQ6wRqY0OTjwxeQNIdIuzOkWVlDf3GarBsK2RTCanq13O1
+        nbmcxg0XWnbFVy/AY2jc9dDovlSScLvWn7zJlpM=
+X-Google-Smtp-Source: ABdhPJy8Y2WGjmhgmk0S8gNJ7jMT9iROaroU3DMIfr/Z94bKZkvSEbg5xsHM6Wzs15kPEkaLO+/14w==
+X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr1003130pls.90.1599608411843;
+        Tue, 08 Sep 2020 16:40:11 -0700 (PDT)
+Received: from [192.168.0.104] ([49.207.193.206])
+        by smtp.gmail.com with ESMTPSA id 31sm310969pgs.59.2020.09.08.16.40.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 16:34:28 -0700 (PDT)
-Subject: Re: [PATCH next] io_uring: fix task hung in io_uring_setup
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
-        syzbot+107dd59d1efcaf3ffca4@syzkaller.appspotmail.com,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-References: <20200903132119.14564-1-hdanton@sina.com>
- <9bef23b1-6791-6601-4368-93de53212b22@kernel.dk>
- <8031fbe7-9e69-4a79-3b42-55b2a1a690e3@gmail.com>
- <20200908000339.2260-1-hdanton@sina.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <c7a4b985-6f22-96b7-d84c-cf3c91ddf79c@kernel.dk>
-Date:   Tue, 8 Sep 2020 17:34:26 -0600
+        Tue, 08 Sep 2020 16:40:11 -0700 (PDT)
+Subject: Re: [PATCH] net: qrtr: Reintroduce ARCH_QCOM as a dependency for QRTR
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com,
+        syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com,
+        syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com,
+        syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Masahiro Yamada <masahiroy@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200908233329.200473-1-anant.thazhemadam@gmail.com>
+From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
+Message-ID: <03d5b23d-b81a-f9b2-c42d-90b3a8e021f2@gmail.com>
+Date:   Wed, 9 Sep 2020 05:10:06 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200908000339.2260-1-hdanton@sina.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200908233329.200473-1-anant.thazhemadam@gmail.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/7/20 6:03 PM, Hillf Danton wrote:
-> 
-> On Mon, 7 Sep 2020 06:55:04 Jens Axboe wrote:
->> On 9/7/20 2:50 AM, Pavel Begunkov wrote:
->>>
->>> BTW, I don't see the patch itself, and it's neither in io_uring, block
->>> nor fs mailing lists. Hillf, could you please CC proper lists next time?
-> 
-> Yes, I can. So will I send io_uring patches with Pavel Cced.
 
-While that is nice, it should not be necessary. We need to ensure that your
-emails reach the list, that's more important than needing to CC a specific
-person, because it still means that everyone else doesn't see it.
+On 09/09/20 5:03 am, Anant Thazhemadam wrote:
+> Removing ARCH_QCOM, as a dependency for QRTR begins to give rise to
+> issues with respect to maintaining reference count integrity and
+> suspicious rcu usage.
+>
+> The bugs resolved by making QRTR dependent on ARCH_QCOM include:
+>
+> * WARNING: refcount bug in qrtr_node_lookup
+> Reported-by: syzbot+c613e88b3093ebf3686e@syzkaller.appspotmail.com
+> * WARNING: refcount bug in qrtr_recvmsg
+> Reported-by: syzbot+d0f27d9af17914bf253b@syzkaller.appspotmail.com
+> * WARNING: suspicious RCU usage in ctrl_cmd_new_lookup
+> Reported-by: syzbot+3025b9294f8cb0ede850@syzkaller.appspotmail.com
+> * WARNING: suspicious RCU usage in qrtr_ns_worker
+> Reported-by: syzbot+0f84f6eed90503da72fc@syzkaller.appspotmail.com
+>
+> Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+> ---
+> As I understand it, QRTR was initially dependent upon ARCH_QCOM, but was 
+> removed since not all modems using IPC Router protocol required the 
+> support provided for Qualcomm platforms. 
+> However, wouldn't ARCH_QCOM be required by the modems that require the 
+> support provided for Qualcomm platforms?
+> The configuration ARCH_QCOM isn't exactly the easiest to find, especially, 
+> for those who don't know what they're looking for (syzbot included, I 
+> guess).
+> I don't feel like the tradeoff of not depending on ARCH_QCOM over giving 
+> rise to potential bugs is worth it. 
+> Is NOT having QRTR depend on ARCH_QCOM so critical that it supersedes the 
+> priority of not giving rise to potential bugs?
+>
+>  net/qrtr/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
+> index b4020b84760f..8156d0f3656b 100644
+> --- a/net/qrtr/Kconfig
+> +++ b/net/qrtr/Kconfig
+> @@ -4,6 +4,7 @@
+>  
+>  config QRTR
+>  	tristate "Qualcomm IPC Router support"
+> +	depends on ARCH_QCOM
+>  	help
+>  	  Say Y if you intend to use Qualcomm IPC router protocol.  The
+>  	  protocol is used to communicate with services provided by other
+I believe I've been mistaken. I realize, requiring ARCH_QCOM wouldn't
+extend functionality, but would limit it to ONLY Qualcomm platforms.
+That makes sense, and would also explain the false positive results
+obtained when tried to test with syzbot, since syzbot wouldn't be
+able to build in the first place.
 
-Do you get an error from vger, or does it simply not show up?
+Sorry for the trouble, you may ignore this patch.
 
--- 
-Jens Axboe
+thanks,
+Anant
 
