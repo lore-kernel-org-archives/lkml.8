@@ -2,54 +2,54 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25137C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5B2C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D002B20678
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E678205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 16:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599582126;
-	bh=MEmvLFwTluSLMx2cM/SWoItoFmupNuwGFBxSHz1bvcg=;
+	s=default; t=1599582192;
+	bh=xEyKS4E47yTjH2Bua1sZXek4xDKW+5vOh+n8Igii48E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyJdbyiZRkPdF75WXaiKAcloD8Sz/+xl8tYQ15Kat4nEIGLf1hL1a4m5TmRi6RB00
-	 yyf1neX3yapgchGaOM16yW838U2xNr3RixWQR4h0tlkX1RswsbamhBNikgUROHgfFZ
-	 ij23xxWvrJ8iwd+JGHVNZl1KqhGEZLLZqPUTs1HM=
+	b=Ikch0fpSP0Qc9PN19zcu9jTW96HHSKAgebFyzOq7FH2g182Zi0qkNAbsuI3/PTAzf
+	 BfFJpsoVXacyDeXzmLv9YJY+sDrn2P4wfEl+a+vhWfhIAl/LiIsHnEaHH70eambzY4
+	 bBDggH04Ic5FdqKpMvXZTe1lhcmtxK4FL9B6S634=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbgIHQWB (ORCPT
+        id S1731902AbgIHQXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 12:22:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 12:23:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731401AbgIHQKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:10:25 -0400
+        id S1731438AbgIHQKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:10:32 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CB4924695;
-        Tue,  8 Sep 2020 15:50:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25780247FF;
+        Tue,  8 Sep 2020 15:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580228;
-        bh=MEmvLFwTluSLMx2cM/SWoItoFmupNuwGFBxSHz1bvcg=;
+        s=default; t=1599579784;
+        bh=xEyKS4E47yTjH2Bua1sZXek4xDKW+5vOh+n8Igii48E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Buop4rt4A59inIQhHF9mALkzk+TYZ+I7Wsssq9oQywnPiK3htT5WptPVHE3Zsnb8Y
-         DaE1jYNgbFGtSggqH7kgymFwBbHId8OVfaECZ/WPcZbl11NnmIiMSw5OwskHdlcZ1O
-         IthfGTyjTrRcmGqKWPjQ0xJB1fUwh4lwPNs1tcGE=
+        b=Fz6WrSVxn8SmjBbSVC3OKg/hPzyK3PgYiCyrpJ4vs/WLjSm3OcugPHR7Kcs3sGJis
+         YOWJbs7NgQ/F/tT+9rGT9pur6aFqePbI9eZ64QRomEp1LRLuW+gawM23GUhKJkVZmN
+         1SwBU130CDy/TtccRM5ZCJ0KL3TYgA7PfMAZ6n5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 52/88] ext2: dont update mtime on COW faults
-Date:   Tue,  8 Sep 2020 17:25:53 +0200
-Message-Id: <20200908152223.727402691@linuxfoundation.org>
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 032/129] netfilter: nf_tables: add NFTA_SET_USERDATA if not null
+Date:   Tue,  8 Sep 2020 17:24:33 +0200
+Message-Id: <20200908152231.300051626@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152221.082184905@linuxfoundation.org>
-References: <20200908152221.082184905@linuxfoundation.org>
+In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
+References: <20200908152229.689878733@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,61 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-commit 1ef6ea0efe8e68d0299dad44c39dc6ad9e5d1f39 upstream.
+[ Upstream commit 6f03bf43ee05b31d3822def2a80f11b3591c55b3 ]
 
-When running in a dax mode, if the user maps a page with MAP_PRIVATE and
-PROT_WRITE, the ext2 filesystem would incorrectly update ctime and mtime
-when the user hits a COW fault.
+Kernel sends an empty NFTA_SET_USERDATA attribute with no value if
+userspace adds a set with no NFTA_SET_USERDATA attribute.
 
-This breaks building of the Linux kernel.  How to reproduce:
-
- 1. extract the Linux kernel tree on dax-mounted ext2 filesystem
- 2. run make clean
- 3. run make -j12
- 4. run make -j12
-
-at step 4, make would incorrectly rebuild the whole kernel (although it
-was already built in step 3).
-
-The reason for the breakage is that almost all object files depend on
-objtool.  When we run objtool, it takes COW page fault on its .data
-section, and these faults will incorrectly update the timestamp of the
-objtool binary.  The updated timestamp causes make to rebuild the whole
-tree.
-
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: e6d8ecac9e68 ("netfilter: nf_tables: Add new attributes into nft_set to store user data.")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext2/file.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/netfilter/nf_tables_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ext2/file.c
-+++ b/fs/ext2/file.c
-@@ -93,8 +93,10 @@ static vm_fault_t ext2_dax_fault(struct
- 	struct inode *inode = file_inode(vmf->vma->vm_file);
- 	struct ext2_inode_info *ei = EXT2_I(inode);
- 	vm_fault_t ret;
-+	bool write = (vmf->flags & FAULT_FLAG_WRITE) &&
-+		(vmf->vma->vm_flags & VM_SHARED);
- 
--	if (vmf->flags & FAULT_FLAG_WRITE) {
-+	if (write) {
- 		sb_start_pagefault(inode->i_sb);
- 		file_update_time(vmf->vma->vm_file);
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index f7129232c8250..c1920adb27e62 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -3353,7 +3353,8 @@ static int nf_tables_fill_set(struct sk_buff *skb, const struct nft_ctx *ctx,
+ 			goto nla_put_failure;
  	}
-@@ -103,7 +105,7 @@ static vm_fault_t ext2_dax_fault(struct
- 	ret = dax_iomap_fault(vmf, PE_SIZE_PTE, NULL, NULL, &ext2_iomap_ops);
  
- 	up_read(&ei->dax_sem);
--	if (vmf->flags & FAULT_FLAG_WRITE)
-+	if (write)
- 		sb_end_pagefault(inode->i_sb);
- 	return ret;
- }
+-	if (nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
++	if (set->udata &&
++	    nla_put(skb, NFTA_SET_USERDATA, set->udlen, set->udata))
+ 		goto nla_put_failure;
+ 
+ 	desc = nla_nest_start_noflag(skb, NFTA_SET_DESC);
+-- 
+2.25.1
+
 
 
