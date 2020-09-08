@@ -2,443 +2,124 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0C20C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADA9C2BC11
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91895204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA9EA2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:09:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="georDWjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgIHUJJ (ORCPT
+        id S1731009AbgIHUJY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:09:09 -0400
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:53564 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730413AbgIHUIv (ORCPT
+        Tue, 8 Sep 2020 16:09:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46568 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730244AbgIHPSl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 16:08:51 -0400
-Received: from localhost.localdomain ([93.22.150.22])
-        by mwinf5d58 with ME
-        id RY8h2300w0VEKhH03Y8hPA; Tue, 08 Sep 2020 22:08:46 +0200
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 08 Sep 2020 22:08:46 +0200
-X-ME-IP: 93.22.150.22
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     jes@trained-monkey.org, davem@davemloft.net, kuba@kernel.org
-Cc:     linux-hippi@sunsite.dk, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] hippi: switch from 'pci_' to 'dma_' API
-Date:   Tue,  8 Sep 2020 22:08:39 +0200
-Message-Id: <20200908200839.323530-1-christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.25.1
+        Tue, 8 Sep 2020 11:18:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E79C0A3BF9;
+        Tue,  8 Sep 2020 07:56:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=qhhv9Hm93hbrEWUTmerzcHfYJ5eCRp8QXVw+0H+lRDo=; b=georDWjwq0N5HilZmlDSCDWJeZ
+        f8oJjOYDfJUCfRFx5Z3VmT+Tlcdr6V8JfV/pMKw9EmaZ5huEBNXFbahQXQvMIbjPhEcMP8y+TcPt0
+        M/rYM8SI7fm/88ci7wbJMgZSasAoiMbM45H8jf2XImil3qlEHlK2UPgwxyr/WGWZT0Jpn96MTcHit
+        ePM6bzVpuje/sMhrk6ZMN8IWgjqYDJB12fDjKAoitSvlVk1R74pfQHirCs4B2wFPop2jiUUJtrHxp
+        Mp+8BmLcmIlGy34HnXzw00JG+emkTXiqd6ripTWqqFlPmj704iX0t4bdzllFnZ3aSVoRY+JDkk0nB
+        uEHP9pqA==;
+Received: from [2001:4bb8:184:af1:3dc3:9c83:fc6c:e0f] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kFf1Q-00031Z-Bh; Tue, 08 Sep 2020 14:55:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Denis Efremov <efremov@linux.com>, Tim Waugh <tim@cyberelk.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Song Liu <song@kernel.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k@lists.linux-m68k.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 19/19] block: remove check_disk_change
+Date:   Tue,  8 Sep 2020 16:53:47 +0200
+Message-Id: <20200908145347.2992670-20-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200908145347.2992670-1-hch@lst.de>
+References: <20200908145347.2992670-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The wrappers in include/linux/pci-dma-compat.h should go away.
+Remove the now unused check_disk_change helper.
 
-The patch has been generated with the coccinelle script below and has been
-hand modified to replace GFP_ with a correct flag.
-It has been compile tested.
-
-When memory is allocated in 'rr_init_one()' GFP_KERNEL can be used because
-it is a probe function and no spinlock is taken in the between.
-
-When memory is allocated in 'rr_open()' GFP_KERNEL can be used because
-it is a '.ndo_open' function (see struct net_device_ops) and no spinlock is
-taken in the between.
-'.ndo_open' functions are synchronized using the rtnl_lock() semaphore.
-
-
-@@
-@@
--    PCI_DMA_BIDIRECTIONAL
-+    DMA_BIDIRECTIONAL
-
-@@
-@@
--    PCI_DMA_TODEVICE
-+    DMA_TO_DEVICE
-
-@@
-@@
--    PCI_DMA_FROMDEVICE
-+    DMA_FROM_DEVICE
-
-@@
-@@
--    PCI_DMA_NONE
-+    DMA_NONE
-
-@@
-expression e1, e2, e3;
-@@
--    pci_alloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3;
-@@
--    pci_zalloc_consistent(e1, e2, e3)
-+    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_free_consistent(e1, e2, e3, e4)
-+    dma_free_coherent(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_single(e1, e2, e3, e4)
-+    dma_map_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_single(e1, e2, e3, e4)
-+    dma_unmap_single(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4, e5;
-@@
--    pci_map_page(e1, e2, e3, e4, e5)
-+    dma_map_page(&e1->dev, e2, e3, e4, e5)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_page(e1, e2, e3, e4)
-+    dma_unmap_page(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_map_sg(e1, e2, e3, e4)
-+    dma_map_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_unmap_sg(e1, e2, e3, e4)
-+    dma_unmap_sg(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-+    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-+    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-+    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2, e3, e4;
-@@
--    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-+    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-
-@@
-expression e1, e2;
-@@
--    pci_dma_mapping_error(e1, e2)
-+    dma_mapping_error(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_dma_mask(e1, e2)
-+    dma_set_mask(&e1->dev, e2)
-
-@@
-expression e1, e2;
-@@
--    pci_set_consistent_dma_mask(e1, e2)
-+    dma_set_coherent_mask(&e1->dev, e2)
-
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 ---
-If needed, see post from Christoph Hellwig on the kernel-janitors ML:
-   https://marc.info/?l=kernel-janitors&m=158745678307186&w=4
----
- drivers/net/hippi/rrunner.c | 117 +++++++++++++++++++-----------------
- 1 file changed, 62 insertions(+), 55 deletions(-)
+ fs/block_dev.c        | 20 --------------------
+ include/linux/genhd.h |  1 -
+ 2 files changed, 21 deletions(-)
 
-diff --git a/drivers/net/hippi/rrunner.c b/drivers/net/hippi/rrunner.c
-index a4b3fce69ecd..df0f125fbb33 100644
---- a/drivers/net/hippi/rrunner.c
-+++ b/drivers/net/hippi/rrunner.c
-@@ -151,7 +151,8 @@ static int rr_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto out;
- 	}
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index c6ac0bd22eca70..0b34955b9e360f 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1368,26 +1368,6 @@ void revalidate_disk_size(struct gendisk *disk, bool verbose)
+ }
+ EXPORT_SYMBOL(revalidate_disk_size);
  
--	tmpptr = pci_alloc_consistent(pdev, TX_TOTAL_SIZE, &ring_dma);
-+	tmpptr = dma_alloc_coherent(&pdev->dev, TX_TOTAL_SIZE, &ring_dma,
-+				    GFP_KERNEL);
- 	rrpriv->tx_ring = tmpptr;
- 	rrpriv->tx_ring_dma = ring_dma;
+-/*
+- * This routine checks whether a removable media has been changed,
+- * and invalidates all buffer-cache-entries in that case. This
+- * is a relatively slow routine, so we have to try to minimize using
+- * it. Thus it is called only upon a 'mount' or 'open'. This
+- * is the best way of combining speed and utility, I think.
+- * People changing diskettes in the middle of an operation deserve
+- * to lose :-)
+- */
+-int check_disk_change(struct block_device *bdev)
+-{
+-	if (!bdev_check_media_change(bdev))
+-		return 0;
+-	if (bdev->bd_disk->fops->revalidate_disk)
+-		bdev->bd_disk->fops->revalidate_disk(bdev->bd_disk);
+-	return 1;
+-}
+-
+-EXPORT_SYMBOL(check_disk_change);
+-
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors)
+ {
+ 	spin_lock(&bdev->bd_size_lock);
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 322d48a207728a..1c97cf84f011a7 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -370,7 +370,6 @@ int register_blkdev(unsigned int major, const char *name);
+ void unregister_blkdev(unsigned int major, const char *name);
  
-@@ -160,7 +161,8 @@ static int rr_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto out;
- 	}
- 
--	tmpptr = pci_alloc_consistent(pdev, RX_TOTAL_SIZE, &ring_dma);
-+	tmpptr = dma_alloc_coherent(&pdev->dev, RX_TOTAL_SIZE, &ring_dma,
-+				    GFP_KERNEL);
- 	rrpriv->rx_ring = tmpptr;
- 	rrpriv->rx_ring_dma = ring_dma;
- 
-@@ -169,7 +171,8 @@ static int rr_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto out;
- 	}
- 
--	tmpptr = pci_alloc_consistent(pdev, EVT_RING_SIZE, &ring_dma);
-+	tmpptr = dma_alloc_coherent(&pdev->dev, EVT_RING_SIZE, &ring_dma,
-+				    GFP_KERNEL);
- 	rrpriv->evt_ring = tmpptr;
- 	rrpriv->evt_ring_dma = ring_dma;
- 
-@@ -198,14 +201,14 @@ static int rr_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
-  out:
- 	if (rrpriv->evt_ring)
--		pci_free_consistent(pdev, EVT_RING_SIZE, rrpriv->evt_ring,
--				    rrpriv->evt_ring_dma);
-+		dma_free_coherent(&pdev->dev, EVT_RING_SIZE, rrpriv->evt_ring,
-+				  rrpriv->evt_ring_dma);
- 	if (rrpriv->rx_ring)
--		pci_free_consistent(pdev, RX_TOTAL_SIZE, rrpriv->rx_ring,
--				    rrpriv->rx_ring_dma);
-+		dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, rrpriv->rx_ring,
-+				  rrpriv->rx_ring_dma);
- 	if (rrpriv->tx_ring)
--		pci_free_consistent(pdev, TX_TOTAL_SIZE, rrpriv->tx_ring,
--				    rrpriv->tx_ring_dma);
-+		dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, rrpriv->tx_ring,
-+				  rrpriv->tx_ring_dma);
- 	if (rrpriv->regs)
- 		pci_iounmap(pdev, rrpriv->regs);
- 	if (pdev)
-@@ -228,12 +231,12 @@ static void rr_remove_one(struct pci_dev *pdev)
- 	}
- 
- 	unregister_netdev(dev);
--	pci_free_consistent(pdev, EVT_RING_SIZE, rr->evt_ring,
--			    rr->evt_ring_dma);
--	pci_free_consistent(pdev, RX_TOTAL_SIZE, rr->rx_ring,
--			    rr->rx_ring_dma);
--	pci_free_consistent(pdev, TX_TOTAL_SIZE, rr->tx_ring,
--			    rr->tx_ring_dma);
-+	dma_free_coherent(&pdev->dev, EVT_RING_SIZE, rr->evt_ring,
-+			  rr->evt_ring_dma);
-+	dma_free_coherent(&pdev->dev, RX_TOTAL_SIZE, rr->rx_ring,
-+			  rr->rx_ring_dma);
-+	dma_free_coherent(&pdev->dev, TX_TOTAL_SIZE, rr->tx_ring,
-+			  rr->tx_ring_dma);
- 	pci_iounmap(pdev, rr->regs);
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
-@@ -648,8 +651,8 @@ static int rr_init1(struct net_device *dev)
- 			goto error;
- 		}
- 		rrpriv->rx_skbuff[i] = skb;
--	        addr = pci_map_single(rrpriv->pci_dev, skb->data,
--			dev->mtu + HIPPI_HLEN, PCI_DMA_FROMDEVICE);
-+		addr = dma_map_single(&rrpriv->pci_dev->dev, skb->data,
-+				      dev->mtu + HIPPI_HLEN, DMA_FROM_DEVICE);
- 		/*
- 		 * Sanity test to see if we conflict with the DMA
- 		 * limitations of the Roadrunner.
-@@ -699,10 +702,10 @@ static int rr_init1(struct net_device *dev)
- 		struct sk_buff *skb = rrpriv->rx_skbuff[i];
- 
- 		if (skb) {
--	        	pci_unmap_single(rrpriv->pci_dev,
-+			dma_unmap_single(&rrpriv->pci_dev->dev,
- 					 rrpriv->rx_ring[i].addr.addrlo,
- 					 dev->mtu + HIPPI_HLEN,
--					 PCI_DMA_FROMDEVICE);
-+					 DMA_FROM_DEVICE);
- 			rrpriv->rx_ring[i].size = 0;
- 			set_rraddr(&rrpriv->rx_ring[i].addr, 0);
- 			dev_kfree_skb(skb);
-@@ -953,18 +956,18 @@ static void rx_int(struct net_device *dev, u32 rxlimit, u32 index)
- 					dev->stats.rx_dropped++;
- 					goto defer;
- 				} else {
--					pci_dma_sync_single_for_cpu(rrpriv->pci_dev,
--								    desc->addr.addrlo,
--								    pkt_len,
--								    PCI_DMA_FROMDEVICE);
-+					dma_sync_single_for_cpu(&rrpriv->pci_dev->dev,
-+								desc->addr.addrlo,
-+								pkt_len,
-+								DMA_FROM_DEVICE);
- 
- 					skb_put_data(skb, rx_skb->data,
- 						     pkt_len);
- 
--					pci_dma_sync_single_for_device(rrpriv->pci_dev,
--								       desc->addr.addrlo,
--								       pkt_len,
--								       PCI_DMA_FROMDEVICE);
-+					dma_sync_single_for_device(&rrpriv->pci_dev->dev,
-+								   desc->addr.addrlo,
-+								   pkt_len,
-+								   DMA_FROM_DEVICE);
- 				}
- 			}else{
- 				struct sk_buff *newskb;
-@@ -974,16 +977,17 @@ static void rx_int(struct net_device *dev, u32 rxlimit, u32 index)
- 				if (newskb){
- 					dma_addr_t addr;
- 
--	        			pci_unmap_single(rrpriv->pci_dev,
--						desc->addr.addrlo, dev->mtu +
--						HIPPI_HLEN, PCI_DMA_FROMDEVICE);
-+					dma_unmap_single(&rrpriv->pci_dev->dev,
-+							 desc->addr.addrlo,
-+							 dev->mtu + HIPPI_HLEN,
-+							 DMA_FROM_DEVICE);
- 					skb = rx_skb;
- 					skb_put(skb, pkt_len);
- 					rrpriv->rx_skbuff[index] = newskb;
--	        			addr = pci_map_single(rrpriv->pci_dev,
--						newskb->data,
--						dev->mtu + HIPPI_HLEN,
--						PCI_DMA_FROMDEVICE);
-+					addr = dma_map_single(&rrpriv->pci_dev->dev,
-+							      newskb->data,
-+							      dev->mtu + HIPPI_HLEN,
-+							      DMA_FROM_DEVICE);
- 					set_rraddr(&desc->addr, addr);
- 				} else {
- 					printk("%s: Out of memory, deferring "
-@@ -1068,9 +1072,9 @@ static irqreturn_t rr_interrupt(int irq, void *dev_id)
- 				dev->stats.tx_packets++;
- 				dev->stats.tx_bytes += skb->len;
- 
--				pci_unmap_single(rrpriv->pci_dev,
-+				dma_unmap_single(&rrpriv->pci_dev->dev,
- 						 desc->addr.addrlo, skb->len,
--						 PCI_DMA_TODEVICE);
-+						 DMA_TO_DEVICE);
- 				dev_kfree_skb_irq(skb);
- 
- 				rrpriv->tx_skbuff[txcon] = NULL;
-@@ -1110,8 +1114,9 @@ static inline void rr_raz_tx(struct rr_private *rrpriv,
- 		if (skb) {
- 			struct tx_desc *desc = &(rrpriv->tx_ring[i]);
- 
--	        	pci_unmap_single(rrpriv->pci_dev, desc->addr.addrlo,
--				skb->len, PCI_DMA_TODEVICE);
-+			dma_unmap_single(&rrpriv->pci_dev->dev,
-+					 desc->addr.addrlo, skb->len,
-+					 DMA_TO_DEVICE);
- 			desc->size = 0;
- 			set_rraddr(&desc->addr, 0);
- 			dev_kfree_skb(skb);
-@@ -1132,8 +1137,10 @@ static inline void rr_raz_rx(struct rr_private *rrpriv,
- 		if (skb) {
- 			struct rx_desc *desc = &(rrpriv->rx_ring[i]);
- 
--	        	pci_unmap_single(rrpriv->pci_dev, desc->addr.addrlo,
--				dev->mtu + HIPPI_HLEN, PCI_DMA_FROMDEVICE);
-+			dma_unmap_single(&rrpriv->pci_dev->dev,
-+					 desc->addr.addrlo,
-+					 dev->mtu + HIPPI_HLEN,
-+					 DMA_FROM_DEVICE);
- 			desc->size = 0;
- 			set_rraddr(&desc->addr, 0);
- 			dev_kfree_skb(skb);
-@@ -1188,17 +1195,17 @@ static int rr_open(struct net_device *dev)
- 		goto error;
- 	}
- 
--	rrpriv->rx_ctrl = pci_alloc_consistent(pdev,
--					       256 * sizeof(struct ring_ctrl),
--					       &dma_addr);
-+	rrpriv->rx_ctrl = dma_alloc_coherent(&pdev->dev,
-+					     256 * sizeof(struct ring_ctrl),
-+					     &dma_addr, GFP_KERNEL);
- 	if (!rrpriv->rx_ctrl) {
- 		ecode = -ENOMEM;
- 		goto error;
- 	}
- 	rrpriv->rx_ctrl_dma = dma_addr;
- 
--	rrpriv->info = pci_alloc_consistent(pdev, sizeof(struct rr_info),
--					    &dma_addr);
-+	rrpriv->info = dma_alloc_coherent(&pdev->dev, sizeof(struct rr_info),
-+					  &dma_addr, GFP_KERNEL);
- 	if (!rrpriv->info) {
- 		ecode = -ENOMEM;
- 		goto error;
-@@ -1237,13 +1244,13 @@ static int rr_open(struct net_device *dev)
- 	spin_unlock_irqrestore(&rrpriv->lock, flags);
- 
- 	if (rrpriv->info) {
--		pci_free_consistent(pdev, sizeof(struct rr_info), rrpriv->info,
--				    rrpriv->info_dma);
-+		dma_free_coherent(&pdev->dev, sizeof(struct rr_info),
-+				  rrpriv->info, rrpriv->info_dma);
- 		rrpriv->info = NULL;
- 	}
- 	if (rrpriv->rx_ctrl) {
--		pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
--				    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
-+		dma_free_coherent(&pdev->dev, 256 * sizeof(struct ring_ctrl),
-+				  rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
- 		rrpriv->rx_ctrl = NULL;
- 	}
- 
-@@ -1365,12 +1372,12 @@ static int rr_close(struct net_device *dev)
- 	rr_raz_tx(rrpriv, dev);
- 	rr_raz_rx(rrpriv, dev);
- 
--	pci_free_consistent(pdev, 256 * sizeof(struct ring_ctrl),
--			    rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
-+	dma_free_coherent(&pdev->dev, 256 * sizeof(struct ring_ctrl),
-+			  rrpriv->rx_ctrl, rrpriv->rx_ctrl_dma);
- 	rrpriv->rx_ctrl = NULL;
- 
--	pci_free_consistent(pdev, sizeof(struct rr_info), rrpriv->info,
--			    rrpriv->info_dma);
-+	dma_free_coherent(&pdev->dev, sizeof(struct rr_info), rrpriv->info,
-+			  rrpriv->info_dma);
- 	rrpriv->info = NULL;
- 
- 	spin_unlock_irqrestore(&rrpriv->lock, flags);
-@@ -1430,8 +1437,8 @@ static netdev_tx_t rr_start_xmit(struct sk_buff *skb,
- 	index = txctrl->pi;
- 
- 	rrpriv->tx_skbuff[index] = skb;
--	set_rraddr(&rrpriv->tx_ring[index].addr, pci_map_single(
--		rrpriv->pci_dev, skb->data, len + 8, PCI_DMA_TODEVICE));
-+	set_rraddr(&rrpriv->tx_ring[index].addr,
-+		   dma_map_single(&rrpriv->pci_dev->dev, skb->data, len + 8, DMA_TO_DEVICE));
- 	rrpriv->tx_ring[index].size = len + 8; /* include IFIELD */
- 	rrpriv->tx_ring[index].mode = PACKET_START | PACKET_END;
- 	txctrl->pi = (index + 1) % TX_RING_ENTRIES;
+ void revalidate_disk_size(struct gendisk *disk, bool verbose);
+-int check_disk_change(struct block_device *bdev);
+ bool bdev_check_media_change(struct block_device *bdev);
+ int __invalidate_device(struct block_device *bdev, bool kill_dirty);
+ void bd_set_nr_sectors(struct block_device *bdev, sector_t sectors);
 -- 
-2.25.1
+2.28.0
 
