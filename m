@@ -2,124 +2,127 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F6BC2BBD0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2473CC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE412065E
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC545218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 06:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599547713;
-	bh=NO/usNhy16yhSKDVyBRRSAZoxSAHHglvXKFbsXtLhrk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GWzRaUyt0I1WflVMFFRrDguoCOOeMZ9C6SFTFskrBWhinCMCiU8xIoQ2Jhd+Wk/ZA
-	 wTC70EwlTBw94WUPPDZve5PeMSrFL4pKHnL3h8lapDsm4UiXs1UfUv2faJpGyhS3ER
-	 Y6igfh334YW2QtpmXriORdA0oRTjqua3ItGrhTD4=
+	s=default; t=1599547769;
+	bh=1mKSHi4avXLKOb4x4GPVRosfO4em7UMRCY8U1TVyBWM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HFShAcVNkZhRG5x1PPar+FEb2BTg4vXpLSknMYu9i0jJuTA0mCVQ2TeV12t8U5/mX
+	 mdONN8OJkjXU5PA1S4uFWeDdcMCmXICUDNVi20sZv3cot+hu6wlVllhIgn+NINnLG5
+	 qsFk5OlOCXo/egY5J7lTfYaCKHxQx3BA01UtAwCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729189AbgIHGsc (ORCPT
+        id S1729159AbgIHGt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 02:48:32 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:44654 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgIHGsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 02:48:17 -0400
-Received: by mail-ej1-f65.google.com with SMTP id r7so7546601ejs.11;
-        Mon, 07 Sep 2020 23:48:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VyiVf+Mq59UC5ZzKMYrAjFhEEKe4orUQbv2Dw6ICisQ=;
-        b=Qt2OvcNIVdt78UW4jLDz6nktC9mUQL/abkGCyd41iCFp1dO1iDhVQgQ9KQRsFJIqP/
-         +cAXGjR8GXm/R8n8bNtHgtid78nlHpKhGzuVnXWukF1nyeyh+YVqzUegEZsPibxnna8y
-         xW4SDv7DnqzXfBVK1RDpg19qGRllqHBskRWEmUsYZNbsFmSLjRqDtNw2IyDhbFw/6vGT
-         roUdrWvMHfSgUc4Jv9/LEie8dJt8SPHrDQJ8bo6ZszAysLFS0cL/2qPDDv7BQRHCKSRc
-         p8U0APQR6BqN0cqC1jphrNDbPejCgFwzVXKk29H97WHEJSEQ0jm9xFwT9ANcaKCMnBtT
-         OCpg==
-X-Gm-Message-State: AOAM531vjY+lOC8/Xan29LgR+bvW9Qr6t7j52kfPWy/zg9i5PKIygj1X
-        Qg8hInokSXw5h9zxQWLtLDA=
-X-Google-Smtp-Source: ABdhPJy61y/aCX2qNyKljrz5UJOWH8ADbK1AwDDzicWB2lQYIWTkbWIYURrKncOKjTAbVcUMp5Tlaw==
-X-Received: by 2002:a17:906:455:: with SMTP id e21mr25591439eja.170.1599547694870;
-        Mon, 07 Sep 2020 23:48:14 -0700 (PDT)
-Received: from pi3 ([194.230.155.174])
-        by smtp.googlemail.com with ESMTPSA id j8sm16697525edp.58.2020.09.07.23.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Sep 2020 23:48:13 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 08:48:11 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Bakker <xc-racer2@live.ca>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH 03/25] dt-bindings: iio: adc: exynos-adc: do not require
- syscon on S5Pv210
-Message-ID: <20200908064811.GA24227@pi3>
-References: <20200907161141.31034-1-krzk@kernel.org>
- <20200907161141.31034-4-krzk@kernel.org>
- <BN6PR04MB06601B8D0B7F1E51953024E6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+        Tue, 8 Sep 2020 02:49:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60980 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728501AbgIHGtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 02:49:24 -0400
+Received: from coco.lan (ip5f5ad5ce.dynamic.kabel-deutschland.de [95.90.213.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45092065E;
+        Tue,  8 Sep 2020 06:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599547763;
+        bh=1mKSHi4avXLKOb4x4GPVRosfO4em7UMRCY8U1TVyBWM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KpaSWzryFcdclEShzr9+OabQGQ7I+B9F8b0J7t5+LDwo7wB81tVPqtvDerbNlM1Ye
+         MVi6x28bMN4alQ56udfHPcCOKWoqsF1ehMUrZ09nh0X4pfLd0hEv1vJHt9OVodv83R
+         U7SL2QkHs1/qXEaPsudsAkopFxWSsQzPPhwqRwK8=
+Date:   Tue, 8 Sep 2020 08:49:15 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Yu Chen <chenyu56@huawei.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
+        suzhuangluan@hisilicon.com, kongfei@hisilicon.com,
+        liuyu712@hisilicon.com, wanghu17@hisilicon.com,
+        butao@hisilicon.com, chenyao11@huawei.com,
+        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
+        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
+        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
+        zangleigang@hisilicon.com,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Binghui Wang <wangbinghui@hisilicon.com>
+Subject: Re: [PATCH v6 04/13] usb: dwc3: Add splitdisable quirk for
+ Hisilicon Kirin Soc
+Message-ID: <20200908084915.5a8c18fc@coco.lan>
+In-Reply-To: <87r1rcn6j9.fsf@kernel.org>
+References: <20190420064019.57522-1-chenyu56@huawei.com>
+        <20190420064019.57522-5-chenyu56@huawei.com>
+        <20200907150631.70e1bce0@coco.lan>
+        <874ko9of80.fsf@kernel.org>
+        <20200907165000.7c42a6da@coco.lan>
+        <87r1rcn6j9.fsf@kernel.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BN6PR04MB06601B8D0B7F1E51953024E6CB280@BN6PR04MB0660.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 02:49:49PM -0700, Jonathan Bakker wrote:
-> Looking at this again, it appears that there is actually control for
-> it at offset 0x6818 of pmu_syscon (0xe0108000) [1].  However, it defaults to
-> enabled so it's not required for proper use of the block.  Whether it should
-> be present in the schema/DTS is up to you.
+Em Tue, 08 Sep 2020 09:09:46 +0300
+Felipe Balbi <balbi@kernel.org> escreveu:
 
-Indeed the driver could turn off the ADC phy via syscon however bindings
-(before YAML conversion) explicitly were saying that it is not needed. I
-am not going to add it as I am not able to test the change and also
-adding such requirement would be a break of ABI (described by first TXT
-bindings).
-
-Best regards,
-Krzysztof
-
-
+> >> Why does it affect only Hikey kirin?   
+> >
+> > As John Stultz didn't re-submit this one (and looking at the DT
+> > between Kirin 960 and 970 from the original Kernel 4.9 official
+> > drivers), I suspect that only Kirin 970 requires this quirk.
+> >
+> > It could well be due to some Dwc3 revision, but it could also be due
+> > to some differences at the USB part of the SoC, as there are a  
 > 
-> Thanks,
-> Jonathan
+> the reason I ask is that if it's caused by dwc3 revision, then we don't
+> need the extra dt property, we can rely on a revision check. If it's
+> something that can't be detected in runtime, then we need a property.
+
+Yeah, if it would be possible to auto-detect, that would be
+better. Yet, hard to say if it would be possible to do that, 
+without access to the Dwc3 docs, and without different hardware 
+for testing it.
+
+> > few other things different between hikey 960 and 970: it has a
+> > different PHY driver, and there are also some differences at the
+> > USB HUB which is connected into it.
+> >
+> > On both devices, the USB physical ports are actually connected
+> > into a HUB. In the case of Hikey 970, the hub seems to be a
+> > TI TUSB8041 4-Port Hub:
+> > 	
+> > 	$ lsusb
+> > 	Bus 002 Device 002: ID 0451:8140 Texas Instruments, Inc. TUSB8041 4-Port Hub
+> > 	Bus 002 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
+> > 	Bus 001 Device 004: ID 090c:1000 Silicon Motion, Inc. - Taiwan (formerly Feiya Technology Corp.) Flash Drive
+> > 	Bus 001 Device 003: ID 413c:301a Dell Computer Corp. Dell MS116 Optical Mouse
+> > 	Bus 001 Device 002: ID 0451:8142 Texas Instruments, Inc. TUSB8041 4-Port Hub
+> > 	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> >  
+> >> What's the dwc3 revision on
+> >> that SoC (grep SNPSID /sys/kernel/debugfs/*dwc3/regdump)?  
+> >
+> > 	GSNPSID = 0x33313130  
 > 
-> [1] https://android.googlesource.com/kernel/samsung/+/refs/heads/android-samsung-3.0-jb-mr0/arch/arm/mach-s5pv210/include/mach/regs-clock.h#325
-> 
-> On 2020-09-07 9:11 a.m., Krzysztof Kozlowski wrote:
-> > The ADC in S5Pv210 does not have ADC phy registers in separate block for
-> > which syscon would be needed.  Remove this requirement to fix dtbs_check
-> > warnings like:
-> > 
-> >   arch/arm/boot/dts/s5pv210-fascinate4g.dt.yaml: adc@e1700000: 'samsung,syscon-phandle' is a required property
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  .../devicetree/bindings/iio/adc/samsung,exynos-adc.yaml          | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> > index 89b4f9c252a6..75174af72288 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> > +++ b/Documentation/devicetree/bindings/iio/adc/samsung,exynos-adc.yaml
-> > @@ -81,7 +81,6 @@ allOf:
-> >                - samsung,exynos-adc-v2
-> >                - samsung,exynos3250-adc
-> >                - samsung,exynos4212-adc
-> > -              - samsung,s5pv210-adc
-> >      then:
-> >        required:
-> >          - samsung,syscon-phandle
-> > 
+> This isn't even listed as a known revision in dwc3/core.h. Thinh, could
+> the issue being described here caused by a known Erratum with this
+> particular revision?
+
+Maybe. Again, hard to tell without any documentation from Synopsys.
+
+Maybe some of the Synopsys folks at USB MK can shed a light.
+
+Thanks,
+Mauro
