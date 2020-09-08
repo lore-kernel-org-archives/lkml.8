@@ -2,125 +2,121 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E7EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED981C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2EE221741
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A682A21741
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 11:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDg4/Uku"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHihzfZt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbgIHLdm (ORCPT
+        id S1729846AbgIHLfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 07:33:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730054AbgIHL2i (ORCPT
+        Tue, 8 Sep 2020 07:35:05 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40107 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730061AbgIHL3n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 07:28:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B04BC061756
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 04:28:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gf14so7874738pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1ePZz+j1mC26EcXRnLkpEleJBzy12DWxPVVwiIwKyc0=;
-        b=XDg4/Uku5/VpdAi0ks3tspgOErVskD47V+JCTvPLbAaCnNjXbzfw0TTt400bpp1D+8
-         y21jfjFYMVXGxhgd7TBioi175NEgOo7AJ6a69HpCzcu76LJIlc1Vsr5hxOSLzn+xy60H
-         iln98V6VsxN2apajg1j4pMGQ/UX2fbhvF4P6L52Ep4ngu5m791p+QVz8EvZJn8W6OoMA
-         DE5FQMkIL/x8oo4+FHaOLz4iBTiyfFBZdXR5lIixDOoWhj6FpDmOsjGmSTL4dmn/2c8d
-         fbrvXY6MH3aljUf/3nVdIYo4q7mRfdoPMEMhVrvAccPp6eNOHBUlPAbwSVK5u3yvjQsN
-         iEFg==
+        Tue, 8 Sep 2020 07:29:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599564549;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8SJToen5De/FMO5Uvn6WpRdklNdA0QrVJ+xmLiUK7iQ=;
+        b=fHihzfZtPV9CO8lNsSR7Oc2vUZlxuGNRgEcHXnvoIobKlAFNbLmELEn/2zenORBy+ApvXQ
+        F80bFlGagQqcESbgujkCsvohx7URWXVR6izEFgqLEkEWCzaG7OhWcqAQVvOZviaMYODbHn
+        +/E3RiW7uhQOEkhib8MoU9IGMXNcbkQ=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-144-R_CPCtztON63EDbRf5jcfg-1; Tue, 08 Sep 2020 07:29:08 -0400
+X-MC-Unique: R_CPCtztON63EDbRf5jcfg-1
+Received: by mail-lj1-f198.google.com with SMTP id 6so2805875lju.22
+        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 04:29:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1ePZz+j1mC26EcXRnLkpEleJBzy12DWxPVVwiIwKyc0=;
-        b=tOlcQWRnLUZlqlzNxgbbKL2BOhEoy3gg2u+QNLTi8ymW93oJeKeAE58MfUVt4mXSZx
-         vCarC/ZXFU95tUHrgiIzYLjS1b7wb5SDJOiZOiXOIByx+krysyfqkb+M6TAO2e/k1YHP
-         h3GHke/PqFJmL9/qZ1AYKMps7A08W+zsmlIYCnuaP8qfH94741U5rXIJzs7KxONE/h15
-         ak//1QeT1IUOSh82kq/89nB/4JvxOzygzM/PygFx+gXCIUIlQBU+i0iswRNEMH9zwyLn
-         7aa9rSE/IVrmcYJWgXNBWK3V/jdoYdFLREQZin4qDiVXw20mBB2zRhzOefVe0WFDi+2A
-         tTCg==
-X-Gm-Message-State: AOAM53037+M1jLNskkKxLY1eLVNzQCn/bzl0kFai/VoPvKpRvCJq7DWp
-        lgs0YberVTQROPziMBv6io5D
-X-Google-Smtp-Source: ABdhPJyawctA9wghGbFvi/7vBQj9SNLlIjR+KiOXSTuFRKIHUj+7uS8WYHJyd6wazPN1CbuzWd7JvQ==
-X-Received: by 2002:a17:90a:1fcc:: with SMTP id z12mr3490650pjz.106.1599564517585;
-        Tue, 08 Sep 2020 04:28:37 -0700 (PDT)
-Received: from mani ([103.59.133.81])
-        by smtp.gmail.com with ESMTPSA id i8sm10685684pjv.43.2020.09.08.04.28.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 08 Sep 2020 04:28:36 -0700 (PDT)
-Date:   Tue, 8 Sep 2020 16:58:28 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rjw@rjwysocki.net, robh+dt@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, amitk@kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dmitry.baryshkov@linaro.org, tdas@codeaurora.org
-Subject: Re: [PATCH 5/7] cpufreq: qcom-hw: Use regmap for accessing hardware
- registers
-Message-ID: <20200908112828.GA23812@mani>
-References: <20200908075716.30357-1-manivannan.sadhasivam@linaro.org>
- <20200908075716.30357-6-manivannan.sadhasivam@linaro.org>
- <20200908103444.5e526uawa45om6lt@vireshk-i7>
- <20200908111141.GB23095@mani>
- <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8SJToen5De/FMO5Uvn6WpRdklNdA0QrVJ+xmLiUK7iQ=;
+        b=hygp3vUEMd6kBHF3kJ9Pthghex25hWT7+c8xthMOxVBq8xwxHWDm233rRBISDDCQhh
+         aKrGkxwz993f2iBNcNMal/6FYPStH+BkHgN2lXbBiO+1zGF3X5o59VXjRaoJIOQOFMIs
+         rPkwelTJHdDH2zC9uH2k/X0tpp05P64JRWaC9U4s+5IbshLoQH+7Lh44LwF4o3pPNX3O
+         1PQlhQshgxVGP+nZSkQv3qINnGJAHflfyWtSww4SLhziAOfiFdb6L9X7y6rmvaev3TjY
+         3bXx2l6+avBzEoKT9hM2JQfW/4iFUHi3P80+tch+0t5Qq33Pdcoh+0WtA+JV/4t8fKo4
+         nw4w==
+X-Gm-Message-State: AOAM5331qciwXDBjAVN9HIx8URHsoUgoRKfvw7/0DcleE9KDkTq/Cega
+        vOikC4wjQ4LS+SvpXC4R9qPQku5AeaCrssWmiGDxgyc31URXh0IVYsSsNDvUKbl14B6qu2DXZCN
+        sZ9ETVP6EShRROJdqmtN6uCB9NUTA4oI+MYV2oKLn
+X-Received: by 2002:a2e:93c9:: with SMTP id p9mr13042317ljh.311.1599564546507;
+        Tue, 08 Sep 2020 04:29:06 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzzAkVnfY3RS8jLmTTPylLLgZwYimBUxyg65KS1GNPlqmB6hBjIWbaP1koimAnXDD5XhM3jLRXYLRHBdxEEogQ=
+X-Received: by 2002:a2e:93c9:: with SMTP id p9mr13042309ljh.311.1599564546218;
+ Tue, 08 Sep 2020 04:29:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908111813.bbgfxo5v7qt6ujpc@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200904160031.6444-1-cgzones@googlemail.com> <20200908102537.GU2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200908102537.GU2674@hirez.programming.kicks-ass.net>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Tue, 8 Sep 2020 13:28:55 +0200
+Message-ID: <CAFqZXNuD3SRQtE9OUC5NX0XepThg0MJ0b8TJ5TF7YRgS93+TOg@mail.gmail.com>
+Subject: Re: [RFC PATCH] sched: only issue an audit on privileged operation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 0908, Viresh Kumar wrote:
-> On 08-09-20, 16:41, Manivannan Sadhasivam wrote:
-> > On 0908, Viresh Kumar wrote:
-> > > On 08-09-20, 13:27, Manivannan Sadhasivam wrote:
-> > > > Use regmap for accessing cpufreq registers in hardware.
-> > > 
-> > > Why ? Please mention why a change is required in the log.
-> > > 
-> > 
-> > Only because it is recommended to use regmap for abstracting the hw access.
-> 
-> Yes it can be very useful in abstracting the hw access in case of
-> busses like SPI/I2C, others, but in this case there is only one way of
-> doing it with the exact same registers. I am not sure it is worth it
-> here. FWIW, I have never played with regmaps personally, and so every
-> chance I can be wrong here.
-> 
-> > Moreover it handles the proper locking for us in the core (spinlock vs mutex).
-> 
-> What locking do you need here ?
-> 
+On Tue, Sep 8, 2020 at 12:26 PM <peterz@infradead.org> wrote:
+> On Fri, Sep 04, 2020 at 06:00:31PM +0200, Christian G=C3=83=C2=B6ttsche w=
+rote:
+> > sched_setattr(2) does via kernel/sched/core.c:__sched_setscheduler()
+> > issue a CAP_SYS_NICE audit event unconditionally, even when the request=
+ed
+> > operation does not require that capability / is un-privileged.
+> >
+> > Perform privilged/unprivileged catigorization first and perform a
+> > capable test only if needed.
+> >
+> > Signed-off-by: Christian G=C3=83=C2=B6ttsche <cgzones@googlemail.com>
+> > ---
+> >  kernel/sched/core.c | 65 ++++++++++++++++++++++++++++++++-------------
+> >  1 file changed, 47 insertions(+), 18 deletions(-)
+>
+> So who sodding cares about audit, and why is that a reason to make a
+> trainwreck of code?
 
-I was just referring the case where if we need the locking in future, regmap
-handles it nicely in the core.
+The commit message should be more specific. I believe Christian is
+talking about the case where SELinux or other LSM denies the
+capability, in which case the denial is usually logged to the audit
+log. Obviously, we don't want to get a denial logged when the
+capability wasn't actually required for the operation to be allowed.
 
-> > I've seen many subsystem maintainers prefer regmap over plain readl/writel
-> > calls. I'll add the reason in commit log.
-> 
-> I am not sure if it is worth it here.
-> 
+Unfortunately, the capability interface doesn't provide a way to first
+get the decision value and only trigger the auditing when it was
+actually used in the decision, so in complex scenarios like this the
+caller needs to jump through some hoops to avoid such false-positive
+denial records.
 
-Hmm, I thought it is recommended to use regmap for MMIO access as well. I can
-drop the patch if you want but let's wait for Bjorn/Amit to get their views.
+--
+Ondrej Mosnacek
+Software Engineer, Platform Security - SELinux kernel
+Red Hat, Inc.
 
-Thanks,
-Mani
-
-> -- 
-> viresh
