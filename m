@@ -2,203 +2,162 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555C4C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18F7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1554F20936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599584847;
-	bh=1GQgNymHoeCIHfdcap9t87zvzoo+WAD3uNYBjZOBY9E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4sHapnaPgoy39a+NcR1iGhukUD8pbjvQprokIIOjHOQMEVmlMnfqni59yInK7pZC
-	 kY9vtYiUKMplQ8Aba0zymiNaSgnKyu5vvexjsWYA7pdjaREkXu/qWqewK8oz4dcLyx
-	 8VQF/ljWoi07YhpHCJNpP0xVmOnLU86oSIr8scpA=
+	by mail.kernel.org (Postfix) with ESMTP id 8ADCB2087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3hF/139"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732083AbgIHRHZ (ORCPT
+        id S1732096AbgIHRHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:07:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58968 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731809AbgIHQTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:19:20 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C9B32462D;
-        Tue,  8 Sep 2020 15:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579551;
-        bh=1GQgNymHoeCIHfdcap9t87zvzoo+WAD3uNYBjZOBY9E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwvrgncBIhdsq9yNc56/2HEcCUAejJ5raoZKXXLORyfzExSVa7/97vmEf+PU0ed/j
-         GEg14DZBM7U3as6t/1L7Hj8iPUegmwTmUxt+zxRcFVhkSuEBHENEDBWSsRx5wtpWKS
-         rHj7DxpWSXvPBbwAgAVIEuw06wFSlhXjWp15icqU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 125/186] btrfs: drop path before adding new uuid tree entry
-Date:   Tue,  8 Sep 2020 17:24:27 +0200
-Message-Id: <20200908152247.694471710@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
-References: <20200908152241.646390211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 8 Sep 2020 13:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731786AbgIHRHS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 13:07:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1990C061573;
+        Tue,  8 Sep 2020 10:07:18 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f18so11472012pfa.10;
+        Tue, 08 Sep 2020 10:07:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IOdsYvuedMqs4VETpiys3IXPYNWGiW6l6USeWyBo5Tw=;
+        b=E3hF/139sLDHkufkGEuXu0Q9tGnJAuMoinQNyL1/f1M5ITqMHmhy8VOQW9c2ijlO8J
+         45LVWXWWXwmRzEu1Iza+SsIpBUD3A5fNtsjLwCbBkhZEUwZm8UCr+w8qucGys/PaARi3
+         pHbYGFycwxvRzYFsAmKoyKgpJ5grAaeFAEKms4+JBCyRo3e6ZG40nKDU2bX+O1VRT5qJ
+         XqyldHdQVAYlBLqR0zs3qe/bgBGcTxCY+qCbSIX6pzB8jRcJJUNy2YfYRNZUGUbPRzUy
+         0U9duWrfBp97BcOKZBa/ht01rj3bCdryAIHmd06RvcfRdWgzeugwOLf8WsMnPq/MI3OQ
+         nIng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IOdsYvuedMqs4VETpiys3IXPYNWGiW6l6USeWyBo5Tw=;
+        b=ScdtPlF0W98ulEBr7ukNTk/8OyqlqQlSPXr/Q76XCbaqK3Qw/JvLw9P83F/kzmBp8Z
+         NxjAnFjLcOuo0Qy316vMgfvumehXRUCP4tt/JpDwA0q0F1n0veZTG8ETA74bHd7RLQU7
+         498Sa86nBRQZwPDHOst0BAAZ/SJfgp1xEjLNokrSQY6QjBrcAqQwY5PdtTPlCgtGArEy
+         BZohH3jMZChnwhiMllUNIWTGZ8VUWS42RVJdsmDFtEf66np8fD8NsCn68VEnz5bmN5K6
+         JCeLejtLrIo23ugW/n/v7S3b/9RL42sUd8708qOblA8X6oXFedqH5l9FJZzjtOMSU3uA
+         ZT0Q==
+X-Gm-Message-State: AOAM532v5+coaNmIOpRvKlnoy7IdVm4dN0KBEEnN8kx2avenZngaQo/V
+        qJxXMrOzG5zXWHfuV2QPKHE=
+X-Google-Smtp-Source: ABdhPJyBDsUF+MDMugjzk8GWbvb0LDjNE6l8t+6+RE+TZU51ofLulEyHHUkRKBe/RL/viJ9TXboP4Q==
+X-Received: by 2002:a62:1648:: with SMTP id 69mr24979230pfw.127.1599584838112;
+        Tue, 08 Sep 2020 10:07:18 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id e27sm16517pfj.62.2020.09.08.10.07.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:07:17 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:35:24 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 11/15] scsi: hpsa: use generic power management
+Message-ID: <20200908170524.GL9948@gmail.com>
+References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+ <20200720133427.454400-12-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200720133427.454400-12-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
-
-commit 9771a5cf937129307d9f58922d60484d58ababe7 upstream.
-
-With the conversion of the tree locks to rwsem I got the following
-lockdep splat:
-
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925 Not tainted
-  ------------------------------------------------------
-  btrfs-uuid/7955 is trying to acquire lock:
-  ffff88bfbafec0f8 (btrfs-root-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  but task is already holding lock:
-  ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  which lock already depends on the new lock.
-
-  the existing dependency chain (in reverse order) is:
-
-  -> #1 (btrfs-uuid-00){++++}-{3:3}:
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_uuid_tree_add+0x89/0x2d0
-	 btrfs_uuid_scan_kthread+0x330/0x390
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  -> #0 (btrfs-root-00){++++}-{3:3}:
-	 __lock_acquire+0x1272/0x2310
-	 lock_acquire+0x9e/0x360
-	 down_read_nested+0x3e/0x140
-	 __btrfs_tree_read_lock+0x39/0x180
-	 __btrfs_read_lock_root_node+0x3a/0x50
-	 btrfs_search_slot+0x4bd/0x990
-	 btrfs_find_root+0x45/0x1b0
-	 btrfs_read_tree_root+0x61/0x100
-	 btrfs_get_root_ref.part.50+0x143/0x630
-	 btrfs_uuid_tree_iterate+0x207/0x314
-	 btrfs_uuid_rescan_kthread+0x12/0x50
-	 kthread+0x133/0x150
-	 ret_from_fork+0x1f/0x30
-
-  other info that might help us debug this:
-
-   Possible unsafe locking scenario:
-
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(btrfs-uuid-00);
-				 lock(btrfs-root-00);
-				 lock(btrfs-uuid-00);
-    lock(btrfs-root-00);
-
-   *** DEADLOCK ***
-
-  1 lock held by btrfs-uuid/7955:
-   #0: ffff88bfbafef2a8 (btrfs-uuid-00){++++}-{3:3}, at: __btrfs_tree_read_lock+0x39/0x180
-
-  stack backtrace:
-  CPU: 73 PID: 7955 Comm: btrfs-uuid Kdump: loaded Not tainted 5.8.0-rc7-00167-g0d7ba0c5b375-dirty #925
-  Hardware name: Quanta Tioga Pass Single Side 01-0030993006/Tioga Pass Single Side, BIOS F08_3A18 12/20/2018
-  Call Trace:
-   dump_stack+0x78/0xa0
-   check_noncircular+0x165/0x180
-   __lock_acquire+0x1272/0x2310
-   lock_acquire+0x9e/0x360
-   ? __btrfs_tree_read_lock+0x39/0x180
-   ? btrfs_root_node+0x1c/0x1d0
-   down_read_nested+0x3e/0x140
-   ? __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_tree_read_lock+0x39/0x180
-   __btrfs_read_lock_root_node+0x3a/0x50
-   btrfs_search_slot+0x4bd/0x990
-   btrfs_find_root+0x45/0x1b0
-   btrfs_read_tree_root+0x61/0x100
-   btrfs_get_root_ref.part.50+0x143/0x630
-   btrfs_uuid_tree_iterate+0x207/0x314
-   ? btree_readpage+0x20/0x20
-   btrfs_uuid_rescan_kthread+0x12/0x50
-   kthread+0x133/0x150
-   ? kthread_create_on_node+0x60/0x60
-   ret_from_fork+0x1f/0x30
-
-This problem exists because we have two different rescan threads,
-btrfs_uuid_scan_kthread which creates the uuid tree, and
-btrfs_uuid_tree_iterate that goes through and updates or deletes any out
-of date roots.  The problem is they both do things in different order.
-btrfs_uuid_scan_kthread() reads the tree_root, and then inserts entries
-into the uuid_root.  btrfs_uuid_tree_iterate() scans the uuid_root, but
-then does a btrfs_get_fs_root() which can read from the tree_root.
-
-It's actually easy enough to not be holding the path in
-btrfs_uuid_scan_kthread() when we add a uuid entry, as we already drop
-it further down and re-start the search when we loop.  So simply move
-the path release before we add our entry to the uuid tree.
-
-This also fixes a problem where we're holding a path open after we do
-btrfs_end_transaction(), which has it's own problems.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/volumes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4462,6 +4462,7 @@ int btrfs_uuid_scan_kthread(void *data)
- 			goto skip;
- 		}
- update_tree:
-+		btrfs_release_path(path);
- 		if (!btrfs_is_empty_uuid(root_item.uuid)) {
- 			ret = btrfs_uuid_tree_add(trans, root_item.uuid,
- 						  BTRFS_UUID_KEY_SUBVOL,
-@@ -4486,6 +4487,7 @@ update_tree:
- 		}
- 
- skip:
-+		btrfs_release_path(path);
- 		if (trans) {
- 			ret = btrfs_end_transaction(trans);
- 			trans = NULL;
-@@ -4493,7 +4495,6 @@ skip:
- 				break;
- 		}
- 
--		btrfs_release_path(path);
- 		if (key.offset < (u64)-1) {
- 			key.offset++;
- 		} else if (key.type < BTRFS_ROOT_ITEM_KEY) {
-
-
+On Mon, Jul 20, 2020 at 07:04:24PM +0530, Vaibhav Gupta wrote:
+> Drivers using legacy PM have to manage PCI states and device's PM states
+> themselves. They also need to take care of configuration registers.
+> 
+> With improved and powerful support of generic PM, PCI Core takes care of
+> above mentioned, device-independent, jobs.
+> 
+> Change function parameter in both .suspend() and .resume() to
+> "struct device*" type. The function body remains unchanged as it was empty.
+> Also, bind callbacks with "static const struct dev_pm_ops" variable.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/scsi/hpsa.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/scsi/hpsa.c b/drivers/scsi/hpsa.c
+> index 81d0414e2117..70bdd6fe91ee 100644
+> --- a/drivers/scsi/hpsa.c
+> +++ b/drivers/scsi/hpsa.c
+> @@ -9070,25 +9070,27 @@ static void hpsa_remove_one(struct pci_dev *pdev)
+>  	hpda_free_ctlr_info(h);				/* init_one 1 */
+>  }
+>  
+> -static int hpsa_suspend(__attribute__((unused)) struct pci_dev *pdev,
+> -	__attribute__((unused)) pm_message_t state)
+> +static int __maybe_unused hpsa_suspend(
+> +	__attribute__((unused)) struct device *dev)
+>  {
+>  	return -ENOSYS;
+>  }
+>  
+> -static int hpsa_resume(__attribute__((unused)) struct pci_dev *pdev)
+> +static int __maybe_unused hpsa_resume
+> +	(__attribute__((unused)) struct device *dev)
+>  {
+>  	return -ENOSYS;
+>  }
+>  
+> +static SIMPLE_DEV_PM_OPS(hpsa_pm_ops, hpsa_suspend, hpsa_resume);
+> +
+>  static struct pci_driver hpsa_pci_driver = {
+>  	.name = HPSA,
+>  	.probe = hpsa_init_one,
+>  	.remove = hpsa_remove_one,
+>  	.id_table = hpsa_pci_device_id,	/* id_table */
+>  	.shutdown = hpsa_shutdown,
+> -	.suspend = hpsa_suspend,
+> -	.resume = hpsa_resume,
+> +	.driver.pm = &hpsa_pm_ops,
+>  };
+>  
+>  /* Fill in bucket_map[], given nsgs (the max number of
+> -- 
+> 2.27.0
+> 
+.
