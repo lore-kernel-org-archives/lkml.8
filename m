@@ -2,91 +2,182 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72356C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548EBC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32B1C2076C
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1328B2076C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WE7GI1Fm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CMnJ8NZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbgIHTZR (ORCPT
+        id S1732066AbgIHTZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54344 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731082AbgIHQAn (ORCPT
+        Tue, 8 Sep 2020 15:25:31 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1578 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731071AbgIHQAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:00:43 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 369DDC061386
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 08:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=b0t5z+qQG1ZBS7H6b7JrMNbuOF10sV7lq6zuv68QoOk=; b=WE7GI1FmhLy4VJa7HinxaNTyg5
-        W2oX8Pvudh0bQzETvhChmPYJAaJ6CSFSPOYS0EUPPayPY76pi2t4mAOohC+I0Mw5D4fsO6TiVz3c+
-        P24ohSbPjOeVDXAfQi4gRX5KBkFDF9210T+DXrMxQ8IaVBP5FFXOUdagoySMcG7MPpZ6I0rK/Dylm
-        qCqDis0r68MLYTMkfIG1je1XRoXC7/FjW6XPOI1m3Y4R2z9puhNJuxXya0+oZ9AgRN0nzCKd6cU5G
-        dCdd1VE7III74de9bgKLHHeBP63kc15CZteugiBgHOWznNHY9/e6zKFMeRYHSw/iTZcFBcH6BcJe5
-        ZtDIQxOg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kFg14-0006h8-Ku; Tue, 08 Sep 2020 15:58:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4E3CA3010D2;
-        Tue,  8 Sep 2020 17:58:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 283302C099E17; Tue,  8 Sep 2020 17:58:40 +0200 (CEST)
-Date:   Tue, 8 Sep 2020 17:58:40 +0200
-From:   peterz@infradead.org
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, acme@kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, mark.rutland@arm.com, luto@amacapital.net
-Subject: Re: [PATCH V2 3/3] perf/x86: Reset the dirty counter to prevent the
- leak for an RDPMC task
-Message-ID: <20200908155840.GC35926@hirez.programming.kicks-ass.net>
-References: <20200821195754.20159-1-kan.liang@linux.intel.com>
- <20200821195754.20159-3-kan.liang@linux.intel.com>
- <20200907160115.GS2674@hirez.programming.kicks-ass.net>
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f57768b0001>; Tue, 08 Sep 2020 05:18:19 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 08 Sep 2020 05:18:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 08 Sep 2020 05:18:33 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 8 Sep
+ 2020 12:18:33 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.171)
+ by HQMAIL111.nvidia.com (172.20.187.18) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 8 Sep 2020 12:18:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UXd/XWXr/mBggv1sn8fyBs1aNz5iidvgxMgRLcfNliErEqRiBOxMR+qfZYBckPQwbjsmetaypx2cGt8PAr2U3+92BdD7ije2MKO0Mjit6NInhpEHQ8Z3Sa2Q3YpRxAVA2BpwMg/PV1+8nTVIZn55AoD27qI4zzQAe9vtI7re5IB8uHmkQxkQ+n72fxKdZ2FLUJGJuV+/+WLTsgUEdMaBkX5XMuCIx+H9u7H2BE3jFxKnq6A/y4kMI/e8c5LRK4kVMRwmIPX3f0FZ8iQfKhAZCdOdrzTWsEq0mwYFcc3/b+MmVg93TgyHR9tDeHZmDVh3gy4mcmkd2hwvlmjFwmYPTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CGsNcIwdPaEJi8jThsV1uqtWfah3BveIJqAAU0lUZNM=;
+ b=aTttXlY+Tv/KGJxBAi5lXgNaxsLT/kZInSGMGRD/ah9qinKa0488njunIgHMJe9lhcDi6lDQEXc4WhG/D13ZdCu/FkG1+kT7XvV/1l1AUfsQjdXoaIlTAOYrle1VR923fkhq3njt23lcWo/dtYiQsuz8aqq5u6nxXiU9YwVxu2/qrkVdT5rPPaYKsALgEYntwrgpTIrU+sf4E8P4mFQN1yQIJGcGkY8TXARNnutUelyBhklScUKr5gHTl23AOY1Q67+hZntoyCQ1FlTDmuyfSVDcvAWl1TX5mlMsSnSXBhklg+vWM2x8hH8Yw462Rh5833A+ol3exAvxxJCwlu2CxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BYAPR12MB2823.namprd12.prod.outlook.com (2603:10b6:a03:96::33)
+ by BYAPR12MB2919.namprd12.prod.outlook.com (2603:10b6:a03:12c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 8 Sep
+ 2020 12:18:31 +0000
+Received: from BYAPR12MB2823.namprd12.prod.outlook.com
+ ([fe80::7dd0:ad41:3d71:679b]) by BYAPR12MB2823.namprd12.prod.outlook.com
+ ([fe80::7dd0:ad41:3d71:679b%6]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
+ 12:18:31 +0000
+From:   Nikolay Aleksandrov <nikolay@nvidia.com>
+To:     "bridge@lists.linux-foundation.org" 
+        <bridge@lists.linux-foundation.org>,
+        "henrik.bjoernlund@microchip.com" <henrik.bjoernlund@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jiri@mellanox.com" <jiri@mellanox.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        "idosch@mellanox.com" <idosch@mellanox.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>
+CC:     "horatiu.vultur@microchip.com" <horatiu.vultur@microchip.com>
+Subject: Re: [PATCH RFC 2/7] bridge: cfm: Add BRIDGE_CFM to Kconfig.
+Thread-Topic: [PATCH RFC 2/7] bridge: cfm: Add BRIDGE_CFM to Kconfig.
+Thread-Index: AQHWgpx4vaCTm02ulUKOejWt4a0/5KlerxoA
+Date:   Tue, 8 Sep 2020 12:18:31 +0000
+Message-ID: <e145b130ba56460ecf11318f9a4550d2637aa222.camel@nvidia.com>
+References: <20200904091527.669109-1-henrik.bjoernlund@microchip.com>
+         <20200904091527.669109-3-henrik.bjoernlund@microchip.com>
+In-Reply-To: <20200904091527.669109-3-henrik.bjoernlund@microchip.com>
+Reply-To: Nikolay Aleksandrov <nikolay@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+authentication-results: lists.linux-foundation.org; dkim=none (message not
+ signed) header.d=none;lists.linux-foundation.org; dmarc=none action=none
+ header.from=nvidia.com;
+x-originating-ip: [84.238.136.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fff34f1f-cea5-4c23-b150-08d853f14d0d
+x-ms-traffictypediagnostic: BYAPR12MB2919:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB29192E463CB886ECEEF65991DF290@BYAPR12MB2919.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LEFyC4iE4I3XhaKXg2dYrt+wVbEQ42F8J2ZivdD+OuXGcD/7cU/jfCCy62gJPvv2bAhOq12aeB/B1lHZ691lnPJG41tc2W+Cb1GO+4MvYXbB+H1wcPOzKQJn38gvGUXytJV/1BjVQhxiLtI+nLtHmgqV26NCg8xgCGJV7ryAiN8KlVbGUFmFKcOcsRBsJoJYna9W5S1nVAsWugAYgFJ5MsDcg38/uTLImpNYUGMAzfnVEumcYCX6H2oz/ZbEkSzTV7WdpUX6XThQVyXeXCWXgGdtECwNbJh8d5TwsPv7ZeKAbOdFoMjp8CzCeO3LbMDBBvNN5TVwLy4pZ/5MYCBvKw6jn9R2tHU5QUfmM/eWGVYySO4dZrnCISpnd1Byv0Uj
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2823.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(39860400002)(136003)(396003)(346002)(2906002)(3450700001)(83380400001)(36756003)(6512007)(5660300002)(186003)(6506007)(2616005)(71200400001)(478600001)(26005)(316002)(4326008)(86362001)(110136005)(66476007)(91956017)(76116006)(66556008)(66446008)(64756008)(6486002)(66946007)(8936002)(8676002)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 9N5gt9gFwc9fYN4YUVdSBpvRsbk9hWNBKkdr2oqJaqxZhnJ3IUNUy8r6TipVdWDG2TMOn3N1E4qii1QvnK26TLFqdqz5ZL+xP3br2Y1GSkO+RjZPnxc3h+Vl/qcZBJBIEEkrxr7GdVQE21lrk3mOXpQUakse4QJdT9zuUdlGN23dn8rzppHqMf9ld6GB+VvtsFmAirDj1QTFIgN9OKakvbRH4D1tP+t9YsCwBusA7ETyOZ5R/P2v9sBVxgncbE2kWOnfm9cl2pxOSjI7tJUXjXaO7ZB7HZvhDwPMeQVJ/r/5eGffVsOII3z6BmNu8SZhnGFycCk7UMH8Re+6I9r3B8qJrMqC+h6Nyo18g9inKISA5MwRYh4cunN1DlQO1E8tEkqnsHkJtp/Mxe7TbIEsPc/hGlrIbFeF8MN8kyTewp8gxf1ueY3zJpZT2KTPH4A92Hbrmx1zyWBM5Yh26D6AbA9lW9SWURnSBGeM5G1+1lRybsoy4ZGrpCWFIqQxPfl5aJc8aAysPiYykgtTZP4wc0K2jD507ZKd7CjwKiYit/IeHPvKQXd7RXJiLLKIrF6A3KI5qJORTMf0sv2Jj8EggaqUE3EUji7OOQnV9Deq7bvIL0qlEVcxGkg2ue+W8GIlyl7aLtNjlLfPx1kRc9xXhw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D9027594D27E84448F9D96A1042E8A31@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200907160115.GS2674@hirez.programming.kicks-ass.net>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2823.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fff34f1f-cea5-4c23-b150-08d853f14d0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2020 12:18:31.5483
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1JofDo4dbbFfrSMD1x7ncVO0hcE/ggC4ZhbYv+y1mttByQT79FXJ+W2yiQBhy0RdTj2WfyKJcQFFoPTsWOilHQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2919
+X-OriginatorOrg: Nvidia.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599567499; bh=CGsNcIwdPaEJi8jThsV1uqtWfah3BveIJqAAU0lUZNM=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:Reply-To:
+         Accept-Language:Content-Language:X-MS-Has-Attach:
+         X-MS-TNEF-Correlator:user-agent:authentication-results:
+         x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-ms-exchange-senderadcheck:
+         x-microsoft-antispam:x-microsoft-antispam-message-info:
+         x-forefront-antispam-report:x-ms-exchange-antispam-messagedata:
+         Content-Type:Content-ID:Content-Transfer-Encoding:MIME-Version:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=CMnJ8NZ5vxNX8NJxJ9dYpmSrif7oWknRklFZWx4/TOVT/8fkMW27uFoGqmBvZAOi6
+         z/wOtbLO0PBd1hIyWlGogoeBIWOfddmFi6cDzO5DqCxRg1hqDm1mZsvfUdDwYRLxQN
+         EmPEOz++dtpeqStEIsRBv6Vf5xmV3LTfgqv4V095UoxSI/P7dmdNhCYF9M3QAJIlms
+         wx9fyZPm6WyLrw5vVzPunSjot39KGLEMD+gmdxtn8ebEfkc3PEDufYZSkciIF2I1os
+         3BRmc5PjG+sDM0ew0lxmCpPG/XLA/pL3U5oBznSiQriYsUsvmqdNgqKcaSJtIQTgu7
+         aEKe8laa95/Kg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 07, 2020 at 06:01:15PM +0200, peterz@infradead.org wrote:
-> On Fri, Aug 21, 2020 at 12:57:54PM -0700, kan.liang@linux.intel.com wrote:
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 0f3d01562ded..fa08d810dcd2 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1440,7 +1440,10 @@ static void x86_pmu_start(struct perf_event *event, int flags)
-> >  
-> >  	cpuc->events[idx] = event;
-> >  	__set_bit(idx, cpuc->active_mask);
-> > -	__set_bit(idx, cpuc->running);
-> > +	/* The cpuc->running is only used by the P4 PMU */
-> > +	if (!cpu_has(&boot_cpu_data, X86_FEATURE_ARCH_PERFMON) &&
-> > +	    (boot_cpu_data.x86 == 0xf))
-> > +		__set_bit(idx, cpuc->running);
-> >  	x86_pmu.enable(event);
-> >  	perf_event_update_userpage(event);
-> >  }
-> 
-> Yuck! Use a static_branch() or something. This is a gnarly nest of code
-> that runs 99.9% of the time to conclude a negative. IOW a complete waste
-> of cycles for everybody not running a P4 space heater.
-
-Better still, move it into p4_pmu_enable_event().
+T24gRnJpLCAyMDIwLTA5LTA0IGF0IDA5OjE1ICswMDAwLCBIZW5yaWsgQmpvZXJubHVuZCB3cm90
+ZToNCj4gVGhpcyBtYWtlcyBpdCBwb3NzaWJsZSB0byBpbmNsdWRlIG9yIGV4Y2x1ZGUgdGhlIENG
+TQ0KPiBwcm90b2NvbCBhY2NvcmRpbmcgdG8gODAyLjFRIHNlY3Rpb24gMTIuMTQuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBIZW5yaWsgQmpvZXJubHVuZCAgPGhlbnJpay5iam9lcm5sdW5kQG1pY3Jv
+Y2hpcC5jb20+DQo+IC0tLQ0KPiAgbmV0L2JyaWRnZS9LY29uZmlnICAgICAgfCAxMSArKysrKysr
+KysrKw0KPiAgbmV0L2JyaWRnZS9icl9kZXZpY2UuYyAgfCAgMyArKysNCj4gIG5ldC9icmlkZ2Uv
+YnJfcHJpdmF0ZS5oIHwgIDMgKysrDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDE3IGluc2VydGlvbnMo
+KykNCj4gDQo+IGRpZmYgLS1naXQgYS9uZXQvYnJpZGdlL0tjb25maWcgYi9uZXQvYnJpZGdlL0tj
+b25maWcNCj4gaW5kZXggODA4NzkxOTY1NjBjLi4zYzhkZWQ3ZDNlODQgMTAwNjQ0DQo+IC0tLSBh
+L25ldC9icmlkZ2UvS2NvbmZpZw0KPiArKysgYi9uZXQvYnJpZGdlL0tjb25maWcNCj4gQEAgLTcz
+LDMgKzczLDE0IEBAIGNvbmZpZyBCUklER0VfTVJQDQo+ICAJICBTYXkgTiB0byBleGNsdWRlIHRo
+aXMgc3VwcG9ydCBhbmQgcmVkdWNlIHRoZSBiaW5hcnkgc2l6ZS4NCj4gIA0KPiAgCSAgSWYgdW5z
+dXJlLCBzYXkgTi4NCj4gKw0KPiArY29uZmlnIEJSSURHRV9DRk0NCj4gKwlib29sICJDRk0gcHJv
+dG9jb2wiDQo+ICsJZGVwZW5kcyBvbiBCUklER0UNCj4gKwloZWxwDQo+ICsJICBJZiB5b3Ugc2F5
+IFkgaGVyZSwgdGhlbiB0aGUgRXRoZXJuZXQgYnJpZGdlIHdpbGwgYmUgYWJsZSB0byBydW4gQ0ZN
+DQo+ICsJICBwcm90b2NvbCBhY2NvcmRpbmcgdG8gODAyLjFRIHNlY3Rpb24gMTIuMTQNCj4gKw0K
+PiArCSAgU2F5IE4gdG8gZXhjbHVkZSB0aGlzIHN1cHBvcnQgYW5kIHJlZHVjZSB0aGUgYmluYXJ5
+IHNpemUuDQo+ICsNCj4gKwkgIElmIHVuc3VyZSwgc2F5IE4uDQo+IGRpZmYgLS1naXQgYS9uZXQv
+YnJpZGdlL2JyX2RldmljZS5jIGIvbmV0L2JyaWRnZS9icl9kZXZpY2UuYw0KPiBpbmRleCBhOTIz
+MmRiMDMxMDguLmQxMmY1NjI2YTRiMSAxMDA2NDQNCj4gLS0tIGEvbmV0L2JyaWRnZS9icl9kZXZp
+Y2UuYw0KPiArKysgYi9uZXQvYnJpZGdlL2JyX2RldmljZS5jDQo+IEBAIC00NzYsNiArNDc2LDkg
+QEAgdm9pZCBicl9kZXZfc2V0dXAoc3RydWN0IG5ldF9kZXZpY2UgKmRldikNCj4gIAlJTklUX0xJ
+U1RfSEVBRCgmYnItPmZ0eXBlX2xpc3QpOw0KPiAgI2lmIElTX0VOQUJMRUQoQ09ORklHX0JSSURH
+RV9NUlApDQo+ICAJSU5JVF9MSVNUX0hFQUQoJmJyLT5tcnBfbGlzdCk7DQo+ICsjZW5kaWYNCj4g
+KyNpZiBJU19FTkFCTEVEKENPTkZJR19CUklER0VfQ0ZNKQ0KPiArCUlOSVRfTElTVF9IRUFEKCZi
+ci0+bWVwX2xpc3QpOw0KPiAgI2VuZGlmDQo+ICAJc3Bpbl9sb2NrX2luaXQoJmJyLT5oYXNoX2xv
+Y2spOw0KPiAgDQo+IGRpZmYgLS1naXQgYS9uZXQvYnJpZGdlL2JyX3ByaXZhdGUuaCBiL25ldC9i
+cmlkZ2UvYnJfcHJpdmF0ZS5oDQo+IGluZGV4IGU2N2M2ZDllOGJlYS4uNjI5NGEzZTUxYTMzIDEw
+MDY0NA0KPiAtLS0gYS9uZXQvYnJpZGdlL2JyX3ByaXZhdGUuaA0KPiArKysgYi9uZXQvYnJpZGdl
+L2JyX3ByaXZhdGUuaA0KPiBAQCAtNDQ1LDYgKzQ0NSw5IEBAIHN0cnVjdCBuZXRfYnJpZGdlIHsN
+Cj4gICNpZiBJU19FTkFCTEVEKENPTkZJR19CUklER0VfTVJQKQ0KPiAgCXN0cnVjdCBsaXN0X2hl
+YWQJCW1ycF9saXN0Ow0KPiAgI2VuZGlmDQo+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfQlJJREdF
+X0NGTSkNCj4gKwlzdHJ1Y3QgbGlzdF9oZWFkCQltZXBfbGlzdDsNCj4gKyNlbmRpZg0KPiAgfTsN
+Cj4gIA0KPiAgc3RydWN0IGJyX2lucHV0X3NrYl9jYiB7DQoNCkxvb2tzIGdvb2QsIHBlcmhhcHMg
+YWxzbyBjYW4gdXNlIGhsaXN0IHRvIHJlZHVjZSB0aGUgaGVhZCBzaXplIGluIG5ldF9icmlkZ2Uu
+DQoNCg==
