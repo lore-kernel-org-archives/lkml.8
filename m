@@ -2,82 +2,320 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1955C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655352256B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DBF23F29
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 15:06:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EMT8EAzf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgIHPBt (ORCPT
+        id S1729961AbgIHPFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 11:01:49 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30542 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbgIHOYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 10:24:51 -0400
-IronPort-SDR: j1rb+VyL4y6f9UVj4mzg5ieTuTtPzROest3KgFNZSFux095SBr6BEXGOIPEg9KFNhGVUbe+Y7D
- P8KPn1uyEqgg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9737"; a="145840389"
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="145840389"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2020 06:52:12 -0700
-IronPort-SDR: GtH7tHAz0ahq8zXLnnABf2GLWZGgYtsMnXaHdd82W1KnqJvzH5xd7xWYoriyVZbzqg4zqFYEF+
- X3UqcHJehHYQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,405,1592895600"; 
-   d="scan'208";a="333479206"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 08 Sep 2020 06:52:10 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kFe0T-00FDbA-Gr; Tue, 08 Sep 2020 16:49:57 +0300
-Date:   Tue, 8 Sep 2020 16:49:57 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 3/3] gpiolib: unexport devprop_gpiochip_set_names()
-Message-ID: <20200908134957.GB1891694@smile.fi.intel.com>
-References: <20200908125813.8809-1-brgl@bgdev.pl>
- <20200908125813.8809-4-brgl@bgdev.pl>
+        Tue, 8 Sep 2020 11:05:06 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:49896 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729953AbgIHPD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 11:03:56 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 088DoBcA053778;
+        Tue, 8 Sep 2020 08:50:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599573011;
+        bh=qHLb+aBzQu0XOv/X10dRlx794IjobDqksoE3Mzhu9Rc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=EMT8EAzfZ2+Yw0UXfSoMMmNmBwQ/TyZ1EWFOar8tQE22hGSnP7XfZhSx9nEZRLomw
+         zsWGPqwbcsbf7IA021UF376HHbwutublPiuVHCcaCQGxvnel61yWpErR7DC903yROS
+         x+jTX9aOAXQYYQUmvbt30HMcBJH7fKHPLK9Y/hpQ=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088DoBFs083592;
+        Tue, 8 Sep 2020 08:50:11 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 8 Sep
+ 2020 08:50:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 8 Sep 2020 08:50:11 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 088DoAgk050565;
+        Tue, 8 Sep 2020 08:50:11 -0500
+Subject: Re: [PATCH] ASoC: tlv320adcx140: Add support for master mode
+To:     Camel Guo <camel.guo@axis.com>, <lgirdwood@gmail.com>,
+        <broonie@kernel.org>, <tiwai@suse.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@axis.com>, Camel Guo <camelg@axis.com>
+References: <20200908091812.1441-1-camel.guo@axis.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <1fdc20a0-2bc7-f479-e489-5a31ba36e4c3@ti.com>
+Date:   Tue, 8 Sep 2020 08:50:10 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200908125813.8809-4-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200908091812.1441-1-camel.guo@axis.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 08, 2020 at 02:58:13PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Now that devprop_gpiochip_set_names() is only used in a single place
-> inside drivers/gpio/gpiolib.c, there's no need anymore for it to be
-> exported or to even live in its own source file. Pull this function into
-> the core source file for gpiolib.
+Camel
 
-Did you miss to remove old file?
+On 9/8/20 4:18 AM, Camel Guo wrote:
+> From: Camel Guo <camelg@axis.com>
+>
+> Add setup of bclk-to-ws ratio and sample rate when in master mode,
+> as well as MCLK input pin setup.
 
->  drivers/gpio/Makefile       |  1 -
->  drivers/gpio/gpiolib.c      | 47 +++++++++++++++++++++++++++++++++++++
->  include/linux/gpio/driver.h |  2 --
+The patches you submitted need to go on the sound/for-next branch as it 
+does not apply cleanly.
 
--- 
-With Best Regards,
-Andy Shevchenko
+https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
 
+> Limitations:
+>
+> - MCLK is assumed to be connected to GPIO1 (other possible choices
+>    would be GPI0..3 if they weren't used for analog positive inputs).
+> - PLL is always enabled, and clock generation is in automatic mode.
+>
+> Signed-off-by: Camel Guo <camelg@axis.com>
+> ---
+>   sound/soc/codecs/tlv320adcx140.c | 134 ++++++++++++++++++++++++++++++-
+>   sound/soc/codecs/tlv320adcx140.h |  35 ++++++++
+>   2 files changed, 165 insertions(+), 4 deletions(-)
+>
+> diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+> index 13ece039e9fe..f143b6b62f84 100644
+> --- a/sound/soc/codecs/tlv320adcx140.c
+> +++ b/sound/soc/codecs/tlv320adcx140.c
+> @@ -35,6 +35,7 @@ struct adcx140_priv {
+>   	unsigned int dai_fmt;
+>   	unsigned int tdm_delay;
+>   	unsigned int slot_width;
+> +	int master;
+Can this be a bool instead?
+>   };
+>   
+>   static const char * const gpo_config_names[] = {
+> @@ -614,12 +615,85 @@ static int adcx140_reset(struct adcx140_priv *adcx140)
+>   	return ret;
+>   }
+>   
+> +static int adcx140_fs_bclk_ratio(unsigned int bclk_ratio)
+> +{
+> +	switch (bclk_ratio) {
+> +	case 16:
+> +		return ADCX140_RATIO_16;
+> +	case 24:
+> +		return ADCX140_RATIO_24;
+> +	case 32:
+> +		return ADCX140_RATIO_32;
+> +	case 48:
+> +		return ADCX140_RATIO_48;
+> +	case 64:
+> +		return ADCX140_RATIO_64;
+> +	case 96:
+> +		return ADCX140_RATIO_96;
+> +	case 128:
+> +		return ADCX140_RATIO_128;
+> +	case 192:
+> +		return ADCX140_RATIO_192;
+> +	case 256:
+> +		return ADCX140_RATIO_256;
+> +	case 384:
+> +		return ADCX140_RATIO_384;
+> +	case 512:
+> +		return ADCX140_RATIO_512;
+> +	case 1024:
+> +		return ADCX140_RATIO_1024;
+> +	case 2048:
+> +		return ADCX140_RATIO_2048;
+> +	default:
+> +		break;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static int adcx140_fs_rate(unsigned int rate)
+> +{
+> +	switch (rate) {
+> +	case 7350:
+> +	case 8000:
+> +		return ADCX140_8_OR_7_35KHZ;
+> +	case 14700:
+> +	case 16000:
+> +		return ADCX140_16_OR_14_7KHZ;
+> +	case 22050:
+> +	case 24000:
+> +		return ADCX140_24_OR_22_05KHZ;
+> +	case 29400:
+> +	case 32000:
+> +		return ADCX140_32_OR_29_4KHZ;
+> +	case 44100:
+> +	case 48000:
+> +		return ADCX140_48_OR_44_1KHZ;
+> +	case 88200:
+> +	case 96000:
+> +		return ADCX140_96_OR_88_2KHZ;
+> +	case 176400:
+> +	case 192000:
+> +		return ADCX140_192_OR_176_4KHZ;
+> +	case 352800:
+> +	case 384000:
+> +		return ADCX140_384_OR_352_8KHZ;
+> +	case 705600:
+> +	case 768000:
+> +		return ADCX140_768_OR_705_6KHZ;
+> +	default:
+> +		break;
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+>   static int adcx140_hw_params(struct snd_pcm_substream *substream,
+>   			     struct snd_pcm_hw_params *params,
+>   			     struct snd_soc_dai *dai)
+>   {
+>   	struct snd_soc_component *component = dai->component;
+> +	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
+>   	u8 data = 0;
+> +	u8 mst_cfg0 = 0;
+>   
+>   	switch (params_width(params)) {
+>   	case 16:
+> @@ -640,6 +714,60 @@ static int adcx140_hw_params(struct snd_pcm_substream *substream,
+>   		return -EINVAL;
+>   	}
+>   
+> +	if (adcx140->master) {
+> +		u8 mst_cfg1 = 0;
+> +		u8 gpio_cfg0 = 0;
+
+> +		unsigned int bclk_ratio;
+> +		int ret;
+> +
+
+Can this be moved into a function?
+
+Then we can avoid variable init mid function
+
+> +		mst_cfg0 = ADCX140_MST_SLV_CFG_BIT;
+> +		if (params_rate(params) % 1000)
+> +			mst_cfg0 |= ADCX140_FS_MODE_BIT; /* 44.1 kHz et al */
+> +
+> +		ret = adcx140_fs_rate(params_rate(params));
+> +		if (ret < 0) {
+> +			dev_err(component->dev, "%s: Unsupported rate %d\n",
+> +				__func__, params_rate(params));
+> +			return ret;
+> +		}
+> +		mst_cfg1 |= ret;
+> +
+> +		/* In slave mode when using automatic clock configuration,
+> +		 * the codec figures out the BCLK to FSYNC ratio itself. But
+> +		 * here in master mode, we need to tell it.
+> +		 */
+> +
+> +		bclk_ratio = snd_soc_params_to_frame_size(params);
+> +		ret = adcx140_fs_bclk_ratio(bclk_ratio);
+> +		if (ret < 0) {
+> +			dev_err(component->dev, "%s: Unsupported bclk_ratio %d\n",
+> +				__func__, bclk_ratio);
+> +			return ret;
+> +		}
+> +		mst_cfg1 |= ret;
+> +
+> +		/* The codec can receive MCLK on any input: GPIO, GPI0..3.
+> +		 * While in future it would be nice to have these selectable
+> +		 * via clk_id for instance, for now we fix GPIO1 as the MCLK
+> +		 * source.
+> +		 */
+> +		gpio_cfg0 |= ADCX140_GPIO1_MCLK;
+
+Actually the latest driver has the GPO and GPI configurable via the DT
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/tlv320adcx140.yaml?h=v5.9-rc4
+
+Shouldn't be to difficult to add the GPIO as well please add this 
+instead of hard coding the GPIO.
+
+
+> +
+> +		snd_soc_component_update_bits(component, ADCX140_MST_CFG1,
+> +					      ADCX140_FS_RATE_MSK |
+> +					      ADCX140_RATIO_MSK,
+> +					      mst_cfg1);
+> +
+> +		snd_soc_component_update_bits(component, ADCX140_GPIO_CFG0,
+> +					      ADCX140_GPIO1_CFG_MSK,
+> +					      gpio_cfg0);
+> +	}
+> +
+> +	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
+> +				      ADCX140_FS_MODE_BIT |
+> +				      ADCX140_MST_SLV_CFG_BIT,
+> +				      mst_cfg0);
+> +
+>   	snd_soc_component_update_bits(component, ADCX140_ASI_CFG0,
+>   			    ADCX140_WORD_LEN_MSK, data);
+>   
+> @@ -652,16 +780,16 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
+>   	struct snd_soc_component *component = codec_dai->component;
+>   	struct adcx140_priv *adcx140 = snd_soc_component_get_drvdata(component);
+>   	u8 iface_reg1 = 0;
+> -	u8 iface_reg2 = 0;
+>   	int offset = 0;
+>   	int width = adcx140->slot_width;
+>   
+>   	/* set master/slave audio interface */
+>   	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+>   	case SND_SOC_DAIFMT_CBM_CFM:
+> -		iface_reg2 |= ADCX140_BCLK_FSYNC_MASTER;
+
+> +		adcx140->master = 1;
+>   		break;
+>   	case SND_SOC_DAIFMT_CBS_CFS:
+> +		adcx140->master = 0;
+>   		break;
+>   	case SND_SOC_DAIFMT_CBS_CFM:
+>   	case SND_SOC_DAIFMT_CBM_CFS:
+> @@ -714,8 +842,6 @@ static int adcx140_set_dai_fmt(struct snd_soc_dai *codec_dai,
+>   				      ADCX140_BCLKINV_BIT |
+>   				      ADCX140_ASI_FORMAT_MSK,
+>   				      iface_reg1);
+> -	snd_soc_component_update_bits(component, ADCX140_MST_CFG0,
+> -				      ADCX140_BCLK_FSYNC_MASTER, iface_reg2);
+>   
+>   	/* Configure data offset */
+>   	snd_soc_component_update_bits(component, ADCX140_ASI_CFG1,
+> diff --git a/sound/soc/codecs/tlv320adcx140.h b/sound/soc/codecs/tlv320adcx140.h
+> index eedbc1d7221f..bac34800b189 100644
+> --- a/sound/soc/codecs/tlv320adcx140.h
+> +++ b/sound/soc/codecs/tlv320adcx140.h
+> @@ -145,4 +145,39 @@
+>   #define ADCX140_GPO_CFG_MAX		4
+>   #define ADCX140_GPO_DRV_MAX		5
+>   
+> +/* MST_CFG0 */
+> +#define ADCX140_MST_SLV_CFG_BIT	BIT(7)
+
+This is already defined as  ADCX140_BCLK_FSYNC_MASTER please don't 
+define defines that are already defined.
+
+> +#define ADCX140_FS_MODE_BIT	BIT(3)
+
+This is already defined as ADCX140_FSYNCINV_BIT
+
+Dan
 
