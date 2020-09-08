@@ -2,289 +2,238 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6252EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4528CC2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB09207DE
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 089742087C
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:10:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aOzz+i4C";
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="UTrG2BQt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyS6OBFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgIHRJL (ORCPT
+        id S1731881AbgIHRKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:09:11 -0400
-Received: from a27-188.smtp-out.us-west-2.amazonses.com ([54.240.27.188]:60186
-        "EHLO a27-188.smtp-out.us-west-2.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732102AbgIHRIA (ORCPT
+        Tue, 8 Sep 2020 13:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731354AbgIHRKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 13:08:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=zsmsymrwgfyinv5wlfyidntwsjeeldzt; d=codeaurora.org; t=1599584879;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References;
-        bh=svFWprcWFvN22I2hfcfhEDwuffz662KdF6zeskRYzi8=;
-        b=aOzz+i4CSHjh+icv4CKqQQeraWB6gmrGKAefyxC1pcouogz9cavattMkJLrXPpWU
-        Pd5JCaDPQdikVLPQDIn/c38DUmwDhrT4U2wfuJw5WI7+tARgQpjYQsYelgya8LCsImw
-        YXe4rTW0kKjH8sltx3RAGotaX2/6tif52Cn6nLTg=
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=hsbnp7p3ensaochzwyq5wwmceodymuwv; d=amazonses.com; t=1599584879;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:Feedback-ID;
-        bh=svFWprcWFvN22I2hfcfhEDwuffz662KdF6zeskRYzi8=;
-        b=UTrG2BQtVcswNfK4eEX4VHzLYMvW4/GimSVZLKB67sTybERmQqlRADoyXGuYV+HU
-        tUtvz1L3DxFLc/WKrQ6KlVzWA/UDeQ89eQ/7aajj7fDNCtMpTzk08d4LHF/OEAkKnVk
-        381TKCC5tECVAFojpWmQijTb17+Xlc29niJX+VfE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF9BBC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=tdas@codeaurora.org
-From:   Taniya Das <tdas@codeaurora.org>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v1 2/3] dt-bindings: clock: Add YAML schemas for the QCOM Camera clock bindings.
-Date:   Tue, 8 Sep 2020 17:07:59 +0000
-Message-ID: <010101746eb0416a-d5b8acbb-fded-4025-aa27-15ccc5f27de6-000000@us-west-2.amazonses.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
-References: <1599584848-15530-1-git-send-email-tdas@codeaurora.org>
-X-SES-Outgoing: 2020.09.08-54.240.27.188
-Feedback-ID: 1.us-west-2.CZuq2qbDmUIuT3qdvXlRHZZCpfZqZ4GtG9v3VKgRyF0=:AmazonSES
+        Tue, 8 Sep 2020 13:10:13 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CEEFC061573;
+        Tue,  8 Sep 2020 10:10:13 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id b17so52419pji.1;
+        Tue, 08 Sep 2020 10:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=IJ84Dco6eLoIv+QhaZ1+EKy5WcV+FPbruhEJbqApu5k=;
+        b=NyS6OBFC5QJRqQC59Ilw2MrC0TVowdh91k+YvAcGb0TVyRKHAjoPUaY0KKQIGKc9lS
+         QBW4s/5u4gKcMOnKrAx11MTo+CtcvPsaBVRTevRZZc/Coh9/iUIaGuCce5ElF4XSA4rD
+         Sm0Umjyk/Nu/gEBCythZlr0LRjrisaoKeULzuI1qH9iSrlUnSeyNvV5IOYbz3Dtu37px
+         G5UrEGN4tAWR3a/llp/eq5GE7FqwdAqF6MTWVIN5Y0JI7pH5pZm8hg8y0f9QdsUzl7xm
+         RrZZs04Jl9J35y7g6LO09Oeq5UL02+WY7sWoGbwLJwLnKLyXDZvkMgHU87eWEFsSQAmy
+         VDUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IJ84Dco6eLoIv+QhaZ1+EKy5WcV+FPbruhEJbqApu5k=;
+        b=Sy5QYZKHdYQ5iQBtFr5mDUV3B65C0YJYcsnOCWdpa2kgxJoay40UjV2UAZQkLCwlJz
+         B9qiez4Yt+hVLfdb9LI2qm8COJ4M2bv2TruZM/2/c8OHdkacSBZwk7anbonE2/1jruqX
+         ffZsqowh3UNLUnbVwErt6dzPn3A1fUngmgFXI6v4dnjWpCZaFXij6fSvTpqR5Q0pZjdp
+         0JWHkmQxFGYiupO75SJFIo6EROaZmJI4pTzrqaulKYyIw+BXmZTTn/qWR6fCjwAEnVVZ
+         G6hdIAqhkrVZzJ8lV/r7m2YN0Qjaei4XYmPe1YRLrA8bYIJpbYJH4bqLIDPhbkpp2mpI
+         ewhA==
+X-Gm-Message-State: AOAM532noY7MpILI0mikUEiogxMW+viXi+08Xz0zWKJQA1safGJSN6aL
+        Xkzpa5Wqza3wsObwhGIg8uc=
+X-Google-Smtp-Source: ABdhPJz+LupikwcXi8+L56pMv9pV+9q6l24UCCc9Ms4+oqhlRGluDntBU1vjkieR70cpz6FydIqR3w==
+X-Received: by 2002:a17:90b:357:: with SMTP id fh23mr73628pjb.221.1599585012676;
+        Tue, 08 Sep 2020 10:10:12 -0700 (PDT)
+Received: from gmail.com ([106.201.26.241])
+        by smtp.gmail.com with ESMTPSA id x140sm552pfc.211.2020.09.08.10.10.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2020 10:10:12 -0700 (PDT)
+Date:   Tue, 8 Sep 2020 22:38:16 +0530
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Adam Radford <aradford@gmail.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Adaptec OEM Raid Solutions <aacraid@microsemi.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bradley Grove <linuxdrivers@attotech.com>,
+        John Garry <john.garry@huawei.com>,
+        Don Brace <don.brace@microsemi.com>,
+        James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Jack Wang <jinpu.wang@cloud.ionos.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-scsi@vger.kernel.org, esc.storagedev@microsemi.com,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com
+Subject: Re: [PATCH v2 15/15] scsi: pmcraid: use generic power management
+Message-ID: <20200908170816.GP9948@gmail.com>
+References: <20200720133427.454400-1-vaibhavgupta40@gmail.com>
+ <20200720133427.454400-16-vaibhavgupta40@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200720133427.454400-16-vaibhavgupta40@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Camera Subsystem clock provider have a bunch of generic properties
-that are needed in a device tree. Add a YAML schemas for those.
-
-Add clock ids for Camera clocks which are required to bring the camera
-subsystem out of reset.
-
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- .../bindings/clock/qcom,sc7180-camcc.yaml          |  73 +++++++++++++
- include/dt-bindings/clock/qcom,camcc-sc7180.h      | 121 +++++++++++++++++++++
- 2 files changed, 194 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,camcc-sc7180.h
-
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
-new file mode 100644
-index 0000000..07bd38e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sc7180-camcc.yaml
-@@ -0,0 +1,73 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sc7180-camcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Camera Clock & Reset Controller Binding for SC7180
-+
-+maintainers:
-+  - Taniya Das <tdas@codeaurora.org>
-+
-+description: |
-+  Qualcomm camera clock control module which supports the clocks, resets and
-+  power domains on SC7180.
-+
-+  See also:
-+  - dt-bindings/clock/qcom,camcc-sc7180.h.
-+
-+properties:
-+  compatible:
-+    const: qcom,sc7180-camcc
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: Camera_ahb clock from GCC
-+      - description: Camera XO clock from GCC
-+
-+  clock-names:
-+    items:
-+      - const: bi_tcxo
-+      - const: iface
-+      - const: xo
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sc7180.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@ad00000 {
-+      compatible = "qcom,sc7180-camcc";
-+      reg = <0x0ad00000 0x10000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&gcc GCC_CAMERA_AHB_CLK>,
-+               <&gcc GCC_CAMERA_XO_CLK>;
-+      clock-names = "bi_tcxo", "iface", "xo";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,camcc-sc7180.h b/include/dt-bindings/clock/qcom,camcc-sc7180.h
-new file mode 100644
-index 0000000..ef7d3a0
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,camcc-sc7180.h
-@@ -0,0 +1,121 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_CAM_CC_SC7180_H
-+#define _DT_BINDINGS_CLK_QCOM_CAM_CC_SC7180_H
-+
-+/* CAM_CC clocks */
-+#define CAM_CC_PLL2_OUT_EARLY					0
-+#define CAM_CC_PLL0						1
-+#define CAM_CC_PLL1						2
-+#define CAM_CC_PLL2						3
-+#define CAM_CC_PLL2_OUT_AUX					4
-+#define CAM_CC_PLL3						5
-+#define CAM_CC_CAMNOC_AXI_CLK					6
-+#define CAM_CC_CCI_0_CLK					7
-+#define CAM_CC_CCI_0_CLK_SRC					8
-+#define CAM_CC_CCI_1_CLK					9
-+#define CAM_CC_CCI_1_CLK_SRC					10
-+#define CAM_CC_CORE_AHB_CLK					11
-+#define CAM_CC_CPAS_AHB_CLK					12
-+#define CAM_CC_CPHY_RX_CLK_SRC					13
-+#define CAM_CC_CSI0PHYTIMER_CLK					14
-+#define CAM_CC_CSI0PHYTIMER_CLK_SRC				15
-+#define CAM_CC_CSI1PHYTIMER_CLK					16
-+#define CAM_CC_CSI1PHYTIMER_CLK_SRC				17
-+#define CAM_CC_CSI2PHYTIMER_CLK					18
-+#define CAM_CC_CSI2PHYTIMER_CLK_SRC				19
-+#define CAM_CC_CSI3PHYTIMER_CLK					20
-+#define CAM_CC_CSI3PHYTIMER_CLK_SRC				21
-+#define CAM_CC_CSIPHY0_CLK					22
-+#define CAM_CC_CSIPHY1_CLK					23
-+#define CAM_CC_CSIPHY2_CLK					24
-+#define CAM_CC_CSIPHY3_CLK					25
-+#define CAM_CC_FAST_AHB_CLK_SRC					26
-+#define CAM_CC_ICP_APB_CLK					27
-+#define CAM_CC_ICP_ATB_CLK					28
-+#define CAM_CC_ICP_CLK						29
-+#define CAM_CC_ICP_CLK_SRC					30
-+#define CAM_CC_ICP_CTI_CLK					31
-+#define CAM_CC_ICP_TS_CLK					32
-+#define CAM_CC_IFE_0_AXI_CLK					33
-+#define CAM_CC_IFE_0_CLK					34
-+#define CAM_CC_IFE_0_CLK_SRC					35
-+#define CAM_CC_IFE_0_CPHY_RX_CLK				36
-+#define CAM_CC_IFE_0_CSID_CLK					37
-+#define CAM_CC_IFE_0_CSID_CLK_SRC				38
-+#define CAM_CC_IFE_0_DSP_CLK					39
-+#define CAM_CC_IFE_1_AXI_CLK					40
-+#define CAM_CC_IFE_1_CLK					41
-+#define CAM_CC_IFE_1_CLK_SRC					42
-+#define CAM_CC_IFE_1_CPHY_RX_CLK				43
-+#define CAM_CC_IFE_1_CSID_CLK					44
-+#define CAM_CC_IFE_1_CSID_CLK_SRC				45
-+#define CAM_CC_IFE_1_DSP_CLK					46
-+#define CAM_CC_IFE_LITE_CLK					47
-+#define CAM_CC_IFE_LITE_CLK_SRC					48
-+#define CAM_CC_IFE_LITE_CPHY_RX_CLK				49
-+#define CAM_CC_IFE_LITE_CSID_CLK				50
-+#define CAM_CC_IFE_LITE_CSID_CLK_SRC				51
-+#define CAM_CC_IPE_0_AHB_CLK					52
-+#define CAM_CC_IPE_0_AREG_CLK					53
-+#define CAM_CC_IPE_0_AXI_CLK					54
-+#define CAM_CC_IPE_0_CLK					55
-+#define CAM_CC_IPE_0_CLK_SRC					56
-+#define CAM_CC_JPEG_CLK						57
-+#define CAM_CC_JPEG_CLK_SRC					58
-+#define CAM_CC_LRME_CLK						59
-+#define CAM_CC_LRME_CLK_SRC					60
-+#define CAM_CC_MCLK0_CLK					61
-+#define CAM_CC_MCLK0_CLK_SRC					62
-+#define CAM_CC_MCLK1_CLK					63
-+#define CAM_CC_MCLK1_CLK_SRC					64
-+#define CAM_CC_MCLK2_CLK					65
-+#define CAM_CC_MCLK2_CLK_SRC					66
-+#define CAM_CC_MCLK3_CLK					67
-+#define CAM_CC_MCLK3_CLK_SRC					68
-+#define CAM_CC_MCLK4_CLK					69
-+#define CAM_CC_MCLK4_CLK_SRC					70
-+#define CAM_CC_BPS_AHB_CLK					71
-+#define CAM_CC_BPS_AREG_CLK					72
-+#define CAM_CC_BPS_AXI_CLK					73
-+#define CAM_CC_BPS_CLK						74
-+#define CAM_CC_BPS_CLK_SRC					75
-+#define CAM_CC_SLOW_AHB_CLK_SRC					76
-+#define CAM_CC_SOC_AHB_CLK					77
-+#define CAM_CC_SYS_TMR_CLK					78
-+
-+/* CAM_CC power domains */
-+#define BPS_GDSC						0
-+#define IFE_0_GDSC						1
-+#define IFE_1_GDSC						2
-+#define IPE_0_GDSC						3
-+#define TITAN_TOP_GDSC						4
-+
-+/* CAM_CC resets */
-+#define CAM_CC_BPS_BCR						0
-+#define CAM_CC_CAMNOC_BCR					1
-+#define CAM_CC_CCI_0_BCR					2
-+#define CAM_CC_CCI_1_BCR					3
-+#define CAM_CC_CPAS_BCR						4
-+#define CAM_CC_CSI0PHY_BCR					5
-+#define CAM_CC_CSI1PHY_BCR					6
-+#define CAM_CC_CSI2PHY_BCR					7
-+#define CAM_CC_CSI3PHY_BCR					8
-+#define CAM_CC_ICP_BCR						9
-+#define CAM_CC_IFE_0_BCR					10
-+#define CAM_CC_IFE_1_BCR					11
-+#define CAM_CC_IFE_LITE_BCR					12
-+#define CAM_CC_IPE_0_BCR					13
-+#define CAM_CC_JPEG_BCR						14
-+#define CAM_CC_LRME_BCR						15
-+#define CAM_CC_MCLK0_BCR					16
-+#define CAM_CC_MCLK1_BCR					17
-+#define CAM_CC_MCLK2_BCR					18
-+#define CAM_CC_MCLK3_BCR					19
-+#define CAM_CC_MCLK4_BCR					20
-+#define CAM_CC_TITAN_TOP_BCR					21
-+
-+#endif
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
-
+On Mon, Jul 20, 2020 at 07:04:28PM +0530, Vaibhav Gupta wrote:
+> Drivers using legacy PM have to manage PCI states and device's PM states
+> themselves. They also need to take care of configuration registers.
+> 
+> With improved and powerful support of generic PM, PCI Core takes care of
+> above mentioned, device-independent, jobs.
+> 
+> This driver makes use of PCI helper functions like
+> pci_save/restore_state(), pci_enable/disable_device(),
+> pci_set_power_state() and to do required operations. In generic mode, they
+> are no longer needed.
+> 
+> Change function parameter in both .suspend() and .resume() to
+> "struct device*" type. Use to_pci_dev() to get "struct pci_dev*" variable.
+> 
+> In function pmcraid_resume(), earlier, the variable "rc" was set by
+> pci_enable_device() which is now removed. Since PCI core does the required
+> job, initialize "rc" with 0 value when declaring it.
+> 
+> Compile-tested only.
+> 
+> Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+> ---
+>  drivers/scsi/pmcraid.c | 44 +++++++++++-------------------------------
+>  1 file changed, 11 insertions(+), 33 deletions(-)
+> 
+> diff --git a/drivers/scsi/pmcraid.c b/drivers/scsi/pmcraid.c
+> index aa9ae2ae8579..b6b70ac2e2ee 100644
+> --- a/drivers/scsi/pmcraid.c
+> +++ b/drivers/scsi/pmcraid.c
+> @@ -5237,54 +5237,39 @@ static void pmcraid_remove(struct pci_dev *pdev)
+>  	return;
+>  }
+>  
+> -#ifdef CONFIG_PM
+>  /**
+>   * pmcraid_suspend - driver suspend entry point for power management
+> - * @pdev:   PCI device structure
+> - * @state:  PCI power state to suspend routine
+> + * @dev:   Device structure
+>   *
+>   * Return Value - 0 always
+>   */
+> -static int pmcraid_suspend(struct pci_dev *pdev, pm_message_t state)
+> +static int __maybe_unused pmcraid_suspend(struct device *dev)
+>  {
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct pmcraid_instance *pinstance = pci_get_drvdata(pdev);
+>  
+>  	pmcraid_shutdown(pdev);
+>  	pmcraid_disable_interrupts(pinstance, ~0);
+>  	pmcraid_kill_tasklets(pinstance);
+> -	pci_set_drvdata(pinstance->pdev, pinstance);
+>  	pmcraid_unregister_interrupt_handler(pinstance);
+> -	pci_save_state(pdev);
+> -	pci_disable_device(pdev);
+> -	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+>  
+>  	return 0;
+>  }
+>  
+>  /**
+>   * pmcraid_resume - driver resume entry point PCI power management
+> - * @pdev: PCI device structure
+> + * @dev: Device structure
+>   *
+>   * Return Value - 0 in case of success. Error code in case of any failure
+>   */
+> -static int pmcraid_resume(struct pci_dev *pdev)
+> +static int __maybe_unused pmcraid_resume(struct device *dev)
+>  {
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+>  	struct pmcraid_instance *pinstance = pci_get_drvdata(pdev);
+>  	struct Scsi_Host *host = pinstance->host;
+> -	int rc;
+> -
+> -	pci_set_power_state(pdev, PCI_D0);
+> -	pci_enable_wake(pdev, PCI_D0, 0);
+> -	pci_restore_state(pdev);
+> -
+> -	rc = pci_enable_device(pdev);
+> -
+> -	if (rc) {
+> -		dev_err(&pdev->dev, "resume: Enable device failed\n");
+> -		return rc;
+> -	}
+> +	int rc = 0;
+>  
+> -	pci_set_master(pdev);
+> +	device_wakeup_disable(dev);
+>  
+>  	if (sizeof(dma_addr_t) == 4 ||
+>  	    dma_set_mask(&pdev->dev, DMA_BIT_MASK(64)))
+> @@ -5337,18 +5322,10 @@ static int pmcraid_resume(struct pci_dev *pdev)
+>  	scsi_host_put(host);
+>  
+>  disable_device:
+> -	pci_disable_device(pdev);
+>  
+>  	return rc;
+>  }
+>  
+> -#else
+> -
+> -#define pmcraid_suspend NULL
+> -#define pmcraid_resume  NULL
+> -
+> -#endif /* CONFIG_PM */
+> -
+>  /**
+>   * pmcraid_complete_ioa_reset - Called by either timer or tasklet during
+>   *				completion of the ioa reset
+> @@ -5836,6 +5813,8 @@ static int pmcraid_probe(struct pci_dev *pdev,
+>  	return -ENODEV;
+>  }
+>  
+> +static SIMPLE_DEV_PM_OPS(pmcraid_pm_ops, pmcraid_suspend, pmcraid_resume);
+> +
+>  /*
+>   * PCI driver structure of pmcraid driver
+>   */
+> @@ -5844,8 +5823,7 @@ static struct pci_driver pmcraid_driver = {
+>  	.id_table = pmcraid_pci_table,
+>  	.probe = pmcraid_probe,
+>  	.remove = pmcraid_remove,
+> -	.suspend = pmcraid_suspend,
+> -	.resume = pmcraid_resume,
+> +	.driver.pm = &pmcraid_pm_ops,
+>  	.shutdown = pmcraid_shutdown
+>  };
+>  
+> -- 
+> 2.27.0
+> 
+.
