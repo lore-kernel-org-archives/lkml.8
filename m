@@ -2,51 +2,51 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AB7C2D0E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC069C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0F2720732
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9251E2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 17:12:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599585172;
-	bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
+	s=default; t=1599585178;
+	bh=MEmvLFwTluSLMx2cM/SWoItoFmupNuwGFBxSHz1bvcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPo3VAeYZ5GKez0VQ6GfwUwTcio1RpS0EUNoioZrR+TNYFKPe4VaRXZiBfuCX7DFu
-	 IKPD3j1MVl620opGZ06nRVkJy/I6jA9PplqI3yc8zJ59ZmNE1BhHUpSK4oLlheeqI2
-	 irtZF1nB/OE8PKr1aRJglxEyBwY0UKRRdM/bjhsQ=
+	b=CTUW7Ir+PPnnfdz5/pkZqplUCsZ0NZnMu/uEnAR0ICLMIvi6opRKfd2lkV97Oyqt8
+	 KtW64xGAc1S7l7qQLkKAp5tyFJE4yEAPRF4CspVyiUUYqT1YE88FzciPqBV5P1dKFs
+	 UigUGVhsYt5F3+OO21aFxkaHzZ2yn4M7BZnU5zGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbgIHRMu (ORCPT
+        id S1725997AbgIHRMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 13:12:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59008 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 13:12:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731796AbgIHQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731532AbgIHQTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:19:19 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FCBA2247F;
-        Tue,  8 Sep 2020 15:37:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DC37241A5;
+        Tue,  8 Sep 2020 15:39:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579434;
-        bh=kSTDMEbbv8+doQ7jyZH6u4aslf3swuwbo7focQT/NNw=;
+        s=default; t=1599579541;
+        bh=MEmvLFwTluSLMx2cM/SWoItoFmupNuwGFBxSHz1bvcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YxIJyRCtlY4MNnRst8OYY2dYTwGpZ7LoSc4V55tFm2bwoBfQ9m53vUgJLF+9AK+wE
-         mSxBwjOx6clVcLKOhrhTzszp54jRNkAnaHbginG8GstvG7C+I/8FoTk2Sd08DgEkb9
-         dVehOFYlk+INAe2zSn+xr8L8jx8KLJO93NOWXWX0=
+        b=nuZ0y6WjbuYdIfVBKHwrozGHH4mbwjiJuSfSujmzrdJQFK4V5lzANAbwRicqo2/IS
+         t+1loar+NJ2EIJsW+hLuF3gUbm0WYouQfeqiBW5o9BGQv7kZSYVjIC/FolW4w7SyvN
+         VmNytrz2UzfuiuDPUWTfU85VUjZgb6Ijhe0mAtCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 046/186] rxrpc: Keep the ACK serial in a var in rxrpc_input_ack()
-Date:   Tue,  8 Sep 2020 17:23:08 +0200
-Message-Id: <20200908152243.892478027@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 121/186] ext2: dont update mtime on COW faults
+Date:   Tue,  8 Sep 2020 17:24:23 +0200
+Message-Id: <20200908152247.501700998@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -59,99 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 68528d937dcd675e79973061c1a314db598162d1 ]
+commit 1ef6ea0efe8e68d0299dad44c39dc6ad9e5d1f39 upstream.
 
-Keep the ACK serial number in a variable in rxrpc_input_ack() as it's used
-frequently.
+When running in a dax mode, if the user maps a page with MAP_PRIVATE and
+PROT_WRITE, the ext2 filesystem would incorrectly update ctime and mtime
+when the user hits a COW fault.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This breaks building of the Linux kernel.  How to reproduce:
+
+ 1. extract the Linux kernel tree on dax-mounted ext2 filesystem
+ 2. run make clean
+ 3. run make -j12
+ 4. run make -j12
+
+at step 4, make would incorrectly rebuild the whole kernel (although it
+was already built in step 3).
+
+The reason for the breakage is that almost all object files depend on
+objtool.  When we run objtool, it takes COW page fault on its .data
+section, and these faults will incorrectly update the timestamp of the
+objtool binary.  The updated timestamp causes make to rebuild the whole
+tree.
+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/rxrpc/input.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ fs/ext2/file.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
-index 767579328a069..a7699e56eac88 100644
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -843,7 +843,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 		struct rxrpc_ackinfo info;
- 		u8 acks[RXRPC_MAXACKS];
- 	} buf;
--	rxrpc_serial_t acked_serial;
-+	rxrpc_serial_t ack_serial, acked_serial;
- 	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
- 	int nr_acks, offset, ioffset;
+--- a/fs/ext2/file.c
++++ b/fs/ext2/file.c
+@@ -93,8 +93,10 @@ static vm_fault_t ext2_dax_fault(struct
+ 	struct inode *inode = file_inode(vmf->vma->vm_file);
+ 	struct ext2_inode_info *ei = EXT2_I(inode);
+ 	vm_fault_t ret;
++	bool write = (vmf->flags & FAULT_FLAG_WRITE) &&
++		(vmf->vma->vm_flags & VM_SHARED);
  
-@@ -856,6 +856,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
+-	if (vmf->flags & FAULT_FLAG_WRITE) {
++	if (write) {
+ 		sb_start_pagefault(inode->i_sb);
+ 		file_update_time(vmf->vma->vm_file);
  	}
- 	offset += sizeof(buf.ack);
+@@ -103,7 +105,7 @@ static vm_fault_t ext2_dax_fault(struct
+ 	ret = dax_iomap_fault(vmf, PE_SIZE_PTE, NULL, NULL, &ext2_iomap_ops);
  
-+	ack_serial = sp->hdr.serial;
- 	acked_serial = ntohl(buf.ack.serial);
- 	first_soft_ack = ntohl(buf.ack.firstPacket);
- 	prev_pkt = ntohl(buf.ack.previousPacket);
-@@ -864,31 +865,31 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
- 			      buf.ack.reason : RXRPC_ACK__INVALID);
- 
--	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
-+	trace_rxrpc_rx_ack(call, ack_serial, acked_serial,
- 			   first_soft_ack, prev_pkt,
- 			   summary.ack_reason, nr_acks);
- 
- 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
- 		rxrpc_input_ping_response(call, skb->tstamp, acked_serial,
--					  sp->hdr.serial);
-+					  ack_serial);
- 	if (buf.ack.reason == RXRPC_ACK_REQUESTED)
- 		rxrpc_input_requested_ack(call, skb->tstamp, acked_serial,
--					  sp->hdr.serial);
-+					  ack_serial);
- 
- 	if (buf.ack.reason == RXRPC_ACK_PING) {
--		_proto("Rx ACK %%%u PING Request", sp->hdr.serial);
-+		_proto("Rx ACK %%%u PING Request", ack_serial);
- 		rxrpc_propose_ACK(call, RXRPC_ACK_PING_RESPONSE,
--				  sp->hdr.serial, true, true,
-+				  ack_serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ping);
- 	} else if (sp->hdr.flags & RXRPC_REQUEST_ACK) {
- 		rxrpc_propose_ACK(call, RXRPC_ACK_REQUESTED,
--				  sp->hdr.serial, true, true,
-+				  ack_serial, true, true,
- 				  rxrpc_propose_ack_respond_to_ack);
- 	}
- 
- 	/* Discard any out-of-order or duplicate ACKs (outside lock). */
- 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
--		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
- 		return;
-@@ -904,7 +905,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 
- 	/* Discard any out-of-order or duplicate ACKs (inside lock). */
- 	if (!rxrpc_is_ack_valid(call, first_soft_ack, prev_pkt)) {
--		trace_rxrpc_rx_discard_ack(call->debug_id, sp->hdr.serial,
-+		trace_rxrpc_rx_discard_ack(call->debug_id, ack_serial,
- 					   first_soft_ack, call->ackr_first_seq,
- 					   prev_pkt, call->ackr_prev_seq);
- 		goto out;
-@@ -964,7 +965,7 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb)
- 	    RXRPC_TX_ANNO_LAST &&
- 	    summary.nr_acks == call->tx_top - hard_ack &&
- 	    rxrpc_is_client_call(call))
--		rxrpc_propose_ACK(call, RXRPC_ACK_PING, sp->hdr.serial,
-+		rxrpc_propose_ACK(call, RXRPC_ACK_PING, ack_serial,
- 				  false, true,
- 				  rxrpc_propose_ack_ping_for_lost_reply);
- 
--- 
-2.25.1
-
+ 	up_read(&ei->dax_sem);
+-	if (vmf->flags & FAULT_FLAG_WRITE)
++	if (write)
+ 		sb_end_pagefault(inode->i_sb);
+ 	return ret;
+ }
 
 
