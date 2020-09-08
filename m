@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B42FC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B82C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7E2820C09
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0912087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592402;
-	bh=pGPGvz4isoVU6Q1OPF74SRiL0p/6cTxaeGQRmI3go7w=;
+	s=default; t=1599592406;
+	bh=Pg1srDwn/nEtHnOj1vo6SaJSChybtZoWAXVP8rrY/eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dr2+wEPcJLo8hY4KgJjMXUCJ8NJPgt/EgUokIqiRhscqPpsZG0F9wzZWgGMAmuxw0
-	 BCHlDlFbH934UKKZekminyztDCoZc1LhWJ0lttJOBm0+QHTVc2zdE30TbdouC/inj5
-	 2botsQ45mGyveebj604c4RhKMk8wtJ7rsZXRHlhw=
+	b=uCISKiBo0rbkgcmLZ0U93XxHq01BoDqGJfmT39+DCyz7ihZwEwCo0pC5dIOtJ2UHT
+	 5xON+SYlep+Pll31OwxmdpL9aLYeqS2ZOnsuC9ICOwoegiAi9S1AhfvLa09oi7zXaE
+	 hmJWHM1iTA5KvnjXQYenn1r0Be3+Ng8XQG8fpqNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbgIHTNU (ORCPT
+        id S1731748AbgIHTNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52114 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731090AbgIHQFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 12:05:09 -0400
+        id S1731207AbgIHQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 8 Sep 2020 12:05:07 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3FA8229C7;
-        Tue,  8 Sep 2020 15:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7239224D2;
+        Tue,  8 Sep 2020 15:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599579327;
-        bh=pGPGvz4isoVU6Q1OPF74SRiL0p/6cTxaeGQRmI3go7w=;
+        s=default; t=1599579427;
+        bh=Pg1srDwn/nEtHnOj1vo6SaJSChybtZoWAXVP8rrY/eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NVNL4R+LGVKVgwoJ8RAqAwl3/+wVW2Ru76+64jKNMaOVvADHqEpF0U4mJE8sgk/m+
-         TsJeFGRP+f2sXng3+3NIH/xTRu4ooH4wovQaW8KubrDiBOjLH2Vqx5V2q2CWlVZw8n
-         BuzQId7ScVE5Zi6B4hLH3Y0u22juhpmhoAhFzaCg=
+        b=MWTfq1i8d2s7EG1maHN2Qy23u6Tk2A3rGqBcs5Qo+BS2+P0UtbVzuH5Sw3EKEpKHb
+         85Xg+a2xmJ8WsBDEG0atMnRPNKcZwQtDAFQ2Q92/A84qgOy70S70sw7df22Jt23O0a
+         4JPyikrZPCdtIgapNde9tuPT9FzEUff9oe/fCJw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Marc Smith <msmith626@gmail.com>,
+        Edwin Peer <edwin.peer@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 031/186] drivers: gpu: amd: Initialize amdgpu_dm_backlight_caps object to 0 in amdgpu_dm_update_backlight_caps
-Date:   Tue,  8 Sep 2020 17:22:53 +0200
-Message-Id: <20200908152243.164605314@linuxfoundation.org>
+Subject: [PATCH 5.8 072/186] bnxt_en: fix HWRM error when querying VF temperature
+Date:   Tue,  8 Sep 2020 17:23:34 +0200
+Message-Id: <20200908152245.148405257@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152241.646390211@linuxfoundation.org>
 References: <20200908152241.646390211@linuxfoundation.org>
@@ -62,38 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Furquan Shaikh <furquan@google.com>
+From: Edwin Peer <edwin.peer@broadcom.com>
 
-[ Upstream commit 5896585512e5156482335e902f7c7393b940da51 ]
+[ Upstream commit 12cce90b934bf2b0ed9c339b4d5503e69954351a ]
 
-In `amdgpu_dm_update_backlight_caps()`, there is a local
-`amdgpu_dm_backlight_caps` object that is filled in by
-`amdgpu_acpi_get_backlight_caps()`. However, this object is
-uninitialized before the call and hence the subsequent check for
-aux_support can fail since it is not initialized by
-`amdgpu_acpi_get_backlight_caps()` as well. This change initializes
-this local `amdgpu_dm_backlight_caps` object to 0.
+Firmware returns RESOURCE_ACCESS_DENIED for HWRM_TEMP_MONITORY_QUERY for
+VFs. This produces unpleasing error messages in the log when temp1_input
+is queried via the hwmon sysfs interface from a VF.
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The error is harmless and expected, so silence it and return unknown as
+the value. Since the device temperature is not particularly sensitive
+information, provide flexibility to change this policy in future by
+silencing the error rather than avoiding the HWRM call entirely for VFs.
+
+Fixes: cde49a42a9bb ("bnxt_en: Add hwmon sysfs support to read temperature")
+Cc: Marc Smith <msmith626@gmail.com>
+Reported-by: Marc Smith <msmith626@gmail.com>
+Signed-off-by: Edwin Peer <edwin.peer@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 666ebe04837af..7ec810ebf4ce4 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2844,6 +2844,8 @@ static void amdgpu_dm_update_backlight_caps(struct amdgpu_display_manager *dm)
- #if defined(CONFIG_ACPI)
- 	struct amdgpu_dm_backlight_caps caps;
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 5a6ddc2dba4ee..93a1f36cdb5cf 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -8992,16 +8992,19 @@ static ssize_t bnxt_show_temp(struct device *dev,
+ 	struct hwrm_temp_monitor_query_input req = {0};
+ 	struct hwrm_temp_monitor_query_output *resp;
+ 	struct bnxt *bp = dev_get_drvdata(dev);
+-	u32 temp = 0;
++	u32 len = 0;
  
-+	memset(&caps, 0, sizeof(caps));
+ 	resp = bp->hwrm_cmd_resp_addr;
+ 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_TEMP_MONITOR_QUERY, -1, -1);
+ 	mutex_lock(&bp->hwrm_cmd_lock);
+-	if (!_hwrm_send_message(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
+-		temp = resp->temp * 1000; /* display millidegree */
++	if (!_hwrm_send_message_silent(bp, &req, sizeof(req), HWRM_CMD_TIMEOUT))
++		len = sprintf(buf, "%u\n", resp->temp * 1000); /* display millidegree */
+ 	mutex_unlock(&bp->hwrm_cmd_lock);
+ 
+-	return sprintf(buf, "%u\n", temp);
++	if (len)
++		return len;
 +
- 	if (dm->backlight_caps.caps_valid)
- 		return;
++	return sprintf(buf, "unknown\n");
+ }
+ static SENSOR_DEVICE_ATTR(temp1_input, 0444, bnxt_show_temp, NULL, 0);
  
 -- 
 2.25.1
