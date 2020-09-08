@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C87EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB45EC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8C02137B
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6682F20C09
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 19:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599592117;
-	bh=J4CaTd7Li/OR/Dm2Ko/DItTSRlT5z2EhpUFE1LseStI=;
+	s=default; t=1599592121;
+	bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WUhzzZ26iVcZzfTmp2UNlmmgWG+iEb92oLAkNN2lACZHeTGY31I2oixC89j9QWdZW
-	 RGF2XegYAT+WLhtDEx8mvxra1F3wWSvzLpJ6iUL2EhQ71p1W7vpwCVQBDeeWhdv01t
-	 7WhFUUHDbrjIz+f7W1nYeztyDUftQ+aR71idJo7c=
+	b=qlSxG0LEWsYRiYPbeSU42PBubtFxUFtHRyIUaXPLONfIVv78tfaiQY8fpplcAitY0
+	 iuPTA1NzK7BSLkJSNZPWvxg5udKgf4A0l8EDItGlq1c2MS5DG17n4ikgZ61oy06ZKX
+	 sXXDHmo4u2P0z1Y+ePsnaHQgd8pNC67HPFK0jZj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbgIHTIR (ORCPT
+        id S1731501AbgIHTIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 15:08:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52178 "EHLO mail.kernel.org"
+        Tue, 8 Sep 2020 15:08:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730964AbgIHQG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 8 Sep 2020 12:06:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48BA723E1C;
-        Tue,  8 Sep 2020 15:46:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EF3723DC1;
+        Tue,  8 Sep 2020 15:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599580004;
-        bh=J4CaTd7Li/OR/Dm2Ko/DItTSRlT5z2EhpUFE1LseStI=;
+        s=default; t=1599579997;
+        bh=QUNd9U2D0FIKd8CMrZu8G74GmA9dtKwfLxlZRU8UKMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bEFRBpR5tWF7bCeqOcj0A1gSvXr2RNCxyOjmCr4cyLDz+NYkvQCZSIISvptHSWJrd
-         U/Y1EZjAHb4tFDt+bqgrreYemvPRbOCfr09/xBQVEsO4X4D7zDlMtIkGwwsh9iXB9Q
-         l4FtjnaKlZcx+gBx1+rA7QzrFZUeMNRRgCXAPoq0=
+        b=Eo6xyPhAg5WO9UH8c/j8+72Io0Tb+xlPR2JT52cPyhuyC0sMao6Ya/43lyQsx+9dP
+         W4ZKJsWsI7pW6ldnxZZruHCgT8o+bp56xIvE18xnoHZKhM8u+p2t3sqb+BqfeR4rss
+         FHFo3LaJ+zHF/oqXfYzWSmjOn9HzzRvpbhhRk9Co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>
-Subject: [PATCH 5.4 122/129] vfio/pci: Fix SR-IOV VF handling with MMIO blocking
-Date:   Tue,  8 Sep 2020 17:26:03 +0200
-Message-Id: <20200908152235.948324566@linuxfoundation.org>
+        stable@vger.kernel.org, Ye Bin <yebin10@huawei.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 119/129] dm thin metadata: Fix use-after-free in dm_bm_set_read_only
+Date:   Tue,  8 Sep 2020 17:26:00 +0200
+Message-Id: <20200908152235.796309786@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200908152229.689878733@linuxfoundation.org>
 References: <20200908152229.689878733@linuxfoundation.org>
@@ -59,62 +59,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Ye Bin <yebin10@huawei.com>
 
-commit ebfa440ce38b7e2e04c3124aa89c8a9f4094cf21 upstream.
+commit 3a653b205f29b3f9827a01a0c88bfbcb0d169494 upstream.
 
-SR-IOV VFs do not implement the memory enable bit of the command
-register, therefore this bit is not set in config space after
-pci_enable_device().  This leads to an unintended difference
-between PF and VF in hand-off state to the user.  We can correct
-this by setting the initial value of the memory enable bit in our
-virtualized config space.  There's really no need however to
-ever fault a user on a VF though as this would only indicate an
-error in the user's management of the enable bit, versus a PF
-where the same access could trigger hardware faults.
+The following error ocurred when testing disk online/offline:
 
-Fixes: abafbc551fdd ("vfio-pci: Invalidate mmaps and block MMIO access on disabled memory")
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+[  301.798344] device-mapper: thin: 253:5: aborting current metadata transaction
+[  301.848441] device-mapper: thin: 253:5: failed to abort metadata transaction
+[  301.849206] Aborting journal on device dm-26-8.
+[  301.850489] EXT4-fs error (device dm-26) in __ext4_new_inode:943: Journal has aborted
+[  301.851095] EXT4-fs (dm-26): Delayed block allocation failed for inode 398742 at logical offset 181 with max blocks 19 with error 30
+[  301.854476] BUG: KASAN: use-after-free in dm_bm_set_read_only+0x3a/0x40 [dm_persistent_data]
+
+Reason is:
+
+ metadata_operation_failed
+    abort_transaction
+        dm_pool_abort_metadata
+	    __create_persistent_data_objects
+	        r = __open_or_format_metadata
+	        if (r) --> If failed will free pmd->bm but pmd->bm not set NULL
+		    dm_block_manager_destroy(pmd->bm);
+    set_pool_mode
+	dm_pool_metadata_read_only(pool->pmd);
+	dm_bm_set_read_only(pmd->bm);  --> use-after-free
+
+Add checks to see if pmd->bm is NULL in dm_bm_set_read_only and
+dm_bm_set_read_write functions.  If bm is NULL it means creating the
+bm failed and so dm_bm_is_read_only must return true.
+
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/vfio/pci/vfio_pci_config.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/md/dm-thin-metadata.c                 |    2 +-
+ drivers/md/persistent-data/dm-block-manager.c |   14 ++++++++------
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -398,9 +398,15 @@ static inline void p_setd(struct perm_bi
- /* Caller should hold memory_lock semaphore */
- bool __vfio_pci_memory_enabled(struct vfio_pci_device *vdev)
- {
-+	struct pci_dev *pdev = vdev->pdev;
- 	u16 cmd = le16_to_cpu(*(__le16 *)&vdev->vconfig[PCI_COMMAND]);
- 
--	return cmd & PCI_COMMAND_MEMORY;
-+	/*
-+	 * SR-IOV VF memory enable is handled by the MSE bit in the
-+	 * PF SR-IOV capability, there's therefore no need to trigger
-+	 * faults based on the virtual value.
-+	 */
-+	return pdev->is_virtfn || (cmd & PCI_COMMAND_MEMORY);
- }
- 
- /*
-@@ -1726,6 +1732,15 @@ int vfio_config_init(struct vfio_pci_dev
- 				 vconfig[PCI_INTERRUPT_PIN]);
- 
- 		vconfig[PCI_INTERRUPT_PIN] = 0; /* Gratuitous for good VFs */
-+
-+		/*
-+		 * VFs do no implement the memory enable bit of the COMMAND
-+		 * register therefore we'll not have it set in our initial
-+		 * copy of config space after pci_enable_device().  For
-+		 * consistency with PFs, set the virtual enable bit here.
-+		 */
-+		*(__le16 *)&vconfig[PCI_COMMAND] |=
-+					cpu_to_le16(PCI_COMMAND_MEMORY);
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -958,7 +958,7 @@ int dm_pool_metadata_close(struct dm_poo
  	}
  
- 	if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) || vdev->nointx)
+ 	pmd_write_lock_in_core(pmd);
+-	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
++	if (!pmd->fail_io && !dm_bm_is_read_only(pmd->bm)) {
+ 		r = __commit_transaction(pmd);
+ 		if (r < 0)
+ 			DMWARN("%s: __commit_transaction() failed, error = %d",
+--- a/drivers/md/persistent-data/dm-block-manager.c
++++ b/drivers/md/persistent-data/dm-block-manager.c
+@@ -493,7 +493,7 @@ int dm_bm_write_lock(struct dm_block_man
+ 	void *p;
+ 	int r;
+ 
+-	if (bm->read_only)
++	if (dm_bm_is_read_only(bm))
+ 		return -EPERM;
+ 
+ 	p = dm_bufio_read(bm->bufio, b, (struct dm_buffer **) result);
+@@ -562,7 +562,7 @@ int dm_bm_write_lock_zero(struct dm_bloc
+ 	struct buffer_aux *aux;
+ 	void *p;
+ 
+-	if (bm->read_only)
++	if (dm_bm_is_read_only(bm))
+ 		return -EPERM;
+ 
+ 	p = dm_bufio_new(bm->bufio, b, (struct dm_buffer **) result);
+@@ -602,7 +602,7 @@ EXPORT_SYMBOL_GPL(dm_bm_unlock);
+ 
+ int dm_bm_flush(struct dm_block_manager *bm)
+ {
+-	if (bm->read_only)
++	if (dm_bm_is_read_only(bm))
+ 		return -EPERM;
+ 
+ 	return dm_bufio_write_dirty_buffers(bm->bufio);
+@@ -616,19 +616,21 @@ void dm_bm_prefetch(struct dm_block_mana
+ 
+ bool dm_bm_is_read_only(struct dm_block_manager *bm)
+ {
+-	return bm->read_only;
++	return (bm ? bm->read_only : true);
+ }
+ EXPORT_SYMBOL_GPL(dm_bm_is_read_only);
+ 
+ void dm_bm_set_read_only(struct dm_block_manager *bm)
+ {
+-	bm->read_only = true;
++	if (bm)
++		bm->read_only = true;
+ }
+ EXPORT_SYMBOL_GPL(dm_bm_set_read_only);
+ 
+ void dm_bm_set_read_write(struct dm_block_manager *bm)
+ {
+-	bm->read_only = false;
++	if (bm)
++		bm->read_only = false;
+ }
+ EXPORT_SYMBOL_GPL(dm_bm_set_read_write);
+ 
 
 
