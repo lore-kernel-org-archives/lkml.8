@@ -2,111 +2,168 @@ Return-Path: <SRS0=o+hd=CR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E2CC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCEEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58A4720936
-	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB2C2145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  8 Sep 2020 20:11:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="FSjMfGsh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZQOpJdL5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbgIHUKx (ORCPT
+        id S1731072AbgIHULE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 8 Sep 2020 16:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729808AbgIHPPo (ORCPT
+        Tue, 8 Sep 2020 16:11:04 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23340 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731882AbgIHUKz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 8 Sep 2020 11:15:44 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B33C0617A3
-        for <linux-kernel@vger.kernel.org>; Tue,  8 Sep 2020 05:12:20 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b124so10761661pfg.13
-        for <linux-kernel@vger.kernel.org>; Tue, 08 Sep 2020 05:12:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4cTTNM2LfB0ZKQtokAlGtAKTl5Gj9gXx4yYPrBUZ2LI=;
-        b=FSjMfGshmgfnWWC3U1YIBx7DE7b7W/6phz3fnwef0gKYOPsk8l7rM9PaF1LdGQy6XF
-         WmriscNv+tWq3wLFbD3vC0aszsLJds7gWEYwfq3AfjZz1C6EWnzGFboWt+UsVWUFseaj
-         1sBDmcRmbvonzTJacW/pB9DmX3xU4DO3FX3ko=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4cTTNM2LfB0ZKQtokAlGtAKTl5Gj9gXx4yYPrBUZ2LI=;
-        b=awRu7HOTRI43P6MEgzLjacmEczlqAakhEF4FEx8+2ZTueNEdypCwTHj4hCS5P/R0th
-         u4neHX7mXyK/0N7DzZvrR7ipGsKyvtEbQbNluvELB4S2ZCsJJPuqXZSp0cSf7ZWiZbLg
-         83Q6nRpsFa1QhzBxvMYT2Q3JGs1RXRh5lYfoYEpcAbMdzhTWh1QNTNfvI9kXkpDAs5iS
-         hob5PP3XrOSDbMLCLIK6Munm5VloOt5miJJiYbfv4vrmYZOAXua+un8UC1E7tNg34bhY
-         ey8zYIjiQge9zjbd0XD0K43U7Q8vzQTwLMOEJ23C2BPY1b3guCCPHOIh9RqaEmfyLzqe
-         eysw==
-X-Gm-Message-State: AOAM5339rfNqtYp+WvuVtzjtsZSXJaouy/yeiicsZ5tBhU6VCiVAR/JJ
-        jZkwOJCk6JzLNYDWlllk/a9SWG+/R3jTU4pcYSRHVWIgxLIrpQLkSpkAMrvCTA43tD/IfqXo39d
-        opcDRrLAxnGJ7jzT4iqG8NHEEVD6xRoIEdRaQucmtg+091vGeDELC7lDB52DenAKgMJF/sNJk95
-        NjOF6YPN/6GFiBCA==
-X-Google-Smtp-Source: ABdhPJzaP8k6OK/iQH1v2SvEVSnGPEtqyLPkJUIOp6ScETEYqxTNqDc4Tope5wDw9XDBQ7aoitAf2Q==
-X-Received: by 2002:a17:902:d702:: with SMTP id w2mr24215594ply.53.1599567139350;
-        Tue, 08 Sep 2020 05:12:19 -0700 (PDT)
-Received: from [10.230.32.194] ([192.19.148.250])
-        by smtp.gmail.com with ESMTPSA id z9sm12049463pfk.118.2020.09.08.05.12.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Sep 2020 05:12:18 -0700 (PDT)
-Subject: Re: [PATCH] brcmsmac: fix memory leak in wlc_phy_attach_lcnphy
-To:     Keita Suzuki <keitasuzuki.park@sslab.ics.keio.ac.jp>
-Cc:     Takafumi Kubota <takafumi@sslab.ics.keio.ac.jp>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <linux-wireless@vger.kernel.org>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "open list:BROADCOM BRCM80211 IEEE802.11n WIRELESS DRIVER" 
-        <brcm80211-dev-list@cypress.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <bad4e33a-af2f-b44f-63e5-56386c312a91@broadcom.com>
- <20200908001324.8215-1-keitasuzuki.park@sslab.ics.keio.ac.jp>
- <c13ee142-d69d-6d21-6373-acb56507c9ec@broadcom.com>
- <CAEYrHjmG-R4RHn=59AGK8E0jKDXE5sbxQj49VpBvDMvBuBGiig@mail.gmail.com>
-From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
-Message-ID: <2a11074f-e155-0af1-aa37-108c8cd120e7@broadcom.com>
-Date:   Tue, 8 Sep 2020 14:12:14 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 8 Sep 2020 16:10:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1599595851;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zFptVInSDSbB2nDLyh5K9NKtnygiDyhn7CU7AXmV4mo=;
+        b=ZQOpJdL5QKuDec1kdXhhf4QOoj8hh2wSifWX+6Ie2ebXnJYXmX2IsBdqEpT+g60SgEgP8u
+        9H3a60MHmTsJ+0rCUyEx48fPcziiCbu36L1Jp5toZssM8ftTeTEsFQ1hJ6OP6zVr4nWIoP
+        0BnptKkAPrm3L4BTJSwnu5e0qwaYntg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-530-LvQ5oUMCNbaDKH3Y7EmEEA-1; Tue, 08 Sep 2020 16:10:47 -0400
+X-MC-Unique: LvQ5oUMCNbaDKH3Y7EmEEA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 409D9839A48;
+        Tue,  8 Sep 2020 20:10:42 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-115-46.ams2.redhat.com [10.36.115.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6279B5D9E8;
+        Tue,  8 Sep 2020 20:10:35 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        linux-hyperv@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-s390@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kexec@lists.infradead.org
+Subject: [PATCH v2 2/7] kernel/resource: move and rename IORESOURCE_MEM_DRIVER_MANAGED
+Date:   Tue,  8 Sep 2020 22:10:07 +0200
+Message-Id: <20200908201012.44168-3-david@redhat.com>
+In-Reply-To: <20200908201012.44168-1-david@redhat.com>
+References: <20200908201012.44168-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAEYrHjmG-R4RHn=59AGK8E0jKDXE5sbxQj49VpBvDMvBuBGiig@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/8/2020 2:02 PM, Keita Suzuki wrote:
-> Thank you for your comment. I am relatively new to the Linux
-> kernel community, so I am more than happy to receive comments.
-> Please let me know if I'm violating any other rules.
+IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
+always set to 0 by hardware. This is far from beautiful (and confusing),
+and the bit only applies to SYSRAM. So let's move it out of the
+bus-specific (PnP) defined bits.
 
-Sure ;-)
+We'll add another SYSRAM specific bit soon. If we ever need more bits for
+other purposes, we can steal some from "desc", or reshuffle/regroup what we
+have.
 
-Here a useful link that Kalle (wireless drivers maintainer) is always 
-sharing in his email signature:
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kexec@lists.infradead.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ include/linux/ioport.h | 4 +++-
+ kernel/kexec_file.c    | 2 +-
+ mm/memory_hotplug.c    | 4 ++--
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 52a91f5fa1a36..d7620d7c941a0 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -58,6 +58,9 @@ struct resource {
+ #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
+ #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
+ 
++/* IORESOURCE_SYSRAM specific bits. */
++#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
++
+ #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
+ 
+ #define IORESOURCE_DISABLED	0x10000000
+@@ -103,7 +106,6 @@ struct resource {
+ #define IORESOURCE_MEM_32BIT		(3<<3)
+ #define IORESOURCE_MEM_SHADOWABLE	(1<<5)	/* dup: IORESOURCE_SHADOWABLE */
+ #define IORESOURCE_MEM_EXPANSIONROM	(1<<6)
+-#define IORESOURCE_MEM_DRIVER_MANAGED	(1<<7)
+ 
+ /* PnP I/O specific bits (IORESOURCE_BITS) */
+ #define IORESOURCE_IO_16BIT_ADDR	(1<<0)
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index ca40bef75a616..dfeeed1aed084 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -520,7 +520,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+ 	/* Returning 0 will take to next memory range */
+ 
+ 	/* Don't use memory that will be detected and handled by a driver. */
+-	if (res->flags & IORESOURCE_MEM_DRIVER_MANAGED)
++	if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
+ 		return 0;
+ 
+ 	if (sz < kbuf->memsz)
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 4c47b68a9f4b5..8e1cd18b5cf14 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size,
+ 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 
+ 	if (strcmp(resource_name, "System RAM"))
+-		flags |= IORESOURCE_MEM_DRIVER_MANAGED;
++		flags |= IORESOURCE_SYSRAM_DRIVER_MANAGED;
+ 
+ 	/*
+ 	 * Make sure value parsed from 'mem=' only restricts memory adding
+@@ -1160,7 +1160,7 @@ EXPORT_SYMBOL_GPL(add_memory);
+  *
+  * For this memory, no entries in /sys/firmware/memmap ("raw firmware-provided
+  * memory map") are created. Also, the created memory resource is flagged
+- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-case
++ * with IORESOURCE_SYSRAM_DRIVER_MANAGED, so in-kernel users can special-case
+  * this memory as well (esp., not place kexec images onto it).
+  *
+  * The resource_name (visible via /proc/iomem) has to have the format
+-- 
+2.26.2
 
-Regards,
-Arend
